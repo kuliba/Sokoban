@@ -12,15 +12,30 @@ struct AnywayPayment: Equatable {
     
     let hasAmount: Bool
     let hasOTP: Bool
+    var status: Status?
+}
+
+extension AnywayPayment {
+    
+    enum Status: Equatable {
+        
+        case infoMessage(String)
+    }
 }
 
 extension AnywayPayment {
     
     func update(with update: AnywayPaymentUpdate) -> Self {
         
-        .init(
+        let status = update.details.info.infoMessage.map {
+            
+            AnywayPayment.Status.infoMessage($0)
+        }
+        
+        return .init(
             hasAmount: update.details.control.needSum,
-            hasOTP: update.details.control.needOTP
+            hasOTP: update.details.control.needOTP,
+            status: status
         )
     }
 }
@@ -57,6 +72,26 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let updated = makeNoAmountAnywayPayment().update(with: update)
         
         XCTAssert(hasAmountField(updated))
+    }
+    
+    func test_update_shouldNotChangeStatusOnNilInfoMessage() {
+        
+        assert(
+            makeAnywayPayment(),
+            on: makeAnywayPaymentUpdate(infoMessage: nil)
+        )
+    }
+    
+    func test_update_shouldChangeStatusOnNonNilInfoMessage() {
+        
+        let message = anyMessage()
+        
+        assert(
+            makeAnywayPayment(),
+            on: makeAnywayPaymentUpdate(infoMessage: message)
+        ) {
+            $0.status = .infoMessage(message)
+        }
     }
     
     // MARK: - Helpers
@@ -139,6 +174,7 @@ private func makeOTPAnywayPayment(
 }
 
 private func makeAnywayPaymentUpdate(
+    infoMessage: String? = nil,
     needOTP: Bool = false,
     needSum: Bool = false
 ) -> AnywayPaymentUpdate {
@@ -148,6 +184,9 @@ private func makeAnywayPaymentUpdate(
             control: makeAnywayPaymentUpdateDetailsControl(
                 needOTP: needOTP,
                 needSum: needSum
+            ),
+            info: makeAnywayPaymentUpdateDetailsInfo(
+                infoMessage: infoMessage
             )
         )
     )
