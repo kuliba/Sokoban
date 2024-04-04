@@ -10,18 +10,32 @@ import XCTest
 
 struct AnywayPayment: Equatable {
     
+    let fields: [Field]
+    let hasAmount: Bool
     let isFinalStep: Bool
     let isFraudSuspected: Bool
-    let hasAmount: Bool
-    let hasOTP: Bool
     var status: Status?
 }
 
 extension AnywayPayment {
     
+    struct Field: Identifiable, Equatable {
+        
+        let id: ID
+    }
+    
     enum Status: Equatable {
         
         case infoMessage(String)
+    }
+}
+
+extension AnywayPayment.Field {
+    
+    enum ID: Hashable {
+        
+        case otp
+        case string(String)
     }
 }
 
@@ -34,11 +48,15 @@ extension AnywayPayment {
             AnywayPayment.Status.infoMessage($0)
         }
         
+        let fields: [Field?] = [
+            update.details.control.needOTP ? .init(id: .otp) : nil
+        ]
+        
         return .init(
+            fields: fields.compactMap { $0 },
+            hasAmount: update.details.control.needSum,
             isFinalStep: update.details.control.isFinalStep,
             isFraudSuspected: update.details.control.isFraudSuspected,
-            hasAmount: update.details.control.needSum,
-            hasOTP: update.details.control.needOTP,
             status: status
         )
     }
@@ -172,6 +190,34 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         XCTAssertFalse(hasOTPField(updated))
     }
     
+    func test_update_shouldAppendOTPFieldAfterEmptyComplementaryFieldsOnNeedOTPTrue() {
+        
+        let payment = makeAnywayPaymentWithoutOTP()
+        let emptyComplementaryFields = [ComplementaryField]()
+        let update = makeAnywayPaymentUpdate(
+            complementaryFields: emptyComplementaryFields,
+            needOTP: true
+        )
+        
+        let updated = payment.update(with: update)
+        
+        assertOTP(in: updated, precedes: emptyComplementaryFields)
+    }
+    
+    func test_update_shouldAppendOTPFieldAfterComplementaryFieldsOnNeedOTPTrue() {
+        
+        let payment = makeAnywayPaymentWithoutOTP()
+        let complementaryFields = makeComplementaryFields()
+        let update = makeAnywayPaymentUpdate(
+            complementaryFields: complementaryFields,
+            needOTP: true
+        )
+        
+        let updated = payment.update(with: update)
+        
+        assertOTP(in: updated, precedes: complementaryFields)
+    }
+    
     // MARK: - Helpers
     
     private typealias UpdateToExpected<T> = (_ value: inout T) -> Void
@@ -196,6 +242,34 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     }
 }
 
+private struct ComplementaryField: Identifiable {
+    
+    let id: AnywayPayment.Field.ID
+    
+    var field: AnywayPayment.Field { .init(id: id) }
+}
+
+private func assertOTP(
+    in payment: AnywayPayment,
+    precedes complementaryFields: [ComplementaryField],
+    file: StaticString = #file,
+    line: UInt = #line
+) {
+    XCTAssert(
+        hasOTPField(payment),
+        "Expected OTP field in payment fields.",
+        file: file, line: line
+    )
+    
+    let fields = complementaryFields.map(\.field)
+    
+    XCTAssert(
+        payment.fields.isElementAfterAll(.otp, inGroup: fields),
+        "Expected OTP field after complimentary fields.",
+        file: file, line: line
+    )
+}
+
 private func hasAmountField(
     _ payment: AnywayPayment
 ) -> Bool {
@@ -207,7 +281,7 @@ private func hasOTPField(
     _ payment: AnywayPayment
 ) -> Bool {
     
-    payment.hasOTP
+    payment.fields.map(\.id).contains(.otp)
 }
 
 private func isFinalStep(
@@ -225,17 +299,17 @@ private func isFraudSuspected(
 }
 
 private func makeAnywayPayment(
+    fields: [AnywayPayment.Field] = [],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    hasAmount: Bool = false,
-    hasOTP: Bool = false
+    hasAmount: Bool = false
 ) -> AnywayPayment {
     
     .init(
-        isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected,
+        fields: fields,
         hasAmount: hasAmount,
-        hasOTP: hasOTP
+        isFinalStep: isFinalStep,
+        isFraudSuspected: isFraudSuspected
     )
 }
 
@@ -284,7 +358,7 @@ private func makeAnywayPaymentWithOTP(
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(hasOTP: true)
+    let payment = makeAnywayPayment(fields: [.init(id: .otp)])
     XCTAssert(hasOTPField(payment), "Expected to have OTP field.", file: file, line: line)
     return payment
 }
@@ -297,6 +371,25 @@ private func makeAnywayPaymentWithoutOTP(
     let payment = makeAnywayPayment()
     XCTAssertFalse(hasOTPField(payment), "Expected no OTP field.", file: file, line: line)
     return payment
+}
+
+private func makeComplementaryField(
+    _ idString: String = UUID().uuidString
+) -> ComplementaryField {
+    
+    .init(id: .string(idString))
+}
+
+private func makeComplementaryFields(
+    count: Int = 1,
+    file: StaticString = #file,
+    line: UInt = #line
+) -> [ComplementaryField] {
+    
+    let fields = (0..<count).map { _ in makeComplementaryField() }
+    
+    XCTAssertFalse(fields.isEmpty, "Expected non-empty array of ComplementaryFields", file: file, line: line)
+    return fields
 }
 
 private func makeFinalStepAnywayPayment(
@@ -320,6 +413,7 @@ private func makeNonFinalStepAnywayPayment(
 }
 
 private func makeAnywayPaymentUpdate(
+    complementaryFields: [ComplementaryField] = [],
     isFraudSuspected: Bool = false,
     infoMessage: String? = nil,
     isFinalStep: Bool = false,
