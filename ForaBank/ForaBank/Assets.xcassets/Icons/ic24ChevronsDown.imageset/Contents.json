@@ -1,13 +1,13 @@
 {
+  "properties" : {
+    "template-rendering-intent" : "template"
+  },
   "images" : [
     {
       "filename" : "ic24ChevronsDown.svg",
       "idiom" : "universal"
     }
   ],
-  "properties" : {
-    "template-rendering-intent" : "template"
-  },
   "info" : {
     "author" : "xcode",
     "version" : 1
