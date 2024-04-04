@@ -379,6 +379,32 @@ extension Payments.ParameterAmount {
 
 extension Model {
     
+    func paymentsByPhoneBankList(
+        _ phone: String
+    ) async -> [String]? {
+
+        typealias BankListRequest = ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments
+
+        let banksByPhone = paymentsByPhone.value[phone.addCodeRuIfNeeded()]?
+            .sorted(by: { $0.defaultBank && $1.defaultBank })
+        
+        if banksByPhone == nil,
+           let token {
+            
+            let command = BankListRequest(token: token, payload: .init(phoneNumber: phone))
+            let result = try? await serverAgent.executeCommand(command: command)
+            
+            let bankIds = result?.compactMap { $0.bankId }
+            
+            return bankIds
+            
+        } else {
+            
+            return banksByPhone?.compactMap { $0.bankId }
+        }
+    }
+    
+    
     func bankParameter(
         _ operation: Payments.Operation,
         operationPhone: String?
