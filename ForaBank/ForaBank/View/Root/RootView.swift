@@ -183,6 +183,7 @@ struct RootView_Previews: PreviewProvider {
                 paymentsViewModel: .sample,
                 chatViewModel: .init(),
                 informerViewModel: .init(.emptyMock),
+                buttonFactory: .init(makeTestButtonViewModel: { .init(productID: $0, title: "Hello")}),
                 .emptyMock,
                 showLoginAction: { _ in
                     

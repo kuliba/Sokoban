@@ -30,6 +30,7 @@ class RootViewModel: ObservableObject, Resetable {
     private let navigationStateManager: UserAccountNavigationStateManager
     let model: Model
     private let infoDictionary: [String : Any]?
+    private let buttonFactory: ButtonFactory
     private let showLoginAction: ShowLoginAction
     private var bindings = Set<AnyCancellable>()
     private var auithBinding: AnyCancellable?
@@ -42,6 +43,7 @@ class RootViewModel: ObservableObject, Resetable {
         chatViewModel: ChatViewModel,
         informerViewModel: InformerView.ViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
+        buttonFactory: ButtonFactory,
         _ model: Model,
         showLoginAction: @escaping ShowLoginAction
     ) {
@@ -54,6 +56,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.informerViewModel = informerViewModel
         self.model = model
         self.infoDictionary = infoDictionary
+        self.buttonFactory = buttonFactory
         self.showLoginAction = showLoginAction
         
         mainViewModel.rootActions = rootActions

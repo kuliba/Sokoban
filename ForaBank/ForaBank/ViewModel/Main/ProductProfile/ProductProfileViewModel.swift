@@ -12,6 +12,7 @@ import PDFKit
 import PinCodeUI
 import Tagged
 import CardUI
+import RxViewModel
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -55,14 +56,20 @@ class ProductProfileViewModel: ObservableObject {
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let operationDetailFactory: OperationDetailFactory
     private let cvvPINServicesClient: CVVPINServicesClient
+    private let buttonFactory: ButtonFactory
     private var cardAction: CardAction?
     
+    private let navigationManager: ProductNavigationStateManager
+
     private var bindings = Set<AnyCancellable>()
     
     private var productData: ProductData? {
         model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
     }
     
+    private let bottomSheetSubject = PassthroughSubject<BottomSheet?, Never>()
+    private let alertSubject = PassthroughSubject<Alert.ViewModel?, Never>()
+
     init(navigationBar: NavigationBarView.ViewModel,
          product: ProductProfileCardView.ViewModel,
          buttons: ProductProfileButtonsView.ViewModel,
@@ -79,6 +86,7 @@ class ProductProfileViewModel: ObservableObject {
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
          operationDetailFactory: OperationDetailFactory,
+         buttonFactory: ButtonFactory,
          cvvPINServicesClient: CVVPINServicesClient,
          rootView: String
     ) {
@@ -98,10 +106,21 @@ class ProductProfileViewModel: ObservableObject {
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.operationDetailFactory = operationDetailFactory
+        self.buttonFactory = buttonFactory
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
+        self.navigationManager = .init(alertReduce: AlertReducer().reduce)
         self.cardAction = createCardAction(cvvPINServicesClient, model)
+        bottomSheetSubject
+            //.removeDuplicates(by: <#T##(BottomSheet?, BottomSheet?) -> Bool#>)
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$bottomSheet)
         
+        alertSubject
+            //.removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$alert)
+
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
     }
     
@@ -121,6 +140,7 @@ class ProductProfileViewModel: ObservableObject {
         operationDetailFactory: OperationDetailFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
+        buttonFactory: ButtonFactory,
         rootView: String,
         dismissAction: @escaping () -> Void
     ) {
@@ -151,6 +171,7 @@ class ProductProfileViewModel: ObservableObject {
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
             operationDetailFactory: operationDetailFactory,
+            buttonFactory: buttonFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             rootView: rootView)
         
@@ -165,7 +186,20 @@ class ProductProfileViewModel: ObservableObject {
                 self.showCvvByTap(
                     cardId: cardId,
                     completion: completion)
-            })!
+            },
+            state: alert,
+            event: {
+                switch $0 {
+                    
+                case .showBlockAlert:
+                    self.event(.showBlockAlert)
+                case .closeAlert:
+                    self.event(.closeAlert)
+                case .showAdditionalOtherAlert:
+                    self.event(.showAdditionalOtherAlert)
+                }
+            }
+        )!
         
         // detail view model
         self.detail = makeDetailViewModel(with: product)
@@ -1531,7 +1565,8 @@ private extension ProductProfileViewModel {
             paymentsTransfersFactory: paymentsTransfersFactory, 
             operationDetailFactory: operationDetailFactory,
             cvvPINServicesClient: cvvPINServicesClient,
-            product: product,
+            product: product, 
+            buttonFactory: buttonFactory,
             rootView: rootView,
             dismissAction: dismissAction
         )
@@ -2335,4 +2370,134 @@ extension ProductProfileViewModel {
             self.makeAlert("\(String.cvvNotReceived).\n\(String.tryLater).")
         }
     }
+}
+
+extension ProductProfileViewModel {
+    // navigationStateManager - ProductProfileNavigationStateManager
+    //     private let routeSubject = PassthroughSubject<ProductProfileRoute, Never>()
+/// ProductProfileRoute ???
+   /* func event(_ event: ProductProfileEvent) {
+
+        let (route, effect) = bottomSheet.reduce(route, event)
+        routeSubject.send(route)
+        
+        if let effect {
+            
+            navigationStateManager.handleEffect(effect) { [weak self] in self?.event($0) }
+        }
+ 
+ 
+    }*/
+    enum BottomSheetEvent {}
+    
+   /* func event(_ event: BottomSheetEvent) {
+        switch bottomSheet {
+        case .none:
+            break // создание шторки ????
+        case let .some(bottomSheet):
+            let (bottomSheet, _) = navigationManager.bottomSheetReduce(bottomSheet, event)
+            bottomSheetSubject.send(bottomSheet)
+        }
+        
+        /*if let effect {
+            
+            navigationStateManager.handleEffect(effect) { [weak self] in self?.event($0) }
+        }*/
+    }*/
+    
+    func event(_ event: AlertEvent) {
+
+        let (alert, _) = navigationManager.alertReduce(alert, event)
+        alertSubject.send(alert)
+        
+        /*if let effect {
+            
+            navigationStateManager.handleEffect(effect) { [weak self] in self?.event($0) }
+        }*/
+    }
+
+}
+
+enum AlertEvent {
+    
+    case showBlockAlert
+    case showAdditionalOtherAlert
+    case closeAlert
+}
+
+
+struct ProductNavigationStateManager {
+    
+   // let bottomSheetReduce: Reduce
+    let alertReduce: Reduce
+   // let handleEffect: HandleEffect
+}
+
+extension ProductNavigationStateManager {
+    
+    typealias Reduce = (State, Event) -> (State, Effect?)
+    
+    typealias Dispatch = (Event) -> Void
+    typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
+    
+    typealias State = Alert.ViewModel?
+    typealias Effect = Never
+    typealias Event = AlertEvent
+}
+
+indirect enum ProductEvent {
+    
+    case alertButtonTapped
+    case dismiss(DismissEvent)
+    case navigate(NavigateEvent)
+}
+
+extension ProductEvent {
+    
+    enum DismissEvent {
+        
+        case alert
+        case bottomSheet
+        case informer
+    }
+    
+    enum NavigateEvent {
+        
+        case alert(Alert.ViewModel)
+        case bottomSheet(ProductProfileViewModel.BottomSheet)
+    }
+}
+
+final class AlertReducer {
+    
+    public init() {}
+}
+
+extension AlertReducer {
+    
+    func reduce(
+        _ state: State,
+        _ event: AlertEvent
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case .showBlockAlert:
+            state = .init(title: "Информация", message: "Для просмотра CVV и смены PIN карта должна быть активна.", primary: .init(type: .cancel, title: "OK", action: {}))
+        case .closeAlert:
+            state = nil
+        case .showAdditionalOtherAlert:
+            state = .init(title: "Информация", message: "CVV может увидеть только человек,\nна которого выпущена карта.\nЭто мера предосторожности во избежание мошеннических операций.", primary: .init(type: .cancel, title: "OK", action: {}))
+        }
+        
+        return (state, effect)
+    }
+}
+
+extension AlertReducer {
+    
+    typealias State = Alert.ViewModel?
+    typealias Effect = Never
 }
