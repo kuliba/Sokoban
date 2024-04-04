@@ -96,7 +96,11 @@ extension Model {
             if let operationPhone = try? parameters.value(forIdentifier: .sfpPhone),
                PhoneValidator().isValid(operationPhone) {
                 
-                let newBankParameter = bankParameter(operation, operationPhone: operationPhone)
+                let newBankParameter = bankParameter(
+                    operation,
+                    operationPhone: operationPhone,
+                    banksIds: parameter.options.map { $0.id }
+                )
                 
                 if parameter.options == newBankParameter.options {
                     
