@@ -227,7 +227,8 @@ final class RootViewModelTests: XCTestCase {
             ),
             chatViewModel: .init(),
             informerViewModel: .init(model),
-            infoDictionary: infoDictionary,
+            infoDictionary: infoDictionary, 
+            cvvAlertsFactory: .preview,
             model,
             showLoginAction: { _ in
                 

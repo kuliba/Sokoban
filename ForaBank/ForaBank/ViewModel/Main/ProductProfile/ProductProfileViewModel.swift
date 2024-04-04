@@ -56,7 +56,7 @@ class ProductProfileViewModel: ObservableObject {
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let operationDetailFactory: OperationDetailFactory
     private let cvvPINServicesClient: CVVPINServicesClient
-    private let buttonFactory: ButtonFactory
+    private let cvvAlertsFactory: CvvAlertsFactory
     private var cardAction: CardAction?
     
     private let navigationManager: ProductNavigationStateManager
@@ -86,9 +86,10 @@ class ProductProfileViewModel: ObservableObject {
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
          operationDetailFactory: OperationDetailFactory,
-         buttonFactory: ButtonFactory,
+         cvvAlertsFactory: CvvAlertsFactory,
          cvvPINServicesClient: CVVPINServicesClient,
-         rootView: String
+         rootView: String,
+         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.navigationBar = navigationBar
         self.product = product
@@ -106,19 +107,19 @@ class ProductProfileViewModel: ObservableObject {
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.operationDetailFactory = operationDetailFactory
-        self.buttonFactory = buttonFactory
+        self.cvvAlertsFactory = cvvAlertsFactory
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
-        self.navigationManager = .init(alertReduce: AlertReducer().reduce)
+        self.navigationManager = .init(alertReduce: AlertReducer(cvvAlertsViewModel: cvvAlertsFactory.makeCvvAlertsViewModel()).reduce)
         self.cardAction = createCardAction(cvvPINServicesClient, model)
-        bottomSheetSubject
+        self.bottomSheetSubject
             //.removeDuplicates(by: <#T##(BottomSheet?, BottomSheet?) -> Bool#>)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .assign(to: &$bottomSheet)
         
-        alertSubject
+        self.alertSubject
             //.removeDuplicates()
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .assign(to: &$alert)
 
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
@@ -140,9 +141,10 @@ class ProductProfileViewModel: ObservableObject {
         operationDetailFactory: OperationDetailFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
-        buttonFactory: ButtonFactory,
+        cvvAlertsFactory: CvvAlertsFactory,
         rootView: String,
-        dismissAction: @escaping () -> Void
+        dismissAction: @escaping () -> Void,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         guard let productViewModel = ProductProfileCardView.ViewModel(
             model,
@@ -171,9 +173,11 @@ class ProductProfileViewModel: ObservableObject {
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
             operationDetailFactory: operationDetailFactory,
-            buttonFactory: buttonFactory,
+            cvvAlertsFactory: cvvAlertsFactory,
             cvvPINServicesClient: cvvPINServicesClient,
-            rootView: rootView)
+            rootView: rootView,
+            scheduler: scheduler
+        )
         
         self.product = ProductProfileCardView.ViewModel(
             model,
@@ -1566,7 +1570,7 @@ private extension ProductProfileViewModel {
             operationDetailFactory: operationDetailFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             product: product, 
-            buttonFactory: buttonFactory,
+            cvvAlertsFactory: cvvAlertsFactory,
             rootView: rootView,
             dismissAction: dismissAction
         )
@@ -2470,7 +2474,13 @@ extension ProductEvent {
 
 final class AlertReducer {
     
-    public init() {}
+    let cvvAlertsViewModel: CvvAlertsViewModel
+    
+    init(
+        cvvAlertsViewModel: CvvAlertsViewModel
+    ) {
+        self.cvvAlertsViewModel = cvvAlertsViewModel
+    }
 }
 
 extension AlertReducer {
@@ -2485,11 +2495,11 @@ extension AlertReducer {
         
         switch event {
         case .showBlockAlert:
-            state = .init(title: "Информация", message: "Для просмотра CVV и смены PIN карта должна быть активна.", primary: .init(type: .cancel, title: "OK", action: {}))
+            state = .init(title: cvvAlertsViewModel.title, message: cvvAlertsViewModel.blockAlertText, primary: .init(type: .cancel, title: "OK", action: {}))
         case .closeAlert:
             state = nil
         case .showAdditionalOtherAlert:
-            state = .init(title: "Информация", message: "CVV может увидеть только человек,\nна которого выпущена карта.\nЭто мера предосторожности во избежание мошеннических операций.", primary: .init(type: .cancel, title: "OK", action: {}))
+            state = .init(title: cvvAlertsViewModel.title, message: cvvAlertsViewModel.additionalAlertText, primary: .init(type: .cancel, title: "OK", action: {}))
         }
         
         return (state, effect)

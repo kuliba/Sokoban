@@ -561,7 +561,8 @@ final class ProductProfileViewModelTests: XCTestCase {
             paymentsTransfersFactory: .preview, 
             operationDetailFactory: .preview,
             cvvPINServicesClient: cvvPINServicesClient,
-            product: product,
+            product: product, 
+            cvvAlertsFactory: .preview,
             rootView: rootView,
             dismissAction: {}
         )
@@ -599,6 +600,7 @@ final class ProductProfileViewModelTests: XCTestCase {
                 operationDetailFactory: .preview,
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: product,
+                cvvAlertsFactory: .preview,
                 rootView: "",
                 dismissAction: {}
             )

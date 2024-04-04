@@ -448,7 +448,7 @@ extension MainViewModel {
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(), 
-            buttonFactory: .init(makeTestButtonViewModel: { .init(productID: $0, title: "Hello")})
+            cvvAlertsFactory: .preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
@@ -468,7 +468,7 @@ extension MainViewModel {
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            buttonFactory: .init(makeTestButtonViewModel: { .init(productID: $0, title: "Hello")})
+            cvvAlertsFactory: .preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
@@ -488,7 +488,7 @@ extension MainViewModel {
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            buttonFactory: .init(makeTestButtonViewModel: { .init(productID: $0, title: "Hello")})
+            cvvAlertsFactory: .preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),

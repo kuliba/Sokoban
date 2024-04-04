@@ -428,7 +428,7 @@ extension ProductProfileViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         operationDetailFactory: .preview,
-        buttonFactory: .init(makeTestButtonViewModel: { .init(productID: $0, title: "Hello")}),
+        cvvAlertsFactory: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         rootView: ""
     )
@@ -446,7 +446,7 @@ extension ProductProfileViewModel {
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         operationDetailFactory: .preview,
-        buttonFactory: .init(makeTestButtonViewModel: { .init(productID: $0, title: "Hello")}),
+        cvvAlertsFactory: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
         rootView: ""
     )
