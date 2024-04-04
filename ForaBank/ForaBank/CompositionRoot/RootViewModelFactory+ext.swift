@@ -123,6 +123,9 @@ extension RootViewModelFactory {
                 )
             }
         )
+        
+        let navigationManager = makeProductNavigationStateManager(
+            alertsReduce: AlertReducer(cvvAlertsViewModel: cvvAlertsFactory.makeCvvAlertsViewModel()))
 
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
@@ -133,7 +136,8 @@ extension RootViewModelFactory {
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient, 
-            cvvAlertsFactory: cvvAlertsFactory
+            cvvAlertsFactory: cvvAlertsFactory, 
+            navigationManager: navigationManager
         )
         
         return make(
@@ -146,7 +150,8 @@ extension RootViewModelFactory {
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             onRegister: resetCVVPINActivation, 
-            cvvAlertsFactory: cvvAlertsFactory
+            cvvAlertsFactory: cvvAlertsFactory,
+            navigationManager: navigationManager
         )
     }
     
@@ -508,7 +513,8 @@ extension ProductProfileViewModel {
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
-        cvvAlertsFactory: CvvAlertsFactory
+        cvvAlertsFactory: CvvAlertsFactory,
+        navigationManager: ProductNavigationStateManager
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, dismissAction in
@@ -522,7 +528,8 @@ extension ProductProfileViewModel {
                 sberQRServices: sberQRServices,
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient, 
-                cvvAlertsFactory: cvvAlertsFactory
+                cvvAlertsFactory: cvvAlertsFactory,
+                navigationManager: navigationManager
             )
             
             let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
@@ -569,6 +576,7 @@ extension ProductProfileViewModel {
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: product, 
                 cvvAlertsFactory: cvvAlertsFactory,
+                navigationManager: navigationManager,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
@@ -634,7 +642,8 @@ private extension RootViewModelFactory {
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         onRegister: @escaping OnRegister,
-        cvvAlertsFactory: CvvAlertsFactory
+        cvvAlertsFactory: CvvAlertsFactory,
+        navigationManager: ProductNavigationStateManager
     ) -> RootViewModel {
         
         let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {

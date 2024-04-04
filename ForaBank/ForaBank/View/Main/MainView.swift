@@ -448,7 +448,8 @@ extension MainViewModel {
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(), 
-            cvvAlertsFactory: .preview
+            cvvAlertsFactory: .preview, 
+            navigationManager: .init(alertReduce: AlertReducer(cvvAlertsViewModel: CvvAlertsFactory.preview.makeCvvAlertsViewModel()).reduce)
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
@@ -468,7 +469,8 @@ extension MainViewModel {
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            cvvAlertsFactory: .preview
+            cvvAlertsFactory: .preview,
+            navigationManager: .init(alertReduce: AlertReducer(cvvAlertsViewModel: CvvAlertsFactory.preview.makeCvvAlertsViewModel()).reduce)
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
@@ -488,7 +490,8 @@ extension MainViewModel {
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            cvvAlertsFactory: .preview
+            cvvAlertsFactory: .preview,
+            navigationManager: .init(alertReduce: AlertReducer(cvvAlertsViewModel: CvvAlertsFactory.preview.makeCvvAlertsViewModel()).reduce)
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),

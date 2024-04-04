@@ -87,6 +87,7 @@ class ProductProfileViewModel: ObservableObject {
          paymentsTransfersFactory: PaymentsTransfersFactory,
          operationDetailFactory: OperationDetailFactory,
          cvvAlertsFactory: CvvAlertsFactory,
+         navigationManager: ProductNavigationStateManager,
          cvvPINServicesClient: CVVPINServicesClient,
          rootView: String,
          scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -110,7 +111,7 @@ class ProductProfileViewModel: ObservableObject {
         self.cvvAlertsFactory = cvvAlertsFactory
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
-        self.navigationManager = .init(alertReduce: AlertReducer(cvvAlertsViewModel: cvvAlertsFactory.makeCvvAlertsViewModel()).reduce)
+        self.navigationManager = navigationManager
         self.cardAction = createCardAction(cvvPINServicesClient, model)
         self.bottomSheetSubject
             //.removeDuplicates(by: <#T##(BottomSheet?, BottomSheet?) -> Bool#>)
@@ -142,6 +143,7 @@ class ProductProfileViewModel: ObservableObject {
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
         cvvAlertsFactory: CvvAlertsFactory,
+        navigationManager: ProductNavigationStateManager,
         rootView: String,
         dismissAction: @escaping () -> Void,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -174,6 +176,7 @@ class ProductProfileViewModel: ObservableObject {
             paymentsTransfersFactory: paymentsTransfersFactory,
             operationDetailFactory: operationDetailFactory,
             cvvAlertsFactory: cvvAlertsFactory,
+            navigationManager: navigationManager,
             cvvPINServicesClient: cvvPINServicesClient,
             rootView: rootView,
             scheduler: scheduler
@@ -1571,6 +1574,7 @@ private extension ProductProfileViewModel {
             cvvPINServicesClient: cvvPINServicesClient,
             product: product, 
             cvvAlertsFactory: cvvAlertsFactory,
+            navigationManager: navigationManager,
             rootView: rootView,
             dismissAction: dismissAction
         )
@@ -2435,6 +2439,11 @@ struct ProductNavigationStateManager {
    // let bottomSheetReduce: Reduce
     let alertReduce: Reduce
    // let handleEffect: HandleEffect
+}
+
+extension ProductNavigationStateManager {
+    
+    static let preview: Self = .init(alertReduce: AlertReducer(cvvAlertsViewModel: CvvAlertsFactory.preview.makeCvvAlertsViewModel()).reduce)
 }
 
 extension ProductNavigationStateManager {

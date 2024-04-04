@@ -429,6 +429,7 @@ extension ProductProfileViewModel {
         paymentsTransfersFactory: .preview,
         operationDetailFactory: .preview,
         cvvAlertsFactory: .preview,
+        navigationManager: .init(alertReduce: AlertReducer(cvvAlertsViewModel: CvvAlertsFactory.preview.makeCvvAlertsViewModel()).reduce),
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         rootView: ""
     )
@@ -447,6 +448,7 @@ extension ProductProfileViewModel {
         paymentsTransfersFactory: .preview,
         operationDetailFactory: .preview,
         cvvAlertsFactory: .preview,
+        navigationManager: .init(alertReduce: AlertReducer(cvvAlertsViewModel: CvvAlertsFactory.preview.makeCvvAlertsViewModel()).reduce),
         cvvPINServicesClient: SadCVVPINServicesClient(),
         rootView: ""
     )
