@@ -192,6 +192,16 @@ extension ProductProfileCardView {
                                 
                             } else {
                                 
+                                let cardType: ProductCardData.CardType?
+                                let cardStatus: ProductCardData.StatusCard?
+                                
+                                if let card = product as? ProductCardData {
+                                    cardType = card.cardType
+                                    cardStatus = card.statusCard
+                                } else {
+                                    cardType = nil
+                                    cardStatus = nil
+                                }
                                 let productViewModel = ProductView.ViewModel(
                                     with: product,
                                     size: .large,
@@ -200,14 +210,8 @@ extension ProductProfileCardView {
                                     cardAction: cardAction,
                                     showCvv: showCvv,
                                     event: event,
-                                    cardType: {
-                                        if let card = product as? ProductCardData { return card.cardType }
-                                        return .none
-                                    }(),
-                                    cardStatus: {
-                                        if let card = product as? ProductCardData { return card.statusCard }
-                                        return .none
-                                    }()
+                                    cardType: cardType,
+                                    cardStatus: cardStatus
                                 )
                                 bind(productViewModel)
                                 updatedProducts.append(productViewModel)
