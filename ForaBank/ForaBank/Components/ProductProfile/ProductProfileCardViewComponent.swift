@@ -30,7 +30,7 @@ extension ProductProfileCardView {
         private let model: Model
         private let cardAction: CardAction?
         private let showCvv: ShowCVV?
-        private let event: (AlertEvent) -> Void
+        private let event: (Event) -> Void
 
         private var bindings = Set<AnyCancellable>()
         
