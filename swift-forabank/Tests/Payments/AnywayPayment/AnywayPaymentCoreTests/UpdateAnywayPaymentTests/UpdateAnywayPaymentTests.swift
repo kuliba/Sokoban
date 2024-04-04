@@ -10,7 +10,7 @@ import XCTest
 
 struct AnywayPayment: Equatable {
     
-    let fields: [Field]
+    var fields: [Field]
     let hasAmount: Bool
     let isFinalStep: Bool
     let isFraudSuspected: Bool
@@ -22,6 +22,8 @@ extension AnywayPayment {
     struct Field: Identifiable, Equatable {
         
         let id: ID
+        let value: String
+        let title: String
     }
     
     enum Status: Equatable {
@@ -48,16 +50,31 @@ extension AnywayPayment {
             AnywayPayment.Status.infoMessage($0)
         }
         
-        let fields: [Field?] = [
-            update.details.control.needOTP ? .init(id: .otp) : nil
-        ]
+        var fields: [Field] = update.fields.map { .init($0) }
+        
+        if update.details.control.needOTP {
+            
+            fields.append(.init(id: .otp, value: "", title: ""))
+        }
         
         return .init(
-            fields: fields.compactMap { $0 },
+            fields: fields,
             hasAmount: update.details.control.needSum,
             isFinalStep: update.details.control.isFinalStep,
             isFraudSuspected: update.details.control.isFraudSuspected,
             status: status
+        )
+    }
+}
+
+private extension AnywayPayment.Field {
+    
+    init(_ field: AnywayPaymentUpdate.Field) {
+        
+        self.init(
+            id: .string(field.fieldName),
+            value: field.fieldValue,
+            title: field.fieldTitle
         )
     }
 }
@@ -218,6 +235,29 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         assertOTP(in: updated, precedes: complementaryFields)
     }
     
+    // MARK: - complimentary fields
+    
+    func test_update_shouldAppendComplementaryFieldsAsInfo() {
+        
+        let complementaryFields = [
+            makeComplementaryField("a", value: "aa", title: "aaa"),
+            makeComplementaryField("b", value: "bb", title: "bbb"),
+            makeComplementaryField("c", value: "cc", title: "ccc")
+        ]
+        let update = makeAnywayPaymentUpdate(
+            complementaryFields: complementaryFields
+        )
+        
+        assert(makeAnywayPayment(), on: update) {
+            
+            $0.fields = [
+                .init(id: .string("a"), value: "aa", title: "aaa"),
+                .init(id: .string("b"), value: "bb", title: "bbb"),
+                .init(id: .string("c"), value: "cc", title: "ccc"),
+            ]
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias UpdateToExpected<T> = (_ value: inout T) -> Void
@@ -244,9 +284,19 @@ final class UpdateAnywayPaymentTests: XCTestCase {
 
 private struct ComplementaryField: Identifiable {
     
-    let id: AnywayPayment.Field.ID
+    let id: String
+    let value: String
+    let title: String
     
-    var field: AnywayPayment.Field { .init(id: id) }
+    var field: AnywayPayment.Field {
+        
+        .init(id: .string(id), value: value, title: title)
+    }
+    
+    var updateField: AnywayPaymentUpdate.Field {
+        
+        makeAnywayPaymentUpdateField(self)
+    }
 }
 
 private func assertOTP(
@@ -358,9 +408,17 @@ private func makeAnywayPaymentWithOTP(
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(fields: [.init(id: .otp)])
+    let payment = makeAnywayPayment(fields: [makeOTPField()])
     XCTAssert(hasOTPField(payment), "Expected to have OTP field.", file: file, line: line)
     return payment
+}
+
+private func makeOTPField(
+    value: String = UUID().uuidString,
+    title: String = UUID().uuidString
+) -> AnywayPayment.Field {
+    
+    .init(id: .otp, value: value, title: title)
 }
 
 private func makeAnywayPaymentWithoutOTP(
@@ -374,19 +432,21 @@ private func makeAnywayPaymentWithoutOTP(
 }
 
 private func makeComplementaryField(
-    _ idString: String = UUID().uuidString
+    _ idString: String = UUID().uuidString,
+    value: String = UUID().uuidString,
+    title: String = UUID().uuidString
 ) -> ComplementaryField {
     
-    .init(id: .string(idString))
+    .init(id: idString, value: value, title: title)
 }
 
 private func makeComplementaryFields(
-    count: Int = 1,
+    _ ids: [String] = [UUID().uuidString],
     file: StaticString = #file,
     line: UInt = #line
 ) -> [ComplementaryField] {
     
-    let fields = (0..<count).map { _ in makeComplementaryField() }
+    let fields = ids.map { _ in makeComplementaryField() }
     
     XCTAssertFalse(fields.isEmpty, "Expected non-empty array of ComplementaryFields", file: file, line: line)
     return fields
@@ -432,7 +492,22 @@ private func makeAnywayPaymentUpdate(
             info: makeAnywayPaymentUpdateDetailsInfo(
                 infoMessage: infoMessage
             )
-        )
+        ),
+        fields: complementaryFields.map(\.updateField)
+    )
+}
+
+private func makeAnywayPaymentUpdateField(
+    _ field: ComplementaryField
+) -> AnywayPaymentUpdate.Field {
+    
+    .init(
+        fieldName: field.id,
+        fieldValue: field.value,
+        fieldTitle: field.title,
+        recycle: false,
+        svgImage: nil,
+        typeIdParameterList: nil
     )
 }
 
