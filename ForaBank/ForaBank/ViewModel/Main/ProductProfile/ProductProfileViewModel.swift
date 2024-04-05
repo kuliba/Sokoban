@@ -110,8 +110,9 @@ class ProductProfileViewModel: ObservableObject {
         self.rootView = rootView
         self.productNavigationStateManager = productNavigationStateManager
         self.cardAction = createCardAction(cvvPINServicesClient, model)
+        // TODO: add removeDuplicates
         self.bottomSheetSubject
-            //.removeDuplicates(by: <#T##(BottomSheet?, BottomSheet?) -> Bool#>)
+            //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$bottomSheet)
         
@@ -2377,47 +2378,10 @@ extension ProductProfileViewModel {
 }
 
 extension ProductProfileViewModel {
-    // navigationStateManager - ProductProfileNavigationStateManager
-    //     private let routeSubject = PassthroughSubject<ProductProfileRoute, Never>()
-/// ProductProfileRoute ???
-   /* func event(_ event: ProductProfileEvent) {
-
-        let (route, effect) = bottomSheet.reduce(route, event)
-        routeSubject.send(route)
-        
-        if let effect {
-            
-            navigationStateManager.handleEffect(effect) { [weak self] in self?.event($0) }
-        }
- 
- 
-    }*/
-    enum BottomSheetEvent {}
-    
-   /* func event(_ event: BottomSheetEvent) {
-        switch bottomSheet {
-        case .none:
-            break // создание шторки ????
-        case let .some(bottomSheet):
-            let (bottomSheet, _) = navigationManager.bottomSheetReduce(bottomSheet, event)
-            bottomSheetSubject.send(bottomSheet)
-        }
-        
-        /*if let effect {
-            
-            navigationStateManager.handleEffect(effect) { [weak self] in self?.event($0) }
-        }*/
-    }*/
     
     func event(_ event: AlertEvent) {
 
         let (alert, _) = productNavigationStateManager.alertReduce(alert, event)
         alertSubject.send(alert)
-        
-        /*if let effect {
-            
-            navigationStateManager.handleEffect(effect) { [weak self] in self?.event($0) }
-        }*/
     }
-
 }
