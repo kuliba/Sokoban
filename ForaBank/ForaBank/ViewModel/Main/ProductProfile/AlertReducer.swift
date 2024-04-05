@@ -9,12 +9,12 @@ import SwiftUI
 
 final class AlertReducer {
     
-    let cvvAlertsViewModel: CvvAlertsViewModel
+    let productAlertsViewModel: ProductAlertsViewModel
     
     init(
-        cvvAlertsViewModel: CvvAlertsViewModel
+        productAlertsViewModel: ProductAlertsViewModel
     ) {
-        self.cvvAlertsViewModel = cvvAlertsViewModel
+        self.productAlertsViewModel = productAlertsViewModel
     }
 }
 
@@ -30,11 +30,11 @@ extension AlertReducer {
         
         switch event {
         case .showBlockAlert:
-            state = .init(title: cvvAlertsViewModel.title, message: cvvAlertsViewModel.blockAlertText, primary: .init(type: .cancel, title: "OK", action: {}))
+            state = .init(title: productAlertsViewModel.title, message: productAlertsViewModel.blockAlertText, primary: .init(type: .cancel, title: "OK", action: {}))
         case .closeAlert:
             state = nil
         case .showAdditionalOtherAlert:
-            state = .init(title: cvvAlertsViewModel.title, message: cvvAlertsViewModel.additionalAlertText, primary: .init(type: .cancel, title: "OK", action: {}))
+            state = .init(title: productAlertsViewModel.title, message: productAlertsViewModel.additionalAlertText, primary: .init(type: .cancel, title: "OK", action: {}))
         }
         
         return (state, effect)

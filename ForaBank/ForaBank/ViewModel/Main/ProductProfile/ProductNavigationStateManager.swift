@@ -36,5 +36,5 @@ enum AlertEvent {
 
 extension ProductNavigationStateManager {
     
-    static let preview: Self = .init(alertReduce: AlertReducer(cvvAlertsViewModel: .default).reduce)
+    static let preview: Self = .init(alertReduce: AlertReducer(productAlertsViewModel: .default).reduce)
 }

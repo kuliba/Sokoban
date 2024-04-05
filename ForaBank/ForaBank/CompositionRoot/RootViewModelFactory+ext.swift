@@ -115,7 +115,7 @@ extension RootViewModelFactory {
         )
 
         let productNavigationStateManager = makeProductNavigationStateManager(
-            alertsReduce: AlertReducer(cvvAlertsViewModel: .default))
+            alertsReduce: AlertReducer(productAlertsViewModel: .default))
 
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,

@@ -7,14 +7,14 @@
 
 import Foundation
 
-struct CvvAlertsViewModel {
+struct ProductAlertsViewModel {
     
     let title: String
     let blockAlertText: String
     let additionalAlertText: String
 }
 
-extension CvvAlertsViewModel {
+extension ProductAlertsViewModel {
     
     static let `default`: Self = .init(
         title: "Информация",
