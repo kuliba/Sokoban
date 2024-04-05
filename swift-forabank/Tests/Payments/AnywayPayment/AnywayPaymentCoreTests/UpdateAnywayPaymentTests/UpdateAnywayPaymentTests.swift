@@ -48,13 +48,14 @@ extension AnywayPayment {
         let infoMessage = update.details.info.infoMessage
         let status = infoMessage.map(AnywayPayment.Status.infoMessage)
         
-        var newFields = fields.update(with: update.fields)
+        var fields = fields
+        fields.update(with: update.fields)
         
         let otp = Field(id: .otp, value: "", title: "")
-        newFields[id: .otp] = update.details.control.needOTP ? otp : nil
+        fields[id: .otp] = update.details.control.needOTP ? otp : nil
         
         return .init(
-            fields: newFields,
+            fields: fields,
             hasAmount: update.details.control.needSum,
             isFinalStep: update.details.control.isFinalStep,
             isFraudSuspected: update.details.control.isFraudSuspected,
@@ -65,29 +66,53 @@ extension AnywayPayment {
 
 private extension Array where Element == AnywayPayment.Field {
     
-    func update(
+    mutating func update(
         with updateFields: [AnywayPaymentUpdate.Field]
-    ) -> Self {
+    ) {
+        updatePrimaryStringIDFields(from: updateFields)
+        appendComplementaryFields(from: updateFields)
+    }
+    
+    mutating func updatePrimaryStringIDFields(
+        from updateFields: [AnywayPaymentUpdate.Field]
+    ) {
+        let updateFields = Dictionary(
+            uniqueKeysWithValues: updateFields.map { ($0.name, $0) }
+        )
         
-        let fields = map {
+        self = map {
             
             guard case let .string(id) = $0.id,
-                  let matching = updateFields.first(where: { $0.name == id })
+                  let matching = updateFields[id]
             else { return $0 }
             
-            return AnywayPayment.Field(
+            return .init(
                 id: $0.id,
                 value: matching.value,
                 title: matching.title
             )
         }
-        
-        let existingIDs = fields.map(\.id)
+    }
+    
+    mutating func appendComplementaryFields(
+        from updateFields: [AnywayPaymentUpdate.Field]
+    ) {
+        let existingIDs = stringFieldIDs
         let complimentary: [AnywayPayment.Field] = updateFields
+            .filter { !existingIDs.contains($0.name) }
             .map(AnywayPayment.Field.init)
-            .filter { !existingIDs.contains($0.id) }
         
-        return fields + complimentary
+        self.append(contentsOf: complimentary)
+    }
+    
+    private var stringFieldIDs: [String] {
+        
+        compactMap {
+            guard case let .string(string) = $0.id
+            else { return nil }
+            
+            return string
+        }
     }
 }
 
