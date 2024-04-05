@@ -50,11 +50,8 @@ extension AnywayPayment {
         
         var newFields = fields.update(with: update.fields)
         
-        if update.details.control.needOTP {
-            newFields.append(.init(id: .otp, value: "", title: ""))
-        } else {
-            newFields[id: .otp] = nil
-        }
+        let otp = Field(id: .otp, value: "", title: "")
+        newFields[id: .otp] = update.details.control.needOTP ? otp : nil
         
         return .init(
             fields: newFields,
