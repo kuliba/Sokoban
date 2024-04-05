@@ -9,12 +9,20 @@ extension Array where Element: Identifiable {
     
     func isElementAfterAll(
         _ element: Element,
-        inGroup set: [Element]
+        inGroup group: [Element]
     ) -> Bool {
         
-        let indices = set.compactMap { item in firstIndex(where: { $0.id == item.id }) }
+        isElementAfterAll(element.id, inGroup: group)
+    }
+    
+    func isElementAfterAll(
+        _ id: Element.ID,
+        inGroup group: [Element]
+    ) -> Bool {
         
-        guard let elementIndex = self.firstIndex(where: { $0.id == element.id })
+        let indices = group.compactMap { item in firstIndex(where: { $0.id == item.id }) }
+        
+        guard let elementIndex = self.firstIndex(where: { $0.id == id })
         else { return false }
         
         return indices.allSatisfy { elementIndex > $0 }
