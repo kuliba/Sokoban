@@ -50,15 +50,35 @@ extension AnywayPayment {
             AnywayPayment.Status.infoMessage($0)
         }
         
-        var fields: [Field] = update.fields.map { .init($0) }
+        let existingIDs = fields.map(\.id)
+        let fields = fields.map {
+          
+#warning("could here be a different ID case?")
+            guard case let .string(id) = $0.id,
+                    let matchingUpdate = update.fields.first(where: { $0.fieldName == id })
+            else { return $0 }
+            
+            return AnywayPayment.Field(
+                id: $0.id,
+                value: matchingUpdate.fieldValue,
+                title: matchingUpdate.fieldTitle
+            )
+        }
+        
+        let complimentaryFields = update.fields
+            .map { AnywayPayment.Field($0) }
+            .filter { !existingIDs.contains($0.id) }
+        
+        var newFields: [Field] = fields + complimentaryFields
         
         if update.details.control.needOTP {
-            
-            fields.append(.init(id: .otp, value: "", title: ""))
+            newFields.append(.init(id: .otp, value: "", title: ""))
+        } else {
+            newFields[id: .otp] = nil
         }
         
         return .init(
-            fields: fields,
+            fields: newFields,
             hasAmount: update.details.control.needSum,
             isFinalStep: update.details.control.isFinalStep,
             isFraudSuspected: update.details.control.isFraudSuspected,
@@ -276,6 +296,68 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         assertOTP(in: updated, precedes: updateFields)
     }
     
+    // MARK: - non-complimentary fields
+    
+    func test_update_shouldAppendComplimentaryStringIDField() {
+        
+        let field = makeAnywayPaymentFieldWithStringID()
+        let payment = makeAnywayPayment(fields: [field])
+        let updateField = makeAnywayPaymentUpdateField()
+        let update = makeAnywayPaymentUpdate(fields: [updateField])
+        
+        assert(payment, on: update) {
+            
+            $0.fields = [field].appending(updateField.field)
+        }
+    }
+    
+    func test_update_shouldAppendComplimentaryStringIDFields() {
+        
+        let field = makeAnywayPaymentFieldWithStringID()
+        let payment = makeAnywayPayment(fields: [field])
+        let (updateField1, updateField2) = (makeAnywayPaymentUpdateField(), makeAnywayPaymentUpdateField())
+        let update = makeAnywayPaymentUpdate(fields: [
+            updateField1, updateField2
+        ])
+        
+        assert(payment, on: update) {
+            
+            $0.fields = [field].appending(contentsOf: [updateField1.field, updateField2.field])
+        }
+    }
+    
+    func test_update_shouldNotChangeStringIDFieldWithSameValueInNonComplementaryFields() {
+        
+        let (id, value, title) = ("abc123", "aaa", "bb")
+        let field = makeAnywayPaymentFieldWithStringID(id, value: value, title: title)
+        let payment = makeAnywayPayment(fields: [field])
+        let update = makeAnywayPaymentUpdate(
+            fields: [
+                makeAnywayPaymentUpdateField(id, value: value, title: title)
+            ]
+        )
+        
+        assert(payment, on: update)
+    }
+    
+    func test_update_shouldChangeStringIDFieldWithDifferentValueInNonComplementaryFields() {
+        
+        let field = makeAnywayPaymentFieldWithStringID("abc123")
+        let payment = makeAnywayPayment(fields: [field])
+        let update = makeAnywayPaymentUpdate(
+            fields: [
+                makeAnywayPaymentUpdateField("abc123", value: "aa", title: "bbb")
+            ]
+        )
+        
+        assert(payment, on: update) {
+            
+            $0.fields = [
+                makeAnywayPaymentField(.string("abc123"), value: "aa", title: "bbb")
+            ]
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias UpdateToExpected<T> = (_ value: inout T) -> Void
@@ -424,6 +506,24 @@ private func makeAnywayPaymentWithOTP(
     let payment = makeAnywayPayment(fields: [makeOTPField()])
     XCTAssert(hasOTPField(payment), "Expected to have OTP field.", file: file, line: line)
     return payment
+}
+
+private func makeAnywayPaymentField(
+    _ id: AnywayPayment.Field.ID = .string(UUID().uuidString),
+    value: String = UUID().uuidString,
+    title: String = UUID().uuidString
+) -> AnywayPayment.Field {
+    
+    .init(id: id, value: value, title: title)
+}
+
+private func makeAnywayPaymentFieldWithStringID(
+    _ id: String = UUID().uuidString,
+    value: String = UUID().uuidString,
+    title: String = UUID().uuidString
+) -> AnywayPayment.Field {
+    
+    makeAnywayPaymentField(.string(id), value: value, title: title)
 }
 
 private func makeOTPField(
