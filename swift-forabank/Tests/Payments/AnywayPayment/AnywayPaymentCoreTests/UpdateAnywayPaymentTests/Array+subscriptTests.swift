@@ -31,31 +31,45 @@ final class Array_subscriptTests: XCTestCase {
         XCTAssertNoDiff(array[id: 2], item)
     }
     
-    func test_subscript_shouldNotChangeOnEmpty() {
+    func test_subscript_shouldAppendToEmpty() {
         
+        let item = makeItem()
         var array = [Item]()
-        array[id: 2] = makeItem()
+        array[id: 2] = item
         
-        XCTAssertNoDiff(array, [])
+        XCTAssertNoDiff(array, [item])
     }
     
-    func test_subscript_shouldNotChangeOnMissing() {
+    func test_subscript_shouldAppendOnMissing() {
         
         let missing = makeItem(id: 2)
+        let new = makeItem()
         let initial = [makeItem()]
         var array = initial
-        array[id: missing.id] = makeItem()
+        array[id: missing.id] = new
 
-        XCTAssertNoDiff(array, initial)
+        XCTAssertNoDiff(array, initial + [new])
     }
     
-    func test_subscript_shouldNotChangeOnDifferentIDInNewValue() {
+    func test_subscript_shouldAppendToOneOnDifferentIDInNewValue() {
         
-        let item = makeItem(id: 1)
+        let item = makeItem(id: 2)
+        let different = makeItem(id: 1)
         var array = [item]
-        array[id: item.id] = makeItem(id: 2)
+        array[id: item.id] = different
 
-        XCTAssertNoDiff(array, [item])
+        XCTAssertNoDiff(array, [item, different])
+    }
+    
+    func test_subscript_shouldAppendToTwoOnDifferentIDInNewValue() {
+        
+        let item = makeItem(id: 2)
+        let other = makeItem(id: 4)
+        let different = makeItem(id: 1)
+        var array = [item, other]
+        array[id: item.id] = different
+
+        XCTAssertNoDiff(array, [item, other, different])
     }
     
     func test_subscript_shouldChangeOnPresentOnNewValueWithSameID() {
