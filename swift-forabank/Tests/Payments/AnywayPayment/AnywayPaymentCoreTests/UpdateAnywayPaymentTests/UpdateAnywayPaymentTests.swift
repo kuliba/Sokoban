@@ -160,13 +160,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     func test_update_shouldAppendComplementaryField() {
         
+        let payment = makeAnywayPayment()
         let update = makeAnywayPaymentUpdate(
             fields: [
                 makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa"),
             ]
         )
         
-        assert(makeAnywayPayment(), on: update) {
+        XCTAssertNoDiff(payment.fields, [])
+        assert(payment, on: update) {
             
             $0.fields = [
                 .init(id: .string("a"), value: "aa", title: "aaa"),
@@ -176,6 +178,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     func test_update_shouldAppendComplementaryFields() {
         
+        let payment = makeAnywayPayment()
         let update = makeAnywayPaymentUpdate(
             fields: [
                 makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa"),
@@ -184,7 +187,8 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             ]
         )
         
-        assert(makeAnywayPayment(), on: update) {
+        XCTAssertNoDiff(payment.fields, [])
+        assert(payment, on: update) {
             
             $0.fields = [
                 .init(id: .string("a"), value: "aa", title: "aaa"),
