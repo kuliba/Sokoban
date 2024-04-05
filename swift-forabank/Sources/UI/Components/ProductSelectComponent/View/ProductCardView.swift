@@ -93,12 +93,17 @@ public struct ProductCardView: View {
     private func selectedCardMarkView() -> some View {
         
         if isSelected {
-            config.selectedImage
-                .renderingMode(.original)
-                .frame(.size18)
-                .opacity(0.9)
-                .padding(.top, 8)
-                .padding(.leading, 8)
+            
+            ZStack {
+                Rectangle()
+                    .fill(productCard.look.backgroundColor)
+                config.selectedImage
+                    .renderingMode(.original)
+                    .opacity(0.9)
+            }
+            .frame(.size18)
+            .padding(.top, 8)
+            .padding(.leading, 8)
         }
     }
     

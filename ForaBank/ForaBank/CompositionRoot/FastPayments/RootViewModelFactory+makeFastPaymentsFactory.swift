@@ -115,7 +115,7 @@ private extension Model {
        
         .init(
             background: .image(self.images.value[productData.largeDesignMd5Hash]?.image ?? .cardPlaceholder),
-            color: productData.backgroundColor.description,
+            color: productData.background.first?.description ?? "3D3D45", 
             icon: {
                 if let image = productData.clover.image {
                     return .image(image)

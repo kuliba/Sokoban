@@ -62,7 +62,7 @@ extension ProductData {
                 balance: .init(card.balanceValue),
                 look: .init(
                     background: .image(getImage(card.largeDesignMd5Hash) ?? .cardPlaceholder),
-                    color: card.backgroundColor.description,
+                    color: card.background.first?.description ?? "3D3D45",
                     icon: clover
                 )
             )

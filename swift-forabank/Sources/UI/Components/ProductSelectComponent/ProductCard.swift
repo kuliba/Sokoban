@@ -34,7 +34,7 @@ public extension ProductCard {
             ),
             look: .init(
                 background: product.look.background,
-                backgroundColor: Color(product.look.color),
+                backgroundColor: Color(hex: product.look.color),
                 mainCardMark: product.look.icon
             )
         )
