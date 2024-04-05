@@ -63,6 +63,7 @@ public extension Config {
         public let cardPadding: CGFloat
         public let cornerRadius: CGFloat
         public let checkPadding: CGFloat
+        public let cloverTrailing: CGFloat
         
         public init(
             headerLeadingPadding: CGFloat,
@@ -70,7 +71,8 @@ public extension Config {
             nameSpacing: CGFloat,
             cardPadding: CGFloat,
             cornerRadius: CGFloat,
-            checkPadding: CGFloat
+            checkPadding: CGFloat,
+            cloverTrailing: CGFloat
         ) {
             self.headerLeadingPadding = headerLeadingPadding
             self.headerTopPadding = headerTopPadding
@@ -78,6 +80,7 @@ public extension Config {
             self.cardPadding = cardPadding
             self.cornerRadius = cornerRadius
             self.checkPadding = checkPadding
+            self.cloverTrailing = cloverTrailing
         }
     }
     
