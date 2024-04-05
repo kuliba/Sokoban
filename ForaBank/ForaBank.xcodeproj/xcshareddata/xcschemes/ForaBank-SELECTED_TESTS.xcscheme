@@ -29,12 +29,10 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            default = "YES"
-            reference = "container:ForaBank-SELECTED_TESTS.xctestplan">
+            reference = "container:ForaBank-SELECTED_TESTS.xctestplan"
+            default = "YES">
          </TestPlanReference>
       </TestPlans>
-      <Testables>
-      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"

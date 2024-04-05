@@ -57,12 +57,10 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            default = "YES"
-            reference = "container:TestPlans/UtilityPaymentPreview.xctestplan">
+            reference = "container:TestPlans/UtilityPaymentPreview.xctestplan"
+            default = "YES">
          </TestPlanReference>
       </TestPlans>
-      <Testables>
-      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
