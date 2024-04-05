@@ -45,25 +45,25 @@ extension AnywayPaymentUpdate {
     
     public struct Field: Equatable {
         
-        public let fieldName: String
-        public let fieldValue: String
-        public let fieldTitle: String
+        public let name: String
+        public let value: String
+        public let title: String
         @available(*, deprecated, message: "not used according to analytics")
         public let recycle: Bool
         public let svgImage: String?
         public let typeIdParameterList: String?
         
         public init(
-            fieldName: String,
-            fieldValue: String,
-            fieldTitle: String,
+            name: String,
+            value: String,
+            title: String,
             recycle: Bool,
             svgImage: String?,
             typeIdParameterList: String?
         ) {
-            self.fieldName = fieldName
-            self.fieldValue = fieldValue
-            self.fieldTitle = fieldTitle
+            self.name = name
+            self.value = value
+            self.title = title
             self.recycle = recycle
             self.svgImage = svgImage
             self.typeIdParameterList = typeIdParameterList

@@ -55,13 +55,13 @@ extension AnywayPayment {
           
 #warning("could here be a different ID case?")
             guard case let .string(id) = $0.id,
-                    let matchingUpdate = update.fields.first(where: { $0.fieldName == id })
+                    let matchingUpdate = update.fields.first(where: { $0.name == id })
             else { return $0 }
             
             return AnywayPayment.Field(
                 id: $0.id,
-                value: matchingUpdate.fieldValue,
-                title: matchingUpdate.fieldTitle
+                value: matchingUpdate.value,
+                title: matchingUpdate.title
             )
         }
         
@@ -92,9 +92,9 @@ private extension AnywayPayment.Field {
     init(_ field: AnywayPaymentUpdate.Field) {
         
         self.init(
-            id: .string(field.fieldName),
-            value: field.fieldValue,
-            title: field.fieldTitle
+            id: .string(field.name),
+            value: field.value,
+            title: field.title
         )
     }
 }
@@ -408,9 +408,9 @@ private extension AnywayPaymentUpdate.Field {
     var field: AnywayPayment.Field {
         
         .init(
-            id: .string(fieldName),
-            value: fieldValue,
-            title: fieldTitle
+            id: .string(name),
+            value: value,
+            title: title
         )
     }
 }
@@ -679,9 +679,9 @@ private func makeAnywayPaymentUpdateField(
 ) -> AnywayPaymentUpdate.Field {
     
     .init(
-        fieldName: name,
-        fieldValue: value,
-        fieldTitle: title,
+        name: name,
+        value: value,
+        title: title,
         recycle: false,
         svgImage: nil,
         typeIdParameterList: nil
