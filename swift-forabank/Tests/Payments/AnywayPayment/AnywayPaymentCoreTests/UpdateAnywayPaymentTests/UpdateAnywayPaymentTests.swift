@@ -45,31 +45,10 @@ extension AnywayPayment {
     
     func update(with update: AnywayPaymentUpdate) -> Self {
         
-        let status = update.details.info.infoMessage.map {
-            
-            AnywayPayment.Status.infoMessage($0)
-        }
+        let infoMessage = update.details.info.infoMessage
+        let status = infoMessage.map(AnywayPayment.Status.infoMessage)
         
-        let existingIDs = fields.map(\.id)
-        let fields = fields.map {
-          
-#warning("could here be a different ID case?")
-            guard case let .string(id) = $0.id,
-                    let matchingUpdate = update.fields.first(where: { $0.name == id })
-            else { return $0 }
-            
-            return AnywayPayment.Field(
-                id: $0.id,
-                value: matchingUpdate.value,
-                title: matchingUpdate.title
-            )
-        }
-        
-        let complimentaryFields = update.fields
-            .map { AnywayPayment.Field($0) }
-            .filter { !existingIDs.contains($0.id) }
-        
-        var newFields: [Field] = fields + complimentaryFields
+        var newFields = fields.update(with: update.fields)
         
         if update.details.control.needOTP {
             newFields.append(.init(id: .otp, value: "", title: ""))
@@ -84,6 +63,34 @@ extension AnywayPayment {
             isFraudSuspected: update.details.control.isFraudSuspected,
             status: status
         )
+    }
+}
+
+private extension Array where Element == AnywayPayment.Field {
+    
+    func update(
+        with updateFields: [AnywayPaymentUpdate.Field]
+    ) -> Self {
+        
+        let fields = map {
+            
+            guard case let .string(id) = $0.id,
+                  let matching = updateFields.first(where: { $0.name == id })
+            else { return $0 }
+            
+            return AnywayPayment.Field(
+                id: $0.id,
+                value: matching.value,
+                title: matching.title
+            )
+        }
+        
+        let existingIDs = fields.map(\.id)
+        let complimentary: [AnywayPayment.Field] = updateFields
+            .map(AnywayPayment.Field.init)
+            .filter { !existingIDs.contains($0.id) }
+        
+        return fields + complimentary
     }
 }
 
