@@ -1893,7 +1893,7 @@
 		833AF9662A93922A00C3DF54 /* ProductSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */; };
 		833E87232B920027009A01AB /* TopUpCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833E87222B920027009A01AB /* TopUpCardView.swift */; };
 		833E87292B94C60A009A01AB /* ProductProfileComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 833E87282B94C60A009A01AB /* ProductProfileComponents */; };
-		833EC1122BBEA56F0050ABE9 /* CvvAlertsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833EC1112BBEA56F0050ABE9 /* CvvAlertsFactory.swift */; };
+		833EC1122BBEA56F0050ABE9 /* CvvAlertsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833EC1112BBEA56F0050ABE9 /* CvvAlertsViewModel.swift */; };
 		8343FE2A2BB29C9200D0C128 /* RequestFactory+createGetProductListByTypeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8343FE292BB29C9200D0C128 /* RequestFactory+createGetProductListByTypeRequest.swift */; };
 		8343FE2D2BB2A08500D0C128 /* Services+getProductListByType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8343FE2C2BB2A08500D0C128 /* Services+getProductListByType.swift */; };
 		8343FE2F2BB3EAC700D0C128 /* RequestFactory+createGetProductListByTypeRequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8343FE2E2BB3EAC700D0C128 /* RequestFactory+createGetProductListByTypeRequestTest.swift */; };
@@ -4426,7 +4426,7 @@
 		833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectorViewTests.swift; sourceTree = "<group>"; };
 		833E87222B920027009A01AB /* TopUpCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopUpCardView.swift; sourceTree = "<group>"; };
 		833E872A2B94CA07009A01AB /* ProductProfileComponents.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ProductProfileComponents.xctestplan; sourceTree = "<group>"; };
-		833EC1112BBEA56F0050ABE9 /* CvvAlertsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvAlertsFactory.swift; sourceTree = "<group>"; };
+		833EC1112BBEA56F0050ABE9 /* CvvAlertsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvAlertsViewModel.swift; sourceTree = "<group>"; };
 		8343FE292BB29C9200D0C128 /* RequestFactory+createGetProductListByTypeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetProductListByTypeRequest.swift"; sourceTree = "<group>"; };
 		8343FE2C2BB2A08500D0C128 /* Services+getProductListByType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getProductListByType.swift"; sourceTree = "<group>"; };
 		8343FE2E2BB3EAC700D0C128 /* RequestFactory+createGetProductListByTypeRequestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetProductListByTypeRequestTest.swift"; sourceTree = "<group>"; };
@@ -9121,7 +9121,7 @@
 				2A77B65D2AE004DC0022600F /* CertificateClientStubs */,
 				68821586283C027100B27D54 /* InfoProduct */,
 				77EA0DBC2779B40100C6ED12 /* OperationDetail */,
-				833EC1112BBEA56F0050ABE9 /* CvvAlertsFactory.swift */,
+				833EC1112BBEA56F0050ABE9 /* CvvAlertsViewModel.swift */,
 			);
 			path = ProductProfile;
 			sourceTree = "<group>";
@@ -14771,7 +14771,7 @@
 				68D06F2A26C3C19800F9BE4C /* MainViewControllerSearchBarDelegate.swift in Sources */,
 				776C846B27DF1CBC00F8F7E1 /* PaymentsHoustingViewController.swift in Sources */,
 				0B22AEA526CDB48F00B11E7F /* GKHDataType.swift in Sources */,
-				833EC1122BBEA56F0050ABE9 /* CvvAlertsFactory.swift in Sources */,
+				833EC1122BBEA56F0050ABE9 /* CvvAlertsViewModel.swift in Sources */,
 				ED5F2885273BE78F006A10BF /* AccountStatementController.swift in Sources */,
 				2ADFE59F2B0D0B950020B382 /* RequestFactory+createGetOperationDetailByPaymentIDRequest.swift in Sources */,
 				8357E3382B6BD20D0065E581 /* CardGuardianConfig.swift in Sources */,

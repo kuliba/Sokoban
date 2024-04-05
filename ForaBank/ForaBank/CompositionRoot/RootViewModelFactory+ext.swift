@@ -114,18 +114,8 @@ extension RootViewModelFactory {
         let paymentsTransfersNavigationStateManager = makePaymentsTransfersNavigationStateManager(
         )
 
-        let cvvAlertsFactory: CvvAlertsFactory = .init(
-            makeCvvAlertsViewModel: {
-                .init(
-                    title: "Информация",
-                    blockAlertText: "Для просмотра CVV и смены PIN карта должна быть активна.",
-                    additionalAlertText: "CVV может увидеть только человек,\nна которого выпущена карта.\nЭто мера предосторожности во избежание мошеннических операций."
-                )
-            }
-        )
-        
         let productNavigationStateManager = makeProductNavigationStateManager(
-            alertsReduce: AlertReducer(cvvAlertsViewModel: cvvAlertsFactory.makeCvvAlertsViewModel()))
+            alertsReduce: AlertReducer(cvvAlertsViewModel: .default))
 
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,

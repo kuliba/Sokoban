@@ -79,7 +79,7 @@ extension PaymentsTransfersFactory {
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: .init(alertReduce: AlertReducer(cvvAlertsViewModel: CvvAlertsFactory.preview.makeCvvAlertsViewModel()).reduce)
+            productNavigationStateManager: .init(alertReduce: AlertReducer(cvvAlertsViewModel: .default).reduce)
         )
         return .init(
             makeUtilitiesViewModel: { _,_ in },
