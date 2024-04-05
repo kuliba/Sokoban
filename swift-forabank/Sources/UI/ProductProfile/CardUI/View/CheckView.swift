@@ -13,12 +13,17 @@ struct CheckView: View {
     
     var body: some View {
         
-        config.images.check
-            .resizable()
-            .renderingMode(.original)
-            .opacity(0.9)
-            .frame(width: config.sizes.checkViewImage.width, height: config.sizes.checkViewImage.height)
-            .padding(config.front.checkPadding)
+        ZStack {
+            
+            Rectangle()
+                .fill(config.appearance.background.color)
+            config.images.check
+                .resizable()
+                .renderingMode(.original)
+                .opacity(0.9)
+        }
+        .frame(width: config.sizes.checkViewImage.width, height: config.sizes.checkViewImage.height)
+        .padding(config.front.checkPadding)
     }
 }
 
