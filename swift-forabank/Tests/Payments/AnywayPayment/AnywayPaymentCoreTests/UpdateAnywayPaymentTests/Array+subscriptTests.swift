@@ -1,5 +1,5 @@
 //
-//  Array+IdentifiableTests.swift
+//  Array+subscriptTests.swift
 //
 //
 //  Created by Igor Malyarov on 05.04.2024.
@@ -7,7 +7,7 @@
 
 import XCTest
 
-final class Array_IdentifiableTests: XCTestCase {
+final class Array_subscriptTests: XCTestCase {
     
     func test_subscript_shouldDeliverNilOnEmpty() {
         
