@@ -224,7 +224,7 @@ extension CurrencyWalletListViewModel {
                 style: .main,
                 model: model,
                 cardAction: nil,
-                showCvv: nil
+                cvvInfo: nil
             )
         }
 

@@ -173,7 +173,7 @@ extension ProductCarouselView {
                                         style: .main,
                                         model: model,
                                         cardAction: nil,
-                                        showCvv: nil)
+                                        cvvInfo: nil)
                                     bind(productViewModel)
                                     
                                     return productViewModel

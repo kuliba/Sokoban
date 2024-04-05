@@ -374,7 +374,8 @@ extension CurrencyWalletSelectorViewModel {
                 let description = product.additionalField
                 let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
                 let cardIcon = model.images.value[product.smallDesignMd5hash]?.image
-                self.init(productId: productId, cardIcon: cardIcon, paymentSystemIcon: product.paymentSystemImage?.image, name: name, balance: balance, numberCard: numberCard, description: description)
+                let paymentSystemIcon = model.images.value[product.paymentSystemImageMd5Hash]?.image
+                self.init(productId: productId, cardIcon: cardIcon, paymentSystemIcon: paymentSystemIcon, name: name, balance: balance, numberCard: numberCard, description: description)
                 
             case let product as ProductAccountData:
                 
@@ -548,7 +549,9 @@ extension CurrencyWalletSelectorView {
                     
                     HStack(alignment: .center, spacing: 10) {
                         
-                        viewModel.paymentSystemIcon
+                        viewModel.paymentSystemIcon?
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
                             .frame(width: 24, height: 24)
                         
                         Text(viewModel.name)

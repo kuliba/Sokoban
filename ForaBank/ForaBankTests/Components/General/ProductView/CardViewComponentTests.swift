@@ -469,7 +469,7 @@ final class CardViewComponentTests: XCTestCase {
         footer:FooterDetails,
         appearance: Appearance,
         cardAction: ProductView.ViewModel.CardAction? = { _ in },
-        showCVV: ProductView.ViewModel.ShowCVV? = nil,
+        showCVV: ShowCVV? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> ProductView.ViewModel {
@@ -491,7 +491,7 @@ final class CardViewComponentTests: XCTestCase {
             isUpdating: false,
             productType: productType,
             cardAction: cardAction,
-            showCvv: showCVV
+            cvvInfo: .init(showCvv: showCVV, cardType: nil, cardStatus: nil)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -501,8 +501,10 @@ final class CardViewComponentTests: XCTestCase {
     
     private func makeSUT(
         productType: ProductType = .card,
+        cardStatus: ProductCardData.StatusCard? = .active,
+        cardType: ProductCardData.CardType? = .main,
         cardAction: ProductView.ViewModel.CardAction? = { _ in },
-        showCVV: ProductView.ViewModel.ShowCVV? = nil,
+        showCVV: ShowCVV? = nil,
         size: Appearance.Size = .small,
         file: StaticString = #file,
         line: UInt = #line
@@ -521,7 +523,11 @@ final class CardViewComponentTests: XCTestCase {
             isUpdating: false,
             productType: productType,
             cardAction: cardAction,
-            showCvv: showCVV
+            cvvInfo: .init(
+                showCvv: showCVV,
+                cardType: cardType,
+                cardStatus: cardStatus
+            )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

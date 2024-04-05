@@ -12,6 +12,7 @@ import PDFKit
 import PinCodeUI
 import Tagged
 import CardUI
+import RxViewModel
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -57,12 +58,17 @@ class ProductProfileViewModel: ObservableObject {
     private let cvvPINServicesClient: CVVPINServicesClient
     private var cardAction: CardAction?
     
+    private let productNavigationStateManager: ProductNavigationStateManager
+
     private var bindings = Set<AnyCancellable>()
     
     private var productData: ProductData? {
         model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
     }
     
+    private let bottomSheetSubject = PassthroughSubject<BottomSheet?, Never>()
+    private let alertSubject = PassthroughSubject<Alert.ViewModel?, Never>()
+
     init(navigationBar: NavigationBarView.ViewModel,
          product: ProductProfileCardView.ViewModel,
          buttons: ProductProfileButtonsView.ViewModel,
@@ -79,8 +85,10 @@ class ProductProfileViewModel: ObservableObject {
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
          operationDetailFactory: OperationDetailFactory,
+         productNavigationStateManager: ProductNavigationStateManager,
          cvvPINServicesClient: CVVPINServicesClient,
-         rootView: String
+         rootView: String,
+         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.navigationBar = navigationBar
         self.product = product
@@ -100,8 +108,19 @@ class ProductProfileViewModel: ObservableObject {
         self.operationDetailFactory = operationDetailFactory
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
+        self.productNavigationStateManager = productNavigationStateManager
         self.cardAction = createCardAction(cvvPINServicesClient, model)
+        // TODO: add removeDuplicates
+        self.bottomSheetSubject
+            //.removeDuplicates()
+            .receive(on: scheduler)
+            .assign(to: &$bottomSheet)
         
+        self.alertSubject
+            //.removeDuplicates()
+            .receive(on: scheduler)
+            .assign(to: &$alert)
+
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
     }
     
@@ -121,8 +140,10 @@ class ProductProfileViewModel: ObservableObject {
         operationDetailFactory: OperationDetailFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
+        productNavigationStateManager: ProductNavigationStateManager,
         rootView: String,
-        dismissAction: @escaping () -> Void
+        dismissAction: @escaping () -> Void,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         guard let productViewModel = ProductProfileCardView.ViewModel(
             model,
@@ -151,8 +172,11 @@ class ProductProfileViewModel: ObservableObject {
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
             operationDetailFactory: operationDetailFactory,
+            productNavigationStateManager: productNavigationStateManager,
             cvvPINServicesClient: cvvPINServicesClient,
-            rootView: rootView)
+            rootView: rootView,
+            scheduler: scheduler
+        )
         
         self.product = ProductProfileCardView.ViewModel(
             model,
@@ -165,7 +189,22 @@ class ProductProfileViewModel: ObservableObject {
                 self.showCvvByTap(
                     cardId: cardId,
                     completion: completion)
-            })!
+            },
+            event: { [weak self] event in
+                    
+                guard let self else { return }
+                
+                switch event {
+                    
+                case .showBlockAlert:
+                    self.event(.showBlockAlert)
+                case .closeAlert:
+                    self.event(.closeAlert)
+                case .showAdditionalOtherAlert:
+                    self.event(.showAdditionalOtherAlert)
+                }
+            }
+        )!
         
         // detail view model
         self.detail = makeDetailViewModel(with: product)
@@ -1531,7 +1570,8 @@ private extension ProductProfileViewModel {
             paymentsTransfersFactory: paymentsTransfersFactory, 
             operationDetailFactory: operationDetailFactory,
             cvvPINServicesClient: cvvPINServicesClient,
-            product: product,
+            product: product, 
+            productNavigationStateManager: productNavigationStateManager,
             rootView: rootView,
             dismissAction: dismissAction
         )
@@ -2334,5 +2374,14 @@ extension ProductProfileViewModel {
             // show Alert
             self.makeAlert("\(String.cvvNotReceived).\n\(String.tryLater).")
         }
+    }
+}
+
+extension ProductProfileViewModel {
+    
+    func event(_ event: AlertEvent) {
+
+        let (alert, _) = productNavigationStateManager.alertReduce(alert, event)
+        alertSubject.send(alert)
     }
 }

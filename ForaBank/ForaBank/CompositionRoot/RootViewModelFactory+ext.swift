@@ -114,6 +114,9 @@ extension RootViewModelFactory {
         let paymentsTransfersNavigationStateManager = makePaymentsTransfersNavigationStateManager(
         )
 
+        let productNavigationStateManager = makeProductNavigationStateManager(
+            alertsReduce: AlertReducer(productAlertsViewModel: .default))
+
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -122,7 +125,8 @@ extension RootViewModelFactory {
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
-            cvvPINServicesClient: cvvPINServicesClient
+            cvvPINServicesClient: cvvPINServicesClient, 
+            productNavigationStateManager: productNavigationStateManager
         )
         
         return make(
@@ -132,6 +136,7 @@ extension RootViewModelFactory {
             makeUtilitiesViewModel: makeUtilitiesViewModel,
             paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
+            productNavigationStateManager: productNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             onRegister: resetCVVPINActivation
@@ -495,7 +500,8 @@ extension ProductProfileViewModel {
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
-        cvvPINServicesClient: CVVPINServicesClient
+        cvvPINServicesClient: CVVPINServicesClient,
+        productNavigationStateManager: ProductNavigationStateManager
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, dismissAction in
@@ -508,7 +514,8 @@ extension ProductProfileViewModel {
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
                 qrViewModelFactory: qrViewModelFactory,
-                cvvPINServicesClient: cvvPINServicesClient
+                cvvPINServicesClient: cvvPINServicesClient, 
+                productNavigationStateManager: productNavigationStateManager
             )
             
             let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
@@ -553,7 +560,8 @@ extension ProductProfileViewModel {
                 paymentsTransfersFactory: paymentsTransfersFactory, 
                 operationDetailFactory: operationDetailFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
-                product: product,
+                product: product, 
+                productNavigationStateManager: productNavigationStateManager,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
@@ -616,6 +624,7 @@ private extension RootViewModelFactory {
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
         paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
+        productNavigationStateManager: ProductNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         onRegister: @escaping OnRegister
@@ -676,6 +685,7 @@ private extension RootViewModelFactory {
         return .init(
             fastPaymentsFactory: fastPaymentsFactory,
             navigationStateManager: userAccountNavigationStateManager,
+            productNavigationStateManager: productNavigationStateManager,
             mainViewModel: mainViewModel,
             paymentsViewModel: paymentsViewModel,
             chatViewModel: chatViewModel,

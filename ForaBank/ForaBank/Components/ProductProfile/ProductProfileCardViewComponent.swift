@@ -30,6 +30,7 @@ extension ProductProfileCardView {
         private let model: Model
         private let cardAction: CardAction?
         private let showCvv: ShowCVV?
+        private let event: (Event) -> Void
 
         private var bindings = Set<AnyCancellable>()
         
@@ -40,7 +41,8 @@ extension ProductProfileCardView {
             productType: ProductType,
             model: Model = .emptyMock,
             cardAction: CardAction? = nil,
-            showCvv: ShowCVV? = nil
+            showCvv: ShowCVV? = nil,
+            event: @escaping (Event) -> Void = {_ in }
         ) {
             self.selector = selector
             self.products = products
@@ -49,13 +51,15 @@ extension ProductProfileCardView {
             self.model = model
             self.cardAction = cardAction
             self.showCvv = showCvv
+            self.event = event
         }
         
         init?(
             _ model: Model,
             productData: ProductData,
             cardAction: CardAction? = nil,
-            showCvv: ShowCVV? = nil
+            showCvv: ShowCVV? = nil,
+            event: @escaping (Event) -> Void = {_ in }
         ) {
             // fetch app products of type
             guard let productsForType = model.products.value[productData.productType],
@@ -68,13 +72,25 @@ extension ProductProfileCardView {
             var productsViewModels = [ProductView.ViewModel]()
             for product in productsWithRelated {
                 
+                let cvvInfo: CvvInfo? = {
+                    if let card = product as? ProductCardData {
+                        return .init(
+                            showCvv: showCvv,
+                            cardType: card.cardType,
+                            cardStatus: card.statusCard
+                        )
+                    }
+                    return nil
+                }()
+                
                 let productViewModel = ProductView.ViewModel(
                     with: product,
                     size: .large,
                     style: .profile,
                     model: model,
                     cardAction: cardAction,
-                    showCvv: showCvv
+                    cvvInfo: cvvInfo,
+                    event: event
                 )
                 productsViewModels.append(productViewModel)
             }
@@ -94,6 +110,7 @@ extension ProductProfileCardView {
             self.model = model
             self.showCvv = showCvv
             self.cardAction = cardAction
+            self.event = event
             bind()
             bind(selector)
             
@@ -173,13 +190,26 @@ extension ProductProfileCardView {
                                 
                             } else {
                                 
+                                let cvvInfo: CvvInfo? = {
+                                    if let card = product as? ProductCardData {
+                                        return .init(
+                                            showCvv: showCvv,
+                                            cardType: card.cardType,
+                                            cardStatus: card.statusCard
+                                        )
+                                    }
+                                    return nil
+                                }()
+                                
                                 let productViewModel = ProductView.ViewModel(
                                     with: product,
                                     size: .large,
                                     style: .profile,
                                     model: model,
                                     cardAction: cardAction,
-                                    showCvv: showCvv)
+                                    cvvInfo: cvvInfo,
+                                    event: event
+                                )
                                 bind(productViewModel)
                                 updatedProducts.append(productViewModel)
                             }
@@ -355,6 +385,11 @@ enum ProductProfileCardViewModelAction {
         let title: String
         let message: String
     }
+}
+
+extension ProductProfileCardView.ViewModel {
+    
+    typealias Event = AlertEvent
 }
 
 extension ProductProfileCardView.ViewModel {

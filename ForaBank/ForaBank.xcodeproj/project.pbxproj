@@ -1893,6 +1893,7 @@
 		833AF9662A93922A00C3DF54 /* ProductSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */; };
 		833E87232B920027009A01AB /* TopUpCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833E87222B920027009A01AB /* TopUpCardView.swift */; };
 		833E87292B94C60A009A01AB /* ProductProfileComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 833E87282B94C60A009A01AB /* ProductProfileComponents */; };
+		833EC1122BBEA56F0050ABE9 /* CvvAlertsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833EC1112BBEA56F0050ABE9 /* CvvAlertsViewModel.swift */; };
 		8343FE2A2BB29C9200D0C128 /* RequestFactory+createGetProductListByTypeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8343FE292BB29C9200D0C128 /* RequestFactory+createGetProductListByTypeRequest.swift */; };
 		8343FE2D2BB2A08500D0C128 /* Services+getProductListByType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8343FE2C2BB2A08500D0C128 /* Services+getProductListByType.swift */; };
 		8343FE2F2BB3EAC700D0C128 /* RequestFactory+createGetProductListByTypeRequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8343FE2E2BB3EAC700D0C128 /* RequestFactory+createGetProductListByTypeRequestTest.swift */; };
@@ -1932,6 +1933,10 @@
 		83808C412B8CEDCB00E9F7BF /* CVVButtonEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */; };
 		83808C472B8DB97C00E9F7BF /* AlertModelOf+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83808C462B8DB97C00E9F7BF /* AlertModelOf+ext.swift */; };
 		83943ECD2A8F790100042CB2 /* ProductsSwapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */; };
+		8394B2EF2BBF095F0078CB10 /* RootViewModelFactory+makeProductNavigationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8394B2EE2BBF095F0078CB10 /* RootViewModelFactory+makeProductNavigationStateManager.swift */; };
+		8394B2F12BBF2E450078CB10 /* ProductNavigationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8394B2F02BBF2E450078CB10 /* ProductNavigationStateManager.swift */; };
+		8394B2F32BBF2F5C0078CB10 /* AlertReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8394B2F22BBF2F5C0078CB10 /* AlertReducer.swift */; };
+		8394B2F52BBFD70E0078CB10 /* CvvInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8394B2F42BBFD70E0078CB10 /* CvvInfo.swift */; };
 		83A219B02A4D8FD500A34482 /* ProductConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A219AF2A4D8FD500A34482 /* ProductConfig.swift */; };
 		83A219B22A4D940900A34482 /* ProductConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A219B12A4D940900A34482 /* ProductConfigTests.swift */; };
 		83A5B42F2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A5B42E2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift */; };
@@ -4421,6 +4426,7 @@
 		833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectorViewTests.swift; sourceTree = "<group>"; };
 		833E87222B920027009A01AB /* TopUpCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopUpCardView.swift; sourceTree = "<group>"; };
 		833E872A2B94CA07009A01AB /* ProductProfileComponents.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ProductProfileComponents.xctestplan; sourceTree = "<group>"; };
+		833EC1112BBEA56F0050ABE9 /* CvvAlertsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvAlertsViewModel.swift; sourceTree = "<group>"; };
 		8343FE292BB29C9200D0C128 /* RequestFactory+createGetProductListByTypeRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetProductListByTypeRequest.swift"; sourceTree = "<group>"; };
 		8343FE2C2BB2A08500D0C128 /* Services+getProductListByType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getProductListByType.swift"; sourceTree = "<group>"; };
 		8343FE2E2BB3EAC700D0C128 /* RequestFactory+createGetProductListByTypeRequestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetProductListByTypeRequestTest.swift"; sourceTree = "<group>"; };
@@ -4458,6 +4464,10 @@
 		83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVButtonEvent.swift; sourceTree = "<group>"; };
 		83808C462B8DB97C00E9F7BF /* AlertModelOf+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlertModelOf+ext.swift"; sourceTree = "<group>"; };
 		83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSwapViewTests.swift; sourceTree = "<group>"; };
+		8394B2EE2BBF095F0078CB10 /* RootViewModelFactory+makeProductNavigationStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeProductNavigationStateManager.swift"; sourceTree = "<group>"; };
+		8394B2F02BBF2E450078CB10 /* ProductNavigationStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductNavigationStateManager.swift; sourceTree = "<group>"; };
+		8394B2F22BBF2F5C0078CB10 /* AlertReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertReducer.swift; sourceTree = "<group>"; };
+		8394B2F42BBFD70E0078CB10 /* CvvInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvInfo.swift; sourceTree = "<group>"; };
 		83A219AF2A4D8FD500A34482 /* ProductConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductConfig.swift; sourceTree = "<group>"; };
 		83A219B12A4D940900A34482 /* ProductConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductConfigTests.swift; sourceTree = "<group>"; };
 		83A5B42E2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift"; sourceTree = "<group>"; };
@@ -8172,6 +8182,7 @@
 		2AF1774D2AC476B600D100DD /* CompositionRoot */ = {
 			isa = PBXGroup;
 			children = (
+				8394B2ED2BBF09410078CB10 /* ProductProfile */,
 				2AF50A142B315CB2009CB9E5 /* RootViewFactory */,
 				2A8CC2442B29D44D00191B8E /* ImageCache.swift */,
 				2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */,
@@ -9104,10 +9115,13 @@
 			children = (
 				8357E3362B6BD1FF0065E581 /* Config */,
 				68E803E527D9280B00B75D41 /* ProductProfileViewModel.swift */,
+				8394B2F02BBF2E450078CB10 /* ProductNavigationStateManager.swift */,
+				8394B2F22BBF2F5C0078CB10 /* AlertReducer.swift */,
 				2A77B6572AE004520022600F /* CVVPINServicesClient.swift */,
 				2A77B65D2AE004DC0022600F /* CertificateClientStubs */,
 				68821586283C027100B27D54 /* InfoProduct */,
 				77EA0DBC2779B40100C6ED12 /* OperationDetail */,
+				833EC1112BBEA56F0050ABE9 /* CvvAlertsViewModel.swift */,
 			);
 			path = ProductProfile;
 			sourceTree = "<group>";
@@ -11021,10 +11035,19 @@
 			path = ProductsSwapViewComponent;
 			sourceTree = "<group>";
 		};
+		8394B2ED2BBF09410078CB10 /* ProductProfile */ = {
+			isa = PBXGroup;
+			children = (
+				8394B2EE2BBF095F0078CB10 /* RootViewModelFactory+makeProductNavigationStateManager.swift */,
+			);
+			path = ProductProfile;
+			sourceTree = "<group>";
+		};
 		83A219AE2A4D8DBC00A34482 /* ProductViewComponent */ = {
 			isa = PBXGroup;
 			children = (
 				774A8B792865FEF100B81140 /* ProductViewComponent.swift */,
+				8394B2F42BBFD70E0078CB10 /* CvvInfo.swift */,
 				83B5DBF22A54B192006B0D6C /* ProductViewComponentPreviewContent.swift */,
 				83A219AF2A4D8FD500A34482 /* ProductConfig.swift */,
 			);
@@ -14683,6 +14706,7 @@
 				68FE3984286A50B30026CBD7 /* AvtodorDetailsView+Legacy.swift in Sources */,
 				684192F52799C34400B4E184 /* ConsentMe2MePullData.swift in Sources */,
 				77A411E727EB962100D36E46 /* MainSectionsSettings.swift in Sources */,
+				8394B2F12BBF2E450078CB10 /* ProductNavigationStateManager.swift in Sources */,
 				6849888627BBB8D200E84E6B /* AuthProductsView.swift in Sources */,
 				ED7866B427A015E3006B4F5A /* PaymentByPhoneViewModel.swift in Sources */,
 				503F074C28252D3B00E84A77 /* DepositBottomSheetItemView.swift in Sources */,
@@ -14747,6 +14771,7 @@
 				68D06F2A26C3C19800F9BE4C /* MainViewControllerSearchBarDelegate.swift in Sources */,
 				776C846B27DF1CBC00F8F7E1 /* PaymentsHoustingViewController.swift in Sources */,
 				0B22AEA526CDB48F00B11E7F /* GKHDataType.swift in Sources */,
+				833EC1122BBEA56F0050ABE9 /* CvvAlertsViewModel.swift in Sources */,
 				ED5F2885273BE78F006A10BF /* AccountStatementController.swift in Sources */,
 				2ADFE59F2B0D0B950020B382 /* RequestFactory+createGetOperationDetailByPaymentIDRequest.swift in Sources */,
 				8357E3382B6BD20D0065E581 /* CardGuardianConfig.swift in Sources */,
@@ -15215,6 +15240,7 @@
 				0CEA32012875D8E7005B80BA /* Model+CurrencyWallet.swift in Sources */,
 				68C8D57026F0DF120076246B /* HistoryTableViewCell.swift in Sources */,
 				C16B8A4D2955F1FD00B0AD4C /* PrefferedBanksList.swift in Sources */,
+				8394B2F52BBFD70E0078CB10 /* CvvInfo.swift in Sources */,
 				687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */,
 				C181083928E3535E002FCC3A /* Model+DeepLink.swift in Sources */,
 				2A8CC23F2B299CC200191B8E /* RootViewFactory.swift in Sources */,
@@ -15552,6 +15578,7 @@
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
 				ED353B6A26FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift in Sources */,
 				50EFA47B29476EC100FE1938 /* TextFieldViewComponent.swift in Sources */,
+				8394B2F32BBF2F5C0078CB10 /* AlertReducer.swift in Sources */,
 				0BB24A9226EFC6AB00DDA4F6 /* GetProductTemplateList.swift in Sources */,
 				ED733D5A285895DF00F22D42 /* CountriesList+Legacy.swift in Sources */,
 				2A2ECBBF2AE5251C00F3C946 /* RequestFactory+makeGetProcessingSessionCode.swift in Sources */,
@@ -15601,6 +15628,7 @@
 				ED2D8A01286DB4AA0000B391 /* ImageGalleryAgent.swift in Sources */,
 				2ABD78372AF9277A001B5860 /* GetProcessingSessionCodeService+Fetcher.swift in Sources */,
 				77517FE227A98CC3005CFB77 /* UserSettingData.swift in Sources */,
+				8394B2EF2BBF095F0078CB10 /* RootViewModelFactory+makeProductNavigationStateManager.swift in Sources */,
 				C1097D9029438242002459F6 /* PaymentCheckViewComponent.swift in Sources */,
 				68E6A29726A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */,
 				EDA0DCC22739523F0013F47E /* AccountDetailsViewController.swift in Sources */,
