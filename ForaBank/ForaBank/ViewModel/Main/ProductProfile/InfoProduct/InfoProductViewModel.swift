@@ -15,8 +15,6 @@ import CardUI
 
 class InfoProductViewModel: ObservableObject {
     
-    typealias ShowCVV = ProductView.ViewModel.ShowCVV
-
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var title: String

@@ -19,7 +19,6 @@ extension ProductView {
     class ViewModel: Identifiable, ObservableObject, Hashable {
         
         @AppStorage(.isNeedOnboardingShow) var isNeedOnboardingShow: Bool = true
-        typealias ShowCVV = (CardDomain.CardId, @escaping (CardInfo.CVV?) -> Void) -> Void
         typealias CardAction = (CardDomain.CardEvent) -> Void
         let action: PassthroughSubject<Action, Never> = .init()
         
@@ -27,11 +26,9 @@ extension ProductView {
         var header: HeaderDetails
         let isChecked: Bool
         let productType: ProductType
-        let cardType: ProductCardData.CardType?
-        let cardStatus: ProductCardData.StatusCard?
 
         let cardAction: CardAction?
-        let showCvv: ShowCVV?
+        let cvvInfo: CvvInfo?
         
         @Published var cardInfo: CardInfo
         @Published var footer: FooterDetails
@@ -44,7 +41,7 @@ extension ProductView {
         private var bindings = Set<AnyCancellable>()
         private let pasteboard = UIPasteboard.general
         
-        private let event: (AlertEvent) -> Void
+        private let event: (Event) -> Void
 
         internal init(
             id: ProductData.ID,
@@ -57,10 +54,8 @@ extension ProductView {
             isUpdating: Bool,
             productType: ProductType,
             cardAction: CardAction? = nil,
-            showCvv: ShowCVV? = nil,
-            event: @escaping (Event) -> Void = { _ in },
-            cardType: ProductCardData.CardType? = nil,
-            cardStatus: ProductCardData.StatusCard? = nil
+            cvvInfo: CvvInfo? = nil,
+            event: @escaping (Event) -> Void = { _ in }
         ) {
             self.id = id
             self.header = header
@@ -72,11 +67,9 @@ extension ProductView {
             self.isUpdating = isUpdating
             self.productType = productType
             self.cardAction = cardAction
-            self.showCvv = showCvv
+            self.cvvInfo = cvvInfo
             self.config = .config(appearance: appearance)
             self.event = event
-            self.cardType = cardType
-            self.cardStatus = cardStatus
         }
         
         convenience init(
@@ -86,10 +79,8 @@ extension ProductView {
             style: Appearance.Style,
             model: Model,
             cardAction: CardAction? = nil,
-            showCvv: ShowCVV? = nil,
-            event: @escaping (Event) -> Void = { _ in },
-            cardType: ProductCardData.CardType? = nil,
-            cardStatus: ProductCardData.StatusCard? = nil
+            cvvInfo: CvvInfo? = nil,
+            event: @escaping (Event) -> Void = { _ in }
         ) {
             let balance = Self.balanceFormatted(product: productData, style: style, model: model)
             let number = productData.displayNumber
@@ -133,10 +124,8 @@ extension ProductView {
                 isUpdating: false,
                 productType: productType,
                 cardAction: cardAction,
-                showCvv: showCvv,
-                event: event,
-                cardType: cardType,
-                cardStatus: cardStatus
+                cvvInfo: cvvInfo,
+                event: event
             )
             
             bind()
@@ -709,7 +698,7 @@ extension ProductView.ViewModel {
         
         if productType == .card, appearance.size == .large  {
             
-            if cardStatus != .active {
+            if cvvInfo?.cardStatus != .active {
                 event(.showBlockAlert)
             } else {
                 withAnimation(.spring(response: 1.0, dampingFraction: 1, blendDuration: 0)) {
@@ -734,13 +723,13 @@ extension ProductView.ViewModel {
     
     func showCVVButtonTap() {
             
-        if cardType == .additionalOther {
+        if cvvInfo?.cardType == .additionalOther {
             event(.showAdditionalOtherAlert)
         } else {
             
             let cardId = CardDomain.CardId.init(self.id)
             cardInfo.state = .awaitingCVV
-            showCvv?(cardId) { cvv in
+            cvvInfo?.showCvv?(cardId) { cvv in
                 
                 Task { @MainActor [weak self] in
                     if let cvv {
