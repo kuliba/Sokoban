@@ -22,6 +22,7 @@ extension AnywayPayment {
     enum Element: Equatable {
         
         case field(Field)
+        case parameter(Parameter)
     }
     
     enum Status: Equatable {
@@ -39,6 +40,8 @@ extension AnywayPayment.Element {
         let value: String
         let title: String
     }
+    
+    struct Parameter: Equatable {}
 }
 
 extension AnywayPayment.Element.Field {
@@ -63,8 +66,10 @@ extension AnywayPayment {
         let otp = Element.Field(id: .otp, value: "", title: "")
         fields[id: .otp] = update.details.control.needOTP ? otp : nil
         
+        let parameters = update.parameters.map(Element.Parameter.init)
+        
         return .init(
-            elements: fields.map(Element.field),
+            elements: fields.map(Element.field) + parameters.map(Element.parameter),
             hasAmount: update.details.control.needSum,
             isFinalStep: update.details.control.isFinalStep,
             isFraudSuspected: update.details.control.isFraudSuspected,
@@ -142,6 +147,15 @@ private extension AnywayPayment.Element.Field {
             id: .string(field.name),
             value: field.value,
             title: field.title
+        )
+    }
+}
+
+private extension AnywayPayment.Element.Parameter {
+    
+    init(_ field: AnywayPaymentUpdate.Parameter) {
+        
+        self.init(
         )
     }
 }
@@ -400,6 +414,47 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         assertOTP(in: updated, precedes: updateFields)
     }
     
+    // MARK: - parameters
+    
+    func test_update_shouldAppendParameterToEmpty() {
+        
+        let payment = makeAnywayPayment(parameters: [])
+        let updateParameter = makeAnywayPaymentUpdateParameter()
+        let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
+        
+        assert(payment, on: update) {
+            
+            $0.elements = [.parameter(updateParameter.parameter)]
+        }
+    }
+    
+    func test_update_shouldAppendParameterToOneField() {
+        
+        let field = makeAnywayPaymentField()
+        let payment = makeAnywayPayment(fields: [field])
+        let updateParameter = makeAnywayPaymentUpdateParameter()
+        let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
+        
+        assert(payment, on: update) {
+            
+            $0.elements = [.field(field), .parameter(updateParameter.parameter)]
+        }
+    }
+    
+    func test_update_shouldAppendParameterToTwoFields() {
+        
+        let field1 = makeAnywayPaymentField()
+        let field2 = makeAnywayPaymentField()
+        let payment = makeAnywayPayment(fields: [field1, field2])
+        let updateParameter = makeAnywayPaymentUpdateParameter()
+        let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
+        
+        assert(payment, on: update) {
+            
+            $0.elements = [.field(field1), .field(field2), .parameter(updateParameter.parameter)]
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias UpdateToExpected<T> = (_ value: inout T) -> Void
@@ -438,6 +493,7 @@ private func assertOTP(
     
     let fields = fields.map(\.field)
     
+#warning("this check is for fields only - is it ok or it needs to check all element cases?")
     XCTAssert(
         payment.paymentFields.isElementAfterAll(.otp, inGroup: fields),
         "Expected OTP field after complimentary fields.",
@@ -454,6 +510,14 @@ private extension AnywayPaymentUpdate.Field {
             value: value,
             title: title
         )
+    }
+}
+
+private extension AnywayPaymentUpdate.Parameter {
+    
+    var parameter: AnywayPayment.Element.Parameter {
+        
+        .init()
     }
 }
 
@@ -498,14 +562,44 @@ private func isFraudSuspected(
 }
 
 private func makeAnywayPayment(
-    fields: [AnywayPayment.Element.Field] = [],
+    fields: [AnywayPayment.Element.Field],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
     hasAmount: Bool = false
 ) -> AnywayPayment {
     
-    .init(
+    makeAnywayPayment(
         elements: fields.map(AnywayPayment.Element.field),
+        hasAmount: hasAmount,
+        isFinalStep: isFinalStep,
+        isFraudSuspected: isFraudSuspected
+    )
+}
+
+private func makeAnywayPayment(
+    parameters: [AnywayPayment.Element.Parameter] = [],
+    isFinalStep: Bool = false,
+    isFraudSuspected: Bool = false,
+    hasAmount: Bool = false
+) -> AnywayPayment {
+    
+    makeAnywayPayment(
+        elements: parameters.map(AnywayPayment.Element.parameter),
+        hasAmount: hasAmount,
+        isFinalStep: isFinalStep,
+        isFraudSuspected: isFraudSuspected
+    )
+}
+
+private func makeAnywayPayment(
+    elements: [AnywayPayment.Element],
+    hasAmount: Bool = false,
+    isFinalStep: Bool = false,
+    isFraudSuspected: Bool = false
+) -> AnywayPayment {
+    
+    .init(
+        elements: elements,
         hasAmount: hasAmount,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected
@@ -578,6 +672,12 @@ private func makeAnywayPaymentFieldWithStringID(
 ) -> AnywayPayment.Element.Field {
     
     makeAnywayPaymentField(.string(id), value: value, title: title)
+}
+
+private func makeAnywayPaymentParameter(
+) -> AnywayPayment.Element.Parameter {
+    
+    .init()
 }
 
 private func makeOTPField(
@@ -739,5 +839,93 @@ private func makeAnywayPaymentUpdateField(
         recycle: false,
         svgImage: nil,
         typeIdParameterList: nil
+    )
+}
+
+private func makeAnywayPaymentUpdateParameter(
+    field: AnywayPaymentUpdate.Parameter.Field = makeAnywayPaymentUpdateParameterField(),
+    masking: AnywayPaymentUpdate.Parameter.Masking = makeAnywayPaymentUpdateParameterMasking(),
+    validation: AnywayPaymentUpdate.Parameter.Validation = makeAnywayPaymentUpdateParameterValidation(),
+    uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes = makeAnywayPaymentUpdateParameterUIAttributes()
+) -> AnywayPaymentUpdate.Parameter {
+    
+    .init(
+        field: field,
+        masking: masking,
+        validation: validation,
+        uiAttributes: uiAttributes
+    )
+}
+
+private func makeAnywayPaymentUpdateParameterField(
+    content: String? = nil,
+    dataDictionary: String? = nil,
+    dataDictionaryРarent: String? = nil,
+    id: String = anyMessage()
+) -> AnywayPaymentUpdate.Parameter.Field {
+    
+    .init(
+        content: content,
+        dataDictionary: dataDictionary,
+        dataDictionaryРarent: dataDictionaryРarent,
+        id: id
+    )
+}
+
+private func makeAnywayPaymentUpdateParameterMasking(
+    inputMask: String? = nil,
+    mask: String? = nil
+) -> AnywayPaymentUpdate.Parameter.Masking {
+    
+    .init(inputMask: inputMask, mask: mask)
+}
+
+private func makeAnywayPaymentUpdateParameterValidation(
+    isRequired: Bool = true,
+    maxLength: Int? = nil,
+    minLength: Int? = nil,
+    rawLength: Int = 0,
+    regExp: String = anyMessage()
+) -> AnywayPaymentUpdate.Parameter.Validation {
+    
+    .init(
+        isRequired: isRequired,
+        maxLength: maxLength,
+        minLength: minLength,
+        rawLength: rawLength,
+        regExp: regExp
+    )
+}
+
+private func makeAnywayPaymentUpdateParameterUIAttributes(
+    dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType = .string,
+    group: String? = nil,
+    inputFieldType: AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType? = nil,
+    isPrint: Bool = true,
+    order: Int? = nil,
+    phoneBook: Bool = false,
+    isReadOnly: Bool = false,
+    subGroup: String? = nil,
+    subTitle: String? = nil,
+    svgImage: String? = nil,
+    title: String = anyMessage(),
+    type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
+    viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType = .input
+) -> AnywayPaymentUpdate.Parameter.UIAttributes {
+    
+    .init(
+        dataType: dataType,
+        group: group,
+        inputFieldType: inputFieldType,
+        isPrint: isPrint,
+        order: order,
+        phoneBook: phoneBook,
+        isReadOnly: isReadOnly,
+        subGroup: subGroup,
+        subTitle: subTitle,
+        svgImage: svgImage,
+        title: title,
+        type: type,
+        viewType: viewType
     )
 }
