@@ -703,7 +703,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAppendFieldAndParameterToEmptyOnUpdateWithParameterAndComplimentoryField() {
         
         let payment = makeAnywayPayment(elements: [])
-        let updateField = makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa")
+        let updateField = makeAnywayPaymentUpdateField()
         let updateParameter = makeAnywayPaymentUpdateParameter()
         let update = makeAnywayPaymentUpdate(
             fields: [updateField],
@@ -720,8 +720,8 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAppendElementsToEmptyOnUpdateWithParametersAndComplimentoryFields() {
         
         let payment = makeAnywayPayment(elements: [])
-        let updateField1 = makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa")
-        let updateField2 = makeAnywayPaymentUpdateField("1", value: "11", title: "111")
+        let updateField1 = makeAnywayPaymentUpdateField()
+        let updateField2 = makeAnywayPaymentUpdateField()
         let updateParameter1 = makeAnywayPaymentUpdateParameter()
         let updateParameter2 = makeAnywayPaymentUpdateParameter()
         let update = makeAnywayPaymentUpdate(
@@ -740,10 +740,10 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     func test_update_shouldAppendFieldAndParameterToNonEmptyOnUpdateWithParameterAndComplimentoryField() {
         
-        let fieldElement = AnywayPayment.Element.field(makeAnywayPaymentField())
-        let parameterElement = AnywayPayment.Element.parameter(makeAnywayPaymentParameter())
+        let fieldElement = makeAnywayPaymentFieldElement()
+        let parameterElement = makeAnywayPaymentParameterElement()
         let payment = makeAnywayPayment(elements: [fieldElement, parameterElement])
-        let updateField = makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa")
+        let updateField = makeAnywayPaymentUpdateField()
         let updateParameter = makeAnywayPaymentUpdateParameter()
         let update = makeAnywayPaymentUpdate(
             fields: [updateField],
@@ -760,11 +760,11 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     func test_update_shouldAppendElementsToNonEmptyOnUpdateWithParametersAndComplimentoryFields() {
         
-        let fieldElement = AnywayPayment.Element.field(makeAnywayPaymentField())
-        let parameterElement = AnywayPayment.Element.parameter(makeAnywayPaymentParameter())
+        let fieldElement = makeAnywayPaymentFieldElement()
+        let parameterElement = makeAnywayPaymentParameterElement()
         let payment = makeAnywayPayment(elements: [fieldElement, parameterElement])
-        let updateField1 = makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa")
-        let updateField2 = makeAnywayPaymentUpdateField("1", value: "11", title: "111")
+        let updateField1 = makeAnywayPaymentUpdateField()
+        let updateField2 = makeAnywayPaymentUpdateField()
         let updateParameter1 = makeAnywayPaymentUpdateParameter()
         let updateParameter2 = makeAnywayPaymentUpdateParameter()
         let update = makeAnywayPaymentUpdate(
@@ -981,6 +981,20 @@ private func makeAnywayPaymentWithOTP(
     let payment = makeAnywayPayment(fields: [makeOTPField()])
     XCTAssert(hasOTPField(payment), "Expected to have OTP field.", file: file, line: line)
     return payment
+}
+
+private func makeAnywayPaymentFieldElement(
+    _ field: AnywayPayment.Element.Field = makeAnywayPaymentField()
+) -> AnywayPayment.Element {
+    
+    .field(field)
+}
+
+private func makeAnywayPaymentParameterElement(
+    _ parameter: AnywayPayment.Element.Parameter = makeAnywayPaymentParameter()
+) -> AnywayPayment.Element {
+    
+    .parameter(parameter)
 }
 
 private func makeAnywayPaymentField(
