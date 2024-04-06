@@ -354,7 +354,7 @@ private extension AnywayPayment.Element.Parameter.Masking {
 private extension AnywayPayment.Element.Parameter.Validation {
     
     init(_ validation: AnywayPaymentUpdate.Parameter.Validation) {
-#warning("mess with values to check mapping with tests")
+        
         self.init(
             isRequired: validation.isRequired,
             maxLength: validation.maxLength,
@@ -367,6 +367,7 @@ private extension AnywayPayment.Element.Parameter.Validation {
 private extension AnywayPayment.Element.Parameter.UIAttributes {
     
     init(_ uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes) {
+        
         self.init(
             dataType: .init(uiAttributes.dataType),
             group: uiAttributes.group,
@@ -386,9 +387,11 @@ private extension AnywayPayment.Element.Parameter.UIAttributes {
 private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
     
     init(_ dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType) {
+
         switch dataType {
         case .string:
             self = .string
+            
         case let .pairs(pairs):
             self = .pairs(pairs.map(Pair.init))
         }
@@ -398,6 +401,7 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
 private extension AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
     
     init(_ pairs: AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair) {
+        
         self.init(key: pairs.key, value: pairs.value)
     }
 }
@@ -405,6 +409,7 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
 private extension AnywayPayment.Element.Parameter.UIAttributes.FieldType {
     
     init(_ fieldType: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType) {
+        
         switch fieldType {
         case .input:    self = .input
         case .select:   self = .select
@@ -416,6 +421,7 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.FieldType {
 private extension AnywayPayment.Element.Parameter.UIAttributes.ViewType {
     
     init(_ viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType) {
+        
         switch viewType {
         case .constant: self = .constant
         case .input:    self = .input
@@ -1040,6 +1046,87 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         }
     }
 
+    // MARK: - Helpers Tests
+    
+    func test_makeAnywayPaymentAndUpdateParameters() {
+        
+        let (update, parameter) = makeAnywayPaymentAndUpdateParameters(
+            value: nil,
+            dataType: .string,
+            type: .select,
+            viewType: .input
+        )
+        
+        XCTAssertNil(update.field.content)
+        XCTAssertNil(parameter.field.value)
+        
+        XCTAssertNoDiff(update.uiAttributes.dataType, .string)
+        XCTAssertNoDiff(parameter.uiAttributes.dataType, .string)
+        
+        XCTAssertNoDiff(update.uiAttributes.type, .select)
+        XCTAssertNoDiff(parameter.uiAttributes.type, .select)
+        
+        XCTAssertNoDiff(update.uiAttributes.viewType, .input)
+        XCTAssertNoDiff(parameter.uiAttributes.viewType, .input)
+    }
+    
+    func test_makeAnywayPaymentAndUpdateParameters_2() {
+        
+        let value = anyMessage()
+        let (update, parameter) = makeAnywayPaymentAndUpdateParameters(
+            value: value,
+            dataType: .pairs([.init(key: "a", value: "1")]),
+            group: nil,
+            isPrint: true,
+            type: .input,
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(update.field.content, value)
+        XCTAssertNoDiff(parameter.field.value, value)
+        
+        XCTAssertNoDiff(update.uiAttributes.dataType, .pairs([.init(key: "a", value: "1")]))
+        XCTAssertNoDiff(parameter.uiAttributes.dataType, .pairs([.init(key: "a", value: "1")]))
+        
+        XCTAssertNil(update.uiAttributes.group)
+        XCTAssertNil(parameter.uiAttributes.group)
+        
+        XCTAssertTrue(update.uiAttributes.isPrint)
+        XCTAssertTrue(parameter.uiAttributes.isPrint)
+        
+        XCTAssertNoDiff(update.uiAttributes.type, .input)
+        XCTAssertNoDiff(parameter.uiAttributes.type, .input)
+        
+        XCTAssertNoDiff(update.uiAttributes.viewType, .constant)
+        XCTAssertNoDiff(parameter.uiAttributes.viewType, .constant)
+    }
+    
+    func test_makeAnywayPaymentAndUpdateParameters_3() {
+        
+        let (update, parameter) = makeAnywayPaymentAndUpdateParameters(
+            dataType: .pairs([.init(key: "a", value: "1"), .init(key: "b", value: "c")]),
+            group: "group",
+            isPrint: false,
+            type: .maskList,
+            viewType: .output
+        )
+        
+        XCTAssertNoDiff(update.uiAttributes.dataType, .pairs([.init(key: "a", value: "1"), .init(key: "b", value: "c")]))
+        XCTAssertNoDiff(parameter.uiAttributes.dataType, .pairs([.init(key: "a", value: "1"), .init(key: "b", value: "c")]))
+        
+        XCTAssertNoDiff(update.uiAttributes.type, .maskList)
+        XCTAssertNoDiff(parameter.uiAttributes.type, .maskList)
+        
+        XCTAssertNoDiff(update.uiAttributes.group, "group")
+        XCTAssertNoDiff(parameter.uiAttributes.group, "group")
+        
+        XCTAssertFalse(update.uiAttributes.isPrint)
+        XCTAssertFalse(parameter.uiAttributes.isPrint)
+
+        XCTAssertNoDiff(update.uiAttributes.viewType, .output)
+        XCTAssertNoDiff(parameter.uiAttributes.viewType, .output)
+    }
+    
     // MARK: - Helpers
     
     private typealias UpdateToExpected<T> = (_ value: inout T) -> Void
@@ -1263,7 +1350,7 @@ private func makeAnywayPaymentParameterWithID(
 
 private func makeAnywayPaymentElementParameterField(
     id: String = anyMessage(),
-    value: String? = nil
+    value: String? = anyMessage()
 ) -> AnywayPayment.Element.Parameter.Field {
     
     .init(id: id, value: value)
@@ -1519,7 +1606,7 @@ private func makeAnywayPaymentUpdateParameter(
 
 private func makeAnywayPaymentAndUpdateParameters(
     id: String = anyMessage(),
-    value: String? = nil,
+    value: String? = anyMessage(),
     inputMask: String? = nil,
     mask: String? = nil,
     isRequired: Bool = true,
