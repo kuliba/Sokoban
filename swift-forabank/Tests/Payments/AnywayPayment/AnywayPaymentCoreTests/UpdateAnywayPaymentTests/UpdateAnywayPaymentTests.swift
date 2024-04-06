@@ -10,7 +10,7 @@ import XCTest
 
 struct AnywayPayment: Equatable {
     
-    var fields: [Field]
+    var elements: [Element]
     let hasAmount: Bool
     let isFinalStep: Bool
     let isFraudSuspected: Bool
@@ -19,11 +19,9 @@ struct AnywayPayment: Equatable {
 
 extension AnywayPayment {
     
-    struct Field: Identifiable, Equatable {
+    enum Element: Equatable {
         
-        let id: ID
-        let value: String
-        let title: String
+        case field(Field)
     }
     
     enum Status: Equatable {
@@ -32,7 +30,18 @@ extension AnywayPayment {
     }
 }
 
-extension AnywayPayment.Field {
+
+extension AnywayPayment.Element {
+    
+    struct Field: Identifiable, Equatable {
+        
+        let id: ID
+        let value: String
+        let title: String
+    }
+}
+
+extension AnywayPayment.Element.Field {
     
     enum ID: Hashable {
         
@@ -51,20 +60,29 @@ extension AnywayPayment {
         var fields = fields
         fields.update(with: update.fields)
         
-        let otp = Field(id: .otp, value: "", title: "")
+        let otp = Element.Field(id: .otp, value: "", title: "")
         fields[id: .otp] = update.details.control.needOTP ? otp : nil
         
         return .init(
-            fields: fields,
+            elements: fields.map(Element.field),
             hasAmount: update.details.control.needSum,
             isFinalStep: update.details.control.isFinalStep,
             isFraudSuspected: update.details.control.isFraudSuspected,
             status: status
         )
     }
+    
+    private var fields: [Element.Field] {
+        
+        elements.compactMap {
+            
+            guard case let .field(field) = $0 else { return nil }
+            return field
+        }
+    }
 }
 
-private extension Array where Element == AnywayPayment.Field {
+private extension Array where Element == AnywayPayment.Element.Field {
     
     mutating func update(
         with updateFields: [AnywayPaymentUpdate.Field]
@@ -98,9 +116,9 @@ private extension Array where Element == AnywayPayment.Field {
         from updateFields: [AnywayPaymentUpdate.Field]
     ) {
         let existingIDs = stringFieldIDs
-        let complimentary: [AnywayPayment.Field] = updateFields
+        let complimentary: [Element] = updateFields
             .filter { !existingIDs.contains($0.name) }
-            .map(AnywayPayment.Field.init)
+            .map(Element.init)
         
         self.append(contentsOf: complimentary)
     }
@@ -116,7 +134,7 @@ private extension Array where Element == AnywayPayment.Field {
     }
 }
 
-private extension AnywayPayment.Field {
+private extension AnywayPayment.Element.Field {
     
     init(_ field: AnywayPaymentUpdate.Field) {
         
@@ -161,18 +179,14 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAppendComplementaryField() {
         
         let payment = makeAnywayPayment()
-        let update = makeAnywayPaymentUpdate(
-            fields: [
-                makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa"),
-            ]
-        )
+        let updateField = makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa")
+        let update = makeAnywayPaymentUpdate(fields: [updateField])
+        let updated = makeAnywayPaymentField(.string("a"), value: "aa", title: "aaa")
         
-        XCTAssertNoDiff(payment.fields, [])
+        XCTAssertNoDiff(payment.elements, [])
         assert(payment, on: update) {
             
-            $0.fields = [
-                .init(id: .string("a"), value: "aa", title: "aaa"),
-            ]
+            $0.elements = [AnywayPayment.Element.field(updated)]
         }
     }
     
@@ -187,14 +201,14 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             ]
         )
         
-        XCTAssertNoDiff(payment.fields, [])
+        XCTAssertNoDiff(payment.elements, [])
         assert(payment, on: update) {
             
-            $0.fields = [
+            $0.elements = [
                 .init(id: .string("a"), value: "aa", title: "aaa"),
                 .init(id: .string("b"), value: "bb", title: "bbb"),
                 .init(id: .string("c"), value: "cc", title: "ccc"),
-            ]
+            ].map(AnywayPayment.Element.field)
         }
     }
     
@@ -283,7 +297,8 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            $0.fields = [field].appending(updateField.field)
+            let fields = [field].appending(updateField.field)
+            $0.elements = fields.map(AnywayPayment.Element.field)
         }
     }
     
@@ -298,7 +313,8 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            $0.fields = [field].appending(contentsOf: [updateField1.field, updateField2.field])
+            let fields = [field, updateField1.field, updateField2.field]
+            $0.elements = fields.map(AnywayPayment.Element.field)
         }
     }
     
@@ -307,11 +323,8 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let (id, value, title) = ("abc123", "aaa", "bb")
         let field = makeAnywayPaymentFieldWithStringID(id, value: value, title: title)
         let payment = makeAnywayPayment(fields: [field])
-        let update = makeAnywayPaymentUpdate(
-            fields: [
-                makeAnywayPaymentUpdateField(id, value: value, title: title)
-            ]
-        )
+        let updateField = makeAnywayPaymentUpdateField(id, value: value, title: title)
+        let update = makeAnywayPaymentUpdate(fields: [updateField])
         
         assert(payment, on: update)
     }
@@ -320,17 +333,13 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let field = makeAnywayPaymentFieldWithStringID("abc123")
         let payment = makeAnywayPayment(fields: [field])
-        let update = makeAnywayPaymentUpdate(
-            fields: [
-                makeAnywayPaymentUpdateField("abc123", value: "aa", title: "bbb")
-            ]
-        )
+        let updateField = makeAnywayPaymentUpdateField("abc123", value: "aa", title: "bbb")
+        let update = makeAnywayPaymentUpdate(fields: [updateField])
+        let updated = makeAnywayPaymentField(.string("abc123"), value: "aa", title: "bbb")
         
         assert(payment, on: update) {
             
-            $0.fields = [
-                makeAnywayPaymentField(.string("abc123"), value: "aa", title: "bbb")
-            ]
+            $0.elements = [.field(updated)]
         }
     }
     
@@ -430,7 +439,7 @@ private func assertOTP(
     let fields = fields.map(\.field)
     
     XCTAssert(
-        payment.fields.isElementAfterAll(.otp, inGroup: fields),
+        payment.paymentFields.isElementAfterAll(.otp, inGroup: fields),
         "Expected OTP field after complimentary fields.",
         file: file, line: line
     )
@@ -438,7 +447,7 @@ private func assertOTP(
 
 private extension AnywayPaymentUpdate.Field {
     
-    var field: AnywayPayment.Field {
+    var field: AnywayPayment.Element.Field {
         
         .init(
             id: .string(name),
@@ -459,7 +468,19 @@ private func hasOTPField(
     _ payment: AnywayPayment
 ) -> Bool {
     
-    payment.fields.map(\.id).contains(.otp)
+    payment.paymentFields.map(\.id).contains(.otp)
+}
+
+private extension AnywayPayment {
+    
+    var paymentFields: [Element.Field] {
+        
+        elements.compactMap {
+            
+            guard case let .field(field) = $0 else { return nil }
+            return field
+        }
+    }
 }
 
 private func isFinalStep(
@@ -477,14 +498,14 @@ private func isFraudSuspected(
 }
 
 private func makeAnywayPayment(
-    fields: [AnywayPayment.Field] = [],
+    fields: [AnywayPayment.Element.Field] = [],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
     hasAmount: Bool = false
 ) -> AnywayPayment {
     
     .init(
-        fields: fields,
+        elements: fields.map(AnywayPayment.Element.field),
         hasAmount: hasAmount,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected
@@ -542,10 +563,10 @@ private func makeAnywayPaymentWithOTP(
 }
 
 private func makeAnywayPaymentField(
-    _ id: AnywayPayment.Field.ID = .string(UUID().uuidString),
+    _ id: AnywayPayment.Element.Field.ID = .string(UUID().uuidString),
     value: String = UUID().uuidString,
     title: String = UUID().uuidString
-) -> AnywayPayment.Field {
+) -> AnywayPayment.Element.Field {
     
     .init(id: id, value: value, title: title)
 }
@@ -554,7 +575,7 @@ private func makeAnywayPaymentFieldWithStringID(
     _ id: String = UUID().uuidString,
     value: String = UUID().uuidString,
     title: String = UUID().uuidString
-) -> AnywayPayment.Field {
+) -> AnywayPayment.Element.Field {
     
     makeAnywayPaymentField(.string(id), value: value, title: title)
 }
@@ -562,7 +583,7 @@ private func makeAnywayPaymentFieldWithStringID(
 private func makeOTPField(
     value: String = UUID().uuidString,
     title: String = UUID().uuidString
-) -> AnywayPayment.Field {
+) -> AnywayPayment.Element.Field {
     
     .init(id: .otp, value: value, title: title)
 }
