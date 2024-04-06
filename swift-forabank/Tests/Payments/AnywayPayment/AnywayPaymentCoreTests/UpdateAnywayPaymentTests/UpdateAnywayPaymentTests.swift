@@ -87,6 +87,27 @@ extension AnywayPayment.Element.Parameter {
     }
 }
 
+private extension AnywayPayment.Element.Field {
+    
+    func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
+        
+        .init(id: id, value: fieldUpdate.value, title: fieldUpdate.title)
+    }
+}
+
+private extension AnywayPayment.Element.Parameter {
+    
+    func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
+        
+        .init(
+            field: .init(id: field.id, value: fieldUpdate.value),
+            masking: masking,
+            validation: validation,
+            uiAttributes: uiAttributes
+        )
+    }
+}
+
 extension AnywayPayment.Element.Parameter.UIAttributes {
     
     enum DataType: Equatable {
@@ -152,7 +173,7 @@ extension AnywayPayment {
         elements.update(with: update)
         
         let otp = Element.Field(id: .otp, value: "", title: "")
-        elements[id: .otp] = update.details.control.needOTP ? .field(otp) : nil
+        elements[fieldID: .otp] = update.details.control.needOTP ? .field(otp) : nil
         
         return .init(
             elements: elements,
@@ -166,7 +187,7 @@ extension AnywayPayment {
 
 private extension Array where Element == AnywayPayment.Element {
     
-    subscript(id id: Element.Field.ID) -> Element? {
+    subscript(fieldID id: Element.Field.ID) -> Element? {
         
         get { firstIndex(matching: id).map { self[$0] } }
         
@@ -221,22 +242,24 @@ private extension Array where Element == AnywayPayment.Element {
         
         self = map {
             
-            guard let id = $0.fieldStringID,
+            guard let id = $0.stringID,
                   let matching = updateFields[id]
             else { return $0 }
             
-            return .field(.init(
-                id: .string(id),
-                value: matching.value,
-                title: matching.title
-            ))
+            switch $0 {
+            case let .field(field):
+                return .field(field.updating(with: matching))
+                
+            case let .parameter(parameter):
+                return .parameter(parameter.updating(with: matching))
+            }
         }
     }
     
     mutating func appendComplementaryFields(
         from updateFields: [AnywayPaymentUpdate.Field]
     ) {
-        let existingIDs = stringFieldIDs
+        let existingIDs = stringIDs
         let complimentary: [Element] = updateFields
             .filter { !existingIDs.contains($0.name) }
             .map(Element.Field.init)
@@ -245,9 +268,9 @@ private extension Array where Element == AnywayPayment.Element {
         self.append(contentsOf: complimentary)
     }
     
-    private var stringFieldIDs: [String] {
+    private var stringIDs: [String] {
         
-        compactMap(\.fieldStringID)
+        compactMap(\.stringID)
     }
     
     mutating func appendParameters(
@@ -266,13 +289,24 @@ private extension AnywayPayment.Element {
         
         return field.id
     }
+}
+
+private extension AnywayPayment.Element {
     
-    var fieldStringID: String? {
+    var stringID: String? {
         
-        guard case let .string(string) = fieldID
-        else { return nil }
-        
-        return string
+        switch self {
+        case let .field(field):
+            switch field.id {
+            case .otp:
+                return nil
+            case let .string(id):
+                return id
+            }
+            
+        case let .parameter(parameter):
+            return parameter.field.id
+        }
     }
 }
 
@@ -304,6 +338,7 @@ private extension AnywayPayment.Element.Parameter {
 private extension AnywayPayment.Element.Parameter.Field {
     
     init(_ field: AnywayPaymentUpdate.Parameter.Field) {
+        
         self.init(id: field.id, value: field.content)
     }
 }
@@ -311,6 +346,7 @@ private extension AnywayPayment.Element.Parameter.Field {
 private extension AnywayPayment.Element.Parameter.Masking {
     
     init(_ masking: AnywayPaymentUpdate.Parameter.Masking) {
+        
         self.init(inputMask: masking.inputMask, mask: masking.mask)
     }
 }
@@ -318,6 +354,7 @@ private extension AnywayPayment.Element.Parameter.Masking {
 private extension AnywayPayment.Element.Parameter.Validation {
     
     init(_ validation: AnywayPaymentUpdate.Parameter.Validation) {
+#warning("mess with values to check mapping with tests")
         self.init(
             isRequired: validation.isRequired,
             maxLength: validation.maxLength,
@@ -964,6 +1001,45 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         }
     }
     
+    func test_update_shouldUpdateExistingParameterOnUpdateWithDifferentValue() {
+        
+        let id = anyMessage()
+        let parameter = makeAnywayPaymentParameterWithID(id)
+        let payment = makeAnywayPayment(elements: [.parameter(parameter)])
+        
+        let newValue = anyMessage()
+        let fieldUpdate = makeAnywayPaymentUpdateField(id, value: newValue)
+        let update = makeAnywayPaymentUpdate(fields: [fieldUpdate])
+        
+        assert(payment, on: update) {
+            
+            $0.elements = [.parameter(parameter.updating(value: newValue))]
+        }
+    }
+
+    func test_update_shouldUpdateExistingParameterOnMatchingIDFieldUpdateWithDifferentValue() {
+        
+        let matchingID = anyMessage()
+        let parameter = makeAnywayPaymentParameterWithID(matchingID)
+        let payment = makeAnywayPayment(elements: [.parameter(parameter)])
+        
+        let newValue = anyMessage()
+        let fieldUpdate = makeAnywayPaymentUpdateField(matchingID, value: newValue)
+        let (parameterUpdate2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
+        let update = makeAnywayPaymentUpdate(
+            fields: [fieldUpdate],
+            parameters: [parameterUpdate2]
+        )
+        
+        assert(payment, on: update) {
+            
+            $0.elements = [
+                .parameter(parameter.updating(value: newValue)),
+                .parameter(updatedParameter2)
+            ]
+        }
+    }
+
     // MARK: - Helpers
     
     private typealias UpdateToExpected<T> = (_ value: inout T) -> Void
@@ -1173,6 +1249,15 @@ private func makeAnywayPaymentParameter(
         masking: masking,
         validation: validation,
         uiAttributes: uiAttributes
+    )
+}
+
+private func makeAnywayPaymentParameterWithID(
+    _ id: String = anyMessage()
+) -> AnywayPayment.Element.Parameter {
+    
+    makeAnywayPaymentParameter(
+        field: makeAnywayPaymentElementParameterField(id: id)
     )
 }
 
@@ -1680,4 +1765,17 @@ private func makeAnywayPaymentUpdateParameterUIAttributes(
         type: type,
         viewType: viewType
     )
+}
+
+private extension AnywayPayment.Element.Parameter {
+    
+    func updating(value: String?) -> Self {
+        
+        .init(
+            field: .init(id: field.id, value: value),
+            masking: masking,
+            validation: validation,
+            uiAttributes: uiAttributes
+        )
+    }
 }
