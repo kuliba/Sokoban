@@ -8,428 +8,6 @@
 import AnywayPaymentCore
 import XCTest
 
-struct AnywayPayment: Equatable {
-    
-    var elements: [Element]
-    let hasAmount: Bool
-    let isFinalStep: Bool
-    let isFraudSuspected: Bool
-    var status: Status?
-}
-
-extension AnywayPayment {
-    
-    enum Element: Equatable {
-        
-        case field(Field)
-        case parameter(Parameter)
-    }
-    
-    enum Status: Equatable {
-        
-        case infoMessage(String)
-    }
-}
-
-extension AnywayPayment.Element {
-    
-    struct Field: Identifiable, Equatable {
-        
-        let id: ID
-        let value: String
-        let title: String
-    }
-    
-    struct Parameter: Equatable {
-        
-        let field: Field
-        let masking: Masking
-        let validation: Validation
-        let uiAttributes: UIAttributes
-    }
-}
-
-extension AnywayPayment.Element.Parameter {
-    
-    struct Field: Identifiable, Equatable {
-        
-        let id: String
-        let value: String?
-    }
-    
-    struct Masking: Equatable {
-        
-        let inputMask: String?
-        let mask: String?
-    }
-    
-    struct Validation: Equatable {
-        
-        let isRequired: Bool
-        let maxLength: Int?
-        let minLength: Int?
-        let regExp: String
-    }
-    
-    struct UIAttributes: Equatable {
-        
-        let dataType: DataType // not used for `viewType: ViewType = .input` https://shorturl.at/hnrE1
-        let group: String?
-        let isPrint: Bool // not used for `type: FieldType = .input`
-        let phoneBook: Bool
-        let isReadOnly: Bool
-        let subGroup: String?
-        let subTitle: String?
-        let svgImage: String?
-        let title: String
-        let type: FieldType
-        let viewType: ViewType
-    }
-}
-
-private extension AnywayPayment.Element.Field {
-    
-    func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
-        
-        .init(id: id, value: fieldUpdate.value, title: fieldUpdate.title)
-    }
-}
-
-private extension AnywayPayment.Element.Parameter {
-    
-    func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
-        
-        .init(
-            field: .init(id: field.id, value: fieldUpdate.value),
-            masking: masking,
-            validation: validation,
-            uiAttributes: uiAttributes
-        )
-    }
-}
-
-extension AnywayPayment.Element.Parameter.UIAttributes {
-    
-    enum DataType: Equatable {
-        
-        case string
-        case pairs([Pair])
-        
-        struct Pair: Equatable {
-            
-            let key: String
-            let value: String
-        }
-    }
-    
-    enum FieldType: Equatable {
-        
-        case input, select, maskList
-    }
-    
-    enum InputFieldType: Equatable {
-        
-        case account
-        case address
-        case amount
-        case bank
-        case bic
-        case counter
-        case date
-        case insurance
-        case inn
-        case name
-        case oktmo
-        case penalty
-        case phone
-        case purpose
-        case recipient
-        case view
-    }
-    
-    enum ViewType: Equatable {
-        
-        case constant, input, output
-    }
-}
-
-extension AnywayPayment.Element.Field {
-    
-    enum ID: Hashable {
-        
-        case otp
-        case string(String)
-    }
-}
-
-extension AnywayPayment {
-    
-    func update(with update: AnywayPaymentUpdate) -> Self {
-        
-        let infoMessage = update.details.info.infoMessage
-        let status = infoMessage.map(AnywayPayment.Status.infoMessage)
-        
-        var elements = elements
-        elements.update(with: update)
-        
-        let otp = Element.Field(id: .otp, value: "", title: "")
-        elements[fieldID: .otp] = update.details.control.needOTP ? .field(otp) : nil
-        
-        return .init(
-            elements: elements,
-            hasAmount: update.details.control.needSum,
-            isFinalStep: update.details.control.isFinalStep,
-            isFraudSuspected: update.details.control.isFraudSuspected,
-            status: status
-        )
-    }
-}
-
-private extension Array where Element == AnywayPayment.Element {
-    
-    subscript(fieldID id: Element.Field.ID) -> Element? {
-        
-        get { firstIndex(matching: id).map { self[$0] } }
-        
-        set {
-            guard let index = firstIndex(matching: id)
-            else {
-                if let newValue { append(newValue) }
-                return
-            }
-            
-            if let newValue {
-                if case let .field(field) = newValue, field.id == id {
-                    self[index] = newValue
-                } else {
-                    append(newValue)
-                }
-            } else {
-                remove(at: index)
-            }
-        }
-    }
-    
-    func firstIndex(
-        matching id: AnywayPayment.Element.Field.ID
-    ) -> Self.Index? {
-        
-        firstIndex {
-            
-            guard let fieldID = $0.fieldID else { return false }
-            
-            return fieldID == id
-        }
-    }
-}
-
-private extension Array where Element == AnywayPayment.Element {
-    
-    mutating func update(
-        with update: AnywayPaymentUpdate
-    ) {
-        updatePrimaryFields(from: update.fields)
-        appendComplementaryFields(from: update.fields)
-        appendParameters(from: update.parameters)
-    }
-    
-    mutating func updatePrimaryFields(
-        from updateFields: [AnywayPaymentUpdate.Field]
-    ) {
-        let updateFields = Dictionary(
-            uniqueKeysWithValues: updateFields.map { ($0.name, $0) }
-        )
-        
-        self = map {
-            
-            guard let id = $0.stringID,
-                  let matching = updateFields[id]
-            else { return $0 }
-            
-            switch $0 {
-            case let .field(field):
-                return .field(field.updating(with: matching))
-                
-            case let .parameter(parameter):
-                return .parameter(parameter.updating(with: matching))
-            }
-        }
-    }
-    
-    mutating func appendComplementaryFields(
-        from updateFields: [AnywayPaymentUpdate.Field]
-    ) {
-        let existingIDs = stringIDs
-        let complimentary: [Element] = updateFields
-            .filter { !existingIDs.contains($0.name) }
-            .map(Element.Field.init)
-            .map(Element.field)
-        
-        self.append(contentsOf: complimentary)
-    }
-    
-    private var stringIDs: [String] {
-        
-        compactMap(\.stringID)
-    }
-    
-    mutating func appendParameters(
-        from updateParameters: [AnywayPaymentUpdate.Parameter]
-    ) {
-        let parameters = updateParameters.map(AnywayPayment.Element.Parameter.init)
-        append(contentsOf: parameters.map(Element.parameter))
-    }
-}
-
-private extension AnywayPayment.Element {
-    
-    var fieldID: Field.ID? {
-        
-        guard case let .field(field) = self else { return nil }
-        
-        return field.id
-    }
-}
-
-private extension AnywayPayment.Element {
-    
-    var stringID: String? {
-        
-        switch self {
-        case let .field(field):
-            switch field.id {
-            case .otp:
-                return nil
-            case let .string(id):
-                return id
-            }
-            
-        case let .parameter(parameter):
-            return parameter.field.id
-        }
-    }
-}
-
-private extension AnywayPayment.Element.Field {
-    
-    init(_ field: AnywayPaymentUpdate.Field) {
-        
-        self.init(
-            id: .string(field.name),
-            value: field.value,
-            title: field.title
-        )
-    }
-}
-
-private extension AnywayPayment.Element.Parameter {
-    
-    init(_ parameter: AnywayPaymentUpdate.Parameter) {
-        
-        self.init(
-            field: .init(parameter.field),
-            masking: .init(parameter.masking),
-            validation: .init(parameter.validation),
-            uiAttributes: .init(parameter.uiAttributes)
-        )
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.Field {
-    
-    init(_ field: AnywayPaymentUpdate.Parameter.Field) {
-        
-        self.init(id: field.id, value: field.content)
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.Masking {
-    
-    init(_ masking: AnywayPaymentUpdate.Parameter.Masking) {
-        
-        self.init(inputMask: masking.inputMask, mask: masking.mask)
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.Validation {
-    
-    init(_ validation: AnywayPaymentUpdate.Parameter.Validation) {
-        
-        self.init(
-            isRequired: validation.isRequired,
-            maxLength: validation.maxLength,
-            minLength: validation.minLength,
-            regExp: validation.regExp
-        )
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.UIAttributes {
-    
-    init(_ uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes) {
-        
-        self.init(
-            dataType: .init(uiAttributes.dataType),
-            group: uiAttributes.group,
-            isPrint: uiAttributes.isPrint,
-            phoneBook: uiAttributes.phoneBook,
-            isReadOnly: uiAttributes.isReadOnly,
-            subGroup: uiAttributes.subGroup,
-            subTitle: uiAttributes.subTitle,
-            svgImage: uiAttributes.svgImage,
-            title: uiAttributes.title,
-            type: .init(uiAttributes.type),
-            viewType: .init(uiAttributes.viewType)
-        )
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
-    
-    init(_ dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType) {
-
-        switch dataType {
-        case .string:
-            self = .string
-            
-        case let .pairs(pairs):
-            self = .pairs(pairs.map(Pair.init))
-        }
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
-    
-    init(_ pairs: AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair) {
-        
-        self.init(key: pairs.key, value: pairs.value)
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.UIAttributes.FieldType {
-    
-    init(_ fieldType: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType) {
-        
-        switch fieldType {
-        case .input:    self = .input
-        case .select:   self = .select
-        case .maskList: self = .maskList
-        }
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.UIAttributes.ViewType {
-    
-    init(_ viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType) {
-        
-        switch viewType {
-        case .constant: self = .constant
-        case .input:    self = .input
-        case .output:   self = .output
-        }
-    }
-}
-
 final class UpdateAnywayPaymentTests: XCTestCase {
     
     // MARK: - amount
@@ -1765,7 +1343,7 @@ private func makeAnywayPaymentAndUpdateParameterUIAttributes(
         viewType: viewType
     )
     let updated = makeAnywayPaymentElementParameterUIAttributes(
-        dataType: .init(dataType),
+        dataType: .init(with: dataType),
         group: group,
         isPrint: isPrint,
         phoneBook: phoneBook,
@@ -1774,11 +1352,57 @@ private func makeAnywayPaymentAndUpdateParameterUIAttributes(
         subTitle: subTitle,
         svgImage: svgImage,
         title: title,
-        type: .init(type),
-        viewType: .init(viewType)
+        type: .init(with: type),
+        viewType: .init(with: viewType)
     )
     
     return (update, updated)
+}
+
+private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
+    
+    init(with dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType) {
+        
+        switch dataType {
+        case .string:
+            self = .string
+            
+        case let .pairs(pairs):
+            self = .pairs(pairs.map(Pair.init))
+        }
+    }
+}
+
+private extension AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
+    
+    init(with pairs: AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair) {
+        
+        self.init(key: pairs.key, value: pairs.value)
+    }
+}
+
+private extension AnywayPayment.Element.Parameter.UIAttributes.FieldType {
+    
+    init(with fieldType: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType) {
+        
+        switch fieldType {
+        case .input:    self = .input
+        case .select:   self = .select
+        case .maskList: self = .maskList
+        }
+    }
+}
+
+private extension AnywayPayment.Element.Parameter.UIAttributes.ViewType {
+    
+    init(with viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType) {
+        
+        switch viewType {
+        case .constant: self = .constant
+        case .input:    self = .input
+        case .output:   self = .output
+        }
+    }
 }
 
 private func makeAnywayPaymentUpdateParameterField(
