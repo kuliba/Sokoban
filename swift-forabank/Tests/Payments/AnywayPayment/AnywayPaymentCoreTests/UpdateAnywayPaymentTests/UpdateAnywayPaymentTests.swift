@@ -238,7 +238,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     // MARK: - complimentary fields
     
-    func test_update_shouldAppendComplementaryField() {
+    func test_update_shouldAppendComplementaryFieldToEmpty() {
         
         let payment = makeAnywayPayment()
         let updateField = makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa")
@@ -252,7 +252,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         }
     }
     
-    func test_update_shouldAppendComplementaryFields() {
+    func test_update_shouldAppendComplementaryFieldsToEmpty() {
         
         let payment = makeAnywayPayment()
         let update = makeAnywayPaymentUpdate(
@@ -271,6 +271,36 @@ final class UpdateAnywayPaymentTests: XCTestCase {
                 .init(id: .string("b"), value: "bb", title: "bbb"),
                 .init(id: .string("c"), value: "cc", title: "ccc"),
             ].map(AnywayPayment.Element.field)
+        }
+    }
+    
+    func test_update_shouldAppendComplimentaryStringIDFieldToNonEmpty() {
+        
+        let field = makeAnywayPaymentFieldWithStringID()
+        let payment = makeAnywayPayment(fields: [field])
+        let updateField = makeAnywayPaymentUpdateField()
+        let update = makeAnywayPaymentUpdate(fields: [updateField])
+        
+        assert(payment, on: update) {
+            
+            let fields = [field].appending(updateField.field)
+            $0.elements = fields.map(AnywayPayment.Element.field)
+        }
+    }
+    
+    func test_update_shouldAppendComplimentaryStringIDFieldsToNonEmpty() {
+        
+        let field = makeAnywayPaymentFieldWithStringID()
+        let payment = makeAnywayPayment(fields: [field])
+        let (updateField1, updateField2) = (makeAnywayPaymentUpdateField(), makeAnywayPaymentUpdateField())
+        let update = makeAnywayPaymentUpdate(fields: [
+            updateField1, updateField2
+        ])
+        
+        assert(payment, on: update) {
+            
+            let fields = [field, updateField1.field, updateField2.field]
+            $0.elements = fields.map(AnywayPayment.Element.field)
         }
     }
     
@@ -348,37 +378,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         }
     }
     
-    // MARK: - non-complimentary fields
-    
-    func test_update_shouldAppendComplimentaryStringIDField() {
-        
-        let field = makeAnywayPaymentFieldWithStringID()
-        let payment = makeAnywayPayment(fields: [field])
-        let updateField = makeAnywayPaymentUpdateField()
-        let update = makeAnywayPaymentUpdate(fields: [updateField])
-        
-        assert(payment, on: update) {
-            
-            let fields = [field].appending(updateField.field)
-            $0.elements = fields.map(AnywayPayment.Element.field)
-        }
-    }
-    
-    func test_update_shouldAppendComplimentaryStringIDFields() {
-        
-        let field = makeAnywayPaymentFieldWithStringID()
-        let payment = makeAnywayPayment(fields: [field])
-        let (updateField1, updateField2) = (makeAnywayPaymentUpdateField(), makeAnywayPaymentUpdateField())
-        let update = makeAnywayPaymentUpdate(fields: [
-            updateField1, updateField2
-        ])
-        
-        assert(payment, on: update) {
-            
-            let fields = [field, updateField1.field, updateField2.field]
-            $0.elements = fields.map(AnywayPayment.Element.field)
-        }
-    }
+    // MARK: - non-complimentary (primary) fields
     
     func test_update_shouldNotChangeStringIDFieldWithSameValueInNonComplementaryFields() {
         
