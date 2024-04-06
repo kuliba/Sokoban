@@ -272,63 +272,6 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         }
     }
     
-    // MARK: - OTP
-    
-    func test_update_shouldNotAddOTPFieldOnNeedOTPFalse() {
-        
-        assert(
-            makeAnywayPaymentWithoutOTP(),
-            on: makeAnywayPaymentUpdate(needOTP: false)
-        )
-    }
-    
-    func test_update_shouldAddOTPFieldOnNeedOTPTrue() {
-        
-        let update = makeAnywayPaymentUpdate(needOTP: true)
-        let updated = makeAnywayPaymentWithoutOTP().update(with: update)
-        
-        XCTAssert(hasOTPField(updated))
-    }
-    
-    func test_update_shouldRemoveOTPFieldOnNeedOTPFalse() {
-        
-        let update = makeAnywayPaymentUpdate(needOTP: false)
-        let updated = makeAnywayPaymentWithOTP().update(with: update)
-        
-        XCTAssertFalse(hasOTPField(updated))
-    }
-    
-    func test_update_shouldAppendOTPFieldAfterEmptyComplementaryFieldsOnNeedOTPTrue() {
-        
-        let payment = makeAnywayPaymentWithoutOTP()
-        let emptyFields = [AnywayPaymentUpdate.Field]()
-        let update = makeAnywayPaymentUpdate(
-            fields: emptyFields,
-            needOTP: true
-        )
-        
-        let updated = payment.update(with: update)
-        
-        assertOTP(in: updated, precedes: emptyFields)
-    }
-    
-    func test_update_shouldAppendOTPFieldAfterComplementaryFieldsOnNeedOTPTrue() {
-        
-        let payment = makeAnywayPaymentWithoutOTP()
-        let updateFields = [
-            makeAnywayPaymentUpdateField(),
-            makeAnywayPaymentUpdateField(),
-        ]
-        let update = makeAnywayPaymentUpdate(
-            fields: updateFields,
-            needOTP: true
-        )
-        
-        let updated = payment.update(with: update)
-        
-        assertOTP(in: updated, precedes: updateFields)
-    }
-    
     // MARK: - non-complimentary fields
     
     func test_update_shouldAppendComplimentaryStringIDField() {
@@ -389,6 +332,63 @@ final class UpdateAnywayPaymentTests: XCTestCase {
                 makeAnywayPaymentField(.string("abc123"), value: "aa", title: "bbb")
             ]
         }
+    }
+    
+    // MARK: - OTP
+    
+    func test_update_shouldNotAddOTPFieldOnNeedOTPFalse() {
+        
+        assert(
+            makeAnywayPaymentWithoutOTP(),
+            on: makeAnywayPaymentUpdate(needOTP: false)
+        )
+    }
+    
+    func test_update_shouldAddOTPFieldOnNeedOTPTrue() {
+        
+        let update = makeAnywayPaymentUpdate(needOTP: true)
+        let updated = makeAnywayPaymentWithoutOTP().update(with: update)
+        
+        XCTAssert(hasOTPField(updated))
+    }
+    
+    func test_update_shouldRemoveOTPFieldOnNeedOTPFalse() {
+        
+        let update = makeAnywayPaymentUpdate(needOTP: false)
+        let updated = makeAnywayPaymentWithOTP().update(with: update)
+        
+        XCTAssertFalse(hasOTPField(updated))
+    }
+    
+    func test_update_shouldAppendOTPFieldAfterEmptyComplementaryFieldsOnNeedOTPTrue() {
+        
+        let payment = makeAnywayPaymentWithoutOTP()
+        let emptyFields = [AnywayPaymentUpdate.Field]()
+        let update = makeAnywayPaymentUpdate(
+            fields: emptyFields,
+            needOTP: true
+        )
+        
+        let updated = payment.update(with: update)
+        
+        assertOTP(in: updated, precedes: emptyFields)
+    }
+    
+    func test_update_shouldAppendOTPFieldAfterComplementaryFieldsOnNeedOTPTrue() {
+        
+        let payment = makeAnywayPaymentWithoutOTP()
+        let updateFields = [
+            makeAnywayPaymentUpdateField(),
+            makeAnywayPaymentUpdateField(),
+        ]
+        let update = makeAnywayPaymentUpdate(
+            fields: updateFields,
+            needOTP: true
+        )
+        
+        let updated = payment.update(with: update)
+        
+        assertOTP(in: updated, precedes: updateFields)
     }
     
     // MARK: - Helpers
