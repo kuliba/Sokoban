@@ -984,18 +984,18 @@ private func makeAnywayPaymentWithOTP(
 }
 
 private func makeAnywayPaymentField(
-    _ id: AnywayPayment.Element.Field.ID = .string(UUID().uuidString),
-    value: String = UUID().uuidString,
-    title: String = UUID().uuidString
+    _ id: AnywayPayment.Element.Field.ID = .string(anyMessage()),
+    value: String = anyMessage(),
+    title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
     
     .init(id: id, value: value, title: title)
 }
 
 private func makeAnywayPaymentFieldWithStringID(
-    _ id: String = UUID().uuidString,
-    value: String = UUID().uuidString,
-    title: String = UUID().uuidString
+    _ id: String = anyMessage(),
+    value: String = anyMessage(),
+    title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
     
     makeAnywayPaymentField(.string(id), value: value, title: title)
@@ -1008,8 +1008,8 @@ private func makeAnywayPaymentParameter(
 }
 
 private func makeOTPField(
-    value: String = UUID().uuidString,
-    title: String = UUID().uuidString
+    value: String = anyMessage(),
+    title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
     
     .init(id: .otp, value: value, title: title)
@@ -1154,9 +1154,9 @@ private func makeAnywayPaymentUpdateDetailsInfo(
 }
 
 private func makeAnywayPaymentUpdateField(
-    _ name: String = UUID().uuidString,
-    value: String = UUID().uuidString,
-    title: String = UUID().uuidString
+    _ name: String = anyMessage(),
+    value: String = anyMessage(),
+    title: String = anyMessage()
 ) -> AnywayPaymentUpdate.Field {
     
     .init(
