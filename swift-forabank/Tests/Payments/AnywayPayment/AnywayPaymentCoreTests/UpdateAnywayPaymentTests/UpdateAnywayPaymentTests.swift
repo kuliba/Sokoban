@@ -278,7 +278,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let field = makeAnywayPaymentFieldWithStringID()
         let payment = makeAnywayPayment(fields: [field])
-        let (updateField, updated) = makeAnywayPaymentAndUpdateField()
+        let (updateField, updated) = makeAnywayPaymentAndUpdateFields()
         let update = makeAnywayPaymentUpdate(fields: [updateField])
         
         assert(payment, on: update) {
@@ -292,8 +292,8 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let field = makeAnywayPaymentFieldWithStringID()
         let payment = makeAnywayPayment(fields: [field])
-        let (updateField1, updated1) = makeAnywayPaymentAndUpdateField()
-        let (updateField2, updated2) = makeAnywayPaymentAndUpdateField()
+        let (updateField1, updated1) = makeAnywayPaymentAndUpdateFields()
+        let (updateField2, updated2) = makeAnywayPaymentAndUpdateFields()
         let update = makeAnywayPaymentUpdate(fields: [
             updateField1, updateField2
         ])
@@ -435,32 +435,30 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAppendOTPFieldAfterEmptyComplementaryFieldsOnNeedOTPTrue() {
         
         let payment = makeAnywayPaymentWithoutOTP()
-        let emptyFields = [AnywayPaymentUpdate.Field]()
         let update = makeAnywayPaymentUpdate(
-            fields: emptyFields,
+            fields: [],
             needOTP: true
         )
         
         let updated = payment.update(with: update)
         
-        assertOTP(in: updated, precedes: emptyFields)
+        assertOTP(in: updated, precedes: [])
     }
     
     func test_update_shouldAppendOTPFieldAfterComplementaryFieldsOnNeedOTPTrue() {
         
         let payment = makeAnywayPaymentWithoutOTP()
-        let updateFields = [
-            makeAnywayPaymentUpdateField(),
-            makeAnywayPaymentUpdateField(),
-        ]
+        let (updateField1, updated1) = makeAnywayPaymentAndUpdateFields()
+        let (updateField2, updated2) = makeAnywayPaymentAndUpdateFields()
+
         let update = makeAnywayPaymentUpdate(
-            fields: updateFields,
+            fields: [updateField1, updateField2],
             needOTP: true
         )
         
         let updated = payment.update(with: update)
         
-        assertOTP(in: updated, precedes: updateFields)
+        assertOTP(in: updated, precedes: [updated1, updated2])
     }
     
     // MARK: - parameters
@@ -468,12 +466,12 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAppendParameterToEmpty() {
         
         let payment = makeAnywayPayment(parameters: [])
-        let updateParameter = makeAnywayPaymentUpdateParameter()
+        let (updateParameter, updated) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
         
         assert(payment, on: update) {
             
-            $0.elements = [.parameter(updateParameter.parameter)]
+            $0.elements = [.parameter(updated)]
         }
     }
     
@@ -481,12 +479,12 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let field = makeAnywayPaymentField()
         let payment = makeAnywayPayment(fields: [field])
-        let updateParameter = makeAnywayPaymentUpdateParameter()
+        let (updateParameter, updated) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
         
         assert(payment, on: update) {
             
-            $0.elements = [.field(field), .parameter(updateParameter.parameter)]
+            $0.elements = [.field(field), .parameter(updated)]
         }
     }
     
@@ -495,12 +493,12 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let field1 = makeAnywayPaymentField()
         let field2 = makeAnywayPaymentField()
         let payment = makeAnywayPayment(fields: [field1, field2])
-        let updateParameter = makeAnywayPaymentUpdateParameter()
+        let (updateParameter, updated) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
         
         assert(payment, on: update) {
             
-            $0.elements = [.field(field1), .field(field2), .parameter(updateParameter.parameter)]
+            $0.elements = [.field(field1), .field(field2), .parameter(updated)]
         }
     }
     
@@ -511,12 +509,12 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let payment = makeAnywayPayment(
             elements: [.field(field), .parameter(parameter)]
         )
-        let updateParameter = makeAnywayPaymentUpdateParameter()
+        let (updateParameter, updated) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
         
         assert(payment, on: update) {
             
-            $0.elements = [.field(field), .parameter(parameter), .parameter(updateParameter.parameter)]
+            $0.elements = [.field(field), .parameter(parameter), .parameter(updated)]
         }
     }
     
@@ -527,12 +525,12 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let payment = makeAnywayPayment(
             elements: [.parameter(parameter), .field(field)]
         )
-        let updateParameter = makeAnywayPaymentUpdateParameter()
+        let (updateParameter, updated) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
         
         assert(payment, on: update) {
             
-            $0.elements = [.parameter(parameter), .field(field), .parameter(updateParameter.parameter)]
+            $0.elements = [.parameter(parameter), .field(field), .parameter(updated)]
         }
     }
     
@@ -540,12 +538,12 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let parameter = makeAnywayPaymentParameter()
         let payment = makeAnywayPayment(parameters: [parameter])
-        let updateParameter = makeAnywayPaymentUpdateParameter()
+        let (updateParameter, updated) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
         
         assert(payment, on: update) {
             
-            $0.elements = [.parameter(parameter), .parameter(updateParameter.parameter)]
+            $0.elements = [.parameter(parameter), .parameter(updated)]
         }
     }
     
@@ -554,30 +552,27 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let parameter1 = makeAnywayPaymentParameter()
         let parameter2 = makeAnywayPaymentParameter()
         let payment = makeAnywayPayment(parameters: [parameter1, parameter2])
-        let updateParameter = makeAnywayPaymentUpdateParameter()
+        let (updateParameter, updated) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
         
         assert(payment, on: update) {
             
-            $0.elements = [parameter1, parameter2, updateParameter.parameter]
-                .map(AnywayPayment.Element.parameter)
+            $0.elements = [parameter1, parameter2, updated].map(AnywayPayment.Element.parameter)
         }
     }
     
     func test_update_shouldAppendTwoParametersToEmpty() {
         
         let payment = makeAnywayPayment(parameters: [])
-        let updateParameter1 = makeAnywayPaymentUpdateParameter()
-        let updateParameter2 = makeAnywayPaymentUpdateParameter()
+        let (updateParameter1, updated1) = makeAnywayPaymentAndUpdateParameters()
+        let (updateParameter2, updated2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
             parameters: [updateParameter1, updateParameter2]
         )
         
         assert(payment, on: update) {
             
-            $0.elements = [updateParameter1, updateParameter2]
-                .map(\.parameter)
-                .map(AnywayPayment.Element.parameter)
+            $0.elements = [updated1, updated2].map(AnywayPayment.Element.parameter)
         }
     }
     
@@ -585,17 +580,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let field = makeAnywayPaymentField()
         let payment = makeAnywayPayment(fields: [field])
-        let updateParameter1 = makeAnywayPaymentUpdateParameter()
-        let updateParameter2 = makeAnywayPaymentUpdateParameter()
+        let (updateParameter1, updated1) = makeAnywayPaymentAndUpdateParameters()
+        let (updateParameter2, updated2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
             parameters: [updateParameter1, updateParameter2]
         )
         
         assert(payment, on: update) {
             
-            let appending = [updateParameter1, updateParameter2]
-                .map(\.parameter)
-                .map(AnywayPayment.Element.parameter)
+            let appending = [updated1, updated2].map(AnywayPayment.Element.parameter)
             $0.elements = [.field(field)] + appending
         }
     }
@@ -605,17 +598,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let field1 = makeAnywayPaymentField()
         let field2 = makeAnywayPaymentField()
         let payment = makeAnywayPayment(fields: [field1, field2])
-        let updateParameter1 = makeAnywayPaymentUpdateParameter()
-        let updateParameter2 = makeAnywayPaymentUpdateParameter()
+        let (updateParameter1, updated1) = makeAnywayPaymentAndUpdateParameters()
+        let (updateParameter2, updated2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
             parameters: [updateParameter1, updateParameter2]
         )
         
         assert(payment, on: update) {
             
-            let appending = [updateParameter1, updateParameter2]
-                .map(\.parameter)
-                .map(AnywayPayment.Element.parameter)
+            let appending = [updated1, updated2].map(AnywayPayment.Element.parameter)
             $0.elements = [.field(field1), .field(field2)] + appending
         }
     }
@@ -627,17 +618,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let payment = makeAnywayPayment(
             elements: [.field(field), .parameter(parameter)]
         )
-        let updateParameter1 = makeAnywayPaymentUpdateParameter()
-        let updateParameter2 = makeAnywayPaymentUpdateParameter()
+        let (updateParameter1, updated1) = makeAnywayPaymentAndUpdateParameters()
+        let (updateParameter2, updated2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
             parameters: [updateParameter1, updateParameter2]
         )
         
         assert(payment, on: update) {
             
-            let appending = [updateParameter1, updateParameter2]
-                .map(\.parameter)
-                .map(AnywayPayment.Element.parameter)
+            let appending = [updated1, updated2].map(AnywayPayment.Element.parameter)
             $0.elements = [.field(field), .parameter(parameter)] + appending
         }
     }
@@ -649,17 +638,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let payment = makeAnywayPayment(
             elements: [.parameter(parameter), .field(field)]
         )
-        let updateParameter1 = makeAnywayPaymentUpdateParameter()
-        let updateParameter2 = makeAnywayPaymentUpdateParameter()
+        let (updateParameter1, updated1) = makeAnywayPaymentAndUpdateParameters()
+        let (updateParameter2, updated2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
             parameters: [updateParameter1, updateParameter2]
         )
         
         assert(payment, on: update) {
             
-            let appending = [updateParameter1, updateParameter2]
-                .map(\.parameter)
-                .map(AnywayPayment.Element.parameter)
+            let appending = [updated1, updated2].map(AnywayPayment.Element.parameter)
             $0.elements = [.parameter(parameter), .field(field)] + appending
         }
     }
@@ -668,16 +655,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let parameter = makeAnywayPaymentParameter()
         let payment = makeAnywayPayment(parameters: [parameter])
-        let updateParameter1 = makeAnywayPaymentUpdateParameter()
-        let updateParameter2 = makeAnywayPaymentUpdateParameter()
+        let (updateParameter1, updated1) = makeAnywayPaymentAndUpdateParameters()
+        let (updateParameter2, updated2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
             parameters: [updateParameter1, updateParameter2]
         )
         
         assert(payment, on: update) {
             
-            let appending = [updateParameter1, updateParameter2].map(\.parameter)
-            $0.elements = ([parameter] + appending)
+            $0.elements = [parameter, updated1, updated2]
                 .map(AnywayPayment.Element.parameter)
         }
     }
@@ -687,16 +673,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let parameter1 = makeAnywayPaymentParameter()
         let parameter2 = makeAnywayPaymentParameter()
         let payment = makeAnywayPayment(parameters: [parameter1, parameter2])
-        let updateParameter1 = makeAnywayPaymentUpdateParameter()
-        let updateParameter2 = makeAnywayPaymentUpdateParameter()
+        let (updateParameter1, updated1) = makeAnywayPaymentAndUpdateParameters()
+        let (updateParameter2, updated2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
             parameters: [updateParameter1, updateParameter2]
         )
         
         assert(payment, on: update) {
             
-            let appending = [updateParameter1, updateParameter2].map(\.parameter)
-            $0.elements = ([parameter1, parameter2] + appending)
+            $0.elements = [parameter1, parameter2, updated1, updated2]
                 .map(AnywayPayment.Element.parameter)
         }
     }
@@ -704,8 +689,8 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAppendFieldAndParameterToEmptyOnUpdateWithParameterAndComplimentoryField() {
         
         let payment = makeAnywayPayment(elements: [])
-        let (updateField, updated) = makeAnywayPaymentAndUpdateField()
-        let updateParameter = makeAnywayPaymentUpdateParameter()
+        let (updateField, updatedField) = makeAnywayPaymentAndUpdateFields()
+        let (updateParameter, updatedParameter) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
             fields: [updateField],
             parameters: [updateParameter]
@@ -713,18 +698,17 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            $0.elements = [.field(updated)]
-            + [updateParameter.parameter].map(AnywayPayment.Element.parameter)
+            $0.elements = [.field(updatedField), .parameter(updatedParameter)]
         }
     }
     
     func test_update_shouldAppendElementsToEmptyOnUpdateWithParametersAndComplimentoryFields() {
         
         let payment = makeAnywayPayment(elements: [])
-        let (updateField1, updated1) = makeAnywayPaymentAndUpdateField()
-        let (updateField2, updated2) = makeAnywayPaymentAndUpdateField()
-        let updateParameter1 = makeAnywayPaymentUpdateParameter()
-        let updateParameter2 = makeAnywayPaymentUpdateParameter()
+        let (updateField1, updated1) = makeAnywayPaymentAndUpdateFields()
+        let (updateField2, updated2) = makeAnywayPaymentAndUpdateFields()
+        let (updateParameter1, updatedParameter1) = makeAnywayPaymentAndUpdateParameters()
+        let (updateParameter2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
             fields: [updateField1, updateField2],
             parameters: [updateParameter1, updateParameter2]
@@ -733,7 +717,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         assert(payment, on: update) {
             
             let complimentaryFields = [updated1, updated2]
-            let parameters = [updateParameter1, updateParameter2].map(\.parameter)
+            let parameters = [updatedParameter1, updatedParameter2]
             $0.elements = complimentaryFields.map(AnywayPayment.Element.field)
             + parameters.map(AnywayPayment.Element.parameter)
         }
@@ -741,11 +725,11 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     func test_update_shouldAppendFieldAndParameterToNonEmptyOnUpdateWithParameterAndComplimentoryField() {
         
-        let fieldElement = makeAnywayPaymentFieldElement()
-        let parameterElement = makeAnywayPaymentParameterElement()
-        let payment = makeAnywayPayment(elements: [fieldElement, parameterElement])
-        let (updateField, updated) = makeAnywayPaymentAndUpdateField()
-        let updateParameter = makeAnywayPaymentUpdateParameter()
+        let field = makeAnywayPaymentField()
+        let parameter = makeAnywayPaymentParameter()
+        let payment = makeAnywayPayment(elements: [.field(field), .parameter(parameter)])
+        let (updateField, updatedField) = makeAnywayPaymentAndUpdateFields()
+        let (updateParameter, updatedParameter) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
             fields: [updateField],
             parameters: [updateParameter]
@@ -753,21 +737,19 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            $0.elements = [fieldElement, parameterElement]
-            + [.field(updated)]
-            + [.parameter(updateParameter.parameter)]
+            $0.elements = [.field(field), .parameter(parameter), .field(updatedField), .parameter(updatedParameter)]
         }
     }
     
     func test_update_shouldAppendElementsToNonEmptyOnUpdateWithParametersAndComplimentoryFields() {
         
-        let fieldElement = makeAnywayPaymentFieldElement()
-        let parameterElement = makeAnywayPaymentParameterElement()
-        let payment = makeAnywayPayment(elements: [fieldElement, parameterElement])
-        let (updateField1, updated1) = makeAnywayPaymentAndUpdateField()
-        let (updateField2, updated2) = makeAnywayPaymentAndUpdateField()
-        let updateParameter1 = makeAnywayPaymentUpdateParameter()
-        let updateParameter2 = makeAnywayPaymentUpdateParameter()
+        let field = makeAnywayPaymentField()
+        let parameter = makeAnywayPaymentParameter()
+        let payment = makeAnywayPayment(elements: [.field(field), .parameter(parameter)])
+        let (updateField1, updatedField1) = makeAnywayPaymentAndUpdateFields()
+        let (updateField2, updatedField2) = makeAnywayPaymentAndUpdateFields()
+        let (updateParameter1, updatedParameter1) = makeAnywayPaymentAndUpdateParameters()
+        let (updateParameter2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
             fields: [updateField1, updateField2],
             parameters: [updateParameter1, updateParameter2]
@@ -775,9 +757,9 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            let complimentaryFields = [updated1, updated2]
-            let parameters = [updateParameter1, updateParameter2].map(\.parameter)
-            $0.elements = [fieldElement, parameterElement]
+            let complimentaryFields = [updatedField1, updatedField2]
+            let parameters = [updatedParameter1, updatedParameter2]
+            $0.elements = [.field(field), .parameter(parameter)]
             + complimentaryFields.map(AnywayPayment.Element.field)
             + parameters.map(AnywayPayment.Element.parameter)
         }
@@ -809,7 +791,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
 
 private func assertOTP(
     in payment: AnywayPayment,
-    precedes fields: [AnywayPaymentUpdate.Field],
+    precedes fields: [AnywayPayment.Element.Field],
     file: StaticString = #file,
     line: UInt = #line
 ) {
@@ -819,36 +801,12 @@ private func assertOTP(
         file: file, line: line
     )
     
-    let fields = fields.map(\.field)
-    
 #warning("this check is for fields only - is it ok or it needs to check all element cases?")
     XCTAssert(
         payment.paymentFields.isElementAfterAll(.otp, inGroup: fields),
         "Expected OTP field after complimentary fields.",
         file: file, line: line
     )
-}
-
-#warning("this could be removed if factory returns both `update` and `updated`")
-private extension AnywayPaymentUpdate.Field {
-    
-    var field: AnywayPayment.Element.Field {
-        
-        .init(
-            id: .string(name),
-            value: value,
-            title: title
-        )
-    }
-}
-
-#warning("this could be removed if factory returns both `update` and `updated`")
-private extension AnywayPaymentUpdate.Parameter {
-    
-    var parameter: AnywayPayment.Element.Parameter {
-        
-        .init()
-    }
 }
 
 private func hasAmountField(
@@ -984,20 +942,6 @@ private func makeAnywayPaymentWithOTP(
     let payment = makeAnywayPayment(fields: [makeOTPField()])
     XCTAssert(hasOTPField(payment), "Expected to have OTP field.", file: file, line: line)
     return payment
-}
-
-private func makeAnywayPaymentFieldElement(
-    _ field: AnywayPayment.Element.Field = makeAnywayPaymentField()
-) -> AnywayPayment.Element {
-    
-    .field(field)
-}
-
-private func makeAnywayPaymentParameterElement(
-    _ parameter: AnywayPayment.Element.Parameter = makeAnywayPaymentParameter()
-) -> AnywayPayment.Element {
-    
-    .parameter(parameter)
 }
 
 private func makeAnywayPaymentField(
@@ -1186,7 +1130,7 @@ private func makeAnywayPaymentUpdateField(
     )
 }
 
-private func makeAnywayPaymentAndUpdateField(
+private func makeAnywayPaymentAndUpdateFields(
     _ name: String = anyMessage(),
     value: String = anyMessage(),
     title: String = anyMessage()
@@ -1218,6 +1162,26 @@ private func makeAnywayPaymentUpdateParameter(
         validation: validation,
         uiAttributes: uiAttributes
     )
+}
+
+private func makeAnywayPaymentAndUpdateParameters(
+    field: AnywayPaymentUpdate.Parameter.Field = makeAnywayPaymentUpdateParameterField(),
+    masking: AnywayPaymentUpdate.Parameter.Masking = makeAnywayPaymentUpdateParameterMasking(),
+    validation: AnywayPaymentUpdate.Parameter.Validation = makeAnywayPaymentUpdateParameterValidation(),
+    uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes = makeAnywayPaymentUpdateParameterUIAttributes()
+) -> (update: AnywayPaymentUpdate.Parameter, updated: AnywayPayment.Element.Parameter) {
+    
+    let update = makeAnywayPaymentUpdateParameter(
+        field: field,
+        masking: masking,
+        validation: validation,
+        uiAttributes: uiAttributes
+    )
+    
+    let updated = makeAnywayPaymentParameter(
+    )
+    
+    return (update, updated)
 }
 
 private func makeAnywayPaymentUpdateParameterField(
