@@ -299,9 +299,9 @@ public extension AnywayPaymentUpdate.Parameter.UIAttributes {
     enum DataType: Equatable {
         
         case string
-        case pairs([Pairs])
+        case pairs([Pair])
         
-        public struct Pairs: Equatable {
+        public struct Pair: Equatable {
             
             public let key: String
             public let value: String
