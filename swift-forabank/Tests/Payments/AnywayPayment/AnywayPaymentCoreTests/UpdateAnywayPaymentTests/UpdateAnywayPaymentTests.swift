@@ -282,6 +282,45 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     // MARK: - parameters
     
+    func test_update_shouldSetParameterValueToNilOnNilUpdateValueAndMissingSnapshot() throws {
+        
+        let payment = makeAnywayPayment(parameters: [])
+        let parameterID = anyMessage()
+        let (parameterUpdate, _) = makeAnywayPaymentAndUpdateParameters(
+            id: parameterID,
+            value: nil
+        )
+        let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
+        
+        let updated = payment.update(with: update)
+        let parameter = try XCTUnwrap(updated[parameterID: parameterID], "Expected parameter with id \(parameterID), but got nil instead.")
+        
+        XCTAssertNil(parameter.field.value)
+        XCTAssertNil(payment.snapshot[parameterID])
+    }
+    
+    func test_update_shouldSetParameterValueToSnapshottedOnNilUpdateValue() throws {
+        
+        let parameterID = anyMessage()
+        let snapshottedValue = anyMessage()
+        let payment = makeAnywayPayment(
+            parameters: [], 
+            snapshot: [parameterID: snapshottedValue]
+        )
+        let (parameterUpdate, _) = makeAnywayPaymentAndUpdateParameters(
+            id: parameterID,
+            value: nil
+        )
+        let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
+        
+        let updated = payment.update(with: update)
+        let parameter = try XCTUnwrap(updated[parameterID: parameterID], "Expected parameter with id \(parameterID), but got nil instead.")
+        
+        XCTAssertNoDiff(parameter.field.value, snapshottedValue, "Expected parameter value set to snapshotted.")
+        XCTAssertNoDiff(payment.snapshot[parameterID], snapshottedValue, "Expected snapshotted value \(snapshottedValue) for parameterID \(parameterID).")
+        XCTAssertNil(parameterUpdate.field.content, "Expected value to be nil.")
+    }
+    
     func test_update_shouldAppendParameterToEmpty() {
         
         let payment = makeAnywayPayment(parameters: [])
@@ -600,7 +639,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             $0.elements = [.parameter(parameter.updating(value: newValue))]
         }
     }
-
+    
     func test_update_shouldUpdateExistingParameterOnMatchingIDFieldUpdateWithDifferentValue() {
         
         let matchingID = anyMessage()
@@ -623,7 +662,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             ]
         }
     }
-
+    
     func test_update_shouldUpdateElementsOnMatchingIDFieldUpdateWithDifferentValue() {
         
         let matchingFieldID = anyMessage()
@@ -656,7 +695,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             ]
         }
     }
-
+    
     // MARK: - Helpers Tests
     
     func test_makeAnywayPaymentAndUpdateParameters() {
@@ -733,7 +772,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         XCTAssertFalse(update.uiAttributes.isPrint)
         XCTAssertFalse(parameter.uiAttributes.isPrint)
-
+        
         XCTAssertNoDiff(update.uiAttributes.viewType, .output)
         XCTAssertNoDiff(parameter.uiAttributes.viewType, .output)
     }
@@ -759,5 +798,21 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             "\nExpected \(expected), but got \(received) instead.",
             file: file, line: line
         )
+    }
+}
+
+private extension AnywayPayment {
+    
+    subscript(parameterID id: String) -> Element.Parameter? {
+        
+        elements.compactMap {
+            
+            guard case let .parameter(parameter) = $0,
+                  parameter.field.id == id
+            else { return nil }
+
+            return parameter
+        }
+        .first
     }
 }

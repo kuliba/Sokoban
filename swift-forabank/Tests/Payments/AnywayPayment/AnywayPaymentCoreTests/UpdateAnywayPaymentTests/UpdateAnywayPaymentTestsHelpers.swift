@@ -88,14 +88,16 @@ func makeAnywayPayment(
     parameters: [AnywayPayment.Element.Parameter] = [],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    hasAmount: Bool = false
+    hasAmount: Bool = false,
+    snapshot: [String: String] = [:]
 ) -> AnywayPayment {
     
     makeAnywayPayment(
         elements: parameters.map(AnywayPayment.Element.parameter),
         hasAmount: hasAmount,
         isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected
+        isFraudSuspected: isFraudSuspected,
+        snapshot: snapshot
     )
 }
 
@@ -103,14 +105,16 @@ func makeAnywayPayment(
     elements: [AnywayPayment.Element],
     hasAmount: Bool = false,
     isFinalStep: Bool = false,
-    isFraudSuspected: Bool = false
+    isFraudSuspected: Bool = false,
+    snapshot: [String: String] = [:]
 ) -> AnywayPayment {
     
     .init(
         elements: elements,
         hasAmount: hasAmount,
         isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected
+        isFraudSuspected: isFraudSuspected,
+        snapshot: snapshot
     )
 }
 

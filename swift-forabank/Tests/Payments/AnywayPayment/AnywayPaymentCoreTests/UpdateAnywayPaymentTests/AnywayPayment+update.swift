@@ -16,7 +16,7 @@ extension AnywayPayment {
         let status = infoMessage.map(AnywayPayment.Status.infoMessage)
         
         var elements = elements
-        elements.update(with: update)
+        elements.update(with: update, and: snapshot)
         
         let otp = Element.Field(id: .otp, value: "", title: "")
         elements[fieldID: .otp] = update.details.control.needOTP ? .field(otp) : nil
@@ -26,6 +26,7 @@ extension AnywayPayment {
             hasAmount: update.details.control.needSum,
             isFinalStep: update.details.control.isFinalStep,
             isFraudSuspected: update.details.control.isFraudSuspected,
+            snapshot: snapshot,
             status: status
         )
     }
@@ -119,11 +120,12 @@ private extension Array where Element == AnywayPayment.Element {
 private extension Array where Element == AnywayPayment.Element {
     
     mutating func update(
-        with update: AnywayPaymentUpdate
+        with update: AnywayPaymentUpdate,
+        and snapshot: [String: String]
     ) {
         updatePrimaryFields(from: update.fields)
         appendComplementaryFields(from: update.fields)
-        appendParameters(from: update.parameters)
+        appendParameters(from: update.parameters, with: snapshot)
     }
     
     mutating func updatePrimaryFields(
@@ -167,9 +169,16 @@ private extension Array where Element == AnywayPayment.Element {
     }
     
     mutating func appendParameters(
-        from updateParameters: [AnywayPaymentUpdate.Parameter]
+        from updateParameters: [AnywayPaymentUpdate.Parameter],
+        with snapshot: [String: String]
     ) {
-        let parameters = updateParameters.map(AnywayPayment.Element.Parameter.init)
+        let parameters = updateParameters.map {
+            
+            AnywayPayment.Element.Parameter(
+                parameter: $0,
+                snapshottedValue: snapshot[$0.field.id]
+            )
+        }
         append(contentsOf: parameters.map(Element.parameter))
     }
 }
@@ -190,10 +199,12 @@ private extension AnywayPayment.Element.Field {
 
 private extension AnywayPayment.Element.Parameter {
     
-    init(_ parameter: AnywayPaymentUpdate.Parameter) {
-        
+    init(
+        parameter: AnywayPaymentUpdate.Parameter,
+        snapshottedValue value: String?
+    ) {
         self.init(
-            field: .init(parameter.field),
+            field: .init(parameter.field, snapshottedValue: value),
             masking: .init(parameter.masking),
             validation: .init(parameter.validation),
             uiAttributes: .init(parameter.uiAttributes)
@@ -203,9 +214,11 @@ private extension AnywayPayment.Element.Parameter {
 
 private extension AnywayPayment.Element.Parameter.Field {
     
-    init(_ field: AnywayPaymentUpdate.Parameter.Field) {
-        
-        self.init(id: field.id, value: field.content)
+    init(
+        _ field: AnywayPaymentUpdate.Parameter.Field,
+        snapshottedValue: String?
+    ) {
+        self.init(id: field.id, value: field.content ?? snapshottedValue)
     }
 }
 

@@ -13,6 +13,7 @@ struct AnywayPayment: Equatable {
     let hasAmount: Bool
     let isFinalStep: Bool
     let isFraudSuspected: Bool
+    let snapshot: [String: String]
     var status: Status?
 }
 
