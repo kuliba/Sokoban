@@ -12,14 +12,16 @@ extension AnywayPayment {
     
     func update(with update: AnywayPaymentUpdate) -> Self {
         
-        let infoMessage = update.details.info.infoMessage
-        let status = infoMessage.map(AnywayPayment.Status.infoMessage)
-        
         var elements = elements
-        elements.update(with: update, and: snapshot)
+        elements.updatePrimaryFields(from: update.fields)
+        elements.appendComplementaryFields(from: update.fields)
+        elements.appendParameters(from: update.parameters, with: snapshot)
         
         let otp = Element.Field(id: .otp, value: "", title: "")
         elements[fieldID: .otp] = update.details.control.needOTP ? .field(otp) : nil
+        
+        let infoMessage = update.details.info.infoMessage
+        let status = infoMessage.map(AnywayPayment.Status.infoMessage)
         
         return .init(
             elements: elements,
@@ -118,15 +120,6 @@ private extension Array where Element == AnywayPayment.Element {
 }
 
 private extension Array where Element == AnywayPayment.Element {
-    
-    mutating func update(
-        with update: AnywayPaymentUpdate,
-        and snapshot: [String: String]
-    ) {
-        updatePrimaryFields(from: update.fields)
-        appendComplementaryFields(from: update.fields)
-        appendParameters(from: update.parameters, with: snapshot)
-    }
     
     mutating func updatePrimaryFields(
         from updateFields: [AnywayPaymentUpdate.Field]
