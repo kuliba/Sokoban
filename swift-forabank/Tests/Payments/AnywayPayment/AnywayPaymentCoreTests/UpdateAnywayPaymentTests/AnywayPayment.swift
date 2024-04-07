@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Tagged
 
 struct AnywayPayment: Equatable {
     
@@ -13,7 +14,7 @@ struct AnywayPayment: Equatable {
     let hasAmount: Bool
     let isFinalStep: Bool
     let isFraudSuspected: Bool
-    let snapshot: [String: String]
+    let snapshot: Snapshot
     var status: Status?
 }
 
@@ -24,6 +25,8 @@ extension AnywayPayment {
         case field(Field)
         case parameter(Parameter)
     }
+    
+    typealias Snapshot = [Element.StringID: Element.Value]
     
     enum Status: Equatable {
         
@@ -36,9 +39,12 @@ extension AnywayPayment.Element {
     struct Field: Identifiable, Equatable {
         
         let id: ID
-        let value: String
+        let value: Value
         let title: String
     }
+    
+    typealias StringID = Tagged<_StringID, String>
+    enum _StringID {}
     
     struct Parameter: Equatable {
         
@@ -47,6 +53,9 @@ extension AnywayPayment.Element {
         let validation: Validation
         let uiAttributes: UIAttributes
     }
+    
+    typealias Value = Tagged<_Value, String>
+    enum _Value {}
 }
 
 extension AnywayPayment.Element.Field {
@@ -54,7 +63,7 @@ extension AnywayPayment.Element.Field {
     enum ID: Hashable {
         
         case otp
-        case string(String)
+        case string(AnywayPayment.Element.StringID)
     }
 }
 
@@ -62,8 +71,8 @@ extension AnywayPayment.Element.Parameter {
     
     struct Field: Identifiable, Equatable {
         
-        let id: String
-        let value: String?
+        let id: AnywayPayment.Element.StringID
+        let value: AnywayPayment.Element.Value?
     }
     
     struct Masking: Equatable {

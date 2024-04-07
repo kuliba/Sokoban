@@ -84,6 +84,13 @@ func makeAnywayPayment(
     )
 }
 
+func makeAnywayPaymentStringID(
+    _ rawValue: String = anyMessage()
+) -> AnywayPayment.Element.StringID {
+ 
+    .init(rawValue)
+}
+
 func makeAnywayPayment(
     parameters: [AnywayPayment.Element.Parameter] = [],
     isFinalStep: Bool = false,
@@ -114,7 +121,10 @@ func makeAnywayPayment(
         hasAmount: hasAmount,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected,
-        snapshot: snapshot
+        snapshot: snapshot.reduce(into: [:]) {
+            
+            $0[.init($1.key)] = .init($1.value)
+        }
     )
 }
 
@@ -169,12 +179,12 @@ func makeAnywayPaymentWithOTP(
 }
 
 func makeAnywayPaymentField(
-    _ id: AnywayPayment.Element.Field.ID = .string(anyMessage()),
+    _ id: AnywayPayment.Element.Field.ID = .string(.init(anyMessage())),
     value: String = anyMessage(),
     title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
     
-    .init(id: id, value: value, title: title)
+    .init(id: id, value: .init(value), title: title)
 }
 
 func makeAnywayPaymentFieldWithStringID(
@@ -183,7 +193,7 @@ func makeAnywayPaymentFieldWithStringID(
     title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
     
-    makeAnywayPaymentField(.string(id), value: value, title: title)
+    makeAnywayPaymentField(.string(.init(id)), value: value, title: title)
 }
 
 func makeAnywayPaymentParameter(
@@ -215,7 +225,7 @@ private func makeAnywayPaymentElementParameterField(
     value: String? = anyMessage()
 ) -> AnywayPayment.Element.Parameter.Field {
     
-    .init(id: id, value: value)
+    .init(id: .init(id), value: value.map { .init($0) })
 }
 
 private func makeAnywayPaymentElementParameterMasking(
@@ -275,7 +285,7 @@ private func makeOTPField(
     title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
     
-    .init(id: .otp, value: value, title: title)
+    .init(id: .otp, value: .init(value), title: title)
 }
 
 func makeAnywayPaymentWithoutOTP(
@@ -445,7 +455,9 @@ func makeAnywayPaymentAndUpdateFields(
     )
     
     let updated = makeAnywayPaymentField(
-        .string(name), value: value, title: title
+        .string(.init(name)),
+        value: value,
+        title: title
     )
     
     return (update, updated)
@@ -767,7 +779,7 @@ extension AnywayPayment.Element.Parameter {
     func updating(value: String?) -> Self {
         
         .init(
-            field: .init(id: field.id, value: value),
+            field: .init(id: field.id, value: value.map { .init($0) }),
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes

@@ -296,7 +296,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let parameter = try XCTUnwrap(updated[parameterID: parameterID], "Expected parameter with id \(parameterID), but got nil instead.")
         
         XCTAssertNil(parameter.field.value)
-        XCTAssertNil(payment.snapshot[parameterID])
+        XCTAssertNil(payment.snapshot[.init(parameterID)])
     }
     
     func test_update_shouldSetParameterValueToSnapshottedOnNilUpdateValue() throws {
@@ -316,8 +316,8 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let updated = payment.update(with: update)
         let parameter = try XCTUnwrap(updated[parameterID: parameterID], "Expected parameter with id \(parameterID), but got nil instead.")
         
-        XCTAssertNoDiff(parameter.field.value, snapshottedValue, "Expected parameter value set to snapshotted.")
-        XCTAssertNoDiff(payment.snapshot[parameterID], snapshottedValue, "Expected snapshotted value \(snapshottedValue) for parameterID \(parameterID).")
+        XCTAssertNoDiff(parameter.field.value, .init(snapshottedValue), "Expected parameter value set to snapshotted.")
+        XCTAssertNoDiff(payment.snapshot[.init(parameterID)], .init(snapshottedValue), "Expected snapshotted value \(snapshottedValue) for parameterID \(parameterID).")
         XCTAssertNil(parameterUpdate.field.content, "Expected value to be nil.")
     }
     
@@ -689,7 +689,13 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         assert(payment, on: update) {
             
             $0.elements = [
-                .field(.init(id: .string(matchingFieldID), value: newFieldValue, title: newFieldTitle)),
+                .field(
+                    .init(
+                        id: .string(.init(matchingFieldID)),
+                        value: .init(newFieldValue),
+                        title: newFieldTitle
+                    )
+                ),
                 .parameter(parameter.updating(value: newParameterValue)),
                 .parameter(updatedParameter2)
             ]
@@ -733,7 +739,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         )
         
         XCTAssertNoDiff(update.field.content, value)
-        XCTAssertNoDiff(parameter.field.value, value)
+        XCTAssertNoDiff(parameter.field.value, .init(value))
         
         XCTAssertNoDiff(update.uiAttributes.dataType, .pairs([.init(key: "a", value: "1")]))
         XCTAssertNoDiff(parameter.uiAttributes.dataType, .pairs([.init(key: "a", value: "1")]))
@@ -808,7 +814,7 @@ private extension AnywayPayment {
         elements.compactMap {
             
             guard case let .parameter(parameter) = $0,
-                  parameter.field.id == id
+                  parameter.field.id == .init(id)
             else { return nil }
 
             return parameter

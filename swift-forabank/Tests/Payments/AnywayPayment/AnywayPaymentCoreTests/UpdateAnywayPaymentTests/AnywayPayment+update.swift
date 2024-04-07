@@ -43,13 +43,14 @@ private extension AnywayPayment.Element {
         return field.id
     }
     
-    var stringID: String? {
+    var stringID: StringID? {
         
         switch self {
         case let .field(field):
             switch field.id {
             case .otp:
                 return nil
+                
             case let .string(id):
                 return id
             }
@@ -64,7 +65,11 @@ private extension AnywayPayment.Element.Field {
     
     func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
         
-        .init(id: id, value: fieldUpdate.value, title: fieldUpdate.title)
+        .init(
+            id: id,
+            value: .init(fieldUpdate.value),
+            title: fieldUpdate.title
+        )
     }
 }
 
@@ -73,7 +78,10 @@ private extension AnywayPayment.Element.Parameter {
     func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
         
         .init(
-            field: .init(id: field.id, value: fieldUpdate.value),
+            field: .init(
+                id: field.id,
+                value: .init(fieldUpdate.value)
+            ),
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes
@@ -131,7 +139,7 @@ private extension Array where Element == AnywayPayment.Element {
         self = map {
             
             guard let id = $0.stringID,
-                  let matching = updateFields[id]
+                  let matching = updateFields[id.rawValue]
             else { return $0 }
             
             switch $0 {
@@ -147,7 +155,7 @@ private extension Array where Element == AnywayPayment.Element {
     mutating func appendComplementaryFields(
         from updateFields: [AnywayPaymentUpdate.Field]
     ) {
-        let existingIDs = stringIDs
+        let existingIDs = stringIDs.map(\.rawValue)
         let complimentary: [Element] = updateFields
             .filter { !existingIDs.contains($0.name) }
             .map(Element.Field.init)
@@ -156,20 +164,20 @@ private extension Array where Element == AnywayPayment.Element {
         self.append(contentsOf: complimentary)
     }
     
-    private var stringIDs: [String] {
+    private var stringIDs: [Element.StringID] {
         
         compactMap(\.stringID)
     }
     
     mutating func appendParameters(
         from updateParameters: [AnywayPaymentUpdate.Parameter],
-        with snapshot: [String: String]
+        with snapshot: AnywayPayment.Snapshot
     ) {
         let parameters = updateParameters.map {
             
             AnywayPayment.Element.Parameter(
                 parameter: $0,
-                snapshottedValue: snapshot[$0.field.id]
+                snapshottedValue: snapshot[.init($0.field.id)]
             )
         }
         append(contentsOf: parameters.map(Element.parameter))
@@ -183,8 +191,8 @@ private extension AnywayPayment.Element.Field {
     init(_ field: AnywayPaymentUpdate.Field) {
         
         self.init(
-            id: .string(field.name),
-            value: field.value,
+            id: .string(.init(field.name)),
+            value: .init(field.value),
             title: field.title
         )
     }
@@ -194,7 +202,7 @@ private extension AnywayPayment.Element.Parameter {
     
     init(
         parameter: AnywayPaymentUpdate.Parameter,
-        snapshottedValue value: String?
+        snapshottedValue value: AnywayPayment.Element.Value?
     ) {
         self.init(
             field: .init(parameter.field, snapshottedValue: value),
@@ -209,9 +217,12 @@ private extension AnywayPayment.Element.Parameter.Field {
     
     init(
         _ field: AnywayPaymentUpdate.Parameter.Field,
-        snapshottedValue: String?
+        snapshottedValue: AnywayPayment.Element.Value?
     ) {
-        self.init(id: field.id, value: field.content ?? snapshottedValue)
+        self.init(
+            id: .init(field.id),
+            value: field.content.map { .init($0) } ?? snapshottedValue
+        )
     }
 }
 
