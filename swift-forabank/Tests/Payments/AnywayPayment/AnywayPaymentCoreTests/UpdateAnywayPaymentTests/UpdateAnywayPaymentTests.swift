@@ -624,6 +624,39 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         }
     }
 
+    func test_update_shouldUpdateElementsOnMatchingIDFieldUpdateWithDifferentValue() {
+        
+        let matchingFieldID = anyMessage()
+        let matchingParameterID = anyMessage()
+        let field = makeAnywayPaymentFieldWithStringID(matchingFieldID)
+        let parameter = makeAnywayPaymentParameterWithID(matchingParameterID)
+        let payment = makeAnywayPayment(elements: [
+            .field(field),
+            .parameter(parameter)
+        ])
+        
+        let (newFieldValue, newFieldTitle) = (anyMessage(), anyMessage())
+        let fieldUpdate = makeAnywayPaymentUpdateField(matchingFieldID, value: newFieldValue, title: newFieldTitle)
+        
+        let newParameterValue = anyMessage()
+        let parameterFieldUpdate = makeAnywayPaymentUpdateField(matchingParameterID, value: newParameterValue)
+        let (parameterUpdate2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
+        
+        let update = makeAnywayPaymentUpdate(
+            fields: [fieldUpdate, parameterFieldUpdate],
+            parameters: [parameterUpdate2]
+        )
+        
+        assert(payment, on: update) {
+            
+            $0.elements = [
+                .field(.init(id: .string(matchingFieldID), value: newFieldValue, title: newFieldTitle)),
+                .parameter(parameter.updating(value: newParameterValue)),
+                .parameter(updatedParameter2)
+            ]
+        }
+    }
+
     // MARK: - Helpers Tests
     
     func test_makeAnywayPaymentAndUpdateParameters() {
