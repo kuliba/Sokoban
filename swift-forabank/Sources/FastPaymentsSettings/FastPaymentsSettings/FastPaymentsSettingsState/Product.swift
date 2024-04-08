@@ -57,12 +57,12 @@ public extension Product {
     struct Look: Equatable {
         
         public let background: Icon
-        public let color: String
+        public let color: Color
         public let icon: Icon
         
         public init(
             background: Icon,
-            color: String,
+            color: Color,
             icon: Icon
         ) {
             self.background = background

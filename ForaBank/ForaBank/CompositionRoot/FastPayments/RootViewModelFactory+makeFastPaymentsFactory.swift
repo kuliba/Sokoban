@@ -115,7 +115,7 @@ private extension Model {
        
         .init(
             background: .image(self.images.value[productData.largeDesignMd5Hash]?.image ?? .cardPlaceholder),
-            color: productData.backgroundColor.description,
+            color: productData.backgroundColor, 
             icon: {
                 if let image = productData.clover.image {
                     return .image(image)
@@ -144,7 +144,7 @@ private extension FastPaymentsSettings.Product.Look {
     
     static let `default`: Self = .init(
         background: .image(.cardPlaceholder),
-        color: Color.clear.description,
+        color: .clear,
         icon: .image(.cardPlaceholder))
 }
 

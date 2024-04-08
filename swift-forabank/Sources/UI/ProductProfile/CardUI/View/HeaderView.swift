@@ -55,11 +55,12 @@ public struct HeaderView: View {
             
             period()
             
-            header.icon.map{
+            header.icon.map {
                 $0
                     .renderingMode(.original)
                     .frame(height: 16, alignment: .center)
                     .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(.trailing, config.front.cloverTrailing)
             }
         }
     }

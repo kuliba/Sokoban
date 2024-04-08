@@ -70,7 +70,6 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
     public let isCheckedImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.alpha = 0.9
         return imageView
     }()
     

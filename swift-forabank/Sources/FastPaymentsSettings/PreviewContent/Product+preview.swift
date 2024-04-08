@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 18.01.2024.
 //
 
-import Foundation
+import SwiftUI
 
 public extension Product {
     
@@ -31,7 +31,7 @@ public extension Product {
         balance: Decimal = 12_345.67,
         look: Product.Look = .init(
             background: .svg("background"),
-            color: "green",
+            color: .green,
             icon: .svg("icon")
         )
     ) -> Self {

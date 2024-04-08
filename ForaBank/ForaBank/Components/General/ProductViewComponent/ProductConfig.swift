@@ -29,7 +29,9 @@ extension CardUI.Config {
                 nameSpacing: 6,
                 cardPadding: 12,
                 cornerRadius: 12,
-                checkPadding: 10)
+                checkPadding: 10,
+                cloverTrailing: 4
+            )
             
         case .small:
             return .init(
@@ -38,7 +40,9 @@ extension CardUI.Config {
                 nameSpacing: 4,
                 cardPadding: 8,
                 cornerRadius: 8,
-                checkPadding: 9)
+                checkPadding: 9,
+                cloverTrailing: 2
+            )
         }
     }
     
