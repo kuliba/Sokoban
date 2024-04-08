@@ -196,14 +196,11 @@ extension PaymentsSelectBankView.ViewModel {
     ) {
         if let defaultBank {
             
-            let bankValue = self.parameterSelectBank?.options.first { $0.id == defaultBank.bankId }
-            if let bankId = bankValue?.id {
-                
-                self.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(
-                    id: bankId
-                ))
-                self.update(value: bankId)
-            }
+            self.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(
+                id: defaultBank.bankId
+            ))
+            self.update(value: defaultBank.bankId)
+            
         } else {
             
             if let value = self.value.current {

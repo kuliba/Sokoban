@@ -361,6 +361,11 @@ extension Payments {
             ParameterSelectBank(.init(id: parameter.id, value: value), icon: icon, title: title, options: options, placeholder: placeholder, selectAll: selectAll, keyboardType: keyboardType, isEditable: isEditable, group: group)
         }
         
+        func updated(options: [ParameterSelectBank.Option]) -> PaymentsParameterRepresentable {
+            
+            ParameterSelectBank(.init(id: parameter.id, value: parameter.value), icon: icon, title: title, options: options, placeholder: placeholder, selectAll: selectAll, keyboardType: keyboardType, isEditable: isEditable, group: group)
+        }
+        
         struct Option: Identifiable, Equatable {
     
             let id: String

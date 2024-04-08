@@ -131,7 +131,7 @@ extension Model {
                     latestPaymentBankIds: nil,
                     operation,
                     operationPhone: operationPhone,
-                    banksIds: parameter.options.map { $0.id }
+                    banksIds: nil
                 )
                 
                 if parameter.options == newBankParameter.options {
