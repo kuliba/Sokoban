@@ -15,22 +15,19 @@ public struct AnywayPayment: Equatable {
     public var infoMessage: String?
     public let isFinalStep: Bool
     public let isFraudSuspected: Bool
-    public let snapshot: Snapshot
     
     public init(
         elements: [Element],
         hasAmount: Bool,
         infoMessage: String?,
         isFinalStep: Bool,
-        isFraudSuspected: Bool,
-        snapshot: Snapshot
+        isFraudSuspected: Bool
     ) {
         self.elements = elements
         self.hasAmount = hasAmount
         self.infoMessage = infoMessage
         self.isFinalStep = isFinalStep
         self.isFraudSuspected = isFraudSuspected
-        self.snapshot = snapshot
     }
 }
 
@@ -41,8 +38,6 @@ extension AnywayPayment {
         case field(Field)
         case parameter(Parameter)
     }
-    
-    public typealias Snapshot = [Element.StringID: Element.Value]
     
     public enum Status: Equatable {
         

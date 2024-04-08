@@ -6,10 +6,14 @@
 //
 
 import Foundation
+import Tagged
 
 extension AnywayPayment {
     
-    public func update(with update: AnywayPaymentUpdate) -> Self {
+    public func update(
+        with update: AnywayPaymentUpdate,
+        and snapshot: Snapshot
+    ) -> Self {
         
         var elements = elements
         elements.updatePrimaryFields(from: update.fields)
@@ -24,10 +28,11 @@ extension AnywayPayment {
             hasAmount: update.details.control.needSum,
             infoMessage: update.details.info.infoMessage,
             isFinalStep: update.details.control.isFinalStep,
-            isFraudSuspected: update.details.control.isFraudSuspected,
-            snapshot: snapshot
+            isFraudSuspected: update.details.control.isFraudSuspected
         )
     }
+    
+    public typealias Snapshot = [Element.StringID: Element.Value]
 }
 
 private extension AnywayPayment.Element {
