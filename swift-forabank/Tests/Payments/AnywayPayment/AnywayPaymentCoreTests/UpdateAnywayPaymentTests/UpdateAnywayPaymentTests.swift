@@ -8,428 +8,6 @@
 import AnywayPaymentCore
 import XCTest
 
-struct AnywayPayment: Equatable {
-    
-    var elements: [Element]
-    let hasAmount: Bool
-    let isFinalStep: Bool
-    let isFraudSuspected: Bool
-    var status: Status?
-}
-
-extension AnywayPayment {
-    
-    enum Element: Equatable {
-        
-        case field(Field)
-        case parameter(Parameter)
-    }
-    
-    enum Status: Equatable {
-        
-        case infoMessage(String)
-    }
-}
-
-extension AnywayPayment.Element {
-    
-    struct Field: Identifiable, Equatable {
-        
-        let id: ID
-        let value: String
-        let title: String
-    }
-    
-    struct Parameter: Equatable {
-        
-        let field: Field
-        let masking: Masking
-        let validation: Validation
-        let uiAttributes: UIAttributes
-    }
-}
-
-extension AnywayPayment.Element.Parameter {
-    
-    struct Field: Identifiable, Equatable {
-        
-        let id: String
-        let value: String?
-    }
-    
-    struct Masking: Equatable {
-        
-        let inputMask: String?
-        let mask: String?
-    }
-    
-    struct Validation: Equatable {
-        
-        let isRequired: Bool
-        let maxLength: Int?
-        let minLength: Int?
-        let regExp: String
-    }
-    
-    struct UIAttributes: Equatable {
-        
-        let dataType: DataType // not used for `viewType: ViewType = .input` https://shorturl.at/hnrE1
-        let group: String?
-        let isPrint: Bool // not used for `type: FieldType = .input`
-        let phoneBook: Bool
-        let isReadOnly: Bool
-        let subGroup: String?
-        let subTitle: String?
-        let svgImage: String?
-        let title: String
-        let type: FieldType
-        let viewType: ViewType
-    }
-}
-
-private extension AnywayPayment.Element.Field {
-    
-    func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
-        
-        .init(id: id, value: fieldUpdate.value, title: fieldUpdate.title)
-    }
-}
-
-private extension AnywayPayment.Element.Parameter {
-    
-    func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
-        
-        .init(
-            field: .init(id: field.id, value: fieldUpdate.value),
-            masking: masking,
-            validation: validation,
-            uiAttributes: uiAttributes
-        )
-    }
-}
-
-extension AnywayPayment.Element.Parameter.UIAttributes {
-    
-    enum DataType: Equatable {
-        
-        case string
-        case pairs([Pair])
-        
-        struct Pair: Equatable {
-            
-            let key: String
-            let value: String
-        }
-    }
-    
-    enum FieldType: Equatable {
-        
-        case input, select, maskList
-    }
-    
-    enum InputFieldType: Equatable {
-        
-        case account
-        case address
-        case amount
-        case bank
-        case bic
-        case counter
-        case date
-        case insurance
-        case inn
-        case name
-        case oktmo
-        case penalty
-        case phone
-        case purpose
-        case recipient
-        case view
-    }
-    
-    enum ViewType: Equatable {
-        
-        case constant, input, output
-    }
-}
-
-extension AnywayPayment.Element.Field {
-    
-    enum ID: Hashable {
-        
-        case otp
-        case string(String)
-    }
-}
-
-extension AnywayPayment {
-    
-    func update(with update: AnywayPaymentUpdate) -> Self {
-        
-        let infoMessage = update.details.info.infoMessage
-        let status = infoMessage.map(AnywayPayment.Status.infoMessage)
-        
-        var elements = elements
-        elements.update(with: update)
-        
-        let otp = Element.Field(id: .otp, value: "", title: "")
-        elements[fieldID: .otp] = update.details.control.needOTP ? .field(otp) : nil
-        
-        return .init(
-            elements: elements,
-            hasAmount: update.details.control.needSum,
-            isFinalStep: update.details.control.isFinalStep,
-            isFraudSuspected: update.details.control.isFraudSuspected,
-            status: status
-        )
-    }
-}
-
-private extension Array where Element == AnywayPayment.Element {
-    
-    subscript(fieldID id: Element.Field.ID) -> Element? {
-        
-        get { firstIndex(matching: id).map { self[$0] } }
-        
-        set {
-            guard let index = firstIndex(matching: id)
-            else {
-                if let newValue { append(newValue) }
-                return
-            }
-            
-            if let newValue {
-                if case let .field(field) = newValue, field.id == id {
-                    self[index] = newValue
-                } else {
-                    append(newValue)
-                }
-            } else {
-                remove(at: index)
-            }
-        }
-    }
-    
-    func firstIndex(
-        matching id: AnywayPayment.Element.Field.ID
-    ) -> Self.Index? {
-        
-        firstIndex {
-            
-            guard let fieldID = $0.fieldID else { return false }
-            
-            return fieldID == id
-        }
-    }
-}
-
-private extension Array where Element == AnywayPayment.Element {
-    
-    mutating func update(
-        with update: AnywayPaymentUpdate
-    ) {
-        updatePrimaryFields(from: update.fields)
-        appendComplementaryFields(from: update.fields)
-        appendParameters(from: update.parameters)
-    }
-    
-    mutating func updatePrimaryFields(
-        from updateFields: [AnywayPaymentUpdate.Field]
-    ) {
-        let updateFields = Dictionary(
-            uniqueKeysWithValues: updateFields.map { ($0.name, $0) }
-        )
-        
-        self = map {
-            
-            guard let id = $0.stringID,
-                  let matching = updateFields[id]
-            else { return $0 }
-            
-            switch $0 {
-            case let .field(field):
-                return .field(field.updating(with: matching))
-                
-            case let .parameter(parameter):
-                return .parameter(parameter.updating(with: matching))
-            }
-        }
-    }
-    
-    mutating func appendComplementaryFields(
-        from updateFields: [AnywayPaymentUpdate.Field]
-    ) {
-        let existingIDs = stringIDs
-        let complimentary: [Element] = updateFields
-            .filter { !existingIDs.contains($0.name) }
-            .map(Element.Field.init)
-            .map(Element.field)
-        
-        self.append(contentsOf: complimentary)
-    }
-    
-    private var stringIDs: [String] {
-        
-        compactMap(\.stringID)
-    }
-    
-    mutating func appendParameters(
-        from updateParameters: [AnywayPaymentUpdate.Parameter]
-    ) {
-        let parameters = updateParameters.map(AnywayPayment.Element.Parameter.init)
-        append(contentsOf: parameters.map(Element.parameter))
-    }
-}
-
-private extension AnywayPayment.Element {
-    
-    var fieldID: Field.ID? {
-        
-        guard case let .field(field) = self else { return nil }
-        
-        return field.id
-    }
-}
-
-private extension AnywayPayment.Element {
-    
-    var stringID: String? {
-        
-        switch self {
-        case let .field(field):
-            switch field.id {
-            case .otp:
-                return nil
-            case let .string(id):
-                return id
-            }
-            
-        case let .parameter(parameter):
-            return parameter.field.id
-        }
-    }
-}
-
-private extension AnywayPayment.Element.Field {
-    
-    init(_ field: AnywayPaymentUpdate.Field) {
-        
-        self.init(
-            id: .string(field.name),
-            value: field.value,
-            title: field.title
-        )
-    }
-}
-
-private extension AnywayPayment.Element.Parameter {
-    
-    init(_ parameter: AnywayPaymentUpdate.Parameter) {
-        
-        self.init(
-            field: .init(parameter.field),
-            masking: .init(parameter.masking),
-            validation: .init(parameter.validation),
-            uiAttributes: .init(parameter.uiAttributes)
-        )
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.Field {
-    
-    init(_ field: AnywayPaymentUpdate.Parameter.Field) {
-        
-        self.init(id: field.id, value: field.content)
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.Masking {
-    
-    init(_ masking: AnywayPaymentUpdate.Parameter.Masking) {
-        
-        self.init(inputMask: masking.inputMask, mask: masking.mask)
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.Validation {
-    
-    init(_ validation: AnywayPaymentUpdate.Parameter.Validation) {
-        
-        self.init(
-            isRequired: validation.isRequired,
-            maxLength: validation.maxLength,
-            minLength: validation.minLength,
-            regExp: validation.regExp
-        )
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.UIAttributes {
-    
-    init(_ uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes) {
-        
-        self.init(
-            dataType: .init(uiAttributes.dataType),
-            group: uiAttributes.group,
-            isPrint: uiAttributes.isPrint,
-            phoneBook: uiAttributes.phoneBook,
-            isReadOnly: uiAttributes.isReadOnly,
-            subGroup: uiAttributes.subGroup,
-            subTitle: uiAttributes.subTitle,
-            svgImage: uiAttributes.svgImage,
-            title: uiAttributes.title,
-            type: .init(uiAttributes.type),
-            viewType: .init(uiAttributes.viewType)
-        )
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
-    
-    init(_ dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType) {
-
-        switch dataType {
-        case .string:
-            self = .string
-            
-        case let .pairs(pairs):
-            self = .pairs(pairs.map(Pair.init))
-        }
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
-    
-    init(_ pairs: AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair) {
-        
-        self.init(key: pairs.key, value: pairs.value)
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.UIAttributes.FieldType {
-    
-    init(_ fieldType: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType) {
-        
-        switch fieldType {
-        case .input:    self = .input
-        case .select:   self = .select
-        case .maskList: self = .maskList
-        }
-    }
-}
-
-private extension AnywayPayment.Element.Parameter.UIAttributes.ViewType {
-    
-    init(_ viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType) {
-        
-        switch viewType {
-        case .constant: self = .constant
-        case .input:    self = .input
-        case .output:   self = .output
-        }
-    }
-}
-
 final class UpdateAnywayPaymentTests: XCTestCase {
     
     // MARK: - amount
@@ -703,6 +281,45 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     }
     
     // MARK: - parameters
+    
+    func test_update_shouldSetParameterValueToNilOnNilUpdateValueAndMissingSnapshot() throws {
+        
+        let payment = makeAnywayPayment(parameters: [])
+        let parameterID = anyMessage()
+        let (parameterUpdate, _) = makeAnywayPaymentAndUpdateParameters(
+            id: parameterID,
+            value: nil
+        )
+        let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
+        
+        let updated = payment.update(with: update)
+        let parameter = try XCTUnwrap(updated[parameterID: parameterID], "Expected parameter with id \(parameterID), but got nil instead.")
+        
+        XCTAssertNil(parameter.field.value)
+        XCTAssertNil(payment.snapshot[parameterID])
+    }
+    
+    func test_update_shouldSetParameterValueToSnapshottedOnNilUpdateValue() throws {
+        
+        let parameterID = anyMessage()
+        let snapshottedValue = anyMessage()
+        let payment = makeAnywayPayment(
+            parameters: [], 
+            snapshot: [parameterID: snapshottedValue]
+        )
+        let (parameterUpdate, _) = makeAnywayPaymentAndUpdateParameters(
+            id: parameterID,
+            value: nil
+        )
+        let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
+        
+        let updated = payment.update(with: update)
+        let parameter = try XCTUnwrap(updated[parameterID: parameterID], "Expected parameter with id \(parameterID), but got nil instead.")
+        
+        XCTAssertNoDiff(parameter.field.value, snapshottedValue, "Expected parameter value set to snapshotted.")
+        XCTAssertNoDiff(payment.snapshot[parameterID], snapshottedValue, "Expected snapshotted value \(snapshottedValue) for parameterID \(parameterID).")
+        XCTAssertNil(parameterUpdate.field.content, "Expected value to be nil.")
+    }
     
     func test_update_shouldAppendParameterToEmpty() {
         
@@ -1022,7 +639,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             $0.elements = [.parameter(parameter.updating(value: newValue))]
         }
     }
-
+    
     func test_update_shouldUpdateExistingParameterOnMatchingIDFieldUpdateWithDifferentValue() {
         
         let matchingID = anyMessage()
@@ -1045,7 +662,40 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             ]
         }
     }
-
+    
+    func test_update_shouldUpdateElementsOnMatchingIDFieldUpdateWithDifferentValue() {
+        
+        let matchingFieldID = anyMessage()
+        let matchingParameterID = anyMessage()
+        let field = makeAnywayPaymentFieldWithStringID(matchingFieldID)
+        let parameter = makeAnywayPaymentParameterWithID(matchingParameterID)
+        let payment = makeAnywayPayment(elements: [
+            .field(field),
+            .parameter(parameter)
+        ])
+        
+        let (newFieldValue, newFieldTitle) = (anyMessage(), anyMessage())
+        let fieldUpdate = makeAnywayPaymentUpdateField(matchingFieldID, value: newFieldValue, title: newFieldTitle)
+        
+        let newParameterValue = anyMessage()
+        let parameterFieldUpdate = makeAnywayPaymentUpdateField(matchingParameterID, value: newParameterValue)
+        let (parameterUpdate2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
+        
+        let update = makeAnywayPaymentUpdate(
+            fields: [fieldUpdate, parameterFieldUpdate],
+            parameters: [parameterUpdate2]
+        )
+        
+        assert(payment, on: update) {
+            
+            $0.elements = [
+                .field(.init(id: .string(matchingFieldID), value: newFieldValue, title: newFieldTitle)),
+                .parameter(parameter.updating(value: newParameterValue)),
+                .parameter(updatedParameter2)
+            ]
+        }
+    }
+    
     // MARK: - Helpers Tests
     
     func test_makeAnywayPaymentAndUpdateParameters() {
@@ -1122,7 +772,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         XCTAssertFalse(update.uiAttributes.isPrint)
         XCTAssertFalse(parameter.uiAttributes.isPrint)
-
+        
         XCTAssertNoDiff(update.uiAttributes.viewType, .output)
         XCTAssertNoDiff(parameter.uiAttributes.viewType, .output)
     }
@@ -1151,718 +801,18 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     }
 }
 
-private func assertOTP(
-    in payment: AnywayPayment,
-    precedes fields: [AnywayPayment.Element.Field],
-    file: StaticString = #file,
-    line: UInt = #line
-) {
-    XCTAssert(
-        hasOTPField(payment),
-        "Expected OTP field in payment fields.",
-        file: file, line: line
-    )
-    
-#warning("this check is for fields only - is it ok or it needs to check all element cases?")
-    XCTAssert(
-        payment.paymentFields.isElementAfterAll(.otp, inGroup: fields),
-        "Expected OTP field after complimentary fields.",
-        file: file, line: line
-    )
-}
-
-private func hasAmountField(
-    _ payment: AnywayPayment
-) -> Bool {
-    
-    payment.hasAmount
-}
-
-private func hasOTPField(
-    _ payment: AnywayPayment
-) -> Bool {
-    
-    payment.paymentFields.map(\.id).contains(.otp)
-}
-
 private extension AnywayPayment {
     
-    var paymentFields: [Element.Field] {
+    subscript(parameterID id: String) -> Element.Parameter? {
         
         elements.compactMap {
             
-            guard case let .field(field) = $0 else { return nil }
-            return field
+            guard case let .parameter(parameter) = $0,
+                  parameter.field.id == id
+            else { return nil }
+
+            return parameter
         }
-    }
-}
-
-private func isFinalStep(
-    _ payment: AnywayPayment
-) -> Bool {
-    
-    payment.isFinalStep
-}
-
-private func isFraudSuspected(
-    _ payment: AnywayPayment
-) -> Bool {
-    
-    payment.isFraudSuspected
-}
-
-private func makeAnywayPayment(
-    fields: [AnywayPayment.Element.Field],
-    isFinalStep: Bool = false,
-    isFraudSuspected: Bool = false,
-    hasAmount: Bool = false
-) -> AnywayPayment {
-    
-    makeAnywayPayment(
-        elements: fields.map(AnywayPayment.Element.field),
-        hasAmount: hasAmount,
-        isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected
-    )
-}
-
-private func makeAnywayPayment(
-    parameters: [AnywayPayment.Element.Parameter] = [],
-    isFinalStep: Bool = false,
-    isFraudSuspected: Bool = false,
-    hasAmount: Bool = false
-) -> AnywayPayment {
-    
-    makeAnywayPayment(
-        elements: parameters.map(AnywayPayment.Element.parameter),
-        hasAmount: hasAmount,
-        isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected
-    )
-}
-
-private func makeAnywayPayment(
-    elements: [AnywayPayment.Element],
-    hasAmount: Bool = false,
-    isFinalStep: Bool = false,
-    isFraudSuspected: Bool = false
-) -> AnywayPayment {
-    
-    .init(
-        elements: elements,
-        hasAmount: hasAmount,
-        isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected
-    )
-}
-
-private func makeAnywayPaymentWithAmount(
-    file: StaticString = #file,
-    line: UInt = #line
-) -> AnywayPayment {
-    
-    let payment = makeAnywayPayment(hasAmount: true)
-    XCTAssert(hasAmountField(payment), "Expected amount field.", file: file, line: line)
-    return payment
-}
-
-private func makeAnywayPaymentWithoutAmount(
-    file: StaticString = #file,
-    line: UInt = #line
-) -> AnywayPayment {
-    
-    let payment = makeAnywayPayment()
-    XCTAssertFalse(hasAmountField(payment), "Expected no amount field.", file: file, line: line)
-    return payment
-}
-
-private func makeAnywayPaymentWithFraudSuspected(
-    file: StaticString = #file,
-    line: UInt = #line
-) -> AnywayPayment {
-    
-    let payment = makeAnywayPayment(isFraudSuspected: true)
-    XCTAssert(isFraudSuspected(payment), "Expected fraud suspected payment.", file: file, line: line)
-    return payment
-}
-
-private func makeAnywayPaymentWithoutFraudSuspected(
-    file: StaticString = #file,
-    line: UInt = #line
-) -> AnywayPayment {
-    
-    let payment = makeAnywayPayment()
-    XCTAssertFalse(isFraudSuspected(payment), "Expected pyament without fraud suspected.", file: file, line: line)
-    return payment
-}
-
-private func makeAnywayPaymentWithOTP(
-    file: StaticString = #file,
-    line: UInt = #line
-) -> AnywayPayment {
-    
-    let payment = makeAnywayPayment(fields: [makeOTPField()])
-    XCTAssert(hasOTPField(payment), "Expected to have OTP field.", file: file, line: line)
-    return payment
-}
-
-private func makeAnywayPaymentField(
-    _ id: AnywayPayment.Element.Field.ID = .string(anyMessage()),
-    value: String = anyMessage(),
-    title: String = anyMessage()
-) -> AnywayPayment.Element.Field {
-    
-    .init(id: id, value: value, title: title)
-}
-
-private func makeAnywayPaymentFieldWithStringID(
-    _ id: String = anyMessage(),
-    value: String = anyMessage(),
-    title: String = anyMessage()
-) -> AnywayPayment.Element.Field {
-    
-    makeAnywayPaymentField(.string(id), value: value, title: title)
-}
-
-private func makeAnywayPaymentParameter(
-    field: AnywayPayment.Element.Parameter.Field = makeAnywayPaymentElementParameterField(),
-    masking: AnywayPayment.Element.Parameter.Masking = makeAnywayPaymentElementParameterMasking(),
-    validation: AnywayPayment.Element.Parameter.Validation = makeAnywayPaymentElementParameterValidation(),
-    uiAttributes: AnywayPayment.Element.Parameter.UIAttributes = makeAnywayPaymentElementParameterUIAttributes()
-) -> AnywayPayment.Element.Parameter {
-    
-    .init(
-        field: field,
-        masking: masking,
-        validation: validation,
-        uiAttributes: uiAttributes
-    )
-}
-
-private func makeAnywayPaymentParameterWithID(
-    _ id: String = anyMessage()
-) -> AnywayPayment.Element.Parameter {
-    
-    makeAnywayPaymentParameter(
-        field: makeAnywayPaymentElementParameterField(id: id)
-    )
-}
-
-private func makeAnywayPaymentElementParameterField(
-    id: String = anyMessage(),
-    value: String? = anyMessage()
-) -> AnywayPayment.Element.Parameter.Field {
-    
-    .init(id: id, value: value)
-}
-
-private func makeAnywayPaymentElementParameterMasking(
-    inputMask: String? = nil,
-    mask: String? = nil
-) -> AnywayPayment.Element.Parameter.Masking {
-    
-    .init(inputMask: inputMask, mask: mask)
-}
-
-private func makeAnywayPaymentElementParameterValidation(
-    isRequired: Bool = true,
-    maxLength: Int? = nil,
-    minLength: Int? = nil,
-    regExp: String = anyMessage()
-) -> AnywayPayment.Element.Parameter.Validation {
-    
-    .init(
-        isRequired: isRequired,
-        maxLength: maxLength,
-        minLength: minLength,
-        regExp: regExp
-    )
-}
-
-private func makeAnywayPaymentElementParameterUIAttributes(
-    dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType = .string,
-    group: String? = nil,
-    isPrint: Bool = true,
-    phoneBook: Bool = false,
-    isReadOnly: Bool = false,
-    subGroup: String? = nil,
-    subTitle: String? = nil,
-    svgImage: String? = nil,
-    title: String = anyMessage(),
-    type: AnywayPayment.Element.Parameter.UIAttributes.FieldType = .input,
-    viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType = .input
-) -> AnywayPayment.Element.Parameter.UIAttributes {
-    
-    .init(
-        dataType: dataType,
-        group: group,
-        isPrint: isPrint,
-        phoneBook: phoneBook,
-        isReadOnly: isReadOnly,
-        subGroup: subGroup,
-        subTitle: subTitle,
-        svgImage: svgImage,
-        title: title,
-        type: type,
-        viewType: viewType
-    )
-}
-
-private func makeOTPField(
-    value: String = anyMessage(),
-    title: String = anyMessage()
-) -> AnywayPayment.Element.Field {
-    
-    .init(id: .otp, value: value, title: title)
-}
-
-private func makeAnywayPaymentWithoutOTP(
-    file: StaticString = #file,
-    line: UInt = #line
-) -> AnywayPayment {
-    
-    let payment = makeAnywayPayment()
-    XCTAssertFalse(hasOTPField(payment), "Expected no OTP field.", file: file, line: line)
-    return payment
-}
-
-private func makeFinalStepAnywayPayment(
-    file: StaticString = #file,
-    line: UInt = #line
-) -> AnywayPayment {
-    
-    let payment = makeAnywayPayment(isFinalStep: true)
-    XCTAssert(isFinalStep(payment), "Expected non final step payment.", file: file, line: line)
-    return payment
-}
-
-private func makeNonFinalStepAnywayPayment(
-    file: StaticString = #file,
-    line: UInt = #line
-) -> AnywayPayment {
-    
-    let payment = makeAnywayPayment(isFinalStep: false)
-    XCTAssert(!isFinalStep(payment), "Expected non final step payment.", file: file, line: line)
-    return payment
-}
-
-private func makeAnywayPaymentUpdate(
-    fields: [AnywayPaymentUpdate.Field] = [],
-    isFraudSuspected: Bool = false,
-    infoMessage: String? = nil,
-    isFinalStep: Bool = false,
-    needOTP: Bool = false,
-    needSum: Bool = false
-) -> AnywayPaymentUpdate {
-    
-    makeAnywayPaymentUpdate(
-        details: makeAnywayPaymentUpdateDetails(
-            control: makeAnywayPaymentUpdateDetailsControl(
-                isFinalStep: isFinalStep,
-                isFraudSuspected: isFraudSuspected,
-                needOTP: needOTP,
-                needSum: needSum
-            ),
-            info: makeAnywayPaymentUpdateDetailsInfo(
-                infoMessage: infoMessage
-            )
-        ),
-        fields: fields
-    )
-}
-
-private func makeAnywayPaymentUpdate(
-    details: AnywayPaymentUpdate.Details = makeAnywayPaymentUpdateDetails(),
-    fields: [AnywayPaymentUpdate.Field] = [],
-    parameters: [AnywayPaymentUpdate.Parameter] = []
-) -> AnywayPaymentUpdate {
-    
-    .init(
-        details: details,
-        fields: fields,
-        parameters: parameters
-    )
-}
-
-private func makeAnywayPaymentUpdateDetails(
-    amounts: AnywayPaymentUpdate.Details.Amounts = makeAnywayPaymentUpdateDetailsAmounts(),
-    control: AnywayPaymentUpdate.Details.Control = makeAnywayPaymentUpdateDetailsControl(),
-    info: AnywayPaymentUpdate.Details.Info = makeAnywayPaymentUpdateDetailsInfo()
-) -> AnywayPaymentUpdate.Details {
-    
-    .init(
-        amounts: amounts,
-        control: control,
-        info: info
-    )
-}
-
-private func makeAnywayPaymentUpdateDetailsAmounts(
-    amount: Decimal? = nil,
-    creditAmount: Decimal? = nil,
-    currencyAmount: String? = nil,
-    currencyPayee: String? = nil,
-    currencyPayer: String? = nil,
-    currencyRate: Decimal? = nil,
-    debitAmount: Decimal? = nil,
-    fee: Decimal? = nil
-) -> AnywayPaymentUpdate.Details.Amounts {
-    
-    .init(
-        amount: amount,
-        creditAmount: creditAmount,
-        currencyAmount: currencyAmount,
-        currencyPayee: currencyPayee,
-        currencyPayer: currencyPayer,
-        currencyRate: currencyRate,
-        debitAmount: debitAmount,
-        fee: fee
-    )
-}
-
-private func makeAnywayPaymentUpdateDetailsControl(
-    isFinalStep: Bool = false,
-    isFraudSuspected: Bool = false,
-    needMake: Bool = false,
-    needOTP: Bool = false,
-    needSum: Bool = false
-) -> AnywayPaymentUpdate.Details.Control {
-    
-    .init(
-        isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected,
-        needMake: needMake,
-        needOTP: needOTP,
-        needSum: needSum
-    )
-}
-
-private func makeAnywayPaymentUpdateDetailsInfo(
-    documentStatus: AnywayPaymentUpdate.Details.Info.DocumentStatus? = nil,
-    infoMessage: String? = nil,
-    payeeName: String? = nil,
-    paymentOperationDetailID: Int? = nil,
-    printFormType: String? = nil
-) -> AnywayPaymentUpdate.Details.Info {
-    
-    .init(
-        documentStatus: documentStatus,
-        infoMessage: infoMessage,
-        payeeName: payeeName,
-        paymentOperationDetailID: paymentOperationDetailID,
-        printFormType: printFormType
-    )
-}
-
-private func makeAnywayPaymentUpdateField(
-    _ name: String = anyMessage(),
-    value: String = anyMessage(),
-    title: String = anyMessage()
-) -> AnywayPaymentUpdate.Field {
-    
-    .init(
-        name: name,
-        value: value,
-        title: title,
-        recycle: false,
-        svgImage: nil,
-        typeIdParameterList: nil
-    )
-}
-
-private func makeAnywayPaymentAndUpdateFields(
-    _ name: String = anyMessage(),
-    value: String = anyMessage(),
-    title: String = anyMessage()
-) -> (update: AnywayPaymentUpdate.Field, updated: AnywayPayment.Element.Field) {
-    
-    let update = makeAnywayPaymentUpdateField(
-        name,
-        value: value,
-        title: title
-    )
-    
-    let updated = makeAnywayPaymentField(
-        .string(name), value: value, title: title
-    )
-    
-    return (update, updated)
-}
-
-private func makeAnywayPaymentUpdateParameter(
-    field: AnywayPaymentUpdate.Parameter.Field = makeAnywayPaymentUpdateParameterField(),
-    masking: AnywayPaymentUpdate.Parameter.Masking = makeAnywayPaymentUpdateParameterMasking(),
-    validation: AnywayPaymentUpdate.Parameter.Validation = makeAnywayPaymentUpdateParameterValidation(),
-    uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes = makeAnywayPaymentUpdateParameterUIAttributes()
-) -> AnywayPaymentUpdate.Parameter {
-    
-    .init(
-        field: field,
-        masking: masking,
-        validation: validation,
-        uiAttributes: uiAttributes
-    )
-}
-
-private func makeAnywayPaymentAndUpdateParameters(
-    id: String = anyMessage(),
-    value: String? = anyMessage(),
-    inputMask: String? = nil,
-    mask: String? = nil,
-    isRequired: Bool = true,
-    maxLength: Int? = nil,
-    minLength: Int? = nil,
-    regExp: String = anyMessage(),
-    dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType = .string,
-    group: String? = nil,
-    inputFieldType: AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType? = nil,
-    isPrint: Bool = true,
-    order: Int? = nil,
-    phoneBook: Bool = false,
-    isReadOnly: Bool = false,
-    subGroup: String? = nil,
-    subTitle: String? = nil,
-    svgImage: String? = nil,
-    title: String = anyMessage(),
-    type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
-    viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType = .input
-    
-) -> (update: AnywayPaymentUpdate.Parameter, updated: AnywayPayment.Element.Parameter) {
-    
-    let (fieldUpdate, updatedField) = makeAnywayPaymentAndUpdateParameterField(
-        id: id,
-        value: value
-    )
-    let (maskingUpdate, updatedMasking) = makeAnywayPaymentAndUpdateParameterMasking(
-        inputMask: inputMask,
-        mask: mask
-    )
-    let (validationUpdate, updatedValidation) = makeAnywayPaymentAndUpdateParameterValidation(
-        isRequired: isRequired,
-        maxLength: maxLength,
-        minLength: minLength,
-        regExp: regExp
-    )
-    let (uiAttributesUpdate, updatedUIAttributes) = makeAnywayPaymentAndUpdateParameterUIAttributes(
-        dataType: dataType,
-        group: group,
-        inputFieldType: inputFieldType,
-        isPrint: isPrint,
-        order: order,
-        phoneBook: phoneBook,
-        isReadOnly: isReadOnly,
-        subGroup: subGroup,
-        subTitle: subTitle,
-        svgImage: svgImage,
-        title: title,
-        type: type,
-        viewType: viewType
-    )
-    
-    let update = makeAnywayPaymentUpdateParameter(
-        field: fieldUpdate,
-        masking: maskingUpdate,
-        validation: validationUpdate,
-        uiAttributes: uiAttributesUpdate
-    )
-    let updated = makeAnywayPaymentParameter(
-        field: updatedField,
-        masking: updatedMasking,
-        validation: updatedValidation,
-        uiAttributes: updatedUIAttributes
-    )
-    
-    return (update, updated)
-}
-
-private func makeAnywayPaymentAndUpdateParameterField(
-    id: String = anyMessage(),
-    value: String? = nil
-) -> (update: AnywayPaymentUpdate.Parameter.Field, updated: AnywayPayment.Element.Parameter.Field) {
-    
-    let update = makeAnywayPaymentUpdateParameterField(
-        content: value,
-        id: id
-    )
-    let updated = makeAnywayPaymentElementParameterField(
-        id: id,
-        value: value
-    )
-    
-    return (update, updated)
-}
-
-private func makeAnywayPaymentAndUpdateParameterMasking(
-    inputMask: String? = nil,
-    mask: String? = nil
-) -> (update: AnywayPaymentUpdate.Parameter.Masking, updated: AnywayPayment.Element.Parameter.Masking) {
-    
-    let update = makeAnywayPaymentUpdateParameterMasking(
-        inputMask: inputMask,
-        mask: mask
-    )
-    let updated = makeAnywayPaymentElementParameterMasking(
-        inputMask: inputMask,
-        mask: mask
-    )
-    
-    return (update, updated)
-}
-
-private func makeAnywayPaymentAndUpdateParameterValidation(
-    isRequired: Bool = true,
-    maxLength: Int? = nil,
-    minLength: Int? = nil,
-    regExp: String = anyMessage()
-) -> (update: AnywayPaymentUpdate.Parameter.Validation, updated: AnywayPayment.Element.Parameter.Validation) {
-    
-    let update = makeAnywayPaymentUpdateParameterValidation(
-        isRequired: isRequired,
-        maxLength: maxLength,
-        minLength: minLength,
-        rawLength: generateRandom11DigitNumber(),
-        regExp: regExp
-    )
-    let updated = makeAnywayPaymentElementParameterValidation(
-        isRequired: isRequired,
-        maxLength: maxLength,
-        minLength: minLength,
-        regExp: regExp
-    )
-    
-    return (update, updated)
-}
-
-private func makeAnywayPaymentAndUpdateParameterUIAttributes(
-    dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType = .string,
-    group: String? = nil,
-    inputFieldType: AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType? = nil,
-    isPrint: Bool = true,
-    order: Int? = nil,
-    phoneBook: Bool = false,
-    isReadOnly: Bool = false,
-    subGroup: String? = nil,
-    subTitle: String? = nil,
-    svgImage: String? = nil,
-    title: String = anyMessage(),
-    type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
-    viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType = .input
-) -> (update: AnywayPaymentUpdate.Parameter.UIAttributes, updated: AnywayPayment.Element.Parameter.UIAttributes) {
-    
-    let update = makeAnywayPaymentUpdateParameterUIAttributes(
-        dataType: dataType,
-        group: group,
-        inputFieldType: inputFieldType,
-        isPrint: isPrint,
-        order: order,
-        phoneBook: phoneBook,
-        isReadOnly: isReadOnly,
-        subGroup: subGroup,
-        subTitle: subTitle,
-        svgImage: svgImage,
-        title: title,
-        type: type,
-        viewType: viewType
-    )
-    let updated = makeAnywayPaymentElementParameterUIAttributes(
-        dataType: .init(dataType),
-        group: group,
-        isPrint: isPrint,
-        phoneBook: phoneBook,
-        isReadOnly: isReadOnly,
-        subGroup: subGroup,
-        subTitle: subTitle,
-        svgImage: svgImage,
-        title: title,
-        type: .init(type),
-        viewType: .init(viewType)
-    )
-    
-    return (update, updated)
-}
-
-private func makeAnywayPaymentUpdateParameterField(
-    content: String? = nil,
-    dataDictionary: String? = nil,
-    dataDictionaryРarent: String? = nil,
-    id: String = anyMessage()
-) -> AnywayPaymentUpdate.Parameter.Field {
-    
-    .init(
-        content: content,
-        dataDictionary: dataDictionary,
-        dataDictionaryРarent: dataDictionaryРarent,
-        id: id
-    )
-}
-
-private func makeAnywayPaymentUpdateParameterMasking(
-    inputMask: String? = nil,
-    mask: String? = nil
-) -> AnywayPaymentUpdate.Parameter.Masking {
-    
-    .init(inputMask: inputMask, mask: mask)
-}
-
-private func makeAnywayPaymentUpdateParameterValidation(
-    isRequired: Bool = true,
-    maxLength: Int? = nil,
-    minLength: Int? = nil,
-    rawLength: Int = 0,
-    regExp: String = anyMessage()
-) -> AnywayPaymentUpdate.Parameter.Validation {
-    
-    .init(
-        isRequired: isRequired,
-        maxLength: maxLength,
-        minLength: minLength,
-        rawLength: rawLength,
-        regExp: regExp
-    )
-}
-
-private func makeAnywayPaymentUpdateParameterUIAttributes(
-    dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType = .string,
-    group: String? = nil,
-    inputFieldType: AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType? = nil,
-    isPrint: Bool = true,
-    order: Int? = nil,
-    phoneBook: Bool = false,
-    isReadOnly: Bool = false,
-    subGroup: String? = nil,
-    subTitle: String? = nil,
-    svgImage: String? = nil,
-    title: String = anyMessage(),
-    type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
-    viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType = .input
-) -> AnywayPaymentUpdate.Parameter.UIAttributes {
-    
-    .init(
-        dataType: dataType,
-        group: group,
-        inputFieldType: inputFieldType,
-        isPrint: isPrint,
-        order: order,
-        phoneBook: phoneBook,
-        isReadOnly: isReadOnly,
-        subGroup: subGroup,
-        subTitle: subTitle,
-        svgImage: svgImage,
-        title: title,
-        type: type,
-        viewType: viewType
-    )
-}
-
-private extension AnywayPayment.Element.Parameter {
-    
-    func updating(value: String?) -> Self {
-        
-        .init(
-            field: .init(id: field.id, value: value),
-            masking: masking,
-            validation: validation,
-            uiAttributes: uiAttributes
-        )
+        .first
     }
 }
