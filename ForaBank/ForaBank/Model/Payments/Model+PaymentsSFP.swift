@@ -45,7 +45,7 @@ extension Model {
                         
                         let command = ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments(
                             token: token,
-                            payload: .init(phoneNumber: latestPayment.phoneNumber.addCodeRuIfNeeded())
+                            payload: .init(phoneNumber: phoneFormatted.digits)
                         )
                         
                         let result = try await serverAgent.executeCommand(command: command)
