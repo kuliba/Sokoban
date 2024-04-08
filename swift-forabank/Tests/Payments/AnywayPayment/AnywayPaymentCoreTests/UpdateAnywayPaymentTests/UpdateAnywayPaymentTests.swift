@@ -31,7 +31,6 @@ extension AnywayPayment {
     }
 }
 
-
 extension AnywayPayment.Element {
     
     struct Field: Identifiable, Equatable {
@@ -41,7 +40,117 @@ extension AnywayPayment.Element {
         let title: String
     }
     
-    struct Parameter: Equatable {}
+    struct Parameter: Equatable {
+        
+        let field: Field
+        let masking: Masking
+        let validation: Validation
+        let uiAttributes: UIAttributes
+    }
+}
+
+extension AnywayPayment.Element.Parameter {
+    
+    struct Field: Identifiable, Equatable {
+        
+        let id: String
+        let value: String?
+    }
+    
+    struct Masking: Equatable {
+        
+        let inputMask: String?
+        let mask: String?
+    }
+    
+    struct Validation: Equatable {
+        
+        let isRequired: Bool
+        let maxLength: Int?
+        let minLength: Int?
+        let regExp: String
+    }
+    
+    struct UIAttributes: Equatable {
+        
+        let dataType: DataType // not used for `viewType: ViewType = .input` https://shorturl.at/hnrE1
+        let group: String?
+        let isPrint: Bool // not used for `type: FieldType = .input`
+        let phoneBook: Bool
+        let isReadOnly: Bool
+        let subGroup: String?
+        let subTitle: String?
+        let svgImage: String?
+        let title: String
+        let type: FieldType
+        let viewType: ViewType
+    }
+}
+
+private extension AnywayPayment.Element.Field {
+    
+    func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
+        
+        .init(id: id, value: fieldUpdate.value, title: fieldUpdate.title)
+    }
+}
+
+private extension AnywayPayment.Element.Parameter {
+    
+    func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
+        
+        .init(
+            field: .init(id: field.id, value: fieldUpdate.value),
+            masking: masking,
+            validation: validation,
+            uiAttributes: uiAttributes
+        )
+    }
+}
+
+extension AnywayPayment.Element.Parameter.UIAttributes {
+    
+    enum DataType: Equatable {
+        
+        case string
+        case pairs([Pair])
+        
+        struct Pair: Equatable {
+            
+            let key: String
+            let value: String
+        }
+    }
+    
+    enum FieldType: Equatable {
+        
+        case input, select, maskList
+    }
+    
+    enum InputFieldType: Equatable {
+        
+        case account
+        case address
+        case amount
+        case bank
+        case bic
+        case counter
+        case date
+        case insurance
+        case inn
+        case name
+        case oktmo
+        case penalty
+        case phone
+        case purpose
+        case recipient
+        case view
+    }
+    
+    enum ViewType: Equatable {
+        
+        case constant, input, output
+    }
 }
 
 extension AnywayPayment.Element.Field {
@@ -64,7 +173,7 @@ extension AnywayPayment {
         elements.update(with: update)
         
         let otp = Element.Field(id: .otp, value: "", title: "")
-        elements[id: .otp] = update.details.control.needOTP ? .field(otp) : nil
+        elements[fieldID: .otp] = update.details.control.needOTP ? .field(otp) : nil
         
         return .init(
             elements: elements,
@@ -78,7 +187,7 @@ extension AnywayPayment {
 
 private extension Array where Element == AnywayPayment.Element {
     
-    subscript(id id: Element.Field.ID) -> Element? {
+    subscript(fieldID id: Element.Field.ID) -> Element? {
         
         get { firstIndex(matching: id).map { self[$0] } }
         
@@ -133,22 +242,24 @@ private extension Array where Element == AnywayPayment.Element {
         
         self = map {
             
-            guard let id = $0.fieldStringID,
+            guard let id = $0.stringID,
                   let matching = updateFields[id]
             else { return $0 }
             
-            return .field(.init(
-                id: .string(id),
-                value: matching.value,
-                title: matching.title
-            ))
+            switch $0 {
+            case let .field(field):
+                return .field(field.updating(with: matching))
+                
+            case let .parameter(parameter):
+                return .parameter(parameter.updating(with: matching))
+            }
         }
     }
     
     mutating func appendComplementaryFields(
         from updateFields: [AnywayPaymentUpdate.Field]
     ) {
-        let existingIDs = stringFieldIDs
+        let existingIDs = stringIDs
         let complimentary: [Element] = updateFields
             .filter { !existingIDs.contains($0.name) }
             .map(Element.Field.init)
@@ -157,9 +268,9 @@ private extension Array where Element == AnywayPayment.Element {
         self.append(contentsOf: complimentary)
     }
     
-    private var stringFieldIDs: [String] {
+    private var stringIDs: [String] {
         
-        compactMap(\.fieldStringID)
+        compactMap(\.stringID)
     }
     
     mutating func appendParameters(
@@ -178,13 +289,24 @@ private extension AnywayPayment.Element {
         
         return field.id
     }
+}
+
+private extension AnywayPayment.Element {
     
-    var fieldStringID: String? {
+    var stringID: String? {
         
-        guard case let .string(string) = fieldID
-        else { return nil }
-        
-        return string
+        switch self {
+        case let .field(field):
+            switch field.id {
+            case .otp:
+                return nil
+            case let .string(id):
+                return id
+            }
+            
+        case let .parameter(parameter):
+            return parameter.field.id
+        }
     }
 }
 
@@ -202,9 +324,109 @@ private extension AnywayPayment.Element.Field {
 
 private extension AnywayPayment.Element.Parameter {
     
-    init(_ field: AnywayPaymentUpdate.Parameter) {
+    init(_ parameter: AnywayPaymentUpdate.Parameter) {
         
-        self.init()
+        self.init(
+            field: .init(parameter.field),
+            masking: .init(parameter.masking),
+            validation: .init(parameter.validation),
+            uiAttributes: .init(parameter.uiAttributes)
+        )
+    }
+}
+
+private extension AnywayPayment.Element.Parameter.Field {
+    
+    init(_ field: AnywayPaymentUpdate.Parameter.Field) {
+        
+        self.init(id: field.id, value: field.content)
+    }
+}
+
+private extension AnywayPayment.Element.Parameter.Masking {
+    
+    init(_ masking: AnywayPaymentUpdate.Parameter.Masking) {
+        
+        self.init(inputMask: masking.inputMask, mask: masking.mask)
+    }
+}
+
+private extension AnywayPayment.Element.Parameter.Validation {
+    
+    init(_ validation: AnywayPaymentUpdate.Parameter.Validation) {
+        
+        self.init(
+            isRequired: validation.isRequired,
+            maxLength: validation.maxLength,
+            minLength: validation.minLength,
+            regExp: validation.regExp
+        )
+    }
+}
+
+private extension AnywayPayment.Element.Parameter.UIAttributes {
+    
+    init(_ uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes) {
+        
+        self.init(
+            dataType: .init(uiAttributes.dataType),
+            group: uiAttributes.group,
+            isPrint: uiAttributes.isPrint,
+            phoneBook: uiAttributes.phoneBook,
+            isReadOnly: uiAttributes.isReadOnly,
+            subGroup: uiAttributes.subGroup,
+            subTitle: uiAttributes.subTitle,
+            svgImage: uiAttributes.svgImage,
+            title: uiAttributes.title,
+            type: .init(uiAttributes.type),
+            viewType: .init(uiAttributes.viewType)
+        )
+    }
+}
+
+private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
+    
+    init(_ dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType) {
+
+        switch dataType {
+        case .string:
+            self = .string
+            
+        case let .pairs(pairs):
+            self = .pairs(pairs.map(Pair.init))
+        }
+    }
+}
+
+private extension AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
+    
+    init(_ pairs: AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair) {
+        
+        self.init(key: pairs.key, value: pairs.value)
+    }
+}
+
+private extension AnywayPayment.Element.Parameter.UIAttributes.FieldType {
+    
+    init(_ fieldType: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType) {
+        
+        switch fieldType {
+        case .input:    self = .input
+        case .select:   self = .select
+        case .maskList: self = .maskList
+        }
+    }
+}
+
+private extension AnywayPayment.Element.Parameter.UIAttributes.ViewType {
+    
+    init(_ viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType) {
+        
+        switch viewType {
+        case .constant: self = .constant
+        case .input:    self = .input
+        case .output:   self = .output
+        }
     }
 }
 
@@ -278,12 +500,12 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let field = makeAnywayPaymentFieldWithStringID()
         let payment = makeAnywayPayment(fields: [field])
-        let (updateField, updated) = makeAnywayPaymentAndUpdateFields()
-        let update = makeAnywayPaymentUpdate(fields: [updateField])
+        let (fieldUpdate, updatedField) = makeAnywayPaymentAndUpdateFields()
+        let update = makeAnywayPaymentUpdate(fields: [fieldUpdate])
         
         assert(payment, on: update) {
             
-            let fields = [field].appending(updated)
+            let fields = [field].appending(updatedField)
             $0.elements = fields.map(AnywayPayment.Element.field)
         }
     }
@@ -292,15 +514,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let field = makeAnywayPaymentFieldWithStringID()
         let payment = makeAnywayPayment(fields: [field])
-        let (updateField1, updated1) = makeAnywayPaymentAndUpdateFields()
-        let (updateField2, updated2) = makeAnywayPaymentAndUpdateFields()
+        let (fieldUpdate1, updatedField1) = makeAnywayPaymentAndUpdateFields()
+        let (fieldUpdate2, updatedField2) = makeAnywayPaymentAndUpdateFields()
         let update = makeAnywayPaymentUpdate(fields: [
-            updateField1, updateField2
+            fieldUpdate1, fieldUpdate2
         ])
         
         assert(payment, on: update) {
             
-            let fields = [field, updated1, updated2]
+            let fields = [field, updatedField1, updatedField2]
             $0.elements = fields.map(AnywayPayment.Element.field)
         }
     }
@@ -394,15 +616,34 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     func test_update_shouldChangeStringIDFieldWithDifferentValueInNonComplementaryFields() {
         
-        let field = makeAnywayPaymentFieldWithStringID("abc123")
+        let id = anyMessage()
+        let field = makeAnywayPaymentFieldWithStringID(id)
         let payment = makeAnywayPayment(fields: [field])
-        let updateField = makeAnywayPaymentUpdateField("abc123", value: "aa", title: "bbb")
-        let update = makeAnywayPaymentUpdate(fields: [updateField])
-        let updated = makeAnywayPaymentField(.string("abc123"), value: "aa", title: "bbb")
+        let (fieldUpdate, updatedField) = makeAnywayPaymentAndUpdateFields(id, value: "aa", title: "bbb")
+        let update = makeAnywayPaymentUpdate(fields: [fieldUpdate])
         
         assert(payment, on: update) {
             
-            $0.elements = [.field(updated)]
+            $0.elements = [.field(updatedField)]
+        }
+    }
+    
+    func test_update_shouldUpdateExistingFieldOnUpdateWithDifferentValue() {
+        
+        let field = makeAnywayPaymentFieldWithStringID("e1")
+        let payment = makeAnywayPayment(elements: [.field(field)])
+        
+        let newValue = anyMessage()
+        let (fieldUpdate, updatedField) = makeAnywayPaymentAndUpdateFields("e1", value: newValue)
+        let (fieldUpdate2, updatedField2) = makeAnywayPaymentAndUpdateFields()
+        
+        let update = makeAnywayPaymentUpdate(
+            fields: [fieldUpdate, fieldUpdate2]
+        )
+        
+        assert(payment, on: update) {
+            
+            $0.elements = [.field(updatedField), .field(updatedField2)]
         }
     }
     
@@ -448,17 +689,17 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAppendOTPFieldAfterComplementaryFieldsOnNeedOTPTrue() {
         
         let payment = makeAnywayPaymentWithoutOTP()
-        let (updateField1, updated1) = makeAnywayPaymentAndUpdateFields()
-        let (updateField2, updated2) = makeAnywayPaymentAndUpdateFields()
-
+        let (fieldUpdate1, updatedField1) = makeAnywayPaymentAndUpdateFields()
+        let (fieldUpdate2, updatedField2) = makeAnywayPaymentAndUpdateFields()
+        
         let update = makeAnywayPaymentUpdate(
-            fields: [updateField1, updateField2],
+            fields: [fieldUpdate1, fieldUpdate2],
             needOTP: true
         )
         
         let updated = payment.update(with: update)
         
-        assertOTP(in: updated, precedes: [updated1, updated2])
+        assertOTP(in: updated, precedes: [updatedField1, updatedField2])
     }
     
     // MARK: - parameters
@@ -466,12 +707,12 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAppendParameterToEmpty() {
         
         let payment = makeAnywayPayment(parameters: [])
-        let (updateParameter, updated) = makeAnywayPaymentAndUpdateParameters()
-        let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
+        let (parameterUpdate, updatedParameter) = makeAnywayPaymentAndUpdateParameters()
+        let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
         
         assert(payment, on: update) {
             
-            $0.elements = [.parameter(updated)]
+            $0.elements = [.parameter(updatedParameter)]
         }
     }
     
@@ -479,12 +720,12 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let field = makeAnywayPaymentField()
         let payment = makeAnywayPayment(fields: [field])
-        let (updateParameter, updated) = makeAnywayPaymentAndUpdateParameters()
-        let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
+        let (parameterUpdate, updatedParameter) = makeAnywayPaymentAndUpdateParameters()
+        let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
         
         assert(payment, on: update) {
             
-            $0.elements = [.field(field), .parameter(updated)]
+            $0.elements = [.field(field), .parameter(updatedParameter)]
         }
     }
     
@@ -493,12 +734,12 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let field1 = makeAnywayPaymentField()
         let field2 = makeAnywayPaymentField()
         let payment = makeAnywayPayment(fields: [field1, field2])
-        let (updateParameter, updated) = makeAnywayPaymentAndUpdateParameters()
-        let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
+        let (parameterUpdate, updatedParameter) = makeAnywayPaymentAndUpdateParameters()
+        let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
         
         assert(payment, on: update) {
             
-            $0.elements = [.field(field1), .field(field2), .parameter(updated)]
+            $0.elements = [.field(field1), .field(field2), .parameter(updatedParameter)]
         }
     }
     
@@ -509,12 +750,12 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let payment = makeAnywayPayment(
             elements: [.field(field), .parameter(parameter)]
         )
-        let (updateParameter, updated) = makeAnywayPaymentAndUpdateParameters()
-        let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
+        let (parameterUpdate, updatedParameter) = makeAnywayPaymentAndUpdateParameters()
+        let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
         
         assert(payment, on: update) {
             
-            $0.elements = [.field(field), .parameter(parameter), .parameter(updated)]
+            $0.elements = [.field(field), .parameter(parameter), .parameter(updatedParameter)]
         }
     }
     
@@ -525,12 +766,12 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let payment = makeAnywayPayment(
             elements: [.parameter(parameter), .field(field)]
         )
-        let (updateParameter, updated) = makeAnywayPaymentAndUpdateParameters()
-        let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
+        let (parameterUpdate, updatedParameter) = makeAnywayPaymentAndUpdateParameters()
+        let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
         
         assert(payment, on: update) {
             
-            $0.elements = [.parameter(parameter), .field(field), .parameter(updated)]
+            $0.elements = [.parameter(parameter), .field(field), .parameter(updatedParameter)]
         }
     }
     
@@ -538,12 +779,12 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let parameter = makeAnywayPaymentParameter()
         let payment = makeAnywayPayment(parameters: [parameter])
-        let (updateParameter, updated) = makeAnywayPaymentAndUpdateParameters()
-        let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
+        let (parameterUpdate, updatedParameter) = makeAnywayPaymentAndUpdateParameters()
+        let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
         
         assert(payment, on: update) {
             
-            $0.elements = [.parameter(parameter), .parameter(updated)]
+            $0.elements = [.parameter(parameter), .parameter(updatedParameter)]
         }
     }
     
@@ -552,27 +793,27 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let parameter1 = makeAnywayPaymentParameter()
         let parameter2 = makeAnywayPaymentParameter()
         let payment = makeAnywayPayment(parameters: [parameter1, parameter2])
-        let (updateParameter, updated) = makeAnywayPaymentAndUpdateParameters()
-        let update = makeAnywayPaymentUpdate(parameters: [updateParameter])
+        let (parameterUpdate, updatedParameter) = makeAnywayPaymentAndUpdateParameters()
+        let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
         
         assert(payment, on: update) {
             
-            $0.elements = [parameter1, parameter2, updated].map(AnywayPayment.Element.parameter)
+            $0.elements = [parameter1, parameter2, updatedParameter].map(AnywayPayment.Element.parameter)
         }
     }
     
     func test_update_shouldAppendTwoParametersToEmpty() {
         
         let payment = makeAnywayPayment(parameters: [])
-        let (updateParameter1, updated1) = makeAnywayPaymentAndUpdateParameters()
-        let (updateParameter2, updated2) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate1, updatedParameter1) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
-            parameters: [updateParameter1, updateParameter2]
+            parameters: [parameterUpdate1, parameterUpdate2]
         )
         
         assert(payment, on: update) {
             
-            $0.elements = [updated1, updated2].map(AnywayPayment.Element.parameter)
+            $0.elements = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
         }
     }
     
@@ -580,15 +821,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let field = makeAnywayPaymentField()
         let payment = makeAnywayPayment(fields: [field])
-        let (updateParameter1, updated1) = makeAnywayPaymentAndUpdateParameters()
-        let (updateParameter2, updated2) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate1, updatedParameter1) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
-            parameters: [updateParameter1, updateParameter2]
+            parameters: [parameterUpdate1, parameterUpdate2]
         )
         
         assert(payment, on: update) {
             
-            let appending = [updated1, updated2].map(AnywayPayment.Element.parameter)
+            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
             $0.elements = [.field(field)] + appending
         }
     }
@@ -598,15 +839,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let field1 = makeAnywayPaymentField()
         let field2 = makeAnywayPaymentField()
         let payment = makeAnywayPayment(fields: [field1, field2])
-        let (updateParameter1, updated1) = makeAnywayPaymentAndUpdateParameters()
-        let (updateParameter2, updated2) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate1, updatedParameter1) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
-            parameters: [updateParameter1, updateParameter2]
+            parameters: [parameterUpdate1, parameterUpdate2]
         )
         
         assert(payment, on: update) {
             
-            let appending = [updated1, updated2].map(AnywayPayment.Element.parameter)
+            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
             $0.elements = [.field(field1), .field(field2)] + appending
         }
     }
@@ -618,15 +859,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let payment = makeAnywayPayment(
             elements: [.field(field), .parameter(parameter)]
         )
-        let (updateParameter1, updated1) = makeAnywayPaymentAndUpdateParameters()
-        let (updateParameter2, updated2) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate1, updatedParameter1) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
-            parameters: [updateParameter1, updateParameter2]
+            parameters: [parameterUpdate1, parameterUpdate2]
         )
         
         assert(payment, on: update) {
             
-            let appending = [updated1, updated2].map(AnywayPayment.Element.parameter)
+            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
             $0.elements = [.field(field), .parameter(parameter)] + appending
         }
     }
@@ -638,15 +879,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let payment = makeAnywayPayment(
             elements: [.parameter(parameter), .field(field)]
         )
-        let (updateParameter1, updated1) = makeAnywayPaymentAndUpdateParameters()
-        let (updateParameter2, updated2) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate1, updatedParameter1) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
-            parameters: [updateParameter1, updateParameter2]
+            parameters: [parameterUpdate1, parameterUpdate2]
         )
         
         assert(payment, on: update) {
             
-            let appending = [updated1, updated2].map(AnywayPayment.Element.parameter)
+            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
             $0.elements = [.parameter(parameter), .field(field)] + appending
         }
     }
@@ -655,15 +896,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let parameter = makeAnywayPaymentParameter()
         let payment = makeAnywayPayment(parameters: [parameter])
-        let (updateParameter1, updated1) = makeAnywayPaymentAndUpdateParameters()
-        let (updateParameter2, updated2) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate1, updatedParameter1) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
-            parameters: [updateParameter1, updateParameter2]
+            parameters: [parameterUpdate1, parameterUpdate2]
         )
         
         assert(payment, on: update) {
             
-            $0.elements = [parameter, updated1, updated2]
+            $0.elements = [parameter, updatedParameter1, updatedParameter2]
                 .map(AnywayPayment.Element.parameter)
         }
     }
@@ -673,15 +914,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let parameter1 = makeAnywayPaymentParameter()
         let parameter2 = makeAnywayPaymentParameter()
         let payment = makeAnywayPayment(parameters: [parameter1, parameter2])
-        let (updateParameter1, updated1) = makeAnywayPaymentAndUpdateParameters()
-        let (updateParameter2, updated2) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate1, updatedParameter1) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
-            parameters: [updateParameter1, updateParameter2]
+            parameters: [parameterUpdate1, parameterUpdate2]
         )
         
         assert(payment, on: update) {
             
-            $0.elements = [parameter1, parameter2, updated1, updated2]
+            $0.elements = [parameter1, parameter2, updatedParameter1, updatedParameter2]
                 .map(AnywayPayment.Element.parameter)
         }
     }
@@ -689,11 +930,11 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAppendFieldAndParameterToEmptyOnUpdateWithParameterAndComplimentoryField() {
         
         let payment = makeAnywayPayment(elements: [])
-        let (updateField, updatedField) = makeAnywayPaymentAndUpdateFields()
-        let (updateParameter, updatedParameter) = makeAnywayPaymentAndUpdateParameters()
+        let (fieldUpdate, updatedField) = makeAnywayPaymentAndUpdateFields()
+        let (parameterUpdate, updatedParameter) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
-            fields: [updateField],
-            parameters: [updateParameter]
+            fields: [fieldUpdate],
+            parameters: [parameterUpdate]
         )
         
         assert(payment, on: update) {
@@ -705,18 +946,18 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAppendElementsToEmptyOnUpdateWithParametersAndComplimentoryFields() {
         
         let payment = makeAnywayPayment(elements: [])
-        let (updateField1, updated1) = makeAnywayPaymentAndUpdateFields()
-        let (updateField2, updated2) = makeAnywayPaymentAndUpdateFields()
-        let (updateParameter1, updatedParameter1) = makeAnywayPaymentAndUpdateParameters()
-        let (updateParameter2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
+        let (fieldUpdate1, updatedField1) = makeAnywayPaymentAndUpdateFields()
+        let (fieldUpdate2, updatedField2) = makeAnywayPaymentAndUpdateFields()
+        let (parameterUpdate1, updatedParameter1) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
-            fields: [updateField1, updateField2],
-            parameters: [updateParameter1, updateParameter2]
+            fields: [fieldUpdate1, fieldUpdate2],
+            parameters: [parameterUpdate1, parameterUpdate2]
         )
         
         assert(payment, on: update) {
             
-            let complimentaryFields = [updated1, updated2]
+            let complimentaryFields = [updatedField1, updatedField2]
             let parameters = [updatedParameter1, updatedParameter2]
             $0.elements = complimentaryFields.map(AnywayPayment.Element.field)
             + parameters.map(AnywayPayment.Element.parameter)
@@ -728,11 +969,11 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let field = makeAnywayPaymentField()
         let parameter = makeAnywayPaymentParameter()
         let payment = makeAnywayPayment(elements: [.field(field), .parameter(parameter)])
-        let (updateField, updatedField) = makeAnywayPaymentAndUpdateFields()
-        let (updateParameter, updatedParameter) = makeAnywayPaymentAndUpdateParameters()
+        let (fieldUpdate, updatedField) = makeAnywayPaymentAndUpdateFields()
+        let (parameterUpdate, updatedParameter) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
-            fields: [updateField],
-            parameters: [updateParameter]
+            fields: [fieldUpdate],
+            parameters: [parameterUpdate]
         )
         
         assert(payment, on: update) {
@@ -746,13 +987,14 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let field = makeAnywayPaymentField()
         let parameter = makeAnywayPaymentParameter()
         let payment = makeAnywayPayment(elements: [.field(field), .parameter(parameter)])
-        let (updateField1, updatedField1) = makeAnywayPaymentAndUpdateFields()
-        let (updateField2, updatedField2) = makeAnywayPaymentAndUpdateFields()
-        let (updateParameter1, updatedParameter1) = makeAnywayPaymentAndUpdateParameters()
-        let (updateParameter2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
+        
+        let (fieldUpdate1, updatedField1) = makeAnywayPaymentAndUpdateFields()
+        let (fieldUpdate2, updatedField2) = makeAnywayPaymentAndUpdateFields()
+        let (parameterUpdate1, updatedParameter1) = makeAnywayPaymentAndUpdateParameters()
+        let (parameterUpdate2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
         let update = makeAnywayPaymentUpdate(
-            fields: [updateField1, updateField2],
-            parameters: [updateParameter1, updateParameter2]
+            fields: [fieldUpdate1, fieldUpdate2],
+            parameters: [parameterUpdate1, parameterUpdate2]
         )
         
         assert(payment, on: update) {
@@ -763,6 +1005,126 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             + complimentaryFields.map(AnywayPayment.Element.field)
             + parameters.map(AnywayPayment.Element.parameter)
         }
+    }
+    
+    func test_update_shouldUpdateExistingParameterOnUpdateWithDifferentValue() {
+        
+        let id = anyMessage()
+        let parameter = makeAnywayPaymentParameterWithID(id)
+        let payment = makeAnywayPayment(elements: [.parameter(parameter)])
+        
+        let newValue = anyMessage()
+        let fieldUpdate = makeAnywayPaymentUpdateField(id, value: newValue)
+        let update = makeAnywayPaymentUpdate(fields: [fieldUpdate])
+        
+        assert(payment, on: update) {
+            
+            $0.elements = [.parameter(parameter.updating(value: newValue))]
+        }
+    }
+
+    func test_update_shouldUpdateExistingParameterOnMatchingIDFieldUpdateWithDifferentValue() {
+        
+        let matchingID = anyMessage()
+        let parameter = makeAnywayPaymentParameterWithID(matchingID)
+        let payment = makeAnywayPayment(elements: [.parameter(parameter)])
+        
+        let newValue = anyMessage()
+        let fieldUpdate = makeAnywayPaymentUpdateField(matchingID, value: newValue)
+        let (parameterUpdate2, updatedParameter2) = makeAnywayPaymentAndUpdateParameters()
+        let update = makeAnywayPaymentUpdate(
+            fields: [fieldUpdate],
+            parameters: [parameterUpdate2]
+        )
+        
+        assert(payment, on: update) {
+            
+            $0.elements = [
+                .parameter(parameter.updating(value: newValue)),
+                .parameter(updatedParameter2)
+            ]
+        }
+    }
+
+    // MARK: - Helpers Tests
+    
+    func test_makeAnywayPaymentAndUpdateParameters() {
+        
+        let (update, parameter) = makeAnywayPaymentAndUpdateParameters(
+            value: nil,
+            dataType: .string,
+            type: .select,
+            viewType: .input
+        )
+        
+        XCTAssertNil(update.field.content)
+        XCTAssertNil(parameter.field.value)
+        
+        XCTAssertNoDiff(update.uiAttributes.dataType, .string)
+        XCTAssertNoDiff(parameter.uiAttributes.dataType, .string)
+        
+        XCTAssertNoDiff(update.uiAttributes.type, .select)
+        XCTAssertNoDiff(parameter.uiAttributes.type, .select)
+        
+        XCTAssertNoDiff(update.uiAttributes.viewType, .input)
+        XCTAssertNoDiff(parameter.uiAttributes.viewType, .input)
+    }
+    
+    func test_makeAnywayPaymentAndUpdateParameters_2() {
+        
+        let value = anyMessage()
+        let (update, parameter) = makeAnywayPaymentAndUpdateParameters(
+            value: value,
+            dataType: .pairs([.init(key: "a", value: "1")]),
+            group: nil,
+            isPrint: true,
+            type: .input,
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(update.field.content, value)
+        XCTAssertNoDiff(parameter.field.value, value)
+        
+        XCTAssertNoDiff(update.uiAttributes.dataType, .pairs([.init(key: "a", value: "1")]))
+        XCTAssertNoDiff(parameter.uiAttributes.dataType, .pairs([.init(key: "a", value: "1")]))
+        
+        XCTAssertNil(update.uiAttributes.group)
+        XCTAssertNil(parameter.uiAttributes.group)
+        
+        XCTAssertTrue(update.uiAttributes.isPrint)
+        XCTAssertTrue(parameter.uiAttributes.isPrint)
+        
+        XCTAssertNoDiff(update.uiAttributes.type, .input)
+        XCTAssertNoDiff(parameter.uiAttributes.type, .input)
+        
+        XCTAssertNoDiff(update.uiAttributes.viewType, .constant)
+        XCTAssertNoDiff(parameter.uiAttributes.viewType, .constant)
+    }
+    
+    func test_makeAnywayPaymentAndUpdateParameters_3() {
+        
+        let (update, parameter) = makeAnywayPaymentAndUpdateParameters(
+            dataType: .pairs([.init(key: "a", value: "1"), .init(key: "b", value: "c")]),
+            group: "group",
+            isPrint: false,
+            type: .maskList,
+            viewType: .output
+        )
+        
+        XCTAssertNoDiff(update.uiAttributes.dataType, .pairs([.init(key: "a", value: "1"), .init(key: "b", value: "c")]))
+        XCTAssertNoDiff(parameter.uiAttributes.dataType, .pairs([.init(key: "a", value: "1"), .init(key: "b", value: "c")]))
+        
+        XCTAssertNoDiff(update.uiAttributes.type, .maskList)
+        XCTAssertNoDiff(parameter.uiAttributes.type, .maskList)
+        
+        XCTAssertNoDiff(update.uiAttributes.group, "group")
+        XCTAssertNoDiff(parameter.uiAttributes.group, "group")
+        
+        XCTAssertFalse(update.uiAttributes.isPrint)
+        XCTAssertFalse(parameter.uiAttributes.isPrint)
+
+        XCTAssertNoDiff(update.uiAttributes.viewType, .output)
+        XCTAssertNoDiff(parameter.uiAttributes.viewType, .output)
     }
     
     // MARK: - Helpers
@@ -963,9 +1325,87 @@ private func makeAnywayPaymentFieldWithStringID(
 }
 
 private func makeAnywayPaymentParameter(
+    field: AnywayPayment.Element.Parameter.Field = makeAnywayPaymentElementParameterField(),
+    masking: AnywayPayment.Element.Parameter.Masking = makeAnywayPaymentElementParameterMasking(),
+    validation: AnywayPayment.Element.Parameter.Validation = makeAnywayPaymentElementParameterValidation(),
+    uiAttributes: AnywayPayment.Element.Parameter.UIAttributes = makeAnywayPaymentElementParameterUIAttributes()
 ) -> AnywayPayment.Element.Parameter {
     
-    .init()
+    .init(
+        field: field,
+        masking: masking,
+        validation: validation,
+        uiAttributes: uiAttributes
+    )
+}
+
+private func makeAnywayPaymentParameterWithID(
+    _ id: String = anyMessage()
+) -> AnywayPayment.Element.Parameter {
+    
+    makeAnywayPaymentParameter(
+        field: makeAnywayPaymentElementParameterField(id: id)
+    )
+}
+
+private func makeAnywayPaymentElementParameterField(
+    id: String = anyMessage(),
+    value: String? = anyMessage()
+) -> AnywayPayment.Element.Parameter.Field {
+    
+    .init(id: id, value: value)
+}
+
+private func makeAnywayPaymentElementParameterMasking(
+    inputMask: String? = nil,
+    mask: String? = nil
+) -> AnywayPayment.Element.Parameter.Masking {
+    
+    .init(inputMask: inputMask, mask: mask)
+}
+
+private func makeAnywayPaymentElementParameterValidation(
+    isRequired: Bool = true,
+    maxLength: Int? = nil,
+    minLength: Int? = nil,
+    regExp: String = anyMessage()
+) -> AnywayPayment.Element.Parameter.Validation {
+    
+    .init(
+        isRequired: isRequired,
+        maxLength: maxLength,
+        minLength: minLength,
+        regExp: regExp
+    )
+}
+
+private func makeAnywayPaymentElementParameterUIAttributes(
+    dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType = .string,
+    group: String? = nil,
+    isPrint: Bool = true,
+    phoneBook: Bool = false,
+    isReadOnly: Bool = false,
+    subGroup: String? = nil,
+    subTitle: String? = nil,
+    svgImage: String? = nil,
+    title: String = anyMessage(),
+    type: AnywayPayment.Element.Parameter.UIAttributes.FieldType = .input,
+    viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType = .input
+) -> AnywayPayment.Element.Parameter.UIAttributes {
+    
+    .init(
+        dataType: dataType,
+        group: group,
+        isPrint: isPrint,
+        phoneBook: phoneBook,
+        isReadOnly: isReadOnly,
+        subGroup: subGroup,
+        subTitle: subTitle,
+        svgImage: svgImage,
+        title: title,
+        type: type,
+        viewType: viewType
+    )
 }
 
 private func makeOTPField(
@@ -1165,20 +1605,177 @@ private func makeAnywayPaymentUpdateParameter(
 }
 
 private func makeAnywayPaymentAndUpdateParameters(
-    field: AnywayPaymentUpdate.Parameter.Field = makeAnywayPaymentUpdateParameterField(),
-    masking: AnywayPaymentUpdate.Parameter.Masking = makeAnywayPaymentUpdateParameterMasking(),
-    validation: AnywayPaymentUpdate.Parameter.Validation = makeAnywayPaymentUpdateParameterValidation(),
-    uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes = makeAnywayPaymentUpdateParameterUIAttributes()
+    id: String = anyMessage(),
+    value: String? = anyMessage(),
+    inputMask: String? = nil,
+    mask: String? = nil,
+    isRequired: Bool = true,
+    maxLength: Int? = nil,
+    minLength: Int? = nil,
+    regExp: String = anyMessage(),
+    dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType = .string,
+    group: String? = nil,
+    inputFieldType: AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType? = nil,
+    isPrint: Bool = true,
+    order: Int? = nil,
+    phoneBook: Bool = false,
+    isReadOnly: Bool = false,
+    subGroup: String? = nil,
+    subTitle: String? = nil,
+    svgImage: String? = nil,
+    title: String = anyMessage(),
+    type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
+    viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType = .input
+    
 ) -> (update: AnywayPaymentUpdate.Parameter, updated: AnywayPayment.Element.Parameter) {
     
-    let update = makeAnywayPaymentUpdateParameter(
-        field: field,
-        masking: masking,
-        validation: validation,
-        uiAttributes: uiAttributes
+    let (fieldUpdate, updatedField) = makeAnywayPaymentAndUpdateParameterField(
+        id: id,
+        value: value
+    )
+    let (maskingUpdate, updatedMasking) = makeAnywayPaymentAndUpdateParameterMasking(
+        inputMask: inputMask,
+        mask: mask
+    )
+    let (validationUpdate, updatedValidation) = makeAnywayPaymentAndUpdateParameterValidation(
+        isRequired: isRequired,
+        maxLength: maxLength,
+        minLength: minLength,
+        regExp: regExp
+    )
+    let (uiAttributesUpdate, updatedUIAttributes) = makeAnywayPaymentAndUpdateParameterUIAttributes(
+        dataType: dataType,
+        group: group,
+        inputFieldType: inputFieldType,
+        isPrint: isPrint,
+        order: order,
+        phoneBook: phoneBook,
+        isReadOnly: isReadOnly,
+        subGroup: subGroup,
+        subTitle: subTitle,
+        svgImage: svgImage,
+        title: title,
+        type: type,
+        viewType: viewType
     )
     
+    let update = makeAnywayPaymentUpdateParameter(
+        field: fieldUpdate,
+        masking: maskingUpdate,
+        validation: validationUpdate,
+        uiAttributes: uiAttributesUpdate
+    )
     let updated = makeAnywayPaymentParameter(
+        field: updatedField,
+        masking: updatedMasking,
+        validation: updatedValidation,
+        uiAttributes: updatedUIAttributes
+    )
+    
+    return (update, updated)
+}
+
+private func makeAnywayPaymentAndUpdateParameterField(
+    id: String = anyMessage(),
+    value: String? = nil
+) -> (update: AnywayPaymentUpdate.Parameter.Field, updated: AnywayPayment.Element.Parameter.Field) {
+    
+    let update = makeAnywayPaymentUpdateParameterField(
+        content: value,
+        id: id
+    )
+    let updated = makeAnywayPaymentElementParameterField(
+        id: id,
+        value: value
+    )
+    
+    return (update, updated)
+}
+
+private func makeAnywayPaymentAndUpdateParameterMasking(
+    inputMask: String? = nil,
+    mask: String? = nil
+) -> (update: AnywayPaymentUpdate.Parameter.Masking, updated: AnywayPayment.Element.Parameter.Masking) {
+    
+    let update = makeAnywayPaymentUpdateParameterMasking(
+        inputMask: inputMask,
+        mask: mask
+    )
+    let updated = makeAnywayPaymentElementParameterMasking(
+        inputMask: inputMask,
+        mask: mask
+    )
+    
+    return (update, updated)
+}
+
+private func makeAnywayPaymentAndUpdateParameterValidation(
+    isRequired: Bool = true,
+    maxLength: Int? = nil,
+    minLength: Int? = nil,
+    regExp: String = anyMessage()
+) -> (update: AnywayPaymentUpdate.Parameter.Validation, updated: AnywayPayment.Element.Parameter.Validation) {
+    
+    let update = makeAnywayPaymentUpdateParameterValidation(
+        isRequired: isRequired,
+        maxLength: maxLength,
+        minLength: minLength,
+        rawLength: generateRandom11DigitNumber(),
+        regExp: regExp
+    )
+    let updated = makeAnywayPaymentElementParameterValidation(
+        isRequired: isRequired,
+        maxLength: maxLength,
+        minLength: minLength,
+        regExp: regExp
+    )
+    
+    return (update, updated)
+}
+
+private func makeAnywayPaymentAndUpdateParameterUIAttributes(
+    dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType = .string,
+    group: String? = nil,
+    inputFieldType: AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType? = nil,
+    isPrint: Bool = true,
+    order: Int? = nil,
+    phoneBook: Bool = false,
+    isReadOnly: Bool = false,
+    subGroup: String? = nil,
+    subTitle: String? = nil,
+    svgImage: String? = nil,
+    title: String = anyMessage(),
+    type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
+    viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType = .input
+) -> (update: AnywayPaymentUpdate.Parameter.UIAttributes, updated: AnywayPayment.Element.Parameter.UIAttributes) {
+    
+    let update = makeAnywayPaymentUpdateParameterUIAttributes(
+        dataType: dataType,
+        group: group,
+        inputFieldType: inputFieldType,
+        isPrint: isPrint,
+        order: order,
+        phoneBook: phoneBook,
+        isReadOnly: isReadOnly,
+        subGroup: subGroup,
+        subTitle: subTitle,
+        svgImage: svgImage,
+        title: title,
+        type: type,
+        viewType: viewType
+    )
+    let updated = makeAnywayPaymentElementParameterUIAttributes(
+        dataType: .init(dataType),
+        group: group,
+        isPrint: isPrint,
+        phoneBook: phoneBook,
+        isReadOnly: isReadOnly,
+        subGroup: subGroup,
+        subTitle: subTitle,
+        svgImage: svgImage,
+        title: title,
+        type: .init(type),
+        viewType: .init(viewType)
     )
     
     return (update, updated)
@@ -1255,4 +1852,17 @@ private func makeAnywayPaymentUpdateParameterUIAttributes(
         type: type,
         viewType: viewType
     )
+}
+
+private extension AnywayPayment.Element.Parameter {
+    
+    func updating(value: String?) -> Self {
+        
+        .init(
+            field: .init(id: field.id, value: value),
+            masking: masking,
+            validation: validation,
+            uiAttributes: uiAttributes
+        )
+    }
 }
