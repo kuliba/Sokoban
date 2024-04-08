@@ -37,6 +37,7 @@ extension AnywayPayment {
         
         case field(Field)
         case parameter(Parameter)
+        case widget(Widget)
     }
     
     public enum Status: Equatable {
@@ -49,12 +50,12 @@ extension AnywayPayment.Element {
     
     public struct Field: Identifiable, Equatable {
         
-        public let id: ID
+        public let id: StringID
         public let value: Value
         public let title: String
         
         public init(
-            id: ID, 
+            id: StringID,
             value: Value,
             title: String
         ) {
@@ -89,14 +90,10 @@ extension AnywayPayment.Element {
     
     public typealias Value = Tagged<_Value, String>
     public enum _Value {}
-}
-
-extension AnywayPayment.Element.Field {
     
-    public enum ID: Hashable {
+    public enum Widget: Equatable {
         
         case otp
-        case string(AnywayPayment.Element.StringID)
     }
 }
 
@@ -242,5 +239,20 @@ extension AnywayPayment.Element.Parameter.UIAttributes {
     public enum ViewType: Equatable {
         
         case constant, input, output
+    }
+}
+
+extension AnywayPayment.Element.Widget {
+    
+    public var id: ID {
+        
+        switch self {
+        case .otp: return .otp
+        }
+    }
+    
+    public enum ID {
+        
+        case otp
     }
 }

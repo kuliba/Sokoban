@@ -43,7 +43,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let payment = makeAnywayPayment()
         let updateField = makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa")
         let update = makeAnywayPaymentUpdate(fields: [updateField])
-        let updated = makeAnywayPaymentField(.string("a"), value: "aa", title: "aaa")
+        let updated = makeAnywayPaymentField("a", value: "aa", title: "aaa")
         
         XCTAssertNoDiff(payment.elements, [])
         assert(payment, on: update) {
@@ -67,9 +67,9 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         assert(payment, on: update) {
             
             $0.elements = [
-                .init(id: .string("a"), value: "aa", title: "aaa"),
-                .init(id: .string("b"), value: "bb", title: "bbb"),
-                .init(id: .string("c"), value: "cc", title: "ccc"),
+                .init(id: "a", value: "aa", title: "aaa"),
+                .init(id: "b", value: "bb", title: "bbb"),
+                .init(id: "c", value: "cc", title: "ccc"),
             ].map(AnywayPayment.Element.field)
         }
     }
@@ -261,7 +261,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let updated = updatePayment(payment, with: update)
         
-        assertOTP(in: updated, precedes: [])
+        assertOTPisLast(in: updated)
     }
     
     func test_update_shouldAppendOTPFieldAfterComplementaryFieldsOnNeedOTPTrue() {
@@ -277,7 +277,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let updated = updatePayment(payment, with: update)
         
-        assertOTP(in: updated, precedes: [updatedField1, updatedField2])
+        assertOTPisLast(in: updated)
     }
     
     // MARK: - parameters
@@ -690,7 +690,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             $0.elements = [
                 .field(
                     .init(
-                        id: .string(.init(matchingFieldID)),
+                        id: .init(matchingFieldID),
                         value: .init(newFieldValue),
                         title: newFieldTitle
                     )

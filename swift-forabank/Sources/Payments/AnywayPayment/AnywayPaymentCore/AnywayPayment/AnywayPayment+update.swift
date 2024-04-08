@@ -20,9 +20,9 @@ extension AnywayPayment {
         elements.appendComplementaryFields(from: update.fields)
         elements.appendParameters(from: update.parameters, with: outline)
         
-        let otp = Element.Field(id: .otp, value: "", title: "")
-        elements[fieldID: .otp] = update.details.control.needOTP ? .field(otp) : nil
-                
+        let otp = Element.Widget.otp
+        elements[widgetID: .otp] = update.details.control.needOTP ? .widget(otp) : nil
+        
         return .init(
             elements: elements,
             hasAmount: update.details.control.needSum,
@@ -48,16 +48,13 @@ private extension AnywayPayment.Element {
         
         switch self {
         case let .field(field):
-            switch field.id {
-            case .otp:
-                return nil
-                
-            case let .string(id):
-                return id
-            }
+            return field.id
             
         case let .parameter(parameter):
             return parameter.field.id
+            
+        case .widget:
+            return nil
         }
     }
 }
@@ -92,19 +89,19 @@ private extension AnywayPayment.Element.Parameter {
 
 private extension Array where Element == AnywayPayment.Element {
     
-    subscript(fieldID id: Element.Field.ID) -> Element? {
+    subscript(widgetID widgetID: Element.Widget.ID) -> Element? {
         
-        get { firstIndex(matching: id).map { self[$0] } }
+        get { firstIndex(matching: widgetID).map { self[$0] }}
         
         set {
-            guard let index = firstIndex(matching: id)
+            guard let index = firstIndex(matching: widgetID)
             else {
                 if let newValue { append(newValue) }
                 return
             }
             
             if let newValue {
-                if case let .field(field) = newValue, field.id == id {
+                if case let .widget(widget) = newValue, widget.id == widgetID {
                     self[index] = newValue
                 } else {
                     append(newValue)
@@ -115,16 +112,26 @@ private extension Array where Element == AnywayPayment.Element {
         }
     }
     
-    func firstIndex(
-        matching id: AnywayPayment.Element.Field.ID
+    private func firstIndex(
+        matching id: Element.Widget.ID
     ) -> Self.Index? {
         
         firstIndex {
             
-            guard let fieldID = $0.fieldID else { return false }
+            guard let widgetID = $0.widgetID else { return false }
             
-            return fieldID == id
+            return widgetID == id
         }
+    }
+}
+
+private extension AnywayPayment.Element {
+    
+    var widgetID: Widget.ID? {
+        
+        guard case let .widget(widget) = self else { return nil }
+        
+        return widget.id
     }
 }
 
@@ -149,6 +156,9 @@ private extension Array where Element == AnywayPayment.Element {
                 
             case let .parameter(parameter):
                 return .parameter(parameter.updating(with: matching))
+                
+            case .widget:
+                return $0
             }
         }
     }
@@ -192,7 +202,7 @@ private extension AnywayPayment.Element.Field {
     init(_ field: AnywayPaymentUpdate.Field) {
         
         self.init(
-            id: .string(.init(field.name)),
+            id: .init(field.name),
             value: .init(field.value),
             title: field.title
         )

@@ -9,21 +9,14 @@ import AnywayPaymentCore
 import Foundation
 import XCTest
 
-func assertOTP(
+func assertOTPisLast(
     in payment: AnywayPayment,
-    precedes fields: [AnywayPayment.Element.Field],
     file: StaticString = #file,
     line: UInt = #line
 ) {
-    XCTAssert(
-        hasOTPField(payment),
-        "Expected OTP field in payment fields.",
-        file: file, line: line
-    )
-    
-#warning("this check is for fields only - is it ok or it needs to check all element cases?")
-    XCTAssert(
-        payment.paymentFields.isElementAfterAll(.otp, inGroup: fields),
+    XCTAssertNoDiff(
+        payment.elements.last,
+        .widget(.otp),
         "Expected OTP field after complimentary fields.",
         file: file, line: line
     )
@@ -40,18 +33,15 @@ func hasOTPField(
     _ payment: AnywayPayment
 ) -> Bool {
     
-    payment.paymentFields.map(\.id).contains(.otp)
+    payment.elements.compactMap(\.widget).map(\.id).contains(.otp)
 }
 
-private extension AnywayPayment {
+private extension AnywayPayment.Element {
     
-    var paymentFields: [Element.Field] {
+    var widget: Widget? {
         
-        elements.compactMap {
-            
-            guard case let .field(field) = $0 else { return nil }
-            return field
-        }
+        guard case let .widget(widget) = self else { return nil }
+        return widget
     }
 }
 
@@ -171,13 +161,13 @@ func makeAnywayPaymentWithOTP(
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(fields: [makeOTPField()])
+    let payment = makeAnywayPayment(elements: [.widget(makeOTPWidget())])
     XCTAssert(hasOTPField(payment), "Expected to have OTP field.", file: file, line: line)
     return payment
 }
 
 func makeAnywayPaymentField(
-    _ id: AnywayPayment.Element.Field.ID = .string(.init(anyMessage())),
+    _ id: AnywayPayment.Element.Field.ID = .init(anyMessage()),
     value: String = anyMessage(),
     title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
@@ -191,7 +181,7 @@ func makeAnywayPaymentFieldWithStringID(
     title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
     
-    makeAnywayPaymentField(.string(.init(id)), value: value, title: title)
+    makeAnywayPaymentField(.init(id), value: value, title: title)
 }
 
 func makeAnywayPaymentParameter(
@@ -278,12 +268,11 @@ private func makeAnywayPaymentElementParameterUIAttributes(
     )
 }
 
-private func makeOTPField(
-    value: String = anyMessage(),
-    title: String = anyMessage()
-) -> AnywayPayment.Element.Field {
+private func makeOTPWidget(
+    value: String = anyMessage()
+) -> AnywayPayment.Element.Widget {
     
-    .init(id: .otp, value: .init(value), title: title)
+    .otp
 }
 
 func makeAnywayPaymentWithoutOTP(
@@ -453,7 +442,7 @@ func makeAnywayPaymentAndUpdateFields(
     )
     
     let updated = makeAnywayPaymentField(
-        .string(.init(name)),
+        .init(name),
         value: value,
         title: title
     )
