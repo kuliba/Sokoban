@@ -115,9 +115,11 @@ extension PaymentsSelectBankView.ViewModel {
                 
                 update(value: bankItemId)
                 
-                guard let parameterSelectBank = parameterSelectBank else {
+                guard let parameterSelectBank = parameterSelectBank?.updated(value: bankItemId) as? Payments.ParameterSelectBank else {
                     return
                 }
+                
+                update(source: parameterSelectBank)
                 
                 withAnimation {
                     state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))

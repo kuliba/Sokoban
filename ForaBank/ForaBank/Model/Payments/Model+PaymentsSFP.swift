@@ -30,7 +30,38 @@ extension Model {
             let phoneParameter = Self.phoneInput
             
             // bank
-            let bankParameter = await createBankParameter(operation, operationPhone: nil, banksIds: banksList(operation))
+            
+            var latestPaymentBankIds: [String]?
+            
+            switch operation.source {
+            case let .latestPayment(latestPaymentId):
+                if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData {
+                    
+                    let phone = paymentsByPhone.value.contains(where: { $0.key == latestPayment.phoneNumber.addCodeRuIfNeeded() })
+                    if !phone,
+                       let token {
+                        
+                        
+                        let command = ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments(
+                            token: token,
+                            payload: .init(phoneNumber: latestPayment.phoneNumber.addCodeRuIfNeeded())
+                        )
+                        
+                        let result = try await serverAgent.executeCommand(command: command)
+
+                        latestPaymentBankIds = result.compactMap { $0.bankId }
+                    }
+                }
+                
+            default: break
+            }
+            
+            let bankParameter = await createBankParameter(
+                latestPaymentBankIds: latestPaymentBankIds ?? nil,
+                operation,
+                operationPhone: nil,
+                banksIds: banksList(operation)
+            )
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
 
             // product
@@ -97,6 +128,7 @@ extension Model {
                PhoneValidator().isValid(operationPhone) {
                 
                 let newBankParameter = createBankParameter(
+                    latestPaymentBankIds: nil,
                     operation,
                     operationPhone: operationPhone,
                     banksIds: parameter.options.map { $0.id }
@@ -428,6 +460,7 @@ extension Model {
     }
     
     func createBankParameter(
+        latestPaymentBankIds: [String]?,
         _ operation: Payments.Operation,
         operationPhone: String?,
         banksIds: [String]?
@@ -437,26 +470,27 @@ extension Model {
         case let .latestPayment(latestPaymentId):
             if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData {
             
-                return filterByPhone(operationPhone ?? latestPayment.phoneNumber.digits, bankId: latestPayment.bankId, banksIds: banksIds)
+                return filterByPhone(operationPhone ?? latestPayment.phoneNumber.digits, bankId: latestPayment.bankId, banksIds: banksIds, latestPaymentBankIds: latestPaymentBankIds)
             } else {
-                return filterByPhone(nil, bankId: nil, banksIds: nil)
+                return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
             }
             
         case let .sfp(phone: phone, bankId: bankId):
-            return filterByPhone(operationPhone ?? phone, bankId: bankId, banksIds: banksIds)
+            return filterByPhone(operationPhone ?? phone, bankId: bankId, banksIds: banksIds, latestPaymentBankIds: latestPaymentBankIds)
             
         case let .mock(mock):
-            return filterByPhone(mock.parameters.first?.value, bankId: nil, banksIds: banksIds)
+            return filterByPhone(mock.parameters.first?.value, bankId: nil, banksIds: banksIds, latestPaymentBankIds: latestPaymentBankIds)
             
         default:
-            return filterByPhone(nil, bankId: nil, banksIds: nil)
+            return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
         }
     }
     
     private func filterByPhone(
         _ phone: String?,
         bankId: String?,
-        banksIds: [String]?
+        banksIds: [String]?,
+        latestPaymentBankIds: [String]?
     ) -> Payments.ParameterSelectBank{
     
         let banksByPhone = paymentsByPhone.value[phone?.digits ?? ""]?
@@ -470,7 +504,7 @@ extension Model {
         
         let options = self.reduceBanks(
             bankList: bankList.value.filter { $0.bankCountry == "RU" },
-            preferred: banksIds ?? banksID ?? [],
+            preferred: banksIds ?? banksID ?? latestPaymentBankIds ?? [],
             defaultBankId: defaultBank?.bankId
         )
 
@@ -506,18 +540,35 @@ extension Model {
         
         let preferredBanks = preferred.compactMap { bankId in bankList.first(where: { $0.id == bankId }) }
         
-        return preferredBanks
-            .filter { $0.bankType == .sfp }
-            .map { item in
-                Payments.ParameterSelectBank.Option(
-                    id: item.id,
-                    name: item.memberNameRus,
-                    subtitle: nil,
-                    icon: .init(with: item.svgImage),
-                    isFavorite: item.id == defaultBankId,
-                    searchValue: item.memberNameRus
-                )
-            }
+        if preferredBanks.isEmpty {
+        
+           return bankList
+                .filter { $0.bankType == .sfp }
+                .map { item in
+                    Payments.ParameterSelectBank.Option(
+                        id: item.id,
+                        name: item.memberNameRus,
+                        subtitle: nil,
+                        icon: .init(with: item.svgImage),
+                        isFavorite: item.id == defaultBankId,
+                        searchValue: item.memberNameRus
+                    )
+                }
+        } else {
+         
+            return preferredBanks
+                .filter { $0.bankType == .sfp }
+                .map { item in
+                    Payments.ParameterSelectBank.Option(
+                        id: item.id,
+                        name: item.memberNameRus,
+                        subtitle: nil,
+                        icon: .init(with: item.svgImage),
+                        isFavorite: item.id == defaultBankId,
+                        searchValue: item.memberNameRus
+                    )
+                }
+        }
     }
     
     private static let phoneInput = Payments.ParameterInputPhone(
