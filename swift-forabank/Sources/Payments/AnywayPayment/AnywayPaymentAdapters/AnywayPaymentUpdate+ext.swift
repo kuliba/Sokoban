@@ -95,9 +95,9 @@ private extension AnywayPaymentUpdate.Field {
     init(_ additional: ResponseMapper.CreateAnywayTransferResponse.Additional) {
         
         self.init(
-            fieldName: additional.fieldName,
-            fieldValue: additional.fieldValue,
-            fieldTitle: additional.fieldTitle,
+            name: additional.fieldName,
+            value: additional.fieldValue,
+            title: additional.fieldTitle,
             recycle: additional.recycle,
             svgImage: additional.svgImage,
             typeIdParameterList: additional.typeIdParameterList
