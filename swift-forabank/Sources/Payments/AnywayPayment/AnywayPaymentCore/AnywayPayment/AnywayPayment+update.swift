@@ -12,13 +12,13 @@ extension AnywayPayment {
     
     public func update(
         with update: AnywayPaymentUpdate,
-        and snapshot: Snapshot
+        and outline: Outline
     ) -> Self {
         
         var elements = elements
         elements.updatePrimaryFields(from: update.fields)
         elements.appendComplementaryFields(from: update.fields)
-        elements.appendParameters(from: update.parameters, with: snapshot)
+        elements.appendParameters(from: update.parameters, with: outline)
         
         let otp = Element.Field(id: .otp, value: "", title: "")
         elements[fieldID: .otp] = update.details.control.needOTP ? .field(otp) : nil
@@ -32,7 +32,7 @@ extension AnywayPayment {
         )
     }
     
-    public typealias Snapshot = [Element.StringID: Element.Value]
+    public typealias Outline = [Element.StringID: Element.Value]
 }
 
 private extension AnywayPayment.Element {
@@ -172,13 +172,13 @@ private extension Array where Element == AnywayPayment.Element {
     
     mutating func appendParameters(
         from updateParameters: [AnywayPaymentUpdate.Parameter],
-        with snapshot: AnywayPayment.Snapshot
+        with outline: AnywayPayment.Outline
     ) {
         let parameters = updateParameters.map {
             
             AnywayPayment.Element.Parameter(
                 parameter: $0,
-                snapshottedValue: snapshot[.init($0.field.id)]
+                fallbackValue: outline[.init($0.field.id)]
             )
         }
         append(contentsOf: parameters.map(Element.parameter))
@@ -203,10 +203,10 @@ private extension AnywayPayment.Element.Parameter {
     
     init(
         parameter: AnywayPaymentUpdate.Parameter,
-        snapshottedValue value: AnywayPayment.Element.Value?
+        fallbackValue: AnywayPayment.Element.Value?
     ) {
         self.init(
-            field: .init(parameter.field, snapshottedValue: value),
+            field: .init(parameter.field, fallbackValue: fallbackValue),
             masking: .init(parameter.masking),
             validation: .init(parameter.validation),
             uiAttributes: .init(parameter.uiAttributes)
@@ -218,11 +218,11 @@ private extension AnywayPayment.Element.Parameter.Field {
     
     init(
         _ field: AnywayPaymentUpdate.Parameter.Field,
-        snapshottedValue: AnywayPayment.Element.Value?
+        fallbackValue: AnywayPayment.Element.Value?
     ) {
         self.init(
             id: .init(field.id),
-            value: field.content.map { .init($0) } ?? snapshottedValue
+            value: field.content.map { .init($0) } ?? fallbackValue
         )
     }
 }

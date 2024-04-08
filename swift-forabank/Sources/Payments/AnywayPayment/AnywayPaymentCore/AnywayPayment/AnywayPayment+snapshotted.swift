@@ -7,7 +7,7 @@
 
 extension AnywayPayment {
     
-    public func snapshotted() -> Snapshot {
+    public func snapshotted() -> Outline {
         
         let pairs = elements.compactMap(\.parameterIDValuePair)
         

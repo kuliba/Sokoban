@@ -282,7 +282,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     // MARK: - parameters
     
-    func test_update_shouldSetParameterValueToNilOnNilUpdateValueAndMissingSnapshot() throws {
+    func test_update_shouldSetParameterValueToNilOnNilUpdateValueAndMissingOutline() throws {
         
         let payment = makeAnywayPayment(parameters: [])
         let parameterID = anyMessage()
@@ -291,32 +291,32 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             value: nil
         )
         let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
-        let snapshot = makeAnywayPaymentSnapshot()
+        let outline = makeAnywayPaymentOutline()
         
-        let updated = updatePayment(payment, with: update, and: snapshot)
+        let updated = updatePayment(payment, with: update, and: outline)
         let parameter = try XCTUnwrap(updated[parameterID: parameterID], "Expected parameter with id \(parameterID), but got nil instead.")
         
         XCTAssertNil(parameter.field.value)
-        XCTAssertNil(snapshot[.init(parameterID)])
+        XCTAssertNil(outline[.init(parameterID)])
     }
     
-    func test_update_shouldSetParameterValueToSnapshottedOnNilUpdateValue() throws {
+    func test_update_shouldSetParameterValueToOutlinedOnNilUpdateValue() throws {
         
         let parameterID = anyMessage()
-        let snapshottedValue = anyMessage()
+        let outlinedValue = anyMessage()
         let payment = makeAnywayPayment()
         let (parameterUpdate, _) = makeAnywayPaymentAndUpdateParameters(
             id: parameterID,
             value: nil
         )
         let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
-        let snapshot = makeAnywayPaymentSnapshot([parameterID: snapshottedValue])
+        let outline = makeAnywayPaymentOutline([parameterID: outlinedValue])
         
-        let updated = updatePayment(payment, with: update, and: snapshot)
+        let updated = updatePayment(payment, with: update, and: outline)
         let parameter = try XCTUnwrap(updated[parameterID: parameterID], "Expected parameter with id \(parameterID), but got nil instead.")
         
-        XCTAssertNoDiff(parameter.field.value, .init(snapshottedValue), "Expected parameter value set to snapshotted.")
-        XCTAssertNoDiff(snapshot[.init(parameterID)], .init(snapshottedValue), "Expected snapshotted value \(snapshottedValue) for parameterID \(parameterID).")
+        XCTAssertNoDiff(parameter.field.value, .init(outlinedValue), "Expected parameter value set to outlined.")
+        XCTAssertNoDiff(outline[.init(parameterID)], .init(outlinedValue), "Expected outlined value \(outlinedValue) for parameterID \(parameterID).")
         XCTAssertNil(parameterUpdate.field.content, "Expected value to be nil.")
     }
     
@@ -787,10 +787,10 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     private func updatePayment(
         _ payment: AnywayPayment,
         with update: AnywayPaymentUpdate,
-        and snapshot: AnywayPayment.Snapshot = [:]
+        and outline: AnywayPayment.Outline = [:]
     ) -> AnywayPayment {
         
-        payment.update(with: update, and: snapshot)
+        payment.update(with: update, and: outline)
     }
     
     private typealias UpdateToExpected<T> = (_ value: inout T) -> Void

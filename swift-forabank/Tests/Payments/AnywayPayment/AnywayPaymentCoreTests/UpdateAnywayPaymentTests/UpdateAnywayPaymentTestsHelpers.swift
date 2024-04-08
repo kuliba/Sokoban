@@ -116,11 +116,11 @@ func makeAnywayPayment(
     )
 }
 
-func makeAnywayPaymentSnapshot(
-    _ snapshot: [String: String] = [:]
-) -> AnywayPayment.Snapshot {
+func makeAnywayPaymentOutline(
+    _ outline: [String: String] = [:]
+) -> AnywayPayment.Outline {
     
-    snapshot.reduce(into: [:]) {
+    outline.reduce(into: [:]) {
         
         $0[.init($1.key)] = .init($1.value)
     }
