@@ -84,13 +84,6 @@ func makeAnywayPayment(
     )
 }
 
-func makeAnywayPaymentStringID(
-    _ rawValue: String = anyMessage()
-) -> AnywayPayment.Element.StringID {
- 
-    .init(rawValue)
-}
-
 func makeAnywayPayment(
     parameters: [AnywayPayment.Element.Parameter] = [],
     isFinalStep: Bool = false,
@@ -111,22 +104,22 @@ func makeAnywayPayment(
 func makeAnywayPayment(
     elements: [AnywayPayment.Element],
     hasAmount: Bool = false,
+    infoMessage: String? = nil,
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    snapshot: [String: String] = [:],
-    status: AnywayPayment.Status? = nil
+    snapshot: [String: String] = [:]
 ) -> AnywayPayment {
     
     .init(
         elements: elements,
         hasAmount: hasAmount,
+        infoMessage: infoMessage,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected,
         snapshot: snapshot.reduce(into: [:]) {
             
             $0[.init($1.key)] = .init($1.value)
-        }, 
-        status: status
+        }
     )
 }
 

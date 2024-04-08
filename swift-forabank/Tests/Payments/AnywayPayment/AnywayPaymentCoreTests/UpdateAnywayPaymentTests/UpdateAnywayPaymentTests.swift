@@ -159,7 +159,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     // MARK: - infoMessage
     
-    func test_update_shouldNotChangeStatusOnNilInfoMessage() {
+    func test_update_shouldNotChangeInfoMessageOnNilInfoMessage() {
         
         assert(
             makeAnywayPayment(),
@@ -167,7 +167,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         )
     }
     
-    func test_update_shouldChangeStatusOnNonNilInfoMessage() {
+    func test_update_shouldChangeInfoMessageOnNonNilInfoMessage() {
         
         let message = anyMessage()
         
@@ -175,7 +175,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             makeAnywayPayment(),
             on: makeAnywayPaymentUpdate(infoMessage: message)
         ) {
-            $0.status = .infoMessage(message)
+            $0.infoMessage = message
         }
     }
     

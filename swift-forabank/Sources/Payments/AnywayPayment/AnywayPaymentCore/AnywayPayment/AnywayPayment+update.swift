@@ -18,17 +18,14 @@ extension AnywayPayment {
         
         let otp = Element.Field(id: .otp, value: "", title: "")
         elements[fieldID: .otp] = update.details.control.needOTP ? .field(otp) : nil
-        
-        let infoMessage = update.details.info.infoMessage
-        let status = infoMessage.map(AnywayPayment.Status.infoMessage)
-        
+                
         return .init(
             elements: elements,
             hasAmount: update.details.control.needSum,
+            infoMessage: update.details.info.infoMessage,
             isFinalStep: update.details.control.isFinalStep,
             isFraudSuspected: update.details.control.isFraudSuspected,
-            snapshot: snapshot,
-            status: status
+            snapshot: snapshot
         )
     }
 }

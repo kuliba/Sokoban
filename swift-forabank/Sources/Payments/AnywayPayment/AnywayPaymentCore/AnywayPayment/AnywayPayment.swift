@@ -12,25 +12,25 @@ public struct AnywayPayment: Equatable {
     
     public var elements: [Element]
     public let hasAmount: Bool
+    public var infoMessage: String?
     public let isFinalStep: Bool
     public let isFraudSuspected: Bool
     public let snapshot: Snapshot
-    public var status: Status?
     
     public init(
         elements: [Element],
         hasAmount: Bool,
+        infoMessage: String?,
         isFinalStep: Bool,
         isFraudSuspected: Bool,
-        snapshot: Snapshot,
-        status: Status?
+        snapshot: Snapshot
     ) {
         self.elements = elements
         self.hasAmount = hasAmount
+        self.infoMessage = infoMessage
         self.isFinalStep = isFinalStep
         self.isFraudSuspected = isFraudSuspected
         self.snapshot = snapshot
-        self.status = status
     }
 }
 
