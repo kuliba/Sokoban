@@ -11,7 +11,7 @@ extension AnywayPayment.Outline {
         
         merging(
             payment.elements.compactMap(\.parameterIDValuePair),
-            uniquingKeysWith: { first, _ in first }
+            uniquingKeysWith: { _, new in new }
         )
     }
 }

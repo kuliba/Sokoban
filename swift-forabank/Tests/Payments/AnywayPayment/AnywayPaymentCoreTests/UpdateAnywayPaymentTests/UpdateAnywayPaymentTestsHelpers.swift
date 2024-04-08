@@ -218,7 +218,7 @@ func makeAnywayPaymentParameterWithID(
     )
 }
 
-private func makeAnywayPaymentElementParameterField(
+func makeAnywayPaymentElementParameterField(
     id: String = anyMessage(),
     value: String? = anyMessage()
 ) -> AnywayPayment.Element.Parameter.Field {

@@ -36,7 +36,7 @@ final class AnywayPaymentOutlineTests: XCTestCase {
         XCTAssertNoDiff(outline.update(with: payment), outline)
     }
     
-    func test_update_shouldDeliverParameterIDs() {
+    func test_update_shouldAppendMissing() {
         
         let outline: AnywayPayment.Outline = ["a": "1"]
         let (parameter1, parameter2) = makeTwoParameters()
@@ -46,6 +46,41 @@ final class AnywayPaymentOutlineTests: XCTestCase {
         XCTAssertNoDiff(outline.update(with: payment), [
             "a": "1",
             parameter1.field.id: parameter1.field.value,
+            parameter2.field.id: parameter2.field.value
+        ])
+    }
+    
+    func test_update_shouldUpdateExisting() {
+        
+        let field = makeAnywayPaymentElementParameterField(id: "b", value: "222")
+        let parameter = makeAnywayPaymentParameter(field: field)
+        let outline: AnywayPayment.Outline = [
+            "a": "1",
+            "b": "2"
+        ]
+        let payment = makeAnywayPayment(elements: [.parameter(parameter)])
+        
+        XCTAssertNoDiff(outline.update(with: payment), [
+            "a": "1",
+            "b": "222",
+        ])
+    }
+    
+    func test_update_shouldUpdateExistingAndAppendMissing() {
+        
+        let field = makeAnywayPaymentElementParameterField(id: "b", value: "222")
+        let parameter = makeAnywayPaymentParameter(field: field)
+        let parameter2 = makeAnywayPaymentParameter()
+        let outline: AnywayPayment.Outline = [
+            "a": "1",
+            "b": "2"
+        ]
+        let payment = makeAnywayPayment(elements: [.parameter(parameter), .parameter(parameter2), .field(makeAnywayPaymentField())]
+        )
+        
+        XCTAssertNoDiff(outline.update(with: payment), [
+            "a": "1",
+            "b": "222",
             parameter2.field.id: parameter2.field.value
         ])
     }
