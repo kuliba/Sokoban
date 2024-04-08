@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import PhoneNumberWrapper
 
 extension Model {
     
@@ -37,10 +38,10 @@ extension Model {
             case let .latestPayment(latestPaymentId):
                 if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData {
                     
-                    let phone = paymentsByPhone.value.contains(where: { $0.key == latestPayment.phoneNumber.addCodeRuIfNeeded() })
+                    let phoneFormatted = PhoneNumberWrapper().format(latestPayment.phoneNumber).digits
+                    let phone = paymentsByPhone.value.contains(where: { $0.key == phoneFormatted })
                     if !phone,
                        let token {
-                        
                         
                         let command = ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments(
                             token: token,
@@ -50,6 +51,8 @@ extension Model {
                         let result = try await serverAgent.executeCommand(command: command)
 
                         latestPaymentBankIds = result.compactMap { $0.bankId }
+                        
+                        paymentsByPhone.value.updateValue(result, forKey: phoneFormatted.digits)
                     }
                 }
                 
@@ -470,7 +473,13 @@ extension Model {
         case let .latestPayment(latestPaymentId):
             if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData {
             
-                return filterByPhone(operationPhone ?? latestPayment.phoneNumber.digits, bankId: latestPayment.bankId, banksIds: banksIds, latestPaymentBankIds: latestPaymentBankIds)
+                return filterByPhone(
+                    operationPhone ?? latestPayment.phoneNumber.digits,
+                    bankId: latestPayment.bankId,
+                    banksIds: banksIds,
+                    latestPaymentBankIds: latestPaymentBankIds
+                )
+                
             } else {
                 return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
             }
