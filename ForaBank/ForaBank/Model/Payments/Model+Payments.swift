@@ -1245,7 +1245,7 @@ extension Model {
                     return nil
                 }
                 
-                let phoneNumber = paymentData.phoneNumber
+                let phoneNumber = PhoneNumberWrapper().format(paymentData.phoneNumber).digits
                 let bankId = paymentData.bankId
                 self.action.send(ModelAction.LatestPayments.BanksList.Request(
                     prePayment: true,
