@@ -22,7 +22,7 @@ extension Array where Element: Identifiable {
     /// - Parameter id: An identifier of the type `Element.ID`.
     ///
     /// - Complexity: O(n), where n is the length of the array.
-    subscript(id id: Element.ID) -> Element? {
+    public subscript(id id: Element.ID) -> Element? {
         
         get {
             guard let element = first(where: { $0.id == id })

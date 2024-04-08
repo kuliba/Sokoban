@@ -113,7 +113,8 @@ func makeAnywayPayment(
     hasAmount: Bool = false,
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    snapshot: [String: String] = [:]
+    snapshot: [String: String] = [:],
+    status: AnywayPayment.Status? = nil
 ) -> AnywayPayment {
     
     .init(
@@ -124,7 +125,8 @@ func makeAnywayPayment(
         snapshot: snapshot.reduce(into: [:]) {
             
             $0[.init($1.key)] = .init($1.value)
-        }
+        }, 
+        status: status
     )
 }
 

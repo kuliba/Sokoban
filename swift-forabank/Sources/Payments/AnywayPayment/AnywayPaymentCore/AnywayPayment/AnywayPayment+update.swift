@@ -5,12 +5,11 @@
 //  Created by Igor Malyarov on 06.04.2024.
 //
 
-import AnywayPaymentCore
 import Foundation
 
 extension AnywayPayment {
     
-    func update(with update: AnywayPaymentUpdate) -> Self {
+    public func update(with update: AnywayPaymentUpdate) -> Self {
         
         var elements = elements
         elements.updatePrimaryFields(from: update.fields)
