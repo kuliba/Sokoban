@@ -7,11 +7,17 @@
 
 extension Array where Element: Identifiable {
     
-    /// Accesses or modifies the element with the specified identifier.
+    /// Accesses, modifies, or appends an element with the specified identifier.
     ///
-    /// When you access the subscript with an identifier, this method returns the first element in the array with the matching identifier, or `nil` if no such element exists.
+    /// When accessing the subscript with an identifier, it returns the first element in the array with the matching identifier, or `nil` if no such element exists.
     ///
-    /// When you set the subscript, you can provide an optional `Element`. If an element with the given identifier exists and you provide a non-nil value, the method updates the element. If you provide `nil`, the method removes the element from the array.
+    /// When setting the subscript:
+    /// - If an element with the given identifier exists:
+    ///   - If a non-nil value is provided, the method updates the element.
+    ///   - If `nil` is provided, the method removes the element.
+    /// - If no element with the given identifier exists:
+    ///   - If a non-nil value is provided, the method appends the new element to the array.
+    ///   - If `nil` is provided, no action is taken.
     ///
     /// - Parameter id: An identifier of the type `Element.ID`.
     ///
@@ -27,11 +33,16 @@ extension Array where Element: Identifiable {
         
         set {
             guard let index = firstIndex(where: { $0.id == id })
-            else { return }
+            else {
+                if let newValue { append(newValue) }
+                return
+            }
             
             if let newValue {
                 if newValue.id == id {
                     self[index] = newValue
+                } else {
+                    append(newValue)
                 }
             } else {
                 remove(at: index)
