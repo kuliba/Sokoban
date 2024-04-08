@@ -30,7 +30,7 @@ func makeProduct(
     balance: Decimal = 12_345.67,
     look: Product.Look = .init(
         background: .svg("background"),
-        color: "green",
+        color: .green,
         icon: .svg("icon")
     )
 ) -> Product {

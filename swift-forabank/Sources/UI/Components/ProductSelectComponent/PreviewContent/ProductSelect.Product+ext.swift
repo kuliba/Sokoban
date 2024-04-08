@@ -32,7 +32,7 @@ extension ProductSelect.Product {
         balance: 123_456,
         look: .init(
             background: .svg(""),
-            color: "orange",
+            color: .orange,
             icon: .svg("")
         )
     )
@@ -48,7 +48,7 @@ extension ProductSelect.Product {
         balance: 678.09,
         look: .init(
             background: .svg(""),
-            color: "orange",
+            color: .orange,
             icon: .svg("")
         )
     )
@@ -64,7 +64,7 @@ extension ProductSelect.Product {
         balance: 1_234.56,
         look: .init(
             background: .svg(""),
-            color: "orange",
+            color: .orange,
             icon: .svg("")
         )
     )
@@ -80,7 +80,7 @@ extension ProductSelect.Product {
         balance: 12_345,
         look: .init(
             background: .svg(""),
-            color: "orange",
+            color: .orange,
             icon: .svg("")
         )
     )
@@ -96,7 +96,7 @@ extension ProductSelect.Product {
         balance: 123_456.78,
         look: .init(
             background: .svg(""),
-            color: "orange",
+            color: .orange,
             icon: .svg("")
         )
     )
@@ -112,7 +112,7 @@ extension ProductSelect.Product {
         balance: 123_456.78,
         look: .init(
             background: .svg(""),
-            color: "orange",
+            color: .orange,
             icon: .svg("")
         )
     )

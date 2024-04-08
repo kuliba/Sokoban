@@ -62,7 +62,7 @@ extension ProductData {
                 balance: .init(card.balanceValue),
                 look: .init(
                     background: .image(getImage(card.largeDesignMd5Hash) ?? .cardPlaceholder),
-                    color: card.background.first?.description ?? .mainColorsBlackMedium,
+                    color: card.backgroundColor,
                     icon: clover
                 )
             )
@@ -81,7 +81,7 @@ extension ProductData {
                 balance: .init(account.balanceValue),
                 look: .init(
                     background: .image(getImage(account.largeDesignMd5Hash) ?? .cardPlaceholder),
-                    color: account.backgroundColor.description,
+                    color: account.backgroundColor,
                     icon: .svg("")
                 )
             )
