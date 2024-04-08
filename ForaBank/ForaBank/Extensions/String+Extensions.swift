@@ -275,3 +275,8 @@ extension String {
     
     static let isNeedOnboardingShow = "isNeedOnboardingShow"
 }
+
+extension String {
+    
+    static let mainColorsBlackMedium = "#3D3D45"
+}
