@@ -180,6 +180,28 @@ extension PaymentsSelectBankView.ViewModel {
         case let .success(paymentsPhone):
             let defaultBank = paymentsPhone.first { $0.defaultBank == true }
             
+            let optionsId = paymentsPhone.map { $0.bankId }
+            let preferredBanks = optionsId.compactMap { bankId in model.bankList.value.first(where: { $0.id == bankId }) }
+            
+            let options = preferredBanks
+                .filter { $0.bankType == .sfp }
+                .map { item in
+                    Payments.ParameterSelectBank.Option(
+                        id: item.id,
+                        name: item.memberNameRus,
+                        subtitle: nil,
+                        icon: .init(with: item.svgImage),
+                        isFavorite: item.id == defaultBank?.bankId,
+                        searchValue: item.memberNameRus
+                    )
+                }
+            
+            if let param = self.parameterSelectBank {
+                
+                self.update(source: param.updated(options: options))
+
+            }
+            
             bankItemTapped(
                 paymentsPhone: paymentsPhone,
                 defaultBank: defaultBank

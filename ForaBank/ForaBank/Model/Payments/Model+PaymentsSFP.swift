@@ -122,34 +122,6 @@ extension Model {
     ) -> PaymentsParameterRepresentable? {
         
         switch parameterId {
-        case Payments.Parameter.Identifier.sfpBank.rawValue:
-            guard let parameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterSelectBank else {
-                return nil
-            }
-            
-            if let operationPhone = try? parameters.value(forIdentifier: .sfpPhone),
-               PhoneValidator().isValid(operationPhone) {
-                
-                let newBankParameter = createBankParameter(
-                    latestPaymentBankIds: nil,
-                    operation,
-                    operationPhone: operationPhone,
-                    banksIds: nil
-                )
-                
-                if parameter.options == newBankParameter.options {
-                    
-                    return parameter
-                } else {
-                    
-                    return newBankParameter
-                }
-                
-            } else {
-                
-                return parameter
-            }
-                        
         case Payments.Parameter.Identifier.amount.rawValue:
             
             guard let amountParameter = parameters.first(where: { $0.id == parameterId }) as? Payments.ParameterAmount else {
