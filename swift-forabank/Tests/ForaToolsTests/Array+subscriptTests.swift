@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 05.04.2024.
 //
 
+import ForaTools
 import XCTest
 
 final class Array_subscriptTests: XCTestCase {
@@ -97,7 +98,7 @@ final class Array_subscriptTests: XCTestCase {
     
     private func makeItem(
         id: Int = generateRandom11DigitNumber(),
-        value: String = anyMessage()
+        value: String = UUID().uuidString
     ) -> Item {
         
         .init(id: id, value: value)
