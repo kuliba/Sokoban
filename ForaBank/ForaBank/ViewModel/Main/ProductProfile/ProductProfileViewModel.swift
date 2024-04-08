@@ -1107,6 +1107,11 @@ private extension ProductProfileViewModel {
                         
                     case .bottomLeft:
                         switch product.productType {
+                            
+                        case .card:
+                            guard let card = productData as? ProductCardData else { return }
+                            createAccountInfoPanel(card)
+
                         case .deposit:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .info, .contract], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
@@ -1281,7 +1286,8 @@ private extension ProductProfileViewModel {
                                     self.showCvvByTap(
                                         cardId: cardId,
                                         completion: completion)
-                                }
+                                }, 
+                                event: self.event(_:)
                             )
                             self.link = .productInfo(productInfoViewModel)
                             self.bind(product: productInfoViewModel)
@@ -1913,6 +1919,7 @@ extension ProductProfileViewModel {
             
             case operationDetail(OperationDetailViewModel)
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
+            case optionsPanelNew([PanelButton])
             case meToMe(PaymentsMeToMeViewModel)
             case meToMeLegacy(MeToMeViewModel)
             case printForm(PrintFormView.ViewModel)
@@ -2383,5 +2390,46 @@ extension ProductProfileViewModel {
 
         let (alert, _) = productNavigationStateManager.alertReduce(alert, event)
         alertSubject.send(alert)
+    }
+    
+    func event(_ event: ProductNavigationStateManager.ButtonEvent) {
+        
+        self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+
+        switch event {
+            
+        case let .accountDetails(productID):
+            
+            guard let productData = model.product(productId: productID) else { return }
+
+            let productInfoViewModel = InfoProductViewModel(
+                model: model,
+                product: productData,
+                info: false,
+                showCvv: { [weak self] cardId, completion in
+                    
+                    guard let self else { return }
+                    
+                    self.showCvvByTap(
+                        cardId: cardId,
+                        completion: completion
+                    )
+                },
+                event: self.event(_:)
+            )
+            self.link = .productInfo(productInfoViewModel)
+            self.bind(product: productInfoViewModel)
+            
+        case let .accountStatement(productID):
+            
+            guard let productData = model.product(productId: productID) else { return }
+
+            let productStatementViewModel = ProductStatementViewModel(
+                product: productData,
+                closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())},
+                getUImage: { self.model.images.value[$0]?.uiImage }
+            )
+            self.link = .productStatement(productStatementViewModel)
+        }
     }
 }

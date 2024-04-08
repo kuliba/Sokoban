@@ -194,6 +194,13 @@ struct ProductProfileView: View {
                 .padding(.top, 26)
                 .padding(.bottom, 72)
             
+        case let .optionsPanelNew(buttons):
+            PanelView(buttons: buttons)
+                .padding(.horizontal, 12)
+                .padding(.top, 26)
+                .padding(.bottom, 72)
+                .fixedSize(horizontal: false, vertical: true)
+
         case let .meToMeLegacy(viewModel):
             MeToMeView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.bottom)
