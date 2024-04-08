@@ -228,8 +228,8 @@ extension AnywayPayment.Element.Parameter.UIAttributes {
         case bic
         case counter
         case date
-        case insurance
         case inn
+        case insurance
         case name
         case oktmo
         case penalty
