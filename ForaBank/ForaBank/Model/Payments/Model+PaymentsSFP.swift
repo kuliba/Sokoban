@@ -422,8 +422,9 @@ extension Model {
             
         case let .latestPayment(latestPaymentId):
             if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData {
-                
-                let banksList = await paymentsByPhoneBankList(latestPayment.phoneNumber)
+                let phoneFormatted = PhoneNumberWrapper().format(latestPayment.phoneNumber).digits
+
+                let banksList = await paymentsByPhoneBankList(phoneFormatted)
                 return banksList
                 
             } else {
