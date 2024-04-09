@@ -43,11 +43,6 @@ extension PaymentsSelectBankView {
                 throw Payments.Error.ui(.sourceParameterMissingOptions(parameterSelect.id))
             }
             
-            if let selectedOptionId = parameterSelect.value,
-               !parameterSelect.options.map(\.id).contains(selectedOptionId) {
-                throw Payments.Error.ui(.sourceParameterSelectedOptionInvalid(parameterSelect.id))
-            }
-            
             self.init(
                 state: .collapsed(
                     .init(
