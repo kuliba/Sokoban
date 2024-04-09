@@ -19,7 +19,7 @@ extension ServerCommands {
         struct ConfirmC2BSubAcc: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/binding/v1/ConfirmC2BSubAcc"
+            let endpoint = "/rest/binding/v2/ConfirmC2BSubAcc"
             let method: ServerCommandMethod = .post
             let payload: Payload?
 
@@ -51,7 +51,7 @@ extension ServerCommands {
         struct ConfirmC2BSubCard: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/binding/v1/ConfirmC2BSubCard"
+            let endpoint = "/rest/binding/v2/ConfirmC2BSubCard"
             let method: ServerCommandMethod = .post
             let payload: Payload?
 
@@ -82,7 +82,7 @@ extension ServerCommands {
         struct DeniedC2BSubscription: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/binding/v1/DeniedC2BSubscription"
+            let endpoint = "/rest/binding/v2/DeniedC2BSubscription"
             let method: ServerCommandMethod = .post
             let payload: Payload?
 
@@ -139,7 +139,7 @@ extension ServerCommands {
         struct GetC2bDetailSubscriptions: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/binding/v1/getDetailC2BSub"
+            let endpoint = "/rest/binding/v2/getDetailC2BSub"
             let method: ServerCommandMethod = .post
             let payload: Payload?
 
@@ -169,7 +169,7 @@ extension ServerCommands {
         struct CancelC2bSubscriptions: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/binding/v1/cancelC2BSub"
+            let endpoint = "/rest/binding/v2/cancelC2BSub"
             let method: ServerCommandMethod = .post
             let payload: Payload?
 
@@ -199,7 +199,7 @@ extension ServerCommands {
         struct UpdateC2bSubscriptionCard: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/binding/v1/updateC2BSubCard"
+            let endpoint = "/rest/binding/v2/updateC2BSubCard"
             let method: ServerCommandMethod = .post
             let payload: Payload?
 
@@ -230,7 +230,7 @@ extension ServerCommands {
         struct UpdateC2bSubscriptionAcc: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/binding/v1/updateC2BSubAcc"
+            let endpoint = "/rest/binding/v2/updateC2BSubAcc"
             let method: ServerCommandMethod = .post
             let payload: Payload?
 

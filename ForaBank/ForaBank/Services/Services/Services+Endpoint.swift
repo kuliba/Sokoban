@@ -299,7 +299,7 @@ extension Services.Endpoint {
     
     static let getScenarioQRData: Self = .init(
         pathPrefix: .binding,
-        version: .v1,
+        version: .v2,
         serviceName: .getScenarioQRData
     )
     
