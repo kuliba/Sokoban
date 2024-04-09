@@ -33,12 +33,15 @@ struct InfoProductView: View {
                         
                         if !viewModel.listWithAction.isEmpty {
                             
-                            ItemsViewNew(
-                                items: viewModel.listWithAction,
-                                title: "Реквизиты счета",
-                                showCheckbox: viewModel.needShowCheckbox,
-                                isCheck: $viewModel.accountInfoSelected
-                            )
+                            if viewModel.listWithAction.isAccountHolder {
+                                
+                                ItemsViewNew(
+                                    items: viewModel.listWithAction,
+                                    title: "Реквизиты счета",
+                                    showCheckbox: viewModel.needShowCheckbox,
+                                    isCheck: $viewModel.accountInfoSelected
+                                )
+                            } else { noAccountDetails() }
                         }
                         
                         if let items = viewModel.additionalList {
@@ -112,6 +115,37 @@ struct InfoProductView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             }
         }
+    }
+    
+    private func noAccountDetails() -> some View {
+        
+        ZStack {
+            
+            Rectangle()
+                .fill(Color.mainColorsGrayLightest)
+                .cornerRadius(90)
+            
+            HStack {
+               
+                viewModel.info.image.map {
+                    $0
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 32, height: 32)
+                }
+                
+                if !viewModel.info.text.isEmpty {
+                    Text(viewModel.info.text)
+                        .lineLimit(3)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            .padding(.leading, 8)
+            .padding(.trailing, 12)
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 76)
+        .padding(.horizontal, 16)
     }
     
     @ViewBuilder

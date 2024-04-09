@@ -9,6 +9,7 @@ import CloudKit
 import Foundation
 import ServerAgent
 import CardStatementAPI
+import AccountInfoPanel
 
 //MARK: - Actions
 
@@ -266,7 +267,7 @@ extension ModelAction {
             
             enum Response: Action {
                 
-                case success(productDetails: ProductDetailsData)
+                case success(productDetails: AccountInfoPanel.ProductDetails)
                 case failure(message: String)
             }
         }
@@ -881,51 +882,41 @@ extension Model {
     }
     
     func handleProductDetails(_ payload: ModelAction.Products.ProductDetails.Request) {
+        Task { try? await handleProductDetailsAsync(payload) }
+    }
+    
+    func handleProductDetailsAsync(_ payload: ModelAction.Products.ProductDetails.Request) async throws {
         
-        guard let token = token else {
-            handledUnauthorizedCommandAttempt()
-            return
-        }
-        
-        var command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: nil, depositId: nil))
-        
+        let productDetailsPayload: ProductDetailsPayload
+
         switch payload.type {
         case .card:
-            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: payload.id, depositId: nil))
+            productDetailsPayload = .cardId(.init(payload.id))
         case .deposit:
-            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: nil, depositId: payload.id))
+            productDetailsPayload = .depositId(.init(payload.id))
         case .account:
-            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: payload.id, cardId: nil, depositId: nil))
+            productDetailsPayload = .accountId(.init(payload.id))
         case .loan:
             guard let product = self.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.id }), let product = product as? ProductLoanData else {
                 return
             }
-            
-            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: product.settlementAccountId, cardId: nil, depositId: nil))
+            productDetailsPayload = .accountId(.init(product.settlementAccountId))
         }
+
+        let productDetails = try await Services.makeGetProductDetails(
+            httpClient: self.authenticatedHTTPClient(),
+            logger: LoggerAgent.shared,
+            payload: productDetailsPayload
+        )
         
-        serverAgent.executeCommand(command: command) { result in
-            
-            switch result {
-            case .success(let response):
-                switch response.statusCode {
-                case .ok:
-                    
-                    guard let details = response.data else {
-                        self.handleServerCommandEmptyData(command: command)
-                        return
-                    }
-                    
-                    self.action.send(ModelAction.Products.ProductDetails.Response.success(productDetails: details))
-                    
-                default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
-                }
-                
-            case .failure(let error):
-                self.handleServerCommandError(error: error, command: command)
+       if !productDetails.infoMd5hash.isEmpty {
+           
+            if self.images.value[productDetails.infoMd5hash] == nil {
+                self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [productDetails.infoMd5hash] ))
             }
         }
+ 
+        self.action.send(ModelAction.Products.ProductDetails.Response.success(productDetails: productDetails))
     }
     
     func handleProductsStatementPrintFormRequest(_ payload: ModelAction.Products.StatementPrintForm.Request) {

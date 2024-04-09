@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import AccountInfoPanel
 
 extension InfoProductViewModel {
     
@@ -141,13 +142,24 @@ extension InfoProductViewModel {
                 }
             }.joined(separator: "\n")
         }
+        
+        var isAccountHolder: Bool {
+            
+            (self.currentValues.first {
+                
+                if $0.id == .accountNumber {
+                    return !$0.subtitle.isEmpty
+                }
+                return false
+            } != nil)
+        }
     }
 }
 
 extension InfoProductViewModel {
     
     static func reduceSingle(
-        data: ProductDetailsData
+        data: AccountInfoPanel.ProductDetails
     ) -> [DocumentItemModel] {
         
         return [
@@ -175,7 +187,7 @@ extension InfoProductViewModel {
     }
     
     static func reduceMultiple(
-        data: ProductDetailsData
+        data: AccountInfoPanel.ProductDetails
     ) -> [DocumentItemModel] {
         
         return [
@@ -401,4 +413,12 @@ extension Dictionary where Key == DocumentItemModel.ID, Value == Image {
         .cvv : .ic24EyeOff,
         .cvvDisable: .ic24Info
     ]
+}
+
+extension Array where Element == InfoProductViewModel.ItemViewModelForList {
+    
+    var isAccountHolder: Bool {
+        
+        (self.first(where: { $0.isAccountHolder }) != nil)
+    }
 }

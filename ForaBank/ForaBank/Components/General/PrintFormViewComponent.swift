@@ -196,9 +196,7 @@ extension PrintFormView {
       
                             } else {
                                 
-                                withAnimation {
-                                    self.state = .failed
-                                }
+                                invalidData(data)
                             }
                             
                         case .failure(let error):
@@ -262,6 +260,26 @@ extension PrintFormView {
                     
                 }.store(in: &bindings)
         }
+        
+        private func invalidData(_ data: Data) {
+            do {
+                let error = try JSONDecoder().decode(ResponseMapper.ServerResponse<Data>.self, from: data)
+                self.state = .failed
+                self.alert = .init(
+                    title: "Информация",
+                    message: error.errorMessage,
+                    primary: .init(
+                        type: .cancel,
+                        title: "ОК",
+                        action: { [weak self] in
+                    self?.dismissAction?()
+                }))
+            } catch {
+                withAnimation {
+                    self.state = .failed
+                }
+            }
+        }
     }
 }
 
@@ -303,7 +321,9 @@ struct PrintFormView: View {
                 
             case .failed:
                 Text("Не удалось загрузить документ")
-                
+                    .alert(item: $viewModel.alert) { alert in
+                        Alert(with: alert)
+                    }
             }
         }
     }

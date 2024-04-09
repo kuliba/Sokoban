@@ -32,6 +32,8 @@ class InfoProductViewModel: ObservableObject {
     private var needShowNumber = false
     private var needShowCvv = false
     private let event: (Event) -> Void
+    
+    var info: (text: String, image: Image?) = ("", nil)
 
     var needShowCheckbox = false {
         didSet {
@@ -147,8 +149,11 @@ class InfoProductViewModel: ObservableObject {
         
         switch product.productType {
         case .card:
-            model.action.send(ModelAction.Products.ProductDetails.Request(type: product.productType, id: product.id))
-            self.title = "Реквизиты счета и карты"
+            
+            if let card = product as? ProductCardData {
+                model.action.send(ModelAction.Products.ProductDetails.Request(type: product.productType, id: product.id))
+                self.title = .accountDetailsTitle(by: card.cardType)
+            }
             
         case .account:
             model.action.send(ModelAction.Products.ProductDetails.Request(type: .account, id: product.id))
@@ -289,6 +294,8 @@ class InfoProductViewModel: ObservableObject {
                 case let payload as ModelAction.Products.ProductDetails.Response:
                     switch payload {
                     case .success(let data):
+                        
+                        info = (data.info, model.images.value[data.infoMd5hash]?.image)
                         
                         let documentListMultiple = Self.reduceMultiple(data: data)
                         
