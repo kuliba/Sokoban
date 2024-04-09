@@ -527,9 +527,9 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     ) -> AnywayPaymentUpdate.Field {
         
         .init(
-            fieldName: fieldName,
-            fieldValue: fieldValue,
-            fieldTitle: fieldTitle,
+            name: fieldName,
+            value: fieldValue,
+            title: fieldTitle,
             recycle: recycle,
             svgImage: svgImage,
             typeIdParameterList: typeIdParameterList

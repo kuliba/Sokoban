@@ -1,5 +1,5 @@
 //
-//  IsElementAfterAllTests.swift
+//  Array+isElementAfterAllTests.swift
 //
 //
 //  Created by Igor Malyarov on 04.04.2024.
@@ -7,20 +7,29 @@
 
 import XCTest
 
-final class IsElementAfterAllTests: XCTestCase {
+final class Array_isElementAfterAllTests: XCTestCase {
     
     func test_isElementAfterAll_shouldReturnFalseOnEmptyArrayAndGroup() {
         
-        let missing = Item(id: 2)
+        let item = Item(id: 2)
         
-        XCTAssertFalse([].isElementAfterAll(missing, inGroup: []))
+        XCTAssertFalse([].isElementAfterAll(item, inGroup: []))
     }
     
     func test_isElementAfterAll_shouldReturnFalseOnEmptyArray() {
         
-        let missing = Item(id: 2)
+        let item = Item(id: 2)
         
-        XCTAssertFalse([].isElementAfterAll(missing, inGroup: [.init(id: 1)]))
+        XCTAssertFalse([].isElementAfterAll(item, inGroup: [.init(id: 1)]))
+    }
+    
+    func test_isElementAfterAll_shouldReturnTrueOnEmptyGroup() {
+        
+        let item = Item(id: 2)
+        let array = [1, 2, 2].map { Item(id: $0) }
+
+        XCTAssert(array.isElementAfterAll(item, inGroup: []))
+        XCTAssert(array.map(\.id).contains(item.id))
     }
     
     func test_isElementAfterAll_shouldReturnFalseForMissingElement() {

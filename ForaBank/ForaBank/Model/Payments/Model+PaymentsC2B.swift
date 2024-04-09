@@ -57,7 +57,7 @@ extension Model {
             }
             
             switch source {
-            case .c2b(let url):
+            case let .c2b(url):
                 
                 let qrLink = QRLink(link: .init(url.absoluteString))
                 let parameters = try await paymentsStepC2B(by: qrLink)
@@ -77,7 +77,7 @@ extension Model {
                         required: required,
                         processed: nil))
                 
-            case .c2bSubscribe(let url):
+            case let .c2bSubscribe(url):
                 
                 let qrLink = QRLink(link: .init(url.absoluteString))
                 let response = try await paymentsStepC2BSubscribe(by: qrLink)
@@ -312,7 +312,10 @@ extension Model {
         case success
     }
     
-    func paymentsC2BReduceScenarioData(data: [AnyPaymentParameter], c2b: C2B) throws -> [PaymentsParameterRepresentable] {
+    func paymentsC2BReduceScenarioData(
+        data: [AnyPaymentParameter],
+        c2b: C2B
+    ) throws -> [PaymentsParameterRepresentable] {
         
         var parameters = [PaymentsParameterRepresentable]()
         
@@ -323,7 +326,11 @@ extension Model {
                 parameters.append(Payments.ParameterHeader(title: header.value, subtitle: nil, icon: nil, rightButton: []))
                 
             case let subscriber as PaymentParameterSubscriber:
-                parameters.append(Payments.ParameterSubscriber(.init(id: subscriber.id, value: subscriber.value), icon: subscriber.icon, description: subscriber.subscriptionPurpose))
+                parameters.append(Payments.ParameterSubscriber(
+                    .init(id: subscriber.id, value: subscriber.value),
+                    icon: subscriber.icon,
+                    description: subscriber.description
+                ))
                 
             case let productSelect as PaymentParameterProductSelect:
                 if let productSelectValue = productSelect.value,
