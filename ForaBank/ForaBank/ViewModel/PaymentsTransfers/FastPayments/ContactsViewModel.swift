@@ -303,7 +303,7 @@ extension ContactsViewModel {
         enum Select: Equatable {
             
             case contacts
-            case banks
+            case banks(phone: String?)
             case banksFullInfo
             case countries
         }
@@ -368,7 +368,10 @@ extension Model {
         let makeRequest: (String) -> Void = { [weak model] phone in
             
             model?.action.send(ModelAction.BankClient.Request(phone: phone.digits))
-            model?.action.send(ModelAction.LatestPayments.BanksList.Request(phone: phone))
+            model?.action.send(ModelAction.LatestPayments.BanksList.Request(
+                prePayment: true,
+                phone: phone
+            ))
         }
         let bankFromID: (BankData.ID) -> BankData? = { [weak model] bankId in
             
@@ -419,14 +422,26 @@ extension Model {
                     ContactsListSectionViewModel(model, mode: .select)
                 ]
                 
-            case .banks:
+            case let .banks(phone):
                 return [
-                    ContactsBanksSectionViewModel(model, mode: .select, phone: nil, bankDictionary: .banks, searchTextFieldFactory: { .bank() })
+                    ContactsBanksSectionViewModel(
+                        model,
+                        mode: .select,
+                        phone: phone,
+                        bankDictionary: .banks,
+                        searchTextFieldFactory: { .bank() }
+                    )
                 ]
                 
             case .banksFullInfo:
                 return [
-                    ContactsBanksSectionViewModel(model, mode: .select, phone: nil, bankDictionary: .banksFullInfo, searchTextFieldFactory: { .bank() })
+                    ContactsBanksSectionViewModel(
+                        model,
+                        mode: .select,
+                        phone: nil,
+                        bankDictionary: .banksFullInfo,
+                        searchTextFieldFactory: { .bank() }
+                    )
                 ]
                 
             case .countries:

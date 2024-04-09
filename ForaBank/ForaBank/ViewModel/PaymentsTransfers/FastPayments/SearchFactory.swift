@@ -16,7 +16,7 @@ extension SearchFactory {
     
     static func makeSearchBanksField() -> RegularFieldViewModel {
         
-        makeSearchFieldModel(for: .select(.banks))
+        makeSearchFieldModel(for: .select(.banks(phone: nil)))
     }
     
     static func makeSearchContactsField() -> RegularFieldViewModel {

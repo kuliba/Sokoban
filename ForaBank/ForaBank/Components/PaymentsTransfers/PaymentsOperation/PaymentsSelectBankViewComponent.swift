@@ -43,17 +43,14 @@ extension PaymentsSelectBankView {
                 throw Payments.Error.ui(.sourceParameterMissingOptions(parameterSelect.id))
             }
             
-            if let selectedOptionId = parameterSelect.value,
-               !parameterSelect.options.map(\.id).contains(selectedOptionId) {
-                throw Payments.Error.ui(.sourceParameterSelectedOptionInvalid(parameterSelect.id))
-            }
-            
             self.init(
                 state: .collapsed(
                     .init(
                         value: parameterSelect.value,
                         parameter: parameterSelect,
-                        defaultIcon: Self.defaultIcon)),
+                        defaultIcon: Self.defaultIcon,
+                        allBanks: model.bankList.value
+                    )),
                 source: parameterSelect,
                 model: model,
                 scheduler: scheduler
@@ -96,12 +93,12 @@ extension PaymentsSelectBankView.ViewModel {
                 switch state {
                 case .collapsed:
                     withAnimation {
-                        state = .expanded(ExpandedViewModel(with: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
+                        state = .expanded(ExpandedViewModel(with: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon, allBanks: model.bankList.value))
                     }
                     
                 case .expanded:
                     withAnimation {
-                        state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
+                        state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon, allBanks: model.bankList.value))
                     }
                 }
                 
@@ -115,12 +112,14 @@ extension PaymentsSelectBankView.ViewModel {
                 
                 update(value: bankItemId)
                 
-                guard let parameterSelectBank = parameterSelectBank else {
+                guard let parameterSelectBank = parameterSelectBank?.updated(value: bankItemId) as? Payments.ParameterSelectBank else {
                     return
                 }
                 
+                update(source: parameterSelectBank)
+                
                 withAnimation {
-                    state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
+                    state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon, allBanks: model.bankList.value))
                 }
                 
             }.store(in: &bindings)
@@ -135,21 +134,18 @@ extension PaymentsSelectBankView.ViewModel {
                       let selectAllOption = parameterSelectBank.selectAll else {
                     return
                 }
-
-                //TODO: move ContactsViewModel initialization to PaymentsOperationViewModel.
-                let contactsViewModel: ContactsViewModel = {
-                    
-                    switch selectAllOption.type {
-                    case .banks:
-                        return model.makeContactsViewModel(forMode: .select(.banks))
-                    case .banksFullInfo:
-                        return model.makeContactsViewModel(forMode: .select(.banksFullInfo))
-                    }
-                    
-                }()
                 
-                bind(contactsViewModel: contactsViewModel)
-                action.send(PaymentsParameterViewModelAction.SelectBank.ContactSelector.Show(viewModel: contactsViewModel))
+                action.send(PaymentsParameterViewModelAction.SelectBank.ContactSelector.Show(type: selectAllOption.type))
+                
+            }.store(in: &bindings)
+        
+        model.action
+            .compactMap { $0 as? ModelAction.LatestPayments.BanksList.Response }
+            .receive(on: scheduler)
+            .map(\.result)
+            .sink { [unowned self] result in
+                
+                selectDefaultBank(result)
                 
             }.store(in: &bindings)
         
@@ -165,7 +161,7 @@ extension PaymentsSelectBankView.ViewModel {
                 }
   
                 withAnimation {
-                    state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
+                    state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon, allBanks: model.bankList.value))
                 }
               
             }.store(in: &bindings)
@@ -173,33 +169,68 @@ extension PaymentsSelectBankView.ViewModel {
 }
 
 extension PaymentsSelectBankView.ViewModel {
-    
-    private func bind(contactsViewModel: ContactsViewModel) {
-            
-            contactsViewModel.action
-                .compactMap({$0 as? ContactsViewModelAction.BankSelected })
-                .map(\.bankId)
-                .receive(on: scheduler)
-                .sink { [weak self] bankId in
-                    
-                    guard let self = self else { return }
-                    
-                    guard let parameterSelectBank = self.parameterSelectBank,
-                          let option = parameterSelectBank.options.first(where: { $0.id == bankId } ) else {
-                        return
-                    }
-                    
-                    self.update(value: option.id)
-                    
-                    withAnimation {
-                        self.state = .collapsed(.init(value: self.value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
-                    }
-                    
-                    self.action.send(PaymentsParameterViewModelAction.SelectBank.ContactSelector.Close())
-   
-                }.store(in: &bindings)
-        }
 
+    func selectDefaultBank(
+        _ result: Result<[PaymentPhoneData], Error>
+    ) {
+        switch result {
+        case let .success(paymentsPhone):
+            let defaultBank = paymentsPhone.first { $0.defaultBank == true }
+            
+            let optionsId = paymentsPhone.map { $0.bankId }
+            let preferredBanks = optionsId.compactMap { bankId in model.bankList.value.first(where: { $0.id == bankId }) }
+            
+            let options = preferredBanks
+                .filter { $0.bankType == .sfp }
+                .map { item in
+                    Payments.ParameterSelectBank.Option(
+                        id: item.id,
+                        name: item.memberNameRus,
+                        subtitle: nil,
+                        icon: .init(with: item.svgImage),
+                        isFavorite: item.id == defaultBank?.bankId,
+                        searchValue: item.memberNameRus
+                    )
+                }
+            
+            if let param = self.parameterSelectBank {
+                
+                self.update(source: param.updated(options: options))
+
+            }
+            
+            bankItemTapped(
+                paymentsPhone: paymentsPhone,
+                defaultBank: defaultBank
+            )
+            
+        case .failure:
+            break
+        }
+    }
+    
+    private func bankItemTapped(
+        paymentsPhone: [PaymentPhoneData],
+        defaultBank: PaymentPhoneData?
+    ) {
+        if let defaultBank {
+            
+            self.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(
+                id: defaultBank.bankId
+            ))
+            self.update(value: defaultBank.bankId)
+            
+        } else {
+            
+            if let value = self.value.current {
+                
+                self.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(
+                    id: value
+                ))
+                self.update(value: value)
+            }
+        }
+    }
 }
 
 //MARK: - Types
@@ -274,7 +305,7 @@ extension PaymentsSelectBankView.ViewModel {
         let icon: IconViewModel
         let name: String
         let subtitle: String?
-        
+        let isFavorite: Bool
         let searchValue: String
     }
     
@@ -295,9 +326,23 @@ extension PaymentsSelectBankView.ViewModel {
 
 extension PaymentsSelectBankView.ViewModel.CollapsedViewModel {
     
-    init(value: Payments.Parameter.Value, parameter: Payments.ParameterSelectBank, defaultIcon: Image) {
+    init(value: Payments.Parameter.Value, parameter: Payments.ParameterSelectBank, defaultIcon: Image, allBanks: [BankData]) {
         
-        if let option = parameter.options.first(where: { $0.id == value }) {
+        let bank = allBanks.first { $0.id == value }
+        let option = parameter.options.first(where: { $0.id == value })
+        
+        let newOption = option ?? bank.map({ item in
+            Payments.ParameterSelectBank.Option(
+                id: item.id,
+                name: item.memberNameRus,
+                subtitle: nil,
+                icon: .init(with: item.svgImage),
+                isFavorite: false,
+                searchValue: item.memberNameRus
+            )
+        })
+        
+        if let option = newOption {
             
             //TODO: more elegant solution required
             if let subtitle = option.subtitle {
@@ -324,11 +369,26 @@ extension PaymentsSelectBankView.ViewModel.ExpandedViewModel {
         with value: Payments.Parameter.Value,
         parameter: Payments.ParameterSelectBank,
         defaultIcon: Image,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain(),
+        allBanks: [BankData]
     ) {
+        
+        let bankOption = allBanks.first(where: { $0.id == value }).map({ item in
+            
+            Payments.ParameterSelectBank.Option(
+                id: item.id,
+                name: item.memberNameRus,
+                subtitle: nil,
+                icon: .init(with: item.svgImage),
+                isFavorite: false,
+                searchValue: item.memberNameRus
+            )
+        })
+        
+        let option = parameter.options.first(where: { $0.id == value }) ?? bankOption
         let icon: PaymentsSelectBankView.ViewModel.IconViewModel = {
             
-            guard let option = parameter.options.first(where: { $0.id == value }) else {
+            guard let option else {
                 return .icon(defaultIcon)
             }
             
@@ -337,7 +397,7 @@ extension PaymentsSelectBankView.ViewModel.ExpandedViewModel {
         
         let placeholder: String = {
             
-            guard let option = parameter.options.first(where: { $0.id == value }) else {
+            guard let option else {
                 return parameter.placeholder
             }
             
@@ -362,6 +422,7 @@ extension PaymentsSelectBankView.ViewModel.ExpandedViewModel {
                 icon: .init(with: option, defaultIcon: defaultIcon),
                 name: option.name,
                 subtitle: option.subtitle,
+                isFavorite: option.isFavorite,
                 searchValue: option.searchValue)
         }
         
@@ -479,7 +540,7 @@ extension PaymentsParameterViewModelAction {
             
             struct Show: Action {
                 
-                let viewModel: ContactsViewModel
+                let type: Payments.ParameterSelectBank.SelectAllOption.Kind
             }
             
             struct Close: Action {}
@@ -676,6 +737,7 @@ struct PaymentsSelectBankView: View {
                     .frame(width: 40, height: 40)
                     .padding(.bottom, 8)
                     .accessibilityIdentifier("SelectBankItemBankIcon")
+                    .overlay(ContactsBankPrefferedItemView.FavoritesIcon(isFavorite: viewModel.isFavorite).offset(x: 20, y: -12))
                 
                 Text(viewModel.name)
                     .font(.textBodyXsR11140())
@@ -758,12 +820,12 @@ struct PaymentsSelectBankView: View {
             VStack {
                 
                 switch viewModel {
-                case .image(let image):
+                case let .image(image):
                     image
                         .resizable()
                         .accessibilityIdentifier("SelectBankIconImage")
                     
-                case .icon(let image):
+                case let .icon(image):
                     image
                         .resizable()
                         .renderingMode(.template)
@@ -812,8 +874,8 @@ extension PaymentsSelectBankView.ViewModel {
             icon: .init(named: "ic24Bank")!,
             title: "Банк получателя",
             options: [
-                .init(id: "0", name: "Сбербанк", subtitle: "04456789", icon: nil, searchValue: "сбербанк"),
-                .init(id: "1", name: "Альфабанк", subtitle: "04478998", icon: nil, searchValue: "альфабанк"),
+                .init(id: "0", name: "Сбербанк", subtitle: "04456789", icon: nil, isFavorite: false, searchValue: "сбербанк"),
+                .init(id: "1", name: "Альфабанк", subtitle: "04478998", icon: nil, isFavorite: false, searchValue: "альфабанк"),
             ],
             placeholder: "Выберите банк",
             selectAll: .init(type: .banks),
@@ -828,8 +890,8 @@ extension PaymentsSelectBankView.ViewModel {
                 icon: .init(named: "ic24Bank")!,
                 title: "Банк получателя",
                 options: [
-                    .init(id: "0", name: "Сбербанк", subtitle: "04456789", icon: nil, searchValue: "сбербанк"),
-                    .init(id: "1", name: "Альфабанк", subtitle: "04478998", icon: nil, searchValue: "альфабанк"),
+                    .init(id: "0", name: "Сбербанк", subtitle: "04456789", icon: nil, isFavorite: false, searchValue: "сбербанк"),
+                    .init(id: "1", name: "Альфабанк", subtitle: "04478998", icon: nil, isFavorite: false, searchValue: "альфабанк"),
                 ],
                 placeholder: "Выберите банк",
                 selectAll: .init(type: .banks),
