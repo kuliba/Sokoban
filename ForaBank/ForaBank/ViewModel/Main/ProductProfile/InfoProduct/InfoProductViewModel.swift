@@ -335,7 +335,7 @@ class InfoProductViewModel: ObservableObject {
                 
                 switch $0.id {
                     
-                case .cvv, .cvvMasked:
+                case .cvv, .cvvMasked, .cvvDisable:
                     return Self.makeItemViewModel(
                         from: $0,
                         with: {_,_ in },

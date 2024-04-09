@@ -28,6 +28,7 @@ extension InfoProductViewModel {
             case number
             case cvvMasked
             case cvv
+            case cvvDisable
         }
         
         var title: String {
@@ -52,7 +53,7 @@ extension InfoProductViewModel {
                 return "Держатель карты"
             case .expirationDate:
                 return "Карта действует до"
-            case .cvvMasked, .cvv:
+            case .cvvMasked, .cvv, .cvvDisable:
                 return .cvvTitle
             }
         }
@@ -132,7 +133,7 @@ extension InfoProductViewModel {
                 
                 switch $0.id {
                     
-                case .cvv, .cvvMasked:
+                case .cvv, .cvvMasked, .cvvDisable:
                     return nil
                     
                 default:
@@ -325,33 +326,34 @@ extension InfoProductViewModel {
         
         var list: [DocumentItemModel] = []
         
-        if let expirationDate = data.expireDate {
+        data.expireDate.map {
             
             list.append(
                 .init(
                     id: .expirationDate,
-                    subtitle: expirationDate,
-                    valueForCopy: expirationDate
+                    subtitle: $0,
+                    valueForCopy: $0
                 )
             )
-            if needShowCvv {
-                list.append(
-                    .init(
-                        id: .cvv,
-                        subtitle: "***",
-                        valueForCopy: "" // CVV не копируем!!!
-                    )
+        }
+        if data.cardType == .additionalOther {
+            
+            list.append(
+                .init(
+                    id: .cvvDisable,
+                    subtitle: "Недоступно",
+                    valueForCopy: "" // CVV не копируем!!!
                 )
-            } else {
-                
-                list.append(
-                    .init(
-                        id: .cvvMasked,
-                        subtitle: "***",
-                        valueForCopy: "" // CVV не копируем!!!
-                    )
+            )
+        } else {
+            
+            list.append(
+                .init(
+                    id: needShowCvv ? .cvv : .cvvMasked,
+                    subtitle: "***",
+                    valueForCopy: "" // CVV не копируем!!!
                 )
-            }
+            )
         }
         return list
     }
@@ -397,5 +399,6 @@ extension Dictionary where Key == DocumentItemModel.ID, Value == Image {
         .cvvMasked : .ic24Eye,
         .number: .ic24EyeOff,
         .cvv : .ic24EyeOff,
+        .cvvDisable: .ic24Info
     ]
 }
