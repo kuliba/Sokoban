@@ -205,6 +205,36 @@ final class PaymentsSelectBankViewComponentTests: XCTestCase {
         
         XCTAssertEqual(collapsedViewModel.title, .selected(title: "Банк получателя", name: "0445566"))
     }
+    
+    func test_selectDefaultBank_shouldChangeValue() throws {
+
+        let sut = try makeSut(selectedOptionId: "0")
+        sut.selectDefaultBank(.success([.init(
+            bankId: "1",
+            bankName: "bankName",
+            payment: true,
+            defaultBank: true
+        )]))
+        
+        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertEqual(sut.value.current, "1")
+    }
+    
+    func test_selectNotDefaultBank_shouldChangeValue() throws {
+
+        let sut = try makeSut(selectedOptionId: "0")
+        sut.selectDefaultBank(.success([.init(
+            bankId: "1",
+            bankName: "bankName",
+            payment: true,
+            defaultBank: false
+        )]))
+        
+        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertEqual(sut.value.current, "0")
+    }
 }
 
 private extension PaymentsSelectBankViewComponentTests {
@@ -226,11 +256,11 @@ private extension PaymentsSelectBankViewComponentTests {
 
 private extension Payments.ParameterSelectBank.Option {
 
-  static let sber: Self = .init(id: "0", name: "Сбербанк", subtitle: "0445566", icon: nil, searchValue: "0445566")
-  static let sberNoSubTitle: Self = .init(id: "0", name: "Сбербанк", subtitle: nil, icon: nil, searchValue: "0445566")
+    static let sber: Self = .init(id: "0", name: "Сбербанк", subtitle: "0445566", icon: nil, isFavorite: false, searchValue: "0445566")
+  static let sberNoSubTitle: Self = .init(id: "0", name: "Сбербанк", subtitle: nil, icon: nil, isFavorite: false, searchValue: "0445566")
 
-  static let alfa: Self = .init(id: "1", name: "Альфа-банк", subtitle: "0447788", icon: nil, searchValue: "0447788")
-  static let alfaNoSubtitle: Self = .init(id: "1", name: "Альфа-банк", subtitle: nil, icon: nil, searchValue: "0447788")
+  static let alfa: Self = .init(id: "1", name: "Альфа-банк", subtitle: "0447788", icon: nil, isFavorite: false, searchValue: "0447788")
+  static let alfaNoSubtitle: Self = .init(id: "1", name: "Альфа-банк", subtitle: nil, icon: nil, isFavorite: false, searchValue: "0447788")
 }
 
 private extension Array where Element == Payments.ParameterSelectBank.Option {
