@@ -22,18 +22,18 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     func test_update_shouldAddAmountFieldOnNeedSumTrue() {
         
+        let payment = makeAnywayPaymentWithoutAmount()
         let update = makeAnywayPaymentUpdate(needSum: true)
-        let updated = updatePayment(makeAnywayPaymentWithoutAmount(), with: update)
         
-        XCTAssert(hasAmountField(updated))
+        XCTAssert(hasAmountField(updatePayment(payment, with: update)))
     }
     
     func test_update_shouldRemoveAmountFieldOnNeedSumFalse() {
         
+        let payment = makeAnywayPaymentWithAmount()
         let update = makeAnywayPaymentUpdate(needSum: false)
-        let updated = updatePayment(makeAnywayPaymentWithAmount(), with: update)
         
-        XCTAssertFalse(hasAmountField(updated))
+        XCTAssertFalse(hasAmountField(updatePayment(payment, with: update)))
     }
     
     // MARK: - complimentary fields

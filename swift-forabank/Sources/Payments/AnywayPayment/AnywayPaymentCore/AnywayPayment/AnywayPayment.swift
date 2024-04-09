@@ -11,20 +11,17 @@ import Tagged
 public struct AnywayPayment: Equatable {
     
     public var elements: [Element]
-    public let hasAmount: Bool
     public var infoMessage: String?
     public let isFinalStep: Bool
     public let isFraudSuspected: Bool
     
     public init(
         elements: [Element],
-        hasAmount: Bool,
         infoMessage: String?,
         isFinalStep: Bool,
         isFraudSuspected: Bool
     ) {
         self.elements = elements
-        self.hasAmount = hasAmount
         self.infoMessage = infoMessage
         self.isFinalStep = isFinalStep
         self.isFraudSuspected = isFraudSuspected
@@ -93,7 +90,7 @@ extension AnywayPayment.Element {
     
     public enum Widget: Equatable {
         
-        case otp
+        case amount, otp
     }
 }
 
@@ -247,12 +244,13 @@ extension AnywayPayment.Element.Widget {
     public var id: ID {
         
         switch self {
-        case .otp: return .otp
+        case .amount: return .amount
+        case .otp:    return .otp
         }
     }
     
     public enum ID {
         
-        case otp
+        case amount, otp
     }
 }

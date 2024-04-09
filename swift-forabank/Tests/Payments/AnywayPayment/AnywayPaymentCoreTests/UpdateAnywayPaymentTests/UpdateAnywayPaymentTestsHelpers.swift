@@ -26,7 +26,7 @@ func hasAmountField(
     _ payment: AnywayPayment
 ) -> Bool {
     
-    payment.hasAmount
+    payment.elements.compactMap(\.widget).map(\.id).contains(.amount)
 }
 
 func hasOTPField(
@@ -66,9 +66,13 @@ func makeAnywayPayment(
     hasAmount: Bool = false
 ) -> AnywayPayment {
     
-    makeAnywayPayment(
-        elements: fields.map(AnywayPayment.Element.field),
-        hasAmount: hasAmount,
+    var elements = fields.map(AnywayPayment.Element.field)
+    if hasAmount {
+        elements.append(.widget(.amount))
+    }
+    
+    return makeAnywayPayment(
+        elements: elements,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected
     )
@@ -81,9 +85,13 @@ func makeAnywayPayment(
     hasAmount: Bool = false
 ) -> AnywayPayment {
     
-    makeAnywayPayment(
-        elements: parameters.map(AnywayPayment.Element.parameter),
-        hasAmount: hasAmount,
+    var elements = parameters.map(AnywayPayment.Element.parameter)
+    if hasAmount {
+        elements.append(.widget(.amount))
+    }
+    
+    return makeAnywayPayment(
+        elements: elements,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected
     )
@@ -91,7 +99,6 @@ func makeAnywayPayment(
 
 func makeAnywayPayment(
     elements: [AnywayPayment.Element],
-    hasAmount: Bool = false,
     infoMessage: String? = nil,
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false
@@ -99,7 +106,6 @@ func makeAnywayPayment(
     
     .init(
         elements: elements,
-        hasAmount: hasAmount,
         infoMessage: infoMessage,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected

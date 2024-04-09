@@ -20,12 +20,11 @@ extension AnywayPayment {
         elements.appendComplementaryFields(from: update.fields)
         elements.appendParameters(from: update.parameters, with: outline)
         
-        let otp = Element.Widget.otp
-        elements[widgetID: .otp] = update.details.control.needOTP ? .widget(otp) : nil
+        elements[widgetID: .amount] = update.details.control.needSum ? .widget(.amount) : nil
+        elements[widgetID: .otp] = update.details.control.needOTP ? .widget(.otp) : nil
         
         return .init(
             elements: elements,
-            hasAmount: update.details.control.needSum,
             infoMessage: update.details.info.infoMessage,
             isFinalStep: update.details.control.isFinalStep,
             isFraudSuspected: update.details.control.isFraudSuspected
