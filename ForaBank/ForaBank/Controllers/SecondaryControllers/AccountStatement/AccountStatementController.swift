@@ -335,7 +335,11 @@ class AccountStatementController: UIViewController {
         
         let startDate = self.startDate ?? Date()
         let endDate = self.endDate ?? Date()
-        let printFormViewModel = PrintFormView.ViewModel(type: .product(productId: card.id, startDate: startDate, endDate: endDate), model: Model.shared)
+        let printFormViewModel = PrintFormView.ViewModel(
+            type: .product(productId: card.id, startDate: startDate, endDate: endDate),
+            model: Model.shared,
+            dismissAction: { [weak self] in self?.dismiss(animated: true) }
+        )
         let printFormView = PrintFormView(viewModel: printFormViewModel)
         let printFormviewController = UIHostingController(rootView: printFormView)
         
