@@ -194,8 +194,8 @@ struct ProductProfileView: View {
                 .padding(.top, 26)
                 .padding(.bottom, 72)
             
-        case let .optionsPanelNew(buttons):
-            PanelView(buttons: buttons)
+        case let .optionsPanelNew(items):
+            PanelView(items: items, event: viewModel.event)
                 .padding(.horizontal, 12)
                 .padding(.top, 26)
                 .padding(.bottom, 72)

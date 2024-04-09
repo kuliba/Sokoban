@@ -11,19 +11,20 @@ extension ProductProfileViewModel {
     
     func createAccountInfoPanel(_ card: ProductCardData) {
         
-        let buttons: [PanelButton] = [
+        let buttons: [PanelButton.Details] = [
             .init(
-                event: { [weak self] in self?.event(.accountDetails(card.id)) },
-                config: .init(
-                    title: .accountDetailsTitle(by: card.cardType),
-                    icon: .ic24FileText,
-                    subtitle: nil)),
+                ID: card.id,
+                title: .accountDetailsTitle(by: card.cardType),
+                icon: .ic24FileText,
+                subtitle: nil,
+                kind: .accountDetails),
             .init(
-                event: { [weak self] in self?.event(.accountStatement(card.id)) },
-                config: .init(
-                    title: .accountStatementTitle(),
-                    icon: .ic24FileHash,
-                    subtitle: .accountStatementSubtitle(by: card.cardType)))
+                ID: card.id,
+                title: .accountStatementTitle(),
+                icon: .ic24FileHash,
+                subtitle: .accountStatementSubtitle(by: card.cardType),
+                kind: .accountStatement
+            )
         ]
         bottomSheet = .init(type: .optionsPanelNew(buttons))
     }
