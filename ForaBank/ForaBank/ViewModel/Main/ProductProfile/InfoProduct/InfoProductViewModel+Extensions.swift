@@ -338,34 +338,35 @@ extension InfoProductViewModel {
         
         var list: [DocumentItemModel] = []
         
-        data.expireDate.map {
+        if let expirationDate = data.expireDate {
             
             list.append(
                 .init(
                     id: .expirationDate,
-                    subtitle: $0,
-                    valueForCopy: $0
+                    subtitle: expirationDate,
+                    valueForCopy: expirationDate
                 )
             )
-        }
-        if data.cardType == .additionalOther {
             
-            list.append(
-                .init(
-                    id: .cvvDisable,
-                    subtitle: "Недоступно",
-                    valueForCopy: "" // CVV не копируем!!!
+            if data.cardType == .additionalOther {
+                
+                list.append(
+                    .init(
+                        id: .cvvDisable,
+                        subtitle: "Недоступно",
+                        valueForCopy: "" // CVV не копируем!!!
+                    )
                 )
-            )
-        } else {
-            
-            list.append(
-                .init(
-                    id: needShowCvv ? .cvv : .cvvMasked,
-                    subtitle: "***",
-                    valueForCopy: "" // CVV не копируем!!!
+            } else {
+                
+                list.append(
+                    .init(
+                        id: needShowCvv ? .cvv : .cvvMasked,
+                        subtitle: "***",
+                        valueForCopy: "" // CVV не копируем!!!
+                    )
                 )
-            )
+            }
         }
         return list
     }
