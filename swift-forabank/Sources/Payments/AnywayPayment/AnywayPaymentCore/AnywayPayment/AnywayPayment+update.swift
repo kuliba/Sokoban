@@ -20,8 +20,8 @@ extension AnywayPayment {
         elements.appendComplementaryFields(from: update.fields)
         elements.appendParameters(from: update.parameters, with: outline)
         
-        elements[widgetID: .amount] = update.details.control.needSum ? .widget(.amount) : nil
-        elements[widgetID: .otp] = update.details.control.needOTP ? .widget(.otp) : nil
+        elements.adjustWidget(.amount, on: update.details.control.needSum)
+        elements.adjustWidget(.otp, on: update.details.control.needOTP)
         
         return .init(
             elements: elements,
@@ -36,13 +36,6 @@ extension AnywayPayment {
 
 private extension AnywayPayment.Element {
     
-    var fieldID: Field.ID? {
-        
-        guard case let .field(field) = self else { return nil }
-        
-        return field.id
-    }
-    
     var stringID: StringID? {
         
         switch self {
@@ -54,6 +47,27 @@ private extension AnywayPayment.Element {
             
         case .widget:
             return nil
+        }
+    }
+    
+    var widgetID: Widget.ID? {
+        
+        guard case let .widget(widget) = self else { return nil }
+        
+        return widget.id
+    }
+
+    func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
+        
+        switch self {
+        case let .field(field):
+            return .field(field.updating(with: fieldUpdate))
+            
+        case let .parameter(parameter):
+            return .parameter(parameter.updating(with: fieldUpdate))
+            
+        case .widget:
+            return self
         }
     }
 }
@@ -88,25 +102,30 @@ private extension AnywayPayment.Element.Parameter {
 
 private extension Array where Element == AnywayPayment.Element {
     
-    subscript(widgetID widgetID: Element.Widget.ID) -> Element? {
-        
-        get { firstIndex(matching: widgetID).map { self[$0] }}
-        
-        set {
-            guard let index = firstIndex(matching: widgetID)
-            else {
-                if let newValue { append(newValue) }
-                return
-            }
-            
-            if let newValue {
-                if case let .widget(widget) = newValue, widget.id == widgetID {
-                    self[index] = newValue
+    mutating func adjustWidget(
+        _ widget: Element.Widget,
+        on condition: Bool
+    ) {
+        update(widgetID: widget.id, with: condition ? widget : nil)
+    }
+    
+    private mutating func update(
+        widgetID: Element.Widget.ID,
+        with widget: Element.Widget?
+    ) {
+        if let index = firstIndex(matching: widgetID) {
+            if let widget {
+                if widget.id == widgetID {
+                    self[index] = .widget(widget)
                 } else {
-                    append(newValue)
+                    append(.widget(widget))
                 }
             } else {
                 remove(at: index)
+            }
+        } else {
+            if let widget {
+                append(.widget(widget))
             }
         }
     }
@@ -122,19 +141,6 @@ private extension Array where Element == AnywayPayment.Element {
             return widgetID == id
         }
     }
-}
-
-private extension AnywayPayment.Element {
-    
-    var widgetID: Widget.ID? {
-        
-        guard case let .widget(widget) = self else { return nil }
-        
-        return widget.id
-    }
-}
-
-private extension Array where Element == AnywayPayment.Element {
     
     mutating func updatePrimaryFields(
         from updateFields: [AnywayPaymentUpdate.Field]
@@ -149,34 +155,20 @@ private extension Array where Element == AnywayPayment.Element {
                   let matching = updateFields[id.rawValue]
             else { return $0 }
             
-            switch $0 {
-            case let .field(field):
-                return .field(field.updating(with: matching))
-                
-            case let .parameter(parameter):
-                return .parameter(parameter.updating(with: matching))
-                
-            case .widget:
-                return $0
-            }
+            return $0.updating(with: matching)
         }
     }
     
     mutating func appendComplementaryFields(
         from updateFields: [AnywayPaymentUpdate.Field]
     ) {
-        let existingIDs = stringIDs.map(\.rawValue)
+        let existingIDs = compactMap(\.stringID?.rawValue)
         let complimentary: [Element] = updateFields
             .filter { !existingIDs.contains($0.name) }
             .map(Element.Field.init)
             .map(Element.field)
         
         self.append(contentsOf: complimentary)
-    }
-    
-    private var stringIDs: [Element.StringID] {
-        
-        compactMap(\.stringID)
     }
     
     mutating func appendParameters(
