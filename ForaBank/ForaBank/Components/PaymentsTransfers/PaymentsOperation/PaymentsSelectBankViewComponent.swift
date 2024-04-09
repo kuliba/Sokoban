@@ -53,7 +53,9 @@ extension PaymentsSelectBankView {
                     .init(
                         value: parameterSelect.value,
                         parameter: parameterSelect,
-                        defaultIcon: Self.defaultIcon)),
+                        defaultIcon: Self.defaultIcon,
+                        allBanks: model.bankList.value
+                    )),
                 source: parameterSelect,
                 model: model,
                 scheduler: scheduler
@@ -96,12 +98,12 @@ extension PaymentsSelectBankView.ViewModel {
                 switch state {
                 case .collapsed:
                     withAnimation {
-                        state = .expanded(ExpandedViewModel(with: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
+                        state = .expanded(ExpandedViewModel(with: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon, allBanks: model.bankList.value))
                     }
                     
                 case .expanded:
                     withAnimation {
-                        state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
+                        state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon, allBanks: model.bankList.value))
                     }
                 }
                 
@@ -122,7 +124,7 @@ extension PaymentsSelectBankView.ViewModel {
                 update(source: parameterSelectBank)
                 
                 withAnimation {
-                    state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
+                    state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon, allBanks: model.bankList.value))
                 }
                 
             }.store(in: &bindings)
@@ -164,7 +166,7 @@ extension PaymentsSelectBankView.ViewModel {
                 }
   
                 withAnimation {
-                    state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon))
+                    state = .collapsed(CollapsedViewModel(value: value.current, parameter: parameterSelectBank, defaultIcon: Self.defaultIcon, allBanks: model.bankList.value))
                 }
               
             }.store(in: &bindings)
@@ -329,9 +331,23 @@ extension PaymentsSelectBankView.ViewModel {
 
 extension PaymentsSelectBankView.ViewModel.CollapsedViewModel {
     
-    init(value: Payments.Parameter.Value, parameter: Payments.ParameterSelectBank, defaultIcon: Image) {
+    init(value: Payments.Parameter.Value, parameter: Payments.ParameterSelectBank, defaultIcon: Image, allBanks: [BankData]) {
         
-        if let option = parameter.options.first(where: { $0.id == value }) {
+        let bank = allBanks.first { $0.id == value }
+        let option = parameter.options.first(where: { $0.id == value })
+        
+        let newOption = option ?? bank.map({ item in
+            Payments.ParameterSelectBank.Option(
+                id: item.id,
+                name: item.memberNameRus,
+                subtitle: nil,
+                icon: .init(with: item.svgImage),
+                isFavorite: false,
+                searchValue: item.memberNameRus
+            )
+        })
+        
+        if let option = newOption {
             
             //TODO: more elegant solution required
             if let subtitle = option.subtitle {
@@ -358,11 +374,26 @@ extension PaymentsSelectBankView.ViewModel.ExpandedViewModel {
         with value: Payments.Parameter.Value,
         parameter: Payments.ParameterSelectBank,
         defaultIcon: Image,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain(),
+        allBanks: [BankData]
     ) {
+        
+        let bankOption = allBanks.first(where: { $0.id == value }).map({ item in
+            
+            Payments.ParameterSelectBank.Option(
+                id: item.id,
+                name: item.memberNameRus,
+                subtitle: nil,
+                icon: .init(with: item.svgImage),
+                isFavorite: false,
+                searchValue: item.memberNameRus
+            )
+        })
+        
+        let option = parameter.options.first(where: { $0.id == value }) ?? bankOption
         let icon: PaymentsSelectBankView.ViewModel.IconViewModel = {
             
-            guard let option = parameter.options.first(where: { $0.id == value }) else {
+            guard let option else {
                 return .icon(defaultIcon)
             }
             
@@ -371,7 +402,7 @@ extension PaymentsSelectBankView.ViewModel.ExpandedViewModel {
         
         let placeholder: String = {
             
-            guard let option = parameter.options.first(where: { $0.id == value }) else {
+            guard let option else {
                 return parameter.placeholder
             }
             
