@@ -138,6 +138,12 @@ extension PaymentsInputPhoneView {
                     
                     switch action {
                     case let payload as ContactsViewModelAction.ContactPhoneSelected:
+                        self?.update(value: payload.phone)
+                        if let source = self?.source.updated(value: payload.phone) {
+                         
+                            self?.update(source: source)
+                        }
+                        
                         self?.textView.setText(to: payload.phone)
                         self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Close())
                         self?.model.action.send(ModelAction.LatestPayments.BanksList.Request(

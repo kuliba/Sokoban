@@ -314,8 +314,8 @@ class PaymentsOperationViewModel: ObservableObject {
                             
                             switch payload.type {
                             case .banks:
-                                let phone = try? self.operation.value.parameters.value(forIdentifier: .sfpPhone)
-                                return self.model.makeContactsViewModel(forMode: .select(.banks(phone: phone)))
+                                let itemPhone = self.items.first(where: { $0.id == Payments.Parameter.Identifier.sfpPhone.rawValue })
+                                return self.model.makeContactsViewModel(forMode: .select(.banks(phone: itemPhone?.value.current)))
                                 
                             case .banksFullInfo:
                                 return self.model.makeContactsViewModel(forMode: .select(.banksFullInfo))
