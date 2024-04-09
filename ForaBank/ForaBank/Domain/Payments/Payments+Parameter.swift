@@ -1180,12 +1180,22 @@ extension Payments {
         
         init(with subscriptionData: C2BSubscriptionData) {
             
-            self.init(.init(id: UUID().uuidString, value: subscriptionData.brandName), icon: subscriptionData.brandIcon, description: nil, style: .small)
+            self.init(
+                .init(id: UUID().uuidString, value: subscriptionData.brandName),
+                icon: subscriptionData.brandIcon,
+                description: subscriptionData.legalName,
+                style: .small
+            )
         }
         
         init(with parameter: PaymentParameterSubscriber) {
             
-            self.init(.init(id: parameter.id, value: parameter.value), icon: parameter.icon, description: parameter.subscriptionPurpose, style: parameter.style)
+            self.init(
+                .init(id: parameter.id, value: parameter.value),
+                icon: parameter.icon,
+                description: parameter.description,
+                style: parameter.style
+            )
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
@@ -1776,6 +1786,22 @@ extension Payments.ParameterButton.Style: Decodable {
             
         default:
             throw Payments.Error.unsupported
+        }
+    }
+}
+
+extension PaymentParameterSubscriber {
+    
+    var description: String? {
+        
+        if let legalName,
+           let subscriptionPurpose {
+            
+            return "\(legalName)" + "\n" + "\(subscriptionPurpose)"
+            
+        } else {
+            
+            return subscriptionPurpose
         }
     }
 }

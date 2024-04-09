@@ -13,6 +13,7 @@ struct C2BSubscriptionData: Decodable, Equatable {
     let title: String
     let brandIcon: String
     let brandName: String
+    let legalName: String?
     let redirectUrl: URL?
 }
 
