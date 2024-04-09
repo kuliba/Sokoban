@@ -163,7 +163,8 @@ final class PaymentsSelectBankViewModelExpandedViewModelTests: XCTestCase {
             with: value,
             parameter: parameter,
             defaultIcon: .ic24Bank,
-            scheduler: scheduler.eraseToAnyScheduler()
+            scheduler: scheduler.eraseToAnyScheduler(),
+            allBanks: []
         )
         let spy = ValueSpy(sut.$list.map(\.simplified))
         
