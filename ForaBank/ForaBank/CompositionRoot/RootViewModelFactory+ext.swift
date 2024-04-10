@@ -550,6 +550,17 @@ extension ProductProfileViewModel {
                 makeOperationDetailViewModel: makeOperationDetailViewModel
             )
             
+            let makeProductProfileViewModelFactory: ProductProfileViewModelFactory = .init(makeInfoProductViewModel: {
+                
+                return .init(
+                    model: $0.model,
+                    product: $0.productData,
+                    info: $0.info,
+                    showCvv: $0.showCVV,
+                    event: $0.events
+                )
+                
+            })
             return .init(
                 model,
                 fastPaymentsFactory: fastPaymentsFactory,
@@ -562,6 +573,7 @@ extension ProductProfileViewModel {
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: product, 
                 productNavigationStateManager: productNavigationStateManager,
+                productProfileViewModelFactory: makeProductProfileViewModelFactory,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
