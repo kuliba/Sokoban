@@ -215,8 +215,8 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType {
         case .bic:       self = .bic
         case .counter:   self = .counter
         case .date:      self = .date
-        case .insurance: self = .insurance
         case .inn:       self = .inn
+        case .insurance: self = .insurance
         case .name:      self = .name
         case .oktmo:     self = .oktmo
         case .penalty:   self = .penalty
