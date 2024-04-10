@@ -1,6 +1,6 @@
 //
 //  AnywayPaymentDigestTests.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 02.04.2024.
 //
@@ -119,11 +119,11 @@ final class AnywayPaymentDigestTests: XCTestCase {
         let mccRawValue = anyMessage()
         let digest = makeAnywayPaymentDigest(
             check: true,
-            amount: .init(
-                value: 1_234.56,
+            amount: 1_234.56,
+            product: .init(
+                type: .card(.init(cardIDRawValue)),
                 currency: "RUB"
             ),
-            product: .card(.init(cardIDRawValue)),
             comment: comment,
             puref: .init(purefRawValue),
             additional: [],
@@ -155,11 +155,11 @@ final class AnywayPaymentDigestTests: XCTestCase {
         let mccRawValue = anyMessage()
         let digest = makeAnywayPaymentDigest(
             check: true,
-            amount: .init(
-                value: 1_234.56,
+            amount: 1_234.56,
+            product: .init(
+                type: .account(.init(accountIDRawValue)),
                 currency: "RUB"
             ),
-            product: .account(.init(accountIDRawValue)),
             comment: comment,
             puref: .init(purefRawValue),
             additional: [],
@@ -187,7 +187,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
     
     private func makeAnywayPaymentDigest(
         check: Bool,
-        amount: AnywayPaymentDigest.Amount? = nil,
+        amount: Decimal? = nil,
         product: AnywayPaymentDigest.Product? = nil,
         comment: String? = nil,
         puref: AnywayPaymentDigest.Puref? = nil,

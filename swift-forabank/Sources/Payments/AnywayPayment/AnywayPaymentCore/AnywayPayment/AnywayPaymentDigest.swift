@@ -1,6 +1,6 @@
 //
 //  AnywayPaymentDigest.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 02.04.2024.
 //
@@ -12,7 +12,7 @@ public struct AnywayPaymentDigest: Equatable {
     
     // Признак проверки операции (если check="true", то OTP не отправляется, если check="false" - OTP отправляется)
     public let check: Bool
-    public let amount: Amount?
+    public let amount: Decimal?
     public let product: Product?
     public let comment: String?
     public let puref: Puref?
@@ -20,8 +20,8 @@ public struct AnywayPaymentDigest: Equatable {
     public let mcc: MCC?
     
     public init(
-        check: Bool, 
-        amount: Amount?,
+        check: Bool,
+        amount: Decimal?,
         product: Product?,
         comment: String?,
         puref: Puref?,
@@ -48,7 +48,7 @@ public extension AnywayPaymentDigest {
 }
 
 extension AnywayPaymentDigest {
-        
+    
     public struct Additional: Equatable {
         
         public let fieldID: Int
@@ -56,7 +56,7 @@ extension AnywayPaymentDigest {
         public let fieldValue: String
         
         public init(
-            fieldID: Int, 
+            fieldID: Int,
             fieldName: String,
             fieldValue: String
         ) {
@@ -65,38 +65,38 @@ extension AnywayPaymentDigest {
             self.fieldValue = fieldValue
         }
     }
+}
+
+public extension AnywayPaymentDigest {
     
-    public struct Amount: Equatable {
+    struct Product: Equatable {
         
-        public let value: Decimal
+        public let type: ProductType
         public let currency: Currency
         
         public init(
-            value: Decimal, 
+            type: ProductType,
             currency: Currency
         ) {
-            self.value = value
+            self.type = type
             self.currency = currency
         }
     }
 }
 
-public extension AnywayPaymentDigest.Amount {
+public extension AnywayPaymentDigest.Product {
     
     typealias Currency = Tagged<_Currency, String>
     enum _Currency {}
-}
-
-public extension AnywayPaymentDigest {
     
-    enum Product: Equatable {
+    enum ProductType: Equatable {
         
         case account(AccountID)
         case card(CardID)
     }
 }
 
-public extension AnywayPaymentDigest.Product {
+public extension AnywayPaymentDigest.Product.ProductType {
     
     typealias AccountID = Tagged<_AccountID, Int>
     enum _AccountID {}

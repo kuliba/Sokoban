@@ -19,11 +19,11 @@ public extension AnywayPaymentDigest {
         
         .init(
             check: check,
-            amount: amount?.value,
-            currencyAmount: amount?.currency.rawValue,
+            amount: amount,
+            currencyAmount: product?.currency.rawValue,
             payer: product.map {
                 
-                switch $0 {
+                switch $0.type {
                 case let .account(accountID):
                     return .init(cardId: nil, accountId: accountID.rawValue)
                     
