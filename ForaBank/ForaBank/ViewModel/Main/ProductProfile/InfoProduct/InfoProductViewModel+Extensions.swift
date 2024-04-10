@@ -145,13 +145,13 @@ extension InfoProductViewModel {
         
         var isAccountHolder: Bool {
             
-            (self.currentValues.first {
+            self.currentValues.first {
                 
                 if $0.id == .accountNumber {
                     return !$0.subtitle.isEmpty
                 }
                 return false
-            } != nil)
+            } != nil
         }
     }
 }
