@@ -90,7 +90,8 @@ extension AnywayPayment.Element {
     
     public enum Widget: Equatable {
         
-        case amount, otp
+        case amount(Decimal)
+        case otp
     }
 }
 

@@ -63,14 +63,14 @@ func makeAnywayPayment(
     fields: [AnywayPayment.Element.Field],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    hasAmount: Bool = false
+    amount: Decimal? = nil
 ) -> AnywayPayment {
     
     var elements = fields.map(AnywayPayment.Element.field)
-    if hasAmount {
-        elements.append(.widget(.amount))
+    if let amount {
+        elements.append(.widget(.amount(amount)))
     }
-    
+
     return makeAnywayPayment(
         elements: elements,
         isFinalStep: isFinalStep,
@@ -82,14 +82,14 @@ func makeAnywayPayment(
     parameters: [AnywayPayment.Element.Parameter] = [],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    hasAmount: Bool = false
+    amount: Decimal? = nil
 ) -> AnywayPayment {
     
     var elements = parameters.map(AnywayPayment.Element.parameter)
-    if hasAmount {
-        elements.append(.widget(.amount))
+    if let amount {
+        elements.append(.widget(.amount(amount)))
     }
-    
+
     return makeAnywayPayment(
         elements: elements,
         isFinalStep: isFinalStep,
@@ -123,11 +123,12 @@ func makeAnywayPaymentOutline(
 }
 
 func makeAnywayPaymentWithAmount(
+    _ amount: Decimal = 99_999.99,
     file: StaticString = #file,
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(hasAmount: true)
+    let payment = makeAnywayPayment(amount: amount)
     XCTAssert(hasAmountField(payment), "Expected amount field.", file: file, line: line)
     return payment
 }

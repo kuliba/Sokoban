@@ -1,6 +1,6 @@
 //
-//  AnywayPaymentDigestTests.swift
-//  
+//  AnywayPaymentDigestPropertyTests.swift
+//
 //
 //  Created by Igor Malyarov on 10.04.2024.
 //
@@ -14,7 +14,7 @@ extension AnywayPayment {
         
         .init(
             check: false,
-            amount: nil,
+            amount: amount,
             product: nil,
             comment: nil,
             puref: nil,
@@ -38,6 +38,14 @@ extension AnywayPayment {
         }
     }
     
+    private var amount: Decimal? {
+        
+        guard case let .widget(.amount(amount)) = elements.first(where: { $0.widget?.id == .amount })
+        else { return nil}
+        
+        return amount
+    }
+    
     private var fields: [Element.Parameter.Field] {
         
         elements.compactMap(\.parameter?.field)
@@ -52,9 +60,16 @@ private extension AnywayPayment.Element {
         
         return parameter
     }
+    
+    var widget: Widget? {
+        
+        guard case let .widget(widget) = self else { return nil }
+        
+        return widget
+    }
 }
 
-final class AnywayPaymentDigestTests: XCTestCase {
+final class AnywayPaymentDigestPropertyTests: XCTestCase {
     
     func test_shouldSetCheckToFalseOnPaymentWithoutOTP() {
         
@@ -68,6 +83,20 @@ final class AnywayPaymentDigestTests: XCTestCase {
         let payment = makeAnywayPaymentWithOTP()
         
         XCTAssertFalse(payment.digest.check)
+    }
+    
+    func test_shouldSetAmountToNilOnPaymentWithoutAmount() {
+        
+        let payment = makeAnywayPaymentWithoutAmount()
+        
+        XCTAssertNil(payment.digest.amount)
+    }
+    
+    func test_shouldSetAmountOnPaymentWithAmount() {
+        
+        let payment = makeAnywayPaymentWithAmount(1_234.56)
+        
+        XCTAssertNoDiff(payment.digest.amount, 1_234.56)
     }
     
     func test_shouldSetAdditionalToEmptyOnEmptyElements() {
