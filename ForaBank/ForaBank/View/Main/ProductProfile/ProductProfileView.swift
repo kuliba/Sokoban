@@ -437,6 +437,7 @@ extension ProductProfileViewModel {
         operationDetailFactory: .preview,
         productNavigationStateManager: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
+        productProfileViewModelFactory: .preview,
         rootView: ""
     )
     
@@ -455,6 +456,7 @@ extension ProductProfileViewModel {
         operationDetailFactory: .preview,
         productNavigationStateManager: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
+        productProfileViewModelFactory: .preview,
         rootView: ""
     )
 }
