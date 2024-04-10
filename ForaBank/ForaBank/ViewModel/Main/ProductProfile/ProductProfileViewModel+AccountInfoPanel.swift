@@ -30,13 +30,13 @@ extension ProductProfileViewModel {
     }
 }
 
-private extension String {
+extension String {
     
     static func accountDetailsTitle(by type: ProductCardData.CardType?) -> String {
         switch type {
-        case nil, .main, .regular, .additionalSelfAccOwn:
+        case nil, .main, .regular, .additionalSelfAccOwn, .additionalSelf:
             return "Реквизиты счета и карты"
-        case .additionalSelf, .additionalOther:
+        case .additionalOther:
             return "Реквизиты карты"
         }
     }
