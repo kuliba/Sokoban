@@ -1,5 +1,5 @@
 //
-//  UpdateAnywayPaymentTests.swift
+//  AnywayPaymentUpdateTests.swift
 //
 //
 //  Created by Igor Malyarov on 04.04.2024.
@@ -8,7 +8,7 @@
 import AnywayPaymentCore
 import XCTest
 
-final class UpdateAnywayPaymentTests: XCTestCase {
+final class AnywayPaymentUpdateTests: XCTestCase {
     
     // MARK: - amount
     
