@@ -196,13 +196,13 @@ final class AnywayPaymentDigestTests: XCTestCase {
     ) -> AnywayPaymentDigest {
         
         .init(
-            check: check,
-            amount: amount,
-            product: product,
-            comment: comment,
-            puref: puref,
             additional: additional,
-            mcc: mcc
+            amount: amount,
+            check: check,
+            comment: comment,
+            mcc: mcc,
+            product: product,
+            puref: puref
         )
     }
     

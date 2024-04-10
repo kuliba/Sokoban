@@ -13,13 +13,13 @@ extension AnywayPayment {
     var digest: AnywayPaymentDigest {
         
         .init(
-            check: false,
-            amount: amount,
-            product: nil,
-            comment: nil,
-            puref: nil,
             additional: additional,
-            mcc: nil
+            amount: amount,
+            check: false,
+            comment: nil,
+            mcc: nil,
+            product: nil,
+            puref: nil
         )
     }
     

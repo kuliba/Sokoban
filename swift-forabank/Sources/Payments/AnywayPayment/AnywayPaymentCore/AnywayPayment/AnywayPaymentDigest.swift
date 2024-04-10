@@ -10,31 +10,31 @@ import Tagged
 
 public struct AnywayPaymentDigest: Equatable {
     
+    public let additional: [Additional]
+    public let amount: Decimal?
     // Признак проверки операции (если check="true", то OTP не отправляется, если check="false" - OTP отправляется)
     public let check: Bool
-    public let amount: Decimal?
-    public let product: Product?
     public let comment: String?
-    public let puref: Puref?
-    public let additional: [Additional]
     public let mcc: MCC?
+    public let product: Product?
+    public let puref: Puref?
     
     public init(
-        check: Bool,
-        amount: Decimal?,
-        product: Product?,
-        comment: String?,
-        puref: Puref?,
         additional: [Additional],
-        mcc: MCC?
+        amount: Decimal?,
+        check: Bool,
+        comment: String?,
+        mcc: MCC?,
+        product: Product?,
+        puref: Puref?
     ) {
-        self.check = check
-        self.amount = amount
-        self.product = product
-        self.comment = comment
-        self.puref = puref
         self.additional = additional
+        self.amount = amount
+        self.check = check
+        self.comment = comment
         self.mcc = mcc
+        self.product = product
+        self.puref = puref
     }
 }
 
