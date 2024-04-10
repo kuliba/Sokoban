@@ -16,6 +16,7 @@ struct PaymentsTransfersView: View {
     @ObservedObject var viewModel: PaymentsTransfersViewModel
     
     let viewFactory: PaymentsTransfersViewFactory
+    let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
         
@@ -184,7 +185,7 @@ struct PaymentsTransfersView: View {
             QRFailedView(viewModel: failedViewModel)
             
         case let .c2b(c2bViewModel):
-            C2BDetailsView(viewModel: c2bViewModel)
+            C2BDetailsView(viewModel: c2bViewModel, getUImage: getUImage)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
                 .edgesIgnoringSafeArea(.all)
@@ -213,14 +214,15 @@ struct PaymentsTransfersView: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                viewFactory: viewFactory
+                viewFactory: viewFactory, 
+                getUImage: getUImage
             )
             
         case let .openDeposit(depositListViewModel):
-            OpenDepositDetailView(viewModel: depositListViewModel)
+            OpenDepositDetailView(viewModel: depositListViewModel, getUImage: getUImage)
             
         case let .openDepositsList(openDepositViewModel):
-            OpenDepositListView(viewModel: openDepositViewModel)
+            OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
             
         case let .sberQRPayment(sberQRPaymentViewModel):
             viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
@@ -577,7 +579,8 @@ struct Payments_TransfersView_Previews: PreviewProvider {
                     )
                 },
                 makeUserAccountView: UserAccountView.init(viewModel:)
-            )
+            ),
+            getUImage: { _ in nil }
         )
     }
 }

@@ -54,7 +54,8 @@ struct RootView: View {
                     dismissAll: viewModel.rootActions.dismissAll
                 ),
                 viewFactory: rootViewFactory.mainViewFactory,
-                paymentsTransfersViewFactory: rootViewFactory.paymentsTransfersViewFactory
+                paymentsTransfersViewFactory: rootViewFactory.paymentsTransfersViewFactory, 
+                getUImage: { viewModel.model.images.value[$0]?.uiImage }
             )
         }
         .taggedTabItem(.main, selected: viewModel.selected)
@@ -214,7 +215,8 @@ private extension RootViewFactory {
                     viewFactory: .init(
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeUserAccountView: UserAccountView.init(viewModel:)
-                    )
+                    ), 
+                    getUImage: { _ in nil }
                 )
             },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,

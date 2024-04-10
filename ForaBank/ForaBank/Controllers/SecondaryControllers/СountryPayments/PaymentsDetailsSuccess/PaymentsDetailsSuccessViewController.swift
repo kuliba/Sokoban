@@ -170,6 +170,7 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     
     func openDetailVC() {
         let vc = ContactConfurmViewController()
+        vc.getUImage = { self.model.images.value[$0]?.uiImage }
         vc.confurmVCModel = confurmVCModel
         vc.doneButton.isHidden = true
         vc.smsCodeField.isHidden = true

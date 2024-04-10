@@ -5,19 +5,23 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-public final class UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse> {
+public final class UtilityFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
+where Operator: Identifiable {
     
-    private let loadOptions: LoadOptions
+    private let loadPrepaymentOptions: LoadPrepaymentOptions
     private let loadServices: LoadServices
+    private let optionsEffectHandle: OptionsEffectHandle
     private let startPayment: StartPayment
     
     public init(
-        loadOptions: @escaping LoadOptions,
+        loadPrepaymentOptions: @escaping LoadPrepaymentOptions,
         loadServices: @escaping LoadServices,
+        optionsEffectHandle: @escaping OptionsEffectHandle,
         startPayment: @escaping StartPayment
     ) {
-        self.loadOptions = loadOptions
+        self.loadPrepaymentOptions = loadPrepaymentOptions
         self.loadServices = loadServices
+        self.optionsEffectHandle = optionsEffectHandle
         self.startPayment = startPayment
     }
 }
@@ -29,8 +33,14 @@ public extension UtilityFlowEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case .initiate:
-            self.initiate(dispatch)
+        case .initiatePrepayment:
+            self.initiatePrepayment(dispatch)
+            
+        case let .prepaymentOptions(optionEffect):
+            self.optionsEffectHandle(optionEffect) {
+                
+                dispatch(.prepaymentOptions($0))
+            }
             
         case let .select(select):
             self.select(select, dispatch)
@@ -40,15 +50,20 @@ public extension UtilityFlowEffectHandler {
 
 public extension UtilityFlowEffectHandler {
     
-    typealias LoadOptionsResponse = ([LastPayment], [Operator])
-    typealias LoadOptionsResult = Result<LoadOptionsResponse, Error>
-    typealias LoadOptionsCompletion = (LoadOptionsResult) -> Void
-    typealias LoadOptions = (@escaping LoadOptionsCompletion) -> Void
+    typealias LoadPrepaymentOptionsResponse = ([LastPayment], [Operator])
+    typealias LoadPrepaymentOptionsResult = Result<LoadPrepaymentOptionsResponse, Error>
+    typealias LoadPrepaymentOptionsCompletion = (LoadPrepaymentOptionsResult) -> Void
+    typealias LoadPrepaymentOptions = (@escaping LoadPrepaymentOptionsCompletion) -> Void
     
     typealias LoadServicesPayload = Operator
     typealias LoadServicesResult = Result<[Service], Error>
     typealias LoadServicesCompletion = (LoadServicesResult) -> Void
     typealias LoadServices = (LoadServicesPayload, @escaping LoadServicesCompletion) -> Void
+    
+    typealias OptionsEvent = PrepaymentOptionsEvent<LastPayment, Operator>
+    typealias OptionsEffect = PrepaymentOptionsEffect<Operator>
+    typealias OptionsDispatch = (OptionsEvent) -> Void
+    typealias OptionsEffectHandle = (OptionsEffect, @escaping OptionsDispatch) -> Void
     
     enum StartPaymentPayload {
         
@@ -70,20 +85,20 @@ extension UtilityFlowEffectHandler.StartPaymentPayload: Equatable where LastPaym
 
 private extension UtilityFlowEffectHandler {
     
-    func initiate(
+    func initiatePrepayment(
         _ dispatch: @escaping Dispatch
     ) {
-        loadOptions {
+        loadPrepaymentOptions {
             
             switch $0 {
             case .failure:
-                dispatch(.loaded(.failure))
+                dispatch(.prepaymentLoaded(.failure))
                 
             case let .success((lastPayments, operators)):
                 if operators.isEmpty {
-                    dispatch(.loaded(.failure))
+                    dispatch(.prepaymentLoaded(.failure))
                 } else {
-                    dispatch(.loaded(.success(lastPayments, operators)))
+                    dispatch(.prepaymentLoaded(.success(lastPayments, operators)))
                 }
             }
         }
@@ -145,7 +160,7 @@ private extension UtilityFlowEffectHandler {
             }
             
         default:
-            dispatch(.loadedServices(services))
+            dispatch(.servicesLoaded(services))
         }
     }
 }

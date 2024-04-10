@@ -7,6 +7,7 @@
 
 import FastPaymentsSettings
 import Foundation
+import RemoteServices
 
 extension RequestFactory {
     
@@ -18,7 +19,7 @@ extension RequestFactory {
         let endpoint = Services.Endpoint.getBankDefault
         let endpointURL = try! endpoint.url(withBase: base)
         
-        return try FastPaymentsSettings.RequestFactory.createGetBankDefaultRequest(
+        return try RemoteServices.RequestFactory.createGetBankDefaultRequest(
             url: endpointURL,
             payload: payload
         )

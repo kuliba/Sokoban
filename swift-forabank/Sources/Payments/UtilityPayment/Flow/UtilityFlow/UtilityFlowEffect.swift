@@ -5,14 +5,18 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-public enum UtilityFlowEffect<LastPayment, Operator, Service> {
+public enum UtilityFlowEffect<LastPayment, Operator, Service>
+where Operator: Identifiable {
     
-    case initiate
+    case initiatePrepayment
+    case prepaymentOptions(Options)
     case select(Select)
 }
 
 public extension UtilityFlowEffect {
     
+    typealias Options = PrepaymentOptionsEffect<Operator>
+
     enum Select {
         
         case last(LastPayment)

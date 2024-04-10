@@ -7,6 +7,7 @@
 
 import Foundation
 
+@available(*, deprecated, message: "Use `PrepaymentOptionsEffectHandler` from `UtilityPayment` module")
 public final class PrePaymentOptionsEffectHandler<LastPayment, Operator>
 where Operator: Identifiable {
     

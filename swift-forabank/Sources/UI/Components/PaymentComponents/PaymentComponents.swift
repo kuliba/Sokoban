@@ -7,6 +7,7 @@
 
 @_exported import AmountComponent
 @_exported import ButtonComponent
+@_exported import CarouselComponent
 @_exported import FooterComponent
 @_exported import InputComponent
 @_exported import InputPhoneComponent

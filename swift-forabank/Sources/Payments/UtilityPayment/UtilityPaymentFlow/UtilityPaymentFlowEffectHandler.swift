@@ -7,6 +7,7 @@
 
 import PrePaymentPicker
 
+@available(*, deprecated, message: "use `UtilityFlowEffectHandler`")
 public final class UtilityPaymentFlowEffectHandler<LastPayment, Operator, Response, Service>
 where Operator: Identifiable {
     

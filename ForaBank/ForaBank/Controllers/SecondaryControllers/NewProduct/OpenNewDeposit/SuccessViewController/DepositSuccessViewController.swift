@@ -56,6 +56,7 @@ class DepositSuccessViewController: UIViewController {
         stackView.addArrangedSubview(cardFromField)
 
         amountLabel.isHidden = true
+        cardFromField.getUImage = { self.model.images.value[$0]?.uiImage }
         cardFromField.titleLabel.text = "Счет списания"
         cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         cardFromField.imageView.isHidden = false
@@ -118,6 +119,7 @@ class DepositSuccessViewController: UIViewController {
     }
     
     func setupData(with model: ConfirmViewControllerModel) {
+        cardFromField.getUImage = { self.model.images.value[$0]?.uiImage }
         cardFromField.model = model.cardFromRealm
         termField.text = model.phone ?? ""
         incomeField.text = model.summTransction
@@ -126,6 +128,7 @@ class DepositSuccessViewController: UIViewController {
     
     func openDetailVC() {
         let vc = ContactConfurmViewController()
+        vc.getUImage = { self.model.images.value[$0]?.uiImage }
         vc.confurmVCModel = confurmVCModel
         vc.doneButton.isHidden = true
         vc.smsCodeField.isHidden = true

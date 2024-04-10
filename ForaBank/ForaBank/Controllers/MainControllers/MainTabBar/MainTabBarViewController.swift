@@ -65,6 +65,7 @@ class MainTabBarViewController: UITabBarController {
         
         if GlobalModule.c2bURL != nil {
             let controller = C2BDetailsViewController.storyboardInstance()!
+            controller.getUImage = { self.mainVC.model.images.value[$0]?.uiImage }
             let nc = UINavigationController(rootViewController: controller)
             nc.modalPresentationStyle = .fullScreen
             present(nc, animated: false)

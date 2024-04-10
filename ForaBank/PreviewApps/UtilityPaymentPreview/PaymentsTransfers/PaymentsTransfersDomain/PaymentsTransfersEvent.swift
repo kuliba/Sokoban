@@ -10,14 +10,15 @@ import UtilityPayment
 enum PaymentsTransfersEvent: Equatable {
     
     case flow(FlowEvent)
-    case tap(TapEvent)
+    // events that lead to changes of state that are out of `PaymentsTransfers` domain scope, like tab switching
+    case alienScope(AlienScopeEvent)
 }
 
 extension PaymentsTransfersEvent {
     
     typealias FlowEvent = PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService, StartPayment>
     
-    enum TapEvent: Equatable {
+    enum AlienScopeEvent: Equatable {
         
         case addCompany
         case goToMain

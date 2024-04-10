@@ -86,6 +86,17 @@ final class Model_PaymentsC2BTests: XCTestCase {
         ])
     }
     
+    func test_paymentsC2BReduceScenarioData_shouldReturnParameterSubscriber() {
+
+        let sut = Model.emptyMock
+        let parameter = try? sut.paymentsC2BReduceScenarioData(
+            data: [.init(PaymentParameterSubscriber.stub())],
+            c2b: .default
+        ).first
+        
+        XCTAssertNoDiff(parameter?.id, "id")
+    }
+    
     // MARK: - Helpers
     
     private func parameterProductStub(
@@ -228,6 +239,20 @@ extension ProductData {
             smallBackgroundDesignHash: "",
             detailedRatesUrl: "",
             detailedConditionUrl: ""
+        )
+    }
+}
+
+private extension PaymentParameterSubscriber {
+    
+    static func stub() -> Self {
+        .init(
+            id: "id",
+            value: "value",
+            icon: "icon",
+            legalName: "legalName",
+            subscriptionPurpose: "subscriptionPurpose",
+            style: .small
         )
     }
 }

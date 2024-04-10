@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import Services
+import RemoteServices
 
-public typealias GetProductDetailsResponseMapper = Services.ResponseMapper
+public typealias GetProductDetailsResponseMapper = RemoteServices.ResponseMapper
 
-public typealias GetProductDetailsMappingError = Services.ResponseMapper.MappingError
+public typealias GetProductDetailsMappingError = RemoteServices.ResponseMapper.MappingError
 
 public extension ResponseMapper {
     

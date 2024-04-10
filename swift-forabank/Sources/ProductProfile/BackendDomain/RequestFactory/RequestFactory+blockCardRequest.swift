@@ -7,7 +7,7 @@
 
 import Foundation
 import Tagged
-import Services
+import RemoteServices
 
 public extension RequestFactory {
         

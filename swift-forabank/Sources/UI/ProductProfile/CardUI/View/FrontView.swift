@@ -10,30 +10,33 @@ import SwiftUI
 
 //MARK: - View
 
-public struct FrontView<Header: View, Footer: View>: View {
+struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
     
     let name: String
-    let balance: Balance
-    
+    let modifierConfig: ModifierConfig
     let config: Config
     let headerView: () -> Header
-    let footerView: (Balance) -> Footer
+    let footerView: () -> Footer
     
-    public init(
+    let statusActionView: () -> StatusAction?
+    
+    init(
         name: String,
-        balance: Balance,
+        modifierConfig: ModifierConfig,
         config: Config,
         headerView: @escaping () -> Header,
-        footerView: @escaping (Balance) -> Footer
+        footerView: @escaping () -> Footer,
+        statusActionView: @escaping () -> StatusAction?
     ) {
         self.name = name
-        self.balance = balance
+        self.modifierConfig = modifierConfig
         self.config = config
         self.headerView = headerView
         self.footerView = footerView
+        self.statusActionView = statusActionView
     }
     
-    public var body: some View {
+    var body: some View {
         
         VStack(alignment: .leading, spacing: 0) {
             
@@ -49,10 +52,26 @@ public struct FrontView<Header: View, Footer: View>: View {
                     .opacity(0.5)
                     .accessibilityIdentifier("productName")
                 
-                footerView(balance)
+                footerView()
             }
             .frame(maxHeight: .infinity, alignment: .bottom)
         }
+        .card(
+            isChecked: modifierConfig.isChecked,
+            isUpdating: modifierConfig.isUpdating,
+            statusActionView: statusActionView(),
+            config: config,
+            isFrontView: true,
+            action: modifierConfig.action
+        )
+        .animation(
+            isShowingCardBack: modifierConfig.isShowingCardBack,
+            cardWiggle: modifierConfig.cardWiggle,
+            opacity: .init(
+                startValue: 0,
+                endValue: modifierConfig.opacity),
+            radians: .init(startValue: .pi, endValue: 2 * .pi)
+        )
     }
 }
 
@@ -64,37 +83,48 @@ struct FrontView_Previews: PreviewProvider {
             
             FrontView(
                 name: "Name",
-                balance: .init("123 RUB"),
-                config: .config(.preview),
+                modifierConfig: .previewUpdating,
+                config: .config(.previewCard),
                 headerView: {
-                    HeaderBackView(
-                        cardInfo: .previewWiggleFalse,
-                        action: { print("action") },
-                        config: .config(.preview))
+                    HeaderView(
+                        config: .config(.previewCard),
+                        header: .init(
+                            number: "111111",
+                            icon: Image(systemName: "snowflake.circle"))
+                    )
                 },
                 footerView: {
                     FooterView(
-                        config: .config(.preview),
-                        footer: .init(balance: $0.rawValue))
+                        config: .config(.previewCard),
+                        footer: .init(balance: "123 RUB"))
+                },
+                statusActionView: {
+                    EmptyView()
                 })
             .fixedSize()
             
             FrontView(
                 name: "Name",
-                balance: .init("123012 RUB"),
-                config: .config(.preview),
+                modifierConfig: .previewFront,
+                config: .config(.previewAccount),
                 headerView: {
-                    HeaderBackView(
-                        cardInfo: .previewWiggleFalse,
-                        action: { print("action") },
-                        config: .config(.preview))
+                    HeaderView(
+                        config: .config(.previewCard),
+                        header: .init(
+                            number: "111111",
+                            icon: Image(systemName: "snowflake.circle.fill"))
+                    )
                 },
                 footerView: {
                     FooterView(
-                        config: .config(.preview),
-                        footer: .init(balance: $0.rawValue, interestRate: "8.05"))
+                        config: .config(.previewCard),
+                        footer: .init(balance: "123012 RUB", interestRate: "8.05"))
+                },
+                statusActionView: {
+                    EmptyView()
                 })
             .fixedSize()
         }
     }
 }
+

@@ -51,6 +51,11 @@ class ProductData: Identifiable, Codable {
     let smallDesignMd5hash: String
     let smallBackgroundDesignHash: String
     
+#warning("For compability with rest/v5/getProductListByType")
+    var mediumDesignMd5Hash: String = ""
+    var largeDesignMd5Hash: String = ""
+    var xlDesignMd5Hash: String = ""
+    
     init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], order: Int, isVisible: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
         
         self.id = id
@@ -337,12 +342,14 @@ extension ProductData {
         
         case blockedByClient = "Блокирована по решению Клиента"
         case active = "Действует"
+        case notActivated = "Не активирована"
         case issuedToClient = "Выдано клиенту"
+        case blockedUnlockAvailable = "Карта блокирована, разблокировка доступна"
         case blockedByBank = "Заблокирована банком"
         case notBlocked = "NOT_BLOCKED"
         case blockedDebet = "BLOCKED_DEBET"
         case blockedCredit = "BLOCKED_CREDIT"
-        case blocked = "BLOCKED"
+        case blocked = "BLOCKED" 
         case unknown
     }
     
@@ -410,24 +417,15 @@ extension ProductData {
     
     var currencyValue: Currency { .init(description: currency) }
     
-    var paymentSystem: Image? {
+    var paymentSystemMd5Hash: String {
         
         guard let paymentSystem = self as? ProductCardData else {
-            return nil
+            return ""
         }
         
-        return paymentSystem.paymentSystemImage?.image
+        return paymentSystem.paymentSystemImageMd5Hash
     }
-    
-    var paymentSystemData: Data? {
         
-        guard let paymentSystem = self as? ProductCardData else {
-            return nil
-        }
-        
-        return paymentSystem.paymentSystemImage?.imageData
-    }
-    
     var description: [String] {
         
         [

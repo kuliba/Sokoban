@@ -8,12 +8,6 @@
 import SwiftUI
 import CardUI
 
-struct Values {
-    
-    let startValue: Double
-    let endValue: Double
-}
-
 extension CardUI.Config.Back {
     
     static let backConfig: Self = .init(
@@ -60,8 +54,10 @@ extension CardUI.Config {
                 foreground: .mainColorsWhite,
                 background: .textPlaceholder,
                 rateFill: .mainColorsGrayMedium,
-                rateForeground: .textSecondary),
-            copyImage: .ic24Copy
+                rateForeground: .textSecondary,
+                checkForeground: .mainColorsBlack
+            ),
+            images: .init(copy: .ic24Copy, check: .ic16Check) 
         )
     }
     

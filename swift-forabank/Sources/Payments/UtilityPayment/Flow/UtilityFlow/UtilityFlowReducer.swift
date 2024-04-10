@@ -5,9 +5,16 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-public final class UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse> {
+public final class UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse>
+where Operator: Identifiable {
     
-    public init() {}
+    private let ppoReduce: PPOReduce
+    
+    public init(
+        ppoReduce: @escaping PPOReduce
+    ) {
+        self.ppoReduce = ppoReduce
+    }
 }
 
 public extension UtilityFlowReducer {
@@ -24,25 +31,28 @@ public extension UtilityFlowReducer {
         case .back:
             state.current = nil
             
-        case .initiate:
+        case .initiatePrepayment:
             if state.isEmpty {
-                effect = .initiate
+                effect = .initiatePrepayment
             }
-            
-        case let .loaded(loaded):
-            state = reduce(state, loaded)
-            
-        case let .loadedServices(services):
-            state.push(.services(services))
             
         case let .paymentStarted(result):
             state = reduce(state, result)
+            
+        case let .prepaymentLoaded(prepaymentLoaded):
+            state = reduce(state, prepaymentLoaded)
+            
+        case let .prepaymentOptions(prepaymentOptions):
+            (state, effect) = reduce(state, prepaymentOptions)
             
         case let .select(select):
             reduce(state, select, &effect)
             
         case let .selectFailure(`operator`):
             state.push(.selectFailure(`operator`))
+            
+        case let .servicesLoaded(services):
+            state.push(.services(services))
         }
         
         return (state, effect)
@@ -51,6 +61,11 @@ public extension UtilityFlowReducer {
 
 public extension UtilityFlowReducer {
     
+    typealias PPOState = PrepaymentOptionsState<LastPayment, Operator>
+    typealias PPOEvent = PrepaymentOptionsEvent<LastPayment, Operator>
+    typealias PPOEffect = PrepaymentOptionsEffect<Operator>
+    typealias PPOReduce = (PPOState, PPOEvent) -> (PPOState, PPOEffect?)
+
     typealias Destination = UtilityDestination<LastPayment, Operator, Service>
     
     typealias State = Flow<Destination>
@@ -62,14 +77,14 @@ private extension UtilityFlowReducer {
     
     func reduce(
         _ state: State,
-        _ loaded: Event.Loaded
+        _ prepaymentLoaded: Event.PrepaymentLoaded
     ) -> State {
         
         var state = state
         
         if state.isEmpty {
             
-            switch loaded {
+            switch prepaymentLoaded {
             case .failure:
                 state.current = .prepayment(.failure)
                 
@@ -82,6 +97,24 @@ private extension UtilityFlowReducer {
         }
         
         return state
+    }
+    
+    func reduce(
+        _ state: State,
+        _ prepaymentEvent: Event.OptionsEvent
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        if case let .prepayment(.options(prepayment)) = state.current {
+            
+            let (s, e) = ppoReduce(prepayment, prepaymentEvent)
+            state.current = .prepayment(.options(s))
+            effect = e.map { .prepaymentOptions($0) }
+        }
+        
+        return (state, effect)
     }
     
     func reduce(

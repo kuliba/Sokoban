@@ -87,6 +87,54 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertTrue(sut.hasTemplate(withID: templateID))
     }
     
+    func test_bankParameter_sourceSFP_shouldReturnParameter() {
+        
+        let sut: Model = .mockWithEmptyExcept()
+        let operation = Payments.Operation(
+            service: .sfp,
+            source: .sfp(phone: "phone", bankId: "1")
+        )
+        
+        let bankParameter = sut.createBankParameter(
+            latestPaymentBankIds: nil,
+            operation,
+            operationPhone: nil,
+            banksIds: []
+        )
+        
+        XCTAssertNoDiff(bankParameter.parameter.id, Self.bankParameterTest.id)
+    }
+    
+    func test_bankParameter_sourceLatestPayment_shouldReturnParameter() {
+        
+        let sut: Model = .mockWithEmptyExcept()
+        sut.bankList.value = [.dummy(id: "1", bankType: .sfp, bankCountry: "RU")]
+        sut.latestPayments.value = [PaymentGeneralData(
+            id: 1,
+            amount: nil,
+            bankId: "",
+            bankName: nil,
+            date: Date(),
+            paymentDate: "",
+            phoneNumber: "",
+            type: .phone
+        )]
+        
+        let operation = Payments.Operation(
+            service: .sfp,
+            source: .latestPayment(1)
+        )
+        
+        let bankParameter = sut.createBankParameter(
+            latestPaymentBankIds: nil,
+            operation,
+            operationPhone: nil,
+            banksIds: []
+        )
+        
+        XCTAssertNoDiff(bankParameter.parameter.id, Self.bankParameterTest.id)
+    }
+    
     // MARK: - Helpers
     
     private func makeTemplate(
@@ -108,6 +156,19 @@ final class Model_PaymensSFPTests: XCTestCase {
             ]
         )
     }
+}
+
+extension Model_PaymensSFPTests {
+    
+    private static let bankParameterTest = Payments.ParameterSelectBank(
+        .init(id: Payments.Parameter.Identifier.sfpBank.rawValue, value: nil),
+        icon: .iconPlaceholder,
+        title: "Банк получателя",
+        options: [],
+        placeholder: "Начните ввод для поиска",
+        selectAll: .init(type: .banks),
+        keyboardType: .normal
+    )
 }
 
 extension Model {

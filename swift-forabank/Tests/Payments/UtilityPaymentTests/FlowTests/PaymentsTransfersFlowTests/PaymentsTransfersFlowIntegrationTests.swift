@@ -11,11 +11,21 @@ import XCTest
 
 final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
     
+    func test_init_shouldNotCallCollaborators() {
+        
+        let (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter) = makeSUT()
+
+        XCTAssertEqual(operatorsLoader.callCount, 0)
+        XCTAssertEqual(optionsLoader.callCount, 0)
+        XCTAssertEqual(servicesLoader.callCount, 0)
+        XCTAssertEqual(paymentStarter.callCount, 0)
+    }
+    
     // MARK: - back
     
     func test_back_shouldNotChangeNilRouteState() {
         
-        let (sut, spy, _,_,_) = makeSUT(initialRoute: nil)
+        let (sut, spy, _,_,_,_) = makeSUT(initialRoute: nil)
         
         sut.event(.back)
         sut.event(.back)
@@ -36,14 +46,14 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
         let lastPayment = makeLastPayment()
         let (_, operators) = makeOperatorOperators()
         let prepayment = makePrepayment([lastPayment], operators)
-        let (sut, spy, optionsLoader, _,_) = makeSUT(initialRoute: nil)
+        let (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
         
-        sut.event(.utilityFlow(.initiate))
+        sut.event(.utilityFlow(.initiatePrepayment))
         optionsLoader.complete(with: .failure(anyError()))
         
         sut.event(.back)
         
-        sut.event(.utilityFlow(.initiate))
+        sut.event(.utilityFlow(.initiatePrepayment))
         optionsLoader.complete(with: .success(([lastPayment], operators)), at: 1)
         
         assert(
@@ -69,9 +79,9 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
         let lastPayment = makeLastPayment()
         let (_, operators) = makeOperatorOperators()
         let prepayment = makePrepayment([lastPayment], operators)
-        let (sut, spy, optionsLoader, _, paymentStarter) = makeSUT(initialRoute: nil)
+        let (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
         
-        sut.event(.utilityFlow(.initiate))
+        sut.event(.utilityFlow(.initiatePrepayment))
         optionsLoader.complete(with: .success(([lastPayment], operators)))
         
         sut.event(.utilityFlow(.select(.last(lastPayment))))
@@ -96,9 +106,9 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
         let lastPayment = makeLastPayment()
         let (`operator`, operators) = makeOperatorOperators()
         let prepayment = makePrepayment([lastPayment], operators)
-        let (sut, spy, optionsLoader, servicesLoader, _) = makeSUT(initialRoute: nil)
+        let (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
         
-        sut.event(.utilityFlow(.initiate))
+        sut.event(.utilityFlow(.initiatePrepayment))
         optionsLoader.complete(with: .success(([lastPayment], operators)))
         
         sut.event(.utilityFlow(.select(.operator(`operator`))))
@@ -124,9 +134,9 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
         let (`operator`, operators) = makeOperatorOperators()
         let prepayment = makePrepayment([lastPayment], operators)
         let service = makeService()
-        let (sut, spy, optionsLoader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
+        let (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
         
-        sut.event(.utilityFlow(.initiate))
+        sut.event(.utilityFlow(.initiatePrepayment))
         optionsLoader.complete(with: .success(([lastPayment], operators)))
         
         sut.event(.utilityFlow(.select(.operator(`operator`))))
@@ -153,9 +163,9 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
         let (`operator`, operators) = makeOperatorOperators()
         let prepayment = makePrepayment([lastPayment], operators)
         let (service, services) = makeServiceServices()
-        let (sut, spy, optionsLoader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
+        let (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
         
-        sut.event(.utilityFlow(.initiate))
+        sut.event(.utilityFlow(.initiatePrepayment))
         optionsLoader.complete(with: .success(([lastPayment], operators)))
         
         sut.event(.utilityFlow(.select(.operator(`operator`))))
@@ -185,9 +195,9 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
         let lastPayment = makeLastPayment()
         let (_, operators) = makeOperatorOperators()
         let prepayment = makePrepayment([lastPayment], operators)
-        let (sut, spy, optionsLoader, _, paymentStarter) = makeSUT(initialRoute: nil)
+        let (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
         
-        sut.event(.utilityFlow(.initiate))
+        sut.event(.utilityFlow(.initiatePrepayment))
         optionsLoader.complete(with: .success(([lastPayment], operators)))
         
         sut.event(.utilityFlow(.select(.last(lastPayment))))
@@ -220,9 +230,9 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
         let (`operator`, operators) = makeOperatorOperators()
         let prepayment = makePrepayment([lastPayment], operators)
         let service = makeService()
-        let (sut, spy, optionsLoader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
+        let (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
         
-        sut.event(.utilityFlow(.initiate))
+        sut.event(.utilityFlow(.initiatePrepayment))
         optionsLoader.complete(with: .success(([lastPayment], operators)))
         
         sut.event(.utilityFlow(.select(.operator(`operator`))))
@@ -256,9 +266,9 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
         let (`operator`, operators) = makeOperatorOperators()
         let prepayment = makePrepayment([lastPayment], operators)
         let (service, services) = makeServiceServices()
-        let (sut, spy, optionsLoader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
+        let (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter) = makeSUT(initialRoute: nil)
         
-        sut.event(.utilityFlow(.initiate))
+        sut.event(.utilityFlow(.initiatePrepayment))
         optionsLoader.complete(with: .success(([lastPayment], operators)))
         
         sut.event(.utilityFlow(.select(.operator(`operator`))))
@@ -309,33 +319,45 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
     
     private typealias EffectHandler = PaymentsTransfersFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
     
-    private typealias OptionsLoaderSpy = Spy<Void, UtilityEffectHandler.LoadOptionsResult>
-    private typealias ServicesLoaderSpy = Spy<UtilityEffectHandler.LoadServicesPayload, UtilityEffectHandler.LoadServicesResult>
-    private typealias PaymentStarterSpy = Spy<UtilityEffectHandler.StartPaymentPayload, UtilityEffectHandler.StartPaymentResult>
-    
     private func makeSUT(
         initialRoute: State.Route? = nil,
+        ppoStub: [(PPOState, PPOEffect?)] = [makePPOStub()],
+        debounce: DispatchTimeInterval = .never,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
         spy: StateSpy,
+        operatorsLoader: LoadOperatorsSpy,
         optionsLoader: OptionsLoaderSpy,
         servicesLoader: ServicesLoaderSpy,
         paymentStarter: PaymentStarterSpy
     ) {
-        let utilityReducer = UtilityReducer()
+        let scheduler: AnySchedulerOfDispatchQueue = .immediate
+        
+        let ppoReducer = PPOReducer(stub: ppoStub)
+        let utilityReducer = UtilityReducer(
+            ppoReduce: ppoReducer.reduce(_:_:)
+        )
         let reducer = Reducer(
             utilityReduce: utilityReducer.reduce(_:_:)
         )
         
+        let operatorsLoader = LoadOperatorsSpy()
+        let optionsEffectHandler = OptionsEffectHandler(
+            debounce: debounce,
+            loadOperators: operatorsLoader.process,
+            scheduler: scheduler
+        )
+
         let optionsLoader = OptionsLoaderSpy()
         let servicesLoader = ServicesLoaderSpy()
         let paymentStarter = PaymentStarterSpy()
         
         let utilityEffectHandler = UtilityEffectHandler(
-            loadOptions: optionsLoader.process,
+            loadPrepaymentOptions: optionsLoader.process,
             loadServices: servicesLoader.process,
+            optionsEffectHandle: optionsEffectHandler.handleEffect,
             startPayment: paymentStarter.process
         )
         
@@ -347,7 +369,7 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
             initialState: .init(route: initialRoute),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: .immediate
+            scheduler: scheduler
         )
         
         let spy = StateSpy(sut.$state)
@@ -355,13 +377,16 @@ final class PaymentsTransfersFlowIntegrationTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(spy, file: file, line: line)
         trackForMemoryLeaks(reducer, file: file, line: line)
+        trackForMemoryLeaks(ppoReducer, file: file, line: line)
+        trackForMemoryLeaks(utilityReducer, file: file, line: line)
         trackForMemoryLeaks(effectHandler, file: file, line: line)
         trackForMemoryLeaks(utilityEffectHandler, file: file, line: line)
+        trackForMemoryLeaks(operatorsLoader, file: file, line: line)
         trackForMemoryLeaks(optionsLoader, file: file, line: line)
         trackForMemoryLeaks(servicesLoader, file: file, line: line)
         trackForMemoryLeaks(paymentStarter, file: file, line: line)
         
-        return (sut, spy, optionsLoader, servicesLoader, paymentStarter)
+        return (sut, spy, operatorsLoader, optionsLoader, servicesLoader, paymentStarter)
     }
     
     private func assert(

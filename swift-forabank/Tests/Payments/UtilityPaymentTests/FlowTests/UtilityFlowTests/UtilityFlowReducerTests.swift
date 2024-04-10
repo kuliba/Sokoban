@@ -62,142 +62,34 @@ final class UtilityFlowReducerTests: XCTestCase {
         assert(.back, on: multiFlowState, effect: nil)
     }
     
-    // MARK: - initiate
+    // MARK: - initiatePrepayment
     
-    func test_initiate_shouldNotChangeEmptyState() {
+    func test_initiatePrepayment_shouldNotChangeEmptyState() {
         
         let emptyState = makeFlow()
         
-        assertState(.initiate, on: emptyState)
+        assertState(.initiatePrepayment, on: emptyState)
     }
     
-    func test_initiate_shouldDeliverEffectOnEmptyState() {
+    func test_initiatePrepayment_shouldDeliverEffectOnEmptyState() {
         
         let emptyState = makeFlow()
         
-        assert(.initiate, on: emptyState, effect: .initiate)
+        assert(.initiatePrepayment, on: emptyState, effect: .initiatePrepayment)
     }
     
-    func test_initiate_shouldNotChangeNonEmptyState() {
+    func test_initiatePrepayment_shouldNotChangeNonEmptyState() {
         
         let nonEmptyState = makeSingleDestinationUtilityFlow()
         
-        assertState(.initiate, on: nonEmptyState)
+        assertState(.initiatePrepayment, on: nonEmptyState)
     }
     
-    func test_initiate_shouldNotDeliverEffectOnNonEmptyState() {
+    func test_initiatePrepayment_shouldNotDeliverEffectOnNonEmptyState() {
         
         let nonEmptyState = makeSingleDestinationUtilityFlow()
         
-        assert(.initiate, on: nonEmptyState, effect: nil)
-    }
-    
-    // MARK: - loaded
-    
-    func test_loaded_shouldChangeStateToFailureOnLoadFailureOnEmptyState() {
-        
-        let emptyState = makeFlow()
-        
-        assertState(.loaded(.failure), on: emptyState) {
-            
-            $0.push(.prepayment(.failure))
-        }
-    }
-    
-    func test_loaded_shouldNotDeliverEffectOnLoadFailureOnEmptyState() {
-        
-        let emptyState = makeFlow()
-        
-        assert(.loaded(.failure), on: emptyState, effect: nil)
-    }
-    
-    func test_loaded_shouldNotChangeStateOnLoadFailureOnNonEmptyState() {
-        
-        let nonEmptyState = makeSingleDestinationUtilityFlow()
-        
-        assertState(.loaded(.failure), on: nonEmptyState)
-    }
-    
-    func test_loaded_shouldNotDeliverEffectOnLoadFailureOnNonEmptyState() {
-        
-        let nonEmptyState = makeSingleDestinationUtilityFlow()
-        
-        assert(.loaded(.failure), on: nonEmptyState, effect: nil)
-    }
-    
-    func test_loaded_shouldChangeEmptyStateOnLoadSuccess_emptyLastPayments() {
-        
-        let operators = [makeOperator()]
-        let emptyState = makeFlow()
-        
-        assertState(.loaded(.success([], operators)), on: emptyState) {
-            
-            $0.push(makePrepayment([], operators))
-        }
-    }
-    
-    func test_loaded_shouldNotDeliverEffectOnLoadSuccessOnEmptyState_emptyLastPayments() {
-        
-        let operators = [makeOperator()]
-        let emptyState = makeFlow()
-        
-        assert(.loaded(.success([], operators)), on: emptyState, effect: nil)
-    }
-    
-    func test_loaded_shouldChangeEmptyStateOnLoadSuccess_nonEmptyLastPayments() {
-        
-        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
-        let emptyState = makeFlow()
-        
-        assertState(.loaded(.success(lastPayments, operators)), on: emptyState) {
-            
-            $0.push(makePrepayment(lastPayments, operators))
-        }
-    }
-    
-    func test_loaded_shouldNotDeliverEffectOnLoadSuccessOnEmptyState_nonEmptyLastPayments() {
-        
-        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
-        let emptyState = makeFlow()
-        
-        assert(.loaded(.success(lastPayments, operators)), on: emptyState, effect: nil)
-    }
-    
-    func test_loaded_shouldNotChangeNonEmptyStateOnLoadSuccess() {
-        
-        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
-        let nonEmptyState = makeSingleDestinationUtilityFlow()
-        
-        assertState(.loaded(.success(lastPayments, operators)), on: nonEmptyState)
-    }
-    
-    func test_loaded_shouldNotDeliverEffectOnLoadSuccessOnNonEmptyState() {
-        
-        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
-        let nonEmptyState = makeSingleDestinationUtilityFlow()
-        
-        assert(.loaded(.success(lastPayments, operators)), on: nonEmptyState, effect: nil)
-    }
-    
-    // MARK: - loadedServices
-    
-    func test_loadedServices_shouldPushServicesDestinationOnTop() {
-        
-        let state = makeFlow()
-        let services = makeServices()
-        
-        assertState(.loadedServices(services), on: state) {
-            
-            $0.push(.services(services))
-        }
-    }
-    
-    func test_loadedServices_shouldNotDeliverEffect() {
-        
-        let state = makeFlow()
-        let services = makeServices()
-        
-        assert(.loadedServices(services), on: state, effect: nil)
+        assert(.initiatePrepayment, on: nonEmptyState, effect: nil)
     }
     
     // MARK: - paymentStarted
@@ -253,6 +145,213 @@ final class UtilityFlowReducerTests: XCTestCase {
         let state = makeFlow()
         
         assert(.paymentStarted(.success(makeResponse())), on: state, effect: nil)
+    }
+    
+    // MARK: - prepaymentLoaded
+    
+    func test_prepaymentLoaded_shouldChangeStateToFailureOnLoadFailureOnEmptyState() {
+        
+        let emptyState = makeFlow()
+        
+        assertState(.prepaymentLoaded(.failure), on: emptyState) {
+            
+            $0.push(.prepayment(.failure))
+        }
+    }
+    
+    func test_prepaymentLoaded_shouldNotDeliverEffectOnLoadFailureOnEmptyState() {
+        
+        let emptyState = makeFlow()
+        
+        assert(.prepaymentLoaded(.failure), on: emptyState, effect: nil)
+    }
+    
+    func test_prepaymentLoaded_shouldNotChangeStateOnLoadFailureOnNonEmptyState() {
+        
+        let nonEmptyState = makeSingleDestinationUtilityFlow()
+        
+        assertState(.prepaymentLoaded(.failure), on: nonEmptyState)
+    }
+    
+    func test_prepaymentLoaded_shouldNotDeliverEffectOnLoadFailureOnNonEmptyState() {
+        
+        let nonEmptyState = makeSingleDestinationUtilityFlow()
+        
+        assert(.prepaymentLoaded(.failure), on: nonEmptyState, effect: nil)
+    }
+    
+    func test_prepaymentLoaded_shouldChangeEmptyStateOnLoadSuccess_emptyLastPayments() {
+        
+        let operators = [makeOperator()]
+        let emptyState = makeFlow()
+        
+        assertState(.prepaymentLoaded(.success([], operators)), on: emptyState) {
+            
+            $0.push(makePrepayment([], operators))
+        }
+    }
+    
+    func test_prepaymentLoaded_shouldNotDeliverEffectOnLoadSuccessOnEmptyState_emptyLastPayments() {
+        
+        let operators = [makeOperator()]
+        let emptyState = makeFlow()
+        
+        assert(.prepaymentLoaded(.success([], operators)), on: emptyState, effect: nil)
+    }
+    
+    func test_prepaymentLoaded_shouldChangeEmptyStateOnLoadSuccess_nonEmptyLastPayments() {
+        
+        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
+        let emptyState = makeFlow()
+        
+        assertState(.prepaymentLoaded(.success(lastPayments, operators)), on: emptyState) {
+            
+            $0.push(makePrepayment(lastPayments, operators))
+        }
+    }
+    
+    func test_prepaymentLoaded_shouldNotDeliverEffectOnLoadSuccessOnEmptyState_nonEmptyLastPayments() {
+        
+        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
+        let emptyState = makeFlow()
+        
+        assert(.prepaymentLoaded(.success(lastPayments, operators)), on: emptyState, effect: nil)
+    }
+    
+    func test_prepaymentLoaded_shouldNotChangeNonEmptyStateOnLoadSuccess() {
+        
+        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
+        let nonEmptyState = makeSingleDestinationUtilityFlow()
+        
+        assertState(.prepaymentLoaded(.success(lastPayments, operators)), on: nonEmptyState)
+    }
+    
+    func test_prepaymentLoaded_shouldNotDeliverEffectOnLoadSuccessOnNonEmptyState() {
+        
+        let (lastPayments, operators) = ([makeLastPayment()], [makeOperator()])
+        let nonEmptyState = makeSingleDestinationUtilityFlow()
+        
+        assert(.prepaymentLoaded(.success(lastPayments, operators)), on: nonEmptyState, effect: nil)
+    }
+    
+    // MARK: - PrepaymentOptionsEvent
+    
+    func test_prepaymentOptionsEvent_shouldNotChangeEmptyFlow_didScrollTo() {
+        
+        let state = makeEmptyUtilityFlow()
+        let event: Event = .prepaymentOptions(.didScrollTo("abc"))
+        
+        assertState(event, on: state)
+        
+        XCTAssertNil(state.current)
+    }
+    
+    func test_prepaymentOptionsEvent_shouldNotChangeEmptyFlow_paginatedFailure() {
+        
+        let state = makeEmptyUtilityFlow()
+        let event: Event = .prepaymentOptions(.paginated(.failure(.connectivityError)))
+        
+        assertState(event, on: state)
+        
+        XCTAssertNil(state.current)
+    }
+    
+    func test_prepaymentOptionsEvent_shouldNotChangeEmptyFlow_paginatedSuccess() {
+        
+        let state = makeEmptyUtilityFlow()
+        let event: Event = .prepaymentOptions(.paginated(.success([
+            makeOperator(), makeOperator()
+        ])))
+        
+        assertState(event, on: state)
+        
+        XCTAssertNil(state.current)
+    }
+    
+    func test_prepaymentOptionsEvent_shouldNotChangeEmptyFlow_search() {
+        
+        let state = makeEmptyUtilityFlow()
+        let event: Event = .prepaymentOptions(.search(.entered("abc")))
+        
+        assertState(event, on: state)
+        
+        XCTAssertNil(state.current)
+    }
+    
+    func test_prepaymentOptionsEvent_shouldCallPrePaymentOptionsReducerOnPrePaymentOptionsState_didScrollTo() {
+        
+        let prePaymentOptions = makePrePaymentOptionsState()
+        let state = makeSingleDestinationUtilityFlow(.prepayment(.options(prePaymentOptions)))
+        let prepaymentOptionsEvent: PPOEvent = .didScrollTo("abc")
+        let (sut, ppoReducer) = makeSUT()
+        
+        _ = sut.reduce(state, .prepaymentOptions(prepaymentOptionsEvent))
+        
+        XCTAssertNoDiff(ppoReducer.messages.map(\.state), [prePaymentOptions])
+        XCTAssertNoDiff(ppoReducer.messages.map(\.event), [prepaymentOptionsEvent])
+    }
+    
+    func test_prepaymentOptionsEvent_shouldCallPrePaymentOptionsReducerOnPrePaymentOptionsState_paginated() {
+        
+        let prePaymentOptions = makePrePaymentOptionsState()
+        let state = makeSingleDestinationUtilityFlow(.prepayment(.options(prePaymentOptions)))
+        let prepaymentOptionsEvent: PPOEvent = .paginated(
+            .failure(.connectivityError)
+        )
+        let (sut, ppoReducer) = makeSUT()
+        
+        _ = sut.reduce(state, .prepaymentOptions(prepaymentOptionsEvent))
+        
+        XCTAssertNoDiff(ppoReducer.messages.map(\.state), [prePaymentOptions])
+        XCTAssertNoDiff(ppoReducer.messages.map(\.event), [prepaymentOptionsEvent])
+    }
+    
+    func test_prepaymentOptionsEvent_shouldCallPrePaymentOptionsReducerOnPrePaymentOptionsState_search() {
+        
+        let prePaymentOptions = makePrePaymentOptionsState()
+        let state = makeSingleDestinationUtilityFlow(.prepayment(.options(prePaymentOptions)))
+        let prepaymentOptionsEvent: PPOEvent = .search(.entered(""))
+        let (sut, ppoReducer) = makeSUT()
+        
+        _ = sut.reduce(state, .prepaymentOptions(prepaymentOptionsEvent))
+        
+        XCTAssertNoDiff(ppoReducer.messages.map(\.state), [prePaymentOptions])
+        XCTAssertNoDiff(ppoReducer.messages.map(\.event), [prepaymentOptionsEvent])
+    }
+    
+    func test_prepaymentOptionsEvent_shouldChangePrePaymentOptionsStateToPrePaymentOptionsReduceResult() {
+        
+        let prePaymentOptions = makePrePaymentOptionsState()
+        let state = makeSingleDestinationUtilityFlow(.prepayment(.options(prePaymentOptions)))
+        let event: Event = .prepaymentOptions(.search(.entered("")))
+        let (ppoStateStub, ppoEffectStub) = makePPOStub(
+            lastPaymentsCount: 1,
+            operatorsCount: 3,
+            searchText: "abc",
+            ppoEffect: .search("abc")
+        )
+        let (sut, _) = makeSUT(ppoStub: [(ppoStateStub, ppoEffectStub)])
+        
+        assertState(sut: sut, event, on: state) {
+            
+            $0 = makeSingleDestinationUtilityFlow(.prepayment(.options(ppoStateStub)))
+        }
+    }
+    
+    func test_prepaymentOptionsEvent_shouldDeliverPrePaymentOptionsReduceEffect() {
+        
+        let prePaymentOptions = makePrePaymentOptionsState()
+        let state = makeSingleDestinationUtilityFlow(.prepayment(.options(prePaymentOptions)))
+        let event: Event = .prepaymentOptions(.search(.entered("")))
+        let ppoStateStub = makePrePaymentOptionsState(
+            lastPaymentsCount: 1,
+            operatorsCount: 3,
+            searchText: "abc"
+        )
+        let ppoEffectStub: PPOEffect = .search("abc")
+        let (sut, _) = makeSUT(ppoStub: [(ppoStateStub, ppoEffectStub)])
+        
+        assert(sut: sut, event, on: state, effect: .prepaymentOptions(ppoEffectStub))
     }
     
     // MARK: - select
@@ -394,7 +493,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         
         let (`operator`, service) = (makeOperator(), makeService())
         let topServicesState = makeFlow(.services([service, makeService()]))
-
+        
         assertState(.select(.service(service, for: `operator`)), on: topServicesState)
     }
     
@@ -410,24 +509,52 @@ final class UtilityFlowReducerTests: XCTestCase {
         )
     }
     
+    // MARK: - servicesLoaded
+    
+    func test_loadedServices_shouldPushServicesDestinationOnTop() {
+        
+        let state = makeFlow()
+        let services = makeServices()
+        
+        assertState(.servicesLoaded(services), on: state) {
+            
+            $0.push(.services(services))
+        }
+    }
+    
+    func test_loadedServices_shouldNotDeliverEffect() {
+        
+        let state = makeFlow()
+        let services = makeServices()
+        
+        assert(.servicesLoaded(services), on: state, effect: nil)
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = UtilityFlowReducer<LastPayment, Operator, Service, StartPaymentResponse>
+    private typealias SUT = UtilityReducer
     
     private typealias State = UtilityFlow
     private typealias Event = UtilityEvent
     private typealias Effect = UtilityEffect
     
+    private typealias PPOReducer = ReducerSpy<PPOState, PPOEvent, PPOEffect>
+    
     private func makeSUT(
+        ppoStub: [(PPOState, PPOEffect?)] = [makePPOStub()],
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT {
-        
-        let sut = SUT()
+    ) -> (
+        sut: SUT,
+        ppoReducer: PPOReducer
+    ) {
+        let ppoReducer = PPOReducer(stub: ppoStub)
+        let sut = SUT(ppoReduce: ppoReducer.reduce(_:_:))
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(ppoReducer, file: file, line: line)
         
-        return sut
+        return (sut, ppoReducer)
     }
     
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void
@@ -440,7 +567,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = sut ?? makeSUT()
+        let sut = sut ?? makeSUT().sut
         
         var expectedState = state
         updateStateToExpected?(&expectedState)
@@ -463,7 +590,7 @@ final class UtilityFlowReducerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let sut = sut ?? makeSUT()
+        let sut = sut ?? makeSUT().sut
         
         let (_, receivedEffect) = sut.reduce(state, event)
         
