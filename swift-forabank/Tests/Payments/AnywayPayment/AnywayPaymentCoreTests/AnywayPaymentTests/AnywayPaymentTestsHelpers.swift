@@ -63,7 +63,8 @@ func makeAnywayPayment(
     fields: [AnywayPayment.Element.Field],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    amount: Decimal? = nil
+    amount: Decimal? = nil,
+    puref: AnywayPayment.Puref? = nil
 ) -> AnywayPayment {
     
     var elements = fields.map(AnywayPayment.Element.field)
@@ -74,7 +75,8 @@ func makeAnywayPayment(
     return makeAnywayPayment(
         elements: elements,
         isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected
+        isFraudSuspected: isFraudSuspected,
+        puref: puref
     )
 }
 
@@ -82,7 +84,8 @@ func makeAnywayPayment(
     parameters: [AnywayPayment.Element.Parameter] = [],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    amount: Decimal? = nil
+    amount: Decimal? = nil,
+    puref: AnywayPayment.Puref? = nil
 ) -> AnywayPayment {
     
     var elements = parameters.map(AnywayPayment.Element.parameter)
@@ -93,7 +96,8 @@ func makeAnywayPayment(
     return makeAnywayPayment(
         elements: elements,
         isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected
+        isFraudSuspected: isFraudSuspected,
+        puref: puref
     )
 }
 
@@ -101,14 +105,16 @@ func makeAnywayPayment(
     elements: [AnywayPayment.Element],
     infoMessage: String? = nil,
     isFinalStep: Bool = false,
-    isFraudSuspected: Bool = false
+    isFraudSuspected: Bool = false,
+    puref: AnywayPayment.Puref? = nil
 ) -> AnywayPayment {
     
     .init(
         elements: elements,
         infoMessage: infoMessage,
         isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected
+        isFraudSuspected: isFraudSuspected,
+        puref: puref ?? .init(anyMessage())
     )
 }
 

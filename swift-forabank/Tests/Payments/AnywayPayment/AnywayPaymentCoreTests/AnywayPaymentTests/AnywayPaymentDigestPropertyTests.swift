@@ -19,7 +19,7 @@ extension AnywayPayment {
             comment: nil,
             mcc: nil,
             product: nil,
-            puref: nil
+            puref: .init(puref.rawValue)
         )
     }
     
@@ -70,34 +70,6 @@ private extension AnywayPayment.Element {
 }
 
 final class AnywayPaymentDigestPropertyTests: XCTestCase {
-    
-    func test_shouldSetCheckToFalseOnPaymentWithoutOTP() {
-        
-        let payment = makeAnywayPaymentWithoutOTP()
-        
-        XCTAssertFalse(payment.digest.check)
-    }
-    
-    func test_shouldSetCheckToFalseOnPaymentWithOTP() {
-        
-        let payment = makeAnywayPaymentWithOTP()
-        
-        XCTAssertFalse(payment.digest.check)
-    }
-    
-    func test_shouldSetAmountToNilOnPaymentWithoutAmount() {
-        
-        let payment = makeAnywayPaymentWithoutAmount()
-        
-        XCTAssertNil(payment.digest.amount)
-    }
-    
-    func test_shouldSetAmountOnPaymentWithAmount() {
-        
-        let payment = makeAnywayPaymentWithAmount(1_234.56)
-        
-        XCTAssertNoDiff(payment.digest.amount, 1_234.56)
-    }
     
     func test_shouldSetAdditionalToEmptyOnEmptyElements() {
         
@@ -158,5 +130,41 @@ final class AnywayPaymentDigestPropertyTests: XCTestCase {
             .init(fieldID: 0, fieldName: id0, fieldValue: value0),
             .init(fieldID: 1, fieldName: id1, fieldValue: value1),
         ])
+    }
+    
+    func test_shouldSetAmountToNilOnPaymentWithoutAmount() {
+        
+        let payment = makeAnywayPaymentWithoutAmount()
+        
+        XCTAssertNil(payment.digest.amount)
+    }
+    
+    func test_shouldSetAmountOnPaymentWithAmount() {
+        
+        let payment = makeAnywayPaymentWithAmount(1_234.56)
+        
+        XCTAssertNoDiff(payment.digest.amount, 1_234.56)
+    }
+    
+    func test_shouldSetCheckToFalseOnPaymentWithoutOTP() {
+        
+        let payment = makeAnywayPaymentWithoutOTP()
+        
+        XCTAssertFalse(payment.digest.check)
+    }
+    
+    func test_shouldSetCheckToFalseOnPaymentWithOTP() {
+        
+        let payment = makeAnywayPaymentWithOTP()
+        
+        XCTAssertFalse(payment.digest.check)
+    }
+    
+    func test_shouldSetPuref() {
+        
+        let puref = anyMessage()
+        let payment = makeAnywayPayment(puref: .init(puref))
+        
+        XCTAssertNoDiff(payment.digest.puref, .init(puref))
     }
 }

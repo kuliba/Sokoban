@@ -14,17 +14,20 @@ public struct AnywayPayment: Equatable {
     public var infoMessage: String?
     public let isFinalStep: Bool
     public let isFraudSuspected: Bool
+    public let puref: Puref
     
     public init(
         elements: [Element],
         infoMessage: String?,
         isFinalStep: Bool,
-        isFraudSuspected: Bool
+        isFraudSuspected: Bool,
+        puref: Puref
     ) {
         self.elements = elements
         self.infoMessage = infoMessage
         self.isFinalStep = isFinalStep
         self.isFraudSuspected = isFraudSuspected
+        self.puref = puref
     }
 }
 
@@ -36,6 +39,9 @@ extension AnywayPayment {
         case parameter(Parameter)
         case widget(Widget)
     }
+    
+    public typealias Puref = Tagged<_Puref, String>
+    public enum _Puref {}
     
     public enum Status: Equatable {
         
