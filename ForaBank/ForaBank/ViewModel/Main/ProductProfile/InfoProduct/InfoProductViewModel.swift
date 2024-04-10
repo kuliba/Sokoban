@@ -31,6 +31,10 @@ class InfoProductViewModel: ObservableObject {
     
     private var needShowNumber = false
     private var needShowCvv = false
+    private let event: (Event) -> Void
+    
+    var info: (text: String, image: Image?) = ("", nil)
+
     var needShowCheckbox = false {
         didSet {
             if !self.needShowCheckbox {
@@ -58,7 +62,8 @@ class InfoProductViewModel: ObservableObject {
         additionalList: [ItemViewModelForList]?,
         shareButton: ButtonViewModel?,
         model: Model,
-        showCvv: ShowCVV? = nil
+        showCvv: ShowCVV? = nil,
+        event: @escaping (Event) -> Void = { _ in }
     ) {
         
         self.product = product
@@ -69,13 +74,15 @@ class InfoProductViewModel: ObservableObject {
         self.shareButton = shareButton
         self.model = model
         self.showCvv = showCvv
+        self.event = event
     }
     
     internal init(
         model: Model,
         product: ProductData,
         info: Bool = true,
-        showCvv: ShowCVV? = nil
+        showCvv: ShowCVV? = nil,
+        event: @escaping (Event) -> Void = { _ in }
     ) {
         
         self.model = model
@@ -84,6 +91,7 @@ class InfoProductViewModel: ObservableObject {
         self.list = []
         self.listWithAction = []
         self.showCvv = showCvv
+        self.event = event
         
         if let cardProductData = product as? ProductCardData {
             
@@ -141,8 +149,11 @@ class InfoProductViewModel: ObservableObject {
         
         switch product.productType {
         case .card:
-            model.action.send(ModelAction.Products.ProductDetails.Request(type: product.productType, id: product.id))
-            self.title = "Реквизиты счета и карты"
+            
+            if let card = product as? ProductCardData {
+                model.action.send(ModelAction.Products.ProductDetails.Request(type: product.productType, id: product.id))
+                self.title = .accountDetailsTitle(by: card.cardType)
+            }
             
         case .account:
             model.action.send(ModelAction.Products.ProductDetails.Request(type: .account, id: product.id))
@@ -284,6 +295,8 @@ class InfoProductViewModel: ObservableObject {
                     switch payload {
                     case .success(let data):
                         
+                        info = (data.info, model.images.value[data.infoMd5hash]?.image)
+                        
                         let documentListMultiple = Self.reduceMultiple(data: data)
                         
                         let listMultiple: ItemViewModelForList = Self.makeItemViewModelMultiple(
@@ -329,7 +342,7 @@ class InfoProductViewModel: ObservableObject {
                 
                 switch $0.id {
                     
-                case .cvv, .cvvMasked:
+                case .cvv, .cvvMasked, .cvvDisable:
                     return Self.makeItemViewModel(
                         from: $0,
                         with: {_,_ in },
@@ -517,28 +530,34 @@ extension InfoProductViewModel {
     
     func cvvToogle(productCardData: ProductCardData) {
         
-        needShowCvv.toggle()
-        
-        if self.needShowNumber, self.needShowCvv {
+        if productCardData.cardType == .additionalOther {
             
-            self.needShowNumber.toggle()
-        }
-
-        self.additionalList = self.setupAdditionalList(
-            for: productCardData,
-            needShowNumber: needShowNumber,
-            needShowCvv: needShowCvv
-        )
-        
-        if needShowCvv {
-            self.showCvv?(.init(productCardData.id)) { [weak self] in
-                guard let self else { return }
+            event(.showAdditionalOtherAlert)
+        } else {
+            
+            needShowCvv.toggle()
+            
+            if self.needShowNumber, self.needShowCvv {
                 
-                if let cvv = $0 {
-                    self.additionalList = self.updateAdditionalList(
-                        oldList: self.additionalList,
-                        newCvv: cvv.rawValue
-                    )
+                self.needShowNumber.toggle()
+            }
+            
+            self.additionalList = self.setupAdditionalList(
+                for: productCardData,
+                needShowNumber: needShowNumber,
+                needShowCvv: needShowCvv
+            )
+            
+            if needShowCvv {
+                self.showCvv?(.init(productCardData.id)) { [weak self] in
+                    guard let self else { return }
+                    
+                    if let cvv = $0 {
+                        self.additionalList = self.updateAdditionalList(
+                            oldList: self.additionalList,
+                            newCvv: cvv.rawValue
+                        )
+                    }
                 }
             }
         }
@@ -579,4 +598,9 @@ extension InfoProductViewModel {
     func close() {
         self.action.send(InfoProductModelAction.Close())
     }
+}
+
+extension InfoProductViewModel {
+    
+    typealias Event = AlertEvent
 }

@@ -57,6 +57,7 @@ class ProductProfileViewModel: ObservableObject {
     private let operationDetailFactory: OperationDetailFactory
     private let cvvPINServicesClient: CVVPINServicesClient
     private var cardAction: CardAction?
+    private let productProfileViewModelFactory: ProductProfileViewModelFactory
     
     private let productNavigationStateManager: ProductNavigationStateManager
 
@@ -87,6 +88,7 @@ class ProductProfileViewModel: ObservableObject {
          operationDetailFactory: OperationDetailFactory,
          productNavigationStateManager: ProductNavigationStateManager,
          cvvPINServicesClient: CVVPINServicesClient,
+         productProfileViewModelFactory: ProductProfileViewModelFactory,
          rootView: String,
          scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
@@ -109,6 +111,7 @@ class ProductProfileViewModel: ObservableObject {
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
         self.productNavigationStateManager = productNavigationStateManager
+        self.productProfileViewModelFactory = productProfileViewModelFactory
         self.cardAction = createCardAction(cvvPINServicesClient, model)
         // TODO: add removeDuplicates
         self.bottomSheetSubject
@@ -141,6 +144,7 @@ class ProductProfileViewModel: ObservableObject {
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
         productNavigationStateManager: ProductNavigationStateManager,
+        productProfileViewModelFactory: ProductProfileViewModelFactory,
         rootView: String,
         dismissAction: @escaping () -> Void,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -174,6 +178,7 @@ class ProductProfileViewModel: ObservableObject {
             operationDetailFactory: operationDetailFactory,
             productNavigationStateManager: productNavigationStateManager,
             cvvPINServicesClient: cvvPINServicesClient,
+            productProfileViewModelFactory: productProfileViewModelFactory,
             rootView: rootView,
             scheduler: scheduler
         )
@@ -1107,6 +1112,11 @@ private extension ProductProfileViewModel {
                         
                     case .bottomLeft:
                         switch product.productType {
+                            
+                        case .card:
+                            guard let card = productData as? ProductCardData else { return }
+                            createAccountInfoPanel(card)
+
                         case .deposit:
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .info, .contract], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
@@ -1270,24 +1280,32 @@ private extension ProductProfileViewModel {
                     case let payload as ProductProfileOptionsPannelViewModelAction.ButtonTapped:
                         switch payload.buttonType {
                         case .requisites:
-                            let productInfoViewModel = InfoProductViewModel(
-                                model: model,
-                                product: productData,
-                                info: false,
-                                showCvv: { [weak self] cardId, completion in
-                                    
-                                    guard let self else { return }
-                                    
-                                    self.showCvvByTap(
-                                        cardId: cardId,
-                                        completion: completion)
-                                }
+                            let productInfoViewModel = productProfileViewModelFactory.makeInfoProductViewModel(
+                                .init(
+                                    model: model,
+                                    productData: productData,
+                                    info: false,
+                                    showCVV: { [weak self] cardId, completion in
+                                        
+                                        guard let self else { return }
+                                        
+                                        self.showCvvByTap(
+                                            cardId: cardId,
+                                            completion: completion)
+                                    },
+                                    events: self.event(_:))
                             )
                             self.link = .productInfo(productInfoViewModel)
                             self.bind(product: productInfoViewModel)
                             
                         case .info:
-                            let productInfoViewModel = InfoProductViewModel(model: self.model, product: productData, info: true)
+                            let productInfoViewModel = productProfileViewModelFactory.makeInfoProductViewModel(
+                                .init(
+                                    model: model,
+                                    productData: productData,
+                                    info: true)
+                            )
+
                             self.link = .productInfo(productInfoViewModel)
                             
                         case .statement:
@@ -1572,6 +1590,7 @@ private extension ProductProfileViewModel {
             cvvPINServicesClient: cvvPINServicesClient,
             product: product, 
             productNavigationStateManager: productNavigationStateManager,
+            productProfileViewModelFactory: productProfileViewModelFactory,
             rootView: rootView,
             dismissAction: dismissAction
         )
@@ -1913,6 +1932,7 @@ extension ProductProfileViewModel {
             
             case operationDetail(OperationDetailViewModel)
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
+            case optionsPanelNew([PanelButton.Details])
             case meToMe(PaymentsMeToMeViewModel)
             case meToMeLegacy(MeToMeViewModel)
             case printForm(PrintFormView.ViewModel)
@@ -2383,5 +2403,46 @@ extension ProductProfileViewModel {
 
         let (alert, _) = productNavigationStateManager.alertReduce(alert, event)
         alertSubject.send(alert)
+    }
+    
+    func event(_ event: ProductNavigationStateManager.ButtonEvent) {
+        
+        self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
+
+        switch event {
+            
+        case let .accountDetails(productID):
+            
+            guard let productData = model.product(productId: productID) else { return }
+
+            let productInfoViewModel = productProfileViewModelFactory.makeInfoProductViewModel(
+                .init(
+                    model: model,
+                    productData: productData,
+                    info: false,
+                    showCVV: { [weak self] cardId, completion in
+                        
+                        guard let self else { return }
+                        
+                        self.showCvvByTap(
+                            cardId: cardId,
+                            completion: completion)
+                    },
+                    events: self.event(_:))
+            )
+            self.link = .productInfo(productInfoViewModel)
+            self.bind(product: productInfoViewModel)
+            
+        case let .accountStatement(productID):
+            
+            guard let productData = model.product(productId: productID) else { return }
+
+            let productStatementViewModel = ProductStatementViewModel(
+                product: productData,
+                closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())},
+                getUImage: { self.model.images.value[$0]?.uiImage }
+            )
+            self.link = .productStatement(productStatementViewModel)
+        }
     }
 }

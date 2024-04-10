@@ -9,6 +9,7 @@ import CloudKit
 import Foundation
 import ServerAgent
 import CardStatementAPI
+import AccountInfoPanel
 
 //MARK: - Actions
 
@@ -266,7 +267,7 @@ extension ModelAction {
             
             enum Response: Action {
                 
-                case success(productDetails: ProductDetailsData)
+                case success(productDetails: AccountInfoPanel.ProductDetails)
                 case failure(message: String)
             }
         }
@@ -881,51 +882,45 @@ extension Model {
     }
     
     func handleProductDetails(_ payload: ModelAction.Products.ProductDetails.Request) {
-        
-        guard let token = token else {
-            handledUnauthorizedCommandAttempt()
-            return
-        }
-        
-        var command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: nil, depositId: nil))
-        
-        switch payload.type {
-        case .card:
-            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: payload.id, depositId: nil))
-        case .deposit:
-            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: nil, depositId: payload.id))
-        case .account:
-            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: payload.id, cardId: nil, depositId: nil))
-        case .loan:
-            guard let product = self.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.id }), let product = product as? ProductLoanData else {
-                return
-            }
+        Task {
             
-            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: product.settlementAccountId, cardId: nil, depositId: nil))
-        }
-        
-        serverAgent.executeCommand(command: command) { result in
-            
-            switch result {
-            case .success(let response):
-                switch response.statusCode {
-                case .ok:
+            if let productDetails = try? await handleProductDetailsAsync(payload) {
+                
+                if !productDetails.infoMd5hash.isEmpty {
                     
-                    guard let details = response.data else {
-                        self.handleServerCommandEmptyData(command: command)
-                        return
+                    if self.images.value[productDetails.infoMd5hash] == nil {
+                        self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [productDetails.infoMd5hash] ))
                     }
-                    
-                    self.action.send(ModelAction.Products.ProductDetails.Response.success(productDetails: details))
-                    
-                default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
-            case .failure(let error):
-                self.handleServerCommandError(error: error, command: command)
+                self.action.send(ModelAction.Products.ProductDetails.Response.success(productDetails: productDetails))
             }
         }
+    }
+    
+    func handleProductDetailsAsync(_ payload: ModelAction.Products.ProductDetails.Request) async throws -> ProductDetails? {
+        
+        let productDetailsPayload: ProductDetailsPayload
+
+        switch payload.type {
+        case .card:
+            productDetailsPayload = .cardId(.init(payload.id))
+        case .deposit:
+            productDetailsPayload = .depositId(.init(payload.id))
+        case .account:
+            productDetailsPayload = .accountId(.init(payload.id))
+        case .loan:
+            guard let product = self.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.id }), let product = product as? ProductLoanData else {
+                return .none
+            }
+            productDetailsPayload = .accountId(.init(product.settlementAccountId))
+        }
+
+        return try await Services.makeGetProductDetails(
+            httpClient: self.authenticatedHTTPClient(),
+            logger: LoggerAgent.shared,
+            payload: productDetailsPayload
+        )
     }
     
     func handleProductsStatementPrintFormRequest(_ payload: ModelAction.Products.StatementPrintForm.Request) {

@@ -9,6 +9,7 @@ import Foundation
 
 import XCTest
 @testable import ForaBank
+import AccountInfoPanel
 
 final class InfoProductViewModelTests: XCTestCase {
     
@@ -983,7 +984,7 @@ final class InfoProductViewModelTests: XCTestCase {
 
 private extension InfoProductViewModel.DocumentItemModel {
     
-    static let info = ProductDetailsData.productDetailsDataFull
+    static let info = AccountInfoPanel.ProductDetails.productDetailsDataFull
     
     static let payeeName: Self = .init(
         id: .payeeName,
@@ -1055,27 +1056,31 @@ private extension InfoProductViewModel.ButtonViewModel {
     static let shareButton: Self = .init(action: {})
 }
 
-private extension ProductDetailsData {
+private extension AccountInfoPanel.ProductDetails {
     
-    static let productDetailsData: Self = .init(
+    static let productDetailsData: Self = .accountDetails(.init(
         accountNumber: "4081781000000000001",
         bic: "044525341",
         corrAccount: "30101810300000000341",
         inn: "7704113772",
         kpp: "770401001",
-        payeeName: "Иванов Иван Иванович",
-        maskCardNumber: nil,
-        cardNumber: nil)
-    
-    static let productDetailsDataFull: Self = .init(
+        payeeName: "Иванов Иван Иванович")
+    )
+            
+    static let productDetailsDataFull: Self = .cardDetails(.init(
         accountNumber: productDetailsData.accountNumber,
         bic: productDetailsData.bic,
+        cardNumber: "4444 5555 6666 1122",
         corrAccount: productDetailsData.corrAccount,
+        expireDate: "11/22/02",
+        holderName: "holderName",
         inn: productDetailsData.inn,
         kpp: productDetailsData.kpp,
+        maskCardNumber: "4444 55** **** 1122", 
         payeeName: productDetailsData.payeeName,
-        maskCardNumber: "4444 55** **** 1122",
-        cardNumber: "4444 5555 6666 1122")
+        info: "info",
+        md5hash: "")
+    )
 }
 
 private extension InfoProductViewModelTests {
@@ -1310,17 +1315,15 @@ private extension ProductData {
     }
 }
 
-private extension ProductDetailsData {
+private extension AccountInfoPanel.ProductDetails {
     
-    static let data: Self = .init(
+    static let data: Self = .accountDetails(.init(
         accountNumber: "accountNumber",
         bic: "bic",
         corrAccount: "corrAccount",
         inn: "inn",
         kpp: "kpp",
-        payeeName: "payeeName",
-        maskCardNumber: "maskCardNumber",
-        cardNumber: "cardNumber"
+        payeeName: "payeeName")
     )
 }
 
