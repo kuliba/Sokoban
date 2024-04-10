@@ -16,7 +16,7 @@ public struct AnywayPaymentDigest: Equatable {
     public let product: Product?
     public let comment: String?
     public let puref: Puref?
-    public let additionals: [Additional]
+    public let additional: [Additional]
     public let mcc: MCC?
     
     public init(
@@ -25,7 +25,7 @@ public struct AnywayPaymentDigest: Equatable {
         product: Product?,
         comment: String?,
         puref: Puref?,
-        additionals: [Additional],
+        additional: [Additional],
         mcc: MCC?
     ) {
         self.check = check
@@ -33,7 +33,7 @@ public struct AnywayPaymentDigest: Equatable {
         self.product = product
         self.comment = comment
         self.puref = puref
-        self.additionals = additionals
+        self.additional = additional
         self.mcc = mcc
     }
 }

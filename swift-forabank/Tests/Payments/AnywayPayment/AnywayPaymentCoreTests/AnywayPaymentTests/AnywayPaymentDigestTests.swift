@@ -18,9 +18,39 @@ extension AnywayPayment {
             product: nil,
             comment: nil,
             puref: nil,
-            additionals: [],
+            additional: additional,
             mcc: nil
         )
+    }
+    
+    private var additional: [AnywayPaymentDigest.Additional] {
+        
+        fields.enumerated().compactMap { index, field in
+            
+            field.value.map {
+                
+                .init(
+                    fieldID: index,
+                    fieldName: field.id.rawValue,
+                    fieldValue: $0.rawValue
+                )
+            }
+        }
+    }
+    
+    private var fields: [Element.Parameter.Field] {
+        
+        elements.compactMap(\.parameter?.field)
+    }
+}
+
+private extension AnywayPayment.Element {
+    
+    var parameter: Parameter? {
+        
+        guard case let .parameter(parameter) = self else { return nil }
+        
+        return parameter
     }
 }
 
@@ -28,11 +58,76 @@ final class AnywayPaymentDigestTests: XCTestCase {
     
     func test_shouldSetCheckToFalseOnPaymentWithoutOTP() {
         
-        XCTAssertFalse(makeAnywayPaymentWithoutOTP().digest.check)
+        let payment = makeAnywayPaymentWithoutOTP()
+        
+        XCTAssertFalse(payment.digest.check)
     }
     
     func test_shouldSetCheckToFalseOnPaymentWithOTP() {
         
-        XCTAssertFalse(makeAnywayPaymentWithOTP().digest.check)
+        let payment = makeAnywayPaymentWithOTP()
+        
+        XCTAssertFalse(payment.digest.check)
+    }
+    
+    func test_shouldSetAdditionalToEmptyOnEmptyElements() {
+        
+        let payment = makeAnywayPayment(elements: [])
+        
+        XCTAssert(payment.digest.additional.isEmpty)
+    }
+    
+    func test_shouldSetAdditionalToEmptyOnEmptyParameters() {
+        
+        let payment = makeAnywayPayment(fields: [makeAnywayPaymentField()])
+        
+        XCTAssert(payment.digest.additional.isEmpty)
+    }
+    
+    func test_shouldNotSetAdditionalOnParameterWithNilValue() {
+        
+        let parameter = makeAnywayPaymentParameter(
+            field: makeAnywayPaymentElementParameterField(value: nil)
+        )
+        let payment = makeAnywayPayment(parameters: [parameter])
+        
+        XCTAssert(payment.digest.additional.isEmpty)
+    }
+    
+    func test_shouldSetAdditionalOnParameter() {
+        
+        let (id, value) = (anyMessage(), anyMessage())
+        let parameter = makeAnywayPaymentParameter(
+            field: makeAnywayPaymentElementParameterField(
+                id: id, value: value
+            )
+        )
+        let payment = makeAnywayPayment(parameters: [parameter])
+        
+        XCTAssertNoDiff(payment.digest.additional, [
+            .init(fieldID: 0, fieldName: id, fieldValue: value),
+        ])
+    }
+    
+    func test_shouldSetAdditionalOnNonEmptyParameters() {
+        
+        let (id0, value0) = (anyMessage(), anyMessage())
+        let (id1, value1) = (anyMessage(), anyMessage())
+        let parameter1 = makeAnywayPaymentParameter(
+            field: makeAnywayPaymentElementParameterField(
+                id: id0, value: value0
+            )
+        )
+        let parameter2 = makeAnywayPaymentParameter(
+            field: makeAnywayPaymentElementParameterField(
+                id: id1, value: value1
+            )
+        )
+        let payment = makeAnywayPayment(parameters: [parameter1, parameter2])
+        
+        XCTAssertNoDiff(payment.digest.additional, [
+            .init(fieldID: 0, fieldName: id0, fieldValue: value0),
+            .init(fieldID: 1, fieldName: id1, fieldValue: value1),
+        ])
     }
 }

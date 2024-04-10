@@ -33,7 +33,7 @@ public extension AnywayPaymentDigest {
             },
             comment: comment,
             puref: puref?.rawValue,
-            additional: additionals.map {
+            additional: additional.map {
                 
                 .init(
                     fieldid: $0.fieldID,

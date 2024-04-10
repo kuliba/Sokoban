@@ -26,7 +26,7 @@ extension RequestFactory {
     
     public struct CreateAnywayTransferPayload: Equatable {
         
-        public let additionals: [Additional]
+        public let additional: [Additional]
         public let amount: Decimal?
         public let check: Bool
         public let comment: String?
@@ -36,7 +36,7 @@ extension RequestFactory {
         public let puref: String?
         
         public init(
-            additionals: [Additional],
+            additional: [Additional],
             amount: Decimal? = nil,
             check: Bool,
             comment: String? = nil,
@@ -45,7 +45,7 @@ extension RequestFactory {
             payer: Payer? = nil,
             puref: String? = nil
         ) {
-            self.additionals = additionals
+            self.additional = additional
             self.amount = amount
             self.check = check
             self.comment = comment
@@ -119,7 +119,7 @@ private extension RequestFactory._DTO {
     init(_ payload: RequestFactory.CreateAnywayTransferPayload) {
         
         self.init(
-            additional: payload.additionals.map { .init($0) },
+            additional: payload.additional.map { .init($0) },
             amount: payload.amount,
             check: payload.check,
             comment: payload.comment,

@@ -98,7 +98,7 @@ final class NanoServices_makeCreateAnywayTransferTests: XCTestCase {
         
         expect(
             toDeliver: .success(.init(
-                additionals: [],
+                additional: [],
                 finalStep: false,
                 needMake: false,
                 needOTP: false,
@@ -278,7 +278,7 @@ private func makePayload(
 ) -> NanoServices.CreateAnywayTransferPayload {
     
     .init(
-        additionals: [
+        additional: [
             .init(
                 fieldID: fieldID,
                 fieldName: fieldName,

@@ -12,7 +12,7 @@ extension ResponseMapper {
     
     public struct CreateAnywayTransferResponse: Equatable {
         
-        public let additionals: [Additional]
+        public let additional: [Additional]
         public let amount: Decimal?
         public let creditAmount: Decimal?
         public let currencyAmount: String?
@@ -34,7 +34,7 @@ extension ResponseMapper {
         public let scenario: AntiFraudScenario?
         
         public init(
-            additionals: [Additional],
+            additional: [Additional],
             amount: Decimal? = nil,
             creditAmount: Decimal? = nil,
             currencyAmount: String? = nil,
@@ -55,7 +55,7 @@ extension ResponseMapper {
             printFormType: String? = nil,
             scenario: AntiFraudScenario? = nil
         ) {
-            self.additionals = additionals
+            self.additional = additional
             self.amount = amount
             self.creditAmount = creditAmount
             self.currencyAmount = currencyAmount

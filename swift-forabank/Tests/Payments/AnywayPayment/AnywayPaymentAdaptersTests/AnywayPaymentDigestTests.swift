@@ -13,7 +13,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
     
     func test_json_shouldDeliverDataWithEmptyOnEmpty() throws {
         
-        let digest = makeAnywayPaymentDigest(check: false, additionals: [])
+        let digest = makeAnywayPaymentDigest(check: false, additional: [])
         
         let decoded = try JSONDecoder().decode(_DTO.self, from: digest.json)
         
@@ -40,7 +40,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
             fieldName: fieldName,
             fieldValue: fieldValue
         )
-        let digest = makeAnywayPaymentDigest(check: false, additionals: [additional])
+        let digest = makeAnywayPaymentDigest(check: false, additional: [additional])
         
         let decoded = try JSONDecoder().decode(_DTO.self, from: digest.json)
         
@@ -62,7 +62,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
         ))
     }
     
-    func test_json_shouldDeliverDataWithTwoAdditionals() throws {
+    func test_json_shouldDeliverDataWithTwoAdditional() throws {
         
         let firstFieldID = generateRandom11DigitNumber()
         let firstFieldName = anyMessage()
@@ -81,7 +81,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
             fieldName: secondFieldName,
             fieldValue: secondFieldValue
         )
-        let digest = makeAnywayPaymentDigest(check: false, additionals: [
+        let digest = makeAnywayPaymentDigest(check: false, additional: [
             firstAdditional,
             secondAdditional
         ])
@@ -126,7 +126,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
             product: .card(.init(cardIDRawValue)),
             comment: comment,
             puref: .init(purefRawValue),
-            additionals: [],
+            additional: [],
             mcc: .init(mccRawValue)
         )
         
@@ -162,7 +162,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
             product: .account(.init(accountIDRawValue)),
             comment: comment,
             puref: .init(purefRawValue),
-            additionals: [],
+            additional: [],
             mcc: .init(mccRawValue)
         )
         
@@ -191,7 +191,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
         product: AnywayPaymentDigest.Product? = nil,
         comment: String? = nil,
         puref: AnywayPaymentDigest.Puref? = nil,
-        additionals: [AnywayPaymentDigest.Additional],
+        additional: [AnywayPaymentDigest.Additional],
         mcc: AnywayPaymentDigest.MCC? = nil
     ) -> AnywayPaymentDigest {
         
@@ -201,7 +201,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
             product: product,
             comment: comment,
             puref: puref,
-            additionals: additionals,
+            additional: additional,
             mcc: mcc
         )
     }
