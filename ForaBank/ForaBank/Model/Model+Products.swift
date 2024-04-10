@@ -882,10 +882,23 @@ extension Model {
     }
     
     func handleProductDetails(_ payload: ModelAction.Products.ProductDetails.Request) {
-        Task { try? await handleProductDetailsAsync(payload) }
+        Task {
+            
+            if let productDetails = try? await handleProductDetailsAsync(payload) {
+                
+                if !productDetails.infoMd5hash.isEmpty {
+                    
+                    if self.images.value[productDetails.infoMd5hash] == nil {
+                        self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [productDetails.infoMd5hash] ))
+                    }
+                }
+                
+                self.action.send(ModelAction.Products.ProductDetails.Response.success(productDetails: productDetails))
+            }
+        }
     }
     
-    func handleProductDetailsAsync(_ payload: ModelAction.Products.ProductDetails.Request) async throws {
+    func handleProductDetailsAsync(_ payload: ModelAction.Products.ProductDetails.Request) async throws -> ProductDetails? {
         
         let productDetailsPayload: ProductDetailsPayload
 
@@ -898,25 +911,16 @@ extension Model {
             productDetailsPayload = .accountId(.init(payload.id))
         case .loan:
             guard let product = self.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.id }), let product = product as? ProductLoanData else {
-                return
+                return .none
             }
             productDetailsPayload = .accountId(.init(product.settlementAccountId))
         }
 
-        let productDetails = try await Services.makeGetProductDetails(
+        return try await Services.makeGetProductDetails(
             httpClient: self.authenticatedHTTPClient(),
             logger: LoggerAgent.shared,
             payload: productDetailsPayload
         )
-        
-       if !productDetails.infoMd5hash.isEmpty {
-           
-            if self.images.value[productDetails.infoMd5hash] == nil {
-                self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: [productDetails.infoMd5hash] ))
-            }
-        }
- 
-        self.action.send(ModelAction.Products.ProductDetails.Response.success(productDetails: productDetails))
     }
     
     func handleProductsStatementPrintFormRequest(_ payload: ModelAction.Products.StatementPrintForm.Request) {
