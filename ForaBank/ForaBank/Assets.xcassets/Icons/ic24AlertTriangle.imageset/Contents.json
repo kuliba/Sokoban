@@ -1,15 +1,15 @@
 {
-  "images" : [
-    {
-      "idiom" : "universal",
-      "filename" : "ic24AlertTriangle.svg"
-    }
-  ],
-  "properties" : {
-    "template-rendering-intent" : "template"
-  },
   "info" : {
     "version" : 1,
     "author" : "xcode"
-  }
+  },
+  "properties" : {
+    "template-rendering-intent" : "template"
+  },
+  "images" : [
+    {
+      "filename" : "ic24AlertTriangle.svg",
+      "idiom" : "universal"
+    }
+  ]
 }
