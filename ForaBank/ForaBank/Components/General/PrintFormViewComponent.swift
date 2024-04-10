@@ -349,9 +349,7 @@ struct PrintFormView: View {
                 
             case .failed:
                 Text("Не удалось загрузить документ")
-                    .alert(item: $viewModel.alert) { alert in
-                        Alert(with: alert)
-                    }
+                    .alert(item: $viewModel.alert, content: Alert.init(with:))
             }
         }
     }
