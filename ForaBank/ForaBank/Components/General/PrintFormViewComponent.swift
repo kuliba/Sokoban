@@ -19,7 +19,10 @@ extension PrintFormView {
         @Published var sheet: Sheet?
         @Published var alert: Alert.ViewModel?
         let dismissAction: (() -> Void)?
-        
+        private let decodeResponse: (Data) -> String? = { data in
+            
+            try? JSONDecoder().decode(ResponseMapper.ServerResponse<Data>.self, from: data).errorMessage
+        }
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
@@ -102,6 +105,45 @@ extension PrintFormView {
             self.state = .document(pdfDocument, button)
         }
         
+        private func handlePDFResult(_ pdfResult: ModelAction.Products.StatementPrintForm.Response.PDFResult) {
+            
+            switch pdfResult {
+            case let .success(document):
+                let activityViewModel = ActivityView.ViewModel(activityItems: [document.dataRepresentation() as Any])
+                let button = ButtonSimpleView.ViewModel(
+                    title: "Сохранить или отправить",
+                    style: .red,
+                    action: { [weak self] in
+                        
+                        self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))
+                    })
+                
+                withAnimation {
+                    self.state = .document(document, button)
+                }
+                
+            case let .failure(.serverError(message)):
+                withAnimation {
+                    self.state = .failed
+                }
+                
+                self.alert = .init(
+                    title: "Информация",
+                    message: message,
+                    primary: .init(
+                        type: .cancel,
+                        title: "ОК",
+                        action: { [weak self] in
+                            self?.dismissAction?()
+                        }))
+                
+            case .failure(.failure):
+                withAnimation {
+                    self.state = .failed
+                }
+            }
+        }
+        
         func bind() {
             
             model.action
@@ -177,35 +219,9 @@ extension PrintFormView {
                         }
                         
                     case let payload as ModelAction.Products.StatementPrintForm.Response:
-                        switch payload.result {
-                        case .success(let data):
-                            if let document = PDFDocument(data: data) {
-                                
-                                let activityViewModel = ActivityView.ViewModel(activityItems: [document.dataRepresentation() as Any])
-                                let button = ButtonSimpleView.ViewModel(
-                                    title: "Сохранить или отправить",
-                                    style: .red,
-                                    action: { [weak self] in
-                                        
-                                        self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))
-                                    })
-                                
-                                withAnimation {
-                                    self.state = .document(document, button)
-                                }
-      
-                            } else {
-                                
-                                invalidData(data)
-                            }
-                            
-                        case .failure(let error):
-                            withAnimation {
-                                self.state = .failed
-                            }
-                            //TODO: show alert with error message
-                        }
                         
+                        handlePDFResult(payload.pdfResult(decodeResponse))
+                                                
                     case let payload as ModelAction.Account.CloseAccount.PrintForm.Response:
                         
                         switch payload.result {
@@ -260,27 +276,39 @@ extension PrintFormView {
                     
                 }.store(in: &bindings)
         }
+    }
+}
+
+private extension ModelAction.Products.StatementPrintForm.Response {
+    
+    func pdfResult(
+        _ decode: @escaping (Data) -> String?
+    ) -> PDFResult {
         
-        private func invalidData(_ data: Data) {
-            do {
-                let error = try JSONDecoder().decode(ResponseMapper.ServerResponse<Data>.self, from: data)
-                self.state = .failed
-                self.alert = .init(
-                    title: "Информация",
-                    message: error.errorMessage,
-                    primary: .init(
-                        type: .cancel,
-                        title: "ОК",
-                        action: { [weak self] in
-                    self?.dismissAction?()
-                }))
-            } catch {
-                withAnimation {
-                    self.state = .failed
+        switch result {
+        case let .success(data):
+            if let document = PDFDocument(data: data) {
+                return .success(document)
+            } else {
+                if let message = decode(data) {
+                    return .failure(.serverError(message))
+                } else {
+                    return .failure(.failure)
                 }
             }
+            
+        case .failure:
+            return .failure(.failure)
         }
     }
+        
+    typealias PDFResult = Result<PDFDocument, ServiceFailure>
+}
+
+private enum ServiceFailure: Error {
+    
+    case failure
+    case serverError(String)
 }
 
 enum PrintFormViewModelAction {
