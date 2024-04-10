@@ -68,9 +68,6 @@ extension PaymentsInputPhoneView {
             
             self.init(textView: textView, phone: phone, title: title, model: model, source: parameterInput)
             
-            let validator = PhoneValidator()
-            let transformer = Transformers.phoneKit
-            
             if let phone = phone {
 #if DEBUG
                 if phone.digits != "70115110217" {
@@ -112,6 +109,15 @@ extension PaymentsInputPhoneView {
 
                             title = titleValue
                         }
+                        
+                        if isEditing,
+                           value.last != value.current,
+                           value.id == Payments.Parameter.Identifier.sfpPhone.rawValue,
+                           let phone = value.current,
+                           PhoneValidator().isValid(phone) {
+                            
+                            model.action.send(ModelAction.LatestPayments.BanksList.Request(prePayment: false, phone: phone))
+                        }
 
                     } else {
 
@@ -132,9 +138,19 @@ extension PaymentsInputPhoneView {
                     
                     switch action {
                     case let payload as ContactsViewModelAction.ContactPhoneSelected:
+                        self?.update(value: payload.phone)
+                        if let source = self?.source.updated(value: payload.phone) {
+                         
+                            self?.update(source: source)
+                        }
+                        
                         self?.textView.setText(to: payload.phone)
                         self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Close())
-    
+                        self?.model.action.send(ModelAction.LatestPayments.BanksList.Request(
+                            prePayment: false,
+                            phone: payload.phone
+                        ))
+                        
                     default:
                         break
                     }
