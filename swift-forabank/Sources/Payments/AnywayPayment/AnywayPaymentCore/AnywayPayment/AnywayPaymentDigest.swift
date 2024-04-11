@@ -11,40 +11,18 @@ import Tagged
 public struct AnywayPaymentDigest: Equatable {
     
     public let additional: [Additional]
-    public let amount: Decimal?
-    // Признак проверки операции (если check="true", то OTP не отправляется, если check="false" - OTP отправляется)
-    public let check: Bool
-    public let comment: String?
-    public let mcc: MCC?
-    public let product: Product?
-    public let puref: Puref?
+    public let core: PaymentCore?
+    public let puref: Puref
     
     public init(
         additional: [Additional],
-        amount: Decimal?,
-        check: Bool,
-        comment: String?,
-        mcc: MCC?,
-        product: Product?,
-        puref: Puref?
+        core: PaymentCore?,
+        puref: Puref
     ) {
         self.additional = additional
-        self.amount = amount
-        self.check = check
-        self.comment = comment
-        self.mcc = mcc
-        self.product = product
+        self.core = core
         self.puref = puref
     }
-}
-
-public extension AnywayPaymentDigest {
-    
-    typealias MCC = Tagged<_MCC, String>
-    enum _MCC {}
-    
-    typealias Puref = Tagged<_Puref, String>
-    enum _Puref {}
 }
 
 extension AnywayPaymentDigest {
@@ -65,38 +43,41 @@ extension AnywayPaymentDigest {
             self.fieldValue = fieldValue
         }
     }
-}
-
-public extension AnywayPaymentDigest {
     
-    struct Product: Equatable {
+    public struct PaymentCore: Equatable {
         
-        public let type: ProductType
+        public let amount: Decimal
         public let currency: Currency
+        public let productID: ProductID
         
         public init(
-            type: ProductType,
-            currency: Currency
+            amount: Decimal,
+            currency: Currency,
+            productID: ProductID
         ) {
-            self.type = type
+            self.amount = amount
             self.currency = currency
+            self.productID = productID
         }
     }
+    
+    public typealias Puref = Tagged<_Puref, String>
+    public enum _Puref {}
 }
 
-public extension AnywayPaymentDigest.Product {
+public extension AnywayPaymentDigest.PaymentCore {
     
     typealias Currency = Tagged<_Currency, String>
     enum _Currency {}
     
-    enum ProductType: Equatable {
+    enum ProductID: Equatable {
         
         case account(AccountID)
         case card(CardID)
     }
 }
 
-public extension AnywayPaymentDigest.Product.ProductType {
+public extension AnywayPaymentDigest.PaymentCore.ProductID {
     
     typealias AccountID = Tagged<_AccountID, Int>
     enum _AccountID {}

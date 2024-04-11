@@ -14,11 +14,7 @@ extension AnywayPayment {
         
         .init(
             additional: additional,
-            amount: amount,
-            check: false,
-            comment: nil,
-            mcc: nil,
-            product: nil,
+            core: nil,
             puref: .init(puref.rawValue)
         )
     }
@@ -132,32 +128,11 @@ final class AnywayPaymentDigestPropertyTests: XCTestCase {
         ])
     }
     
-    func test_shouldSetAmountToNilOnPaymentWithoutAmount() {
+    func test_shouldSetCoreToNilOnPaymentWithoutAmount() {
         
         let payment = makeAnywayPaymentWithoutAmount()
-        
-        XCTAssertNil(payment.digest.amount)
-    }
-    
-    func test_shouldSetAmountOnPaymentWithAmount() {
-        
-        let payment = makeAnywayPaymentWithAmount(1_234.56)
-        
-        XCTAssertNoDiff(payment.digest.amount, 1_234.56)
-    }
-    
-    func test_shouldSetCheckToFalseOnPaymentWithoutOTP() {
-        
-        let payment = makeAnywayPaymentWithoutOTP()
-        
-        XCTAssertFalse(payment.digest.check)
-    }
-    
-    func test_shouldSetCheckToFalseOnPaymentWithOTP() {
-        
-        let payment = makeAnywayPaymentWithOTP()
-        
-        XCTAssertFalse(payment.digest.check)
+
+        XCTAssertNil(payment.digest.core)
     }
     
     func test_shouldSetPuref() {
