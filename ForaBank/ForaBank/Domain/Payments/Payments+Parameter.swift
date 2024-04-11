@@ -1798,19 +1798,14 @@ extension Payments.ParameterButton.Style: Decodable {
 extension PaymentParameterSubscriber {
     
     var description: String? {
-         
+        
         if let legalName {
             
-            let description = "\(legalName)"
-            
             if let subscriptionPurpose {
-            
-                let description = "\(legalName)" + "\n" + "\(subscriptionPurpose)"
-            
-                return description
+                
+                return legalName + "\n" + subscriptionPurpose
             }
-            
-            return description
+            return legalName
             
         } else {
             
