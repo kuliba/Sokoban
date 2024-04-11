@@ -11,26 +11,20 @@ import Tagged
 public struct AnywayPayment: Equatable {
     
     public var elements: [Element]
-    public let hasAmount: Bool
+    public var infoMessage: String?
     public let isFinalStep: Bool
     public let isFraudSuspected: Bool
-    public let snapshot: Snapshot
-    public var status: Status?
     
     public init(
         elements: [Element],
-        hasAmount: Bool,
+        infoMessage: String?,
         isFinalStep: Bool,
-        isFraudSuspected: Bool,
-        snapshot: Snapshot,
-        status: Status?
+        isFraudSuspected: Bool
     ) {
         self.elements = elements
-        self.hasAmount = hasAmount
+        self.infoMessage = infoMessage
         self.isFinalStep = isFinalStep
         self.isFraudSuspected = isFraudSuspected
-        self.snapshot = snapshot
-        self.status = status
     }
 }
 
@@ -40,9 +34,8 @@ extension AnywayPayment {
         
         case field(Field)
         case parameter(Parameter)
+        case widget(Widget)
     }
-    
-    public typealias Snapshot = [Element.StringID: Element.Value]
     
     public enum Status: Equatable {
         
@@ -54,12 +47,12 @@ extension AnywayPayment.Element {
     
     public struct Field: Identifiable, Equatable {
         
-        public let id: ID
+        public let id: StringID
         public let value: Value
         public let title: String
         
         public init(
-            id: ID, 
+            id: StringID,
             value: Value,
             title: String
         ) {
@@ -94,14 +87,10 @@ extension AnywayPayment.Element {
     
     public typealias Value = Tagged<_Value, String>
     public enum _Value {}
-}
-
-extension AnywayPayment.Element.Field {
     
-    public enum ID: Hashable {
+    public enum Widget: Equatable {
         
-        case otp
-        case string(AnywayPayment.Element.StringID)
+        case amount, otp
     }
 }
 
@@ -233,8 +222,8 @@ extension AnywayPayment.Element.Parameter.UIAttributes {
         case bic
         case counter
         case date
-        case insurance
         case inn
+        case insurance
         case name
         case oktmo
         case penalty
@@ -247,5 +236,21 @@ extension AnywayPayment.Element.Parameter.UIAttributes {
     public enum ViewType: Equatable {
         
         case constant, input, output
+    }
+}
+
+extension AnywayPayment.Element.Widget {
+    
+    public var id: ID {
+        
+        switch self {
+        case .amount: return .amount
+        case .otp:    return .otp
+        }
+    }
+    
+    public enum ID {
+        
+        case amount, otp
     }
 }

@@ -447,6 +447,7 @@ public extension Image {
     static var ic24Cashback: Image { Image(#function) }
     static var ic24Cashterminal: Image { Image(#function) }
     static var ic24Cast: Image { Image(#function) }
+    static var ic24Catering: Image { Image(#function) }
     static var ic24ChatActive: Image { Image(#function) }
     static var ic24ChatInactive: Image { Image(#function) }
     static var ic24Check: Image { Image(#function) }
@@ -819,6 +820,7 @@ public extension Image {
     static var ic40BankServices: Image { Image(#function) }
     static var ic40Beauty: Image { Image(#function) }
     static var ic40Card: Image { Image(#function) }
+    static var ic40Catering: Image { Image(#function) }
     static var ic40ClothesAccessories: Image { Image(#function) }
     static var ic40Danger: Image { Image(#function) }
     static var ic40Delete: Image { Image(#function) }

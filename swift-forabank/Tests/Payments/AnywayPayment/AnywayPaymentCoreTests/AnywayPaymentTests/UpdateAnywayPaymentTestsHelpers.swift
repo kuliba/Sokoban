@@ -9,21 +9,14 @@ import AnywayPaymentCore
 import Foundation
 import XCTest
 
-func assertOTP(
+func assertOTPisLast(
     in payment: AnywayPayment,
-    precedes fields: [AnywayPayment.Element.Field],
     file: StaticString = #file,
     line: UInt = #line
 ) {
-    XCTAssert(
-        hasOTPField(payment),
-        "Expected OTP field in payment fields.",
-        file: file, line: line
-    )
-    
-#warning("this check is for fields only - is it ok or it needs to check all element cases?")
-    XCTAssert(
-        payment.paymentFields.isElementAfterAll(.otp, inGroup: fields),
+    XCTAssertNoDiff(
+        payment.elements.last,
+        .widget(.otp),
         "Expected OTP field after complimentary fields.",
         file: file, line: line
     )
@@ -33,25 +26,22 @@ func hasAmountField(
     _ payment: AnywayPayment
 ) -> Bool {
     
-    payment.hasAmount
+    payment.elements.compactMap(\.widget).map(\.id).contains(.amount)
 }
 
 func hasOTPField(
     _ payment: AnywayPayment
 ) -> Bool {
     
-    payment.paymentFields.map(\.id).contains(.otp)
+    payment.elements.compactMap(\.widget).map(\.id).contains(.otp)
 }
 
-private extension AnywayPayment {
+private extension AnywayPayment.Element {
     
-    var paymentFields: [Element.Field] {
+    var widget: Widget? {
         
-        elements.compactMap {
-            
-            guard case let .field(field) = $0 else { return nil }
-            return field
-        }
+        guard case let .widget(widget) = self else { return nil }
+        return widget
     }
 }
 
@@ -76,58 +66,60 @@ func makeAnywayPayment(
     hasAmount: Bool = false
 ) -> AnywayPayment {
     
-    makeAnywayPayment(
-        elements: fields.map(AnywayPayment.Element.field),
-        hasAmount: hasAmount,
+    var elements = fields.map(AnywayPayment.Element.field)
+    if hasAmount {
+        elements.append(.widget(.amount))
+    }
+    
+    return makeAnywayPayment(
+        elements: elements,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected
     )
-}
-
-func makeAnywayPaymentStringID(
-    _ rawValue: String = anyMessage()
-) -> AnywayPayment.Element.StringID {
- 
-    .init(rawValue)
 }
 
 func makeAnywayPayment(
     parameters: [AnywayPayment.Element.Parameter] = [],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    hasAmount: Bool = false,
-    snapshot: [String: String] = [:]
+    hasAmount: Bool = false
 ) -> AnywayPayment {
     
-    makeAnywayPayment(
-        elements: parameters.map(AnywayPayment.Element.parameter),
-        hasAmount: hasAmount,
+    var elements = parameters.map(AnywayPayment.Element.parameter)
+    if hasAmount {
+        elements.append(.widget(.amount))
+    }
+    
+    return makeAnywayPayment(
+        elements: elements,
         isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected,
-        snapshot: snapshot
+        isFraudSuspected: isFraudSuspected
     )
 }
 
 func makeAnywayPayment(
     elements: [AnywayPayment.Element],
-    hasAmount: Bool = false,
+    infoMessage: String? = nil,
     isFinalStep: Bool = false,
-    isFraudSuspected: Bool = false,
-    snapshot: [String: String] = [:],
-    status: AnywayPayment.Status? = nil
+    isFraudSuspected: Bool = false
 ) -> AnywayPayment {
     
     .init(
         elements: elements,
-        hasAmount: hasAmount,
+        infoMessage: infoMessage,
         isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected,
-        snapshot: snapshot.reduce(into: [:]) {
-            
-            $0[.init($1.key)] = .init($1.value)
-        }, 
-        status: status
+        isFraudSuspected: isFraudSuspected
     )
+}
+
+func makeAnywayPaymentOutline(
+    _ outline: [String: String] = [:]
+) -> AnywayPayment.Outline {
+    
+    outline.reduce(into: [:]) {
+        
+        $0[.init($1.key)] = .init($1.value)
+    }
 }
 
 func makeAnywayPaymentWithAmount(
@@ -175,13 +167,13 @@ func makeAnywayPaymentWithOTP(
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(fields: [makeOTPField()])
+    let payment = makeAnywayPayment(elements: [.widget(makeOTPWidget())])
     XCTAssert(hasOTPField(payment), "Expected to have OTP field.", file: file, line: line)
     return payment
 }
 
 func makeAnywayPaymentField(
-    _ id: AnywayPayment.Element.Field.ID = .string(.init(anyMessage())),
+    _ id: AnywayPayment.Element.Field.ID = .init(anyMessage()),
     value: String = anyMessage(),
     title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
@@ -195,7 +187,7 @@ func makeAnywayPaymentFieldWithStringID(
     title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
     
-    makeAnywayPaymentField(.string(.init(id)), value: value, title: title)
+    makeAnywayPaymentField(.init(id), value: value, title: title)
 }
 
 func makeAnywayPaymentParameter(
@@ -222,7 +214,7 @@ func makeAnywayPaymentParameterWithID(
     )
 }
 
-private func makeAnywayPaymentElementParameterField(
+func makeAnywayPaymentElementParameterField(
     id: String = anyMessage(),
     value: String? = anyMessage()
 ) -> AnywayPayment.Element.Parameter.Field {
@@ -282,12 +274,11 @@ private func makeAnywayPaymentElementParameterUIAttributes(
     )
 }
 
-private func makeOTPField(
-    value: String = anyMessage(),
-    title: String = anyMessage()
-) -> AnywayPayment.Element.Field {
+private func makeOTPWidget(
+    value: String = anyMessage()
+) -> AnywayPayment.Element.Widget {
     
-    .init(id: .otp, value: .init(value), title: title)
+    .otp
 }
 
 func makeAnywayPaymentWithoutOTP(
@@ -457,7 +448,7 @@ func makeAnywayPaymentAndUpdateFields(
     )
     
     let updated = makeAnywayPaymentField(
-        .string(.init(name)),
+        .init(name),
         value: value,
         title: title
     )

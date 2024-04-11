@@ -2,14 +2,14 @@
   "properties" : {
     "template-rendering-intent" : "template"
   },
-  "info" : {
-    "version" : 1,
-    "author" : "xcode"
-  },
   "images" : [
     {
       "filename" : "ic16CloudRain.svg",
       "idiom" : "universal"
     }
-  ]
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
 }
