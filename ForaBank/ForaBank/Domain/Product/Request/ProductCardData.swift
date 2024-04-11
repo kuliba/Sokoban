@@ -101,7 +101,7 @@ class ProductCardData: ProductData {
         statusCard = try container.decodeIfPresent(StatusCard.self, forKey: .statusCard)
         cardType = try container.decodeIfPresent(CardType.self, forKey: .cardType)
         idParent = try container.decodeIfPresent(Int.self, forKey: .idParent)
-        paymentSystemImageMd5Hash = try container.decode(String.self, forKey: .paymentSystemImageMd5Hash)
+        paymentSystemImageMd5Hash = try container.decodeIfPresent(String.self, forKey: .paymentSystemImageMd5Hash) ?? ""
 
         try super.init(from: decoder)
     }
