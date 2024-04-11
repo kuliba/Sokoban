@@ -1813,3 +1813,17 @@ extension PaymentParameterSubscriber {
         }
     }
 }
+
+extension Payments.ParameterSelectBank.Option {
+    
+    var text: String {
+          
+          switch subtitle {
+          case let .some(subtitle):
+              return subtitle
+          case .none:
+              return name
+          }
+      }
+
+}
