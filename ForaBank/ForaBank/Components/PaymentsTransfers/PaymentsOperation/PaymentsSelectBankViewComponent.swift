@@ -329,9 +329,9 @@ extension PaymentsSelectBankView.ViewModel.CollapsedViewModel {
     init(value: Payments.Parameter.Value, parameter: Payments.ParameterSelectBank, defaultIcon: Image, allBanks: [BankData]) {
         
         let bank = allBanks.first { $0.id == value }
-        let option = parameter.options.first(where: { $0.id == value })
+        let parameterOption = parameter.options.first(where: { $0.id == value })
         
-        let newOption = option ?? bank.map({ item in
+        let newOption = parameterOption ?? bank.map({ item in
             Payments.ParameterSelectBank.Option(
                 id: item.id,
                 name: item.memberNameRus,
@@ -345,7 +345,7 @@ extension PaymentsSelectBankView.ViewModel.CollapsedViewModel {
         if let option = newOption {
             
             //TODO: more elegant solution required
-            if let subtitle = option.subtitle {
+            if let subtitle = parameterOption?.subtitle {
                 
                 // bank BIC
                 self.init(icon: .init(with: option, defaultIcon: defaultIcon), title: .selected(title: parameter.title, name: subtitle))
