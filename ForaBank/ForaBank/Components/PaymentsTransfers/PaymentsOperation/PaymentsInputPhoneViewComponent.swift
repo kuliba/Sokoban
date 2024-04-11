@@ -113,7 +113,7 @@ extension PaymentsInputPhoneView {
                         if isEditing,
                            value.last != value.current,
                            value.id == Payments.Parameter.Identifier.sfpPhone.rawValue,
-                           let phone = value.current,
+                           let phone = textView.text,
                            PhoneValidator().isValid(phone) {
                             
                             model.action.send(ModelAction.LatestPayments.BanksList.Request(prePayment: false, phone: phone))
