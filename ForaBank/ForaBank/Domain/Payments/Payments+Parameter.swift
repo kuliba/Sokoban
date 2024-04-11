@@ -1813,19 +1813,14 @@ extension PaymentParameterSubscriber {
 
 extension Payments.ParameterSelectBank.Option {
     
-    enum OptionType {
+    var text: String {
+          
+          switch subtitle {
+          case let .some(subtitle):
+              return subtitle
+          case .none:
+              return name
+          }
+      }
 
-        case sfp
-        case requisites(String)
-    }
-    
-    var optionType: OptionType {
-        
-        switch subtitle {
-        case let .some(subtitle):
-            return .requisites(subtitle)
-        case .none:
-            return .sfp
-        }
-    }
 }
