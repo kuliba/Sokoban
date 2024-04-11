@@ -139,9 +139,9 @@ class ProductData: Identifiable, Codable {
         isVisible = try container.decode(Bool.self, forKey: .visibility)
         smallDesignMd5hash = try container.decode(String.self, forKey: .smallDesignMd5hash)
         smallBackgroundDesignHash = try container.decode(String.self, forKey: .smallBackgroundDesignHash)
-        mediumDesignMd5Hash = try container.decode(String.self, forKey: .mediumDesignMd5Hash)
-        largeDesignMd5Hash = try container.decode(String.self, forKey: .largeDesignMd5Hash)
-        xlDesignMd5Hash = try container.decode(String.self, forKey: .xlDesignMd5Hash)
+        mediumDesignMd5Hash = try container.decodeIfPresent(String.self, forKey: .mediumDesignMd5Hash) ?? ""
+        largeDesignMd5Hash = try container.decodeIfPresent(String.self, forKey: .largeDesignMd5Hash) ?? ""
+        xlDesignMd5Hash = try container.decodeIfPresent(String.self, forKey: .xlDesignMd5Hash) ?? ""
     }
     
     func encode(to encoder: Encoder) throws {
@@ -176,9 +176,9 @@ class ProductData: Identifiable, Codable {
         try container.encode(order, forKey: .order)
         try container.encode(smallDesignMd5hash, forKey: .smallDesignMd5hash)
         try container.encode(smallBackgroundDesignHash, forKey: .smallBackgroundDesignHash)
-        try container.encode(mediumDesignMd5Hash, forKey: .mediumDesignMd5Hash)
-        try container.encode(largeDesignMd5Hash, forKey: .largeDesignMd5Hash)
-        try container.encode(xlDesignMd5Hash, forKey: .xlDesignMd5Hash)
+        try container.encodeIfPresent(mediumDesignMd5Hash, forKey: .mediumDesignMd5Hash)
+        try container.encodeIfPresent(largeDesignMd5Hash, forKey: .largeDesignMd5Hash)
+        try container.encodeIfPresent(xlDesignMd5Hash, forKey: .xlDesignMd5Hash)
     }
 }
 
