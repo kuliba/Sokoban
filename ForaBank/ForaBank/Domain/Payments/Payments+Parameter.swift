@@ -1810,3 +1810,22 @@ extension PaymentParameterSubscriber {
         }
     }
 }
+
+extension Payments.ParameterSelectBank.Option {
+    
+    enum OptionType {
+
+        case sfp
+        case requisites(String)
+    }
+    
+    var optionType: OptionType {
+        
+        switch subtitle {
+        case let .some(subtitle):
+            return .requisites(subtitle)
+        case .none:
+            return .sfp
+        }
+    }
+}

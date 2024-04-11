@@ -344,16 +344,20 @@ extension PaymentsSelectBankView.ViewModel.CollapsedViewModel {
         
         if let option = newOption {
             
-            //TODO: more elegant solution required
-            if let subtitle = parameterOption?.subtitle {
-                
-                // bank BIC
-                self.init(icon: .init(with: option, defaultIcon: defaultIcon), title: .selected(title: parameter.title, name: subtitle))
-                
-            } else {
-                
+            switch option.optionType {
+            case .sfp:
                 // bank name
-                self.init(icon: .init(with: option, defaultIcon: defaultIcon), title: .selected(title: parameter.title, name: option.name))
+                self.init(
+                    icon: .init(with: option, defaultIcon: defaultIcon),
+                    title: .selected(title: parameter.title, name: option.name)
+                )
+                
+            case let .requisites(subtitle):
+                // bank BIC
+                self.init(
+                    icon: .init(with: option, defaultIcon: defaultIcon),
+                    title: .selected(title: parameter.title, name: subtitle)
+                )
             }
             
         } else {
