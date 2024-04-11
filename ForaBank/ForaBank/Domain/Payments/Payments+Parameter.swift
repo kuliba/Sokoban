@@ -1544,9 +1544,9 @@ extension Payments {
             self.url = url
         }
         
-        init?(with subsctiptionData: C2BSubscriptionData) {
+        init?(with subscriptionData: C2BSubscriptionData) {
             
-            guard let url = subsctiptionData.redirectUrl else {
+            guard let url = subscriptionData.redirectUrl else {
                 return nil
             }
             
