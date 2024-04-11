@@ -118,11 +118,10 @@ extension ProductCardData {
             order: 1,
             visibility: true,
             smallDesignMd5hash: "7e7beff3d0827be85b8259135643bf62",
-            smallBackgroundDesignHash: "b0c85ac844ee9758af64ad2c066d5191"
-        )
-        productCardData.statusCard = .active
-        productCardData.cardType = .regular
-        productCardData.idParent = nil
+            smallBackgroundDesignHash: "b0c85ac844ee9758af64ad2c066d5191",
+            statusCard: .active,
+            cardType: .regular,
+            idParent: nil)
         
         return productCardData
     }()
