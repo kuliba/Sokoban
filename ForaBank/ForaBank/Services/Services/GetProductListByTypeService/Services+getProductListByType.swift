@@ -129,17 +129,14 @@ private extension ProductCardData {
             order: commonData.order,
             visibility: commonData.visibility,
             smallDesignMd5hash: commonData.smallDesignMd5Hash,
-            smallBackgroundDesignHash: commonData.smallBackgroundDesignHash
-        )
-        
-        self.statusCard = .init(cardData.statusCard)
-        self.cardType = .init(cardData.cardType)
-        self.idParent = cardData.idParent
-        self.paymentSystemImageMd5Hash = cardData.paymentSystemImageMd5Hash
-        
-        self.mediumDesignMd5Hash = commonData.mediumDesignMd5Hash
-        self.largeDesignMd5Hash = commonData.largeDesignMd5Hash
-        self.xlDesignMd5Hash = commonData.xlDesignMd5Hash
+            smallBackgroundDesignHash: commonData.smallBackgroundDesignHash,
+            mediumDesignMd5Hash: commonData.mediumDesignMd5Hash,
+            largeDesignMd5Hash: commonData.largeDesignMd5Hash,
+            xlDesignMd5Hash: commonData.xlDesignMd5Hash,
+            statusCard: .init(cardData.statusCard),
+            cardType: .init(cardData.cardType),
+            idParent: cardData.idParent,
+            paymentSystemImageMd5Hash: cardData.paymentSystemImageMd5Hash)
     }
 }
 
@@ -189,11 +186,10 @@ private extension ProductLoanData {
             order: commonData.order,
             visibility: commonData.visibility,
             smallDesignMd5hash: commonData.smallDesignMd5Hash,
-            smallBackgroundDesignHash: commonData.smallBackgroundDesignHash
-        )
-        self.mediumDesignMd5Hash = commonData.mediumDesignMd5Hash
-        self.largeDesignMd5Hash = commonData.largeDesignMd5Hash
-        self.xlDesignMd5Hash = commonData.xlDesignMd5Hash
+            smallBackgroundDesignHash: commonData.smallBackgroundDesignHash,
+            mediumDesignMd5Hash: commonData.mediumDesignMd5Hash,
+            largeDesignMd5Hash: commonData.largeDesignMd5Hash,
+            xlDesignMd5Hash: commonData.xlDesignMd5Hash)
     }
 }
 
@@ -241,11 +237,10 @@ private extension ProductDepositData {
             order: commonData.order,
             visibility: commonData.visibility,
             smallDesignMd5hash: commonData.smallDesignMd5Hash,
-            smallBackgroundDesignHash: commonData.smallBackgroundDesignHash
-        )
-        self.mediumDesignMd5Hash = commonData.mediumDesignMd5Hash
-        self.largeDesignMd5Hash = commonData.largeDesignMd5Hash
-        self.xlDesignMd5Hash = commonData.xlDesignMd5Hash
+            smallBackgroundDesignHash: commonData.smallBackgroundDesignHash,
+            mediumDesignMd5Hash: commonData.mediumDesignMd5Hash,
+            largeDesignMd5Hash: commonData.largeDesignMd5Hash,
+            xlDesignMd5Hash: commonData.xlDesignMd5Hash)
     }
 }
 
@@ -291,11 +286,10 @@ private extension ProductAccountData {
             smallDesignMd5hash: commonData.smallDesignMd5Hash,
             smallBackgroundDesignHash: commonData.smallBackgroundDesignHash,
             detailedRatesUrl: accountData.detailedRatesUrl,
-            detailedConditionUrl: accountData.detailedConditionUrl
-        )
-        self.mediumDesignMd5Hash = commonData.mediumDesignMd5Hash
-        self.largeDesignMd5Hash = commonData.largeDesignMd5Hash
-        self.xlDesignMd5Hash = commonData.xlDesignMd5Hash
+            detailedConditionUrl: accountData.detailedConditionUrl,
+            mediumDesignMd5Hash: commonData.mediumDesignMd5Hash,
+            largeDesignMd5Hash: commonData.largeDesignMd5Hash,
+            xlDesignMd5Hash: commonData.xlDesignMd5Hash)
     }
 }
 

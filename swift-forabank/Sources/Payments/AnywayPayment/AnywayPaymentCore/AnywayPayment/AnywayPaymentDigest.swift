@@ -1,6 +1,6 @@
 //
 //  AnywayPaymentDigest.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 02.04.2024.
 //
@@ -10,45 +10,23 @@ import Tagged
 
 public struct AnywayPaymentDigest: Equatable {
     
-    // Признак проверки операции (если check="true", то OTP не отправляется, если check="false" - OTP отправляется)
-    public let check: Bool
-    public let amount: Amount?
-    public let product: Product?
-    public let comment: String?
-    public let puref: Puref?
-    public let additionals: [Additional]
-    public let mcc: MCC?
+    public let additional: [Additional]
+    public let core: PaymentCore?
+    public let puref: Puref
     
     public init(
-        check: Bool, 
-        amount: Amount?,
-        product: Product?,
-        comment: String?,
-        puref: Puref?,
-        additionals: [Additional],
-        mcc: MCC?
+        additional: [Additional],
+        core: PaymentCore?,
+        puref: Puref
     ) {
-        self.check = check
-        self.amount = amount
-        self.product = product
-        self.comment = comment
+        self.additional = additional
+        self.core = core
         self.puref = puref
-        self.additionals = additionals
-        self.mcc = mcc
     }
 }
 
-public extension AnywayPaymentDigest {
-    
-    typealias MCC = Tagged<_MCC, String>
-    enum _MCC {}
-    
-    typealias Puref = Tagged<_Puref, String>
-    enum _Puref {}
-}
-
 extension AnywayPaymentDigest {
-        
+    
     public struct Additional: Equatable {
         
         public let fieldID: Int
@@ -56,7 +34,7 @@ extension AnywayPaymentDigest {
         public let fieldValue: String
         
         public init(
-            fieldID: Int, 
+            fieldID: Int,
             fieldName: String,
             fieldValue: String
         ) {
@@ -66,37 +44,40 @@ extension AnywayPaymentDigest {
         }
     }
     
-    public struct Amount: Equatable {
+    public struct PaymentCore: Equatable {
         
-        public let value: Decimal
+        public let amount: Decimal
         public let currency: Currency
+        public let productID: ProductID
         
         public init(
-            value: Decimal, 
-            currency: Currency
+            amount: Decimal,
+            currency: Currency,
+            productID: ProductID
         ) {
-            self.value = value
+            self.amount = amount
             self.currency = currency
+            self.productID = productID
         }
     }
+    
+    public typealias Puref = Tagged<_Puref, String>
+    public enum _Puref {}
 }
 
-public extension AnywayPaymentDigest.Amount {
+public extension AnywayPaymentDigest.PaymentCore {
     
     typealias Currency = Tagged<_Currency, String>
     enum _Currency {}
-}
-
-public extension AnywayPaymentDigest {
     
-    enum Product: Equatable {
+    enum ProductID: Equatable {
         
         case account(AccountID)
         case card(CardID)
     }
 }
 
-public extension AnywayPaymentDigest.Product {
+public extension AnywayPaymentDigest.PaymentCore.ProductID {
     
     typealias AccountID = Tagged<_AccountID, Int>
     enum _AccountID {}

@@ -9,10 +9,12 @@ extension AnywayPayment.Outline {
     
     public func update(with payment: AnywayPayment) -> Self {
         
-        merging(
+        let fields = fields.merging(
             payment.elements.compactMap(\.parameterIDValuePair),
             uniquingKeysWith: { _, new in new }
         )
+        
+        return .init(core: core, fields: fields)
     }
 }
 

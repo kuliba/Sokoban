@@ -132,7 +132,7 @@ private func makePayload(
 ) -> CreateAnywayTransferResponsePayload {
     
     .init(
-        additionals: [
+        additional: [
             .init(
                 fieldID: fieldID,
                 fieldName: fieldName,

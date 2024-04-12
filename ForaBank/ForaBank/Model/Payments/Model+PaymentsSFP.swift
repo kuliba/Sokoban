@@ -38,7 +38,7 @@ extension Model {
             case let .latestPayment(latestPaymentId):
                 if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData {
                     
-                    let phoneFormatted = PhoneNumberWrapper().format(latestPayment.phoneNumber).digits
+                    let phoneFormatted = PhoneNumberWrapper().format(latestPayment.phoneNumber.addCodeRuIfNeeded()).digits
                     let phone = paymentsByPhone.value.contains(where: { $0.key == phoneFormatted })
                     if !phone,
                        let token {

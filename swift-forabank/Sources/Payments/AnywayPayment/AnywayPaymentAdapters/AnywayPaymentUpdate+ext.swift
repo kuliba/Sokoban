@@ -15,7 +15,7 @@ public extension AnywayPaymentUpdate {
         
         self.init(
             details: .init(response),
-            fields: response.additionals.map { .init($0) },
+            fields: response.additional.map { .init($0) },
             parameters: response.parametersForNextStep.map { .init($0) }
         )
     }
