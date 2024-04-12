@@ -259,17 +259,17 @@ extension ProductCardData {
 extension ProductCardData {
 
     var isNotActivated: Bool {
-
-        guard status == .active || status == .issuedToClient,
-              statusPc == .notActivated else {
-                  return false
-              }
-
-        return true
+        
+        guard let statusCard else {  return false }
+        
+        return statusCard == .notActivated
     }
     
     var isActivated: Bool {
-        isNotActivated == false
+        
+        guard let statusCard else {  return true }
+
+        return statusCard != .notActivated
     }
     
     func activate() {
@@ -280,17 +280,15 @@ extension ProductCardData {
 
     var isBlocked: Bool {
 
-        guard status == .blockedByBank || status == .blockedByClient, statusPc == .operationsBlocked || statusPc == .blockedByBank || statusPc == .lost || statusPc == .stolen || statusPc == .temporarilyBlocked || statusPc == .blockedByClient || status == .blockedByClient else {
-            return false
-        }
+        guard let statusCard else {  return false }
 
-        return true
+        return statusCard == .blockedUnlockAvailable || statusCard == .blockedUnlockNotAvailable
     }
   
     
     var canBeUnblocked: Bool {
 
-        return statusPc == .temporarilyBlocked || statusPc == .blockedByClient
+        statusCard == .blockedUnlockAvailable
     }
     
     var isCreditCard: Bool {
