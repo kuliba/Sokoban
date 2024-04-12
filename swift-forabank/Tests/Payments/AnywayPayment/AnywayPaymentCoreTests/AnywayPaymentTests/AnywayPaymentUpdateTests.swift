@@ -1,5 +1,5 @@
 //
-//  UpdateAnywayPaymentTests.swift
+//  AnywayPaymentUpdateTests.swift
 //
 //
 //  Created by Igor Malyarov on 04.04.2024.
@@ -8,9 +8,9 @@
 import AnywayPaymentCore
 import XCTest
 
-final class UpdateAnywayPaymentTests: XCTestCase {
+final class AnywayPaymentUpdateTests: XCTestCase {
     
-    // MARK: - amount
+    // MARK: - amount (core)
     
     func test_update_shouldNotAddAmountFieldOnNeedSumFalse() {
         
@@ -34,6 +34,55 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let update = makeAnywayPaymentUpdate(needSum: false)
         
         XCTAssertFalse(hasAmountField(updatePayment(payment, with: update)))
+    }
+    
+    func test_update_shouldSetCoreWidgetWithAccountIDFromOutline() {
+        
+        let payment = makeAnywayPaymentWithoutAmount()
+        let update = makeAnywayPaymentUpdate(needSum: true)
+        let (amount, currency, id) = (makeAmount(), anyMessage(), makeIntID())
+        let core = makeOutlinePaymentCore(amount: amount, currency: currency, productID: id, productType: .account)
+        let outline = makeAnywayPaymentOutline(core: core)
+
+        let widgetCore = widgetCore(updatePayment(payment, with: update, and: outline))
+
+        XCTAssertNoDiff(widgetCore, .init(
+            amount: amount,
+            currency: .init(currency),
+            productID: .accountID(.init(id))
+        ))
+    }
+    
+    func test_update_shouldSetCoreWidgetWithCardIDFromOutline() {
+        
+        let payment = makeAnywayPaymentWithoutAmount()
+        let update = makeAnywayPaymentUpdate(needSum: true)
+        let (amount, currency, id) = (makeAmount(), anyMessage(), makeIntID())
+        let core = makeOutlinePaymentCore(amount: amount, currency: currency, productID: id, productType: .card)
+        let outline = makeAnywayPaymentOutline(core: core)
+        
+        let widgetCore = widgetCore(updatePayment(payment, with: update, and: outline))
+
+        XCTAssertNoDiff(widgetCore, .init(
+            amount: amount,
+            currency: .init(currency),
+            productID: .cardID(.init(id))
+        ))
+    }
+    
+    private func widgetCore(
+        _ payment: AnywayPayment
+    ) -> AnywayPayment.Element.Widget.PaymentCore? {
+        
+        let cores: [AnywayPayment.Element.Widget.PaymentCore] = payment.elements.compactMap {
+            
+            guard case let .widget(.core(core)) = $0
+            else { return nil }
+            
+            return core
+        }
+        
+        return cores.first
     }
     
     // MARK: - complimentary fields
@@ -297,7 +346,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let parameter = try XCTUnwrap(updated[parameterID: parameterID], "Expected parameter with id \(parameterID), but got nil instead.")
         
         XCTAssertNil(parameter.field.value)
-        XCTAssertNil(outline[.init(parameterID)])
+        XCTAssertNil(outline.fields[.init(parameterID)])
     }
     
     func test_update_shouldSetParameterValueToOutlinedOnNilUpdateValue() throws {
@@ -316,7 +365,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let parameter = try XCTUnwrap(updated[parameterID: parameterID], "Expected parameter with id \(parameterID), but got nil instead.")
         
         XCTAssertNoDiff(parameter.field.value, .init(outlinedValue), "Expected parameter value set to outlined.")
-        XCTAssertNoDiff(outline[.init(parameterID)], .init(outlinedValue), "Expected outlined value \(outlinedValue) for parameterID \(parameterID).")
+        XCTAssertNoDiff(outline.fields[.init(parameterID)], .init(outlinedValue), "Expected outlined value \(outlinedValue) for parameterID \(parameterID).")
         XCTAssertNil(parameterUpdate.field.content, "Expected value to be nil.")
     }
     
@@ -787,7 +836,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     private func updatePayment(
         _ payment: AnywayPayment,
         with update: AnywayPaymentUpdate,
-        and outline: AnywayPayment.Outline = [:]
+        and outline: AnywayPayment.Outline = makeAnywayPaymentOutline()
     ) -> AnywayPayment {
         
         payment.update(with: update, and: outline)

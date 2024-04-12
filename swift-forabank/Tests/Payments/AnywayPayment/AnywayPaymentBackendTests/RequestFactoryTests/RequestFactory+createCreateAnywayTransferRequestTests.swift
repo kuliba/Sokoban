@@ -103,7 +103,7 @@ private extension _DTO {
     init(_ payload: RequestFactory.CreateAnywayTransferPayload) {
         
         self.init(
-            additional: payload.additionals.map { .init($0) },
+            additional: payload.additional.map { .init($0) },
             amount: payload.amount,
             check: payload.check,
             comment: payload.comment,
@@ -160,7 +160,7 @@ private func makePayload(
 ) -> RequestFactory.CreateAnywayTransferPayload {
     
     .init(
-        additionals: [
+        additional: [
             .init(
                 fieldID: fieldID,
                 fieldName: fieldName,

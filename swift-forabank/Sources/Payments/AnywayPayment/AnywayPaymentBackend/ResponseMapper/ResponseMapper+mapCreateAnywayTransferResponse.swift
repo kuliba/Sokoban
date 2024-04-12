@@ -24,7 +24,7 @@ private extension ResponseMapper.CreateAnywayTransferResponse {
     init(_ data: ResponseMapper._Data) {
         
         self.init(
-            additionals: data.additionalList.map { .init($0) },
+            additional: data.additionalList.map { .init($0) },
             amount: data.amount,
             creditAmount: data.creditAmount,
             currencyAmount: data.currencyAmount,
