@@ -34,6 +34,7 @@ struct ContentView: View {
             ScrollView {
                 
                 ForEach(viewModel.state.elements, content: elementView)
+                    .padding(.horizontal)
             }
             
             infoOverlay()
@@ -50,7 +51,13 @@ struct ContentView: View {
             Text(String(describing: field))
             
         case .otp:
-            Text("TBD: OTP Field")
+            element.otp.map {
+                
+                OTPView(
+                    state: $0,
+                    event: { viewModel.event(.otp($0)) }
+                )
+            }
             
         case .productPicker:
             Text("TBD: Product Picker (Selector)")
@@ -61,7 +68,7 @@ struct ContentView: View {
         
         VStack {
             
-            Text("OTP: \(viewModel.state.otp ?? "n/a")")
+            Text("OTP: \(viewModel.state.otp)")
         }
     }
 }
@@ -91,12 +98,12 @@ extension AnywayPayment.Element: Identifiable {
 
 private extension AnywayPayment {
     
-    var otp: String? {
+    var otp: String {
         
         guard let otp = elements.compactMap(\.otp).first
-        else { return nil }
+        else { return "n/a" }
         
-        return otp
+        return otp.isEmpty ? "<empty>" : otp
     }
 }
 

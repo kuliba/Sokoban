@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentCore
+import ForaTools
 
 final class AnywayPaymentReducer {
     
@@ -14,11 +15,12 @@ final class AnywayPaymentReducer {
         _ event: Event
     ) -> (State, Effect?) {
         
-        let state = state
-        let effect: Effect?
+        var state = state
+        var effect: Effect?
         
         switch event {
-            
+        case let .otp(otp):
+            state.elements[id: .widgetID(.otp)] = .widget(.otp(otp))
         }
         
         return (state, effect)
