@@ -115,7 +115,10 @@ extension RootViewModelFactory {
         )
 
         let productNavigationStateManager = makeProductNavigationStateManager(
-            alertsReduce: AlertReducer(productAlertsViewModel: .default))
+            alertsReduce: AlertReducer(productAlertsViewModel: .default),
+            bottomSheetReduce: BottomSheetReducer(),
+            handleEffect: ProductNavigationStateEffectHandler()
+        )
 
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,

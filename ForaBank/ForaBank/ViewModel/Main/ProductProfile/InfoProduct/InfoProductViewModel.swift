@@ -532,7 +532,7 @@ extension InfoProductViewModel {
         
         if productCardData.cardType == .additionalOther {
             
-            event(.showAdditionalOtherAlert)
+            event(.delayAlert(.showAdditionalOtherAlert))
         } else {
             
             needShowCvv.toggle()

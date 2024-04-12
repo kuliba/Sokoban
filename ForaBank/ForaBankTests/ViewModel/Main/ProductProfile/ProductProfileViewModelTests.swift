@@ -327,8 +327,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     func test_optionsPannelAction_unBlockCard_showAlert() throws {
         
         let (sut, _) = try makeSUT(
-            status: .blockedByClient,
-            statusPC: .blockedByClient
+            statusCard: .blockedUnlockAvailable
         )
         
         XCTAssertNil(sut.optionsPannel)
@@ -570,8 +569,8 @@ final class ProductProfileViewModelTests: XCTestCase {
     }
     
     private func makeSUT(
-        status: ProductData.Status = .active,
-        statusPC: ProductData.StatusPC = .active,
+        statusCard: ProductCardData.StatusCard = .active,
+        cardType: ProductCardData.CardType = .main,
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         file: StaticString = #file,
         line: UInt = #line
@@ -581,10 +580,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     ) {
         let model = Model.mockWithEmptyExcept()
         model.products.value = [.card: [
-            ProductCardData(
-                status: status,
-                statusPc: statusPC
-            )
+            ProductCardData(statusCard: statusCard, cardType: cardType)
         ]]
         
         let product = try XCTUnwrap(model.products.value[.card]?.first)
@@ -637,6 +633,20 @@ private extension ProductProfileViewModel {
             return nil
         }
     }
+    
+    var optionsPanelNew: [PanelButton.Details]? {
+        
+        switch bottomSheet?.type {
+            
+        case let .optionsPanelNew(optionsPanel):
+            
+            return optionsPanel
+            
+        default:
+            return nil
+        }
+    }
+
     
     var panelViewModelRequisites: ProductProfileOptionsPannelView.ViewModel {
         .init(
@@ -698,10 +708,10 @@ private extension ProductCardData {
         holderName: String? = "Иванов",
         allowCredit: Bool = true,
         allowDebit: Bool = true,
-        status: ProductData.Status = .active,
+        statusCard: ProductCardData.StatusCard = .active,
         loanBaseParam: ProductCardData.LoanBaseParamInfoData? = nil,
-        statusPc: ProductData.StatusPC = .active,
-        isMain: Bool = true
+        isMain: Bool = true,
+        cardType: ProductCardData.CardType = .main
     ) {
         
         self.init(
@@ -732,7 +742,7 @@ private extension ProductCardData {
             cardId: 0,
             name: "",
             validThru: Date(),
-            status: status,
+            status: .active,
             expireDate: nil,
             holderName: holderName,
             product: nil,
@@ -741,13 +751,16 @@ private extension ProductCardData {
             paymentSystemName: nil,
             paymentSystemImage: nil,
             loanBaseParam: loanBaseParam,
-            statusPc: statusPc,
+            statusPc: .active,
             isMain: isMain,
             externalId: nil,
             order: 0,
             visibility: true,
             smallDesignMd5hash: "",
-            smallBackgroundDesignHash: "")
+            smallBackgroundDesignHash: "",
+            statusCard: statusCard,
+            cardType: cardType
+        )
     }
 }
 

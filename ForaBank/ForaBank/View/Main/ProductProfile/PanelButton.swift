@@ -21,10 +21,13 @@ struct PanelButton: View {
                 
                 HStack(spacing: config.spacings.hstack) {
                     
-                    details.icon
-                        .frame(width: config.height, height: config.height)
-                        .background(config.colors.background)
-                        .cornerRadius(config.height/2)
+                    details.icon.map {
+                        $0
+                            .renderingMode(.original)
+                            .frame(width: config.height, height: config.height)
+                            .background(config.colors.background)
+                            .cornerRadius(config.height/2)
+                    }
                     
                     Text(details.title)
                         .font(config.fonts.title)
@@ -68,6 +71,8 @@ extension PanelButton {
         
         case accountDetails
         case accountStatement
+        case accountOurBank
+        case accountAnotherBank
     }
 }
 
@@ -80,6 +85,10 @@ extension PanelButton.Details {
             return .accountDetails(ID)
         case .accountStatement:
             return .accountStatement(ID)
+        case .accountOurBank:
+            return .accountOurBank(ID)
+        case .accountAnotherBank:
+            return .accountAnotherBank(ID)
         }
     }
 }
