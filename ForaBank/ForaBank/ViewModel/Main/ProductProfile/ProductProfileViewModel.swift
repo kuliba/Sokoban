@@ -1156,9 +1156,10 @@ private extension ProductProfileViewModel {
                                 return
                             }
                             
-                            let buttonType: ProductProfileOptionsPannelView.ViewModel.ButtonType = productCard.isBlocked ? .card(.unblock) : .card(.block)
+                            createCardGuardianPanel(productCard)
+                            /*let buttonType: ProductProfileOptionsPannelView.ViewModel.ButtonType = productCard.isBlocked ? .card(.unblock) : .card(.block)
                             let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [buttonType, .card(.changePin)], productType: product.productType)
-                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
+                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))*/
                             
                         case .account:
                             
@@ -2544,6 +2545,28 @@ extension ProductProfileViewModel {
             guard let productData = model.product(productId: productID) as? ProductCardData else { return }
             
             showPaymentAnotherBank(productData)
+            
+        case let .cardGuardian(productID):
+            guard let productData = model.product(productId: productID) as? ProductCardData else { return }
+            
+            switch productData.statusCard {
+            case .blockedUnlockAvailable:
+                self.handleCardType(.unblock, productData)
+
+            case .active:
+                self.handleCardType(.block, productData)
+                
+            default:
+                return
+            }
+
+        case let .changePin(productID):
+            guard let productData = model.product(productId: productID) as? ProductCardData else { return }
+            
+            self.handleCardType(.changePin, productData)
+
+        case let .visibility(productID):
+            guard let productData = model.product(productId: productID) as? ProductCardData else { return }
         }
     }
 }

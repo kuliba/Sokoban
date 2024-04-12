@@ -15,5 +15,8 @@ extension ProductNavigationStateManager {
         case accountStatement(ProductData.ID)
         case accountOurBank(ProductData.ID)
         case accountAnotherBank(ProductData.ID)
+        case cardGuardian(ProductData.ID)
+        case changePin(ProductData.ID)
+        case visibility(ProductData.ID)
     }
 }

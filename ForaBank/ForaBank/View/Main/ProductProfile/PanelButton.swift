@@ -73,6 +73,9 @@ extension PanelButton {
         case accountStatement
         case accountOurBank
         case accountAnotherBank
+        case cardGuardian
+        case changePin
+        case visibility
     }
 }
 
@@ -89,6 +92,12 @@ extension PanelButton.Details {
             return .accountOurBank(ID)
         case .accountAnotherBank:
             return .accountAnotherBank(ID)
+        case .cardGuardian:
+            return .cardGuardian(ID)
+        case .changePin:
+            return .changePin(ID)
+        case .visibility:
+            return .visibility(ID)
         }
     }
 }
