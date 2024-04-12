@@ -64,13 +64,13 @@ extension ProductAlertsViewModel {
         
         switch kind {
         case .showBlockAlert:
-            blockAlertText
+            return blockAlertText
         case .showAdditionalOtherAlert:
-            additionalAlertText
+            return additionalAlertText
         case .showServiceOnlyMainCard:
-            serviceOnlyMainCard
+            return serviceOnlyMainCard
         case .showServiceOnlyOwnerCard:
-            serviceOnlyOwnerCard
+            return serviceOnlyOwnerCard
         }
     }
 }
