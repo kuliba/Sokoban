@@ -200,13 +200,14 @@ class ProductProfileViewModel: ObservableObject {
                 guard let self else { return }
                 
                 switch event {
-                    
-                case .showBlockAlert:
-                    self.event(.showBlockAlert)
+                case let .delayAlert(kind):
+                    self.event(.delayAlert(kind))
+                 
                 case .closeAlert:
                     self.event(.closeAlert)
-                case .showAdditionalOtherAlert:
-                    self.event(.showAdditionalOtherAlert)
+                    
+                case let .showAlert(alert):
+                    self.event(.showAlert(alert))
                 }
             }
         )!
@@ -1061,8 +1062,13 @@ private extension ProductProfileViewModel {
                         
                         if !(allowCreditValue && productType ) {
                             
-                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct], productType: product.productType)
-                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
+                            if let card = productData as? ProductCardData {
+                                createTopUpPanel(card)
+                            }
+                            else  {
+                                let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct], productType: product.productType)
+                                self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
+                            }
                             
                         } else {
                             
@@ -2401,14 +2407,27 @@ extension ProductProfileViewModel {
     
     func event(_ event: AlertEvent) {
 
-        let (alert, _) = productNavigationStateManager.alertReduce(alert, event)
+        let (alert, effect) = productNavigationStateManager.alertReduce(alert, event)
         alertSubject.send(alert)
+
+        if let effect {
+            
+            productNavigationStateManager.handleEffect(effect) { [weak self] event in
+                
+                self?.event(event)
+            }
+        }
     }
     
     func event(_ event: ProductNavigationStateManager.ButtonEvent) {
         
-        self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-
+        switch event {
+        case .accountOurBank:
+            break
+        default:
+            self.bottomSheet = nil
+        }
+        
         switch event {
             
         case let .accountDetails(productID):
@@ -2443,6 +2462,54 @@ extension ProductProfileViewModel {
                 getUImage: { self.model.images.value[$0]?.uiImage }
             )
             self.link = .productStatement(productStatementViewModel)
+            
+        case let .accountOurBank(productID):
+            
+            guard let productData = model.product(productId: productID) as? ProductCardData else { return }
+            
+            switch productData.cardType {
+            case .additionalOther:
+                self.bottomSheet = nil
+                self.event(.delayAlert(.showServiceOnlyOwnerCard))
+                
+            default:
+                guard let viewModel = PaymentsMeToMeViewModel(
+                    self.model,
+                    mode: .makePaymentTo(productData, 0.0))
+                else { return }
+                
+                self.bind(viewModel)
+                
+                withAnimation(.linear(duration: 0.1)) { [weak self] in
+                    self?.bottomSheet = nil
+                }
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    
+                    withAnimation(.linear(duration: 0.1)) { [weak self] in
+                        self?.bottomSheet = .init(type: .meToMe(viewModel))
+                    } 
+                }
+            }
+            
+        case let .accountAnotherBank(productID):
+            
+            guard let productData = model.product(productId: productID) as? ProductCardData else { return }
+            
+            switch productData.cardType {
+            case .additionalSelf, .additionalOther:
+                self.event(.delayAlert(.showServiceOnlyMainCard))
+                
+            default:
+                let meToMeExternalViewModel = MeToMeExternalViewModel(
+                    productTo: productData,
+                    closeAction: { [weak self] in
+                        self?.action.send(ProductProfileViewModelAction.Close.Link())
+                    },
+                    getUImage: { self.model.images.value[$0]?.uiImage }
+                )
+                self.link = .meToMeExternal(meToMeExternalViewModel)
+            }
         }
     }
 }

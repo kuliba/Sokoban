@@ -11,7 +11,7 @@ struct ProductNavigationStateManager {
     
    // let bottomSheetReduce: Reduce
     let alertReduce: Reduce
-   // let handleEffect: HandleEffect
+    let handleEffect: HandleEffect
 }
 
 extension ProductNavigationStateManager {
@@ -22,19 +22,33 @@ extension ProductNavigationStateManager {
     typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
     
     typealias State = Alert.ViewModel?
-    typealias Effect = Never
+    typealias Effect = ProductNavigationStateEffect
     typealias Event = AlertEvent
 }
 
 enum AlertEvent {
     
-    case showBlockAlert
-    case showAdditionalOtherAlert
     case closeAlert
+    case showAlert(Alert.ViewModel)
+    case delayAlert(Kind)
+    
+    enum Kind {
+        case showAdditionalOtherAlert
+        case showBlockAlert
+        case showServiceOnlyMainCard
+        case showServiceOnlyOwnerCard
+    }
 }
 
+enum ProductNavigationStateEffect {
+    
+    case delayAlert(Alert.ViewModel, DispatchTimeInterval)
+}
 
 extension ProductNavigationStateManager {
     
-    static let preview: Self = .init(alertReduce: AlertReducer(productAlertsViewModel: .default).reduce)
+    static let preview: Self = .init(
+        alertReduce: AlertReducer(productAlertsViewModel: .default).reduce,
+        handleEffect: ProductNavigationStateEffectHandler().handleEffect
+    )
 }

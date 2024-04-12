@@ -13,5 +13,7 @@ extension ProductNavigationStateManager {
         
         case accountDetails(ProductData.ID)
         case accountStatement(ProductData.ID)
+        case accountOurBank(ProductData.ID)
+        case accountAnotherBank(ProductData.ID)
     }
 }

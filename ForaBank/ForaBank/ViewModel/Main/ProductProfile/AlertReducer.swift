@@ -9,11 +9,14 @@ import SwiftUI
 
 final class AlertReducer {
     
-    let productAlertsViewModel: ProductAlertsViewModel
-    
+    private let productAlertsViewModel: ProductAlertsViewModel
+    private let alertLifespan: DispatchTimeInterval
+
     init(
+        alertLifespan: DispatchTimeInterval = .milliseconds(400),
         productAlertsViewModel: ProductAlertsViewModel
     ) {
+        self.alertLifespan = alertLifespan
         self.productAlertsViewModel = productAlertsViewModel
     }
 }
@@ -29,14 +32,21 @@ extension AlertReducer {
         var effect: Effect?
         
         switch event {
-        case .showBlockAlert:
-            state = .init(title: productAlertsViewModel.title, message: productAlertsViewModel.blockAlertText, primary: .init(type: .cancel, title: "OK", action: {}))
+            
+        case let .delayAlert(kind):
+            
+            let alertViewModel: Alert.ViewModel = .init(
+                title: productAlertsViewModel.title,
+                message: productAlertsViewModel.message(by: kind),
+                primary: .init(type: .cancel, title: "OK", action: {}))
+        
+            effect = .delayAlert(alertViewModel, alertLifespan)
+            
         case .closeAlert:
             state = nil
-        case .showAdditionalOtherAlert:
-            state = .init(title: productAlertsViewModel.title, message: productAlertsViewModel.additionalAlertText, primary: .init(type: .cancel, title: "OK", action: {}))
+        case let .showAlert(alert):
+            state = alert
         }
-        
         return (state, effect)
     }
 }
@@ -45,5 +55,22 @@ extension AlertReducer {
     
     typealias Event = AlertEvent
     typealias State = Alert.ViewModel?
-    typealias Effect = Never
+    typealias Effect = ProductNavigationStateEffect
+}
+
+extension ProductAlertsViewModel {
+    
+    func message(by kind: AlertEvent.Kind) -> String {
+        
+        switch kind {
+        case .showBlockAlert:
+            blockAlertText
+        case .showAdditionalOtherAlert:
+            additionalAlertText
+        case .showServiceOnlyMainCard:
+            serviceOnlyMainCard
+        case .showServiceOnlyOwnerCard:
+            serviceOnlyOwnerCard
+        }
+    }
 }

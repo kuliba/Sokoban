@@ -699,7 +699,7 @@ extension ProductView.ViewModel {
         if productType == .card, appearance.size == .large  {
             
             if cvvInfo?.cardStatus != .active {
-                event(.showBlockAlert)
+                event(.delayAlert(.showBlockAlert))
             } else {
                 withAnimation(.spring(response: 1.0, dampingFraction: 1, blendDuration: 0)) {
                     self.cardInfo.stateToggle()
@@ -724,7 +724,7 @@ extension ProductView.ViewModel {
     func showCVVButtonTap() {
             
         if cvvInfo?.cardType == .additionalOther {
-            event(.showAdditionalOtherAlert)
+            event(.delayAlert(.showAdditionalOtherAlert))
         } else {
             
             let cardId = CardDomain.CardId.init(self.id)

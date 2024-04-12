@@ -10,10 +10,14 @@ import Foundation
 extension RootViewModelFactory {
     
     static func makeProductNavigationStateManager(
-        alertsReduce: AlertReducer
+        alertsReduce: AlertReducer,
+        handleEffect: ProductNavigationStateEffectHandler
     ) -> ProductNavigationStateManager {
         
-        .init(alertReduce: alertsReduce.reduce(_:_:))
+        .init(
+            alertReduce: alertsReduce.reduce(_:_:),
+            handleEffect: handleEffect.handleEffect(_:_:)
+        )
     }
 }
 
