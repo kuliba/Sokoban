@@ -88,7 +88,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
     func test_map_shouldDeliverResponse() throws {
         
         try assert(.validData, .init(
-            additionals: [],
+            additional: [],
             finalStep: false,
             needMake: false,
             needOTP: false,

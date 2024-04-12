@@ -1544,9 +1544,9 @@ extension Payments {
             self.url = url
         }
         
-        init?(with subsctiptionData: C2BSubscriptionData) {
+        init?(with subscriptionData: C2BSubscriptionData) {
             
-            guard let url = subsctiptionData.redirectUrl else {
+            guard let url = subscriptionData.redirectUrl else {
                 return nil
             }
             
@@ -1799,14 +1799,31 @@ extension PaymentParameterSubscriber {
     
     var description: String? {
         
-        if let legalName,
-           let subscriptionPurpose {
+        if let legalName {
             
-            return "\(legalName)" + "\n" + "\(subscriptionPurpose)"
+            if let subscriptionPurpose {
+                
+                return legalName + "\n" + subscriptionPurpose
+            }
+            return legalName
             
         } else {
             
             return subscriptionPurpose
         }
     }
+}
+
+extension Payments.ParameterSelectBank.Option {
+    
+    var text: String {
+          
+          switch subtitle {
+          case let .some(subtitle):
+              return subtitle
+          case .none:
+              return name
+          }
+      }
+
 }

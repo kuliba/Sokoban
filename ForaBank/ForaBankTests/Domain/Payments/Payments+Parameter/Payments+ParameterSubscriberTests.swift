@@ -23,16 +23,25 @@ final class Payments_ParameterSubscriberTests: XCTestCase {
     
     func test_init_shouldSetParameterDescription_valueLegalNameSubscriptionPurpose() {
         
-        let parameterSubscriber = Payments.ParameterSubscriber(with: PaymentParameterSubscriber.stub(legalName: "legalName")
+        let parameterSubscriber = Payments.ParameterSubscriber(with: PaymentParameterSubscriber.stub(legalName: "legalName", subscriptionPurpose: "subscriptionPurpose")
         )
         
         XCTAssertNoDiff(parameterSubscriber.value, "value")
         XCTAssertNoDiff(parameterSubscriber.description, "legalName" + "\n" + "subscriptionPurpose")
     }
     
+    func test_init_shouldSetParameterDescription_valueLegalNameSubscriptionPurposeNil() {
+        
+        let parameterSubscriber = Payments.ParameterSubscriber(with: PaymentParameterSubscriber.stub(legalName: "legalName", subscriptionPurpose: nil)
+        )
+        
+        XCTAssertNoDiff(parameterSubscriber.value, "value")
+        XCTAssertNoDiff(parameterSubscriber.description, "legalName")
+    }
+    
     func test_init_shouldSetParameterDescription_valueLegalNamNileSubscriptionPurpose() {
         
-        let parameterSubscriber = Payments.ParameterSubscriber(with: PaymentParameterSubscriber.stub(legalName: nil)
+        let parameterSubscriber = Payments.ParameterSubscriber(with: PaymentParameterSubscriber.stub(legalName: nil, subscriptionPurpose: "subscriptionPurpose")
         )
         
         XCTAssertNoDiff(parameterSubscriber.value, "value")
@@ -57,14 +66,15 @@ private extension C2BSubscriptionData {
 private extension PaymentParameterSubscriber {
     
     static func stub(
-        legalName: String?
+        legalName: String?,
+        subscriptionPurpose: String?
     ) -> Self {
         .init(
             id: "id",
             value: "value",
             icon: "icon",
             legalName: legalName,
-            subscriptionPurpose: "subscriptionPurpose",
+            subscriptionPurpose: subscriptionPurpose,
             style: .small
         )
     }
