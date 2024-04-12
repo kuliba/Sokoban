@@ -24,14 +24,25 @@ extension ProductNavigationStateEffectHandler {
                 
                 dispatch(.showAlert(alert))
             }
+            
+        case let .delayBottomSheet(bottomSheet, dispatchTimeInterval):
+            DispatchQueue.main.asyncAfter(deadline: .now() + dispatchTimeInterval) {
+                
+                dispatch(.showBottomSheet(bottomSheet))
+            }
         }
     }
 }
 
 extension ProductNavigationStateEffectHandler {
     
-    typealias Event = AlertEvent
-    typealias State = Alert.ViewModel?
+    typealias Event = ProductNavigationEvent
     typealias Effect = ProductNavigationStateEffect
     typealias Dispatch = (Event) -> Void
+}
+
+enum ProductNavigationEvent {
+    
+    case showAlert(Alert.ViewModel)
+    case showBottomSheet(ProductProfileViewModel.BottomSheet)
 }

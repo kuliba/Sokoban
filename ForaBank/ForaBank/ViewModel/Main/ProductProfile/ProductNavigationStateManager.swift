@@ -9,21 +9,24 @@ import SwiftUI
 
 struct ProductNavigationStateManager {
     
-   // let bottomSheetReduce: Reduce
-    let alertReduce: Reduce
+    let alertReduce: AlertReduce
+    let bottomSheetReduce: BottomSheetReduce
     let handleEffect: HandleEffect
 }
 
 extension ProductNavigationStateManager {
     
-    typealias Reduce = (State, Event) -> (State, Effect?)
-    
+    typealias Effect = ProductNavigationStateEffect
+    typealias Event = ProductNavigationEvent
+
+    typealias AlertReduce = (AlertState, AlertEvent) -> (AlertState, Effect?)
+    typealias AlertState = Alert.ViewModel?
+
+    typealias BottomSheetReduce = (BottomSheetState, BottomSheetEvent) -> (BottomSheetState, Effect?)
+    typealias BottomSheetState = ProductProfileViewModel.BottomSheet?
+
     typealias Dispatch = (Event) -> Void
     typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
-    
-    typealias State = Alert.ViewModel?
-    typealias Effect = ProductNavigationStateEffect
-    typealias Event = AlertEvent
 }
 
 enum AlertEvent {
@@ -40,15 +43,23 @@ enum AlertEvent {
     }
 }
 
+enum BottomSheetEvent {
+    
+    case showBottomSheet(ProductProfileViewModel.BottomSheet)
+    case delayBottomSheet(ProductProfileViewModel.BottomSheet)
+}
+
 enum ProductNavigationStateEffect {
     
     case delayAlert(Alert.ViewModel, DispatchTimeInterval)
+    case delayBottomSheet(ProductProfileViewModel.BottomSheet, DispatchTimeInterval)
 }
 
 extension ProductNavigationStateManager {
     
     static let preview: Self = .init(
         alertReduce: AlertReducer(productAlertsViewModel: .default).reduce,
+        bottomSheetReduce: BottomSheetReducer().reduce,
         handleEffect: ProductNavigationStateEffectHandler().handleEffect
     )
 }

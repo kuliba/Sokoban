@@ -1877,6 +1877,7 @@
 		832481A02BC5175200D20A2F /* PanelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8324819F2BC5175200D20A2F /* PanelButton.swift */; };
 		832F2D4D2BC9205600221360 /* ProductProfileViewModel+createTopUpPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F2D4C2BC9205600221360 /* ProductProfileViewModel+createTopUpPanel.swift */; };
 		832F2D4F2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F2D4E2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift */; };
+		832F2D532BC9570200221360 /* BottomSheetReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F2D522BC9570200221360 /* BottomSheetReducer.swift */; };
 		832F83112BB8292600C97BBD /* CarouselComponentConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F83102BB8292600C97BBD /* CarouselComponentConfig+iFora.swift */; };
 		8333238A2BB404F7007C135F /* MD5Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833323892BB404F7007C135F /* MD5Hash.swift */; };
 		833325412B5AE955001920EB /* CardStatementAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 833325402B5AE955001920EB /* CardStatementAPI */; };
@@ -4420,6 +4421,7 @@
 		8324819F2BC5175200D20A2F /* PanelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelButton.swift; sourceTree = "<group>"; };
 		832F2D4C2BC9205600221360 /* ProductProfileViewModel+createTopUpPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductProfileViewModel+createTopUpPanel.swift"; sourceTree = "<group>"; };
 		832F2D4E2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductNavigationStateEffectHandler.swift; sourceTree = "<group>"; };
+		832F2D522BC9570200221360 /* BottomSheetReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetReducer.swift; sourceTree = "<group>"; };
 		832F83102BB8292600C97BBD /* CarouselComponentConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarouselComponentConfig+iFora.swift"; sourceTree = "<group>"; };
 		833323892BB404F7007C135F /* MD5Hash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MD5Hash.swift; sourceTree = "<group>"; };
 		833370BF2B6D369800B424E8 /* ControlButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlButtonView.swift; sourceTree = "<group>"; };
@@ -9143,6 +9145,7 @@
 				8394B2F02BBF2E450078CB10 /* ProductNavigationStateManager.swift */,
 				83CE89FA2BC417BA008CA98C /* ProductNavigationStateManager+ButtonEvent.swift */,
 				8394B2F22BBF2F5C0078CB10 /* AlertReducer.swift */,
+				832F2D522BC9570200221360 /* BottomSheetReducer.swift */,
 				832F2D4E2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift */,
 				2A77B6572AE004520022600F /* CVVPINServicesClient.swift */,
 				2A77B65D2AE004DC0022600F /* CertificateClientStubs */,
@@ -15186,6 +15189,7 @@
 				ED84994326A6F647005205C6 /* ChooseCountryHeaderViewModel.swift in Sources */,
 				0B22AEAE26CE8DFE00B11E7F /* GKHDataCaseImage.swift in Sources */,
 				EDDFE3B82756E6F900F57C71 /* DetailInformationCollectionViewCell.swift in Sources */,
+				832F2D532BC9570200221360 /* BottomSheetReducer.swift in Sources */,
 				2A872E912B00DE6C007A8E72 /* SessionKey.swift in Sources */,
 				C10423952A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift in Sources */,
 				5063064E286E07B800CEA12F /* InformerViewComponent.swift in Sources */,
