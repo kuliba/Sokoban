@@ -2441,7 +2441,7 @@ extension ProductProfileViewModel {
         }
     }
     
-    func productInfo(_ productData: ProductData) {
+    func showProductInfo(_ productData: ProductData) {
         
         let productInfoViewModel = productProfileViewModelFactory.makeInfoProductViewModel(
             .init(
@@ -2462,7 +2462,7 @@ extension ProductProfileViewModel {
         self.bind(product: productInfoViewModel)
     }
     
-    func productStatement(_ productData: ProductData) {
+    func showProductStatement(_ productData: ProductData) {
         let productStatementViewModel = ProductStatementViewModel(
             product: productData,
             closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())},
@@ -2471,7 +2471,7 @@ extension ProductProfileViewModel {
         self.link = .productStatement(productStatementViewModel)
     }
     
-    func paymentOurBank(_ productData: ProductCardData) {
+    func showPaymentOurBank(_ productData: ProductCardData) {
         switch productData.cardType {
         case .additionalOther:
             self.event(.delayAlert(.showServiceOnlyOwnerCard))
@@ -2488,7 +2488,7 @@ extension ProductProfileViewModel {
         }
     }
     
-    func paymentAnotherBank(_ productData: ProductCardData) {
+    func showPaymentAnotherBank(_ productData: ProductCardData) {
         switch productData.cardType {
         case .additionalSelf, .additionalOther:
             self.event(.delayAlert(.showServiceOnlyMainCard))
@@ -2515,25 +2515,25 @@ extension ProductProfileViewModel {
             
             guard let productData = model.product(productId: productID) else { return }
 
-            productInfo(productData)
+            showProductInfo(productData)
             
         case let .accountStatement(productID):
             
             guard let productData = model.product(productId: productID) else { return }
 
-            productStatement(productData)
+            showProductStatement(productData)
             
         case let .accountOurBank(productID):
             
             guard let productData = model.product(productId: productID) as? ProductCardData else { return }
             
-            paymentOurBank(productData)
+            showPaymentOurBank(productData)
             
         case let .accountAnotherBank(productID):
             
             guard let productData = model.product(productId: productID) as? ProductCardData else { return }
             
-            paymentAnotherBank(productData)
+            showPaymentAnotherBank(productData)
         }
     }
 }
