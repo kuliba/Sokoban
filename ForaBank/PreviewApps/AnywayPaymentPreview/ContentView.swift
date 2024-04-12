@@ -16,7 +16,7 @@ struct ContentView: View {
     @StateObject private var viewModel: ViewModel = .init(
         initialState: .init(
             elements: [
-                .widget(.otp)
+                .widget(.otp(""))
             ],
             infoMessage: nil,
             isFinalStep: false,
@@ -61,7 +61,7 @@ struct ContentView: View {
         
         VStack {
             
-            Text("OTP: \(viewModel.state.otp.map { "\($0)" } ?? "n/a")")
+            Text("OTP: \(viewModel.state.otp ?? "n/a")")
         }
     }
 }
@@ -91,7 +91,7 @@ extension AnywayPayment.Element: Identifiable {
 
 private extension AnywayPayment {
     
-    var otp: Int? {
+    var otp: String? {
         
         guard let otp = elements.compactMap(\.otp).first
         else { return nil }
@@ -102,10 +102,12 @@ private extension AnywayPayment {
 
 private extension AnywayPayment.Element {
     
-    var otp: Int? {
+    var otp: String? {
         
-#warning("FIXME")
-        return nil
+        guard case let .widget(.otp(otp)) = self
+        else { return nil }
+        
+        return otp
     }
 }
 

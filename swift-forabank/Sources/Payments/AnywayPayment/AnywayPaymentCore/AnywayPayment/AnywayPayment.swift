@@ -97,7 +97,7 @@ extension AnywayPayment.Element {
     public enum Widget: Equatable {
         
         case core(PaymentCore)
-        case otp
+        case otp(String)
     }
 }
 

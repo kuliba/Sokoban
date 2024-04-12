@@ -21,7 +21,7 @@ extension AnywayPayment {
         elements.appendParameters(from: update.parameters, with: outline)
         
         elements.adjustWidget(.core(.init(outline.core)), on: update.details.control.needSum)
-        elements.adjustWidget(.otp, on: update.details.control.needOTP)
+        elements.adjustWidget(.otp(""), on: update.details.control.needOTP)
         
         return .init(
             elements: elements,

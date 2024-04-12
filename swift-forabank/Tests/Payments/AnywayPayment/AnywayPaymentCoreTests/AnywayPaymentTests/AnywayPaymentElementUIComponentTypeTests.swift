@@ -31,7 +31,7 @@ final class AnywayPaymentElementUIComponentTypeTests: XCTestCase {
     
     func test_uiComponentType_shouldDeliverOTPForOTPWidget() {
         
-        let element = makeAnywayPaymentWidgetElement(.otp)
+        let element = makeAnywayPaymentWidgetElement(.otp(""))
         
         XCTAssertNoDiff(element.uiComponentType, .otp)
     }

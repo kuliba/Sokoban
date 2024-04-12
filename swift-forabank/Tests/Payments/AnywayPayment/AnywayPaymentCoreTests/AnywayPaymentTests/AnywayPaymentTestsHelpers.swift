@@ -11,12 +11,13 @@ import XCTest
 
 func assertOTPisLast(
     in payment: AnywayPayment,
+    with value: String = "",
     file: StaticString = #file,
     line: UInt = #line
 ) {
     XCTAssertNoDiff(
         payment.elements.last,
-        .widget(.otp),
+        .widget(makeOTPWidget(value)),
         "Expected OTP field after complimentary fields.",
         file: file, line: line
     )
@@ -313,9 +314,11 @@ func makeAnywayPaymentWidgetElement(
     .widget(widget)
 }
 
-func makeOTPWidget() -> AnywayPayment.Element.Widget {
+func makeOTPWidget(
+    _ value: String = ""
+) -> AnywayPayment.Element.Widget {
     
-    .otp
+    .otp(value)
 }
 
 func makeAnywayPaymentWithoutOTP(
