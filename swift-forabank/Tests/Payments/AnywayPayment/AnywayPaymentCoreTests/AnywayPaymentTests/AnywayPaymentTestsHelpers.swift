@@ -203,7 +203,7 @@ func makeAnywayPaymentField(
     title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
     
-    .init(id: id, value: .init(value), title: title)
+    .init(id: id, title: title, value: .init(value))
 }
 
 func makeAnywayPaymentFieldWithStringID(
@@ -299,9 +299,21 @@ private func makeAnywayPaymentElementParameterUIAttributes(
     )
 }
 
-private func makeOTPWidget(
-    value: String = anyMessage()
-) -> AnywayPayment.Element.Widget {
+func makeAnywayPaymentFieldElement(
+    _ field: AnywayPayment.Element.Field = makeAnywayPaymentField()
+) -> AnywayPayment.Element {
+    
+    .field(field)
+}
+
+func makeAnywayPaymentWidgetElement(
+    _ widget: AnywayPayment.Element.Widget
+) -> AnywayPayment.Element {
+    
+    .widget(widget)
+}
+
+func makeOTPWidget() -> AnywayPayment.Element.Widget {
     
     .otp
 }
@@ -446,8 +458,8 @@ private func makeAnywayPaymentUpdateDetailsInfo(
 
 func makeAnywayPaymentUpdateField(
     _ name: String = anyMessage(),
-    value: String = anyMessage(),
-    title: String = anyMessage()
+    title: String = anyMessage(),
+    value: String = anyMessage()
 ) -> AnywayPaymentUpdate.Field {
     
     .init(
@@ -468,8 +480,8 @@ func makeAnywayPaymentAndUpdateFields(
     
     let update = makeAnywayPaymentUpdateField(
         name,
-        value: value,
-        title: title
+        title: title,
+        value: value
     )
     
     let updated = makeAnywayPaymentField(
@@ -811,6 +823,26 @@ func makeOutlinePaymentCore(
         currency: currency,
         productID: productID,
         productType: productType
+    )
+}
+
+func makeWidgetPaymentCore(
+    amount: Decimal = makeAmount(),
+    currency: String = anyMessage(),
+    productID: Int = makeIntID(),
+    productType: AnywayPayment.Outline.PaymentCore.ProductType
+) -> AnywayPayment.Element.Widget.PaymentCore {
+    
+    .init(
+        amount: amount, 
+        currency: .init(currency),
+        productID: {
+           
+            switch productType {
+            case .account: return .accountID(.init(productID))
+            case .card: return .cardID(.init(productID))
+            }
+        }()
     )
 }
 

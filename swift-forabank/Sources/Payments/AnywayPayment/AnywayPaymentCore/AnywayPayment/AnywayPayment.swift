@@ -54,17 +54,17 @@ extension AnywayPayment.Element {
     public struct Field: Identifiable, Equatable {
         
         public let id: StringID
-        public let value: Value
         public let title: String
+        public let value: Value
         
         public init(
             id: StringID,
-            value: Value,
-            title: String
+            title: String,
+            value: Value
         ) {
             self.id = id
-            self.value = value
             self.title = title
+            self.value = value
         }
     }
     
