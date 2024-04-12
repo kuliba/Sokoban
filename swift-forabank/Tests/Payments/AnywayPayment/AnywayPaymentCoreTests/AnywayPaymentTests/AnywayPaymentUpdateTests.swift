@@ -43,9 +43,9 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         let (amount, currency, id) = (makeAmount(), anyMessage(), makeIntID())
         let core = makeOutlinePaymentCore(amount: amount, currency: currency, productID: id, productType: .account)
         let outline = makeAnywayPaymentOutline(core: core)
-
+        
         let widgetCore = widgetCore(updatePayment(payment, with: update, and: outline))
-
+        
         XCTAssertNoDiff(widgetCore, .init(
             amount: amount,
             currency: .init(currency),
@@ -62,7 +62,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         let outline = makeAnywayPaymentOutline(core: core)
         
         let widgetCore = widgetCore(updatePayment(payment, with: update, and: outline))
-
+        
         XCTAssertNoDiff(widgetCore, .init(
             amount: amount,
             currency: .init(currency),
@@ -90,7 +90,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_update_shouldAppendComplementaryFieldToEmpty() {
         
         let payment = makeAnywayPayment()
-        let updateField = makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa")
+        let updateField = makeAnywayPaymentUpdateField("a", title: "aaa", value: "aa")
         let update = makeAnywayPaymentUpdate(fields: [updateField])
         let updated = makeAnywayPaymentField("a", value: "aa", title: "aaa")
         
@@ -106,9 +106,9 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         let payment = makeAnywayPayment()
         let update = makeAnywayPaymentUpdate(
             fields: [
-                makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa"),
-                makeAnywayPaymentUpdateField("b", value: "bb", title: "bbb"),
-                makeAnywayPaymentUpdateField("c", value: "cc", title: "ccc")
+                makeAnywayPaymentUpdateField("a", title: "aaa", value: "aa"),
+                makeAnywayPaymentUpdateField("b", title: "bbb", value: "bb"),
+                makeAnywayPaymentUpdateField("c", title: "ccc", value: "cc")
             ]
         )
         
@@ -116,9 +116,9 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         assert(payment, on: update) {
             
             $0.elements = [
-                .init(id: "a", value: "aa", title: "aaa"),
-                .init(id: "b", value: "bb", title: "bbb"),
-                .init(id: "c", value: "cc", title: "ccc"),
+                .init(id: "a", title: "aaa", value: "aa"),
+                .init(id: "b", title: "bbb", value: "bb"),
+                .init(id: "c", title: "ccc", value: "cc"),
             ].map(AnywayPayment.Element.field)
         }
     }
@@ -235,7 +235,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         let (id, value, title) = ("abc123", "aaa", "bb")
         let field = makeAnywayPaymentFieldWithStringID(id, value: value, title: title)
         let payment = makeAnywayPayment(fields: [field])
-        let updateField = makeAnywayPaymentUpdateField(id, value: value, title: title)
+        let updateField = makeAnywayPaymentUpdateField(id, title: title, value: value)
         let update = makeAnywayPaymentUpdate(fields: [updateField])
         
         assert(payment, on: update)
@@ -723,7 +723,11 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         ])
         
         let (newFieldValue, newFieldTitle) = (anyMessage(), anyMessage())
-        let fieldUpdate = makeAnywayPaymentUpdateField(matchingFieldID, value: newFieldValue, title: newFieldTitle)
+        let fieldUpdate = makeAnywayPaymentUpdateField(
+            matchingFieldID,
+            title: newFieldTitle,
+            value: newFieldValue
+        )
         
         let newParameterValue = anyMessage()
         let parameterFieldUpdate = makeAnywayPaymentUpdateField(matchingParameterID, value: newParameterValue)
@@ -740,8 +744,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 .field(
                     .init(
                         id: .init(matchingFieldID),
-                        value: .init(newFieldValue),
-                        title: newFieldTitle
+                        title: newFieldTitle,
+                        value: .init(newFieldValue)
                     )
                 ),
                 .parameter(parameter.updating(value: newParameterValue)),
@@ -873,7 +877,7 @@ private extension AnywayPayment {
             guard case let .parameter(parameter) = $0,
                   parameter.field.id == .init(id)
             else { return nil }
-
+            
             return parameter
         }
         .first

@@ -203,7 +203,7 @@ func makeAnywayPaymentField(
     title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
     
-    .init(id: id, value: .init(value), title: title)
+    .init(id: id, title: title, value: .init(value))
 }
 
 func makeAnywayPaymentFieldWithStringID(
@@ -458,8 +458,8 @@ private func makeAnywayPaymentUpdateDetailsInfo(
 
 func makeAnywayPaymentUpdateField(
     _ name: String = anyMessage(),
-    value: String = anyMessage(),
-    title: String = anyMessage()
+    title: String = anyMessage(),
+    value: String = anyMessage()
 ) -> AnywayPaymentUpdate.Field {
     
     .init(
@@ -480,8 +480,8 @@ func makeAnywayPaymentAndUpdateFields(
     
     let update = makeAnywayPaymentUpdateField(
         name,
-        value: value,
-        title: title
+        title: title,
+        value: value
     )
     
     let updated = makeAnywayPaymentField(

@@ -67,8 +67,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         let element = makeAnywayPaymentFieldElement(.init(
             id: "123",
-            value: "abc",
-            title: "CDE"
+            title: "CDE",
+            value: "abc"
         ))
         
         XCTAssertNoDiff(element.uiComponent, .field(.init(

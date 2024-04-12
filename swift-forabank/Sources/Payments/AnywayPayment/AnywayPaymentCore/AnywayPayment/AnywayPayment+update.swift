@@ -147,8 +147,8 @@ private extension AnywayPayment.Element.Field {
         
         .init(
             id: id,
-            value: .init(fieldUpdate.value),
-            title: fieldUpdate.title
+            title: fieldUpdate.title,
+            value: .init(fieldUpdate.value)
         )
     }
 }
@@ -263,8 +263,8 @@ private extension AnywayPayment.Element.Field {
         
         self.init(
             id: .init(field.name),
-            value: .init(field.value),
-            title: field.title
+            title: field.title,
+            value: .init(field.value)
         )
     }
 }
