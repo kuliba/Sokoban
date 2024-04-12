@@ -16,6 +16,7 @@ struct ContentView: View {
     @StateObject private var viewModel: ViewModel = .init(
         initialState: .init(
             elements: [
+                .field(.init(id: "1", title: "a", value: "bb")),
                 .widget(.otp(""))
             ],
             infoMessage: nil,
@@ -46,22 +47,7 @@ struct ContentView: View {
         element: AnywayPayment.Element
     ) -> some View {
         
-        switch element.uiComponentType {
-        case let .field(field):
-            Text(String(describing: field))
-            
-        case .otp:
-            element.otp.map {
-                
-                OTPView(
-                    state: $0,
-                    event: { viewModel.event(.otp($0)) }
-                )
-            }
-            
-        case .productPicker:
-            Text("TBD: Product Picker (Selector)")
-        }
+        ElementView(state: element, event: viewModel.event)
     }
     
     private func infoOverlay() -> some View {
@@ -70,6 +56,8 @@ struct ContentView: View {
             
             Text("OTP: \(viewModel.state.otp)")
         }
+        .foregroundColor(.purple)
+        .font(.caption)
     }
 }
 
@@ -100,21 +88,11 @@ private extension AnywayPayment {
     
     var otp: String {
         
-        guard let otp = elements.compactMap(\.otp).first
+        guard let widget = elements[id: .widgetID(.otp)],
+              case let .widget(.otp(otp)) = widget
         else { return "n/a" }
         
         return otp.isEmpty ? "<empty>" : otp
-    }
-}
-
-private extension AnywayPayment.Element {
-    
-    var otp: String? {
-        
-        guard case let .widget(.otp(otp)) = self
-        else { return nil }
-        
-        return otp
     }
 }
 
