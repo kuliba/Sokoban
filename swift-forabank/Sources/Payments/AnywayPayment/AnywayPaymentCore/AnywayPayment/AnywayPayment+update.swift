@@ -20,7 +20,7 @@ extension AnywayPayment {
         elements.appendComplementaryFields(from: update.fields)
         elements.appendParameters(from: update.parameters, with: outline)
         
-        elements.adjustWidget(.amount(0), on: update.details.control.needSum)
+        elements.adjustWidget(.core(.init(outline.core)), on: update.details.control.needSum)
         elements.adjustWidget(.otp, on: update.details.control.needOTP)
         
         return .init(
@@ -32,7 +32,75 @@ extension AnywayPayment {
         )
     }
     
-    public typealias Outline = [Element.StringID: Element.Value]
+    public struct Outline: Equatable {
+        
+        public let core: PaymentCore
+        public let fields: Fields
+        
+        public init(
+            core: PaymentCore,
+            fields: Fields
+        ) {
+            self.core = core
+            self.fields = fields
+        }
+    }
+}
+
+extension AnywayPayment.Outline {
+    
+    public typealias Fields = [AnywayPayment.Element.StringID: AnywayPayment.Element.Value]
+    
+    public struct PaymentCore: Equatable {
+        
+        public let amount: Decimal
+        public let currency: String
+        public let productID: Int
+        public let productType: ProductType
+        
+        public init(
+            amount: Decimal,
+            currency: String,
+            productID: Int,
+            productType: ProductType
+        ) {
+            self.amount = amount
+            self.currency = currency
+            self.productID = productID
+            self.productType = productType
+        }
+    }
+}
+
+extension AnywayPayment.Outline.PaymentCore {
+    
+    public enum ProductType {
+        
+        case account, card
+    }
+}
+
+private extension AnywayPayment.Element.Widget.PaymentCore {
+    
+    init(_ core: AnywayPayment.Outline.PaymentCore) {
+        
+        self.init(
+            amount: core.amount,
+            currency: .init(core.currency),
+            productID: .init(core)
+        )
+    }
+}
+
+private extension AnywayPayment.Element.Widget.PaymentCore.ProductID {
+    
+    init(_ core: AnywayPayment.Outline.PaymentCore) {
+        
+        switch core.productType {
+        case .account: self = .accountID(.init(core.productID))
+        case .card:    self = .cardID(.init(core.productID))
+        }
+    }
 }
 
 private extension AnywayPayment.Element {
@@ -180,7 +248,7 @@ private extension Array where Element == AnywayPayment.Element {
             
             AnywayPayment.Element.Parameter(
                 parameter: $0,
-                fallbackValue: outline[.init($0.field.id)]
+                fallbackValue: outline.fields[.init($0.field.id)]
             )
         }
         append(contentsOf: parameters.map(Element.parameter))

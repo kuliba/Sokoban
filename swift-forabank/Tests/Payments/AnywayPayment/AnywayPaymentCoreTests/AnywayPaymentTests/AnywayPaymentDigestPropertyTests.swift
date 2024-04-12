@@ -14,7 +14,7 @@ extension AnywayPayment {
         
         .init(
             additional: additional,
-            core: nil,
+            core: core,
             puref: .init(puref.rawValue)
         )
     }
@@ -34,12 +34,16 @@ extension AnywayPayment {
         }
     }
     
-    private var amount: Decimal? {
+    private var core: AnywayPaymentDigest.PaymentCore? {
         
-        guard case let .widget(.amount(amount)) = elements.first(where: { $0.widget?.id == .amount })
+        guard case let .widget(.core(core)) = elements.first(where: { $0.widget?.id == .core })
         else { return nil}
         
-        return amount
+        return .init(
+            amount: core.amount,
+            currency: .init(core.currency.rawValue),
+            productID: core._productID
+        )
     }
     
     private var fields: [Element.Parameter.Field] {
@@ -62,6 +66,20 @@ private extension AnywayPayment.Element {
         guard case let .widget(widget) = self else { return nil }
         
         return widget
+    }
+}
+
+private extension AnywayPayment.Element.Widget.PaymentCore {
+    
+    var _productID: AnywayPaymentDigest.PaymentCore.ProductID {
+        
+        switch productID {
+        case let .accountID(accountID):
+            return .account(.init(accountID.rawValue))
+            
+        case let .cardID(cardID):
+            return .card(.init(cardID.rawValue))
+        }
     }
 }
 
@@ -131,8 +149,32 @@ final class AnywayPaymentDigestPropertyTests: XCTestCase {
     func test_shouldSetCoreToNilOnPaymentWithoutAmount() {
         
         let payment = makeAnywayPaymentWithoutAmount()
-
+        
         XCTAssertNil(payment.digest.core)
+    }
+    
+    func test_shouldSetCoreWithAccountIDOnPaymentWithAmount() {
+        
+        let (amount, currency, id) = makeCore()
+        let payment = makeAnywayPaymentWithAmount(amount, currency, .accountID(.init(id)))
+        
+        XCTAssertNoDiff(payment.digest.core, .init(
+            amount: amount,
+            currency: .init(currency),
+            productID: .account(.init(id))
+        ))
+    }
+    
+    func test_shouldSetCoreWithCardIDOnPaymentWithAmount() {
+        
+        let (amount, currency, id) = makeCore()
+        let payment = makeAnywayPaymentWithAmount(amount, currency, .cardID(.init(id)))
+        
+        XCTAssertNoDiff(payment.digest.core, .init(
+            amount: amount,
+            currency: .init(currency),
+            productID: .card(.init(id))
+        ))
     }
     
     func test_shouldSetPuref() {
@@ -141,5 +183,16 @@ final class AnywayPaymentDigestPropertyTests: XCTestCase {
         let payment = makeAnywayPayment(puref: .init(puref))
         
         XCTAssertNoDiff(payment.digest.puref, .init(puref))
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeCore(
+        _ amount: Decimal = 99_999.99,
+        _ currency: String = anyMessage(),
+        _ id: Int = generateRandom11DigitNumber()
+    ) -> (amount: Decimal, currency: String, id: Int) {
+        
+        (amount, currency, id)
     }
 }
