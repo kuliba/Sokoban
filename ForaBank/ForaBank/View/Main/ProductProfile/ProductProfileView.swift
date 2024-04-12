@@ -126,9 +126,7 @@ struct ProductProfileView: View {
             default: break
             }
         }
-        .alert(item: $viewModel.alert, content: {
-            Alert.init(with:)
-        }())
+        .alert(item: $viewModel.alert, content: Alert.init(with:))
         .bottomSheet(
             item: $viewModel.bottomSheet,
             content: bottomSheetContent
