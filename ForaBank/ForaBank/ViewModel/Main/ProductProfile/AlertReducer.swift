@@ -71,6 +71,8 @@ extension ProductAlertsViewModel {
             return serviceOnlyMainCard
         case .showServiceOnlyOwnerCard:
             return serviceOnlyOwnerCard
+        case .showTransferAdditionalOther:
+            return transferAdditionalOther
         }
     }
 }

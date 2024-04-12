@@ -1080,7 +1080,17 @@ private extension ProductProfileViewModel {
                         
                     case .topRight:
                         switch product.productType {
-                        case .card, .account:
+                        case .card:
+                            guard let card = productData as? ProductCardData else {
+                                return
+                            }
+                            
+                            if card.cardType == .additionalOther {
+                                self.event(.delayAlert(.showTransferAdditionalOther))
+                            } else {
+                                self.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
+                            }
+                        case .account:
                             self.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
                             
                         case .deposit:

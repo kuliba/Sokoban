@@ -40,6 +40,7 @@ enum AlertEvent {
         case showBlockAlert
         case showServiceOnlyMainCard
         case showServiceOnlyOwnerCard
+        case showTransferAdditionalOther
     }
 }
 
