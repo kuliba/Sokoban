@@ -42,6 +42,10 @@ extension AlertReducer {
         
             effect = .delayAlert(alertViewModel, alertLifespan)
             
+        case let .delayAlertViewModel(alertViewModel):
+        
+            effect = .delayAlert(alertViewModel, alertLifespan)
+            
         case .closeAlert:
             state = nil
         case let .showAlert(alert):

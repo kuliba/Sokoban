@@ -9,6 +9,10 @@ import SwiftUI
 
 extension ProductProfileViewModel {
     
+    enum PanelButtonType {
+        case block, unblock, changePin, visibility
+    }
+    
     func createCardGuardianPanel(_ card: ProductCardData) {
         
         let buttons: [PanelButton.Details] = {
@@ -21,7 +25,10 @@ extension ProductProfileViewModel {
                 ]
             default:
                 if card.statusCard == .blockedUnlockNotAvailable {
-                    return [.createVisibilityButton(by: card)]
+                    return [                    
+                        .createCardGuardianButton(by: card),
+                        .createVisibilityButton(by: card)
+                    ]
                 } else {
                     return [
                         .createCardGuardianButton(by: card),

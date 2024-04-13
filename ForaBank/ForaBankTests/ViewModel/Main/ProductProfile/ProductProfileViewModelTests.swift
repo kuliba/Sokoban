@@ -93,7 +93,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_handlePinError_certificateError_showActivateCertificateAlert() throws {
         
-        let (sut, model) = try makeSUT()
+        let (sut, model, _) = try makeSUT()
         
         XCTAssertNil(sut.alert)
         
@@ -123,7 +123,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_handlePinError_serviceFailureError_showActivateCertificateAlert() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.alert)
         
@@ -145,7 +145,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_showActivateCertificateAlert() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.alert)
         
@@ -167,7 +167,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_activateCertificateAction_happyPathActivateCertificate_shouldShowConfirmOtpViewHideSpinner() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.alert)
         XCTAssertNil(sut.fullScreenCoverState)
@@ -195,7 +195,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_activateCertificateAction_sadPathActivateCertificate_shouldShowAlertHideSpinner() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.alert)
         XCTAssertNil(sut.fullScreenCoverState)
@@ -223,7 +223,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     // MARK: - test showSpinner
     func test_showSpinner_linkNotInfoProductModel() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.spinner)
         XCTAssertNil(sut.link)
@@ -238,7 +238,7 @@ final class ProductProfileViewModelTests: XCTestCase {
 
     func test_showSpinner_linkInfoProductModel() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.spinner)
         XCTAssertNil(sut.link)
@@ -285,24 +285,24 @@ final class ProductProfileViewModelTests: XCTestCase {
 
     func test_optionsPannelAction_blockCard_showAlert() throws {
         
-        let (sut, _) = try makeSUT()
-        
-        XCTAssertNil(sut.optionsPannel)
-        
-        sut.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: sut.panelViewModelBlockCardChangePin))
+        let (sut, _, product) = try makeSUT()
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertNil(sut.optionsPanelNew)
         
-        XCTAssertNotNil(sut.optionsPannel)
+        
+        sut.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped(buttonType: .bottomRight))
+        
+        
+        XCTAssertNotNil(sut.optionsPanelNew)
         
         XCTAssertNil(sut.alert)
         
-        let action = ProductProfileOptionsPannelViewModelAction.ButtonTapped(buttonType: .card(.block))
+        sut.event(.cardGuardian(product.id))
         
-        sut.optionsPannel?.action.send(action)
-        
-        //в коде now + .milliseconds(300)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+        //в коде now + .milliseconds(400)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
         
         XCTAssertNotNil(sut.alert)
         
@@ -324,9 +324,9 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNil(sut.alert)
     }
     
-    func test_optionsPannelAction_unBlockCard_showAlert() throws {
+    /*func test_optionsPannelAction_unBlockCard_showAlert() throws {
         
-        let (sut, _) = try makeSUT(
+        let (sut, _, product) = try makeSUT(
             statusCard: .blockedUnlockAvailable
         )
         
@@ -427,12 +427,12 @@ final class ProductProfileViewModelTests: XCTestCase {
         }
         sut.fullScreenCoverState = nil
     }
-    
+    */
     // MARK: - test showCvvByTap
     
     func test_showCvvByTap_happyPath_returnCVV() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         sut.showCvvByTap(cardId: .init(111)) { result in
             
@@ -442,7 +442,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_showCvvByTap_checkCertificateError_returNil() throws {
         
-        let (sut, _) = try makeSUT(
+        let (sut, _, _) = try makeSUT(
             cvvPINServicesClient: SadShowCVVSadCheckCertificateClient()
         )
         
@@ -454,7 +454,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_showCvvByTap_checkCertificateConnectivityError_returNil() throws {
         
-        let (sut, _) = try makeSUT(
+        let (sut, _, _) = try makeSUT(
             cvvPINServicesClient: SadShowCVVCheckCertificateConnectivityClient()
         )
         
@@ -466,7 +466,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_showCvvByTap_activateCertificateError_returnNil() throws {
         
-        let (sut, _) = try makeSUT(
+        let (sut, _, _) = try makeSUT(
             cvvPINServicesClient: SadShowCVVSadActivateCertificateClient()
         )
         
@@ -477,7 +477,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_showCvvByTap_otpErrorRetryAttempts0_returNil() throws {
         
-        let (sut, _) = try makeSUT(
+        let (sut, _, _) = try makeSUT(
             cvvPINServicesClient: SadShowCVVSadOtpRetryAttempts0CertificateClient()
         )
         
@@ -488,7 +488,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_showCvvByTap_otpErrorRetryAttempts_returNil() throws {
         
-        let (sut, _) = try makeSUT(
+        let (sut, _, _) = try makeSUT(
             cvvPINServicesClient: SadShowCVVSadOtpRetryAttemptsCertificateClient()
         )
         
@@ -501,7 +501,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     // MARK: - test show/hide spinner
     func test_showHideSpinner() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.spinner)
         
@@ -521,7 +521,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     // MARK: - test show confirm otp
     func test_showConfirmOtp() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.fullScreenCoverState)
         
@@ -576,15 +576,14 @@ final class ProductProfileViewModelTests: XCTestCase {
         line: UInt = #line
     ) throws -> (
         sut: ProductProfileViewModel,
-        model: Model
+        model: Model,
+        card: ProductCardData
     ) {
         let model = Model.mockWithEmptyExcept()
-        model.products.value = [.card: [
-            ProductCardData(statusCard: statusCard, cardType: cardType)
-        ]]
-        
-        let product = try XCTUnwrap(model.products.value[.card]?.first)
-        
+        let card = ProductCardData(statusCard: statusCard, cardType: cardType)
+
+        model.products.value = [.card: [ card ]]
+                
         let sut = try XCTUnwrap(
             ProductProfileViewModel(
                 model,
@@ -596,7 +595,7 @@ final class ProductProfileViewModelTests: XCTestCase {
                 paymentsTransfersFactory: .preview,
                 operationDetailFactory: .preview,
                 cvvPINServicesClient: cvvPINServicesClient,
-                product: product,
+                product: card,
                 productNavigationStateManager: .preview,
                 productProfileViewModelFactory: .preview,
                 rootView: "",
@@ -607,7 +606,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(model, file: file, line: line)
         
-        return (sut, model)
+        return (sut, model, card)
     }
     
     func makeModelWithProducts(_ counts: ProductTypeCounts = [(.card, 1)]) -> Model {
@@ -652,26 +651,6 @@ private extension ProductProfileViewModel {
         .init(
             buttonsTypes: [
                 .requisites
-            ],
-            productType: .card
-        )
-    }
-
-    var panelViewModelBlockCardChangePin: ProductProfileOptionsPannelView.ViewModel {
-        .init(
-            buttonsTypes: [
-                .card(.block),
-                .card(.changePin)
-            ],
-            productType: .card
-        )
-    }
-    
-    var panelViewModelUnBlockCardChangePin: ProductProfileOptionsPannelView.ViewModel {
-        .init(
-            buttonsTypes: [
-                .card(.unblock),
-                .card(.changePin)
             ],
             productType: .card
         )

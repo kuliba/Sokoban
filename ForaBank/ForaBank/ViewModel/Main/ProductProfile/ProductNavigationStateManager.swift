@@ -34,6 +34,7 @@ enum AlertEvent {
     case closeAlert
     case showAlert(Alert.ViewModel)
     case delayAlert(Kind)
+    case delayAlertViewModel(Alert.ViewModel)
     
     enum Kind {
         case showAdditionalOtherAlert

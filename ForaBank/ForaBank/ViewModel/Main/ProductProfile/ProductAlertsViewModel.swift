@@ -15,6 +15,7 @@ struct ProductAlertsViewModel {
     let serviceOnlyMainCard: String
     let serviceOnlyOwnerCard: String
     let transferAdditionalOther: String
+    let unblockCard: String
 }
 
 extension ProductAlertsViewModel {
@@ -25,6 +26,7 @@ extension ProductAlertsViewModel {
         additionalAlertText: "CVV может увидеть только человек,\nна которого выпущена карта.\nЭто мера предосторожности во избежание мошеннических операций.",
         serviceOnlyMainCard: "Эта услуга доступна только для основной карты",
         serviceOnlyOwnerCard: "Данной услугой может воспользоваться человек, на которого выпущена карта",
-        transferAdditionalOther: "Переводы  с помощью карты может проводить только человек, на которого выпущена карта.\nДля перевода воспользуйтесь картой, которая выпущена на вас."
+        transferAdditionalOther: "Переводы  с помощью карты может проводить только человек, на которого выпущена карта.\nДля перевода воспользуйтесь картой, которая выпущена на вас.",
+        unblockCard: "Карту можно будет разблокировать в приложении или в колл-центре"
     )
 }

@@ -130,22 +130,6 @@ extension ProductProfileOptionsPannelView {
                 
             case .termsOfService:
                 return .init(icon: .circleSmall(image: .ic24FileText), title: .bold(text: "Условия комплексного банковского обслуживания"), orientation: .horizontal, action: action)
-                
-            case let .card(type):
-                
-                switch type {
-                case .block:
-                    return .init(icon: .circleSmall(image: .ic24Lock), title: .bold(text: "Блокировать"), orientation: .horizontal, action: action)
-                    
-                case .unblock:
-                    return .init(icon: .circleSmall(image: .ic24Unlock), title: .bold(text: "Разблокировать"), orientation: .horizontal, action: action)
-                    
-                case .changePin:
-                    return .init(icon: .circleSmall(image: .ic24Pass), title: .bold(text: "Изменить PIN-код"), orientation: .horizontal, action: action)
-                    
-                case .visibility:
-                    return .init(icon: .circleSmall(image: .ic24Eye), title: .bold(text: "Скрыть с главной"), orientation: .horizontal, action: action)
-                }
             }
         }
         
@@ -162,12 +146,6 @@ extension ProductProfileOptionsPannelView {
             case tariffsByAccount
             case termsOfService
             case contract
-            
-            case card(Card)
-            
-            enum Card {
-                case block, unblock, changePin, visibility
-            }
         }
     }
 }
