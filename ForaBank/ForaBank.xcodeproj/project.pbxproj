@@ -994,6 +994,16 @@
 		2AFE37F02BC972800079C401 /* ForaTools in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFE37EF2BC972800079C401 /* ForaTools */; };
 		2AFE37F22BC987830079C401 /* ElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE37F12BC987830079C401 /* ElementView.swift */; };
 		2AFE37F42BCA676F0079C401 /* AnywayPaymentEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE37F32BCA676F0079C401 /* AnywayPaymentEvent.swift */; };
+		2AFE37F72BCA85FB0079C401 /* ExpandablePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE37F62BCA85FB0079C401 /* ExpandablePicker.swift */; };
+		2AFE37F92BCA866C0079C401 /* ExpandablePickerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE37F82BCA866C0079C401 /* ExpandablePickerState.swift */; };
+		2AFE37FB2BCA86810079C401 /* ExpandablePickerEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE37FA2BCA86810079C401 /* ExpandablePickerEvent.swift */; };
+		2AFE37FD2BCAA75C0079C401 /* ExpandablePickerWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE37FC2BCAA75C0079C401 /* ExpandablePickerWrapperView.swift */; };
+		2AFE37FF2BCAA8BB0079C401 /* ExpandablePickerState+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE37FE2BCAA8BB0079C401 /* ExpandablePickerState+preview.swift */; };
+		2AFE38012BCAA92B0079C401 /* ExpandablePickerViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE38002BCAA92B0079C401 /* ExpandablePickerViewModel+preview.swift */; };
+		2AFE38032BCAA98F0079C401 /* ExpandablePickerEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE38022BCAA98F0079C401 /* ExpandablePickerEffect.swift */; };
+		2AFE38052BCAA9A30079C401 /* ExpandablePickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE38042BCAA9A30079C401 /* ExpandablePickerViewModel.swift */; };
+		2AFE38072BCAA9C50079C401 /* ExpandablePickerStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE38062BCAA9C50079C401 /* ExpandablePickerStateWrapperView.swift */; };
+		2AFE38092BCAAA1F0079C401 /* ExpandablePickerReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE38082BCAAA1F0079C401 /* ExpandablePickerReducer.swift */; };
 		2AFF5D292A9885210097F429 /* CryptoSwaddler in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFF5D282A9885210097F429 /* CryptoSwaddler */; };
 		50037F7A2934D107009D1F0C /* TransfersInfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50037F792934D107009D1F0C /* TransfersInfoViewComponent.swift */; };
 		50037F7C2934DE56009D1F0C /* TransfersPromoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50037F7B2934DE56009D1F0C /* TransfersPromoViewComponent.swift */; };
@@ -3538,6 +3548,16 @@
 		2AFE37EC2BC96F500079C401 /* OTPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPView.swift; sourceTree = "<group>"; };
 		2AFE37F12BC987830079C401 /* ElementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementView.swift; sourceTree = "<group>"; };
 		2AFE37F32BCA676F0079C401 /* AnywayPaymentEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentEvent.swift; sourceTree = "<group>"; };
+		2AFE37F62BCA85FB0079C401 /* ExpandablePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandablePicker.swift; sourceTree = "<group>"; };
+		2AFE37F82BCA866C0079C401 /* ExpandablePickerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandablePickerState.swift; sourceTree = "<group>"; };
+		2AFE37FA2BCA86810079C401 /* ExpandablePickerEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandablePickerEvent.swift; sourceTree = "<group>"; };
+		2AFE37FC2BCAA75C0079C401 /* ExpandablePickerWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandablePickerWrapperView.swift; sourceTree = "<group>"; };
+		2AFE37FE2BCAA8BB0079C401 /* ExpandablePickerState+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExpandablePickerState+preview.swift"; sourceTree = "<group>"; };
+		2AFE38002BCAA92B0079C401 /* ExpandablePickerViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExpandablePickerViewModel+preview.swift"; sourceTree = "<group>"; };
+		2AFE38022BCAA98F0079C401 /* ExpandablePickerEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandablePickerEffect.swift; sourceTree = "<group>"; };
+		2AFE38042BCAA9A30079C401 /* ExpandablePickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandablePickerViewModel.swift; sourceTree = "<group>"; };
+		2AFE38062BCAA9C50079C401 /* ExpandablePickerStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandablePickerStateWrapperView.swift; sourceTree = "<group>"; };
+		2AFE38082BCAAA1F0079C401 /* ExpandablePickerReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandablePickerReducer.swift; sourceTree = "<group>"; };
 		50037F792934D107009D1F0C /* TransfersInfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransfersInfoViewComponent.swift; sourceTree = "<group>"; };
 		50037F7B2934DE56009D1F0C /* TransfersPromoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransfersPromoViewComponent.swift; sourceTree = "<group>"; };
 		50043664287B3747000545BD /* PagerScrollViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerScrollViewComponent.swift; sourceTree = "<group>"; };
@@ -6550,6 +6570,8 @@
 			isa = PBXGroup;
 			children = (
 				2A2F88302BC942230097119C /* Preview Assets.xcassets */,
+				2AFE37FE2BCAA8BB0079C401 /* ExpandablePickerState+preview.swift */,
+				2AFE38002BCAA92B0079C401 /* ExpandablePickerViewModel+preview.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -8300,8 +8322,24 @@
 			children = (
 				2AFE37F12BC987830079C401 /* ElementView.swift */,
 				2AFE37EC2BC96F500079C401 /* OTPView.swift */,
+				2AFE37F52BCA85EC0079C401 /* ExpandablePicker */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		2AFE37F52BCA85EC0079C401 /* ExpandablePicker */ = {
+			isa = PBXGroup;
+			children = (
+				2AFE38042BCAA9A30079C401 /* ExpandablePickerViewModel.swift */,
+				2AFE38062BCAA9C50079C401 /* ExpandablePickerStateWrapperView.swift */,
+				2AFE37FC2BCAA75C0079C401 /* ExpandablePickerWrapperView.swift */,
+				2AFE37F62BCA85FB0079C401 /* ExpandablePicker.swift */,
+				2AFE37F82BCA866C0079C401 /* ExpandablePickerState.swift */,
+				2AFE37FA2BCA86810079C401 /* ExpandablePickerEvent.swift */,
+				2AFE38022BCAA98F0079C401 /* ExpandablePickerEffect.swift */,
+				2AFE38082BCAAA1F0079C401 /* ExpandablePickerReducer.swift */,
+			);
+			path = ExpandablePicker;
 			sourceTree = "<group>";
 		};
 		501BCFC82936A23C003F81DF /* Promo */ = {
@@ -14515,13 +14553,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AFE38072BCAA9C50079C401 /* ExpandablePickerStateWrapperView.swift in Sources */,
+				2AFE38092BCAAA1F0079C401 /* ExpandablePickerReducer.swift in Sources */,
 				2A2F882C2BC942220097119C /* ContentView.swift in Sources */,
+				2AFE37FD2BCAA75C0079C401 /* ExpandablePickerWrapperView.swift in Sources */,
+				2AFE37FF2BCAA8BB0079C401 /* ExpandablePickerState+preview.swift in Sources */,
 				2AFE37F22BC987830079C401 /* ElementView.swift in Sources */,
+				2AFE38032BCAA98F0079C401 /* ExpandablePickerEffect.swift in Sources */,
 				2AFE37EE2BC970150079C401 /* OTPView.swift in Sources */,
+				2AFE37F72BCA85FB0079C401 /* ExpandablePicker.swift in Sources */,
+				2AFE37FB2BCA86810079C401 /* ExpandablePickerEvent.swift in Sources */,
+				2AFE38012BCAA92B0079C401 /* ExpandablePickerViewModel+preview.swift in Sources */,
 				2AFE37E92BC94BB60079C401 /* AnywayPaymentReducer.swift in Sources */,
 				2AFE37EA2BC94BB60079C401 /* AnywayPaymentEffect.swift in Sources */,
 				2A2F882A2BC942220097119C /* AnywayPaymentPreviewApp.swift in Sources */,
 				2AFE37F42BCA676F0079C401 /* AnywayPaymentEvent.swift in Sources */,
+				2AFE38052BCAA9A30079C401 /* ExpandablePickerViewModel.swift in Sources */,
+				2AFE37F92BCA866C0079C401 /* ExpandablePickerState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
