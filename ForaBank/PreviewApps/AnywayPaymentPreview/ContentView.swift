@@ -70,7 +70,7 @@ extension AnywayPayment.Element: Identifiable {
             return .fieldID(field.id)
             
         case let .parameter(parameter):
-            return .fieldID(parameter.field.id)
+            return .parameterID(parameter.field.id)
             
         case let .widget(widget):
             return .widgetID(widget.id)
@@ -79,7 +79,8 @@ extension AnywayPayment.Element: Identifiable {
     
     public enum ID: Hashable {
         
-        case fieldID(StringID)
+        case fieldID(Field.ID)
+        case parameterID(Parameter.Field.ID)
         case widgetID(Widget.ID)
     }
 }

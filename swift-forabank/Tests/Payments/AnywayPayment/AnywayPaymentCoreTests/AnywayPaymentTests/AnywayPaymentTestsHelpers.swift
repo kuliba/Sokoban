@@ -207,8 +207,8 @@ func makeAnywayPaymentField(
     .init(id: id, title: title, value: .init(value))
 }
 
-func makeAnywayPaymentFieldWithStringID(
-    _ id: String = anyMessage(),
+func makeAnywayPaymentField(
+    id: String,
     value: String = anyMessage(),
     title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
@@ -231,12 +231,16 @@ func makeAnywayPaymentParameter(
     )
 }
 
-func makeAnywayPaymentParameterWithID(
-    _ id: String = anyMessage()
+func makeAnywayPaymentParameter(
+    id: String = anyMessage(),
+    value: String? = anyMessage()
 ) -> AnywayPayment.Element.Parameter {
     
     makeAnywayPaymentParameter(
-        field: makeAnywayPaymentElementParameterField(id: id)
+        field: makeAnywayPaymentElementParameterField(
+            id: id,
+            value: value
+        )
     )
 }
 

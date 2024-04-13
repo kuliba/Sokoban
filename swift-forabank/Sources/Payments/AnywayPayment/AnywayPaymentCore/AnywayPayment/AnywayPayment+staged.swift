@@ -14,12 +14,12 @@ extension AnywayPayment {
         .init(elements.compactMap(\.parameterID))
     }
 
-    public typealias Staged = Set<AnywayPayment.Element.StringID>
+    public typealias Staged = Set<AnywayPayment.Element.Parameter.Field.ID>
 }
 
 private extension AnywayPayment.Element {
     
-    var parameterID: AnywayPayment.Element.StringID? {
+    var parameterID: AnywayPayment.Element.Parameter.Field.ID? {
         
         guard case let .parameter(parameter) = self
         else { return nil }

@@ -106,7 +106,8 @@ final class AnywayPaymentContextTests: XCTestCase {
     func test_stage_shouldAppendMissingToOutline() {
         
         let outline = makeAnywayPaymentOutline(["a": "1"])
-        let (parameter1, parameter2) = makeTwoParameters()
+        let parameter1 = makeAnywayPaymentParameter(id: "x", value: "X")
+        let parameter2 = makeAnywayPaymentParameter(id: "y", value: "Y")
         var context = makeAnywayPaymentContext(
             elements: [.parameter(parameter1), .parameter(parameter2), .field(makeAnywayPaymentField())],
             outline: outline
@@ -116,8 +117,8 @@ final class AnywayPaymentContextTests: XCTestCase {
         
         XCTAssertNoDiff(context.outline.fields, [
             "a": "1",
-            parameter1.field.id: parameter1.field.value,
-            parameter2.field.id: parameter2.field.value
+            "x": "X",
+            "y": "Y",
         ])
     }
     
@@ -147,7 +148,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         
         let field = makeAnywayPaymentElementParameterField(id: "b", value: "222")
         let parameter = makeAnywayPaymentParameter(field: field)
-        let parameter2 = makeAnywayPaymentParameter()
+        let parameter2 = makeAnywayPaymentParameter(id: "y", value: "Y")
         let outline = makeAnywayPaymentOutline([
             "a": "1",
             "b": "2"
@@ -162,7 +163,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssertNoDiff(context.outline.fields, [
             "a": "1",
             "b": "222",
-            parameter2.field.id: parameter2.field.value
+            "y": "Y",
         ])
     }
     
