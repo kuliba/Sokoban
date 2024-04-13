@@ -699,10 +699,11 @@ extension ProductView {
                                        size: viewModel.iconSize(with: style))
 
             case .unblockShow:
+                let countImages = 2.0 // 2 images: unblock + show
                 let size = viewModel.iconSize(with: style)
                 ProductView.StatusView(icon: viewModel.icon(with: style),
                                        color: color,
-                                       size: CGSizeMake(size.width * 2, size.height))
+                                       size: CGSizeMake(size.width * countImages, size.height))
             }
         }
     }
