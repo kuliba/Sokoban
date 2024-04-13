@@ -9,7 +9,7 @@ import AnywayPaymentCore
 import RxViewModel
 import SwiftUI
 
-typealias ViewModel = RxViewModel<AnywayPayment, AnywayEvent, AnywayEffect>
+typealias ViewModel = RxViewModel<AnywayPayment, AnywayPaymentEvent, AnywayPaymentEffect>
 
 struct ContentView: View {
     

@@ -989,10 +989,11 @@
 		2AFD59EC2B6F990F00C86FBF /* Services+loggingLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59EB2B6F990F00C86FBF /* Services+loggingLoader.swift */; };
 		2AFE37E22BC944B10079C401 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFE37E12BC944B10079C401 /* RxViewModel */; };
 		2AFE37E92BC94BB60079C401 /* AnywayPaymentReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE37E62BC94B8F0079C401 /* AnywayPaymentReducer.swift */; };
-		2AFE37EA2BC94BB60079C401 /* AnywayPaymentDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE37E42BC94B630079C401 /* AnywayPaymentDomain.swift */; };
+		2AFE37EA2BC94BB60079C401 /* AnywayPaymentEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE37E42BC94B630079C401 /* AnywayPaymentEffect.swift */; };
 		2AFE37EE2BC970150079C401 /* OTPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE37EC2BC96F500079C401 /* OTPView.swift */; };
 		2AFE37F02BC972800079C401 /* ForaTools in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFE37EF2BC972800079C401 /* ForaTools */; };
 		2AFE37F22BC987830079C401 /* ElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE37F12BC987830079C401 /* ElementView.swift */; };
+		2AFE37F42BCA676F0079C401 /* AnywayPaymentEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE37F32BCA676F0079C401 /* AnywayPaymentEvent.swift */; };
 		2AFF5D292A9885210097F429 /* CryptoSwaddler in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFF5D282A9885210097F429 /* CryptoSwaddler */; };
 		50037F7A2934D107009D1F0C /* TransfersInfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50037F792934D107009D1F0C /* TransfersInfoViewComponent.swift */; };
 		50037F7C2934DE56009D1F0C /* TransfersPromoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50037F7B2934DE56009D1F0C /* TransfersPromoViewComponent.swift */; };
@@ -3532,10 +3533,11 @@
 		2AFD59DC2B6F70F300C86FBF /* RequestFactory+createGetC2BSubRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetC2BSubRequestTests.swift"; sourceTree = "<group>"; };
 		2AFD59E82B6F97DB00C86FBF /* FastPaymentsSettingsEffectHandler+Facade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FastPaymentsSettingsEffectHandler+Facade.swift"; sourceTree = "<group>"; };
 		2AFD59EB2B6F990F00C86FBF /* Services+loggingLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+loggingLoader.swift"; sourceTree = "<group>"; };
-		2AFE37E42BC94B630079C401 /* AnywayPaymentDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentDomain.swift; sourceTree = "<group>"; };
+		2AFE37E42BC94B630079C401 /* AnywayPaymentEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentEffect.swift; sourceTree = "<group>"; };
 		2AFE37E62BC94B8F0079C401 /* AnywayPaymentReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentReducer.swift; sourceTree = "<group>"; };
 		2AFE37EC2BC96F500079C401 /* OTPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPView.swift; sourceTree = "<group>"; };
 		2AFE37F12BC987830079C401 /* ElementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementView.swift; sourceTree = "<group>"; };
+		2AFE37F32BCA676F0079C401 /* AnywayPaymentEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentEvent.swift; sourceTree = "<group>"; };
 		50037F792934D107009D1F0C /* TransfersInfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransfersInfoViewComponent.swift; sourceTree = "<group>"; };
 		50037F7B2934DE56009D1F0C /* TransfersPromoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransfersPromoViewComponent.swift; sourceTree = "<group>"; };
 		50043664287B3747000545BD /* PagerScrollViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerScrollViewComponent.swift; sourceTree = "<group>"; };
@@ -8286,7 +8288,8 @@
 		2AFE37E32BC94B510079C401 /* AnywayPaymentDomain */ = {
 			isa = PBXGroup;
 			children = (
-				2AFE37E42BC94B630079C401 /* AnywayPaymentDomain.swift */,
+				2AFE37E42BC94B630079C401 /* AnywayPaymentEffect.swift */,
+				2AFE37F32BCA676F0079C401 /* AnywayPaymentEvent.swift */,
 				2AFE37E62BC94B8F0079C401 /* AnywayPaymentReducer.swift */,
 			);
 			path = AnywayPaymentDomain;
@@ -14516,8 +14519,9 @@
 				2AFE37F22BC987830079C401 /* ElementView.swift in Sources */,
 				2AFE37EE2BC970150079C401 /* OTPView.swift in Sources */,
 				2AFE37E92BC94BB60079C401 /* AnywayPaymentReducer.swift in Sources */,
-				2AFE37EA2BC94BB60079C401 /* AnywayPaymentDomain.swift in Sources */,
+				2AFE37EA2BC94BB60079C401 /* AnywayPaymentEffect.swift in Sources */,
 				2A2F882A2BC942220097119C /* AnywayPaymentPreviewApp.swift in Sources */,
+				2AFE37F42BCA676F0079C401 /* AnywayPaymentEvent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

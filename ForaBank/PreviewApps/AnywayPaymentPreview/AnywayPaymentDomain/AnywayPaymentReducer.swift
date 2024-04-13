@@ -8,7 +8,9 @@
 import AnywayPaymentCore
 import ForaTools
 
-final class AnywayPaymentReducer {
+final class AnywayPaymentReducer {}
+
+extension AnywayPaymentReducer {
     
     func reduce(
         _ state: State,
@@ -16,11 +18,15 @@ final class AnywayPaymentReducer {
     ) -> (State, Effect?) {
         
         var state = state
-        var effect: Effect?
+        let effect: Effect? = nil
         
         switch event {
         case let .otp(otp):
             state.elements[id: .widgetID(.otp)] = .widget(.otp(otp))
+            
+        case let .setValue(newValue, for: parameterID):
+            let parameterValue = ParameterValue(rawValue: newValue)
+            state.elements.set(value: parameterValue, for: parameterID)
         }
         
         return (state, effect)
@@ -29,7 +35,45 @@ final class AnywayPaymentReducer {
 
 extension AnywayPaymentReducer {
     
+    typealias ParameterValue = AnywayPayment.Element.Parameter.Field.Value
+    
     typealias State = AnywayPayment
-    typealias Event = AnywayEvent
-    typealias Effect = AnywayEffect
+    typealias Event = AnywayPaymentEvent
+    typealias Effect = AnywayPaymentEffect
+}
+
+private extension Array where Element == AnywayPayment.Element {
+    
+    mutating func set(
+        value newValue: Element.Parameter.Field.Value,
+        for id: Element.Parameter.Field.ID
+    ) {
+        guard let index = firstIndex(matching: .parameterID(id)),
+              case let .parameter(parameter) = self[index],
+              id == parameter.field.id
+        else { return }
+        
+        self[index] = .parameter(parameter.updating(value: newValue))
+    }
+}
+
+private extension Array where Element: Identifiable {
+    
+    func firstIndex(matching id: Element.ID) -> Index? {
+        
+        firstIndex(where: { $0.id == id})
+    }
+}
+
+private extension AnywayPayment.Element.Parameter {
+    
+    func updating(value newValue: Field.Value) -> Self {
+        
+        .init(
+            field: .init(id: field.id, value: newValue),
+            masking: masking,
+            validation: validation,
+            uiAttributes: uiAttributes
+        )
+    }
 }

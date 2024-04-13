@@ -11,7 +11,7 @@ import SwiftUI
 struct ElementView: View {
     
     let state: AnywayPayment.Element
-    let event: (AnywayEvent) -> Void
+    let event: (AnywayPaymentEvent) -> Void
     
     var body: some View {
         
