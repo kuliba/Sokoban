@@ -13,8 +13,14 @@ typealias ViewModel = RxViewModel<AnywayPayment, AnywayPaymentEvent, AnywayPayme
 
 struct ContentView: View {
     
-    @StateObject private var viewModel: ViewModel = .init(
-        initialState: .init(
+    @StateObject private var viewModel: ViewModel
+        
+    init() {
+        
+        let reducer = AnywayPaymentReducer(
+            makeOTP: { Int($0.filter(\.isWholeNumber).prefix(6)) }
+        )
+        let initialState = AnywayPayment(
             elements: [
                 .field(.init(id: "1", title: "a", value: "bb")),
                 .widget(.otp(nil))
@@ -23,10 +29,15 @@ struct ContentView: View {
             isFinalStep: false,
             isFraudSuspected: false,
             puref: "iFora || abc"
-        ),
-        reduce: AnywayPaymentReducer().reduce(_:_:),
-        handleEffect: { _,_ in }
-    )
+        )
+        let viewModel = ViewModel(
+            initialState: initialState,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: { _,_ in }
+        )
+        
+        self._viewModel = .init(wrappedValue: viewModel)
+    }
     
     var body: some View {
         

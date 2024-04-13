@@ -8,7 +8,15 @@
 import AnywayPaymentCore
 import ForaTools
 
-final class AnywayPaymentReducer {}
+final class AnywayPaymentReducer {
+    
+    private let makeOTP: MakeOTP
+    
+    init(makeOTP: @escaping MakeOTP) {
+        
+        self.makeOTP = makeOTP
+    }
+}
 
 extension AnywayPaymentReducer {
     
@@ -22,8 +30,7 @@ extension AnywayPaymentReducer {
         
         switch event {
         case let .otp(otp):
-            let otp = Int(otp.filter(\.isWholeNumber))
-            state.elements[id: .widgetID(.otp)] = .widget(.otp(otp))
+            state.elements[id: .widgetID(.otp)] = .widget(.otp(makeOTP(otp)))
             
         case let .setValue(newValue, for: parameterID):
             let parameterValue = ParameterValue(rawValue: newValue)
@@ -35,6 +42,8 @@ extension AnywayPaymentReducer {
 }
 
 extension AnywayPaymentReducer {
+    
+    typealias MakeOTP = (String) -> Int?
     
     typealias ParameterValue = AnywayPayment.Element.Parameter.Field.Value
     
