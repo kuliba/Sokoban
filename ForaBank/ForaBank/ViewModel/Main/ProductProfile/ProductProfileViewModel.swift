@@ -2565,7 +2565,7 @@ extension ProductProfileViewModel {
             guard let productData = model.product(productId: productID) as? ProductCardData else { return }
             
             switch productData.statusCard {
-            case .blockedUnlockAvailable:
+            case .blockedUnlockAvailable, .blockedUnlockNotAvailable:
                 self.handlePanelButtonType(.unblock, productData)
 
             case .active:
