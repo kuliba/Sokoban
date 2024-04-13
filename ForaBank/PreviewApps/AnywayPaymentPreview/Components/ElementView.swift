@@ -23,13 +23,10 @@ struct ElementView: View {
             Text(String(describing: state))
             
         case .widget(.otp):
-            state.otp.map {
-                
-                OTPView(
-                    state: $0,
-                    event: { event(.otp($0)) }
-                )
-            }
+            OTPView(
+                state: state.otp,
+                event: { event(.otp($0)) }
+            )
             
         case .widget(.productPicker):
             Text("TBD: Product Picker (Selector)")
@@ -39,12 +36,13 @@ struct ElementView: View {
 
 private extension AnywayPayment.Element {
     
-    var otp: String? {
+    var otp: String {
         
-        guard case let .widget(.otp(otp)) = self
-        else { return nil }
+        guard case let .widget(.otp(otp)) = self,
+              let otp
+        else { return "" }
         
-        return otp
+        return "\(otp)"
     }
 }
 
@@ -53,7 +51,7 @@ struct ElementView_Previews: PreviewProvider {
     static var previews: some View {
         
         ElementView(
-            state: .widget(.otp("123")),
+            state: .widget(.otp(123)),
             event: { _ in }
         )
     }

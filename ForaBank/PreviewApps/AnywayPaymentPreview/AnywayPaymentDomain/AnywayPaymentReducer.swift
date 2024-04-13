@@ -22,6 +22,7 @@ extension AnywayPaymentReducer {
         
         switch event {
         case let .otp(otp):
+            let otp = Int(otp.filter(\.isWholeNumber))
             state.elements[id: .widgetID(.otp)] = .widget(.otp(otp))
             
         case let .setValue(newValue, for: parameterID):

@@ -17,7 +17,7 @@ struct ContentView: View {
         initialState: .init(
             elements: [
                 .field(.init(id: "1", title: "a", value: "bb")),
-                .widget(.otp(""))
+                .widget(.otp(nil))
             ],
             infoMessage: nil,
             isFinalStep: false,
@@ -93,7 +93,7 @@ private extension AnywayPayment {
               case let .widget(.otp(otp)) = widget
         else { return "n/a" }
         
-        return otp.isEmpty ? "<empty>" : otp
+        return otp.map { "\($0)" } ?? "<nil>"
     }
 }
 

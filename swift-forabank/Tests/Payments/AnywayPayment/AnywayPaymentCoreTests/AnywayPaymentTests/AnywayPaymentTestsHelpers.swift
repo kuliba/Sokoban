@@ -11,7 +11,7 @@ import XCTest
 
 func assertOTPisLast(
     in payment: AnywayPayment,
-    with value: String = "",
+    with value: Int? = nil,
     file: StaticString = #file,
     line: UInt = #line
 ) {
@@ -319,7 +319,7 @@ func makeAnywayPaymentWidgetElement(
 }
 
 func makeOTPWidget(
-    _ value: String = ""
+    _ value: Int? = nil
 ) -> AnywayPayment.Element.Widget {
     
     .otp(value)
