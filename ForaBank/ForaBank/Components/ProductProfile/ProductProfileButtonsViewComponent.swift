@@ -55,34 +55,43 @@ extension ProductProfileButtonsView {
               
         func buttonEnabled(for buttonType: ButtonType, for product: ProductData, depositInfo: DepositInfoDataItem?) -> Bool {
             
-            switch buttonType {
-            case .topLeft:
-                switch product {
-                case let cardProduct as ProductCardData:
-                    return cardProduct.isBlocked ? false : true
+            if let card = product as? ProductCardData, card.statusCard == .notActivated {
                 
-                case let deposit as ProductDepositData:
-                    return deposit.isCanReplenish
+                switch buttonType {
+                case .bottomLeft: return true
+                default: return false
+                }
+            } else {
+                
+                switch buttonType {
+                case .topLeft:
+                    switch product {
+                    case let cardProduct as ProductCardData:
+                        return cardProduct.isBlocked ? false : true
                         
-                default: return true
-                }
-                
-            case .bottomLeft: return true
-                
-            case .topRight:
-                switch product {
-                case let cardProduct as ProductCardData:
-                    return cardProduct.isBlocked ? false : true
+                    case let deposit as ProductDepositData:
+                        return deposit.isCanReplenish
+                        
+                    default: return true
+                    }
                     
-                case let depositProduct as ProductDepositData:
-                    return (depositProduct.availableTransferType(with: depositInfo) != nil && depositInfo != nil)
+                case .bottomLeft: return true
                     
-                case _ as ProductLoanData: return false
-                default: return true
+                case .topRight:
+                    switch product {
+                    case let cardProduct as ProductCardData:
+                        return cardProduct.isBlocked ? false : true
+                        
+                    case let depositProduct as ProductDepositData:
+                        return (depositProduct.availableTransferType(with: depositInfo) != nil && depositInfo != nil)
+                        
+                    case _ as ProductLoanData: return false
+                    default: return true
+                    }
+                    
+                case .bottomRight:
+                    return true
                 }
-                
-            case .bottomRight:
-                return true
             }
         }
 
