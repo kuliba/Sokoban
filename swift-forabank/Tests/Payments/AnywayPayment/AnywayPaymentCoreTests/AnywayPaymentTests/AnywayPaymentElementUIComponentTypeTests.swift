@@ -33,13 +33,13 @@ final class AnywayPaymentElementUIComponentTypeTests: XCTestCase {
         
         let element = makeAnywayPaymentWidgetElement(.otp(""))
         
-        XCTAssertNoDiff(element.uiComponentType, .otp)
+        XCTAssertNoDiff(element.uiComponentType, .widget(.otp))
     }
     
     func test_uiComponentType_shouldDeliverProductPickerForCoreWidget() {
         
         let element = makeAnywayPaymentWidgetElement(.core(makeWidgetPaymentCore(productType: .account)))
         
-        XCTAssertNoDiff(element.uiComponentType, .productPicker)
+        XCTAssertNoDiff(element.uiComponentType, .widget(.productPicker))
     }
 }

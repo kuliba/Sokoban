@@ -27,6 +27,15 @@ extension AnywayPayment {
     public enum UIComponentType: Equatable {
         
         case field(Field)
+        case parameter
+        case widget(Widget)
+    }
+}
+
+extension AnywayPayment.UIComponentType {
+    
+    public enum Widget: Equatable {
+        
         case otp, productPicker
     }
 }
@@ -73,10 +82,10 @@ private extension AnywayPayment.Element.Widget {
         
         switch self {
         case .core:
-            return .productPicker
+            return .widget(.productPicker)
             
         case .otp:
-            return .otp
+            return .widget(.otp)
         }
     }
 }

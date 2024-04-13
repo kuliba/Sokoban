@@ -19,7 +19,10 @@ struct ElementView: View {
         case let .field(field):
             Text(String(describing: field))
             
-        case .otp:
+        case .parameter:
+            Text(String(describing: state))
+            
+        case .widget(.otp):
             state.otp.map {
                 
                 OTPView(
@@ -28,7 +31,7 @@ struct ElementView: View {
                 )
             }
             
-        case .productPicker:
+        case .widget(.productPicker):
             Text("TBD: Product Picker (Selector)")
         }
     }
