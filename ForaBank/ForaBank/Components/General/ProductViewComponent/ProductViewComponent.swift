@@ -11,6 +11,7 @@ import SwiftUI
 import Tagged
 import PinCodeUI
 import CardUI
+import UIKit
 
 //MARK: - ViewModel
 
@@ -363,21 +364,21 @@ extension ProductView {
         
         static func statusAction(product: ProductData) -> StatusActionViewModel? {
             
-            guard let cardProduct = product as? ProductCardData else {
+            guard let cardProduct = product as? ProductCardData, let statusCard = cardProduct.statusCard else {
                 return nil
             }
             
-            if cardProduct.isActivated == false {
+            switch statusCard {
+            case .active:
+                if !cardProduct.isVisible { return .init(status: .show) }
+                else { return nil }
+
+            case .blockedUnlockAvailable, .blockedUnlockNotAvailable:
+                if cardProduct.isVisible { return .init(status: .unblock) }
+                else { return .init(status: .unblockShow) }
                 
+            case .notActivated:
                 return .init(status: .activation(.init(state: .notActivated)))
-                
-            } else if cardProduct.isBlocked == true {
-                
-                return .init(status: .unblock)
-                
-            } else {
-                
-                return nil
             }
         }
         
@@ -531,6 +532,24 @@ extension ProductView.ViewModel {
                 case .main: return .ic24Lock
                 case .profile: return .ic40Lock
                 }
+            case .show:
+                return .ic24EyeOff
+                
+            case .unblockShow:
+                switch style {
+                case .main: 
+                    return .combineImages(
+                        images: [
+                            UIImage(named: "ic24Lock")!,
+                            UIImage(named: "ic24EyeOff")!
+                        ])!
+                    // TODO: need ic40
+                case .profile: return .combineImages(
+                    images: [
+                        UIImage(named: "ic24Lock")!,
+                        UIImage(named: "ic24EyeOff")!
+                    ])!
+                }
             }
         }
         
@@ -541,11 +560,13 @@ extension ProductView.ViewModel {
             case .profile: return .init(width: 40, height: 40)
             }
         }
-        
+                
         enum Status {
             
             case activation(CardActivateSliderView.ViewModel)
             case unblock
+            case show
+            case unblockShow
         }
     }
     
@@ -672,6 +693,16 @@ extension ProductView {
                 ProductView.StatusView(icon: viewModel.icon(with: style),
                                        color: color,
                                        size: viewModel.iconSize(with: style))
+            case .show:
+                ProductView.StatusView(icon: viewModel.icon(with: style),
+                                       color: color,
+                                       size: viewModel.iconSize(with: style))
+
+            case .unblockShow:
+                let size = viewModel.iconSize(with: style)
+                ProductView.StatusView(icon: viewModel.icon(with: style),
+                                       color: color,
+                                       size: CGSizeMake(size.width * 2, size.height))
             }
         }
     }
