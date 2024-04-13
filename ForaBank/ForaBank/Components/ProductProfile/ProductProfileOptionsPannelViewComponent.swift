@@ -142,6 +142,9 @@ extension ProductProfileOptionsPannelView {
                     
                 case .changePin:
                     return .init(icon: .circleSmall(image: .ic24Pass), title: .bold(text: "Изменить PIN-код"), orientation: .horizontal, action: action)
+                    
+                case .visibility:
+                    return .init(icon: .circleSmall(image: .ic24Eye), title: .bold(text: "Скрыть с главной"), orientation: .horizontal, action: action)
                 }
             }
         }
@@ -163,7 +166,7 @@ extension ProductProfileOptionsPannelView {
             case card(Card)
             
             enum Card {
-                case block, unblock, changePin
+                case block, unblock, changePin, visibility
             }
         }
     }

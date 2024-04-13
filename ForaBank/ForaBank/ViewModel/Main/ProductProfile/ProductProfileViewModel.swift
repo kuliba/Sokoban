@@ -2179,6 +2179,9 @@ extension ProductProfileViewModel {
             
         case .changePin:
             checkCertificate(.init(productCard.id), certificate: self.cvvPINServicesClient, productCard)
+            
+        case .visibility:
+            self.model.action.send(ModelAction.Products.UpdateVisibility(productId: productCard.id, visibility: !productCard.isVisible))
         }
     }
     
@@ -2567,6 +2570,8 @@ extension ProductProfileViewModel {
 
         case let .visibility(productID):
             guard let productData = model.product(productId: productID) as? ProductCardData else { return }
+            
+            self.handleCardType(.visibility, productData)
         }
     }
 }
