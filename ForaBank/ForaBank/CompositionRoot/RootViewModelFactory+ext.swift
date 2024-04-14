@@ -553,17 +553,26 @@ extension ProductProfileViewModel {
                 makeOperationDetailViewModel: makeOperationDetailViewModel
             )
             
-            let makeProductProfileViewModelFactory: ProductProfileViewModelFactory = .init(makeInfoProductViewModel: {
-                
-                return .init(
-                    model: $0.model,
-                    product: $0.productData,
-                    info: $0.info,
-                    showCvv: $0.showCVV,
-                    event: $0.events
-                )
-                
-            })
+            let makeProductProfileViewModelFactory: ProductProfileViewModelFactory = .init(
+                makeInfoProductViewModel: {
+                    
+                    return .init(
+                        model: $0.model,
+                        product: $0.productData,
+                        info: $0.info,
+                        showCvv: $0.showCVV,
+                        event: $0.events
+                    )
+                    
+                },
+                makeAlert: {
+                    return .init(
+                        title: $0.title,
+                        message: $0.message,
+                        primary: $0.primaryButton,
+                        secondary: $0.secondaryButton)
+                })
+            
             return .init(
                 model,
                 fastPaymentsFactory: fastPaymentsFactory,

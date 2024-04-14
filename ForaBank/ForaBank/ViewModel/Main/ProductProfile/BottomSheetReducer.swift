@@ -12,7 +12,7 @@ final class BottomSheetReducer {
     private let bottomSheetLifespan: DispatchTimeInterval
 
     init(
-        bottomSheetLifespan: DispatchTimeInterval = .microseconds(400)
+        bottomSheetLifespan: DispatchTimeInterval = .milliseconds(400)
     ) {
         self.bottomSheetLifespan = bottomSheetLifespan
     }

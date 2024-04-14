@@ -1690,15 +1690,6 @@ private extension ProductProfileViewModel {
             return nil
         }
         
-        var description: String? {
-            switch statusCard {
-            case .blockedUnlockNotAvailable: return "Обратитесь в поддержку, чтобы разблокировать карту"
-            case .active: return "Карту можно будет разблокировать в приложении или в колл-центре"
-            default:
-                return nil
-            }
-        }
-        
         let secondaryButton: Alert.ViewModel.ButtonViewModel = {
             switch statusCard {
             case .blockedUnlockNotAvailable:
@@ -1723,29 +1714,20 @@ private extension ProductProfileViewModel {
                     })
             }
         }()
-        let alertViewModel: Alert.ViewModel = .init(
-            title: alertTitle(),
-            message: description,
-            primary: .init(
-                type: .default,
-                title: "Отмена",
-                action: { [weak self] in
-                    
-                    self?.action.send(ProductProfileViewModelAction.Close.Alert())
-                }),
-            secondary: secondaryButton
+        
+        let alertViewModel = productProfileViewModelFactory.makeAlert(
+            .init(
+                statusCard: statusCard,
+                primaryButton: .init(
+                    type: .default,
+                    title: "Отмена",
+                    action: { [weak self] in
+                        
+                        self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                    }),
+                secondaryButton: secondaryButton)
         )
-        
-        func alertTitle() -> String {
-            
-            switch statusCard {
-            case .active: return "Заблокировать карту?"
-            case .blockedUnlockAvailable: return "Разблокировать карту?"
-            case .blockedUnlockNotAvailable: return "Невозможно разблокировать"
-            case .notActivated: return ""
-            }
-        }
-        
+                
         return alertViewModel
     }
     
