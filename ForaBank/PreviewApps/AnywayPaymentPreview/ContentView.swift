@@ -14,24 +14,14 @@ typealias ViewModel = RxViewModel<AnywayPayment, AnywayPaymentEvent, AnywayPayme
 struct ContentView: View {
     
     @StateObject private var viewModel: ViewModel
-        
+    
     init() {
         
         let reducer = AnywayPaymentReducer(
             makeOTP: { Int($0.filter(\.isWholeNumber).prefix(6)) }
         )
-        let initialState = AnywayPayment(
-            elements: [
-                .field(.init(id: "1", title: "a", value: "bb")),
-                .widget(.otp(nil))
-            ],
-            infoMessage: nil,
-            isFinalStep: false,
-            isFraudSuspected: false,
-            puref: "iFora || abc"
-        )
         let viewModel = ViewModel(
-            initialState: initialState,
+            initialState: .preview,
             reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in }
         )
@@ -43,22 +33,13 @@ struct ContentView: View {
         
         ZStack(alignment: .bottom) {
             
-            ScrollView {
-                
-                ForEach(viewModel.state.elements, content: elementView)
-                    .padding(.horizontal)
-            }
+            AnywayPaymentLayoutView(
+                elements: viewModel.state.elements,
+                event: viewModel.event
+            )
             
             infoOverlay()
         }
-    }
-    
-    @ViewBuilder
-    private func elementView(
-        element: AnywayPayment.Element
-    ) -> some View {
-        
-        ElementView(state: element, event: viewModel.event)
     }
     
     private func infoOverlay() -> some View {
@@ -72,27 +53,16 @@ struct ContentView: View {
     }
 }
 
-extension AnywayPayment.Element: Identifiable {
+private extension AnywayPaymentLayoutView where ElementView == AnywayPaymentElementView {
     
-    public var id: ID {
-        
-        switch self {
-        case let .field(field):
-            return .fieldID(field.id)
-            
-        case let .parameter(parameter):
-            return .parameterID(parameter.field.id)
-            
-        case let .widget(widget):
-            return .widgetID(widget.id)
-        }
-    }
-    
-    public enum ID: Hashable {
-        
-        case fieldID(Field.ID)
-        case parameterID(Parameter.Field.ID)
-        case widgetID(Widget.ID)
+    init(
+        elements: [AnywayPayment.Element],
+        event: @escaping (AnywayPaymentEvent) -> Void
+    ) {
+        self.init(
+            elements: elements,
+            elementView: { .init(state: $0, event: event) }
+        )
     }
 }
 
