@@ -7,6 +7,7 @@
 
 import AnywayPaymentCore
 import ForaTools
+import Foundation
 
 final class AnywayPaymentReducer {
     
@@ -29,8 +30,15 @@ extension AnywayPaymentReducer {
         let effect: Effect? = nil
         
         switch event {
+        case let .amount(amount):
+            state.elements.updating(coreAmount: amount)
+            
         case let .otp(otp):
             state.elements[id: .widgetID(.otp)] = .widget(.otp(makeOTP(otp)))
+            
+        case .pay:
+            #warning("should belong to transaction level event")
+            break
             
         case let .setValue(newValue, for: parameterID):
             let parameterValue = ParameterValue(rawValue: newValue)
@@ -65,6 +73,14 @@ private extension Array where Element == AnywayPayment.Element {
         
         self[index] = .parameter(parameter.updating(value: newValue))
     }
+    
+    mutating func updating(coreAmount amount: Decimal) {
+        
+        guard case let .widget(.core(core)) = self[id: .widgetID(.core)]
+        else { return }
+        
+        self[id: .widgetID(.core)] = .widget(.core(core.updating(amount: amount)))
+    }
 }
 
 private extension Array where Element: Identifiable {
@@ -85,5 +101,13 @@ private extension AnywayPayment.Element.Parameter {
             validation: validation,
             uiAttributes: uiAttributes
         )
+    }
+}
+
+private extension AnywayPayment.Element.Widget.PaymentCore {
+    
+    func updating(amount: Decimal) -> Self {
+        
+        .init(amount: amount, currency: currency, productID: productID)
     }
 }
