@@ -29,11 +29,18 @@ final class AnywayPaymentElementUIComponentTypeTests: XCTestCase {
     
     // MARK: - widget
     
-    func test_uiComponentType_shouldDeliverOTPForOTPWidget() {
+    func test_uiComponentType_shouldDeliverNilOTPForOTPWidgetWithNil() {
         
         let element = makeAnywayPaymentWidgetElement(.otp(nil))
         
-        XCTAssertNoDiff(element.uiComponentType, .widget(.otp))
+        XCTAssertNoDiff(element.uiComponentType, .widget(.otp(nil)))
+    }
+    
+    func test_uiComponentType_shouldDeliverOTPForOTPWidget() {
+        
+        let element = makeAnywayPaymentWidgetElement(.otp(123_456))
+        
+        XCTAssertNoDiff(element.uiComponentType, .widget(.otp(123_456)))
     }
     
     func test_uiComponentType_shouldDeliverProductPickerForCoreWidget() {
