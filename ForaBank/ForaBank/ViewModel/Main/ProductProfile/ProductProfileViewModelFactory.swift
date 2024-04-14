@@ -63,9 +63,12 @@ extension ProductProfileViewModelFactory {
         makeInfoProductViewModel: {
             _ in .sample
         },
-        makeAlert: { _ in .techError {
-            
-        } })
+        makeAlert: { .init(
+            title: $0.title,
+            message: $0.message,
+            primary: $0.primaryButton,
+            secondary: $0.secondaryButton)
+        })
 }
 
 private extension String {
