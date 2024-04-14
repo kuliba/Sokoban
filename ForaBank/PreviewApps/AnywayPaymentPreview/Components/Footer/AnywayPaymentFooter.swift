@@ -9,6 +9,7 @@ import Foundation
 
 struct AnywayPaymentFooter: Equatable {
     
+    let buttonTitle: String
     let core: Core?
     let isEnabled: Bool
 }
@@ -24,6 +25,6 @@ extension AnywayPaymentFooter {
 
 enum AnywayPaymentFooterEvent: Equatable {
     
+    case `continue`
     case edit(Decimal)
-    case pay
 }
