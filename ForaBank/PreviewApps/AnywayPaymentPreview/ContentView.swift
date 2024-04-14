@@ -53,7 +53,9 @@ struct ContentView: View {
     }
 }
 
-private extension AnywayPaymentLayoutView where ElementView == AnywayPaymentElementView {
+private extension AnywayPaymentLayoutView
+where ElementView == AnywayPaymentElementView,
+      FooterView == AnywayPaymentFooterView {
     
     init(
         elements: [AnywayPayment.Element],
@@ -61,7 +63,8 @@ private extension AnywayPaymentLayoutView where ElementView == AnywayPaymentElem
     ) {
         self.init(
             elements: elements,
-            elementView: { .init(state: $0, event: event) }
+            elementView: { .init(state: $0, event: event) },
+            footerView: { .init(elements: elements, event: event) }
         )
     }
 }

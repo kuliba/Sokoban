@@ -8,18 +8,25 @@
 import AnywayPaymentCore
 import SwiftUI
 
-struct AnywayPaymentLayoutView<ElementView>: View
-where ElementView: View {
+struct AnywayPaymentLayoutView<ElementView, FooterView>: View
+where ElementView: View,
+      FooterView: View {
     
     let elements: [AnywayPayment.Element]
     let elementView: (AnywayPayment.Element) -> ElementView
+    let footerView: () -> FooterView
     
     var body: some View {
         
-        ScrollView {
+        VStack {
             
-            ForEach(elements, content: elementView)
-                .padding(.horizontal)
+            ScrollView {
+                
+                ForEach(elements, content: elementView)
+                    .padding(.horizontal)
+            }
+            
+            footerView()
         }
     }
 }
@@ -30,7 +37,8 @@ struct AnywayPaymentLayoutView_Previews: PreviewProvider {
         
         AnywayPaymentLayoutView(
             elements: .preview,
-            elementView: { Text(String(describing: $0)) }
+            elementView: { Text(String(describing: $0)) },
+            footerView: { Text("Footer") }
         )
     }
 }
