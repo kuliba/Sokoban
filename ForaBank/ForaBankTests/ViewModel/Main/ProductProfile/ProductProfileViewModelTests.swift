@@ -253,16 +253,44 @@ final class ProductProfileViewModelTests: XCTestCase {
     }
   // MARK: - optionsPannelAction
 
-    func test_optionsPannelAction_requisites_showRequisites() throws {
+    func test_optionsPanelAction_requisites_card_createNewPanelShowRequisites() throws {
         
-        let model = makeModelWithProducts()
-        let product = try XCTUnwrap(model.products.value[.card]?.first)
+        let (sut, _, product) = try makeSUT(statusCard: .active)
+        
+        XCTAssertNil(sut.alert)
+        XCTAssertNil(sut.optionsPanelNew)
+        XCTAssertNil(sut.optionsPannel)
+
+        sut.buttons.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped(buttonType: .bottomLeft))
+
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertNotNil(sut.optionsPanelNew)
+        XCTAssertNil(sut.optionsPannel)
+
+        XCTAssertNil(sut.link)
+        
+        sut.event(.accountDetails(product.id))
+
+        //в коде now + .milliseconds(300)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+        
+        XCTAssertNotNil(sut.link)
+        XCTAssertTrue(sut.viewModelByLink is InfoProductViewModel)
+
+        sut.link = nil
+    }
+    
+    func test_optionsPanelAction_notCard_createOldPanelShowRequisite() throws {
+        
+        let model = makeModelWithProducts([(.deposit, 1)])
+        let product = try XCTUnwrap(model.products.value[.deposit]?.first)
         let sut = try XCTUnwrap(makeSUT(model: model, product: product))
         
         XCTAssertNil(sut.optionsPannel)
         XCTAssertNil(sut.link)
         
-        sut.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: sut.panelViewModelRequisites))
+        sut.buttons.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped(buttonType: .bottomLeft))
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
@@ -289,11 +317,13 @@ final class ProductProfileViewModelTests: XCTestCase {
                 
         XCTAssertNil(sut.alert)
         XCTAssertNil(sut.optionsPanelNew)
-        
+        XCTAssertNil(sut.optionsPannel)
+
         sut.createCardGuardianPanel(product)
         
         XCTAssertNotNil(sut.optionsPanelNew)
-        
+        XCTAssertNil(sut.optionsPannel)
+
         sut.event(.cardGuardian(product.id))
          
         //в коде now + .milliseconds(300)
