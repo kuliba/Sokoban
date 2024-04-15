@@ -26,8 +26,8 @@ extension Image {
         
         if images.count > 1 {
             
-            let width: CGFloat = images.map({$0.size.width}).reduce(0, +)
-            let height: CGFloat = images.map({$0.size.height}).max(by: { (a, b) -> Bool in
+            let width: CGFloat = images.map(\.size.width).reduce(0, +)
+            let height: CGFloat = images.map(\.size.height).max(by: { (a, b) -> Bool in
                 return a < b
             })!
             
@@ -50,6 +50,8 @@ extension Image {
             UIGraphicsEndImageContext()
             
             return Image(uiImage: result)
-        } else { return Image(uiImage: images.first!) }
+        } else {
+            return Image(uiImage: images.first!)
+        }
     }
 }
