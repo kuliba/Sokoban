@@ -24,6 +24,12 @@ extension AnywayPaymentEvent {
         
         case amount(Decimal)
         case otp(String)
-        // case product(ProductID, Currency)
+        case product(ProductID, Currency)
     }
+}
+
+extension AnywayPaymentEvent.Widget {
+    
+    typealias Currency = AnywayPayment.Element.Widget.PaymentCore.Currency
+    typealias ProductID = AnywayPayment.Element.Widget.PaymentCore.ProductID
 }

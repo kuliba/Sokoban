@@ -68,6 +68,9 @@ private extension AnywayPaymentReducer {
             
         case let .otp(otp):
             state.elements[id: .widgetID(.otp)] = .widget(.otp(makeOTP(otp)))
+            
+        case let .product(productID, currency):
+            state.elements.updating(productID: productID, currency: currency)
         }
     }
 }
@@ -92,6 +95,17 @@ private extension Array where Element == AnywayPayment.Element {
         else { return }
         
         self[id: .widgetID(.core)] = .widget(.core(core.updating(amount: amount)))
+    }
+    
+    mutating func updating(
+        productID: Element.Widget.PaymentCore.ProductID,
+        currency: Element.Widget.PaymentCore.Currency
+    ) {
+        guard case let .widget(.core(core)) = self[id: .widgetID(.core)]
+        else { return }
+        
+        let updated = core.updating(productID: productID, currency: currency)
+        self[id: .widgetID(.core)] = .widget(.core(updated))
     }
 }
 
@@ -119,6 +133,14 @@ private extension AnywayPayment.Element.Parameter {
 private extension AnywayPayment.Element.Widget.PaymentCore {
     
     func updating(amount: Decimal) -> Self {
+        
+        .init(amount: amount, currency: currency, productID: productID)
+    }
+    
+    func updating(
+        productID: ProductID,
+        currency: Currency
+    ) -> Self {
         
         .init(amount: amount, currency: currency, productID: productID)
     }
