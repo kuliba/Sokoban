@@ -39,9 +39,26 @@ struct AnywayPaymentElementView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        AnywayPaymentElementView(
-            state: .widget(.otp(123)),
-            event: { _ in }
-        )
+        VStack(spacing: 32, content: previewsGroup)
+            .padding(.horizontal)
+    }
+    
+    static func previewsGroup() -> some View {
+        
+        Group {
+            
+            anywayPaymentElementView(.field(.preview))
+            anywayPaymentElementView(.parameter(.select))
+            anywayPaymentElementView(.parameter(.emptyTextInput))
+            anywayPaymentElementView(.parameter(.textInput))
+            anywayPaymentElementView(.widget(.otp(123)))
+        }
+    }
+    
+    static func anywayPaymentElementView(
+        _ element: AnywayPayment.Element
+    ) -> some View {
+        
+        AnywayPaymentElementView(state: element, event: { _ in })
     }
 }

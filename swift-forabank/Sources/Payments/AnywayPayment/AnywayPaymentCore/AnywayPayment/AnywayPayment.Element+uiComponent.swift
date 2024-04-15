@@ -14,7 +14,7 @@ extension AnywayPayment.Element {
             return .field(.init(field))
             
         case let .parameter(parameter):
-            return parameter.uiComponent
+            return .parameter(parameter.uiComponent)
             
         case let .widget(widget):
             return widget.uiComponent
@@ -102,15 +102,15 @@ extension AnywayPayment.UIComponent.Parameter {
     }
 }
 
-private extension AnywayPayment.Element.Parameter {
+extension AnywayPayment.Element.Parameter {
     
-    var uiComponent: AnywayPayment.UIComponent {
+    public var uiComponent: AnywayPayment.UIComponent.Parameter {
         
-        .parameter(.init(
+        .init(
             id: field.id,
             value: field.value,
             type: uiAttributes.uiComponent
-        ))
+        )
     }
 }
 

@@ -11,8 +11,9 @@ extension Array where Element == AnywayPayment.Element {
     
     static let preview: Self = [
         .field(.init(id: "1", title: "a", value: "bb")),
-        .parameter(.textInput),
         .parameter(.select),
+        .parameter(.emptyTextInput),
+        .parameter(.textInput),
         .widget(.otp(nil))
     ]
 }

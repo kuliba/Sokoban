@@ -15,6 +15,8 @@ struct AnywayPaymentElementFieldView: View {
     var body: some View {
         
         Text(String(describing: state))
+            .font(.body.italic())
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

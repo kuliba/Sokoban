@@ -22,8 +22,11 @@ where ElementView: View,
             
             ScrollView {
                 
-                ForEach(elements, content: elementView)
-                    .padding(.horizontal)
+                VStack(spacing: 24) {
+                    
+                    ForEach(elements, content: elementView)
+                        .padding(.horizontal)
+                }
             }
             
             footerView()

@@ -13,7 +13,7 @@ struct TextFieldMockStateWrapperView: View {
 
     var body: some View {
         
-        TextField("", text: .init(
+        TextField("Enter value", text: .init(
             get: { viewModel.text },
             set: viewModel.edit(_:)
         ))

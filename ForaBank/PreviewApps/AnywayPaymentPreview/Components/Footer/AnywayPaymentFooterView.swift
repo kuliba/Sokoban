@@ -61,6 +61,7 @@ struct AnywayPaymentFooterView: View {
             config: config
         )
         .disabled(!state.isEnabled)
+        .padding(.horizontal)
     }
 }
 

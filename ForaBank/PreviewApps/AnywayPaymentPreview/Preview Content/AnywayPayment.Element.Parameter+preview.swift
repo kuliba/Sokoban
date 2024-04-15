@@ -9,6 +9,12 @@ import AnywayPaymentCore
 
 extension AnywayPayment.Element.Parameter {
     
+    static let emptyTextInput: Self = .init(
+        field: .init(id: "emptyTextInput", value: nil),
+        masking: .preview,
+        validation: .preview,
+        uiAttributes: .textInput
+    )
     static let textInput: Self = .init(
         field: .preview,
         masking: .preview,
@@ -43,7 +49,11 @@ private extension AnywayPayment.Element.Parameter.Validation {
 private extension AnywayPayment.Element.Parameter.UIAttributes {
     
     static let select: Self = preview(
-        dataType: .pairs([.init(key: "0", value: "abc")]),
+        dataType: .pairs([
+            .init(key: "0", value: "abc"),
+            .init(key: "1", value: "ABC"),
+            .init(key: "2", value: "cdef"),
+        ]),
         type: .select,
         viewType: .input
     )

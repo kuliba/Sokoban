@@ -56,12 +56,17 @@ struct ContentView: View {
     
     private func infoOverlay() -> some View {
         
-        VStack {
+        VStack(alignment: .leading) {
             
+            Text(String(describing: viewModel.state.digest))
             Text("OTP: \(viewModel.state.otp)")
         }
+        .padding()
         .foregroundColor(.purple)
         .font(.caption)
+        .background(Color.white.opacity(0.9))
+        .padding(.bottom)
+        .padding(.bottom)
     }
 }
 

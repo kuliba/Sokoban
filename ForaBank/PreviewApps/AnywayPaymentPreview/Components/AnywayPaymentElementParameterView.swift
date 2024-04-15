@@ -15,15 +15,13 @@ struct AnywayPaymentElementParameterView: View {
     
     var body: some View {
         
-        Text(String(describing: state))
-        
         switch state.type {
         case let .select(options):
             Text("TBD: Select with options: \(options)")
             
         case .textInput:
             TextFieldMockWrapperView(
-                initial: state.value?.rawValue ?? "", 
+                initial: state.value?.rawValue ?? "",
                 onChange: event
             )
             
@@ -37,6 +35,24 @@ struct AnywayPaymentElementParameterView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        AnywayPaymentElementParameterView(state: .preview, event: { _ in })
+        VStack(spacing: 32, content: previewsGroup)
+            .padding(.horizontal)
+    }
+    
+    static func previewsGroup() -> some View {
+        
+        Group {
+            
+            anywayPaymentElementParameterView(.select)
+            anywayPaymentElementParameterView(.emptyTextInput)
+            anywayPaymentElementParameterView(.textInput)
+        }
+    }
+    
+    static func anywayPaymentElementParameterView(
+        _ parameter: AnywayPayment.Element.Parameter
+    ) -> some View {
+        
+        AnywayPaymentElementParameterView(state: parameter.uiComponent, event: { _ in })
     }
 }
