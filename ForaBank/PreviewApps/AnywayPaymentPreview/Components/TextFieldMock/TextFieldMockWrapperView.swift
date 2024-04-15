@@ -9,21 +9,29 @@ import SwiftUI
 
 struct TextFieldMockWrapperView: View {
     
-    @StateObject var viewModel: TextFieldMockViewModel
-
+    let onChange: (String) -> Void
+    
+    private let viewModel: TextFieldMockViewModel
+    
+    init(
+        initial: String,
+        onChange: @escaping (String) -> Void
+    ) {
+        self.onChange = onChange
+        self.viewModel = .init(text: initial)
+    }
+    
     var body: some View {
         
-        TextField("", text: .init(
-            get: { viewModel.text },
-            set: viewModel.edit(_:)
-        ))
+        TextFieldMockStateWrapperView(viewModel: viewModel)
+            .onChange(of: viewModel.text, perform: onChange)
     }
 }
 
-struct TextFieldMockWrapperView_Previews: PreviewProvider {
+struct TextFieldMockView_Previews: PreviewProvider {
     
     static var previews: some View {
- 
-        TextFieldMockWrapperView(viewModel: .init(text: "abc"))
+        
+        TextFieldMockWrapperView(initial: "abc", onChange: { _ in })
     }
 }

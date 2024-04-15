@@ -11,7 +11,7 @@ import SwiftUI
 struct AnywayPaymentElementParameterView: View {
     
     let state: AnywayPayment.UIComponent.Parameter
-    let event: (AnywayPaymentEvent) -> Void
+    let event: (String) -> Void
     
     var body: some View {
         
@@ -22,9 +22,9 @@ struct AnywayPaymentElementParameterView: View {
             Text("TBD: Select with options: \(options)")
             
         case .textInput:
-            TextFieldMockView(
-                initial: state.value?.rawValue ?? "",
-                onChange: { event(.setValue($0, for: state.id)) }
+            TextFieldMockWrapperView(
+                initial: state.value?.rawValue ?? "", 
+                onChange: event
             )
             
         case .unknown:
