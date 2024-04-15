@@ -10,7 +10,7 @@ import SwiftUI
 
 struct AnywayPaymentElementWidgetView: View {
     
-    let state: AnywayPayment.UIComponentType.Widget
+    let state: AnywayPayment.UIComponent.Widget
     let event: (AnywayPaymentEvent) -> Void
     
     var body: some View {

@@ -1,5 +1,5 @@
 //
-//  AnywayPayment.Element+uiComponentType.swift
+//  AnywayPayment.Element+uiComponent.swift
 //
 //
 //  Created by Igor Malyarov on 06.04.2024.
@@ -7,24 +7,24 @@
 
 extension AnywayPayment.Element {
     
-    public var uiComponentType: AnywayPayment.UIComponentType {
+    public var uiComponent: AnywayPayment.UIComponent {
         
         switch self {
         case let .field(field):
             return .field(.init(field))
             
         case let .parameter(parameter):
-            return parameter.uiComponentType
+            return parameter.uiComponent
             
         case let .widget(widget):
-            return widget.uiComponentType
+            return widget.uiComponent
         }
     }
 }
 
 extension AnywayPayment {
     
-    public enum UIComponentType: Equatable {
+    public enum UIComponent: Equatable {
         
         case field(Field)
         case parameter(Parameter)
@@ -32,7 +32,7 @@ extension AnywayPayment {
     }
 }
 
-extension AnywayPayment.UIComponentType {
+extension AnywayPayment.UIComponent {
     
     public struct Field: Equatable {
         
@@ -51,9 +51,11 @@ extension AnywayPayment.UIComponentType {
         }
     }
     
-    public struct Parameter: Equatable {
+    public enum Parameter: Equatable {
         
-        public init() {}
+        case select([Option])
+        case textInput
+        case unknown
     }
     
     public enum Widget: Equatable {
@@ -63,25 +65,51 @@ extension AnywayPayment.UIComponentType {
     }
 }
 
+extension AnywayPayment.UIComponent.Parameter {
+    
+    public struct Option: Equatable {
+        
+        public let key: String
+        public let value: String
+        
+        public init(
+            key: String,
+            value: String
+        ) {
+            self.key = key
+            self.value = value
+        }
+    }
+}
+
 private extension AnywayPayment.Element.Parameter {
     
-    var uiComponentType: AnywayPayment.UIComponentType {
+    var uiComponent: AnywayPayment.UIComponent {
         
-        uiAttributes.uiComponentType
+        .parameter(uiAttributes.uiComponent)
     }
 }
 
 private extension AnywayPayment.Element.Parameter.UIAttributes {
     
-    var uiComponentType: AnywayPayment.UIComponentType {
+    var uiComponent: AnywayPayment.UIComponent.Parameter {
         
-        fatalError()
+        switch (type, viewType, dataType) {
+        case (.input, .input, .string):
+            return .textInput
+            
+        case let (.select, .input, .pairs(pairs)):
+            return .select(pairs.map { .init(key: $0.key, value: $0.value) })
+            
+        default:
+            return .unknown
+        }
     }
 }
 
 private extension AnywayPayment.Element.Widget {
     
-    var uiComponentType: AnywayPayment.UIComponentType {
+    var uiComponent: AnywayPayment.UIComponent {
         
         switch self {
         case .core:
@@ -93,7 +121,7 @@ private extension AnywayPayment.Element.Widget {
     }
 }
 
-private extension AnywayPayment.UIComponentType.Field {
+private extension AnywayPayment.UIComponent.Field {
     
     init(_ field: AnywayPayment.Element.Field) {
         
