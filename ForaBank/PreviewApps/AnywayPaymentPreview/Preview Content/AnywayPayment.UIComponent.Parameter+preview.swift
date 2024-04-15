@@ -9,5 +9,9 @@ import AnywayPaymentCore
 
 extension AnywayPayment.UIComponent.Parameter {
     
-    static let preview: Self = .textInput
+    static let preview: Self = .init(
+        id: ".init(abc123)",
+        value: "ABCDE",
+        type: .textInput
+    )
 }

@@ -51,13 +51,23 @@ extension AnywayPayment.UIComponent {
         }
     }
     
-    public enum Parameter: Equatable {
+    public struct Parameter: Equatable {
         
-        case select([Option])
-        case textInput
-        case unknown
+        public let id: ID
+        public let value: Value
+        public let type: ParameterType
+        
+        public init(
+            id: ID,
+            value: Value,
+            type: ParameterType
+        ) {
+            self.id = id
+            self.value = value
+            self.type = type
+        }
     }
-    
+        
     public enum Widget: Equatable {
         
         case otp(Int?)
@@ -66,6 +76,9 @@ extension AnywayPayment.UIComponent {
 }
 
 extension AnywayPayment.UIComponent.Parameter {
+    
+    public typealias ID = AnywayPayment.Element.Parameter.Field.ID
+    public typealias Value = AnywayPayment.Element.Parameter.Field.Value?
     
     public struct Option: Equatable {
         
@@ -80,19 +93,30 @@ extension AnywayPayment.UIComponent.Parameter {
             self.value = value
         }
     }
+    
+    public enum ParameterType: Equatable {
+        
+        case select([Option])
+        case textInput
+        case unknown
+    }
 }
 
 private extension AnywayPayment.Element.Parameter {
     
     var uiComponent: AnywayPayment.UIComponent {
         
-        .parameter(uiAttributes.uiComponent)
+        .parameter(.init(
+            id: field.id,
+            value: field.value,
+            type: uiAttributes.uiComponent
+        ))
     }
 }
 
 private extension AnywayPayment.Element.Parameter.UIAttributes {
     
-    var uiComponent: AnywayPayment.UIComponent.Parameter {
+    var uiComponent: AnywayPayment.UIComponent.Parameter.ParameterType {
         
         switch (type, viewType, dataType) {
         case (.input, .input, .string):
