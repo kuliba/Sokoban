@@ -99,7 +99,7 @@ where ElementView == AnywayPaymentElementView,
                         
                         switch footerEvent {
                         case let .edit(decimal):
-                            event(.amount(decimal))
+                            event(.widget(.amount(decimal)))
                         
                         case .continue:
                             event(.pay)

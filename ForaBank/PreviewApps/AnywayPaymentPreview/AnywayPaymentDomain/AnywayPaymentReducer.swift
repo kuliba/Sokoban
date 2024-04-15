@@ -30,19 +30,15 @@ extension AnywayPaymentReducer {
         let effect: Effect? = nil
         
         switch event {
-        case let .amount(amount):
-            state.elements.updating(coreAmount: amount)
-            
-        case let .otp(otp):
-            state.elements[id: .widgetID(.otp)] = .widget(.otp(makeOTP(otp)))
-            
         case .pay:
-            #warning("should belong to transaction level event")
+#warning("should belong to transaction level event")
             break
             
         case let .setValue(newValue, for: parameterID):
-            let parameterValue = ParameterValue(rawValue: newValue)
-            state.elements.set(value: parameterValue, for: parameterID)
+            state.elements.set(value: .init(newValue), for: parameterID)
+            
+        case let .widget(widget):
+            reduce(&state, with: widget)
         }
         
         return (state, effect)
@@ -58,6 +54,22 @@ extension AnywayPaymentReducer {
     typealias State = AnywayPayment
     typealias Event = AnywayPaymentEvent
     typealias Effect = AnywayPaymentEffect
+}
+
+private extension AnywayPaymentReducer {
+    
+    func reduce(
+        _ state: inout State,
+        with event: AnywayPaymentEvent.Widget
+    ) {
+        switch event {
+        case let .amount(amount):
+            state.elements.updating(coreAmount: amount)
+            
+        case let .otp(otp):
+            state.elements[id: .widgetID(.otp)] = .widget(.otp(makeOTP(otp)))
+        }
+    }
 }
 
 private extension Array where Element == AnywayPayment.Element {

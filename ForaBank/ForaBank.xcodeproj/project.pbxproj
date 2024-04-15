@@ -8394,10 +8394,10 @@
 			children = (
 				2A09E6E72BCBB9EB001A7089 /* AnywayPaymentLayoutView.swift */,
 				2AFE37F12BC987830079C401 /* AnywayPaymentElementView.swift */,
-				2A9602712BCC1FC3000D9B68 /* Footer */,
 				2A09E6EF2BCBCB22001A7089 /* AnywayPaymentElementFieldView.swift */,
 				2A09E6F32BCBCB99001A7089 /* AnywayPaymentElementParameterView.swift */,
 				2A09E6F72BCBCC3B001A7089 /* AnywayPaymentElementWidgetView.swift */,
+				2A9602712BCC1FC3000D9B68 /* Footer */,
 				2AFE37EC2BC96F500079C401 /* OTPView.swift */,
 				2A319B9E2BCD412F009333ED /* TextFieldMock */,
 				2AFE37F52BCA85EC0079C401 /* ExpandablePicker */,
