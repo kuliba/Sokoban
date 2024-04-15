@@ -275,7 +275,7 @@ private func makeAnywayPaymentElementParameterValidation(
     )
 }
 
-private func makeAnywayPaymentElementParameterUIAttributes(
+func makeAnywayPaymentElementParameterUIAttributes(
     dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType = .string,
     group: String? = nil,
     isPrint: Bool = true,
@@ -309,6 +309,13 @@ func makeAnywayPaymentFieldElement(
 ) -> AnywayPayment.Element {
     
     .field(field)
+}
+
+func makeAnywayPaymentParameterElement(
+    _ parameter: AnywayPayment.Element.Parameter = makeAnywayPaymentParameter()
+) -> AnywayPayment.Element {
+    
+    .parameter(parameter)
 }
 
 func makeAnywayPaymentWidgetElement(

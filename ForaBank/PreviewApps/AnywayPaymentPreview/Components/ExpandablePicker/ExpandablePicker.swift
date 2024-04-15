@@ -7,13 +7,14 @@
 
 import SwiftUI
 
-struct ExpandablePicker<Item, ItemView>: View
-where Item: Hashable,
+struct ExpandablePicker<ID, Item, ItemView>: View
+where ID: Hashable,
+      Item: Equatable,
       ItemView: View {
     
     let state: State
     let event: (Event) -> Void
-    
+    let keyPath: KeyPath<Item, ID>
     let itemView: (Item) -> ItemView
     
     var body: some View {
@@ -31,7 +32,7 @@ where Item: Hashable,
                 
                 VStack {
                     
-                    ForEach(state.items, id: \.self, content: selectableItemView)
+                    ForEach(state.items, id: keyPath, content: selectableItemView)
                 }
                 .animation(.easeInOut, value: state)
             }
@@ -63,6 +64,30 @@ extension ExpandablePicker {
     
     typealias State = ExpandablePickerState<Item>
     typealias Event = ExpandablePickerEvent<Item>
+}
+
+extension ExpandablePicker where ID == Item, Item: Hashable {
+    
+    init(
+        state: State,
+        event: @escaping (Event) -> Void,
+        itemView: @escaping (Item) -> ItemView
+    ) {
+        
+        self.init(state: state, event: event, keyPath: \.self, itemView: itemView)
+    }
+}
+
+extension ExpandablePicker where ID == Item.ID, Item: Identifiable {
+    
+    init(
+        state: State,
+        event: @escaping (Event) -> Void,
+        itemView: @escaping (Item) -> ItemView
+    ) {
+        
+        self.init(state: state, event: event, keyPath: \.id, itemView: itemView)
+    }
 }
 
 struct ExpandablePicker_Previews: PreviewProvider {

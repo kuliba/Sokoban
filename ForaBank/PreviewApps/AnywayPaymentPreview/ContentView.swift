@@ -16,11 +16,14 @@ struct ContentView: View {
     
     @StateObject private var viewModel: ViewModel
     
-#warning("mind `isEnabled: true` - demo only, is a transaction level property")
+#warning("mind `buttonTitle` and `isEnabled: true` - demo only, is a transaction level property")
+    private let buttonTitle: String
     private let isEnabled: Bool
     
-    init(isEnabled: Bool = true) {
-        
+    init(
+        buttonTitle: String = "Продолжить",
+        isEnabled: Bool = true
+    ) {
         let reducer = AnywayPaymentReducer(
             makeOTP: { Int($0.filter(\.isWholeNumber).prefix(6)) }
         )
@@ -31,6 +34,7 @@ struct ContentView: View {
         )
         
         self._viewModel = .init(wrappedValue: viewModel)
+        self.buttonTitle = buttonTitle
         self.isEnabled = isEnabled
     }
     
@@ -39,7 +43,8 @@ struct ContentView: View {
         ZStack(alignment: .bottom) {
             
             AnywayPaymentLayoutView(
-                elements: viewModel.state.elements, 
+                buttonTitle: buttonTitle,
+                elements: viewModel.state.elements,
                 isEnabled: isEnabled,
                 event: viewModel.event,
                 config: .preview
@@ -65,10 +70,11 @@ where ElementView == AnywayPaymentElementView,
       FooterView == AnywayPaymentFooterView {
     
     init(
+        buttonTitle: String,
         elements: [AnywayPayment.Element],
         isEnabled: Bool,
         event: @escaping (AnywayPaymentEvent) -> Void,
-        config: AmountConfig
+        config: AnywayPaymentFooterConfig
     ) {
         self.init(
             elements: elements,
@@ -79,14 +85,18 @@ where ElementView == AnywayPaymentElementView,
             footerView: {
                 
                 .init(
-                    state: .init(with: elements, isEnabled: isEnabled),
+                    state: .init(
+                        buttonTitle: buttonTitle,
+                        elements: elements,
+                        isEnabled: isEnabled
+                    ),
                     event: { footerEvent in
                         
                         switch footerEvent {
                         case let .edit(decimal):
                             event(.amount(decimal))
                         
-                        case .pay:
+                        case .continue:
                             event(.pay)
                         }
                     },
@@ -100,11 +110,15 @@ where ElementView == AnywayPaymentElementView,
 private extension AnywayPaymentFooter {
     
     init(
-        with elements: [AnywayPayment.Element],
+        buttonTitle: String,
+        elements: [AnywayPayment.Element],
         isEnabled: Bool
     ) {
-        
-        self.init(core: elements.core, isEnabled: isEnabled)
+        self.init(
+            buttonTitle: buttonTitle, 
+            core: elements.core,
+            isEnabled: isEnabled
+        )
     }
 }
 
