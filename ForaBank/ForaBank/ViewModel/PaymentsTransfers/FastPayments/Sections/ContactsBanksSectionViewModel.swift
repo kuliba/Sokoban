@@ -66,7 +66,11 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
         
         switch bankDictionary {
         case .banks:
-            self.items.value = Self.reduce(bankList: model.bankList.value, preferred: model.prefferedBanksList.value) { [weak self]  bank in
+            self.items.value = Self.reduce(
+                bankList: model.bankList.value,
+                preferred: banksID
+            ) { [weak self] bank in
+                
                 { self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: bank.id)) }
             }
             
@@ -117,15 +121,8 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                     
                     withAnimation {
                         
-                        let sortedBanks = Self.reduce(
-                            bankList: model.bankList.value,
-                            preferred: banksID
-                        ) { [weak self]  bank in
-                            { self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: bank.id)) }
-                        }
-                        
                         let filterBanks = Self.reduce(
-                            items: sortedBanks,
+                            items: items,
                             filterByType: bankType,
                             filterByName: filter
                         )

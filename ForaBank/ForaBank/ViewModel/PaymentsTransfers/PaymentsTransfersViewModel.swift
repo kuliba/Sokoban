@@ -318,6 +318,7 @@ extension PaymentsTransfersViewModel {
         event(.resetDestination)
         event(.resetModal)
         fullCover = nil
+        route = .empty
     }
             
     func openScanner() {

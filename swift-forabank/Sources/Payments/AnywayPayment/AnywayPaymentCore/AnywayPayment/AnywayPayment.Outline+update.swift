@@ -9,20 +9,25 @@ extension AnywayPayment.Outline {
     
     public func update(with payment: AnywayPayment) -> Self {
         
-        merging(
-            payment.elements.compactMap(\.parameterIDValuePair),
+        let fields = fields.merging(
+            payment.elements.compactMap(\.idValuePair),
             uniquingKeysWith: { _, new in new }
         )
+        
+        return .init(core: core, fields: fields)
     }
 }
 
 private extension AnywayPayment.Element {
     
-    var parameterIDValuePair: (StringID, Value)? {
+    var idValuePair: (AnywayPayment.Outline.ID, AnywayPayment.Outline.Value)? {
         
         guard case let .parameter(parameter) = self
         else { return nil }
         
-        return parameter.field.value.map { (parameter.field.id, $0 ) }
+        return parameter.field.value.map {
+            
+            (.init(parameter.field.id.rawValue), .init($0.rawValue))
+        }
     }
 }

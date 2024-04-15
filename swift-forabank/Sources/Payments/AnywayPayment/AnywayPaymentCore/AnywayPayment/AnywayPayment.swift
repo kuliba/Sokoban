@@ -14,17 +14,20 @@ public struct AnywayPayment: Equatable {
     public var infoMessage: String?
     public let isFinalStep: Bool
     public let isFraudSuspected: Bool
+    public let puref: Puref
     
     public init(
         elements: [Element],
         infoMessage: String?,
         isFinalStep: Bool,
-        isFraudSuspected: Bool
+        isFraudSuspected: Bool,
+        puref: Puref
     ) {
         self.elements = elements
         self.infoMessage = infoMessage
         self.isFinalStep = isFinalStep
         self.isFraudSuspected = isFraudSuspected
+        self.puref = puref
     }
 }
 
@@ -37,6 +40,9 @@ extension AnywayPayment {
         case widget(Widget)
     }
     
+    public typealias Puref = Tagged<_Puref, String>
+    public enum _Puref {}
+    
     public enum Status: Equatable {
         
         case infoMessage(String)
@@ -47,23 +53,20 @@ extension AnywayPayment.Element {
     
     public struct Field: Identifiable, Equatable {
         
-        public let id: StringID
-        public let value: Value
+        public let id: ID
         public let title: String
+        public let value: Value
         
         public init(
-            id: StringID,
-            value: Value,
-            title: String
+            id: ID,
+            title: String,
+            value: Value
         ) {
             self.id = id
-            self.value = value
             self.title = title
+            self.value = value
         }
     }
-    
-    public typealias StringID = Tagged<_StringID, String>
-    public enum _StringID {}
     
     public struct Parameter: Equatable {
         
@@ -73,7 +76,7 @@ extension AnywayPayment.Element {
         public let uiAttributes: UIAttributes
         
         public init(
-            field: Field, 
+            field: Field,
             masking: Masking,
             validation: Validation,
             uiAttributes: UIAttributes
@@ -85,25 +88,32 @@ extension AnywayPayment.Element {
         }
     }
     
-    public typealias Value = Tagged<_Value, String>
-    public enum _Value {}
-    
     public enum Widget: Equatable {
         
-        case amount, otp
+        case core(PaymentCore)
+        case otp(Int?)
     }
+}
+
+extension AnywayPayment.Element.Field {
+    
+    public typealias ID = Tagged<_ID, String>
+    public enum _ID {}
+    
+    public typealias Value = Tagged<_Value, String>
+    public enum _Value {}
 }
 
 extension AnywayPayment.Element.Parameter {
     
     public struct Field: Identifiable, Equatable {
         
-        public let id: AnywayPayment.Element.StringID
-        public let value: AnywayPayment.Element.Value?
+        public let id: ID
+        public let value: Value?
         
         public init(
-            id: AnywayPayment.Element.StringID,
-            value: AnywayPayment.Element.Value?
+            id: ID,
+            value: Value?
         ) {
             self.id = id
             self.value = value
@@ -132,7 +142,7 @@ extension AnywayPayment.Element.Parameter {
         public let regExp: String
         
         public init(
-            isRequired: Bool, 
+            isRequired: Bool,
             maxLength: Int?,
             minLength: Int?,
             regExp: String
@@ -159,7 +169,7 @@ extension AnywayPayment.Element.Parameter {
         public let viewType: ViewType
         
         public init(
-            dataType: DataType, 
+            dataType: DataType,
             group: String?,
             isPrint: Bool,
             phoneBook: Bool,
@@ -184,6 +194,15 @@ extension AnywayPayment.Element.Parameter {
             self.viewType = viewType
         }
     }
+}
+
+extension AnywayPayment.Element.Parameter.Field {
+    
+    public typealias ID = Tagged<_ID, String>
+    public enum _ID {}
+    
+    public typealias Value = Tagged<_Value, String>
+    public enum _Value {}
 }
 
 extension AnywayPayment.Element.Parameter.UIAttributes {
@@ -244,13 +263,51 @@ extension AnywayPayment.Element.Widget {
     public var id: ID {
         
         switch self {
-        case .amount: return .amount
+        case .core: return .core
         case .otp:    return .otp
         }
     }
     
     public enum ID {
         
-        case amount, otp
+        case core, otp
     }
+    
+    public struct PaymentCore: Equatable {
+        
+        public let amount: Decimal
+        public let currency: Currency
+        public let productID: ProductID
+        
+        public init(
+            amount: Decimal,
+            currency: Currency,
+            productID: ProductID
+        ) {
+            self.amount = amount
+            self.currency = currency
+            self.productID = productID
+        }
+    }
+}
+
+extension AnywayPayment.Element.Widget.PaymentCore {
+    
+    public typealias Currency = Tagged<_Currency, String>
+    public enum _Currency {}
+    
+    public enum ProductID: Equatable {
+        
+        case accountID(AccountID)
+        case cardID(CardID)
+    }
+}
+
+extension AnywayPayment.Element.Widget.PaymentCore.ProductID {
+    
+    public typealias AccountID = Tagged<_AccountID, Int>
+    public enum _AccountID {}
+    
+    public typealias CardID = Tagged<_CardID, Int>
+    public enum _CardID {}
 }
