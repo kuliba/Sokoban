@@ -16,7 +16,7 @@ struct AnywayPaymentElementView: View {
     
     var body: some View {
         
-        switch state.uiComponentType {
+        switch state.uiComponent {
         case let .field(field):
             AnywayPaymentElementFieldView(state: field)
             
