@@ -9,14 +9,20 @@ import Tagged
 
 extension ProductNavigationStateManager {
     
-    enum ButtonEvent {
+    struct ButtonEvent {
         
-        case accountDetails(ProductData.ID)
-        case accountStatement(ProductData.ID)
-        case accountOurBank(ProductData.ID)
-        case accountAnotherBank(ProductData.ID)
-        case cardGuardian(ProductData.ID)
-        case changePin(ProductData.ID)
-        case visibility(ProductData.ID)
+        let productID: ProductData.ID
+        let type: ButtonEventType
+    }
+    
+    enum ButtonEventType {
+        
+        case accountDetails
+        case accountStatement
+        case accountOurBank
+        case accountAnotherBank
+        case cardGuardian
+        case changePin
+        case visibility
     }
 }

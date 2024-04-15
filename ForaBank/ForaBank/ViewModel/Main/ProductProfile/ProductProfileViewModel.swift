@@ -2522,34 +2522,24 @@ extension ProductProfileViewModel {
         
         self.bottomSheet = nil
 
-        switch event {
-            
-        case let .accountDetails(productID):
-            
-            guard let productData = model.product(productId: productID) else { return }
-
+        guard let productData = model.product(productId: event.productID) else { return }
+        
+        switch (event.type, productData.asCard) {
+        case (.accountDetails, _):
             showProductInfo(productData)
             
-        case let .accountStatement(productID):
-            
-            guard let productData = model.product(productId: productID) else { return }
-
+        case (.accountStatement, _):
             showProductStatement(productData)
             
-        case let .accountOurBank(productID):
+        case let (.accountOurBank, .some(card)):
+                        
+            showPaymentOurBank(card)
             
-            guard let productData = model.product(productId: productID)?.asCard else { return }
+        case let (.accountAnotherBank, .some(card)):
+                        
+            showPaymentAnotherBank(card)
             
-            showPaymentOurBank(productData)
-            
-        case let .accountAnotherBank(productID):
-            
-            guard let productData = model.product(productId: productID)?.asCard else { return }
-            
-            showPaymentAnotherBank(productData)
-            
-        case let .cardGuardian(productID):
-            guard let card = model.product(productId: productID)?.asCard else { return }
+        case let (.cardGuardian, .some(card)):
             
             switch card.statusCard {
             case .blockedUnlockAvailable, .blockedUnlockNotAvailable:
@@ -2562,15 +2552,16 @@ extension ProductProfileViewModel {
                 return
             }
 
-        case let .changePin(productID):
-            guard let card = model.product(productId: productID)?.asCard else { return }
+        case let (.changePin, .some(card)):
             
             self.handlePanelButtonType(.changePin, card)
 
-        case let .visibility(productID):
-            guard let card = model.product(productId: productID)?.asCard else { return }
+        case let (.visibility, .some(card)):
             
             self.handlePanelButtonType(.visibility, card)
+            
+        default:
+            return
         }
     }
 }

@@ -270,7 +270,7 @@ final class ProductProfileViewModelTests: XCTestCase {
 
         XCTAssertNil(sut.link)
         
-        sut.event(.accountDetails(product.id))
+        sut.event(.init(productID: product.id, type: .accountDetails))
 
         //в коде now + .milliseconds(300)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
@@ -324,7 +324,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNotNil(sut.optionsPanelNew)
         XCTAssertNil(sut.optionsPannel)
 
-        sut.event(.cardGuardian(product.id))
+        sut.event(.init(productID: product.id, type: .cardGuardian))
          
         //в коде now + .milliseconds(300)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
@@ -362,7 +362,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         XCTAssertNotNil(sut.optionsPanelNew)
         
-        sut.event(.cardGuardian(product.id))
+        sut.event(.init(productID: product.id, type: .cardGuardian))
          
         //в коде now + .milliseconds(300)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
@@ -400,7 +400,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         XCTAssertNotNil(sut.optionsPanelNew)
         
-        sut.event(.cardGuardian(product.id))
+        sut.event(.init(productID: product.id, type: .cardGuardian))
          
         //в коде now + .milliseconds(300)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
@@ -438,7 +438,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNotNil(sut.optionsPanelNew)
         XCTAssertNil(sut.alert)
         
-        sut.event(.changePin(product.id))
+        sut.event(.init(productID: product.id, type: .changePin))
         
         //в коде now + .milliseconds(300)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
@@ -466,7 +466,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNotNil(sut.optionsPanelNew)
         XCTAssertNil(sut.fullScreenCoverState)
         
-        sut.event(.changePin(product.id))
+        sut.event(.init(productID: product.id, type: .changePin))
 
         //в коде now + .milliseconds(300)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
