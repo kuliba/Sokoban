@@ -17,7 +17,13 @@ struct AnywayPaymentElementParameterView: View {
         
         switch state.type {
         case let .select(options):
-            Text("TBD: Select with options: \(options)")
+            ExpandablePickerStateWrapperView(
+                viewModel: .decorated(
+                    initialState: .init(items: options),
+                    onSelect: { event($0.key) }
+                ),
+                itemView: { Text($0.value) }
+            )
             
         case .textInput:
             TextFieldMockWrapperView(
@@ -29,6 +35,11 @@ struct AnywayPaymentElementParameterView: View {
             EmptyView()
         }
     }
+}
+
+extension AnywayPayment.UIComponent.Parameter.Option: Identifiable {
+    
+    public var id: String { key }
 }
 
 struct AnywayPaymentElementParameterView_Previews: PreviewProvider {

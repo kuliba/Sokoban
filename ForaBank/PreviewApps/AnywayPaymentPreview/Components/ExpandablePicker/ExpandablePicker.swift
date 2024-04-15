@@ -23,7 +23,11 @@ where ID: Hashable,
             
             HStack {
                 
-                _itemView(state.selection)
+                if let selection = state.selection {
+                    _itemView(selection)
+                } else {
+                    Spacer()
+                }
                 
                 Button("toggle", action: { event(.toggle) })
             }

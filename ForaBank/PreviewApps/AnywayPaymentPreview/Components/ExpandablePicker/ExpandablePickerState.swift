@@ -8,8 +8,18 @@
 struct ExpandablePickerState<Item> {
     
     let items: [Item]
-    var selection: Item
+    var selection: Item?
     var toggle: Toggle
+    
+    init(
+        items: [Item],
+        selection: Item? = nil,
+        toggle: Toggle = .collapsed
+    ) {
+        self.items = items
+        self.selection = selection
+        self.toggle = toggle
+    }
 }
 
 extension ExpandablePickerState {
