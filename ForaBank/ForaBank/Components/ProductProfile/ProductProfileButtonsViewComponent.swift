@@ -55,7 +55,7 @@ extension ProductProfileButtonsView {
               
         func buttonEnabled(for buttonType: ButtonType, for product: ProductData, depositInfo: DepositInfoDataItem?) -> Bool {
             
-            if let card = product.asCard, card.statusCard == .notActivated {
+            if product.asCard?.statusCard == .notActivated {
                 
                 switch buttonType {
                 case .bottomLeft: return true

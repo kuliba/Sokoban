@@ -1085,9 +1085,7 @@ private extension ProductProfileViewModel {
                     case .topRight:
                         switch product.productType {
                         case .card:
-                            guard let card = productData?.asCard else {
-                                return
-                            }
+                            guard let card = productData?.asCard else { return }
                             
                             if card.cardType == .additionalOther {
                                 self.event(.delayAlert(.showTransferAdditionalOther))
@@ -1704,12 +1702,9 @@ private extension ProductProfileViewModel {
                     title: "Oк",
                     action: { [weak self] in
                         if card.isBlocked {
-                            
-                            self?.model.action.send(ModelAction.Card.Unblock.Request(cardId: card.cardId, cardNumber: cardNumber))
-                            
+                            self?.unBlock(cardId: card.cardId, cardNumber: cardNumber)
                         } else {
-                            
-                            self?.model.action.send(ModelAction.Card.Block.Request(cardId: card.cardId, cardNumber: cardNumber))
+                            self?.block(cardId: card.cardId, cardNumber: cardNumber)
                         }
                     })
             }
@@ -1729,6 +1724,16 @@ private extension ProductProfileViewModel {
         )
                 
         return alertViewModel
+    }
+    
+    func block(cardId: ProductData.ID, cardNumber: String) {
+        
+        self.model.action.send(ModelAction.Card.Block.Request(cardId: cardId, cardNumber: cardNumber))
+    }
+    
+    func unBlock(cardId: ProductData.ID, cardNumber: String) {
+        
+        self.model.action.send(ModelAction.Card.Unblock.Request(cardId: cardId, cardNumber: cardNumber))
     }
     
     func errorDepositConditionAlert(
