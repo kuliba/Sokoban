@@ -6,10 +6,14 @@
 //
 
 import AnywayPaymentCore
+import Foundation
 
 enum AnywayPaymentEvent: Equatable {
     
+    case amount(Decimal)
     case otp(String)
+    #warning("this is demo only, `pay` is a higher, i.e. transaction, level event")
+    case pay
     case setValue(String, for: ParameterID)
 }
 

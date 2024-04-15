@@ -27,16 +27,8 @@ extension AnywayPayment {
     public enum UIComponentType: Equatable {
         
         case field(Field)
-        case parameter
+        case parameter(Parameter)
         case widget(Widget)
-    }
-}
-
-extension AnywayPayment.UIComponentType {
-    
-    public enum Widget: Equatable {
-        
-        case otp, productPicker
     }
 }
 
@@ -49,7 +41,7 @@ extension AnywayPayment.UIComponentType {
         public let value: String
         
         public init(
-            name: String, 
+            name: String,
             title: String,
             value: String
         ) {
@@ -57,6 +49,17 @@ extension AnywayPayment.UIComponentType {
             self.title = title
             self.value = value
         }
+    }
+    
+    public struct Parameter: Equatable {
+        
+        public init() {}
+    }
+    
+    public enum Widget: Equatable {
+        
+        case otp(Int?)
+        case productPicker
     }
 }
 
@@ -84,8 +87,8 @@ private extension AnywayPayment.Element.Widget {
         case .core:
             return .widget(.productPicker)
             
-        case .otp:
-            return .widget(.otp)
+        case let .otp(otp):
+            return .widget(.otp(otp))
         }
     }
 }
