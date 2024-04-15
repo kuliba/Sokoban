@@ -21,7 +21,7 @@ extension AnywayPayment {
         elements.appendParameters(from: update.parameters, with: outline)
         
         elements.adjustWidget(.core(.init(outline.core)), on: update.details.control.needSum)
-        elements.adjustWidget(.otp, on: update.details.control.needOTP)
+        elements.adjustWidget(.otp(nil), on: update.details.control.needOTP)
         
         return .init(
             elements: elements,
@@ -49,8 +49,14 @@ extension AnywayPayment {
 
 extension AnywayPayment.Outline {
     
-    public typealias Fields = [AnywayPayment.Element.StringID: AnywayPayment.Element.Value]
+    public typealias Fields = [ID: Value]
     
+    public typealias ID = Tagged<_ID, String>
+    public enum _ID {}
+    
+    public typealias Value = Tagged<_Value, String>
+    public enum _Value {}
+
     public struct PaymentCore: Equatable {
         
         public let amount: Decimal
@@ -105,14 +111,14 @@ private extension AnywayPayment.Element.Widget.PaymentCore.ProductID {
 
 private extension AnywayPayment.Element {
     
-    var stringID: StringID? {
+    var stringID: String? {
         
         switch self {
         case let .field(field):
-            return field.id
+            return field.id.rawValue
             
         case let .parameter(parameter):
-            return parameter.field.id
+            return parameter.field.id.rawValue
             
         case .widget:
             return nil
@@ -221,7 +227,7 @@ private extension Array where Element == AnywayPayment.Element {
         self = map {
             
             guard let id = $0.stringID,
-                  let matching = updateFields[id.rawValue]
+                  let matching = updateFields[id]
             else { return $0 }
             
             return $0.updating(with: matching)
@@ -231,7 +237,7 @@ private extension Array where Element == AnywayPayment.Element {
     mutating func appendComplementaryFields(
         from updateFields: [AnywayPaymentUpdate.Field]
     ) {
-        let existingIDs = compactMap(\.stringID?.rawValue)
+        let existingIDs = compactMap(\.stringID)
         let complimentary: [Element] = updateFields
             .filter { !existingIDs.contains($0.name) }
             .map(Element.Field.init)
@@ -273,7 +279,7 @@ private extension AnywayPayment.Element.Parameter {
     
     init(
         parameter: AnywayPaymentUpdate.Parameter,
-        fallbackValue: AnywayPayment.Element.Value?
+        fallbackValue: AnywayPayment.Outline.Value?
     ) {
         self.init(
             field: .init(parameter.field, fallbackValue: fallbackValue),
@@ -288,11 +294,11 @@ private extension AnywayPayment.Element.Parameter.Field {
     
     init(
         _ field: AnywayPaymentUpdate.Parameter.Field,
-        fallbackValue: AnywayPayment.Element.Value?
+        fallbackValue: AnywayPayment.Outline.Value?
     ) {
         self.init(
             id: .init(field.id),
-            value: field.content.map { .init($0) } ?? fallbackValue
+            value: field.content.map { .init($0) } ?? fallbackValue.map { .init($0.rawValue) }
         )
     }
 }

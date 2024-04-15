@@ -125,7 +125,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     
     func test_update_shouldAppendComplimentaryStringIDFieldToNonEmpty() {
         
-        let field = makeAnywayPaymentFieldWithStringID()
+        let field = makeAnywayPaymentField()
         let payment = makeAnywayPayment(fields: [field])
         let (fieldUpdate, updatedField) = makeAnywayPaymentAndUpdateFields()
         let update = makeAnywayPaymentUpdate(fields: [fieldUpdate])
@@ -139,7 +139,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     
     func test_update_shouldAppendComplimentaryStringIDFieldsToNonEmpty() {
         
-        let field = makeAnywayPaymentFieldWithStringID()
+        let field = makeAnywayPaymentField()
         let payment = makeAnywayPayment(fields: [field])
         let (fieldUpdate1, updatedField1) = makeAnywayPaymentAndUpdateFields()
         let (fieldUpdate2, updatedField2) = makeAnywayPaymentAndUpdateFields()
@@ -233,7 +233,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_update_shouldNotChangeStringIDFieldWithSameValueInNonComplementaryFields() {
         
         let (id, value, title) = ("abc123", "aaa", "bb")
-        let field = makeAnywayPaymentFieldWithStringID(id, value: value, title: title)
+        let field = makeAnywayPaymentField(id: id, value: value, title: title)
         let payment = makeAnywayPayment(fields: [field])
         let updateField = makeAnywayPaymentUpdateField(id, title: title, value: value)
         let update = makeAnywayPaymentUpdate(fields: [updateField])
@@ -244,7 +244,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_update_shouldChangeStringIDFieldWithDifferentValueInNonComplementaryFields() {
         
         let id = anyMessage()
-        let field = makeAnywayPaymentFieldWithStringID(id)
+        let field = makeAnywayPaymentField(id: id)
         let payment = makeAnywayPayment(fields: [field])
         let (fieldUpdate, updatedField) = makeAnywayPaymentAndUpdateFields(id, value: "aa", title: "bbb")
         let update = makeAnywayPaymentUpdate(fields: [fieldUpdate])
@@ -257,7 +257,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     
     func test_update_shouldUpdateExistingFieldOnUpdateWithDifferentValue() {
         
-        let field = makeAnywayPaymentFieldWithStringID("e1")
+        let field = makeAnywayPaymentField(id: "e1")
         let payment = makeAnywayPayment(elements: [.field(field)])
         
         let newValue = anyMessage()
@@ -675,7 +675,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_update_shouldUpdateExistingParameterOnUpdateWithDifferentValue() {
         
         let id = anyMessage()
-        let parameter = makeAnywayPaymentParameterWithID(id)
+        let parameter = makeAnywayPaymentParameter(id: id)
         let payment = makeAnywayPayment(elements: [.parameter(parameter)])
         
         let newValue = anyMessage()
@@ -691,7 +691,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_update_shouldUpdateExistingParameterOnMatchingIDFieldUpdateWithDifferentValue() {
         
         let matchingID = anyMessage()
-        let parameter = makeAnywayPaymentParameterWithID(matchingID)
+        let parameter = makeAnywayPaymentParameter(id: matchingID)
         let payment = makeAnywayPayment(elements: [.parameter(parameter)])
         
         let newValue = anyMessage()
@@ -715,8 +715,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         let matchingFieldID = anyMessage()
         let matchingParameterID = anyMessage()
-        let field = makeAnywayPaymentFieldWithStringID(matchingFieldID)
-        let parameter = makeAnywayPaymentParameterWithID(matchingParameterID)
+        let field = makeAnywayPaymentField(id: matchingFieldID)
+        let parameter = makeAnywayPaymentParameter(id: matchingParameterID)
         let payment = makeAnywayPayment(elements: [
             .field(field),
             .parameter(parameter)

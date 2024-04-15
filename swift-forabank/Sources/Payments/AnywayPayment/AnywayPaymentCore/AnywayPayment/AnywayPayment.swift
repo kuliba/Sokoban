@@ -53,12 +53,12 @@ extension AnywayPayment.Element {
     
     public struct Field: Identifiable, Equatable {
         
-        public let id: StringID
+        public let id: ID
         public let title: String
         public let value: Value
         
         public init(
-            id: StringID,
+            id: ID,
             title: String,
             value: Value
         ) {
@@ -67,9 +67,6 @@ extension AnywayPayment.Element {
             self.value = value
         }
     }
-    
-    public typealias StringID = Tagged<_StringID, String>
-    public enum _StringID {}
     
     public struct Parameter: Equatable {
         
@@ -91,26 +88,32 @@ extension AnywayPayment.Element {
         }
     }
     
-    public typealias Value = Tagged<_Value, String>
-    public enum _Value {}
-    
     public enum Widget: Equatable {
         
         case core(PaymentCore)
-        case otp
+        case otp(Int?)
     }
+}
+
+extension AnywayPayment.Element.Field {
+    
+    public typealias ID = Tagged<_ID, String>
+    public enum _ID {}
+    
+    public typealias Value = Tagged<_Value, String>
+    public enum _Value {}
 }
 
 extension AnywayPayment.Element.Parameter {
     
     public struct Field: Identifiable, Equatable {
         
-        public let id: AnywayPayment.Element.StringID
-        public let value: AnywayPayment.Element.Value?
+        public let id: ID
+        public let value: Value?
         
         public init(
-            id: AnywayPayment.Element.StringID,
-            value: AnywayPayment.Element.Value?
+            id: ID,
+            value: Value?
         ) {
             self.id = id
             self.value = value
@@ -191,6 +194,15 @@ extension AnywayPayment.Element.Parameter {
             self.viewType = viewType
         }
     }
+}
+
+extension AnywayPayment.Element.Parameter.Field {
+    
+    public typealias ID = Tagged<_ID, String>
+    public enum _ID {}
+    
+    public typealias Value = Tagged<_Value, String>
+    public enum _Value {}
 }
 
 extension AnywayPayment.Element.Parameter.UIAttributes {

@@ -67,7 +67,8 @@ final class AnywayPaymentOutlineTests: XCTestCase {
     func test_update_shouldAppendMissingFields() {
         
         let outline = makeAnywayPaymentOutline(["a": "1"])
-        let (parameter1, parameter2) = makeTwoParameters()
+        let parameter1 = makeAnywayPaymentParameter(id: "x", value: "X")
+        let parameter2 = makeAnywayPaymentParameter(id: "y", value: "Y")
         let payment = makeAnywayPayment(elements: [.parameter(parameter1), .parameter(parameter2), .field(makeAnywayPaymentField())]
         )
         
@@ -75,8 +76,8 @@ final class AnywayPaymentOutlineTests: XCTestCase {
 
         XCTAssertNoDiff(fields, [
             "a": "1",
-            parameter1.field.id: parameter1.field.value,
-            parameter2.field.id: parameter2.field.value
+            "x": "X",
+            "y": "Y",
         ])
     }
     
@@ -102,7 +103,7 @@ final class AnywayPaymentOutlineTests: XCTestCase {
         
         let field = makeAnywayPaymentElementParameterField(id: "b", value: "222")
         let parameter = makeAnywayPaymentParameter(field: field)
-        let parameter2 = makeAnywayPaymentParameter()
+        let parameter2 = makeAnywayPaymentParameter(id: "x", value: "X")
         let outline = makeAnywayPaymentOutline([
             "a": "1",
             "b": "2"
@@ -115,20 +116,7 @@ final class AnywayPaymentOutlineTests: XCTestCase {
         XCTAssertNoDiff(fields, [
             "a": "1",
             "b": "222",
-            parameter2.field.id: parameter2.field.value
+            "x": "X"
         ])
-    }
-    
-    // MARK: - Helpers
-    
-    private typealias Parameter = AnywayPayment.Element.Parameter
-    
-    private func makeTwoParameters(
-    ) -> (parameter1: Parameter, parameter2: Parameter) {
-        
-        let parameter1 = makeAnywayPaymentParameter()
-        let parameter2 = makeAnywayPaymentParameter()
-        
-        return (parameter1, parameter2)
     }
 }

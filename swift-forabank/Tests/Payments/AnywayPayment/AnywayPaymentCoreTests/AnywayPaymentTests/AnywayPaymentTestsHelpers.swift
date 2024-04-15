@@ -11,12 +11,13 @@ import XCTest
 
 func assertOTPisLast(
     in payment: AnywayPayment,
+    with value: Int? = nil,
     file: StaticString = #file,
     line: UInt = #line
 ) {
     XCTAssertNoDiff(
         payment.elements.last,
-        .widget(.otp),
+        .widget(makeOTPWidget(value)),
         "Expected OTP field after complimentary fields.",
         file: file, line: line
     )
@@ -206,8 +207,8 @@ func makeAnywayPaymentField(
     .init(id: id, title: title, value: .init(value))
 }
 
-func makeAnywayPaymentFieldWithStringID(
-    _ id: String = anyMessage(),
+func makeAnywayPaymentField(
+    id: String,
     value: String = anyMessage(),
     title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
@@ -230,12 +231,16 @@ func makeAnywayPaymentParameter(
     )
 }
 
-func makeAnywayPaymentParameterWithID(
-    _ id: String = anyMessage()
+func makeAnywayPaymentParameter(
+    id: String = anyMessage(),
+    value: String? = anyMessage()
 ) -> AnywayPayment.Element.Parameter {
     
     makeAnywayPaymentParameter(
-        field: makeAnywayPaymentElementParameterField(id: id)
+        field: makeAnywayPaymentElementParameterField(
+            id: id,
+            value: value
+        )
     )
 }
 
@@ -313,9 +318,11 @@ func makeAnywayPaymentWidgetElement(
     .widget(widget)
 }
 
-func makeOTPWidget() -> AnywayPayment.Element.Widget {
+func makeOTPWidget(
+    _ value: Int? = nil
+) -> AnywayPayment.Element.Widget {
     
-    .otp
+    .otp(value)
 }
 
 func makeAnywayPaymentWithoutOTP(
