@@ -27,6 +27,8 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     
   
     private let model: Model
+    private let getProduct: (ProductData.ID) -> ProductData?
+
     private var bindings = Set<AnyCancellable>()
     
     init(id: ProductData.ID, icon: IconViewModel, paymentSystemIcon: Image?, name: String, balance: String, descriptions: [String], sideButton: SideButtonViewModel?, orderModePadding: CGFloat = 0, model: Model) {
@@ -40,7 +42,8 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
         self.sideButton = sideButton
         self.orderModePadding = orderModePadding
         self.model = model
-        
+        self.getProduct = { model.product(productId: $0) }
+
         bind()
     }
 
@@ -69,7 +72,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     
     var isHidden: Bool {
         get {
-            guard let product = model.product(productId: self.id) else { return true }
+            guard let product = getProduct(self.id) else { return true }
             return !product.productStatus.contains(.visible) //!productData.visibility
         }
         
@@ -122,7 +125,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self ] images in
                 
-                guard let productData = model.product(productId: self.id) else { return }
+                guard let productData = self.getProduct(self.id) else { return }
                 update(with: productData)
         }
         .store(in: &bindings)
@@ -144,7 +147,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     
     func actionButton(for direction: SwipeDirection) -> ActionButtonViewModel? {
         
-        guard let product = model.product(productId: id)
+        guard let product = getProduct(id)
         else { return nil }
         
         switch direction {
@@ -183,7 +186,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     
     func clover() -> Image? {
         
-        return model.product(productId: id)?.cloverImage
+        return getProduct(id)?.cloverImage
     }
 }
 
