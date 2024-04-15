@@ -42,6 +42,10 @@ extension AlertReducer {
         
             effect = .delayAlert(alertViewModel, alertLifespan)
             
+        case let .delayAlertViewModel(alertViewModel):
+        
+            effect = .delayAlert(alertViewModel, alertLifespan)
+            
         case .closeAlert:
             state = nil
         case let .showAlert(alert):
@@ -71,6 +75,8 @@ extension ProductAlertsViewModel {
             return serviceOnlyMainCard
         case .showServiceOnlyOwnerCard:
             return serviceOnlyOwnerCard
+        case .showTransferAdditionalOther:
+            return transferAdditionalOther
         }
     }
 }

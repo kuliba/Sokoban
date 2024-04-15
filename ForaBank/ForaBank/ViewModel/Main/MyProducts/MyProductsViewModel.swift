@@ -32,7 +32,8 @@ class MyProductsViewModel: ObservableObject {
     var refreshingIndicator: RefreshingIndicatorView.ViewModel
     let openProductTitle = "Открыть продукт"
     var rootActions: RootViewModel.RootActions?
-    
+    var contactsAction: () -> Void = { }
+
     let openOrderSticker: () -> Void
     
     private lazy var settingsOnboarding = model.settingsMyProductsOnboarding
@@ -268,6 +269,7 @@ class MyProductsViewModel: ObservableObject {
                         else { return }
                         
                         productProfileViewModel.rootActions = rootActions
+                        productProfileViewModel.contactsAction = contactsAction
                         link = .productProfile(productProfileViewModel)
                         
                     default: break

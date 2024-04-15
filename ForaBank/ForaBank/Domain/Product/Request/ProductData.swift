@@ -481,3 +481,9 @@ extension ProductData {
         }
     }
 }
+
+extension ProductData {
+
+   var asAccount: ProductAccountData? { self as? ProductAccountData }
+   var asCard: ProductCardData? { self as? ProductCardData }
+}

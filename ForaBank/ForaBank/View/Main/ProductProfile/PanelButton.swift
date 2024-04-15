@@ -73,6 +73,9 @@ extension PanelButton {
         case accountStatement
         case accountOurBank
         case accountAnotherBank
+        case cardGuardian
+        case changePin
+        case visibility
     }
 }
 
@@ -82,13 +85,19 @@ extension PanelButton.Details {
     
         switch kind {
         case .accountDetails:
-            return .accountDetails(ID)
+            return .init(productID: ID, type: .accountDetails)
         case .accountStatement:
-            return .accountStatement(ID)
+            return .init(productID: ID, type: .accountStatement)
         case .accountOurBank:
-            return .accountOurBank(ID)
+            return .init(productID: ID, type: .accountOurBank)
         case .accountAnotherBank:
-            return .accountAnotherBank(ID)
+            return .init(productID: ID, type: .accountAnotherBank)
+        case .cardGuardian:
+            return .init(productID: ID, type: .cardGuardian)
+        case .changePin:
+            return .init(productID: ID, type: .changePin)
+        case .visibility:
+            return .init(productID: ID, type: .visibility)
         }
     }
 }

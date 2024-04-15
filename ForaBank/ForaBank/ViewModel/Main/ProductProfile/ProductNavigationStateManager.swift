@@ -34,12 +34,14 @@ enum AlertEvent {
     case closeAlert
     case showAlert(Alert.ViewModel)
     case delayAlert(Kind)
+    case delayAlertViewModel(Alert.ViewModel)
     
     enum Kind {
         case showAdditionalOtherAlert
         case showBlockAlert
         case showServiceOnlyMainCard
         case showServiceOnlyOwnerCard
+        case showTransferAdditionalOther
     }
 }
 
@@ -58,8 +60,8 @@ enum ProductNavigationStateEffect {
 extension ProductNavigationStateManager {
     
     static let preview: Self = .init(
-        alertReduce: AlertReducer(productAlertsViewModel: .default).reduce,
-        bottomSheetReduce: BottomSheetReducer().reduce,
+        alertReduce: AlertReducer(alertLifespan: .microseconds(0), productAlertsViewModel: .default).reduce,
+        bottomSheetReduce: BottomSheetReducer(bottomSheetLifespan: .microseconds(0)).reduce,
         handleEffect: ProductNavigationStateEffectHandler().handleEffect
     )
 }

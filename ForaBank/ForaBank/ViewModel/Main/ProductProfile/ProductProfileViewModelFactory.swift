@@ -5,12 +5,13 @@
 //  Created by Andryusina Nataly on 10.04.2024.
 //
 
-import Foundation
+import SwiftUI
 
 struct ProductProfileViewModelFactory {
     
     let makeInfoProductViewModel: (Parameters) -> InfoProductViewModel
-      
+    let makeAlert: (AlertParameters) -> Alert.ViewModel
+    
     struct Parameters {
         let model: Model
         let productData: ProductData
@@ -33,13 +34,62 @@ struct ProductProfileViewModelFactory {
         }
     }
     
+    struct AlertParameters {
+        
+        let title: String
+        let message: String?
+        let primaryButton: Alert.ViewModel.ButtonViewModel
+        let secondaryButton: Alert.ViewModel.ButtonViewModel?
+        
+        init(
+            statusCard: ProductCardData.StatusCard,
+            primaryButton: Alert.ViewModel.ButtonViewModel,
+            secondaryButton: Alert.ViewModel.ButtonViewModel?
+        ) {
+            self.title = .alertTitle(statusCard)
+            self.message = .description(statusCard)
+            self.primaryButton = primaryButton
+            self.secondaryButton = secondaryButton
+        }
+    }
+
     typealias Event = AlertEvent
     typealias Events = (Event) -> Void
 }
 
 extension ProductProfileViewModelFactory {
     
-    static let preview: Self = .init(makeInfoProductViewModel: {
-        _ in .sample
-    })
+    static let preview: Self = .init(
+        makeInfoProductViewModel: {
+            _ in .sample
+        },
+        makeAlert: { .init(
+            title: $0.title,
+            message: $0.message,
+            primary: $0.primaryButton,
+            secondary: $0.secondaryButton)
+        })
+}
+
+private extension String {
+    
+    static func alertTitle(_ statusCard: ProductCardData.StatusCard) -> String {
+        
+        switch statusCard {
+        case .active: return "Заблокировать карту?"
+        case .blockedUnlockAvailable: return "Разблокировать карту?"
+        case .blockedUnlockNotAvailable: return "Невозможно разблокировать"
+        case .notActivated: return ""
+        }
+    }
+    
+    static func description(_ statusCard: ProductCardData.StatusCard) -> String? {
+        
+        switch statusCard {
+        case .blockedUnlockNotAvailable: return "Обратитесь в поддержку, чтобы разблокировать карту"
+        case .active: return "Карту можно будет разблокировать в приложении или в колл-центре"
+        default:
+            return nil
+        }
+    }
 }

@@ -45,6 +45,7 @@ class ProductProfileViewModel: ObservableObject {
     
     var rootActions: RootViewModel.RootActions?
     var rootView: String
+    var contactsAction: () -> Void = { }
     
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
@@ -203,6 +204,9 @@ class ProductProfileViewModel: ObservableObject {
                 case let .delayAlert(kind):
                     self.event(.delayAlert(kind))
                  
+                case let .delayAlertViewModel(alertViewModel):
+                    self.event(.delayAlertViewModel(alertViewModel))
+                    
                 case .closeAlert:
                     self.event(.closeAlert)
                     
@@ -238,7 +242,7 @@ extension ProductProfileViewModel {
         switch actionType {
             
         case .restartChangePin:
-            guard let productCard = model.product(productId: cardId.rawValue) as? ProductCardData else { return }
+            guard let productCard = model.product(productId: cardId.rawValue)?.asCard else { return }
             
             checkCertificate(.init(cardId.rawValue), certificate: self.cvvPINServicesClient, productCard)
             
@@ -543,7 +547,7 @@ private extension ProductProfileViewModel {
                             bind(closeAccountSpinner)
                         }
                         
-                        if let productFrom = from as? ProductAccountData {
+                        if let productFrom = from.asAccount {
                             
                             model.action.send(ModelAction.Account.Close.Request(payload: .init(id: from.id, name: productFrom.name, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: nil)))
                         }
@@ -1062,7 +1066,7 @@ private extension ProductProfileViewModel {
                         
                         if !(allowCreditValue && productType ) {
                             
-                            if let card = productData as? ProductCardData {
+                            if let card = productData?.asCard {
                                 createTopUpPanel(card)
                             }
                             else  {
@@ -1080,7 +1084,15 @@ private extension ProductProfileViewModel {
                         
                     case .topRight:
                         switch product.productType {
-                        case .card, .account:
+                        case .card:
+                            guard let card = productData?.asCard else { return }
+                            
+                            if card.cardType == .additionalOther {
+                                self.event(.delayAlert(.showTransferAdditionalOther))
+                            } else {
+                                self.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
+                            }
+                        case .account:
                             self.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
                             
                         case .deposit:
@@ -1120,7 +1132,7 @@ private extension ProductProfileViewModel {
                         switch product.productType {
                             
                         case .card:
-                            guard let card = productData as? ProductCardData else { return }
+                            guard let card = productData?.asCard else { return }
                             createAccountInfoPanel(card)
 
                         case .deposit:
@@ -1142,13 +1154,10 @@ private extension ProductProfileViewModel {
                         switch product.productType {
                         case .card:
                             
-                            guard let productCard = productData as? ProductCardData else {
+                            guard let card = productData?.asCard else {
                                 return
                             }
-                            
-                            let buttonType: ProductProfileOptionsPannelView.ViewModel.ButtonType = productCard.isBlocked ? .card(.unblock) : .card(.block)
-                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [buttonType, .card(.changePin)], productType: product.productType)
-                            self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
+                            createCardGuardianPanel(card)
                             
                         case .account:
                             
@@ -1456,21 +1465,15 @@ private extension ProductProfileViewModel {
                             
                         case .tariffsByAccount:
                             
-                            if let productData = productData as? ProductAccountData {
+                            if let productData = productData.asAccount {
                                 self.openLinkURL(productData.detailedRatesUrl)
                             }
                             
                         case .termsOfService:
                             
-                            if let productData = productData as? ProductAccountData {
+                            if let productData = productData.asAccount {
                                 self.openLinkURL(productData.detailedConditionUrl)
                             }
-                            
-                        case let .card(type):
-                            
-                            guard let productCard = productData as? ProductCardData else { return }
-                            
-                            self.handleCardType(type, productCard)
                         }
                         
                     default:
@@ -1678,51 +1681,59 @@ private extension ProductProfileViewModel {
     }
     
     func alertBlockedCard(
-        with product: ProductData
+        with card: ProductCardData
     ) -> Alert.ViewModel? {
         
-        guard let product = product as? ProductCardData, let cardNumber = product.number else {
+        guard let cardNumber = card.number, let statusCard = card.statusCard else {
             return nil
         }
         
-        var description: String? {
-            switch product.isBlocked {
-            case true: return nil
-            case false: return "Карту можно будет разблокировать в приложении или в колл-центре"
+        let secondaryButton: Alert.ViewModel.ButtonViewModel = {
+            switch statusCard {
+            case .blockedUnlockNotAvailable:
+                return .init(
+                    type: .default,
+                    title: "Контакты",
+                    action: contactsAction)
+
+            default:
+                return .init(
+                    type: .default,
+                    title: "Oк",
+                    action: { [weak self] in
+                        if card.isBlocked {
+                            self?.unBlock(cardId: card.cardId, cardNumber: cardNumber)
+                        } else {
+                            self?.block(cardId: card.cardId, cardNumber: cardNumber)
+                        }
+                    })
             }
-        }
+        }()
         
-        let alertViewModel: Alert.ViewModel = .init(
-            title: alertTitle(),
-            message: description,
-            primary: .init(
-                type: .default,
-                title: "Отмена",
-                action: { [weak self] in
-                    
-                    self?.action.send(ProductProfileViewModelAction.Close.Alert())
-                }),
-            secondary: .init(
-                type: .default,
-                title: "Oк",
-                action: { [weak self] in
-                    if product.isBlocked {
+        let alertViewModel = productProfileViewModelFactory.makeAlert(
+            .init(
+                statusCard: statusCard,
+                primaryButton: .init(
+                    type: .default,
+                    title: "Отмена",
+                    action: { [weak self] in
                         
-                        self?.model.action.send(ModelAction.Card.Unblock.Request(cardId: product.cardId, cardNumber: cardNumber))
-                        
-                    } else {
-                        
-                        self?.model.action.send(ModelAction.Card.Block.Request(cardId: product.cardId, cardNumber: cardNumber))
-                    }
-                })
+                        self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                    }),
+                secondaryButton: secondaryButton)
         )
-        
-        func alertTitle() -> String {
-            
-            product.isBlocked ? "Разблокировать карту?" : "Заблокировать карту?"
-        }
-        
+                
         return alertViewModel
+    }
+    
+    func block(cardId: ProductData.ID, cardNumber: String) {
+        
+        self.model.action.send(ModelAction.Card.Block.Request(cardId: cardId, cardNumber: cardNumber))
+    }
+    
+    func unBlock(cardId: ProductData.ID, cardNumber: String) {
+        
+        self.model.action.send(ModelAction.Card.Unblock.Request(cardId: cardId, cardNumber: cardNumber))
     }
     
     func errorDepositConditionAlert(
@@ -2130,11 +2141,10 @@ extension ProductProfileViewModel {
     
     private func blockCard(with productData: ProductData?) {
         
-        guard let productData = productData else {
+        guard let card = productData?.asCard, let alertViewModel = alertBlockedCard(with: card) else {
             return
         }
-        
-        alert = alertBlockedCard(with: productData)
+        event(.delayAlertViewModel(alertViewModel))
     }
     
     private func unblockCard(with productData: ProductData?) {
@@ -2155,8 +2165,8 @@ extension ProductProfileViewModel {
         }
     }
     
-    func handleCardType(
-        _ type: ProductProfileOptionsPannelView.ViewModel.ButtonType.Card,
+    func handlePanelButtonType(
+        _ type: PanelButtonType,
         _ productCard: ProductCardData
     ) {
         switch type {
@@ -2168,6 +2178,9 @@ extension ProductProfileViewModel {
             
         case .changePin:
             checkCertificate(.init(productCard.id), certificate: self.cvvPINServicesClient, productCard)
+            
+        case .visibility:
+            self.model.action.send(ModelAction.Products.UpdateVisibility(productId: productCard.id, visibility: !productCard.isVisible))
         }
     }
     
@@ -2509,31 +2522,46 @@ extension ProductProfileViewModel {
         
         self.bottomSheet = nil
 
-        switch event {
-            
-        case let .accountDetails(productID):
-            
-            guard let productData = model.product(productId: productID) else { return }
-
+        guard let productData = model.product(productId: event.productID) else { return }
+        
+        switch (event.type, productData.asCard) {
+        case (.accountDetails, _):
             showProductInfo(productData)
             
-        case let .accountStatement(productID):
-            
-            guard let productData = model.product(productId: productID) else { return }
-
+        case (.accountStatement, _):
             showProductStatement(productData)
             
-        case let .accountOurBank(productID):
+        case let (.accountOurBank, .some(card)):
+                        
+            showPaymentOurBank(card)
             
-            guard let productData = model.product(productId: productID) as? ProductCardData else { return }
+        case let (.accountAnotherBank, .some(card)):
+                        
+            showPaymentAnotherBank(card)
             
-            showPaymentOurBank(productData)
+        case let (.cardGuardian, .some(card)):
             
-        case let .accountAnotherBank(productID):
+            switch card.statusCard {
+            case .blockedUnlockAvailable, .blockedUnlockNotAvailable:
+                self.handlePanelButtonType(.unblock, card)
+
+            case .active:
+                self.handlePanelButtonType(.block, card)
+                
+            default:
+                return
+            }
+
+        case let (.changePin, .some(card)):
             
-            guard let productData = model.product(productId: productID) as? ProductCardData else { return }
+            self.handlePanelButtonType(.changePin, card)
+
+        case let (.visibility, .some(card)):
             
-            showPaymentAnotherBank(productData)
+            self.handlePanelButtonType(.visibility, card)
+            
+        default:
+            return
         }
     }
 }
