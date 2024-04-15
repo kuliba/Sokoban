@@ -488,6 +488,8 @@
 		2A319BA52BCD4414009333ED /* TextFieldMockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A319B9F2BCD414B009333ED /* TextFieldMockViewModel.swift */; };
 		2A319BA62BCD4414009333ED /* TextFieldMockStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A319BA12BCD41AF009333ED /* TextFieldMockStateWrapperView.swift */; };
 		2A319BA72BCD4414009333ED /* TextFieldMockWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A319BA32BCD4263009333ED /* TextFieldMockWrapperView.swift */; };
+		2A319BA92BCD58BC009333ED /* AnywayPayment.Element.Parameter+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A319BA82BCD58BC009333ED /* AnywayPayment.Element.Parameter+preview.swift */; };
+		2A319BAB2BCD5C4C009333ED /* AnywayPayment.Element.Field+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A319BAA2BCD5C4C009333ED /* AnywayPayment.Element.Field+preview.swift */; };
 		2A34177E2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34177D2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift */; };
 		2A3417802B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34177F2B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift */; };
 		2A3417822B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3417812B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift */; };
@@ -3070,6 +3072,8 @@
 		2A319B9F2BCD414B009333ED /* TextFieldMockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldMockViewModel.swift; sourceTree = "<group>"; };
 		2A319BA12BCD41AF009333ED /* TextFieldMockStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldMockStateWrapperView.swift; sourceTree = "<group>"; };
 		2A319BA32BCD4263009333ED /* TextFieldMockWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldMockWrapperView.swift; sourceTree = "<group>"; };
+		2A319BA82BCD58BC009333ED /* AnywayPayment.Element.Parameter+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPayment.Element.Parameter+preview.swift"; sourceTree = "<group>"; };
+		2A319BAA2BCD5C4C009333ED /* AnywayPayment.Element.Field+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPayment.Element.Field+preview.swift"; sourceTree = "<group>"; };
 		2A34177D2B7B9147002FAAFC /* UserAccountNavigationFPSReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationFPSReducer.swift; sourceTree = "<group>"; };
 		2A34177F2B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationOTPReducer.swift; sourceTree = "<group>"; };
 		2A3417812B7BC566002FAAFC /* UserAccountNavigationOTPEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountNavigationOTPEffectHandler.swift; sourceTree = "<group>"; };
@@ -6611,9 +6615,11 @@
 				2A2F88302BC942230097119C /* Preview Assets.xcassets */,
 				2A09E6EB2BCBBB5A001A7089 /* AnywayPayment+preview.swift */,
 				2A09E6E92BCBBA52001A7089 /* AnywayPayment.Element+preview.swift */,
+				2A319BAA2BCD5C4C009333ED /* AnywayPayment.Element.Field+preview.swift */,
+				2A319BA82BCD58BC009333ED /* AnywayPayment.Element.Parameter+preview.swift */,
+				2A96026D2BCC117C000D9B68 /* AnywayPayment.Element.Widget.PaymentCore+preview.swift */,
 				2A09E6F12BCBCB5E001A7089 /* AnywayPayment.UIComponent.Field+preview.swift */,
 				2A09E6F52BCBCBEC001A7089 /* AnywayPayment.UIComponent.Parameter+preview.swift */,
-				2A96026D2BCC117C000D9B68 /* AnywayPayment.Element.Widget.PaymentCore+preview.swift */,
 				2A09E6F92BCBCC6F001A7089 /* AnywayPayment.UIComponent.Widget+preview.swift */,
 				2A9602722BCC24F0000D9B68 /* AnywayPaymentFooterConfig+preview.swift */,
 				2AFE37FE2BCAA8BB0079C401 /* ExpandablePickerState+preview.swift */,
@@ -14629,6 +14635,7 @@
 				2AFE38072BCAA9C50079C401 /* ExpandablePickerStateWrapperView.swift in Sources */,
 				2A09E6FA2BCBCC6F001A7089 /* AnywayPayment.UIComponent.Widget+preview.swift in Sources */,
 				2A09E6EE2BCBCA5E001A7089 /* AnywayPayment.Element+Identifiable.swift in Sources */,
+				2A319BA92BCD58BC009333ED /* AnywayPayment.Element.Parameter+preview.swift in Sources */,
 				2AC3EFFD2BCBDE1D0037A4E1 /* AnywayPaymentFooterView.swift in Sources */,
 				2AFE38092BCAAA1F0079C401 /* ExpandablePickerReducer.swift in Sources */,
 				2A2F882C2BC942220097119C /* ContentView.swift in Sources */,
@@ -14641,6 +14648,7 @@
 				2AFE37F22BC987830079C401 /* AnywayPaymentElementView.swift in Sources */,
 				2A09E6F42BCBCB99001A7089 /* AnywayPaymentElementParameterView.swift in Sources */,
 				2A09E6EC2BCBBB5A001A7089 /* AnywayPayment+preview.swift in Sources */,
+				2A319BAB2BCD5C4C009333ED /* AnywayPayment.Element.Field+preview.swift in Sources */,
 				2AFE38032BCAA98F0079C401 /* ExpandablePickerEffect.swift in Sources */,
 				2A9602702BCC16CF000D9B68 /* AnywayPaymentFooter.swift in Sources */,
 				2AFE37EE2BC970150079C401 /* OTPView.swift in Sources */,
