@@ -180,6 +180,11 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
             sideButton = nil
         }
     }
+    
+    func clover() -> Image? {
+        
+        return model.product(productId: id)?.cloverImage
+    }
 }
 
 //MARK: - Types
