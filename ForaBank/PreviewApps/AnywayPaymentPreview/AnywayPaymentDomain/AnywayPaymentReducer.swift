@@ -125,8 +125,11 @@ private extension AnywayPayment.Element.Widget.PaymentCore.ProductID {
     init(_ productID: AnywayPaymentEvent.Widget.ProductID) {
         
         switch productID.type {
-        case .account: self = .accountID(.init(productID.id))
-        case .card:    self = .cardID(.init(productID.id))
+        case .account:
+            self = .accountID(.init(productID.id))
+            
+        case .card:
+            self = .cardID(.init(productID.id))
         }
     }
 }

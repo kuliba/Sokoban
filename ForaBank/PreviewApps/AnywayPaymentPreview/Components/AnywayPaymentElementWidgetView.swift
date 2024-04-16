@@ -17,19 +17,33 @@ struct AnywayPaymentElementWidgetView: View {
         
         switch state {
         case let .otp(otp):
-            OTPView(state: otp.asString, event: { event(.otp($0)) })
+            otpView(
+                state: otp.map(String.init) ?? "",
+                event: { event(.otp($0)) }
+            )
             
-        case .productPicker:
-            Text("TBD: Product Picker (Selector)")
+        case let .productPicker(productID):
+            productPicker(
+                state: productID,
+                event: { event(.product($0, $1)) }
+            )
         }
     }
-}
-
-private extension Optional where Wrapped == Int {
     
-    var asString: String {
+    private func otpView(
+        state: String,
+        event: @escaping (String) -> Void
+    ) -> some View {
         
-        return map(String.init) ?? ""
+        OTPView(state: state, event: event)
+    }
+    
+    private func productPicker(
+        state: AnywayPayment.UIComponent.Widget.ProductID,
+        event: @escaping (AnywayPaymentEvent.Widget.ProductID, AnywayPaymentEvent.Widget.Currency) -> Void
+    ) -> some View {
+        
+        Text("TBD: Product Picker (Selector)")
     }
 }
 
