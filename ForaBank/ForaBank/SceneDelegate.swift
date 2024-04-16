@@ -82,6 +82,7 @@ extension SceneDelegate {
                 case _ as RootViewModelAction.DismissAll:
                     window?.rootViewController?.dismiss(animated: false, completion: nil)
                     rootViewModel.resetLink()
+                    rootViewModel.reset()
                     
                 default:
                     break

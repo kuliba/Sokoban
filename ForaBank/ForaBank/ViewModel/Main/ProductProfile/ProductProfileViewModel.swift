@@ -1801,7 +1801,11 @@ fileprivate extension NavigationBarView.ViewModel {
     
     func update(with product: ProductData) {
         
-        self.title = ProductView.ViewModel.name(product: product, style: .profile, creditProductName: .navigationTitle)
+        self.title = ProductView.ViewModel.name(
+            product: product,
+            style: .profile,
+            creditProductName: .productView
+        )
         self.subtitle = Self.subtitle(with: product)
         self.foreground = Self.textColor(with: product)
         self.background = Self.accentColor(with: product)

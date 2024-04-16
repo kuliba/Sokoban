@@ -1339,7 +1339,8 @@ extension Model {
                         return payload.last?.additional.sfpPhone
                         
                     default:
-                        return payload.last?.additional.first(where: { $0.fieldname == parameterId })?.fieldvalue
+                        let additions = payload.flatMap { $0.additional }
+                        return additions.first(where: { $0.fieldname == parameterId })?.fieldvalue
                     }
                     
                 case let payload as [TransferGeneralData]:
