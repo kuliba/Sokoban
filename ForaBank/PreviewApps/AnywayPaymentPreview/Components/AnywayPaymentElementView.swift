@@ -38,35 +38,6 @@ where FieldView: View,
     }
 }
 
-struct AnywayPaymentElementViewFactory<FieldView, ParameterView, WidgetView> {
-    
-    let fieldView: (Field) -> FieldView
-    let parameterView: (Parameter, @escaping (String) -> Void) -> ParameterView
-    let widgetView: (Widget, @escaping (AnywayPaymentEvent.Widget) -> Void) -> WidgetView
-}
-
-extension AnywayPaymentElementViewFactory {
-    
-    typealias Field = AnywayPayment.UIComponent.Field
-    typealias Parameter = AnywayPayment.UIComponent.Parameter
-    typealias Widget = AnywayPayment.UIComponent.Widget
-}
-
-extension AnywayPaymentElementViewFactory
-where FieldView == AnywayPaymentElementFieldView,
-      ParameterView == AnywayPaymentElementParameterView,
-      WidgetView == AnywayPaymentElementWidgetView<OTPMockView, Text> {
-    
-    static var preview: Self {
-        
-        .init(
-            fieldView: FieldView.init,
-            parameterView: ParameterView.init,
-            widgetView: { .init(state: $0, event: $1, factory: .preview) }
-        )
-    }
-}
-
 struct AnywayPaymentElementView_Previews: PreviewProvider {
     
     static var previews: some View {

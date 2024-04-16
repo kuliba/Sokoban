@@ -8,20 +8,6 @@
 import AnywayPaymentCore
 import SwiftUI
 
-struct AnywayPaymentElementWidgetViewFactory<OTPView, ProductPicker>
-where OTPView: View,
-      ProductPicker: View {
-    
-    let otpView: MakeOTPView
-    let productPicker: MakeProductPicker
-}
-
-extension AnywayPaymentElementWidgetViewFactory {
-    
-    typealias MakeOTPView = (String, @escaping (String) -> Void) -> OTPView
-    typealias MakeProductPicker = (AnywayPayment.UIComponent.Widget.ProductID, @escaping (AnywayPaymentEvent.Widget.ProductID, AnywayPaymentEvent.Widget.Currency) -> Void) -> ProductPicker
-}
-
 struct AnywayPaymentElementWidgetView<OTPView, ProductPicker>: View
 where OTPView: View,
       ProductPicker: View {
@@ -45,19 +31,6 @@ where OTPView: View,
                 { event(.product($0, $1)) }
             )
         }
-    }
-}
-
-extension AnywayPaymentElementWidgetViewFactory
-where OTPView == OTPMockView,
-      ProductPicker == Text {
-    
-    static var preview: Self {
-        
-        .init(
-            otpView: OTPMockView.init,
-            productPicker: { Text("TBD: Product Picker (Selector): \($0), \(String(describing: $1))") }
-        )
     }
 }
 
