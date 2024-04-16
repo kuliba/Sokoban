@@ -112,6 +112,27 @@ where ElementView == AnywayPaymentElementView<AnywayPaymentElementFieldView, Any
     }
 }
 
+private extension AnywayPaymentElementView
+where FieldView == AnywayPaymentElementFieldView,
+      ParameterView == AnywayPaymentElementParameterView,
+      WidgetView == AnywayPaymentElementWidgetView {
+    
+    init(
+        state: AnywayPayment.Element,
+        event: @escaping (AnywayPaymentEvent) -> Void
+    ) {
+        self.init(
+            state: state,
+            event: event,
+            factory: .init(
+                fieldView: FieldView.init,
+                parameterView: ParameterView.init,
+                widgetView: WidgetView.init
+            )
+        )
+    }
+}
+
 private extension AnywayPaymentFooter {
     
     init(
