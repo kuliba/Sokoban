@@ -55,14 +55,14 @@ extension AnywayPaymentElementViewFactory {
 extension AnywayPaymentElementViewFactory
 where FieldView == AnywayPaymentElementFieldView,
       ParameterView == AnywayPaymentElementParameterView,
-      WidgetView == AnywayPaymentElementWidgetView {
+      WidgetView == AnywayPaymentElementWidgetView<OTPMockView, Text> {
     
-    static var `default`: Self {
+    static var preview: Self {
         
         .init(
             fieldView: FieldView.init,
             parameterView: ParameterView.init,
-            widgetView: WidgetView.init
+            widgetView: { .init(state: $0, event: $1, factory: .preview) }
         )
     }
 }
@@ -94,7 +94,7 @@ struct AnywayPaymentElementView_Previews: PreviewProvider {
         AnywayPaymentElementView(
             state: element,
             event: { _ in },
-            factory: .default
+            factory: .preview
         )
     }
 }

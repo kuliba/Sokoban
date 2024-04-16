@@ -71,7 +71,7 @@ struct ContentView: View {
 }
 
 private extension AnywayPaymentLayoutView
-where ElementView == AnywayPaymentElementView<AnywayPaymentElementFieldView, AnywayPaymentElementParameterView, AnywayPaymentElementWidgetView>,
+where ElementView == AnywayPaymentElementView<AnywayPaymentElementFieldView, AnywayPaymentElementParameterView, AnywayPaymentElementWidgetView<OTPMockView, Text>>,
       FooterView == AnywayPaymentFooterView {
     
     init(
@@ -115,7 +115,7 @@ where ElementView == AnywayPaymentElementView<AnywayPaymentElementFieldView, Any
 private extension AnywayPaymentElementView
 where FieldView == AnywayPaymentElementFieldView,
       ParameterView == AnywayPaymentElementParameterView,
-      WidgetView == AnywayPaymentElementWidgetView {
+      WidgetView == AnywayPaymentElementWidgetView<OTPMockView, Text> {
     
     init(
         state: AnywayPayment.Element,
@@ -124,7 +124,7 @@ where FieldView == AnywayPaymentElementFieldView,
         self.init(
             state: state,
             event: event,
-            factory: .default
+            factory: .preview
         )
     }
 }
