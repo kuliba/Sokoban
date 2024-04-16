@@ -256,7 +256,7 @@ extension ContactsBanksSectionViewModel {
         
         let allBanks = preferredBanks + otherBanks
         
-        return allBanks.map{ ContactsBankItemView.ViewModel(id: $0.id, icon: $0.svgImage.image, name: $0.memberNameRus, subtitle: nil, type: $0.bankType, action: action($0)) }
+        return allBanks.map { ContactsBankItemView.ViewModel(id: $0.id, icon: $0.svgImage.image, name: $0.memberNameRus, subtitle: nil, type: $0.bankType, action: action($0)) }
     }
     
     static func reduceBanksFullInfo(
