@@ -11,13 +11,13 @@ import SwiftUI
 struct AnywayPaymentElementWidgetView: View {
     
     let state: AnywayPayment.UIComponent.Widget
-    let event: (AnywayPaymentEvent) -> Void
+    let event: (AnywayPaymentEvent.Widget) -> Void
     
     var body: some View {
         
         switch state {
         case let .otp(otp):
-            OTPView(state: otp.asString, event: { event(.widget(.otp($0))) })
+            OTPView(state: otp.asString, event: { event(.otp($0)) })
             
         case .productPicker:
             Text("TBD: Product Picker (Selector)")

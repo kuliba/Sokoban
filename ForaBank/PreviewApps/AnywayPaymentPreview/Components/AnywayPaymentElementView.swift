@@ -12,7 +12,6 @@ struct AnywayPaymentElementView: View {
     
     let state: AnywayPayment.Element
     let event: (AnywayPaymentEvent) -> Void
-    // let event: (String) -> Void
     
     var body: some View {
         
@@ -29,7 +28,7 @@ struct AnywayPaymentElementView: View {
         case let .widget(widget):
             AnywayPaymentElementWidgetView(
                 state: widget,
-                event: event
+                event: { event(.widget($0)) }
             )
         }
     }
