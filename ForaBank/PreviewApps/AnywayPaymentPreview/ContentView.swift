@@ -71,7 +71,7 @@ struct ContentView: View {
 }
 
 private extension AnywayPaymentLayoutView
-where ElementView == AnywayPaymentElementView,
+where ElementView == AnywayPaymentElementView<AnywayPaymentElementFieldView, AnywayPaymentElementParameterView, AnywayPaymentElementWidgetView>,
       FooterView == AnywayPaymentFooterView {
     
     init(
@@ -84,7 +84,7 @@ where ElementView == AnywayPaymentElementView,
         self.init(
             elements: elements,
             elementView: {
-            
+                
                 .init(state: $0, event: event)
             },
             footerView: {
@@ -100,7 +100,7 @@ where ElementView == AnywayPaymentElementView,
                         switch footerEvent {
                         case let .edit(decimal):
                             event(.widget(.amount(decimal)))
-                        
+                            
                         case .continue:
                             event(.pay)
                         }
@@ -120,7 +120,7 @@ private extension AnywayPaymentFooter {
         isEnabled: Bool
     ) {
         self.init(
-            buttonTitle: buttonTitle, 
+            buttonTitle: buttonTitle,
             core: elements.core,
             isEnabled: isEnabled
         )

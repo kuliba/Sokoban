@@ -8,29 +8,62 @@
 import AnywayPaymentCore
 import SwiftUI
 
-struct AnywayPaymentElementView: View {
+struct AnywayPaymentElementView<FieldView, ParameterView, WidgetView>: View
+where FieldView: View,
+      ParameterView: View,
+      WidgetView: View {
     
     let state: AnywayPayment.Element
     let event: (AnywayPaymentEvent) -> Void
+    
+    let fieldView: (Field) -> FieldView
+    let parameterView: (Parameter, @escaping (String) -> Void) -> ParameterView
+    let widgetView: (Widget, @escaping (AnywayPaymentEvent.Widget) -> Void) -> WidgetView
     
     var body: some View {
         
         switch state.uiComponent {
         case let .field(field):
-            AnywayPaymentElementFieldView(state: field)
+            fieldView(field)
             
         case let .parameter(parameter):
-            AnywayPaymentElementParameterView(
-                state: parameter,
-                event: { event(.setValue($0, for: parameter.id)) }
+            parameterView(
+                parameter,
+                { event(.setValue($0, for: parameter.id)) }
             )
             
         case let .widget(widget):
-            AnywayPaymentElementWidgetView(
-                state: widget,
-                event: { event(.widget($0)) }
+            widgetView(
+                widget,
+                { event(.widget($0)) }
             )
         }
+    }
+}
+
+extension AnywayPaymentElementView {
+    
+   typealias Field = AnywayPayment.UIComponent.Field
+   typealias Parameter = AnywayPayment.UIComponent.Parameter
+   typealias Widget = AnywayPayment.UIComponent.Widget
+}
+
+extension AnywayPaymentElementView
+where FieldView == AnywayPaymentElementFieldView,
+      ParameterView == AnywayPaymentElementParameterView,
+      WidgetView == AnywayPaymentElementWidgetView {
+    
+    init(
+        state: AnywayPayment.Element,
+        event: @escaping (AnywayPaymentEvent) -> Void
+    ) {
+        self.init(
+            state: state,
+            event: event,
+            fieldView: AnywayPaymentElementFieldView.init,
+            parameterView: ParameterView.init,
+            widgetView: WidgetView.init
+        )
     }
 }
 
