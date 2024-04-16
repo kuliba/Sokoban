@@ -11,20 +11,24 @@ import SwiftUI
 struct AnywayPaymentElementParameterView: View {
     
     let state: AnywayPayment.UIComponent.Parameter
-    let event: (AnywayPaymentEvent) -> Void
+    let event: (String) -> Void
     
     var body: some View {
         
-        Text(String(describing: state))
-        
         switch state.type {
         case let .select(options):
-            Text("TBD: Select with options: \(options)")
+            ExpandablePickerStateWrapperView(
+                viewModel: .decorated(
+                    initialState: .init(items: options),
+                    onSelect: { event($0.key) }
+                ),
+                itemView: { Text($0.value) }
+            )
             
         case .textInput:
-            TextFieldMockView(
+            TextFieldMockWrapperView(
                 initial: state.value?.rawValue ?? "",
-                onChange: { event(.setValue($0, for: state.id)) }
+                onChange: event
             )
             
         case .unknown:
@@ -33,10 +37,33 @@ struct AnywayPaymentElementParameterView: View {
     }
 }
 
+extension AnywayPayment.UIComponent.Parameter.Option: Identifiable {
+    
+    public var id: String { key }
+}
+
 struct AnywayPaymentElementParameterView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        AnywayPaymentElementParameterView(state: .preview, event: { _ in })
+        VStack(spacing: 32, content: previewsGroup)
+            .padding(.horizontal)
+    }
+    
+    static func previewsGroup() -> some View {
+        
+        Group {
+            
+            anywayPaymentElementParameterView(.select)
+            anywayPaymentElementParameterView(.emptyTextInput)
+            anywayPaymentElementParameterView(.textInput)
+        }
+    }
+    
+    static func anywayPaymentElementParameterView(
+        _ parameter: AnywayPayment.Element.Parameter
+    ) -> some View {
+        
+        AnywayPaymentElementParameterView(state: parameter.uiComponent, event: { _ in })
     }
 }

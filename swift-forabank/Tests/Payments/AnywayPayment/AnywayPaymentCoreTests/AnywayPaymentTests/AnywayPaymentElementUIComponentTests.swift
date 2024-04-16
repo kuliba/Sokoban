@@ -111,10 +111,29 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.uiComponent, .widget(.otp(123_456)))
     }
     
-    func test_uiComponent_shouldDeliverProductPickerForCoreWidget() {
+    func test_uiComponent_shouldDeliverProductPickerWithAccountForCoreWidget() {
         
-        let element = makeAnywayPaymentWidgetElement(.core(makeWidgetPaymentCore(productType: .account)))
+        let id = generateRandom11DigitNumber()
+        let element = makeAnywayPaymentWidgetElement(.core(
+            makeWidgetPaymentCore(
+                productID: id,
+                productType: .account
+            )
+        ))
         
-        XCTAssertNoDiff(element.uiComponent, .widget(.productPicker))
+        XCTAssertNoDiff(element.uiComponent, .widget(.productPicker(.accountID(.init(id)))))
+    }
+    
+    func test_uiComponent_shouldDeliverProductPickerWithCardForCoreWidget() {
+        
+        let id = generateRandom11DigitNumber()
+        let element = makeAnywayPaymentWidgetElement(.core(
+            makeWidgetPaymentCore(
+                productID: id,
+                productType: .card
+            )
+        ))
+        
+        XCTAssertNoDiff(element.uiComponent, .widget(.productPicker(.cardID(.init(id)))))
     }
 }

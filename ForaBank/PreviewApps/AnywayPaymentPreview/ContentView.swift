@@ -56,17 +56,22 @@ struct ContentView: View {
     
     private func infoOverlay() -> some View {
         
-        VStack {
+        VStack(alignment: .leading) {
             
+            Text(String(describing: viewModel.state.digest))
             Text("OTP: \(viewModel.state.otp)")
         }
+        .padding()
         .foregroundColor(.purple)
         .font(.caption)
+        .background(Color.white.opacity(0.9))
+        .padding(.bottom)
+        .padding(.bottom)
     }
 }
 
 private extension AnywayPaymentLayoutView
-where ElementView == AnywayPaymentElementView,
+where ElementView == AnywayPaymentElementView<AnywayPaymentElementFieldView, AnywayPaymentElementParameterView, AnywayPaymentElementWidgetView>,
       FooterView == AnywayPaymentFooterView {
     
     init(
@@ -79,7 +84,7 @@ where ElementView == AnywayPaymentElementView,
         self.init(
             elements: elements,
             elementView: {
-            
+                
                 .init(state: $0, event: event)
             },
             footerView: {
@@ -94,8 +99,8 @@ where ElementView == AnywayPaymentElementView,
                         
                         switch footerEvent {
                         case let .edit(decimal):
-                            event(.amount(decimal))
-                        
+                            event(.widget(.amount(decimal)))
+                            
                         case .continue:
                             event(.pay)
                         }
@@ -103,6 +108,27 @@ where ElementView == AnywayPaymentElementView,
                     config: config
                 )
             }
+        )
+    }
+}
+
+private extension AnywayPaymentElementView
+where FieldView == AnywayPaymentElementFieldView,
+      ParameterView == AnywayPaymentElementParameterView,
+      WidgetView == AnywayPaymentElementWidgetView {
+    
+    init(
+        state: AnywayPayment.Element,
+        event: @escaping (AnywayPaymentEvent) -> Void
+    ) {
+        self.init(
+            state: state,
+            event: event,
+            factory: .init(
+                fieldView: FieldView.init,
+                parameterView: ParameterView.init,
+                widgetView: WidgetView.init
+            )
         )
     }
 }
@@ -115,7 +141,7 @@ private extension AnywayPaymentFooter {
         isEnabled: Bool
     ) {
         self.init(
-            buttonTitle: buttonTitle, 
+            buttonTitle: buttonTitle,
             core: elements.core,
             isEnabled: isEnabled
         )

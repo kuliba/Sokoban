@@ -14,7 +14,7 @@ extension AnywayPayment.Element {
             return .field(.init(field))
             
         case let .parameter(parameter):
-            return parameter.uiComponent
+            return .parameter(parameter.uiComponent)
             
         case let .widget(widget):
             return widget.uiComponent
@@ -71,7 +71,7 @@ extension AnywayPayment.UIComponent {
     public enum Widget: Equatable {
         
         case otp(Int?)
-        case productPicker
+        case productPicker(ProductID)
     }
 }
 
@@ -102,16 +102,22 @@ extension AnywayPayment.UIComponent.Parameter {
     }
 }
 
-private extension AnywayPayment.Element.Parameter {
+extension AnywayPayment.Element.Parameter {
     
-    var uiComponent: AnywayPayment.UIComponent {
+    #warning("used in preview - fix, make private")
+    public var uiComponent: AnywayPayment.UIComponent.Parameter {
         
-        .parameter(.init(
+        .init(
             id: field.id,
             value: field.value,
             type: uiAttributes.uiComponent
-        ))
+        )
     }
+}
+
+extension AnywayPayment.UIComponent.Widget {
+    
+    public typealias ProductID = AnywayPayment.Element.Widget.PaymentCore.ProductID
 }
 
 private extension AnywayPayment.Element.Parameter.UIAttributes {
@@ -136,8 +142,8 @@ private extension AnywayPayment.Element.Widget {
     var uiComponent: AnywayPayment.UIComponent {
         
         switch self {
-        case .core:
-            return .widget(.productPicker)
+        case let .core(core):
+            return .widget(.productPicker(core.productID))
             
         case let .otp(otp):
             return .widget(.otp(otp))

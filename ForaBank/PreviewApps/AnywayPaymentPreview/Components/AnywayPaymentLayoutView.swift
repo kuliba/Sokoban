@@ -22,8 +22,11 @@ where ElementView: View,
             
             ScrollView {
                 
-                ForEach(elements, content: elementView)
-                    .padding(.horizontal)
+                VStack(spacing: 24) {
+                    
+                    ForEach(elements, content: elementView)
+                        .padding(.horizontal)
+                }
             }
             
             footerView()
@@ -37,7 +40,7 @@ struct AnywayPaymentLayoutView_Previews: PreviewProvider {
         
         AnywayPaymentLayoutView(
             elements: .preview,
-            elementView: { Text(String(describing: $0)) },
+            elementView: { Text(String(describing: $0).prefix(80)) },
             footerView: { Text("Footer") }
         )
     }
