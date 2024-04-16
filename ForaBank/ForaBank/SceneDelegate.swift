@@ -26,7 +26,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         utilitiesPaymentsFlag: .init(.inactive)
     )
     private lazy var rootViewFactory = RootViewFactory(
-        with: model.imageCache()
+        with: model.imageCache(),
+        getUImage: { self.model.images.value[$0]?.uiImage }
     )
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -81,6 +82,7 @@ extension SceneDelegate {
                 case _ as RootViewModelAction.DismissAll:
                     window?.rootViewController?.dismiss(animated: false, completion: nil)
                     rootViewModel.resetLink()
+                    rootViewModel.reset()
                     
                 default:
                     break

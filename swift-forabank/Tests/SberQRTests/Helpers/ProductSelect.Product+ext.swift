@@ -12,7 +12,8 @@ extension ProductSelect.Product {
     
     static let test: Self = .init(
         id: 12345678,
-        type: .card,
+        type: .card, 
+        isAdditional: false,
         header: "Счет списания",
         title: "Title",
         footer: "5678",
@@ -23,7 +24,8 @@ extension ProductSelect.Product {
     
     static let test2: Self = .init(
         id: 23456789,
-        type: .card,
+        type: .card, 
+        isAdditional: false,
         header: "Счет списания",
         title: "Title",
         footer: "6789",
@@ -34,7 +36,8 @@ extension ProductSelect.Product {
     
     static let missing: Self = .init(
         id: 1111111,
-        type: .card,
+        type: .card, 
+        isAdditional: false,
         header: "Счет списания",
         title: "Title",
         footer: "1111",

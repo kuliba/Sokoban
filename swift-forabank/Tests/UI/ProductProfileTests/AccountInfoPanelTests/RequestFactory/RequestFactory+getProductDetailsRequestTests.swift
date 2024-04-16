@@ -7,7 +7,7 @@
 
 @testable import AccountInfoPanel
 import XCTest
-import Services
+import RemoteServices
 
 final class RequestFactory_getProductDetailsRequestTests: XCTestCase {
     

@@ -23,7 +23,8 @@ struct ContentView: View {
         topUpCardButtons: [TopUpCardState.PanelButton],
         accountInfoPanelButtons: [AccountInfoPanelState.PanelButton],
         accountDetails: [ListItem],
-        cardDetails: [ListItem]
+        cardDetails: [ListItem],
+        sheetButtons: [ProductDetailsSheetState.PanelButton]
     ) {
         self.buttons = buttons
         self.topUpCardButtons = topUpCardButtons
@@ -33,6 +34,7 @@ struct ContentView: View {
                 topUpCardButtons: topUpCardButtons,
                 accountInfoPanelButtons: accountInfoPanelButtons,
                 accountDetails: accountDetails,
+                detailsSheetButtons: sheetButtons, 
                 cardDetails: cardDetails
             )
         )
@@ -40,7 +42,7 @@ struct ContentView: View {
     
     var body: some View {
         
-        NavigationView {
+        NavigationStack {
             
             VStack {
                 
@@ -130,11 +132,6 @@ struct ContentView: View {
                 state: viewModel.state,
                 event: viewModel.event
             )
-            
-            ProductDetailsView.init(
-                state: viewModel.state,
-                event: viewModel.event
-            )
         }
         .padding()
     }
@@ -146,6 +143,7 @@ struct ContentView: View {
         topUpCardButtons: .previewRegular,
         accountInfoPanelButtons: .previewRegular,
         accountDetails: .accountItems,
-        cardDetails: .cardItems
+        cardDetails: .cardItems, 
+        sheetButtons: .previewRegular
     )
 }

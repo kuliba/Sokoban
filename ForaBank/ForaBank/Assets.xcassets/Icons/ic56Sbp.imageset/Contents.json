@@ -1,14 +1,14 @@
 {
+  "images" : [
+    {
+      "filename" : "ic56Sbp.svg",
+      "idiom" : "universal"
+    }
+  ],
   "info" : {
     "version" : 1,
     "author" : "xcode"
   },
-  "images" : [
-    {
-      "idiom" : "universal",
-      "filename" : "ic56Sbp.svg"
-    }
-  ],
   "properties" : {
     "template-rendering-intent" : "template"
   }

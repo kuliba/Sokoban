@@ -388,7 +388,7 @@ final class SearchBarComponentTests: XCTestCase {
     
     func test_init_shouldSetInitialValues_searchBar_select_banks() throws {
         
-        let sut: ViewModel = .searchBar(for: .select(.banks))
+        let sut: ViewModel = .searchBar(for: .select(.banks(phone: nil)))
         trackForMemoryLeaks(sut)
         
         XCTAssertEqual(sut.textFieldModel.hasValue, false)
@@ -627,7 +627,7 @@ final class SearchBarComponentTests: XCTestCase {
 
     func test_init_shouldSetPhoneNumberModelInitialValues_searchBar_select_banks() throws {
         
-        let sut: ViewModel = .searchBar(for: .select(.banks))
+        let sut: ViewModel = .searchBar(for: .select(.banks(phone: nil)))
         let phoneNumberModel = try XCTUnwrap(sut.textFieldModel as? TextViewPhoneNumberView.ViewModel)
         
         XCTAssertEqual(phoneNumberModel.text, nil)

@@ -141,7 +141,7 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     func test_dismissDestination_shouldNotDeliverEffect() {
         
         assert(
-            .dismissDestination,
+            .dismissModal,
             on: productProfileState(),
             effect: nil)
     }
@@ -196,6 +196,116 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
             effect: .productProfile(.showContacts))
     }
     
+    // MARK: - test productDetailsInput
+    
+    // MARK: test apear
+
+    func test_appear_shouldNotDeliverEffect() {
+        
+        assert(
+            .productDetailsInput(.appear),
+            on: productProfileState(),
+            effect: nil)
+    }
+    
+    // MARK: test itemTapped
+    
+    func test_iconTap_shouldDeliverEffectOnProductProfile() {
+        
+        assert(
+            .productDetailsInput(.itemTapped(.iconTap(.accountNumber))),
+            on: productProfileState(),
+            effect: .productProfile(.productDetailsIconTap(.accountNumber)))
+    }
+    
+    func test_longPress_shouldDeliverEffectOnProductProfile() {
+        
+        assert(
+            .productDetailsInput(.itemTapped(.longPress("text", "informer"))),
+            on: productProfileState(),
+            effect: .productProfile(.productDetailsItemlongPress("text", "informer")))
+    }
+    
+    func test_share_shouldDeliverEffectOnCreate() {
+        
+        assert(
+            .productDetailsInput(.itemTapped(.share)),
+            on: productProfileState(),
+            effect: .create(.share))
+    }
+    
+    func test_selectAccountValueFalse_shouldDeliverEffectNil() {
+        
+        assert(
+            .productDetailsInput(.itemTapped(.selectAccountValue(false))),
+            on: productProfileState(),
+            effect: nil)
+    }
+
+    func test_selectAccountValueTrue_shouldDeliverEffectNil() {
+        
+        assert(
+            .productDetailsInput(.itemTapped(.selectAccountValue(true))),
+            on: productProfileState(),
+            effect: nil)
+    }
+
+    func test_selectCardValueFalse_shouldDeliverEffectNil() {
+        
+        assert(
+            .productDetailsInput(.itemTapped(.selectCardValue(false))),
+            on: productProfileState(),
+            effect: nil)
+    }
+
+    func test_selectCardValueTrue_shouldDeliverEffectNil() {
+        
+        assert(
+            .productDetailsInput(.itemTapped(.selectCardValue(true))),
+            on: productProfileState(),
+            effect: nil)
+    }
+
+    // MARK: test close
+    
+    func test_close_shouldDeliverEffectOnProductProfile() {
+        
+        assert(
+            .productDetailsInput(.close),
+            on: productProfileState(),
+            effect: nil)
+    }
+    
+    // MARK: test closeModal
+    
+    func test_closeModal_shouldDeliverEffectNil() {
+        
+        assert(
+            .productDetailsInput(.closeModal),
+            on: productProfileState(),
+            effect: nil)
+    }
+    
+    // MARK: test sendAll
+    
+    func test_sendAll_shouldDeliverEffectNil() {
+        
+        assert(
+            .productDetailsInput(.sendAll),
+            on: productProfileState(),
+            effect: nil)
+    }
+
+    // MARK: test sendSelect
+    
+    func test_sendSelect_shouldDeliverEffectNil() {
+        
+        assert(
+            .productDetailsInput(.sendSelect),
+            on: productProfileState(),
+            effect: nil)
+    }
+
     private typealias SUT = ProductProfileNavigationReducer
     private typealias State = SUT.State
     private typealias Event = SUT.Event
@@ -340,9 +450,10 @@ final class ProductProfileNavigationReducerTests: XCTestCase {
     }
     
     private func createProductDetailsRoute(
+        shareInfo: @escaping ([String]) -> Void = {_ in }
     ) -> ProductProfileNavigation.ProductDetailsRoute {
         
-        let detailsReduce = ProductDetailsReducer().reduce(_:_:)
+        let detailsReduce = ProductDetailsReducer(shareInfo: shareInfo).reduce(_:_:)
         
         let detailsHandleEffect = ProductDetailsEffectHandler().handleEffect(_:_:)
 

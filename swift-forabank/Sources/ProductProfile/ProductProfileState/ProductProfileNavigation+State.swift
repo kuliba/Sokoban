@@ -14,18 +14,32 @@ public extension ProductProfileNavigation {
     struct State: Equatable {
         
         public var modal: ProductProfileRoute?
+        public var destination: ProductDetailsRoute?
         public var alert: AlertModelOf<Event>?
         public var informer: String?
 
         public init(
             modal: ProductProfileRoute? = nil,
+            destination: ProductDetailsRoute? = nil,
             alert: AlertModelOf<Event>? = nil,
             informer: String? = nil
         ) {
             self.modal = modal
+            self.destination = destination
             self.alert = alert
             self.informer = informer
         }
+    }
+}
+
+extension ProductProfileNavigation.State.ProductDetailsRoute: Hashable {
+    
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 

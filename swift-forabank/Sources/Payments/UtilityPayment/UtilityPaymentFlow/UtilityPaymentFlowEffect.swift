@@ -7,6 +7,7 @@
 
 import PrePaymentPicker
 
+@available(*, deprecated, message: "use `UtilityFlowEffect`")
 public enum UtilityPaymentFlowEffect<LastPayment, Operator, Service>
 where Operator: Identifiable {
     

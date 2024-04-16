@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import RemoteServices
 import XCTest
 
 final class RequestFactory_createChangeClientConsentMe2MePullRequestTests: XCTestCase {

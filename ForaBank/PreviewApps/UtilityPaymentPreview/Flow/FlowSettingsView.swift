@@ -9,19 +9,43 @@ import SwiftUI
 
 struct FlowSettingsView: View {
     
-    @Binding var flow: Flow
+    @Binding var flowSettings: FlowSettings
     
     var body: some View {
         
         List {
             
-            pickerSection("Load Last Payments", $flow.loadLastPayments)
-            pickerSection("Load Operators", $flow.loadOperators)
+            buttons()
+            
+            pickerSection("Load Prepayment Options", $flowSettings.loadPrepayment)
+            pickerSection("Load Operators", $flowSettings.loadOperators)
         }
         .listStyle(.plain)
     }
+}
+
+private extension FlowSettingsView {
     
-    private func pickerSection<T: Hashable & CaseIterable & RawRepresentable>(
+    func buttons() -> some View {
+        
+        HStack {
+            
+            Button("happy") {
+                
+                flowSettings = .happy
+            }
+            .foregroundColor(.blue)
+            
+            Button("sad") {
+                
+                flowSettings = .sad
+            }
+            .foregroundColor(.red)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+    func pickerSection<T: Hashable & CaseIterable & RawRepresentable>(
         _ title: String,
         _ selection: Binding<T>
     ) -> some View where T.AllCases: RandomAccessCollection, T.RawValue == String {
@@ -45,6 +69,6 @@ struct FlowSettingsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        FlowSettingsView(flow: .constant(.happy))
+        FlowSettingsView(flowSettings: .constant(.happy))
     }
 }

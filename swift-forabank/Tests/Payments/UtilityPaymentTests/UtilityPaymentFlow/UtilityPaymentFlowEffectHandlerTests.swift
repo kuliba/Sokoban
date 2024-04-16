@@ -321,7 +321,7 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
         })
     }
     
-    // MARK: - startPayment
+    // MARK: - select
     
     func test_prePaymentEffect_startPayment_shouldCallPrePaymentHandleEffect_startPayment() {
         
@@ -347,7 +347,7 @@ final class UtilityPaymentFlowEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentFlowEffectHandler<LastPayment, Operator, StartPaymentResponse, UtilityService>
+    private typealias SUT = UtilityPaymentFlowEffectHandler<LastPayment, Operator, StartPaymentResponse, Service>
     
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect

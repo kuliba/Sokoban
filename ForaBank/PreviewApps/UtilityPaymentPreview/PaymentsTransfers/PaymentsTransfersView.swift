@@ -10,46 +10,90 @@ import UIPrimitives
 
 struct PaymentsTransfersView: View {
     
-    @ObservedObject var viewModel: PaymentsTransfersViewModel
+    @StateObject var viewModel: PaymentsTransfersViewModel
     
     let factory: PaymentsTransfersViewFactory
     
     var body: some View {
         
-        ZStack {
-#warning("remodel spinner and NavigationView position to resemble app")
-            
-            NavigationView {
-                
-                utilityPaymentButton()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            
-            spinner()
-        }
+        utilityPaymentButton()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
+}
+
+private extension PaymentsTransfersView {
     
-    private func utilityPaymentButton() -> some View {
+    func utilityPaymentButton() -> some View {
         
         Button(
             "Utility Payment",
-            action: { viewModel.event(.openUtilityPayment) }
+            action: { viewModel.event(.flow(.utilityFlow(.initiatePrepayment))) }
         )
         .navigationDestination(
             item: .init(
                 get: { viewModel.state.navigationState },
-                set: { if $0 == nil { viewModel.event(.back) }}
+                set: { if $0 == nil { viewModel.event(.flow(.back)) }}
             ),
             content: destinationView
         )
     }
     
     @ViewBuilder
-    private func destinationView(
+    func destinationView(
         navigationState: PaymentsTransfersState.NavigationState
     ) -> some View {
         
-        switch navigationState {            
+        NavStack(
+            stack: .init(
+                get: { viewModel.navState },
+                set: { _ in
+                    #warning(" $0 ???")
+                    viewModel.event(.flow(.back))
+                }
+            ),
+            destinationView: {
+                
+                switch $0 {
+                case let .failure(serviceFailure):
+                    switch serviceFailure {
+                    case .connectivityError:
+                        Text("connectivityError")
+                        
+                    case let .serverError(message):
+                        Text(message)
+                    }
+                    
+                case .payment:
+                    Text("TBD: payment")
+                
+                case .payByInstruction:
+                    Text("TBD: payByInstruction")
+                    
+                case let .prepayment(prepayment):
+                    PrePaymentMockView(
+                        event: { _ in fatalError() },// viewModel.event(.flow(.utilityFlow(.prepayment($0)))) },
+                        addCompany: { viewModel.event(.alienScope(.addCompany)) }
+                    )
+                    
+                case .scan:
+                    Text("TBD: Scan QR")
+                    
+                case let .selectFailure(`operator`):
+                    Text("selectFailure for \(String(describing: `operator`))")
+                    
+                case let .services(services):
+                    Text("TBD: list of \(services)")
+                }
+            }
+        )
+    }
+    
+    @ViewBuilder
+    func destinationViewOLD(
+        navigationState: PaymentsTransfersState.NavigationState
+    ) -> some View {
+        
+        switch navigationState {
         case .payingByInstruction:
             Text("TBD: pay by Instruction here")
             
@@ -57,70 +101,62 @@ struct PaymentsTransfersView: View {
             switch prePaymentOptions {
             case .failure:
                 factory.prePaymentFailureView {
-                
-                    viewModel.event(.utilityPayment(.prePayment(.payByInstruction)))
+                    
+                    // viewModel.event(.utilityFlow(.prePayment(.payByInstruction)))
+                    fatalError()
                 }
                 
             case .success:
                 Text("TBD: prePaymentOptionsView")
                 // factory.prePaymentView { _ in fatalError() }
-//                    .navigationDestination(
-//                        item: .init(
-//                            get: {
-//                                let state = viewModel.state.prePaymentNavigationState
-//                                print(state ?? "nil")
-//                                return state
-//                            },
-//                            set: { if $0 == nil { viewModel.event(.utilityPayment(.prePayment(.back))) }}
-//                        ),
-//                        content: prePaymentDestinationView
-//                    )
+                //                    .navigationDestination(
+                //                        item: .init(
+                //                            get: {
+                //                                let state = viewModel.state.prePaymentNavigationState
+                //                                print(state ?? "nil")
+                //                                return state
+                //                            },
+                //                            set: { if $0 == nil { viewModel.event(.utilityPayment(.prePayment(.back))) }}
+                //                        ),
+                //                        content: prePaymentDestinationView
+                //                    )
             }
             
         case let .prePayment(prePayment):
             switch prePayment {
             case .failure:
                 Text("TBD: prePaymentFailureView")
-//                factory.prePaymentFailureView { viewModel.event(.utilityPayment(.prePayment(.payByInstruction))) }
+                //                factory.prePaymentFailureView { viewModel.event(.utilityPayment(.prePayment(.payByInstruction))) }
                 
             case .success:
                 Text("TBD: prePaymentView")
-//                factory.prePaymentView { _ in fatalError() }
-//                    .navigationDestination(
-//                        item: .init(
-//                            get: {
-//                                let state = viewModel.state.prePaymentNavigationState
-//                                print(state ?? "nil")
-//                                return state
-//                            },
-//                            set: { if $0 == nil { viewModel.event(.prePayment(.back)) }}
-//                        ),
-//                        content: prePaymentDestinationView
-//                    )
+                //                factory.prePaymentView { _ in fatalError() }
+                //                    .navigationDestination(
+                //                        item: .init(
+                //                            get: {
+                //                                let state = viewModel.state.prePaymentNavigationState
+                //                                print(state ?? "nil")
+                //                                return state
+                //                            },
+                //                            set: { if $0 == nil { viewModel.event(.prePayment(.back)) }}
+                //                        ),
+                //                        content: prePaymentDestinationView
+                //                    )
             }
             
         case .scanning:
             Text("TBD: scanning")
+            
+        case .other:
+            Text("Just other destination")
         }
     }
     
-    private func prePaymentDestinationView(
+    func prePaymentDestinationView(
         prePaymentNavigationState: PaymentsTransfersState.PrePaymentNavigationState
     ) -> some View {
         
         Text("Utility Payment View")
-    }
-    
-    private func spinner() -> some View {
-        
-        ZStack {
-            
-            Color.black.opacity(0.5)
-            
-            ProgressView()
-        }
-        .ignoresSafeArea()
-        .opacity(viewModel.state.status == .inflight ? 1 : 0)
     }
 }
 

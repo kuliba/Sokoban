@@ -72,6 +72,8 @@ final class Model_PaymentsServicesTests: XCTestCase {
         XCTAssertNoDiff(operatorr, .utility)
         XCTAssertNoDiff(sut.dictionaryAnywayOperatorGroups()?.map(\.code), ["iFora||1031001"])
     }
+
+    // MARK: - paymentsParameterRepresentablePaymentsServices
     
     // MARK: - AdditionalList
     
@@ -147,6 +149,146 @@ final class Model_PaymentsServicesTests: XCTestCase {
         let res = makeListValue(.qrPersAccCategoryNil, parameterData: .pdCode)
         
         XCTAssertEqual(res, "")
+    }
+    
+    func test_paymentsParameterRepresentablePaymentsServices_TypeEmpty_DefaultParameterInfo() async throws {
+        
+        let parameterData = ParameterData.test(content: "value", id: "IdInputTest", isRequired: true, regExp: "", title: "title", type: "", svgImage: .test)
+        let model = makeSUT()
+        let parameterRepresentable = try await model.paymentsParameterRepresentablePaymentsServices(parameterData: parameterData)
+       
+        guard let selectParameter = parameterRepresentable as? Payments.ParameterInfo else {
+            XCTFail("Expected ParameterInfo")
+            return
+        }
+        
+        XCTAssertEqual(selectParameter.id, "IdInputTest")
+        XCTAssertEqual(selectParameter.value, "value")
+        XCTAssertEqual(selectParameter.title, "title")
+        XCTAssertEqual(selectParameter.icon, .image(parameterData.iconData ?? .parameterDocument))
+        XCTAssertEqual(selectParameter.group, .init(id: "info", type: .info))
+    }
+    
+    func test_paymentsParameterRepresentablePaymentsServices_InputIsRequiredWhenRegExpNil() async throws {
+        
+        let parameterData = ParameterData.test(content: "content", id: "inputTest", isRequired: true, regExp: nil, title: "title", type: "input", svgImage: .test)
+        let model = makeSUT([.iFora1031001])
+        
+        let parameterRepresentable = try await model.paymentsParameterRepresentablePaymentsServices(parameterData: parameterData)
+        
+        guard let selectParameter = parameterRepresentable as? Payments.ParameterInput else {
+            XCTFail("Expected ParameterInput")
+            return
+        }
+        
+        let regExpStr = parameterData.regExp ?? "^.{1,}$"
+        let regExpRules: any PaymentsValidationRulesSystemRule = Payments.Validation.RegExpRule(regExp: regExpStr, actions: [.post: .warning((parameterData.subTitle ?? ""))])
+        let expectedValidator = Payments.Validation.RulesSystem(rules: [regExpRules])
+        
+        XCTAssertEqual(selectParameter.id, "inputTest")
+        XCTAssertEqual(selectParameter.value, "content")
+        XCTAssertEqual(selectParameter.icon, ImageData(with: parameterData.svgImage ?? .test))
+        XCTAssertEqual(selectParameter.title, "title")
+        XCTAssertEqual(selectParameter.validator, expectedValidator)
+    }
+    
+    func test_paymentsParameterRepresentablePaymentsServices_InputisRequiredWhenRegExpEmpty() async throws {
+        
+        let parameterData = ParameterData.test(content: "value", id: "IdInputTest", isRequired: true, regExp: "", title: "title", type: "input", svgImage: .test)
+        let model = makeSUT()
+        let parameterRepresentable = try await model.paymentsParameterRepresentablePaymentsServices(parameterData: parameterData)
+
+        guard let selectParameter = parameterRepresentable as? Payments.ParameterInput else {
+            XCTFail("Expected ParameterInput")
+            return
+        }
+        let regExpStr = parameterData.regExp ?? "^.{1,}$"
+        let regExpRules: any PaymentsValidationRulesSystemRule = Payments.Validation.RegExpRule(regExp: regExpStr, actions: [.post: .warning((parameterData.subTitle ?? ""))])
+        let expectedValidator = Payments.Validation.RulesSystem(rules: [regExpRules])
+        
+        XCTAssertEqual(selectParameter.id, "IdInputTest")
+        XCTAssertEqual(selectParameter.value, "value")
+        XCTAssertEqual(selectParameter.icon, ImageData(with: parameterData.svgImage ?? .test))
+        XCTAssertEqual(selectParameter.title, "title")
+        XCTAssertEqual(selectParameter.validator, .init(rules: [regExpRules]))
+    }
+    
+    func test_paymentsParameterRepresentablePaymentsServices_InputisRequiredWithRegExp() async throws {
+        
+        let parameterData = ParameterData.test(content: "value", id: "IdInputTest", isRequired: true, regExp: #"\d{5}810\d{12}|\d{5}643\d{12}$"#, title: "title", type: "input", svgImage: .test)
+        let model = makeSUT()
+        let parameterRepresentable = try await model.paymentsParameterRepresentablePaymentsServices(parameterData: parameterData)
+
+        guard let selectParameter = parameterRepresentable as? Payments.ParameterInput else {
+            XCTFail("Expected ParameterInput")
+            return
+        }
+        let regExpStr = parameterData.regExp ?? "^.{1,}$"
+        let regExpRules: any PaymentsValidationRulesSystemRule = Payments.Validation.RegExpRule(regExp: regExpStr, actions: [.post: .warning((parameterData.subTitle ?? ""))])
+        let expectedValidator = Payments.Validation.RulesSystem(rules: [regExpRules])
+        
+        XCTAssertEqual(selectParameter.id, "IdInputTest")
+        XCTAssertEqual(selectParameter.value, "value")
+        XCTAssertEqual(selectParameter.icon, ImageData(with: parameterData.svgImage ?? .test))
+        XCTAssertEqual(selectParameter.title, "title")
+        XCTAssertEqual(selectParameter.validator, .init(rules: [regExpRules]))
+    }
+    
+    func test_paymentsParameterRepresentablePaymentsServices_InputisNotRequiredWithRegExpNil() async throws {
+        
+        let parameterData = ParameterData.test(content: "value", id: "IdInputTest", isRequired: false, regExp: nil, title: "title", type: "input", svgImage: .test)
+        let model = makeSUT()
+        let parameterRepresentable = try await model.paymentsParameterRepresentablePaymentsServices(parameterData: parameterData)
+
+        guard let selectParameter = parameterRepresentable as? Payments.ParameterInput else {
+            XCTFail("Expected ParameterInput")
+            return
+        }
+        
+        XCTAssertEqual(selectParameter.id, "IdInputTest")
+        XCTAssertEqual(selectParameter.value, "value")
+        XCTAssertEqual(selectParameter.icon, ImageData(with: parameterData.svgImage ?? .test))
+        XCTAssertEqual(selectParameter.title, "title")
+        XCTAssertEqual(selectParameter.validator, .init(rules: []))
+    }
+    
+    func test_paymentsParameterRepresentablePaymentsServices_InputisNotRequiredWithRegExpEmpty() async throws {
+        
+        let parameterData = ParameterData.test(content: "value", id: "IdInputTest", isRequired: false, regExp: nil, title: "title", type: "input", svgImage: .test)
+        let model = makeSUT()
+        let parameterRepresentable = try await model.paymentsParameterRepresentablePaymentsServices(parameterData: parameterData)
+
+        guard let selectParameter = parameterRepresentable as? Payments.ParameterInput else {
+            XCTFail("Expected ParameterInput")
+            return
+        }
+        
+        XCTAssertEqual(selectParameter.id, "IdInputTest")
+        XCTAssertEqual(selectParameter.value, "value")
+        XCTAssertEqual(selectParameter.icon, ImageData(with: parameterData.svgImage ?? .test))
+        XCTAssertEqual(selectParameter.title, "title")
+        XCTAssertEqual(selectParameter.validator, .init(rules: []))
+    }
+    
+    func test_paymentsParameterRepresentablePaymentsServices_InputisNotRequiredWithRegExp() async throws {
+        
+        let parameterData = ParameterData.test(content: "value", id: "IdInputTest", isRequired: false, regExp: #"\d{5}810\d{12}|\d{5}643\d{12}$"#, title: "title", type: "input", svgImage: .test)
+        let model = makeSUT()
+        let parameterRepresentable = try await model.paymentsParameterRepresentablePaymentsServices(parameterData: parameterData)
+
+        guard let selectParameter = parameterRepresentable as? Payments.ParameterInput else {
+            XCTFail("Expected ParameterInput")
+            return
+        }
+        let regExpStr = parameterData.regExp ?? "^.{1,}$"
+        let regExpRules: any PaymentsValidationRulesSystemRule = Payments.Validation.OptionalRegExpRule(regExp: regExpStr, actions: [.post: .warning((parameterData.subTitle ?? ""))])
+        let expectedValidator = Payments.Validation.RulesSystem(rules: [regExpRules])
+        
+        XCTAssertEqual(selectParameter.id, "IdInputTest")
+        XCTAssertEqual(selectParameter.value, "value")
+        XCTAssertEqual(selectParameter.icon, ImageData(with: parameterData.svgImage ?? .test))
+        XCTAssertEqual(selectParameter.title, "title")
+        XCTAssertEqual(selectParameter.validator, .init(rules: [regExpRules]))
     }
     
     // MARK: - Helper Tests
@@ -326,6 +468,43 @@ extension OperatorGroupData.OperatorData {
         )
     }
 }
+
+
+private struct EquatableRule: Equatable {
+    
+    let rule: any PaymentsValidationRulesSystemRule
+    
+    static func == (lhs: EquatableRule, rhs: EquatableRule) -> Bool {
+        
+        let lhsDescription = String(describing: lhs.rule)
+        let rhsDescription = String(describing: rhs.rule)
+        
+        return lhsDescription == rhsDescription
+    }
+}
+
+extension Payments.Validation.RulesSystem: Equatable {
+    
+    public static func == (lhs: Payments.Validation.RulesSystem, rhs: Payments.Validation.RulesSystem) -> Bool {
+        
+        let lhsRules = lhs.rules.map { EquatableRule(rule: $0) }
+        let rhsRules = rhs.rules.map { EquatableRule(rule: $0) }
+        
+        return lhsRules == rhsRules
+    }
+}
+
+extension Payments.ParameterSelect.Option: Equatable {
+    
+    public static func == (lhs: Payments.ParameterSelect.Option, rhs: Payments.ParameterSelect.Option) -> Bool {
+        
+        let lhsRules = lhs.id.map { $0 }
+        let rhsRules = rhs.id.map { $0 }
+        
+        return lhsRules == rhsRules
+    }
+}
+
 
 private extension QRCode {
     

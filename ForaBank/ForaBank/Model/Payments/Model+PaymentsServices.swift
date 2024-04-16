@@ -647,14 +647,33 @@ extension Model {
             
         case .input:
             switch parameterData.id {
+                // Errors occur in many cases with an empty/nil regExp "a3_Period_3_1": + case a3_CITY_2_1, a3_STREET_3_1, a3_HOUSE_4_1, a3_BLOCK_5_1, a3_APARTMENT_6_1
             default:
-                let regExp: any PaymentsValidationRulesSystemRule = parameterData.isRequired == true ? Payments.Validation.RegExpRule(regExp:parameterData.regExp ?? "", actions: [.post: .warning((parameterData.subTitle ?? ""))]) : Payments.Validation.OptionalRegExpRule(regExp:parameterData.regExp ?? "", actions: [.post: .warning((parameterData.subTitle ?? ""))])
-                
-                return Payments.ParameterInput(
-                    .init(id: parameterData.id, value: parameterData.value),
-                    icon: parameterData.iconData ?? .parameterDocument,
-                    title: parameterData.title,
-                    validator: .init(rules: [regExp]))
+                if parameterData.isRequired == true {
+                    
+                    guard let regExpStr = parameterData.regExp, !regExpStr.isEmpty else {
+                        
+                        let regExpStr = parameterData.regExp ?? "^.{1,}$"
+                        let regExpRules: any PaymentsValidationRulesSystemRule = Payments.Validation.RegExpRule(regExp: regExpStr, actions: [.post: .warning((parameterData.subTitle ?? ""))])
+                        
+                        return setParameterInput(parameterData, arrayOfRules: [regExpRules])
+                    }
+                    
+                    let regExpRules: any PaymentsValidationRulesSystemRule = Payments.Validation.RegExpRule(regExp: regExpStr, actions: [.post: .warning((parameterData.subTitle ?? ""))])
+                    
+                    return setParameterInput(parameterData, arrayOfRules: [regExpRules])
+                    
+                } else {
+                    
+                    guard let regExpStr = parameterData.regExp, !regExpStr.isEmpty else {
+                        
+                        return setParameterInput(parameterData, arrayOfRules: [])
+                    }
+                    
+                    let regExpRules: any PaymentsValidationRulesSystemRule = Payments.Validation.OptionalRegExpRule(regExp: regExpStr, actions: [.post: .warning((parameterData.subTitle ?? ""))])
+                    
+                    return setParameterInput(parameterData, arrayOfRules: [regExpRules])
+                }
             }
             
         case .info:
@@ -667,5 +686,24 @@ extension Model {
         case .selectSwitch:
             return nil
         }
+    }
+}
+
+private extension Model {
+    
+    private func setParameterInput(
+        _ parameterData: ParameterData,
+        arrayOfRules: [PaymentsValidationRulesSystemRule]
+    ) -> Payments.ParameterInput {
+        
+        return Payments.ParameterInput(
+            .init(
+                id: parameterData.id,
+                value: parameterData.value
+            ),
+            icon: parameterData.iconData ?? .parameterDocument,
+            title: parameterData.title,
+            validator: .init(rules: arrayOfRules)
+        )
     }
 }

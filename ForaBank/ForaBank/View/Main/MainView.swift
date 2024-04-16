@@ -19,6 +19,7 @@ struct MainView<NavigationOperationView: View>: View {
     
     let viewFactory: MainViewFactory
     let paymentsTransfersViewFactory: PaymentsTransfersViewFactory
+    let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
         
@@ -157,20 +158,21 @@ struct MainView<NavigationOperationView: View>: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                viewFactory: paymentsTransfersViewFactory
+                viewFactory: paymentsTransfersViewFactory, 
+                getUImage: getUImage
             )
             
         case let .messages(messagesHistoryViewModel):
             MessagesHistoryView(viewModel: messagesHistoryViewModel)
             
         case let .openDeposit(depositListViewModel):
-            OpenDepositDetailView(viewModel: depositListViewModel)
+            OpenDepositDetailView(viewModel: depositListViewModel, getUImage: getUImage)
             
         case let .openCard(authProductsViewModel):
             AuthProductsView(viewModel: authProductsViewModel)
             
         case let .openDepositsList(openDepositViewModel):
-            OpenDepositListView(viewModel: openDepositViewModel)
+            OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
             
         case let .templates(templatesViewModel):
             TemplatesListView(viewModel: templatesViewModel)
@@ -181,7 +183,8 @@ struct MainView<NavigationOperationView: View>: View {
         case let .myProducts(myProductsViewModel):
             MyProductsView(
                 viewModel: myProductsViewModel,
-                viewFactory: paymentsTransfersViewFactory
+                viewFactory: paymentsTransfersViewFactory, 
+                getUImage: getUImage
             )
             
         case let .country(countyViewModel):
@@ -245,7 +248,8 @@ struct MainView<NavigationOperationView: View>: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                viewFactory: paymentsTransfersViewFactory
+                viewFactory: paymentsTransfersViewFactory, 
+                getUImage: getUImage
             )
             
         case let .messages(messagesHistoryViewModel):
@@ -425,7 +429,8 @@ struct MainView_Previews: PreviewProvider {
                     )
                 },
                 makeUserAccountView: UserAccountView.init(viewModel:)
-            )
+            ), 
+            getUImage: { _ in nil }
         )
     }
 }

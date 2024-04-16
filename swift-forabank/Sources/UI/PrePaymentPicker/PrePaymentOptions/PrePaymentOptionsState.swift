@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 19.02.2024.
 //
 
+@available(*, deprecated, message: "Use `PrepaymentOptionsState` from `UtilityPayment` module")
 public struct PrePaymentOptionsState<LastPayment, Operator> {
     
     // TODO: replace Array with NonEmptyArray

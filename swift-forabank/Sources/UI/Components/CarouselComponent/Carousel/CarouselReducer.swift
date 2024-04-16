@@ -8,12 +8,8 @@
 import RxViewModel
 import Foundation
 
-public final class CarouselReducer {
-    
-    public typealias State = CarouselState
-    public typealias Event = CarouselEvent
-    public typealias Effect = CarouselEffect
-    
+public final class CarouselReducer<Product: CarouselProduct & Equatable> {
+        
     public init() { }
 }
 
@@ -51,9 +47,19 @@ extension CarouselReducer {
             }
             
         case let .update(products):
-            state = .init(products: products)
+            state = .init(products: products, needShowSticker: state.needShowSticker)
+            
+        case .closeSticker:
+            state.needShowSticker = false
         }
         
         return (state, effect)
     }
+}
+
+public extension CarouselReducer {
+    
+    typealias State = CarouselState<Product>
+    typealias Event = CarouselEvent<Product>
+    typealias Effect = CarouselEffect
 }

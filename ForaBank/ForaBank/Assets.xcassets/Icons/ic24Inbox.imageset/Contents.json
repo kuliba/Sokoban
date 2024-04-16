@@ -1,15 +1,15 @@
 {
   "info" : {
-    "author" : "xcode",
-    "version" : 1
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "properties" : {
+    "template-rendering-intent" : "template"
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic24Inbox.svg"
+      "filename" : "ic24Inbox.svg",
+      "idiom" : "universal"
     }
-  ],
-  "properties" : {
-    "template-rendering-intent" : "template"
-  }
+  ]
 }

@@ -8,6 +8,7 @@
 import FastPaymentsSettings
 import Foundation
 import GenericRemoteService
+import RemoteServices
 
 extension MicroServices.Facade {
     
@@ -51,8 +52,8 @@ extension MicroServices.Facade {
         )
         
         typealias ForaRequestFactory = ForaBank.RequestFactory
-        typealias FastResponseMapper = FastPaymentsSettings.ResponseMapper
-        typealias MapResponse<T> = (Data, HTTPURLResponse) -> Result<T, FastResponseMapper.MappingError>
+        typealias FastResponseMapper = RemoteServices.ResponseMapper
+        typealias MapResponse<T> = (Data, HTTPURLResponse) -> Result<T, RemoteServices.ResponseMapper.MappingError>
         
         func adaptedLoggingFetch<Payload, Input, Output>(
             mapPayload: @escaping (Payload) -> Input,
@@ -95,7 +96,7 @@ extension MicroServices.Facade {
 
 // MARK: - Adapters
 
-private extension FastPaymentsSettings.RequestFactory.CreateFastPaymentContractPayload {
+private extension RemoteServices.RequestFactory.CreateFastPaymentContractPayload {
     
     static func create(
         _ productID: FastPaymentsSettings.Product.ID
@@ -110,7 +111,7 @@ private extension FastPaymentsSettings.RequestFactory.CreateFastPaymentContractP
     }
 }
 
-private extension FastPaymentsSettings.RequestFactory.UpdateFastPaymentContractPayload {
+private extension RemoteServices.RequestFactory.UpdateFastPaymentContractPayload {
     
     static func create(
         _ payload: MicroServices.Facade.ContractUpdatePayload
@@ -141,7 +142,7 @@ private extension FastPaymentsSettings.RequestFactory.UpdateFastPaymentContractP
 extension ServiceFailure {
     
     init(
-        error: RemoteServiceErrorOf<FastPaymentsSettings.ResponseMapper.MappingError>
+        error: RemoteServiceErrorOf<RemoteServices.ResponseMapper.MappingError>
     ) {
         switch error {
         case .createRequest, .performRequest:

@@ -26,6 +26,7 @@ class MainViewModel: ObservableObject, Resetable {
         avatar: nil,
         action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())}
     )
+    
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var sections: [MainSectionViewModel]
     @Published var productProfile: ProductProfileViewModel?

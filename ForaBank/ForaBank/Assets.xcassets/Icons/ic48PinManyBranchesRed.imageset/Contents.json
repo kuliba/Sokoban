@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic48PinManyBranchesRed.svg"
+      "filename" : "ic48PinManyBranchesRed.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

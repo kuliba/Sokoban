@@ -13,75 +13,82 @@ func anyMessage() -> String {
     UUID().uuidString
 }
 
-// MARK: -
+// MARK: - factories
 
- func makeLastPayment(
+func makeLastPayment(
     _ value: String = UUID().uuidString
 ) -> LastPayment {
     
     .init(value: value)
 }
 
- func makeOperator(
+func makeOperator(
     _ value: String = UUID().uuidString
 ) -> Operator {
     
     .init(value: value)
 }
 
- func makeResponse(
+func makeOperatorOperators(
+) -> (Operator, [Operator]) {
+    
+    let `operator` = makeOperator()
+    let operators = [`operator`, makeOperator()]
+    
+    return (`operator`, operators)
+}
+
+func makePrepayment(
+    _ lastPayments: [LastPayment] = [],
+    _ operators: [Operator] = []
+) -> Destination {
+    
+    .prepayment(.options(.init(
+        lastPayments: lastPayments,
+        operators: operators
+    )))
+}
+
+func makeResponse(
     _ value: String = UUID().uuidString
 ) -> StartPaymentResponse {
     
     .init(value: value)
 }
 
- func makeService(
+func makeService(
     _ value: String = UUID().uuidString
-) -> UtilityService {
+) -> Service {
     
     .init(value: value)
 }
 
-struct LastPayment: Equatable, Identifiable {
+func makeServiceServices(
+    _ value: String = UUID().uuidString
+) -> (Service, [Service]) {
     
-    var value: String
+    let service = makeService()
+    let services = [service, makeService()]
     
-    var id: String { value }
+    return (service, services)
 }
 
-struct Operator: Equatable, Identifiable {
+func makeServices() -> [Service] {
     
-    var value: String
-    
-    var id: String { value }
+    [makeService(), makeService()]
 }
-
-struct StartPaymentResponse: Equatable {
-    
-    var value: String
-    
-    var id: String { value }
-}
-
-struct UtilityService: Equatable {
-    
-    var value: String
-    
-    var id: String { value }
-}
-
-// MARK: -
 
 func makeCreateAnywayTransferResponse(
+    _ value: String = UUID().uuidString
+
 ) -> CreateAnywayTransferResponse {
     
-    .init()
+    .init(value: value)
 }
 
 func makeFinalStepUtilityPayment(
     verificationCode: VerificationCode? = "654321"
-) -> TestPayment {
+) -> Payment {
     
     .init(
         isFinalStep: true,
@@ -90,7 +97,7 @@ func makeFinalStepUtilityPayment(
 }
 
 func makeNonFinalStepUtilityPayment(
-) -> TestPayment {
+) -> Payment {
     
     .init(isFinalStep: false)
 }
@@ -117,7 +124,7 @@ func makeUtilityPayment(
     isFinalStep: Bool = false,
     verificationCode: VerificationCode? = nil,
     status: PaymentStatus? = nil
-) -> TestPayment {
+) -> Payment {
     
     .init(
         isFinalStep: isFinalStep,
@@ -126,9 +133,30 @@ func makeUtilityPayment(
     )
 }
 
-struct CreateAnywayTransferResponse: Equatable {}
+// MARK: - Types
 
-struct TestPayment: AnywayPayment {
+struct CreateAnywayTransferResponse: Equatable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+struct LastPayment: Equatable, Identifiable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+struct Operator: Equatable, Identifiable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+struct Payment: AnywayPayment {
     
 #warning("TBD")
     // snapshots stack
@@ -147,4 +175,26 @@ struct TestPayment: AnywayPayment {
         self.verificationCode = verificationCode
         self.status = status
     }
+}
+
+struct StartPaymentResponse: Equatable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+struct Service: Equatable {
+    
+    var value: String
+    
+    var id: String { value }
+}
+
+extension Array where Element == Operator {
+    
+    static let stub: Self = (0..<10)
+        .map { $0 }
+        .map(String.init)
+        .map { .init(value: $0) }
 }
