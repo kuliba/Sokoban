@@ -101,6 +101,7 @@ extension CustomPopUpWithRateView {
                                 viewModel.taxTransction = "\(model.data?.fee ?? 0)"
                                 viewModel.status = .succses
                                 let vc = ContactConfurmViewController()
+                                vc.getUImage = { self?.model.images.value[$0]?.uiImage }
                                 vc.modalPresentationStyle = .fullScreen
                                 vc.confurmVCModel?.type = .card2card
                                 viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""

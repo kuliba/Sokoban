@@ -321,7 +321,7 @@ class MeToMeSettingViewController: UIViewController {
                 currencyCode: product.currency,
                 style: .fraction
                ),
-               let icon = product.smallDesign.image {
+               let icon = newModel.images.value[product.smallDesignMd5hash]?.image {
                 
                 if let product = product as? ProductCardData {
                     

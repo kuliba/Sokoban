@@ -163,7 +163,8 @@ final class PaymentsSelectBankViewModelExpandedViewModelTests: XCTestCase {
             with: value,
             parameter: parameter,
             defaultIcon: .ic24Bank,
-            scheduler: scheduler.eraseToAnyScheduler()
+            scheduler: scheduler.eraseToAnyScheduler(),
+            allBanks: []
         )
         let spy = ValueSpy(sut.$list.map(\.simplified))
         
@@ -288,7 +289,7 @@ private extension Payments.ParameterSelectBank.Option {
         searchValue: String
     ) -> Self {
         
-        .init(id: id, name: name, subtitle: subtitle, icon: icon, searchValue: searchValue)
+        .init(id: id, name: name, subtitle: subtitle, icon: icon, isFavorite: false, searchValue: searchValue)
     }
 }
 

@@ -65,17 +65,17 @@ struct BackView_Previews: PreviewProvider {
         
         BackView(
             modifierConfig: .previewBack,
-            config: .config(.preview),
+            config: .config(.previewCard),
             header: {
                 HeaderBackView(
                     cardInfo: .previewWiggleFalse,
                     action: { print("action") },
-                    config: .config(.preview))
+                    config: .config(.previewCard))
             },
             cvv: {
                 CVVView(
                     cardInfo: .previewWiggleFalse,
-                    config: .config(.preview),
+                    config: .config(.previewCard),
                     action: { print("cvv action") })
             })
         .fixedSize()

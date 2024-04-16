@@ -7,19 +7,4 @@
 
 import RxViewModel
 
-public typealias CarouselViewModel = RxViewModel<CarouselState, CarouselEvent, CarouselEffect>
-
-public extension CarouselViewModel {
-        
-    convenience init(initialState: CarouselState) {
-        
-        let reducer = CarouselReducer()
-        let effectHandler = CarouselEffectHandler()
-        
-        self.init(
-            initialState: initialState,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
-        )
-    }
-}
+public typealias CarouselViewModel<Product: CarouselProduct & Equatable & Identifiable> = RxViewModel<CarouselState<Product>, CarouselEvent<Product>, CarouselEffect>
