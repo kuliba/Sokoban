@@ -49,6 +49,7 @@ extension TransferResponseBaseData {
         case complete = "COMPLETE"
         case inProgress = "IN_PROGRESS"
         case rejected = "REJECTED"
+        case suspended = "SUSPEND"
         case unknown
     }
 }

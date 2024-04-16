@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import RemoteServices
 import XCTest
 
 final class RequestFactory_createUpdateFastPaymentContractRequestTests: XCTestCase {
@@ -76,7 +77,7 @@ final class RequestFactory_createUpdateFastPaymentContractRequestTests: XCTestCa
                 
                 return .init(
                     contractID: contractId,
-                    accountID: accountId,
+                    selectableProductID: .account(.init(accountId)),
                     flagBankDefault: flagBankDefault,
                     flagClientAgreementIn: flagClientAgreementIn,
                     flagClientAgreementOut: flagClientAgreementOut
@@ -105,7 +106,7 @@ private extension Flag {
 
 private func anyPayload(
     contractID: Int = 10000084818,
-    accountID: Int = 10004203497,
+    selectableProductID: SelectableProductID = .account(10004203497),
     flagBankDefault: Flag = .empty,
     flagClientAgreementIn: Flag = .yes,
     flagClientAgreementOut: Flag = .yes
@@ -113,7 +114,7 @@ private func anyPayload(
     
     .init(
         contractID: contractID,
-        accountID: accountID,
+        selectableProductID: selectableProductID,
         flagBankDefault: flagBankDefault,
         flagClientAgreementIn: flagClientAgreementIn,
         flagClientAgreementOut: flagClientAgreementOut

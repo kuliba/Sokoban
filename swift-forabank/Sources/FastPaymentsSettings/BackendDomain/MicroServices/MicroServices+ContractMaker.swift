@@ -27,7 +27,7 @@ public extension MicroServices.ContractMaker {
     
     func process(
         _ payload: Payload,
-        completion: @escaping Completion
+        _ completion: @escaping Completion
     ) {
         createContract(payload, completion)
     }
@@ -35,7 +35,8 @@ public extension MicroServices.ContractMaker {
 
 public extension MicroServices.ContractMaker {
     
-    typealias ProcessResult = Result<Contract?, ServiceFailure>
+    #warning("how to enforce on type level that success case means active contract and active only? check is performed in `getContract(_:_:)`")
+    typealias ProcessResult = Result<Contract, ServiceFailure>
     typealias Completion = (ProcessResult) -> Void
     
     // createFastPaymentContract

@@ -64,6 +64,10 @@ struct PaymentsOperationView: View {
                 if let link = viewModel.link  {
                     
                     switch link {
+                    case let .success(successViewModel):
+                        PaymentsSuccessView(viewModel: successViewModel)
+                            .navigationBarBackButtonHidden()
+                        
                     case let .confirm(confirmViewModel):
                         PaymentsOperationView(viewModel: confirmViewModel)
                     }
@@ -90,7 +94,12 @@ struct PaymentsOperationView: View {
                         PaymentsPopUpSelectView(viewModel: popUpVewModel)
                         
                     case .antifraud(let antifraudViewModel):
+                        if #available(iOS 15.0, *) {
                         PaymentsAntifraudView(viewModel: antifraudViewModel)
+                            .interactiveDismissDisabled()
+                        } else {
+                            PaymentsAntifraudView(viewModel: antifraudViewModel)
+                        }
                         
                     case .hint(let hintViewModel):
                         HintView(viewModel: hintViewModel)

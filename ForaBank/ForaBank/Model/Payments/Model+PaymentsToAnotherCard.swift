@@ -132,7 +132,10 @@ extension Model {
     }
     
 //MARK: process remote confirm step
-    func paymentsProcessRemoteStepToAnotherCard(operation: Payments.Operation, response: TransferResponseData) async throws -> Payments.Operation.Step {
+    func paymentsProcessRemoteStepToAnotherCard(
+        operation: Payments.Operation,
+        response: TransferResponseData
+    ) async throws -> Payments.Operation.Step {
 
         var parameters = [PaymentsParameterRepresentable]()
         let group = Payments.Parameter.Group(id: UUID().uuidString, type: .info)
@@ -161,6 +164,15 @@ extension Model {
             parameters.append(feeParameter)
         }
             
+        if response.scenario == .suspect {
+            
+            parameters.append(Payments.ParameterInfo(
+                .init(id: Payments.Parameter.Identifier.sfpAntifraud.rawValue, value: "SUSPECT"),
+                icon: .image(.parameterDocument),
+                title: "Antifraud"
+            ))
+        }
+        
         parameters.append(Payments.ParameterCode.regular)
             
         return .init(parameters: parameters, front: .init(visible: parameters.map({ $0.id }), isCompleted: false), back: .init(stage: .remote(.confirm), required: [], processed: nil))

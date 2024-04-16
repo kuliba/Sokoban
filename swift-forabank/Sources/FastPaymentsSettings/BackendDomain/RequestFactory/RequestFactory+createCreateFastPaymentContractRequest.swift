@@ -6,23 +6,24 @@
 //
 
 import Foundation
+import RemoteServices
 
 public extension RequestFactory {
     
     struct CreateFastPaymentContractPayload: Equatable {
         
-        let accountID: Int
+        let selectableProductID: SelectableProductID
         let flagBankDefault: Flag
         let flagClientAgreementIn: Flag
         let flagClientAgreementOut: Flag
         
         public init(
-            accountID: Int, 
-            flagBankDefault: Flag, 
+            selectableProductID: SelectableProductID,
+            flagBankDefault: Flag,
             flagClientAgreementIn: Flag,
             flagClientAgreementOut: Flag
         ) {
-            self.accountID = accountID
+            self.selectableProductID = selectableProductID
             self.flagBankDefault = flagBankDefault
             self.flagClientAgreementIn = flagClientAgreementIn
             self.flagClientAgreementOut = flagClientAgreementOut
@@ -50,13 +51,25 @@ private extension RequestFactory.CreateFastPaymentContractPayload {
     var httpBody: Data {
         
         get throws {
-        
-            try JSONSerialization.data(withJSONObject: [
-                "accountId" : accountID,
-                "flagBankDefault" : flagBankDefault.rawValue,
-                "flagClientAgreementIn" : flagClientAgreementIn.rawValue,
-                "flagClientAgreementOut" : flagClientAgreementOut.rawValue
-            ] as [String: Any])
+            
+            switch selectableProductID {
+            case let .account(accountID):
+                return try JSONSerialization.data(withJSONObject: [
+                    "accountId" : accountID.rawValue,
+                    "flagBankDefault" : flagBankDefault.rawValue,
+                    "flagClientAgreementIn" : flagClientAgreementIn.rawValue,
+                    "flagClientAgreementOut" : flagClientAgreementOut.rawValue
+                ] as [String: Any])
+                
+#warning("add tests for card case")
+            case let .card(cardID):
+                return try JSONSerialization.data(withJSONObject: [
+                    "cardId" : cardID.rawValue,
+                    "flagBankDefault" : flagBankDefault.rawValue,
+                    "flagClientAgreementIn" : flagClientAgreementIn.rawValue,
+                    "flagClientAgreementOut" : flagClientAgreementOut.rawValue
+                ] as [String: Any])
+            }
         }
     }
 }

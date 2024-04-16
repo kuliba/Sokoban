@@ -9,6 +9,11 @@ import UIKit
 
 class DepositSuccessViewController: UIViewController {
 
+    @IBOutlet weak var depositLabel: UILabel!
+    @IBOutlet weak var amountLabel: UILabel!
+    @IBOutlet weak var optionsButtons: UIStackView!
+    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var statusImage: UIImageView!
     let model = Model.shared
     var id: Int?
     var printFormType: String?
@@ -50,6 +55,8 @@ class DepositSuccessViewController: UIViewController {
         stackView.addArrangedSubview(incomeField)
         stackView.addArrangedSubview(cardFromField)
 
+        amountLabel.isHidden = true
+        cardFromField.getUImage = { self.model.images.value[$0]?.uiImage }
         cardFromField.titleLabel.text = "Счет списания"
         cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         cardFromField.imageView.isHidden = false
@@ -77,6 +84,25 @@ class DepositSuccessViewController: UIViewController {
                 self.model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: integerCardId))
             }
         }
+        
+        descriptionLabel.text = ""
+        
+        if confurmVCModel?.status == .antifraudCanceled {
+            termField.isHidden = true
+            closeField.isHidden = true
+            cardFromField.isHidden = true
+            incomeField.isHidden = true
+            
+            optionsButtons.isHidden = true
+            depositLabel.text = "Операция временно приостановлена в целях безопасности"
+            depositLabel.textColor = .systemRed
+            descriptionLabel.text = Payments.Success.antifraudSubtitle
+            amountLabel.text = confurmVCModel?.summTransction ?? ""
+            amountLabel.isHidden = false
+            descriptionLabel.text = Payments.Success.antifraudSubtitle
+            
+            statusImage.image = UIImage(named: "waiting")
+        }
     }
 
     
@@ -93,6 +119,7 @@ class DepositSuccessViewController: UIViewController {
     }
     
     func setupData(with model: ConfirmViewControllerModel) {
+        cardFromField.getUImage = { self.model.images.value[$0]?.uiImage }
         cardFromField.model = model.cardFromRealm
         termField.text = model.phone ?? ""
         incomeField.text = model.summTransction
@@ -101,6 +128,7 @@ class DepositSuccessViewController: UIViewController {
     
     func openDetailVC() {
         let vc = ContactConfurmViewController()
+        vc.getUImage = { self.model.images.value[$0]?.uiImage }
         vc.confurmVCModel = confurmVCModel
         vc.doneButton.isHidden = true
         vc.smsCodeField.isHidden = true

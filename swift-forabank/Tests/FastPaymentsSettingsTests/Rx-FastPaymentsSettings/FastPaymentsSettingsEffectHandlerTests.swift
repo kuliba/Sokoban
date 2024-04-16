@@ -76,21 +76,21 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_createContract_shouldPassPayload() {
         
-        let productID = anyEffectProductID()
+        let product = makeProduct()
         let (sut, _, _, _, _, createContractSpy, _) = makeSUT()
         
-        sut.handleEffect(createContract(productID)) { _ in }
+        sut.handleEffect(createContract(product)) { _ in }
         
-        XCTAssertNoDiff(createContractSpy.payloads, [productID])
+        XCTAssertNoDiff(createContractSpy.payloads, [product])
     }
     
     func test_createContract_shouldDeliverContractOnSuccess() {
         
-        let productID = anyEffectProductID()
+        let product = makeProduct()
         let activatedContract = paymentContract(contractStatus: .active)
         let (sut, _, _, _, _, createContractSpy, _) = makeSUT()
         
-        expect(sut, with: createContract(productID), toDeliver: updateContractSuccess(activatedContract), on: {
+        expect(sut, with: createContract(product), toDeliver: updateContractSuccess(activatedContract), on: {
             
             createContractSpy.complete(with: .success(activatedContract))
         })
@@ -98,10 +98,10 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_createContract_shouldDeliverContractUpdateConnectivityFailureOnConnectivityError() {
         
-        let productID = anyEffectProductID()
+        let product = makeProduct()
         let (sut, _, _, _, _, createContractSpy, _) = makeSUT()
         
-        expect(sut, with: createContract(productID), toDeliver: updateContractConnectivityError(), on: {
+        expect(sut, with: createContract(product), toDeliver: updateContractConnectivityError(), on: {
             
             createContractSpy.complete(with: .failure(.connectivityError))
         })
@@ -109,11 +109,11 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     
     func test_createContract_shouldDeliverContractUpdateServerErrorFailureOnServerError() {
         
-        let productID = anyEffectProductID()
+        let product = makeProduct()
         let message = UUID().uuidString
         let (sut, _, _, _, _, createContractSpy, _) = makeSUT()
         
-        expect(sut, with: createContract(productID), toDeliver: updateContractServerError(message), on: {
+        expect(sut, with: createContract(product), toDeliver: updateContractServerError(message), on: {
             
             createContractSpy.complete(with: .failure(.serverError(message)))
         })
@@ -324,9 +324,9 @@ final class FastPaymentsSettingsEffectHandlerTests: XCTestCase {
     private typealias ChangeConsentListSpy = Spy<ConsentListRxEffectHandler.ChangeConsentListPayload, ConsentListRxEffectHandler.ChangeConsentListResponse>
     private typealias GetC2BSubSpy = Spy<Void, SUT.GetC2BSubResult>
     private typealias GetSettingsSpy = Spy<Void, UserPaymentSettingsResult>
-    private typealias UpdateContractSpy = Spy<ContractEffectHandler.UpdateContractPayload, ContractEffectHandler.UpdateContractResponse>
+    private typealias UpdateContractSpy = Spy<ContractEffectHandler.UpdateContractPayload, ContractEffectHandler.UpdateContractResult>
     private typealias PrepareSetBankDefaultSpy = Spy<Void, SUT.PrepareSetBankDefaultResponse>
-    private typealias CreateContractSpy = Spy<ContractEffectHandler.CreateContractPayload, ContractEffectHandler.CreateContractResponse>
+    private typealias CreateContractSpy = Spy<ContractEffectHandler.CreateContractPayload, ContractEffectHandler.CreateContractResult>
     private typealias UpdateProductSpy = Spy<SUT.UpdateProductPayload, SUT.UpdateProductResponse>
     
     private func makeSUT(

@@ -8,5 +8,5 @@
 public enum ProductSelectEvent: Equatable {
     
     case toggleProductSelect
-    case select(ProductSelect.Product.ID)
+    case select(ProductSelect.Product)
 }

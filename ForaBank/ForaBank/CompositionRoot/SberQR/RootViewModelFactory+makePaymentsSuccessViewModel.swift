@@ -158,7 +158,7 @@ private extension Parameter.SuccessStatusIcon {
         
         switch value {
         case .complete:   return .success
-        case .inProgress: return .accepted
+        case .inProgress, .suspended: return .accepted
         case .rejected:   return .error
         }
     }

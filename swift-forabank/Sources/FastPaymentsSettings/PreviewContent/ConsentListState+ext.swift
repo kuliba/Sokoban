@@ -1,6 +1,6 @@
 //
 //  ConsentListState+ext.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 14.01.2024.
 //
@@ -10,26 +10,22 @@ import Tagged
 public extension ConsentListState {
     
     static let collapsedEmpty: Self = .success(.init(
-        banks: .preview,
-        consent: [],
-        mode: .collapsed,
-        searchText: ""
+        banks: .init(banks: .preview, consent: [])
     ))
     
-    static var collapsedPreview: Self {
-        
-        let banks: [ConsentList.SelectableBank] = [Bank].preview.map {
-            
-            .init(bank: $0, isSelected: Consent.preview.contains($0.id))
-        }
-        
-       return .success(.init(
-            banks: banks,
-            consent: .preview,
-            mode: .collapsed,
-            searchText: ""
-        ))
-    }
+    static let collapsedPreview: Self = .success(.init(
+        banks: .init(banks: .preview, consent: .preview)
+    ))
+    
+    static let expandedEmpty: Self = .success(.init(
+        banks: .init(banks: .preview, consent: []),
+        mode: .expanded
+    ))
+    
+    static let expandedPreview: Self = .success(.init(
+        banks: .init(banks: .preview, consent: .preview),
+        mode: .expanded
+    ))
     
     static func expanded(
         _ banks: [ConsentList.SelectableBank],
@@ -38,8 +34,7 @@ public extension ConsentListState {
     ) -> Self {
         
         .success(.init(
-            banks: banks,
-            consent: consent,
+            banks: .init(banks: .preview, consent: consent),
             mode: .expanded,
             searchText: searchText
         ))

@@ -6,15 +6,14 @@
 //
 
 import Foundation
+import RemoteServices
 
 public extension ResponseMapper {
-    
-    typealias GetClientConsentMe2MePullResult = Result<[ConsentMe2MePull], MappingError>
     
     static func mapGetClientConsentMe2MePullResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> GetClientConsentMe2MePullResult {
+    ) -> MappingResult<[ConsentMe2MePull]> {
         
         map(data, httpURLResponse, mapOrThrow: map)
     }

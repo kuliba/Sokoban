@@ -15,6 +15,7 @@ extension ProductCardConfig {
             textFont: .caption.bold(),
             textColor: .orange
         ),
+        cardSize: .init(width: 112, height: 71),
         number: .init(
             textFont: .caption.bold(),
             textColor: .blue

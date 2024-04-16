@@ -20,8 +20,24 @@ class TransferResponseData: TransferResponseBaseData {
     let needMake: Bool?
     let needOTP: Bool?
     let payeeName: String?
+    let scenario: AntiFraudScenario?
 
-    internal init(amount: Double?, creditAmount: Double?, currencyAmount: Currency?, currencyPayee: Currency?, currencyPayer: Currency?, currencyRate: Double?, debitAmount: Double?, fee: Double?, needMake: Bool?, needOTP: Bool?, payeeName: String?, documentStatus: DocumentStatus?, paymentOperationDetailId: Int) {
+    internal init(
+        amount: Double?,
+        creditAmount: Double?,
+        currencyAmount: Currency?,
+        currencyPayee: Currency?,
+        currencyPayer: Currency?,
+        currencyRate: Double?,
+        debitAmount: Double?,
+        fee: Double?,
+        needMake: Bool?,
+        needOTP: Bool?,
+        payeeName: String?,
+        documentStatus: DocumentStatus?,
+        paymentOperationDetailId: Int,
+        scenario: AntiFraudScenario?
+    ) {
         
         self.amount = amount
         self.creditAmount = creditAmount
@@ -34,6 +50,7 @@ class TransferResponseData: TransferResponseBaseData {
         self.needMake = needMake
         self.needOTP = needOTP
         self.payeeName = payeeName
+        self.scenario = scenario
         
         super.init(documentStatus: documentStatus, paymentOperationDetailId: paymentOperationDetailId)
     }
@@ -41,7 +58,7 @@ class TransferResponseData: TransferResponseBaseData {
     //MARK: Codable
     
     private enum CodingKeys : String, CodingKey {
-        case amount, creditAmount, currencyAmount, currencyPayee, currencyPayer, currencyRate, debitAmount, documentStatus, fee, needMake, needOTP, payeeName, paymentOperationDetailId
+        case amount, creditAmount, currencyAmount, currencyPayee, currencyPayer, currencyRate, debitAmount, documentStatus, fee, needMake, needOTP, payeeName, paymentOperationDetailId, scenario
     }
     
     required init(from decoder: Decoder) throws {
@@ -58,6 +75,7 @@ class TransferResponseData: TransferResponseBaseData {
         needMake = try container.decodeIfPresent(Bool.self, forKey: .needMake)
         needOTP = try container.decodeIfPresent(Bool.self, forKey: .needOTP)
         payeeName = try container.decodeIfPresent(String.self, forKey: .payeeName)
+        scenario = try container.decodeIfPresent(AntiFraudScenario.self, forKey: .scenario)
        
         try super.init(from: decoder)
     }
@@ -76,6 +94,7 @@ class TransferResponseData: TransferResponseBaseData {
         try container.encodeIfPresent(needMake, forKey: .needMake)
         try container.encodeIfPresent(needOTP, forKey: .needOTP)
         try container.encodeIfPresent(payeeName, forKey: .payeeName)
+        try container.encodeIfPresent(scenario, forKey: .scenario)
         
         try super.encode(to: encoder)
     }
@@ -107,6 +126,30 @@ extension TransferResponseData {
 
     func update(_ transferData: TransferResponseData, transferBaseData: TransferResponseBaseData) -> TransferResponseData {
         
-        .init(amount: transferData.amount, creditAmount: transferData.creditAmount, currencyAmount: transferData.currencyAmount, currencyPayee: transferData.currencyPayee, currencyPayer: transferData.currencyPayer, currencyRate: transferData.currencyRate, debitAmount: transferData.debitAmount, fee: transferData.fee, needMake: transferData.needMake, needOTP: transferData.needOTP, payeeName: transferData.payeeName, documentStatus: transferBaseData.documentStatus, paymentOperationDetailId: transferBaseData.paymentOperationDetailId)
+        .init(
+            amount: transferData.amount,
+            creditAmount: transferData.creditAmount,
+            currencyAmount: transferData.currencyAmount,
+            currencyPayee: transferData.currencyPayee,
+            currencyPayer: transferData.currencyPayer,
+            currencyRate: transferData.currencyRate,
+            debitAmount: transferData.debitAmount,
+            fee: transferData.fee,
+            needMake: transferData.needMake,
+            needOTP: transferData.needOTP,
+            payeeName: transferData.payeeName,
+            documentStatus: transferBaseData.documentStatus,
+            paymentOperationDetailId: transferBaseData.paymentOperationDetailId,
+            scenario: .ok
+        )
+    }
+}
+
+extension TransferResponseData {
+    
+    enum AntiFraudScenario: String, Codable {
+        
+        case suspect = "SCOR_SUSPECT_FRAUD"
+        case ok = "OK"
     }
 }

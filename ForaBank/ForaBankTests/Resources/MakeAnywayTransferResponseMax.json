@@ -17,7 +17,8 @@
         "finalStep": true,
         "infoMessage": "string",
         "documentStatus": "COMPLETE",
-        "paymentOperationDetailId": 1
+        "paymentOperationDetailId": 1,
+        "scenario": "OK"
     },
     "errorMessage": "string",
     "statusCode": 0

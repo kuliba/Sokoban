@@ -99,7 +99,7 @@ extension Model {
         let nexStepParametersIds = nextStepParameters.map{ $0.id }
         result.append(contentsOf: nexStepParametersIds)
 
-        return result
+        return result.filter({ $0 != Payments.Parameter.Identifier.sfpAntifraud.rawValue })
     }
     
     func paymentsTransferStepStage(_ operation: Payments.Operation, response: TransferResponseData) throws -> Payments.Operation.Stage {

@@ -7,6 +7,7 @@
 
 import FastPaymentsSettings
 import SwiftUI
+import UserAccountNavigationComponent
 
 struct FastPaymentsSettingsWrapperView: View {
     

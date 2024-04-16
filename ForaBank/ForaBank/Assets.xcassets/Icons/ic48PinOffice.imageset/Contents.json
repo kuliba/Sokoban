@@ -1,15 +1,15 @@
 {
-  "properties" : {
-    "template-rendering-intent" : "template"
-  },
+  "images" : [
+    {
+      "idiom" : "universal",
+      "filename" : "ic48PinOffice.svg"
+    }
+  ],
   "info" : {
     "version" : 1,
     "author" : "xcode"
   },
-  "images" : [
-    {
-      "filename" : "ic48PinOffice.svg",
-      "idiom" : "universal"
-    }
-  ]
+  "properties" : {
+    "template-rendering-intent" : "template"
+  }
 }

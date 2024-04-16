@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 08.12.2023.
 //
 
-import Foundation
 import Tagged
 
 enum FeatureFlag {

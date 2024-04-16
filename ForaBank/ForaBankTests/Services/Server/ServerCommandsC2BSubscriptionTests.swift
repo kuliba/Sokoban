@@ -50,7 +50,7 @@ class ServerCommandsC2BSubscriptionTests: XCTestCase {
         
         let json = try Data(contentsOf: url)
         
-        let expected = ServerCommands.SubscriptionController.DeniedC2BSubscription.Response(statusCode: .ok, errorMessage: nil, data: .init(operationStatus: .rejected, title: "Счет не привязан", brandIcon: "c896aba73a67de2bfc69de70209eb3f3", brandName: "Тестовый ТСП ТИВ", redirectUrl: .init(string: "https://sbp.nspk.ru/test_link_tiv.html")!))
+        let expected = ServerCommands.SubscriptionController.DeniedC2BSubscription.Response(statusCode: .ok, errorMessage: nil, data: .init(operationStatus: .rejected, title: "Счет не привязан", brandIcon: "c896aba73a67de2bfc69de70209eb3f3", brandName: "Тестовый ТСП ТИВ", legalName: nil, redirectUrl: .init(string: "https://sbp.nspk.ru/test_link_tiv.html")!))
         
         // when
         let result = try decoder.decode(ServerCommands.SubscriptionController.DeniedC2BSubscription.Response.self, from: json)
@@ -117,6 +117,7 @@ class ServerCommandsC2BSubscriptionTests: XCTestCase {
                 title: "Привязка счета оформлена",
                 brandIcon: "12123344",
                 brandName: "Тестовый ТСП ТИВ",
+                legalName: nil,
                 redirectUrl: nil
             )
         )

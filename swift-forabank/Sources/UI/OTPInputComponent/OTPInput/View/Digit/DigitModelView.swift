@@ -6,22 +6,22 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct DigitModelView: View {
     
     let model: DigitModel
+    let config: DigitModelConfig
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: 8) {
             
-            Text(model.value)
-                .font(.largeTitle.bold())
-                .foregroundColor(.secondary)
+            model.value.text(withConfig: config.digitConfig)
             
             Rectangle()
-                .frame(width: 32, height: 1)
-                .foregroundColor(.gray)
+                .frame(width: 40, height: 1)
+                .foregroundColor(config.rectColor)
         }
     }
 }
@@ -30,6 +30,9 @@ struct DigitModelView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        DigitModelView(model: .init(id: 1, value: "1"))
+        DigitModelView(
+            model: .init(id: 1, value: "1"),
+            config: .preview
+        )
     }
 }

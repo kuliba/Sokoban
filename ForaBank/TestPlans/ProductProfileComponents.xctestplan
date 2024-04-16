@@ -1,0 +1,59 @@
+{
+  "configurations" : [
+    {
+      "id" : "3A059D07-628E-4AE4-8EAF-64E58363FB06",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ActivateSliderTests",
+        "name" : "ActivateSliderTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardGuardianUITests",
+        "name" : "CardGuardianUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TopUpCardUITests",
+        "name" : "TopUpCardUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AccountInfoPanelTests",
+        "name" : "AccountInfoPanelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ProductDetailsUITests",
+        "name" : "ProductDetailsUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardUITests",
+        "name" : "CardUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

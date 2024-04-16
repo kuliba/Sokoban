@@ -1,4 +1,8 @@
 {
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
   "images" : [
     {
       "scale" : "1x",
@@ -6,18 +10,14 @@
       "filename" : "imgLendingSubscription@1x.png"
     },
     {
+      "scale" : "2x",
       "idiom" : "universal",
-      "filename" : "imgLendingSubscription@2x.png",
-      "scale" : "2x"
+      "filename" : "imgLendingSubscription@2x.png"
     },
     {
       "filename" : "imgLendingSubscription@3x.png",
       "scale" : "3x",
       "idiom" : "universal"
     }
-  ],
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
-  }
+  ]
 }

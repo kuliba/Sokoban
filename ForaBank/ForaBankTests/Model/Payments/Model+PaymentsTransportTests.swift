@@ -283,7 +283,8 @@ extension TransferAnywayResponseData {
             infoMessage: infoMessage,
             needSum: needSum,
             printFormType: printFormType,
-            parameterListForNextStep: parameterListForNextStep
+            parameterListForNextStep: parameterListForNextStep,
+            scenario: .ok
         )
     }
 }
@@ -348,7 +349,8 @@ extension TransferResponseData {
         needOTP: Bool? = nil,
         payeeName: String? = nil,
         documentStatus: TransferResponseBaseData.DocumentStatus? = nil,
-        paymentOperationDetailId: Int = 1
+        paymentOperationDetailId: Int = 1,
+        scenario: AntiFraudScenario = .ok
     ) -> TransferResponseData {
         
         TransferResponseData(
@@ -364,7 +366,8 @@ extension TransferResponseData {
             needOTP: needOTP,
             payeeName: payeeName,
             documentStatus: documentStatus,
-            paymentOperationDetailId: paymentOperationDetailId
+            paymentOperationDetailId: paymentOperationDetailId,
+            scenario: scenario
         )
     }
 }

@@ -107,12 +107,12 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         
         let current = ProductSelect.Product.test2
         let selectedProduct = ProductSelect.Product.test
-        let event: ProductSelectReducer.Event = .select(selectedProduct.id)
+        let event: ProductSelectReducer.Event = .select(selectedProduct)
         let (sut, spy) = makeSUT()
         
         _ = sut.reduce(
             makeEditableAmount(productSelect: .compact(current)),
-            .productSelect(.select(selectedProduct.id))
+            .productSelect(.select(selectedProduct))
         )
         
         XCTAssertNoDiff(spy.states, [.compact(current)])
@@ -124,7 +124,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         let current = ProductSelect.Product.test2
         let productSelect: ProductSelect = .expanded(.test2, [.test, .test2])
         let selectedProduct = ProductSelect.Product.test
-        let event: ProductSelectReducer.Event = .select(selectedProduct.id)
+        let event: ProductSelectReducer.Event = .select(selectedProduct)
         let (sut, _) = makeSUT(
             productSelectStub: productSelect
         )
@@ -142,7 +142,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         let amount: Decimal = 4.22
         let current = ProductSelect.Product.test2
         let selectedProduct = ProductSelect.Product.test
-        let event: ProductSelectReducer.Event = .select(selectedProduct.id)
+        let event: ProductSelectReducer.Event = .select(selectedProduct)
         let (sut, _) = makeSUT()
         
         let newState = sut.reduce(
@@ -163,7 +163,7 @@ final class SberQRConfirmPaymentStateEditableAmountReducerTests: XCTestCase {
         let amount: Decimal = 4.21
         let current = ProductSelect.Product.test2
         let selectedProduct = ProductSelect.Product.test
-        let event: ProductSelectReducer.Event = .select(selectedProduct.id)
+        let event: ProductSelectReducer.Event = .select(selectedProduct)
         let (sut, _) = makeSUT()
         
         let newState = sut.reduce(

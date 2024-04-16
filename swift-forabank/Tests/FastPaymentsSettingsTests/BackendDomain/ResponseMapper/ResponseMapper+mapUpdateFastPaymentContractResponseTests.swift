@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import RemoteServices
 import XCTest
 
 final class ResponseMapper_mapUpdateFastPaymentContractResponseTests: XCTestCase {
@@ -83,7 +84,7 @@ final class ResponseMapper_mapUpdateFastPaymentContractResponseTests: XCTestCase
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.UpdateFastPaymentContractResult {
+    ) -> ResponseMapper.VoidMappingResult {
         
         ResponseMapper.mapUpdateFastPaymentContractResponse(data, httpURLResponse)
     }

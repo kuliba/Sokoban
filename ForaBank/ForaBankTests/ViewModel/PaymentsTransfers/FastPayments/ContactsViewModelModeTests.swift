@@ -59,7 +59,7 @@ final class ContactsViewModelModeTests: XCTestCase {
     
     func test_select_banks() {
         
-        let mode: ContactsViewModel.Mode = .select(.banks)
+        let mode: ContactsViewModel.Mode = .select(.banks(phone: nil))
         
         XCTAssertEqual(mode.visibleSectionsTypes, [
             .banks
@@ -95,7 +95,7 @@ final class ContactsViewModelModeTests: XCTestCase {
         XCTAssertEqual(Mode.fastPayments(.banksAndCountries(phone: "123")).title, "Выберите контакт")
         XCTAssertEqual(Mode.abroad.title, "В какую страну?")
         XCTAssertEqual(Mode.select(.contacts).title, "Выберите контакт")
-        XCTAssertEqual(Mode.select(.banks).title, "Выберите банк")
+        XCTAssertEqual(Mode.select(.banks(phone: nil)).title, "Выберите банк")
         XCTAssertEqual(Mode.select(.banksFullInfo).title, "Выберите банк")
         XCTAssertEqual(Mode.select(.countries).title, "Выберите страну")
     }

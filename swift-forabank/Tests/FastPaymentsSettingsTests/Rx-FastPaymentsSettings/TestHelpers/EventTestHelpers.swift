@@ -56,11 +56,25 @@ func setBankDefaultServerError(
     .bankDefault(.setBankDefaultResult(.serviceFailure(.serverError(message))))
 }
 
+func makeSelectableProductID(
+    _ rawValue: Int = generateRandom11DigitNumber()
+) -> SelectableProductID {
+    
+    .account(.init(rawValue))
+}
+
 func selectProduct(
     _ product: Product = makeProduct()
 ) -> FastPaymentsSettingsEvent {
     
-    .products(.selectProduct(product.id))
+    .products(.selectProduct(product.selectableProductID))
+}
+
+func select(
+    _ selectableProductID: SelectableProductID = makeSelectableProductID()
+) -> FastPaymentsSettingsEvent {
+    
+    .products(.selectProduct(selectableProductID))
 }
 
 func toggleProducts(
@@ -93,7 +107,7 @@ func updateProductSuccess(
     _ product: Product = makeProduct()
 ) -> FastPaymentsSettingsEvent {
     
-    .products(.updateProduct(.success(product.id)))
+    .products(.updateProduct(.success(product.selectableProductID)))
 }
 
 func updateProductConnectivityError(
@@ -111,5 +125,5 @@ func updateProductServerError(
 
 func updateProductSuccess() -> FastPaymentsSettingsEvent {
     
-    .products(.updateProduct(.success(makeProduct().id)))
+    .products(.updateProduct(.success(makeProduct().selectableProductID)))
 }

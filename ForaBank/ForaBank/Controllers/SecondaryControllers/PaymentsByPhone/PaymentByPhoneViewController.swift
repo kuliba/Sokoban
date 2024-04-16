@@ -437,7 +437,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                     guard let statusCode = dataresp?.statusCode else { return }
                     if statusCode == 0 {
                         DispatchQueue.main.async {
-                            let model = ConfirmViewControllerModel(type: .phoneNumber)
+                            let model = ConfirmViewControllerModel(type: .phoneNumber, status: .succses)
                             model.bank = self?.viewModel.selectedBank
                             model.cardFromRealm = self?.cardField.model
                             model.phone = self?.phoneField.textField.unmaskedText
@@ -449,6 +449,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                             model.template = self?.viewModel.template
                             
                             let vc = ContactConfurmViewController()
+                            vc.getUImage = { self?.model.images.value[$0]?.uiImage }
                             vc.confurmVCModel = model
                             vc.title = "Подтвердите реквизиты"
                             vc.addCloseButton()
@@ -507,7 +508,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
             guard let data = data else { return }
             if data.statusCode == 0 {
                 DispatchQueue.main.async {
-                    let model = ConfirmViewControllerModel(type: .phoneNumberSBP)
+                    let model = ConfirmViewControllerModel(type: .phoneNumberSBP, status: .succses)
                     if self?.viewModel.selectedBank != nil {
                         model.bank = self?.viewModel.selectedBank
                     }
@@ -524,6 +525,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                     let numberTransaction = data.data?.additionalList?.filter({$0.fieldName == "BizMsgIdr"})
                     
                     let vc = ContactConfurmViewController()
+                    vc.getUImage = { self?.model.images.value[$0]?.uiImage }
                     vc.confurmVCModel = model
                     if numberTransaction?.count ?? 0 > 0{
                         vc.confurmVCModel?.numberTransction = numberTransaction?[0].fieldValue?.description ?? ""

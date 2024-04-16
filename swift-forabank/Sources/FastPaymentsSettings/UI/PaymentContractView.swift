@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct PaymentContractView: View {
     
     let paymentContract: PaymentContract
     let action: () -> Void
+    let config: PaymentContractConfig
     
     var body: some View {
         
@@ -20,20 +22,21 @@ struct PaymentContractView: View {
             
             subtitleView()
         }
+        .foregroundColor(.secondary)
     }
 
     private func labeledToggle() -> some View {
         
-        HStack {
+        Button(action: action) {
             
-            Text(title)
-                .font(.headline)
-            
-            Spacer()
-            
-            Button(action: action) {
+            HStack {
                 
-                ToggleMockView(status: status)
+                Text(title)
+                    .font(.headline)
+                
+                Spacer()
+                
+                ToggleMockView(status: status, color: color)
             }
         }
     }
@@ -49,19 +52,28 @@ struct PaymentContractView: View {
                 Text("Настройки для входящих и исходящих переводов СБП  ")
                 
             case .inactive:
-#warning("link inside!!!")
-                Text("Подключая возможность осуществлять переводы денежных средств в рамках СБП, соглашаюсь с условиями осуществления переводов СБП")
+                AttributedTextView(
+                    attributedString: .consent,
+                    linkColor: .red
+                )
             }
         }
-        .foregroundColor(.secondary)
         .font(.subheadline)
     }
     
     private var status: ToggleMockView.Status {
         
         switch paymentContract.contractStatus {
-        case .active:   return .active
-        case .inactive: return .inactive
+        case .active:   return .on(.enabled)
+        case .inactive: return .off(.enabled)
+        }
+    }
+    
+    private var color: Color {
+        
+        switch paymentContract.contractStatus {
+        case .active:   return config.active.toggleColor
+        case .inactive: return config.inactive.toggleColor
         }
     }
 }
@@ -90,6 +102,10 @@ struct PaymentContractView_Previews: PreviewProvider {
         _ paymentContract: PaymentContractView.PaymentContract
     ) -> some View {
         
-        PaymentContractView(paymentContract: paymentContract, action: {})
+        PaymentContractView(
+            paymentContract: paymentContract,
+            action: {},
+            config: .preview
+        )
     }
 }

@@ -6,15 +6,14 @@
 //
 
 import Foundation
+import RemoteServices
 
 public extension ResponseMapper {
-    
-    typealias CreateFastPaymentContractResult = VoidMappingResult
     
     static func mapCreateFastPaymentContractResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> CreateFastPaymentContractResult {
+    ) -> VoidMappingResult {
         
         mapToVoid(data, httpURLResponse)
     }

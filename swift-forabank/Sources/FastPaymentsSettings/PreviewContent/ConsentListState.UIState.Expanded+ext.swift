@@ -5,13 +5,35 @@
 //  Created by Igor Malyarov on 13.01.2024.
 //
 
-public extension ConsentListState.UIState.Expanded {
+extension ConsentListState.UIState.Expanded {
     
-    static let preview: Self = .init(
+    static func preview(
+        searchText: String = ""
+    ) -> Self {
+     
+        .init(
+            searchText: searchText,
+            banks: .preview,
+            canApply: false
+        )
+    }
+    
+    static let consented: Self = .init(
         searchText: "",
-        banks: .preview,
+        banks: .consented(),
         canApply: false
     )
+    
+    static func many(
+        searchText: String = ""
+    ) -> Self {
+        
+        .init(
+            searchText: searchText,
+            banks: .many,
+            canApply: false
+        )
+    }
     
     static let search: Self = .init(
         searchText: "сбер",

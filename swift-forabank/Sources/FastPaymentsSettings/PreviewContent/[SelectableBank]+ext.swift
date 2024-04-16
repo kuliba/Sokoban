@@ -9,22 +9,14 @@ public extension Array where Element == ConsentList.SelectableBank {
     
     static let empty: Self = []
     
-    static let preview: Self = ["Сбербанк", "Альфа-банк", "ВТБ", "Тинькофф банк", "Открытие", "Сургутнефтегазбанк"].map {
-        
-        .init(
-            bank: .init(id: .init($0.lowercased()), name: $0),
-            isSelected: false
-        )
-    }
+    static let preview: Self = .init(banks: .preview, consent: .preview)
     
-    static var consented: Self {
+    static let many: Self = .init(banks: .many, consent: [])
+    
+    static func consented(
+        _ consent: Consent = .preview
+    ) -> Self {
         
-        Self.preview.map {
-            
-            .init(
-                bank: $0.bank,
-                isSelected: Consent.preview.contains($0.bank.id)
-            )
-        }
+        .init(banks: .preview, consent: consent)
     }
 }

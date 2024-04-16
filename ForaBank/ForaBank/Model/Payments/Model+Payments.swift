@@ -733,10 +733,19 @@ extension Model {
         with response: TransferAnywayResponseData
     ) async throws -> Payments.Operation.Step {
 
-        let nextParameters = try await uniqueNextParameters(
+        var nextParameters = try await uniqueNextParameters(
             for: operation,
             with: response
         )
+        
+        if response.scenario == .suspect {
+            
+            nextParameters.append(Payments.ParameterInfo(
+                .init(id: Payments.Parameter.Identifier.sfpAntifraud.rawValue, value: "SUSPECT"),
+                icon: .image(.parameterDocument),
+                title: "Antifraud"
+            ))
+        }
         
         return try step(
             for: operation,
@@ -816,14 +825,22 @@ extension Model {
 extension Model {
     
     /// updates operation parameters with data in operation source
-    func paymentsProcessSourceReducer(service: Payments.Service, source: Payments.Operation.Source, parameterId: Payments.Parameter.ID) -> Payments.Parameter.Value? {
+    func paymentsProcessSourceReducer(
+        service: Payments.Service,
+        source: Payments.Operation.Source,
+        parameterId: Payments.Parameter.ID
+    ) -> Payments.Parameter.Value? {
 
         switch source {
         case let .mock(mock):
             return mock.parameters.first(where: { $0.id == parameterId })?.value
             
         case let .sfp(phone: phone, bankId: bankId):
-            return paymentsProcessSourceReducerSFP(phone: phone, bankId: bankId, parameterId: parameterId)
+            return paymentsProcessSourceReducerSFP(
+                phone: phone,
+                bankId: bankId,
+                parameterId: parameterId
+            )
             
         case let .requisites(qrCode: qrCode):
             return paymentsProcessSourceReducerRequisites(qrCode: qrCode, parameterId: parameterId)
@@ -871,7 +888,11 @@ extension Model {
             return paymentsProcessDependencyReducerFSSP(parameterId: parameterId, parameters: parameters)
             
         case .sfp:
-            return paymentsProcessDependencyReducerSFP(parameterId: parameterId, parameters: parameters)
+            return paymentsProcessDependencyReducerSFP(
+                operation: operation,
+                parameterId: parameterId,
+                parameters: parameters
+            )
         
         case .requisites:
             return paymentsProcessDependencyReducerRequisits(parameterId: parameterId, parameters: parameters)
@@ -1128,21 +1149,32 @@ extension Model {
         }
     }
     
-    func paymentsParameterRepresentable(_ operation: Payments.Operation, adittionalData: TransferAnywayResponseData.AdditionalData, group: Payments.Parameter.Group) throws -> PaymentsParameterRepresentable? {
+    func paymentsParameterRepresentable(
+        _ operation: Payments.Operation,
+        additionalData: TransferAnywayResponseData.AdditionalData,
+        group: Payments.Parameter.Group
+    ) throws -> PaymentsParameterRepresentable? {
         
         switch operation.service {
         case .sfp:
-            return try paymentsParameterRepresentableSFP(operation, adittionalData: adittionalData)
+            return try paymentsParameterRepresentableSFP(operation, additionalData: additionalData)
             
+        case .requisites, .mobileConnection, .fms, .fns, .fssp, .internetTV, .toAnotherCard, .utility, .transport:
+            return try paymentsParameterRepresentableSFP(operation, additionalData: additionalData)
+
         default:
+
             return Payments.ParameterInfo(
-                .init(id: adittionalData.fieldName, value: adittionalData.fieldValue),
-                icon: .image(adittionalData.iconData ?? .parameterDocument),
-                title: adittionalData.fieldTitle ?? "", group: group) //FIXME: fix "" create case for .contact, .direct
+                .init(id: additionalData.fieldName, value: additionalData.fieldValue),
+                icon: .image(additionalData.iconData ?? .parameterDocument),
+                title: additionalData.fieldTitle ?? "", group: group) //FIXME: fix "" create case for .contact, .direct
         }
     }
     
-    func paymentsParameterRepresentableSelectServiceOption(for service: Payments.Service, with operators: [OperatorGroupData.OperatorData]) -> Payments.ParameterSelectService.Option? {
+    func paymentsParameterRepresentableSelectServiceOption(
+        for service: Payments.Service,
+        with operators: [OperatorGroupData.OperatorData]
+    ) -> Payments.ParameterSelectService.Option? {
         
         switch service {
         case .fns:
@@ -1213,11 +1245,18 @@ extension Model {
                     return nil
                 }
                 
-                let phoneNumber = paymentData.phoneNumber
+                let phoneNumber = PhoneNumberWrapper().format(paymentData.phoneNumber).digits
                 let bankId = paymentData.bankId
-                return paymentsProcessSourceReducerSFP(phone: phoneNumber,
-                                                       bankId: bankId,
-                                                       parameterId: parameterId)
+                self.action.send(ModelAction.LatestPayments.BanksList.Request(
+                    prePayment: true,
+                    phone: phoneNumber.addCodeRuIfNeeded()
+                ))
+                
+                return paymentsProcessSourceReducerSFP(
+                    phone: phoneNumber,
+                    bankId: bankId,
+                    parameterId: parameterId
+                )
                 
             case .mobile:
                 guard let latestPayment = latestPayment as? PaymentServiceData else {
@@ -1300,7 +1339,8 @@ extension Model {
                         return payload.last?.additional.sfpPhone
                         
                     default:
-                        return payload.last?.additional.first(where: { $0.fieldname == parameterId })?.fieldvalue
+                        let additions = payload.flatMap { $0.additional }
+                        return additions.first(where: { $0.fieldname == parameterId })?.fieldvalue
                     }
                     
                 case let payload as [TransferGeneralData]:
@@ -1408,7 +1448,10 @@ extension Model {
 
 extension Model {
     
-    func paymentsParameterValue(_ parameters: [PaymentsParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter.Value {
+    func paymentsParameterValue(
+        _ parameters: [PaymentsParameterRepresentable],
+        id: Payments.Parameter.ID
+    ) -> Payments.Parameter.Value {
         
         return parameters.first(where: { $0.id == id })?.value
     }
@@ -1490,38 +1533,203 @@ extension Model {
             return nil
         }
     }
+     
+    func antifraudStatus() -> [String] {
+        ["F", "G1", "S", "SUSPECT"]
+    }
     
-    func paymentsAntifraudData(for operation: Payments.Operation) -> Payments.AntifraudData? {
+    func paymentsAntifraudData(
+        for operation: Payments.Operation
+    ) -> Payments.AntifraudData? {
+        
+        let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
+        let antifraudParameter = paymentsParameterValue(
+            operation.parameters,
+            id: antifraudParameterId
+        )
+        
+        guard antifraudStatus().contains(where: { $0 == antifraudParameter }) || (operation.service == .sfp && antifraudParameter == nil) else {
+            return nil
+        }
+        
+        var name: String?
+        var phone: String?
         
         switch operation.service {
         case .sfp:
-            let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
-            guard let antifraudParameter = operation.parameters.first(where: { $0.id == antifraudParameterId}) else {
-                return nil
-            }
-            
-            guard antifraudParameter.value != "G" else {
-                return nil
-            }
             
             let recipientParameterId = Payments.Parameter.Identifier.sftRecipient.rawValue
             let phoneParameterId = Payments.Parameter.Identifier.sfpPhone.rawValue
             let amountParameterId = Payments.Parameter.Identifier.sfpAmount.rawValue
             
-            guard let recipientValue = operation.parameters.first(where: { $0.id == recipientParameterId})?.value,
-            let phoneValue = operation.parameters.first(where: { $0.id == phoneParameterId })?.value,
-            let amountValue = operation.parameters.first(where: { $0.id == amountParameterId })?.value else {
+            guard let recipientValue = paymentsParameterValue(operation.parameters, id: recipientParameterId),
+                  let phoneValue = paymentsParameterValue(operation.parameters, id: phoneParameterId),
+                  let amountValue = paymentsParameterValue(operation.parameters, id: amountParameterId)
+            else {
                 return nil
             }
+            
+            let formatPhone = PhoneNumberKitFormater().format(phoneValue.digits)
+            return .init(
+                payeeName: recipientValue,
+                phone: formatPhone,
+                amount: "- \(amountValue)"
+            )
+            
+        case .requisites:
+            if let newName = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.requisitsName.rawValue
+            ) {
+                name = newName
+            } else if let newName = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.requisitsCompanyName.rawValue
+            ) {
+                name = newName
+            }
+            
+            let amount = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.requisitsAmount.rawValue
+            )
+            
+            return .init(
+                payeeName: name ?? "",
+                phone: phone ?? "",
+                amount: "- \(amount ?? "")"
+            )
+            
+        case .abroad:
+            if let newName = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.countryPayee.rawValue
+            ) {
+                name = newName
+            }
+            
+            let amount = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.amount.rawValue
+            )
+            
+            let numberCard = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.p1.rawValue
+            )
+            
+            let value = numberCard?.masked(mask: StringValueMask.card)
+            
+            let amountFormatted = amountWithParameterProductCurrency(
+                operation: operation,
+                amount: amount
+            )
+            
+            return .init(
+                payeeName: value ?? name ?? "",
+                phone: phone ?? "",
+                amount: "- \(amountFormatted ?? amount ?? "")"
+            )
+            
+        case  .fms, .fns, .fssp, .gibdd, .transport, .utility, .avtodor, .internetTV:
+            
+            if let newName = operation.parameters.first(
+                where: { $0.id == Payments.Parameter.Identifier.header.rawValue
+                }) as? Payments.ParameterHeader {
+                name = newName.title
+            }
+            
+            let amount = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.amount.rawValue
+            )
+            
+            let paymentsServiceAmount = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.paymentsServiceAmount.rawValue
+            )
+            
+            return .init(
+                payeeName: name ?? "",
+                phone: phone ?? "",
+                amount: "- \(amount ?? paymentsServiceAmount ?? "") ₽"
+            )
+            
+        case .mobileConnection:
+            if let newPhone = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.mobileConnectionPhone.rawValue
+            ) {
+                phone = newPhone
+            }
+            
+            let amount = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.mobileConnectionAmount.rawValue
+            )
+            
+            let formatPhone = PhoneNumberKitFormater().format(phone?.digits.addCodeRuIfNeeded() ?? "")
+            return .init(
+                payeeName: name ?? "",
+                phone: formatPhone,
+                amount: "- \(amount ?? "")"
+            )
+            
+        case .toAnotherCard:
+            if let newName = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.productTemplate.rawValue
+            ) {
+                name = newName
+            }
+                    
+            let productNumberMask = name?.dropFirst(2) ?? ""
+            let maskCardNumber = String(productNumberMask.prefix(4)) + " **** **** " + String(productNumberMask.suffix(4))
+            
+            let amount = paymentsParameterValue(
+                operation.parameters,
+                id: Payments.Parameter.Identifier.amount.rawValue
+            )
 
-            let phoneFormatted = PhoneNumberKitFormater().format(phoneValue.count == 10 ? "7\(phoneValue)" : phoneValue)
-            return .init(payeeName: recipientValue, phone: phoneFormatted, amount: "- \(amountValue)")
+            let amountFormatted = amountWithParameterProductCurrency(
+                operation: operation,
+                amount: amount
+            )
+            
+            return .init(
+                payeeName: maskCardNumber,
+                phone: phone ?? "",
+                amount: "- \(amountFormatted ?? amount ?? "")"
+            )
             
         default:
             return nil
         }
     }
     
+    func amountWithParameterProductCurrency(
+        operation: Payments.Operation,
+        amount: String?
+    ) -> String? {
+        
+        if let product = paymentsParameterValue(
+            operation.parameters,
+            id: Payments.Parameter.Identifier.product.rawValue
+        ), let amount = Double(amount ?? "") {
+            
+            let currency = self.allProducts.first(where: { $0.id == Int(product) })?.currency
+            let amountFormatted = amountFormatted(
+                amount: amount,
+                currencyCode: currency,
+                style: .fraction
+            )
+            
+            return amountFormatted
+        }
+        
+        return nil
+    }
+        
     func isSingleService(_ puref: String) async throws -> Bool {
         
         LoggerAgent.shared.log(category: .model, message: "isSingleService")

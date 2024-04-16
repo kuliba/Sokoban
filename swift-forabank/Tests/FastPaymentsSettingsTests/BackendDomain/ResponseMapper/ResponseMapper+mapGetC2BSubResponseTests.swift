@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import RemoteServices
 import XCTest
 
 final class ResponseMapper_mapGetC2BSubResponseResponseTests: XCTestCase {
@@ -91,7 +92,7 @@ final class ResponseMapper_mapGetC2BSubResponseResponseTests: XCTestCase {
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.GetC2BSubResponseResult {
+    ) -> ResponseMapper.MappingResult<GetC2BSubscription> {
         
         ResponseMapper.mapGetC2BSubResponseResponse(data, httpURLResponse)
     }

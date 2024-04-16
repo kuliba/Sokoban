@@ -48,7 +48,7 @@ final class ConsentListRxEffectHandlerTests: XCTestCase {
         
         expect(sut, with: effect, toDeliver: .changeConsent(consent), on: {
             
-            spy.complete(with: .success)
+            spy.complete(with: .success(.init()))
         })
     }
     
@@ -60,7 +60,7 @@ final class ConsentListRxEffectHandlerTests: XCTestCase {
         
         expect(sut, with: effect, toDeliver: .changeConsent(consent), on: {
             
-            spy.complete(with: .success)
+            spy.complete(with: .success(.init()))
         })
     }
     
@@ -72,7 +72,7 @@ final class ConsentListRxEffectHandlerTests: XCTestCase {
         
         expect(sut, with: effect, toDeliver: .changeConsentFailure(.serverError(message)), on: {
             
-            spy.complete(with: .serverError(message))
+            spy.complete(with: .failure(.serverError(message)))
         })
     }
     
@@ -83,7 +83,7 @@ final class ConsentListRxEffectHandlerTests: XCTestCase {
         
         expect(sut, with: effect, toDeliver: .changeConsentFailure(.connectivityError), on: {
             
-            spy.complete(with: .connectivityError)
+            spy.complete(with: .failure(.connectivityError))
         })
     }
     

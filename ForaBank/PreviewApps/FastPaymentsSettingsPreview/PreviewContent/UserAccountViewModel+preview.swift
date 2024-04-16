@@ -139,23 +139,22 @@ extension UserAccountViewModel {
         
         let userAccountNavigationFPSReducer = UserAccountNavigationFPSReducer()
         
-        let userAccountNavigationOTPReducer = UserAccountNavigationOTPReducer(
-            makeTimedOTPInputViewModel: makeTimedOTPInputViewModel,
+        let userAccountNavigationOTPReducer = UserAccountNavigationOTPReducer()
+        
+        let userAccountNavigationReducer = UserAccountNavigationReducer(
+            fpsReduce: userAccountNavigationFPSReducer.reduce(_:_:),
+            otpReduce: userAccountNavigationOTPReducer.reduce(_:_:),
             scheduler: scheduler
         )
         
-        let userAccountNavigationReducer = UserAccountNavigationReducer(
-            fpsReduce: userAccountNavigationFPSReducer.reduce(_:_:_:),
-            otpReduce: userAccountNavigationOTPReducer.reduce(_:_:_:_:),
-            scheduler: .makeMain()
-        )
-        
         let userAccountNavigationOTPEffectHandler = UserAccountNavigationOTPEffectHandler(
-            prepareSetBankDefault: prepareSetBankDefault
+            makeTimedOTPInputViewModel: makeTimedOTPInputViewModel,
+            prepareSetBankDefault: prepareSetBankDefault,
+            scheduler: scheduler
         )
         
         let navigationStateManager = UserAccountNavigationStateManager(
-            reduce: userAccountNavigationReducer.reduce(_:_:_:_:),
+            reduce: userAccountNavigationReducer.reduce(_:_:),
             handleOTPEffect: userAccountNavigationOTPEffectHandler.handleEffect(_:dispatch:),
             makeFastPaymentsSettingsViewModel: makeFastPaymentsSettingsViewModel
         )

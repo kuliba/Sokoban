@@ -27,7 +27,7 @@ public struct FastPaymentsSettingsView: View {
         
         switch settingsResult {
         case .none, .failure:
-            Text("Empty View").opacity(0.1)
+            Color.clear
             
         case let .success(.contracted(contractDetails)):
             switch contractDetails.paymentContract.contractStatus {

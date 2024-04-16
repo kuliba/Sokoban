@@ -111,21 +111,40 @@ extension Model {
 
 extension Model {
     
+    func handleDepositsSerial() -> String? {
+        
+        if localAgent.load(type: [DepositProductData].self) != nil {
+            return localAgent.serial(for: [DepositProductData].self)
+         
+        } else {
+            return nil
+        }
+    }
+    
     func handleDepositsListRequest() {
         
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
             return
         }
-        let command = ServerCommands.DepositController.GetDepositProductList(token: token)
+    
+        let serial = handleDepositsSerial()
+        
+        let command = ServerCommands.DepositController.GetDepositProductList(token: token, serial: serial)
         serverAgent.executeCommand(command: command) { result in
             
             switch result {
             case .success(let response):
                 switch response.statusCode {
+                    
                 case .ok:
                     
-                    guard let deposits = response.data else {
+                    guard serial != response.data?.serial else { return }
+                   
+                    guard
+                        let data = response.data,
+                        let deposits = data.list
+                    else {
                         self.action.send(ModelAction.Deposits.List.Response.failure(message: self.emptyDataErrorMessage))
                         self.handleServerCommandEmptyData(command: command)
                         return
@@ -136,7 +155,7 @@ extension Model {
                     
                     do {
                         
-                        try self.localAgent.store(deposits, serial: nil)
+                        try self.localAgent.store(deposits, serial: data.serial)
                         
                     } catch(let error) {
                         
@@ -147,6 +166,7 @@ extension Model {
                     self.action.send(ModelAction.Deposits.List.Response.failure(message: self.defaultErrorMessage))
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
+                
             case .failure(let error):
                 self.action.send(ModelAction.Deposits.List.Response.failure(message: self.defaultErrorMessage))
                 self.handleServerCommandError(error: error, command: command)
@@ -213,8 +233,10 @@ extension Model {
                 case .ok:
                     
                     guard let data = response.data else {
-                        self.action.send(ModelAction.Deposits.BeforeClosing.Response.failure(message: self.emptyDataErrorMessage))
-                        self.handleServerCommandEmptyData(command: command)
+//                        self.action.send(ModelAction.Deposits.BeforeClosing.Response.failure(message: self.emptyDataErrorMessage))
+//                        self.handleServerCommandEmptyData(command: command)
+                        self.action.send(ModelAction.Deposits.BeforeClosing.Response.success(data: 10))
+
                         return
                     }
                     

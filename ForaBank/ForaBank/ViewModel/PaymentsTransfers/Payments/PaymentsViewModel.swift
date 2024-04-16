@@ -53,7 +53,12 @@ class PaymentsViewModel: ObservableObject {
                 switch result {
                 case let .select(selectServiceParameter):
                     // multiple services for category
-                    let serviceViewModel = PaymentsServiceViewModel(category: category, parameters: [selectServiceParameter], model: model, closeAction: closeAction)
+                    let serviceViewModel = PaymentsServiceViewModel(
+                        category: category,
+                        parameters: [selectServiceParameter],
+                        model: model,
+                        closeAction: closeAction
+                    )
                     serviceViewModel.rootActions = rootActions
                     
                     await MainActor.run {
@@ -325,21 +330,6 @@ class PaymentsViewModel: ObservableObject {
                 case _ as PaymentsViewModelAction.EditName:
                     break
                     //TODO: setup open edit name sheet action
-                    
-                case _ as PaymentsOperationViewModelAction.CancelOperation:
-                    
-                    //TODO: move to convenience init
-                    let succes = Payments.Success(
-                        operation: operationViewModel.operation.value,
-                        parameters: [
-                            Payments.ParameterSuccessStatus(status: .accepted),
-                            Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
-                            //TODO: logo: .init(title: "сбп", image: .ic40Sbp)
-                            //TODO: amount
-                            Payments.ParameterButton.actionButtonMain()
-                        ])
-                    
-                    self.successViewModel = .init(paymentSuccess: succes, model)
                 
                 case _ as PaymentsSuccessAction.Button.Repeat:
                     self.content = .operation(operationViewModel)

@@ -68,7 +68,7 @@ extension UserPaymentSettings.PaymentContract {
     
     static let active: Self = .init(
         id: .init(generateRandom11DigitNumber()),
-        productID: Product.card.id,
+        accountID: Product.card.accountID,
         contractStatus: .active,
         phoneNumber: "79171044913",
         phoneNumberMasked: "+7 ... ... 49 13"
@@ -76,7 +76,7 @@ extension UserPaymentSettings.PaymentContract {
     
     static let inactive: Self = .init(
         id: .init(generateRandom11DigitNumber()),
-        productID: Product.account.id,
+        accountID: Product.account.accountID,
         contractStatus: .inactive,
         phoneNumber: "79171044913",
         phoneNumberMasked: "+7 ... ... 49 13"
@@ -92,7 +92,6 @@ private extension ConsentList {
     
     static let preview: Self = .init(
         banks: .preview,
-        consent: .preview,
         mode: .collapsed,
         searchText: ""
     )

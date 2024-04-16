@@ -133,17 +133,22 @@ class ConfirmViewControllerModel {
     var summTransction: String = ""
     var taxTransction: String = ""
     var currancyTransction: String = ""
-    var status: StatusOperation = .error
+    var status: StatusOperation
     var summInCurrency = ""
     var name: String? = ""
     var surname: String? = ""
     var secondName: String? = ""
     
-    init(type: PaymentType) {
+    init(
+        type: PaymentType,
+        status: StatusOperation
+    ) {
         self.type = type
+        self.status = status
     }
     
     enum StatusOperation {
+        case antifraudCanceled
         case inProgress
         case succses
         case error
@@ -207,7 +212,7 @@ class ConfirmViewControllerModel {
 class ContactConfurmViewController: UIViewController {
     
     var operatorsViewModel: OperatorsViewModel?
-    
+    var getUImage: (Md5hash) -> UIImage? = { _ in UIImage() }
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
@@ -386,6 +391,9 @@ class ContactConfurmViewController: UIViewController {
         summTransctionField.text = model.summTransction
         taxTransctionField.text = model.taxTransction
 
+        cardFromField.getUImage = getUImage
+        cardToField.getUImage = getUImage
+        
         if model.taxTransction.isEmpty {
             taxTransctionField.isHidden = true
         }

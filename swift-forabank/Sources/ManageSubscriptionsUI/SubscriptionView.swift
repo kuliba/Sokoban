@@ -20,7 +20,7 @@ public class SubscriptionViewModel: ObservableObject, Identifiable {
     let trash: Image
     let config: ConfigSubscription
     let onDelete: (Token, String) -> Void
-    let detailAction: (Token) -> Void
+    let onDetail: (Token) -> Void
     
     public var id: Token { token }
     
@@ -33,7 +33,7 @@ public class SubscriptionViewModel: ObservableObject, Identifiable {
         trash: Image,
         config: ConfigSubscription,
         onDelete: @escaping (Token, String) -> Void,
-        detailAction: @escaping (Token) -> Void
+        onDetail: @escaping (Token) -> Void
     ) {
         self.token = token
         self.name = name
@@ -43,7 +43,7 @@ public class SubscriptionViewModel: ObservableObject, Identifiable {
         self.trash = trash
         self.config = config
         self.onDelete = onDelete
-        self.detailAction = detailAction
+        self.onDetail = onDetail
     }
     
     public enum Icon {
@@ -70,7 +70,7 @@ struct SubscriptionView: View {
     
     var body: some View {
         
-        Button(action: { viewModel.detailAction(viewModel.token) }) {
+        Button(action: { viewModel.onDetail(viewModel.token) }) {
             
             VStack {
                 
@@ -176,7 +176,7 @@ struct SubscriptionView_Preview: PreviewProvider {
             trash: .init(systemName: "trash"),
             config: .init(headerFont: .body, subtitle: .callout),
             onDelete: { token, title  in },
-            detailAction: { _ in })
+            onDetail: { _ in })
         )
     }
 }

@@ -22,10 +22,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         model: model,
         logger: logger,
         qrResolverFeatureFlag: .init(.active),
-        fastPaymentsSettingsFlag: .init(.inactive)
+        fastPaymentsSettingsFlag: .init(.active(.live)),
+        utilitiesPaymentsFlag: .init(.inactive)
     )
     private lazy var rootViewFactory = RootViewFactory(
-        with: model.imageCache()
+        with: model.imageCache(),
+        getUImage: { self.model.images.value[$0]?.uiImage }
     )
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -80,6 +82,7 @@ extension SceneDelegate {
                 case _ as RootViewModelAction.DismissAll:
                     window?.rootViewController?.dismiss(animated: false, completion: nil)
                     rootViewModel.resetLink()
+                    rootViewModel.reset()
                     
                 default:
                     break

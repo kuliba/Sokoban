@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "4946EA07-7F7F-404B-91B9-8898229D2848",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "RemoteServicesTests",
+        "name" : "RemoteServicesTests"
+      }
+    }
+  ],
+  "version" : 1
+}

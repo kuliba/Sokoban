@@ -503,7 +503,7 @@ private extension TransferAnywayResponseData {
     
     convenience init(parameters: [ParameterData], needSum: Bool, finalStep: Bool) {
         
-        self.init(amount: nil, creditAmount: nil, currencyAmount: nil, currencyPayee: nil, currencyPayer: nil, currencyRate: nil, debitAmount: nil, fee: nil, needMake: nil, needOTP: nil, payeeName: nil, documentStatus: .inProgress, paymentOperationDetailId: 1, additionalList: [], finalStep: finalStep, infoMessage: nil, needSum: needSum, printFormType: nil, parameterListForNextStep: parameters)
+        self.init(amount: nil, creditAmount: nil, currencyAmount: nil, currencyPayee: nil, currencyPayer: nil, currencyRate: nil, debitAmount: nil, fee: nil, needMake: nil, needOTP: nil, payeeName: nil, documentStatus: .inProgress, paymentOperationDetailId: 1, additionalList: [], finalStep: finalStep, infoMessage: nil, needSum: needSum, printFormType: nil, parameterListForNextStep: parameters, scenario: .ok)
     }
 }
 

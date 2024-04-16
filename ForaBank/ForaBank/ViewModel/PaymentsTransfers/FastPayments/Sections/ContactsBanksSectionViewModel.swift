@@ -26,7 +26,20 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
     
     private let searchTextFieldFactory: () -> RegularFieldViewModel
     
-    private init(_ model: Model, header: ContactsSectionHeaderView.ViewModel, isCollapsed: Bool, mode: Mode, searchTextField: RegularFieldViewModel?, options: OptionSelectorView.ViewModel, visible: [ContactsItemViewModel], items: [ContactsItemViewModel], bankType: BankType? = nil, phone: String?, filter: String? = nil, searchTextFieldFactory: @escaping () -> RegularFieldViewModel) {
+    private init(
+        _ model: Model,
+        header: ContactsSectionHeaderView.ViewModel,
+        isCollapsed: Bool,
+        mode: Mode,
+        searchTextField: RegularFieldViewModel?,
+        options: OptionSelectorView.ViewModel,
+        visible: [ContactsItemViewModel],
+        items: [ContactsItemViewModel],
+        bankType: BankType? = nil,
+        phone: String?,
+        filter: String? = nil,
+        searchTextFieldFactory: @escaping () -> RegularFieldViewModel
+    ) {
         
         self.searchTextField = searchTextField
         self.options = options
@@ -40,14 +53,24 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
         super.init(header: header, isCollapsed: isCollapsed, mode: mode, model: model)
     }
     
-    convenience init(_ model: Model, mode: Mode, phone: String?, bankDictionary: BankDictionary, searchTextFieldFactory: @escaping () -> RegularFieldViewModel) {
+    convenience init(
+        _ model: Model,
+        mode: Mode,
+        phone: String?,
+        bankDictionary: BankDictionary,
+        searchTextFieldFactory: @escaping () -> RegularFieldViewModel
+    ) {
         
         let options = Self.createOptionViewModel()
         self.init(model, header: .init(kind: .banks), isCollapsed: true, mode: mode, searchTextField: nil, options: options, visible: [], items: [], phone: phone, searchTextFieldFactory: searchTextFieldFactory)
         
         switch bankDictionary {
         case .banks:
-            self.items.value = Self.reduce(bankList: model.bankList.value, preffered: model.prefferedBanksList.value) { [weak self]  bank in
+            self.items.value = Self.reduce(
+                bankList: model.bankList.value,
+                preferred: banksID
+            ) { [weak self] bank in
+                
                 { self?.action.send(ContactsSectionViewModelAction.Banks.ItemDidTapped(bankId: bank.id)) }
             }
             
@@ -98,7 +121,11 @@ class ContactsBanksSectionViewModel: ContactsSectionCollapsableViewModel {
                     
                     withAnimation {
                         
-                        let filterBanks = Self.reduce(items: items, filterByType: bankType, filterByName: filter)
+                        let filterBanks = Self.reduce(
+                            items: items,
+                            filterByType: bankType,
+                            filterByName: filter
+                        )
                         
                         if filterBanks.count > 0 {
                             
@@ -216,35 +243,52 @@ extension ContactsBanksSectionViewModel {
 
 extension ContactsBanksSectionViewModel {
     
-    static func reduce(bankList: [BankData], preffered: [String], action: @escaping (BankData) -> () -> Void) -> [ContactsItemViewModel] {
+    static func reduce(
+        bankList: [BankData],
+        preferred: [String],
+        action: @escaping (BankData) -> () -> Void
+    ) -> [ContactsItemViewModel] {
         
-        let prefferedBanks = preffered.compactMap { bankId in bankList.first(where: { $0.id == bankId }) }
-        let otherBanks = bankList.filter{ preffered.contains($0.id) == false }
+        let preferredBanks = preferred.compactMap { bankId in bankList.first(where: { $0.id == bankId }) }
+        let otherBanks = bankList.filter{ preferred.contains($0.id) == false }
             .sorted(by: {$0.memberNameRus.lowercased() < $1.memberNameRus.lowercased()})
             .sorted(by: {$0.memberNameRus.localizedCaseInsensitiveCompare($1.memberNameRus) == .orderedAscending})
         
-        let allBanks = prefferedBanks + otherBanks
+        let allBanks = preferredBanks + otherBanks
         
-        return allBanks.map{ ContactsBankItemView.ViewModel(id: $0.id, icon: $0.svgImage.image, name: $0.memberNameRus, subtitle: nil, type: $0.bankType, action: action($0)) }
+        return allBanks.map { ContactsBankItemView.ViewModel(id: $0.id, icon: $0.svgImage.image, name: $0.memberNameRus, subtitle: nil, type: $0.bankType, action: action($0)) }
     }
     
-    static func reduceBanksFullInfo(bankList: [BankFullInfoData], action: @escaping (BankFullInfoData) -> () -> Void) -> [ContactsItemViewModel] {
+    static func reduceBanksFullInfo(
+        bankList: [BankFullInfoData],
+        action: @escaping (BankFullInfoData) -> () -> Void
+    ) -> [ContactsItemViewModel] {
         
-        bankList.map{ ContactsBankItemView.ViewModel(icon: $0.svgImage.image, name: $0.rusName ?? $0.fullName, subtitle: $0.bic, type: .sfp, action: action($0)) }
+        bankList.map{ ContactsBankItemView.ViewModel(
+            icon: $0.svgImage.image,
+            name: $0.rusName ?? $0.fullName,
+            subtitle: $0.bic,
+            type: .sfp,
+            action: action($0)
+        )}
     }
     
-    static func reduce(items: [ContactsItemViewModel], filterByType: BankType? = nil, filterByName: String? = nil) -> [ContactsItemViewModel] {
+    static func reduce(
+        items: [ContactsItemViewModel],
+        filterByType: BankType? = nil,
+        filterByName: String? = nil
+    ) -> [ContactsItemViewModel] {
         
-        var filterredItems = items.compactMap({ $0 as? ContactsBankItemView.ViewModel })
+        var filteredItems = items.compactMap({ $0 as? ContactsBankItemView.ViewModel })
         
         if let bankType = filterByType {
             
-            filterredItems = filterredItems.filter({$0.type == bankType})
+            filteredItems = filteredItems.filter({ $0.type == bankType })
         }
         
         if let name = filterByName, name != "" {
             
-            filterredItems = filterredItems.filter({ item in
+            filteredItems = filteredItems.filter({ item in
                 
                 if name.isNumeric, let subtitle = item.subtitle {
                     
@@ -257,13 +301,26 @@ extension ContactsBanksSectionViewModel {
             })
         }
 
-        return filterredItems
+        return filteredItems
     }
 }
 
 //MARK: - Helpers
 
 extension ContactsBanksSectionViewModel {
+    
+    var banksID: [String] {
+        
+        let banksByPhone = model.paymentsByPhone.value[phone.value?.digits ?? ""]?
+            .sorted(by: { $0.defaultBank && $1.defaultBank })
+            .filter { $0.defaultBank || $0.payment }
+        
+        guard let banksID = banksByPhone?.compactMap({ $0.bankId }) else {
+            return []
+        }
+
+        return banksID
+    }
     
     static func createOptionViewModel() -> OptionSelectorView.ViewModel {
         

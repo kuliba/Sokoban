@@ -171,7 +171,7 @@ final class MicroServices_GetSettingsTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = MicroServices.GetSettings<Contract, ConsentResponse, Settings>
+    private typealias SUT = MicroServices.SettingsGetter<Contract, ConsentResponse, Settings>
     
     private typealias GetContractSpy = Spy<Void, SUT.GetContractResult>
     private typealias GetConsentSpy = Spy<Void, ConsentResponse>

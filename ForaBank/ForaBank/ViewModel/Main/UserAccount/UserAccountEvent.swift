@@ -5,56 +5,73 @@
 //  Created by Igor Malyarov on 30.01.2024.
 //
 
+import FastPaymentsSettings
+import ManageSubscriptionsUI
+import OTPInputComponent
 import SwiftUI
+import UIPrimitives
 
-enum UserAccountEvent {
+indirect enum UserAccountEvent {
     
-    case route(RouteEvent)
+    case alertButtonTapped(UserAccountEvent)
+    case dismiss(DismissEvent)
+    case navigate(NavigateEvent)
+    
+    case cancelC2BSub(SubscriptionViewModel.Token)
+    case deleteRequest
+    case exit
+    
+    case fps(FastPaymentsSettings)
+    case otp(OTPEvent)
 }
 
 extension UserAccountEvent {
     
-    enum RouteEvent {
+    enum DismissEvent {
         
-        case alert(AlertEvent)
-        case bottomSheet(BottomSheetEvent)
-        case link(LinkEvent)
-        case spinner(SpinnerEvent)
-        case sheet(SheetEvent)
-        case textFieldAlert(TextFieldAlertEvent)
+        case alert
+        case bottomSheet
+        case destination
+        case fpsAlert
+        case fpsDestination
+        case informer
+        case route
+        case sheet
+        case textFieldAlert
+    }
+    
+    enum NavigateEvent {
         
-        enum AlertEvent {
+        case alert(AlertModelOf<UserAccountEvent>)
+        case bottomSheet(UserAccountRoute.BottomSheet)
+        case link(UserAccountRoute.Link)
+        case spinner
+        case textFieldAlert(AlertTextFieldView.ViewModel)
+    }
+}
+
+extension UserAccountEvent {
+    
+    enum FastPaymentsSettings: Equatable {
+        
+        case dismissFPSDestination
+        case updated(FastPaymentsSettingsState)
+    }
+    
+    enum OTPEvent: Equatable {
+        
+        case create(TimedOTPRoute)
+        case otpInput(OTPInputStateProjection)
+        case prepareSetBankDefault
+        case prepareSetBankDefaultResponse(PrepareSetBankDefaultResponse)
+        
+        typealias TimedOTPRoute = GenericRoute<TimedOTPInputViewModel, Never, Never, Never>
+        
+        enum PrepareSetBankDefaultResponse: Equatable {
             
-            case reset
-            case setTo(Alert.ViewModel)
-        }
-        
-        enum BottomSheetEvent {
-            
-            case reset
-            case setTo(UserAccountRoute.BottomSheet)
-        }
-        
-        enum LinkEvent {
-            
-            case reset
-            case setTo(UserAccountRoute.Link)
-        }
-        
-        enum SpinnerEvent {
-            
-            case hide, show
-        }
-        
-        enum SheetEvent {
-            
-            case reset
-        }
-        
-        enum TextFieldAlertEvent {
-            
-            case reset
-            case setTo(AlertTextFieldView.ViewModel)
+            case success(OTPInputState.PhoneNumberMask)
+            case connectivityError
+            case serverError(String)
         }
     }
 }

@@ -9,6 +9,7 @@ import Foundation
 import SVGKit
 import SwiftUI
 
+#if os(iOS)
 public extension Image {
     
     init?(svg: String) {
@@ -22,3 +23,4 @@ public extension Image {
         self.init(uiImage: uiImage)
     }
 }
+#endif

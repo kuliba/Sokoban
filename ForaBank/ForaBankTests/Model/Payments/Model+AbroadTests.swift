@@ -1007,6 +1007,25 @@ final class Model_AbroadTests: XCTestCase {
         }
     }
     
+    func test_paymentsProcessRemoteStepAbroad_shouldReturnAntifraudParameter() async throws {
+       
+        let operation = operationWithCountryDropDownList(
+            paymentsOperator: .contact
+        )
+        let response: TransferResponseData = .makeDummy(
+            needOTP: true,
+            scenario: .suspect
+        )
+        let model: Model = .mockWithEmptyExcept()
+        
+        let step = try await model.paymentsProcessRemoteStepAbroad(
+            operation: operation,
+            response: response
+        )
+        
+        XCTAssertTrue(step.parametersIds.contains(where: { $0 == "AFResponse" }))
+    }
+    
     // MARK: - Helpers
     
     private func operationWithCountryDropDownList(

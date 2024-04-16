@@ -12,73 +12,35 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     
     func test_mapToSettings_shouldSetContract() {
         
-        let product = makeProduct()
-        let loadedContract = paymentContract(productID: product.id)
+        let loadedContract = paymentContract()
         
-        let settings = map(
-            getProductsStub: [product],
-            paymentContract: loadedContract
-        )
+        let settings = map(paymentContract: loadedContract)
         
         XCTAssertNoDiff(contract(in: settings), loadedContract)
     }
     
-    func test_mapToSettings_shouldSetConsentListSuccess() {
-        
-        let product = makeProduct()
-        let loadedConsentList = consentListSuccess()
-        
-        let settings = map(
-            getProductsStub: [product],
-            consentList: loadedConsentList
-        )
-        
-        XCTAssertNoDiff(consentList(in: settings), loadedConsentList)
-    }
-    
-    func test_mapToSettings_shouldSetConsentListFailure() {
-        
-        let product = makeProduct()
-        let loadedConsentList = consentListFailure()
-        
-        let settings = map(
-            getProductsStub: [product],
-            consentList: loadedConsentList
-        )
-        
-        XCTAssertNoDiff(consentList(in: settings), loadedConsentList)
-    }
-    
     func test_mapToSettings_shouldSetBankDefault() {
         
-        let product = makeProduct()
         let loadedBankDefault = bankDefault(.onDisabled)
         
-        let settings = map(
-            getProductsStub: [product],
-            bankDefaultResponse: loadedBankDefault
-        )
+        let settings = map(bankDefaultResponse: loadedBankDefault)
         
         XCTAssertNoDiff(bankDefaultResponse(in: settings), loadedBankDefault)
     }
     
     func test_mapToSettings_shouldSetBankDefaultWithRequestsLimit() {
         
-        let product = makeProduct()
         let loadedBankDefault = bankDefault(
             .onDisabled,
             requestLimitMessage: anyMessage()
         )
         
-        let settings = map(
-            getProductsStub: [product],
-            bankDefaultResponse: loadedBankDefault
-        )
+        let settings = map(bankDefaultResponse: loadedBankDefault)
         
         XCTAssertNoDiff(bankDefaultResponse(in: settings), loadedBankDefault)
     }
     
-    func test_mapToSettings_shouldSetProductSelectorWithEmptyProducts() {
+    func test_mapToSettings_shouldSetProductSelectorWithEmptyProductsOnEmptyProducts() {
         
         let settings = map(getProductsStub: [])
         
@@ -97,7 +59,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     func test_mapToSettings_shouldSetProductSelectorSelectedProductOnMatch() {
         
         let products = [makeProduct(), makeProduct()]
-        let contract = paymentContract(productID: products[1].id)
+        let contract = paymentContract(accountID: products[1].accountID)
         
         let settings = map(
             getProductsStub: products,
@@ -111,7 +73,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
         
         let products = [makeProduct(), makeProduct()]
         let nonMatch = makeProduct()
-        let contract = paymentContract(productID: nonMatch.id)
+        let contract = paymentContract(accountID: nonMatch.accountID)
         
         let settings = map(
             getProductsStub: products,
@@ -124,7 +86,7 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     func test_mapToSettings_shouldSetProductSelectorSelectedProductNilOnEmptyProducts() {
         
         let nonMatch = makeProduct()
-        let contract = paymentContract(productID: nonMatch.id)
+        let contract = paymentContract(accountID: nonMatch.accountID)
         
         let settings = map(
             getProductsStub: [],
@@ -134,17 +96,65 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
         XCTAssertNoDiff(productSelector(in: settings)?.selectedProduct, nil)
     }
     
+    func test_mapToSettings_shouldSetConsentListStateToCollapsedErrorOnNilConsentEmptyBanks() {
+        
+        let consent: Consent? = nil
+        let settings = map(consent: consent)
+        
+        XCTAssertNoDiff(consentList(in: settings), .failure(.collapsedError))
+    }
+    
+    func test_mapToSettings_shouldSetConsentListStateToCollapsedErrorOnNilConsentNonEmptyBanks() {
+        
+        let consent: Consent? = nil
+        let settings = map(getBanksStub: [.a], consent: consent)
+        
+        XCTAssertNoDiff(consentList(in: settings), .failure(.collapsedError))
+    }
+    
+    func test_mapToSettings_shouldSetConsentListStateToEmptyOnEmptyConsentEmptyBanks() {
+        
+        let consent: Consent? = []
+        let settings = map(consent: consent)
+        
+        XCTAssertNoDiff(consentList(in: settings), .success(.init(banks: [])))
+    }
+    
+    func test_mapToSettings_shouldSetConsentListStateOnEmptyConsentNonEmptyBanks() {
+        
+        let consent: Consent? = []
+        let settings = map(getBanksStub: [.a], consent: consent)
+        
+        XCTAssertNoDiff(consentList(in: settings), .success(.init(banks: [
+            .init(bank: .a, isConsented: false, isSelected: false)
+        ])))
+    }
+    
+    func test_mapToSettings_shouldSetConsentListStateOnNonEmptyConsentNonEmptyBanks() {
+        
+        let consent: Consent? = ["a"]
+        let settings = map(getBanksStub: [.a], consent: consent)
+        
+        XCTAssertNoDiff(consentList(in: settings), .success(.init(banks: [
+            .init(bank: .a, isConsented: true, isSelected: true)
+        ])))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = MicroServices.GetSettingsMapper
     
     private func makeSUT(
-        getProductsStub: [Product],
+        getProductsStub: [Product] = [],
+        getBanksStub: [Bank] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(getProducts: { getProductsStub })
+        let sut = SUT(
+            getProducts: { getProductsStub },
+            getBanks: { getBanksStub }
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -152,19 +162,24 @@ final class MicroServices_GetSettingsMapperTests: XCTestCase {
     }
     
     private func map(
-        getProductsStub: [Product],
+        getProductsStub: [Product] = [],
+        getBanksStub: [Bank] = [],
         paymentContract: UserPaymentSettings.PaymentContract = paymentContract(),
-        consentList: ConsentListState = consentListSuccess(),
+        consent: Consent? = nil,
         bankDefaultResponse: UserPaymentSettings.GetBankDefaultResponse = bankDefault(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> UserPaymentSettings {
         
-        let sut = makeSUT(getProductsStub: getProductsStub, file: file, line: line)
+        let sut = makeSUT(
+            getProductsStub: getProductsStub,
+            getBanksStub: getBanksStub,
+            file: file, line: line
+        )
         
         return sut.mapToSettings(
             paymentContract: paymentContract,
-            consentList: consentList,
+            consent: consent,
             bankDefaultResponse: bankDefaultResponse
         )
     }

@@ -5,12 +5,14 @@
 //  Created by Igor Malyarov on 18.01.2024.
 //
 
+import C2BSubscriptionUI
+
 extension FastPaymentsSettingsEffectHandler {
     
     static var preview: FastPaymentsSettingsEffectHandler {
         
         let consentListEffectHandler = ConsentListRxEffectHandler(
-            changeConsentList: { _, completion in completion(.success) }
+            changeConsentList: { _, completion in completion(.success(.init())) }
         )
         let contractEffectHandler = ContractEffectHandler(
             createContract: { _, completion in completion(.success(.active)) },

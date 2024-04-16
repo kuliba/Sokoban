@@ -5,31 +5,24 @@
 //  Created by Igor Malyarov on 10.01.2024.
 //
 
+import FastPaymentsSettings
 import SwiftUI
+import UserAccountNavigationComponent
 
 struct FastPaymentsSettingsWrapperView: View {
     
     @ObservedObject var viewModel: FastPaymentsSettingsViewModel
-    let navigationBarViewModel: NavigationBarView.ViewModel
-
-    var body: some View {
-        
-        #warning("replace with implementation from module")
-        VStack(spacing: 64) {
-            
-            Text(viewModel.isLoading ? "isLoading" : "not loading")
-            
-            Text("TBD: FastPaymentsSettingsView with \(String(describing: viewModel))")
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .navigationBar(with: navigationBarViewModel)
-        .loader(isLoading: viewModel.isLoading)
-    }
-}
-
-private extension FastPaymentsSettingsViewModel {
     
-    var isLoading: Bool { state }
+    let config: FastPaymentsSettingsConfig
+    
+    var body: some View {
+         
+        FastPaymentsSettingsView(
+            settingsResult: viewModel.state.settingsResult,
+            event: viewModel.event(_:),
+            config: config
+        )
+    }
 }
 
 struct FastPaymentsSettingsWrapperView_Previews: PreviewProvider {
@@ -37,11 +30,11 @@ struct FastPaymentsSettingsWrapperView_Previews: PreviewProvider {
     static var previews: some View {
         
         FastPaymentsSettingsWrapperView(
-            viewModel: .init(reduce: { state, event, completion in
-                
-                completion(state)
-            }), 
-            navigationBarViewModel: .init(action: {})
+            viewModel: .init(
+                initialState: .init(),
+                reduce: { state, _ in (state, nil) },
+                handleEffect: { _,_ in }),
+            config: .preview
         )
     }
 }

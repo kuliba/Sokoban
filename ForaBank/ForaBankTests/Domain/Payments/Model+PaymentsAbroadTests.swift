@@ -231,6 +231,6 @@ private extension TransferAnywayResponseData {
         printFormType: String? = nil,
         parameterListForNextStep: [ParameterData] = []) -> TransferAnywayResponseData {
             
-            .init(amount: amount, creditAmount: creditAmount, currencyAmount: currencyAmount, currencyPayee: currencyPayee, currencyPayer: currencyPayer, currencyRate: currencyRate, debitAmount: debitAmount, fee: fee, needMake: needMake, needOTP: needOTP, payeeName: payeeName, documentStatus: documentStatus, paymentOperationDetailId: paymentOperationDetailId, additionalList: additionalList, finalStep: finalStep, infoMessage: infoMessage, needSum: needSum, printFormType: printFormType, parameterListForNextStep: parameterListForNextStep)
+            .init(amount: amount, creditAmount: creditAmount, currencyAmount: currencyAmount, currencyPayee: currencyPayee, currencyPayer: currencyPayer, currencyRate: currencyRate, debitAmount: debitAmount, fee: fee, needMake: needMake, needOTP: needOTP, payeeName: payeeName, documentStatus: documentStatus, paymentOperationDetailId: paymentOperationDetailId, additionalList: additionalList, finalStep: finalStep, infoMessage: infoMessage, needSum: needSum, printFormType: printFormType, parameterListForNextStep: parameterListForNextStep, scenario: .ok)
         }
 }

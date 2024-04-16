@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 28.01.2024.
 //
 
+import C2BSubscriptionUI
 import Combine
 import FastPaymentsSettings
 import OTPInputComponent
@@ -15,18 +16,21 @@ public extension UserAccountNavigation {
     
     struct State: Equatable {
         
-        public var destination: Destination?
-        public var alert: Alert?
+        public var destination: FPSRoute?
+        public var alert: AlertModelOf<Event>?
         public var isLoading: Bool
+        public var informer: String?
         
         public init(
-            destination: Destination? = nil,
-            modal: Alert? = nil,
-            isLoading: Bool = false
+            destination: FPSRoute? = nil,
+            alert: AlertModelOf<Event>? = nil,
+            isLoading: Bool = false,
+            informer: String? = nil
         ) {
             self.destination = destination
-            self.alert = modal
+            self.alert = alert
             self.isLoading = isLoading
+            self.informer = informer
         }
     }
 }
@@ -35,54 +39,40 @@ public extension UserAccountNavigation.State {
     
     typealias Event = UserAccountNavigation.Event
     
-    enum Destination: Equatable {
-        
-        case fastPaymentsSettings(FPSRoute)
-    }
-    
-    enum Alert: Equatable {
-        
-        case alert(AlertModelOf<Event>)
-    }
-}
-
-public extension UserAccountNavigation.State.Destination {
-    
     typealias FastPaymentsSettingsViewModel = RxViewModel<FastPaymentsSettingsState, FastPaymentsSettingsEvent, FastPaymentsSettingsEffect>
     
-    typealias FPSRoute = GenericRoute<FastPaymentsSettingsViewModel, UserAccountNavigation.State.Destination.FPSDestination, Never, AlertModelOf<UserAccountNavigation.Event>>
-    
-    enum FPSDestination: Equatable {
-        
-        case confirmSetBankDefault(TimedOTPInputViewModel, AnyCancellable)//(phoneNumberMask: String)
-#warning("change `AnyCancellable?` to `AnyCancellable` after replacing `GetC2BSubResponse` to view model as associated type")
-        case c2BSub(GetC2BSubResponse, AnyCancellable?)
-    }
+    typealias FPSRoute = GenericRoute<FastPaymentsSettingsViewModel, UserAccountNavigation.State.FPSDestination, Never, AlertModelOf<UserAccountNavigation.Event>>
 }
-
-// MARK: - Helpers
 
 public extension UserAccountNavigation.State {
     
-    var fpsRoute: UserAccountNavigation.State.Destination.FPSRoute? {
+    
+    enum FPSDestination: Equatable, Identifiable {
         
-        get {
-            guard case let .fastPaymentsSettings(fpsRoute) = destination
-            else { return nil }
+#warning("remove optionality: change `AnyCancellable?` to `AnyCancellable` after replacing `GetC2BSubResponse` to view model as associated type")
+        case c2BSub(GetC2BSubResponse, AnyCancellable?)
+        case confirmSetBankDefault(TimedOTPInputViewModel, AnyCancellable)//(phoneNumberMask: String)
+        
+        public var id: Case {
             
-            return fpsRoute
+            switch self {
+            case .c2BSub: 
+                return .c2BSub
+                
+            case .confirmSetBankDefault:
+                return .confirmSetBankDefault
+            }
         }
         
-        set(newValue) {
-            guard case .fastPaymentsSettings = destination
-            else { return }
+        public enum Case {
             
-            self.destination = newValue.map(Destination.fastPaymentsSettings)
+            case c2BSub
+            case confirmSetBankDefault
         }
     }
 }
 
-// MAKR: - Hashable Conformance
+// MARK: - Hashable Conformance
 
 extension AlertModel: Hashable
 where PrimaryEvent: Equatable,
@@ -97,25 +87,7 @@ where PrimaryEvent: Equatable,
     }
 }
 
-extension UserAccountNavigation.State.Destination: Hashable {
-    
-    public static func == (lhs: Self, rhs: Self) -> Bool {
-        
-        switch (lhs, rhs) {
-        case let (.fastPaymentsSettings(lhs), .fastPaymentsSettings(rhs)):
-            return lhs.hashValue == rhs.hashValue
-        }
-    }
-    
-    public func hash(into hasher: inout Hasher) {
-        switch self {
-        case let .fastPaymentsSettings(route):
-            hasher.combine(route.hashValue)
-        }
-    }
-}
-
-extension UserAccountNavigation.State.Destination.FPSDestination: Hashable {
+extension UserAccountNavigation.State.FPSDestination: Hashable {
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
         
@@ -139,6 +111,20 @@ extension UserAccountNavigation.State.Destination.FPSDestination: Hashable {
             
         case let .c2BSub(getC2BSubResponse, _):
             hasher.combine(getC2BSubResponse)
+        }
+    }
+}
+
+extension GetC2BSubResponse: Hashable {
+    
+    public func hash(into hasher: inout Hasher) {
+        
+        switch details {
+        case .empty:
+            hasher.combine(0)
+        
+        case let .list(list):
+            hasher.combine(list.map(\.id))
         }
     }
 }

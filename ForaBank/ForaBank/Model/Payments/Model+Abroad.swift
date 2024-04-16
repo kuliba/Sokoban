@@ -505,7 +505,7 @@ extension Model {
                             return .init(with: svgImage)
                         }()
                         
-                        list.append(Payments.ParameterSelectBank.Option(id: item.id, name: item.name, subtitle: nil, icon: icon, searchValue: item.name))
+                        list.append(Payments.ParameterSelectBank.Option(id: item.id, name: item.name, subtitle: nil, icon: icon, isFavorite: false, searchValue: item.name))
                     }
                 }
                 
@@ -645,7 +645,7 @@ extension Model {
         response: TransferResponseData
     ) async throws -> Payments.Operation.Step {
         
-        let parameters = RemoteStepAbroadParametersMapper.map(
+        var parameters = RemoteStepAbroadParametersMapper.map(
             response,
             with: operation,
             and: self
@@ -654,6 +654,15 @@ extension Model {
         let remoteStage: Payments.Operation.Stage.Remote = response.needOTP == true ? .confirm : .next
         
         let dividendParameter = try? parameters.parameter(forIdentifier: .countryDividend)
+        
+        if response.scenario == .suspect {
+            
+            parameters.append(Payments.ParameterInfo(
+                .init(id: Payments.Parameter.Identifier.sfpAntifraud.rawValue, value: "SUSPECT"),
+                icon: .image(.parameterDocument),
+                title: "Antifraud"
+            ))
+        }
         
         return .init(
             parameters: parameters,

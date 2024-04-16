@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 22.01.2024.
 //
 
-extension OTPInputState.Input {
+extension OTPInputState.Status.Input {
  
     // MARK: - CountdownState
     

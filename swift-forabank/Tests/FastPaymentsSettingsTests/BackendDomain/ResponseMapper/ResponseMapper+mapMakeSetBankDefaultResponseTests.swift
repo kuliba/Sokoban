@@ -6,9 +6,10 @@
 //
 
 import FastPaymentsSettings
+import RemoteServices
 import XCTest
 
-final class ResponseMapper_mapMakeSetBankDefaultResponseResponseTests: XCTestCase {
+final class ResponseMapper_mapMakeSetBankDefaultResponseTests: XCTestCase {
     
     func test_map_shouldDeliverInvalidErrorOnInvalidData() throws {
         
@@ -77,23 +78,23 @@ final class ResponseMapper_mapMakeSetBankDefaultResponseResponseTests: XCTestCas
         
         assert(result, equals: .success(()))
     }
-    
-    func test_map_shouldDeliverRetryErrorOnSpecificMessage_g3() throws {
-        
-        let SpecificMessageData = Data(jsonString_g2.utf8)
-        let result = map(SpecificMessageData)
-        
-        assert(result, equals: .failure(.retry(errorMessage: retryErrorMessage)))
-    }
+    #warning("move to client tests")
+//    func test_map_shouldDeliverRetryErrorOnSpecificMessage_g3() throws {
+//        
+//        let SpecificMessageData = Data(jsonString_g2.utf8)
+//        let result = map(SpecificMessageData)
+//        
+//        assert(result, equals: .failure(.retry(errorMessage: retryErrorMessage)))
+//    }
     
     // MARK: - Helpers
     
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.MakeSetBankDefaultResponseResult {
+    ) -> ResponseMapper.VoidMappingResult {
         
-        ResponseMapper.mapMakeSetBankDefaultResponseResponse(data, httpURLResponse)
+        ResponseMapper.mapMakeSetBankDefaultResponse(data, httpURLResponse)
     }
     
     private let retryErrorMessage = "Введен некорректный код. Попробуйте еще раз."

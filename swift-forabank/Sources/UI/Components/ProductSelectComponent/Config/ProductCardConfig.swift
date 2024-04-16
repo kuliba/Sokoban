@@ -11,6 +11,7 @@ import SwiftUI
 public struct ProductCardConfig {
     
     let balance: TextConfig
+    let cardSize: CGSize
     let number: TextConfig
     let title: TextConfig
     let shadowColor: Color // main colors/Black background: #1C1C1C;
@@ -22,6 +23,7 @@ public extension ProductSelectConfig.Card {
         
         .init(
             balance: amount,
+            cardSize: cardSize,
             number: number,
             title: title,
             shadowColor: .black.opacity(0.1)

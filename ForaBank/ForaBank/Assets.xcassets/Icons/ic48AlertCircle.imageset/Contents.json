@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic48AlertCircle.svg"
+      "filename" : "ic48AlertCircle.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

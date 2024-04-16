@@ -59,11 +59,11 @@ public struct GetC2BSubscription: Equatable {
         
         public struct Subscription: Equatable {
             
-            let subscriptionToken: String
-            let brandIcon: String
-            let brandName: String
-            let subscriptionPurpose: String
-            let cancelAlert: String
+            public let subscriptionToken: String
+            public let brandIcon: String
+            public let brandName: String
+            public let subscriptionPurpose: String
+            public let cancelAlert: String
             
             public init(
                 subscriptionToken: String,

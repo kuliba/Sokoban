@@ -33,7 +33,7 @@ public final class TimedOTPInputViewModel: ObservableObject {
                 
                 self?.state = state
                 
-                switch state {
+                switch state.status {
                 case .failure, .validOTP:
                     timer.stop()
                     

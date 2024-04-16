@@ -309,7 +309,24 @@ class PaymentsOperationViewModel: ObservableObject {
                         }
                         
                     case let payload as PaymentsSectionViewModelAction.BankSelector.Show:
-                        sheet = .init(type: .contacts(payload.viewModel))
+         
+                        let contactsViewModel: ContactsViewModel = {
+                            
+                            switch payload.type {
+                            case .banks:
+                                let itemPhone = self.items.first(where: { $0.id == Payments.Parameter.Identifier.sfpPhone.rawValue })
+                                return self.model.makeContactsViewModel(forMode: .select(.banks(phone: itemPhone?.value.current)))
+                                
+                            case .banksFullInfo:
+                                return self.model.makeContactsViewModel(forMode: .select(.banksFullInfo))
+                            }
+                            
+                        }()
+                        
+                        bind(contactsViewModel: contactsViewModel)
+                        
+                        sheet = .init(type: .contacts(contactsViewModel))
+                        
                         // hide keyboard
                         UIApplication.shared.endEditing()
                         
@@ -398,8 +415,42 @@ class PaymentsOperationViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as PaymentsConfirmViewModelAction.CancelOperation:
-                    self.action.send(PaymentsOperationViewModelAction.CancelOperation(amount: payload.amount, reason: payload.reason))
-                
+                    self.action.send(PaymentsOperationViewModelAction.CancelOperation(
+                        amount: payload.amount,
+                        reason: payload.reason
+                    ))
+                    
+                case let payload as PaymentsOperationViewModelAction.CancelOperation:
+                    
+                    switch payload.reason {
+                    case .cancel, .none:
+                        //TODO: move to convenience init
+                        let success = Payments.Success(
+                            operation: operation.value,
+                            parameters: [
+                                Payments.ParameterSuccessStatus(status: .accepted),
+                                Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
+                                Payments.ParameterSuccessText(value: String(payload.amount.dropFirst()), style: .amount),
+                                Payments.ParameterButton.actionButtonMain()
+                            ])
+                        
+                        self.link = .success(.init(paymentSuccess: success, model))
+                        
+                    case .timeOut:
+                        //TODO: move to convenience init
+                        let success = Payments.Success(
+                            operation: operation.value,
+                            parameters: [
+                                Payments.ParameterSuccessStatus(status: .accepted),
+                                Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
+                                Payments.ParameterSuccessText(value: "Время на подтверждение перевода вышло", style: .title),
+                                Payments.ParameterSuccessText(value: String(payload.amount.dropFirst()), style: .amount),
+                                Payments.ParameterButton.actionButtonMain()
+                            ])
+                        
+                        self.link = .success(.init(paymentSuccess: success, model))
+                    }
+                    
                 case _ as PaymentsOperationViewModelAction.ItemDidUpdated:
                     updateBottomSection(isContinueEnabled: isItemsValuesValid)
                     
@@ -409,6 +460,22 @@ class PaymentsOperationViewModel: ObservableObject {
             }
             .store(in: &bindings)
     }
+    
+    private func bind(contactsViewModel: ContactsViewModel) {
+            
+            contactsViewModel.action
+                .compactMap({$0 as? ContactsViewModelAction.BankSelected })
+                .map(\.bankId)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] bankId in
+                    
+                    self?.sheet = nil
+                    
+                    let bankItem = self?.items.compactMap({ $0 as? PaymentsSelectBankView.ViewModel }).first
+                    bankItem?.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(id: bankId))
+                    
+                }.store(in: &bindings)
+        }
 }
 
 // MARK: - Sections Reducers
@@ -566,6 +633,7 @@ extension PaymentsOperationViewModel {
         
     enum Link {
         
+        case success(PaymentsSuccessViewModel)
         case confirm(PaymentsConfirmViewModel)
     }
     
@@ -628,8 +696,10 @@ enum PaymentsOperationViewModelAction {
     
     struct CancelOperation: Action {
         
+        typealias Reason = PaymentsConfirmViewModelAction.CancelOperation.Reason?
+        
         let amount: String
-        let reason: String?
+        let reason: Reason
     }
     
     struct ShowWarning: Action {

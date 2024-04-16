@@ -9,8 +9,9 @@
     import AnyFormatKit
     import IQKeyboardManagerSwift
 
-    class ConfurmOpenDepositViewController: PaymentViewController {
+    class ConfurmOpenDepositViewController: PaymentViewController { 
         
+        var getUImage: (Md5hash) -> UIImage? = { _ in UIImage() }
         var startAmount: Double = 5000.0
         var showSmsCode = false {
             didSet {
@@ -240,6 +241,7 @@
             smsCodeField.isHidden = true
             smsCodeField.alpha = 0
             
+            cardFromField.getUImage = getUImage
             cardFromField.titleLabel.text = "Счет списания"
             cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
             cardFromField.imageView.isHidden = false
@@ -469,7 +471,32 @@
                     
                     if model.statusCode == 0 {
                         
-                        let confurmVCModel = ConfirmViewControllerModel(type: .openDeposit)
+                        var status = ConfirmViewControllerModel.StatusOperation.succses
+                        
+                        switch model.data?.documentStatus{
+                        case .some("COMPLETE"):
+                            status = .succses
+                            
+                        case .some("IN_PROGRESS"):
+                            status = .inProgress
+                            
+                        case .some("REJECTED"):
+                            status = .error
+                            
+                        case .some("SUSPEND"):
+                            status = .antifraudCanceled
+                            
+                        case .some(_):
+                            status = .error
+                            
+                        case .none:
+                            status = .error
+                        }
+                        
+                        let confurmVCModel = ConfirmViewControllerModel(
+                            type: .openDeposit,
+                            status: status
+                        )
                         confurmVCModel.cardFromRealm = self.cardFromField.model
                         confurmVCModel.fullName = self.product?.name
                         confurmVCModel.summTransction = self.bottomView.amountTextField.text ?? ""

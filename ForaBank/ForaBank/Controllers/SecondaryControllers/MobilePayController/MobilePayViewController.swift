@@ -322,7 +322,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                     }
                     
                     if data?.statusCode == 0 {
-                        let model = ConfirmViewControllerModel(type: .mobilePayment)
+                        let model = ConfirmViewControllerModel(type: .mobilePayment, status: .succses)
                         model.operatorImage = svgImage ?? ""
                         model.cardFromRealm = self?.cardField.model
                         
@@ -344,6 +344,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                         model.status = .succses
                         DispatchQueue.main.async {
                             let vc = ContactConfurmViewController()
+                            vc.getUImage = { self?.model.images.value[$0]?.uiImage }
                             vc.confurmVCModel = model
                             vc.addCloseButton()
                             vc.title = "Подтвердите реквизиты"

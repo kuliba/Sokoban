@@ -27,12 +27,9 @@ public final class UserAccountNavigationReducer {
 
 public extension UserAccountNavigationReducer {
     
-    /// `dispatch` is used in `sink`
     func reduce(
         _ state: State,
-        _ event: Event,
-        _ inform: @escaping Inform,
-        _ dispatch: @escaping Dispatch
+        _ event: Event
     ) -> (State, Effect?) {
         
         var state = state
@@ -41,29 +38,33 @@ public extension UserAccountNavigationReducer {
         switch event {
         case .closeAlert:
             state.alert = nil
-           // effect = .fps(.resetStatus)
+            state.destination?.viewModel.event(.resetStatus)
             
         case .closeFPSAlert:
            // state.alert = nil
-            // state.fpsRoute?.alert = nil
-            effect = .fps(.resetStatus)
+            state.destination?.alert = nil
+            state.destination?.viewModel.event(.resetStatus)
             
         case .dismissFPSDestination:
-            state.fpsRoute?.destination = nil
-            effect = .fps(.resetStatus)
+            state.destination?.destination = nil
+            state.destination?.viewModel.event(.resetStatus)
             
         case .dismissDestination:
             state.destination = nil
-            effect = .fps(.resetStatus)
+            state.destination?.viewModel.event(.resetStatus)
             
         case .dismissRoute:
             state = .init()
             
+        case .fps(.dismissFPSDestination):
+            state.destination?.destination = nil
+            state.destination?.viewModel.event(.resetStatus)
+            
         case let .fps(.updated(fpsState)):
-            (state, effect) = fpsReduce(state, fpsState, inform)
+            (state, effect) = fpsReduce(state, fpsState)
             
         case let .otp(otpEvent):
-            (state, effect) = otpReduce(state, otpEvent, inform) { dispatch(.otp($0)) }
+            (state, effect) = otpReduce(state, otpEvent)
         }
         
         return (state, effect)
@@ -72,15 +73,9 @@ public extension UserAccountNavigationReducer {
 
 public extension UserAccountNavigationReducer {
     
-    typealias Inform = (String) -> Void
-    
-    typealias FPSReduce = (State, FastPaymentsSettingsState, @escaping Inform) -> (State, Effect?)
-    
-    typealias OTPDispatch = (Event.OTP) -> Void
-    typealias OTPReduce = (State, Event.OTP, @escaping Inform, @escaping OTPDispatch) -> (State, Effect?)
+    typealias FPSReduce = (State, FastPaymentsSettingsState) -> (State, Effect?)
+    typealias OTPReduce = (State, Event.OTP) -> (State, Effect?)
 
-    typealias Dispatch = (Event) -> Void
-    
     typealias State = UserAccountNavigation.State
     typealias Event = UserAccountNavigation.Event
     typealias Effect = UserAccountNavigation.Effect

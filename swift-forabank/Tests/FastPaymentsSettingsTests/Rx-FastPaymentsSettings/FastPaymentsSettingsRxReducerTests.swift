@@ -133,7 +133,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let product = makeProduct()
         let sut = makeSUT(products: [product])
         
-        assert(sut: sut, missing, activateContract(), effect: createContract(.init(product.id.rawValue)))
+        assert(sut: sut, missing, activateContract(), effect: createContract(product))
     }
     
     func test_activateContract_shouldChangeStatusToMissingProductOnMissingProductAtMissingSettingsWithConsentSuccess() {
@@ -172,7 +172,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let product = makeProduct()
         let sut = makeSUT(products: [product])
         
-        assert(sut: sut, missing, activateContract(), effect: createContract(.init(product.id.rawValue)))
+        assert(sut: sut, missing, activateContract(), effect: createContract(product))
     }
     
     func test_activateContract_shouldNotChangeStateOnConnectivityErrorFailure() {
@@ -1437,7 +1437,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let consentList = consentListFailure()
         let missing = missingContract(consentList)
         let (product1, selected) = (makeProduct(), makeProduct())
-        let newContract = paymentContract(productID: selected.id)
+        let newContract = paymentContract(accountID: selected.accountID)
         let sut = makeSUT(products: [product1, selected])
         
         assert(sut: sut, updateContractSuccess(newContract), on: missing) {
@@ -1457,7 +1457,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         let consentList = consentListFailure()
         let missing = missingContract(consentList)
         let (product1, missingProduct) = (makeProduct(), makeProduct())
-        let newContract = paymentContract(productID: missingProduct.id)
+        let newContract = paymentContract(accountID: missingProduct.accountID)
         let sut = makeSUT(products: [product1])
         
         assert(sut: sut, updateContractSuccess(newContract), on: missing) {
@@ -1624,8 +1624,8 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
     
     func test_updateProduct_shouldNotSetMissingProductOnSuccess_active_collapsed() {
         
-        let missingProduct = makeProduct(1)
-        let selectedProduct = makeProduct(0)
+        let missingProduct = makeProduct(.account(1))
+        let selectedProduct = makeProduct(.card(0, accountID: 2))
         let (details, active) = contractedState(
             .active,
             selectedProduct: selectedProduct,
@@ -2060,7 +2060,7 @@ final class FastPaymentsSettingsRxReducerTests: XCTestCase {
         
         return .init(
             contractID: .init(contractDetails.paymentContract.id.rawValue),
-            productID: product.id
+            selectableProductID: product.selectableProductID
         )
     }
 }

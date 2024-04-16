@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "8B63068F-F74D-4E1A-832E-08FCA9F07270",
+      "id" : "7719986B-4791-46F8-BAFC-9CC61A5CD66C",
       "name" : "Configuration 1",
       "options" : {
 
@@ -15,141 +15,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "WIPTests",
-        "name" : "WIPTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "TextFieldModelTests",
-        "name" : "TextFieldModelTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "TextFieldDomainTests",
-        "name" : "TextFieldDomainTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "TextFieldComponentTests",
-        "name" : "TextFieldComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "UserModelTests",
-        "name" : "UserModelTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "PickerWithPreviewComponentTests",
-        "name" : "PickerWithPreviewComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "LoadableResourceComponentTests",
-        "name" : "LoadableResourceComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "TextFieldUITests",
-        "name" : "TextFieldUITests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "CvvPinTests",
-        "name" : "CvvPinTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "GetProcessingSessionCodeServiceTests",
-        "name" : "GetProcessingSessionCodeServiceTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "SharedAPIInfraTests",
-        "name" : "SharedAPIInfraTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "SymmetricEncryptionTests",
-        "name" : "SymmetricEncryptionTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "GenericRemoteServiceTests",
-        "name" : "GenericRemoteServiceTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "LinkableTextTests",
-        "name" : "LinkableTextTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "LandingUIComponentTests",
-        "name" : "LandingUIComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "LandingMappingTests",
-        "name" : "LandingMappingTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "LoadableModelTests",
-        "name" : "LoadableModelTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "ServerAgentTests",
-        "name" : "ServerAgentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "PhoneNumberWrapperTests",
-        "name" : "PhoneNumberWrapperTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "PaymentStickerTests",
-        "name" : "PaymentStickerTests"
+        "identifier" : "ActivateSliderTests",
+        "name" : "ActivateSliderTests"
       }
     },
     {
@@ -169,8 +36,43 @@
     {
       "target" : {
         "containerPath" : "container:",
+        "identifier" : "CardGuardianUITests",
+        "name" : "CardGuardianUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardStatementAPITests",
+        "name" : "CardStatementAPITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CarouselComponentTests",
+        "name" : "CarouselComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
         "identifier" : "CryptoSwaddlerTests",
         "name" : "CryptoSwaddlerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CvvPinTests",
+        "name" : "CvvPinTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "FastPaymentsSettingsTests",
+        "name" : "FastPaymentsSettingsTests"
       }
     },
     {
@@ -190,6 +92,27 @@
     {
       "target" : {
         "containerPath" : "container:",
+        "identifier" : "ForaToolsTests",
+        "name" : "ForaToolsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GenericRemoteServiceTests",
+        "name" : "GenericRemoteServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetProcessingSessionCodeServiceTests",
+        "name" : "GetProcessingSessionCodeServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
         "identifier" : "KeyChainStoreTests",
         "name" : "KeyChainStoreTests"
       }
@@ -197,8 +120,162 @@
     {
       "target" : {
         "containerPath" : "container:",
+        "identifier" : "LandingMappingTests",
+        "name" : "LandingMappingTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LandingUIComponentTests",
+        "name" : "LandingUIComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LinkableTextTests",
+        "name" : "LinkableTextTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LoadableModelTests",
+        "name" : "LoadableModelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LoadableResourceComponentTests",
+        "name" : "LoadableResourceComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OTPInputComponentTests",
+        "name" : "OTPInputComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OperatorsListComponentsTests",
+        "name" : "OperatorsListComponentsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PaymentStickerTests",
+        "name" : "PaymentStickerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PhoneNumberWrapperTests",
+        "name" : "PhoneNumberWrapperTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PickerWithPreviewComponentTests",
+        "name" : "PickerWithPreviewComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
         "identifier" : "PinCodeUITests",
         "name" : "PinCodeUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ProductProfileTests",
+        "name" : "ProductProfileTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ProductSelectComponentTests",
+        "name" : "ProductSelectComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "RxViewModelTests",
+        "name" : "RxViewModelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SberQRTests",
+        "name" : "SberQRTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ServerAgentTests",
+        "name" : "ServerAgentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SharedAPIInfraTests",
+        "name" : "SharedAPIInfraTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SymmetricEncryptionTests",
+        "name" : "SymmetricEncryptionTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TextFieldComponentTests",
+        "name" : "TextFieldComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TextFieldDomainTests",
+        "name" : "TextFieldDomainTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TextFieldModelTests",
+        "name" : "TextFieldModelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TextFieldUITests",
+        "name" : "TextFieldUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "TopUpCardUITests",
+        "name" : "TopUpCardUITests"
       }
     },
     {
@@ -218,62 +295,6 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "SberQRTests",
-        "name" : "SberQRTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "ForaToolsTests",
-        "name" : "ForaToolsTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "FastPaymentsSettingsTests",
-        "name" : "FastPaymentsSettingsTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "ProductSelectComponentTests",
-        "name" : "ProductSelectComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "CardStatementAPITests",
-        "name" : "CardStatementAPITests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "OTPInputComponentTests",
-        "name" : "OTPInputComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "RxViewModelTests",
-        "name" : "RxViewModelTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "ProductProfileTests",
-        "name" : "ProductProfileTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
         "identifier" : "UserAccountNavigationComponentTests",
         "name" : "UserAccountNavigationComponentTests"
       }
@@ -281,15 +302,78 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "CarouselComponentTests",
-        "name" : "CarouselComponentTests"
+        "identifier" : "UserModelTests",
+        "name" : "UserModelTests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "CardGuardianModuleTests",
-        "name" : "CardGuardianModuleTests"
+        "identifier" : "PrePaymentPickerTests",
+        "name" : "PrePaymentPickerTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UtilityPaymentTests",
+        "name" : "UtilityPaymentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetProductListByTypeServiceTests",
+        "name" : "GetProductListByTypeServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AccountInfoPanelTests",
+        "name" : "AccountInfoPanelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CardUITests",
+        "name" : "CardUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ProductDetailsUITests",
+        "name" : "ProductDetailsUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "RemoteServicesTests",
+        "name" : "RemoteServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AnywayPaymentBackendTests",
+        "name" : "AnywayPaymentBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AnywayPaymentCoreTests",
+        "name" : "AnywayPaymentCoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AnywayPaymentAdaptersTests",
+        "name" : "AnywayPaymentAdaptersTests"
       }
     }
   ],

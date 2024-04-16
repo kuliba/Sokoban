@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import RemoteServices
 import XCTest
 
 final class ResponseMapper_mapFastPaymentContractFindListResponseTests: XCTestCase {
@@ -94,12 +95,20 @@ final class ResponseMapper_mapFastPaymentContractFindListResponseTests: XCTestCa
         assert(result, equals: .success(.a2))
     }
     
+    func test_map_shouldDeliverResponseOnOkHTTPURLResponseStatusCodeWithValidData_a3_Gevorg() throws {
+        
+        let validData = Data(jsonString_a3_Gevorg.utf8)
+        let result = map(validData)
+        
+        assert(result, equals: .success(.a3))
+    }
+    
     // MARK: - Helpers
     
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.FastPaymentContractFindListResult {
+    ) -> ResponseMapper.MappingResult<FastPaymentContractFullInfo?> {
         
         ResponseMapper.mapFastPaymentContractFindListResponse(data, httpURLResponse)
     }
@@ -173,6 +182,41 @@ private extension FastPaymentContractFullInfo {
             fpcontractID: 10000084818,
             phoneNumber: "79171044913",
             phoneNumberMask: "+7 ... ... 49 13",
+            branchBIC: "044525341"
+        )
+    )
+    
+    static let a3: Self = .init(
+        account: .init(
+            accountID: 10004176990,
+            flagPossibAddAccount: .yes,
+            maxAddAccount: 0,
+            minAddAccount: 0,
+            accountNumber: "40817810552005000639"
+        ),
+        clientInfo: .init(
+            clientID: 10002053887,
+            inn: "480211238460",
+            name: "Чаликян Геворг Акопович",
+            nm: "Геворг Акопович Ч",
+            clientSurName: "Чаликян",
+            clientPatronymicName: "Акопович",
+            clientName: "Геворг",
+            docType: "21",
+            regSeries: "42 17",
+            regNumber: "095830",
+            address: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, Липецкая обл, Грязинский р-н, Сошки с, Фролова ул ,  д. 4"
+        ),
+        contract: .init(
+            accountID: 10004176990,
+            branchID: 2000,
+            clientID: 10002053887,
+            flagBankDefault: .empty,
+            flagClientAgreementIn: .yes,
+            flagClientAgreementOut: .yes,
+            fpcontractID: 10000082922,
+            phoneNumber: "79191619658",
+            phoneNumberMask: "+7 ... ... 96 58",
             branchBIC: "044525341"
         )
     )
@@ -280,6 +324,57 @@ private let jsonString_a2 = """
             "regSeries": "36 12",
             "regNumber": "990428",
             "address": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 443109, Самарская обл, Самара г, Товарная ,  д. 7Г,  кв. 5"
+          }
+        }
+      ]
+    }
+  ]
+}
+"""
+
+private let jsonString_a3_Gevorg = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": [
+    {
+      "fastPaymentContractAccountAttributeList": [
+        {
+          "accountID": 10004176990,
+          "flagPossibAddAccount": "YES",
+          "maxAddAccount": 0E-10,
+          "minAddAccount": 0E-10,
+          "accountNumber": "40817810552005000639"
+        }
+      ],
+      "fastPaymentContractAttributeList": [
+        {
+          "accountID": 10004176990,
+          "branchID": 2000,
+          "clientID": 10002053887,
+          "flagBankDefault": "EMPTY",
+          "flagClientAgreementIn": "YES",
+          "flagClientAgreementOut": "YES",
+          "fpcontractID": 10000082922,
+          "phoneNumber": "79191619658",
+          "phoneNumberMask": "+7 ... ... 96 58",
+          "branchBIC": "044525341"
+        }
+      ],
+      "fastPaymentContractClAttributeList": [
+        {
+          "clientInfo": {
+            "clientID": 10002053887,
+            "inn": "480211238460",
+            "name": "Чаликян Геворг Акопович",
+            "nm": "Геворг Акопович Ч",
+            "clientSurName": "Чаликян",
+            "clientPatronymicName": "Акопович",
+            "clientName": "Геворг",
+            "docType": "21",
+            "regSeries": "42 17",
+            "regNumber": "095830",
+            "address": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, Липецкая обл, Грязинский р-н, Сошки с, Фролова ул ,  д. 4"
           }
         }
       ]

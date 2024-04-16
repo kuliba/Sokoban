@@ -23,6 +23,7 @@ extension CurrencyExchangeSuccessView {
         var id: String { title }
         let icon: Image
         let title: String
+        let subtitle: String?
         let amount: String
         let delay: TimeInterval?
         
@@ -37,30 +38,49 @@ extension CurrencyExchangeSuccessView {
             case success
             case error
             case wait
+            case suspended
                 
             var appearance: (icon: Image, text: String) {
                 switch self {
                 case .success: return (Image("Done"), "Успешный перевод")
                 case .error: return (Image("Denied"), "Операция неуспешна!")
+                case .suspended: return (Image("waiting"), "Операция временно приостановлена в целях безопасности!")
                 case .wait: return (Image("waiting"), "Операция в обработке!")
+                }
+            }
+            
+            var subtitle: String? {
+                switch self {
+                case .suspended:
+                    return Payments.Success.antifraudSubtitle
+                    
+                default:
+                    return nil
                 }
             }
         }
         
-        internal init(icon: Image, title: String, state: State, amount: String, delay: TimeInterval? = 0) {
+        internal init(icon: Image, title: String, subtitle: String?, state: State, amount: String, delay: TimeInterval? = 0) {
             
             self.icon = icon
             self.title = title
+            self.subtitle = subtitle
             self.state = state
             self.amount = amount
             self.delay = delay
         }
             
-        init(state: State, amount: Double, currency: Currency,
-             delay: TimeInterval? = 0, model: Model ) {
+        init(
+            state: State,
+            amount: Double,
+            currency: Currency,
+            delay: TimeInterval? = 0,
+            model: Model
+        ) {
                 
             self.icon = state.appearance.icon
             self.title = state.appearance.text
+            self.subtitle = state.subtitle
             self.state = state
             self.amount = model.amountFormatted(amount: amount,
                                                 currencyCode: currency.description,
@@ -116,10 +136,32 @@ struct CurrencyExchangeSuccessView: View {
             if viewModel.isPresent {
                 
                 Group {
-                    
-                    Text(viewModel.title)
-                        .font(.textH3Sb18240())
-                        .foregroundColor(.textSecondary)
+                 
+                    if viewModel.state == .suspended {
+                        
+                        Text(viewModel.title)
+                            .font(.textH3Sb18240())
+                            .foregroundColor(.systemColorError)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 20)
+                        
+                    } else {
+                        
+                        Text(viewModel.title)
+                            .font(.textH3Sb18240())
+                            .foregroundColor(.textSecondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 20)
+                    }
+                
+                    if let subtitle = viewModel.subtitle {
+                     
+                        Text(subtitle)
+                            .font(.textH3Sb18240())
+                            .foregroundColor(.textSecondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 20)
+                    }
                 
                     Text(viewModel.amount)
                         .font(.textH1Sb24322())
@@ -145,8 +187,7 @@ struct CurrencyExchangeSuccessView: View {
                                 .frame(height: 48)
                                 .padding(.horizontal, 20)
                         }
-                    }
-                    else {
+                    } else if viewModel.state != .suspended {
                         HStack(alignment: .center, spacing: 36) {
                             ButtonIconTextView(viewModel: viewModel.detailsButton)
                         }
@@ -204,6 +245,7 @@ extension CurrencyExchangeSuccessView.ViewModel {
     static var success = CurrencyExchangeSuccessView
                             .ViewModel(icon: Image("Done"),
                                        title: "Успешный перевод",
+                                       subtitle: nil,
                                        state: .success,
                                        amount: "100.23 $",
                                        delay: 2.0)
@@ -211,6 +253,7 @@ extension CurrencyExchangeSuccessView.ViewModel {
     static var error = CurrencyExchangeSuccessView
                             .ViewModel(icon: Image("Denied"),
                                        title: "Операция неуспешна!",
+                                       subtitle: nil,
                                        state: .error,
                                        amount: "80.23 $",
                                        delay: nil )
@@ -218,6 +261,7 @@ extension CurrencyExchangeSuccessView.ViewModel {
     static var waiting = CurrencyExchangeSuccessView
                             .ViewModel(icon: Image("waiting"),
                                        title: "Операция в обработке!",
+                                       subtitle: nil,
                                        state: .wait,
                                        amount: "99.23 $",
                                        delay: nil)

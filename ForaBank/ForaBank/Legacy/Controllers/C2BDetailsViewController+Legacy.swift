@@ -12,15 +12,16 @@ import Combine
 struct C2BDetailsView: UIViewControllerRepresentable {
     
     let viewModel: C2BViewModel
+    let getUImage: (Md5hash) -> UIImage?
     
     func makeUIViewController(context: Context) -> UIViewController {
         guard let controller = C2BDetailsViewController.storyboardInstance() else {
             return UIViewController()
         }
-        
+        controller.getUImage = getUImage
         controller.modalPresentationStyle = .fullScreen
         controller.closeAction = viewModel.closeAction
-        controller.viewModel = .init(urlString: viewModel.urlString)
+        controller.viewModel = .init(urlString: viewModel.urlString, getUImage: getUImage)
 
         context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
             

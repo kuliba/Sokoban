@@ -289,10 +289,71 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         let json = try Data(contentsOf: url)
         
         guard let urlString = URL(string:"string") else { return }
-        guard let urlImage = URL(string:"rest/getDepositImage?image=10000003006") else { return }
+        guard let _ = URL(string:"rest/getDepositImage?image=10000003006") else { return }
         
-        
-        let expected = ServerCommands.DepositController.GetDepositProductList.Response(statusCode: .ok, data: [.init(depositProductID: 10000003006, detailedСonditions: [.init(desc: "Капитализация процентов ко вкладу", enable: true)], documentsList: [.init(name: "string", url: urlString)], generalСondition: .init(design: .init(background: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")], textColor: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")]), formula: "(initialAmount * interestRate * termDay/AllDay) / 100", generalTxtСondition: ["string"], imageLink: "rest/getDepositImage?image=10000003006", maxRate: 8.7, maxSum: 10000000, maxTerm: 731, maxTermTxt: "До 2-х лет", minSum: 5000, minSumCur: "RUB", minTerm: 31), name: "Сберегательный онлайн", termRateList: [.init(termRateSum: [.init(sum: 5000, termRateList: [.init(rate: 0.7, term: 31, termName: "1 месяц", termABS: nil, termKind: nil, termType: nil)])], сurrencyCode: "810", сurrencyCodeTxt: "RUB")], termRateCapList: nil, txtСondition: ["string"])], errorMessage: "string")
+        let expected = ServerCommands.DepositController.GetDepositProductList.Response(
+            statusCode: .ok,
+            data: .init(
+                list: [
+                    .init(
+                        depositProductID: 10000003006,
+                        detailedСonditions: [
+                            .init(desc: "Капитализация процентов ко вкладу", enable: true)
+                        ],
+                        documentsList: [
+                            .init(name: "string", url: urlString)
+                        ],
+                        generalСondition:
+                                .init(
+                                    design: .init(
+                                        background: [
+                                            ColorData.init(description: "1C1C1C"),
+                                            ColorData.init(description: "FFFFFF"),
+                                            ColorData.init(description: "999999")
+                                        ],
+                                        textColor: [
+                                            ColorData.init(description: "1C1C1C"),
+                                            ColorData.init(description: "FFFFFF"),
+                                            ColorData.init(description: "999999")
+                                        ]
+                                    ),
+                                    formula: "(initialAmount * interestRate * termDay/AllDay) / 100",
+                                    generalTxtСondition: ["string"],
+                                    imageLink: "rest/getDepositImage?image=10000003006",
+                                    maxRate: 8.7,
+                                    maxSum: 10000000,
+                                    maxTerm: 731,
+                                    maxTermTxt: "До 2-х лет",
+                                    minSum: 5000,
+                                    minSumCur: "RUB",
+                                    minTerm: 31),
+                        name: "Сберегательный онлайн",
+                        termRateList: [
+                            .init(
+                                termRateSum: [
+                                    .init(
+                                        sum: 5000,
+                                        termRateList: [
+                                            .init(
+                                                rate: 0.7,
+                                                term: 31,
+                                                termName: "1 месяц",
+                                                termABS: nil,
+                                                termKind: nil,
+                                                termType: nil
+                                            )
+                                        ]
+                                    )
+                                ],
+                                сurrencyCode: "810",
+                                сurrencyCodeTxt: "RUB"
+                            )
+                        ],
+                        termRateCapList: nil,
+                        txtСondition: ["string"])
+                ],
+                serial: "serial"),
+            errorMessage: "string")
         
         // when
         let result = try decoder.decode(ServerCommands.DepositController.GetDepositProductList.Response.self, from: json)

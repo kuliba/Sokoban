@@ -6,21 +6,25 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 public struct OTPInputView: View {
     
-    private let state: OTPInputState.Input
+    private let state: OTPInputState.Status.Input
     private let phoneNumber: String
     private let event: (OTPInputEvent) -> Void
+    private let config: OTPInputConfig
     
     public init(
-        state: OTPInputState.Input,
+        state: OTPInputState.Status.Input,
         phoneNumber: String,
-        event: @escaping (OTPInputEvent) -> Void
+        event: @escaping (OTPInputEvent) -> Void,
+        config: OTPInputConfig
     ) {
         self.state = state
         self.phoneNumber = phoneNumber
         self.event = event
+        self.config = config
     }
     
     private let title = "Введите код из сообщения"
@@ -38,7 +42,7 @@ public struct OTPInputView: View {
         
         VStack(spacing: 40) {
             
-            titleView()
+            title.text(withConfig: config.title)
             
             ZStack(alignment: .top) {
                 
@@ -62,18 +66,20 @@ public struct OTPInputView: View {
         .padding(.top, 0)
     }
     
-    private func titleView() -> some View {
-        
-        Text(title)
-            .font(.headline.bold())
-    }
-    
     private func inputField() -> some View {
         
         OTPInputFieldView(
             state: state.otpField,
-            event: { event(.otpField($0)) }
+            event: { event(.otpField($0)) },
+            config: config.digitModel
         )
+    }
+    
+    private func descriptionView() -> some View {
+        
+        subtitle.text(withConfig: config.subtitle)
+            .multilineTextAlignment(.center)
+            .fixedSize()
     }
     
     @ViewBuilder
@@ -84,27 +90,52 @@ public struct OTPInputView: View {
         
         switch state {
         case .completed:
-            Button("resend") { event(.prepare) }
+            resendButton(action: { event(.prepare) })
             
         case let .failure(countdownFailure):
             // Alert should dismiss view
             EmptyView()
             
         case let .running(remaining: remaining):
-            Text(remainingTime(remaining))
+            remainingTime(remaining).text(withConfig: config.timer)
             
         case let .starting(duration):
-            Text(remainingTime(duration))
+            remainingTime(duration).text(withConfig: config.timer)
+        }
+    }
+    
+    private func resendButton(
+        action: @escaping () -> Void
+    ) -> some View {
+        
+        Button(action: action) {
+            
+            ZStack {
+                
+                config.resend.backgroundColor
+                
+                "Отправить повторно".text(withConfig: config.resend.text)
+                    .padding(.horizontal)
+            }
+            .frame(height: 24)
+            .fixedSize()
+            .clipShape(RoundedRectangle(cornerRadius: 90))
         }
     }
     
     private func confirmButton() -> some View {
         
         Button(action: confirmButtonAction) {
-            Text("Подтвердить")
-                .bold()
-                .padding(.vertical, 9)
-                .frame(maxWidth: .infinity)
+            
+            ZStack {
+                
+                confirmButtonBackgroundColor()
+                
+                "Подтвердить".text(withConfig: confirmButtonTextConfig())
+            }
+            .frame(height: config.button.buttonHeight)
+            .frame(maxWidth: .infinity)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .padding(.horizontal)
         .padding(.bottom, 24)
@@ -119,12 +150,18 @@ public struct OTPInputView: View {
         }
     }
     
-    private func descriptionView() -> some View {
+    private func confirmButtonBackgroundColor() -> some View {
         
-        Text(subtitle)
-            .foregroundColor(.secondary)
-            .multilineTextAlignment(.center)
-            .fixedSize()
+        state.isConfirmButtonActive
+        ? config.button.active.backgroundColor
+        : config.button.inactive.backgroundColor
+    }
+    
+    private func confirmButtonTextConfig() -> TextConfig {
+        
+        state.isConfirmButtonActive
+        ? config.button.active.text
+        : config.button.active.text
     }
     
     private func autofocusTextField() -> some View {
@@ -151,7 +188,7 @@ public struct OTPInputView: View {
     }
 }
 
-private extension OTPInputState.Input {
+private extension OTPInputState.Status.Input {
     
     var isTimerCompleted: Bool {
         
@@ -188,13 +225,14 @@ struct OTPInputView_Previews: PreviewProvider {
     }
     
     private static func otpInputView(
-        _ state: OTPInputState.Input
+        _ state: OTPInputState.Status.Input
     ) -> some View {
         
         OTPInputView(
             state: state,
             phoneNumber: "+7 ... ... 54 15",
-            event: { _ in }
+            event: { _ in },
+            config: .preview
         )
     }
 }

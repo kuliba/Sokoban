@@ -670,7 +670,7 @@ private extension PaymentStickerBusinessTests {
             processImageLoaderService: imageLoaderSpy.process(_:_:),
             selectOffice: {_,_  in },
             products: { return [] },
-            cityList: { return [] }
+            cityList: { _ in return [] }
         )
         
 //        trackForMemoryLeaks(spyDictionary, file: file, line: line)

@@ -216,6 +216,7 @@ private extension ResponseMapper._Data.Parameter {
         case complete = "COMPLETE"
         case inProgress = "IN_PROGRESS"
         case rejected = "REJECTED"
+        case suspended = "SUSPEND"
         
         var icon: CreateSberQRPaymentResponse.Parameter.SuccessStatusIcon.StatusIcon {
             
@@ -223,6 +224,7 @@ private extension ResponseMapper._Data.Parameter {
             case .complete: return .complete
             case .inProgress: return .inProgress
             case .rejected: return .rejected
+            case .suspended: return .suspended
             }
         }
     }

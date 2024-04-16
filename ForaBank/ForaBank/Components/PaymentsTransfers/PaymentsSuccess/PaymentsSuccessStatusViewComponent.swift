@@ -38,6 +38,7 @@ extension Payments.ParameterSuccessStatus.Status {
         case .success: return .ic48Check
         case .accepted: return .ic48Clock
         case .transfer: return .ic48UploadToAccount
+        case .suspended: return .ic48Clock
         case .error: return .ic48Close
         }
     }
@@ -48,6 +49,7 @@ extension Payments.ParameterSuccessStatus.Status {
         case .success: return .systemColorActive
         case .accepted: return .systemColorWarning
         case .transfer: return .systemColorWarning
+        case .suspended: return .systemColorWarning
         case .error: return .systemColorError
         }
     }

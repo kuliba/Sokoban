@@ -10,36 +10,33 @@ import SwiftUI
 struct ToggleMockView: View {
     
     let status: Status
-    var height: CGFloat = 24
+    let color: Color
+    let knobHeight: CGFloat = 21
+    var width: CGFloat = 51
+    var height: CGFloat = 31
     var padding: CGFloat = 6
     
     var body: some View {
         
         Capsule(style: .continuous)
             .strokeBorder(color)
-            .frame(width: height * 2 + padding, height: height + padding)
+            .frame(width: width, height: height)
             .overlay(
                 Circle()
                     .fill(color)
-                    .frame(width: height, height: height)
-                    .padding(padding),
+                    .frame(width: knobHeight, height: knobHeight)
+                    .padding(.horizontal, 5),
                 alignment: alignment
             )
-    }
-    
-    var color: Color {
-        
-        switch status {
-        case .active:   return .green
-        case .inactive: return .black
-        }
     }
     
     var alignment: Alignment {
         
         switch status {
-        case .active:   return .trailing
-        case .inactive: return .leading
+        case .on(.enabled):   return .trailing
+        case .on(.disabled):  return .trailing
+        case .off(.enabled):  return .leading
+        case .off(.disabled): return .leading
         }
     }
 }
@@ -48,7 +45,13 @@ extension ToggleMockView {
     
     enum Status {
         
-        case active, inactive
+        case on(Mode)
+        case off(Mode)
+        
+        enum Mode {
+            
+            case enabled, disabled
+        }
     }
 }
 
@@ -58,16 +61,18 @@ struct ToggleMockView_Previews: PreviewProvider {
         
         VStack {
             
-            toggleMockView(.active)
-            toggleMockView(.inactive)
+            toggleMockView(.on(.enabled), color: .green)
+            toggleMockView(.on(.disabled), color: .gray)
+            toggleMockView(.off(.enabled), color: .black)
+            toggleMockView(.off(.disabled), color: .blue)
         }
     }
     
     private static func toggleMockView(
         _ status: ToggleMockView.Status,
-        height: CGFloat = 24
+        color: Color
     ) -> some View {
         
-        ToggleMockView(status: status, height: height)
+        ToggleMockView(status: status, color: color)
     }
 }

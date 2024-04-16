@@ -23,7 +23,7 @@ struct OTPInputWrapperView: View {
     
     var body: some View {
         
-        switch viewModel.state {
+        switch viewModel.state.status {
         case let .failure(otpFieldFailure):
             Text(String(describing: otpFieldFailure))
                 .foregroundStyle(.red)
@@ -33,8 +33,9 @@ struct OTPInputWrapperView: View {
         case let .input(input):
             OTPInputView(
                 state: input,
-                phoneNumber: "+7 ... ... 54 15",
-                event: viewModel.event
+                phoneNumber: viewModel.state.phoneNumber.rawValue,
+                event: viewModel.event, 
+                config: .preview
             )
             
         case .validOTP:
@@ -46,12 +47,16 @@ struct OTPInputWrapperView: View {
     }
 }
 
-extension TimedOTPInputViewModel {
+private extension TimedOTPInputViewModel {
     
     convenience init(
         demoSettings: DemoSettings
     ) {
         let otpInputViewModel = OTPInputViewModel.default(
+            initialState: .starting(
+                phoneNumber: .init(demoSettings.phoneNumber), 
+                duration: demoSettings.countdownDemoSettings.duration.rawValue
+            ),
             duration: demoSettings.countdownDemoSettings.duration.rawValue,
             initiateOTP: { completion in
                 

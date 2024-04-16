@@ -391,6 +391,8 @@ extension Payments {
  
         let operation: Payments.Operation?
         let parameters: [PaymentsParameterRepresentable]
+        
+        static let antifraudSubtitle = "Ожидайте звонка call-центра банка для подтверждения операции. В случае если в течение 2-х дней мы не сможем связаться с вами, операция будет выполнена по умолчанию."
     }
 }
 

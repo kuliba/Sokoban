@@ -361,13 +361,18 @@ extension Payments {
             ParameterSelectBank(.init(id: parameter.id, value: value), icon: icon, title: title, options: options, placeholder: placeholder, selectAll: selectAll, keyboardType: keyboardType, isEditable: isEditable, group: group)
         }
         
+        func updated(options: [ParameterSelectBank.Option]) -> PaymentsParameterRepresentable {
+            
+            ParameterSelectBank(.init(id: parameter.id, value: parameter.value), icon: icon, title: title, options: options, placeholder: placeholder, selectAll: selectAll, keyboardType: keyboardType, isEditable: isEditable, group: group)
+        }
+        
         struct Option: Identifiable, Equatable {
     
             let id: String
             let name: String
             let subtitle: String?
             let icon: ImageData?
-            
+            let isFavorite: Bool
             let searchValue: String
         }
         
@@ -1180,12 +1185,22 @@ extension Payments {
         
         init(with subscriptionData: C2BSubscriptionData) {
             
-            self.init(.init(id: UUID().uuidString, value: subscriptionData.brandName), icon: subscriptionData.brandIcon, description: nil, style: .small)
+            self.init(
+                .init(id: UUID().uuidString, value: subscriptionData.brandName),
+                icon: subscriptionData.brandIcon,
+                description: subscriptionData.legalName,
+                style: .small
+            )
         }
         
         init(with parameter: PaymentParameterSubscriber) {
             
-            self.init(.init(id: parameter.id, value: parameter.value), icon: parameter.icon, description: parameter.subscriptionPurpose, style: parameter.style)
+            self.init(
+                .init(id: parameter.id, value: parameter.value),
+                icon: parameter.icon,
+                description: parameter.description,
+                style: parameter.style
+            )
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
@@ -1345,6 +1360,9 @@ extension Payments {
 
             case .inProgress:
                 self.init(status: .accepted)
+            
+            case .suspended:
+                self.init(status: .suspended)
 
             case .rejected, .unknown:
                 self.init(status: .error)
@@ -1373,6 +1391,9 @@ extension Payments {
                 
             case .rejected:
                 self.init(status: .error)
+            
+            case .suspended:
+                self.init(status: .suspended)
                 
             default:
                 self.init(status: .accepted)
@@ -1384,6 +1405,7 @@ extension Payments {
             case success
             case accepted
             case transfer
+            case suspended
             case error
         }
     }
@@ -1522,9 +1544,9 @@ extension Payments {
             self.url = url
         }
         
-        init?(with subsctiptionData: C2BSubscriptionData) {
+        init?(with subscriptionData: C2BSubscriptionData) {
             
-            guard let url = subsctiptionData.redirectUrl else {
+            guard let url = subscriptionData.redirectUrl else {
                 return nil
             }
             
@@ -1771,4 +1793,37 @@ extension Payments.ParameterButton.Style: Decodable {
             throw Payments.Error.unsupported
         }
     }
+}
+
+extension PaymentParameterSubscriber {
+    
+    var description: String? {
+        
+        if let legalName {
+            
+            if let subscriptionPurpose {
+                
+                return legalName + "\n" + subscriptionPurpose
+            }
+            return legalName
+            
+        } else {
+            
+            return subscriptionPurpose
+        }
+    }
+}
+
+extension Payments.ParameterSelectBank.Option {
+    
+    var text: String {
+          
+          switch subtitle {
+          case let .some(subtitle):
+              return subtitle
+          case .none:
+              return name
+          }
+      }
+
 }

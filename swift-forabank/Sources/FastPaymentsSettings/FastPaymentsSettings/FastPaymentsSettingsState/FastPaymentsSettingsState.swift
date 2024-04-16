@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 14.01.2024.
 //
 
+import C2BSubscriptionUI
+
 public struct FastPaymentsSettingsState: Equatable {
     
     public var settingsResult: UserPaymentSettingsResult?

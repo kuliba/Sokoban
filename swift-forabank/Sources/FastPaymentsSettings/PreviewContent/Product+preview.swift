@@ -9,21 +9,21 @@ import Foundation
 
 public extension Product {
     
-    static let card: Self = _product(
-        id: .init(generateRandom11DigitNumber()),
-        type: .card,
-        amountFormatted: "123.45"
+    static let account: Self = _product(
+        id: .account(.init(generateRandom11DigitNumber())),
+        amountFormatted: "98.76"
     )
     
-    static let account: Self = _product(
-        id: .init(generateRandom11DigitNumber()),
-        type: .account,
-        amountFormatted: "98.76"
+    static let card: Self = _product(
+        id: .card(
+            .init(generateRandom11DigitNumber()),
+            accountID: .init(generateRandom11DigitNumber())
+        ),
+        amountFormatted: "123.45"
     )
     
     private static func _product(
         id: ID,
-        type: ProductType,
         header: String? = nil,
         title: String = "title",
         amountFormatted: String,
@@ -37,10 +37,9 @@ public extension Product {
         
         .init(
             id: id,
-            type: type,
-            header: header ?? type.rawValue,
+            header: header ?? id.typeString,
             title: title,
-            number: .init(String(id.rawValue).prefix(4)),
+            number: id.numberString,
             amountFormatted: amountFormatted,
             balance: balance,
             look: look
@@ -48,13 +47,25 @@ public extension Product {
     }
 }
 
-private extension Product.ProductType {
+private extension ProductID
+where AccountID: RawRepresentable<Int>,
+      CardID: RawRepresentable<Int> {
     
-    var rawValue: String {
+    var typeString: String {
         
         switch self {
         case .account: return "Account"
-        case .card:    return "Card"
+        case .card: return "Card"
+        }
+    }
+    
+    var numberString: String { .init(String(rawID).prefix(4)) }
+    
+    private var rawID: Int {
+        
+        switch self {
+        case let .account(accountID): return accountID.rawValue
+        case let .card(cardID, _): return cardID.rawValue
         }
     }
 }

@@ -21,15 +21,17 @@ where PerformRequestError: Error,
         createRequest: @escaping CreateRequest,
         performRequest: @escaping Decoratee.PerformRequest,
         mapResponse: @escaping Decoratee.MapResponse,
-        log: @escaping (String, StaticString, UInt) -> Void
+        log: @escaping (String, StaticString, UInt) -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
     ) {
         self.remoteService = .init(
             createRequest: { [log] input in
                 
                 let request = try createRequest(input)
-                log("RemoteService: Created \(request.httpMethod ?? "n/a") request \(request) for input \"\(input)\".", #file, #line)
+                log("RemoteService: Created \(request.httpMethod ?? "n/a") request \(request) for input \"\(input)\".", file, line)
                 if let body = request.httpBody {
-                    log("RemoteService: request body: \(String(data: body, encoding: .utf8) ?? "nil")", #file, #line)
+                    log("RemoteService: request body: \(String(data: body, encoding: .utf8) ?? "nil")", file, line)
                 }
                 
                 return request
@@ -41,10 +43,10 @@ where PerformRequestError: Error,
                 
                 switch result {
                 case let .failure(error):
-                    log("RemoteService: mapResponse failure: \(error): statusCode: \(httpURLResponse.statusCode), data: \(String(data: data, encoding: .utf8) ?? "nil").", #file, #line)
+                    log("RemoteService: mapResponse failure: \(error): statusCode: \(httpURLResponse.statusCode), data: \(String(data: data, encoding: .utf8) ?? "nil").", file, line)
                     
                 case let .success(output):
-                    log("RemoteService: mapResponse success: \(output).", #file, #line)
+                    log("RemoteService: mapResponse success: \(output).", file, line)
                 }
                 
                 return result

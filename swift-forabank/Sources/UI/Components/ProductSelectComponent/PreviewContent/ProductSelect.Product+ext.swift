@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 22.12.2023.
 //
 
-import ForaTools
+import UIPrimitives
 
 public extension Array where Element == ProductSelect.Product {
     
@@ -22,7 +22,8 @@ extension ProductSelect.Product {
     
     public static let accountPreview: Self = .init(
         id: 234567891,
-        type: .account,
+        type: .account, 
+        isAdditional: false,
         header: "Счет списания",
         title: "Текущий счет",
         footer: "7891",
@@ -38,6 +39,7 @@ extension ProductSelect.Product {
     static let account2Preview: Self = .init(
         id: 2345678912,
         type: .account,
+        isAdditional: false,
         header: "Счет списания",
         title: "Account 2",
         footer: "8912",
@@ -53,6 +55,7 @@ extension ProductSelect.Product {
     public static let cardPreview: Self = .init(
         id: 123456789,
         type: .card,
+        isAdditional: false,
         header: "Счет списания",
         title: "Card",
         footer: "6789",
@@ -68,6 +71,7 @@ extension ProductSelect.Product {
     static let card2Preview: Self = .init(
         id: 1234567892,
         type: .card,
+        isAdditional: true,
         header: "Счет списания",
         title: "Card 2",
         footer: "7892",
@@ -83,6 +87,7 @@ extension ProductSelect.Product {
     static let card3Preview: Self = .init(
         id: 1234567893,
         type: .card,
+        isAdditional: false,
         header: "Счет списания",
         title: "Card 3",
         footer: "7893",

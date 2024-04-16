@@ -127,7 +127,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        _ = sut._reduce(makeEditableAmount(), .productSelect(.select(.init(100000))))
+        _ = sut._reduce(makeEditableAmount(), .productSelect(.select(.test)))
         
         XCTAssertNoDiff(spy.callCount, 0)
     }
@@ -141,7 +141,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )
         XCTAssertNoDiff(state.productSelect, .compact(.test))
         
-        let newState = sut._reduce(state, .productSelect(.select(missingProduct.id)))
+        let newState = sut._reduce(state, .productSelect(.select(missingProduct)))
         
         XCTAssertNoDiff(newState.confirm, .editableAmount(state))
     }
@@ -155,7 +155,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )
         XCTAssertNoDiff(state.productSelect, .compact(.test))
         
-        let newState = sut._reduce(state, .productSelect(.select(existingProduct.id)))
+        let newState = sut._reduce(state, .productSelect(.select(existingProduct)))
         
         XCTAssertNoDiff(newState.confirm, .editableAmount(makeEditableAmount(
             brandName: "some brand",
@@ -265,7 +265,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         
         let (sut, spy) = makeSUT()
         
-        _ = sut._reduce(makeFixedAmount(), .productSelect(.select(.init(100000))))
+        _ = sut._reduce(makeFixedAmount(), .productSelect(.select(.test)))
         
         XCTAssertNoDiff(spy.callCount, 0)
     }
@@ -279,7 +279,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )
         XCTAssertNoDiff(state.productSelect, .compact(.test))
         
-        let newState = sut._reduce(state, .productSelect(.select(missingProduct.id)))
+        let newState = sut._reduce(state, .productSelect(.select(missingProduct)))
         
         XCTAssertNoDiff(newState.confirm, .fixedAmount(state))
     }
@@ -293,7 +293,7 @@ final class SberQRConfirmPaymentStateReducerTests: XCTestCase {
         )
         XCTAssertNoDiff(state.productSelect, .compact(.test))
         
-        let newState = sut._reduce(state, .productSelect(.select(existingProduct.id)))
+        let newState = sut._reduce(state, .productSelect(.select(existingProduct)))
         
         XCTAssertNoDiff(newState.confirm, .fixedAmount(makeFixedAmount(
             brandName: "some brand",

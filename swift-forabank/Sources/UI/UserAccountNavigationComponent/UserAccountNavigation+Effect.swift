@@ -6,12 +6,14 @@
 //
 
 import FastPaymentsSettings
+import OTPInputComponent
 
 public extension UserAccountNavigation {
     
     enum Effect: Equatable {
         
-        case fps(FastPaymentsSettingsEvent)
+        case dismissInformer
+//        case fps(FastPaymentsSettingsEvent)
         case otp(OTP)
     }
 }
@@ -20,6 +22,7 @@ public extension UserAccountNavigation.Effect {
     
     enum OTP: Equatable {
         
-        case prepareSetBankDefault
+        case create(OTPInputState.PhoneNumberMask)
+        case prepareSetBankDefault(OTPInputState.PhoneNumberMask)
     }
 }

@@ -8,12 +8,15 @@
 import InfoComponent
 import SberQR
 import SwiftUI
+import OperatorsListComponents
+import TextFieldModel
 
 struct PaymentsTransfersView: View {
     
     @ObservedObject var viewModel: PaymentsTransfersViewModel
     
     let viewFactory: PaymentsTransfersViewFactory
+    let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
         
@@ -31,7 +34,7 @@ struct PaymentsTransfersView: View {
                 .sheet(
                     item: .init(
                         get: { viewModel.route.modal?.sheet },
-                        set: { if $0 == nil { viewModel.resetModal() } }),
+                        set: { if $0 == nil { viewModel.event(.resetModal) } }),
                     content: sheetView
                 )
             
@@ -39,7 +42,7 @@ struct PaymentsTransfersView: View {
                 .fullScreenCover(
                     item: .init(
                         get: { viewModel.route.modal?.fullScreenSheet },
-                        set: { if $0 == nil { viewModel.resetModal() } }
+                        set: { if $0 == nil { viewModel.event(.resetModal) } }
                     ),
                     content: fullScreenCoverView
                 )
@@ -50,21 +53,21 @@ struct PaymentsTransfersView: View {
         .alert(
             item: .init(
                 get: { viewModel.route.modal?.alert },
-                set: { if $0 == nil { viewModel.resetModal() } }
+                set: { if $0 == nil { viewModel.event(.resetModal) } }
             ),
             content: Alert.init(with:)
         )
         .bottomSheet(
             item: .init(
                 get: { viewModel.route.modal?.bottomSheet },
-                set: { if $0 == nil { viewModel.resetModal() } }
+                set: { if $0 == nil { viewModel.event(.resetModal) } }
             ),
             content: bottomSheetView
         )
         .navigationDestination(
             item: .init(
                 get: { viewModel.route.destination },
-                set: { if $0 == nil { viewModel.resetDestination() } }
+                set: { if $0 == nil { viewModel.event(.resetDestination) } }
             ),
             content: destinationView(link:)
         )
@@ -85,7 +88,7 @@ struct PaymentsTransfersView: View {
                 }
         )
         .tabBar(isHidden: .init(
-            get: { !viewModel.route.isEmpty },
+            get: { viewModel.route.destination != nil },
             set: { if !$0 { viewModel.reset() } }
         ))
     }
@@ -182,7 +185,7 @@ struct PaymentsTransfersView: View {
             QRFailedView(viewModel: failedViewModel)
             
         case let .c2b(c2bViewModel):
-            C2BDetailsView(viewModel: c2bViewModel)
+            C2BDetailsView(viewModel: c2bViewModel, getUImage: getUImage)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
                 .edgesIgnoringSafeArea(.all)
@@ -211,22 +214,118 @@ struct PaymentsTransfersView: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                viewFactory: viewFactory
+                viewFactory: viewFactory, 
+                getUImage: getUImage
             )
             
         case let .openDeposit(depositListViewModel):
-            OpenDepositDetailView(viewModel: depositListViewModel)
+            OpenDepositDetailView(viewModel: depositListViewModel, getUImage: getUImage)
             
         case let .openDepositsList(openDepositViewModel):
-            OpenDepositListView(viewModel: openDepositViewModel)
+            OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
             
         case let .sberQRPayment(sberQRPaymentViewModel):
             viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
                 .navigationBar(
                     sberQRPaymentViewModel.navTitle,
-                    dismiss: viewModel.resetDestination
+                    dismiss: { viewModel.event(.resetDestination) }
                 )
+            
+        case let .utilities(utilitiesRoute):
+            utilityOperatorPicker(utilitiesRoute.viewModel)
+                .navigationDestination(
+                    item: .init(
+                        get: { viewModel.route.utilitiesRoute?.destination },
+                        set: { if $0 == nil {
+                            viewModel.event(.resetUtilityDestination) }}
+                    ),
+                    content: utilitiesDestinationView
+                )
+#warning("add nav bar")
         }
+    }
+    
+    @ViewBuilder
+    private func utilitiesDestinationView(
+        destination: PaymentsTransfersViewModel.Route.UtilitiesDestination
+    ) -> some View {
+        switch destination {
+        case let .failure(`operator`):
+            failureView(`operator`)
+#warning("add nav bar")
+            
+        case let .list(list):
+            utilityServicePicker(list.operator, list.services)
+                .navigationDestination(
+                    item: .init(
+                        get: { list.destination },
+                        set: { if $0 == nil { viewModel.event(.resetUtilityListDestination)}}
+                    ),
+                    content: utilityServicePickerDestinationView
+                )
+#warning("add nav bar")
+            
+        case let .payment(utilityPaymentState):
+            utilityPaymentWrapperView(utilityPaymentState)
+#warning("add nav bar")
+        }
+    }
+    
+    private func failureView(
+        _ `operator`: OperatorsListComponents.Operator
+    ) -> some View {
+        
+        VStack(spacing: 32) {
+            
+            Text(String(describing: `operator`))
+                .font(.title3.bold())
+            
+            Text("Что-то пошло не так.\nПопробуйте позже или воспользуйтесь другим способом оплаты.")
+                .foregroundColor(.secondary)
+            
+            Button("Оплатить по реквизитам") {
+                
+                self.viewModel.event(.payByRequisites)
+            }
+        }
+        .padding()
+    }
+    
+    private func utilityServicePicker(
+        _ `operator`: OperatorsListComponents.Operator,
+        _ utilityServices: [UtilityService]
+    ) -> some View {
+        VStack(spacing: 32) {
+            
+            Text("Services for \(String(describing: `operator`))")
+                .font(.title3.bold())
+            
+            UtilityServicePicker(
+                state: utilityServices,
+                event: { self.viewModel.event(.utilityServiceTap(`operator`, $0)) }
+            )
+        }
+    }
+    
+    private func utilityPaymentWrapperView(
+        _ utilityPaymentState: UtilityPaymentState
+    ) -> some View {
+        UtilityPaymentWrapperView(
+            state: utilityPaymentState,
+            event: { viewModel.event(.utilityPayment($0)) }
+        )
+    }
+    
+    @ViewBuilder
+    private func utilityServicePickerDestinationView(
+        _ utilityListDestination: PaymentsTransfersViewModel.Route.UtilitiesDestination.UtilityServicePickerDestination
+    ) -> some View {
+        
+        switch utilityListDestination {
+        case let .payment(utilityPaymentState):
+            utilityPaymentWrapperView(utilityPaymentState)
+        }
+#warning("add nav bar")
     }
     
     private func transportPaymentsView(
@@ -273,6 +372,16 @@ struct PaymentsTransfersView: View {
                 navLeadingAction: viewModel.dismiss,
                 navTrailingAction: viewModel.openScanner
             )
+        )
+    }
+    
+    private func utilityOperatorPicker(
+        _ viewModel: UtilitiesViewModel
+    ) -> some View {
+        
+        UtilityOperatorPicker(
+            state: viewModel.state,
+            event: { self.viewModel.event(.utilityPayment($0)) }
         )
     }
     
@@ -351,6 +460,32 @@ struct PaymentsTransfersView: View {
             PaymentsSuccessView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.all)
         }
+    }
+}
+
+private extension NavigationBarView.ViewModel {
+    
+    static func with(
+        title: String,
+        navLeadingAction: @escaping () -> Void,
+        navTrailingAction: @escaping () -> Void
+    ) -> NavigationBarView.ViewModel {
+        
+        .init(
+            title: title,
+            leftItems: [
+                NavigationBarView.ViewModel.BackButtonItemViewModel(
+                    icon: .ic24ChevronLeft,
+                    action: navLeadingAction
+                )
+            ],
+            rightItems: [
+                NavigationBarView.ViewModel.ButtonItemViewModel(
+                    icon: Image("qr_Icon"),
+                    action: navTrailingAction
+                )
+            ]
+        )
     }
 }
 
@@ -439,7 +574,8 @@ struct Payments_TransfersView_Previews: PreviewProvider {
                     )
                 },
                 makeUserAccountView: UserAccountView.init(viewModel:)
-            )
+            ),
+            getUImage: { _ in nil }
         )
     }
 }

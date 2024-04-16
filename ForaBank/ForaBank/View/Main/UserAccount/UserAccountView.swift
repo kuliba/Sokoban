@@ -7,18 +7,20 @@
 
 import Combine
 import LandingUIComponent
-import SwiftUI
+import OTPInputComponent
 import Presentation
 import ManageSubscriptionsUI
 import SearchBarComponent
+import SwiftUI
+import UIPrimitives
 
 struct UserAccountView: View {
     
     @ObservedObject var viewModel: UserAccountViewModel
-        
+    
     var body: some View {
         
-        ZStack {
+        ZStack(alignment: .top) {
             
             scrollView
             
@@ -43,35 +45,36 @@ struct UserAccountView: View {
             .navigationDestination(
                 item: .init(
                     get: { viewModel.route.link },
-                    set: { if $0 == nil { viewModel.resetLink() }}),
+                    set: { if $0 == nil { viewModel.event(.dismiss(.destination)) }}
+                ),
                 content: destinationView(link:)
             )
         }
         .sheet(
             item: .init(
                 get: { viewModel.route.sheet },
-                set: { if $0 == nil { viewModel.resetSheet() }}
+                set: { if $0 == nil { viewModel.event(.dismiss(.sheet)) }}
             ),
             content: sheetView
         )
         .bottomSheet(
             item: .init(
                 get: { viewModel.route.bottomSheet },
-                set: { if $0 == nil { viewModel.resetBottomSheet() }}
+                set: { if $0 == nil { viewModel.event(.dismiss(.bottomSheet)) }}
             ),
             content: bottomSheetView
         )
         .alert(
             item: .init(
                 get: { viewModel.route.alert },
-                set: { if $0 == nil { viewModel.resetAlert() }}
+                set: { if $0 == nil { viewModel.event(.dismiss(.alert)) }}
             ),
-            content: Alert.init(with:)
+            content: { .init(with: $0, event: { viewModel.event(.alertButtonTapped($0)) }) }
         )
         .textfieldAlert(
             alert: .init(
                 get: { viewModel.route.textFieldAlert },
-                set: { if $0 == nil { viewModel.resetTextFieldAlert() }}
+                set: { if $0 == nil { viewModel.event(.dismiss(.textFieldAlert)) }}
             )
         )
         .navigationBarTitle("", displayMode: .inline)
@@ -198,12 +201,8 @@ struct UserAccountView: View {
                     .navigationBarBackButtonHidden(false)
                     .navigationBarTitle("", displayMode: .inline)
                 
-            case let .new(fpsViewModel):
-                FastPaymentsSettingsWrapperView(
-                    viewModel: fpsViewModel,
-                    navigationBarViewModel: .fastPayments(action: viewModel.dismissDestination)
-                )
-                .onAppear { fpsViewModel.event(.appear) }
+            case let .new(route):
+                fpsView(route)
             }
             
         case let .deleteUserInfo(deleteInfoViewModel):
@@ -235,13 +234,80 @@ struct UserAccountView: View {
         }
     }
     
+    private func fpsView(
+        _ route: UserAccountRoute.FPSRoute
+    ) -> some View {
+        
+        ZStack(alignment: .top) {
+            
+            fpsWrapperView(route)
+            
+            viewModel.route.spinner.map(SpinnerView.init(viewModel:))
+            
+            viewModel.route.informer.map {
+                InformerView(viewModel: .init(
+                    message: $0.message,
+                    icon: $0.icon.image
+                ))
+                .padding(.top, 56)
+            }
+        }
+    }
+    
+    private func fpsWrapperView(
+        _ route: UserAccountRoute.FPSRoute
+    ) -> some View {
+        
+        FastPaymentsSettingsWrapperView(
+            viewModel: route.viewModel,
+            config: .iFora
+        )
+        .navigationBar(with: .fastPayments(
+            action: { viewModel.event(.dismiss(.destination)) }
+        ))
+        .alert(
+            item: .init(
+                get: { viewModel.route.fpsAlert },
+                // set: { if $0 == nil { viewModel.event(.closeFPSAlert) }}
+                // set is called by tapping on alert buttons, that are wired to some actions, no extra handling is needed (not like in case of modal or navigation)
+                set: { _ in }
+            ),
+            content: { .init(with: $0, event: { viewModel.event($0) }) }
+        )
+        .navigationDestination(
+            item: .init(
+                get: { viewModel.route.fpsDestination },
+                set: { if $0 == nil { viewModel.event(.dismiss(.fpsDestination)) }}
+            ),
+            content: fpsDestinationView
+        )
+    }
+    
+    @ViewBuilder
+    private func fpsDestinationView(
+        fpsDestination: UserAccountRoute.FPSDestination
+    ) -> some View {
+        
+        ZStack {
+            
+            switch fpsDestination {
+            case let .confirmSetBankDefault(timedOTPInputViewModel, _):
+                OTPInputWrapperView(viewModel: timedOTPInputViewModel)
+                    .navigationBar(with: .fastPayments(
+                        action: { viewModel.event(.dismiss(.fpsDestination)) }
+                    ))
+            }
+            
+            viewModel.route.spinner.map(SpinnerView.init(viewModel:))
+        }
+    }
+    
     @ViewBuilder
     private func sheetView(
         sheet: UserAccountRoute.Sheet
     ) -> some View {
         
         switch sheet.sheetType {
-            
         case let .userDocument(userDocumentViewModel):
             UserDocumentView(viewModel: userDocumentViewModel)
         }
@@ -250,7 +316,7 @@ struct UserAccountView: View {
     @ViewBuilder
     private func bottomSheetView(
         sheet: UserAccountRoute.BottomSheet
-    ) -> some View { 
+    ) -> some View {
         
         switch sheet.sheetType {
             
@@ -277,6 +343,61 @@ struct UserAccountView: View {
     }
 }
 
+extension UserAccountRoute.Informer.Icon {
+    
+    var image: Image {
+        
+        switch self {
+        case .failure:
+            return .ic16Close
+        case .success:
+            return .ic16Check
+        }
+    }
+}
+
+private extension UserAccountRoute {
+    
+    var fpsAlert: AlertModelOf<UserAccountEvent>? {
+        
+        fpsRoute?.alert
+    }
+    
+    var fpsDestination: UserAccountRoute.FPSDestination? {
+        
+        fpsRoute?.destination
+    }
+}
+
+private struct OTPInputWrapperView: View {
+    
+    @ObservedObject private var viewModel: TimedOTPInputViewModel
+    
+    init(viewModel: TimedOTPInputViewModel) {
+        
+        self.viewModel = viewModel
+    }
+    
+    var body: some View {
+        
+        switch viewModel.state.status {
+        case .failure:
+            EmptyView()
+            
+        case let .input(input):
+            OTPInputView(
+                state: input,
+                phoneNumber: viewModel.state.phoneNumber.rawValue,
+                event: viewModel.event(_:),
+                config: .iFora
+            )
+            
+        case .validOTP:
+            EmptyView()
+        }
+    }
+}
+
 private extension NavigationBarView.ViewModel {
     
     static func fastPayments(
@@ -286,7 +407,7 @@ private extension NavigationBarView.ViewModel {
         .init(
             title: "Настройки СБП",
             subtitle: "Система быстрых платежей",
-            icon: "sfpBig",
+            icon: "ic32Sbp",
             action: action
         )
     }
@@ -335,23 +456,34 @@ extension FastPaymentsFactory {
     )
     
     static let new: Self = .init(
-        fastPaymentsViewModel: .new({ _ in
+        fastPaymentsViewModel: .new({
             
-                .init(reduce: { state, event, completion in
-                
-                    completion(state)
-                })
+            .init(
+                initialState: .init(),
+                reduce: { state, _ in (state, nil) },
+                handleEffect: { _,_ in },
+                scheduler: $0
+            )
         })
     )
 }
 
-extension FastPaymentsServices {
+extension UserAccountNavigationStateManager {
     
-    static let empty: Self = .init(
-        getFastPaymentContractFindList: {
-            
-            Empty().eraseToAnyPublisher()
-        },
-        getConsentAndDefault: { _,_ in }
+    static let preview: Self = .init(
+        fastPaymentsFactory: .new, 
+        makeSubscriptionsViewModel: { _,_ in .empty },
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
+}
+
+private extension SubscriptionsViewModel {
+    
+    static let empty = SubscriptionsViewModel(
+        products: [], 
+        searchViewModel: .bank(),
+        emptyViewModel: .init(icon: .checkImage, title: ""),
+        configurator: .init(backgroundColor: .red)
     )
 }

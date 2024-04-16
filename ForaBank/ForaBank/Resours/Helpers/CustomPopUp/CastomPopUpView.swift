@@ -19,7 +19,7 @@ class MemeDetailVC: UIViewController {
     var anotherCardModel: AnotherCardViewModel?
     var paymentTemplate: PaymentTemplateData? = nil
     
-    var viewModel = ConfirmViewControllerModel(type: .card2card) {
+    var viewModel = ConfirmViewControllerModel(type: .card2card, status: .succses) {
         didSet {
             checkModel(with: viewModel)
         }
@@ -226,7 +226,8 @@ class MemeDetailVC: UIViewController {
         let clientId = Model.shared.clientInfo.value?.id
         cardFromListView.cardList = products.filter({$0.ownerID == clientId})
         cardToListView.cardList = products
-        
+        cardFromField.getUImage = { self.model.images.value[$0]?.uiImage }
+
         if let cardId = cardId {
             
             let card = products.first(where: { $0.id == cardId })
@@ -353,6 +354,7 @@ class MemeDetailVC: UIViewController {
                 products.forEach({ card in
                     if card.id == cardId {
                         self.viewModel.cardFromRealm = card
+                        self.cardFromField.getUImage = { self.model.images.value[$0]?.uiImage }
                         self.cardFromField.model = card
                         self.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
                         UIView.animate(withDuration: 0.2) {
@@ -378,6 +380,7 @@ class MemeDetailVC: UIViewController {
             }
             vc.didCardTapped = { [weak self] card in
                 self?.viewModel.cardFromRealm = card
+                self?.cardFromField.getUImage = { self?.model.images.value[$0]?.uiImage }
                 self?.cardFromField.model = card
                 self?.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
                 self?.hideAllCardList()
@@ -412,6 +415,7 @@ class MemeDetailVC: UIViewController {
                 products.forEach({ card in
                     if card.id == cardId {
                         self.viewModel.cardToRealm = card
+                        self.cardToField.getUImage = { self.model.images.value[$0]?.uiImage }
                         self.cardToField.model = card
                         self.hideAllCardList()
                     }
@@ -426,6 +430,7 @@ class MemeDetailVC: UIViewController {
             }
             vc.didCardTapped = { [weak self] card in
                 self?.viewModel.cardToRealm = card
+                self?.cardToField.getUImage = { self?.model.images.value[$0]?.uiImage }
                 self?.cardToField.model = card
                 self?.hideAllCardList()
                 vc.dismiss(animated: true, completion: nil)
@@ -561,6 +566,7 @@ class MemeDetailVC: UIViewController {
                                 viewModel.taxTransction = "\(model.data?.fee ?? 0)"
                                 viewModel.status = .succses
                                 let vc = ContactConfurmViewController()
+                                vc.getUImage = { self?.model.images.value[$0]?.uiImage }
                                 vc.modalPresentationStyle = .fullScreen
                                 vc.confurmVCModel?.type = .card2card
                                 viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""

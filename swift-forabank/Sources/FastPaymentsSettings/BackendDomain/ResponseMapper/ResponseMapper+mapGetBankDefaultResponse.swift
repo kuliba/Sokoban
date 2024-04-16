@@ -6,30 +6,21 @@
 //
 
 import Foundation
-
-public enum GetBankDefaultMappingError: Error, Equatable {
-    
-    case invalid(statusCode: Int, data: Data)
-    case limit(errorMessage: String)
-    case server(statusCode: Int, errorMessage: String)
-}
+import RemoteServices
 
 public extension ResponseMapper {
-    
-    typealias GetBankDefaultResult = Result<GetBankDefault, GetBankDefaultMappingError>
-    
+        
     static func mapGetBankDefaultResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> GetBankDefaultResult {
+    ) -> MappingResult<BankDefault> {
         
         map(data, httpURLResponse, mapOrThrow: map)
-            .mapError(GetBankDefaultMappingError.init(error:))
     }
     
     private static func map(
         _ data: _Data
-    ) throws -> GetBankDefault {
+    ) throws -> BankDefault {
         
         .init(data.foraBank)
     }
@@ -41,27 +32,4 @@ private extension ResponseMapper {
         
         let foraBank: Bool
     }
-}
-
-private extension GetBankDefaultMappingError {
-    
-    init(error: MappingError) {
-        
-        
-        switch error {
-        case let .invalid(statusCode, data):
-            self = .invalid(statusCode: statusCode, data: data)
-            
-        case .server(_, .limitErrorMessage):
-            self = .limit(errorMessage: .limitErrorMessage)
-            
-        case let .server(statusCode, errorMessage):
-            self = .server(statusCode: statusCode, errorMessage: errorMessage)
-        }
-    }
-}
-
-private extension String {
-    
-    static let limitErrorMessage = "Исчерпан лимит запросов. Повторите попытку через 24 часа."
 }

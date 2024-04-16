@@ -309,7 +309,7 @@ class MeToMeSettingViewController: UIViewController {
                             self.newModel.action.send(ModelAction.C2B.CancelC2BSub.Request(token: token))
                         }
                     },
-                    detailAction: { token in
+                    onDetail: { token in
                         
                         self.newModel.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
                     })
@@ -321,7 +321,7 @@ class MeToMeSettingViewController: UIViewController {
                 currencyCode: product.currency,
                 style: .fraction
                ),
-               let icon = product.smallDesign.image {
+               let icon = newModel.images.value[product.smallDesignMd5hash]?.image {
                 
                 if let product = product as? ProductCardData {
                     

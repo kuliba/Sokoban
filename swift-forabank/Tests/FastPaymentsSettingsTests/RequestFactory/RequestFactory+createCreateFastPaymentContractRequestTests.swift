@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import RemoteServices
 import XCTest
 
 final class RequestFactory_createCreateFastPaymentContractRequestTests: XCTestCase {
@@ -74,7 +75,7 @@ final class RequestFactory_createCreateFastPaymentContractRequestTests: XCTestCa
                 else { throw MappingError() }
                 
                 return .init(
-                    accountID: accountId,
+                    selectableProductID: .account(.init(accountId)),
                     flagBankDefault: flagBankDefault,
                     flagClientAgreementIn: flagClientAgreementIn,
                     flagClientAgreementOut: flagClientAgreementOut
@@ -109,7 +110,7 @@ private func anyPayload(
 ) -> RequestFactory.CreateFastPaymentContractPayload {
     
     .init(
-        accountID: accountID,
+        selectableProductID: .account(.init(accountID)),
         flagBankDefault: flagBankDefault,
         flagClientAgreementIn: flagClientAgreementIn,
         flagClientAgreementOut: flagClientAgreementOut

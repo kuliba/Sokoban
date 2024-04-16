@@ -166,7 +166,8 @@ extension ServerCommands {
         struct GetDepositProductList: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/getDepositProductList"
+            let serial: String?
+            let endpoint = "/rest/v2/getDepositProductList"
             let method: ServerCommandMethod = .get
             
             struct Payload: Encodable {}
@@ -174,13 +175,20 @@ extension ServerCommands {
             struct Response: ServerResponse {
                 
                 let statusCode: ServerStatusCode
-                let data: [DepositProductData]?
+                let data: DepositProductList?
                 let errorMessage: String?
+                
+                struct DepositProductList: Decodable, Equatable {
+                    
+                    let list: [DepositProductData]?
+                    let serial: String
+                }
             }
             
-            internal init(token: String) {
+            internal init(token: String, serial: String?) {
                 
                 self.token = token
+                self.serial = serial
             }
         }
         

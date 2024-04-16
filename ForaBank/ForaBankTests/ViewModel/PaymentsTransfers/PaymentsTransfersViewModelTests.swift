@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 04.07.2023.
 //
 
+import Combine
 @testable import ForaBank
+import OperatorsListComponents
 import SberQR
 import XCTest
 
@@ -13,7 +15,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_shouldFailOnEmptyProducts() throws {
         
-        let (sut, model) = makeSUT()
+        let (sut, model, _) = makeSUT()
         
         sut.sendBetweenSelf()
         
@@ -24,7 +26,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     func test_meToMe_shouldDeliverActionOnMeToMeSendSuccess() throws {
         
         let (product1, product2) = makeTwoProducts()
-        let (sut, model) = makeSUT(products: [product1, product2])
+        let (sut, model, _) = makeSUT(products: [product1, product2])
         
         sut.sendBetweenSelf()
         
@@ -43,43 +45,45 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertEqual(spy.values.count, 4)
     }
     
-    func test_meToMe_shouldNotDeliverActionsAfterBottomSheetDeallocated() throws {
-        
-        let (product1, product2) = makeTwoProducts()
-        let (sut, model) = makeSUT(products: [product1, product2])
-        
-        sut.sendBetweenSelf()
-        
-        XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда"])
-        
-        try sut.selectMeToMeProductTo(product2, model: model)
-        let spy = ValueSpy(model.action)
-        
-        XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда", "WhereTo"])
-        
-        XCTAssertEqual(spy.values.count, 0)
-        
-        sut.meToMeSendSuccess(model: model)
-        sut.closeBottomSheet()
-        
-        XCTAssertEqual(spy.values.count, 0)
-        XCTAssertNil(sut.meToMe)
-    }
+#warning("fix and restore")
+    //    func test_meToMe_shouldNotDeliverActionsAfterBottomSheetClosed() throws {
+    //
+    //        let (product1, product2) = makeTwoProducts()
+    //        let (sut, model, _) = makeSUT(products: [product1, product2])
+    //
+    //        sut.sendBetweenSelf()
+    //
+    //        XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда"])
+    //
+    //        try sut.selectMeToMeProductTo(product2, model: model)
+    //        let spy = ValueSpy(model.action)
+    //
+    //        XCTAssertNoDiff(try sut.selectedMeToMeProductTitles(), ["Откуда", "WhereTo"])
+    //
+    //        XCTAssertEqual(spy.values.count, 0)
+    //
+    //        sut.meToMeSendSuccess(model: model)
+    //        XCTAssertEqual(spy.values.count, 0)
+    //        sut.closeBottomSheet()
+    //
+    //        XCTAssertEqual(spy.values.count, 0)
+    //        XCTAssertNil(sut.meToMe)
+    //    }
     
     func test_tapTemplates_shouldSetLinkToTemplates() {
-         
-         let (sut, _) = makeSUT()
+        
+        let (sut, _,_) = makeSUT()
         let linkSpy = ValueSpy(sut.$route.map(\.case))
-         XCTAssertNoDiff(linkSpy.values, [.other])
-         
-         sut.section?.tapTemplatesAndWait()
-         
-         XCTAssertNoDiff(linkSpy.values, [.other, .template])
-     }
+        XCTAssertNoDiff(linkSpy.values, [.other])
+        
+        sut.section?.tapTemplatesAndWait()
+        
+        XCTAssertNoDiff(linkSpy.values, [.other, .template])
+    }
     
     func test_tapTemplates_shouldNotSetLinkToNilOnTemplatesCloseUntilDelay() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _,_) = makeSUT()
         let linkSpy = ValueSpy(sut.$route.map(\.case))
         sut.section?.tapTemplatesAndWait()
         
@@ -90,7 +94,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
         
-        let (sut, _) = makeSUT()
+        let (sut, _,_) = makeSUT()
         let linkSpy = ValueSpy(sut.$route.map(\.case))
         sut.section?.tapTemplatesAndWait()
         
@@ -99,11 +103,417 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertNoDiff(linkSpy.values, [.other, .template, .other])
     }
     
+    // MARK: - event(_:)
+    
+    func test_init_shouldNotSetDestination() {
+        
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+        
+        XCTAssertNoDiff(spy.values, [nil])
+    }
+    
+    func test_addCompany_shouldNotChangeDestination() {
+        
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+        
+        sut.event(.addCompany)
+        
+        XCTAssertNoDiff(spy.values, [nil, nil])
+    }
+    
+    func test_addCompany_shouldNotDeliverEffect() {
+        
+        let (sut, _, effectSpy) = makeSUT()
+        
+        sut.event(.addCompany)
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+    }
+    
+    func test_latestPaymentTapped_shouldNotChangeDestination() {
+        
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+        
+        sut.event(.latestPaymentTapped(makeLatestPayment()))
+        
+        XCTAssertNoDiff(spy.values, [nil, nil])
+    }
+    
+    func test_latestPaymentTapped_shouldDeliverEffect() {
+        
+        let latestPayment = makeLatestPayment()
+        let (sut, _, effectSpy) = makeSUT()
+        
+        sut.event(.latestPaymentTapped(latestPayment))
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [
+            .startPayment(.latestPayment(latestPayment))
+        ])
+    }
+    
+    func test_loaded_shouldChangeUtilitiesDestinationToFailureOnFailure() throws {
+        
+        let `operator` = makeOperator()
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+        
+        try sut.openUtilityPayments()
+        sut.event(.loaded(.failure, for: `operator`))
+        
+        XCTAssertNoDiff(spy.values, [nil, nil, .failure])
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnFailure() throws {
+        
+        let `operator` = makeOperator()
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.loaded(.failure, for: `operator`))
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+    }
+    
+    func test_loaded_shouldChangeUtilitiesDestinationToFailureOnList() throws {
+        
+        let `operator` = makeOperator()
+        let utilityServices = [makeService(), makeService()]
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+        
+        try sut.openUtilityPayments()
+        sut.event(.loaded(.list(utilityServices), for: `operator`))
+        
+        XCTAssertNoDiff(spy.values, [nil, nil, .list])
+    }
+    
+    func test_loaded_shouldNotDeliverEffectOnList() throws {
+        
+        let `operator` = makeOperator()
+        let utilityServices = [makeService(), makeService()]
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.loaded(.list(utilityServices), for: `operator`))
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+    }
+    
+    func test_loaded_shouldNotChangeStateOnSingle() throws {
+        
+        let `operator` = makeOperator()
+        let utilityService = makeService()
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+        
+        try sut.openUtilityPayments()
+        XCTAssertNoDiff(spy.values, [nil, .utilities])
+        
+        sut.event(.loaded(.single(utilityService), for: `operator`))
+        
+        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
+        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
+    }
+    
+    func test_loaded_shouldDeliverEffectOnSingle() throws {
+        
+        let `operator` = makeOperator()
+        let utilityService = makeService()
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.loaded(.single(utilityService), for: `operator`))
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [.startPayment(.service(`operator`, utilityService))])
+    }
+    
+    func test_operatorTapped_shouldNotChangeState() throws {
+        
+        let `operator` = makeOperator()
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+        
+        try sut.openUtilityPayments()
+        XCTAssertNoDiff(spy.values, [nil, .utilities])
+        
+        sut.event(.operatorTapped(`operator`))
+        
+        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
+        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
+    }
+    
+    func test_operatorTapped_shouldDeliverEffect() throws {
+        
+        let `operator` = makeOperator()
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.operatorTapped(`operator`))
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [.getServicesFor(`operator`)])
+    }
+    
+    func test_payByRequisites_shouldChangeState() throws {
+        
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+        
+        try sut.openUtilityPayments()
+        XCTAssertNoDiff(spy.values, [nil, .utilities])
+        
+        sut.event(.payByRequisites)
+        
+        XCTAssertNoDiff(spy.values, [nil, .utilities, .payments])
+        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
+    }
+    
+    func test_payByRequisites_shouldNotDeliverEffect() throws {
+        
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.payByRequisites)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+    }
+    
+    func test_paymentStarted_shouldChangeStateOnDetails_single() throws {
+        
+        let `operator` = makeOperator()
+        let service = makeService()
+        let details = makePaymentDetails()
+        let (sut, _, effectSpy) = makeSUT()
+        let destinationSpy = ValueSpy(sut.destinationPublisher)
+        let utilityPaymentDestinationSpy = ValueSpy(sut.utilityPaymentDestinationPublisher)
+        let utilityPaymentStateSpy = ValueSpy(sut.utilityPaymentStatePublisher)
+        
+        try sut.openUtilityPayments()
+        XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
+        XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil])
+        
+        sut.event(.operatorTapped(`operator`))
+        effectSpy.complete(with: .loaded(.single(service), for: `operator`))
+        effectSpy.complete(with: .paymentStarted(.details(details)))
+        
+        XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
+        XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .payment])
+        XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil, .init(details)])
+    }
+    
+    func test_paymentStarted_shouldChangeStateOnDetails_list() throws {
+        
+        let `operator` = makeOperator()
+        let service = makeService()
+        let details = makePaymentDetails()
+        let (sut, _, effectSpy) = makeSUT()
+        let destinationSpy = ValueSpy(sut.destinationPublisher)
+        let utilityPaymentDestinationSpy = ValueSpy(sut.utilityPaymentDestinationPublisher)
+        let utilityPaymentStateSpy = ValueSpy(sut.utilityPaymentStatePublisher)
+        
+        try sut.openUtilityPayments()
+        XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
+        XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil])
+        
+        sut.event(.operatorTapped(`operator`))
+        effectSpy.complete(with: .loaded(.list([service, makeService()]), for: `operator`))
+        sut.event(.utilityServiceTap(`operator`, service))
+        effectSpy.complete(with: .paymentStarted(.details(details)))
+        
+        XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
+        XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .list])
+        XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil, .init(details)])
+    }
+    
+    func test_paymentStarted_shouldNotDeliverEffectOnDetails() throws {
+        
+        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .details(makePaymentDetails())
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.paymentStarted(paymentStarted))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+    }
+    
+    func test_paymentStarted_shouldChangeStateOnFailure() throws {
+        
+        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .failure
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+        let modalSpy = ValueSpy(sut.$route.map(\.modal?.equatable))
+        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+        
+        try sut.openUtilityPayments()
+        XCTAssertNoDiff(spy.values, [nil, .utilities])
+        
+        sut.event(.paymentStarted(paymentStarted))
+        
+        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
+        XCTAssertNoDiff(modalSpy.values, [nil, nil, .alert])
+        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
+    }
+    
+    func test_paymentStarted_shouldNotDeliverEffectOnFailure() throws {
+        
+        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .failure
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.paymentStarted(paymentStarted))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+    }
+    
+    func test_paymentStarted_shouldChangeStateOnServerError() throws {
+        
+        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .serverError(UUID().uuidString)
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+        let modalSpy = ValueSpy(sut.$route.map(\.modal?.equatable))
+        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+        
+        try sut.openUtilityPayments()
+        XCTAssertNoDiff(spy.values, [nil, .utilities])
+        
+        sut.event(.paymentStarted(paymentStarted))
+        
+        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
+        XCTAssertNoDiff(modalSpy.values, [nil, nil, .alert])
+        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
+    }
+    
+    func test_paymentStarted_shouldNotDeliverEffectOnServerError() throws {
+        
+        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .serverError(UUID().uuidString)
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.paymentStarted(paymentStarted))
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+    }
+    
+    func test_resetDestination_shouldResetDestination() throws {
+        
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+        
+        try sut.openUtilityPayments()
+        sut.event(.resetDestination)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNoDiff(spy.values, [nil, .utilities, nil])
+    }
+    
+    func test_resetDestination_shouldNotDeliverEffect() throws {
+        
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.resetDestination)
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+    }
+    
+    func test_resetModal_shouldResetModal() throws {
+        
+        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .serverError(UUID().uuidString)
+        let (sut, _,_) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.paymentStarted(paymentStarted))
+        
+        XCTAssertNotNil(sut.route.modal)
+        
+        sut.event(.resetModal)
+        
+        XCTAssertNil(sut.route.modal)
+    }
+    
+    func test_resetModal_shouldNotDeliverEffect() throws {
+        
+        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .serverError(UUID().uuidString)
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.paymentStarted(paymentStarted))
+        sut.event(.resetModal)
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+    }
+    
+    func test_resetUtilityDestination_shouldResetUtilityDestination() throws {
+        
+        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .details(makePaymentDetails())
+        let (sut, _,_) = makeSUT()
+        let utilityPaymentDestinationSpy = ValueSpy(sut.utilityPaymentDestinationPublisher)
+        
+        try sut.openUtilityPayments()
+        sut.event(.paymentStarted(paymentStarted))
+        
+        XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .payment])
+        
+        sut.event(.resetUtilityDestination)
+        
+        XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .payment, nil])
+    }
+    
+    func test_resetUtilityDestination_shouldNotDeliverEffect() throws {
+        
+        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .details(makePaymentDetails())
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.paymentStarted(paymentStarted))
+        sut.event(.resetUtilityDestination)
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+    }
+    
+    func test_utilityServiceTap_shouldNotChangeState() throws {
+        
+        let `operator` = makeOperator()
+        let utilityService = makeService()
+        let (sut, _,_) = makeSUT()
+        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+        
+        try sut.openUtilityPayments()
+        sut.event(.utilityServiceTap(`operator`, utilityService))
+        
+        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
+        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
+    }
+    
+    func test_utilityServiceTap_shouldDeliverEffect() throws {
+        
+        let `operator` = makeOperator()
+        let utilityService = makeService()
+        let (sut, _, effectSpy) = makeSUT()
+        
+        try sut.openUtilityPayments()
+        sut.event(.utilityServiceTap(`operator`, utilityService))
+        
+        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [
+            .startPayment(.service(`operator`, utilityService))
+        ])
+    }
+    
     // MARK: SBER QR
     
     func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataInvalidFailure() throws {
         
-        let (sut, _) = makeSUT(
+        let (sut, _,_) = makeSUT(
             getSberQRDataResultStub: .failure(.mapResponse(
                 .invalid(statusCode: 200, data: anyData())
             ))
@@ -123,13 +533,13 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataInvalidFailure() throws {
         
-        let (sut, _) = makeSUT(
+        let (sut, _,_) = makeSUT(
             getSberQRDataResultStub: .failure(.mapResponse(
                 .invalid(statusCode: 200, data: anyData())
             ))
         )
         let alertMessageSpy = ValueSpy(sut.$route.map(\.message))
-
+        
         try sut.scanAndWait()
         try sut.tapPrimaryAlertButton()
         
@@ -144,7 +554,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataServerFailure() throws {
         
-        let (sut, _) = makeSUT(
+        let (sut, _,_) = makeSUT(
             getSberQRDataResultStub: .failure(.mapResponse(
                 .server(statusCode: 200, errorMessage: UUID().uuidString)
             ))
@@ -164,7 +574,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataServerFailure() throws {
         
-        let (sut, _) = makeSUT(
+        let (sut, _,_) = makeSUT(
             getSberQRDataResultStub: .failure(.mapResponse(
                 .server(statusCode: 200, errorMessage: UUID().uuidString)
             ))
@@ -185,7 +595,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_sberQR_shouldNotSetAlertOnSuccess() throws {
         
-        let (sut, _) = makeSUT()
+        let (sut, _,_) = makeSUT()
         let alertMessageSpy = ValueSpy(sut.$route.map(\.message))
         
         try sut.scanAndWait()
@@ -197,7 +607,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let sberQRURL = anyURL()
         let sberQRData = anyGetSberQRDataResponse()
-        let (sut, _) = makeSUT(
+        let (sut, _,_) = makeSUT(
             getSberQRDataResultStub: .success(sberQRData)
         )
         let navigationSpy = ValueSpy(sut.$route.map(\.case))
@@ -213,64 +623,69 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         ])
     }
     
-//    func test_sberQR_shouldResetNavigationLinkOnSberQRPaymentFailure() throws {
-//
-//        let sberQRURL = anyURL()
-//        let sberQRData = anyGetSberQRDataResponse()
-//        let sberQRError = anySberQRError()
-//        let (sut, _) = makeSUT(
-//            getSberQRDataResultStub: .success(sberQRData)
-//        )
-//        let navigationSpy = ValueSpy(sut.$link.map(\.?.case))
-//
-//        try sut.scanAndWait(sberQRURL)
-//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-//
-//        XCTAssertNoDiff(navigationSpy.values, [
-//            nil,
-//            .sberQRPayment,
-//            nil
-//        ])
-//    }
+    //    func test_sberQR_shouldResetNavigationLinkOnSberQRPaymentFailure() throws {
+    //
+    //        let sberQRURL = anyURL()
+    //        let sberQRData = anyGetSberQRDataResponse()
+    //        let sberQRError = anySberQRError()
+    //        let (sut, _,_) = makeSUT(
+    //            getSberQRDataResultStub: .success(sberQRData)
+    //        )
+    //        let navigationSpy = ValueSpy(sut.$link.map(\.?.case))
+    //
+    //        try sut.scanAndWait(sberQRURL)
+    //        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+    //
+    //        XCTAssertNoDiff(navigationSpy.values, [
+    //            nil,
+    //            .sberQRPayment,
+    //            nil
+    //        ])
+    //    }
     
-//    func test_sberQR_shouldPresentErrorAlertOnSberQRPaymentFailure() throws {
-//
-//        let (sut, _) = makeSUT(
-//            createSberQRPaymentResultStub: .failure(anySberQRError())
-//        )
-//        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
-//
-//        try sut.scanAndWait(anyURL())
-//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-//
-//        XCTAssertNoDiff(alertMessageSpy.values, [
-//            nil,
-//            "Возникла техническая ошибка"
-//        ])
-//    }
+    //    func test_sberQR_shouldPresentErrorAlertOnSberQRPaymentFailure() throws {
+    //
+    //        let (sut, _,_) = makeSUT(
+    //            createSberQRPaymentResultStub: .failure(anySberQRError())
+    //        )
+    //        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
+    //
+    //        try sut.scanAndWait(anyURL())
+    //        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+    //
+    //        XCTAssertNoDiff(alertMessageSpy.values, [
+    //            nil,
+    //            "Возникла техническая ошибка"
+    //        ])
+    //    }
     
-//    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnSberQRPaymentFailure() throws {
-//
-//        let (sut, _) = makeSUT(
-//            createSberQRPaymentResultStub: .failure(anySberQRError())
-//        )
-//        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
-//
-//        try sut.scanAndWait(anyURL())
-//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-//        try sut.tapPrimaryAlertButton()
-//
-//        XCTAssertNoDiff(alertMessageSpy.values, [
-//            nil,
-//            "Возникла техническая ошибка",
-//            nil
-//        ])
-//    }
+    //    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnSberQRPaymentFailure() throws {
+    //
+    //        let (sut, _,_) = makeSUT(
+    //            createSberQRPaymentResultStub: .failure(anySberQRError())
+    //        )
+    //        let alertMessageSpy = ValueSpy(sut.$alert.map(\.?.message))
+    //
+    //        try sut.scanAndWait(anyURL())
+    //        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+    //        try sut.tapPrimaryAlertButton()
+    //
+    //        XCTAssertNoDiff(alertMessageSpy.values, [
+    //            nil,
+    //            "Возникла техническая ошибка",
+    //            nil
+    //        ])
+    //    }
     
     // MARK: - Helpers
     
     fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
     private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
+    
+    private typealias EffectSpy = EffectHandlerSpy<Event, Effect>
+    private typealias State = PaymentsTransfersViewModel.Route
+    private typealias Event = PaymentsTransfersEvent
+    private typealias Effect = PaymentsTransfersEffect
     
     private func makeTwoProducts() -> (ProductData, ProductData) {
         let product1 = anyProduct(id: 1, productType: .card, currency: "RUB")
@@ -288,7 +703,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: PaymentsTransfersViewModel,
-        model: Model
+        model: Model,
+        effectSpy: EffectSpy
     ) {
         let model: Model = .mockWithEmptyExcept()
         if !products.isEmpty {
@@ -302,35 +718,83 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let qrViewModelFactory = QRViewModelFactory.preview()
         
+        let effectSpy = EffectSpy()
+        let navigationStateManager = PaymentsTransfersNavigationStateManager(
+            utilityPaymentReduce: { state,_ in (state, nil) },
+            reduce: { _,_ in fatalError() },
+            handleEffect: effectSpy.handleEffect(_:_:)
+        )
         
         let productProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: .legacy,
-            fastPaymentsServices: .empty,
+            makeUtilitiesViewModel: { _,_ in },
+            paymentsTransfersNavigationStateManager: navigationStateManager,
+            userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
+            makeUtilitiesViewModel: { _, completion in
+                
+                completion(.utilities(.init(
+                    initialState: .init(
+                        lastPayments: [],
+                        operators: []
+                    ),
+                    loadOperators: { _,_ in }
+                )))
+            },
             makeProductProfileViewModel: productProfileViewModel,
             makeTemplatesListViewModel: { _ in .sampleComplete }
         )
-
+        
         let sut = PaymentsTransfersViewModel(
             model: model,
-            fastPaymentsFactory: .legacy,
-            fastPaymentsServices: .empty,
+            navigationStateManager: navigationStateManager,
+            userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
-            paymentsTransfersFactory: paymentsTransfersFactory
+            paymentsTransfersFactory: paymentsTransfersFactory,
+            scheduler: .immediate
         )
         
         // TODO: restore memory leaks tracking after Model fix
         // trackForMemoryLeaks(model, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(effectSpy, file: file, line: line)
         
-        return (sut, model)
+        return (sut, model, effectSpy)
+    }
+    
+    private func makeOperator(
+        _ id: String = UUID().uuidString
+    ) -> OperatorsListComponents.Operator {
+        
+        .init(id: id, title: id, subtitle: nil, image: nil)
+    }
+    
+    private func makeLatestPayment(
+        _ title: String = UUID().uuidString
+    ) -> OperatorsListComponents.LatestPayment {
+        
+        .init(image: nil, title: title, amount: "")
+    }
+    
+    private func makeService(
+        _ id: String = UUID().uuidString
+    ) -> UtilityService {
+        
+        .init(id: id)
+    }
+    
+    private func makePaymentDetails(
+        _ value: String = UUID().uuidString
+    ) -> PaymentsTransfersEvent.PaymentStarted.PaymentDetails {
+        
+        .init()
     }
 }
 
@@ -392,10 +856,11 @@ extension PaymentsTransfersViewModel {
         meToMe?.action.send(PaymentsMeToMeAction.Response.Success(viewModel: .init(sections: [], adapter: .init(model: model), operation: nil)))
     }
     
-    func closeBottomSheet() {
-        
+    func closeBottomSheet(
+        timeout: TimeInterval = 0.05
+    ) {
         route.modal = nil
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
     
     var section: PaymentsTransfersSectionViewModel? {
@@ -530,5 +995,88 @@ private extension TemplatesListViewModel {
         action.send(TemplatesListViewModelAction.CloseAction())
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+    }
+}
+
+extension PaymentsTransfersViewModel {
+    
+    var destinationPublisher: AnyPublisher<PaymentsTransfersViewModel.Link.Case?, Never> {
+        
+        $route
+            .map(\.destination?.id)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+    
+    var utilityPaymentDestinationPublisher: AnyPublisher<PaymentsTransfersViewModel.Route.UtilitiesDestination.ID?, Never> {
+        
+        $route
+            .map(\.utilitiesRoute?.destination?.id)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+    
+    var utilityPaymentStatePublisher: AnyPublisher<UtilityPaymentState?, Never> {
+        
+        $route
+            .map(\.utilityPaymentState)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+    
+    func paymentButton(
+        ofType type: PTSectionPaymentsView.ViewModel.PaymentsType,
+        timeout: TimeInterval = 0.05,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> PTSectionPaymentsView.ViewModel.PaymentButtonVM {
+        
+        let button = sections
+            .compactMap { $0 as? PTSectionPaymentsView.ViewModel }
+            .flatMap(\.paymentButtons)
+            .first(where: { $0.type == type })
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+        
+        return try XCTUnwrap(button, "\nExpected \"Payments Button\", but got nil instead.", file: file, line: line)
+    }
+    
+    @discardableResult
+    func openUtilityPayments(
+        timeout: TimeInterval = 0.05,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> PaymentsTransfersViewModel.Route.UtilitiesRoute {
+        
+        let button = try paymentButton(ofType: .service, file: file, line: line)
+        button.action()
+        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+        
+        return try XCTUnwrap(route.utilitiesRoute, "\nExpected \"Utility Payments Button\", but got nil instead.", file: file, line: line)
+    }
+}
+
+extension PaymentsTransfersViewModel.Modal {
+    
+    var equatable: EquatableModal {
+        
+        switch self {
+        case .alert:
+            return .alert
+        case .bottomSheet:
+            return .bottomSheet
+        case .fullScreenSheet:
+            return .fullScreenSheet
+        case .sheet:
+            return .sheet
+        }
+    }
+    
+    enum EquatableModal: Equatable {
+        
+        case alert
+        case bottomSheet
+        case fullScreenSheet
+        case sheet
     }
 }

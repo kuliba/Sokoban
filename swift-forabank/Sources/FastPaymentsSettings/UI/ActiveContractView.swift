@@ -7,6 +7,7 @@
 
 import PaymentComponents
 import SwiftUI
+import UIPrimitives
 
 struct ActiveContractView: View {
     
@@ -20,42 +21,49 @@ struct ActiveContractView: View {
             
             VStack {
                 
-                Group {
-                    
-                    PaymentContractView(
-                        paymentContract: contractDetails.paymentContract,
-                        action: { event(.contract(.deactivateContract)) }
-                    )
-                    
-                    BankDefaultView(
-                        bankDefault: contractDetails.bankDefaultResponse.bankDefault,
-                        action: { event(.bankDefault(.setBankDefault)) }
-                    )
-                    
-                    ConsentListView(
-                        state: contractDetails.consentList.uiState,
-                        event: { event(.consentList($0)) }
-                    )
-                    
-                    ProductSelectView(
-                        state: contractDetails.productSelect,
-                        event: { event(.products($0.productSelect)) },
-                        config: config.productSelect
-                    ) {
-                        ProductCardView(
-                            productCard: .init(product: $0),
-                            config: config.productSelect.card.productCardConfig
-                        )
-                    }
-                    
-                    AccountLinkingSettingsButton(action: { event(.subscription(.getC2BSubButtonTapped)) })
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-                .background(Color.gray.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 9))
-                .padding(.horizontal)
+                Group(content: content)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(config.backgroundColor)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(.horizontal)
             }
+        }
+    }
+    
+    @ViewBuilder
+    private func content() -> some View {
+        
+        Group {
+            
+            PaymentContractView(
+                paymentContract: contractDetails.paymentContract,
+                action: { event(.contract(.deactivateContract)) },
+                config: config.paymentContract
+            )
+            
+            BankDefaultView(
+                bankDefault: contractDetails.bankDefaultResponse.bankDefault,
+                action: { event(.bankDefault(.setBankDefault)) },
+                config: config.bankDefault
+            )
+            
+            ConsentListView(
+                state: contractDetails.consentList.uiState,
+                event: { event(.consentList($0)) },
+                config: config.consentList
+            )
+        }
+        .padding()
+        
+        ProductSelectView(
+            state: contractDetails.productSelect,
+            event: { event(.products($0.productSelect)) },
+            config: config.productSelect
+        ) {
+            ProductCardView(
+                productCard: .init(product: $0),
+                config: config.productSelect.card.productCardConfig
+            )
         }
     }
 }
@@ -67,8 +75,9 @@ private extension Product {
     var product: ProductSelect.Product {
         
         .init(
-            id: .init(id.rawValue),
-            type: type.productSelectProductType,
+            id: productSelectProductID,
+            type: productSelectProductType,
+            isAdditional: false, // TODO: add real value for Additional card
             header: header,
             title: title,
             footer: number,
@@ -76,6 +85,28 @@ private extension Product {
             balance: balance,
             look: look.productSelectProductLook
         )
+    }
+    
+    private var productSelectProductID: ProductSelect.Product.ID {
+        
+        switch id {
+        case let .account(accountID):
+            return .init(accountID.rawValue)
+            
+        case let .card(cardID, _):
+            return .init(cardID.rawValue)
+        }
+    }
+    
+    private var productSelectProductType: ProductSelect.Product.ProductType {
+        
+        switch id {
+        case .account:
+            return .account
+            
+        case .card:
+            return .card
+        }
     }
 }
 
@@ -97,17 +128,7 @@ private extension Product.Look.Icon {
         
         switch self {
         case let .svg(svg): return .svg(svg)
-        }
-    }
-}
-
-private extension Product.ProductType {
-    
-    var productSelectProductType: ProductSelect.Product.ProductType {
-        
-        switch self {
-        case .account: return  .account
-        case .card:    return  .card
+        case let .image(image): return .image(image)
         }
     }
 }
@@ -150,8 +171,22 @@ private extension ProductSelectEvent {
         case .toggleProductSelect:
             return .toggleProducts
             
-        case let .select(id):
-            return .selectProduct(.init(id.rawValue))
+        case let .select(product):
+            return .selectProduct(product.productID)
+        }
+    }
+}
+
+private extension ProductSelect.Product {
+    
+    var productID: SelectableProductID {
+        
+        switch type {
+        case .account:
+            return .account(.init(id.rawValue))
+            
+        case .card:
+            return .card(.init(id.rawValue))
         }
     }
 }

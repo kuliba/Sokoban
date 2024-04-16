@@ -7,5 +7,5 @@
 
 import Tagged
 
-typealias FastPaymentsSettingsFlag = Tagged<_FastPaymentsSettingsFlag, FeatureFlag>
+typealias FastPaymentsSettingsFlag = Tagged<_FastPaymentsSettingsFlag, StubbedFeatureFlag>
 enum _FastPaymentsSettingsFlag {}

@@ -16,7 +16,28 @@ class TransferAnywayResponseData: TransferResponseData {
     let printFormType: String?
     let parameterListForNextStep: [ParameterData]
     
-    internal init(amount: Double?, creditAmount: Double?, currencyAmount: Currency?, currencyPayee: Currency?, currencyPayer: Currency?, currencyRate: Double?, debitAmount: Double?, fee: Double?, needMake: Bool?, needOTP: Bool?, payeeName: String?, documentStatus: DocumentStatus?, paymentOperationDetailId: Int, additionalList: [AdditionalData], finalStep: Bool, infoMessage: String?, needSum: Bool, printFormType: String?, parameterListForNextStep: [ParameterData]) {
+    internal init(
+        amount: Double?,
+        creditAmount: Double?,
+        currencyAmount: Currency?,
+        currencyPayee: Currency?,
+        currencyPayer: Currency?,
+        currencyRate: Double?,
+        debitAmount: Double?,
+        fee: Double?,
+        needMake: Bool?,
+        needOTP: Bool?,
+        payeeName: String?,
+        documentStatus: DocumentStatus?,
+        paymentOperationDetailId: Int,
+        additionalList: [AdditionalData],
+        finalStep: Bool,
+        infoMessage: String?,
+        needSum: Bool,
+        printFormType: String?,
+        parameterListForNextStep: [ParameterData],
+        scenario: AntiFraudScenario
+    ) {
         
         self.additionalList = additionalList
         self.finalStep = finalStep
@@ -25,7 +46,7 @@ class TransferAnywayResponseData: TransferResponseData {
         self.printFormType = printFormType
         self.parameterListForNextStep = parameterListForNextStep
         
-        super.init(amount: amount, creditAmount: creditAmount, currencyAmount: currencyAmount, currencyPayee: currencyPayee, currencyPayer: currencyPayer, currencyRate: currencyRate, debitAmount: debitAmount, fee: fee, needMake: needMake, needOTP: needOTP, payeeName: payeeName, documentStatus: documentStatus, paymentOperationDetailId: paymentOperationDetailId)
+        super.init(amount: amount, creditAmount: creditAmount, currencyAmount: currencyAmount, currencyPayee: currencyPayee, currencyPayer: currencyPayer, currencyRate: currencyRate, debitAmount: debitAmount, fee: fee, needMake: needMake, needOTP: needOTP, payeeName: payeeName, documentStatus: documentStatus, paymentOperationDetailId: paymentOperationDetailId, scenario: scenario)
     }
     
     //MARK: Codable

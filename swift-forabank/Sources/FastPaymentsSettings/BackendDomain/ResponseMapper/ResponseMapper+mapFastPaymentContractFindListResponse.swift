@@ -1,20 +1,19 @@
 //
 //  ResponseMapper+mapFastPaymentContractFindListResponse.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 28.12.2023.
 //
 
 import Foundation
+import RemoteServices
 
 public extension ResponseMapper {
-    
-    typealias FastPaymentContractFindListResult = Result<FastPaymentContractFullInfo?, MappingError>
     
     static func mapFastPaymentContractFindListResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> FastPaymentContractFindListResult {
+    ) -> MappingResult<FastPaymentContractFullInfo?> {
         
         map(data, httpURLResponse, mapOrThrow: map)
     }
@@ -100,7 +99,7 @@ private extension ResponseMapper {
                 let address: String
             }
         }
-
+        
         enum Flag: String, Decodable {
             
             case yes = "YES"

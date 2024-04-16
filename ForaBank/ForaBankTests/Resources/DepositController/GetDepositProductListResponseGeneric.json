@@ -1,61 +1,64 @@
 {
-  "data": [
-    {
-      "depositProductID": 10000003006,
-      "detailedСonditions": [
-        {
-          "desc": "Капитализация процентов ко вкладу",
-          "enable": true
-        }
-      ],
-      "documentsList": [
-        {
-          "name": "string",
-          "url": "string"
-        }
-      ],
-      "generalСondition": {
-        "design": {
-          "background": ["1C1C1C", "FFFFFF", "999999"],
-          "textColor": ["1C1C1C", "FFFFFF", "999999"]
-        },
-        "formula": "(initialAmount * interestRate * termDay/AllDay) / 100",
-        "generalTxtСondition": [
-          "string"
+  "statusCode": 0,
+  "data": {
+    "list": [
+      {
+        "depositProductID": 10000003006,
+        "detailedСonditions": [
+          {
+            "desc": "Капитализация процентов ко вкладу",
+            "enable": true
+          }
         ],
-        "imageLink": "rest/getDepositImage?image=10000003006",
-        "maxRate": 8.7,
-        "maxSum": 10000000,
-        "maxTerm": 731,
-        "maxTermTxt": "До 2-х лет",
-        "minSum": 5000,
-        "minSumCur": "RUB",
-        "minTerm": 31
-      },
-      "name": "Сберегательный онлайн",
-      "termRateList": [
-        {
-          "termRateSum": [
-            {
-              "sum": 5000,
-              "termRateList": [
-                {
-                  "rate": 0.7,
-                  "term": 31,
-                  "termName": "1 месяц"
-                }
-              ]
-            }
+        "documentsList": [
+          {
+            "name": "string",
+            "url": "string"
+          }
+        ],
+        "generalСondition": {
+          "design": {
+            "background": ["1C1C1C", "FFFFFF", "999999"],
+            "textColor": ["1C1C1C", "FFFFFF", "999999"]
+          },
+          "formula": "(initialAmount * interestRate * termDay/AllDay) / 100",
+          "generalTxtСondition": [
+            "string"
           ],
-          "сurrencyCode": "810",
-          "сurrencyCodeTxt": "RUB"
-        }
-      ],
-      "txtСondition": [
-        "string"
-      ]
-    }
-  ],
-  "errorMessage": "string",
-  "statusCode": 0
+          "imageLink": "rest/getDepositImage?image=10000003006",
+          "maxRate": 8.7,
+          "maxSum": 10000000,
+          "maxTerm": 731,
+          "maxTermTxt": "До 2-х лет",
+          "minSum": 5000,
+          "minSumCur": "RUB",
+          "minTerm": 31
+        },
+        "name": "Сберегательный онлайн",
+        "termRateList": [
+          {
+            "termRateSum": [
+              {
+                "sum": 5000,
+                "termRateList": [
+                  {
+                    "rate": 0.7,
+                    "term": 31,
+                    "termName": "1 месяц"
+                  }
+                ]
+              }
+            ],
+            "сurrencyCode": "810",
+            "сurrencyCodeTxt": "RUB"
+          }
+        ],
+        "txtСondition": [
+          "string"
+        ]
+      }
+    ],
+    "serial": "serial"
+  },
+  "errorMessage": "string"
 }

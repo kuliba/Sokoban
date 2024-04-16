@@ -97,6 +97,23 @@ final class Model_PaymentsTests: XCTestCase {
         XCTAssertFalse(isSingleService)
     }
 
+    // MARK: - Step
+    func test_step_withTransferData_shouldReturnNextStepOperation() async throws {
+        
+        let sut = makeSUT()
+        
+        let step = try await sut.step(
+            for: .makeDummy(),
+            with: .makeTransferAnywayResponseData(
+                finalStep: false,
+                needSum: false,
+                scenario: .suspect
+            )
+        )
+        
+        XCTAssertTrue(step.parametersIds.contains(where: { $0 == "AFResponse" }))
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(

@@ -6,15 +6,14 @@
 //
 
 import Foundation
+import RemoteServices
 
 public extension ResponseMapper {
-    
-    typealias GetC2BSubResponseResult = Result<GetC2BSubscription, MappingError>
     
     static func mapGetC2BSubResponseResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> GetC2BSubResponseResult {
+    ) -> MappingResult<GetC2BSubscription> {
         
         map(data, httpURLResponse, mapOrThrow: map)
     }
@@ -26,6 +25,8 @@ public extension ResponseMapper {
         data.getC2BSubscription
     }
 }
+
+// MARK: - Adapters
 
 private extension ResponseMapper._Data {
     
@@ -130,4 +131,3 @@ private extension ResponseMapper {
         }
     }
 }
-

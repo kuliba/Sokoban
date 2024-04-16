@@ -278,9 +278,10 @@ extension Model {
         return nil
     }
     
-    func paymentsProcessRemoteStepServices(operation: Payments.Operation,
-                                           response: TransferResponseData)
-    async throws -> Payments.Operation.Step {
+    func paymentsProcessRemoteStepServices(
+        operation: Payments.Operation,
+        response: TransferResponseData
+    ) async throws -> Payments.Operation.Step {
         
         var parameters = [PaymentsParameterRepresentable]()
         let group = Payments.Parameter.Group(id: UUID().uuidString, type: .info)
@@ -320,15 +321,39 @@ extension Model {
             )
             parameters.append(parameterOperatorLogo)
             parameters.append(Payments.ParameterCode.regular)
-            return .init(parameters: parameters, front: .init(visible: parameters.map(\.id), isCompleted: false), back: .init(stage: .remote(.confirm), required: [], processed: nil))
-        }
-        else {
             
-            return .init(parameters: parameters, front: .init(visible: parameters.map(\.id), isCompleted: false), back: .init(stage: .remote(.next), required: [], processed: nil))
+            if response.scenario == .suspect {
+                
+                parameters.append(Payments.ParameterInfo(
+                    .init(id: Payments.Parameter.Identifier.sfpAntifraud.rawValue, value: "SUSPECT"),
+                    icon: .image(.parameterDocument),
+                    title: "Antifraud"
+                ))
+            }
+            
+            let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
+
+            return .init(
+                parameters: parameters,
+                front: .init(visible: parameters.map(\.id).filter({ $0 != antifraudParameterId }), isCompleted: false),
+                back: .init(stage: .remote(.confirm), required: [], processed: nil)
+            )
+        } else {
+
+            return .init(
+                parameters: parameters,
+                front: .init(visible: parameters.map(\.id), isCompleted: false),
+                back: .init(stage: .remote(.next), required: [], processed: nil)
+            )
         }
     }
     
-    func paymentsServicesStepVisible(_ operation: Payments.Operation, nextStepParameters: [PaymentsParameterRepresentable], operationParameters: [PaymentsParameterRepresentable], response: TransferAnywayResponseData) throws -> [Payments.Parameter.ID] {
+    func paymentsServicesStepVisible(
+        _ operation: Payments.Operation,
+        nextStepParameters: [PaymentsParameterRepresentable],
+        operationParameters: [PaymentsParameterRepresentable],
+        response: TransferAnywayResponseData
+    ) throws -> [Payments.Parameter.ID] {
         
         var result = [Payments.Parameter.ID]()
         
@@ -347,14 +372,18 @@ extension Model {
             
             result.append(Payments.Parameter.Identifier.product.rawValue)
         }
-        return result
+        
+        let antifraudParameterId = Payments.Parameter.Identifier.sfpAntifraud.rawValue
+        return result.filter({ $0 != antifraudParameterId })
     }
     
     func paymentsServicesStepExcludingParameters(
         response: TransferAnywayResponseData
     ) throws -> [Payments.Parameter.ID] {
         
-        response.parameterListForNextStep.filter({ $0.isRequired == false }).map(\.id)
+        var params = response.parameterListForNextStep.filter({ $0.isRequired == false }).map(\.id)
+        params.append(Payments.Parameter.Identifier.sfpAntifraud.rawValue)
+        return params
     }
     
     func paymentsServicesStepStage(_ operation: Payments.Operation,
@@ -600,14 +629,33 @@ extension Model {
             
         case .input:
             switch parameterData.id {
+                // Errors occur in many cases with an empty/nil regExp "a3_Period_3_1": + case a3_CITY_2_1, a3_STREET_3_1, a3_HOUSE_4_1, a3_BLOCK_5_1, a3_APARTMENT_6_1
             default:
-                let regExp: any PaymentsValidationRulesSystemRule = parameterData.isRequired == true ? Payments.Validation.RegExpRule(regExp:parameterData.regExp ?? "", actions: [.post: .warning((parameterData.subTitle ?? ""))]) : Payments.Validation.OptionalRegExpRule(regExp:parameterData.regExp ?? "", actions: [.post: .warning((parameterData.subTitle ?? ""))])
-                
-                return Payments.ParameterInput(
-                    .init(id: parameterData.id, value: parameterData.value),
-                    icon: parameterData.iconData ?? .parameterDocument,
-                    title: parameterData.title,
-                    validator: .init(rules: [regExp]))
+                if parameterData.isRequired == true {
+                    
+                    guard let regExpStr = parameterData.regExp, !regExpStr.isEmpty else {
+                        
+                        let regExpStr = parameterData.regExp ?? "^.{1,}$"
+                        let regExpRules: any PaymentsValidationRulesSystemRule = Payments.Validation.RegExpRule(regExp: regExpStr, actions: [.post: .warning((parameterData.subTitle ?? ""))])
+                        
+                        return setParameterInput(parameterData, arrayOfRules: [regExpRules])
+                    }
+                    
+                    let regExpRules: any PaymentsValidationRulesSystemRule = Payments.Validation.RegExpRule(regExp: regExpStr, actions: [.post: .warning((parameterData.subTitle ?? ""))])
+                    
+                    return setParameterInput(parameterData, arrayOfRules: [regExpRules])
+                    
+                } else {
+                    
+                    guard let regExpStr = parameterData.regExp, !regExpStr.isEmpty else {
+                        
+                        return setParameterInput(parameterData, arrayOfRules: [])
+                    }
+                    
+                    let regExpRules: any PaymentsValidationRulesSystemRule = Payments.Validation.OptionalRegExpRule(regExp: regExpStr, actions: [.post: .warning((parameterData.subTitle ?? ""))])
+                    
+                    return setParameterInput(parameterData, arrayOfRules: [regExpRules])
+                }
             }
             
         case .info:
@@ -620,5 +668,24 @@ extension Model {
         case .selectSwitch:
             return nil
         }
+    }
+}
+
+private extension Model {
+    
+    private func setParameterInput(
+        _ parameterData: ParameterData,
+        arrayOfRules: [PaymentsValidationRulesSystemRule]
+    ) -> Payments.ParameterInput {
+        
+        return Payments.ParameterInput(
+            .init(
+                id: parameterData.id,
+                value: parameterData.value
+            ),
+            icon: parameterData.iconData ?? .parameterDocument,
+            title: parameterData.title,
+            validator: .init(rules: arrayOfRules)
+        )
     }
 }

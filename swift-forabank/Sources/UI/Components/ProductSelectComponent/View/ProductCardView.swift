@@ -7,6 +7,7 @@
 
 import SharedConfigs
 import SwiftUI
+import UIPrimitives
 
 public struct ProductCardView: View {
     
@@ -21,14 +22,13 @@ public struct ProductCardView: View {
         self.config = config
     }
     
-    private let cardSize = CGSize(width: 112, height: 71)
     private let logoSize = CGSize(width: 22, height: 36)
     private let shadowSize = CGSize(width: 88, height: 54)
     private let cardInsets = EdgeInsets(top: 12, leading: 8, bottom: 8, trailing: 8)
     
     private var offsetY: CGFloat {
         
-        (cardSize.height - shadowSize.height) + 4
+        (config.cardSize.height - shadowSize.height) + 4
     }
     
     public var body: some View {
@@ -60,7 +60,7 @@ public struct ProductCardView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(cardInsets)
         .background(background)
-        .frame(cardSize)
+        .frame(config.cardSize)
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
     

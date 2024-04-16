@@ -11,28 +11,28 @@ public extension UserPaymentSettings {
     
     struct PaymentContract: Equatable, Identifiable {
         
-        public let id: ContractID
-        public let productID: Product.ID
+        public let id: ID
+        public let accountID: Product.AccountID
         public let contractStatus: ContractStatus
         public let phoneNumber: PhoneNumber
-        public let phoneNumberMasked: String
+        public let phoneNumberMasked: PhoneNumberMask
         
         public init(
-            id: ContractID,
-            productID: Product.ID,
+            id: ID,
+            accountID: Product.AccountID,
             contractStatus: ContractStatus,
             phoneNumber: PhoneNumber,
-            phoneNumberMasked: String
+            phoneNumberMasked: PhoneNumberMask
         ) {
             self.id = id
-            self.productID = productID
+            self.accountID = accountID
             self.contractStatus = contractStatus
             self.phoneNumber = phoneNumber
             self.phoneNumberMasked = phoneNumberMasked
         }
         
-        public typealias ContractID = Tagged<_ContractID, Int>
-        public enum _ContractID {}
+        public typealias ID = Tagged<_ID, Int>
+        public enum _ID {}
         
         public enum ContractStatus: Equatable {
             

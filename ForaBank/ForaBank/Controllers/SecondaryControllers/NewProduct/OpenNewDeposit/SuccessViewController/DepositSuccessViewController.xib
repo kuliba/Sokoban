@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,8 +17,13 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DepositSuccessViewController" customModule="ForaBank" customModuleProvider="target">
             <connections>
+                <outlet property="amountLabel" destination="1vu-yo-IDf" id="fHC-2P-J3Q"/>
+                <outlet property="depositLabel" destination="yHp-QC-UKo" id="mIX-DA-tZi"/>
+                <outlet property="descriptionLabel" destination="qlI-0E-vQi" id="XcF-EN-t2o"/>
                 <outlet property="doneButton" destination="mUp-me-yrn" id="NEA-pO-PNJ"/>
+                <outlet property="optionsButtons" destination="B2M-S6-mKr" id="D5I-mD-lPh"/>
                 <outlet property="stackView" destination="kY8-pp-N2J" id="kA9-yf-uYj"/>
+                <outlet property="statusImage" destination="fQs-lG-n2K" id="gbt-EV-BEX"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -28,7 +33,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OkOperators" translatesAutoresizingMaskIntoConstraints="NO" id="fQs-lG-n2K">
-                    <rect key="frame" x="163" y="92" width="88" height="88"/>
+                    <rect key="frame" x="163" y="96" width="88" height="88"/>
                     <accessibility key="accessibilityConfiguration" identifier="SuccessPageStatusIcon">
                         <bool key="isElement" value="YES"/>
                     </accessibility>
@@ -37,10 +42,22 @@
                         <constraint firstAttribute="width" constant="88" id="92W-ew-Dqf"/>
                     </constraints>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Вклад оформлен" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yHp-QC-UKo">
-                    <rect key="frame" x="139.5" y="204" width="135.5" height="20.5"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Вклад оформлен" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yHp-QC-UKo">
+                    <rect key="frame" x="20" y="208" width="374" height="20.5"/>
                     <accessibility key="accessibilityConfiguration" identifier="SuccessPageTitle"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qlI-0E-vQi">
+                    <rect key="frame" x="20" y="238.5" width="374" height="0.0"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1vu-yo-IDf">
+                    <rect key="frame" x="20" y="258.5" width="374" height="0.0"/>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="24"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -65,7 +82,7 @@
                     </connections>
                 </button>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="kY8-pp-N2J">
-                    <rect key="frame" x="20" y="244.5" width="374" height="407.5"/>
+                    <rect key="frame" x="20" y="248.5" width="374" height="403.5"/>
                 </stackView>
                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="B2M-S6-mKr">
                     <rect key="frame" x="103" y="672" width="208" height="92"/>
@@ -146,13 +163,20 @@
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
+                <constraint firstItem="1vu-yo-IDf" firstAttribute="trailing" secondItem="qlI-0E-vQi" secondAttribute="trailing" id="05O-d9-rVg"/>
                 <constraint firstItem="mUp-me-yrn" firstAttribute="top" secondItem="B2M-S6-mKr" secondAttribute="bottom" constant="30" id="0uR-Dk-d9w"/>
+                <constraint firstItem="qlI-0E-vQi" firstAttribute="top" secondItem="yHp-QC-UKo" secondAttribute="bottom" constant="10" id="2oE-Ub-Xoz"/>
+                <constraint firstItem="1vu-yo-IDf" firstAttribute="leading" secondItem="qlI-0E-vQi" secondAttribute="leading" id="ATw-NN-Bx4"/>
                 <constraint firstItem="yHp-QC-UKo" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="DuZ-8b-Ol8"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="kY8-pp-N2J" secondAttribute="trailing" constant="20" id="EXW-rE-Kg0"/>
                 <constraint firstItem="B2M-S6-mKr" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Izh-Qk-llK"/>
+                <constraint firstItem="qlI-0E-vQi" firstAttribute="trailing" secondItem="yHp-QC-UKo" secondAttribute="trailing" id="J2Q-ZV-b2o"/>
                 <constraint firstItem="fQs-lG-n2K" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="48" id="REJ-U7-uDg"/>
+                <constraint firstItem="qlI-0E-vQi" firstAttribute="leading" secondItem="yHp-QC-UKo" secondAttribute="leading" id="SZQ-hG-Q6j"/>
                 <constraint firstItem="fQs-lG-n2K" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="TZ0-vh-YSu"/>
+                <constraint firstItem="qlI-0E-vQi" firstAttribute="leading" secondItem="kY8-pp-N2J" secondAttribute="leading" id="WHf-I9-oJH"/>
                 <constraint firstItem="B2M-S6-mKr" firstAttribute="top" secondItem="kY8-pp-N2J" secondAttribute="bottom" constant="20" id="cRT-4Z-9Mw"/>
+                <constraint firstItem="1vu-yo-IDf" firstAttribute="top" secondItem="qlI-0E-vQi" secondAttribute="bottom" constant="20" id="g7F-AG-88V"/>
                 <constraint firstItem="kY8-pp-N2J" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="jlX-0U-Gub"/>
                 <constraint firstItem="kY8-pp-N2J" firstAttribute="top" secondItem="yHp-QC-UKo" secondAttribute="bottom" constant="20" id="qRD-E0-AdQ"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="mUp-me-yrn" secondAttribute="trailing" constant="20" id="rMv-eI-SS2"/>
@@ -166,7 +190,7 @@
     <resources>
         <image name="OkOperators" width="72" height="72"/>
         <image name="doc" catalog="system" width="115" height="128"/>
-        <image name="info.circle" catalog="system" width="128" height="121"/>
+        <image name="info.circle" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

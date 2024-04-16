@@ -11,6 +11,7 @@ import Combine
 struct OpenDepositDetailView: View {
     
     @ObservedObject var viewModel: OpenDepositDetailViewModel
+    let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
         
@@ -82,7 +83,7 @@ struct OpenDepositDetailView: View {
         
         switch destination {
         case let .confirm(viewModel):
-            ConfirmView(viewModel: viewModel)
+            ConfirmView(viewModel: viewModel, getUImage: getUImage)
                 .edgesIgnoringSafeArea(.bottom)
                 .navigationBarTitle("Подтвердите параметры вклада", displayMode: .inline)
         }
@@ -627,13 +628,14 @@ extension OpenDepositDetailView {
     struct ConfirmView: UIViewControllerRepresentable {
         
         @ObservedObject var viewModel: OpenDepositDetailViewModel
+        let getUImage: (Md5hash) -> UIImage?
         
         typealias UIViewControllerType = ConfurmOpenDepositViewController
         
         func makeUIViewController(context: Context) -> ConfurmOpenDepositViewController {
             
             let vc = ConfurmOpenDepositViewController()
-            
+            vc.getUImage = getUImage
             //FIXME: remove force unwrap!!!
             let deposit = viewModel.model.deposits.value.first(where: { $0.depositProductID == viewModel.id })!
             
@@ -722,7 +724,7 @@ struct ProductDetailView_Previews: PreviewProvider {
         
         Group {
             
-            OpenDepositDetailView(viewModel: .sample)
+            OpenDepositDetailView(viewModel: .sample, getUImage: { _ in nil })
             
             OpenDepositDetailView.PercentView(viewModel: OpenDepositDetailViewModel.percentSample)
                 .padding(.horizontal, 20)
