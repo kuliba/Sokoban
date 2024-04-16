@@ -10,7 +10,7 @@ import Foundation
 
 //MARK: - View
 
-public struct BackView<Header: View, CVV: View>: View {
+struct BackView<Header: View, CVV: View>: View {
     
     let modifierConfig: ModifierConfig
     let config: Config
@@ -18,7 +18,7 @@ public struct BackView<Header: View, CVV: View>: View {
     let header: () -> Header
     let cvv: () -> CVV
     
-    public init(
+    init(
         modifierConfig: ModifierConfig,
         config: Config,
         header: @escaping () -> Header,
@@ -30,7 +30,7 @@ public struct BackView<Header: View, CVV: View>: View {
         self.cvv = cvv
     }
     
-    public var body: some View {
+    var body: some View {
         
         VStack {
             
@@ -65,17 +65,17 @@ struct BackView_Previews: PreviewProvider {
         
         BackView(
             modifierConfig: .previewBack,
-            config: .config(.preview),
+            config: .config(.previewCard),
             header: {
                 HeaderBackView(
                     cardInfo: .previewWiggleFalse,
                     action: { print("action") },
-                    config: .config(.preview))
+                    config: .config(.previewCard))
             },
             cvv: {
                 CVVView(
                     cardInfo: .previewWiggleFalse,
-                    config: .config(.preview),
+                    config: .config(.previewCard),
                     action: { print("cvv action") })
             })
         .fixedSize()

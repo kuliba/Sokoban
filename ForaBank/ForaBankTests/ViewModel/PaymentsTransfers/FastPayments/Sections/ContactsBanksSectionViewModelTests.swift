@@ -460,11 +460,38 @@ final class ContactsBanksSectionViewModelTests: XCTestCase {
         XCTAssertEqual(spy.values, [nil, nil, "A", nil, "B", "1", nil])
     }
         
+    func test_bankID_shouldReturnIDsList() {
+        
+        let model = Model.emptyMock
+        model.paymentsByPhone.value.append(
+            element: .init(
+                bankId: "1",
+                bankName: "bankName",
+                payment: true,
+                defaultBank: true
+            ),
+            toValueOfKey: "1"
+        )
+        let sut = makeSUT(model: model, phone: "1", .select, .banks)
+        
+        XCTAssertEqual(sut.banksID, ["1"])
+    }
+    
+    func test_bankID_shouldReturnEmptyIDsList() {
+        
+        let model = Model.emptyMock
+        model.paymentsByPhone.value = [:]
+        let sut = makeSUT(model: model, phone: "1", .select, .banks)
+        
+        XCTAssertEqual(sut.banksID, [])
+    }
+    
     // TODO: add tests for other ContactsBanksSectionViewModel behaviour
 
     // MARK: - Helpers
     
     private func makeSUT(
+        model: Model = .emptyMock,
         phone: String?,
         _ mode: ContactsBanksSectionViewModel.Mode,
         _ bankDictionary: ContactsBanksSectionViewModel.BankDictionary,
@@ -474,7 +501,7 @@ final class ContactsBanksSectionViewModelTests: XCTestCase {
     ) -> ContactsBanksSectionViewModel {
      
         let sut = ContactsBanksSectionViewModel(
-            .emptyMock,
+            model,
             mode: mode,
             phone: phone,
             bankDictionary: bankDictionary,

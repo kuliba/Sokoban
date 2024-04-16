@@ -7,7 +7,7 @@
 
 import AccountInfoPanel
 import XCTest
-import Services
+import RemoteServices
 
 final class ResponseMapper_mapGetProductDetailsResponseTests: XCTestCase {
     

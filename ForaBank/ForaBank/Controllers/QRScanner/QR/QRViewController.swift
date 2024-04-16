@@ -132,7 +132,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
         
         a.forEach { [weak self] v in
             if v.contains("qr.nspk.ru") {
-                onC2B(link: v)
+                self?.onC2B(link: v, getUImage: self?.viewModel?.getUImage ?? { _ in UIImage()})
                 return
             }
             if v.contains("=") {
@@ -174,7 +174,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
         }
     }
 
-    final func onC2B(link: String) {
+    final func onC2B(link: String, getUImage: @escaping (Md5hash) -> UIImage?) {
         qrCodesession.stopRunning()
         GlobalModule.c2bURL = link
        // viewModel?.closeAction(false)
@@ -182,6 +182,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
         self.presentingViewController?.dismiss(animated: true, completion: nil)
         
         if GlobalModule.c2bURL != nil,  let controller = C2BDetailsViewController.storyboardInstance() {
+            controller.getUImage = getUImage
             let nc = UINavigationController(rootViewController: controller)
             nc.modalPresentationStyle = .fullScreen
             present(nc, animated: false)

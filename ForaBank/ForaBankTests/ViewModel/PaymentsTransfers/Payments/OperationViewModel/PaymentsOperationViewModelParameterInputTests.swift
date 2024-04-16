@@ -113,6 +113,7 @@ final class PaymentsOperationViewModelParameterInputTests: XCTestCase {
                     name: "Bank",
                     subtitle: nil,
                     icon: nil,
+                    isFavorite: false,
                     searchValue: "Bank"
                 )
             ],

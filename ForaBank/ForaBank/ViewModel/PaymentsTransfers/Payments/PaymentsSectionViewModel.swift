@@ -102,7 +102,7 @@ class PaymentsSectionViewModel {
                         
                         // MARK: Bank List Component
                     case let payload as PaymentsParameterViewModelAction.SelectBank.ContactSelector.Show:
-                        self.action.send(PaymentsSectionViewModelAction.BankSelector.Show(viewModel: payload.viewModel))
+                        self.action.send(PaymentsSectionViewModelAction.BankSelector.Show(type: payload.type))
                         
                     case _ as PaymentsParameterViewModelAction.SelectBank.ContactSelector.Close:
                         self.action.send(PaymentsSectionViewModelAction.ContactSelector.Close())
@@ -403,7 +403,7 @@ enum PaymentsSectionViewModelAction {
         
         struct Show: Action {
             
-            let viewModel: ContactsViewModel
+            let type: Payments.ParameterSelectBank.SelectAllOption.Kind
         }
         
         struct Close: Action {}

@@ -14,7 +14,12 @@ class ContactsSectionCollapsableViewModel: ContactsSectionViewModel, ObservableO
     let header: ContactsSectionHeaderView.ViewModel
     @Published var isCollapsed: Bool
 
-    init(header: ContactsSectionHeaderView.ViewModel, isCollapsed: Bool = false, mode: Mode, model: Model) {
+    init(
+        header: ContactsSectionHeaderView.ViewModel,
+        isCollapsed: Bool = false,
+        mode: Mode,
+        model: Model
+    ) {
         
         self.isCollapsed = isCollapsed
         self.header = header

@@ -36,6 +36,7 @@ extension ProductView {
         @Published var isUpdating: Bool
         
         var appearance: Appearance
+        var config: CardUI.Config
 
         private var bindings = Set<AnyCancellable>()
         private let pasteboard = UIPasteboard.general
@@ -64,6 +65,7 @@ extension ProductView {
             self.productType = productType
             self.cardAction = cardAction
             self.showCvv = showCvv
+            self.config = .config(appearance: appearance)
         }
         
         convenience init(
@@ -96,7 +98,7 @@ extension ProductView {
             let textColor = productData.fontDesignColor.color
             let productType = productData.productType
             let backgroundColor = productData.backgroundColor
-            let backgroundImage = Self.backgroundImage(with: productData, size: size)
+            let backgroundImage = Self.backgroundImage(with: productData, size: size, getImage: { model.images.value[.init($0)]?.image })
             let statusAction = Self.statusAction(product: productData)
             let interestRate = Self.rateFormatted(product: productData)
             let icon = Self.iconForCard(product: productData)
@@ -193,7 +195,9 @@ extension ProductView {
             cardInfo.owner = Self.owner(from: productData)
             statusAction = Self.statusAction(product: productData)
             footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
-            
+            let backgroundImage = Self.backgroundImage(with: productData, size: appearance.size, getImage: { model.images.value[.init($0)]?.image })
+            appearance.background = .init(color: productData.backgroundColor, image: backgroundImage)
+            config = .config(appearance: appearance)
             bind(statusAction)
         }
         
@@ -350,10 +354,13 @@ extension ProductView {
             }
         }
         
-        static func paymentSystemIcon(from data: ProductData) -> Image? {
+        static func paymentSystemIcon(
+            from data: ProductData,
+            getImage: (MD5Hash) -> Image?
+        ) -> Image? {
             
             guard let cardData = data as? ProductCardData else { return nil }
-            return cardData.paymentSystemImage?.image
+            return  getImage(.init(cardData.paymentSystemImageMd5Hash))
         }
         
         static func statusAction(product: ProductData) -> StatusActionViewModel? {
@@ -376,12 +383,13 @@ extension ProductView {
             }
         }
         
-        static func backgroundImage(with productData: ProductData, size: Appearance.Size) -> Image? {
+        static func backgroundImage(with productData: ProductData, size: Appearance.Size, getImage: @escaping (MD5Hash) -> Image?) -> Image? {
             
             switch size {
-            case .large: return productData.extraLargeDesign.image
-            case .normal: return productData.largeDesign.image
-            case .small: return productData.mediumDesign.image
+            case .large: return getImage(.init(productData.xlDesignMd5Hash))
+            case .normal:
+                return getImage(.init(productData.largeDesignMd5Hash))
+            case .small: return getImage(.init(productData.mediumDesignMd5Hash))
             }
         }
         
@@ -574,34 +582,22 @@ extension ProductView.ViewModel {
 struct ProductView: View {
     
     @StateObject private var viewModel: ViewModel
-    let config: CardUI.Config
     
     init(
         viewModel: ViewModel
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
-        self.config = .config(appearance: viewModel.appearance)
     }
 
     var body: some View {
         
-        FrontView(
+        ProductFrontView(
             name: viewModel.cardInfo.name,
-            balance: .init(viewModel.footer.balance),
+            headerDetails: viewModel.header,
+            footerDetails: viewModel.footer,
             modifierConfig: modifierConfig(viewModel.cardInfo.cardWiggle),
-            config: config,
-            headerView: { HeaderView(config: config, header: viewModel.header) },
-            footerView: {
-                FooterView(
-                    config: config,
-                    footer: .init(
-                        balance: $0.rawValue,
-                        interestRate: viewModel.footer.interestRate,
-                        paymentSystem: viewModel.footer.paymentSystem
-                    )
-                )
-            },
-            statusActionView: statusView
+            activationView: activationView,
+            config: viewModel.config
         )
         .animation(
             .linear(duration: 0.5),
@@ -616,33 +612,25 @@ struct ProductView: View {
             viewModel.resetToFrontIfNotAwaiting()
         }
         
-        BackView(
+        ProductBackView(
+            cardInfo: viewModel.cardInfo,
+            actions: .init(
+                header: viewModel.copyCardNumberToClipboard,
+                cvv: viewModel.showCVVButtonTap),
             modifierConfig: modifierConfig(false),
-            config: config,
-            header: {
-                
-                HeaderBackView.init(
-                    cardInfo: viewModel.cardInfo,
-                    action: viewModel.copyCardNumberToClipboard,
-                    config: config
-                )
-            },
-            cvv: {
-                
-                CVVView.init(cardInfo: viewModel.cardInfo, config: config, action: viewModel.showCVVButtonTap)
-            }
+            config: viewModel.config
         )
     }
     
     @ViewBuilder
-    private func statusView() -> (some View)? {
+    private func activationView() -> (some View)? {
         
         viewModel.statusAction.map {
             
             return ProductView.StatusActionView(
                 viewModel: $0,
-                color: config.appearance.textColor,
-                style: config.appearance.style)
+                color: viewModel.config.appearance.textColor,
+                style: viewModel.config.appearance.style)
         }
     }
     

@@ -171,7 +171,7 @@ extension CardsScrollView: UICollectionViewDataSource {
             } else {
                 
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardsScrollCell
-                
+                cell.getUImage = { self.model.images.value [$0]?.uiImage }
                 if isFiltered {
                     cell.card = filteredCardList[indexPath.item - 1]
                 } else {
@@ -187,7 +187,8 @@ extension CardsScrollView: UICollectionViewDataSource {
                 return cellLast
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardsScrollCell
-                
+                cell.getUImage = { self.model.images.value [$0]?.uiImage }
+
                 if isFiltered {
                     
                     cell.card = filteredCardList[indexPath.item ]

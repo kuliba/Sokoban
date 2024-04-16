@@ -10,28 +10,25 @@ import SwiftUI
 
 //MARK: - View
 
-public struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
+struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
     
     let name: String
-    let balance: Balance
     let modifierConfig: ModifierConfig
     let config: Config
     let headerView: () -> Header
-    let footerView: (Balance) -> Footer
+    let footerView: () -> Footer
     
     let statusActionView: () -> StatusAction?
-
-    public init(
+    
+    init(
         name: String,
-        balance: Balance,
         modifierConfig: ModifierConfig,
         config: Config,
         headerView: @escaping () -> Header,
-        footerView: @escaping (Balance) -> Footer,
+        footerView: @escaping () -> Footer,
         statusActionView: @escaping () -> StatusAction?
     ) {
         self.name = name
-        self.balance = balance
         self.modifierConfig = modifierConfig
         self.config = config
         self.headerView = headerView
@@ -39,7 +36,7 @@ public struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
         self.statusActionView = statusActionView
     }
     
-    public var body: some View {
+    var body: some View {
         
         VStack(alignment: .leading, spacing: 0) {
             
@@ -55,7 +52,7 @@ public struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
                     .opacity(0.5)
                     .accessibilityIdentifier("productName")
                 
-                footerView(balance)
+                footerView()
             }
             .frame(maxHeight: .infinity, alignment: .bottom)
         }
@@ -86,12 +83,11 @@ struct FrontView_Previews: PreviewProvider {
             
             FrontView(
                 name: "Name",
-                balance: .init("123 RUB"),
                 modifierConfig: .previewUpdating,
-                config: .config(.preview),
+                config: .config(.previewCard),
                 headerView: {
                     HeaderView(
-                        config: .config(.preview),
+                        config: .config(.previewCard),
                         header: .init(
                             number: "111111",
                             icon: Image(systemName: "snowflake.circle"))
@@ -99,9 +95,9 @@ struct FrontView_Previews: PreviewProvider {
                 },
                 footerView: {
                     FooterView(
-                        config: .config(.preview),
-                        footer: .init(balance: $0.rawValue))
-                }, 
+                        config: .config(.previewCard),
+                        footer: .init(balance: "123 RUB"))
+                },
                 statusActionView: {
                     EmptyView()
                 })
@@ -109,12 +105,11 @@ struct FrontView_Previews: PreviewProvider {
             
             FrontView(
                 name: "Name",
-                balance: .init("123012 RUB"),
                 modifierConfig: .previewFront,
-                config: .config(.preview),
+                config: .config(.previewAccount),
                 headerView: {
                     HeaderView(
-                        config: .config(.preview),
+                        config: .config(.previewCard),
                         header: .init(
                             number: "111111",
                             icon: Image(systemName: "snowflake.circle.fill"))
@@ -122,8 +117,8 @@ struct FrontView_Previews: PreviewProvider {
                 },
                 footerView: {
                     FooterView(
-                        config: .config(.preview),
-                        footer: .init(balance: $0.rawValue, interestRate: "8.05"))
+                        config: .config(.previewCard),
+                        footer: .init(balance: "123012 RUB", interestRate: "8.05"))
                 },
                 statusActionView: {
                     EmptyView()

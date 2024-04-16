@@ -41,6 +41,6 @@ struct CheckView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        CheckView(config: .config(.preview))
+        CheckView(config: .config(.previewCard))
     }
 }

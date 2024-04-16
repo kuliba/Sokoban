@@ -23,7 +23,7 @@ final class CardChooseView: UIView {
     @IBOutlet weak var leftTitleAncor: NSLayoutConstraint!
     @IBOutlet weak var choseButton: UIButton?
     
-    
+    var getUImage: (Md5hash) -> UIImage? = { _ in UIImage() }
     var didChooseButtonTapped: (() -> Void)?
     
     var cardModel: GetProductListDatum? {
@@ -77,7 +77,7 @@ final class CardChooseView: UIView {
         
         var balance = Double(model.balance)
 
-        imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
+        imageView.image = getUImage(model.smallDesignMd5Hash ?? "") ?? UIImage(named:"AccImage")
         imageView.accessibilityIdentifier = "ChooseProductIcon"
         
         self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
@@ -132,7 +132,7 @@ final class CardChooseView: UIView {
             break
         }
         self.nameLabel.text = model.customName ?? model.additionalField ?? ""
-        self.cardTypeImage.image = model.paymentSystemImage?.convertSVGStringToImage()
+        self.cardTypeImage.image = getUImage(model.paymentSystemImageMd5Hash ?? "") ?? UIImage()
         self.cardTypeImage.accessibilityIdentifier = "ChooseProductPaymentSystemIcon"
     }
     
@@ -143,8 +143,7 @@ final class CardChooseView: UIView {
         
         var balance = Double(modelBalance)
         
-        imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
-                
+        imageView.image = getUImage(model.smallDesignMd5Hash ?? "") ?? UIImage(named:"AccImage")
         self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
             
         let text = NSAttributedString(
@@ -201,7 +200,7 @@ final class CardChooseView: UIView {
             break
         }
         self.nameLabel.text = model.customName ?? model.additionalField ?? ""
-        self.cardTypeImage.image = model.paymentSystemImage?.convertSVGStringToImage()
+        self.cardTypeImage.image = getUImage(model.smallDesignMd5Hash ?? "") ?? UIImage()
     }
     
     private func setupCustomData(with model: CastomCardViewModel) {

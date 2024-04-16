@@ -505,7 +505,7 @@ extension Model {
                             return .init(with: svgImage)
                         }()
                         
-                        list.append(Payments.ParameterSelectBank.Option(id: item.id, name: item.name, subtitle: nil, icon: icon, searchValue: item.name))
+                        list.append(Payments.ParameterSelectBank.Option(id: item.id, name: item.name, subtitle: nil, icon: icon, isFavorite: false, searchValue: item.name))
                     }
                 }
                 
