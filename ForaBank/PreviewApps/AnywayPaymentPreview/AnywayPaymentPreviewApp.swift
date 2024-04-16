@@ -9,9 +9,16 @@ import SwiftUI
 
 @main
 struct AnywayPaymentPreviewApp: App {
+    
     var body: some Scene {
+        
         WindowGroup {
-            ContentView()
+            
+            NavigationView {
+                
+                ContentView()
+                    .navigationTitle("Anyway Payment")
+            }
         }
     }
 }
