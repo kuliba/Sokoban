@@ -124,11 +124,7 @@ where FieldView == AnywayPaymentElementFieldView,
         self.init(
             state: state,
             event: event,
-            factory: .init(
-                fieldView: FieldView.init,
-                parameterView: ParameterView.init,
-                widgetView: WidgetView.init
-            )
+            factory: .default
         )
     }
 }
