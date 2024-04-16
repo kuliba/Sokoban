@@ -92,23 +92,31 @@ private extension Array where Element == AnywayPayment.Element {
         self[index] = .parameter(parameter.updating(value: newValue))
     }
     
-    mutating func updating(coreAmount amount: Decimal) {
+    mutating func updating(
+        coreAmount amount: Decimal
+    ) {
+        guard let core else { return }
         
-        guard case let .widget(.core(core)) = self[id: .widgetID(.core)]
-        else { return }
-        
-        self[id: .widgetID(.core)] = .widget(.core(core.updating(amount: amount)))
+        let updated = core.updating(amount: amount)
+        self[id: .widgetID(.core)] = .widget(.core(updated))
     }
     
     mutating func updating(
         productID: Element.Widget.PaymentCore.ProductID,
         currency: Element.Widget.PaymentCore.Currency
     ) {
-        guard case let .widget(.core(core)) = self[id: .widgetID(.core)]
-        else { return }
+        guard let core else { return }
         
         let updated = core.updating(productID: productID, currency: currency)
         self[id: .widgetID(.core)] = .widget(.core(updated))
+    }
+    
+    private var core: Element.Widget.PaymentCore? {
+        
+        guard case let .widget(.core(core)) = self[id: .widgetID(.core)]
+        else { return nil }
+        
+        return core
     }
 }
 
@@ -133,7 +141,9 @@ private extension Array where Element: Identifiable {
 
 private extension AnywayPayment.Element.Parameter {
     
-    func updating(value newValue: Field.Value) -> Self {
+    func updating(
+        value newValue: Field.Value
+    ) -> Self {
         
         .init(
             field: .init(id: field.id, value: newValue),
@@ -146,7 +156,9 @@ private extension AnywayPayment.Element.Parameter {
 
 private extension AnywayPayment.Element.Widget.PaymentCore {
     
-    func updating(amount: Decimal) -> Self {
+    func updating(
+        amount: Decimal
+    ) -> Self {
         
         .init(amount: amount, currency: currency, productID: productID)
     }
