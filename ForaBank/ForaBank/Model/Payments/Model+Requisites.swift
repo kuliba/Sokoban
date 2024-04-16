@@ -212,8 +212,8 @@ extension Model {
                     //MARK: Kpp Parameter
                     let options: [Payments.ParameterSelect.Option] = createParameterOptions(suggestedCompanies)
                     
-                    let kppParameter = createKppParameterInput(id: kppParameterId, value: options.first?.id, icon: ImageData(named: "ic24FileHash") ?? .parameterDocument, validator: kppParameterValidator)
-                    parameters.append(kppParameter)
+                    let kppParameterSelect = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), icon: .name("ic24FileHash"), title: "КПП получателя", placeholder: "Начните ввод для поиска", options: options, description: "Выберите из \(options.count)")
+                    parameters.append(kppParameterSelect)
                     
                     //MARK: Company Name Parameter
                     let companyNameValue = options.first?.subname
