@@ -919,6 +919,9 @@
 		2AD0F6912BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6902BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift */; };
 		2AD0F6932BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6922BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift */; };
 		2AD0F6952BCEA440007EC720 /* AnywayPaymentElementWidgetViewFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6942BCEA440007EC720 /* AnywayPaymentElementWidgetViewFactory+preview.swift */; };
+		2AD0F6972BCEA48A007EC720 /* ComposedAnywayPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6962BCEA48A007EC720 /* ComposedAnywayPaymentView.swift */; };
+		2AD0F6992BCEAABC007EC720 /* ComposedAnywayPaymentViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6982BCEAABC007EC720 /* ComposedAnywayPaymentViewFactory.swift */; };
+		2AD0F69B2BCEAB9F007EC720 /* ComposedAnywayPaymentLayoutViewFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F69A2BCEAB9F007EC720 /* ComposedAnywayPaymentLayoutViewFactory+preview.swift */; };
 		2AD437672B00A9CD0027286A /* XCTestCase+assert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD437662B00A9CD0027286A /* XCTestCase+assert.swift */; };
 		2AD4376A2B00BD200027286A /* Spy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD437692B00BD200027286A /* Spy.swift */; };
 		2AD54D342B03686A00481463 /* Services+makeCVVPINInitiateActivationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD54D332B03686A00481463 /* Services+makeCVVPINInitiateActivationService.swift */; };
@@ -3510,6 +3513,9 @@
 		2AD0F6902BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementViewFactory.swift; sourceTree = "<group>"; };
 		2AD0F6922BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentElementViewFactory+preview.swift"; sourceTree = "<group>"; };
 		2AD0F6942BCEA440007EC720 /* AnywayPaymentElementWidgetViewFactory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentElementWidgetViewFactory+preview.swift"; sourceTree = "<group>"; };
+		2AD0F6962BCEA48A007EC720 /* ComposedAnywayPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedAnywayPaymentView.swift; sourceTree = "<group>"; };
+		2AD0F6982BCEAABC007EC720 /* ComposedAnywayPaymentViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedAnywayPaymentViewFactory.swift; sourceTree = "<group>"; };
+		2AD0F69A2BCEAB9F007EC720 /* ComposedAnywayPaymentLayoutViewFactory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComposedAnywayPaymentLayoutViewFactory+preview.swift"; sourceTree = "<group>"; };
 		2AD437662B00A9CD0027286A /* XCTestCase+assert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+assert.swift"; sourceTree = "<group>"; };
 		2AD437692B00BD200027286A /* Spy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spy.swift; sourceTree = "<group>"; };
 		2AD54D332B03686A00481463 /* Services+makeCVVPINInitiateActivationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeCVVPINInitiateActivationService.swift"; sourceTree = "<group>"; };
@@ -6632,6 +6638,7 @@
 				2A9602722BCC24F0000D9B68 /* AnywayPaymentFooterConfig+preview.swift */,
 				2AD0F6922BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift */,
 				2AD0F6942BCEA440007EC720 /* AnywayPaymentElementWidgetViewFactory+preview.swift */,
+				2AD0F69A2BCEAB9F007EC720 /* ComposedAnywayPaymentLayoutViewFactory+preview.swift */,
 				2AFE37FE2BCAA8BB0079C401 /* ExpandablePickerState+preview.swift */,
 				2AFE38002BCAA92B0079C401 /* ExpandablePickerViewModel+preview.swift */,
 			);
@@ -8403,6 +8410,8 @@
 			isa = PBXGroup;
 			children = (
 				2A09E6E72BCBB9EB001A7089 /* AnywayPaymentLayoutView.swift */,
+				2AD0F6962BCEA48A007EC720 /* ComposedAnywayPaymentView.swift */,
+				2AD0F6982BCEAABC007EC720 /* ComposedAnywayPaymentViewFactory.swift */,
 				2AFE37F12BC987830079C401 /* AnywayPaymentElementView.swift */,
 				2AD0F6902BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift */,
 				2A09E6EF2BCBCB22001A7089 /* AnywayPaymentElementFieldView.swift */,
@@ -14646,6 +14655,7 @@
 			files = (
 				2AFE38072BCAA9C50079C401 /* ExpandablePickerStateWrapperView.swift in Sources */,
 				2A09E6FA2BCBCC6F001A7089 /* AnywayPayment.UIComponent.Widget+preview.swift in Sources */,
+				2AD0F69B2BCEAB9F007EC720 /* ComposedAnywayPaymentLayoutViewFactory+preview.swift in Sources */,
 				2A09E6EE2BCBCA5E001A7089 /* AnywayPayment.Element+Identifiable.swift in Sources */,
 				2A319BA92BCD58BC009333ED /* AnywayPayment.Element.Parameter+preview.swift in Sources */,
 				2AC3EFFD2BCBDE1D0037A4E1 /* AnywayPaymentFooterView.swift in Sources */,
@@ -14656,6 +14666,7 @@
 				2AD0F6912BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift in Sources */,
 				2A319BA52BCD4414009333ED /* TextFieldMockViewModel.swift in Sources */,
 				2A319BA62BCD4414009333ED /* TextFieldMockStateWrapperView.swift in Sources */,
+				2AD0F6972BCEA48A007EC720 /* ComposedAnywayPaymentView.swift in Sources */,
 				2A319BA72BCD4414009333ED /* TextFieldMockWrapperView.swift in Sources */,
 				2AFE37FD2BCAA75C0079C401 /* ExpandablePickerWrapperView.swift in Sources */,
 				2AFE37FF2BCAA8BB0079C401 /* ExpandablePickerState+preview.swift in Sources */,
@@ -14684,6 +14695,7 @@
 				2AFE38052BCAA9A30079C401 /* ExpandablePickerViewModel.swift in Sources */,
 				2AD0F6952BCEA440007EC720 /* AnywayPaymentElementWidgetViewFactory+preview.swift in Sources */,
 				2A09E6EA2BCBBA52001A7089 /* AnywayPayment.Element+preview.swift in Sources */,
+				2AD0F6992BCEAABC007EC720 /* ComposedAnywayPaymentViewFactory.swift in Sources */,
 				2AFE37F92BCA866C0079C401 /* ExpandablePickerState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

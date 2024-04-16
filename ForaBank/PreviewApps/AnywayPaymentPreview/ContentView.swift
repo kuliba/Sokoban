@@ -42,16 +42,21 @@ struct ContentView: View {
         
         ZStack(alignment: .bottom) {
             
-            AnywayPaymentLayoutView(
-                buttonTitle: buttonTitle,
-                elements: viewModel.state.elements,
-                isEnabled: isEnabled,
-                event: viewModel.event,
-                config: .preview
-            )
-            
+            paymentView()
             infoOverlay()
         }
+    }
+    
+    private func paymentView() -> some View {
+        
+        ComposedAnywayPaymentView(
+            buttonTitle: buttonTitle,
+            elements: viewModel.state.elements,
+            isEnabled: isEnabled,
+            event: viewModel.event,
+            config: .preview,
+            factory: .preview
+        )
     }
     
     private func infoOverlay() -> some View {
