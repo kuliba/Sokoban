@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import RemoteServices
 
 extension NanoServices {
     
@@ -34,7 +35,7 @@ extension NanoServices {
         let getBankDefault = adaptedLoggingFetch(
             createRequest: ForaBank.RequestFactory.createGetBankDefaultRequest,
             httpClient: httpClient,
-            mapResponse: FastPaymentsSettings.ResponseMapper.mapGetBankDefaultResponse,
+            mapResponse: RemoteServices.ResponseMapper.mapGetBankDefaultResponse,
             mapError: ServiceFailure.init(error:),
             log: log
         )

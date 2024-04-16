@@ -19,7 +19,7 @@ extension ServerCommands {
         struct GetScenarioQRData: ServerCommand {
             
             let token: String
-            let endpoint = "/rest/binding/v1/getScenarioQRData"
+            let endpoint = "/rest/binding/v2/getScenarioQRData"
             let method: ServerCommandMethod = .post
             let payload: Payload?
 

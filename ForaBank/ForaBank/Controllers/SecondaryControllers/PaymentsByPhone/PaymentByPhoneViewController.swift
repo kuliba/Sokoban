@@ -449,6 +449,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                             model.template = self?.viewModel.template
                             
                             let vc = ContactConfurmViewController()
+                            vc.getUImage = { self?.model.images.value[$0]?.uiImage }
                             vc.confurmVCModel = model
                             vc.title = "Подтвердите реквизиты"
                             vc.addCloseButton()
@@ -524,6 +525,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                     let numberTransaction = data.data?.additionalList?.filter({$0.fieldName == "BizMsgIdr"})
                     
                     let vc = ContactConfurmViewController()
+                    vc.getUImage = { self?.model.images.value[$0]?.uiImage }
                     vc.confurmVCModel = model
                     if numberTransaction?.count ?? 0 > 0{
                         vc.confurmVCModel?.numberTransction = numberTransaction?[0].fieldValue?.description ?? ""

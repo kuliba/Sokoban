@@ -1,0 +1,109 @@
+//
+//  PrepaymentOptionsReducer.swift
+//
+//
+//  Created by Igor Malyarov on 19.02.2024.
+//
+
+public final class PrepaymentOptionsReducer<LastPayment, Operator>
+where LastPayment: Equatable & Identifiable,
+      Operator: Equatable & Identifiable {
+    
+    private let observeLast: Int
+    private let pageSize: Int
+    
+    public init(observeLast: Int, pageSize: Int) {
+        
+        self.observeLast = observeLast
+        self.pageSize = pageSize
+    }
+}
+
+public extension PrepaymentOptionsReducer {
+    
+#warning("fix search")
+#warning("add tests")
+    func reduce(
+        _ state: State,
+        _ event: Event
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case let .didScrollTo(operatorID):
+            (state, effect) = reduce(state, operatorID)
+            
+        case let .paginated(paginated):
+            (state, effect) = reduce(state, paginated)
+            
+        case let .search(search):
+            (state, effect) = reduce(state, search)
+        }
+        
+        return (state, effect)
+    }
+}
+
+public extension PrepaymentOptionsReducer {
+    
+    typealias State = PrepaymentOptionsState<LastPayment, Operator>
+    typealias Event = PrepaymentOptionsEvent<LastPayment, Operator>
+    typealias Effect = PrepaymentOptionsEffect<Operator>
+}
+
+private extension PrepaymentOptionsReducer {
+    
+    func reduce(
+        _ state: State,
+        _ operatorID: Operator.ID
+    ) -> (State, Effect?) {
+        
+        var effect: Effect?
+        
+        let lastObserved = state.operators.map(\.id).suffix(observeLast)
+        
+        guard Set(lastObserved).contains(operatorID)
+        else { return (state, nil) }
+        
+        effect = .paginate(operatorID, pageSize)
+        
+        return (state, effect)
+    }
+    
+    func reduce(
+        _ state: State,
+        _ result: Event.LoadOperatorsResult
+    ) -> (State, Effect?) {
+        
+        var state = state
+        
+        var operators = state.operators
+        let paged = try? result.get()
+        operators.append(contentsOf: paged ?? [])
+        state.operators = operators
+        state.isInflight = false
+        
+        return (state, nil)
+    }
+    
+    func reduce(
+        _ state: State,
+        _ event: Event.Search
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case let .entered(text):
+            effect = .search(text)
+            
+        case let .updated(text):
+            state.searchText = text
+        }
+        
+        return (state, effect)
+    }
+}

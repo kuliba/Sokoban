@@ -63,8 +63,11 @@ extension MyProductsSectionItemView {
                         
                         HStack {
                             
-                            if let paymentSystemIcon = viewModel.paymentSystemIcon {
-                                paymentSystemIcon.renderingMode(.original)
+                            viewModel.paymentSystemIcon.map {
+                                $0.renderingMode(.original)
+                                    .resizable()
+                                    .aspectRatio(1, contentMode: .fit)
+                                    .frame(width: 24, height: 24, alignment: .center)
                                     .accessibilityIdentifier("MyProductsProductPaymentSistemIcon")
                             }
                             

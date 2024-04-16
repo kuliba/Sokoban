@@ -8,11 +8,9 @@
 import SwiftUI
 
 struct SelectorView: View {
-    
-    typealias Selector = CarouselState.ProductTypeSelector
-    
-    let state: Selector
-    let event: (Product.ID.ProductType) -> Void
+        
+    let selector: ProductTypeSelector
+    let action: (ProductType) -> Void
     let config: SelectorConfig
         
     var body: some View {
@@ -21,14 +19,14 @@ struct SelectorView: View {
             
             HStack(spacing: config.itemSpacing) {
                                 
-                ForEach(state.items.uniqueValues, id: \.self) { productType in
+                ForEach(selector.items.uniqueValues, id: \.self) { productType in
                                             
                     labelView(
                         title: productType.pluralName,
-                        shouldSelect: productType == state.selected,
+                        shouldSelect: productType == selector.selected,
                         config: config
                     ) {
-                        event(productType)
+                        action(productType)
                     }
                     .frame(height: config.optionConfig.frameHeight)
                     .accessibilityIdentifier("optionProductTypeSelection")

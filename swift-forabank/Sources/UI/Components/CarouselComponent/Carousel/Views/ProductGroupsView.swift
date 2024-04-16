@@ -7,14 +7,18 @@
 
 import SwiftUI
 
-struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView: View>: View {
+struct ProductGroupsView<Product, ProductView, NewProductButton, StickerView>: View
+where Product: CarouselProduct & Equatable & Identifiable,
+      ProductView: View,
+      NewProductButton: View,
+      StickerView: View {
     
-    var state: CarouselState
-    let groups: CarouselState.ProductGroups
-    let event: (CarouselEvent) -> Void
+    var state: State
+    let groups: Groups
+    let event: (Event) -> Void
     
     let productView: (Product) -> ProductView
-    let stickerView: (Product) -> StickerView?
+    let stickerView: () -> StickerView?
     let newProductButton: () -> NewProductButton?
     
     let config: CarouselConfig
@@ -26,7 +30,7 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
         groupView(groups: groups)
     }
     
-    private func groupView(groups: CarouselState.ProductGroups) -> some View {
+    private func groupView(groups: Groups) -> some View {
         
         ScrollView(.horizontal, showsIndicators: false) {
             
@@ -45,8 +49,10 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
                         productGroupSeparator(for: group)
                     }
                     
-                    newProductButton()
-                        .frame(config.productDimensions, for: \.new)
+                    if state.needShowAddNewProduct {
+                        newProductButton()
+                            .frame(config.productDimensions, for: \.new)
+                    }
                 }
                 .onHorizontalScroll(in: .named(coordinateSpaceName), completion: { event(.didScrollTo($0)) })
                 .onChange(of: state.selectedProductType) { productType in
@@ -74,7 +80,7 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
         .coordinateSpace(name: coordinateSpaceName)
     }
     
-    private func visibleProducts(for group: ProductGroup) -> some View {
+    private func visibleProducts(for group: Group) -> some View {
         
         ForEach(
             state.visibleProducts(for: group),
@@ -105,7 +111,7 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
     }
     
     @ViewBuilder
-    private func spoiler(for group: ProductGroup) -> some View {
+    private func spoiler(for group: Group) -> some View {
                         
         if state.shouldAddSpoiler(for: group) {
             
@@ -134,21 +140,25 @@ struct ProductGroupsView<ProductView: View, NewProductButton: View, StickerView:
     }
     
     @ViewBuilder
-    private func sticker(for group: ProductGroup) -> some View {
+    private func sticker(for group: Group) -> some View {
         
-        if let sticker = state.sticker, state.shouldAddSticker(for: group) {
+        if state.needShowSticker, state.shouldAddSticker(for: group) {
             
             if !state.shouldAddSpoiler(for: group) { separator() }
             
-            stickerView(sticker)
-                .id(group.id)
-                .frame(config.productDimensions, for: \.product)
-                .accessibilityIdentifier("mainProduct")
+            ZStack(alignment: .topTrailing) {
+                
+                stickerView()
+                    .id(group.id)
+                    .frame(config.productDimensions, for: \.product)
+                    .accessibilityIdentifier("mainProduct")
+                StickerCloseButtonView(action: { event(.closeSticker) })
+            }
         }
     }
     
     @ViewBuilder
-    private func productGroupSeparator(for group: ProductGroup) -> some View {
+    private func productGroupSeparator(for group: Group) -> some View {
         
         if state.shouldAddGroupSeparator(for: group) { separator() }
     }
@@ -208,4 +218,40 @@ private extension View {
             height: size.height
         )
     }
+}
+
+struct StickerCloseButtonView: View {
+    
+    let action: () -> Void
+    
+    var body: some View {
+        
+        Button {
+            withAnimation { action() }
+            
+        } label: {
+            
+            ZStack {
+                Circle()
+                    .foregroundColor(.gray)
+                    .frame(width: 20, height: 20)
+                
+                Image(systemName: "xmark")
+                    .renderingMode(.template)
+                    .frame(width: 16, height: 16)
+                    .foregroundColor(.white)
+            }
+            .frame(width: 20, height: 20)
+        }
+        .padding(4)
+    }
+}
+
+extension ProductGroupsView {
+    
+    typealias State = CarouselState<Product>
+    typealias Event = CarouselEvent<Product>
+    
+    typealias Group = ProductGroup<Product>
+    typealias Groups = [Group]
 }

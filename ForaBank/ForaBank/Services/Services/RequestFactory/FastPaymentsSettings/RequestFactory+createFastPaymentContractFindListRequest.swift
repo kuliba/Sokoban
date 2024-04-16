@@ -7,6 +7,7 @@
 
 import FastPaymentsSettings
 import Foundation
+import RemoteServices
 
 extension RequestFactory {
     
@@ -17,6 +18,6 @@ extension RequestFactory {
         let endpoint = Services.Endpoint.fastPaymentContractFindList
         let endpointURL = try! endpoint.url(withBase: base)
         
-        return FastPaymentsSettings.RequestFactory.createFastPaymentContractFindListRequest(url: endpointURL)
+        return RemoteServices.RequestFactory.createFastPaymentContractFindListRequest(url: endpointURL)
     }
 }

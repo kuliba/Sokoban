@@ -1360,7 +1360,7 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         let model: Model = .mockWithEmptyExcept()
         model.products.value = products
         model.currencyList.value = currencyList
-        
+        model.images.value = ["1": .iconClose]
         let sut = OperationDetailInfoViewModel(
             model: model,
             operation: detail ?? makeOperationDetail(transferEnum: transferEnum),

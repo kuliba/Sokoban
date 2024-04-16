@@ -6,6 +6,7 @@ class C2BSuccessViewController: UIViewController {
     var printFormType: String?
     let mainView = C2BSuccessView()
     let button = UIButton(title: "На главную")
+    var getUImage: (Md5hash) -> UIImage? = { _ in UIImage() }
 //    var confirmModel: C2BDetailsFormViewModel? {
 //        didSet {
 //            guard let model = confirmModel else { return }
@@ -58,6 +59,7 @@ class C2BSuccessViewController: UIViewController {
         let vc = C2BDetailsFormViewController()
 //        vc.doneButton.isHidden = true
         vc.addCloseButton()
+        vc.getUImage = getUImage
         vc.title = "Детали операции"
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)

@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import RemoteServices
 @testable import ForaBank
 import XCTest
 
@@ -61,7 +62,7 @@ final class RequestFactory_createMakeSetBankDefaultRequestTests: XCTestCase {
     }
 }
 
-private typealias FastRequestFactory = FastPaymentsSettings.RequestFactory
+private typealias FastRequestFactory = RemoteServices.RequestFactory
 
 private func anyPayload(
     _ rawValue: String = UUID().uuidString

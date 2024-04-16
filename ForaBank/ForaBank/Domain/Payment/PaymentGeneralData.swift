@@ -22,13 +22,22 @@ class PaymentGeneralData: LatestPaymentData {
 		case amount, bankId, bankName, phoneNumber
 	}
 
-	init(amount: String?, bankId: String, bankName: String?, date: Date, paymentDate: String, phoneNumber: String, type: Kind) {
+    init(
+        id: Int = UUID().uuidString.hashValue,
+        amount: String?,
+        bankId: String,
+        bankName: String?,
+        date: Date,
+        paymentDate: String,
+        phoneNumber: String,
+        type: Kind
+    ) {
 
 		self.amount = amount
 		self.bankId = bankId
 		self.bankName = bankName
 		self.phoneNumber = phoneNumber
-		super.init(date: date, paymentDate: paymentDate, type: type)
+        super.init(id: id, date: date, paymentDate: paymentDate, type: type)
 	}
 
 	required init(from decoder: Decoder) throws {

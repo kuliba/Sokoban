@@ -86,7 +86,7 @@ final class SearchFactoryTests: XCTestCase {
     
     func test_init_shouldSetInitialValues_select_banks() {
         
-        let (sut, scheduler, textSpy, stateSpy) = makeSUT(.select(.banks))
+        let (sut, scheduler, textSpy, stateSpy) = makeSUT(.select(.banks(phone: nil)))
         
         scheduler.advance()
         

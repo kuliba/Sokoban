@@ -6,11 +6,12 @@
 //
 
 import FastPaymentsSettings
+import RemoteServices
 import Foundation
 
 extension RequestFactory {
     
-    typealias BankIDList = FastPaymentsSettings.RequestFactory.BankIDList
+    typealias BankIDList = RemoteServices.RequestFactory.BankIDList
     
     static func createChangeClientConsentMe2MePullRequest(
         _ payload: BankIDList
@@ -20,6 +21,6 @@ extension RequestFactory {
         let endpoint = Services.Endpoint.changeClientConsentMe2MePull
         let endpointURL = try! endpoint.url(withBase: base)
         
-        return try FastPaymentsSettings.RequestFactory.createChangeClientConsentMe2MePullRequest(url: endpointURL, payload: payload)
+        return try RemoteServices.RequestFactory.createChangeClientConsentMe2MePullRequest(url: endpointURL, payload: payload)
     }
 }
