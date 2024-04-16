@@ -70,7 +70,10 @@ private extension AnywayPaymentReducer {
             state.elements[id: .widgetID(.otp)] = .widget(.otp(makeOTP(otp)))
             
         case let .product(productID, currency):
-            state.elements.updating(productID: productID, currency: currency)
+            state.elements.updating(
+                productID: .init(productID),
+                currency: .init(currency.rawValue)
+            )
         }
     }
 }
@@ -106,6 +109,17 @@ private extension Array where Element == AnywayPayment.Element {
         
         let updated = core.updating(productID: productID, currency: currency)
         self[id: .widgetID(.core)] = .widget(.core(updated))
+    }
+}
+
+private extension AnywayPayment.Element.Widget.PaymentCore.ProductID {
+    
+    init(_ productID: AnywayPaymentEvent.Widget.ProductID) {
+        
+        switch productID.type {
+        case .account: self = .accountID(.init(productID.id))
+        case .card:    self = .cardID(.init(productID.id))
+        }
     }
 }
 

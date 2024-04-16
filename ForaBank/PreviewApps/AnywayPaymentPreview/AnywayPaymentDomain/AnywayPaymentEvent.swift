@@ -7,6 +7,7 @@
 
 import AnywayPaymentCore
 import Foundation
+import Tagged
 
 enum AnywayPaymentEvent: Equatable {
     
@@ -30,6 +31,20 @@ extension AnywayPaymentEvent {
 
 extension AnywayPaymentEvent.Widget {
     
-    typealias Currency = AnywayPayment.Element.Widget.PaymentCore.Currency
-    typealias ProductID = AnywayPayment.Element.Widget.PaymentCore.ProductID
+    typealias Currency = Tagged<_Currency, String>
+    enum _Currency {}
+    
+    struct ProductID: Equatable {
+        
+        let id: Int
+        let type: ProductType
+    }
+}
+
+extension AnywayPaymentEvent.Widget.ProductID {
+    
+    enum ProductType: Equatable {
+        
+        case account, card
+    }
 }
