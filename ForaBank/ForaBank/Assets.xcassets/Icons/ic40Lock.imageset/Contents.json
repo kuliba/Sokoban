@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic40Lock.svg"
+      "filename" : "ic40Lock.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

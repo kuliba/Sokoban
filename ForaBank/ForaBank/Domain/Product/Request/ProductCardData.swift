@@ -29,12 +29,20 @@ class ProductCardData: ProductData {
     let externalId: Int?
     
     #warning("For compability with rest/v5/getProductListByType")
-    var statusCard: StatusCard? = nil
-    var cardType: CardType? = nil
-    var idParent: Int? = nil
-    var paymentSystemImageMd5Hash: String = ""
+    let statusCard: StatusCard?
+    let cardType: CardType?
+    let idParent: Int?
+    let paymentSystemImageMd5Hash: String
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], accountId: Int?, cardId: Int, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?, order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], accountId: Int?, cardId: Int, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?, order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String,
+        mediumDesignMd5Hash: String = "",
+        largeDesignMd5Hash: String = "",
+        xlDesignMd5Hash: String = "",
+        statusCard: StatusCard? = nil,
+        cardType: CardType? = nil,
+        idParent: Int? = nil,
+        paymentSystemImageMd5Hash: String = ""
+    ) {
 
         self.accountId = accountId
         self.cardId = cardId
@@ -52,8 +60,12 @@ class ProductCardData: ProductData {
         self.statusPc = statusPc
         self.isMain = isMain
         self.externalId = externalId
+        self.statusCard = statusCard
+        self.cardType = cardType
+        self.idParent = idParent
+        self.paymentSystemImageMd5Hash = paymentSystemImageMd5Hash
         
-        super.init(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: balance, balanceRub: balanceRub, currency: currency, mainField: mainField, additionalField: additionalField, customName: customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background, order: order, isVisible: visibility, smallDesignMd5hash: smallDesignMd5hash, smallBackgroundDesignHash: smallBackgroundDesignHash)
+        super.init(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: balance, balanceRub: balanceRub, currency: currency, mainField: mainField, additionalField: additionalField, customName: customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background, order: order, isVisible: visibility, smallDesignMd5hash: smallDesignMd5hash, smallBackgroundDesignHash: smallBackgroundDesignHash, mediumDesignMd5Hash: mediumDesignMd5Hash, largeDesignMd5Hash: largeDesignMd5Hash, xlDesignMd5Hash: xlDesignMd5Hash)
     }
     
     private enum CodingKeys : String, CodingKey {
@@ -62,7 +74,8 @@ class ProductCardData: ProductData {
         case accountId = "accountID"
         case externalId = "externalID"
         case statusPc = "statusPC"
-        case name, validThru, status, expireDate, holderName, branch, product, miniStatement, paymentSystemName, paymentSystemImage, loanBaseParam, isMain
+        case name, validThru, status, expireDate, holderName, branch, product, miniStatement, paymentSystemName, paymentSystemImage, loanBaseParam, isMain,
+            statusCard, cardType, idParent, paymentSystemImageMd5Hash
     }
     
     required init(from decoder: Decoder) throws {
@@ -85,6 +98,10 @@ class ProductCardData: ProductData {
         statusPc = try container.decodeIfPresent(ProductData.StatusPC.self, forKey: .statusPc)
         isMain = try container.decodeIfPresent(Bool.self, forKey: .isMain)
         externalId = try container.decodeIfPresent(Int.self, forKey: .externalId)
+        statusCard = try container.decodeIfPresent(StatusCard.self, forKey: .statusCard)
+        cardType = try container.decodeIfPresent(CardType.self, forKey: .cardType)
+        idParent = try container.decodeIfPresent(Int.self, forKey: .idParent)
+        paymentSystemImageMd5Hash = try container.decodeIfPresent(String.self, forKey: .paymentSystemImageMd5Hash) ?? ""
 
         try super.init(from: decoder)
     }
@@ -108,6 +125,10 @@ class ProductCardData: ProductData {
         try container.encodeIfPresent(statusPc, forKey: .statusPc)
         try container.encodeIfPresent(isMain, forKey: .isMain)
         try container.encodeIfPresent(externalId, forKey: .externalId)
+        try container.encodeIfPresent(statusCard, forKey: .statusCard)
+        try container.encodeIfPresent(cardType, forKey: .cardType)
+        try container.encodeIfPresent(idParent, forKey: .idParent)
+        try container.encodeIfPresent(paymentSystemImageMd5Hash, forKey: .paymentSystemImageMd5Hash)
 
         try super.encode(to: encoder)
     }
@@ -300,7 +321,7 @@ extension ProductCardData.LoanBaseParamInfoData {
 #warning("For compability with rest/v5/getProductListByType")
 extension ProductCardData {
     
-    enum StatusCard: String, Decodable {
+    enum StatusCard: String, Codable {
         
         case active = "ACTIVE"
         case blockedUnlockAvailable = "BLOCKED_UNLOCK_AVAILABLE"
@@ -308,7 +329,7 @@ extension ProductCardData {
         case notActivated = "NOT_ACTIVE"
     }
 
-    enum CardType: String, Decodable {
+    enum CardType: String, Codable {
         
         case main = "MAIN"
         case regular = "REGULAR"

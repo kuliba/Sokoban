@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic40Supermarket.svg"
+      "filename" : "ic40Supermarket.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

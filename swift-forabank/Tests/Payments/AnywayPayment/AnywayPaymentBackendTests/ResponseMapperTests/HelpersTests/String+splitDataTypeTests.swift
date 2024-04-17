@@ -33,9 +33,17 @@ final class String_splitDataTypeTests: XCTestCase {
         XCTAssertNoDiff(pairs.map(\.value), [])
     }
     
+    func test_dataType_shouldDeliverEmptyOnNonMatchingSeparator() throws {
+        
+        let pairs = try ":=1-a".splitDataType()
+        
+        XCTAssertNoDiff(pairs.map(\.key), [])
+        XCTAssertNoDiff(pairs.map(\.value), [])
+    }
+    
     func test_dataType_shouldDeliverOnePair() throws {
         
-        let pairs = try "=:1=a".splitDataType()
+        let pairs = try "-:1-a".splitDataType()
         
         XCTAssertNoDiff(pairs.map(\.key), ["1"])
         XCTAssertNoDiff(pairs.map(\.value), ["a"])
@@ -43,7 +51,7 @@ final class String_splitDataTypeTests: XCTestCase {
     
     func test_dataType_shouldDeliverOnePairWithLongStrings() throws {
         
-        let pairs = try "=;123=abcd".splitDataType()
+        let pairs = try "-;123-abcd".splitDataType()
         
         XCTAssertNoDiff(pairs.map(\.key), ["123"])
         XCTAssertNoDiff(pairs.map(\.value), ["abcd"])

@@ -1,5 +1,5 @@
 //
-//  UpdateAnywayPaymentTests.swift
+//  AnywayPaymentUpdateTests.swift
 //
 //
 //  Created by Igor Malyarov on 04.04.2024.
@@ -8,9 +8,9 @@
 import AnywayPaymentCore
 import XCTest
 
-final class UpdateAnywayPaymentTests: XCTestCase {
+final class AnywayPaymentUpdateTests: XCTestCase {
     
-    // MARK: - amount
+    // MARK: - amount (core)
     
     func test_update_shouldNotAddAmountFieldOnNeedSumFalse() {
         
@@ -22,18 +22,67 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     func test_update_shouldAddAmountFieldOnNeedSumTrue() {
         
+        let payment = makeAnywayPaymentWithoutAmount()
         let update = makeAnywayPaymentUpdate(needSum: true)
-        let updated = makeAnywayPaymentWithoutAmount().update(with: update)
         
-        XCTAssert(hasAmountField(updated))
+        XCTAssert(hasAmountField(updatePayment(payment, with: update)))
     }
     
     func test_update_shouldRemoveAmountFieldOnNeedSumFalse() {
         
+        let payment = makeAnywayPaymentWithAmount()
         let update = makeAnywayPaymentUpdate(needSum: false)
-        let updated = makeAnywayPaymentWithAmount().update(with: update)
         
-        XCTAssertFalse(hasAmountField(updated))
+        XCTAssertFalse(hasAmountField(updatePayment(payment, with: update)))
+    }
+    
+    func test_update_shouldSetCoreWidgetWithAccountIDFromOutline() {
+        
+        let payment = makeAnywayPaymentWithoutAmount()
+        let update = makeAnywayPaymentUpdate(needSum: true)
+        let (amount, currency, id) = (makeAmount(), anyMessage(), makeIntID())
+        let core = makeOutlinePaymentCore(amount: amount, currency: currency, productID: id, productType: .account)
+        let outline = makeAnywayPaymentOutline(core: core)
+        
+        let widgetCore = widgetCore(updatePayment(payment, with: update, and: outline))
+        
+        XCTAssertNoDiff(widgetCore, .init(
+            amount: amount,
+            currency: .init(currency),
+            productID: .accountID(.init(id))
+        ))
+    }
+    
+    func test_update_shouldSetCoreWidgetWithCardIDFromOutline() {
+        
+        let payment = makeAnywayPaymentWithoutAmount()
+        let update = makeAnywayPaymentUpdate(needSum: true)
+        let (amount, currency, id) = (makeAmount(), anyMessage(), makeIntID())
+        let core = makeOutlinePaymentCore(amount: amount, currency: currency, productID: id, productType: .card)
+        let outline = makeAnywayPaymentOutline(core: core)
+        
+        let widgetCore = widgetCore(updatePayment(payment, with: update, and: outline))
+        
+        XCTAssertNoDiff(widgetCore, .init(
+            amount: amount,
+            currency: .init(currency),
+            productID: .cardID(.init(id))
+        ))
+    }
+    
+    private func widgetCore(
+        _ payment: AnywayPayment
+    ) -> AnywayPayment.Element.Widget.PaymentCore? {
+        
+        let cores: [AnywayPayment.Element.Widget.PaymentCore] = payment.elements.compactMap {
+            
+            guard case let .widget(.core(core)) = $0
+            else { return nil }
+            
+            return core
+        }
+        
+        return cores.first
     }
     
     // MARK: - complimentary fields
@@ -41,9 +90,9 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAppendComplementaryFieldToEmpty() {
         
         let payment = makeAnywayPayment()
-        let updateField = makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa")
+        let updateField = makeAnywayPaymentUpdateField("a", title: "aaa", value: "aa")
         let update = makeAnywayPaymentUpdate(fields: [updateField])
-        let updated = makeAnywayPaymentField(.string("a"), value: "aa", title: "aaa")
+        let updated = makeAnywayPaymentField("a", value: "aa", title: "aaa")
         
         XCTAssertNoDiff(payment.elements, [])
         assert(payment, on: update) {
@@ -57,9 +106,9 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         let payment = makeAnywayPayment()
         let update = makeAnywayPaymentUpdate(
             fields: [
-                makeAnywayPaymentUpdateField("a", value: "aa", title: "aaa"),
-                makeAnywayPaymentUpdateField("b", value: "bb", title: "bbb"),
-                makeAnywayPaymentUpdateField("c", value: "cc", title: "ccc")
+                makeAnywayPaymentUpdateField("a", title: "aaa", value: "aa"),
+                makeAnywayPaymentUpdateField("b", title: "bbb", value: "bb"),
+                makeAnywayPaymentUpdateField("c", title: "ccc", value: "cc")
             ]
         )
         
@@ -67,16 +116,16 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         assert(payment, on: update) {
             
             $0.elements = [
-                .init(id: .string("a"), value: "aa", title: "aaa"),
-                .init(id: .string("b"), value: "bb", title: "bbb"),
-                .init(id: .string("c"), value: "cc", title: "ccc"),
+                .init(id: "a", title: "aaa", value: "aa"),
+                .init(id: "b", title: "bbb", value: "bb"),
+                .init(id: "c", title: "ccc", value: "cc"),
             ].map(AnywayPayment.Element.field)
         }
     }
     
     func test_update_shouldAppendComplimentaryStringIDFieldToNonEmpty() {
         
-        let field = makeAnywayPaymentFieldWithStringID()
+        let field = makeAnywayPaymentField()
         let payment = makeAnywayPayment(fields: [field])
         let (fieldUpdate, updatedField) = makeAnywayPaymentAndUpdateFields()
         let update = makeAnywayPaymentUpdate(fields: [fieldUpdate])
@@ -90,7 +139,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     func test_update_shouldAppendComplimentaryStringIDFieldsToNonEmpty() {
         
-        let field = makeAnywayPaymentFieldWithStringID()
+        let field = makeAnywayPaymentField()
         let payment = makeAnywayPayment(fields: [field])
         let (fieldUpdate1, updatedField1) = makeAnywayPaymentAndUpdateFields()
         let (fieldUpdate2, updatedField2) = makeAnywayPaymentAndUpdateFields()
@@ -118,7 +167,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldSetFraudSuspectedOnFraudSuspectedTrue() {
         
         let update = makeAnywayPaymentUpdate(isFraudSuspected: true)
-        let updated = makeAnywayPaymentWithoutFraudSuspected().update(with: update)
+        let updated = updatePayment(makeAnywayPaymentWithoutFraudSuspected(), with: update)
         
         XCTAssert(isFraudSuspected(updated))
     }
@@ -126,7 +175,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldRemoveFraudSuspectedFieldOnFraudSuspectedFalse() {
         
         let update = makeAnywayPaymentUpdate(isFraudSuspected: false)
-        let updated = makeAnywayPaymentWithFraudSuspected().update(with: update)
+        let updated = updatePayment(makeAnywayPaymentWithFraudSuspected(), with: update)
         
         XCTAssertFalse(isFraudSuspected(updated))
     }
@@ -144,7 +193,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldSetIsFinalStepFlagOnIsFinalStepTrue() {
         
         let update = makeAnywayPaymentUpdate(isFinalStep: true)
-        let updated = makeNonFinalStepAnywayPayment().update(with: update)
+        let updated = updatePayment(makeNonFinalStepAnywayPayment(), with: update)
         
         XCTAssert(isFinalStep(updated))
     }
@@ -152,14 +201,14 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldSetIsFinalStepFlagOnIsFinalStepFalse() {
         
         let update = makeAnywayPaymentUpdate(isFinalStep: false)
-        let updated = makeFinalStepAnywayPayment().update(with: update)
+        let updated = updatePayment(makeFinalStepAnywayPayment(), with: update)
         
         XCTAssertFalse(isFinalStep(updated))
     }
     
     // MARK: - infoMessage
     
-    func test_update_shouldNotChangeStatusOnNilInfoMessage() {
+    func test_update_shouldNotChangeInfoMessageOnNilInfoMessage() {
         
         assert(
             makeAnywayPayment(),
@@ -167,7 +216,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         )
     }
     
-    func test_update_shouldChangeStatusOnNonNilInfoMessage() {
+    func test_update_shouldChangeInfoMessageOnNonNilInfoMessage() {
         
         let message = anyMessage()
         
@@ -175,7 +224,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             makeAnywayPayment(),
             on: makeAnywayPaymentUpdate(infoMessage: message)
         ) {
-            $0.status = .infoMessage(message)
+            $0.infoMessage = message
         }
     }
     
@@ -184,9 +233,9 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldNotChangeStringIDFieldWithSameValueInNonComplementaryFields() {
         
         let (id, value, title) = ("abc123", "aaa", "bb")
-        let field = makeAnywayPaymentFieldWithStringID(id, value: value, title: title)
+        let field = makeAnywayPaymentField(id: id, value: value, title: title)
         let payment = makeAnywayPayment(fields: [field])
-        let updateField = makeAnywayPaymentUpdateField(id, value: value, title: title)
+        let updateField = makeAnywayPaymentUpdateField(id, title: title, value: value)
         let update = makeAnywayPaymentUpdate(fields: [updateField])
         
         assert(payment, on: update)
@@ -195,7 +244,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldChangeStringIDFieldWithDifferentValueInNonComplementaryFields() {
         
         let id = anyMessage()
-        let field = makeAnywayPaymentFieldWithStringID(id)
+        let field = makeAnywayPaymentField(id: id)
         let payment = makeAnywayPayment(fields: [field])
         let (fieldUpdate, updatedField) = makeAnywayPaymentAndUpdateFields(id, value: "aa", title: "bbb")
         let update = makeAnywayPaymentUpdate(fields: [fieldUpdate])
@@ -208,7 +257,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     func test_update_shouldUpdateExistingFieldOnUpdateWithDifferentValue() {
         
-        let field = makeAnywayPaymentFieldWithStringID("e1")
+        let field = makeAnywayPaymentField(id: "e1")
         let payment = makeAnywayPayment(elements: [.field(field)])
         
         let newValue = anyMessage()
@@ -238,7 +287,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldAddOTPFieldOnNeedOTPTrue() {
         
         let update = makeAnywayPaymentUpdate(needOTP: true)
-        let updated = makeAnywayPaymentWithoutOTP().update(with: update)
+        let updated = updatePayment(makeAnywayPaymentWithoutOTP(), with: update)
         
         XCTAssert(hasOTPField(updated))
     }
@@ -246,7 +295,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldRemoveOTPFieldOnNeedOTPFalse() {
         
         let update = makeAnywayPaymentUpdate(needOTP: false)
-        let updated = makeAnywayPaymentWithOTP().update(with: update)
+        let updated = updatePayment(makeAnywayPaymentWithOTP(), with: update)
         
         XCTAssertFalse(hasOTPField(updated))
     }
@@ -259,9 +308,9 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             needOTP: true
         )
         
-        let updated = payment.update(with: update)
+        let updated = updatePayment(payment, with: update)
         
-        assertOTP(in: updated, precedes: [])
+        assertOTPisLast(in: updated)
     }
     
     func test_update_shouldAppendOTPFieldAfterComplementaryFieldsOnNeedOTPTrue() {
@@ -275,14 +324,14 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             needOTP: true
         )
         
-        let updated = payment.update(with: update)
+        let updated = updatePayment(payment, with: update)
         
-        assertOTP(in: updated, precedes: [updatedField1, updatedField2])
+        assertOTPisLast(in: updated)
     }
     
     // MARK: - parameters
     
-    func test_update_shouldSetParameterValueToNilOnNilUpdateValueAndMissingSnapshot() throws {
+    func test_update_shouldSetParameterValueToNilOnNilUpdateValueAndMissingOutline() throws {
         
         let payment = makeAnywayPayment(parameters: [])
         let parameterID = anyMessage()
@@ -291,33 +340,32 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             value: nil
         )
         let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
+        let outline = makeAnywayPaymentOutline()
         
-        let updated = payment.update(with: update)
+        let updated = updatePayment(payment, with: update, and: outline)
         let parameter = try XCTUnwrap(updated[parameterID: parameterID], "Expected parameter with id \(parameterID), but got nil instead.")
         
         XCTAssertNil(parameter.field.value)
-        XCTAssertNil(payment.snapshot[.init(parameterID)])
+        XCTAssertNil(outline.fields[.init(parameterID)])
     }
     
-    func test_update_shouldSetParameterValueToSnapshottedOnNilUpdateValue() throws {
+    func test_update_shouldSetParameterValueToOutlinedOnNilUpdateValue() throws {
         
         let parameterID = anyMessage()
-        let snapshottedValue = anyMessage()
-        let payment = makeAnywayPayment(
-            parameters: [], 
-            snapshot: [parameterID: snapshottedValue]
-        )
+        let outlinedValue = anyMessage()
+        let payment = makeAnywayPayment()
         let (parameterUpdate, _) = makeAnywayPaymentAndUpdateParameters(
             id: parameterID,
             value: nil
         )
         let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
+        let outline = makeAnywayPaymentOutline([parameterID: outlinedValue])
         
-        let updated = payment.update(with: update)
+        let updated = updatePayment(payment, with: update, and: outline)
         let parameter = try XCTUnwrap(updated[parameterID: parameterID], "Expected parameter with id \(parameterID), but got nil instead.")
         
-        XCTAssertNoDiff(parameter.field.value, .init(snapshottedValue), "Expected parameter value set to snapshotted.")
-        XCTAssertNoDiff(payment.snapshot[.init(parameterID)], .init(snapshottedValue), "Expected snapshotted value \(snapshottedValue) for parameterID \(parameterID).")
+        XCTAssertNoDiff(parameter.field.value, .init(outlinedValue), "Expected parameter value set to outlined.")
+        XCTAssertNoDiff(outline.fields[.init(parameterID)], .init(outlinedValue), "Expected outlined value \(outlinedValue) for parameterID \(parameterID).")
         XCTAssertNil(parameterUpdate.field.content, "Expected value to be nil.")
     }
     
@@ -627,7 +675,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldUpdateExistingParameterOnUpdateWithDifferentValue() {
         
         let id = anyMessage()
-        let parameter = makeAnywayPaymentParameterWithID(id)
+        let parameter = makeAnywayPaymentParameter(id: id)
         let payment = makeAnywayPayment(elements: [.parameter(parameter)])
         
         let newValue = anyMessage()
@@ -643,7 +691,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     func test_update_shouldUpdateExistingParameterOnMatchingIDFieldUpdateWithDifferentValue() {
         
         let matchingID = anyMessage()
-        let parameter = makeAnywayPaymentParameterWithID(matchingID)
+        let parameter = makeAnywayPaymentParameter(id: matchingID)
         let payment = makeAnywayPayment(elements: [.parameter(parameter)])
         
         let newValue = anyMessage()
@@ -667,15 +715,19 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         
         let matchingFieldID = anyMessage()
         let matchingParameterID = anyMessage()
-        let field = makeAnywayPaymentFieldWithStringID(matchingFieldID)
-        let parameter = makeAnywayPaymentParameterWithID(matchingParameterID)
+        let field = makeAnywayPaymentField(id: matchingFieldID)
+        let parameter = makeAnywayPaymentParameter(id: matchingParameterID)
         let payment = makeAnywayPayment(elements: [
             .field(field),
             .parameter(parameter)
         ])
         
         let (newFieldValue, newFieldTitle) = (anyMessage(), anyMessage())
-        let fieldUpdate = makeAnywayPaymentUpdateField(matchingFieldID, value: newFieldValue, title: newFieldTitle)
+        let fieldUpdate = makeAnywayPaymentUpdateField(
+            matchingFieldID,
+            title: newFieldTitle,
+            value: newFieldValue
+        )
         
         let newParameterValue = anyMessage()
         let parameterFieldUpdate = makeAnywayPaymentUpdateField(matchingParameterID, value: newParameterValue)
@@ -691,9 +743,9 @@ final class UpdateAnywayPaymentTests: XCTestCase {
             $0.elements = [
                 .field(
                     .init(
-                        id: .string(.init(matchingFieldID)),
-                        value: .init(newFieldValue),
-                        title: newFieldTitle
+                        id: .init(matchingFieldID),
+                        title: newFieldTitle,
+                        value: .init(newFieldValue)
                     )
                 ),
                 .parameter(parameter.updating(value: newParameterValue)),
@@ -785,6 +837,15 @@ final class UpdateAnywayPaymentTests: XCTestCase {
     
     // MARK: - Helpers
     
+    private func updatePayment(
+        _ payment: AnywayPayment,
+        with update: AnywayPaymentUpdate,
+        and outline: AnywayPayment.Outline = makeAnywayPaymentOutline()
+    ) -> AnywayPayment {
+        
+        payment.update(with: update, and: outline)
+    }
+    
     private typealias UpdateToExpected<T> = (_ value: inout T) -> Void
     
     private func assert(
@@ -797,7 +858,7 @@ final class UpdateAnywayPaymentTests: XCTestCase {
         var expected = payment
         updateToExpected?(&expected)
         
-        let received = payment.update(with: update)
+        let received = updatePayment(payment, with: update)
         
         XCTAssertNoDiff(
             received, expected,
@@ -816,7 +877,7 @@ private extension AnywayPayment {
             guard case let .parameter(parameter) = $0,
                   parameter.field.id == .init(id)
             else { return nil }
-
+            
             return parameter
         }
         .first

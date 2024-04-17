@@ -15,7 +15,7 @@ public extension AnywayPaymentUpdate {
         
         self.init(
             details: .init(response),
-            fields: response.additionals.map { .init($0) },
+            fields: response.additional.map { .init($0) },
             parameters: response.parametersForNextStep.map { .init($0) }
         )
     }
@@ -215,8 +215,8 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType {
         case .bic:       self = .bic
         case .counter:   self = .counter
         case .date:      self = .date
-        case .insurance: self = .insurance
         case .inn:       self = .inn
+        case .insurance: self = .insurance
         case .name:      self = .name
         case .oktmo:     self = .oktmo
         case .penalty:   self = .penalty

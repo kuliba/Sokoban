@@ -14,47 +14,28 @@ public extension AnywayPaymentDigest {
         
         get throws { try JSONEncoder().encode(_dto) }
     }
+}
+
+private extension AnywayPaymentDigest {
     
-    private var _dto: _DTO {
+    var _dto: _DTO {
         
         .init(
-            check: check,
-            amount: amount?.value,
-            currencyAmount: amount?.currency.rawValue,
-            payer: product.map {
-                
-                switch $0 {
-                case let .account(accountID):
-                    return .init(cardId: nil, accountId: accountID.rawValue)
-                    
-                case let .card(cardID):
-                    return .init(cardId: cardID.rawValue, accountId: nil)
-                }
-            },
-            comment: comment,
-            puref: puref?.rawValue,
-            additional: additionals.map {
-                
-                .init(
-                    fieldid: $0.fieldID,
-                    fieldname: $0.fieldName,
-                    fieldvalue: $0.fieldValue
-                )
-            },
-            mcc: mcc?.rawValue
+            amount: core?.amount,
+            currencyAmount: core?.currency.rawValue,
+            payer: core.map(\._payer),
+            puref: puref.rawValue,
+            additional: additional.map(\._additional)
         )
     }
     
     struct _DTO: Encodable {
         
-        let check: Bool
         let amount: Decimal?
         let currencyAmount: String?
         let payer: Payer?
-        let comment: String?
-        let puref: String?
+        let puref: String
         let additional: [Additional]
-        let mcc: String?
         
         struct Additional: Encodable {
             
@@ -67,6 +48,32 @@ public extension AnywayPaymentDigest {
             
             let cardId: Int?
             let accountId: Int?
+        }
+    }
+}
+
+private extension AnywayPaymentDigest.Additional {
+    
+    var _additional: AnywayPaymentDigest._DTO.Additional {
+        
+        .init(
+            fieldid: fieldID,
+            fieldname: fieldName,
+            fieldvalue: fieldValue
+        )
+    }
+}
+
+private extension AnywayPaymentDigest.PaymentCore {
+    
+    var _payer: AnywayPaymentDigest._DTO.Payer {
+        
+        switch productID {
+        case let .account(accountID):
+            return .init(cardId: nil, accountId: accountID.rawValue)
+            
+        case let .card(cardID):
+            return .init(cardId: cardID.rawValue, accountId: nil)
         }
     }
 }

@@ -1733,6 +1733,9 @@ private extension Target {
     static let paymentComponents = target(
         name: .paymentComponents,
         dependencies: [
+            // external
+            .combineSchedulers,
+            // internal
             .amountComponent,
             .buttonComponent,
             .carouselComponent,
@@ -1743,6 +1746,7 @@ private extension Target {
             .inputComponent,
             .inputPhoneComponent,
             .productSelectComponent,
+            .rxViewModel,
             .sharedConfigs,
         ],
         path: "Sources/UI/Components/\(String.paymentComponents)"

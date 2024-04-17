@@ -1,5 +1,5 @@
 //
-//  UpdateAnywayPaymentTestsHelpers.swift
+//  AnywayPaymentTestsHelpers.swift
 //
 //
 //  Created by Igor Malyarov on 06.04.2024.
@@ -9,21 +9,15 @@ import AnywayPaymentCore
 import Foundation
 import XCTest
 
-func assertOTP(
+func assertOTPisLast(
     in payment: AnywayPayment,
-    precedes fields: [AnywayPayment.Element.Field],
+    with value: Int? = nil,
     file: StaticString = #file,
     line: UInt = #line
 ) {
-    XCTAssert(
-        hasOTPField(payment),
-        "Expected OTP field in payment fields.",
-        file: file, line: line
-    )
-    
-#warning("this check is for fields only - is it ok or it needs to check all element cases?")
-    XCTAssert(
-        payment.paymentFields.isElementAfterAll(.otp, inGroup: fields),
+    XCTAssertNoDiff(
+        payment.elements.last,
+        .widget(makeOTPWidget(value)),
         "Expected OTP field after complimentary fields.",
         file: file, line: line
     )
@@ -33,25 +27,22 @@ func hasAmountField(
     _ payment: AnywayPayment
 ) -> Bool {
     
-    payment.hasAmount
+    payment.elements.compactMap(\.widget).map(\.id).contains(.core)
 }
 
 func hasOTPField(
     _ payment: AnywayPayment
 ) -> Bool {
     
-    payment.paymentFields.map(\.id).contains(.otp)
+    payment.elements.compactMap(\.widget).map(\.id).contains(.otp)
 }
 
-private extension AnywayPayment {
+private extension AnywayPayment.Element {
     
-    var paymentFields: [Element.Field] {
+    var widget: Widget? {
         
-        elements.compactMap {
-            
-            guard case let .field(field) = $0 else { return nil }
-            return field
-        }
+        guard case let .widget(widget) = self else { return nil }
+        return widget
     }
 }
 
@@ -69,73 +60,100 @@ func isFraudSuspected(
     payment.isFraudSuspected
 }
 
+func makeAmount(
+    _ amount: Decimal = Decimal(generateRandom11DigitNumber())/100
+) -> Decimal {
+    
+    return amount
+}
+
 func makeAnywayPayment(
     fields: [AnywayPayment.Element.Field],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    hasAmount: Bool = false
+    core: AnywayPayment.Element.Widget.PaymentCore? = nil,
+    puref: AnywayPayment.Puref? = nil
 ) -> AnywayPayment {
     
-    makeAnywayPayment(
-        elements: fields.map(AnywayPayment.Element.field),
-        hasAmount: hasAmount,
-        isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected
-    )
-}
+    var elements = fields.map(AnywayPayment.Element.field)
+    if let core {
+        elements.append(.widget(.core(core)))
+    }
 
-func makeAnywayPaymentStringID(
-    _ rawValue: String = anyMessage()
-) -> AnywayPayment.Element.StringID {
- 
-    .init(rawValue)
+    return makeAnywayPayment(
+        elements: elements,
+        isFinalStep: isFinalStep,
+        isFraudSuspected: isFraudSuspected,
+        puref: puref
+    )
 }
 
 func makeAnywayPayment(
     parameters: [AnywayPayment.Element.Parameter] = [],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    hasAmount: Bool = false,
-    snapshot: [String: String] = [:]
+    core: AnywayPayment.Element.Widget.PaymentCore? = nil,
+    puref: AnywayPayment.Puref? = nil
 ) -> AnywayPayment {
     
-    makeAnywayPayment(
-        elements: parameters.map(AnywayPayment.Element.parameter),
-        hasAmount: hasAmount,
+    var elements = parameters.map(AnywayPayment.Element.parameter)
+    if let core {
+        elements.append(.widget(.core(core)))
+    }
+
+    return makeAnywayPayment(
+        elements: elements,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected,
-        snapshot: snapshot
+        puref: puref
     )
 }
 
 func makeAnywayPayment(
     elements: [AnywayPayment.Element],
-    hasAmount: Bool = false,
+    infoMessage: String? = nil,
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    snapshot: [String: String] = [:],
-    status: AnywayPayment.Status? = nil
+    puref: AnywayPayment.Puref? = nil
 ) -> AnywayPayment {
     
     .init(
         elements: elements,
-        hasAmount: hasAmount,
+        infoMessage: infoMessage,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected,
-        snapshot: snapshot.reduce(into: [:]) {
+        puref: puref ?? .init(anyMessage())
+    )
+}
+
+func makeAnywayPaymentOutline(
+    _ fields: [String: String] = [:],
+    core: AnywayPayment.Outline.PaymentCore = makeOutlinePaymentCore(productType: .account)
+) -> AnywayPayment.Outline {
+    
+    .init(
+        core: core,
+        fields: fields.reduce(into: [:]) {
             
             $0[.init($1.key)] = .init($1.value)
-        }, 
-        status: status
+        }
     )
 }
 
 func makeAnywayPaymentWithAmount(
+    _ amount: Decimal = 99_999.99,
+    _ currency: String = anyMessage(),
+    _ productID: AnywayPayment.Element.Widget.PaymentCore.ProductID = .accountID(.init(generateRandom11DigitNumber())),
     file: StaticString = #file,
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(hasAmount: true)
+    let payment = makeAnywayPayment(core: .init(
+        amount: amount,
+        currency: .init(currency),
+        productID: productID
+    ))
+    XCTAssertFalse(currency.isEmpty, "Expected non-empty currency.", file: file, line: line)
     XCTAssert(hasAmountField(payment), "Expected amount field.", file: file, line: line)
     return payment
 }
@@ -175,27 +193,27 @@ func makeAnywayPaymentWithOTP(
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(fields: [makeOTPField()])
+    let payment = makeAnywayPayment(elements: [.widget(makeOTPWidget())])
     XCTAssert(hasOTPField(payment), "Expected to have OTP field.", file: file, line: line)
     return payment
 }
 
 func makeAnywayPaymentField(
-    _ id: AnywayPayment.Element.Field.ID = .string(.init(anyMessage())),
+    _ id: AnywayPayment.Element.Field.ID = .init(anyMessage()),
     value: String = anyMessage(),
     title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
     
-    .init(id: id, value: .init(value), title: title)
+    .init(id: id, title: title, value: .init(value))
 }
 
-func makeAnywayPaymentFieldWithStringID(
-    _ id: String = anyMessage(),
+func makeAnywayPaymentField(
+    id: String,
     value: String = anyMessage(),
     title: String = anyMessage()
 ) -> AnywayPayment.Element.Field {
     
-    makeAnywayPaymentField(.string(.init(id)), value: value, title: title)
+    makeAnywayPaymentField(.init(id), value: value, title: title)
 }
 
 func makeAnywayPaymentParameter(
@@ -213,16 +231,20 @@ func makeAnywayPaymentParameter(
     )
 }
 
-func makeAnywayPaymentParameterWithID(
-    _ id: String = anyMessage()
+func makeAnywayPaymentParameter(
+    id: String = anyMessage(),
+    value: String? = anyMessage()
 ) -> AnywayPayment.Element.Parameter {
     
     makeAnywayPaymentParameter(
-        field: makeAnywayPaymentElementParameterField(id: id)
+        field: makeAnywayPaymentElementParameterField(
+            id: id,
+            value: value
+        )
     )
 }
 
-private func makeAnywayPaymentElementParameterField(
+func makeAnywayPaymentElementParameterField(
     id: String = anyMessage(),
     value: String? = anyMessage()
 ) -> AnywayPayment.Element.Parameter.Field {
@@ -253,7 +275,7 @@ private func makeAnywayPaymentElementParameterValidation(
     )
 }
 
-private func makeAnywayPaymentElementParameterUIAttributes(
+func makeAnywayPaymentElementParameterUIAttributes(
     dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType = .string,
     group: String? = nil,
     isPrint: Bool = true,
@@ -282,12 +304,32 @@ private func makeAnywayPaymentElementParameterUIAttributes(
     )
 }
 
-private func makeOTPField(
-    value: String = anyMessage(),
-    title: String = anyMessage()
-) -> AnywayPayment.Element.Field {
+func makeAnywayPaymentFieldElement(
+    _ field: AnywayPayment.Element.Field = makeAnywayPaymentField()
+) -> AnywayPayment.Element {
     
-    .init(id: .otp, value: .init(value), title: title)
+    .field(field)
+}
+
+func makeAnywayPaymentParameterElement(
+    _ parameter: AnywayPayment.Element.Parameter = makeAnywayPaymentParameter()
+) -> AnywayPayment.Element {
+    
+    .parameter(parameter)
+}
+
+func makeAnywayPaymentWidgetElement(
+    _ widget: AnywayPayment.Element.Widget
+) -> AnywayPayment.Element {
+    
+    .widget(widget)
+}
+
+func makeOTPWidget(
+    _ value: Int? = nil
+) -> AnywayPayment.Element.Widget {
+    
+    .otp(value)
 }
 
 func makeAnywayPaymentWithoutOTP(
@@ -430,8 +472,8 @@ private func makeAnywayPaymentUpdateDetailsInfo(
 
 func makeAnywayPaymentUpdateField(
     _ name: String = anyMessage(),
-    value: String = anyMessage(),
-    title: String = anyMessage()
+    title: String = anyMessage(),
+    value: String = anyMessage()
 ) -> AnywayPaymentUpdate.Field {
     
     .init(
@@ -452,12 +494,12 @@ func makeAnywayPaymentAndUpdateFields(
     
     let update = makeAnywayPaymentUpdateField(
         name,
-        value: value,
-        title: title
+        title: title,
+        value: value
     )
     
     let updated = makeAnywayPaymentField(
-        .string(.init(name)),
+        .init(name),
         value: value,
         title: title
     )
@@ -773,6 +815,48 @@ private func makeAnywayPaymentUpdateParameterUIAttributes(
         title: title,
         type: type,
         viewType: viewType
+    )
+}
+
+func makeIntID(
+    _ id: Int = generateRandom11DigitNumber()
+) -> Int {
+    
+    return id
+}
+
+func makeOutlinePaymentCore(
+    amount: Decimal = makeAmount(),
+    currency: String = anyMessage(),
+    productID: Int = makeIntID(),
+    productType: AnywayPayment.Outline.PaymentCore.ProductType
+) -> AnywayPayment.Outline.PaymentCore {
+    
+    .init(
+        amount: amount, 
+        currency: currency,
+        productID: productID,
+        productType: productType
+    )
+}
+
+func makeWidgetPaymentCore(
+    amount: Decimal = makeAmount(),
+    currency: String = anyMessage(),
+    productID: Int = makeIntID(),
+    productType: AnywayPayment.Outline.PaymentCore.ProductType
+) -> AnywayPayment.Element.Widget.PaymentCore {
+    
+    .init(
+        amount: amount, 
+        currency: .init(currency),
+        productID: {
+           
+            switch productType {
+            case .account: return .accountID(.init(productID))
+            case .card: return .cardID(.init(productID))
+            }
+        }()
     )
 }
 

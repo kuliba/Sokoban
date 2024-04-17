@@ -6,56 +6,143 @@
 //
 
 import Foundation
+import Tagged
 
 extension AnywayPayment {
     
-    public func update(with update: AnywayPaymentUpdate) -> Self {
+    public func update(
+        with update: AnywayPaymentUpdate,
+        and outline: Outline
+    ) -> Self {
         
         var elements = elements
         elements.updatePrimaryFields(from: update.fields)
         elements.appendComplementaryFields(from: update.fields)
-        elements.appendParameters(from: update.parameters, with: snapshot)
+        elements.appendParameters(from: update.parameters, with: outline)
         
-        let otp = Element.Field(id: .otp, value: "", title: "")
-        elements[fieldID: .otp] = update.details.control.needOTP ? .field(otp) : nil
-        
-        let infoMessage = update.details.info.infoMessage
-        let status = infoMessage.map(AnywayPayment.Status.infoMessage)
+        elements.adjustWidget(.core(.init(outline.core)), on: update.details.control.needSum)
+        elements.adjustWidget(.otp(nil), on: update.details.control.needOTP)
         
         return .init(
             elements: elements,
-            hasAmount: update.details.control.needSum,
+            infoMessage: update.details.info.infoMessage,
             isFinalStep: update.details.control.isFinalStep,
             isFraudSuspected: update.details.control.isFraudSuspected,
-            snapshot: snapshot,
-            status: status
+            puref: puref
         )
+    }
+    
+    public struct Outline: Equatable {
+        
+        public let core: PaymentCore
+        public let fields: Fields
+        
+        public init(
+            core: PaymentCore,
+            fields: Fields
+        ) {
+            self.core = core
+            self.fields = fields
+        }
+    }
+}
+
+extension AnywayPayment.Outline {
+    
+    public typealias Fields = [ID: Value]
+    
+    public typealias ID = Tagged<_ID, String>
+    public enum _ID {}
+    
+    public typealias Value = Tagged<_Value, String>
+    public enum _Value {}
+
+    public struct PaymentCore: Equatable {
+        
+        public let amount: Decimal
+        public let currency: String
+        public let productID: Int
+        public let productType: ProductType
+        
+        public init(
+            amount: Decimal,
+            currency: String,
+            productID: Int,
+            productType: ProductType
+        ) {
+            self.amount = amount
+            self.currency = currency
+            self.productID = productID
+            self.productType = productType
+        }
+    }
+}
+
+extension AnywayPayment.Outline.PaymentCore {
+    
+    public enum ProductType {
+        
+        case account, card
+    }
+}
+
+private extension AnywayPayment.Element.Widget.PaymentCore {
+    
+    init(_ core: AnywayPayment.Outline.PaymentCore) {
+        
+        self.init(
+            amount: core.amount,
+            currency: .init(core.currency),
+            productID: .init(core)
+        )
+    }
+}
+
+private extension AnywayPayment.Element.Widget.PaymentCore.ProductID {
+    
+    init(_ core: AnywayPayment.Outline.PaymentCore) {
+        
+        switch core.productType {
+        case .account: self = .accountID(.init(core.productID))
+        case .card:    self = .cardID(.init(core.productID))
+        }
     }
 }
 
 private extension AnywayPayment.Element {
     
-    var fieldID: Field.ID? {
-        
-        guard case let .field(field) = self else { return nil }
-        
-        return field.id
-    }
-    
-    var stringID: StringID? {
+    var stringID: String? {
         
         switch self {
         case let .field(field):
-            switch field.id {
-            case .otp:
-                return nil
-                
-            case let .string(id):
-                return id
-            }
+            return field.id.rawValue
             
         case let .parameter(parameter):
-            return parameter.field.id
+            return parameter.field.id.rawValue
+            
+        case .widget:
+            return nil
+        }
+    }
+    
+    var widgetID: Widget.ID? {
+        
+        guard case let .widget(widget) = self else { return nil }
+        
+        return widget.id
+    }
+
+    func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
+        
+        switch self {
+        case let .field(field):
+            return .field(field.updating(with: fieldUpdate))
+            
+        case let .parameter(parameter):
+            return .parameter(parameter.updating(with: fieldUpdate))
+            
+        case .widget:
+            return self
         }
     }
 }
@@ -66,8 +153,8 @@ private extension AnywayPayment.Element.Field {
         
         .init(
             id: id,
-            value: .init(fieldUpdate.value),
-            title: fieldUpdate.title
+            title: fieldUpdate.title,
+            value: .init(fieldUpdate.value)
         )
     }
 }
@@ -90,43 +177,45 @@ private extension AnywayPayment.Element.Parameter {
 
 private extension Array where Element == AnywayPayment.Element {
     
-    subscript(fieldID id: Element.Field.ID) -> Element? {
-        
-        get { firstIndex(matching: id).map { self[$0] } }
-        
-        set {
-            guard let index = firstIndex(matching: id)
-            else {
-                if let newValue { append(newValue) }
-                return
-            }
-            
-            if let newValue {
-                if case let .field(field) = newValue, field.id == id {
-                    self[index] = newValue
+    mutating func adjustWidget(
+        _ widget: Element.Widget,
+        on condition: Bool
+    ) {
+        update(widgetID: widget.id, with: condition ? widget : nil)
+    }
+    
+    private mutating func update(
+        widgetID: Element.Widget.ID,
+        with widget: Element.Widget?
+    ) {
+        if let index = firstIndex(matching: widgetID) {
+            if let widget {
+                if widget.id == widgetID {
+                    self[index] = .widget(widget)
                 } else {
-                    append(newValue)
+                    append(.widget(widget))
                 }
             } else {
                 remove(at: index)
             }
+        } else {
+            if let widget {
+                append(.widget(widget))
+            }
         }
     }
     
-    func firstIndex(
-        matching id: AnywayPayment.Element.Field.ID
+    private func firstIndex(
+        matching id: Element.Widget.ID
     ) -> Self.Index? {
         
         firstIndex {
             
-            guard let fieldID = $0.fieldID else { return false }
+            guard let widgetID = $0.widgetID else { return false }
             
-            return fieldID == id
+            return widgetID == id
         }
     }
-}
-
-private extension Array where Element == AnywayPayment.Element {
     
     mutating func updatePrimaryFields(
         from updateFields: [AnywayPaymentUpdate.Field]
@@ -138,23 +227,17 @@ private extension Array where Element == AnywayPayment.Element {
         self = map {
             
             guard let id = $0.stringID,
-                  let matching = updateFields[id.rawValue]
+                  let matching = updateFields[id]
             else { return $0 }
             
-            switch $0 {
-            case let .field(field):
-                return .field(field.updating(with: matching))
-                
-            case let .parameter(parameter):
-                return .parameter(parameter.updating(with: matching))
-            }
+            return $0.updating(with: matching)
         }
     }
     
     mutating func appendComplementaryFields(
         from updateFields: [AnywayPaymentUpdate.Field]
     ) {
-        let existingIDs = stringIDs.map(\.rawValue)
+        let existingIDs = compactMap(\.stringID)
         let complimentary: [Element] = updateFields
             .filter { !existingIDs.contains($0.name) }
             .map(Element.Field.init)
@@ -163,20 +246,15 @@ private extension Array where Element == AnywayPayment.Element {
         self.append(contentsOf: complimentary)
     }
     
-    private var stringIDs: [Element.StringID] {
-        
-        compactMap(\.stringID)
-    }
-    
     mutating func appendParameters(
         from updateParameters: [AnywayPaymentUpdate.Parameter],
-        with snapshot: AnywayPayment.Snapshot
+        with outline: AnywayPayment.Outline
     ) {
         let parameters = updateParameters.map {
             
             AnywayPayment.Element.Parameter(
                 parameter: $0,
-                snapshottedValue: snapshot[.init($0.field.id)]
+                fallbackValue: outline.fields[.init($0.field.id)]
             )
         }
         append(contentsOf: parameters.map(Element.parameter))
@@ -190,9 +268,9 @@ private extension AnywayPayment.Element.Field {
     init(_ field: AnywayPaymentUpdate.Field) {
         
         self.init(
-            id: .string(.init(field.name)),
-            value: .init(field.value),
-            title: field.title
+            id: .init(field.name),
+            title: field.title,
+            value: .init(field.value)
         )
     }
 }
@@ -201,10 +279,10 @@ private extension AnywayPayment.Element.Parameter {
     
     init(
         parameter: AnywayPaymentUpdate.Parameter,
-        snapshottedValue value: AnywayPayment.Element.Value?
+        fallbackValue: AnywayPayment.Outline.Value?
     ) {
         self.init(
-            field: .init(parameter.field, snapshottedValue: value),
+            field: .init(parameter.field, fallbackValue: fallbackValue),
             masking: .init(parameter.masking),
             validation: .init(parameter.validation),
             uiAttributes: .init(parameter.uiAttributes)
@@ -216,11 +294,11 @@ private extension AnywayPayment.Element.Parameter.Field {
     
     init(
         _ field: AnywayPaymentUpdate.Parameter.Field,
-        snapshottedValue: AnywayPayment.Element.Value?
+        fallbackValue: AnywayPayment.Outline.Value?
     ) {
         self.init(
             id: .init(field.id),
-            value: field.content.map { .init($0) } ?? snapshottedValue
+            value: field.content.map { .init($0) } ?? fallbackValue.map { .init($0.rawValue) }
         )
     }
 }
