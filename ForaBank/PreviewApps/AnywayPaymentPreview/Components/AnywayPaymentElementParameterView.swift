@@ -20,9 +20,9 @@ struct AnywayPaymentElementParameterView: View {
             ExpandablePickerStateWrapperView(
                 viewModel: .decorated(
                     initialState: .init(items: options),
-                    onSelect: { event($0.key) }
+                    onSelect: { event($0.key.rawValue) }
                 ),
-                itemView: { Text($0.value) }
+                itemView: { Text($0.value.rawValue) }
             )
             
         case .textInput:
@@ -37,9 +37,9 @@ struct AnywayPaymentElementParameterView: View {
     }
 }
 
-extension AnywayPayment.UIComponent.Parameter.Option: Identifiable {
+extension AnywayPayment.UIComponent.Parameter.ParameterType.Option: Identifiable {
     
-    public var id: String { key }
+    public var id: Key { key }
 }
 
 struct AnywayPaymentElementParameterView_Previews: PreviewProvider {

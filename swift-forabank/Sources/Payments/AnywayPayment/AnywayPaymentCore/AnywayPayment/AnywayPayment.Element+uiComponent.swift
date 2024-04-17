@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 06.04.2024.
 //
 
+import Tagged
+
 extension AnywayPayment.Element {
     
     public var uiComponent: AnywayPayment.UIComponent {
@@ -54,20 +56,20 @@ extension AnywayPayment.UIComponent {
     public struct Parameter: Equatable {
         
         public let id: ID
-        public let value: Value
         public let type: ParameterType
+        public let value: Value?
         
         public init(
             id: ID,
-            value: Value,
-            type: ParameterType
+            type: ParameterType,
+            value: Value?
         ) {
             self.id = id
-            self.value = value
             self.type = type
+            self.value = value
         }
     }
-        
+    
     public enum Widget: Equatable {
         
         case otp(Int?)
@@ -77,22 +79,8 @@ extension AnywayPayment.UIComponent {
 
 extension AnywayPayment.UIComponent.Parameter {
     
-    public typealias ID = AnywayPayment.Element.Parameter.Field.ID
-    public typealias Value = AnywayPayment.Element.Parameter.Field.Value?
-    
-    public struct Option: Equatable {
-        
-        public let key: String
-        public let value: String
-        
-        public init(
-            key: String,
-            value: String
-        ) {
-            self.key = key
-            self.value = value
-        }
-    }
+    public typealias ID = Tagged<_ID, String>
+    public enum _ID {}
     
     public enum ParameterType: Equatable {
         
@@ -100,17 +88,46 @@ extension AnywayPayment.UIComponent.Parameter {
         case textInput
         case unknown
     }
+    
+    public typealias Value = Tagged<_Value, String>
+    public enum _Value {}
+}
+
+extension AnywayPayment.UIComponent.Parameter.ParameterType {
+    
+    public struct Option: Equatable {
+        
+        public let key: Key
+        public let value: Value
+        
+        public init(
+            key: Key,
+            value: Value
+        ) {
+            self.key = key
+            self.value = value
+        }
+    }
+}
+
+extension AnywayPayment.UIComponent.Parameter.ParameterType.Option {
+    
+    public typealias Key = Tagged<_Key, String>
+    public enum _Key {}
+    
+    public typealias Value = Tagged<_Value, String>
+    public enum _Value {}
 }
 
 extension AnywayPayment.Element.Parameter {
     
-    #warning("used in preview - fix, make private")
+#warning("used in preview - fix, make private")
     public var uiComponent: AnywayPayment.UIComponent.Parameter {
         
         .init(
-            id: field.id,
-            value: field.value,
-            type: uiAttributes.uiComponent
+            id: .init(field.id.rawValue),
+            type: uiAttributes.uiComponent,
+            value: field.value.map { .init($0.rawValue) }
         )
     }
 }
@@ -129,11 +146,19 @@ private extension AnywayPayment.Element.Parameter.UIAttributes {
             return .textInput
             
         case let (.select, .input, .pairs(pairs)):
-            return .select(pairs.map { .init(key: $0.key, value: $0.value) })
+            return .select(pairs.map(\.option))
             
         default:
             return .unknown
         }
+    }
+}
+
+private extension AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
+    
+    var option: AnywayPayment.UIComponent.Parameter.ParameterType.Option {
+        
+        .init(key: .init(key), value: .init(value))
     }
 }
 

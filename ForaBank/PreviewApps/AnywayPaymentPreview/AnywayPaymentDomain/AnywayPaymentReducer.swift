@@ -35,7 +35,7 @@ extension AnywayPaymentReducer {
             break
             
         case let .setValue(newValue, for: parameterID):
-            state.elements.set(value: .init(newValue), for: parameterID)
+            state.elements.set(value: newValue, for: parameterID)
             
         case let .widget(widget):
             reduce(&state, with: widget)
@@ -81,8 +81,15 @@ private extension AnywayPaymentReducer {
 private extension Array where Element == AnywayPayment.Element {
     
     mutating func set(
+        value: AnywayPayment.UIComponent.Parameter.Value.RawValue,
+        for id: AnywayPayment.UIComponent.Parameter.ID
+    ) {
+        set(value: .init(value), forID: .init(id.rawValue))
+    }
+    
+    private mutating func set(
         value newValue: Element.Parameter.Field.Value,
-        for id: Element.Parameter.Field.ID
+        forID id: Element.Parameter.Field.ID
     ) {
         guard let index = firstIndex(matching: .parameterID(id)),
               case let .parameter(parameter) = self[index],

@@ -8,20 +8,6 @@
 import AnywayPaymentCore
 import SwiftUI
 
-struct AnywayPaymentElementViewFactory<FieldView, ParameterView, WidgetView> {
-    
-    let fieldView: (Field) -> FieldView
-    let parameterView: (Parameter, @escaping (String) -> Void) -> ParameterView
-    let widgetView: (Widget, @escaping (AnywayPaymentEvent.Widget) -> Void) -> WidgetView
-}
-
-extension AnywayPaymentElementViewFactory {
-    
-    typealias Field = AnywayPayment.UIComponent.Field
-    typealias Parameter = AnywayPayment.UIComponent.Parameter
-    typealias Widget = AnywayPayment.UIComponent.Widget
-}
-
 struct AnywayPaymentElementView<FieldView, ParameterView, WidgetView>: View
 where FieldView: View,
       ParameterView: View,
@@ -77,13 +63,9 @@ struct AnywayPaymentElementView_Previews: PreviewProvider {
     ) -> some View {
         
         AnywayPaymentElementView(
-            state: element, 
+            state: element,
             event: { _ in },
-            factory: .init(
-                fieldView: AnywayPaymentElementFieldView.init,
-                parameterView: AnywayPaymentElementParameterView.init,
-                widgetView: AnywayPaymentElementWidgetView.init
-            )
+            factory: .preview
         )
     }
 }
