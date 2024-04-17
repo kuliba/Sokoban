@@ -56,17 +56,17 @@ extension AnywayPayment.UIComponent {
     public struct Parameter: Equatable {
         
         public let id: ID
-        public let value: Value?
         public let type: ParameterType
+        public let value: Value?
         
         public init(
             id: ID,
-            value: Value?,
-            type: ParameterType
+            type: ParameterType,
+            value: Value?
         ) {
             self.id = id
-            self.value = value
             self.type = type
+            self.value = value
         }
     }
     
@@ -79,8 +79,8 @@ extension AnywayPayment.UIComponent {
 
 extension AnywayPayment.UIComponent.Parameter {
     
-    public typealias ID = AnywayPayment.Element.Parameter.Field.ID
-    public typealias Value = AnywayPayment.Element.Parameter.Field.Value
+    public typealias ID = Tagged<_ID, String>
+    public enum _ID {}
     
     public enum ParameterType: Equatable {
         
@@ -88,6 +88,9 @@ extension AnywayPayment.UIComponent.Parameter {
         case textInput
         case unknown
     }
+    
+    public typealias Value = Tagged<_Value, String>
+    public enum _Value {}
 }
 
 extension AnywayPayment.UIComponent.Parameter.ParameterType {
@@ -122,9 +125,9 @@ extension AnywayPayment.Element.Parameter {
     public var uiComponent: AnywayPayment.UIComponent.Parameter {
         
         .init(
-            id: field.id,
-            value: field.value,
-            type: uiAttributes.uiComponent
+            id: .init(field.id.rawValue),
+            type: uiAttributes.uiComponent,
+            value: field.value.map { .init($0.rawValue) }
         )
     }
 }

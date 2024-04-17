@@ -46,8 +46,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         XCTAssertNoDiff(element.uiComponent, .parameter(.init(
             id: "123",
-            value: "ABC",
-            type: .textInput
+            type: .textInput,
+            value: "ABC"
         )))
     }
     
@@ -65,8 +65,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         XCTAssertNoDiff(element.uiComponent, .parameter(.init(
             id: "123",
-            value: "ABC",
-            type: .select([.init(key: "a", value: "1"),])
+            type: .select([.init(key: "a", value: "1"),]),
+            value: "ABC"
         )))
     }
     
@@ -87,11 +87,11 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         XCTAssertNoDiff(element.uiComponent, .parameter(.init(
             id: "123",
-            value: "ABC",
             type: .select([
                 .init(key: "a", value: "1"),
                 .init(key: "bb", value: "22"),
-            ])
+            ]),
+            value: "ABC"
         )))
     }
     

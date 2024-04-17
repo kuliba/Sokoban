@@ -19,7 +19,7 @@ enum AnywayPaymentEvent: Equatable {
 
 extension AnywayPaymentEvent {
     
-    typealias ParameterID = AnywayPayment.Element.Parameter.Field.ID
+    typealias ParameterID = AnywayPayment.UIComponent.Parameter.ID
     
     enum Widget: Equatable {
         
