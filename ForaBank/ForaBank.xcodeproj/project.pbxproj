@@ -8409,9 +8409,9 @@
 		2AFE37EB2BC96F410079C401 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				2A09E6E72BCBB9EB001A7089 /* AnywayPaymentLayoutView.swift */,
 				2AD0F6962BCEA48A007EC720 /* ComposedAnywayPaymentView.swift */,
 				2AD0F6982BCEAABC007EC720 /* ComposedAnywayPaymentViewFactory.swift */,
+				2A09E6E72BCBB9EB001A7089 /* AnywayPaymentLayoutView.swift */,
 				2AFE37F12BC987830079C401 /* AnywayPaymentElementView.swift */,
 				2AD0F6902BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift */,
 				2A09E6EF2BCBCB22001A7089 /* AnywayPaymentElementFieldView.swift */,
