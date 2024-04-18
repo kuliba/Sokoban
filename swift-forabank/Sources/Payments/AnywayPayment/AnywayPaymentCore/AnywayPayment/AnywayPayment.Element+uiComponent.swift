@@ -125,7 +125,7 @@ extension AnywayPayment.Element.Parameter {
         
         .init(
             id: .init(field.id.rawValue),
-            type: uiAttributes.uiComponent,
+            type: uiAttributes.parameterType,
             value: field.value.map { .init($0.rawValue) }
         )
     }
@@ -136,9 +136,11 @@ extension AnywayPayment.Element.UIComponent.Widget {
     public typealias ProductID = AnywayPayment.Element.Widget.PaymentCore.ProductID
 }
 
+// MARK: - Adapters
+
 private extension AnywayPayment.Element.Parameter.UIAttributes {
     
-    var uiComponent: AnywayPayment.Element.UIComponent.Parameter.ParameterType {
+    var parameterType: AnywayPayment.Element.UIComponent.Parameter.ParameterType {
         
         switch (type, viewType, dataType) {
         case (_, .constant, _):
