@@ -41,8 +41,7 @@ struct EditableAmountSberQRConfirmPaymentView: View {
             PaymentComponents.ProductSelectView(
                 state: state.productSelect,
                 event: { event(.productSelect($0)) },
-                config: config.productSelect, 
-                carouselConfig: config.carousel
+                config: config.productSelect
             ) {
                 PaymentComponents.ProductCardView(
                     productCard: .init(product: $0),

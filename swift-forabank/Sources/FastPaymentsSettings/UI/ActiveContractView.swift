@@ -58,8 +58,7 @@ struct ActiveContractView: View {
         ProductSelectView(
             state: contractDetails.productSelect,
             event: { event(.products($0.productSelect)) },
-            config: config.productSelect,
-            carouselConfig: config.carousel
+            config: config.productSelect
         ) {
             ProductCardView(
                 productCard: .init(product: $0),
