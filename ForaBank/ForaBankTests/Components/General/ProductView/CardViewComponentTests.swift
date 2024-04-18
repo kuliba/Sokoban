@@ -71,6 +71,101 @@ final class CardViewComponentTests: XCTestCase {
         XCTAssertEqual(sut.appearance.style, .profile)
     }
     
+    // MARK: - Test name, as ProductCardData
+    
+    func testNameReturnsEmptyForEmptyProduct() {
+        
+        let product = ProductData(productType: .card)
+        
+        let str = ProductView.ViewModel.name(product: product, style: .main, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(str, "")
+    }
+    func testNameReturnsDisplayNameForMainStyle() {
+        
+        let productData = ProductData(productType: .card)
+        
+        let name = ProductView.ViewModel.name(product: productData, style: .main, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "")
+    }
+    
+    func testNameReturnsMainFieldNameForMainStyle() {
+        
+        let product = ProductCardData()
+        let name = ProductView.ViewModel.name(product: product, style: .main, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "Visa")
+    }
+    
+    func testNameReturnsCustomNameForProfileStyle() {
+        
+        let product = ProductCardData.product
+        product.update(with: .init(balance: 100, balanceRub: 200, customName: "Кредитная полка"))
+        let name = ProductView.ViewModel.name(product: product, style: .profile, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "Кредитная полка")
+    }
+    
+    func testNameReturnsEmptyForEmptyCustomName() {
+        
+        let product = ProductCardData.product
+        product.update(with: .init(balance: 100, balanceRub: 200, customName: ""))
+        let name = ProductView.ViewModel.name(product: product, style: .profile, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "")
+    }
+    
+    func testNameReturnsEmptyForEmptyFields() {
+        
+        let product = ProductCardData.productWithCustomFields(mainField: "", customName: "")
+        let name = ProductView.ViewModel.name(product: product, style: .profile, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "")
+        
+    }
+    
+    func testNameUsesMainFieldWhenCustomNameIsNil() {
+        
+        let product = ProductCardData.productWithCustomFields(mainField: "Visa Gold", customName: nil)
+        let name = ProductView.ViewModel.name(product: product, style: .profile, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "Visa Gold")
+        
+    }
+    
+    func testNameUsesCustomNameOverMainField() {
+        
+        let product = ProductCardData.productWithCustomFields(mainField: "mainField", customName: "customName")
+        let name = ProductView.ViewModel.name(product: product, style: .main, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "customName")
+    }
+    
+    func testNameAddsCreditForProfileAndCreditCard() {
+        
+        let product = ProductCardData.productWithLoan
+        let name = ProductView.ViewModel.name(product: product, style: .profile, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "Кредитная\nVisa")
+    }
+    
+    func testNameReturnsDefaultCreditCardForEmptyFieldsAndMainStyle() {
+        
+        let product = ProductCardData.productWithCustomFields(mainField: "", customName: "")
+        let name = ProductView.ViewModel.name(product: product, style: .main, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "Кредитная карта")
+    }
+    
+    func testNameReturnsDefaultCreditCardForNilCustomNameAndMainStyle() {
+        
+        let product = ProductCardData.productWithCustomFields(mainField: "", customName: nil)
+        let name = ProductView.ViewModel.name(product: product, style: .main, creditProductName: .cardTitle)
+        
+        XCTAssertEqual(name, "Кредитная карта")
+    }
+    
     // MARK: - Test owner
     
     func test_owner_shouldEmptyIfDeposit() {
@@ -396,7 +491,7 @@ final class CardViewComponentTests: XCTestCase {
         
         // open CVV
         sut.showCVVButtonTap()
-                
+        
         // copy number to clipboard
         sut.copyCardNumberToClipboard()
         
@@ -742,4 +837,42 @@ private extension CardInfo {
         fullNumber: .number,
         numberMasked: .maskedNumber
     )
+}
+
+private  extension CardViewComponentTests {
+    
+    static let productWithLoan = ProductCardData(
+        holderName: "My Card",
+        loanBaseParam: .init(loanId: 1, clientId: 1, number: "1", currencyId: 1, currencyNumber: 1, currencyCode: "1", minimumPayment: 1, gracePeriodPayment: 1, overduePayment: 1, availableExceedLimit: 1, ownFunds: 1, debtAmount: 1, totalAvailableAmount: 1, totalDebtAmount: 1))
+}
+private extension ColorData {
+    
+}
+private extension ProductCardData {
+    
+    static let product = ProductCardData(id: 1, currency: .init(description: "qwe"), number: "1", numberMasked: "1", ownerId: 1, holderName: "1", allowCredit: true, allowDebit: true, status: .active, loanBaseParam: nil, statusPc: .active, isMain: true)
+    
+    static func productWithCustomFields(
+        mainField: String = "Visa",
+        customName: String? = nil
+    ) -> ProductCardData {
+        
+        return ProductCardData(
+            id: 1,
+            productType: .card,
+            number: "1234 5678 9012 3456",
+            numberMasked: "**** **** **** 3456",
+            accountNumber: "1234567890123456",
+            balance: 1000.0,
+            balanceRub: 75000.0,
+            currency: "USD",
+            mainField: mainField,
+            additionalField: "Additional Info",
+            customName: customName,
+            productName: "Visa Gold", openDate: Date(), ownerId: 123, branchId: 456, allowCredit: true, allowDebit: true, extraLargeDesign: .test, largeDesign: .test, mediumDesign: .test, smallDesign: .test, fontDesignColor: .init(description: "qwe"), background: [.init(description: "asd")], accountId: 789, cardId: 987, name: "John Doe", validThru: Date(), status: .active, expireDate: "12/25", holderName: "Andrew", product: "Credit Card", branch: "Main Branch", miniStatement: nil, paymentSystemName: "psn", paymentSystemImage: .test, loanBaseParam: nil, statusPc: .active, isMain: true, externalId: 321, order: 1, visibility: true, smallDesignMd5hash: "md5hash", smallBackgroundDesignHash: "backgroundHash")
+    }
+    
+    static let productWithLoan = ProductCardData(
+        holderName: "My Card",
+        loanBaseParam: .init(loanId: 1, clientId: 1, number: "1", currencyId: 1, currencyNumber: 1, currencyCode: "1", minimumPayment: 1, gracePeriodPayment: 1, overduePayment: 1, availableExceedLimit: 1, ownFunds: 1, debtAmount: 1, totalAvailableAmount: 1, totalDebtAmount: 1))
 }

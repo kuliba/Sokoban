@@ -349,20 +349,23 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
     init(_ dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType) {
         
         switch dataType {
+        case .number:
+            self = .number
+            
+        case let .pairs(pair, pairs):
+            self = .pairs(pair.pair, pairs.map(\.pair))
+            
         case .string:
             self = .string
-            
-        case let .pairs(pairs):
-            self = .pairs(pairs.map(Pair.init))
         }
     }
 }
 
-private extension AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
+private extension AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair {
     
-    init(_ pairs: AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair) {
+    var pair: AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
         
-        self.init(key: pairs.key, value: pairs.value)
+        .init(key: key, value: value)
     }
 }
 

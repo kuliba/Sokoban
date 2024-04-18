@@ -201,11 +201,12 @@ extension ResponseMapper.CreateAnywayTransferResponse {
 extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
     
     public enum DataType: Equatable {
-        
+
+        case number
+        case pairs(Pair, [Pair])
         case string
-        case pairs([Pairs])
         
-        public struct Pairs: Equatable {
+        public struct Pair: Equatable {
             
             public let key: String
             public let value: String

@@ -152,10 +152,14 @@ extension PaymentsInputPhoneView {
                         
                         self?.textView.setText(to: payload.phone)
                         self?.action.send(PaymentsParameterViewModelAction.InputPhone.ContactSelector.Close())
-                        self?.model.action.send(ModelAction.LatestPayments.BanksList.Request(
-                            prePayment: false,
-                            phone: payload.phone
-                        ))
+                        
+                        if self?.source.parameter.id == Payments.Parameter.Identifier.sfpPhone.rawValue {
+                            
+                            self?.model.action.send(ModelAction.LatestPayments.BanksList.Request(
+                                prePayment: false,
+                                phone: payload.phone
+                            ))
+                        }
                         
                     default:
                         break

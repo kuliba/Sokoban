@@ -347,6 +347,9 @@ private extension ProductData.Status {
             
         case .blockedUnlockAvailable:
             self = .blockedUnlockAvailable
+            
+        case .blockedUnlockNotAvailable:
+            self = .blockedByBank
         }
     }
 }
@@ -402,6 +405,9 @@ private extension ProductData.StatusPC {
             
         case .blockedByClient:
             self = .blockedByClient
+            
+        case .blockedUnlockNotAvailable:
+            self = .blockedUnlockNotAvailable
         }
     }
 }

@@ -44,7 +44,8 @@ public struct Appearance {
     
     public enum NameOfCreditProduct {
         
-        case navigationTitle
+        case productView
+        case myProductsSectionItem
         case cardTitle
     }
     

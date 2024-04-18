@@ -1,5 +1,5 @@
 //
-//  OTPView.swift
+//  OTPMockView.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 12.04.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct OTPView: View {
+struct OTPMockView: View {
     
     let state: String
     let event: (String) -> Void
@@ -29,7 +29,7 @@ struct OTPView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        OTPView(state: "", event: { _ in })
+        OTPMockView(state: "", event: { _ in })
             .padding(.horizontal)
     }
 }

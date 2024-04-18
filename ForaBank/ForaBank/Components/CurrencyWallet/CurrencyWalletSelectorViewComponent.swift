@@ -370,7 +370,11 @@ extension CurrencyWalletSelectorViewModel {
             case let product as ProductCardData:
                 
                 let numberCard = product.displayNumber ?? "XXXX"
-                let name = ProductView.ViewModel.name(product: productData, style: .main, creditProductName: .cardTitle)
+                let name = ProductView.ViewModel.name(
+                    product: productData,
+                    style: .main,
+                    creditProductName: .cardTitle
+                )
                 let description = product.additionalField
                 let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
                 let cardIcon = model.images.value[product.smallDesignMd5hash]?.image
