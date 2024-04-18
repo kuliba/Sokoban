@@ -46,9 +46,9 @@ extension Model {
                 .init(id: searchTypeParameterId, value: "20"),
                 title: "Выберите тип",
                 options: [
-                    .init(id: "20", name: "Документ", icon: .image(ImageData(named: "ic24FileHash") ?? .empty)),
-                    .init(id: "30", name: "УИН", icon: .image(ImageData(named: "ic24Hash") ?? .empty)),
-                    .init(id: "40", name: "ИП", icon: .image(ImageData(named: "ic24Hammer") ?? .empty))
+                    .init(id: "20", name: "Документ", icon: nil),
+                    .init(id: "30", name: "УИН", icon: nil),
+                    .init(id: "40", name: "ИП", icon: nil)
                 ], placement: .top)
             
             return .init(parameters: [operatorParameter, headerParameter, productParameter, searchTypeParameter], front: .init(visible: [headerParameter.id, searchTypeParameter.id], isCompleted: true), back: .init(stage: .remote(.start), required: [searchTypeParameter.id], processed: nil))

@@ -214,10 +214,15 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     func test_getHeaderIconForParameters_hasSfpBankAndIncorrectParameter_returnsSbpIcon() {
         
-        let par1 = Payments.ParameterSelectBank.getTestParametersWithFora()
-        let par2 = Payments.ParameterSelectBank.getTestParametersWithFora(bankId: "qwe", value: "qwe", name: "gaz")
+        let testParameter1 = Payments.ParameterSelectBank.getTestParametersWithFora()
+        let testParameter2 = Payments.ParameterSelectBank.getTestParametersWithFora(
+            bankId: "bankId",
+            value: "value",
+            name: "name"
+        )
+
         let parameters: [PaymentsParameterRepresentable] = [
-            par1, par2
+            testParameter1, testParameter2
         ]
         let sut: Model = .mockWithEmptyExcept()
         let icon = sut.getHeaderIconForParameters(parameters)
