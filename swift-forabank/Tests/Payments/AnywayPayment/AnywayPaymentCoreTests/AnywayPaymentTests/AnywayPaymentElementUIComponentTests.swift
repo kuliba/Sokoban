@@ -381,7 +381,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
 
 private extension AnywayPayment.Element {
     
-    var parameterType: AnywayPayment.UIComponent.Parameter.ParameterType? {
+    var parameterType: AnywayPayment.Element.UIComponent.Parameter.ParameterType? {
         
         guard case let .parameter(parameter) = self
         else { return nil }

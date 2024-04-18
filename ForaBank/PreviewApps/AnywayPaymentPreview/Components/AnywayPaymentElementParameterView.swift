@@ -7,10 +7,11 @@
 
 import AnywayPaymentCore
 import SwiftUI
+import Tagged
 
 struct AnywayPaymentElementParameterView: View {
     
-    let state: AnywayPayment.UIComponent.Parameter
+    let state: AnywayPayment.Element.UIComponent.Parameter
     let event: (String) -> Void
     
     var body: some View {
@@ -43,7 +44,7 @@ struct AnywayPaymentElementParameterView: View {
     }
 }
 
-extension AnywayPayment.UIComponent.Parameter.ParameterType.Option: Identifiable {
+extension AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option: Identifiable {
     
     public var id: Key { key }
 }

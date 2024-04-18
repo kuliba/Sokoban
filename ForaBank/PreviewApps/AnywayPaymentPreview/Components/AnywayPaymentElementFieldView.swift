@@ -10,7 +10,7 @@ import SwiftUI
 
 struct AnywayPaymentElementFieldView: View {
     
-    let state: AnywayPayment.UIComponent.Field
+    let state: AnywayPayment.Element.UIComponent.Field
     
     var body: some View {
         

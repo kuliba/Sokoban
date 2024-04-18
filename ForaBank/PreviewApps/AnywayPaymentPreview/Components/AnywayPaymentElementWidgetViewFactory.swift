@@ -19,5 +19,5 @@ where OTPView: View,
 extension AnywayPaymentElementWidgetViewFactory {
     
     typealias MakeOTPView = (String, @escaping (String) -> Void) -> OTPView
-    typealias MakeProductPicker = (AnywayPayment.UIComponent.Widget.ProductID, @escaping (AnywayPaymentEvent.Widget.ProductID, AnywayPaymentEvent.Widget.Currency) -> Void) -> ProductPicker
+    typealias MakeProductPicker = (AnywayPayment.Element.UIComponent.Widget.ProductID, @escaping (AnywayPaymentEvent.Widget.ProductID, AnywayPaymentEvent.Widget.Currency) -> Void) -> ProductPicker
 }
