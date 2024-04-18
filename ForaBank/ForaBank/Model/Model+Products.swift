@@ -25,8 +25,24 @@ extension Model {
     var productsOpenLoanURL: URL { URL(string: "https://www.forabank.ru/private/credits/")! }
     var productsOpenInsuranceURL: URL { URL(string: "https://www.forabank.ru/landings/e-osago/")! }
     var productsOpenMortgageURL: URL { URL(string: "https://www.forabank.ru/private/mortgage/")! }
-    
-    var allProducts: [ProductData] { products.value.values.flatMap { $0 }.sorted { $0.productType.order < $1.productType.order } }
+        
+    var allProducts: [ProductData] {
+        
+        let dictionary = Dictionary(grouping: products.value.values.flatMap { $0 }, by: { $0.asCard?.idParent })
+
+        var all: [ProductData] = []
+        products.value.values.flatMap{ $0 }.forEach { product in
+            if let values = dictionary[product.id] {
+                let sortedArray = values.sorted { $0.order < $1.order }
+                all.append(product)
+                all.append(contentsOf: sortedArray)
+            } else if product.asCard?.idParent == nil {
+                all.append(product)
+            }
+        }
+        return all.sorted { $0.productType.order < $1.productType.order
+}
+    }
     
     func productType(for productId: ProductData.ID) -> ProductType? {
         
@@ -187,6 +203,18 @@ extension Model {
         return products
     }
 }
+
+extension Array {
+    func group<T: Hashable>(by key: (_ element: Element) -> T) -> [[Element]] {
+        var categories: [T: [Element]] = [:]
+        for element in self {
+            let key = key(element)
+            categories[key, default: []].append(element)
+        }
+      return categories.values.map { $0 }
+    }
+}
+
 
 //MARK: - Action
 
