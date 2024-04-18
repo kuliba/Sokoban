@@ -131,6 +131,108 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .hidden)
     }
     
+    // TBD: number case for `dataType`
+    //    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_select() {
+    //
+    //        let element = makeElement(
+    //            type: .select,
+    //            dataType: .number,
+    //            viewType: .constant
+    //        )
+    //
+    //        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    //    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantPairs_select() {
+        
+        let element = makeElement(
+            type: .select,
+            dataType: makePairsDataType(),
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantString_select() {
+        
+        let element = makeElement(
+            type: .select,
+            dataType: .string,
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
+    // TBD: number case for `dataType`
+    //    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_maskList() {
+    //
+    //        let element = makeElement(
+    //            type: .maskList,
+    //            dataType: .number,
+    //            viewType: .constant
+    //        )
+    //
+    //        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    //    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantPairs_maskList() {
+        
+        let element = makeElement(
+            type: .maskList,
+            dataType: makePairsDataType(),
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantString_maskList() {
+        
+        let element = makeElement(
+            type: .maskList,
+            dataType: .string,
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
+    // TBD: number case for `dataType`
+    //    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_input() {
+    //
+    //        let element = makeElement(
+    //            type: .input,
+    //            dataType: .number,
+    //            viewType: .constant
+    //        )
+    //
+    //        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    //    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantPairs_input() {
+        
+        let element = makeElement(
+            type: .input,
+            dataType: makePairsDataType(),
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantString_input() {
+        
+        let element = makeElement(
+            type: .input,
+            dataType: .string,
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
     func test_uiComponent_shouldDeliverTextInputForInputString() {
         
         let field = makeAnywayPaymentElementParameterField(

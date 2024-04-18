@@ -16,6 +16,12 @@ struct AnywayPaymentElementParameterView: View {
     var body: some View {
         
         switch state.type {
+        case .hidden:
+            EmptyView()
+            
+        case let .nonEditable:
+            Text("TBD: non editable parameter")
+            
         case let .select(selected, options):
             ExpandablePickerStateWrapperView(
                 viewModel: .decorated(
@@ -31,7 +37,7 @@ struct AnywayPaymentElementParameterView: View {
                 onChange: event
             )
             
-        case .hidden, .unknown:
+        case .unknown:
             EmptyView()
         }
     }
