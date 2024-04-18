@@ -41,8 +41,7 @@ struct FixedAmountSberQRConfirmPaymentView: View {
             ProductSelectView(
                 state: state.productSelect,
                 event: { event(.productSelect($0)) },
-                config: config.productSelect,
-                carouselConfig: config.carousel
+                config: config.productSelect
             ) {
                 ProductCardView(
                     productCard: .init(product: $0),

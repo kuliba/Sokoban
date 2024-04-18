@@ -39,7 +39,8 @@ public extension ProductSelectConfig {
         title: .init(
             textFont: .headline,
             textColor: .green
-        )
+        ),
+        carouselConfig: .preview
     )
 }
 

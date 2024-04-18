@@ -81,7 +81,8 @@ extension ProductSelectComponent.ProductSelectConfig {
                 textColor: .textPlaceholder
             )
         ),
-        title: .secondary
+        title: .secondary,
+        carouselConfig: .iForaSmall
     )
 }
 

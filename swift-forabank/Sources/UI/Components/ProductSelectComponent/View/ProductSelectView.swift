@@ -14,20 +14,17 @@ public struct ProductSelectView<ProductView: View>: View {
     let state: ProductSelect
     let event: (ProductSelectEvent) -> Void
     let config: ProductSelectConfig
-    let carouselConfig: CarouselComponentConfig
     let productView: (ProductSelect.Product) -> ProductView
     
     public init(
         state: ProductSelect,
         event: @escaping (ProductSelectEvent) -> Void,
         config: ProductSelectConfig,
-        carouselConfig: CarouselComponentConfig,
         productView: @escaping (ProductSelect.Product) -> ProductView
     ) {
         self.state = state
         self.event = event
         self.config = config
-        self.carouselConfig = carouselConfig
         self.productView = productView
     }
     
@@ -148,7 +145,7 @@ public struct ProductSelectView<ProductView: View>: View {
             initialState: .init(
                 products: products,
                 needShowSticker: false,
-                carouselDimensions: carouselConfig.carousel.productDimensions
+                carouselDimensions: config.carouselConfig.carousel.productDimensions
             ),
             reduce: CarouselReducer().reduce,
             handleEffect: CarouselEffectHandler().handleEffect)
@@ -158,7 +155,7 @@ public struct ProductSelectView<ProductView: View>: View {
             productView: _productView,
             stickerView: { EmptyView() },
             newProductButton: { EmptyView() },
-            config: carouselConfig
+            config: config.carouselConfig
         )
     }
     
@@ -220,8 +217,7 @@ struct ProductSelectView_Previews: PreviewProvider {
             ProductSelectView(
                 state: state,
                 event: { state = reduce(state, $0) },
-                config: .preview,
-                carouselConfig: .preview
+                config: .preview
             ) {
                 ProductCardView(
                     productCard: .init(product: $0),
