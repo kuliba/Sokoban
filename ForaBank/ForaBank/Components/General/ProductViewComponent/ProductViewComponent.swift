@@ -616,14 +616,17 @@ struct ProductView: View {
             viewModel.resetToFrontIfNotAwaiting()
         }
         
-        ProductBackView(
-            cardInfo: viewModel.cardInfo,
-            actions: .init(
-                header: viewModel.copyCardNumberToClipboard,
-                cvv: viewModel.showCVVButtonTap),
-            modifierConfig: modifierConfig(false),
-            config: viewModel.config
-        )
+        if viewModel.appearance.style == .profile {
+         
+            ProductBackView(
+                cardInfo: viewModel.cardInfo,
+                actions: .init(
+                    header: viewModel.copyCardNumberToClipboard,
+                    cvv: viewModel.showCVVButtonTap),
+                modifierConfig: modifierConfig(false),
+                config: viewModel.config
+            )
+        }
     }
     
     @ViewBuilder

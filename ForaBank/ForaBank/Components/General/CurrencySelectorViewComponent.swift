@@ -374,7 +374,12 @@ struct CurrencySelectorView: View {
 
 extension CurrencySelectorView.ViewModel {
     
-    static let sample: CurrencySelectorView.ViewModel = .init(.productsMock, state: .openAccount, currency: .rub, currencyOperation: .buy)
+    static let sample: CurrencySelectorView.ViewModel = .init(
+        .productsMock,
+        state: .openAccount,
+        currency: .rub,
+        currencyOperation: .buy
+    )
 }
 
 // MARK: - Previews
