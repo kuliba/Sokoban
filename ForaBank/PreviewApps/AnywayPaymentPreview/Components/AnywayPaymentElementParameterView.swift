@@ -7,16 +7,23 @@
 
 import AnywayPaymentCore
 import SwiftUI
+import Tagged
 
 struct AnywayPaymentElementParameterView: View {
     
-    let state: AnywayPayment.UIComponent.Parameter
+    let state: AnywayPayment.Element.UIComponent.Parameter
     let event: (String) -> Void
     
     var body: some View {
         
         switch state.type {
-        case let .select(options):
+        case .hidden:
+            EmptyView()
+            
+        case .nonEditable:
+            Text("TBD: non editable parameter")
+            
+        case let .select(selected, options):
             ExpandablePickerStateWrapperView(
                 viewModel: .decorated(
                     initialState: .init(items: options),
@@ -37,7 +44,7 @@ struct AnywayPaymentElementParameterView: View {
     }
 }
 
-extension AnywayPayment.UIComponent.Parameter.ParameterType.Option: Identifiable {
+extension AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option: Identifiable {
     
     public var id: Key { key }
 }

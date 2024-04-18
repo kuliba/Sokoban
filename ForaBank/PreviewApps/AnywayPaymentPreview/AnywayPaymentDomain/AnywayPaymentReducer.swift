@@ -81,8 +81,8 @@ private extension AnywayPaymentReducer {
 private extension Array where Element == AnywayPayment.Element {
     
     mutating func set(
-        value: AnywayPayment.UIComponent.Parameter.Value.RawValue,
-        for id: AnywayPayment.UIComponent.Parameter.ID
+        value: AnywayPayment.Element.UIComponent.Parameter.Value.RawValue,
+        for id: AnywayPayment.Element.UIComponent.Parameter.ID
     ) {
         set(value: .init(value), forID: .init(id.rawValue))
     }

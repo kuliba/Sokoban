@@ -47,7 +47,7 @@ where FieldView: View,
     }
     
     private func widgetView(
-        state: AnywayPayment.UIComponent.Widget,
+        state: AnywayPayment.Element.UIComponent.Widget,
         event: @escaping (AnywayPaymentEvent.Widget) -> Void
     ) -> some View {
         

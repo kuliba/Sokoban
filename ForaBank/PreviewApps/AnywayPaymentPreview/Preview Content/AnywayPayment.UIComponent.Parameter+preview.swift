@@ -7,7 +7,7 @@
 
 import AnywayPaymentCore
 
-extension AnywayPayment.UIComponent.Parameter {
+extension AnywayPayment.Element.UIComponent.Parameter {
     
     static let preview: Self = .init(
         id: ".init(abc123)",

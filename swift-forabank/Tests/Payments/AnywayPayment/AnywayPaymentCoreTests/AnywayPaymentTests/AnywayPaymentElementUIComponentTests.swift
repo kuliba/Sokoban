@@ -29,6 +29,204 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     
     // MARK: - parameter
     
+    func test_uiComponent_shouldDeliverHiddenForOutputNumber_select() {
+        
+        let element = makeElement(
+            type: .select,
+            dataType: .number,
+            viewType: .output
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .hidden)
+    }
+    
+    func test_uiComponent_shouldDeliverHiddenForOutputPairs_select() {
+        
+        let element = makeElement(
+            type: .select,
+            dataType: makePairsDataType(),
+            viewType: .output
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .hidden)
+    }
+    
+    func test_uiComponent_shouldDeliverHiddenForOutputString_select() {
+        
+        let element = makeElement(
+            type: .select,
+            dataType: .string,
+            viewType: .output
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .hidden)
+    }
+    
+    func test_uiComponent_shouldDeliverHiddenForOutputNumber_maskList() {
+        
+        let element = makeElement(
+            type: .maskList,
+            dataType: .number,
+            viewType: .output
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .hidden)
+    }
+    
+    func test_uiComponent_shouldDeliverHiddenForOutputPairs_maskList() {
+        
+        let element = makeElement(
+            type: .maskList,
+            dataType: makePairsDataType(),
+            viewType: .output
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .hidden)
+    }
+    
+    func test_uiComponent_shouldDeliverHiddenForOutputString_maskList() {
+        
+        let element = makeElement(
+            type: .maskList,
+            dataType: .string,
+            viewType: .output
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .hidden)
+    }
+    
+    func test_uiComponent_shouldDeliverHiddenForOutputNumber_input() {
+        
+        let element = makeElement(
+            type: .input,
+            dataType: .number,
+            viewType: .output
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .hidden)
+    }
+    
+    func test_uiComponent_shouldDeliverHiddenForOutputPairs_input() {
+        
+        let element = makeElement(
+            type: .input,
+            dataType: makePairsDataType(),
+            viewType: .output
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .hidden)
+    }
+    
+    func test_uiComponent_shouldDeliverHiddenForOutputString_input() {
+        
+        let element = makeElement(
+            type: .input,
+            dataType: .string,
+            viewType: .output
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .hidden)
+    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_select() {
+        
+        let element = makeElement(
+            type: .select,
+            dataType: .number,
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantPairs_select() {
+        
+        let element = makeElement(
+            type: .select,
+            dataType: makePairsDataType(),
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantString_select() {
+        
+        let element = makeElement(
+            type: .select,
+            dataType: .string,
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_maskList() {
+        
+        let element = makeElement(
+            type: .maskList,
+            dataType: .number,
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantPairs_maskList() {
+        
+        let element = makeElement(
+            type: .maskList,
+            dataType: makePairsDataType(),
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantString_maskList() {
+        
+        let element = makeElement(
+            type: .maskList,
+            dataType: .string,
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_input() {
+        
+        let element = makeElement(
+            type: .input,
+            dataType: .number,
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantPairs_input() {
+        
+        let element = makeElement(
+            type: .input,
+            dataType: makePairsDataType(),
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
+    func test_uiComponent_shouldDeliverNonEditableForConstantString_input() {
+        
+        let element = makeElement(
+            type: .input,
+            dataType: .string,
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
+    
     func test_uiComponent_shouldDeliverTextInputForInputString() {
         
         let field = makeAnywayPaymentElementParameterField(
@@ -55,7 +253,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         let field = makeAnywayPaymentElementParameterField(id: "123", value: "ABC")
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
-            dataType: .pairs([.init(key: "a", value: "1"),]),
+            dataType: .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
             type: .select,
             viewType: .input
         )
@@ -65,7 +263,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         XCTAssertNoDiff(element.uiComponent, .parameter(.init(
             id: "123",
-            type: .select([.init(key: "a", value: "1"),]),
+            type: .select(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
             value: "ABC"
         )))
     }
@@ -74,10 +272,11 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         let field = makeAnywayPaymentElementParameterField(id: "123", value: "ABC")
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
-            dataType: .pairs([
-                .init(key: "a", value: "1"),
-                .init(key: "bb", value: "22"),
-            ]),
+            dataType: .pairs(
+                .init(key: "a", value: "1"), [
+                    .init(key: "a", value: "1"),
+                    .init(key: "bb", value: "22"),
+                ]),
             type: .select,
             viewType: .input
         )
@@ -87,10 +286,11 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         XCTAssertNoDiff(element.uiComponent, .parameter(.init(
             id: "123",
-            type: .select([
-                .init(key: "a", value: "1"),
-                .init(key: "bb", value: "22"),
-            ]),
+            type: .select(
+                .init(key: "a", value: "1"), [
+                    .init(key: "a", value: "1"),
+                    .init(key: "bb", value: "22"),
+                ]),
             value: "ABC"
         )))
     }
@@ -135,5 +335,57 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         ))
         
         XCTAssertNoDiff(element.uiComponent, .widget(.productPicker(.cardID(.init(id)))))
+    }
+    
+    // MARK: - Helpers
+    
+    private typealias DataType = AnywayPayment.Element.Parameter.UIAttributes.DataType
+    
+    private func makePairsDataType() -> DataType {
+        
+        .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1")])
+    }
+    
+    private func makeElement(
+        type: AnywayPayment.Element.Parameter.UIAttributes.FieldType,
+        dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType,
+        viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType
+    ) -> AnywayPayment.Element {
+        
+        makeAnywayPaymentParameterElement(
+            makeAnywayPaymentParameter(
+                uiAttributes: makeUIAttributes(
+                    type: type,
+                    dataType: dataType,
+                    viewType: viewType
+                )
+            )
+        )
+    }
+    
+    private func makeUIAttributes(
+        type: AnywayPayment.Element.Parameter.UIAttributes.FieldType,
+        dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType,
+        viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType
+    ) -> AnywayPayment.Element.Parameter.UIAttributes {
+        
+        makeAnywayPaymentElementParameterUIAttributes(
+            dataType: dataType,
+            type: type,
+            viewType: viewType
+        )
+    }
+}
+
+// MARK: - DSL
+
+private extension AnywayPayment.Element {
+    
+    var parameterType: AnywayPayment.Element.UIComponent.Parameter.ParameterType? {
+        
+        guard case let .parameter(parameter) = self
+        else { return nil }
+        
+        return parameter.uiComponent.type
     }
 }

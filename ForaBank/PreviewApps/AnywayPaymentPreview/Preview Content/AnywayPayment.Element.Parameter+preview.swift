@@ -49,7 +49,8 @@ private extension AnywayPayment.Element.Parameter.Validation {
 private extension AnywayPayment.Element.Parameter.UIAttributes {
     
     static let select: Self = preview(
-        dataType: .pairs([
+        dataType: .pairs(
+            .init(key: "0", value: "abc"), [
             .init(key: "0", value: "abc"),
             .init(key: "1", value: "ABC"),
             .init(key: "2", value: "cdef"),
