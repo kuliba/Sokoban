@@ -11,7 +11,7 @@ extension AnywayPayment.UIComponent.Parameter {
     
     static let preview: Self = .init(
         id: ".init(abc123)",
-        value: "ABCDE",
-        type: .textInput
+        type: .textInput,
+        value: "ABCDE"
     )
 }

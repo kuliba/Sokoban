@@ -18,17 +18,18 @@ extension ExpandablePickerViewModel {
         )
     }
     
-    static func decorated(
-        _ onSelect: @escaping (String) -> Void
-    ) -> ExpandablePickerViewModel<String> {
+    static func decorated<T>(
+        initialState: ExpandablePickerState<T>,
+        onSelect: @escaping (T) -> Void
+    ) -> ExpandablePickerViewModel<T> {
         
         decorated(
-            initialState: .preview,
+            initialState: initialState,
             with: { event, state in
                 
                 guard case .select = event else { return }
                 
-                onSelect(state.selection)
+                state.selection.map { onSelect($0) }
             }
         )
     }

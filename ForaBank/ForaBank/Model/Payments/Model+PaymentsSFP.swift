@@ -39,24 +39,21 @@ extension Model {
             
             switch operation.source {
             case let .latestPayment(latestPaymentId):
-                if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData {
+                if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData,
+                    let token {
                     
-                    let phoneFormatted = PhoneNumberWrapper().format(latestPayment.phoneNumber.addCodeRuIfNeeded()).digits
-                    let phone = paymentsByPhone.value.contains(where: { $0.key == phoneFormatted })
-                    if !phone,
-                       let token {
-                        
-                        let command = ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments(
-                            token: token,
-                            payload: .init(phoneNumber: phoneFormatted.digits)
-                        )
-                        
-                        let result = try await serverAgent.executeCommand(command: command)
-
-                        latestPaymentBankIds = result.compactMap { $0.bankId }
-                        
-                        paymentsByPhone.value.updateValue(result, forKey: phoneFormatted.digits)
-                    }
+                    latestPaymentBankIds = await getLatestPhonePayments(
+                        phone: latestPayment.phoneNumber,
+                        token: token
+                    )
+                }
+            case let .sfp(phone: phone, bankId: _):
+                if let token {
+                 
+                    latestPaymentBankIds = await getLatestPhonePayments(
+                        phone: phone,
+                        token: token
+                    )
                 }
                 
             default: break
@@ -416,6 +413,38 @@ extension Payments.ParameterAmount {
 }
 
 extension Model {
+    
+    func getLatestPhonePayments(
+        phone: String,
+        token: String
+    ) async -> [String]? {
+    
+        let phoneFormatted = PhoneNumberWrapper().format(phone.addCodeRuIfNeeded()).digits
+        let phoneContained = paymentsByPhone.value.contains(where: { $0.key == phoneFormatted })
+        
+        if !phoneContained {
+         
+            let command = ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments(
+                token: token,
+                payload: .init(phoneNumber: phoneFormatted.digits)
+            )
+            
+            let result = try? await serverAgent.executeCommand(command: command)
+
+            if let result {
+                paymentsByPhone.value.updateValue(result, forKey: phoneFormatted.digits)
+                
+                return result.compactMap { $0.bankId }
+            } else {
+                
+                return nil
+            }
+            
+        } else {
+            
+            return nil
+        }
+    }
     
     func paymentsByPhoneBankList(
         _ phone: String
