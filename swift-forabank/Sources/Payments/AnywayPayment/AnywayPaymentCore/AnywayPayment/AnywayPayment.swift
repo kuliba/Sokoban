@@ -210,7 +210,7 @@ extension AnywayPayment.Element.Parameter.UIAttributes {
     public enum DataType: Equatable {
         
         case string
-        case pairs([Pair])
+        case pairs(Pair, [Pair])
         
         public struct Pair: Equatable {
             

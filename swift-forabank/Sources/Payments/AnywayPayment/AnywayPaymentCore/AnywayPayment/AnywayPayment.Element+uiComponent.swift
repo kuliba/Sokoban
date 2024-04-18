@@ -145,7 +145,7 @@ private extension AnywayPayment.Element.Parameter.UIAttributes {
         case (.input, .input, .string):
             return .textInput
             
-        case let (.select, .input, .pairs(pairs)):
+        case let (.select, .input, .pairs(pair, pairs)):
             return .select(pairs.map(\.option))
             
         default:

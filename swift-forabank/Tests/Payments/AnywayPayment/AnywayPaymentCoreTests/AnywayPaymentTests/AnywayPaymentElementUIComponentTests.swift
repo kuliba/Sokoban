@@ -55,7 +55,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         let field = makeAnywayPaymentElementParameterField(id: "123", value: "ABC")
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
-            dataType: .pairs([.init(key: "a", value: "1"),]),
+            dataType: .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
             type: .select,
             viewType: .input
         )
@@ -74,7 +74,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         let field = makeAnywayPaymentElementParameterField(id: "123", value: "ABC")
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
-            dataType: .pairs([
+            dataType: .pairs(
+                .init(key: "a", value: "1"), [
                 .init(key: "a", value: "1"),
                 .init(key: "bb", value: "22"),
             ]),

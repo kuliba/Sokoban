@@ -43,17 +43,18 @@ final class ResponseMapper_CreateAnywayTransferResponse_Parameter_DataTypeTests:
     
     func test_init_shouldDeliverOnePair() throws {
         
-        XCTAssertNoDiff(DataType("=:1=a"), .pairs([.init("1", "a")]))
+        XCTAssertNoDiff(DataType("=:1=a"), .pairs(.init("1", "a"), [.init("1", "a")]))
     }
     
     func test_init_shouldDeliverOnePairWithLongStrings() throws {
         
-        XCTAssertNoDiff(DataType("=;123=abcd"), .pairs([.init("123", "abcd")]))
+        XCTAssertNoDiff(DataType("=;123=abcd"), .pairs(.init("123", "abcd"), [.init("123", "abcd")]))
     }
     
     func test_init_shouldDeliverTwoPairs() throws {
         
-        XCTAssertNoDiff(DataType("=;1=a;2=b"), .pairs([
+        XCTAssertNoDiff(DataType("=;1=a;2=b"), .pairs(
+            .init("1", "a"), [
             .init("1", "a"),
             .init("2", "b")
         ]))
@@ -61,7 +62,8 @@ final class ResponseMapper_CreateAnywayTransferResponse_Parameter_DataTypeTests:
     
     func test_init_shouldDeliverTwoPairsWithLongStrings() throws {
         
-        XCTAssertNoDiff(DataType("=*123=abcd*22=bbbbb"), .pairs([
+        XCTAssertNoDiff(DataType("=*123=abcd*22=bbbbb"), .pairs(
+            .init("123", "abcd"), [
             .init("123", "abcd"),
             .init("22", "bbbbb")
         ]))
@@ -71,7 +73,8 @@ final class ResponseMapper_CreateAnywayTransferResponse_Parameter_DataTypeTests:
         
         let dataType = "=;ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС=ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС;БЕЗ СТРАХОВОГО ВЗНОСА=БЕЗ СТРАХОВОГО ВЗНОСА;ПРОЧИЕ ПЛАТЕЖИ=ПРОЧИЕ ПЛАТЕЖИ"
         
-        XCTAssertNoDiff(DataType(dataType), .pairs([
+        XCTAssertNoDiff(DataType(dataType), .pairs(
+            .init("ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС", "ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС"), [
             .init("ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС", "ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС"),
             .init("БЕЗ СТРАХОВОГО ВЗНОСА", "БЕЗ СТРАХОВОГО ВЗНОСА"),
             .init("ПРОЧИЕ ПЛАТЕЖИ", "ПРОЧИЕ ПЛАТЕЖИ")

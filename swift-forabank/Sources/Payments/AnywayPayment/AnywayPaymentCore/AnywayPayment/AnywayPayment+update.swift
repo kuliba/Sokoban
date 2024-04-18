@@ -352,17 +352,17 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
         case .string:
             self = .string
             
-        case let .pairs(pairs):
-            self = .pairs(pairs.map(Pair.init))
+        case let .pairs(pair, pairs):
+            self = .pairs(pair.pair, pairs.map(\.pair))
         }
     }
 }
 
-private extension AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
+private extension AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair {
     
-    init(_ pairs: AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair) {
+    var pair: AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
         
-        self.init(key: pairs.key, value: pairs.value)
+        .init(key: key, value: value)
     }
 }
 
