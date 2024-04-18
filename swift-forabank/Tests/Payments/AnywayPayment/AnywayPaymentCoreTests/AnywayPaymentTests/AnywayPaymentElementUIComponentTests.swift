@@ -29,17 +29,16 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     
     // MARK: - parameter
     
-    // TBD: number case for `dataType`
-    //    func test_uiComponent_shouldDeliverHiddenForOutputNumber_select() {
-    //
-    //        let element = makeElement(
-    //            type: .select,
-    //            dataType: .number,
-    //            viewType: .output
-    //        )
-    //
-    //        XCTAssertNoDiff(element.parameterType, .hidden)
-    //    }
+    func test_uiComponent_shouldDeliverHiddenForOutputNumber_select() {
+        
+        let element = makeElement(
+            type: .select,
+            dataType: .number,
+            viewType: .output
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .hidden)
+    }
     
     func test_uiComponent_shouldDeliverHiddenForOutputPairs_select() {
         
@@ -63,17 +62,16 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .hidden)
     }
     
-    // TBD: number case for `dataType`
-    //    func test_uiComponent_shouldDeliverHiddenForOutputNumber_maskList() {
-    //
-    //        let element = makeElement(
-    //            type: .maskList,
-    //            dataType: .number,
-    //            viewType: .output
-    //        )
-    //
-    //        XCTAssertNoDiff(element.parameterType, .hidden)
-    //    }
+    func test_uiComponent_shouldDeliverHiddenForOutputNumber_maskList() {
+        
+        let element = makeElement(
+            type: .maskList,
+            dataType: .number,
+            viewType: .output
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .hidden)
+    }
     
     func test_uiComponent_shouldDeliverHiddenForOutputPairs_maskList() {
         
@@ -97,17 +95,16 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .hidden)
     }
     
-    // TBD: number case for `dataType`
-    //    func test_uiComponent_shouldDeliverHiddenForOutputNumber_input() {
-    //
-    //        let element = makeElement(
-    //            type: .input,
-    //            dataType: .number,
-    //            viewType: .output
-    //        )
-    //
-    //        XCTAssertNoDiff(element.parameterType, .hidden)
-    //    }
+    func test_uiComponent_shouldDeliverHiddenForOutputNumber_input() {
+        
+        let element = makeElement(
+            type: .input,
+            dataType: .number,
+            viewType: .output
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .hidden)
+    }
     
     func test_uiComponent_shouldDeliverHiddenForOutputPairs_input() {
         
@@ -131,17 +128,16 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .hidden)
     }
     
-    // TBD: number case for `dataType`
-    //    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_select() {
-    //
-    //        let element = makeElement(
-    //            type: .select,
-    //            dataType: .number,
-    //            viewType: .constant
-    //        )
-    //
-    //        XCTAssertNoDiff(element.parameterType, .nonEditable)
-    //    }
+    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_select() {
+        
+        let element = makeElement(
+            type: .select,
+            dataType: .number,
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
     
     func test_uiComponent_shouldDeliverNonEditableForConstantPairs_select() {
         
@@ -165,17 +161,16 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .nonEditable)
     }
     
-    // TBD: number case for `dataType`
-    //    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_maskList() {
-    //
-    //        let element = makeElement(
-    //            type: .maskList,
-    //            dataType: .number,
-    //            viewType: .constant
-    //        )
-    //
-    //        XCTAssertNoDiff(element.parameterType, .nonEditable)
-    //    }
+    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_maskList() {
+        
+        let element = makeElement(
+            type: .maskList,
+            dataType: .number,
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
     
     func test_uiComponent_shouldDeliverNonEditableForConstantPairs_maskList() {
         
@@ -199,17 +194,16 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .nonEditable)
     }
     
-    // TBD: number case for `dataType`
-    //    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_input() {
-    //
-    //        let element = makeElement(
-    //            type: .input,
-    //            dataType: .number,
-    //            viewType: .constant
-    //        )
-    //
-    //        XCTAssertNoDiff(element.parameterType, .nonEditable)
-    //    }
+    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_input() {
+        
+        let element = makeElement(
+            type: .input,
+            dataType: .number,
+            viewType: .constant
+        )
+        
+        XCTAssertNoDiff(element.parameterType, .nonEditable)
+    }
     
     func test_uiComponent_shouldDeliverNonEditableForConstantPairs_input() {
         

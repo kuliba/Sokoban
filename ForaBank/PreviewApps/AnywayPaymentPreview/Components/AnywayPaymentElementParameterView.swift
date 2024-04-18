@@ -19,7 +19,7 @@ struct AnywayPaymentElementParameterView: View {
         case .hidden:
             EmptyView()
             
-        case let .nonEditable:
+        case .nonEditable:
             Text("TBD: non editable parameter")
             
         case let .select(selected, options):

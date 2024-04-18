@@ -183,11 +183,14 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes.DataType {
     init(_ dataType: ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType) {
         
         switch dataType {
-        case .string:
-            self = .string
+        case .number:
+            self = .number
             
         case let .pairs(pair, pairs):
             self = .pairs(pair.pair, pairs.map(\.pair))
+
+        case .string:
+            self = .string
         }
     }
 }

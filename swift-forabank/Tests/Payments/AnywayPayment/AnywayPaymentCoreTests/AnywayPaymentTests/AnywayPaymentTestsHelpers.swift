@@ -708,11 +708,14 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
     init(with dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType) {
         
         switch dataType {
-        case .string:
-            self = .string
+        case .number:
+            self = .number
             
         case let .pairs(pair, pairs):
             self = .pairs(pair.pair, pairs.map(\.pair))
+            
+        case .string:
+            self = .string
         }
     }
 }
