@@ -83,7 +83,7 @@ final class ResponseMapper_CreateAnywayTransferResponse_Parameter_DataTypeTests:
     private typealias DataType = ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType
 }
 
-private extension ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType.Pairs {
+private extension ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType.Pair {
     
     init(_ key: String, _ value: String) {
         
