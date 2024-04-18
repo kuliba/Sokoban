@@ -131,6 +131,12 @@ extension ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType {
         guard string != "%String"
         else { self = .string; return }
         
+        guard string != "%Number"
+        else { self = .number; return }
+        
+        guard string != "%Numeric"
+        else { self = .number; return }
+        
         guard let pairs = try? string.splitDataType(),
               let first = pairs.first
         else { return nil }
