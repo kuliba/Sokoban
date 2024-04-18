@@ -25,12 +25,13 @@ final class Model_allProductTests: XCTestCase {
                 makeCardProduct(id: 6),
                 makeCardProduct(id: 7, idParent: 3),
                 makeCardProduct(id: 8),
+                makeCardProduct(id: 9, idParent: 34),
             ],
         ])
         
         let products = sut.allProducts
         
-        XCTAssertNoDiff(products.map(\.id), [3, 5, 7, 6, 4, 8, 1, 2])
+        XCTAssertNoDiff(products.map(\.id), [3, 5, 7, 6, 4, 8, 9, 1, 2])
     }
     
     func test_allProductsWithoutAdditionalCards_shouldReturnSortedArray() {

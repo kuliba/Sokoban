@@ -28,20 +28,45 @@ extension Model {
         
     var allProducts: [ProductData] {
         
-        let dictionary = Dictionary(grouping: products.value.values.flatMap { $0 }, by: { $0.asCard?.idParent })
+        // получили все продукты
+        let currentProducts = products.value.values.flatMap{ $0 }
+        
+        // сгруппировали карты по idParent
+        var dictionary = Dictionary(
+            grouping: currentProducts,
+            by: { $0.asCard?.idParent }
+        )
+        
+        // удалили не допки (карты у которых idParent = nil)
+        dictionary.removeValue(forKey: nil)
 
         var all: [ProductData] = []
-        products.value.values.flatMap{ $0 }.forEach { product in
+        
+        currentProducts.forEach { product in
+            // группируем карты главная + ее допки
             if let values = dictionary[product.id] {
                 let sortedArray = values.sorted { $0.order < $1.order }
+                // добавляем главную
                 all.append(product)
+                // добавляем ее допки
                 all.append(contentsOf: sortedArray)
-            } else if product.asCard?.idParent == nil {
+            } else if product.asCard?.idParent == nil { // исключаем повторное добавление допок
                 all.append(product)
             }
         }
-        return all.sorted { $0.productType.order < $1.productType.order
-}
+        
+        // добавляем допки, которые выпущены не владельцем (главной карты на текущем аккаунте нет)
+        let allIDs = all.map(\.id)
+        dictionary.keys.forEach {
+            if let key = $0, let value = dictionary[key] {
+                // если на аккаунте нет такой карточки - добавляем все ее допки
+                if !allIDs.contains(key) {
+                    all.append(contentsOf: value)
+                }
+            }
+        }
+        // сортируем по типу продуктов
+        return all.sorted { $0.productType.order < $1.productType.order }
     }
     
     func productType(for productId: ProductData.ID) -> ProductType? {
@@ -203,18 +228,6 @@ extension Model {
         return products
     }
 }
-
-extension Array {
-    func group<T: Hashable>(by key: (_ element: Element) -> T) -> [[Element]] {
-        var categories: [T: [Element]] = [:]
-        for element in self {
-            let key = key(element)
-            categories[key, default: []].append(element)
-        }
-      return categories.values.map { $0 }
-    }
-}
-
 
 //MARK: - Action
 
