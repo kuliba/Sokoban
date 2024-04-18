@@ -1683,19 +1683,16 @@ extension Payments.ParameterHeader.Icon {
     }
     
     static func headerIconForBankParameters(
-        _ parameters: [PaymentsParameterRepresentable]
+      _ parameters: [PaymentsParameterRepresentable]
     ) -> Payments.ParameterHeader.Icon? {
         
-        let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
-        
-        guard let bankParameter = parameters.first(where: { $0.id == bankParameterId }),
-              let bankParameterValue = bankParameter.value,
-              bankParameterValue != .foraBankId else {
-            
-            return nil
-        }
-        
-        return .name("ic24Sbp")
+      guard let bankParameterValue = try? parameters.value(forId: Payments.Parameter.Identifier.sfpBank.rawValue),
+            bankParameterValue != .foraBankId else {
+          
+        return nil
+      }
+      
+      return .name("ic24Sbp")
     }
 }
 

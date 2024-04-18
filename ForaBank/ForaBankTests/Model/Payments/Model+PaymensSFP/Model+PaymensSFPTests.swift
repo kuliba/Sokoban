@@ -148,7 +148,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         let source = makeSPFSource(bankID: "123123123")
         let icon = PPIcon.headerIconForOperationSource(source)
         
-        XCTAssertEqual(icon, .testSBPIcon)
+        XCTAssertEqual(icon?.equatable, .testSBPIcon)
     }
     
     func test_getHeaderIconForOperation_otherSource_returnsSbpIcon() {
@@ -156,28 +156,28 @@ final class Model_PaymensSFPTests: XCTestCase {
         let source = Payments.Operation.Source.avtodor
         let icon = PPIcon.headerIconForOperationSource(source)
         
-        XCTAssertEqual(icon, .testSBPIcon)
+        XCTAssertEqual(icon?.equatable, .testSBPIcon)
     }
     
     func test_getHeaderIconForOperation_nilSource_returnsSbpIcon() {
         
         let icon = PPIcon.headerIconForOperationSource(nil)
         
-        XCTAssertEqual(icon, .testSBPIcon)
+        XCTAssertEqual(icon?.equatable, .testSBPIcon)
     }
     
     func test_getHeaderIconForParameters_emptyParameters_returnsNil() {
         
         let icon = PPIcon.headerIconForBankParameters([])
         
-        XCTAssertNil(icon)
+        XCTAssertNil(icon?.equatable)
     }
     
     func test_getHeaderIconForParameters_sfpBankNotFora_returnsSbpIcon() {
         
         let icon = PPIcon.headerIconForBankParameters(makeParameter())
         
-        XCTAssertEqual(icon, .testSBPIcon)
+        XCTAssertEqual(icon?.equatable, .testSBPIcon)
     }
     
     func test_getHeaderIconForParameters_sfpBankIsFora_returnsNil() {
@@ -191,14 +191,14 @@ final class Model_PaymensSFPTests: XCTestCase {
         
         let icon = PPIcon.headerIconForBankParameters(makeParameter(""))
         
-        XCTAssertEqual(icon, .testSBPIcon)
+        XCTAssertEqual(icon?.equatable, .testSBPIcon)
     }
     
     func test_getHeaderIconForParameters_hasSfpBankAndIncorrectParameter_returnsSbpIcon() {
         
         let icon = PPIcon.headerIconForBankParameters(makeParametersWithFora())
-        
-        XCTAssertEqual(icon, .testSBPIcon)
+
+        XCTAssertEqual(icon?.equatable, .testSBPIcon)
     }
     
     // MARK: - Helpers
@@ -280,18 +280,42 @@ extension Model {
     }
 }
 
-extension Payments.ParameterHeader.Icon: Equatable {
+private struct EquatableIcon: Equatable {
     
-    public static func == (lhs: Self, rhs: Self) -> Bool {
-        switch (lhs, rhs) {
-        case let (.name(l), .name(r)):
-            return l == r
-        default:
-            return false
+    enum Value: Equatable {
+        
+        case image(ImageData)
+        case name(String)
+    }
+    
+    let value: Value
+    
+    init(_ icon: Payments.ParameterHeader.Icon) {
+        switch icon {
+        case .image(let imageData):
+            self.value = .image(imageData)
+        case .name(let name):
+            self.value = .name(name)
         }
+    }
+    
+    static func == (lhs: EquatableIcon, rhs: EquatableIcon) -> Bool {
+        return lhs.value == rhs.value
     }
 }
 
+private extension EquatableIcon {
+    
+    static let testSBPIcon: Self = .init(.name("ic24Sbp"))
+}
+
+private extension Payments.ParameterHeader.Icon {
+    
+    var equatable: EquatableIcon {
+        
+        return EquatableIcon(self)
+    }
+}
 
 private extension String {
     
