@@ -253,7 +253,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         let field = makeAnywayPaymentElementParameterField(id: "123", value: nil)
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
-            dataType: .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
+            dataType: makePairsDataType(),
             type: .select,
             viewType: .input
         )
@@ -272,7 +272,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         let field = makeAnywayPaymentElementParameterField(id: "123", value: "ABC")
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
-            dataType: .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
+            dataType: makePairsDataType(),
             type: .select,
             viewType: .input
         )
@@ -291,11 +291,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         let field = makeAnywayPaymentElementParameterField(id: "123", value: "ABC")
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
-            dataType: .pairs(
-                .init(key: "a", value: "1"), [
-                    .init(key: "a", value: "1"),
-                    .init(key: "bb", value: "22"),
-                ]),
+            dataType: makePairsDataType(("a", "1"), ("bb", "22")),
             type: .select,
             viewType: .input
         )
@@ -340,7 +336,10 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             )
         ))
         
-        XCTAssertNoDiff(element.uiComponent, .widget(.productPicker(.accountID(.init(id)))))
+        XCTAssertNoDiff(
+            element.uiComponent,
+            .widget(.productPicker(.accountID(.init(id))))
+        )
     }
     
     func test_uiComponent_shouldDeliverProductPickerWithCardForCoreWidget() {
@@ -353,16 +352,26 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             )
         ))
         
-        XCTAssertNoDiff(element.uiComponent, .widget(.productPicker(.cardID(.init(id)))))
+        XCTAssertNoDiff(
+            element.uiComponent,
+            .widget(.productPicker(.cardID(.init(id))))
+        )
     }
     
     // MARK: - Helpers
     
     private typealias DataType = AnywayPayment.Element.Parameter.UIAttributes.DataType
+    private typealias Pair = (key: String, value: String)
     
-    private func makePairsDataType() -> DataType {
+    private func makePairsDataType(
+        _ pair: Pair = ("a", "1"),
+        _ pairs: Pair...
+    ) -> DataType {
         
-        .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1")])
+        let pair = DataType.Pair(key: pair.key, value: pair.value)
+        let pairs = pairs.map { DataType.Pair(key: $0.key, value: $0.value) }
+        
+        return .pairs(pair, [pair] + pairs)
     }
     
     private func makeElement(
