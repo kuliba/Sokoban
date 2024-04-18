@@ -377,6 +377,7 @@ extension ProductData {
         case notActivated = "17"
         case temporarilyBlocked = "20"
         case blockedByClient = "21"
+        case blockedUnlockNotAvailable = "23"
         case unknown
     }
     

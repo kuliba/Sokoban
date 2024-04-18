@@ -255,6 +255,65 @@ extension ProductResponse {
                         paymentSystemImageMd5Hash: "d7516b59941d5acd06df25a64ea32660"
                     )
                 )
+            ),
+            ProductResponse.Product(
+                commonProperties: ProductResponse.CommonProperties(
+                    id: 10000206170,
+                    productType: .card,
+                    productState: [
+                        .default,
+                        .notActivated,
+                        .blocked,
+                        .notVisible,
+                        .blockedNotVisible
+                    ],
+                    order: 0,
+                    visibility: true,
+                    number: "2200980201039648",
+                    numberMasked: "2200-XXXX-XXXX-9648",
+                    accountNumber: "40817810952005000763",
+                    currency: "RUB",
+                    mainField: "МИР",
+                    additionalField: "Все включено",
+                    customName: "жжлдждж",
+                    productName: "MIR ADVANCED R-5",
+                    balance: nil,
+                    balanceRUB: nil,
+                    openDate: 1645995600000,
+                    ownerId: 10002169963,
+                    branchId: 2000,
+                    allowDebit: true,
+                    allowCredit: true,
+                    fontDesignColor: "FFFFFF",
+                    smallDesignMd5Hash: "7e7beff3d0827be85b8259135643bf62",
+                    mediumDesignMd5Hash: "ea17603d0024c339ed6ebb296e0e143b",
+                    largeDesignMd5Hash: "e00e7f7c112c4d487ab0218243c7b540",
+                    xlDesignMd5Hash: "54d46ff3ed19e49caccdaba134d0e08b",
+                    smallBackgroundDesignHash: "b0c85ac844ee9758af64ad2c066d5191",
+                    background: [
+                        "FFBB36"
+                    ]
+                ),
+                uniqueProperties: .card(
+                    ProductResponse.Card(
+                        cardID: 10000206170,
+                        idParent: nil,
+                        accountID: 10004335207,
+                        cardType: .regular,
+                        statusCard: .blockedUnlockNotAvailable,
+                        loanBaseParam: nil,
+                        statusPC: .blockedUnlockNotAvailable,
+                        name: "ТП ВСЕ ВКЛ2 МИР PW ГОД_",
+                        validThru: 1803762000000,
+                        status: .blockedByBank,
+                        expireDate: "02/27",
+                        holderName: "ANNA SOLOVеVA",
+                        product: "MIR ADVANCED R-5",
+                        branch: #"АКБ "ФОРА-БАНК" (АО)"#,
+                        paymentSystemName: "MIR",
+                        paymentSystemImageMd5Hash: "268b81ab6ff15601ccb77c9023f43544"
+                    )
+                )
             )
         ]
     )
