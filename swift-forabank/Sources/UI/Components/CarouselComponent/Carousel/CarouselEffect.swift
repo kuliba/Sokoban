@@ -9,5 +9,5 @@ import Foundation
 
 public enum CarouselEffect: Equatable {
     
-    case scrollTo(ProductGroup.ID, TimeInterval)
+    case scrollTo(ProductType, TimeInterval)
 }

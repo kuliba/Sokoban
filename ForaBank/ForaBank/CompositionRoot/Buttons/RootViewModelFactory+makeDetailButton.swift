@@ -28,6 +28,7 @@ extension RootViewModelFactory {
             
             let buttonLabel = { makeSuccessButtonLabel(option: .details) }
 
+            // TODO: reuse methods form `AnywayPayment`
             let getDetailService = RemoteService(
                 createRequest: RequestFactory.createGetOperationDetailByPaymentIDRequest,
                 performRequest: httpClient.performRequest(_:completion:),

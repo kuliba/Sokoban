@@ -9,10 +9,14 @@ import Foundation
 
 public struct ProductResponse: Equatable {
     
+    public let serial: String?
     public let products: [Product]
     
-    public init(products: [Product]) {
-        
+    public init(
+        serial: String?,
+        products: [Product]
+    ) {
+        self.serial = serial
         self.products = products
     }
     
@@ -178,12 +182,15 @@ public extension ProductResponse {
         
         case blockedByClient
         case active
+        case notActivated
+        case blockedUnlockAvailable
         case issuedToClient
         case blockedByBank
         case notBlocked
         case blockedDebet
         case blockedCredit
         case blocked
+        case blockedUnlockNotAvailable
     }
 
     enum CardType: Equatable {
@@ -214,5 +221,6 @@ public extension ProductResponse {
         case notActivated
         case temporarilyBlocked
         case blockedByClient
+        case blockedUnlockNotAvailable
     }
 }

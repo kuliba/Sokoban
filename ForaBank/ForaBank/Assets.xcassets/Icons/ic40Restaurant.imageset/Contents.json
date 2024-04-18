@@ -5,8 +5,8 @@
   },
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "ic40Restaurant.svg"
+      "filename" : "ic40Restaurant.svg",
+      "idiom" : "universal"
     }
   ],
   "properties" : {

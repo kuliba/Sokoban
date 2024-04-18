@@ -68,9 +68,17 @@ extension Config {
             fonts: .fontsConfig(appearance.size),
             sizes: .sizesConfig(appearance.size),
             colors: .preview,
-            copyImage: Image(systemName: "doc.on.doc")
+            images: .preview
         )
     }
+}
+
+extension Config.Images {
+    
+    static let preview: Self = .init(
+        copy: Image(systemName: "doc.on.doc"),
+        check: Image(systemName: "checkmark")
+    )
 }
 
 extension Config.Colors {
@@ -79,7 +87,8 @@ extension Config.Colors {
         foreground: .white,
         background: Color(red: 0.6, green: 0.6, blue: 0.6),
         rateFill: Color(red: 0.827, green: 0.827, blue: 0.827),
-        rateForeground: Color(red: 0.11, green: 0.11, blue: 0.11)
+        rateForeground: Color(red: 0.11, green: 0.11, blue: 0.11),
+        checkForeground: Color(red: 0.11, green: 0.11, blue: 0.11)
     )
 }
 
@@ -141,3 +150,12 @@ public extension CGFloat {
         return self / UIScreen.main.scale
     }
 }
+
+public extension Config {
+    
+    static let preview: Self = .config(.previewCard)
+    static let previewAccount: Self = .config(.previewAccount)
+    static let previewLoan: Self = .config(.previewLoan)
+    static let previewDeposit: Self = .config(.previewDeposit)
+}
+

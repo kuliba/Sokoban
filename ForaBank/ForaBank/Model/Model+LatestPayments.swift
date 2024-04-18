@@ -27,6 +27,7 @@ extension ModelAction {
             
             struct Request: Action, Equatable {
                 
+                let prePayment: Bool
                 let phone: String
             }
             
@@ -137,7 +138,11 @@ extension Model {
                     }
                     
                     self.paymentsByPhone.value[unformattedPhone] = data
-                    self.action.send(ModelAction.LatestPayments.BanksList.Response(result: .success(data)))
+                    
+                    if !payload.prePayment {
+                        
+                        self.action.send(ModelAction.LatestPayments.BanksList.Response(result: .success(data)))
+                    }
                     
                     do {
                         

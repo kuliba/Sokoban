@@ -342,6 +342,55 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "AccountInfoPanelTests",
+        "name" : "AccountInfoPanelTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "CardUITests",
+        "name" : "CardUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ProductDetailsUITests",
+        "name" : "ProductDetailsUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "RemoteServicesTests",
+        "name" : "RemoteServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "AnywayPaymentBackendTests",
+        "name" : "AnywayPaymentBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "AnywayPaymentCoreTests",
+        "name" : "AnywayPaymentCoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AnywayPaymentAdaptersTests",
+        "name" : "AnywayPaymentAdaptersTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "ProductDetailsUITests",
         "name" : "ProductDetailsUITests"
       }

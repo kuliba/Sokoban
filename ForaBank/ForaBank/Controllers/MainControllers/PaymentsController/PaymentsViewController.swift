@@ -10,7 +10,7 @@ import AVFoundation
 
 class PaymentsViewController: UIViewController {
     
-    var strongSelf: PaymentsServiceViewModel?
+    var strongSelf: PaymentsServicesViewModel?
     
     // QR data
     var qrData = [String: String]()

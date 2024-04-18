@@ -3,6 +3,7 @@
 extension ProductResponse {
     
     static let deposit: Self = .init(
+        serial: "d00365a56896bde5f4070fbcea58893f", 
         products: [
             ProductResponse.Product(
                 commonProperties: ProductResponse.CommonProperties(

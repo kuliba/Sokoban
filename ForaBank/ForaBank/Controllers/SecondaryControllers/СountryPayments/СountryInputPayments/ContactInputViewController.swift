@@ -473,6 +473,7 @@ class ContactInputViewController: UIViewController {
     func goToConfurmVC(with model: ConfirmViewControllerModel) {
         DispatchQueue.main.async {
             let vc = ContactConfurmViewController()
+            vc.getUImage = { self.model.images.value[$0]?.uiImage }
             vc.operatorsViewModel = self.operatorsViewModel
             vc.title = "Подтвердите реквизиты"
             vc.confurmVCModel = model

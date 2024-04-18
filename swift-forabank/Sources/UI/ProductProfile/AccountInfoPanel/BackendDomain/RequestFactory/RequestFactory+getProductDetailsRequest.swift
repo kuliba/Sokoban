@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Services
+import RemoteServices
 
 public typealias GetProductDetailsRequestFactory = RequestFactory
 

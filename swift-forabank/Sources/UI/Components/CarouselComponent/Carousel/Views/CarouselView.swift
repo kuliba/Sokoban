@@ -7,22 +7,26 @@
 
 import SwiftUI
 
-public struct CarouselView<ProductView: View, NewProductButton: View, StickerView: View>: View {
+public struct CarouselView<Product, ProductView, NewProductButton, StickerView>: View
+where Product: CarouselProduct & Equatable & Identifiable,
+      ProductView: View,
+      NewProductButton: View,
+      StickerView: View {
 
-    let state: CarouselState
-    let event: (CarouselEvent) -> Void
+    private let state: State
+    private let event: (Event) -> Void
     
-    let productView: (Product) -> ProductView
-    let stickerView: (Product) -> StickerView?
-    let newProductButton: () -> NewProductButton?
+    private let productView: (Product) -> ProductView
+    private let stickerView: () -> StickerView?
+    private let newProductButton: () -> NewProductButton?
     
-    let config: CarouselComponentConfig
-    
+    private let config: CarouselComponentConfig
+        
     public init(
-        state: CarouselState,
-        event: @escaping (CarouselEvent) -> Void,
+        state: State,
+        event: @escaping (Event) -> Void,
         productView: @escaping (Product) -> ProductView,
-        stickerView: @escaping (Product) -> StickerView?,
+        stickerView: @escaping () -> StickerView?,
         newProductButton: @escaping () -> NewProductButton?,
         config: CarouselComponentConfig
     ) {
@@ -45,12 +49,12 @@ public struct CarouselView<ProductView: View, NewProductButton: View, StickerVie
             VStack() {
                 
                 SelectorView(
-                    state: state.selector,
-                    event: { event(.select($0, delay: 0.2)) }, 
+                    selector: state.selector,
+                    action: { event(.select($0, delay: 0.2)) }, 
                     config: config.selector
                 )
                 
-                ProductGroupsView<ProductView, NewProductButton, StickerView>(
+                ProductGroupsView<Product, ProductView, NewProductButton, StickerView>(
                     state: state,
                     groups: state.productGroups,
                     event: event,
@@ -67,4 +71,10 @@ public struct CarouselView<ProductView: View, NewProductButton: View, StickerVie
         
         state.productGroups.isEmpty
     }
+}
+
+public extension CarouselView {
+    
+    typealias State = CarouselState<Product>
+    typealias Event = CarouselEvent<Product>
 }

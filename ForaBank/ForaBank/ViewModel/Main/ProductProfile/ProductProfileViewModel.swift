@@ -544,13 +544,21 @@ private extension ProductProfileViewModel {
                 case _ as ProductProfileViewModelAction.Show.MeToMeExternal:
                     if let productData = productData as? ProductLoanData, let loanAccount = self.model.products.value[.account]?.first(where: {$0.number == productData.settlementAccount}) {
                         
-                        let meToMeExternalViewModel = MeToMeExternalViewModel(productTo: loanAccount, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())})
+                        let meToMeExternalViewModel = MeToMeExternalViewModel(
+                            productTo: loanAccount,
+                            closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())},
+                            getUImage: { self.model.images.value[$0]?.uiImage }
+                        )
                         self.link = .meToMeExternal(meToMeExternalViewModel)
                     } else {
                         
-                        let meToMeExternalViewModel = MeToMeExternalViewModel(productTo: productData, closeAction: { [weak self] in
-                            self?.action.send(ProductProfileViewModelAction.Close.Link())
-                        })
+                        let meToMeExternalViewModel = MeToMeExternalViewModel(
+                            productTo: productData,
+                            closeAction: { [weak self] in
+                                self?.action.send(ProductProfileViewModelAction.Close.Link())
+                            },
+                            getUImage: { self.model.images.value[$0]?.uiImage }
+                        )
                         self.link = .meToMeExternal(meToMeExternalViewModel)
                     }
                 default:
@@ -1244,7 +1252,11 @@ private extension ProductProfileViewModel {
                             self.link = .productInfo(productInfoViewModel)
                             
                         case .statement:
-                            let productStatementViewModel = ProductStatementViewModel(product: productData, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())})
+                            let productStatementViewModel = ProductStatementViewModel(
+                                product: productData,
+                                closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())},
+                                getUImage: { self.model.images.value[$0]?.uiImage }
+                            )
                             self.link = .productStatement(productStatementViewModel)
                             
                         case .refillFromOtherProduct:
@@ -1789,7 +1801,11 @@ fileprivate extension NavigationBarView.ViewModel {
     
     func update(with product: ProductData) {
         
-        self.title = ProductView.ViewModel.name(product: product, style: .profile, creditProductName: .navigationTitle)
+        self.title = ProductView.ViewModel.name(
+            product: product,
+            style: .profile,
+            creditProductName: .productView
+        )
         self.subtitle = Self.subtitle(with: product)
         self.foreground = Self.textColor(with: product)
         self.background = Self.accentColor(with: product)

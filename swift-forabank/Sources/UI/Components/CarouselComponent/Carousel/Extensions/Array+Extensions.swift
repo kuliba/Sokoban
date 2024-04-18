@@ -18,13 +18,16 @@ extension Array where Element: Identifiable {
         
         firstIndex { $0.id == id }
     }
-    
 }
 
-extension Array where Element: Hashable {
+extension Array where Element: Equatable {
 
     var uniqueValues: [Element] {
-        var allowed = Set(self)
-        return compactMap { allowed.remove($0) }
+        
+        var allowed = [Element]()
+        self.forEach {
+            if !allowed.contains($0) { allowed.append($0) }
+        }
+        return allowed
     }
 }

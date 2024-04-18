@@ -7,6 +7,7 @@
 
 @_exported import AmountComponent
 @_exported import ButtonComponent
+@_exported import CarouselComponent
 @_exported import InfoComponent
 @_exported import CheckBoxComponent
 @_exported import ProductSelectComponent

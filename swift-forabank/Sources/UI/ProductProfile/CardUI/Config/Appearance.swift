@@ -10,7 +10,7 @@ import SwiftUI
 public struct Appearance {
     
     public let textColor: Color
-    public let background: Background
+    public var background: Background
     public var opacity: Double
     public let size: Size
     public let style: Style
@@ -44,7 +44,8 @@ public struct Appearance {
     
     public enum NameOfCreditProduct {
         
-        case navigationTitle
+        case productView
+        case myProductsSectionItem
         case cardTitle
     }
     

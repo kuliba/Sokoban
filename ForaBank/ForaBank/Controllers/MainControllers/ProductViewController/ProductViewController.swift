@@ -925,7 +925,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     }
     
     @objc func showAlert(sender: AnyObject) {
-        let viewController = PayViewController(card: card.card)
+        let viewController = PayViewController(card: card.card, getUImage: { self.model.images.value[$0]?.uiImage })
         halfScreen = false
         let navController = UINavigationController(rootViewController: viewController)
         navController.modalPresentationStyle = .custom

@@ -53,6 +53,7 @@ struct PaymentParameterSubscriber: PaymentParameterProtocol {
     let id: String
     let value: String
     let icon: String
+    let legalName: String?
     let subscriptionPurpose: String?
     let style: Payments.ParameterSubscriber.Style
 }

@@ -15,7 +15,7 @@ public struct Config {
     public let fonts: Fonts
     public let sizes: Sizes
     public let colors: Colors
-    public let copyImage: Image
+    public let images: Images
     
     public init(
         appearance: Appearance,
@@ -24,7 +24,7 @@ public struct Config {
         fonts: Fonts,
         sizes: Sizes,
         colors: Colors,
-        copyImage: Image
+        images: Images
     ) {
         self.appearance = appearance
         self.back = back
@@ -32,7 +32,7 @@ public struct Config {
         self.fonts = fonts
         self.sizes = sizes
         self.colors = colors
-        self.copyImage = copyImage
+        self.images = images
     }
 }
 
@@ -126,17 +126,31 @@ public extension Config {
         let background: Color
         let rateFill: Color
         let rateForeground: Color
+        let checkForeground: Color
         
         public init(
             foreground: Color,
             background: Color,
             rateFill: Color,
-            rateForeground: Color
+            rateForeground: Color,
+            checkForeground: Color
         ) {
             self.foreground = foreground
             self.background = background
             self.rateFill = rateFill
             self.rateForeground = rateForeground
+            self.checkForeground = checkForeground
+        }
+    }
+    
+    struct Images {
+        
+        public let copy: Image
+        public let check: Image
+
+        public init(copy: Image, check: Image) {
+            self.copy = copy
+            self.check = check
         }
     }
 }

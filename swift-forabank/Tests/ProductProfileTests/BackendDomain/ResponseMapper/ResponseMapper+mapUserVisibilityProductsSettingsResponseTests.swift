@@ -7,7 +7,7 @@
 
 import ProductProfile
 import XCTest
-import Services
+import RemoteServices
 
 final class ResponseMapper_mapUserVisibilityProductsSettingsResponseTests: XCTestCase {
     

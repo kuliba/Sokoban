@@ -7,24 +7,25 @@
 
 import ForaTools
 
+@available(*, deprecated)
 public struct UtilityPaymentFlowState<LastPayment, Operator, Service> {
     
     public var status: Status?
     
-    private var stack: Stack<Flow>
+    private var stack: Stack<Destination>
     
     public init(
-        _ flows: [Flow],
+        _ destinations: [Destination],
         status: Status? = nil
     ) {
-        self.stack = .init(flows)
+        self.stack = .init(destinations)
         self.status = status
     }
 }
 
 public extension UtilityPaymentFlowState {
 
-    var current: Flow? {
+    var current: Destination? {
         
         get { stack.top }
         set { stack.top = newValue }
@@ -36,7 +37,7 @@ public extension UtilityPaymentFlowState {
         set { if newValue { status = .inflight }}
     }
     
-    mutating func push(_ flow: Flow) {
+    mutating func push(_ flow: Destination) {
         
         stack.push(flow)
     }
@@ -51,7 +52,7 @@ public extension UtilityPaymentFlowState {
         case failure(ServiceFailure)
     }
     
-    typealias Flow = UtilityPaymentFlow<LastPayment, Operator, Service>
+    typealias Destination = UtilityPaymentDestination<LastPayment, Operator, Service>
 }
 
 extension UtilityPaymentFlowState: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}

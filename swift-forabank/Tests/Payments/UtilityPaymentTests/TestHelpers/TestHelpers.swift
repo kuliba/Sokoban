@@ -190,3 +190,11 @@ struct Service: Equatable {
     
     var id: String { value }
 }
+
+extension Array where Element == Operator {
+    
+    static let stub: Self = (0..<10)
+        .map { $0 }
+        .map(String.init)
+        .map { .init(value: $0) }
+}

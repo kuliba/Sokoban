@@ -5,7 +5,8 @@
 //  Created by Igor Malyarov on 15.03.2024.
 //
 
-public final class PaymentsTransfersFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse> {
+public final class PaymentsTransfersFlowEffectHandler<LastPayment, Operator, Service, StartPaymentResponse>
+where Operator: Identifiable {
     
     private let utilityFlowHandleEffect: UtilityFlowHandleEffect
     

@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-public struct CVVView: View {
+struct CVVView: View {
     
     let cardInfo: CardInfo
     @State private var showDotsAnimation: Bool
     let config: Config
     let action: () -> Void
     
-    public init(
+    init(
         cardInfo: CardInfo,
         showDotsAnimation: Bool = false,
         config: Config,
@@ -26,7 +26,7 @@ public struct CVVView: View {
         self.action = action
     }
     
-    public var body: some View {
+    var body: some View {
         
         VStack {
             
@@ -55,7 +55,7 @@ struct CVVView_Previews: PreviewProvider {
         
         CVVView(
             cardInfo: .previewWiggleTrue,
-            config: .config(.preview),
+            config: .config(.previewCard),
             action: { print("cvv tap")})
     }
 }

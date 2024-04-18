@@ -10,15 +10,14 @@ import Foundation
 import PrePaymentPicker
 import UtilityPayment
 
-private typealias PPOReducer = PrePaymentOptionsReducer<LastPayment, Operator>
-private typealias FlowReducer = UtilityPaymentFlowReducer<LastPayment, Operator, StartPayment, UtilityService>
+private typealias PPOReducer = PrepaymentOptionsReducer<LastPayment, Operator>
 private typealias UtilityReducer = UtilityFlowReducer<LastPayment, Operator, UtilityService, StartPayment>
-private typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, StartPayment>
+private typealias FlowReducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, StartPayment>
 
-private typealias PPOEffectHandler = PrePaymentOptionsEffectHandler<LastPayment, Operator>
+private typealias PPOEffectHandler = PrepaymentOptionsEffectHandler<LastPayment, Operator>
 private typealias PPEffectHandler = PrePaymentEffectHandler<LastPayment, Operator, StartPayment, UtilityService>
 private typealias UtilityEffectHandler = UtilityFlowEffectHandler<LastPayment, Operator, UtilityService, StartPayment>
-private typealias EffectHandler = PaymentsTransfersFlowEffectHandler<LastPayment, Operator, UtilityService, StartPayment>
+private typealias FlowEffectHandler = PaymentsTransfersFlowEffectHandler<LastPayment, Operator, UtilityService, StartPayment>
 
 extension PaymentsTransfersViewModel {
     
@@ -29,25 +28,15 @@ extension PaymentsTransfersViewModel {
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) -> PaymentsTransfersViewModel {
         
-        let prePaymentOptionsReducer = PPOReducer(observeLast: 3, pageSize: 10)
+        let prepaymentOptionsReducer = PPOReducer(observeLast: 3, pageSize: 10)
         
-        let utilityPaymentFlowReducer = FlowReducer(
-            prePaymentOptionsReduce: prePaymentOptionsReducer.reduce
+        let utilityReducer = UtilityReducer(
+            ppoReduce: prepaymentOptionsReducer.reduce(_:_:)
         )
         
-        let utilityReducer = UtilityReducer()
-        
-        let reducer = Reducer(
+        let flowReducer = FlowReducer(
             utilityReduce: utilityReducer.reduce
         )
-        
-        let loadLastPayments: PPOEffectHandler.LoadLastPayments = { completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion(flowSettings.loadLastPayments.result)
-            }
-        }
         
         let loadOperators: PPOEffectHandler.LoadOperators = { payload, completion in
             
@@ -57,9 +46,8 @@ extension PaymentsTransfersViewModel {
             }
         }
         
-        let ppoEffectHandler = PPOEffectHandler(
+        let optionsEffectHandler = PPOEffectHandler(
             debounce: debounce,
-            loadLastPayments: loadLastPayments,
             loadOperators: loadOperators,
             scheduler: scheduler
         )
@@ -80,16 +68,11 @@ extension PaymentsTransfersViewModel {
             }
         }
         
-        let ppEffectHandler = PPEffectHandler(
-            loadServices: loadServices,
-            startPayment: startPayment
-        )
-                
-        let loadOptions: UtilityEffectHandler.LoadOptions = { completion in
+        let loadPrepayment: UtilityEffectHandler.LoadPrepaymentOptions = { completion in
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 
-                completion(flowSettings.loadOptions.result)
+                completion(flowSettings.loadPrepayment.result)
             }
         }
         
@@ -102,35 +85,22 @@ extension PaymentsTransfersViewModel {
         }
         
         let utilityFlowEffectHandler = UtilityEffectHandler(
-            loadOptions: loadOptions,
+            loadPrepaymentOptions: loadPrepayment,
             loadServices: loadServices,
+            optionsEffectHandle: optionsEffectHandler.handleEffect,
             startPayment: startPayment2
         )
         
-        let effectHandler = EffectHandler(
+        let flowEffectHandler = FlowEffectHandler(
             utilityFlowHandleEffect: utilityFlowEffectHandler.handleEffect
         )
         
         return .init(
             initialState: initialState,
-            flowReduce: reducer.reduce,
-            flowHandleEffect: effectHandler.handleEffect,
+            flowReduce: flowReducer.reduce,
+            flowHandleEffect: flowEffectHandler.handleEffect,
             scheduler: scheduler
         )
-    }
-}
-
-private extension FlowSettings.LoadLastPayments {
-    
-    var result: PPOEffectHandler.LoadLastPaymentsResult {
-        
-        switch self {
-        case .failure:
-            return .failure(.connectivityError)
-            
-        case .success:
-            return .success(.init())
-        }
     }
 }
 
@@ -148,9 +118,9 @@ private extension FlowSettings.LoadOperators {
     }
 }
 
-private extension FlowSettings.LoadOptions {
+private extension FlowSettings.LoadPrepayment {
     
-    var result: UtilityEffectHandler.LoadOptionsResult {
+    var result: UtilityEffectHandler.LoadPrepaymentOptionsResult {
         
         switch self {
         case .failure:

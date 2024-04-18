@@ -309,7 +309,24 @@ class PaymentsOperationViewModel: ObservableObject {
                         }
                         
                     case let payload as PaymentsSectionViewModelAction.BankSelector.Show:
-                        sheet = .init(type: .contacts(payload.viewModel))
+         
+                        let contactsViewModel: ContactsViewModel = {
+                            
+                            switch payload.type {
+                            case .banks:
+                                let itemPhone = self.items.first(where: { $0.id == Payments.Parameter.Identifier.sfpPhone.rawValue })
+                                return self.model.makeContactsViewModel(forMode: .select(.banks(phone: itemPhone?.value.current)))
+                                
+                            case .banksFullInfo:
+                                return self.model.makeContactsViewModel(forMode: .select(.banksFullInfo))
+                            }
+                            
+                        }()
+                        
+                        bind(contactsViewModel: contactsViewModel)
+                        
+                        sheet = .init(type: .contacts(contactsViewModel))
+                        
                         // hide keyboard
                         UIApplication.shared.endEditing()
                         
@@ -443,6 +460,22 @@ class PaymentsOperationViewModel: ObservableObject {
             }
             .store(in: &bindings)
     }
+    
+    private func bind(contactsViewModel: ContactsViewModel) {
+            
+            contactsViewModel.action
+                .compactMap({$0 as? ContactsViewModelAction.BankSelected })
+                .map(\.bankId)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] bankId in
+                    
+                    self?.sheet = nil
+                    
+                    let bankItem = self?.items.compactMap({ $0 as? PaymentsSelectBankView.ViewModel }).first
+                    bankItem?.action.send(PaymentsParameterViewModelAction.SelectBank.List.BankItemTapped(id: bankId))
+                    
+                }.store(in: &bindings)
+        }
 }
 
 // MARK: - Sections Reducers
