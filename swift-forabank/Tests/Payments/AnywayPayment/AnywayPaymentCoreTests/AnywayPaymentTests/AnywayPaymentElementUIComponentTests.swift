@@ -29,7 +29,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     
     // MARK: - parameter
     
-    func test_uiComponent_shouldDeliverHiddenForOutputNumber_select() {
+    func test_uiComponent_shouldDeliverHiddenParameterTypeForOutputNumber_select() {
         
         let element = makeElement(
             type: .select,
@@ -40,7 +40,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .hidden)
     }
     
-    func test_uiComponent_shouldDeliverHiddenForOutputPairs_select() {
+    func test_uiComponent_shouldDeliverHiddenParameterTypeForOutputPairs_select() {
         
         let element = makeElement(
             type: .select,
@@ -51,7 +51,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .hidden)
     }
     
-    func test_uiComponent_shouldDeliverHiddenForOutputString_select() {
+    func test_uiComponent_shouldDeliverHiddenParameterTypeForOutputString_select() {
         
         let element = makeElement(
             type: .select,
@@ -62,7 +62,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .hidden)
     }
     
-    func test_uiComponent_shouldDeliverHiddenForOutputNumber_maskList() {
+    func test_uiComponent_shouldDeliverHiddenParameterTypeForOutputNumber_maskList() {
         
         let element = makeElement(
             type: .maskList,
@@ -73,7 +73,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .hidden)
     }
     
-    func test_uiComponent_shouldDeliverHiddenForOutputPairs_maskList() {
+    func test_uiComponent_shouldDeliverHiddenParameterTypeForOutputPairs_maskList() {
         
         let element = makeElement(
             type: .maskList,
@@ -84,7 +84,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .hidden)
     }
     
-    func test_uiComponent_shouldDeliverHiddenForOutputString_maskList() {
+    func test_uiComponent_shouldDeliverHiddenParameterTypeForOutputString_maskList() {
         
         let element = makeElement(
             type: .maskList,
@@ -95,7 +95,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .hidden)
     }
     
-    func test_uiComponent_shouldDeliverHiddenForOutputNumber_input() {
+    func test_uiComponent_shouldDeliverHiddenParameterTypeForOutputNumber_input() {
         
         let element = makeElement(
             type: .input,
@@ -106,7 +106,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .hidden)
     }
     
-    func test_uiComponent_shouldDeliverHiddenForOutputPairs_input() {
+    func test_uiComponent_shouldDeliverHiddenParameterTypeForOutputPairs_input() {
         
         let element = makeElement(
             type: .input,
@@ -117,7 +117,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .hidden)
     }
     
-    func test_uiComponent_shouldDeliverHiddenForOutputString_input() {
+    func test_uiComponent_shouldDeliverHiddenParameterTypeForOutputString_input() {
         
         let element = makeElement(
             type: .input,
@@ -128,7 +128,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .hidden)
     }
     
-    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_select() {
+    func test_uiComponent_shouldDeliverNonEditableParameterTypeForConstantNumber_select() {
         
         let element = makeElement(
             type: .select,
@@ -139,7 +139,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .nonEditable)
     }
     
-    func test_uiComponent_shouldDeliverNonEditableForConstantPairs_select() {
+    func test_uiComponent_shouldDeliverNonEditableParameterTypeForConstantPairs_select() {
         
         let element = makeElement(
             type: .select,
@@ -150,7 +150,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .nonEditable)
     }
     
-    func test_uiComponent_shouldDeliverNonEditableForConstantString_select() {
+    func test_uiComponent_shouldDeliverNonEditableParameterTypeForConstantString_select() {
         
         let element = makeElement(
             type: .select,
@@ -161,7 +161,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .nonEditable)
     }
     
-    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_maskList() {
+    func test_uiComponent_shouldDeliverNonEditableParameterTypeForConstantNumber_maskList() {
         
         let element = makeElement(
             type: .maskList,
@@ -172,7 +172,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .nonEditable)
     }
     
-    func test_uiComponent_shouldDeliverNonEditableForConstantPairs_maskList() {
+    func test_uiComponent_shouldDeliverNonEditableParameterTypeForConstantPairs_maskList() {
         
         let element = makeElement(
             type: .maskList,
@@ -183,7 +183,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .nonEditable)
     }
     
-    func test_uiComponent_shouldDeliverNonEditableForConstantString_maskList() {
+    func test_uiComponent_shouldDeliverNonEditableParameterTypeForConstantString_maskList() {
         
         let element = makeElement(
             type: .maskList,
@@ -194,7 +194,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.parameterType, .nonEditable)
     }
     
-    func test_uiComponent_shouldDeliverNonEditableForConstantNumber_input() {
+    func test_uiComponent_shouldDeliverNonEditableParameterTypeForConstantNumber_input() {
         
         let element = makeElement(
             type: .input,
@@ -226,6 +226,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         XCTAssertNoDiff(element.parameterType, .nonEditable)
     }
+    
+    // MARK: - parameter
     
     func test_uiComponent_shouldDeliverTextInputForInputString() {
         
