@@ -84,6 +84,7 @@ extension AnywayPayment.UIComponent.Parameter {
     
     public enum ParameterType: Equatable {
         
+        case hidden
         case select(Option, [Option])
         case textInput
         case unknown
@@ -142,6 +143,9 @@ private extension AnywayPayment.Element.Parameter.UIAttributes {
     var uiComponent: AnywayPayment.UIComponent.Parameter.ParameterType {
         
         switch (type, viewType, dataType) {
+        case (_, .output, _):
+            return .hidden
+            
         case (.input, .input, .string):
             return .textInput
             

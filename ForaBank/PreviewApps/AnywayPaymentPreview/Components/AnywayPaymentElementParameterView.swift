@@ -31,7 +31,7 @@ struct AnywayPaymentElementParameterView: View {
                 onChange: event
             )
             
-        case .unknown:
+        case .hidden, .unknown:
             EmptyView()
         }
     }
