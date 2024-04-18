@@ -9,18 +9,33 @@ extension AnywayPayment.Element.Parameter {
     
     var entry: Entry? {
         
-        switch uiAttributes.dataType {
+        switch uiAttributes.viewType {
+        case .constant:
+            switch uiAttributes.dataType {
+            case .number, .string:
+                return field.value.map { .nonEditable(.string($0.rawValue)) }
+
+            case let .pairs(pair, _):
+                return .nonEditable(.pair(key: pair.key, value: pair.value))
+            }
             
-        case .number, .string:
-            return field.value.map { .nonEditable(.string($0.rawValue)) }
+        case .input:
+            return nil
             
-        case let .pairs(pair, _):
-            return.nonEditable(.pair(key: pair.key, value: pair.value))
+        case .output:
+            switch uiAttributes.dataType {
+            case .number, .string:
+                return field.value.map { .hidden($0.rawValue) }
+                
+            case let .pairs(pair, _):
+                return .hidden(pair.key)
+            }
         }
     }
     
     enum Entry: Equatable {
         
+        case hidden(String)
         case nonEditable(Field)
     }
 }
@@ -50,6 +65,30 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
             viewType: .constant,
             dataType: .number,
             type: .input
+        )
+        
+        XCTAssertNil(parameter.entry)
+    }
+    
+    func test_entry_shouldDeliverNilOnNilValue_constantViewType_numberDateType_selectType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .constant,
+            dataType: .number,
+            type: .select
+        )
+        
+        XCTAssertNil(parameter.entry)
+    }
+    
+    func test_entry_shouldDeliverNilOnNilValue_constantViewType_numberDateType_maskListType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .constant,
+            dataType: .number,
+            type: .maskList
         )
         
         XCTAssertNil(parameter.entry)
@@ -105,6 +144,30 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
         XCTAssertNil(parameter.entry)
     }
     
+    func test_entry_shouldDeliverNilOnNilValue_constantViewType_stringDateType_selectType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .constant,
+            dataType: .string,
+            type: .select
+        )
+        
+        XCTAssertNil(parameter.entry)
+    }
+    
+    func test_entry_shouldDeliverNilOnNilValue_constantViewType_stringDateType_maskListType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .constant,
+            dataType: .string,
+            type: .maskList
+        )
+        
+        XCTAssertNil(parameter.entry)
+    }
+    
     func test_entry_shouldDeliverNonEditableStringValueOn_constantViewType_stringDateType_inputType() {
         
         let parameter = makeParameter(
@@ -155,6 +218,30 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
         XCTAssertNoDiff(parameter.entry, nonEditable("b", "B"))
     }
     
+    func test_entry_shouldDeliverNonEditablePairValueOnNilValue_constantViewType_pairsDateType_selectType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .constant,
+            dataType: makePairsDataType(("b", "B"), ("a", "A")),
+            type: .select
+        )
+        
+        XCTAssertNoDiff(parameter.entry, nonEditable("b", "B"))
+    }
+    
+    func test_entry_shouldDeliverNonEditablePairValueOnNilValue_constantViewType_pairsDateType_maskListType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .constant,
+            dataType: makePairsDataType(("b", "B"), ("a", "A")),
+            type: .maskList
+        )
+        
+        XCTAssertNoDiff(parameter.entry, nonEditable("b", "B"))
+    }
+    
     func test_entry_shouldDeliverNonEditablePairValueOn_constantViewType_pairsDateType_inputType() {
         
         let parameter = makeParameter(
@@ -189,6 +276,230 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
         )
         
         XCTAssertNoDiff(parameter.entry, nonEditable("b", "B"))
+    }
+    
+    // MARK: - output viewType
+    
+    // MARK: number dataType
+    
+    func test_entry_shouldDeliverNilOnNilValue_outputViewType_numberDateType_inputType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .output,
+            dataType: .number,
+            type: .input
+        )
+        
+        XCTAssertNil(parameter.entry)
+    }
+    
+    func test_entry_shouldDeliverNilOnNilValue_outputViewType_numberDateType_selectType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .output,
+            dataType: .number,
+            type: .select
+        )
+        
+        XCTAssertNil(parameter.entry)
+    }
+    
+    func test_entry_shouldDeliverNilOnNilValue_outputViewType_numberDateType_maskListType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .output,
+            dataType: .number,
+            type: .maskList
+        )
+        
+        XCTAssertNil(parameter.entry)
+    }
+    
+    func test_entry_shouldDeliverHiddenStringValueOn_outputViewType_numberDateType_inputType() {
+        
+        let parameter = makeParameter(
+            value: "12345",
+            viewType: .output,
+            dataType: .number,
+            type: .input
+        )
+        
+        XCTAssertNoDiff(parameter.entry, .hidden("12345"))
+    }
+    
+    func test_entry_shouldDeliverHiddenStringValueOn_outputViewType_numberDateType_selectType() {
+        
+        let parameter = makeParameter(
+            value: "12345",
+            viewType: .output,
+            dataType: .number,
+            type: .select
+        )
+        
+        XCTAssertNoDiff(parameter.entry, .hidden("12345"))
+    }
+    
+    func test_entry_shouldDeliverHiddenStringValueOn_outputViewType_numberDateType_maskListType() {
+        
+        let parameter = makeParameter(
+            value: "12345",
+            viewType: .output,
+            dataType: .number,
+            type: .maskList
+        )
+        
+        XCTAssertNoDiff(parameter.entry, .hidden("12345"))
+    }
+    
+    // MARK: string dataType
+    
+    func test_entry_shouldDeliverNilOnNilValue_outputViewType_stringDateType_inputType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .output,
+            dataType: .string,
+            type: .input
+        )
+        
+        XCTAssertNil(parameter.entry)
+    }
+    
+    func test_entry_shouldDeliverNilOnNilValue_outputViewType_stringDateType_selectType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .output,
+            dataType: .string,
+            type: .select
+        )
+        
+        XCTAssertNil(parameter.entry)
+    }
+    
+    func test_entry_shouldDeliverNilOnNilValue_outputViewType_stringDateType_maskListType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .output,
+            dataType: .string,
+            type: .maskList
+        )
+        
+        XCTAssertNil(parameter.entry)
+    }
+    
+    func test_entry_shouldDeliverHiddenStringValueOn_outputViewType_stringDateType_inputType() {
+        
+        let parameter = makeParameter(
+            value: "abcd",
+            viewType: .output,
+            dataType: .string,
+            type: .input
+        )
+        
+        XCTAssertNoDiff(parameter.entry, .hidden("abcd"))
+    }
+    
+    func test_entry_shouldDeliverHiddenStringValueOn_outputViewType_stringDateType_selectType() {
+        
+        let parameter = makeParameter(
+            value: "abcd",
+            viewType: .output,
+            dataType: .string,
+            type: .select
+        )
+        
+        XCTAssertNoDiff(parameter.entry, .hidden("abcd"))
+    }
+    
+    func test_entry_shouldDeliverHiddenStringValueOn_outputViewType_stringDateType_maskListType() {
+        
+        let parameter = makeParameter(
+            value: "abcd",
+            viewType: .output,
+            dataType: .string,
+            type: .maskList
+        )
+        
+        XCTAssertNoDiff(parameter.entry, .hidden("abcd"))
+    }
+    
+    // MARK: pair dataType
+    
+    func test_entry_shouldDeliverHiddenPairValueOnNilValue_outputViewType_pairsDateType_inputType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .output,
+            dataType: makePairsDataType(("b", "B"), ("a", "A")),
+            type: .input
+        )
+        
+        XCTAssertNoDiff(parameter.entry, .hidden("b"))
+    }
+    
+    func test_entry_shouldDeliverHiddenPairValueOnNilValue_outputViewType_pairsDateType_selectType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .output,
+            dataType: makePairsDataType(("b", "B"), ("a", "A")),
+            type: .select
+        )
+        
+        XCTAssertNoDiff(parameter.entry, .hidden("b"))
+    }
+    
+    func test_entry_shouldDeliverHiddenPairValueOnNilValue_outputViewType_pairsDateType_maskListType() {
+        
+        let parameter = makeParameter(
+            value: nil,
+            viewType: .output,
+            dataType: makePairsDataType(("b", "B"), ("a", "A")),
+            type: .maskList
+        )
+        
+        XCTAssertNoDiff(parameter.entry, .hidden("b"))
+    }
+    
+    func test_entry_shouldDeliverHiddenPairValueOn_outputViewType_pairsDateType_inputType() {
+        
+        let parameter = makeParameter(
+            value: "abcd",
+            viewType: .output,
+            dataType: makePairsDataType(("b", "B"), ("a", "A")),
+            type: .input
+        )
+        
+        XCTAssertNoDiff(parameter.entry, .hidden("b"))
+    }
+    
+    func test_entry_shouldDeliverHiddenPairValueOn_outputViewType_pairsDateType_selectType() {
+        
+        let parameter = makeParameter(
+            value: "abcd",
+            viewType: .output,
+            dataType: makePairsDataType(("b", "B"), ("a", "A")),
+            type: .select
+        )
+        
+        XCTAssertNoDiff(parameter.entry, .hidden("b"))
+    }
+    
+    func test_entry_shouldDeliverHiddenPairValueOn_outputViewType_pairsDateType_maskListType() {
+        
+        let parameter = makeParameter(
+            value: "abcd",
+            viewType: .output,
+            dataType: makePairsDataType(("b", "B"), ("a", "A")),
+            type: .maskList
+        )
+        
+        XCTAssertNoDiff(parameter.entry, .hidden("b"))
     }
     
     // MARK: - Helpers
