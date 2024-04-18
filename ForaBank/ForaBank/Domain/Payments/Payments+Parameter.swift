@@ -1668,6 +1668,37 @@ extension Payments {
     }
 }
 
+extension Payments.ParameterHeader.Icon {
+    
+    static func headerIconForOperationSource(
+        _ source: Payments.Operation.Source?
+    ) -> Payments.ParameterHeader.Icon? {
+        
+        switch source {
+            case .sfp(_, let bankId):
+                return (bankId != .foraBankId) ? .name("ic24Sbp") : nil
+            default:
+                return .name("ic24Sbp")
+        }
+    }
+    
+    static func headerIconForBankParameters(
+        _ parameters: [PaymentsParameterRepresentable]
+    ) -> Payments.ParameterHeader.Icon? {
+        
+        let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
+        
+        guard let bankParameter = parameters.first(where: { $0.id == bankParameterId }),
+              let bankParameterValue = bankParameter.value,
+              bankParameterValue != .foraBankId else {
+            
+            return nil
+        }
+        
+        return .name("ic24Sbp")
+    }
+}
+
 extension Payments.Validation.RulesSystem {
     
     static let baseName: Payments.Validation.RulesSystem = {
@@ -1826,4 +1857,9 @@ extension Payments.ParameterSelectBank.Option {
           }
       }
 
+}
+
+private extension String {
+    
+    static let foraBankId = "100000000217"
 }

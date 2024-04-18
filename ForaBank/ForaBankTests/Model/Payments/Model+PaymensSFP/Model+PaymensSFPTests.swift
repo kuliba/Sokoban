@@ -14,7 +14,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         
         let source: Payments.Operation.Source? = nil
         let productID = "abc"
-        let sut: Model = .mockWithEmptyExcept()
+        let sut = makeSUT()
         
         let result = sut.productWithSource(
             source: source,
@@ -39,7 +39,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         sources.forEach { source in
             
             let productID = "abc"
-            let sut: Model = .mockWithEmptyExcept()
+            let sut = makeSUT()
             
             let result = sut.productWithSource(
                 source: source,
@@ -55,7 +55,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         let templateID = 123
         let source: Payments.Operation.Source? = .template(templateID)
         let productID = "abc"
-        let sut: Model = .mockWithEmptyExcept()
+        let sut = makeSUT()
         
         let result = sut.productWithSource(
             source: source,
@@ -72,7 +72,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         let payerAccountID = 4567
         let source: Payments.Operation.Source? = .template(templateID)
         let productID = "abc"
-        let sut: Model = .mockWithEmptyExcept()
+        let sut = makeSUT()
         sut.paymentTemplates.value = [makeTemplate(
             templateID: templateID,
             payerAccountID: payerAccountID
@@ -89,7 +89,7 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     func test_bankParameter_sourceSFP_shouldReturnParameter() {
         
-        let sut: Model = .mockWithEmptyExcept()
+        let sut = makeSUT()
         let operation = Payments.Operation(
             service: .sfp,
             source: .sfp(phone: "phone", bankId: "1")
@@ -107,7 +107,7 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     func test_bankParameter_sourceLatestPayment_shouldReturnParameter() {
         
-        let sut: Model = .mockWithEmptyExcept()
+        let sut = makeSUT()
         sut.bankList.value = [.dummy(id: "1", bankType: .sfp, bankCountry: "RU")]
         sut.latestPayments.value = [PaymentGeneralData(
             id: 1,
@@ -135,22 +135,18 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNoDiff(bankParameter.parameter.id, Self.bankParameterTest.id)
     }
     
-    typealias PPIcon = Payments.ParameterHeader.Icon
-    
     func test_getHeaderIconForOperation_sfpForaBank_returnsNil() {
         
-        let source = Payments.Operation.Source.sfp(phone: "123", bankId: .foraBankId)
-        let sut: Model = .mockWithEmptyExcept()
-        let icon = sut.getHeaderIconForOperation(source: source)
+        let source = makeSPFSource(bankID: .foraBankId)
+        let icon = PPIcon.headerIconForOperationSource(source)
         
         XCTAssertNil(icon)
     }
     
     func test_getHeaderIconForOperation_sfpNonForaBank_returnsSbpIcon() {
         
-        let source = Payments.Operation.Source.sfp(phone: "123", bankId: "123123123")
-        let sut: Model = .mockWithEmptyExcept()
-        let icon = sut.getHeaderIconForOperation(source: source)
+        let source = makeSPFSource(bankID: "123123123")
+        let icon = PPIcon.headerIconForOperationSource(source)
         
         XCTAssertEqual(icon, .testSBPIcon)
     }
@@ -158,79 +154,67 @@ final class Model_PaymensSFPTests: XCTestCase {
     func test_getHeaderIconForOperation_otherSource_returnsSbpIcon() {
         
         let source = Payments.Operation.Source.avtodor
-        let sut: Model = .mockWithEmptyExcept()
-        let icon = sut.getHeaderIconForOperation(source: source)
+        let icon = PPIcon.headerIconForOperationSource(source)
         
         XCTAssertEqual(icon, .testSBPIcon)
     }
     
     func test_getHeaderIconForOperation_nilSource_returnsSbpIcon() {
         
-        let source: Payments.Operation.Source? = nil
-        let sut: Model = .mockWithEmptyExcept()
-        let icon = sut.getHeaderIconForOperation(source: source)
+        let icon = PPIcon.headerIconForOperationSource(nil)
         
         XCTAssertEqual(icon, .testSBPIcon)
     }
     
     func test_getHeaderIconForParameters_emptyParameters_returnsNil() {
         
-        let parameters: [PaymentsParameterRepresentable] = []
-        let sut: Model = .mockWithEmptyExcept()
-        let icon = sut.getHeaderIconForParameters(parameters)
+        let icon = PPIcon.headerIconForBankParameters([])
         
         XCTAssertNil(icon)
     }
     
     func test_getHeaderIconForParameters_sfpBankNotFora_returnsSbpIcon() {
         
-        let parameter = Payments.ParameterSelectBank.getTestParametersWithFora()
-        let parameters: [PaymentsParameterRepresentable] = [parameter]
-        let sut: Model = .mockWithEmptyExcept()
-        let icon = sut.getHeaderIconForParameters(parameters)
+        let icon = PPIcon.headerIconForBankParameters(makeParameter())
         
         XCTAssertEqual(icon, .testSBPIcon)
     }
     
     func test_getHeaderIconForParameters_sfpBankIsFora_returnsNil() {
         
-        let parameter = Payments.ParameterSelectBank.getTestParametersWithFora(value: .foraBankId)
-        let parameters: [PaymentsParameterRepresentable] = [parameter]
-        let sut: Model = .mockWithEmptyExcept()
-        let icon = sut.getHeaderIconForParameters(parameters)
+        let icon = PPIcon.headerIconForBankParameters(makeParameter(.foraBankId))
         
         XCTAssertNil(icon)
     }
     
     func test_getHeaderIconForParameters_sfpBankWithEmptyVal_returnsSbpIcon() {
         
-        let parameter = Payments.ParameterSelectBank.getTestParametersWithFora(value: "")
-        let parameters: [PaymentsParameterRepresentable] = [parameter]
-        let sut: Model = .mockWithEmptyExcept()
-        let icon = sut.getHeaderIconForParameters(parameters)
+        let icon = PPIcon.headerIconForBankParameters(makeParameter(""))
         
         XCTAssertEqual(icon, .testSBPIcon)
     }
     
     func test_getHeaderIconForParameters_hasSfpBankAndIncorrectParameter_returnsSbpIcon() {
         
-        let testParameter1 = Payments.ParameterSelectBank.getTestParametersWithFora()
-        let testParameter2 = Payments.ParameterSelectBank.getTestParametersWithFora(
-            bankId: "bankId",
-            value: "value",
-            name: "name"
-        )
-
-        let parameters: [PaymentsParameterRepresentable] = [
-            testParameter1, testParameter2
-        ]
-        let sut: Model = .mockWithEmptyExcept()
-        let icon = sut.getHeaderIconForParameters(parameters)
+        let icon = PPIcon.headerIconForBankParameters(makeParametersWithFora())
         
         XCTAssertEqual(icon, .testSBPIcon)
     }
     
     // MARK: - Helpers
+    private typealias PPIcon = Payments.ParameterHeader.Icon
+    
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> Model {
+        
+        let sut: Model = .mockWithEmptyExcept()
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        return sut
+    }
     
     private func makeTemplate(
         templateID: Int,
@@ -250,6 +234,28 @@ final class Model_PaymensSFPTests: XCTestCase {
                 )
             ]
         )
+    }
+    
+    private func makeSPFSource(bankID: String) -> Payments.Operation.Source {
+        
+        .sfp(phone: "123", bankId: bankID)
+    }
+    
+    private func makeParameter(_ value: String = "1crt88888881") -> [PaymentsParameterRepresentable] {
+        
+        [Payments.ParameterSelectBank.getTestParametersWithFora(value: value)]
+    }
+    
+    private func makeParametersWithFora() -> [PaymentsParameterRepresentable] {
+        
+        let testParameter1 = Payments.ParameterSelectBank.getTestParametersWithFora()
+        let testParameter2 = Payments.ParameterSelectBank.getTestParametersWithFora(
+            bankId: "bankId",
+            value: "value",
+            name: "name"
+        )
+        
+        return [testParameter1, testParameter2]
     }
 }
 
@@ -285,6 +291,7 @@ extension Payments.ParameterHeader.Icon: Equatable {
         }
     }
 }
+
 
 private extension String {
     

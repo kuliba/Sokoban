@@ -19,13 +19,11 @@ extension Model {
             let operatorParameter = Payments.ParameterOperator(operatorType: .sfp)
             
             // header
-            let headerIcon: Payments.ParameterHeader.Icon? = getHeaderIconForOperation(source: operation.source)
-            
             let headerParameter: Payments.ParameterHeader = parameterHeader(
                 source: operation.source,
                 header: .init(
                     title: "Перевод по номеру телефона",
-                    icon: headerIcon
+                    icon: .headerIconForOperationSource(operation.source)
                 )
             )
             
@@ -160,8 +158,7 @@ extension Model {
             
         case Payments.Parameter.Identifier.header.rawValue:
             
-            let headerIcon: Payments.ParameterHeader.Icon? = getHeaderIconForParameters(parameters)
-            return Payments.ParameterHeader(title: "Подтвердите реквизиты", icon: headerIcon)
+            return Payments.ParameterHeader(title: "Подтвердите реквизиты", icon: .headerIconForBankParameters(parameters))
             
         case Payments.Parameter.Identifier.sfpMessage.rawValue:
             
@@ -364,38 +361,6 @@ extension Model {
         )
     }
 }
-
- extension Model {
-    
-     func getHeaderIconForOperation(
-        source: Payments.Operation.Source?
-     ) -> Payments.ParameterHeader.Icon? {
-         
-         if case let .sfp(_, bankId) = source {
-             return (bankId != .foraBankId) ? .name("ic24Sbp") : nil
-             
-         } else {
-             return .name("ic24Sbp")
-         }
-     }
-     
-     func getHeaderIconForParameters(
-        _ parameters: [PaymentsParameterRepresentable]
-     ) -> Payments.ParameterHeader.Icon? {
-         
-         let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
-         if let bankParameter = parameters.first(where: { $0.id == bankParameterId }),
-            let bankParameterValue = bankParameter.value,
-            bankParameterValue != .foraBankId {
-            return .name("ic24Sbp")
-             
-         } else {
-             return nil
-         }
-     }
-}
-
-
 
 extension Payments.ParameterAmount {
     
@@ -618,9 +583,4 @@ extension Model {
         title: "Номер телефона получателя",
         countryCode: .russian
     )
-}
-
-private extension String {
-    
-    static let foraBankId = "100000000217"
 }
