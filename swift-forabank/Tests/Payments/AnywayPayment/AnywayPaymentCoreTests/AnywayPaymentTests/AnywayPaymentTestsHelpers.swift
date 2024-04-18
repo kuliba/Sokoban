@@ -233,13 +233,17 @@ func makeAnywayPaymentParameter(
 
 func makeAnywayPaymentParameter(
     id: String = anyMessage(),
-    value: String? = anyMessage()
+    value: String? = anyMessage(),
+    viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType = .input
 ) -> AnywayPayment.Element.Parameter {
     
     makeAnywayPaymentParameter(
         field: makeAnywayPaymentElementParameterField(
             id: id,
             value: value
+        ),
+        uiAttributes: makeAnywayPaymentElementParameterUIAttributes(
+            viewType: viewType
         )
     )
 }
