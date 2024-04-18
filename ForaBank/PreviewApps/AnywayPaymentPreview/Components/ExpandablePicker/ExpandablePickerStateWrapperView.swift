@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ExpandablePickerStateWrapperView<Item, ItemView>: View
-where Item: Hashable,
+where Item: Identifiable & Equatable,
       ItemView: View {
     
     @StateObject var viewModel: ExpandablePickerViewModel<Item>
@@ -22,17 +22,5 @@ where Item: Hashable,
             event: viewModel.event(_:),
             itemView: itemView
         )
-    }
-}
-
-struct ExpandablePickerStateWrapperView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        ExpandablePickerStateWrapperView(
-            viewModel: .preview,
-            itemView: { Text($0) }
-        )
-        .padding()
     }
 }

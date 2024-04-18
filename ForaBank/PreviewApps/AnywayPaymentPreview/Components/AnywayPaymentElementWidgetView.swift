@@ -8,28 +8,29 @@
 import AnywayPaymentCore
 import SwiftUI
 
-struct AnywayPaymentElementWidgetView: View {
+struct AnywayPaymentElementWidgetView<OTPView, ProductPicker>: View
+where OTPView: View,
+      ProductPicker: View {
     
-    let state: AnywayPayment.UIComponent.Widget
-    let event: (AnywayPaymentEvent) -> Void
+    let state: AnywayPayment.Element.UIComponent.Widget
+    let event: (AnywayPaymentEvent.Widget) -> Void
+    let factory: AnywayPaymentElementWidgetViewFactory<OTPView, ProductPicker>
     
     var body: some View {
         
         switch state {
         case let .otp(otp):
-            OTPView(state: otp.asString, event: { event(.otp($0)) })
+            factory.otpView(
+                otp.map(String.init) ?? "",
+                { event(.otp($0)) }
+            )
             
-        case .productPicker:
-            Text("TBD: Product Picker (Selector)")
+        case let .productPicker(productID):
+            factory.productPicker(
+                productID,
+                { event(.product($0, $1)) }
+            )
         }
-    }
-}
-
-private extension Optional where Wrapped == Int {
-    
-    var asString: String {
-        
-        return map(String.init) ?? ""
     }
 }
 
@@ -37,6 +38,10 @@ struct AnywayPaymentElementWidgetView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        AnywayPaymentElementWidgetView(state: .preview, event: { _ in })
+        AnywayPaymentElementWidgetView(
+            state: .preview,
+            event: { _ in },
+            factory: .preview
+        )
     }
 }

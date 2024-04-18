@@ -7,17 +7,44 @@
 
 import AnywayPaymentCore
 import Foundation
+import Tagged
 
 enum AnywayPaymentEvent: Equatable {
     
-    case amount(Decimal)
-    case otp(String)
-    #warning("this is demo only, `pay` is a higher, i.e. transaction, level event")
+#warning("demo only: `pay` is a higher - transaction - level event")
     case pay
     case setValue(String, for: ParameterID)
+    case widget(Widget)
 }
 
 extension AnywayPaymentEvent {
     
-    typealias ParameterID = AnywayPayment.Element.Parameter.Field.ID
+    typealias ParameterID = AnywayPayment.Element.UIComponent.Parameter.ID
+    
+    enum Widget: Equatable {
+        
+        case amount(Decimal)
+        case otp(String)
+        case product(ProductID, Currency)
+    }
+}
+
+extension AnywayPaymentEvent.Widget {
+    
+    typealias Currency = Tagged<_Currency, String>
+    enum _Currency {}
+    
+    struct ProductID: Equatable {
+        
+        let id: Int
+        let type: ProductType
+    }
+}
+
+extension AnywayPaymentEvent.Widget.ProductID {
+    
+    enum ProductType: Equatable {
+        
+        case account, card
+    }
 }

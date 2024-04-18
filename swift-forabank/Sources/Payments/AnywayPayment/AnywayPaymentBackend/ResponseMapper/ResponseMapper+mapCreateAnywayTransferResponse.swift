@@ -131,11 +131,20 @@ extension ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType {
         guard string != "%String"
         else { self = .string; return }
         
+        guard string != "%Number"
+        else { self = .number; return }
+        
+        guard string != "%Numeric"
+        else { self = .number; return }
+        
         guard let pairs = try? string.splitDataType(),
-              !pairs.isEmpty
+              let first = pairs.first
         else { return nil }
         
-        self = .pairs(pairs.map { .init(key: $0.key, value: $0.value) })
+        self = .pairs(
+            .init(key: first.key, value: first.value),
+            pairs.map { .init(key: $0.key, value: $0.value) }
+        )
     }
 }
 

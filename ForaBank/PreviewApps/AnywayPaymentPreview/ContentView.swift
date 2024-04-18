@@ -42,100 +42,42 @@ struct ContentView: View {
         
         ZStack(alignment: .bottom) {
             
-            AnywayPaymentLayoutView(
-                buttonTitle: buttonTitle,
-                elements: viewModel.state.elements,
-                isEnabled: isEnabled,
-                event: viewModel.event,
-                config: .preview
-            )
-            
+            paymentView()
             infoOverlay()
         }
     }
     
+    private func paymentView() -> some View {
+        
+        ComposedAnywayPaymentView(
+            buttonTitle: buttonTitle,
+            elements: viewModel.state.elements,
+            isEnabled: isEnabled,
+            event: viewModel.event,
+            config: .preview,
+            factory: .preview
+        )
+    }
+    
     private func infoOverlay() -> some View {
         
-        VStack {
+        VStack(alignment: .leading) {
             
-            Text("OTP: \(viewModel.state.otp)")
+            Text(String(describing: viewModel.state.digest))
+            Text("OTP: \(viewModel.state.infoOTP)")
         }
+        .padding()
         .foregroundColor(.purple)
         .font(.caption)
-    }
-}
-
-private extension AnywayPaymentLayoutView
-where ElementView == AnywayPaymentElementView,
-      FooterView == AnywayPaymentFooterView {
-    
-    init(
-        buttonTitle: String,
-        elements: [AnywayPayment.Element],
-        isEnabled: Bool,
-        event: @escaping (AnywayPaymentEvent) -> Void,
-        config: AnywayPaymentFooterConfig
-    ) {
-        self.init(
-            elements: elements,
-            elementView: {
-            
-                .init(state: $0, event: event)
-            },
-            footerView: {
-                
-                .init(
-                    state: .init(
-                        buttonTitle: buttonTitle,
-                        elements: elements,
-                        isEnabled: isEnabled
-                    ),
-                    event: { footerEvent in
-                        
-                        switch footerEvent {
-                        case let .edit(decimal):
-                            event(.amount(decimal))
-                        
-                        case .continue:
-                            event(.pay)
-                        }
-                    },
-                    config: config
-                )
-            }
-        )
-    }
-}
-
-private extension AnywayPaymentFooter {
-    
-    init(
-        buttonTitle: String,
-        elements: [AnywayPayment.Element],
-        isEnabled: Bool
-    ) {
-        self.init(
-            buttonTitle: buttonTitle, 
-            core: elements.core,
-            isEnabled: isEnabled
-        )
-    }
-}
-
-private extension Array where Element == AnywayPayment.Element {
-    
-    var core: AnywayPaymentFooter.Core? {
-        
-        guard case let .widget(.core(core)) = self[id: .widgetID(.core)]
-        else { return nil }
-        
-        return .init(value: core.amount, currency: core.currency.rawValue)
+        .background(Color.white.opacity(0.9))
+        .padding(.bottom)
+        .padding(.bottom)
     }
 }
 
 private extension AnywayPayment {
     
-    var otp: String {
+    var infoOTP: String {
         
         guard let widget = elements[id: .widgetID(.otp)],
               case let .widget(.otp(otp)) = widget

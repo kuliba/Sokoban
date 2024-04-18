@@ -64,12 +64,12 @@ final class AnywayPaymentOutlineTests: XCTestCase {
         XCTAssertNoDiff(outline.update(with: payment), outline)
     }
     
-    func test_update_shouldAppendMissingFields() {
+    func test_update_shouldAppendMissingInputFields() {
         
         let outline = makeAnywayPaymentOutline(["a": "1"])
-        let parameter1 = makeAnywayPaymentParameter(id: "x", value: "X")
-        let parameter2 = makeAnywayPaymentParameter(id: "y", value: "Y")
-        let payment = makeAnywayPayment(elements: [.parameter(parameter1), .parameter(parameter2), .field(makeAnywayPaymentField())]
+        let input1 = makeAnywayPaymentParameter(id: "x", value: "X", viewType: .input)
+        let input2 = makeAnywayPaymentParameter(id: "y", value: "Y", viewType: .input)
+        let payment = makeAnywayPayment(elements: [.parameter(input1), .parameter(input2), .field(makeAnywayPaymentField())]
         )
         
         let fields = outline.update(with: payment).fields
@@ -77,6 +77,51 @@ final class AnywayPaymentOutlineTests: XCTestCase {
         XCTAssertNoDiff(fields, [
             "a": "1",
             "x": "X",
+            "y": "Y",
+        ])
+    }
+    
+    func test_update_shouldNotAppendMissingConstantFields() {
+        
+        let outline = makeAnywayPaymentOutline(["a": "1"])
+        let constant = makeAnywayPaymentParameter(id: "x", value: "X", viewType: .constant)
+        let payment = makeAnywayPayment(elements: [.parameter(constant), .field(makeAnywayPaymentField())]
+        )
+        
+        let fields = outline.update(with: payment).fields
+
+        XCTAssertNoDiff(fields, [
+            "a": "1",
+        ])
+    }
+    
+    func test_update_shouldNotAppendMissingOutputFields() {
+        
+        let outline = makeAnywayPaymentOutline(["a": "1"])
+        let output = makeAnywayPaymentParameter(id: "x", value: "X", viewType: .output)
+        let payment = makeAnywayPayment(elements: [.parameter(output), .field(makeAnywayPaymentField())]
+        )
+        
+        let fields = outline.update(with: payment).fields
+
+        XCTAssertNoDiff(fields, [
+            "a": "1",
+        ])
+    }
+    
+    func test_update_shouldAppendMissingInputFieldsAndSkipConstantAndOutput() {
+        
+        let outline = makeAnywayPaymentOutline(["a": "1"])
+        let constant = makeAnywayPaymentParameter(id: "x", value: "X", viewType: .constant)
+        let input = makeAnywayPaymentParameter(id: "y", value: "Y", viewType: .input)
+        let output = makeAnywayPaymentParameter(id: "z", value: "z", viewType: .output)
+        let payment = makeAnywayPayment(elements: [.parameter(constant), .parameter(input), .parameter(output), .field(makeAnywayPaymentField())]
+        )
+        
+        let fields = outline.update(with: payment).fields
+
+        XCTAssertNoDiff(fields, [
+            "a": "1",
             "y": "Y",
         ])
     }
