@@ -249,6 +249,25 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         )))
     }
     
+    func test_uiComponent_shouldDeliverNilValueSelectForSelectAndPair() {
+        
+        let field = makeAnywayPaymentElementParameterField(id: "123", value: nil)
+        let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
+            dataType: .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
+            type: .select,
+            viewType: .input
+        )
+        let element = makeAnywayPaymentParameterElement(
+            makeAnywayPaymentParameter(field: field, uiAttributes: uiAttributes)
+        )
+        
+        XCTAssertNoDiff(element.uiComponent, .parameter(.init(
+            id: "123",
+            type: .select(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
+            value: nil
+        )))
+    }
+    
     func test_uiComponent_shouldDeliverSelectForSelectAndPair() {
         
         let field = makeAnywayPaymentElementParameterField(id: "123", value: "ABC")
