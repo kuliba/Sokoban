@@ -192,7 +192,7 @@ extension ProductData.Filter {
             return productCard.loanBaseParam == nil
         }
     }
-        
+      
     struct CardAdditionalSelfRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {
@@ -214,6 +214,43 @@ extension ProductData.Filter {
         }
     }
     
+    struct CardRegularOrMainRule: ProductDataFilterRule {
+        
+        func result(_ productData: ProductData) -> Bool? {
+            
+            guard let cardType = productData.asCard?.cardType else {
+                return nil
+            }
+            
+            switch cardType {
+            case .main, .regular:
+                return true
+                
+            default:
+                return false
+            }
+        }
+    }
+
+    struct CardOnlyAdditionalSelfRule: ProductDataFilterRule {
+        
+        func result(_ productData: ProductData) -> Bool? {
+            
+            guard let cardType = productData.asCard?.cardType else {
+                return nil
+            }
+            
+            switch cardType {
+                
+            case .additionalSelf, .additionalSelfAccOwn:
+                return true
+                
+            default:
+                return false
+            }
+        }
+    }
+
     struct CardAdditionalSelfAccOwnRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {

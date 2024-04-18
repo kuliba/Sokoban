@@ -21,9 +21,9 @@ final class Model_allProductTests: XCTestCase {
             .card: [
                 makeCardProduct(id: 3),
                 makeCardProduct(id: 4, idParent: 6),
-                makeCardProduct(id: 5, idParent: 3),
+                makeCardProduct(id: 5, idParent: 3, order: 10),
                 makeCardProduct(id: 6),
-                makeCardProduct(id: 7, idParent: 3),
+                makeCardProduct(id: 7, idParent: 3, order: 0),
                 makeCardProduct(id: 8),
                 makeCardProduct(id: 9, idParent: 34),
             ],
@@ -31,7 +31,7 @@ final class Model_allProductTests: XCTestCase {
         
         let products = sut.allProducts
         
-        XCTAssertNoDiff(products.map(\.id), [3, 5, 7, 6, 4, 8, 9, 1, 2])
+        XCTAssertNoDiff(products.map(\.id), [3, 7, 5, 6, 4, 8, 9, 1, 2])
     }
     
     func test_allProductsWithoutAdditionalCards_shouldReturnSortedArray() {
@@ -121,7 +121,7 @@ extension XCTestCase {
     func makeCardProduct(
         id: Int,
         idParent: Int? = nil,
-        isMain: Bool? = nil
+        order: Int = 0
     ) -> ProductCardData {
         
         .init(
@@ -162,9 +162,9 @@ extension XCTestCase {
             paymentSystemImage: nil,
             loanBaseParam: nil,
             statusPc: nil,
-            isMain: isMain,
+            isMain: nil,
             externalId: nil,
-            order: 0,
+            order: order,
             visibility: true,
             smallDesignMd5hash: "",
             smallBackgroundDesignHash: "",
