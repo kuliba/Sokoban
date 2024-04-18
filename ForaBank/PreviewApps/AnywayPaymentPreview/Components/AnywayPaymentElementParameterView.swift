@@ -16,7 +16,7 @@ struct AnywayPaymentElementParameterView: View {
     var body: some View {
         
         switch state.type {
-        case let .select(options):
+        case let .select(selected, options):
             ExpandablePickerStateWrapperView(
                 viewModel: .decorated(
                     initialState: .init(items: options),
