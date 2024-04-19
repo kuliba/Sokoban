@@ -32,14 +32,8 @@ extension Model {
         let currentProducts = products.value.values.flatMap{ $0 }
         
         // сгруппировали карты по idParent
-        var dictionary = Dictionary(
-            grouping: currentProducts,
-            by: { $0.asCard?.idParent }
-        )
+        let dictionary = currentProducts.groupingByParentID()
         
-        // удалили не допки (карты у которых idParent = nil)
-        dictionary.removeValue(forKey: nil)
-
         var all: [ProductData] = []
         
         currentProducts.forEach { product in
@@ -57,16 +51,14 @@ extension Model {
         
         // добавляем допки, которые выпущены не владельцем (главной карты на текущем аккаунте нет)
         let allIDs = all.map(\.id)
-        dictionary.keys.forEach {
-            if let key = $0, let value = dictionary[key] {
-                // если на аккаунте нет такой карточки - добавляем все ее допки
-                if !allIDs.contains(key) {
-                    all.append(contentsOf: value)
-                }
+        dictionary.forEach {
+            // если на аккаунте нет такой карточки - добавляем все ее допки
+            if !allIDs.contains($0) {
+                all.append(contentsOf: $1)
             }
         }
         // сортируем по типу продуктов
-        return all.sorted { $0.productType.order < $1.productType.order }
+        return all.sorted(by: \.productType.order)
     }
     
     func productType(for productId: ProductData.ID) -> ProductType? {
