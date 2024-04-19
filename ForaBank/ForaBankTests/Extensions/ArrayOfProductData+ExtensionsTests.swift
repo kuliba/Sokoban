@@ -31,7 +31,7 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
         
         XCTAssertNoDiff( 
             groupedByParentID.mapValues { $0.map(\.id)},
-            [3:  [5, 12, 7, 11, 45],
+            [3:  [12, 7, 11, 45, 5],
              6:  [4],
              34: [9]
             ])
