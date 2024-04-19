@@ -689,7 +689,11 @@ final class AnywayPaymentUpdateParameterEntryTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias DataType = AnywayPaymentUpdate.Parameter.UIAttributes.DataType
+    private typealias Entry = AnywayPaymentUpdate.Parameter.Entry
+    private typealias FieldType = AnywayPaymentUpdate.Parameter.UIAttributes.FieldType
+    private typealias ViewType = AnywayPaymentUpdate.Parameter.UIAttributes.ViewType
     private typealias Pair = (key: String, value: String)
+
     
     private func makePairsDataType(
         _ pair: Pair = ("a", "1"),
@@ -705,9 +709,9 @@ final class AnywayPaymentUpdateParameterEntryTests: XCTestCase {
     private func makeParameter(
         id: String = anyMessage(),
         value content: String? = nil,
-        viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType,
-        dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType,
-        type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType
+        viewType: ViewType,
+        dataType: DataType,
+        type: FieldType
     ) -> AnywayPaymentUpdate.Parameter {
         
         makeAnywayPaymentUpdateParameter(
@@ -724,9 +728,9 @@ final class AnywayPaymentUpdateParameterEntryTests: XCTestCase {
     }
     
     private func makeUIAttributes(
-        type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType,
-        dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType,
-        viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType
+        type: FieldType,
+        dataType: DataType,
+        viewType: ViewType
     ) -> AnywayPaymentUpdate.Parameter.UIAttributes {
         
         makeAnywayPaymentUpdateParameterUIAttributes(
@@ -739,7 +743,7 @@ final class AnywayPaymentUpdateParameterEntryTests: XCTestCase {
     private func maskList(
         _ pair: Pair = ("a", "1"),
         _ pairs: Pair...
-    ) -> AnywayPaymentUpdate.Parameter.Entry {
+    ) -> Entry {
         
         let pair = DataType.Pair(key: pair.key, value: pair.value)
         let pairs = pairs.map { DataType.Pair(key: $0.key, value: $0.value) }
@@ -749,7 +753,7 @@ final class AnywayPaymentUpdateParameterEntryTests: XCTestCase {
     
     private func nonEditable(
         _ string: String
-    ) -> AnywayPaymentUpdate.Parameter.Entry {
+    ) -> Entry {
         
         .nonEditable(.string(string))
     }
@@ -757,15 +761,15 @@ final class AnywayPaymentUpdateParameterEntryTests: XCTestCase {
     private func nonEditable(
         _ key: String,
         _ value: String
-    ) -> AnywayPaymentUpdate.Parameter.Entry {
+    ) -> Entry {
         
         .nonEditable(.pair(key: key, value: value))
     }
     
     private func numberInput(
-        _ id: AnywayPaymentUpdate.Parameter.Entry.ID,
-        _ value: AnywayPaymentUpdate.Parameter.Entry.Value?
-    ) -> AnywayPaymentUpdate.Parameter.Entry {
+        _ id: Entry.ID,
+        _ value: Entry.Value?
+    ) -> Entry {
         
         .numberInput(id: id, value: value)
     }
@@ -773,7 +777,7 @@ final class AnywayPaymentUpdateParameterEntryTests: XCTestCase {
     private func select(
         _ pair: Pair = ("a", "1"),
         _ pairs: Pair...
-    ) -> AnywayPaymentUpdate.Parameter.Entry {
+    ) -> Entry {
         
         let pair = DataType.Pair(key: pair.key, value: pair.value)
         let pairs = pairs.map { DataType.Pair(key: $0.key, value: $0.value) }
@@ -782,9 +786,9 @@ final class AnywayPaymentUpdateParameterEntryTests: XCTestCase {
     }
     
     private func textInput(
-        _ id: AnywayPaymentUpdate.Parameter.Entry.ID,
-        _ value: AnywayPaymentUpdate.Parameter.Entry.Value?
-    ) -> AnywayPaymentUpdate.Parameter.Entry {
+        _ id: Entry.ID,
+        _ value: Entry.Value?
+    ) -> Entry {
         
         .textInput(id: id, value: value)
     }

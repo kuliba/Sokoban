@@ -687,8 +687,11 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
     }
     
     // MARK: - Helpers
-    
+
     private typealias DataType = AnywayPayment.Element.Parameter.UIAttributes.DataType
+    private typealias Entry = AnywayPayment.Element.Parameter.Entry
+    private typealias FieldType = AnywayPayment.Element.Parameter.UIAttributes.FieldType
+    private typealias ViewType = AnywayPayment.Element.Parameter.UIAttributes.ViewType
     private typealias Pair = (key: String, value: String)
     
     private func makePairsDataType(
@@ -705,9 +708,9 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
     private func makeParameter(
         id: String = anyMessage(),
         value: String? = nil,
-        viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType,
-        dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType,
-        type: AnywayPayment.Element.Parameter.UIAttributes.FieldType
+        viewType: ViewType,
+        dataType: DataType,
+        type: FieldType
     ) -> AnywayPayment.Element.Parameter {
         
         makeAnywayPaymentParameter(
@@ -724,9 +727,9 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
     }
     
     private func makeUIAttributes(
-        type: AnywayPayment.Element.Parameter.UIAttributes.FieldType,
-        dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType,
-        viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType
+        type: FieldType,
+        dataType: DataType,
+        viewType: ViewType
     ) -> AnywayPayment.Element.Parameter.UIAttributes {
         
         makeAnywayPaymentElementParameterUIAttributes(
@@ -739,7 +742,7 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
     private func maskList(
         _ pair: Pair = ("a", "1"),
         _ pairs: Pair...
-    ) -> AnywayPayment.Element.Parameter.Entry {
+    ) -> Entry {
         
         let pair = DataType.Pair(key: pair.key, value: pair.value)
         let pairs = pairs.map { DataType.Pair(key: $0.key, value: $0.value) }
@@ -749,7 +752,7 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
     
     private func nonEditable(
         _ string: String
-    ) -> AnywayPayment.Element.Parameter.Entry {
+    ) -> Entry {
         
         .nonEditable(.string(string))
     }
@@ -757,15 +760,15 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
     private func nonEditable(
         _ key: String,
         _ value: String
-    ) -> AnywayPayment.Element.Parameter.Entry {
+    ) -> Entry {
         
         .nonEditable(.pair(key: key, value: value))
     }
     
     private func numberInput(
-        _ id: AnywayPayment.Element.Parameter.Entry.ID,
-        _ value: AnywayPayment.Element.Parameter.Entry.Value?
-    ) -> AnywayPayment.Element.Parameter.Entry {
+        _ id: Entry.ID,
+        _ value: Entry.Value?
+    ) -> Entry {
         
         .numberInput(id: id, value: value)
     }
@@ -773,7 +776,7 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
     private func select(
         _ pair: Pair = ("a", "1"),
         _ pairs: Pair...
-    ) -> AnywayPayment.Element.Parameter.Entry {
+    ) -> Entry {
         
         let pair = DataType.Pair(key: pair.key, value: pair.value)
         let pairs = pairs.map { DataType.Pair(key: $0.key, value: $0.value) }
@@ -782,9 +785,9 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
     }
     
     private func textInput(
-        _ id: AnywayPayment.Element.Parameter.Entry.ID,
-        _ value: AnywayPayment.Element.Parameter.Entry.Value?
-    ) -> AnywayPayment.Element.Parameter.Entry {
+        _ id: Entry.ID,
+        _ value: Entry.Value?
+    ) -> Entry {
         
         .textInput(id: id, value: value)
     }
