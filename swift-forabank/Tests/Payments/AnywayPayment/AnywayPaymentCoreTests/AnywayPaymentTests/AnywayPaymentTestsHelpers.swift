@@ -511,7 +511,7 @@ func makeAnywayPaymentAndUpdateFields(
     return (update, updated)
 }
 
-private func makeAnywayPaymentUpdateParameter(
+func makeAnywayPaymentUpdateParameter(
     field: AnywayPaymentUpdate.Parameter.Field = makeAnywayPaymentUpdateParameterField(),
     masking: AnywayPaymentUpdate.Parameter.Masking = makeAnywayPaymentUpdateParameterMasking(),
     validation: AnywayPaymentUpdate.Parameter.Validation = makeAnywayPaymentUpdateParameterValidation(),
@@ -752,7 +752,7 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.ViewType {
     }
 }
 
-private func makeAnywayPaymentUpdateParameterField(
+func makeAnywayPaymentUpdateParameterField(
     content: String? = nil,
     dataDictionary: String? = nil,
     dataDictionaryРarent: String? = nil,
@@ -792,7 +792,7 @@ private func makeAnywayPaymentUpdateParameterValidation(
     )
 }
 
-private func makeAnywayPaymentUpdateParameterUIAttributes(
+func makeAnywayPaymentUpdateParameterUIAttributes(
     dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType = .string,
     group: String? = nil,
     inputFieldType: AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType? = nil,
