@@ -21,8 +21,8 @@ extension ComposedAnywayPaymentViewFactory {
     typealias MakeFieldView = (Field) -> FieldView
     typealias MakeOTPView = (String, @escaping (String) -> Void) -> OTPView
     typealias MakeParameterView = (Parameter, @escaping (String) -> Void) -> ParameterView
-    typealias MakeProductPicker = (AnywayPayment.UIComponent.Widget.ProductID, @escaping (AnywayPaymentEvent.Widget.ProductID, AnywayPaymentEvent.Widget.Currency) -> Void) -> ProductPicker
+    typealias MakeProductPicker = (AnywayPayment.Element.UIComponent.Widget.ProductID, @escaping (AnywayPaymentEvent.Widget.ProductID, AnywayPaymentEvent.Widget.Currency) -> Void) -> ProductPicker
     
-    typealias Field = AnywayPayment.UIComponent.Field
-    typealias Parameter = AnywayPayment.UIComponent.Parameter
+    typealias Field = AnywayPayment.Element.UIComponent.Field
+    typealias Parameter = AnywayPayment.Element.UIComponent.Parameter
 }

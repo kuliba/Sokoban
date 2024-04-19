@@ -783,7 +783,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         let value = anyMessage()
         let (update, parameter) = makeAnywayPaymentAndUpdateParameters(
             value: value,
-            dataType: .pairs([.init(key: "a", value: "1")]),
+            dataType: .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
             group: nil,
             isPrint: true,
             type: .input,
@@ -793,8 +793,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         XCTAssertNoDiff(update.field.content, value)
         XCTAssertNoDiff(parameter.field.value, .init(value))
         
-        XCTAssertNoDiff(update.uiAttributes.dataType, .pairs([.init(key: "a", value: "1")]))
-        XCTAssertNoDiff(parameter.uiAttributes.dataType, .pairs([.init(key: "a", value: "1")]))
+        XCTAssertNoDiff(update.uiAttributes.dataType, .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]))
+        XCTAssertNoDiff(parameter.uiAttributes.dataType, .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]))
         
         XCTAssertNil(update.uiAttributes.group)
         XCTAssertNil(parameter.uiAttributes.group)
@@ -812,15 +812,15 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_makeAnywayPaymentAndUpdateParameters_3() {
         
         let (update, parameter) = makeAnywayPaymentAndUpdateParameters(
-            dataType: .pairs([.init(key: "a", value: "1"), .init(key: "b", value: "c")]),
+            dataType: .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1"), .init(key: "b", value: "c")]),
             group: "group",
             isPrint: false,
             type: .maskList,
             viewType: .output
         )
         
-        XCTAssertNoDiff(update.uiAttributes.dataType, .pairs([.init(key: "a", value: "1"), .init(key: "b", value: "c")]))
-        XCTAssertNoDiff(parameter.uiAttributes.dataType, .pairs([.init(key: "a", value: "1"), .init(key: "b", value: "c")]))
+        XCTAssertNoDiff(update.uiAttributes.dataType, .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1"), .init(key: "b", value: "c")]))
+        XCTAssertNoDiff(parameter.uiAttributes.dataType, .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1"), .init(key: "b", value: "c")]))
         
         XCTAssertNoDiff(update.uiAttributes.type, .maskList)
         XCTAssertNoDiff(parameter.uiAttributes.type, .maskList)

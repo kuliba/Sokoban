@@ -7,7 +7,7 @@
 
 import AnywayPaymentCore
 
-extension AnywayPayment.UIComponent.Widget {
+extension AnywayPayment.Element.UIComponent.Widget {
     
     static let preview: Self = .otp(nil)
 }

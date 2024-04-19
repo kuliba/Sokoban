@@ -759,7 +759,9 @@ extension PaymentsTransfersViewModel {
                 switch action {
                 case _ as PaymentsViewModelAction.ScanQrCode:
                     self.event(.resetDestination)
-                    self.openScanner()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        self.openScanner()
+                    }
                     
                 case let payload as PaymentsViewModelAction.ContactAbroad:
                     let paymentsViewModel = PaymentsViewModel(
