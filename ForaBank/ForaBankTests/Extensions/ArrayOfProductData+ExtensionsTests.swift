@@ -36,4 +36,28 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
              34: [9]
             ])
     }
+    
+    func test_productsWithoutAdditional_shouldReturnArray() {
+        
+        let products: [ProductData] = [
+                makeAccountProduct(id: 1),
+                makeAccountProduct(id: 2),
+                makeCardProduct(id: 5, parentID: 3, order: 10),
+                makeCardProduct(id: 3),
+                makeCardProduct(id: 4, parentID: 6),
+                makeCardProduct(id: 6),
+                makeCardProduct(id: 12, parentID: 3, order: 0),
+                makeCardProduct(id: 7, parentID: 3, order: 0),
+                makeCardProduct(id: 11, parentID: 3, order: 0),
+                makeCardProduct(id: 8),
+                makeCardProduct(id: 9, parentID: 34),
+                makeCardProduct(id: 45, parentID: 3, order: 1)
+        ]
+        
+        let productsWithoutAdditional = products.productsWithoutAdditional()
+        
+        XCTAssertNoDiff(
+            productsWithoutAdditional.map(\.id),
+            [1, 2, 3, 6, 8])
+    }
 }

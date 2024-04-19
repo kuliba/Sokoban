@@ -39,11 +39,10 @@ extension Model {
         currentProducts.forEach { product in
             // группируем карты главная + ее допки
             if let values = dictionary[product.id] {
-                let sortedArray = values.sorted { $0.order < $1.order }
                 // добавляем главную
                 all.append(product)
                 // добавляем ее допки
-                all.append(contentsOf: sortedArray)
+                all.append(contentsOf: values)
             } else if product.asCard?.idParent == nil { // исключаем повторное добавление допок
                 all.append(product)
             }

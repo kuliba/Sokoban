@@ -17,4 +17,13 @@ extension Array where Element == ProductData {
             }
         }).mapValues { $0.sorted(by: \.order) }
     }
+    
+    func productsWithoutAdditional() -> [ProductData] {
+        
+        return self.filter {
+            $0.asCard?.idParent == nil
+        }
+    }
+    
+    
 }
