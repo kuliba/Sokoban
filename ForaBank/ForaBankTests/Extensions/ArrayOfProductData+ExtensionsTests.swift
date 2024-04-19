@@ -10,11 +10,9 @@ import XCTest
 
 final class ArrayOfProductData_ExtensionsTests: XCTestCase {
 
-    func test_groupingByParentID_shouldReturnArray() {
+    func test_groupingByParentID_shouldReturnDictionary() {
         
-        let products = makeProducts()
-        
-        let groupedByParentID = products.groupingByParentID()
+        let groupedByParentID = makeProducts().groupingByParentID()
         
         XCTAssertNoDiff( 
             groupedByParentID.mapValues { $0.map(\.id)},
@@ -26,9 +24,7 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
     
     func test_productsWithoutAdditional_shouldReturnArray() {
         
-        let products = makeProducts()
-        
-        let productsWithoutAdditional = products.productsWithoutAdditional()
+        let productsWithoutAdditional = makeProducts().productsWithoutAdditional()
         
         XCTAssertNoDiff(
             productsWithoutAdditional.map(\.id),
@@ -37,9 +33,7 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
     
     func test_cardsWithoutAdditional_shouldReturnArray() {
         
-        let products = makeProducts()
-        
-        let productsWithoutAdditional = products.cardsWithoutAdditional()
+        let productsWithoutAdditional = makeProducts().cardsWithoutAdditional()
         
         XCTAssertNoDiff(
             productsWithoutAdditional.map(\.id),
@@ -48,9 +42,7 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
     
     func test_productsWithoutCards_shouldReturnArray() {
         
-        let products = makeProducts()
-        
-        let productsWithoutCards = products.productsWithoutCards()
+        let productsWithoutCards = makeProducts().productsWithoutCards()
         
         XCTAssertNoDiff(
             productsWithoutCards.map(\.id),
@@ -59,9 +51,7 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
     
     func test_groupingAndSortedProducts_shouldReturnArray() {
         
-        let products = makeProducts()
-        
-        let groupingAndSortedProducts = products.groupingAndSortedProducts()
+        let groupingAndSortedProducts = makeProducts().groupingAndSortedProducts()
         
         XCTAssertNoDiff(
             groupingAndSortedProducts.map(\.id),
