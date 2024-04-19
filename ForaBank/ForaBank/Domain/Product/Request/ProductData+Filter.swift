@@ -192,7 +192,7 @@ extension ProductData.Filter {
             return productCard.loanBaseParam == nil
         }
     }
-      
+        
     struct CardAdditionalSelfRule: ProductDataFilterRule {
         
         func result(_ productData: ProductData) -> Bool? {
