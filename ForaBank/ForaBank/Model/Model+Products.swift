@@ -25,8 +25,13 @@ extension Model {
     var productsOpenLoanURL: URL { URL(string: "https://www.forabank.ru/private/credits/")! }
     var productsOpenInsuranceURL: URL { URL(string: "https://www.forabank.ru/landings/e-osago/")! }
     var productsOpenMortgageURL: URL { URL(string: "https://www.forabank.ru/private/mortgage/")! }
-    
-    var allProducts: [ProductData] { products.value.values.flatMap { $0 }.sorted { $0.productType.order < $1.productType.order } }
+        
+    var allProducts: [ProductData] {
+        
+        // получили все продукты
+        let currentProducts = products.value.values.flatMap{ $0 }
+        return currentProducts.groupingAndSortedProducts()
+    }
     
     func productType(for productId: ProductData.ID) -> ProductType? {
         

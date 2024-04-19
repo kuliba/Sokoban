@@ -277,14 +277,9 @@ class MyProductsMoneyViewModel: ObservableObject {
             }
             
         } else {
-            // ????
-            let filter = ProductData.Filter(rules: [ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
-                                                    ProductData.Filter.CardAdditionalSelfRule(),
-                                                    ProductData.Filter.CardAdditionalSelfAccOwnRule()])
             
-            let filteredProducts = filter.filteredProducts(products)
-            let balanceRub = filteredProducts.compactMap({ $0.balanceRub }).reduce(0, +)
-            
+            let balanceRub = products.balanceRub()
+                        
             if let currencyDataItem = rates.first(where: { $0.id == selectedCurrency.id }) {
             
                 withAnimation {
@@ -313,7 +308,6 @@ class MyProductsMoneyViewModel: ObservableObject {
         
         NumberFormatter.decimal().string(from: NSNumber(value: value)) ?? ""
     }
-    
 }
     
 enum MyProductsMoneyViewModelAction {

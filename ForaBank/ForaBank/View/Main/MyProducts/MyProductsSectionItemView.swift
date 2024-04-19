@@ -85,6 +85,13 @@ extension MyProductsSectionItemView {
 
                         HStack(spacing: 8) {
                             
+                            viewModel.clover().map {
+                                
+                                $0
+                                    .renderingMode(.template)
+                                    .foregroundColor(.mainColorsGray)
+                            }
+                            
                             ForEach(viewModel.descriptions, id: \.self) { description in
                                 
                                 Circle().frame(width: 3)
