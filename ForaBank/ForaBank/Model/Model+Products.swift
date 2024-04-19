@@ -30,34 +30,7 @@ extension Model {
         
         // получили все продукты
         let currentProducts = products.value.values.flatMap{ $0 }
-        
-        // сгруппировали карты по idParent
-        let dictionary = currentProducts.groupingByParentID()
-        
-        var all: [ProductData] = []
-        
-        currentProducts.forEach { product in
-            // группируем карты главная + ее допки
-            if let values = dictionary[product.id] {
-                // добавляем главную
-                all.append(product)
-                // добавляем ее допки
-                all.append(contentsOf: values)
-            } else if product.asCard?.idParent == nil { // исключаем повторное добавление допок
-                all.append(product)
-            }
-        }
-        
-        // добавляем допки, которые выпущены не владельцем (главной карты на текущем аккаунте нет)
-        let allIDs = all.map(\.id)
-        dictionary.forEach {
-            // если на аккаунте нет такой карточки - добавляем все ее допки
-            if !allIDs.contains($0) {
-                all.append(contentsOf: $1)
-            }
-        }
-        // сортируем по типу продуктов
-        return all.sorted(by: \.productType.order)
+        return currentProducts.groupingAndSortedProducts()
     }
     
     func productType(for productId: ProductData.ID) -> ProductType? {
