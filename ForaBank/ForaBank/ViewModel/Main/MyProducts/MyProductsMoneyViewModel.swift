@@ -277,10 +277,8 @@ class MyProductsMoneyViewModel: ObservableObject {
             }
             
         } else {
-
-            let filteredProducts = Self.filteredProducts(products)
             
-            let balanceRub = filteredProducts.compactMap({ $0.balanceRub }).reduce(0, +)
+            let balanceRub = products.balanceRub()
                         
             if let currencyDataItem = rates.first(where: { $0.id == selectedCurrency.id }) {
             
@@ -309,36 +307,6 @@ class MyProductsMoneyViewModel: ObservableObject {
     static func doubleFormatter(_ value: Double) -> String {
         
         NumberFormatter.decimal().string(from: NSNumber(value: value)) ?? ""
-    }
-    
-    static func filteredProducts(_ products: [ProductData]) -> [ProductData] {
-        
-        // only .account, .deposit + card (main + regular)
-        let filter = ProductData.Filter(
-            rules:
-                [ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
-                 ProductData.Filter.CardRegularOrMainRule()])
-        let productsWithOutAdditional = filter.filteredProducts(products)
-        let productsWithOutAdditionalIDs = productsWithOutAdditional.map(\.id)
-
-        // only card ADDITIONAL_SELF\ADDITIONAL_SELF_ACC_OWN
-        let additionalSelfFilter = ProductData.Filter(
-            rules:
-                [ProductData.Filter.ProductTypeRule([.card]),
-                 ProductData.Filter.CardOnlyAdditionalSelfRule()])
-        let additionalSelfProducts = additionalSelfFilter.filteredProducts(products)
-        
-        let dictionary = Dictionary(grouping: additionalSelfProducts, by: { $0.asCard?.idParent })
-        
-        var additionalSelfWithOutMainCard: [ProductData] = []
-        
-        dictionary.forEach {
-            if let key = $0, productsWithOutAdditionalIDs.contains(key) == false {
-                additionalSelfWithOutMainCard.append(contentsOf: $1)
-            }
-        }
-                
-        return (productsWithOutAdditional + additionalSelfWithOutMainCard).compactMap { $0 }
     }
 }
     

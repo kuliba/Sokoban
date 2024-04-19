@@ -18,6 +18,19 @@ extension Array where Element == ProductData {
         }).mapValues { $0.sorted(by: \.order) }
     }
     
+    func groupingByParentIDOnlySelf() -> [ProductData.ID: [ProductData]] {
+        
+       return self.groupingByParentID().mapValues {
+           return $0.compactMap {
+                if $0.asCard?.cardType == .additionalSelfAccOwn ||
+                    $0.asCard?.cardType == .additionalSelf {
+                    return $0
+                }
+               return nil
+            }
+        }
+    }
+    
     func productsWithoutAdditional() -> [ProductData] {
         
         return self.filter {
@@ -70,5 +83,27 @@ extension Array where Element == ProductData {
         let allProducts = self.productsWithoutCards() + self.cardsWithAdditional()
         
         return allProducts.sorted(by: \.productType.order)
+    }
+    
+    func balanceRub() -> Double {
+        
+        let productsOnlyAccountOrDeposit = self.filter {
+            
+            $0.productType == .account || $0.productType == .deposit
+        }
+        
+        let cardsWithoutAdditional = self.cardsWithoutAdditional()
+        let cardsWithoutAdditionalIDs = cardsWithoutAdditional.map(\.id)
+
+        var productsForBalance: [ProductData] = productsOnlyAccountOrDeposit + cardsWithoutAdditional
+        
+        self.groupingByParentIDOnlySelf().forEach { key, value in
+            
+            if !cardsWithoutAdditionalIDs.contains(key), let first = value.first {
+                productsForBalance.append(first)
+            }
+        }
+        
+        return productsForBalance.compactMap({ $0.balanceRub }).reduce(0, +)
     }
 }
