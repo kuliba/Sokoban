@@ -15,8 +15,7 @@ final class RxObservingViewModelTests: XCTestCase {
         let value = anyMessage()
         let (_, spy) = makeSUT(
             initialState: .init(value: value),
-            stub: makeStub(),
-            observe: { _ in }
+            stub: makeStub()
         )
         
         XCTAssertNoDiff(spy.values, [.init(value: value)])
@@ -28,8 +27,7 @@ final class RxObservingViewModelTests: XCTestCase {
         let newValue = anyMessage()
         let (sut, spy) = makeSUT(
             initialState: .init(value: value),
-            stub: (.init(value: newValue), nil),
-            observe: { _ in }
+            stub: (.init(value: newValue), nil)
         )
         
         sut.event(.changeValueTo("abc"))
@@ -52,9 +50,7 @@ final class RxObservingViewModelTests: XCTestCase {
         
         sut.event(.changeValueTo("abc"))
         
-        XCTAssertNoDiff(values, [
-            .init(value: newValue),
-        ])
+        XCTAssertNoDiff(values, [.init(value: newValue)])
     }
     
     // MARK: - Helpers
@@ -67,7 +63,7 @@ final class RxObservingViewModelTests: XCTestCase {
     private func makeSUT(
         initialState: State = makeState(),
         stub: (State, Effect?)...,
-        observe: @escaping (State) -> Void,
+        observe: @escaping (State) -> Void = { _ in },
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
