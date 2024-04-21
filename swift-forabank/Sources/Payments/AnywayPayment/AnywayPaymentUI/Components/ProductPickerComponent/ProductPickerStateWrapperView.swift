@@ -12,7 +12,7 @@ import SwiftUI
 
 struct ProductPickerStateWrapperView: View {
     
-    typealias ViewModel = RxViewModel<State, Event, Effect>
+    typealias ViewModel = RxObservingViewModel<State, Event, Effect>
     
     @StateObject private var viewModel: ViewModel
     
@@ -24,7 +24,7 @@ struct ProductPickerStateWrapperView: View {
         config: ProductPickerConfig,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
-        self._viewModel = .init(wrappedValue: .decorated(
+        self._viewModel = .init(wrappedValue: .init(
             selected: selected,
             onProductSelect: onProductSelect,
             scheduler: scheduler
@@ -41,7 +41,6 @@ struct ProductPickerStateWrapperView: View {
         )
     }
 }
-
 extension ProductPickerStateWrapperView {
     
     typealias State = ProductPickerState
@@ -49,29 +48,25 @@ extension ProductPickerStateWrapperView {
     typealias Effect = Never
 }
 
-extension ProductPickerStateWrapperView.ViewModel {
+private extension RxObservingViewModel
+where State == ProductPickerState,
+      Event == ProductPickerEvent,
+      Effect == Never {
     
-    static func decorated(
+    convenience init(
         selected: Product,
         onProductSelect: @escaping (Product) -> Void,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
-    ) -> ProductPickerStateWrapperView.ViewModel {
-        
+    ) {
         let reducer = ProductPickerReducer()
-        let decorated: Reduce = { state, event in
-            
-            if case let .select(product) = event {
-                
-                onProductSelect(product)
-            }
-            
-            return reducer.reduce(state, event)
-        }
-        
-        return .init(
+        self.init(
             initialState: .init(selection: selected),
-            reduce: decorated,
-            handleEffect: { _,_ in },
+            observable: .init(
+                initialState: .init(selection: selected),
+                reduce: reducer.reduce(_:_:),
+                handleEffect: { _,_ in },
+                scheduler: scheduler),
+            observe: { $0.selection.map(onProductSelect) },
             scheduler: scheduler
         )
     }
