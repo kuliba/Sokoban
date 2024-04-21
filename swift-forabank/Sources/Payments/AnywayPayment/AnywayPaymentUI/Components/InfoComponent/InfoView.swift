@@ -47,7 +47,7 @@ struct InfoView_Previews: PreviewProvider {
     }
 }
 
-private extension Info where Icon == String {
+extension Info where Icon == String {
     
     static var preview: Self {
         
