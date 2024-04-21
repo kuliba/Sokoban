@@ -60,7 +60,6 @@ where State == ProductPickerState,
     ) {
         let reducer = ProductPickerReducer()
         self.init(
-            initialState: .init(selection: selected),
             observable: .init(
                 initialState: .init(selection: selected),
                 reduce: reducer.reduce(_:_:),
