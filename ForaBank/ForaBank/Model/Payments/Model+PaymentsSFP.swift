@@ -23,7 +23,7 @@ extension Model {
                 source: operation.source,
                 header: .init(
                     title: "Перевод по номеру телефона",
-                    icon: .headerIconForOperationSource(operation.source)
+                    icon: .init(source: operation.source)
                 )
             )
             
@@ -158,7 +158,7 @@ extension Model {
             
         case Payments.Parameter.Identifier.header.rawValue:
             
-            return Payments.ParameterHeader(title: "Подтвердите реквизиты", icon: .headerIconForBankParameters(parameters))
+            return Payments.ParameterHeader(title: "Подтвердите реквизиты", icon: .init(parameters: parameters))
             
         case Payments.Parameter.Identifier.sfpMessage.rawValue:
             

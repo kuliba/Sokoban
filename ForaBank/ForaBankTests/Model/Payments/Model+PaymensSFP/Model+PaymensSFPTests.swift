@@ -7,6 +7,7 @@
 
 @testable import ForaBank
 import XCTest
+import OTPInputComponentTests
 
 final class Model_PaymensSFPTests: XCTestCase {
     
@@ -137,68 +138,51 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     func test_getHeaderIconForOperation_sfpForaBank_returnsNil() {
         
-        let source = makeSPFSource(bankID: .foraBankId)
-        let icon = PPIcon.headerIconForOperationSource(source)
-        
-        XCTAssertNil(icon)
+        XCTAssertNil(PPIcon.init(source: makeSPFSource()))
     }
     
     func test_getHeaderIconForOperation_sfpNonForaBank_returnsSbpIcon() {
         
-        let source = makeSPFSource(bankID: "123123123")
-        let icon = PPIcon.headerIconForOperationSource(source)
-        
-        XCTAssertEqual(icon?.equatable, .testSBPIcon)
+        XCTAssertEqual(PPIcon.init(source: makeSPFSource(bankID: "123123123"))?.equatable, .testSBPIcon)
     }
     
     func test_getHeaderIconForOperation_otherSource_returnsSbpIcon() {
         
-        let source = Payments.Operation.Source.avtodor
-        let icon = PPIcon.headerIconForOperationSource(source)
-        
-        XCTAssertEqual(icon?.equatable, .testSBPIcon)
+        XCTAssertEqual(PPIcon.init(source: Payments.Operation.Source.avtodor)?.equatable, .testSBPIcon)
     }
     
     func test_getHeaderIconForOperation_nilSource_returnsSbpIcon() {
         
-        let icon = PPIcon.headerIconForOperationSource(nil)
-        
-        XCTAssertEqual(icon?.equatable, .testSBPIcon)
+        XCTAssertEqual(PPIcon.init(source: nil)?.equatable, .testSBPIcon)
     }
     
     func test_getHeaderIconForParameters_emptyParameters_returnsNil() {
         
-        let icon = PPIcon.headerIconForBankParameters([])
-        
-        XCTAssertNil(icon?.equatable)
+        XCTAssertNil(PPIcon.init(parameters: [])?.equatable)
     }
     
     func test_getHeaderIconForParameters_sfpBankNotFora_returnsSbpIcon() {
         
-        let icon = PPIcon.headerIconForBankParameters(makeParameter())
+       // let icon = PPIcon.headerIconForBankParameters(makeParameter())
         
-        XCTAssertEqual(icon?.equatable, .testSBPIcon)
+        XCTAssertEqual(PPIcon(parameters: makeParameter())?.equatable, .testSBPIcon)
     }
     
     func test_getHeaderIconForParameters_sfpBankIsFora_returnsNil() {
         
-        let icon = PPIcon.headerIconForBankParameters(makeParameter(.foraBankId))
+        //let icon = PPIcon.headerIconForBankParameters(makeParameter(.foraBankId))
         
-        XCTAssertNil(icon)
+        XCTAssertNil(PPIcon.init(parameters: makeParameter(.foraBankID)))
     }
     
     func test_getHeaderIconForParameters_sfpBankWithEmptyVal_returnsSbpIcon() {
         
-        let icon = PPIcon.headerIconForBankParameters(makeParameter(""))
-        
-        XCTAssertEqual(icon?.equatable, .testSBPIcon)
+        XCTAssertEqual(PPIcon.init(parameters: makeParameter(""))?.equatable, .testSBPIcon)
     }
     
     func test_getHeaderIconForParameters_hasSfpBankAndIncorrectParameter_returnsSbpIcon() {
-        
-        let icon = PPIcon.headerIconForBankParameters(makeParametersWithFora())
 
-        XCTAssertEqual(icon?.equatable, .testSBPIcon)
+        XCTAssertEqual(PPIcon.init(parameters: makeParametersWithFora())?.equatable, .testSBPIcon)
     }
     
     // MARK: - Helpers
@@ -236,21 +220,23 @@ final class Model_PaymensSFPTests: XCTestCase {
         )
     }
     
-    private func makeSPFSource(bankID: String) -> Payments.Operation.Source {
+    private func makeSPFSource(bankID: String = .foraBankID) -> Payments.Operation.Source {
         
-        .sfp(phone: "123", bankId: bankID)
+        return .sfp(phone: "123", bankId: bankID)
     }
     
-    private func makeParameter(_ value: String = "1crt88888881") -> [PaymentsParameterRepresentable] {
-        
-        [Payments.ParameterSelectBank.getTestParametersWithFora(value: value)]
+    private func makeParameter(_ value: String? = nil) -> [PaymentsParameterRepresentable] {
+
+      let value = value ?? .testParamaterValue
+      return [Payments.ParameterSelectBank.getTestParametersWithFora(value: value)]
     }
+
     
     private func makeParametersWithFora() -> [PaymentsParameterRepresentable] {
         
         let testParameter1 = Payments.ParameterSelectBank.getTestParametersWithFora()
         let testParameter2 = Payments.ParameterSelectBank.getTestParametersWithFora(
-            bankId: "bankId",
+            bankID: "bankId",
             value: "value",
             name: "name"
         )
@@ -298,10 +284,6 @@ private struct EquatableIcon: Equatable {
             self.value = .name(name)
         }
     }
-    
-    static func == (lhs: EquatableIcon, rhs: EquatableIcon) -> Bool {
-        return lhs.value == rhs.value
-    }
 }
 
 private extension EquatableIcon {
@@ -319,7 +301,8 @@ private extension Payments.ParameterHeader.Icon {
 
 private extension String {
     
-    static let foraBankId = "100000000217"
+    static let foraBankID = BankID.foraBankID.rawValue
+    static let testParamaterValue = "1crt88888881"
 }
 
 private extension Payments.ParameterHeader.Icon {
@@ -330,21 +313,21 @@ private extension Payments.ParameterHeader.Icon {
 private extension Payments.ParameterSelectBank {
     
     static func getTestParametersWithFora(
-        bankId: String = "BankRecipientID",
+        bankID: String = "BankRecipientID",
         value: String = "1crt88888881",
         name: String = "ФОРА-БАНК",
-        optionId: String = .foraBankId
+        optionID: String = .foraBankID
     ) -> PaymentsParameterRepresentable {
         
         Payments.ParameterSelectBank(
             .init(
-                id: bankId,
+                id: bankID,
                 value: value
             ),
             icon: .empty,
             title: "Банк получателя",
             options: [
-                .init(id: optionId, name: name, subtitle: nil, icon: .empty, isFavorite: false, searchValue: name)
+                .init(id: optionID, name: name, subtitle: nil, icon: .empty, isFavorite: false, searchValue: name)
             ],
             placeholder: "Начните ввод для поиска",
             keyboardType: .normal

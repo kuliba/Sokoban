@@ -1124,6 +1124,28 @@ extension Payments {
             
             case image(ImageData)
             case name(String)
+            
+            init?(source: Payments.Operation.Source?) {
+                
+                switch source {
+                case .sfp(_, let bankId):
+                    if bankId != BankID.foraBankID.rawValue {
+                        self = .name("ic24Sbp")
+                    } else {
+                        return nil
+                    }
+                default:
+                    self = .name("ic24Sbp")
+                }
+            }
+            
+            init?(parameters: [PaymentsParameterRepresentable]) {
+                
+                guard let bankParameterValue = try? parameters.value(forId: Payments.Parameter.Identifier.sfpBank.rawValue),
+                      bankParameterValue != BankID.foraBankID.rawValue
+                else { return nil }
+                self = .name("ic24Sbp")
+            }
         }
         
         enum Style {
@@ -1668,34 +1690,6 @@ extension Payments {
     }
 }
 
-extension Payments.ParameterHeader.Icon {
-    
-    static func headerIconForOperationSource(
-        _ source: Payments.Operation.Source?
-    ) -> Payments.ParameterHeader.Icon? {
-        
-        switch source {
-            case .sfp(_, let bankId):
-                return (bankId != .foraBankId) ? .name("ic24Sbp") : nil
-            default:
-                return .name("ic24Sbp")
-        }
-    }
-    
-    static func headerIconForBankParameters(
-      _ parameters: [PaymentsParameterRepresentable]
-    ) -> Payments.ParameterHeader.Icon? {
-        
-      guard let bankParameterValue = try? parameters.value(forId: Payments.Parameter.Identifier.sfpBank.rawValue),
-            bankParameterValue != .foraBankId else {
-          
-        return nil
-      }
-      
-      return .name("ic24Sbp")
-    }
-}
-
 extension Payments.Validation.RulesSystem {
     
     static let baseName: Payments.Validation.RulesSystem = {
@@ -1854,9 +1848,4 @@ extension Payments.ParameterSelectBank.Option {
           }
       }
 
-}
-
-private extension String {
-    
-    static let foraBankId = "100000000217"
 }
