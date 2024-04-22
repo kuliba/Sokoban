@@ -8,10 +8,7 @@
 import Combine
 import Foundation
 
-public final class RxViewModel<State, Event, Effect>: ObservableObject
-where State: Equatable,
-      Event: Equatable,
-      Effect: Equatable {
+public final class RxViewModel<State, Event, Effect>: ObservableObject {
     
     @Published public private(set) var state: State
     
@@ -24,6 +21,7 @@ where State: Equatable,
         initialState: State,
         reduce: @escaping Reduce,
         handleEffect: @escaping HandleEffect,
+        predicate: @escaping (State, State) -> Bool = { _,_ in false },
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.state = initialState
@@ -31,7 +29,7 @@ where State: Equatable,
         self.handleEffect = handleEffect
         
         stateSubject
-            .removeDuplicates()
+            .removeDuplicates(by: predicate)
             .receive(on: scheduler)
             .assign(to: &$state)
     }

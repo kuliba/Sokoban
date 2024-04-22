@@ -9,7 +9,7 @@ import Tagged
 
 extension AnywayPayment.Element {
     
-    public var uiComponent: AnywayPayment.UIComponent {
+    public var uiComponent: UIComponent {
         
         switch self {
         case let .field(field):
@@ -22,9 +22,6 @@ extension AnywayPayment.Element {
             return widget.uiComponent
         }
     }
-}
-
-extension AnywayPayment {
     
     public enum UIComponent: Equatable {
         
@@ -34,7 +31,7 @@ extension AnywayPayment {
     }
 }
 
-extension AnywayPayment.UIComponent {
+extension AnywayPayment.Element.UIComponent {
     
     public struct Field: Equatable {
         
@@ -77,14 +74,16 @@ extension AnywayPayment.UIComponent {
     }
 }
 
-extension AnywayPayment.UIComponent.Parameter {
+extension AnywayPayment.Element.UIComponent.Parameter {
     
     public typealias ID = Tagged<_ID, String>
     public enum _ID {}
     
     public enum ParameterType: Equatable {
         
-        case select([Option])
+        case hidden
+        case nonEditable
+        case select(Option, [Option])
         case textInput
         case unknown
     }
@@ -93,7 +92,7 @@ extension AnywayPayment.UIComponent.Parameter {
     public enum _Value {}
 }
 
-extension AnywayPayment.UIComponent.Parameter.ParameterType {
+extension AnywayPayment.Element.UIComponent.Parameter.ParameterType {
     
     public struct Option: Equatable {
         
@@ -110,7 +109,7 @@ extension AnywayPayment.UIComponent.Parameter.ParameterType {
     }
 }
 
-extension AnywayPayment.UIComponent.Parameter.ParameterType.Option {
+extension AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option {
     
     public typealias Key = Tagged<_Key, String>
     public enum _Key {}
@@ -122,31 +121,39 @@ extension AnywayPayment.UIComponent.Parameter.ParameterType.Option {
 extension AnywayPayment.Element.Parameter {
     
 #warning("used in preview - fix, make private")
-    public var uiComponent: AnywayPayment.UIComponent.Parameter {
+    public var uiComponent: AnywayPayment.Element.UIComponent.Parameter {
         
         .init(
             id: .init(field.id.rawValue),
-            type: uiAttributes.uiComponent,
+            type: uiAttributes.parameterType,
             value: field.value.map { .init($0.rawValue) }
         )
     }
 }
 
-extension AnywayPayment.UIComponent.Widget {
+extension AnywayPayment.Element.UIComponent.Widget {
     
     public typealias ProductID = AnywayPayment.Element.Widget.PaymentCore.ProductID
 }
 
+// MARK: - Adapters
+
 private extension AnywayPayment.Element.Parameter.UIAttributes {
     
-    var uiComponent: AnywayPayment.UIComponent.Parameter.ParameterType {
+    var parameterType: AnywayPayment.Element.UIComponent.Parameter.ParameterType {
         
         switch (type, viewType, dataType) {
+        case (_, .constant, _):
+            return .nonEditable
+            
+        case (_, .output, _):
+            return .hidden
+            
         case (.input, .input, .string):
             return .textInput
             
-        case let (.select, .input, .pairs(pairs)):
-            return .select(pairs.map(\.option))
+        case let (.select, .input, .pairs(pair, pairs)):
+            return .select(pair.option, pairs.map(\.option))
             
         default:
             return .unknown
@@ -156,7 +163,7 @@ private extension AnywayPayment.Element.Parameter.UIAttributes {
 
 private extension AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
     
-    var option: AnywayPayment.UIComponent.Parameter.ParameterType.Option {
+    var option: AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option {
         
         .init(key: .init(key), value: .init(value))
     }
@@ -164,7 +171,7 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
 
 private extension AnywayPayment.Element.Widget {
     
-    var uiComponent: AnywayPayment.UIComponent {
+    var uiComponent: AnywayPayment.Element.UIComponent {
         
         switch self {
         case let .core(core):
@@ -176,7 +183,7 @@ private extension AnywayPayment.Element.Widget {
     }
 }
 
-private extension AnywayPayment.UIComponent.Field {
+private extension AnywayPayment.Element.UIComponent.Field {
     
     init(_ field: AnywayPayment.Element.Field) {
         

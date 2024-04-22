@@ -22,12 +22,21 @@ private extension AnywayPayment.Element {
     
     var idValuePair: (AnywayPayment.Outline.ID, AnywayPayment.Outline.Value)? {
         
-        guard case let .parameter(parameter) = self
+        guard case let .parameter(parameter) = self,
+              parameter.isOutlinable
         else { return nil }
         
         return parameter.field.value.map {
             
             (.init(parameter.field.id.rawValue), .init($0.rawValue))
         }
+    }
+}
+
+private extension AnywayPayment.Element.Parameter {
+
+    var isOutlinable: Bool {
+        
+        uiAttributes.viewType == .input
     }
 }
