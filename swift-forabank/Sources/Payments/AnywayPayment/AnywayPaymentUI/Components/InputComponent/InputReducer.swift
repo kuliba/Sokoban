@@ -17,9 +17,10 @@ extension InputReducer {
         var state = state
         var effect: Effect?
         
-        //        switch event {
-        //
-        //        }
+        switch event {
+        case let .edit(text):
+            state.dynamic.value = text
+        }
         
         return (state, effect)
     }
