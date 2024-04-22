@@ -118,6 +118,8 @@ let package = Package(
         .anywayPaymentBackendTests,
         .anywayPaymentCore,
         .anywayPaymentCoreTests,
+        .anywayPaymentUI,
+        .anywayPaymentUITests,
         .utilityPayment,
         .utilityPaymentTests,
         // Services
@@ -530,6 +532,7 @@ private extension Product {
             .anywayPaymentAdapters,
             .anywayPaymentBackend,
             .anywayPaymentCore,
+            .anywayPaymentUI,
         ]
     )
 
@@ -934,6 +937,7 @@ private extension Target {
         name: .anywayPaymentAdapters,
         dependencies: [
             .anywayPaymentCore,
+            .anywayPaymentUI,
             .anywayPaymentBackend,
             .remoteServices,
             .tagged,
@@ -994,6 +998,29 @@ private extension Target {
             .rxViewModel,
         ],
         path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentCoreTests)"
+    )
+    
+    static let anywayPaymentUI = target(
+        name: .anywayPaymentUI,
+        dependencies: [
+            .anywayPaymentCore,
+            .paymentComponents,
+            .rxViewModel,
+        ],
+        path: "Sources/Payments/AnywayPayment/\(String.anywayPaymentUI)"
+    )
+    static let anywayPaymentUITests = testTarget(
+        name: .anywayPaymentUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .tagged,
+            // internal modules
+            .anywayPaymentUI,
+            .remoteServices,
+            .rxViewModel,
+        ],
+        path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentUITests)"
     )
     
     static let utilityPayment = target(
@@ -2058,6 +2085,10 @@ private extension Target.Dependency {
         name: .anywayPaymentCore
     )
 
+    static let anywayPaymentUI = byName(
+        name: .anywayPaymentUI
+    )
+
     static let utilityPayment = byName(
         name: .utilityPayment
     )
@@ -2270,6 +2301,8 @@ private extension String {
     static let anywayPaymentBackendTests = "AnywayPaymentBackendTests"
     static let anywayPaymentCore = "AnywayPaymentCore"
     static let anywayPaymentCoreTests = "AnywayPaymentCoreTests"
+    static let anywayPaymentUI = "AnywayPaymentUI"
+    static let anywayPaymentUITests = "AnywayPaymentUITests"
 
     static let utilityPayment = "UtilityPayment"
     static let utilityPaymentTests = "UtilityPaymentTests"
