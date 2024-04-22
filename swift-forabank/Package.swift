@@ -1101,6 +1101,8 @@ private extension Target {
             .rxViewModel,
             .prePaymentPicker,
             .remoteServices
+            .services,
+            .paymentComponents
         ]
     )
     
