@@ -10,7 +10,7 @@ import Foundation
 import RxViewModel
 import SwiftUI
 
-typealias InputViewModel<Icon> = RxViewModel<InputState<Icon>, InputEvent, InputEffect>
+typealias InputViewModel<Icon> = RxObservingViewModel<InputState<Icon>, InputEvent, InputEffect>
 
 struct InputWrapperView<Icon, IconView: View>: View {
     
@@ -26,9 +26,9 @@ struct InputWrapperView<Icon, IconView: View>: View {
         iconView: @escaping () -> IconView,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
-        self._viewModel = .init(wrappedValue: .decorated(
+        self._viewModel = .init(wrappedValue: .default(
             initialState: initialState,
-            decorate: { if case let .edit(value) = $0 { onInput(value) }},
+            observe: { onInput($0.dynamic.value) },
             scheduler: scheduler
         ))
         self.config = config
@@ -56,9 +56,9 @@ extension InputWrapperView {
 
 private extension InputViewModel {
     
-    static func decorated<Icon>(
+    static func `default`<Icon>(
         initialState: InputState<Icon>,
-        decorate: @escaping (InputEvent) -> Void,
+        observe: @escaping (InputState<Icon>) -> Void,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) -> InputViewModel<Icon> {
         
@@ -66,12 +66,9 @@ private extension InputViewModel {
         
         return .init(
             initialState: initialState,
-            reduce: { state, event in
-                
-                decorate(event)
-                return reducer.reduce(state, event)
-            },
+            reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in },
+            observe: observe,
             scheduler: scheduler
         )
     }

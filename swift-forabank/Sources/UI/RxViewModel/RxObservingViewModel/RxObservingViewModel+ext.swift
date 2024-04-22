@@ -19,7 +19,6 @@ public extension RxObservingViewModel {
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.init(
-            initialState: initialState,
             observable: .init(
                 initialState: initialState,
                 reduce: reduce,
@@ -43,7 +42,6 @@ public extension RxObservingViewModel where State: Equatable {
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.init(
-            initialState: initialState,
             observable: .init(
                 initialState: initialState,
                 reduce: reduce,

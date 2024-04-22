@@ -15,12 +15,11 @@ public final class RxObservingViewModel<State, Event, Effect>: ObservableObject 
     private let observable: ObservableViewModel
     
     public init(
-        initialState: State,
         observable: ObservableViewModel,
         observe: @escaping (State) -> Void,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
-        self.state = initialState
+        self.state = observable.state
         self.observable = observable
         
         observable.$state
