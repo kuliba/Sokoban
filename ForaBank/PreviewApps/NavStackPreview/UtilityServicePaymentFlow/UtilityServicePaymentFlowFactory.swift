@@ -14,6 +14,7 @@ where OperatorPicker: View,
     
     let asyncImage: MakeAsyncImage
     let makeOperatorPicker: MakeOperatorPicker
+    // TODO: replace with MakeDestinationView
     let makeServicePicker: MakeServicePicker
 }
 

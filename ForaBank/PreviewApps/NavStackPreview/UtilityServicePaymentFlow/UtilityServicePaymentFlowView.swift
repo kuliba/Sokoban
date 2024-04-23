@@ -26,6 +26,7 @@ where OperatorPicker: View,
                     get: { state },
                     set: { if $0 == nil { event(.resetDestination) }}
                 ),
+                // TODO: replace with factory.makeDestinationView
                 content: destinationView
             )
     }
@@ -40,7 +41,6 @@ where OperatorPicker: View,
         }
     }
     
-#warning("mind `operator`.icon` - use AsyncImage")
     private func servicePicker(
         _ state: PickerState
     ) -> some View {

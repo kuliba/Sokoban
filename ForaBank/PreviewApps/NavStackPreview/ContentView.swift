@@ -48,7 +48,7 @@ private extension UtilityServicePaymentFlowViewModel {
 }
 
 private extension UtilityServicePaymentFlowFactory
-where OperatorPicker == _OperatorPicker,
+where OperatorPicker == UtilityPaymentOperatorPickerStateWrapperView<Icon>,
       ServicePicker == UtilityServicePicker<Icon, UIPrimitives.AsyncImage> {
     
     static func makeFactory(
@@ -77,7 +77,7 @@ where OperatorPicker == _OperatorPicker,
         func _makeOperatorPicker(
         ) -> OperatorPicker {
             
-            _OperatorPicker()
+            UtilityPaymentOperatorPickerStateWrapperView<Icon>()
         }
         
         func _makeServicePicker(
