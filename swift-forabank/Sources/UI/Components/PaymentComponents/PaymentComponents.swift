@@ -41,7 +41,7 @@ public extension PaymentComponents {
     typealias InfoView = InfoComponent.InfoView
     
     typealias InputView = InputComponent.InputView
-    typealias InputConfig = InputComponent.InputView.Config
+    typealias InputConfig = InputComponent.InputConfig
     
     typealias InputPhoneView = InputPhoneComponent.InputPhoneView
     typealias InputPhoneConfig = InputPhoneComponent.InputPhoneView.InputPhoneConfig
