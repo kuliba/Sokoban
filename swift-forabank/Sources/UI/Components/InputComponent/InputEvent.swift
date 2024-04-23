@@ -9,6 +9,5 @@ import Foundation
 
 public enum InputEvent {
 
-    case updateText
-    case loadImage
+    case edit(String)
 }
