@@ -21,7 +21,6 @@ where OperatorPicker: View,
     var body: some View {
         
         factory.makeOperatorPicker(
-            state.operatorPickerState,
             { event(.selectUtilityServiceOperator($0)) }
         )
         .navigationDestination(

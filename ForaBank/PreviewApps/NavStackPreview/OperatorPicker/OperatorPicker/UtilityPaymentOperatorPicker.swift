@@ -77,7 +77,7 @@ struct UtilityPaymentOperatorPicker<Icon>: View {
         `operator`: State.Operator
     ) -> some View {
         
-        Button(String(describing: `operator`).prefix(6)) {
+        Button(String(describing: `operator`).prefix(32)) {
             
             event(.select(.`operator`(`operator`)))
         }

@@ -24,7 +24,7 @@ extension UtilityServicePaymentFlowFactory {
     
     typealias OperatorPickerState = UtilityPaymentOperatorPickerState<Icon>
     typealias Operator = OperatorPickerState.Operator
-    typealias MakeOperatorPicker = (OperatorPickerState, @escaping (Operator) -> Void) -> OperatorPicker
+    typealias MakeOperatorPicker = (@escaping (Operator) -> Void) -> OperatorPicker
     
     typealias Service = UtilityService<Icon>
     typealias ServicePickerState = UtilityServicePickerState<Icon>
