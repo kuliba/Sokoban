@@ -7,13 +7,37 @@
 
 import SwiftUI
 
-public struct InputState {
-
-    let image: () -> Image
+struct InputState<Icon> {
     
-    public init(
-        image: @escaping () -> Image
-    ) {
-        self.image = image
+    var dynamic: Dynamic
+    let settings: Settings
+}
+
+extension InputState {
+    
+    struct Dynamic: Equatable {
+        
+        var value: String
+        var warning: String?
+    }
+    
+    struct Settings {
+        
+        let hint: String?
+        let icon: Icon
+        let keyboard: Keyboard
+        let title: String
+        let subtitle: String
     }
 }
+
+extension InputState.Settings {
+    
+    enum Keyboard: Equatable {
+        
+        case `default`, numeric
+    }
+}
+
+extension InputState: Equatable where Icon: Equatable {}
+extension InputState.Settings: Equatable where Icon: Equatable {}
