@@ -7,11 +7,13 @@
 
 import SwiftUI
 
-struct UtilityServicePicker<Icon>: View {
+struct UtilityServicePicker<Icon, IconView>: View
+where IconView: View {
     
     let state: State
     let event: (Service) -> Void
     let config: Config
+    let iconView: (Icon) -> IconView
     
     var body: some View {
         
@@ -25,7 +27,14 @@ struct UtilityServicePicker<Icon>: View {
         service: Service
     ) -> some View {
         
-        Button(service.name.prefix(16)) { event(service) }
+        Button(action: { event(service) }) {
+            
+            Label {
+                Text(service.name.prefix(16))
+            } icon: {
+                iconView(service.icon).aspectRatio(contentMode: .fit)
+            }
+        }
     }
 }
 
@@ -40,6 +49,7 @@ extension UtilityServicePicker {
     UtilityServicePicker(
         state: .preview,
         event: { print($0) },
-        config: .preview
+        config: .preview,
+        iconView: { Text($0) }
     )
 }

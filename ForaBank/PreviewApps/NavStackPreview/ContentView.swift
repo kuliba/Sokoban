@@ -5,9 +5,11 @@
 //  Created by Igor Malyarov on 23.04.2024.
 //
 
+import Combine
 import CombineSchedulers
 import RxViewModel
 import SwiftUI
+import UIPrimitives
 
 struct ContentView: View {
     
@@ -17,7 +19,10 @@ struct ContentView: View {
             
             UtilityServicePaymentFlowStateWrapperView(
                 viewModel: .make(initialState: .services(.preview)),
-                factory: .makeFactory(config: .preview)
+                factory: .makeFactory(
+                    makeImageSubject: { _ in .init(.init(systemName: "car")) },
+                    config: .preview
+                )
             )
         }
     }
@@ -44,16 +49,30 @@ private extension UtilityServicePaymentFlowViewModel {
 
 private extension UtilityServicePaymentFlowFactory
 where OperatorPicker == _OperatorPicker,
-      ServicePicker == UtilityServicePicker<Icon> {
+      ServicePicker == UtilityServicePicker<Icon, UIPrimitives.AsyncImage> {
     
     static func makeFactory(
+        makeImageSubject: @escaping MakeImageSubject,
         config: UtilityServicePickerConfig
     ) -> Self {
         
         return .init(
+            asyncImage: asyncImage,
             makeOperatorPicker: _makeOperatorPicker,
             makeServicePicker: _makeServicePicker
         )
+        
+        func asyncImage(
+            icon: Icon
+        ) -> UIPrimitives.AsyncImage {
+            
+            let imageSubject = makeImageSubject(icon)
+            
+            return .init(
+                image: imageSubject.value,
+                publisher: imageSubject.eraseToAnyPublisher()
+            )
+        }
         
         func _makeOperatorPicker(
         ) -> OperatorPicker {
@@ -69,10 +88,14 @@ where OperatorPicker == _OperatorPicker,
             UtilityServicePicker(
                 state: state,
                 event: event,
-                config: config
+                config: config,
+                iconView: asyncImage(icon:)
             )
         }
     }
+    
+    typealias ImageSubject = CurrentValueSubject<Image, Never>
+    typealias MakeImageSubject = (Icon) -> ImageSubject
 }
 
 #Preview {

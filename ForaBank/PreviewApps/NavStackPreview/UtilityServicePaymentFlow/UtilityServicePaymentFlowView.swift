@@ -47,6 +47,7 @@ where OperatorPicker: View,
         
         factory.makeServicePicker(state, { event(.selectUtilityService($0)) })
             .navigationTitle(state.`operator`.navTitle)
+            .toolbar { factory.asyncImage(state.operator.icon) }
             .navigationBarTitleDisplayMode(.inline)
     }
 }
