@@ -955,6 +955,7 @@
 		2ADBDBA22BD7A36A00114E87 /* UtilityServicePickerState.Operator+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBA12BD7A36A00114E87 /* UtilityServicePickerState.Operator+preview.swift */; };
 		2ADBDBA42BD7A39600114E87 /* UtilityServicePickerState+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBA32BD7A39600114E87 /* UtilityServicePickerState+preview.swift */; };
 		2ADBDBA62BD7A47B00114E87 /* UtilityServicePickerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBA52BD7A47B00114E87 /* UtilityServicePickerState.swift */; };
+		2ADBDBA82BD7AC7500114E87 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADBDBA72BD7AC7500114E87 /* CombineSchedulers */; };
 		2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */; };
 		2ADDFD802AEFF3C2002FCE43 /* RSADomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */; };
 		2ADDFD822AEFF4F7002FCE43 /* ECDHDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */; };
@@ -5217,6 +5218,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2ADBDBA82BD7AC7500114E87 /* CombineSchedulers in Frameworks */,
 				2AD87D9C2BD778D4004D06C0 /* UIPrimitives in Frameworks */,
 				2AD87D9E2BD77AC3004D06C0 /* RxViewModel in Frameworks */,
 				2AD87D9A2BD778A4004D06C0 /* ForaTools in Frameworks */,
@@ -13750,6 +13752,7 @@
 				2AD87D992BD778A4004D06C0 /* ForaTools */,
 				2AD87D9B2BD778D4004D06C0 /* UIPrimitives */,
 				2AD87D9D2BD77AC3004D06C0 /* RxViewModel */,
+				2ADBDBA72BD7AC7500114E87 /* CombineSchedulers */,
 			);
 			productName = NavStackPreview;
 			productReference = 2AD87D892BD77859004D06C0 /* NavStackPreview.app */;
@@ -20598,6 +20601,11 @@
 		2AD87D9D2BD77AC3004D06C0 /* RxViewModel */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RxViewModel;
+		};
+		2ADBDBA72BD7AC7500114E87 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
 		};
 		2AF5AC312B66628D00845E7A /* UserAccountNavigationComponent */ = {
 			isa = XCSwiftPackageProductDependency;

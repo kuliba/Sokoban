@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Array where Element == UtilityService {
+extension Array where Element == UtilityService<String> {
     
     static let preview: Self = (0..<10).map { _ in
         

@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 23.04.2024.
 //
 
+import CombineSchedulers
 import RxViewModel
 import SwiftUI
 
@@ -15,23 +16,25 @@ struct ContentView: View {
         NavigationView {
             
             UtilityServicePaymentFlowStateWrapperView(
-                viewModel: .init(),
+                viewModel: .make(initialState: .services(.preview)),
                 factory: .makeFactory(config: .preview)
             )
         }
     }
 }
 
-private extension RxViewModel
-where State == UtilityServicePaymentFlowState, Event == UtilityServicePaymentFlowEvent, Effect == UtilityServicePaymentFlowEffect {
+private extension UtilityServicePaymentFlowViewModel {
     
-    convenience init() {
+    static func make<Icon>(
+        initialState: UtilityServicePaymentFlowState<Icon>,
+        scheduler: AnySchedulerOf<DispatchQueue> = .main
+    ) -> UtilityServicePaymentFlowViewModel<Icon> {
         
-        let reducer = UtilityServicePaymentFlowReducer()
-        let effectHandler = UtilityServicePaymentFlowEffectHandler()
+        let reducer = UtilityServicePaymentFlowReducer<Icon>()
+        let effectHandler = UtilityServicePaymentFlowEffectHandler<Icon>()
         
-        self.init(
-            initialState: .services(.preview),
+        return .init(
+            initialState: initialState,
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: .main
@@ -41,7 +44,7 @@ where State == UtilityServicePaymentFlowState, Event == UtilityServicePaymentFlo
 
 private extension UtilityServicePaymentFlowFactory
 where OperatorPicker == _OperatorPicker,
-      ServicePicker == UtilityServicePicker {
+      ServicePicker == UtilityServicePicker<Icon> {
     
     static func makeFactory(
         config: UtilityServicePickerConfig
@@ -59,8 +62,8 @@ where OperatorPicker == _OperatorPicker,
         }
         
         func _makeServicePicker(
-            state: UtilityServicePickerState,
-            event: @escaping (UtilityService) -> Void
+            state: PickerState,
+            event: @escaping (Service) -> Void
         ) -> ServicePicker {
             
             UtilityServicePicker(

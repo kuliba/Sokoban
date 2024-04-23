@@ -9,7 +9,7 @@ import ForaTools
 import RxViewModel
 import SwiftUI
 
-struct UtilityServicePaymentFlowStateWrapperView<OperatorPicker, ServicePicker>: View
+struct UtilityServicePaymentFlowStateWrapperView<Icon, OperatorPicker, ServicePicker>: View
 where OperatorPicker: View,
       ServicePicker: View {
     
@@ -35,14 +35,18 @@ where OperatorPicker: View,
     }
 }
 
+typealias UtilityServicePaymentFlowViewModel<Icon> = RxViewModel<UtilityServicePaymentFlowState<Icon>,
+      UtilityServicePaymentFlowEvent<Icon>,
+      UtilityServicePaymentFlowEffect>
+
 extension UtilityServicePaymentFlowStateWrapperView {
     
-    typealias ViewModel = RxViewModel<State, Event, Effect>
+    typealias ViewModel = UtilityServicePaymentFlowViewModel<Icon>
     
-    typealias State = UtilityServicePaymentFlowState
-    typealias Event = UtilityServicePaymentFlowEvent
+    typealias State = UtilityServicePaymentFlowState<Icon>
+    typealias Event = UtilityServicePaymentFlowEvent<Icon>
     typealias Effect = UtilityServicePaymentFlowEffect
-    typealias Factory = UtilityServicePaymentFlowFactory<OperatorPicker, ServicePicker>
+    typealias Factory = UtilityServicePaymentFlowFactory<Icon, OperatorPicker, ServicePicker>
 }
 
 //#Preview {

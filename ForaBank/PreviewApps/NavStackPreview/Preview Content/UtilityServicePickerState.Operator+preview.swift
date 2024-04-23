@@ -7,11 +7,14 @@
 
 import Foundation
 
-extension UtilityServicePickerState.Operator {
+extension UtilityServicePickerState.Operator where Icon == String {
     
-    static let preview: Self = .init(
-        name: UUID().uuidString,
-        inn: UUID().uuidString,
-        icon: UUID().uuidString
-    )
+    static var preview: Self {
+ 
+        .init(
+            name: UUID().uuidString,
+            inn: UUID().uuidString,
+            icon: UUID().uuidString
+        )
+    }
 }

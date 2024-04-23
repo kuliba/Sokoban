@@ -7,32 +7,32 @@
 
 import SwiftUI
 
-struct UtilityServicePicker: View {
+struct UtilityServicePicker<Icon>: View {
     
     let state: State
-    let event: (Event) -> Void
+    let event: (Service) -> Void
     let config: Config
     
     var body: some View {
         
         List {
             
-            ForEach(state.services, content: utilityServiceView)
+            ForEach(state.services, content: serviceView)
         }
     }
     
-    private func utilityServiceView(
-        utilityService: UtilityService
+    private func serviceView(
+        service: Service
     ) -> some View {
         
-        Button(utilityService.name.prefix(16)) { event(utilityService) }
+        Button(service.name.prefix(16)) { event(service) }
     }
 }
 
 extension UtilityServicePicker {
     
-    typealias State = UtilityServicePickerState
-    typealias Event = UtilityService
+    typealias State = UtilityServicePickerState<Icon>
+    typealias Service = UtilityService<Icon>
     typealias Config = UtilityServicePickerConfig
 }
 

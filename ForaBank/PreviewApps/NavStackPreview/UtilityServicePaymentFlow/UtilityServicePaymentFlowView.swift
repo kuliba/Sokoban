@@ -8,13 +8,13 @@
 import SwiftUI
 import UIPrimitives
 
-struct UtilityServicePaymentFlowView<OperatorPicker, ServicePicker>: View
+struct UtilityServicePaymentFlowView<Icon, OperatorPicker, ServicePicker>: View
 where OperatorPicker: View,
       ServicePicker: View {
     
     let state: State
     let event: (Event) -> Void
-    let factory: Factory<OperatorPicker, ServicePicker>
+    let factory: Factory<Icon, OperatorPicker, ServicePicker>
     
 #warning("replace with NavStack")
     
@@ -31,7 +31,7 @@ where OperatorPicker: View,
     }
     
     private func destinationView(
-        destination: UtilityServicePaymentFlowDestination
+        destination: Destination
     ) -> some View {
         
         switch destination {
@@ -42,7 +42,7 @@ where OperatorPicker: View,
     
 #warning("mind `operator`.icon` - use AsyncImage")
     private func servicePicker(
-        _ state: UtilityServicePickerState
+        _ state: PickerState
     ) -> some View {
         
         factory.makeServicePicker(state, { event(.selectUtilityService($0)) })
@@ -60,13 +60,16 @@ private extension UtilityServicePickerState.Operator {
     
     private var nameTitle: Substring { name.prefix(6) }
     private var innTitle: Substring { inn.prefix(4) }
-    private var iconTitle: Substring { icon.prefix(4) }
+    private var iconTitle: Substring { String(describing: icon).prefix(4) }
 }
 
 extension UtilityServicePaymentFlowView {
     
-    typealias State = UtilityServicePaymentFlowState
-    typealias Event = UtilityServicePaymentFlowEvent
+    typealias Destination = UtilityServicePaymentFlowDestination<Icon>
+    typealias PickerState = UtilityServicePickerState<Icon>
+    
+    typealias State = UtilityServicePaymentFlowState<Icon>
+    typealias Event = UtilityServicePaymentFlowEvent<Icon>
     typealias Effect = UtilityServicePaymentFlowEffect
     typealias Factory = UtilityServicePaymentFlowFactory
 }

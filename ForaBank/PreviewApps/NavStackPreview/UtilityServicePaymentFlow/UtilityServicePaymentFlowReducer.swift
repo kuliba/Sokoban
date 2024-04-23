@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.04.2024.
 //
 
-final class UtilityServicePaymentFlowReducer {}
+final class UtilityServicePaymentFlowReducer<Icon> {}
 
 extension UtilityServicePaymentFlowReducer {
     
@@ -31,7 +31,7 @@ extension UtilityServicePaymentFlowReducer {
 
 extension UtilityServicePaymentFlowReducer {
     
-    typealias State = UtilityServicePaymentFlowState
-    typealias Event = UtilityServicePaymentFlowEvent
+    typealias State = UtilityServicePaymentFlowState<Icon>
+    typealias Event = UtilityServicePaymentFlowEvent<Icon>
     typealias Effect = UtilityServicePaymentFlowEffect
 }

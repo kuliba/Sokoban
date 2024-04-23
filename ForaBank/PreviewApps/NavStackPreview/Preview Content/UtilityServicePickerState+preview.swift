@@ -7,10 +7,10 @@
 
 import Foundation
 
-extension UtilityServicePickerState {
+extension UtilityServicePickerState where Icon == String {
     
-    static let preview: Self = .init(
-        operator: .preview,
-        services: .preview
-    )
+    static var preview: Self {
+        
+        .init(operator: .preview, services: .preview)
+    }
 }

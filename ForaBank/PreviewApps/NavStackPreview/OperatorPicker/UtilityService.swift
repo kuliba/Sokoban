@@ -7,9 +7,11 @@
 
 import Foundation
 
-struct UtilityService: Equatable, Identifiable {
+struct UtilityService<Icon>: Identifiable {
     
     let id: String
     let name: String
-    let icon: String
+    let icon: Icon
 }
+
+extension UtilityService: Equatable where Icon: Equatable {}

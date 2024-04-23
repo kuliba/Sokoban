@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct UtilityServicePaymentFlowFactory<OperatorPicker, ServicePicker>
+struct UtilityServicePaymentFlowFactory<Icon, OperatorPicker, ServicePicker>
 where OperatorPicker: View,
       ServicePicker: View {
     
@@ -19,5 +19,7 @@ extension UtilityServicePaymentFlowFactory {
     
     typealias MakeOperatorPicker = () -> OperatorPicker
     
-    typealias MakeServicePicker = (UtilityServicePickerState, @escaping (UtilityService) -> Void) -> ServicePicker
+    typealias Service = UtilityService<Icon>
+    typealias PickerState = UtilityServicePickerState<Icon>
+    typealias MakeServicePicker = (PickerState, @escaping (Service) -> Void) -> ServicePicker
 }

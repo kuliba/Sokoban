@@ -9,11 +9,11 @@ import ForaTools
 
 #warning("replace with `Stack`")
 // typealias UtilityServicePaymentFlowState = Stack<UtilityServicePaymentFlowDestination>
-typealias UtilityServicePaymentFlowState = UtilityServicePaymentFlowDestination?
+typealias UtilityServicePaymentFlowState<Icon> = UtilityServicePaymentFlowDestination<Icon>?
 
-enum UtilityServicePaymentFlowDestination {
+enum UtilityServicePaymentFlowDestination<Icon> {
     
-    case services(UtilityServicePickerState)
+    case services(UtilityServicePickerState<Icon>)
 }
 
 extension UtilityServicePaymentFlowDestination: Identifiable {
