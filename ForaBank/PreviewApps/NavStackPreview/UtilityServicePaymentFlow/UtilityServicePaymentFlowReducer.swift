@@ -19,10 +19,13 @@ extension UtilityServicePaymentFlowReducer {
         
         switch event {
         case .resetDestination:
-            state = nil
+            state.destination = nil
             
         case let .selectUtilityService(service):
             fatalError("what goes here???")
+            
+        case let .selectUtilityServiceOperator(`operator`):
+            effect = .selectUtilityServiceOperator(`operator`)
         }
         
         return (state, effect)
@@ -33,5 +36,5 @@ extension UtilityServicePaymentFlowReducer {
     
     typealias State = UtilityServicePaymentFlowState<Icon>
     typealias Event = UtilityServicePaymentFlowEvent<Icon>
-    typealias Effect = UtilityServicePaymentFlowEffect
+    typealias Effect = UtilityServicePaymentFlowEffect<Icon>
 }

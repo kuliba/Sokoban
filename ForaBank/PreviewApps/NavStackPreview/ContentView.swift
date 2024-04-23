@@ -18,7 +18,15 @@ struct ContentView: View {
         NavigationView {
             
             UtilityServicePaymentFlowStateWrapperView(
-                viewModel: .make(initialState: .services(.preview)),
+                viewModel: .make(
+                    initialState: .init(
+                        operatorPickerState: .init(
+                            lastPayments: .preview,
+                            operators: .preview
+                        ),
+                        destination: .services(.preview)
+                    )
+                ),
                 factory: .makeFactory(
                     makeImageSubject: { _ in .init(.init(systemName: "car")) },
                     config: .preview
@@ -47,13 +55,39 @@ private extension UtilityServicePaymentFlowViewModel {
     }
 }
 
+private extension UtilityPaymentOperatorPickerViewModel {
+    
+    static func make<Icon>(
+        initialState: UtilityPaymentOperatorPickerState<Icon>,
+        scheduler: AnySchedulerOf<DispatchQueue> = .main
+    ) -> UtilityPaymentOperatorPickerViewModel<Icon> {
+        
+        let reducer = UtilityPaymentOperatorPickerReducer<Icon>()
+        let effectHandler = UtilityPaymentOperatorPickerEffectHandler<Icon>()
+
+        return .init(
+            initialState: initialState,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: scheduler
+        )
+    }
+}
+
+struct UtilityPaymentConfig {
+    
+    let operatorPicker: UtilityPaymentOperatorPickerConfig
+    let servicePicker: UtilityServicePickerConfig
+}
+
 private extension UtilityServicePaymentFlowFactory
 where OperatorPicker == UtilityPaymentOperatorPickerStateWrapperView<Icon>,
       ServicePicker == UtilityServicePicker<Icon, UIPrimitives.AsyncImage> {
     
     static func makeFactory(
         makeImageSubject: @escaping MakeImageSubject,
-        config: UtilityServicePickerConfig
+        config: UtilityPaymentConfig,
+        scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) -> Self {
         
         return .init(
@@ -75,20 +109,28 @@ where OperatorPicker == UtilityPaymentOperatorPickerStateWrapperView<Icon>,
         }
         
         func _makeOperatorPicker(
+            state: OperatorPickerState,
+            event: @escaping (OperatorPickerState.Operator) -> Void
         ) -> OperatorPicker {
             
-            UtilityPaymentOperatorPickerStateWrapperView<Icon>()
+            UtilityPaymentOperatorPickerStateWrapperView<Icon>(
+                viewModel: .make(
+                    initialState: state,
+                    scheduler: scheduler
+                ),
+                config: config.operatorPicker
+            )
         }
         
         func _makeServicePicker(
-            state: PickerState,
+            state: ServicePickerState,
             event: @escaping (Service) -> Void
         ) -> ServicePicker {
             
             UtilityServicePicker(
                 state: state,
                 event: event,
-                config: config,
+                config: config.servicePicker,
                 iconView: asyncImage(icon:)
             )
         }

@@ -20,15 +20,18 @@ where OperatorPicker: View,
     
     var body: some View {
         
-        factory.makeOperatorPicker()
-            .navigationDestination(
-                item: .init(
-                    get: { state },
-                    set: { if $0 == nil { event(.resetDestination) }}
-                ),
-                // TODO: replace with factory.makeDestinationView
-                content: destinationView
-            )
+        factory.makeOperatorPicker(
+            state.operatorPickerState,
+            { event(.selectUtilityServiceOperator($0)) }
+        )
+        .navigationDestination(
+            item: .init(
+                get: { state.destination },
+                set: { if $0 == nil { event(.resetDestination) }}
+            ),
+            // TODO: replace with factory.makeDestinationView
+            content: destinationView
+        )
     }
     
     private func destinationView(
@@ -66,12 +69,12 @@ private extension UtilityServicePickerState.Operator {
 
 extension UtilityServicePaymentFlowView {
     
-    typealias Destination = UtilityServicePaymentFlowDestination<Icon>
+    typealias Destination = UtilityServicePaymentFlowState<Icon>.Destination
     typealias PickerState = UtilityServicePickerState<Icon>
     
     typealias State = UtilityServicePaymentFlowState<Icon>
     typealias Event = UtilityServicePaymentFlowEvent<Icon>
-    typealias Effect = UtilityServicePaymentFlowEffect
+    typealias Effect = UtilityServicePaymentFlowEffect<Icon>
     typealias Factory = UtilityServicePaymentFlowFactory
 }
 

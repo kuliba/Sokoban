@@ -8,7 +8,14 @@
 enum UtilityServicePaymentFlowEvent<Icon> {
     
     case resetDestination
-    case selectUtilityService(UtilityService<Icon>)
+    case selectUtilityService(Service)
+    case selectUtilityServiceOperator(Operator)
+}
+
+extension UtilityServicePaymentFlowEvent{
+    
+    typealias Service = UtilityService<Icon>
+    typealias Operator = UtilityPaymentOperatorPickerState<Icon>.Operator
 }
 
 extension UtilityServicePaymentFlowEvent: Equatable where Icon: Equatable {}

@@ -22,9 +22,11 @@ extension UtilityServicePaymentFlowFactory {
     
     typealias MakeAsyncImage = (Icon) -> UIPrimitives.AsyncImage
     
-    typealias MakeOperatorPicker = () -> OperatorPicker
+    typealias OperatorPickerState = UtilityPaymentOperatorPickerState<Icon>
+    typealias Operator = OperatorPickerState.Operator
+    typealias MakeOperatorPicker = (OperatorPickerState, @escaping (Operator) -> Void) -> OperatorPicker
     
     typealias Service = UtilityService<Icon>
-    typealias PickerState = UtilityServicePickerState<Icon>
-    typealias MakeServicePicker = (PickerState, @escaping (Service) -> Void) -> ServicePicker
+    typealias ServicePickerState = UtilityServicePickerState<Icon>
+    typealias MakeServicePicker = (ServicePickerState, @escaping (Service) -> Void) -> ServicePicker
 }

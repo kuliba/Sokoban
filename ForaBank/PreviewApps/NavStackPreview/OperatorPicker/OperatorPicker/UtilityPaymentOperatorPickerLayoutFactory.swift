@@ -1,5 +1,5 @@
 //
-//  UtilityPaymentOperatorPickerFactory.swift
+//  UtilityPaymentOperatorPickerLayoutFactory.swift
 //  NavStackPreview
 //
 //  Created by Igor Malyarov on 23.04.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct UtilityPaymentOperatorPickerFactory<Icon, FooterView, LastPaymentsView, OperatorsView>
+struct UtilityPaymentOperatorPickerLayoutFactory<Icon, FooterView, LastPaymentsView, OperatorsView>
 where FooterView: View,
       LastPaymentsView: View,
       OperatorsView: View {
@@ -17,7 +17,7 @@ where FooterView: View,
     let operatorsView: MakeOperatorView
 }
 
-extension UtilityPaymentOperatorPickerFactory {
+extension UtilityPaymentOperatorPickerLayoutFactory {
     
     typealias MakeFooterView = (Bool) -> FooterView
     

@@ -11,6 +11,7 @@ struct UtilityPaymentOperatorPicker<Icon>: View {
     
     let state: State
     let event: (Event) -> Void
+    let config: Config
     
     var body: some View {
         
@@ -87,6 +88,7 @@ extension UtilityPaymentOperatorPicker {
     
     typealias State = UtilityPaymentOperatorPickerState<Icon>
     typealias Event = UtilityPaymentOperatorPickerEvent<Icon>
+    typealias Config = UtilityPaymentOperatorPickerConfig
 }
 
 //#Preview {

@@ -957,11 +957,19 @@
 		2ADBDBA62BD7A47B00114E87 /* UtilityServicePickerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBA52BD7A47B00114E87 /* UtilityServicePickerState.swift */; };
 		2ADBDBA82BD7AC7500114E87 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADBDBA72BD7AC7500114E87 /* CombineSchedulers */; };
 		2ADBDBAA2BD7BB1900114E87 /* UtilityPaymentOperatorPickerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBA92BD7BB1900114E87 /* UtilityPaymentOperatorPickerState.swift */; };
-		2ADBDBAC2BD7BE2200114E87 /* UtilityPaymentOperatorPickerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBAB2BD7BE2200114E87 /* UtilityPaymentOperatorPickerFactory.swift */; };
+		2ADBDBAC2BD7BE2200114E87 /* UtilityPaymentOperatorPickerLayoutFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBAB2BD7BE2200114E87 /* UtilityPaymentOperatorPickerLayoutFactory.swift */; };
 		2ADBDBAE2BD7C08B00114E87 /* UtilityPaymentOperatorPickerStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBAD2BD7C08B00114E87 /* UtilityPaymentOperatorPickerStateWrapperView.swift */; };
 		2ADBDBB02BD7C20300114E87 /* UtilityPaymentOperatorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBAF2BD7C20300114E87 /* UtilityPaymentOperatorPicker.swift */; };
 		2ADBDBB22BD7C38600114E87 /* UtilityPaymentOperatorPickerFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBB12BD7C38600114E87 /* UtilityPaymentOperatorPickerFooterView.swift */; };
 		2ADBDBB42BD7C49800114E87 /* UtilityPaymentOperatorPickerEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBB32BD7C49800114E87 /* UtilityPaymentOperatorPickerEvent.swift */; };
+		2ADBDBB62BD7CE9700114E87 /* UtilityPaymentOperatorPickerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBB52BD7CE9700114E87 /* UtilityPaymentOperatorPickerConfig.swift */; };
+		2ADBDBB82BD7D0E700114E87 /* UtilityPaymentConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBB72BD7D0E700114E87 /* UtilityPaymentConfig+preview.swift */; };
+		2ADBDBBA2BD7D10F00114E87 /* UtilityServiceOperatorPickerConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBB92BD7D10F00114E87 /* UtilityServiceOperatorPickerConfig+preview.swift */; };
+		2ADBDBBC2BD7D2CA00114E87 /* UtilityPaymentOperatorPickerEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBBB2BD7D2CA00114E87 /* UtilityPaymentOperatorPickerEffect.swift */; };
+		2ADBDBBE2BD7D2E100114E87 /* UtilityPaymentOperatorPickerReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBBD2BD7D2E100114E87 /* UtilityPaymentOperatorPickerReducer.swift */; };
+		2ADBDBC02BD7D2EA00114E87 /* UtilityPaymentOperatorPickerEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBBF2BD7D2EA00114E87 /* UtilityPaymentOperatorPickerEffectHandler.swift */; };
+		2ADBDBC22BD7E00400114E87 /* Array.UtilityPaymentOperatorPickerState.LastPayment+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBC12BD7E00400114E87 /* Array.UtilityPaymentOperatorPickerState.LastPayment+preview.swift */; };
+		2ADBDBC42BD7E0A000114E87 /* Array.UtilityPaymentOperatorPickerState.Operator+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBC32BD7E0A000114E87 /* Array.UtilityPaymentOperatorPickerState.Operator+preview.swift */; };
 		2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */; };
 		2ADDFD802AEFF3C2002FCE43 /* RSADomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */; };
 		2ADDFD822AEFF4F7002FCE43 /* ECDHDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */; };
@@ -3579,11 +3587,19 @@
 		2ADBDBA32BD7A39600114E87 /* UtilityServicePickerState+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UtilityServicePickerState+preview.swift"; sourceTree = "<group>"; };
 		2ADBDBA52BD7A47B00114E87 /* UtilityServicePickerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePickerState.swift; sourceTree = "<group>"; };
 		2ADBDBA92BD7BB1900114E87 /* UtilityPaymentOperatorPickerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerState.swift; sourceTree = "<group>"; };
-		2ADBDBAB2BD7BE2200114E87 /* UtilityPaymentOperatorPickerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerFactory.swift; sourceTree = "<group>"; };
+		2ADBDBAB2BD7BE2200114E87 /* UtilityPaymentOperatorPickerLayoutFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerLayoutFactory.swift; sourceTree = "<group>"; };
 		2ADBDBAD2BD7C08B00114E87 /* UtilityPaymentOperatorPickerStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerStateWrapperView.swift; sourceTree = "<group>"; };
 		2ADBDBAF2BD7C20300114E87 /* UtilityPaymentOperatorPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPicker.swift; sourceTree = "<group>"; };
 		2ADBDBB12BD7C38600114E87 /* UtilityPaymentOperatorPickerFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerFooterView.swift; sourceTree = "<group>"; };
 		2ADBDBB32BD7C49800114E87 /* UtilityPaymentOperatorPickerEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerEvent.swift; sourceTree = "<group>"; };
+		2ADBDBB52BD7CE9700114E87 /* UtilityPaymentOperatorPickerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerConfig.swift; sourceTree = "<group>"; };
+		2ADBDBB72BD7D0E700114E87 /* UtilityPaymentConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UtilityPaymentConfig+preview.swift"; sourceTree = "<group>"; };
+		2ADBDBB92BD7D10F00114E87 /* UtilityServiceOperatorPickerConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UtilityServiceOperatorPickerConfig+preview.swift"; sourceTree = "<group>"; };
+		2ADBDBBB2BD7D2CA00114E87 /* UtilityPaymentOperatorPickerEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerEffect.swift; sourceTree = "<group>"; };
+		2ADBDBBD2BD7D2E100114E87 /* UtilityPaymentOperatorPickerReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerReducer.swift; sourceTree = "<group>"; };
+		2ADBDBBF2BD7D2EA00114E87 /* UtilityPaymentOperatorPickerEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerEffectHandler.swift; sourceTree = "<group>"; };
+		2ADBDBC12BD7E00400114E87 /* Array.UtilityPaymentOperatorPickerState.LastPayment+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array.UtilityPaymentOperatorPickerState.LastPayment+preview.swift"; sourceTree = "<group>"; };
+		2ADBDBC32BD7E0A000114E87 /* Array.UtilityPaymentOperatorPickerState.Operator+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array.UtilityPaymentOperatorPickerState.Operator+preview.swift"; sourceTree = "<group>"; };
 		2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+getMosParkingListDataTests.swift"; sourceTree = "<group>"; };
 		2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSADomain.swift; sourceTree = "<group>"; };
 		2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECDHDomain.swift; sourceTree = "<group>"; };
@@ -8304,9 +8320,13 @@
 			isa = PBXGroup;
 			children = (
 				2AD87D922BD7785B004D06C0 /* Preview Assets.xcassets */,
+				2ADBDBC12BD7E00400114E87 /* Array.UtilityPaymentOperatorPickerState.LastPayment+preview.swift */,
+				2ADBDBC32BD7E0A000114E87 /* Array.UtilityPaymentOperatorPickerState.Operator+preview.swift */,
 				2ADBDBA32BD7A39600114E87 /* UtilityServicePickerState+preview.swift */,
 				2ADBDBA12BD7A36A00114E87 /* UtilityServicePickerState.Operator+preview.swift */,
 				2ADBDB9B2BD79BC300114E87 /* Array.UtilityService+preview.swift */,
+				2ADBDBB72BD7D0E700114E87 /* UtilityPaymentConfig+preview.swift */,
+				2ADBDBB92BD7D10F00114E87 /* UtilityServiceOperatorPickerConfig+preview.swift */,
 				2ADBDB9F2BD79C9C00114E87 /* UtilityServicePickerConfig+preview.swift */,
 			);
 			path = "Preview Content";
@@ -8333,9 +8353,13 @@
 			children = (
 				2ADBDBA92BD7BB1900114E87 /* UtilityPaymentOperatorPickerState.swift */,
 				2ADBDBB32BD7C49800114E87 /* UtilityPaymentOperatorPickerEvent.swift */,
-				2ADBDB932BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift */,
-				2ADBDBAB2BD7BE2200114E87 /* UtilityPaymentOperatorPickerFactory.swift */,
+				2ADBDBBB2BD7D2CA00114E87 /* UtilityPaymentOperatorPickerEffect.swift */,
+				2ADBDBBD2BD7D2E100114E87 /* UtilityPaymentOperatorPickerReducer.swift */,
+				2ADBDBBF2BD7D2EA00114E87 /* UtilityPaymentOperatorPickerEffectHandler.swift */,
 				2ADBDBAF2BD7C20300114E87 /* UtilityPaymentOperatorPicker.swift */,
+				2ADBDBB52BD7CE9700114E87 /* UtilityPaymentOperatorPickerConfig.swift */,
+				2ADBDB932BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift */,
+				2ADBDBAB2BD7BE2200114E87 /* UtilityPaymentOperatorPickerLayoutFactory.swift */,
 				2ADBDBB12BD7C38600114E87 /* UtilityPaymentOperatorPickerFooterView.swift */,
 				2ADBDBAD2BD7C08B00114E87 /* UtilityPaymentOperatorPickerStateWrapperView.swift */,
 			);
@@ -14976,31 +15000,39 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2ADBDBB62BD7CE9700114E87 /* UtilityPaymentOperatorPickerConfig.swift in Sources */,
 				2ADBDB9A2BD79AB900114E87 /* UtilityService.swift in Sources */,
 				2ADBDB912BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift in Sources */,
 				2ADBDBAE2BD7C08B00114E87 /* UtilityPaymentOperatorPickerStateWrapperView.swift in Sources */,
 				2ADBDBA22BD7A36A00114E87 /* UtilityServicePickerState.Operator+preview.swift in Sources */,
+				2ADBDBC22BD7E00400114E87 /* Array.UtilityPaymentOperatorPickerState.LastPayment+preview.swift in Sources */,
 				2ADBDBB22BD7C38600114E87 /* UtilityPaymentOperatorPickerFooterView.swift in Sources */,
 				2ADBDB972BD79A0F00114E87 /* UtilityServicePicker.swift in Sources */,
 				2AD87DA02BD77C04004D06C0 /* UtilityServicePaymentFlowView.swift in Sources */,
 				2ADBDBA42BD7A39600114E87 /* UtilityServicePickerState+preview.swift in Sources */,
 				2AD87DAD2BD77E4B004D06C0 /* UtilityServicePaymentFlowEffectHandler.swift in Sources */,
+				2ADBDBB82BD7D0E700114E87 /* UtilityPaymentConfig+preview.swift in Sources */,
 				2AD87DA52BD77DD9004D06C0 /* UtilityServicePaymentFlowState.swift in Sources */,
 				2ADBDB9C2BD79BC300114E87 /* Array.UtilityService+preview.swift in Sources */,
 				2AD87DAF2BD782E1004D06C0 /* UtilityServicePaymentFlowConfig.swift in Sources */,
 				2ADBDBAA2BD7BB1900114E87 /* UtilityPaymentOperatorPickerState.swift in Sources */,
+				2ADBDBC42BD7E0A000114E87 /* Array.UtilityPaymentOperatorPickerState.Operator+preview.swift in Sources */,
 				2ADBDB942BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift in Sources */,
 				2ADBDB9E2BD79C7900114E87 /* UtilityServicePickerConfig.swift in Sources */,
+				2ADBDBC02BD7D2EA00114E87 /* UtilityPaymentOperatorPickerEffectHandler.swift in Sources */,
 				2AD87DA92BD77E00004D06C0 /* UtilityServicePaymentFlowEffect.swift in Sources */,
-				2ADBDBAC2BD7BE2200114E87 /* UtilityPaymentOperatorPickerFactory.swift in Sources */,
+				2ADBDBAC2BD7BE2200114E87 /* UtilityPaymentOperatorPickerLayoutFactory.swift in Sources */,
 				2AD87D8E2BD77859004D06C0 /* ContentView.swift in Sources */,
+				2ADBDBBA2BD7D10F00114E87 /* UtilityServiceOperatorPickerConfig+preview.swift in Sources */,
 				2ADBDBA62BD7A47B00114E87 /* UtilityServicePickerState.swift in Sources */,
 				2ADBDBB02BD7C20300114E87 /* UtilityPaymentOperatorPicker.swift in Sources */,
+				2ADBDBBE2BD7D2E100114E87 /* UtilityPaymentOperatorPickerReducer.swift in Sources */,
 				2ADBDBB42BD7C49800114E87 /* UtilityPaymentOperatorPickerEvent.swift in Sources */,
 				2AD87DA22BD77C50004D06C0 /* UtilityServicePaymentFlowStateWrapperView.swift in Sources */,
 				2ADBDBA02BD79C9C00114E87 /* UtilityServicePickerConfig+preview.swift in Sources */,
 				2AD87DA72BD77DF0004D06C0 /* UtilityServicePaymentFlowEvent.swift in Sources */,
 				2AD87DAB2BD77E17004D06C0 /* UtilityServicePaymentFlowReducer.swift in Sources */,
+				2ADBDBBC2BD7D2CA00114E87 /* UtilityPaymentOperatorPickerEffect.swift in Sources */,
 				2AD87D8C2BD77859004D06C0 /* NavStackPreviewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

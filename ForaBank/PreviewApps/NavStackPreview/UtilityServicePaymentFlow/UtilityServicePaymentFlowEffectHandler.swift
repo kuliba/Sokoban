@@ -22,5 +22,5 @@ extension UtilityServicePaymentFlowEffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = UtilityServicePaymentFlowEvent<Icon>
-    typealias Effect = UtilityServicePaymentFlowEffect
+    typealias Effect = UtilityServicePaymentFlowEffect<Icon>
 }

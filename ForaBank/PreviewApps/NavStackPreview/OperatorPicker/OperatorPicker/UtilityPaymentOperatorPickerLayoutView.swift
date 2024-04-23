@@ -46,7 +46,7 @@ where FooterView: View,
 extension UtilityPaymentOperatorPickerLayoutView {
     
     typealias State = UtilityPaymentOperatorPickerState<Icon>
-    typealias Factory = UtilityPaymentOperatorPickerFactory<Icon, FooterView, LastPaymentsView, OperatorsView>
+    typealias Factory = UtilityPaymentOperatorPickerLayoutFactory<Icon, FooterView, LastPaymentsView, OperatorsView>
 }
 
 //#Preview {

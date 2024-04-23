@@ -37,7 +37,7 @@ where OperatorPicker: View,
 
 typealias UtilityServicePaymentFlowViewModel<Icon> = RxViewModel<UtilityServicePaymentFlowState<Icon>,
       UtilityServicePaymentFlowEvent<Icon>,
-      UtilityServicePaymentFlowEffect>
+      UtilityServicePaymentFlowEffect<Icon>>
 
 extension UtilityServicePaymentFlowStateWrapperView {
     
@@ -45,7 +45,7 @@ extension UtilityServicePaymentFlowStateWrapperView {
     
     typealias State = UtilityServicePaymentFlowState<Icon>
     typealias Event = UtilityServicePaymentFlowEvent<Icon>
-    typealias Effect = UtilityServicePaymentFlowEffect
+    typealias Effect = UtilityServicePaymentFlowEffect<Icon>
     typealias Factory = UtilityServicePaymentFlowFactory<Icon, OperatorPicker, ServicePicker>
 }
 
