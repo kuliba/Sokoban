@@ -12,10 +12,13 @@ struct ContentView: View {
     
     var body: some View {
         
-        UtilityServicePaymentFlowStateWrapperView(
-            viewModel: .init(),
-            factory: .default
-        )
+        NavigationView {
+            
+            UtilityServicePaymentFlowStateWrapperView(
+                viewModel: .init(),
+                factory: .makeFactory(config: .preview)
+            )
+        }
     }
 }
 
@@ -28,7 +31,7 @@ where State == UtilityServicePaymentFlowState, Event == UtilityServicePaymentFlo
         let effectHandler = UtilityServicePaymentFlowEffectHandler()
         
         self.init(
-            initialState: .none,
+            initialState: .services(.preview),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: .main
@@ -38,26 +41,34 @@ where State == UtilityServicePaymentFlowState, Event == UtilityServicePaymentFlo
 
 private extension UtilityServicePaymentFlowFactory
 where OperatorPicker == _OperatorPicker,
-      ServicePicker == _ServicePicker {
+      ServicePicker == UtilityServicePicker {
     
-    static var `default`: Self {
+    static func makeFactory(
+        config: UtilityServicePickerConfig
+    ) -> Self {
         
-        .init(
+        return .init(
             makeOperatorPicker: _makeOperatorPicker,
             makeServicePicker: _makeServicePicker
         )
-    }
-    
-    private static func _makeOperatorPicker(
-    ) -> OperatorPicker {
         
-        _OperatorPicker()
-    }
-    
-    private static func _makeServicePicker(
-    ) -> ServicePicker {
+        func _makeOperatorPicker(
+        ) -> OperatorPicker {
+            
+            _OperatorPicker()
+        }
         
-        _ServicePicker()
+        func _makeServicePicker(
+            state: UtilityServicePickerState,
+            event: @escaping (UtilityService) -> Void
+        ) -> ServicePicker {
+            
+            UtilityServicePicker(
+                state: state,
+                event: event,
+                config: config
+            )
+        }
     }
 }
 

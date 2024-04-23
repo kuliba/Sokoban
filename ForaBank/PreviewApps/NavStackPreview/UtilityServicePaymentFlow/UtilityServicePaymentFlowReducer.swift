@@ -20,6 +20,9 @@ extension UtilityServicePaymentFlowReducer {
         switch event {
         case .resetDestination:
             state = nil
+            
+        case let .selectUtilityService(service):
+            fatalError("what goes here???")
         }
         
         return (state, effect)

@@ -13,7 +13,7 @@ typealias UtilityServicePaymentFlowState = UtilityServicePaymentFlowDestination?
 
 enum UtilityServicePaymentFlowDestination {
     
-    case services
+    case services(UtilityServicePickerState)
 }
 
 extension UtilityServicePaymentFlowDestination: Identifiable {

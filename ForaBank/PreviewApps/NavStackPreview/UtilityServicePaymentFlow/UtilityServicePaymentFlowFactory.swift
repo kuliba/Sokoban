@@ -18,5 +18,6 @@ where OperatorPicker: View,
 extension UtilityServicePaymentFlowFactory {
     
     typealias MakeOperatorPicker = () -> OperatorPicker
-    typealias MakeServicePicker = () -> ServicePicker
+    
+    typealias MakeServicePicker = (UtilityServicePickerState, @escaping (UtilityService) -> Void) -> ServicePicker
 }

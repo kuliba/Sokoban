@@ -947,7 +947,14 @@
 		2AD87DAF2BD782E1004D06C0 /* UtilityServicePaymentFlowConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD87DAE2BD782E1004D06C0 /* UtilityServicePaymentFlowConfig.swift */; };
 		2ADBDB912BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB902BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift */; };
 		2ADBDB942BD799E500114E87 /* _OperatorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB932BD799E500114E87 /* _OperatorPicker.swift */; };
-		2ADBDB972BD79A0F00114E87 /* _ServicePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB962BD79A0F00114E87 /* _ServicePicker.swift */; };
+		2ADBDB972BD79A0F00114E87 /* UtilityServicePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB962BD79A0F00114E87 /* UtilityServicePicker.swift */; };
+		2ADBDB9A2BD79AB900114E87 /* UtilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB992BD79AB900114E87 /* UtilityService.swift */; };
+		2ADBDB9C2BD79BC300114E87 /* Array.UtilityService+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB9B2BD79BC300114E87 /* Array.UtilityService+preview.swift */; };
+		2ADBDB9E2BD79C7900114E87 /* UtilityServicePickerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB9D2BD79C7900114E87 /* UtilityServicePickerConfig.swift */; };
+		2ADBDBA02BD79C9C00114E87 /* UtilityServicePickerConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB9F2BD79C9C00114E87 /* UtilityServicePickerConfig+preview.swift */; };
+		2ADBDBA22BD7A36A00114E87 /* UtilityServicePickerState.Operator+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBA12BD7A36A00114E87 /* UtilityServicePickerState.Operator+preview.swift */; };
+		2ADBDBA42BD7A39600114E87 /* UtilityServicePickerState+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBA32BD7A39600114E87 /* UtilityServicePickerState+preview.swift */; };
+		2ADBDBA62BD7A47B00114E87 /* UtilityServicePickerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBA52BD7A47B00114E87 /* UtilityServicePickerState.swift */; };
 		2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */; };
 		2ADDFD802AEFF3C2002FCE43 /* RSADomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */; };
 		2ADDFD822AEFF4F7002FCE43 /* ECDHDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */; };
@@ -3556,7 +3563,14 @@
 		2AD87DAE2BD782E1004D06C0 /* UtilityServicePaymentFlowConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowConfig.swift; sourceTree = "<group>"; };
 		2ADBDB902BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowFactory.swift; sourceTree = "<group>"; };
 		2ADBDB932BD799E500114E87 /* _OperatorPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _OperatorPicker.swift; sourceTree = "<group>"; };
-		2ADBDB962BD79A0F00114E87 /* _ServicePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _ServicePicker.swift; sourceTree = "<group>"; };
+		2ADBDB962BD79A0F00114E87 /* UtilityServicePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePicker.swift; sourceTree = "<group>"; };
+		2ADBDB992BD79AB900114E87 /* UtilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityService.swift; sourceTree = "<group>"; };
+		2ADBDB9B2BD79BC300114E87 /* Array.UtilityService+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array.UtilityService+preview.swift"; sourceTree = "<group>"; };
+		2ADBDB9D2BD79C7900114E87 /* UtilityServicePickerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePickerConfig.swift; sourceTree = "<group>"; };
+		2ADBDB9F2BD79C9C00114E87 /* UtilityServicePickerConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UtilityServicePickerConfig+preview.swift"; sourceTree = "<group>"; };
+		2ADBDBA12BD7A36A00114E87 /* UtilityServicePickerState.Operator+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UtilityServicePickerState.Operator+preview.swift"; sourceTree = "<group>"; };
+		2ADBDBA32BD7A39600114E87 /* UtilityServicePickerState+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UtilityServicePickerState+preview.swift"; sourceTree = "<group>"; };
+		2ADBDBA52BD7A47B00114E87 /* UtilityServicePickerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePickerState.swift; sourceTree = "<group>"; };
 		2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+getMosParkingListDataTests.swift"; sourceTree = "<group>"; };
 		2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSADomain.swift; sourceTree = "<group>"; };
 		2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECDHDomain.swift; sourceTree = "<group>"; };
@@ -8276,6 +8290,10 @@
 			isa = PBXGroup;
 			children = (
 				2AD87D922BD7785B004D06C0 /* Preview Assets.xcassets */,
+				2ADBDBA32BD7A39600114E87 /* UtilityServicePickerState+preview.swift */,
+				2ADBDBA12BD7A36A00114E87 /* UtilityServicePickerState.Operator+preview.swift */,
+				2ADBDB9B2BD79BC300114E87 /* Array.UtilityService+preview.swift */,
+				2ADBDB9F2BD79C9C00114E87 /* UtilityServicePickerConfig+preview.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -8307,7 +8325,9 @@
 		2ADBDB952BD79A0700114E87 /* ServicePicker */ = {
 			isa = PBXGroup;
 			children = (
-				2ADBDB962BD79A0F00114E87 /* _ServicePicker.swift */,
+				2ADBDBA52BD7A47B00114E87 /* UtilityServicePickerState.swift */,
+				2ADBDB962BD79A0F00114E87 /* UtilityServicePicker.swift */,
+				2ADBDB9D2BD79C7900114E87 /* UtilityServicePickerConfig.swift */,
 			);
 			path = ServicePicker;
 			sourceTree = "<group>";
@@ -8315,6 +8335,7 @@
 		2ADBDB982BD79A2B00114E87 /* OperatorPicker */ = {
 			isa = PBXGroup;
 			children = (
+				2ADBDB992BD79AB900114E87 /* UtilityService.swift */,
 				2ADBDB922BD799D100114E87 /* OperatorPicker */,
 				2ADBDB952BD79A0700114E87 /* ServicePicker */,
 			);
@@ -14934,16 +14955,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2ADBDB9A2BD79AB900114E87 /* UtilityService.swift in Sources */,
 				2ADBDB912BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift in Sources */,
-				2ADBDB972BD79A0F00114E87 /* _ServicePicker.swift in Sources */,
+				2ADBDBA22BD7A36A00114E87 /* UtilityServicePickerState.Operator+preview.swift in Sources */,
+				2ADBDB972BD79A0F00114E87 /* UtilityServicePicker.swift in Sources */,
 				2AD87DA02BD77C04004D06C0 /* UtilityServicePaymentFlowView.swift in Sources */,
+				2ADBDBA42BD7A39600114E87 /* UtilityServicePickerState+preview.swift in Sources */,
 				2AD87DAD2BD77E4B004D06C0 /* UtilityServicePaymentFlowEffectHandler.swift in Sources */,
 				2AD87DA52BD77DD9004D06C0 /* UtilityServicePaymentFlowState.swift in Sources */,
+				2ADBDB9C2BD79BC300114E87 /* Array.UtilityService+preview.swift in Sources */,
 				2AD87DAF2BD782E1004D06C0 /* UtilityServicePaymentFlowConfig.swift in Sources */,
 				2ADBDB942BD799E500114E87 /* _OperatorPicker.swift in Sources */,
+				2ADBDB9E2BD79C7900114E87 /* UtilityServicePickerConfig.swift in Sources */,
 				2AD87DA92BD77E00004D06C0 /* UtilityServicePaymentFlowEffect.swift in Sources */,
 				2AD87D8E2BD77859004D06C0 /* ContentView.swift in Sources */,
+				2ADBDBA62BD7A47B00114E87 /* UtilityServicePickerState.swift in Sources */,
 				2AD87DA22BD77C50004D06C0 /* UtilityServicePaymentFlowStateWrapperView.swift in Sources */,
+				2ADBDBA02BD79C9C00114E87 /* UtilityServicePickerConfig+preview.swift in Sources */,
 				2AD87DA72BD77DF0004D06C0 /* UtilityServicePaymentFlowEvent.swift in Sources */,
 				2AD87DAB2BD77E17004D06C0 /* UtilityServicePaymentFlowReducer.swift in Sources */,
 				2AD87D8C2BD77859004D06C0 /* NavStackPreviewApp.swift in Sources */,

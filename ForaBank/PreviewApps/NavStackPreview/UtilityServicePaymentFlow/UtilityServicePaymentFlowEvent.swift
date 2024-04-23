@@ -8,4 +8,5 @@
 enum UtilityServicePaymentFlowEvent: Equatable {
     
     case resetDestination
+    case selectUtilityService(UtilityService)
 }

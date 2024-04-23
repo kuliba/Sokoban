@@ -34,8 +34,33 @@ where OperatorPicker: View,
         destination: UtilityServicePaymentFlowDestination
     ) -> some View {
         
-        factory.makeServicePicker()
+        switch destination {
+        case let .services(state):
+            servicePicker(state)
+        }
     }
+    
+#warning("mind `operator`.icon` - use AsyncImage")
+    private func servicePicker(
+        _ state: UtilityServicePickerState
+    ) -> some View {
+        
+        factory.makeServicePicker(state, { event(.selectUtilityService($0)) })
+            .navigationTitle(state.`operator`.navTitle)
+            .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private extension UtilityServicePickerState.Operator {
+    
+    var navTitle: String {
+        
+        [nameTitle, innTitle, iconTitle].joined(separator: ", ")
+    }
+    
+    private var nameTitle: Substring { name.prefix(6) }
+    private var innTitle: Substring { inn.prefix(4) }
+    private var iconTitle: Substring { icon.prefix(4) }
 }
 
 extension UtilityServicePaymentFlowView {
