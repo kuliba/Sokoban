@@ -5,8 +5,10 @@
 //  Created by Igor Malyarov on 24.04.2024.
 //
 
+import Combine
 import RxViewModel
 import SwiftUI
+import UIPrimitives
 
 struct _LastPayment<Icon>: Identifiable {
     
@@ -131,14 +133,14 @@ private extension _UtilityPrepaymentPickerReducer {
         _ event: Event.Complete.Select
     ) -> (State, Effect?) {
         
-        var state = state
-        var effect: Effect?
+        let state = state
+        let effect: Effect?
         
         switch event {
-        case let .lastPayment(lastPayment):
+        case let .lastPayment(_):
             fatalError()
             
-        case let .operator(`operator`):
+        case let .operator(_):
             fatalError()
         }
         
@@ -325,22 +327,32 @@ extension _OperatorPickerFactory {
     typealias Operator = _Operator<Icon>
 
     typealias MakeFooterView = () -> _FooterView
-    typealias MakeLastPaymentView = (LastPayment, @escaping (LastPayment) -> Void) -> _LastPaymentView<Icon>
-    typealias MakeOperatorView = (Operator, @escaping (Operator) -> Void) -> _OperatorView<Icon>
+    typealias AsyncImage = UIPrimitives.AsyncImage
+    typealias MakeLastPaymentView = (LastPayment, @escaping (LastPayment) -> Void) -> _LastPaymentView<Icon, AsyncImage>
+    typealias MakeOperatorView = (Operator, @escaping (Operator) -> Void) -> _OperatorView<Icon, AsyncImage>
 }
 
-struct _LastPaymentView<Icon>: View {
+struct _LastPaymentView<Icon, IconView>: View
+where IconView: View {
     
     let state: State
     let event: (State) -> Void
     let config: Config
+    let iconView: (Icon) -> IconView
     
     var body: some View {
         
-        SimpleButton(
-            title: String(describing: state).prefix(5),
-            action: { event(state) }
-        )
+        HStack {
+         
+            iconView(state.icon)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 24, height: 24)
+            
+            SimpleButton(
+                title: String(describing: state).prefix(5),
+                action: { event(state) }
+            )
+        }
     }
 }
 
@@ -352,19 +364,28 @@ extension _LastPaymentView {
 
 struct _LastPaymentViewConfig: Equatable {}
 
-struct _OperatorView<Icon>: View {
+struct _OperatorView<Icon, IconView>: View
+where IconView: View {
     
     let state: State
     let event: (State) -> Void
     let config: Config
+    let iconView: (Icon) -> IconView
     
     var body: some View {
         
-        SimpleButton(
-            title: String(describing: state).prefix(32),
-            action: { event(state) }
-        )
-        .frame(maxWidth: .infinity, alignment: .leading)
+        HStack {
+            
+            iconView(state.icon)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 24, height: 24)
+            
+            SimpleButton(
+                title: String(describing: state).prefix(32),
+                action: { event(state) }
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
 }
 
@@ -454,6 +475,7 @@ struct _Composed<Icon>: View {
     let state: State
     let event: (Event) -> Void
     let config: Config
+    let imageSubject: CurrentValueSubject<Image, Never>
     
     var body: some View {
         
@@ -535,17 +557,37 @@ struct _Composed<Icon>: View {
     private func makeLastPaymentView(
         state: LastPayment,
         event: @escaping (LastPayment) -> ()
-    ) -> _LastPaymentView<Icon> {
+    ) -> _LastPaymentView<Icon, AsyncImage> {
         
-        .init(state: state, event: event, config: config.lastPayment)
+        .init(
+            state: state,
+            event: event,
+            config: config.lastPayment,
+            iconView: iconView
+        )
     }
     
     private func makeOperatorView(
         state: Operator,
         event: @escaping (Operator) -> ()
-    ) -> _OperatorView<Icon> {
+    ) -> _OperatorView<Icon, AsyncImage> {
         
-        .init(state: state, event: event, config: config.operator)
+        .init(
+            state: state,
+            event: event,
+            config: config.operator,
+            iconView: iconView
+        )
+    }
+    
+    private func iconView(
+        icon: Icon
+    ) -> AsyncImage {
+        
+        .init(
+            image: imageSubject.value,
+            publisher: imageSubject.eraseToAnyPublisher()
+        )
     }
 }
 
@@ -554,6 +596,8 @@ extension _Composed {
     typealias LastPayment = _LastPayment<Icon>
     typealias Operator = _Operator<Icon>
 
+    typealias AsyncImage = UIPrimitives.AsyncImage
+    
     typealias State = _UtilityPrepaymentPicker<Icon>.State
     typealias Event = _UtilityPrepaymentPicker<Icon>.Event
     typealias Config = _UtilityPrepaymentPicker<Icon>.Config
@@ -584,7 +628,8 @@ struct _ComposedStateWrapperView<Icon>: View {
         _Composed(
             state: viewModel.state,
             event: viewModel.event(_:),
-            config: .preview
+            config: .preview,
+            imageSubject: .init(.init(systemName: "car"))
         )
     }
     
@@ -652,9 +697,22 @@ extension _OperatorPickerFactory {
         
         .init(
             makeFooterView: { .init(state: footerState, event: { _ in }, config: .preview) },
-            makeLastPaymentView: { .init(state: $0, event: $1, config: .preview) },
-            makeOperatorView: { .init(state: $0, event: $1, config: .preview) }
+            makeLastPaymentView: { .init(state: $0, event: $1, config: .preview, iconView: iconView) },
+            makeOperatorView: { .init(state: $0, event: $1, config: .preview, iconView: iconView) }
         )
+    }
+    
+    private static func iconView(icon: Icon) -> AsyncImage {
+        
+        .init(
+            image: imageSubject.value,
+            publisher: imageSubject.eraseToAnyPublisher()
+        )
+    }
+    
+    private static var imageSubject: CurrentValueSubject<Image, Never> {
+        
+        .init(.init(systemName: "car"))
     }
 }
 
