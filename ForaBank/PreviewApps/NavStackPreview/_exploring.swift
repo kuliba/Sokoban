@@ -23,6 +23,8 @@ struct _Operator: Equatable, Identifiable {
     let id: String
 }
 
+// MARK: - _UtilityPrepaymentPicker
+
 struct _UtilityPrepaymentPickerState: Equatable {
     
     let lastPayments: [_LastPayment]
@@ -147,7 +149,6 @@ extension _UtilityPrepaymentPickerEffectHandler {
     typealias Effect = _UtilityPrepaymentPickerEffect
 }
 
-
 struct _UtilityPrepaymentPicker: View {
     
     let state: State
@@ -159,14 +160,11 @@ struct _UtilityPrepaymentPicker: View {
         
         VStack {
             
-            state.map {
-                
-                factory.makeOperatorPicker(
-                    ($0.lastPayments, $0.operators)
-                )
+            if let state, !state.operators.isEmpty {
+                factory.makeOperatorPicker((state.lastPayments, state.operators))
+            } else {
+                factory.makeFooterView()
             }
-            
-            factory.makeFooterView(state != nil)
         }
     }
 }
@@ -195,11 +193,13 @@ struct _UtilityPrepaymentPickerFactory {
 
 extension _UtilityPrepaymentPickerFactory {
     
-    typealias MakeFooterView = (Bool) -> _FooterView
+    typealias MakeFooterView = () -> _FooterView
     
     typealias MakeOperatorPickerPayload = ([_LastPayment], [_Operator])
     typealias MakeOperatorPicker = (MakeOperatorPickerPayload) -> _OperatorPicker
 }
+
+// MARK: - _OperatorPicker
 
 struct _OperatorPickerState: Equatable {
     
@@ -243,6 +243,8 @@ struct _OperatorPicker: View {
                 }
                 
                 ForEach(state.operators, content: operatorView)
+                
+                factory.makeFooterView()
             }
             .padding(.horizontal)
         }
@@ -273,12 +275,14 @@ extension _OperatorPicker {
 
 struct _OperatorPickerFactory {
     
+    let makeFooterView: MakeFooterView
     let makeLastPaymentView: MakeLastPaymentView
     let makeOperatorView: MakeOperatorView
 }
 
 extension _OperatorPickerFactory {
     
+    typealias MakeFooterView = () -> _FooterView
     typealias MakeLastPaymentView = (_LastPayment, @escaping (_LastPayment) -> Void) -> _LastPaymentView
     typealias MakeOperatorView = (_Operator, @escaping (_Operator) -> Void) -> _OperatorView
 }
@@ -313,7 +317,7 @@ struct _OperatorView: View {
     let config: Config
     
     var body: some View {
-
+        
         SimpleButton(
             title: String(describing: state).prefix(32),
             action: { event(state) }
@@ -366,28 +370,29 @@ struct _FooterView: View {
             if state {
                 Text("Нет компании в списке?")
                     .bold()
-                Text("Воспользуйтесь другими способами оплаты")
-                    .foregroundColor(.secondary)
+                secondary("Воспользуйтесь другими способами оплаты")
             } else {
                 Image(systemName: "magnifyingglass.circle.fill")
                     .imageScale(.large)
                     .font(.largeTitle)
                     .foregroundColor(.secondary.opacity(0.5))
-                Text("Что-то пошло не так.\nПопробуйте позже или воспользуйтесь другим способом оплаты.")
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
+                secondary("Что-то пошло не так.\nПопробуйте позже или воспользуйтесь другим способом оплаты.")
             }
             
             Button("Pay by Instructions", action: { event(.payByInstructions) })
             
             if state {
                 Button("Add Company", action: { event(.addCompany) })
-                Text("Сообщите нам, и мы подключим новую организацию")
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
+                secondary("Сообщите нам, и мы подключим новую организацию")
             }
         }
-        .padding()
+    }
+    
+    private func secondary(_ text: String) -> some View {
+        
+        Text(text)
+            .foregroundColor(.secondary)
+            .multilineTextAlignment(.center)
     }
 }
 
@@ -399,6 +404,8 @@ extension _FooterView {
 }
 
 struct _FooterViewConfig: Equatable {}
+
+// MARK: - _Composed
 
 struct _Composed: View {
     
@@ -413,21 +420,31 @@ struct _Composed: View {
             event: event,
             config: config,
             factory: .init(
-                makeFooterView: makeFooterView,
+                makeFooterView: makeFooterView(.error),
                 makeOperatorPicker: makeOperatorPicker
             )
         )
     }
     
     private func makeFooterView(
-        _ state: Bool
-    ) -> _FooterView {
+        _ mode: FooterViewMode
+    ) -> () -> _FooterView {
         
-        _FooterView(
-            state: state,
-            event: footerEvent,
-            config: config.footer
-        )
+        return {
+            
+            _FooterView(
+                state: mode.isExpanded,
+                event: footerEvent,
+                config: config.footer
+            )
+        }
+    }
+    
+    private enum FooterViewMode {
+        
+        case error, regular
+        
+        var isExpanded: Bool { self == .regular }
     }
     
     private func footerEvent(
@@ -454,6 +471,7 @@ struct _Composed: View {
             event: operatorPickerEvent,
             config: config.operatorPicker,
             factory: .init(
+                makeFooterView: makeFooterView(.regular),
                 makeLastPaymentView: makeLastPaymentView,
                 makeOperatorView: makeOperatorView
             )
@@ -538,19 +556,28 @@ struct _ComposedStateWrapperView: View {
 
 #Preview {
     _OperatorPicker(
-        state: .init(lastPayments: [], operators: .preview),
+        state: .init(lastPayments: .preview, operators: .preview),
         event: { print($0) },
         config: .preview,
-        factory: .preview
+        factory: .preview(footerState: true)
     )
 }
 
 #Preview {
     _OperatorPicker(
-        state: .init(lastPayments: .preview, operators: .preview),
+        state: .init(lastPayments: [], operators: .preview),
         event: { print($0) },
         config: .preview,
-        factory: .preview
+        factory: .preview(footerState: true)
+    )
+}
+
+#Preview {
+    _OperatorPicker(
+        state: .init(lastPayments: [], operators: []),
+        event: { print($0) },
+        config: .preview,
+        factory: .preview(footerState: false)
     )
 }
 
@@ -574,10 +601,16 @@ struct _ComposedStateWrapperView: View {
 
 extension _OperatorPickerFactory {
     
-    static let preview: Self = .init(
-        makeLastPaymentView: { .init(state: $0, event: $1, config: .preview) },
-        makeOperatorView: { .init(state: $0, event: $1, config: .preview) }
-    )
+    static func preview(
+        footerState: Bool
+    ) -> Self {
+        
+        .init(
+            makeFooterView: { .init(state: footerState, event: { _ in }, config: .preview) },
+            makeLastPaymentView: { .init(state: $0, event: $1, config: .preview) },
+            makeOperatorView: { .init(state: $0, event: $1, config: .preview) }
+        )
+    }
 }
 
 extension _LastPaymentViewConfig {
@@ -622,7 +655,7 @@ extension Array where Element == _LastPayment {
     
     static var preview: Self {
         
-        (0..<5).map { _ in
+        (0..<10).map { _ in
             
             return  .init(id: UUID().uuidString)
         }
