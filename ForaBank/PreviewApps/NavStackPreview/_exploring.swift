@@ -8,37 +8,48 @@
 import RxViewModel
 import SwiftUI
 
-struct _LastPayment: Equatable, Identifiable {
+struct _LastPayment<Icon>: Identifiable {
     
     let id: String
+    let icon: Icon
 }
 
-struct _UtilityService: Equatable, Identifiable {
+extension _LastPayment: Equatable where Icon: Equatable {}
+
+struct _Operator<Icon>: Identifiable {
     
     let id: String
+    let icon: Icon
 }
 
-struct _Operator: Equatable, Identifiable {
+extension _Operator: Equatable where Icon: Equatable {}
+
+struct _UtilityService<Icon>: Identifiable {
     
     let id: String
+    let icon: Icon
 }
+
+extension _UtilityService: Equatable where Icon: Equatable {}
 
 // MARK: - _UtilityPrepaymentPicker
 
-struct _UtilityPrepaymentPickerState: Equatable {
+struct _UtilityPrepaymentPickerState<Icon> {
     
-    let lastPayments: [_LastPayment]
-    let operators: [_Operator] // non empty
+    let lastPayments: [_LastPayment<Icon>]
+    let operators: [_Operator<Icon>] // non empty
 }
 
-enum _UtilityPrepaymentPickerEvent: Equatable {
+extension _UtilityPrepaymentPickerState: Equatable where Icon: Equatable {}
+
+enum _UtilityPrepaymentPickerEvent<Icon> {
     
     case complete(Complete)
 }
 
 extension _UtilityPrepaymentPickerEvent {
     
-    enum Complete: Equatable {
+    enum Complete {
         
         case addCompany
         case payByInstructions
@@ -48,16 +59,22 @@ extension _UtilityPrepaymentPickerEvent {
 
 extension _UtilityPrepaymentPickerEvent.Complete {
     
-    enum Select: Equatable {
+    enum Select {
         
-        case lastPayment(_LastPayment)
-        case `operator`(_Operator)
+        case lastPayment(_LastPayment<Icon>)
+        case `operator`(_Operator<Icon>)
     }
 }
 
-enum _UtilityPrepaymentPickerEffect {}
+extension _UtilityPrepaymentPickerEvent: Equatable where Icon: Equatable {}
+extension _UtilityPrepaymentPickerEvent.Complete: Equatable where Icon: Equatable {}
+extension _UtilityPrepaymentPickerEvent.Complete.Select: Equatable where Icon: Equatable {}
 
-final class _UtilityPrepaymentPickerReducer {}
+enum _UtilityPrepaymentPickerEffect<Icon> {}
+
+extension _UtilityPrepaymentPickerEffect: Equatable where Icon: Equatable {}
+
+final class _UtilityPrepaymentPickerReducer<Icon> {}
 
 extension _UtilityPrepaymentPickerReducer {
     
@@ -80,9 +97,9 @@ extension _UtilityPrepaymentPickerReducer {
 
 extension _UtilityPrepaymentPickerReducer {
     
-    typealias State = _UtilityPrepaymentPickerState?
-    typealias Event = _UtilityPrepaymentPickerEvent
-    typealias Effect = _UtilityPrepaymentPickerEffect
+    typealias State = _UtilityPrepaymentPickerState<Icon>?
+    typealias Event = _UtilityPrepaymentPickerEvent<Icon>
+    typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
 }
 
 private extension _UtilityPrepaymentPickerReducer {
@@ -129,7 +146,7 @@ private extension _UtilityPrepaymentPickerReducer {
     }
 }
 
-final class _UtilityPrepaymentPickerEffectHandler {}
+final class _UtilityPrepaymentPickerEffectHandler<Icon> {}
 
 extension _UtilityPrepaymentPickerEffectHandler {
     
@@ -145,11 +162,11 @@ extension _UtilityPrepaymentPickerEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = _UtilityPrepaymentPickerEvent
-    typealias Effect = _UtilityPrepaymentPickerEffect
+    typealias Event = _UtilityPrepaymentPickerEvent<Icon>
+    typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
 }
 
-struct _UtilityPrepaymentPicker: View {
+struct _UtilityPrepaymentPicker<Icon>: View {
     
     let state: State
     let event: (Event) -> Void
@@ -171,10 +188,10 @@ struct _UtilityPrepaymentPicker: View {
 
 extension _UtilityPrepaymentPicker {
     
-    typealias State = _UtilityPrepaymentPickerState?
-    typealias Event = _UtilityPrepaymentPickerEvent
+    typealias State = _UtilityPrepaymentPickerState<Icon>?
+    typealias Event = _UtilityPrepaymentPickerEvent<Icon>
     typealias Config = _UtilityPrepaymentPickerConfig
-    typealias Factory = _UtilityPrepaymentPickerFactory
+    typealias Factory = _UtilityPrepaymentPickerFactory<Icon>
 }
 
 struct _UtilityPrepaymentPickerConfig: Equatable {
@@ -185,7 +202,7 @@ struct _UtilityPrepaymentPickerConfig: Equatable {
     let `operator`: _OperatorViewConfig
 }
 
-struct _UtilityPrepaymentPickerFactory {
+struct _UtilityPrepaymentPickerFactory<Icon> {
     
     let makeFooterView: MakeFooterView
     let makeOperatorPicker: MakeOperatorPicker
@@ -195,19 +212,29 @@ extension _UtilityPrepaymentPickerFactory {
     
     typealias MakeFooterView = () -> _FooterView
     
-    typealias MakeOperatorPickerPayload = ([_LastPayment], [_Operator])
-    typealias MakeOperatorPicker = (MakeOperatorPickerPayload) -> _OperatorPicker
+    typealias LastPayment = _LastPayment<Icon>
+    typealias Operator = _Operator<Icon>
+    typealias MakeOperatorPickerPayload = ([LastPayment], [Operator])
+    typealias MakeOperatorPicker = (MakeOperatorPickerPayload) -> _OperatorPicker<Icon>
 }
 
 // MARK: - _OperatorPicker
 
-struct _OperatorPickerState: Equatable {
+struct _OperatorPickerState<Icon> {
     
-    let lastPayments: [_LastPayment]
-    let operators: [_Operator]
+    let lastPayments: [LastPayment]
+    let operators: [Operator]
 }
 
-enum _OperatorPickerEvent {
+extension _OperatorPickerState {
+    
+    typealias LastPayment = _LastPayment<Icon>
+    typealias Operator = _Operator<Icon>
+}
+
+extension _OperatorPickerState: Equatable where Icon: Equatable {}
+
+enum _OperatorPickerEvent<Icon> {
     
     case select(Select)
 }
@@ -216,12 +243,21 @@ extension _OperatorPickerEvent {
     
     enum Select {
         
-        case lastPayment(_LastPayment)
-        case `operator`(_Operator)
+        case lastPayment(LastPayment)
+        case `operator`(Operator)
     }
 }
 
-struct _OperatorPicker: View {
+extension _OperatorPickerEvent.Select {
+    
+    typealias LastPayment = _LastPayment<Icon>
+    typealias Operator = _Operator<Icon>
+}
+
+extension _OperatorPickerEvent: Equatable where Icon: Equatable {}
+extension _OperatorPickerEvent.Select: Equatable where Icon: Equatable {}
+
+struct _OperatorPicker<Icon>: View {
     
     let state: State
     let event: (Event) -> Void
@@ -251,14 +287,14 @@ struct _OperatorPicker: View {
     }
     
     private func lastPaymentView(
-        lastPayment: _LastPayment
+        lastPayment: LastPayment
     ) -> some View {
         
         factory.makeLastPaymentView(lastPayment, { event(.select(.lastPayment($0))) })
     }
     
     private func operatorView(
-        `operator`: _Operator
+        `operator`: Operator
     ) -> some View {
         
         factory.makeOperatorView(`operator`, { event(.select(.operator($0))) })
@@ -266,14 +302,17 @@ struct _OperatorPicker: View {
 }
 
 extension _OperatorPicker {
-    
-    typealias State = _OperatorPickerState
-    typealias Event = _OperatorPickerEvent
+
+    typealias LastPayment = _LastPayment<Icon>
+    typealias Operator = _Operator<Icon>
+
+    typealias State = _OperatorPickerState<Icon>
+    typealias Event = _OperatorPickerEvent<Icon>
     typealias Config = _OperatorPickerConfig
-    typealias Factory = _OperatorPickerFactory
+    typealias Factory = _OperatorPickerFactory<Icon>
 }
 
-struct _OperatorPickerFactory {
+struct _OperatorPickerFactory<Icon> {
     
     let makeFooterView: MakeFooterView
     let makeLastPaymentView: MakeLastPaymentView
@@ -282,12 +321,15 @@ struct _OperatorPickerFactory {
 
 extension _OperatorPickerFactory {
     
+    typealias LastPayment = _LastPayment<Icon>
+    typealias Operator = _Operator<Icon>
+
     typealias MakeFooterView = () -> _FooterView
-    typealias MakeLastPaymentView = (_LastPayment, @escaping (_LastPayment) -> Void) -> _LastPaymentView
-    typealias MakeOperatorView = (_Operator, @escaping (_Operator) -> Void) -> _OperatorView
+    typealias MakeLastPaymentView = (LastPayment, @escaping (LastPayment) -> Void) -> _LastPaymentView<Icon>
+    typealias MakeOperatorView = (Operator, @escaping (Operator) -> Void) -> _OperatorView<Icon>
 }
 
-struct _LastPaymentView: View {
+struct _LastPaymentView<Icon>: View {
     
     let state: State
     let event: (State) -> Void
@@ -304,13 +346,13 @@ struct _LastPaymentView: View {
 
 extension _LastPaymentView {
     
-    typealias State = _LastPayment
+    typealias State = _LastPayment<Icon>
     typealias Config = _LastPaymentViewConfig
 }
 
 struct _LastPaymentViewConfig: Equatable {}
 
-struct _OperatorView: View {
+struct _OperatorView<Icon>: View {
     
     let state: State
     let event: (State) -> Void
@@ -328,7 +370,7 @@ struct _OperatorView: View {
 
 extension _OperatorView {
     
-    typealias State = _Operator
+    typealias State = _Operator<Icon>
     typealias Config = _OperatorViewConfig
 }
 
@@ -407,7 +449,7 @@ struct _FooterViewConfig: Equatable {}
 
 // MARK: - _Composed
 
-struct _Composed: View {
+struct _Composed<Icon>: View {
     
     let state: State
     let event: (Event) -> Void
@@ -460,8 +502,8 @@ struct _Composed: View {
     }
     
     private func makeOperatorPicker(
-        _ payload: (lastPayments: [_LastPayment], operators: [_Operator])
-    ) -> _OperatorPicker {
+        _ payload: (lastPayments: [LastPayment], operators: [Operator])
+    ) -> _OperatorPicker<Icon> {
         
         _OperatorPicker(
             state: .init(
@@ -479,7 +521,7 @@ struct _Composed: View {
     }
     
     private func operatorPickerEvent(
-        _ operatorPickerEvent: _OperatorPickerEvent
+        _ operatorPickerEvent: _OperatorPickerEvent<Icon>
     ) {
         switch operatorPickerEvent {
         case let .select(.lastPayment(lastPayment)):
@@ -491,17 +533,17 @@ struct _Composed: View {
     }
     
     private func makeLastPaymentView(
-        state: _LastPayment,
-        event: @escaping (_LastPayment) -> ()
-    ) -> _LastPaymentView {
+        state: LastPayment,
+        event: @escaping (LastPayment) -> ()
+    ) -> _LastPaymentView<Icon> {
         
         .init(state: state, event: event, config: config.lastPayment)
     }
     
     private func makeOperatorView(
-        state: _Operator,
-        event: @escaping (_Operator) -> ()
-    ) -> _OperatorView {
+        state: Operator,
+        event: @escaping (Operator) -> ()
+    ) -> _OperatorView<Icon> {
         
         .init(state: state, event: event, config: config.operator)
     }
@@ -509,21 +551,24 @@ struct _Composed: View {
 
 extension _Composed {
     
-    typealias State = _UtilityPrepaymentPicker.State
-    typealias Event = _UtilityPrepaymentPicker.Event
-    typealias Config = _UtilityPrepaymentPicker.Config
+    typealias LastPayment = _LastPayment<Icon>
+    typealias Operator = _Operator<Icon>
+
+    typealias State = _UtilityPrepaymentPicker<Icon>.State
+    typealias Event = _UtilityPrepaymentPicker<Icon>.Event
+    typealias Config = _UtilityPrepaymentPicker<Icon>.Config
 }
 
 // MARK: - Preview
 
-struct _ComposedStateWrapperView: View {
+struct _ComposedStateWrapperView<Icon>: View {
     
     @StateObject private var viewModel: ViewModel
     
-    init(initialState: _Composed.State) {
+    init(initialState: _Composed<Icon>.State) {
         
-        let reducer = _UtilityPrepaymentPickerReducer()
-        let effectHandler = _UtilityPrepaymentPickerEffectHandler()
+        let reducer = _UtilityPrepaymentPickerReducer<Icon>()
+        let effectHandler = _UtilityPrepaymentPickerEffectHandler<Icon>()
         let viewModel = ViewModel(
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
@@ -543,7 +588,7 @@ struct _ComposedStateWrapperView: View {
         )
     }
     
-    typealias ViewModel = RxViewModel<_Composed.State, _UtilityPrepaymentPickerEvent, _UtilityPrepaymentPickerEffect>
+    typealias ViewModel = RxViewModel<_Composed<Icon>.State, _UtilityPrepaymentPickerEvent<Icon>, _UtilityPrepaymentPickerEffect<Icon>>
 }
 
 #Preview {
@@ -551,7 +596,7 @@ struct _ComposedStateWrapperView: View {
 }
 
 #Preview {
-    _ComposedStateWrapperView(initialState: nil)
+    _ComposedStateWrapperView<String>(initialState: nil)
 }
 
 #Preview {
@@ -573,7 +618,7 @@ struct _ComposedStateWrapperView: View {
 }
 
 #Preview {
-    _OperatorPicker(
+    _OperatorPicker<String>(
         state: .init(lastPayments: [], operators: []),
         event: { print($0) },
         config: .preview,
@@ -643,32 +688,35 @@ extension _FooterViewConfig {
     static let preview: Self = .init()
 }
 
-extension _UtilityPrepaymentPickerState {
+extension _UtilityPrepaymentPickerState where Icon == String {
     
-    static let preview: Self = .init(
-        lastPayments: .preview,
-        operators: .preview
-    )
+    static var preview: Self {
+        
+        .init(
+            lastPayments: .preview,
+            operators: .preview
+        )
+    }
 }
 
-extension Array where Element == _LastPayment {
+extension Array where Element == _LastPayment<String> {
     
     static var preview: Self {
         
         (0..<10).map { _ in
             
-            return  .init(id: UUID().uuidString)
+            return  .init(id: UUID().uuidString, icon: UUID().uuidString)
         }
     }
 }
 
-extension Array where Element == _Operator {
+extension Array where Element == _Operator<String> {
     
     static var preview: Self {
         
         (0..<30).map { _ in
             
-            return  .init(id: UUID().uuidString)
+            return  .init(id: UUID().uuidString, icon: UUID().uuidString)
         }
     }
 }
