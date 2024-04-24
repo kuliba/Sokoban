@@ -469,6 +469,57 @@ extension _FooterView {
 
 struct _FooterViewConfig: Equatable {}
 
+// MARK: - UtilityPrepaymentStateWrapperFactory
+
+final class UtilityPrepaymentStateWrapperFactory<Icon> {
+    
+    private let config: _UtilityPrepaymentPickerConfig
+    private let scheduler: AnySchedulerOf<DispatchQueue>
+    
+    init(
+        config: _UtilityPrepaymentPickerConfig,
+        scheduler: AnySchedulerOf<DispatchQueue> = .main
+    ) {
+        self.config = config
+        self.scheduler = scheduler
+    }
+}
+
+extension UtilityPrepaymentStateWrapperFactory {
+    
+    func makeComposedStateWrapperView(
+        initialState: State,
+        makeFactory: @escaping MakeUtilityPrepaymentPickerFactory
+    ) -> _ComposedStateWrapperView<Icon> {
+        
+        let reducer = _UtilityPrepaymentPickerReducer<Icon>()
+        let effectHandler = _UtilityPrepaymentPickerEffectHandler<Icon>()
+        let viewModel = ViewModel(
+            initialState: initialState,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: scheduler
+        )
+        
+        return .init(
+            viewModel: viewModel,
+            config: config,
+            factory: makeFactory(viewModel.event(_:))
+        )
+    }
+}
+
+extension UtilityPrepaymentStateWrapperFactory {
+    
+    typealias MakeUtilityPrepaymentPickerFactory = (@escaping (Event) -> Void) -> _UtilityPrepaymentPickerFactory<Icon>
+    
+    typealias ViewModel = RxViewModel<State, Event, Effect>
+    
+    typealias State = _UtilityPrepaymentPickerState<Icon>
+    typealias Event = _UtilityPrepaymentPickerEvent<Icon>
+    typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
+}
+
 // MARK: - UtilityPrepaymentFactory
 
 final class UtilityPrepaymentFactory<Icon> {
@@ -490,28 +541,6 @@ final class UtilityPrepaymentFactory<Icon> {
 
 extension UtilityPrepaymentFactory {
     
-    func makeComposedStateWrapperView(
-        initialState: State
-    ) -> _ComposedStateWrapperView<Icon> {
-        
-        let reducer = _UtilityPrepaymentPickerReducer<Icon>()
-        let effectHandler = _UtilityPrepaymentPickerEffectHandler<Icon>()
-        let viewModel = ViewModel(
-            initialState: initialState,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: scheduler
-        )
-        
-        return .init(
-            viewModel: viewModel,
-            config: config,
-            factory: makeUtilityPrepaymentPickerFactory(
-                event: viewModel.event(_:)
-            )
-        )
-    }
-    
     func makeUtilityPrepaymentPickerFactory(
         event: @escaping (Event) -> Void
     ) -> _UtilityPrepaymentPickerFactory<Icon> {
@@ -521,6 +550,9 @@ extension UtilityPrepaymentFactory {
             makeOperatorPicker: makeOperatorPicker(event)
         )
     }
+}
+
+private extension UtilityPrepaymentFactory {
     
     private func makeFooterView(
         _ mode: FooterViewMode,
@@ -638,7 +670,6 @@ extension UtilityPrepaymentFactory {
 
 extension UtilityPrepaymentFactory {
     
-    typealias ViewModel = RxViewModel<State, Event, Effect>
     typealias ImageSubject = CurrentValueSubject<Image, Never>
     
     typealias AsyncImage = UIPrimitives.AsyncImage
@@ -699,8 +730,14 @@ struct _Demo: View {
             imageSubject: .init(.init(systemName: "car")),
             config: .preview
         )
+        let stateFactory = UtilityPrepaymentStateWrapperFactory<String>(
+            config: .preview
+        )
         
-        factory.makeComposedStateWrapperView(initialState: initialState)
+        stateFactory.makeComposedStateWrapperView(
+            initialState: initialState,
+            makeFactory: factory.makeUtilityPrepaymentPickerFactory(event:)
+        )
     }
 }
 
