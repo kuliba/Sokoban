@@ -11,11 +11,11 @@ import SharedConfigs
 
 public struct NameView<Icon, IconView: View>: View {
     
-    let state: NameViewState
-    @State private var text: String = ""
-    let event: (NameEvent) -> Void
-    let iconView: () -> IconView
-    let config: InputConfig
+    private let state: NameViewState
+    @State private(set) var text: String = ""
+    private let event: (NameEvent) -> Void
+    private let iconView: () -> IconView
+    private let config: InputConfig
     
     public init(
         state: NameViewState,
