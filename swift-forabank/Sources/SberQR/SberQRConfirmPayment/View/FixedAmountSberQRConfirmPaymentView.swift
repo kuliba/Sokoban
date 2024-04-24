@@ -53,19 +53,16 @@ struct FixedAmountSberQRConfirmPaymentView: View {
                 
                 InfoView(
                     info: state.brandName,
-                    style: .expanded,
                     config: config.info
                 )
                 
                 InfoView(
                     info: state.amount,
-                    style: .expanded,
                     config: config.info
                 )
                 
                 InfoView(
                     info: state.recipientBank,
-                    style: .expanded,
                     config: config.info
                 )
             }

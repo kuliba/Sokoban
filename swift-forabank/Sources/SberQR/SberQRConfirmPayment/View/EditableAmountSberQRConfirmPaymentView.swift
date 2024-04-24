@@ -53,13 +53,11 @@ struct EditableAmountSberQRConfirmPaymentView: View {
                 
                 PaymentComponents.InfoView(
                     info: state.brandName,
-                    style: .expanded,
                     config: config.info
                 )
                 
                 PaymentComponents.InfoView(
                     info: state.recipientBank,
-                    style: .expanded,
                     config: config.info
                 )
             }

@@ -99,9 +99,9 @@ struct InfoView_Previews: PreviewProvider {
         
         Group {
             
-            InfoView(info: info, style: .expanded, config: .preview)
+            InfoView(info: info, config: .preview)
             
-            InfoView(info: info, style: .compressed, config: .preview)
+            InfoView(info: info, config: .preview)
         }
         .padding(20)
     }
