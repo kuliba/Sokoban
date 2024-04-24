@@ -6,16 +6,28 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
-struct PaymentsView: View {
+struct PaymentsView<DestinationView>: View
+where DestinationView: View {
     
     let state: State
     let event: (Event) -> Void
-    let config: Config
+    let factory: Factory
     
     var body: some View {
         
-        utilityServicePaymentsButton()
+        ScrollView(showsIndicators: false) {
+            
+            utilityServicePaymentsButton()
+        }
+        .navigationDestination(
+            item: .init(
+                get: { state.destination },
+                set: { if $0 == nil { event(.dismissDestination) }}
+            ),
+            content: factory.makeDestinationView
+        )
     }
     
     private func utilityServicePaymentsButton(
@@ -34,7 +46,23 @@ extension PaymentsView {
     typealias Event = PaymentsEvent
     typealias Effect = PaymentsEffect
     
-    typealias Config = PaymentsViewConfig
+    typealias Factory = PaymentsViewFactory<DestinationView>
+}
+
+extension PaymentsState.Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .utilityServicePayment:
+            return .utilityServicePayment
+        }
+    }
+    
+    enum ID {
+        
+        case utilityServicePayment
+    }
 }
 
 struct PaymentsView_Previews: PreviewProvider {
@@ -52,10 +80,14 @@ struct PaymentsView_Previews: PreviewProvider {
         _ state: PaymentsState
     ) -> some View {
         
-        PaymentsView(
-            state: state,
-            event: { _ in },
-            config: .preview
-        )
+        NavigationView {
+            
+            PaymentsView(
+                state: state,
+                event: { _ in },
+                factory: .preview
+            )
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }

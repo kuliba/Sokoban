@@ -8,6 +8,7 @@
 enum PaymentsEvent {
     
     case buttonTapped(ButtonTapped)
+    case dismissDestination
 }
 
 extension PaymentsEvent {

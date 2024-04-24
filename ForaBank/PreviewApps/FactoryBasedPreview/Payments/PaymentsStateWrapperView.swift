@@ -8,18 +8,19 @@
 import RxViewModel
 import SwiftUI
 
-struct PaymentsStateWrapperView: View {
+struct PaymentsStateWrapperView<DestinationView>: View
+where DestinationView: View {
     
     @StateObject private var viewModel: PaymentsViewModel
     
-    private let config: Config
+    private let factory: Factory
     
     init(
         viewModel: PaymentsViewModel,
-        config: Config
+        factory: Factory
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
-        self.config = config
+        self.factory = factory
     }
     
     var body: some View {
@@ -27,14 +28,14 @@ struct PaymentsStateWrapperView: View {
         PaymentsView(
             state: viewModel.state,
             event: viewModel.event(_:),
-            config: config
+            factory: factory
         )
     }
 }
 
 extension PaymentsStateWrapperView {
     
-    typealias Config = PaymentsViewConfig
+    typealias Factory = PaymentsViewFactory<DestinationView>
 }
 
 struct PaymentsStateWrapperView_Previews: PreviewProvider {
@@ -54,7 +55,7 @@ struct PaymentsStateWrapperView_Previews: PreviewProvider {
         
         PaymentsStateWrapperView(
             viewModel: .preview(initialState: state),
-            config: .preview
+            factory: .preview
         )
     }
     
@@ -66,7 +67,7 @@ struct PaymentsStateWrapperView_Previews: PreviewProvider {
             viewModel: .preview(
                 initialState: .preview(destination)
             ),
-            config: .preview
+            factory: .preview
         )
     }
 }

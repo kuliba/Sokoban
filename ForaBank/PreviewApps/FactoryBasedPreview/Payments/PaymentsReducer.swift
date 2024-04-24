@@ -20,6 +20,9 @@ extension PaymentsReducer {
         switch event {
         case let .buttonTapped(buttonTapped):
             (state, effect) = reduce(state, buttonTapped)
+            
+        case .dismissDestination:
+            state.destination = nil
         }
         
         return (state, effect)
