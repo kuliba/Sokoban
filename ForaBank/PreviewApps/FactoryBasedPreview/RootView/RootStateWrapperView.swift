@@ -75,19 +75,6 @@ struct RootStateWrapperView_Previews: PreviewProvider {
             makeSpinner: SpinnerView.init
         )
     }
-    
-    private struct SpinnerView: View {
-        
-        var body: some View {
-            
-            ZStack {
-                
-                Color.secondary.opacity(0.3)
-                
-                ProgressView()
-            }
-        }
-    }
 }
 
 private extension RootViewModel {

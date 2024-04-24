@@ -700,6 +700,7 @@
 		2A62E9962BD9662C0044EB39 /* MainTabStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A62E9952BD9662C0044EB39 /* MainTabStateWrapperView.swift */; };
 		2A62E9982BD968290044EB39 /* MainTabReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A62E9972BD968290044EB39 /* MainTabReducer.swift */; };
 		2A62E99A2BD968400044EB39 /* MainTabEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A62E9992BD968400044EB39 /* MainTabEffect.swift */; };
+		2A62E99C2BD974640044EB39 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A62E99B2BD974640044EB39 /* SpinnerView.swift */; };
 		2A6481F72A1BC623005CC17A /* TextFieldFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */; };
 		2A6481F92A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481F82A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift */; };
 		2A6481FB2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481FA2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift */; };
@@ -3369,6 +3370,7 @@
 		2A62E9952BD9662C0044EB39 /* MainTabStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabStateWrapperView.swift; sourceTree = "<group>"; };
 		2A62E9972BD968290044EB39 /* MainTabReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabReducer.swift; sourceTree = "<group>"; };
 		2A62E9992BD968400044EB39 /* MainTabEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabEffect.swift; sourceTree = "<group>"; };
+		2A62E99B2BD974640044EB39 /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
 		2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFactory.swift; sourceTree = "<group>"; };
 		2A6481F82A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldState+makeTextFieldState.swift"; sourceTree = "<group>"; };
 		2A6481FA2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateMaskedTransformerTests.swift; sourceTree = "<group>"; };
@@ -7565,6 +7567,7 @@
 			children = (
 				2A62E9832BD958710044EB39 /* SpinnerState.swift */,
 				2A62E9852BD958820044EB39 /* SpinnerEvent.swift */,
+				2A62E99B2BD974640044EB39 /* SpinnerView.swift */,
 			);
 			path = Spinner;
 			sourceTree = "<group>";
@@ -15122,6 +15125,7 @@
 			files = (
 				2A62E9802BD952E80044EB39 /* RootView.swift in Sources */,
 				2A62E9842BD958710044EB39 /* SpinnerState.swift in Sources */,
+				2A62E99C2BD974640044EB39 /* SpinnerView.swift in Sources */,
 				2A62E9862BD958820044EB39 /* SpinnerEvent.swift in Sources */,
 				2A62E9902BD9617C0044EB39 /* MainTabState.swift in Sources */,
 				2A62E9942BD9619E0044EB39 /* MainTabFactory.swift in Sources */,
