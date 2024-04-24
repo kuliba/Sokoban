@@ -217,7 +217,7 @@ extension _UtilityPrepaymentPickerFactory {
     
     typealias LastPayment = _LastPayment<Icon>
     typealias Operator = _Operator<Icon>
-    typealias MakeOperatorPickerPayload = ([LastPayment], [Operator])
+    typealias MakeOperatorPickerPayload = (lastPayments: [LastPayment], operators: [Operator])
     typealias MakeOperatorPicker = (MakeOperatorPickerPayload) -> _OperatorPicker<Icon>
 }
 
@@ -500,91 +500,38 @@ extension UtilityPrepaymentFactory {
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: .main
+            scheduler: scheduler
         )
         
         return .init(
             viewModel: viewModel,
-            imageSubject: imageSubject,
-            config: config
-        )
-    }
-}
-
-extension UtilityPrepaymentFactory {
-    
-    typealias State = _UtilityPrepaymentPickerState<Icon>
-    typealias Event = _UtilityPrepaymentPickerEvent<Icon>
-    typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
-    
-    typealias ViewModel = RxViewModel<State, Event, Effect>
-    typealias ImageSubject = CurrentValueSubject<Image, Never>
-}
-
-struct _ComposedStateWrapperView<Icon>: View {
-    
-    @StateObject private var viewModel: ViewModel
-    
-    private let imageSubject: ImageSubject
-    private let config: _UtilityPrepaymentPickerConfig
-    
-    init(
-        viewModel: ViewModel,
-        imageSubject: ImageSubject,
-        config: _UtilityPrepaymentPickerConfig
-    ) {
-        self._viewModel = .init(wrappedValue: viewModel)
-        self.imageSubject = imageSubject
-        self.config = config
-    }
-    
-    var body: some View {
-        
-        _Composed(
-            state: viewModel.state,
-            event: viewModel.event(_:),
             config: config,
-            imageSubject: imageSubject
-        )
-    }
-    
-    typealias State = _UtilityPrepaymentPickerState<Icon>
-    typealias Event = _UtilityPrepaymentPickerEvent<Icon>
-    typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
-    
-    typealias ViewModel = RxViewModel<State, Event, Effect>
-    typealias ImageSubject = CurrentValueSubject<Image, Never>
-}
-
-struct _Composed<Icon>: View {
-    
-    let state: State
-    let event: (Event) -> Void
-    let config: Config
-    let imageSubject: CurrentValueSubject<Image, Never>
-    
-    var body: some View {
-        
-        _UtilityPrepaymentPicker(
-            state: state,
-            event: event,
-            config: config,
-            factory: .init(
-                makeFooterView: makeFooterView(.error),
-                makeOperatorPicker: makeOperatorPicker
+            factory: makeUtilityPrepaymentPickerFactory(
+                event: viewModel.event(_:)
             )
         )
     }
     
+    func makeUtilityPrepaymentPickerFactory(
+        event: @escaping (Event) -> Void
+    ) -> _UtilityPrepaymentPickerFactory<Icon> {
+        
+        .init(
+            makeFooterView: makeFooterView(.error, event),
+            makeOperatorPicker: makeOperatorPicker(event)
+        )
+    }
+    
     private func makeFooterView(
-        _ mode: FooterViewMode
+        _ mode: FooterViewMode,
+        _ event: @escaping (Event) -> Void
     ) -> () -> _FooterView {
         
-        return {
+        return { [self] in
             
             _FooterView(
                 state: mode.isExpanded,
-                event: footerEvent,
+                event: footerEvent(event),
                 config: config.footer
             )
         }
@@ -598,45 +545,58 @@ struct _Composed<Icon>: View {
     }
     
     private func footerEvent(
-        _ footerEvent: _FooterViewEvent
-    ) {
-        switch footerEvent {
-        case .addCompany:
-            event(.complete(.addCompany))
+        _ event: @escaping (Event) -> Void
+    ) -> (_FooterViewEvent) -> Void {
+        
+        return {
             
-        case .payByInstructions:
-            event(.complete(.payByInstructions))
+            switch $0 {
+            case .addCompany:
+                event(.complete(.addCompany))
+                
+            case .payByInstructions:
+                event(.complete(.payByInstructions))
+            }
         }
     }
     
+    typealias OperatorPickerPayload = _UtilityPrepaymentPickerFactory<Icon>.MakeOperatorPickerPayload
+    
     private func makeOperatorPicker(
-        _ payload: (lastPayments: [LastPayment], operators: [Operator])
-    ) -> _OperatorPicker<Icon> {
+        _ event: @escaping (Event) -> Void
+    ) -> (OperatorPickerPayload) -> _OperatorPicker<Icon> {
         
-        _OperatorPicker(
-            state: .init(
-                lastPayments: payload.lastPayments,
-                operators: payload.operators
-            ),
-            event: operatorPickerEvent,
-            config: config.operatorPicker,
-            factory: .init(
-                makeFooterView: makeFooterView(.regular),
-                makeLastPaymentView: makeLastPaymentView,
-                makeOperatorView: makeOperatorView
+        return { [self] payload in
+            
+            _OperatorPicker(
+                state: .init(
+                    lastPayments: payload.lastPayments,
+                    operators: payload.operators
+                ),
+                event: operatorPickerEvent(event),
+                config: config.operatorPicker,
+                factory: .init(
+                    makeFooterView: makeFooterView(.regular, event),
+                    makeLastPaymentView: makeLastPaymentView,
+                    makeOperatorView: makeOperatorView
+                )
             )
-        )
+        }
     }
     
     private func operatorPickerEvent(
-        _ operatorPickerEvent: _OperatorPickerEvent<Icon>
-    ) {
-        switch operatorPickerEvent {
-        case let .select(.lastPayment(lastPayment)):
-            event(.complete(.select(.lastPayment(lastPayment))))
+        _ event: @escaping (Event) -> Void
+    ) -> (_OperatorPickerEvent<Icon>) -> Void {
+        
+        return {
             
-        case let .select(.operator(`operator`)):
-            event(.complete(.select(.operator(`operator`))))
+            switch $0 {
+            case let .select(.lastPayment(lastPayment)):
+                event(.complete(.select(.lastPayment(lastPayment))))
+                
+            case let .select(.operator(`operator`)):
+                event(.complete(.select(.operator(`operator`))))
+            }
         }
     }
     
@@ -674,19 +634,57 @@ struct _Composed<Icon>: View {
             image: imageSubject.value,
             publisher: imageSubject.eraseToAnyPublisher()
         )
-    }
-}
+    }}
 
-extension _Composed {
+extension UtilityPrepaymentFactory {
+    
+    typealias ViewModel = RxViewModel<State, Event, Effect>
+    typealias ImageSubject = CurrentValueSubject<Image, Never>
+    
+    typealias AsyncImage = UIPrimitives.AsyncImage
     
     typealias LastPayment = _LastPayment<Icon>
     typealias Operator = _Operator<Icon>
     
-    typealias AsyncImage = UIPrimitives.AsyncImage
+    typealias State = _UtilityPrepaymentPickerState<Icon>
+    typealias Event = _UtilityPrepaymentPickerEvent<Icon>
+    typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
+}
+
+struct _ComposedStateWrapperView<Icon>: View {
+    
+    @StateObject private var viewModel: ViewModel
+    
+    private let config: Config
+    private let factory: Factory
+    
+    init(
+        viewModel: ViewModel,
+        config: Config,
+        factory: Factory
+    ) {
+        self._viewModel = .init(wrappedValue: viewModel)
+        self.config = config
+        self.factory = factory
+    }
+    
+    var body: some View {
+        
+        _UtilityPrepaymentPicker(
+            state: viewModel.state,
+            event: viewModel.event(_:),
+            config: config,
+            factory: factory
+        )
+    }
+    
+    typealias ViewModel = RxViewModel<State, Event, Effect>
+    typealias Config = _UtilityPrepaymentPickerConfig
+    typealias Factory = _UtilityPrepaymentPickerFactory<Icon>
     
     typealias State = _UtilityPrepaymentPickerState<Icon>
     typealias Event = _UtilityPrepaymentPickerEvent<Icon>
-    typealias Config = _UtilityPrepaymentPickerConfig
+    typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
 }
 
 // MARK: - Preview
