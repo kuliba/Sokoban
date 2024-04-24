@@ -10,26 +10,28 @@ import SwiftUI
 
 typealias UtilityPaymentOperatorPickerViewModel<Icon> = RxViewModel<UtilityPaymentOperatorPickerState<Icon>, UtilityPaymentOperatorPickerEvent<Icon>, UtilityPaymentOperatorPickerEffect>
 
-struct UtilityPaymentOperatorPickerStateWrapperView<Icon>: View {
+struct UtilityPaymentOperatorPickerStateWrapperView<Icon, FooterView, LastPaymentsView, OperatorsView>: View
+where FooterView: View,
+      LastPaymentsView: View,
+      OperatorsView: View {
     
     @StateObject private var viewModel: ViewModel
     
-    private let config: Config
+    private let factory: Factory
     
     init(
         viewModel: ViewModel,
-        config: Config
+        factory: Factory
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
-        self.config = config
+        self.factory = factory
     }
     
     var body: some View {
         
-        UtilityPaymentOperatorPicker(
+        UtilityPaymentOperatorPickerLayoutView(
             state: viewModel.state,
-            event: viewModel.event,
-            config: config
+            factory: factory
         )
     }
 }
@@ -37,7 +39,7 @@ struct UtilityPaymentOperatorPickerStateWrapperView<Icon>: View {
 extension UtilityPaymentOperatorPickerStateWrapperView {
     
     typealias ViewModel = UtilityPaymentOperatorPickerViewModel<Icon>
-    typealias Config = UtilityPaymentOperatorPickerConfig
+    typealias Factory = UtilityPaymentOperatorPickerLayoutFactory<Icon, FooterView, LastPaymentsView, OperatorsView>
 }
 
 //#Preview {

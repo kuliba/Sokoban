@@ -35,7 +35,9 @@ extension FlowComposer {
 
 extension FlowComposer {
     
-    typealias UtilityServicePaymentFlowView = UtilityServicePaymentFlowStateWrapperView<Icon, UtilityPaymentOperatorPickerStateWrapperView<Icon>, UtilityServicePicker<Icon, UIPrimitives.AsyncImage>>
+    typealias OperatorPicker = UtilityPaymentOperatorPickerStateWrapperView<Icon, UtilityPaymentOperatorPickerFooterView, LastPaymentsView<Icon>, OperatorsView<Icon>>
+    typealias ServicePicker = UtilityServicePicker<Icon, UIPrimitives.AsyncImage>
+    typealias UtilityServicePaymentFlowView = UtilityServicePaymentFlowStateWrapperView<Icon, OperatorPicker, ServicePicker>
 }
 
 private extension UtilityServicePaymentFlowViewModel {
@@ -77,7 +79,7 @@ private extension UtilityPaymentOperatorPickerViewModel {
 }
 
 private extension UtilityServicePaymentFlowFactory
-where OperatorPicker == UtilityPaymentOperatorPickerStateWrapperView<Icon>,
+where OperatorPicker == UtilityPaymentOperatorPickerStateWrapperView<Icon, UtilityPaymentOperatorPickerFooterView, LastPaymentsView<Icon>, OperatorsView<Icon>>,
       ServicePicker == UtilityServicePicker<Icon, UIPrimitives.AsyncImage> {
     
     static func make(
@@ -106,15 +108,18 @@ where OperatorPicker == UtilityPaymentOperatorPickerStateWrapperView<Icon>,
         }
         
         func _makeOperatorPicker(
-            event: @escaping (OperatorPickerState.Operator) -> Void
+            event: @escaping (OperatorPickerEvent) -> Void
         ) -> OperatorPicker {
             
-            UtilityPaymentOperatorPickerStateWrapperView<Icon>(
+            .init(
                 viewModel: .make(
                     initialState: state,
                     scheduler: scheduler
                 ),
-                config: config.operatorPicker
+                factory: makeFactory(
+                    event: event,
+                    config: config.operatorPicker
+                )
             )
         }
         
@@ -132,6 +137,66 @@ where OperatorPicker == UtilityPaymentOperatorPickerStateWrapperView<Icon>,
         }
     }
     
+    static func makeFactory(
+        event: @escaping (OperatorPickerEvent) -> Void,
+        config: UtilityPaymentOperatorPickerConfig
+    ) -> OperatorPickerFactory {
+        
+        return .init(
+            footerView: footerView,
+            lastPaymentsView: lastPaymentsView,
+            operatorsView: operatorsView
+        )
+        
+        func footerView(
+            _ state: Bool
+        ) -> UtilityPaymentOperatorPickerFooterView {
+            
+            .init(
+                state: state,
+                event: {
+                    switch $0 {
+                    case .addCompany:
+                        event(.addCompany)
+                        
+                    case .payByInstructions:
+                        event(.payByInstructions)
+                    }
+                },
+                config: config.footer
+            )
+        }
+        
+        func lastPaymentsView(
+            lastPayments: [State.LastPayment]
+        ) -> LastPaymentsView<Icon> {
+            
+            .init(
+                state: lastPayments,
+                event: { event(.select(.lastPayment($0))) },
+                config: config.lastPayments
+            )
+        }
+        
+        func operatorsView(
+            operators: [State.Operator]
+        ) -> OperatorsView<Icon> {
+            
+            .init(
+                state: operators,
+                event: { event(.select(.operator($0))) },
+                config: config.operatorsPicker
+            )
+        }
+        
+        typealias State = UtilityPaymentOperatorPickerState<Icon>
+        typealias Event = UtilityPaymentOperatorPickerEvent<Icon>
+        typealias Config = UtilityPaymentOperatorPickerConfig
+    }
+    
     typealias ImageSubject = CurrentValueSubject<Image, Never>
     typealias MakeImageSubject = (Icon) -> ImageSubject
+  
+    typealias OperatorPickerEvent = UtilityPaymentOperatorPickerEvent<Icon>
+    typealias OperatorPickerFactory = UtilityPaymentOperatorPickerLayoutFactory<Icon, UtilityPaymentOperatorPickerFooterView, LastPaymentsView<Icon>, OperatorsView<Icon>>
 }

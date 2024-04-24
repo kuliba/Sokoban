@@ -21,7 +21,7 @@ where OperatorPicker: View,
     var body: some View {
         
         factory.makeOperatorPicker(
-            { event(.selectUtilityServiceOperator($0)) }
+            { _ in fatalError() }// { event(.selectUtilityServiceOperator($0)) }
         )
         .navigationDestination(
             item: .init(

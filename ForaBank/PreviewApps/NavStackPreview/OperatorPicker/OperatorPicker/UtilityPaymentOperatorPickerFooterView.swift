@@ -13,10 +13,13 @@ enum UtilityPaymentOperatorPickerFooterEvent {
     case payByInstructions
 }
 
+struct UtilityPaymentOperatorPickerFooterConfig {}
+
 struct UtilityPaymentOperatorPickerFooterView: View {
     
     let state: State
     let event: (Event) -> Void
+    let config: Config
     
     var body: some View {
         
@@ -32,6 +35,7 @@ extension UtilityPaymentOperatorPickerFooterView {
     
     typealias State = Bool
     typealias Event = UtilityPaymentOperatorPickerFooterEvent
+    typealias Config = UtilityPaymentOperatorPickerFooterConfig
 }
 
 //#Preview {

@@ -7,5 +7,9 @@
 
 extension UtilityPaymentOperatorPickerConfig {
     
-    static let preview: Self = .init()
+    static let preview: Self = .init(
+        footer: .preview, 
+        lastPayments: .preview,
+        operatorsPicker: .preview
+    )
 }

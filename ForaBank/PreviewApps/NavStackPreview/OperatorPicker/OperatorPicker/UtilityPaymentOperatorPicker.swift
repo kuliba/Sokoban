@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+#warning("remove")
 struct UtilityPaymentOperatorPicker<Icon>: View {
     
     let state: State
@@ -39,7 +39,8 @@ struct UtilityPaymentOperatorPicker<Icon>: View {
                 case .payByInstructions:
                     event(.payByInstructions)
                 }
-            }
+            },
+            config: config.footer
         )
     }
     
