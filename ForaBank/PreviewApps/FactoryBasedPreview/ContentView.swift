@@ -24,10 +24,14 @@ where RootView: View {
     let makeRootView: () -> RootView
 }
 
-#Preview {
-    ContentView(
-        factory: .init(
-            makeRootView: { Text("Root View here.") }
+struct ContentView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+ 
+        ContentView(
+            factory: .init(
+                makeRootView: { Text("Root View here.") }
+            )
         )
-    )
+    }
 }
