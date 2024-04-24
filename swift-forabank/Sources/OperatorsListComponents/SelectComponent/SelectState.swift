@@ -17,7 +17,7 @@ public struct SelectUIState {
 public enum SelectState {
     
     case collapsed(option: Option?)
-    case expanded(selectOption: Option, options: [Option], searchText: String)
+    case expanded(selectOption: Option?, options: [Option], searchText: String)
     
     public struct Option {
         
