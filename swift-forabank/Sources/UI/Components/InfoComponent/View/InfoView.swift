@@ -11,17 +11,14 @@ public struct InfoView: View {
     
     let info: Info
     let config: InfoConfig
-    let style: Style
     
     @State private var image: Image
     
     public init(
         info: Info,
-        style: Style,
         config: InfoConfig
     ) {
         self.info = info
-        self.style = style
         self.config = config
         self.image = info.image.value
     }
@@ -34,7 +31,7 @@ public struct InfoView: View {
                 .frame(info.size)
                 .frame(width: 32, height: 32)
             
-            switch style {
+            switch info.style {
             case .expanded:
                 VStack(alignment: .leading, spacing: 4) {
                     
@@ -64,15 +61,6 @@ public struct InfoView: View {
             .renderingMode(.original)
             .resizable()
             .aspectRatio(contentMode: .fit)
-    }
-}
-
-extension InfoView {
-
-    public enum Style {
-        
-        case expanded
-        case compressed
     }
 }
 
