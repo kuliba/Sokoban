@@ -43,14 +43,14 @@ public extension InputState {
         let icon: Icon
         let keyboard: Keyboard
         let title: String
-        let subtitle: String
+        let subtitle: String?
         
         public init(
             hint: String? = nil,
             icon: Icon,
             keyboard: InputState<Icon>.Settings.Keyboard,
             title: String,
-            subtitle: String
+            subtitle: String?
         ) {
             self.hint = hint
             self.icon = icon
