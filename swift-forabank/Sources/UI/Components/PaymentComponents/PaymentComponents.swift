@@ -58,7 +58,7 @@ public extension PaymentComponents {
     typealias CheckBoxConfig = CheckBoxComponent.CheckBoxView.Config
     
     typealias NameView = NameComponent.NameView
-    typealias NameConfig = InputComponent.InputView.Config
+    typealias NameConfig = InputComponent.InputConfig
     
     typealias FooterView = FooterComponent.FooterView
     typealias FooterConfig = FooterComponent.FooterView.Config
