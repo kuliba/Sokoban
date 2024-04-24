@@ -24,18 +24,22 @@ where MainView: View,
                 set: { event(.switchTo($0)) }
             )
         ) {
-            factory.makeMainView()
-                .tabItem { Text("Main") }
-                .tag(State.main)
-            
-            factory.makePaymentsView()
-                .tabItem { Text("Payments") }
-                .tag(State.payments)
-            
-            factory.makeChatView()
-                .tabItem { Text("Chat") }
-                .tag(State.chat)
+            navWrapped(factory.makeMainView, "Main", .main)
+            navWrapped(factory.makePaymentsView, "Payments", .payments)
+            navWrapped(factory.makeChatView, "Chat", .chat)
         }
+    }
+    
+    private func navWrapped(
+        _ content: @escaping () -> some View,
+        _ title: String,
+        _ tab: State
+    ) -> some View {
+        
+        NavigationView(content: content)
+            .navigationViewStyle(StackNavigationViewStyle())
+            .tabItem { Text(title) }
+            .tag(tab)
     }
 }
 
