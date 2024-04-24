@@ -272,7 +272,10 @@ extension _OperatorPickerEvent.Select {
 extension _OperatorPickerEvent: Equatable where Icon: Equatable {}
 extension _OperatorPickerEvent.Select: Equatable where Icon: Equatable {}
 
-struct _OperatorPicker<Icon>: View {
+struct GenericOperatorPicker<Icon, FooterView, LastPaymentView, OperatorView>: View
+where FooterView: View,
+      LastPaymentView: View,
+      OperatorView: View {
     
     let state: State
     let event: (Event) -> Void
@@ -316,7 +319,7 @@ struct _OperatorPicker<Icon>: View {
     }
 }
 
-extension _OperatorPicker {
+extension GenericOperatorPicker {
     
     typealias LastPayment = _LastPayment<Icon>
     typealias Operator = _Operator<Icon>
@@ -324,17 +327,53 @@ extension _OperatorPicker {
     typealias State = _OperatorPickerState<Icon>
     typealias Event = _OperatorPickerEvent<Icon>
     typealias Config = _OperatorPickerConfig
-    typealias Factory = _OperatorPickerFactory<Icon>
+    typealias Factory = GenericOperatorPickerFactory<Icon, FooterView, LastPaymentView, OperatorView>
 }
 
-struct _OperatorPickerFactory<Icon> {
+struct _OperatorPicker<Icon>: View {
+    
+    let state: State
+    let event: (Event) -> Void
+    let config: Config
+    let factory: Factory
+    
+    var body: some View {
+        
+        OperatorPicker(
+            state: state,
+            event: event,
+            config: config,
+            factory: .init(
+                makeFooterView: factory.makeFooterView,
+                makeLastPaymentView: factory.makeLastPaymentView,
+                makeOperatorView: factory.makeOperatorView
+            ))
+    }
+}
+
+extension _OperatorPicker {
+    
+    typealias State = _OperatorPickerState<Icon>
+    typealias Event = _OperatorPickerEvent<Icon>
+    typealias Config = _OperatorPickerConfig
+    typealias Factory = _OperatorPickerFactory<Icon>
+    
+    typealias LastPaymentView = _LastPaymentView<Icon, UIPrimitives.AsyncImage>
+    typealias OperatorView = _OperatorView<Icon, UIPrimitives.AsyncImage>
+    typealias OperatorPicker = GenericOperatorPicker<Icon, _FooterView, LastPaymentView, OperatorView>
+}
+
+struct GenericOperatorPickerFactory<Icon, FooterView, LastPaymentView, OperatorView>
+where FooterView: View,
+      LastPaymentView: View,
+      OperatorView: View {
     
     let makeFooterView: MakeFooterView
     let makeLastPaymentView: MakeLastPaymentView
     let makeOperatorView: MakeOperatorView
 }
 
-extension _OperatorPickerFactory {
+extension GenericOperatorPickerFactory {
     
     typealias LastPayment = _LastPayment<Icon>
     typealias Operator = _Operator<Icon>
@@ -343,6 +382,55 @@ extension _OperatorPickerFactory {
     typealias AsyncImage = UIPrimitives.AsyncImage
     typealias MakeLastPaymentView = (LastPayment, @escaping (LastPayment) -> Void) -> _LastPaymentView<Icon, AsyncImage>
     typealias MakeOperatorView = (Operator, @escaping (Operator) -> Void) -> _OperatorView<Icon, AsyncImage>
+}
+
+struct _OperatorPickerFactory<Icon> {
+    
+    private let factory: Factory
+    
+    init(
+        factory: Factory
+    ) {
+        self.factory = factory
+    }
+}
+
+extension _OperatorPickerFactory {
+    
+    func makeFooterView() -> FooterView {
+        
+        factory.makeFooterView()
+    }
+    
+    func makeLastPaymentView(
+        lastPayment: LastPayment,
+        event: @escaping (LastPayment) -> Void
+    ) -> LastPaymentView {
+        
+        factory.makeLastPaymentView(lastPayment, event)
+    }
+    
+    func makeOperatorView(
+        `operator`: Operator,
+        event: @escaping (Operator) -> Void
+    ) -> OperatorView {
+        
+        factory.makeOperatorView(`operator`, event)
+    }
+}
+
+extension _OperatorPickerFactory {
+    
+    typealias Factory = GenericOperatorPickerFactory<Icon, FooterView, LastPaymentView, OperatorView>
+    
+    typealias LastPayment = _LastPayment<Icon>
+    typealias Operator = _Operator<Icon>
+    
+    typealias AsyncImage = UIPrimitives.AsyncImage
+    
+    typealias FooterView = _FooterView
+    typealias LastPaymentView = _LastPaymentView<Icon, AsyncImage>
+    typealias OperatorView = _OperatorView<Icon, AsyncImage>
 }
 
 struct _LastPaymentView<Icon, IconView>: View
@@ -606,7 +694,7 @@ private extension UtilityPrepaymentFactory {
     
     private func makeOperatorPicker(
         _ event: @escaping (Event) -> Void
-    ) -> (OperatorPickerPayload) -> _OperatorPicker<Icon> {
+    ) -> (OperatorPickerPayload) -> OperatorPicker {
         
         return { [self] payload in
             
@@ -617,11 +705,11 @@ private extension UtilityPrepaymentFactory {
                 ),
                 event: operatorPickerEvent(event),
                 config: config.operatorPicker,
-                factory: .init(
+                factory: .init(factory: .init(
                     makeFooterView: makeFooterView(.regular, event),
                     makeLastPaymentView: makeLastPaymentView,
                     makeOperatorView: makeOperatorView
-                )
+                ))
             )
         }
     }
@@ -645,7 +733,7 @@ private extension UtilityPrepaymentFactory {
     private func makeLastPaymentView(
         state: LastPayment,
         event: @escaping (LastPayment) -> ()
-    ) -> _LastPaymentView<Icon, AsyncImage> {
+    ) -> LastPaymentView {
         
         .init(
             state: state,
@@ -658,7 +746,7 @@ private extension UtilityPrepaymentFactory {
     private func makeOperatorView(
         state: Operator,
         event: @escaping (Operator) -> ()
-    ) -> _OperatorView<Icon, AsyncImage> {
+    ) -> OperatorView {
         
         .init(
             state: state,
@@ -683,13 +771,14 @@ extension UtilityPrepaymentFactory {
     typealias ImageSubject = CurrentValueSubject<Image, Never>
     
     typealias AsyncImage = UIPrimitives.AsyncImage
+    typealias LastPaymentView = _LastPaymentView<Icon, AsyncImage>
+    typealias OperatorView = _OperatorView<Icon, AsyncImage>
+    typealias OperatorPicker = _OperatorPicker<Icon>
     
     typealias LastPayment = _LastPayment<Icon>
     typealias Operator = _Operator<Icon>
     
-    typealias State = _UtilityPrepaymentPickerState<Icon>
     typealias Event = _UtilityPrepaymentPickerEvent<Icon>
-    typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
 }
 
 struct _ComposedStateWrapperView<Icon>: View {
@@ -868,11 +957,11 @@ extension _OperatorPickerFactory {
         footerState: Bool
     ) -> Self {
         
-        .init(
+        return .init(factory: .init(
             makeFooterView: { .init(state: footerState, event: { _ in }, config: .preview) },
             makeLastPaymentView: { .init(state: $0, event: $1, config: .preview, iconView: iconView) },
             makeOperatorView: { .init(state: $0, event: $1, config: .preview, iconView: iconView) }
-        )
+        ))
     }
     
     private static func iconView(icon: Icon) -> AsyncImage {
