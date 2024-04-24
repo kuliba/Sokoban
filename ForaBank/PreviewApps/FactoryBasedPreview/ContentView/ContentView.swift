@@ -10,28 +10,31 @@ import SwiftUI
 struct ContentView<RootView>: View
 where RootView: View {
     
+    let state: RootState
     let factory: ContentViewFactory<RootView>
     
     var body: some View {
         
-        factory.makeRootView()
+        factory.makeRootView(state)
     }
-}
-
-struct ContentViewFactory<RootView>
-where RootView: View {
-    
-    let makeRootView: () -> RootView
 }
 
 struct ContentView_Previews: PreviewProvider {
     
     static var previews: some View {
- 
+        
+        preview()
+        preview(spinner: .on, tab: .payments)
+    }
+    
+    private static func preview(
+        spinner: SpinnerState = .off,
+        tab: MainTabState = .chat
+    ) -> some View {
+        
         ContentView(
-            factory: .init(
-                makeRootView: { Text("Root View here.") }
-            )
+            state: .init(spinner: spinner, tab: tab),
+            factory: Composer().makeContentViewFactory()
         )
     }
 }

@@ -14,18 +14,22 @@ extension RootReducer {
         _ event: Event
     ) -> (State, Effect?) {
         
+        var state = state
+
         switch event {
         case .hide:
-            return (.off, nil)
+            state.spinner = .off
         case .show:
-            return (.on, nil)
+            state.spinner = .on
         }
+        
+        return (state, nil)
     }
 }
 
 extension RootReducer {
     
-    typealias State = SpinnerState
-    typealias Event = SpinnerEvent
+    typealias State = RootState
+    typealias Event = RootEvent
     typealias Effect = Never
 }

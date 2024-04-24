@@ -10,10 +10,6 @@ import SwiftUI
 
 typealias RootViewModel = RxViewModel<RootState, RootEvent, RootEffect>
 
-typealias RootState = SpinnerState
-typealias RootEvent = SpinnerEvent
-typealias RootEffect = Never
-
 struct RootStateWrapperView<Content, Spinner>: View
 where Content: View,
       Spinner: View {
@@ -58,11 +54,15 @@ struct RootStateWrapperView_Previews: PreviewProvider {
     }
     
     static func preview(
-        _ initialState: SpinnerState
+        _ spinner: SpinnerState,
+        _ tab: MainTabState = .chat
     ) -> some View {
         
         RootStateWrapperView(
-            viewModel: .preview(initialState: initialState),
+            viewModel: .preview(initialState: .init(
+                spinner: spinner,
+                tab: tab
+            )),
             factory: makeFactory()
         )
     }
@@ -71,7 +71,7 @@ struct RootStateWrapperView_Previews: PreviewProvider {
     ) -> RootViewFactory<Text, SpinnerView> {
         
         .init(
-            makeContent: { _ in Text("RootView Content") },
+            makeContent: { _,_ in Text("RootView Content") },
             makeSpinner: SpinnerView.init
         )
     }
@@ -80,7 +80,7 @@ struct RootStateWrapperView_Previews: PreviewProvider {
 private extension RootViewModel {
     
     static func preview(
-        initialState: SpinnerState
+        initialState: RootState
     ) -> Self {
         
         .init(

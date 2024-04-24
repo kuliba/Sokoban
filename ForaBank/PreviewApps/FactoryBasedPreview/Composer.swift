@@ -20,13 +20,59 @@ extension Composer {
 
 extension Composer {
     
-    typealias RootView = Text
+    typealias _MainTabView = MainTabStateWrapperView<Text, Text, Text>
+    typealias RootView = RootStateWrapperView<_MainTabView, SpinnerView>
 }
 
 private extension Composer {
     
-    func makeRootView() -> RootView {
+    func makeRootView(
+        initialState: RootState = .init()
+    ) -> RootView {
         
-        Text("Root View here.")
+        let viewModel = RootViewModel(
+            initialState: initialState,
+            reduce: RootReducer().reduce(_:_:),
+            handleEffect: { _,_ in }
+        )
+        
+        return .init(
+            viewModel: viewModel,
+            factory: makeRootViewFactory()
+        )
+    }
+    
+    private func makeRootViewFactory(
+    ) -> RootViewFactory<_MainTabView, SpinnerView> {
+        
+        .init(
+            makeContent: makeRootContent,
+            makeSpinner: SpinnerView.init
+        )
+    }
+    
+    private func makeRootContent(
+        initialState: MainTabState,
+        event: @escaping (SpinnerEvent) -> Void
+    ) -> _MainTabView {
+        
+        .init(
+            viewModel: .init(
+                initialState: initialState,
+                reduce: MainTabReducer().reduce(_:_:),
+                handleEffect: { _,_ in }
+            ),
+            factory: makeMainTabFactory()
+        )
+    }
+    
+    private func makeMainTabFactory(
+    ) -> MainTabFactory<Text, Text, Text> {
+        
+        .init(
+            makeMainView: { Text("Main View") },
+            makePaymentsView: { Text("Payments") },
+            makeChatView: { Text("Chat here") }
+        )
     }
 }

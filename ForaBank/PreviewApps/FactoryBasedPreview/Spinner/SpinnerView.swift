@@ -13,7 +13,7 @@ struct SpinnerView: View {
         
         ZStack {
             
-            Color.secondary.opacity(0.3)
+            Color.secondary.opacity(0.5)
             
             ProgressView()
         }

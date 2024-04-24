@@ -19,9 +19,9 @@ where Content: View,
         
         ZStack {
             
-            factory.makeContent({ event($0) })
+            factory.makeContent(state.tab) { event($0) }
             
-            if state == .on {
+            if state.spinner == .on {
                 
                 factory.makeSpinner()
                     .ignoresSafeArea()
@@ -32,8 +32,8 @@ where Content: View,
 
 extension RootView {
     
-    typealias State = SpinnerState
-    typealias Event = SpinnerEvent
+    typealias State = RootState
+    typealias Event = RootEvent
     typealias Factory = RootViewFactory<Content, Spinner>
 }
 
@@ -49,11 +49,11 @@ struct RootView_Previews: PreviewProvider {
     }
     
     private static func rootView(
-        _ state: SpinnerState
+        _ spinner: SpinnerState
     ) -> some View {
         
         RootView(
-            state: state,
+            state: .init(spinner: spinner, tab: .chat),
             event: { _ in },
             factory: makeFactory()
         )
@@ -63,7 +63,7 @@ struct RootView_Previews: PreviewProvider {
     ) -> RootViewFactory<Text, SpinnerView> {
         
         .init(
-            makeContent: { _ in Text("RootView Content") },
+            makeContent: { _,_ in Text("RootView Content") },
             makeSpinner: SpinnerView.init
         )
     }

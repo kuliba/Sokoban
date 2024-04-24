@@ -16,7 +16,10 @@ struct FactoryBasedPreviewApp: App {
         
         WindowGroup {
         
-            ContentView(factory: composer.makeContentViewFactory())
+            ContentView(
+                state: .init(),
+                factory: composer.makeContentViewFactory()
+            )
         }
     }
 }
