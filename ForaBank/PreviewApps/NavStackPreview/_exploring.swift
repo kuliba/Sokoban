@@ -169,7 +169,9 @@ extension _UtilityPrepaymentPickerEffectHandler {
     typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
 }
 
-struct _UtilityPrepaymentPicker<Icon>: View {
+struct _UtilityPrepaymentPicker<Icon, FooterView, OperatorPicker>: View
+where FooterView: View,
+      OperatorPicker: View {
     
     let state: State
     let event: (Event) -> Void
@@ -194,7 +196,7 @@ extension _UtilityPrepaymentPicker {
     typealias State = _UtilityPrepaymentPickerState<Icon>
     typealias Event = _UtilityPrepaymentPickerEvent<Icon>
     typealias Config = _UtilityPrepaymentPickerConfig
-    typealias Factory = _UtilityPrepaymentPickerFactory<Icon>
+    typealias Factory = GenericUtilityPrepaymentPickerFactory<Icon, FooterView, OperatorPicker>
 }
 
 struct _UtilityPrepaymentPickerConfig: Equatable {
@@ -205,20 +207,30 @@ struct _UtilityPrepaymentPickerConfig: Equatable {
     let `operator`: _OperatorViewConfig
 }
 
-struct _UtilityPrepaymentPickerFactory<Icon> {
-    
+final class GenericUtilityPrepaymentPickerFactory<Icon, FooterView, OperatorPicker>
+where FooterView: View,
+      OperatorPicker: View {
+
     let makeFooterView: MakeFooterView
     let makeOperatorPicker: MakeOperatorPicker
+    
+    init(
+        makeFooterView: @escaping MakeFooterView,
+        makeOperatorPicker: @escaping MakeOperatorPicker
+    ) {
+        self.makeFooterView = makeFooterView
+        self.makeOperatorPicker = makeOperatorPicker
+    }
 }
 
-extension _UtilityPrepaymentPickerFactory {
+extension GenericUtilityPrepaymentPickerFactory {
     
-    typealias MakeFooterView = () -> _FooterView
+    typealias MakeFooterView = () -> FooterView
     
     typealias LastPayment = _LastPayment<Icon>
     typealias Operator = _Operator<Icon>
     typealias MakeOperatorPickerPayload = (lastPayments: [LastPayment], operators: [Operator])
-    typealias MakeOperatorPicker = (MakeOperatorPickerPayload) -> _OperatorPicker<Icon>
+    typealias MakeOperatorPicker = (MakeOperatorPickerPayload) -> OperatorPicker
 }
 
 // MARK: - _OperatorPicker
@@ -526,7 +538,6 @@ final class UtilityPrepaymentFactory<Icon> {
     
     private let imageSubject: ImageSubject
     private let config: _UtilityPrepaymentPickerConfig
-    private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         imageSubject: ImageSubject,
@@ -535,7 +546,6 @@ final class UtilityPrepaymentFactory<Icon> {
     ) {
         self.imageSubject = imageSubject
         self.config = config
-        self.scheduler = scheduler
     }
 }
 
@@ -545,10 +555,10 @@ extension UtilityPrepaymentFactory {
         event: @escaping (Event) -> Void
     ) -> _UtilityPrepaymentPickerFactory<Icon> {
         
-        .init(
+        return .init(factory: .init(
             makeFooterView: makeFooterView(.error, event),
             makeOperatorPicker: makeOperatorPicker(event)
-        )
+        ))
     }
 }
 
@@ -716,6 +726,64 @@ struct _ComposedStateWrapperView<Icon>: View {
     typealias State = _UtilityPrepaymentPickerState<Icon>
     typealias Event = _UtilityPrepaymentPickerEvent<Icon>
     typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
+}
+
+private extension _UtilityPrepaymentPicker
+where FooterView == _FooterView,
+      OperatorPicker == _OperatorPicker<Icon> {
+    
+    init(
+        state: State,
+        event: @escaping (Event) -> Void,
+        config: Config,
+        factory: _UtilityPrepaymentPickerFactory<Icon>
+    ) {
+        self.init(
+            state: state,
+            event: event,
+            config: config,
+            factory: .init(
+                makeFooterView: factory.makeFooterView,
+                makeOperatorPicker: factory.makeOperatorPicker(payload:)
+            )
+        )
+    }
+}
+
+final class _UtilityPrepaymentPickerFactory<Icon> {
+    
+    private let factory: Factory
+    
+    init(factory: Factory) {
+     
+        self.factory = factory
+    }
+}
+
+extension _UtilityPrepaymentPickerFactory {
+    
+    func makeFooterView() -> FooterView {
+    
+        factory.makeFooterView()
+    }
+    
+    func makeOperatorPicker(
+        payload: MakeOperatorPickerPayload
+    ) -> OperatorPicker {
+        
+        factory.makeOperatorPicker(payload)
+    }
+}
+
+extension _UtilityPrepaymentPickerFactory {
+    
+    typealias FooterView = _FooterView
+    typealias OperatorPicker = _OperatorPicker<Icon>
+    typealias Factory = GenericUtilityPrepaymentPickerFactory<Icon, FooterView, OperatorPicker>
+    
+    typealias LastPayment = _LastPayment<Icon>
+    typealias Operator = _Operator<Icon>
+    typealias MakeOperatorPickerPayload = (lastPayments: [LastPayment], operators: [Operator])
 }
 
 // MARK: - Preview
