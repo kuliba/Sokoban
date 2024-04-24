@@ -8,8 +8,9 @@
 import SwiftUI
 import UIPrimitives
 
-struct PaymentsView<DestinationView>: View
-where DestinationView: View {
+struct PaymentsView<DestinationView, PaymentButtonLabel>: View
+where DestinationView: View,
+      PaymentButtonLabel: View {
     
     let state: State
     let event: (Event) -> Void
@@ -19,7 +20,13 @@ where DestinationView: View {
         
         ScrollView(showsIndicators: false) {
             
-            utilityServicePaymentsButton()
+            VStack(spacing: 16) {
+                
+                ForEach(
+                    PaymentsEvent.ButtonTapped.allCases,
+                    content: paymentButton
+                )
+            }
         }
         .navigationDestination(
             item: .init(
@@ -30,13 +37,14 @@ where DestinationView: View {
         )
     }
     
-    private func utilityServicePaymentsButton(
+    private func paymentButton(
+        buttonTapped: PaymentsEvent.ButtonTapped
     ) -> some View {
         
-        Button("Utility Service Payments") {
-            
-            event(.buttonTapped(.utilityService))
-        }
+        Button(
+            action: { event(.buttonTapped(buttonTapped)) },
+            label: { factory.makePaymentButtonLabel(buttonTapped) }
+        )
     }
 }
 
@@ -46,7 +54,7 @@ extension PaymentsView {
     typealias Event = PaymentsEvent
     typealias Effect = PaymentsEffect
     
-    typealias Factory = PaymentsViewFactory<DestinationView>
+    typealias Factory = PaymentsViewFactory<DestinationView, PaymentButtonLabel>
 }
 
 extension PaymentsState.Destination: Identifiable {
@@ -62,6 +70,26 @@ extension PaymentsState.Destination: Identifiable {
     enum ID {
         
         case utilityServicePayment
+    }
+}
+
+extension PaymentsEvent.ButtonTapped: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .mobile:
+            return .mobile
+            
+        case .utilityService:
+            return .utilityService
+        }
+    }
+    
+    enum ID {
+        
+        case mobile
+        case utilityService
     }
 }
 

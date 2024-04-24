@@ -7,7 +7,9 @@
 
 import SwiftUI
 
-extension PaymentsViewFactory where DestinationView == Text {
+extension PaymentsViewFactory
+where DestinationView == Text,
+      PaymentButtonLabel == Text {
     
     static var preview: Self {
         
@@ -15,6 +17,16 @@ extension PaymentsViewFactory where DestinationView == Text {
             makeDestinationView: {
                 
                 Text("Destination View: \(String(describing: $0))")
+            },
+            makePaymentButtonLabel: {
+                
+                switch $0 {
+                case .mobile:
+                    Text("Cellular Service")
+                    
+                case .utilityService:
+                    Text("Utility Service")
+                }
             }
         )
     }

@@ -47,6 +47,9 @@ private extension PaymentsReducer {
         var effect: Effect?
         
         switch event {
+        case .mobile:
+            print("`mobile` event occured")
+            
         case .utilityService:
             effect = .initiateUtilityPayment
         }

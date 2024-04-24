@@ -13,8 +13,9 @@ enum PaymentsEvent {
 
 extension PaymentsEvent {
     
-    enum ButtonTapped {
+    enum ButtonTapped: CaseIterable {
         
+        case mobile
         case utilityService
     }
 }

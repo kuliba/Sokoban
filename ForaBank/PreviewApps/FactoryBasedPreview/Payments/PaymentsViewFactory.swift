@@ -7,14 +7,18 @@
 
 import SwiftUI
 
-struct PaymentsViewFactory<DestinationView>
-where DestinationView: View {
+struct PaymentsViewFactory<DestinationView, PaymentButtonLabel>
+where DestinationView: View,
+      PaymentButtonLabel: View {
     
     let makeDestinationView: MakeDestinationView
+    let makePaymentButtonLabel: MakePaymentButtonLabel
 }
 
 extension PaymentsViewFactory {
     
     typealias Destination = PaymentsState.Destination
     typealias MakeDestinationView = (Destination) -> DestinationView
+    
+    typealias MakePaymentButtonLabel = (PaymentsEvent.ButtonTapped) -> PaymentButtonLabel
 }
