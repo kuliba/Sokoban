@@ -183,6 +183,8 @@ struct _UtilityPrepaymentPickerConfig: Equatable {
     
     let operatorPicker: _OperatorPickerConfig
     let footer: _FooterViewConfig
+    let lastPayment: _LastPaymentViewConfig
+    let `operator`: _OperatorViewConfig
 }
 
 struct _UtilityPrepaymentPickerFactory {
@@ -224,6 +226,7 @@ struct _OperatorPicker: View {
     let state: State
     let event: (Event) -> Void
     let config: Config
+    let factory: Factory
     
     var body: some View {
         
@@ -249,35 +252,14 @@ struct _OperatorPicker: View {
         lastPayment: _LastPayment
     ) -> some View {
         
-        button(
-            title: String(describing: lastPayment).prefix(5),
-            select: .lastPayment(lastPayment)
-        )
+        factory.makeLastPaymentView(lastPayment, { event(.select(.lastPayment($0))) })
     }
     
     private func operatorView(
         `operator`: _Operator
     ) -> some View {
         
-        button(
-            title: String(describing: `operator`).prefix(32),
-            select: .operator(`operator`)
-        )
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-    
-    private func button(
-        title: Substring,
-        select: Event.Select
-    ) -> some View {
-        
-        Button {
-            event(.select(select))
-        } label: {
-            Text(title)
-                .padding(.vertical)
-        }
-        .buttonStyle(.plain)
+        factory.makeOperatorView(`operator`, { event(.select(.operator($0))) })
     }
 }
 
@@ -286,6 +268,81 @@ extension _OperatorPicker {
     typealias State = _OperatorPickerState
     typealias Event = _OperatorPickerEvent
     typealias Config = _OperatorPickerConfig
+    typealias Factory = _OperatorPickerFactory
+}
+
+struct _OperatorPickerFactory {
+    
+    let makeLastPaymentView: MakeLastPaymentView
+    let makeOperatorView: MakeOperatorView
+}
+
+extension _OperatorPickerFactory {
+    
+    typealias MakeLastPaymentView = (_LastPayment, @escaping (_LastPayment) -> Void) -> _LastPaymentView
+    typealias MakeOperatorView = (_Operator, @escaping (_Operator) -> Void) -> _OperatorView
+}
+
+struct _LastPaymentView: View {
+    
+    let state: State
+    let event: (State) -> Void
+    let config: Config
+    
+    var body: some View {
+        
+        SimpleButton(
+            title: String(describing: state).prefix(5),
+            action: { event(state) }
+        )
+    }
+}
+
+extension _LastPaymentView {
+    
+    typealias State = _LastPayment
+    typealias Config = _LastPaymentViewConfig
+}
+
+struct _LastPaymentViewConfig: Equatable {}
+
+struct _OperatorView: View {
+    
+    let state: State
+    let event: (State) -> Void
+    let config: Config
+    
+    var body: some View {
+
+        SimpleButton(
+            title: String(describing: state).prefix(32),
+            action: { event(state) }
+        )
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+extension _OperatorView {
+    
+    typealias State = _Operator
+    typealias Config = _OperatorViewConfig
+}
+
+struct _OperatorViewConfig: Equatable {}
+
+private struct SimpleButton: View {
+    
+    let title: Substring
+    let action: () -> Void
+    
+    var body: some View {
+        
+        Button(action: action) {
+            
+            Text(title).padding(.vertical)
+        }
+        .buttonStyle(.plain)
+    }
 }
 
 struct _OperatorPickerConfig: Equatable {}
@@ -395,7 +452,11 @@ struct _Composed: View {
                 operators: payload.operators
             ),
             event: operatorPickerEvent,
-            config: config.operatorPicker
+            config: config.operatorPicker,
+            factory: .init(
+                makeLastPaymentView: makeLastPaymentView,
+                makeOperatorView: makeOperatorView
+            )
         )
     }
     
@@ -409,6 +470,22 @@ struct _Composed: View {
         case let .select(.operator(`operator`)):
             event(.complete(.select(.operator(`operator`))))
         }
+    }
+    
+    private func makeLastPaymentView(
+        state: _LastPayment,
+        event: @escaping (_LastPayment) -> ()
+    ) -> _LastPaymentView {
+        
+        .init(state: state, event: event, config: config.lastPayment)
+    }
+    
+    private func makeOperatorView(
+        state: _Operator,
+        event: @escaping (_Operator) -> ()
+    ) -> _OperatorView {
+        
+        .init(state: state, event: event, config: config.operator)
     }
 }
 
@@ -463,7 +540,8 @@ struct _ComposedStateWrapperView: View {
     _OperatorPicker(
         state: .init(lastPayments: [], operators: .preview),
         event: { print($0) },
-        config: .preview
+        config: .preview,
+        factory: .preview
     )
 }
 
@@ -471,7 +549,8 @@ struct _ComposedStateWrapperView: View {
     _OperatorPicker(
         state: .init(lastPayments: .preview, operators: .preview),
         event: { print($0) },
-        config: .preview
+        config: .preview,
+        factory: .preview
     )
 }
 
@@ -493,11 +572,31 @@ struct _ComposedStateWrapperView: View {
 
 // MARK: - Preview Content
 
+extension _OperatorPickerFactory {
+    
+    static let preview: Self = .init(
+        makeLastPaymentView: { .init(state: $0, event: $1, config: .preview) },
+        makeOperatorView: { .init(state: $0, event: $1, config: .preview) }
+    )
+}
+
+extension _LastPaymentViewConfig {
+    
+    static let preview: Self = .init()
+}
+
+extension _OperatorViewConfig {
+    
+    static let preview: Self = .init()
+}
+
 extension _UtilityPrepaymentPickerConfig {
     
     static let preview: Self = .init(
         operatorPicker: .preview,
-        footer: .preview
+        footer: .preview,
+        lastPayment: .preview,
+        operator: .preview
     )
 }
 
