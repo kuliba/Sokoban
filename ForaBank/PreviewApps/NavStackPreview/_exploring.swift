@@ -99,7 +99,7 @@ extension _UtilityPrepaymentPickerReducer {
 
 extension _UtilityPrepaymentPickerReducer {
     
-    typealias State = _UtilityPrepaymentPickerState<Icon>?
+    typealias State = _UtilityPrepaymentPickerState<Icon>
     typealias Event = _UtilityPrepaymentPickerEvent<Icon>
     typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
 }
@@ -179,7 +179,7 @@ struct _UtilityPrepaymentPicker<Icon>: View {
         
         VStack {
             
-            if let state, !state.operators.isEmpty {
+            if !state.operators.isEmpty {
                 factory.makeOperatorPicker((state.lastPayments, state.operators))
             } else {
                 factory.makeFooterView()
@@ -190,7 +190,7 @@ struct _UtilityPrepaymentPicker<Icon>: View {
 
 extension _UtilityPrepaymentPicker {
     
-    typealias State = _UtilityPrepaymentPickerState<Icon>?
+    typealias State = _UtilityPrepaymentPickerState<Icon>
     typealias Event = _UtilityPrepaymentPickerEvent<Icon>
     typealias Config = _UtilityPrepaymentPickerConfig
     typealias Factory = _UtilityPrepaymentPickerFactory<Icon>
@@ -304,10 +304,10 @@ struct _OperatorPicker<Icon>: View {
 }
 
 extension _OperatorPicker {
-
+    
     typealias LastPayment = _LastPayment<Icon>
     typealias Operator = _Operator<Icon>
-
+    
     typealias State = _OperatorPickerState<Icon>
     typealias Event = _OperatorPickerEvent<Icon>
     typealias Config = _OperatorPickerConfig
@@ -325,7 +325,7 @@ extension _OperatorPickerFactory {
     
     typealias LastPayment = _LastPayment<Icon>
     typealias Operator = _Operator<Icon>
-
+    
     typealias MakeFooterView = () -> _FooterView
     typealias AsyncImage = UIPrimitives.AsyncImage
     typealias MakeLastPaymentView = (LastPayment, @escaping (LastPayment) -> Void) -> _LastPaymentView<Icon, AsyncImage>
@@ -343,7 +343,7 @@ where IconView: View {
     var body: some View {
         
         HStack {
-         
+            
             iconView(state.icon)
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 24, height: 24)
@@ -595,12 +595,12 @@ extension _Composed {
     
     typealias LastPayment = _LastPayment<Icon>
     typealias Operator = _Operator<Icon>
-
+    
     typealias AsyncImage = UIPrimitives.AsyncImage
     
-    typealias State = _UtilityPrepaymentPicker<Icon>.State
-    typealias Event = _UtilityPrepaymentPicker<Icon>.Event
-    typealias Config = _UtilityPrepaymentPicker<Icon>.Config
+    typealias State = _UtilityPrepaymentPickerState<Icon>
+    typealias Event = _UtilityPrepaymentPickerEvent<Icon>
+    typealias Config = _UtilityPrepaymentPickerConfig
 }
 
 // MARK: - Preview
@@ -609,7 +609,7 @@ struct _ComposedStateWrapperView<Icon>: View {
     
     @StateObject private var viewModel: ViewModel
     
-    init(initialState: _Composed<Icon>.State) {
+    init(initialState: State) {
         
         let reducer = _UtilityPrepaymentPickerReducer<Icon>()
         let effectHandler = _UtilityPrepaymentPickerEffectHandler<Icon>()
@@ -633,7 +633,11 @@ struct _ComposedStateWrapperView<Icon>: View {
         )
     }
     
-    typealias ViewModel = RxViewModel<_Composed<Icon>.State, _UtilityPrepaymentPickerEvent<Icon>, _UtilityPrepaymentPickerEffect<Icon>>
+    typealias State = _UtilityPrepaymentPickerState<Icon>
+    typealias Event = _UtilityPrepaymentPickerEvent<Icon>
+    typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
+
+    typealias ViewModel = RxViewModel<State, Event, Effect>
 }
 
 #Preview {
@@ -641,7 +645,7 @@ struct _ComposedStateWrapperView<Icon>: View {
 }
 
 #Preview {
-    _ComposedStateWrapperView<String>(initialState: nil)
+    _ComposedStateWrapperView<String>(initialState: .empty)
 }
 
 #Preview {
@@ -750,11 +754,10 @@ extension _UtilityPrepaymentPickerState where Icon == String {
     
     static var preview: Self {
         
-        .init(
-            lastPayments: .preview,
-            operators: .preview
-        )
+        .init(lastPayments: .preview, operators: .preview)
     }
+    
+    static var empty: Self { .init(lastPayments: [], operators: []) }
 }
 
 extension Array where Element == _LastPayment<String> {
