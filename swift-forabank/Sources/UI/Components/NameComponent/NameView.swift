@@ -80,12 +80,14 @@ public struct NameView<Icon, IconView: View>: View {
         HStack {
             
             InputView(
-                state: .init(dynamic: .init(value: text.description), settings: .init(
-                    icon: Image.init(systemName: ""),
-                    keyboard: .default,
-                    title: title,
-                    subtitle: nil
-                )),
+                state: .init(
+                    dynamic: .init(value: text.description),
+                    settings: .init(
+                        icon: Image.init(systemName: ""),
+                        keyboard: .default,
+                        title: title,
+                        subtitle: nil
+                    )),
                 event: {_ in },
                 config: config,
                 iconView: iconView
