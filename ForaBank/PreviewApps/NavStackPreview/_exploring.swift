@@ -5,14 +5,538 @@
 //  Created by Igor Malyarov on 24.04.2024.
 //
 
+import RxViewModel
 import SwiftUI
 
-struct _exploring: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct _LastPayment: Equatable, Identifiable {
+    
+    let id: String
+}
+
+struct _UtilityService: Equatable, Identifiable {
+    
+    let id: String
+}
+
+struct _Operator: Equatable, Identifiable {
+    
+    let id: String
+}
+
+struct _UtilityPrepaymentPickerState: Equatable {
+    
+    let lastPayments: [_LastPayment]
+    let operators: [_Operator] // non empty
+}
+
+enum _UtilityPrepaymentPickerEvent: Equatable {
+    
+    case complete(Complete)
+}
+
+extension _UtilityPrepaymentPickerEvent {
+    
+    enum Complete: Equatable {
+        
+        case addCompany
+        case payByInstructions
+        case select(Select)
     }
 }
 
+extension _UtilityPrepaymentPickerEvent.Complete {
+    
+    enum Select: Equatable {
+        
+        case lastPayment(_LastPayment)
+        case `operator`(_Operator)
+    }
+}
+
+enum _UtilityPrepaymentPickerEffect {}
+
+final class _UtilityPrepaymentPickerReducer {}
+
+extension _UtilityPrepaymentPickerReducer {
+    
+    func reduce(
+        _ state: State,
+        _ event: Event
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case let .complete(complete):
+            (state, effect) = reduce(state, complete)
+        }
+        
+        return (state, effect)
+    }
+}
+
+extension _UtilityPrepaymentPickerReducer {
+    
+    typealias State = _UtilityPrepaymentPickerState?
+    typealias Event = _UtilityPrepaymentPickerEvent
+    typealias Effect = _UtilityPrepaymentPickerEffect
+}
+
+private extension _UtilityPrepaymentPickerReducer {
+    
+    func reduce(
+        _ state: State,
+        _ event: Event.Complete
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case .addCompany:
+            fatalError()
+            
+        case .payByInstructions:
+            fatalError()
+            
+        case let .select(select):
+            (state, effect) = reduce(state, select)
+        }
+        
+        return (state, effect)
+    }
+    
+    func reduce(
+        _ state: State,
+        _ event: Event.Complete.Select
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case let .lastPayment(lastPayment):
+            fatalError()
+            
+        case let .operator(`operator`):
+            fatalError()
+        }
+        
+        return (state, effect)
+    }
+}
+
+final class _UtilityPrepaymentPickerEffectHandler {}
+
+extension _UtilityPrepaymentPickerEffectHandler {
+    
+    func handleEffect(
+        _ effect: Effect,
+        _ dispatch: @escaping Dispatch
+    ) {
+        fatalError()
+    }
+}
+
+extension _UtilityPrepaymentPickerEffectHandler {
+    
+    typealias Dispatch = (Event) -> Void
+    
+    typealias Event = _UtilityPrepaymentPickerEvent
+    typealias Effect = _UtilityPrepaymentPickerEffect
+}
+
+
+struct _UtilityPrepaymentPicker: View {
+    
+    let state: State
+    let event: (Event) -> Void
+    let config: Config
+    let factory: Factory
+    
+    var body: some View {
+        
+        VStack {
+            
+            state.map {
+                
+                factory.makeOperatorPicker(
+                    ($0.lastPayments, $0.operators)
+                )
+            }
+            
+            factory.makeFooterView(state != nil)
+        }
+    }
+}
+
+extension _UtilityPrepaymentPicker {
+    
+    typealias State = _UtilityPrepaymentPickerState?
+    typealias Event = _UtilityPrepaymentPickerEvent
+    typealias Config = _UtilityPrepaymentPickerConfig
+    typealias Factory = _UtilityPrepaymentPickerFactory
+}
+
+struct _UtilityPrepaymentPickerConfig: Equatable {
+    
+    let operatorPicker: _OperatorPickerConfig
+    let footer: _FooterViewConfig
+}
+
+struct _UtilityPrepaymentPickerFactory {
+    
+    let makeFooterView: MakeFooterView
+    let makeOperatorPicker: MakeOperatorPicker
+}
+
+extension _UtilityPrepaymentPickerFactory {
+    
+    typealias MakeFooterView = (Bool) -> _FooterView
+    
+    typealias MakeOperatorPickerPayload = ([_LastPayment], [_Operator])
+    typealias MakeOperatorPicker = (MakeOperatorPickerPayload) -> _OperatorPicker
+}
+
+struct _OperatorPickerState: Equatable {
+    
+    let lastPayments: [_LastPayment]
+    let operators: [_Operator]
+}
+
+enum _OperatorPickerEvent {
+    
+    case select(Select)
+}
+
+extension _OperatorPickerEvent {
+    
+    enum Select {
+        
+        case lastPayment(_LastPayment)
+        case `operator`(_Operator)
+    }
+}
+
+struct _OperatorPicker: View {
+    
+    let state: State
+    let event: (Event) -> Void
+    let config: Config
+    
+    var body: some View {
+        
+        ScrollView(showsIndicators: false) {
+            
+            VStack {
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    
+                    HStack(spacing: 16) {
+                        
+                        ForEach(state.lastPayments, content: lastPaymentView)
+                    }
+                }
+                
+                ForEach(state.operators, content: operatorView)
+            }
+            .padding(.horizontal)
+        }
+    }
+    
+    private func lastPaymentView(
+        lastPayment: _LastPayment
+    ) -> some View {
+        
+        button(
+            title: String(describing: lastPayment).prefix(5),
+            select: .lastPayment(lastPayment)
+        )
+    }
+    
+    private func operatorView(
+        `operator`: _Operator
+    ) -> some View {
+        
+        button(
+            title: String(describing: `operator`).prefix(32),
+            select: .operator(`operator`)
+        )
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private func button(
+        title: Substring,
+        select: Event.Select
+    ) -> some View {
+        
+        Button {
+            event(.select(select))
+        } label: {
+            Text(title)
+                .padding(.vertical)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+extension _OperatorPicker {
+    
+    typealias State = _OperatorPickerState
+    typealias Event = _OperatorPickerEvent
+    typealias Config = _OperatorPickerConfig
+}
+
+struct _OperatorPickerConfig: Equatable {}
+
+enum _FooterViewEvent {
+    
+    case addCompany
+    case payByInstructions
+}
+
+struct _FooterView: View {
+    
+    let state: State
+    let event: (Event) -> Void
+    let config: Config
+    
+    var body: some View {
+        
+        VStack(spacing: 32) {
+            
+            if state {
+                Text("Нет компании в списке?")
+                    .bold()
+                Text("Воспользуйтесь другими способами оплаты")
+                    .foregroundColor(.secondary)
+            } else {
+                Image(systemName: "magnifyingglass.circle.fill")
+                    .imageScale(.large)
+                    .font(.largeTitle)
+                    .foregroundColor(.secondary.opacity(0.5))
+                Text("Что-то пошло не так.\nПопробуйте позже или воспользуйтесь другим способом оплаты.")
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+            
+            Button("Pay by Instructions", action: { event(.payByInstructions) })
+            
+            if state {
+                Button("Add Company", action: { event(.addCompany) })
+                Text("Сообщите нам, и мы подключим новую организацию")
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+        }
+        .padding()
+    }
+}
+
+extension _FooterView {
+    
+    typealias State = Bool
+    typealias Event = _FooterViewEvent
+    typealias Config = _FooterViewConfig
+}
+
+struct _FooterViewConfig: Equatable {}
+
+struct _Composed: View {
+    
+    let state: State
+    let event: (Event) -> Void
+    let config: Config
+    
+    var body: some View {
+        
+        _UtilityPrepaymentPicker(
+            state: state,
+            event: event,
+            config: config,
+            factory: .init(
+                makeFooterView: makeFooterView,
+                makeOperatorPicker: makeOperatorPicker
+            )
+        )
+    }
+    
+    private func makeFooterView(
+        _ state: Bool
+    ) -> _FooterView {
+        
+        _FooterView(
+            state: state,
+            event: footerEvent,
+            config: config.footer
+        )
+    }
+    
+    private func footerEvent(
+        _ footerEvent: _FooterViewEvent
+    ) {
+        switch footerEvent {
+        case .addCompany:
+            event(.complete(.addCompany))
+            
+        case .payByInstructions:
+            event(.complete(.payByInstructions))
+        }
+    }
+    
+    private func makeOperatorPicker(
+        _ payload: (lastPayments: [_LastPayment], operators: [_Operator])
+    ) -> _OperatorPicker {
+        
+        _OperatorPicker(
+            state: .init(
+                lastPayments: payload.lastPayments,
+                operators: payload.operators
+            ),
+            event: operatorPickerEvent,
+            config: config.operatorPicker
+        )
+    }
+    
+    private func operatorPickerEvent(
+        _ operatorPickerEvent: _OperatorPickerEvent
+    ) {
+        switch operatorPickerEvent {
+        case let .select(.lastPayment(lastPayment)):
+            event(.complete(.select(.lastPayment(lastPayment))))
+            
+        case let .select(.operator(`operator`)):
+            event(.complete(.select(.operator(`operator`))))
+        }
+    }
+}
+
+extension _Composed {
+    
+    typealias State = _UtilityPrepaymentPicker.State
+    typealias Event = _UtilityPrepaymentPicker.Event
+    typealias Config = _UtilityPrepaymentPicker.Config
+}
+
+// MARK: - Preview
+
+struct _ComposedStateWrapperView: View {
+    
+    @StateObject private var viewModel: ViewModel
+    
+    init(initialState: _Composed.State) {
+        
+        let reducer = _UtilityPrepaymentPickerReducer()
+        let effectHandler = _UtilityPrepaymentPickerEffectHandler()
+        let viewModel = ViewModel(
+            initialState: initialState,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: .main
+        )
+        
+        self._viewModel = .init(wrappedValue: viewModel)
+    }
+    
+    var body: some View {
+        
+        _Composed(
+            state: viewModel.state,
+            event: viewModel.event(_:),
+            config: .preview
+        )
+    }
+    
+    typealias ViewModel = RxViewModel<_Composed.State, _UtilityPrepaymentPickerEvent, _UtilityPrepaymentPickerEffect>
+}
+
 #Preview {
-    _exploring()
+    _ComposedStateWrapperView(initialState: .preview)
+}
+
+#Preview {
+    _ComposedStateWrapperView(initialState: nil)
+}
+
+#Preview {
+    _OperatorPicker(
+        state: .init(lastPayments: [], operators: .preview),
+        event: { print($0) },
+        config: .preview
+    )
+}
+
+#Preview {
+    _OperatorPicker(
+        state: .init(lastPayments: .preview, operators: .preview),
+        event: { print($0) },
+        config: .preview
+    )
+}
+
+#Preview {
+    _FooterView(
+        state: true,
+        event: { print($0) },
+        config: .preview
+    )
+}
+
+#Preview {
+    _FooterView(
+        state: false,
+        event: { print($0) },
+        config: .preview
+    )
+}
+
+// MARK: - Preview Content
+
+extension _UtilityPrepaymentPickerConfig {
+    
+    static let preview: Self = .init(
+        operatorPicker: .preview,
+        footer: .preview
+    )
+}
+
+extension _OperatorPickerConfig {
+    
+    static let preview: Self = .init()
+}
+
+extension _FooterViewConfig {
+    
+    static let preview: Self = .init()
+}
+
+extension _UtilityPrepaymentPickerState {
+    
+    static let preview: Self = .init(
+        lastPayments: .preview,
+        operators: .preview
+    )
+}
+
+extension Array where Element == _LastPayment {
+    
+    static var preview: Self {
+        
+        (0..<5).map { _ in
+            
+            return  .init(id: UUID().uuidString)
+        }
+    }
+}
+
+extension Array where Element == _Operator {
+    
+    static var preview: Self {
+        
+        (0..<30).map { _ in
+            
+            return  .init(id: UUID().uuidString)
+        }
+    }
 }

@@ -978,6 +978,7 @@
 		2ADBDBD02BD7F73900114E87 /* UtilityPaymentOperatorPickerFooterConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBCF2BD7F73900114E87 /* UtilityPaymentOperatorPickerFooterConfig+preview.swift */; };
 		2ADBDBD22BD7F75400114E87 /* LastPaymentsViewConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBD12BD7F75400114E87 /* LastPaymentsViewConfig+preview.swift */; };
 		2ADBDBD42BD7F76900114E87 /* OperatorsPickerConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBD32BD7F76900114E87 /* OperatorsPickerConfig+preview.swift */; };
+		2ADBDBD62BD8C16500114E87 /* _exploring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBD52BD8C16500114E87 /* _exploring.swift */; };
 		2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */; };
 		2ADDFD802AEFF3C2002FCE43 /* RSADomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */; };
 		2ADDFD822AEFF4F7002FCE43 /* ECDHDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */; };
@@ -3616,6 +3617,7 @@
 		2ADBDBCF2BD7F73900114E87 /* UtilityPaymentOperatorPickerFooterConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UtilityPaymentOperatorPickerFooterConfig+preview.swift"; sourceTree = "<group>"; };
 		2ADBDBD12BD7F75400114E87 /* LastPaymentsViewConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LastPaymentsViewConfig+preview.swift"; sourceTree = "<group>"; };
 		2ADBDBD32BD7F76900114E87 /* OperatorsPickerConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperatorsPickerConfig+preview.swift"; sourceTree = "<group>"; };
+		2ADBDBD52BD8C16500114E87 /* _exploring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _exploring.swift; sourceTree = "<group>"; };
 		2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+getMosParkingListDataTests.swift"; sourceTree = "<group>"; };
 		2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSADomain.swift; sourceTree = "<group>"; };
 		2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECDHDomain.swift; sourceTree = "<group>"; };
@@ -8324,6 +8326,7 @@
 			children = (
 				2AD87D8B2BD77859004D06C0 /* NavStackPreviewApp.swift */,
 				2AD87D8D2BD77859004D06C0 /* ContentView.swift */,
+				2ADBDBD52BD8C16500114E87 /* _exploring.swift */,
 				2ADBDBC72BD7E85D00114E87 /* FlowView.swift */,
 				2ADBDBC52BD7E78600114E87 /* FlowComposer.swift */,
 				2ADBDBC92BD7E87300114E87 /* UtilityPaymentConfig.swift */,
@@ -15040,6 +15043,7 @@
 				2AD87DAD2BD77E4B004D06C0 /* UtilityServicePaymentFlowEffectHandler.swift in Sources */,
 				2ADBDBB82BD7D0E700114E87 /* UtilityPaymentConfig+preview.swift in Sources */,
 				2ADBDBD02BD7F73900114E87 /* UtilityPaymentOperatorPickerFooterConfig+preview.swift in Sources */,
+				2ADBDBD62BD8C16500114E87 /* _exploring.swift in Sources */,
 				2AD87DA52BD77DD9004D06C0 /* UtilityServicePaymentFlowState.swift in Sources */,
 				2ADBDBD22BD7F75400114E87 /* LastPaymentsViewConfig+preview.swift in Sources */,
 				2ADBDB9C2BD79BC300114E87 /* Array.UtilityService+preview.swift in Sources */,
