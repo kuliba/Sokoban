@@ -17,7 +17,6 @@ public struct SelectView: View {
     var state: SelectUIState
     let event: (SelectEvent) -> Void
     let config: SelectConfig
-    let optionConfig: OptionConfig
     
     var searchText: String
     
@@ -25,14 +24,12 @@ public struct SelectView: View {
         state: SelectUIState,
         event: @escaping (SelectEvent) -> Void,
         searchText: String,
-        config: SelectConfig,
-        optionConfig: OptionConfig
+        config: SelectConfig
     ) {
         self.state = state
         self.event = event
         self.searchText = searchText
         self.config = config
-        self.optionConfig = optionConfig
     }
     
     public var body: some View {
@@ -89,7 +86,7 @@ public struct SelectView: View {
             
             if let option {
                 
-                circleIcon(option, optionConfig)
+                circleIcon(option, config.optionConfig)
                     .cornerRadius(20)
                 
             } else {
@@ -169,7 +166,7 @@ public struct SelectView: View {
             
             HStack(alignment: .top, spacing: 20) {
                 
-                circleIcon(option, optionConfig)
+                circleIcon(option, config.optionConfig)
                     .cornerRadius(20)
                     .frame(height: 50, alignment: .top)
             }
@@ -210,7 +207,7 @@ public struct SelectView: View {
     
     private func circleIcon(
         _ option: SelectState.Option,
-        _ config: OptionConfig
+        _ config: SelectConfig.OptionConfig
     ) -> some View {
         
         ZStack {
@@ -269,8 +266,7 @@ struct SelectView_Previews: PreviewProvider {
             state: .init(image: config.icon, state: state),
             event: { _ in },
             searchText: "",
-            config: config,
-            optionConfig: .preview
+            config: config
             
         )
         .padding(.all, 20)
@@ -288,7 +284,8 @@ struct SelectView_Previews: PreviewProvider {
             backgroundIcon: .clear,
             foregroundIcon: .gray.opacity(0.4),
             icon: .init(systemName: "doc"),
-            isSearchable: isSearchable
+            isSearchable: isSearchable,
+            optionConfig: .preview
         )
     }
     
@@ -318,7 +315,7 @@ struct SelectView_Previews: PreviewProvider {
         ]
     }
     
-    private static func circleConfig() -> OptionConfig {
+    private static func circleConfig() -> SelectConfig.OptionConfig {
         
         return .init(
             icon: Image(systemName: "circle"),
@@ -364,7 +361,7 @@ struct SelectView_Previews: PreviewProvider {
     }
 }
 
-public extension OptionConfig {
+public extension SelectConfig.OptionConfig {
     
     static let preview: Self = .init(
         icon: Image(systemName: "house"),
@@ -388,6 +385,7 @@ public extension SelectConfig {
         backgroundIcon: .clear,
         foregroundIcon: .gray.opacity(0.6),
         icon: .init(systemName: "photo.artframe"),
-        isSearchable: false
+        isSearchable: false,
+        optionConfig: .preview
     )
 }

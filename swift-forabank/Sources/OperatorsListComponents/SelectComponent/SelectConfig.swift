@@ -22,6 +22,7 @@ public struct SelectConfig {
     let icon: Image
     
     let isSearchable: Bool
+    let optionConfig: OptionConfig
     
     public init(
         title: String,
@@ -31,7 +32,8 @@ public struct SelectConfig {
         backgroundIcon: Color,
         foregroundIcon: Color,
         icon: Image,
-        isSearchable: Bool
+        isSearchable: Bool,
+        optionConfig: OptionConfig
     ) {
         self.title = title
         self.titleConfig = titleConfig
@@ -41,46 +43,50 @@ public struct SelectConfig {
         self.foregroundIcon = foregroundIcon
         self.icon = icon
         self.isSearchable = isSearchable
+        self.optionConfig = optionConfig
     }
 }
 
-public struct OptionConfig {
+public extension SelectConfig {
     
-    let icon: Image
-    let foreground: Color
-    let background: Color
-    
-    let selectIcon: Image
-    let selectForeground: Color
-    let selectBackground: Color
-    
-    let mainBackground: Color
-    
-    let kind: Kind
-    
-    public init(
-        icon: Image,
-        foreground: Color,
-        background: Color,
-        selectIcon: Image,
-        selectForeground: Color,
-        selectBackground: Color,
-        mainBackground: Color,
-        kind: Kind
-    ) {
-        self.icon = icon
-        self.foreground = foreground
-        self.background = background
-        self.selectIcon = selectIcon
-        self.selectForeground = selectForeground
-        self.selectBackground = selectBackground
-        self.mainBackground = mainBackground
-        self.kind = kind
-    }
-    
-    public enum Kind: Int {
+    struct OptionConfig {
         
-        case small = 16
-        case normal = 24
+        let icon: Image
+        let foreground: Color
+        let background: Color
+        
+        let selectIcon: Image
+        let selectForeground: Color
+        let selectBackground: Color
+        
+        let mainBackground: Color
+        
+        let kind: Kind
+        
+        public init(
+            icon: Image,
+            foreground: Color,
+            background: Color,
+            selectIcon: Image,
+            selectForeground: Color,
+            selectBackground: Color,
+            mainBackground: Color,
+            kind: Kind
+        ) {
+            self.icon = icon
+            self.foreground = foreground
+            self.background = background
+            self.selectIcon = selectIcon
+            self.selectForeground = selectForeground
+            self.selectBackground = selectBackground
+            self.mainBackground = mainBackground
+            self.kind = kind
+        }
+        
+        public enum Kind: Int {
+            
+            case small = 16
+            case normal = 24
+        }
     }
 }
