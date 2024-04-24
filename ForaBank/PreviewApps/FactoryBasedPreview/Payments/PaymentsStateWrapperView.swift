@@ -8,8 +8,6 @@
 import RxViewModel
 import SwiftUI
 
-typealias PaymentsViewModel = RxViewModel<PaymentsState, PaymentsEvent, PaymentsEffect>
-
 struct PaymentsStateWrapperView: View {
     
     @StateObject private var viewModel: PaymentsViewModel

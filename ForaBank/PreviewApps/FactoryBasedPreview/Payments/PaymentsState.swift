@@ -5,14 +5,14 @@
 //  Created by Igor Malyarov on 24.04.2024.
 //
 
-struct PaymentsState {
+struct PaymentsState: Equatable {
     
     var destination: Destination?
 }
 
 extension PaymentsState {
     
-    enum Destination {
+    enum Destination: Equatable {
         
         case utilityServicePayment
     }

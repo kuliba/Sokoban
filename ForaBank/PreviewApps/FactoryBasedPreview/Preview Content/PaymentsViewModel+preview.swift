@@ -17,7 +17,8 @@ extension PaymentsViewModel {
         return .init(
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
+            handleEffect: effectHandler.handleEffect(_:_:),
+            spinner: { _ in }
         )
     }
 }
