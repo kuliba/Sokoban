@@ -7,24 +7,28 @@
 
 import SwiftUI
 import InputComponent
+import SharedConfigs
 
-public struct NameView: View {
+public struct NameView<Icon, IconView: View>: View {
     
     let state: NameViewState
     @State private var text: String = ""
     let event: (NameEvent) -> Void
-    let config: InputView.Config
+    let iconView: () -> IconView
+    let config: InputConfig
     
     public init(
         state: NameViewState,
         text: String,
         event: @escaping (NameEvent) -> Void,
-        config: InputView.Config
+        config: InputConfig,
+        iconView: @escaping () -> IconView
     ) {
         self.state = state
         self.text = text
         self.event = event
         self.config = config
+        self.iconView = iconView
     }
     
     public var body: some View {
@@ -76,10 +80,15 @@ public struct NameView: View {
         HStack {
             
             InputView(
-                state: .init(image: { .init(systemName: "person") }), 
-                text: text,
-                event: { event in },
-                config: setupConfig(title, placeholder)
+                state: .init(dynamic: .init(value: text.description), settings: .init(
+                    icon: Image.init(systemName: ""),
+                    keyboard: .default,
+                    title: title,
+                    subtitle: nil
+                )),
+                event: {_ in },
+                config: config,
+                iconView: iconView
             )
             
             if collapseButton {
@@ -114,38 +123,15 @@ private extension NameView {
         case patronymic = "Введите Отчество Получателя"
         case general = "Введите ФИО Получателя"
     }
-    
-    private func setupConfig(
-        _ title: String,
-        _ placeholder: String
-    ) ->  InputView.Config {
-        
-        .init(
-            title: title,
-            titleFont: config.titleFont,
-            titleColor: config.titleColor,
-            textFieldFont: config.textFieldFont,
-            placeholder: placeholder,
-            hint: nil,
-            hintFont: config.hintFont,
-            hintColor: config.hintColor,
-            backgroundColor: .clear,
-            imageSize: .small
-        )
-    }
 }
 
-private extension InputView.Config {
+private extension InputConfig {
     
     static let preview: Self = .init(
-        title: "title",
-        titleFont: .system(size: 12),
-        titleColor: .gray.opacity(0.8),
-        textFieldFont: .system(size: 14),
+        titleConfig: .init(textFont: .system(size: 12), textColor: .gray.opacity(0.8)),
+        textFieldFont: .init(textFont: .system(size: 14), textColor: .black),
         placeholder: "placeholder",
-        hint: nil,
-        hintFont: .system(size: 10),
-        hintColor: .gray.opacity(0.7),
+        hintConfig: .init(textFont: .system(size: 10), textColor: .gray.opacity(0.7)),
         backgroundColor: .clear,
         imageSize: .small
     )
@@ -158,18 +144,20 @@ struct NameView_Previews: PreviewProvider {
             
             VStack(spacing: 20) {
                 
-                NameView(
+                NameView<Any, EmptyView>(
                     state: .init(state: .collapse),
                     text: "",
                     event: { state in },
-                    config: .preview
+                    config: .preview,
+                    iconView: { return EmptyView() }
                 )
                 
-                NameView(
+                NameView<Any, EmptyView>(
                     state: .init(state: .expended),
                     text: "",
                     event: { state in },
-                    config: .preview
+                    config: .preview,
+                    iconView: { return EmptyView() }
                 )
             }
         }
