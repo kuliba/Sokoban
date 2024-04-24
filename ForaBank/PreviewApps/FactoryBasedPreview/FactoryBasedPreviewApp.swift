@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct FactoryBasedPreviewApp: App {
+    
+    private let composer = Composer()
+    
     var body: some Scene {
+        
         WindowGroup {
-            ContentView()
+        
+            ContentView(factory: composer.makeContentViewFactory())
         }
     }
 }

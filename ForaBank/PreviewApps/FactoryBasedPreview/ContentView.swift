@@ -7,18 +7,27 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct ContentView<RootView>: View
+where RootView: View {
+    
+    let factory: ContentViewFactory<RootView>
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-
-            Text("Hello, world!")
-        }
-        .padding()
+        
+        factory.makeRootView()
     }
 }
 
+struct ContentViewFactory<RootView>
+where RootView: View {
+    
+    let makeRootView: () -> RootView
+}
+
 #Preview {
-    ContentView()
+    ContentView(
+        factory: .init(
+            makeRootView: { Text("Root View here.") }
+        )
+    )
 }
