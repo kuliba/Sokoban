@@ -11,5 +11,5 @@ public enum SelectEvent {
     
     case chevronTapped
     case optionTapped
-    case search
+    case search(String)
 }
