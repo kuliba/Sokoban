@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CombineSchedulers
 import RxViewModel
 import SwiftUI
 import UIPrimitives
@@ -468,7 +469,92 @@ extension _FooterView {
 
 struct _FooterViewConfig: Equatable {}
 
-// MARK: - _Composed
+// MARK: - UtilityPrepaymentFactory
+
+final class UtilityPrepaymentFactory<Icon> {
+    
+    private let imageSubject: ImageSubject
+    private let config: _UtilityPrepaymentPickerConfig
+    private let scheduler: AnySchedulerOf<DispatchQueue>
+    
+    init(
+        imageSubject: ImageSubject,
+        config: _UtilityPrepaymentPickerConfig,
+        scheduler: AnySchedulerOf<DispatchQueue> = .main
+    ) {
+        self.imageSubject = imageSubject
+        self.config = config
+        self.scheduler = scheduler
+    }
+}
+
+extension UtilityPrepaymentFactory {
+    
+    func makeComposedStateWrapperView(
+        initialState: State
+    ) -> _ComposedStateWrapperView<Icon> {
+        
+        let reducer = _UtilityPrepaymentPickerReducer<Icon>()
+        let effectHandler = _UtilityPrepaymentPickerEffectHandler<Icon>()
+        let viewModel = ViewModel(
+            initialState: initialState,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: .main
+        )
+        
+        return .init(
+            viewModel: viewModel,
+            imageSubject: imageSubject,
+            config: config
+        )
+    }
+}
+
+extension UtilityPrepaymentFactory {
+    
+    typealias State = _UtilityPrepaymentPickerState<Icon>
+    typealias Event = _UtilityPrepaymentPickerEvent<Icon>
+    typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
+    
+    typealias ViewModel = RxViewModel<State, Event, Effect>
+    typealias ImageSubject = CurrentValueSubject<Image, Never>
+}
+
+struct _ComposedStateWrapperView<Icon>: View {
+    
+    @StateObject private var viewModel: ViewModel
+    
+    private let imageSubject: ImageSubject
+    private let config: _UtilityPrepaymentPickerConfig
+    
+    init(
+        viewModel: ViewModel,
+        imageSubject: ImageSubject,
+        config: _UtilityPrepaymentPickerConfig
+    ) {
+        self._viewModel = .init(wrappedValue: viewModel)
+        self.imageSubject = imageSubject
+        self.config = config
+    }
+    
+    var body: some View {
+        
+        _Composed(
+            state: viewModel.state,
+            event: viewModel.event(_:),
+            config: config,
+            imageSubject: imageSubject
+        )
+    }
+    
+    typealias State = _UtilityPrepaymentPickerState<Icon>
+    typealias Event = _UtilityPrepaymentPickerEvent<Icon>
+    typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
+    
+    typealias ViewModel = RxViewModel<State, Event, Effect>
+    typealias ImageSubject = CurrentValueSubject<Image, Never>
+}
 
 struct _Composed<Icon>: View {
     
@@ -605,47 +691,27 @@ extension _Composed {
 
 // MARK: - Preview
 
-struct _ComposedStateWrapperView<Icon>: View {
+struct _Demo: View {
     
-    @StateObject private var viewModel: ViewModel
-    
-    init(initialState: State) {
-        
-        let reducer = _UtilityPrepaymentPickerReducer<Icon>()
-        let effectHandler = _UtilityPrepaymentPickerEffectHandler<Icon>()
-        let viewModel = ViewModel(
-            initialState: initialState,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: .main
-        )
-        
-        self._viewModel = .init(wrappedValue: viewModel)
-    }
+    let initialState: _UtilityPrepaymentPickerState<String>
     
     var body: some View {
         
-        _Composed(
-            state: viewModel.state,
-            event: viewModel.event(_:),
-            config: .preview,
-            imageSubject: .init(.init(systemName: "car"))
+        let factory = UtilityPrepaymentFactory<String>(
+            imageSubject: .init(.init(systemName: "car")),
+            config: .preview
         )
+        
+        factory.makeComposedStateWrapperView(initialState: initialState)
     }
-    
-    typealias State = _UtilityPrepaymentPickerState<Icon>
-    typealias Event = _UtilityPrepaymentPickerEvent<Icon>
-    typealias Effect = _UtilityPrepaymentPickerEffect<Icon>
-
-    typealias ViewModel = RxViewModel<State, Event, Effect>
 }
 
 #Preview {
-    _ComposedStateWrapperView(initialState: .preview)
+    _Demo(initialState: .preview)
 }
 
 #Preview {
-    _ComposedStateWrapperView<String>(initialState: .empty)
+    _Demo(initialState: .empty)
 }
 
 #Preview {
