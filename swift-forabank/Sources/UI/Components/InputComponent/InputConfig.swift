@@ -18,7 +18,7 @@ public struct InputConfig {
     public let backgroundColor: Color
     let imageSize: ImageSize
     
-    internal init(
+    public init(
         titleConfig: TextConfig,
         textFieldFont: TextConfig,
         placeholder: String,
@@ -34,7 +34,7 @@ public struct InputConfig {
         self.imageSize = imageSize
     }
     
-    enum ImageSize: CGFloat {
+    public enum ImageSize: CGFloat {
         
         case small = 24
         case large = 32

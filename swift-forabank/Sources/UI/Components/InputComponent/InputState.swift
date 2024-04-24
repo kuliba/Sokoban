@@ -7,18 +7,34 @@
 
 import SwiftUI
 
-struct InputState<Icon> {
+public struct InputState<Icon> {
     
     var dynamic: Dynamic
     let settings: Settings
+    
+    public init(
+        dynamic: InputState<Icon>.Dynamic,
+        settings: InputState<Icon>.Settings
+    ) {
+        self.dynamic = dynamic
+        self.settings = settings
+    }
 }
 
-extension InputState {
+public extension InputState {
     
     struct Dynamic: Equatable {
         
         var value: String
         var warning: String?
+        
+        public init(
+            value: String,
+            warning: String? = nil
+        ) {
+            self.value = value
+            self.warning = warning
+        }
     }
     
     struct Settings {
@@ -28,10 +44,24 @@ extension InputState {
         let keyboard: Keyboard
         let title: String
         let subtitle: String
+        
+        public init(
+            hint: String? = nil,
+            icon: Icon,
+            keyboard: InputState<Icon>.Settings.Keyboard,
+            title: String,
+            subtitle: String
+        ) {
+            self.hint = hint
+            self.icon = icon
+            self.keyboard = keyboard
+            self.title = title
+            self.subtitle = subtitle
+        }
     }
 }
 
-extension InputState.Settings {
+public extension InputState.Settings {
     
     enum Keyboard: Equatable {
         

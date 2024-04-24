@@ -15,6 +15,18 @@ public struct InputView<Icon, IconView: View>: View {
     let config: InputConfig
     let iconView: () -> IconView
     
+    public init(
+        state: InputState<Icon>,
+        event: @escaping (InputEvent) -> Void,
+        config: InputConfig,
+        iconView: @escaping () -> IconView
+    ) {
+        self.state = state
+        self.event = event
+        self.config = config
+        self.iconView = iconView
+    }
+    
     public var body: some View {
         
         VStack(alignment: .leading, spacing: 4) {
