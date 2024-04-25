@@ -13,7 +13,10 @@ extension PaymentsComposer {
         
         self.init(
             prepaymentFlowEffectHandler: .preview(result),
-            paymentsDestinationFactory: .preview
+            makeDestinationView: {
+                
+                .init(state: $0, factory: .preview)
+            }
         )
     }
     
