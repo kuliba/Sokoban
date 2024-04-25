@@ -15,17 +15,17 @@ final class PaymentsViewModel: ObservableObject {
     
     private let stateSubject = PassthroughSubject<State, Never>()
     
-    private let paymentFlowManager: PaymentFlowManager
+    private let prepaymentFlowManager: PrepaymentFlowManager
     private let spinner: (SpinnerEvent) -> Void
     
     init(
         initialState: State,
-        paymentFlowManager: PaymentFlowManager,
+        prepaymentFlowManager: PrepaymentFlowManager,
         spinner: @escaping (SpinnerEvent) -> Void,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.state = initialState
-        self.paymentFlowManager = paymentFlowManager
+        self.prepaymentFlowManager = prepaymentFlowManager
         self.spinner = spinner
         
         stateSubject
@@ -80,10 +80,10 @@ private extension PaymentsViewModel {
         case .dismissDestination:
             state.destination = nil
 
-        case let .paymentFlow(paymentFlowEvent):
-            let (paymentFlowState, paymentFlowEffect) = paymentFlowManager.reduce(state.paymentFlowState, paymentFlowEvent)
-            state.destination = paymentFlowState.destination.map(State.Destination.paymentFlow)
-            effect = paymentFlowEffect.map(Effect.paymentFlow)
+        case let .prepaymentFlow(paymentFlowEvent):
+            let (paymentFlowState, paymentFlowEffect) = prepaymentFlowManager.reduce(state.paymentFlowState, paymentFlowEvent)
+            state.destination = paymentFlowState.destination.map(State.Destination.prepaymentFlow)
+            effect = paymentFlowEffect.map(Effect.prepaymentFlow)
         }
         
         return (state, effect)
@@ -94,17 +94,17 @@ private extension PaymentsViewModel {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case let .paymentFlow(effect):
-            paymentFlowManager.handleEffect(effect) { dispatch(.paymentFlow($0)) }
+        case let .prepaymentFlow(effect):
+            prepaymentFlowManager.handleEffect(effect) { dispatch(.prepaymentFlow($0)) }
         }
     }
 }
 
 private extension PaymentsState {
     
-    var paymentFlowState: PaymentFlowState {
+    var paymentFlowState: PrepaymentFlowState {
         
-        guard case let .paymentFlow(destination) = destination
+        guard case let .prepaymentFlow(destination) = destination
         else { return .init() }
         
         return .init(destination: destination)
@@ -125,7 +125,7 @@ private extension PaymentsViewModel {
             print("`mobile` event occurred")
             
         case .utilityService:
-            effect = .paymentFlow(.initiateUtilityPayment)
+            effect = .prepaymentFlow(.initiateUtilityPayment)
         }
         
         return (state, effect)

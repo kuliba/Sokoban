@@ -9,14 +9,14 @@ extension PaymentsViewModel {
     
     static func preview(
         initialState: PaymentsState = .preview(),
-        effectHandler: PaymentFlowEffectHandler = .preview
+        effectHandler: PrepaymentFlowEffectHandler = .preview
     ) -> Self {
         
-        let reducer = PaymentFlowReducer()
+        let reducer = PrepaymentFlowReducer()
         
         return .init(
             initialState: initialState,
-            paymentFlowManager: .init(
+            prepaymentFlowManager: .init(
                 reduce: reducer.reduce(_:_:),
                 handleEffect: effectHandler.handleEffect(_:_:)
             ),

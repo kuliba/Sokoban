@@ -14,6 +14,6 @@ extension PaymentsState {
     
     enum Destination: Equatable {
         
-        case paymentFlow(PaymentFlowState.Destination)
+        case prepaymentFlow(PrepaymentFlowState.Destination)
     }
 }

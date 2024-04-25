@@ -1,13 +1,13 @@
 //
-//  PaymentFlowReducer.swift
+//  PrepaymentFlowReducer.swift
 //  FactoryBasedPreview
 //
 //  Created by Igor Malyarov on 24.04.2024.
 //
 
-final class PaymentFlowReducer {}
+final class PrepaymentFlowReducer {}
 
-extension PaymentFlowReducer {
+extension PrepaymentFlowReducer {
     
     func reduce(
         _ state: State,
@@ -26,14 +26,14 @@ extension PaymentFlowReducer {
     }
 }
 
-extension PaymentFlowReducer {
+extension PrepaymentFlowReducer {
     
-    typealias State = PaymentFlowState
-    typealias Event = PaymentFlowEvent
-    typealias Effect = PaymentFlowEffect
+    typealias State = PrepaymentFlowState
+    typealias Event = PrepaymentFlowEvent
+    typealias Effect = PrepaymentFlowEffect
 }
 
-private extension PaymentFlowReducer {
+private extension PrepaymentFlowReducer {
     
     func reduce(
         _ state: State,
@@ -52,9 +52,9 @@ private extension PaymentFlowReducer {
     }
 }
 
-private extension PaymentFlowState.Destination.UtilityPrepaymentState {
+private extension PrepaymentFlowState.Destination.UtilityPrepaymentState {
     
-    init(_ response: PaymentFlowEvent.Loaded.UtilityPaymentResponse) {
+    init(_ response: PrepaymentFlowEvent.Loaded.UtilityPaymentResponse) {
         
         self.init(
             lastPayments: response.lastPayments,

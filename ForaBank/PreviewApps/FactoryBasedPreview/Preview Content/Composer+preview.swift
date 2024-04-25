@@ -8,13 +8,13 @@
 extension Composer {
     
     static func preview(
-        result: InitiateUtilityPaymentResult = .success(.preview)
+        result: InitiateUtilityPrepaymentResult = .success(.preview)
     ) -> Self {
         
         .init(paymentsComposer: .preview(result: result))
     }
     
-    typealias InitiateUtilityPaymentResult = PaymentFlowEffectHandler.InitiateUtilityPaymentResult
+    typealias InitiateUtilityPrepaymentResult = PrepaymentFlowEffectHandler.InitiateUtilityPrepaymentResult
     
     private convenience init(paymentsComposer: PaymentsComposer) {
         

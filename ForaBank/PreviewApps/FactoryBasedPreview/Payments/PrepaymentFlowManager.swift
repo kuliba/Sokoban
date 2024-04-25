@@ -1,11 +1,11 @@
 //
-//  PaymentFlowManager.swift
+//  PrepaymentFlowManager.swift
 //  FactoryBasedPreview
 //
 //  Created by Igor Malyarov on 25.04.2024.
 //
 
-final class PaymentFlowManager {
+final class PrepaymentFlowManager {
     
     let reduce: Reduce
     let handleEffect: HandleEffect
@@ -19,12 +19,12 @@ final class PaymentFlowManager {
     }
 }
 
-extension PaymentFlowManager {
+extension PrepaymentFlowManager {
 
     typealias Reduce = (State, Event) -> (State, Effect?)
     typealias HandleEffect = (Effect, @escaping (Event) -> Void) -> Void
 
-    typealias State = PaymentFlowState
-    typealias Event = PaymentFlowEvent
-    typealias Effect = PaymentFlowEffect
+    typealias State = PrepaymentFlowState
+    typealias Event = PrepaymentFlowEvent
+    typealias Effect = PrepaymentFlowEffect
 }

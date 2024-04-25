@@ -29,7 +29,7 @@ struct FactoryBasedPreviewApp: App {
 
 private extension PaymentsState.Destination {
     
-    static let deepLinkDemo: Self = .paymentFlow(
+    static let deepLinkDemo: Self = .prepaymentFlow(
         .utilityServicePayment(.init(
             lastPayments: .preview,
             operators: .preview

@@ -60,7 +60,7 @@ extension PaymentsState.Destination: Identifiable {
     var id: ID {
         
         switch self {
-        case let .paymentFlow(destination):
+        case let .prepaymentFlow(destination):
             switch destination {
             case .utilityServicePayment:
                 return .paymentFlow(.utilityServicePayment)
@@ -107,11 +107,11 @@ struct PaymentsView_Previews: PreviewProvider {
             
             preview(.init())
             
-            preview(.init(destination: .paymentFlow(
+            preview(.init(destination: .prepaymentFlow(
                 .utilityServicePayment(.empty)
             )))
             
-            preview(.init(destination: .paymentFlow(
+            preview(.init(destination: .prepaymentFlow(
                 .utilityServicePayment(.preview)
             )))
         }

@@ -8,14 +8,14 @@
 extension PaymentsComposer {
     
     static func preview(
-        result: InitiateUtilityPaymentResult = .success(.preview)
+        result: InitiateUtilityPrepaymentResult = .success(.preview)
     ) -> Self {
         
         self.init(
-            paymentFlowEffectHandler: .preview(result),
+            prepaymentFlowEffectHandler: .preview(result),
             paymentsDestinationFactory: .preview
         )
     }
     
-    typealias InitiateUtilityPaymentResult = PaymentFlowEffectHandler.InitiateUtilityPaymentResult
+    typealias InitiateUtilityPrepaymentResult = PrepaymentFlowEffectHandler.InitiateUtilityPrepaymentResult
 }

@@ -12,6 +12,6 @@ struct PaymentsDestinationViewFactory {
 
 extension PaymentsDestinationViewFactory {
     
-    typealias UtilityPrepaymentState = PaymentFlowState.Destination.UtilityPrepaymentState
+    typealias UtilityPrepaymentState = PrepaymentFlowState.Destination.UtilityPrepaymentState
     typealias MakeUtilityPrepaymentView = (UtilityPrepaymentState) -> UtilityPrepaymentView
 }

@@ -45,11 +45,11 @@ struct PaymentsStateWrapperView_Previews: PreviewProvider {
             
             preview()
             
-            preview(destination: .paymentFlow(
+            preview(destination: .prepaymentFlow(
                 .utilityServicePayment(.empty)
             ))
             
-            preview(destination: .paymentFlow(
+            preview(destination: .prepaymentFlow(
                 .utilityServicePayment(.preview)
             ))
         }

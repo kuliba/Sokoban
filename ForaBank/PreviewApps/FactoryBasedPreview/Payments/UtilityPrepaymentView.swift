@@ -24,7 +24,7 @@ struct UtilityPrepaymentView: View {
 
 extension UtilityPrepaymentView {
     
-    typealias State = PaymentFlowState.Destination.UtilityPrepaymentState
+    typealias State = PrepaymentFlowState.Destination.UtilityPrepaymentState
 }
 
 struct UtilityPrepaymentView_Previews: PreviewProvider {

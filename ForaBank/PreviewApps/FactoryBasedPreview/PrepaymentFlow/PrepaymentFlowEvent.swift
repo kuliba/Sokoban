@@ -1,16 +1,16 @@
 //
-//  PaymentFlowEvent.swift
+//  PrepaymentFlowEvent.swift
 //  FactoryBasedPreview
 //
 //  Created by Igor Malyarov on 24.04.2024.
 //
 
-enum PaymentFlowEvent: Equatable {
+enum PrepaymentFlowEvent: Equatable {
     
     case loaded(Loaded)
 }
 
-extension PaymentFlowEvent {
+extension PrepaymentFlowEvent {
     
     enum Loaded: Equatable {
         
@@ -18,7 +18,7 @@ extension PaymentFlowEvent {
     }
 }
 
-extension PaymentFlowEvent.Loaded {
+extension PrepaymentFlowEvent.Loaded {
     
     struct UtilityPaymentResponse: Equatable {
         

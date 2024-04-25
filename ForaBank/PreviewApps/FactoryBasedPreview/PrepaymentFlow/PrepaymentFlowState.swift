@@ -1,16 +1,16 @@
 //
-//  PaymentFlowState.swift
+//  PrepaymentFlowState.swift
 //  FactoryBasedPreview
 //
 //  Created by Igor Malyarov on 24.04.2024.
 //
 
-struct PaymentFlowState: Equatable {
+struct PrepaymentFlowState: Equatable {
     
     var destination: Destination?
 }
 
-extension PaymentFlowState {
+extension PrepaymentFlowState {
     
     enum Destination: Equatable {
         
@@ -18,7 +18,7 @@ extension PaymentFlowState {
     }
 }
 
-extension PaymentFlowState.Destination {
+extension PrepaymentFlowState.Destination {
     
     struct UtilityPrepaymentState: Equatable {
         

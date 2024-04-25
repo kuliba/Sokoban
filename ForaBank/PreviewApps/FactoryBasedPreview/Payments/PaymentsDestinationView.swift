@@ -15,7 +15,7 @@ struct PaymentsDestinationView: View {
     var body: some View {
         
         switch state {
-        case let .paymentFlow(destination):
+        case let .prepaymentFlow(destination):
             switch destination {
             case let .utilityServicePayment(state):
                 factory.makeUtilityPrepaymentView(state)
@@ -42,11 +42,11 @@ struct PaymentsDestinationView_Previews: PreviewProvider {
     }
     
     private static func preview(
-        _ state: PaymentFlowState.Destination.UtilityPrepaymentState
+        _ state: PrepaymentFlowState.Destination.UtilityPrepaymentState
     ) -> some View {
         
         PaymentsDestinationView(
-            state: .paymentFlow(
+            state: .prepaymentFlow(
                 .utilityServicePayment(state)
             ),
             factory: .preview

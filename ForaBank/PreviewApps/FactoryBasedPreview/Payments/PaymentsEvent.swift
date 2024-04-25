@@ -9,7 +9,7 @@ enum PaymentsEvent: Equatable {
     
     case buttonTapped(ButtonTapped)
     case dismissDestination
-    case paymentFlow(PaymentFlowEvent)
+    case prepaymentFlow(PrepaymentFlowEvent)
 }
 
 extension PaymentsEvent {
