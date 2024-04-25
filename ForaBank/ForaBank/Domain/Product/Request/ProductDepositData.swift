@@ -121,7 +121,10 @@ class ProductDepositData: ProductData {
 
 extension ProductDepositData {
         
-    func availableTransferType(with info: DepositInfoDataItem?) -> TransferType? {
+    func availableTransferType(
+        with info: DepositInfoDataItem?,
+        deposit: ProductDepositData?
+    ) -> TransferType? {
         
         if isDemandDeposit, allowDebit {
             
@@ -175,7 +178,7 @@ extension ProductDepositData {
                 // All other deposits
                 
                 if endDateNf,
-                   let balance = info?.balance {
+                   let balance = deposit?.balance {
                     
                     return .close(balance)
                 } else {
