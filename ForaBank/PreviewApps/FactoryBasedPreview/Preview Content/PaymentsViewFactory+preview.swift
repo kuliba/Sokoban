@@ -12,7 +12,7 @@ extension PaymentsViewFactory {
     static var preview: Self {
         
         .init(
-            makeDestinationView: PaymentsDestinationView.init,
+            makeDestinationView: { .init(state: $0, factory: .preview) },
             makePaymentButtonLabel: PaymentButtonLabel.init
         )
     }

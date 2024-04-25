@@ -8,13 +8,16 @@
 import SwiftUI
 
 final class PaymentsComposer {
-    
+
     private let paymentFlowEffectHandler: PaymentFlowEffectHandler
+    private let paymentsDestinationFactory: PaymentsDestinationViewFactory
     
     init(
-        paymentFlowEffectHandler: PaymentFlowEffectHandler
+        paymentFlowEffectHandler: PaymentFlowEffectHandler,
+        paymentsDestinationFactory: PaymentsDestinationViewFactory
     ) {
         self.paymentFlowEffectHandler = paymentFlowEffectHandler
+        self.paymentsDestinationFactory = paymentsDestinationFactory
     }
 }
 
@@ -55,7 +58,10 @@ private extension PaymentsComposer {
     ) -> PaymentsViewFactory {
         
         .init(
-            makeDestinationView: PaymentsDestinationView.init,
+            makeDestinationView: {
+                
+                .init(state: $0, factory: self.paymentsDestinationFactory)
+            },
             makePaymentButtonLabel: PaymentButtonLabel.init
         )
     }

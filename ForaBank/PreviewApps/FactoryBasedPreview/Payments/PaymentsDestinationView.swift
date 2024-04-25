@@ -10,16 +10,24 @@ import SwiftUI
 struct PaymentsDestinationView: View {
     
     let state: State
+    let factory: Factory
     
     var body: some View {
         
-        Text("Destination View: \(String(describing: state))")
+        switch state {
+        case let .paymentFlow(destination):
+            switch destination {
+            case let .utilityServicePayment(state):
+                factory.makeUtilityPrepaymentView(state)
+            }
+        }
     }
 }
 
 extension PaymentsDestinationView {
     
     typealias State = PaymentsState.Destination
+    typealias Factory = PaymentsDestinationViewFactory
 }
 
 struct PaymentsDestinationView_Previews: PreviewProvider {
@@ -37,8 +45,11 @@ struct PaymentsDestinationView_Previews: PreviewProvider {
         _ state: PaymentFlowState.Destination.UtilityPrepaymentState
     ) -> some View {
         
-        PaymentsDestinationView(state: .paymentFlow(
-            .utilityServicePayment(state)
-        ))
+        PaymentsDestinationView(
+            state: .paymentFlow(
+                .utilityServicePayment(state)
+            ),
+            factory: .preview
+        )
     }
 }

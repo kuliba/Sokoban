@@ -11,7 +11,10 @@ extension PaymentsComposer {
         result: InitiateUtilityPaymentResult = .success(.preview)
     ) -> Self {
         
-        self.init(paymentFlowEffectHandler: .preview(result))
+        self.init(
+            paymentFlowEffectHandler: .preview(result),
+            paymentsDestinationFactory: .preview
+        )
     }
     
     typealias InitiateUtilityPaymentResult = PaymentFlowEffectHandler.InitiateUtilityPaymentResult
