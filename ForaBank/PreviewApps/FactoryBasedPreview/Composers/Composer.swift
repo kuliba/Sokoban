@@ -20,8 +20,12 @@ extension Composer {
 
 extension Composer {
     
-    typealias _MainTabView = MainTabStateWrapperView<Text, Text, Text>
     typealias RootView = RootStateWrapperView<_MainTabView, SpinnerView>
+    typealias _MainTabView = MainTabStateWrapperView<MainView, PaymentsView, ChatView>
+    
+    typealias MainView = Text
+    typealias PaymentsView = Text
+    typealias ChatView = Text
 }
 
 private extension Composer {
@@ -53,7 +57,7 @@ private extension Composer {
     
     private func makeRootContent(
         initialState: MainTabState,
-        event: @escaping (SpinnerEvent) -> Void
+        spinner: @escaping (SpinnerEvent) -> Void
     ) -> _MainTabView {
         
         .init(
@@ -67,7 +71,7 @@ private extension Composer {
     }
     
     private func makeMainTabFactory(
-    ) -> MainTabFactory<Text, Text, Text> {
+    ) -> MainTabFactory<MainView, PaymentsView, ChatView> {
         
         .init(
             makeMainView: { Text("Main View") },

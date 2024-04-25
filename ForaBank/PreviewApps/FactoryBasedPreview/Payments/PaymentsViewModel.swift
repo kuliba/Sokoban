@@ -118,7 +118,6 @@ private extension PaymentsViewModel {
         _ event: Event.ButtonTapped
     ) -> (State, Effect?) {
         
-        var state = state
         var effect: Effect?
         
         switch event {
@@ -131,5 +130,4 @@ private extension PaymentsViewModel {
         
         return (state, effect)
     }
-
 }
