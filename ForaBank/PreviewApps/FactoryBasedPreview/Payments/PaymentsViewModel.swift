@@ -15,20 +15,17 @@ final class PaymentsViewModel: ObservableObject {
     
     private let stateSubject = PassthroughSubject<State, Never>()
     
-    private let reduce: Reduce
-    private let handleEffect: HandleEffect
+    private let paymentFlowManager: PaymentFlowManager
     private let spinner: (SpinnerEvent) -> Void
     
     init(
         initialState: State,
-        reduce: @escaping Reduce,
-        handleEffect: @escaping HandleEffect,
+        paymentFlowManager: PaymentFlowManager,
         spinner: @escaping (SpinnerEvent) -> Void,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.state = initialState
-        self.reduce = reduce
-        self.handleEffect = handleEffect
+        self.paymentFlowManager = paymentFlowManager
         self.spinner = spinner
         
         stateSubject
@@ -59,10 +56,80 @@ extension PaymentsViewModel {
 
 extension PaymentsViewModel {
     
-    typealias Reduce = (State, Event) -> (State, Effect?)
-    typealias HandleEffect = (Effect, @escaping (Event) -> Void) -> Void
+    typealias Dispatch = (Event) -> Void
     
     typealias State = PaymentsState
     typealias Event = PaymentsEvent
     typealias Effect = PaymentsEffect
+}
+
+private extension PaymentsViewModel {
+    
+    func reduce(
+        _ state: State,
+        _ event: Event
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case let .buttonTapped(buttonTapped):
+            (state, effect) = reduce(state, buttonTapped)
+            
+        case .dismissDestination:
+            state.destination = nil
+
+        case let .paymentFlow(paymentFlowEvent):
+            let (paymentFlowState, paymentFlowEffect) = paymentFlowManager.reduce(state.paymentFlowState, paymentFlowEvent)
+            state.destination = paymentFlowState.destination.map(State.Destination.paymentFlow)
+            effect = paymentFlowEffect.map(Effect.paymentFlow)
+        }
+        
+        return (state, effect)
+    }
+    
+    func handleEffect(
+        _ effect: Effect,
+        _ dispatch: @escaping Dispatch
+    ) {
+        switch effect {
+        case let .paymentFlow(effect):
+            paymentFlowManager.handleEffect(effect) { dispatch(.paymentFlow($0)) }
+        }
+    }
+}
+
+private extension PaymentsState {
+    
+    var paymentFlowState: PaymentFlowState {
+        
+        guard case let .paymentFlow(destination) = destination
+        else { return .init() }
+        
+        return .init(destination: destination)
+    }
+}
+
+private extension PaymentsViewModel {
+    
+    func reduce(
+        _ state: State,
+        _ event: Event.ButtonTapped
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case .mobile:
+            print("`mobile` event occurred")
+            
+        case .utilityService:
+            effect = .paymentFlow(.initiateUtilityPayment)
+        }
+        
+        return (state, effect)
+    }
+
 }

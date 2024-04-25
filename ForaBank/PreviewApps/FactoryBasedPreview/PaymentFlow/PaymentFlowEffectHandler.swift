@@ -1,13 +1,13 @@
 //
-//  PaymentsEffectHandler.swift
+//  PaymentFlowEffectHandler.swift
 //  FactoryBasedPreview
 //
 //  Created by Igor Malyarov on 24.04.2024.
 //
 
-final class PaymentsEffectHandler {}
+final class PaymentFlowEffectHandler {}
 
-extension PaymentsEffectHandler {
+extension PaymentFlowEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -20,15 +20,15 @@ extension PaymentsEffectHandler {
     }
 }
 
-extension PaymentsEffectHandler {
+extension PaymentFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentsEvent
-    typealias Effect = PaymentsEffect
+    typealias Event = PaymentFlowEvent
+    typealias Effect = PaymentFlowEffect
 }
 
-private extension PaymentsEffectHandler {
+private extension PaymentFlowEffectHandler {
     
     func initiateUtilityPayment() {
         

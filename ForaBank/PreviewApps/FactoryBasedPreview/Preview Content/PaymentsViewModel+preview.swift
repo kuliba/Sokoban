@@ -11,13 +11,15 @@ extension PaymentsViewModel {
         initialState: PaymentsState = .preview()
     ) -> Self {
         
-        let reducer = PaymentsReducer()
-        let effectHandler = PaymentsEffectHandler()
+        let reducer = PaymentFlowReducer()
+        let effectHandler = PaymentFlowEffectHandler()
         
         return .init(
             initialState: initialState,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
+            paymentFlowManager: .init(
+                reduce: reducer.reduce(_:_:),
+                handleEffect: effectHandler.handleEffect(_:_:)
+            ),
             spinner: { _ in }
         )
     }

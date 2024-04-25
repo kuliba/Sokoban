@@ -62,14 +62,22 @@ extension PaymentsState.Destination: Identifiable {
     var id: ID {
         
         switch self {
-        case .utilityServicePayment:
-            return .utilityServicePayment
+        case let .paymentFlow(destination):
+            switch destination {
+            case .utilityServicePayment:
+                return .paymentFlow(.utilityServicePayment)
+            }
         }
     }
     
-    enum ID {
+    enum ID: Hashable {
         
-        case utilityServicePayment
+        case paymentFlow(Destination)
+        
+        enum Destination {
+            
+            case utilityServicePayment
+        }
     }
 }
 
@@ -100,7 +108,7 @@ struct PaymentsView_Previews: PreviewProvider {
         Group {
             
             preview(.init())
-            preview(.init(destination: .utilityServicePayment))
+            preview(.init(destination: .paymentFlow(.utilityServicePayment)))
         }
     }
     

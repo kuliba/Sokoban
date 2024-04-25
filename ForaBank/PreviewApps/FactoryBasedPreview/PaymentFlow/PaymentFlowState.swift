@@ -1,19 +1,19 @@
 //
-//  PaymentsState.swift
+//  PaymentFlowState.swift
 //  FactoryBasedPreview
 //
 //  Created by Igor Malyarov on 24.04.2024.
 //
 
-struct PaymentsState: Equatable {
+struct PaymentFlowState: Equatable {
     
     var destination: Destination?
 }
 
-extension PaymentsState {
+extension PaymentFlowState {
     
     enum Destination: Equatable {
         
-        case paymentFlow(PaymentFlowState.Destination)
+        case utilityServicePayment
     }
 }

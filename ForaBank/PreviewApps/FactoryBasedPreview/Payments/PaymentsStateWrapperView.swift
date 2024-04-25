@@ -46,7 +46,7 @@ struct PaymentsStateWrapperView_Previews: PreviewProvider {
         Group {
             
             preview()
-            preview(destination: .utilityServicePayment)
+            preview(destination: .paymentFlow(.utilityServicePayment))
         }
     }
     
