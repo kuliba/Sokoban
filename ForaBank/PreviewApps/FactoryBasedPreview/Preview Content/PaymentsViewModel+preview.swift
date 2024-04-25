@@ -8,11 +8,11 @@
 extension PaymentsViewModel {
     
     static func preview(
-        initialState: PaymentsState = .preview()
+        initialState: PaymentsState = .preview(),
+        effectHandler: PaymentFlowEffectHandler = .preview
     ) -> Self {
         
         let reducer = PaymentFlowReducer()
-        let effectHandler = PaymentFlowEffectHandler()
         
         return .init(
             initialState: initialState,

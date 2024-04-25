@@ -5,7 +5,16 @@
 //  Created by Igor Malyarov on 24.04.2024.
 //
 
-final class PaymentFlowEffectHandler {}
+final class PaymentFlowEffectHandler {
+    
+    private let initiateUtilityPayment: InitiateUtilityPayment
+    
+    init(
+        initiateUtilityPayment: @escaping InitiateUtilityPayment
+    ) {
+        self.initiateUtilityPayment = initiateUtilityPayment
+    }
+}
 
 extension PaymentFlowEffectHandler {
     
@@ -15,12 +24,17 @@ extension PaymentFlowEffectHandler {
     ) {
         switch effect {
         case .initiateUtilityPayment:
-            initiateUtilityPayment()
+            initiateUtilityPayment(dispatch)
         }
     }
 }
 
 extension PaymentFlowEffectHandler {
+    
+    typealias InitiateUtilityPaymentResponse = PaymentFlowEvent.Loaded.UtilityPaymentResponse
+    typealias InitiateUtilityPaymentResult = Result<InitiateUtilityPaymentResponse, Error>
+    typealias InitiateUtilityPaymentCompletion = (InitiateUtilityPaymentResult) -> Void
+    typealias InitiateUtilityPayment = (@escaping InitiateUtilityPaymentCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
     
@@ -30,8 +44,31 @@ extension PaymentFlowEffectHandler {
 
 private extension PaymentFlowEffectHandler {
     
-    func initiateUtilityPayment() {
-        
-        fatalError()
+    func initiateUtilityPayment(
+        _ dispatch: @escaping Dispatch
+    ) {
+        initiateUtilityPayment { dispatch(.init($0)) }
     }
+}
+
+private extension PaymentFlowEvent {
+    
+    init(_ result: PaymentFlowEffectHandler.InitiateUtilityPaymentResult) {
+        
+        self = .loaded(.utilityPayment(result.response))
+    }
+}
+
+private extension PaymentFlowEffectHandler.InitiateUtilityPaymentResult {
+    
+    var response: PaymentFlowEvent.Loaded.UtilityPaymentResponse {
+        
+        let response = (try? self.get()) ?? ._empty
+        return response.operators.isEmpty ? ._empty : response
+    }
+}
+
+private extension PaymentFlowEvent.Loaded.UtilityPaymentResponse {
+    
+    static let _empty: Self = .init(lastPayments: [], operators: [])
 }

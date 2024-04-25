@@ -10,25 +10,29 @@ import SwiftUI
 @main
 struct FactoryBasedPreviewApp: App {
     
-    private let composer: Composer
-    
-    init() {
-        
-        let paymentsComposer = PaymentsComposer()
-        
-        self.composer = .init(
-            makePaymentsView: paymentsComposer.makePaymentsView
-        )
-    }
+    private let composer: Composer = .preview()
     
     var body: some Scene {
         
         WindowGroup {
-        
+            
             ContentView(
-                state: .init(),
+                state: .init(
+                    payments: .init(destination: .deepLinkDemo),
+                    tab: .payments
+                ),
                 factory: composer.makeContentViewFactory()
             )
         }
     }
+}
+
+private extension PaymentsState.Destination {
+    
+    static let deepLinkDemo: Self = .paymentFlow(
+        .utilityServicePayment(.init(
+            lastPayments: .preview,
+            operators: .preview
+        ))
+    )
 }

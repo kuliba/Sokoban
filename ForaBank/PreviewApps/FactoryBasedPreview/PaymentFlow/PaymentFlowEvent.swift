@@ -7,4 +7,22 @@
 
 enum PaymentFlowEvent: Equatable {
     
+    case loaded(Loaded)
+}
+
+extension PaymentFlowEvent {
+    
+    enum Loaded: Equatable {
+        
+        case utilityPayment(UtilityPaymentResponse)
+    }
+}
+
+extension PaymentFlowEvent.Loaded {
+    
+    struct UtilityPaymentResponse: Equatable {
+        
+        let lastPayments: [LastPayment]
+        let operators: [Operator]
+    }
 }

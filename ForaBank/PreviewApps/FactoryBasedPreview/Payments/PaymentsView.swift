@@ -106,7 +106,14 @@ struct PaymentsView_Previews: PreviewProvider {
         Group {
             
             preview(.init())
-            preview(.init(destination: .paymentFlow(.utilityServicePayment)))
+            
+            preview(.init(destination: .paymentFlow(
+                .utilityServicePayment(.empty)
+            )))
+            
+            preview(.init(destination: .paymentFlow(
+                .utilityServicePayment(.preview)
+            )))
         }
     }
     

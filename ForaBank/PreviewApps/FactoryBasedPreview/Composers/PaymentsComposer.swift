@@ -7,7 +7,16 @@
 
 import SwiftUI
 
-final class PaymentsComposer {}
+final class PaymentsComposer {
+    
+    private let paymentFlowEffectHandler: PaymentFlowEffectHandler
+    
+    init(
+        paymentFlowEffectHandler: PaymentFlowEffectHandler
+    ) {
+        self.paymentFlowEffectHandler = paymentFlowEffectHandler
+    }
+}
 
 extension PaymentsComposer {
     
@@ -35,11 +44,10 @@ private extension PaymentsComposer {
     ) -> PaymentFlowManager {
         
         let reducer = PaymentFlowReducer()
-        let effectHandler = PaymentFlowEffectHandler()
         
         return .init(
             reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
+            handleEffect: paymentFlowEffectHandler.handleEffect(_:_:)
         )
     }
     
