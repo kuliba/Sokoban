@@ -9,9 +9,6 @@ import Foundation
 import SwiftUI
 import SharedConfigs
 
-//0. Перенести в UIComponents
-//3. Добавить Reducer (ProductSelectComponent)
-
 public struct SelectView: View {
     
     var state: SelectUIState
@@ -35,14 +32,14 @@ public struct SelectView: View {
     public var body: some View {
         
         switch state.state {
-        case let .collapsed(option):
+        case let .collapsed(selectOption, options):
             
-            horizontalView(option)
+            horizontalView(selectOption)
                 .padding(.horizontal, 16)
                 .background(Color.gray.opacity(0.1))
                 .cornerRadius(12)
                 .onTapGesture {
-                    event(.chevronTapped)
+                    event(.chevronTapped(options: options, selectOption: selectOption))
                 }
             
         case let .expanded(_, options, _):
@@ -100,10 +97,10 @@ public struct SelectView: View {
             }
             
             switch state.state {
-            case let .collapsed(option):
+            case let .collapsed(selectOption, options):
                 
-                Text(option?.title ?? config.title)
-                    .foregroundColor(option?.title != nil ? .black : Color.gray.opacity(0.6))
+                Text(selectOption?.title ?? config.title)
+                    .foregroundColor(selectOption?.title != nil ? .black : Color.gray.opacity(0.6))
                     .frame(height: 72, alignment: .center)
                 
             case .expanded:
@@ -142,7 +139,7 @@ public struct SelectView: View {
             
             chevronButton()
                 .onTapGesture {
-                    event(.chevronTapped)
+                    event(.chevronTapped(options: self.state.state.options, selectOption: option))
                 }
         }
     }
@@ -162,7 +159,7 @@ public struct SelectView: View {
         _ option: SelectState.Option
     ) -> some View {
         
-        Button(action: { event(.optionTapped) }) {
+        Button(action: { event(.optionTapped(option)) }) {
             
             HStack(alignment: .top, spacing: 20) {
                 
@@ -191,7 +188,7 @@ public struct SelectView: View {
     
     private func chevronButton() -> some View {
         
-        Button(action: { event(.chevronTapped) }, label: {
+        Button(action: { event(.chevronTapped(options: self.state.state.options, selectOption: nil)) }, label: {
             
             switch state.state {
             case .collapsed:
@@ -230,14 +227,14 @@ struct SelectView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        selectView(.preview, .collapsed(option: nil))
+        selectView(.preview, .collapsed(option: nil, options: []))
             .previewDisplayName("collapse")
         
         selectView(.preview, .collapsed(option: .init(
             id: UUID().description,
             title: "Имущественный налог",
             isSelected: false
-        )))
+        ), options: []))
         .previewDisplayName("collapse with Option")
         
         
