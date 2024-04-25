@@ -7,6 +7,7 @@
 
 struct RootState {
     
+    var payments: PaymentsState = .init()
     var spinner: SpinnerState = .off
     var tab: MainTabState = .main
 }

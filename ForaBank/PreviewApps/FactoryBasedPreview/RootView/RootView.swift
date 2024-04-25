@@ -19,7 +19,7 @@ where Content: View,
         
         ZStack {
             
-            factory.makeContent(state.tab) { event($0) }
+            factory.makeContent(state) { event($0) }
             
             if state.spinner == .on {
                 

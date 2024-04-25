@@ -42,7 +42,7 @@ extension Composer {
 private extension Composer {
     
     func makeRootView(
-        initialState: RootState = .init()
+        initialState: RootState
     ) -> RootView {
         
         let viewModel = RootViewModel(
@@ -67,19 +67,22 @@ private extension Composer {
     }
     
     private func makeRootContent(
-        initialState: MainTabState,
+        rootState: RootState,
         spinner: @escaping (SpinnerEvent) -> Void
     ) -> _MainTabView {
         
         .init(
             viewModel: .init(
-                initialState: initialState,
+                initialState: rootState.tab,
                 reduce: MainTabReducer().reduce(_:_:),
                 handleEffect: { _,_ in }
             ),
             factory: .init(
                 makeMainView: makeMainView,
-                makePaymentsView: _makePaymentsView(spinner),
+                makePaymentsView: _makePaymentsView(
+                    initialState: rootState.payments,
+                    spinner: spinner
+                ),
                 makeChatView: makeChatView
             )
         )
@@ -92,12 +95,13 @@ private extension Composer {
     }
     
     private func _makePaymentsView(
-        _ spinner: @escaping (SpinnerEvent) -> Void
+        initialState: PaymentsState,
+        spinner: @escaping (SpinnerEvent) -> Void
     ) -> () -> PaymentsView {
         
         return {
             
-            self.makePaymentsView(.init(), spinner)
+            self.makePaymentsView(initialState, spinner)
         }
     }
     
