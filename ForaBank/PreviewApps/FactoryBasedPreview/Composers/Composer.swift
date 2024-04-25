@@ -45,25 +45,18 @@ private extension Composer {
         initialState: RootState
     ) -> RootView {
         
+        let reducer = RootReducer()
         let viewModel = RootViewModel(
             initialState: initialState,
-            reduce: RootReducer().reduce(_:_:),
+            reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in }
         )
-        
-        return .init(
-            viewModel: viewModel,
-            factory: makeRootViewFactory()
-        )
-    }
-    
-    private func makeRootViewFactory(
-    ) -> RootViewFactory<_MainTabView, SpinnerView> {
-        
-        .init(
+        let factory = RootViewFactory(
             makeContent: makeRootContent,
             makeSpinner: SpinnerView.init
         )
+        
+        return .init(viewModel: viewModel, factory: factory)
     }
     
     private func makeRootContent(
@@ -71,21 +64,21 @@ private extension Composer {
         spinner: @escaping (SpinnerEvent) -> Void
     ) -> _MainTabView {
         
-        .init(
-            viewModel: .init(
-                initialState: rootState.tab,
-                reduce: MainTabReducer().reduce(_:_:),
-                handleEffect: { _,_ in }
-            ),
-            factory: .init(
-                makeMainView: makeMainView,
-                makePaymentsView: _makePaymentsView(
-                    initialState: rootState.payments,
-                    spinner: spinner
-                ),
-                makeChatView: makeChatView
-            )
+        let viewModel = MainTabViewModel(
+            initialState: rootState.tab,
+            reduce: MainTabReducer().reduce(_:_:),
+            handleEffect: { _,_ in }
         )
+        let factory = MainTabFactory(
+            makeMainView: makeMainView,
+            makePaymentsView: _makePaymentsView(
+                initialState: rootState.payments,
+                spinner: spinner
+            ),
+            makeChatView: makeChatView
+        )
+        
+        return .init(viewModel: viewModel, factory: factory)
     }
     
     private func makeMainView(

@@ -16,12 +16,14 @@ extension PaymentsComposer {
         spinner: @escaping (SpinnerEvent) -> Void
     ) -> PaymentsStateWrapperView {
         
-        .init(
-            viewModel: .init(
-                initialState: initialState,
-                paymentFlowManager: makePaymentFlowManager(),
-                spinner: spinner
-            ),
+        let viewModel = PaymentsViewModel(
+            initialState: initialState,
+            paymentFlowManager: makePaymentFlowManager(),
+            spinner: spinner
+        )
+        
+        return .init(
+            viewModel: viewModel,
             factory: makeFactory()
         )
     }
