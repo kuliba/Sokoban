@@ -10,11 +10,11 @@ import SwiftUI
 final class PaymentsComposer {
     
     private let prepaymentFlowEffectHandler: PrepaymentFlowEffectHandler
-    private let paymentsDestinationFactory: PaymentsDestinationViewFactory
+    private let paymentsDestinationFactory: PaymentsDestinationFactory
     
     init(
         prepaymentFlowEffectHandler: PrepaymentFlowEffectHandler,
-        paymentsDestinationFactory: PaymentsDestinationViewFactory
+        paymentsDestinationFactory: PaymentsDestinationFactory
     ) {
         self.prepaymentFlowEffectHandler = prepaymentFlowEffectHandler
         self.paymentsDestinationFactory = paymentsDestinationFactory
@@ -39,8 +39,14 @@ extension PaymentsComposer {
             factory: makeFactory()
         )
     }
+}
+
+extension PaymentsComposer {
     
-    typealias PaymentsView = PaymentsStateWrapperView<PaymentsDestinationView, PaymentButtonLabel>
+    typealias PaymentsDestinationFactory = PaymentsDestinationViewFactory<UtilityPrepaymentView>
+
+    typealias _PaymentsDestinationView = PaymentsDestinationView<UtilityPrepaymentView>
+    typealias PaymentsView = PaymentsStateWrapperView<_PaymentsDestinationView, PaymentButtonLabel>
 }
 
 private extension PaymentsComposer {
@@ -68,5 +74,5 @@ private extension PaymentsComposer {
         )
     }
     
-    typealias _PaymentsViewFactory = PaymentsViewFactory<PaymentsDestinationView, PaymentButtonLabel>
+    typealias _PaymentsViewFactory = PaymentsViewFactory<_PaymentsDestinationView, PaymentButtonLabel>
 }

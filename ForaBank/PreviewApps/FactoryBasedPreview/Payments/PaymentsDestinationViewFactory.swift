@@ -5,7 +5,10 @@
 //  Created by Igor Malyarov on 25.04.2024.
 //
 
-struct PaymentsDestinationViewFactory {
+import SwiftUI
+
+struct PaymentsDestinationViewFactory<UtilityPrepaymentView>
+where UtilityPrepaymentView: View {
     
     let makeUtilityPrepaymentView: MakeUtilityPrepaymentView
 }

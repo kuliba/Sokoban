@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct PaymentsDestinationView: View {
+struct PaymentsDestinationView<UtilityPrepaymentView>: View
+where UtilityPrepaymentView: View {
     
     let state: State
     let factory: Factory
@@ -27,7 +28,7 @@ struct PaymentsDestinationView: View {
 extension PaymentsDestinationView {
     
     typealias State = PaymentsState.Destination
-    typealias Factory = PaymentsDestinationViewFactory
+    typealias Factory = PaymentsDestinationViewFactory<UtilityPrepaymentView>
 }
 
 struct PaymentsDestinationView_Previews: PreviewProvider {
