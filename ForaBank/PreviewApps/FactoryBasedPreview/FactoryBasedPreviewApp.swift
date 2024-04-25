@@ -10,7 +10,16 @@ import SwiftUI
 @main
 struct FactoryBasedPreviewApp: App {
     
-    private let composer = Composer()
+    private let composer: Composer
+    
+    init() {
+        
+        let paymentsComposer = PaymentsComposer()
+        
+        self.composer = .init(
+            makePaymentsView: paymentsComposer.makePaymentsView
+        )
+    }
     
     var body: some Scene {
         

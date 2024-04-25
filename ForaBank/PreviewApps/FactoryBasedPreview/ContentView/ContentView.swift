@@ -32,9 +32,12 @@ struct ContentView_Previews: PreviewProvider {
         tab: MainTabState = .chat
     ) -> some View {
         
-        ContentView(
+        let paymentsComposer = PaymentsComposer()
+        let composer = Composer(makePaymentsView: paymentsComposer.makePaymentsView)
+        
+        return ContentView(
             state: .init(spinner: spinner, tab: tab),
-            factory: Composer().makeContentViewFactory()
+            factory: composer.makeContentViewFactory()
         )
     }
 }

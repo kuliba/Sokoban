@@ -7,7 +7,16 @@
 
 import SwiftUI
 
-final class Composer {}
+final class Composer {
+    
+    private let makePaymentsView: MakePaymentsView
+    
+    init(
+        makePaymentsView: @escaping MakePaymentsView
+    ) {
+        self.makePaymentsView = makePaymentsView
+    }
+}
 
 extension Composer {
     
@@ -20,11 +29,13 @@ extension Composer {
 
 extension Composer {
     
+    typealias MakePaymentsView = (PaymentsState, @escaping (SpinnerEvent) -> Void) -> PaymentsView
+    
     typealias RootView = RootStateWrapperView<_MainTabView, SpinnerView>
     typealias _MainTabView = MainTabStateWrapperView<MainView, PaymentsView, ChatView>
     
     typealias MainView = Text
-    typealias PaymentsView = Text
+    typealias PaymentsView = PaymentsStateWrapperView
     typealias ChatView = Text
 }
 
@@ -66,17 +77,33 @@ private extension Composer {
                 reduce: MainTabReducer().reduce(_:_:),
                 handleEffect: { _,_ in }
             ),
-            factory: makeMainTabFactory()
+            factory: .init(
+                makeMainView: makeMainView,
+                makePaymentsView: _makePaymentsView(spinner),
+                makeChatView: makeChatView
+            )
         )
     }
     
-    private func makeMainTabFactory(
-    ) -> MainTabFactory<MainView, PaymentsView, ChatView> {
+    private func makeMainView(
+    ) -> MainView {
         
-        .init(
-            makeMainView: { Text("Main View") },
-            makePaymentsView: { Text("Payments") },
-            makeChatView: { Text("Chat here") }
-        )
+        Text("Main View")
+    }
+    
+    private func _makePaymentsView(
+        _ spinner: @escaping (SpinnerEvent) -> Void
+    ) -> () -> PaymentsView {
+        
+        return {
+            
+            self.makePaymentsView(.init(), spinner)
+        }
+    }
+    
+    private func makeChatView(
+    ) -> MainView {
+        
+        Text("Chat here")
     }
 }
