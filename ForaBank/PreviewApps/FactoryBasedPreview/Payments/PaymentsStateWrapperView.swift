@@ -8,9 +8,7 @@
 import RxViewModel
 import SwiftUI
 
-struct PaymentsStateWrapperView<DestinationView, PaymentButtonLabel>: View
-where DestinationView: View,
-      PaymentButtonLabel: View {
+struct PaymentsStateWrapperView: View {
     
     @StateObject private var viewModel: PaymentsViewModel
     
@@ -36,7 +34,7 @@ where DestinationView: View,
 
 extension PaymentsStateWrapperView {
     
-    typealias Factory = PaymentsViewFactory<DestinationView, PaymentButtonLabel>
+    typealias Factory = PaymentsViewFactory
 }
 
 struct PaymentsStateWrapperView_Previews: PreviewProvider {

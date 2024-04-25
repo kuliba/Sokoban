@@ -724,6 +724,8 @@
 		2A62E9C92BDA1EA20044EB39 /* PaymentsEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A62E9C82BDA1EA20044EB39 /* PaymentsEffect.swift */; };
 		2A62E9CB2BDA1ED80044EB39 /* PaymentFlowState+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A62E9CA2BDA1ED80044EB39 /* PaymentFlowState+preview.swift */; };
 		2A62E9CD2BDA1FAE0044EB39 /* PaymentFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A62E9CC2BDA1FAE0044EB39 /* PaymentFlowManager.swift */; };
+		2A62E9CF2BDA2CDF0044EB39 /* PaymentsDestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A62E9CE2BDA2CDF0044EB39 /* PaymentsDestinationView.swift */; };
+		2A62E9D12BDA2CF60044EB39 /* PaymentButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A62E9D02BDA2CF60044EB39 /* PaymentButtonLabel.swift */; };
 		2A6481F72A1BC623005CC17A /* TextFieldFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */; };
 		2A6481F92A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481F82A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift */; };
 		2A6481FB2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6481FA2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift */; };
@@ -3417,6 +3419,8 @@
 		2A62E9C82BDA1EA20044EB39 /* PaymentsEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsEffect.swift; sourceTree = "<group>"; };
 		2A62E9CA2BDA1ED80044EB39 /* PaymentFlowState+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentFlowState+preview.swift"; sourceTree = "<group>"; };
 		2A62E9CC2BDA1FAE0044EB39 /* PaymentFlowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFlowManager.swift; sourceTree = "<group>"; };
+		2A62E9CE2BDA2CDF0044EB39 /* PaymentsDestinationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsDestinationView.swift; sourceTree = "<group>"; };
+		2A62E9D02BDA2CF60044EB39 /* PaymentButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentButtonLabel.swift; sourceTree = "<group>"; };
 		2A6481F62A1BC623005CC17A /* TextFieldFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFactory.swift; sourceTree = "<group>"; };
 		2A6481F82A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldState+makeTextFieldState.swift"; sourceTree = "<group>"; };
 		2A6481FA2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateMaskedTransformerTests.swift; sourceTree = "<group>"; };
@@ -7659,6 +7663,8 @@
 				2A62E9C82BDA1EA20044EB39 /* PaymentsEffect.swift */,
 				2A62E9B12BD984DB0044EB39 /* PaymentsView.swift */,
 				2A62E9BF2BD9920D0044EB39 /* PaymentsViewFactory.swift */,
+				2A62E9CE2BDA2CDF0044EB39 /* PaymentsDestinationView.swift */,
+				2A62E9D02BDA2CF60044EB39 /* PaymentButtonLabel.swift */,
 				2A62E9B32BD9853C0044EB39 /* PaymentsViewConfig.swift */,
 				2A62E9B52BD9856E0044EB39 /* PaymentsStateWrapperView.swift */,
 				2A62E9BD2BD98AD40044EB39 /* PaymentsViewModel.swift */,
@@ -15235,7 +15241,9 @@
 				2A62E9B42BD9853C0044EB39 /* PaymentsViewConfig.swift in Sources */,
 				2A62E9652BD94F870044EB39 /* ContentView.swift in Sources */,
 				2A62E9C52BDA1E4B0044EB39 /* PaymentsState.swift in Sources */,
+				2A62E9CF2BDA2CDF0044EB39 /* PaymentsDestinationView.swift in Sources */,
 				2A62E9A22BD980170044EB39 /* RootEffect.swift in Sources */,
+				2A62E9D12BDA2CF60044EB39 /* PaymentButtonLabel.swift in Sources */,
 				2A62E9AE2BD984920044EB39 /* PaymentFlowReducer.swift in Sources */,
 				2A62E9BA2BD986CE0044EB39 /* PaymentsViewModel+preview.swift in Sources */,
 				2A62E9AA2BD984160044EB39 /* PaymentFlowEvent.swift in Sources */,
