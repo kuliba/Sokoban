@@ -8,7 +8,9 @@
 import SwiftUI
 import UIPrimitives
 
-struct PaymentsView: View {
+struct PaymentsView<DestinationView, PaymentButtonLabel>: View
+where DestinationView: View,
+      PaymentButtonLabel: View {
     
     let state: State
     let event: (Event) -> Void
@@ -52,7 +54,7 @@ extension PaymentsView {
     typealias Event = PaymentsEvent
     typealias Effect = PaymentsEffect
     
-    typealias Factory = PaymentsViewFactory
+    typealias Factory = PaymentsViewFactory<DestinationView, PaymentButtonLabel>
 }
 
 extension PaymentsState.Destination: Identifiable {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 final class PaymentsComposer {
-
+    
     private let prepaymentFlowEffectHandler: PrepaymentFlowEffectHandler
     private let paymentsDestinationFactory: PaymentsDestinationViewFactory
     
@@ -26,7 +26,7 @@ extension PaymentsComposer {
     func makePaymentsView(
         initialState: PaymentsState = .init(),
         spinner: @escaping (SpinnerEvent) -> Void
-    ) -> PaymentsStateWrapperView {
+    ) -> PaymentsView {
         
         let viewModel = PaymentsViewModel(
             initialState: initialState,
@@ -39,6 +39,8 @@ extension PaymentsComposer {
             factory: makeFactory()
         )
     }
+    
+    typealias PaymentsView = PaymentsStateWrapperView<PaymentsDestinationView, PaymentButtonLabel>
 }
 
 private extension PaymentsComposer {
@@ -55,7 +57,7 @@ private extension PaymentsComposer {
     }
     
     func makeFactory(
-    ) -> PaymentsViewFactory {
+    ) -> _PaymentsViewFactory {
         
         .init(
             makeDestinationView: {
@@ -65,4 +67,6 @@ private extension PaymentsComposer {
             makePaymentButtonLabel: PaymentButtonLabel.init
         )
     }
+    
+    typealias _PaymentsViewFactory = PaymentsViewFactory<PaymentsDestinationView, PaymentButtonLabel>
 }
