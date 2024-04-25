@@ -12,12 +12,21 @@ public struct SelectUIState {
 
     let image: Image
     var state: SelectState
+    
+    init(image: Image, state: SelectState) {
+        self.image = image
+        self.state = state
+    }
 }
 
 public enum SelectState {
     
-    case collapsed(option: Option?)
-    case expanded(selectOption: Option?, options: [Option], searchText: String)
+    case collapsed(option: Option?, options: [Option]?)
+    case expanded(selectOption: Option?, options: [Option], searchText: String?)
+    
+    init(state: SelectState) {
+        self = state
+    }
     
     public struct Option {
         
