@@ -9,7 +9,7 @@ import Foundation
 
 public enum SelectEvent {
     
-    case chevronTapped
-    case optionTapped
+    case chevronTapped(options: [SelectState.Option]?, selectOption: SelectState.Option?)
+    case optionTapped(SelectState.Option)
     case search(String)
 }
