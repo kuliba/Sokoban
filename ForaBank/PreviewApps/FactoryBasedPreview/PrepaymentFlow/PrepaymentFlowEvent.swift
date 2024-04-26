@@ -7,18 +7,18 @@
 
 enum PrepaymentFlowEvent: Equatable {
     
-    case loaded(Loaded)
+    case initiated(Initiated)
 }
 
 extension PrepaymentFlowEvent {
     
-    enum Loaded: Equatable {
+    enum Initiated: Equatable {
         
         case utilityPayment(UtilityPaymentResponse)
     }
 }
 
-extension PrepaymentFlowEvent.Loaded {
+extension PrepaymentFlowEvent.Initiated {
     
     struct UtilityPaymentResponse: Equatable {
         

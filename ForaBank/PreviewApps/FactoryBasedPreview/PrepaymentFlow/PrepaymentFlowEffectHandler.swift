@@ -31,7 +31,7 @@ extension PrepaymentFlowEffectHandler {
 
 extension PrepaymentFlowEffectHandler {
     
-    typealias InitiateUtilityPrepaymentResponse = PrepaymentFlowEvent.Loaded.UtilityPaymentResponse
+    typealias InitiateUtilityPrepaymentResponse = PrepaymentFlowEvent.Initiated.UtilityPaymentResponse
     typealias InitiateUtilityPrepaymentResult = Result<InitiateUtilityPrepaymentResponse, Error>
     typealias InitiateUtilityPrepaymentCompletion = (InitiateUtilityPrepaymentResult) -> Void
     typealias InitiateUtilityPrepayment = (@escaping InitiateUtilityPrepaymentCompletion) -> Void
@@ -55,20 +55,20 @@ private extension PrepaymentFlowEvent {
     
     init(_ result: PrepaymentFlowEffectHandler.InitiateUtilityPrepaymentResult) {
         
-        self = .loaded(.utilityPayment(result.response))
+        self = .initiated(.utilityPayment(result.response))
     }
 }
 
 private extension PrepaymentFlowEffectHandler.InitiateUtilityPrepaymentResult {
     
-    var response: PrepaymentFlowEvent.Loaded.UtilityPaymentResponse {
+    var response: PrepaymentFlowEvent.Initiated.UtilityPaymentResponse {
         
         let response = (try? self.get()) ?? ._empty
         return response.operators.isEmpty ? ._empty : response
     }
 }
 
-private extension PrepaymentFlowEvent.Loaded.UtilityPaymentResponse {
+private extension PrepaymentFlowEvent.Initiated.UtilityPaymentResponse {
     
     static let _empty: Self = .init(lastPayments: [], operators: [])
 }

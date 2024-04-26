@@ -18,7 +18,7 @@ extension PrepaymentFlowReducer {
         var effect: Effect?
         
         switch event {
-        case let .loaded(loaded):
+        case let .initiated(loaded):
             (state, effect) = reduce(state, loaded)
         }
         
@@ -37,7 +37,7 @@ private extension PrepaymentFlowReducer {
     
     func reduce(
         _ state: State,
-        _ event: Event.Loaded
+        _ event: Event.Initiated
     ) -> (State, Effect?) {
         
         var state = state
@@ -54,7 +54,7 @@ private extension PrepaymentFlowReducer {
 
 private extension PrepaymentFlowState.Destination.UtilityPrepaymentState {
     
-    init(_ response: PrepaymentFlowEvent.Loaded.UtilityPaymentResponse) {
+    init(_ response: PrepaymentFlowEvent.Initiated.UtilityPaymentResponse) {
         
         self.init(
             lastPayments: response.lastPayments,
