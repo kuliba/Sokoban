@@ -6,9 +6,12 @@
 //
 
 extension PaymentsDestinationViewFactory
-where UtilityPrepaymentView == FactoryBasedPreview.UtilityPrepaymentView {
+where UtilityPrepaymentView == FactoryBasedPreview.UtilityPrepaymentPickerMockView {
     
     static let preview: Self = .init(
-        makeUtilityPrepaymentView: UtilityPrepaymentView.init
+        makeUtilityPrepaymentView: {
+            
+            UtilityPrepaymentView(state: $0, event: { _ in })
+        }
     )
 }

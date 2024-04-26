@@ -6,7 +6,7 @@
 //
 
 extension PaymentsComposer 
-where DestinationView == PaymentsDestinationView<UtilityPrepaymentView> {
+where DestinationView == PaymentsDestinationView<UtilityPrepaymentPickerMockView> {
     
     static func preview(
         result: InitiateUtilityPrepaymentResult = .success(.preview)

@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension PaymentsViewFactory
-where DestinationView == PaymentsDestinationView<UtilityPrepaymentView>,
+where DestinationView == PaymentsDestinationView<UtilityPrepaymentPickerMockView>,
       ButtonLabel == PaymentButtonLabel {
     
     static var preview: Self {

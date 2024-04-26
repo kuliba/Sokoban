@@ -16,7 +16,7 @@ extension Composer {
     
     typealias InitiateUtilityPrepaymentResult = PrepaymentFlowEffectHandler.InitiateUtilityPrepaymentResult
     
-    private convenience init(paymentsComposer: PaymentsComposer<PaymentsDestinationView<UtilityPrepaymentView>>) {
+    private convenience init(paymentsComposer: PaymentsComposer<PaymentsDestinationView<UtilityPrepaymentPickerMockView>>) {
         
         self.init(makePaymentsView: paymentsComposer.makePaymentsView)
     }

@@ -35,7 +35,7 @@ extension Composer {
     typealias _MainTabView = MainTabStateWrapperView<MainView, PaymentsView, ChatView>
     
     typealias MainView = Text
-    typealias _PaymentsDestinationView = PaymentsDestinationView<UtilityPrepaymentView>
+    typealias _PaymentsDestinationView = PaymentsDestinationView<UtilityPrepaymentPickerMockView>
     typealias PaymentsView = PaymentsStateWrapperView<_PaymentsDestinationView, PaymentButtonLabel>
     typealias ChatView = Text
 }

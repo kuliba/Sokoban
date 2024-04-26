@@ -7,34 +7,30 @@
 
 import SwiftUI
 
-struct UtilityPrepaymentPicker: View {
+struct UtilityPrepaymentPickerMockView: View {
     
     let state: State
     let event: (Event) -> Void
-    let config: Config
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 32) {
+        VStack(spacing: 32) {
             
-            ScrollView(.horizontal, showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 32) {
                 
-                HStack {
-                    
-                    ForEach(state.lastPayments, content: lastPaymentView)
-                }
+                lastPaymentView(lastPayment: .preview)
+                
+                operatorView(operator: .single)
+                operatorView(operator: .multiple)
+                
+                Divider()
             }
             
-            ScrollView(.horizontal, showsIndicators: false) {
+            VStack(alignment: .center, spacing: 32) {
                 
-                HStack {
-                    
-                    ForEach(state.operators, content: operatorView)
-                }
+                Button("Add Company") { event(.addCompany) }
+                Button("Pay by Instructions") { event(.addCompany) }
             }
-            
-            Button("Add Company") { event(.addCompany) }
-            Button("Pay by Instructions") { event(.addCompany) }
         }
         .padding()
     }
@@ -43,7 +39,7 @@ struct UtilityPrepaymentPicker: View {
         lastPayment: LastPayment
     ) -> some View {
         
-        Button(String(describing: lastPayment).prefix(6)) {
+        Button(String(describing: lastPayment).prefix(11)) {
             
             event(.select(.lastPayment(lastPayment)))
         }
@@ -53,18 +49,17 @@ struct UtilityPrepaymentPicker: View {
         `operator`: Operator
     ) -> some View {
         
-        Button(String(describing: `operator`).prefix(6)) {
+        Button(String(describing: `operator`)/*.prefix(6)*/) {
             
             event(.select(.operator(`operator`)))
         }
     }
 }
 
-extension UtilityPrepaymentPicker {
+extension UtilityPrepaymentPickerMockView {
     
     typealias State = PrepaymentFlowState.Destination.UtilityPrepaymentState
     typealias Event = UtilityPrepaymentPickerEvent
-    typealias Config = UtilityPrepaymentPickerConfig
 }
 
 struct UtilityPrepaymentPicker_Previews: PreviewProvider {
@@ -76,13 +71,12 @@ struct UtilityPrepaymentPicker_Previews: PreviewProvider {
     }
     
     static func preview(
-        _ state: UtilityPrepaymentPicker.State
+        _ state: UtilityPrepaymentPickerMockView.State
     ) -> some View {
         
-        UtilityPrepaymentPicker(
+        UtilityPrepaymentPickerMockView(
             state: state,
-            event: { _ in },
-            config: .preview
+            event: { _ in }
         )
     }
 }
