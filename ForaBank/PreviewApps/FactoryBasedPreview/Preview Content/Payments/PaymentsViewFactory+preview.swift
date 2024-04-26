@@ -11,12 +11,14 @@ extension PaymentsViewFactory
 where DestinationView == PaymentView<UtilityPrepaymentPickerMockView>,
       PaymentButtonLabel == FactoryBasedPreview.PaymentButtonLabel {
     
-    static var preview: Self {
+    static func preview(
+        event: @escaping (PaymentEvent) -> Void
+    ) -> Self {
         
         .init(
             makeDestinationView: {
                 
-                .init(state: $0, event: $1, factory: .preview)
+                .init(state: $0, event: event, factory: .preview())
             },
             makePaymentButtonLabel: FactoryBasedPreview.PaymentButtonLabel.init
         )

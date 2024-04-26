@@ -7,5 +7,4 @@
 
 enum UtilityServicePaymentEffect: Equatable {
     
-    case initiate
 }

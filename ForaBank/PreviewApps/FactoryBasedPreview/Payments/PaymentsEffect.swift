@@ -7,5 +7,13 @@
 
 enum PaymentsEffect: Equatable {
     
-    case payment(PaymentEffect)
+    case initiate(Initiate)
+}
+
+extension PaymentsEffect {
+    
+    enum Initiate {
+        
+        case utilityPayment
+    }
 }

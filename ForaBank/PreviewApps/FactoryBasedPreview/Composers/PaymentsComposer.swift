@@ -7,18 +7,14 @@
 
 import SwiftUI
 
-final class PaymentsComposer<DestinationView>
-where DestinationView: View {
+final class PaymentsComposer {
     
-    private let prepaymentFlowManager: PaymentManager
-    private let makeDestinationView: MakeDestinationView
+    private let paymentManager: PaymentsManager
     
     init(
-        prepaymentFlowManager: PaymentManager,
-        makeDestinationView: @escaping MakeDestinationView
+        paymentManager: PaymentsManager
     ) {
-        self.prepaymentFlowManager = prepaymentFlowManager
-        self.makeDestinationView = makeDestinationView
+        self.paymentManager = paymentManager
     }
 }
 
@@ -31,8 +27,12 @@ extension PaymentsComposer {
         
         let viewModel = PaymentsViewModel(
             initialState: initialState,
-            paymentManager: prepaymentFlowManager,
+            paymentsManager: paymentManager,
             rootEvent: rootEvent
+        )
+        
+        let makeDestinationView = makeDestinationView(
+            event: { viewModel.event(.payment($0)) }
         )
         
         return .init(
@@ -47,7 +47,28 @@ extension PaymentsComposer {
 
 extension PaymentsComposer {
     
-    typealias MakeDestinationView = (PaymentsState.Destination, @escaping (PaymentEvent) -> Void) -> DestinationView
+    typealias DestinationView = PaymentView<UtilityPrepaymentPickerMockView>
     
     typealias PaymentsView = PaymentsStateWrapperView<DestinationView, PaymentButtonLabel>
+}
+
+private extension PaymentsComposer {
+    
+    func makeDestinationView(
+        event: @escaping (PaymentEvent) -> Void
+    ) -> (PaymentState) -> DestinationView {
+        
+        return {
+            
+            .init(state: $0, event: event, factory: self.makeFactory())
+        }
+    }
+    
+    private func makeFactory(
+    ) -> PaymentViewFactory<UtilityPrepaymentPickerMockView> {
+        
+        .init(
+            makeUtilityPrepaymentView: { .init(state: $0, event: $1) }
+        )
+    }
 }

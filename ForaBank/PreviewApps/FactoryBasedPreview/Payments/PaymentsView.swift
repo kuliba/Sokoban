@@ -30,7 +30,7 @@ where DestinationView: View,
                 get: { state.destination },
                 set: { if $0 == nil { event(.dismissDestination) }}
             ),
-            content: destinationView
+            content: factory.makeDestinationView
         )
     }
     
@@ -39,16 +39,9 @@ where DestinationView: View,
     ) -> some View {
         
         Button(
-            action: { event(.paymentButtonTapped(button.button)) },
+            action: { event(.payment(.buttonTapped(button.button))) },
             label: { factory.makePaymentButtonLabel(button.button) }
         )
-    }
-    
-    private func destinationView(
-        destination: PaymentsState.Destination
-    ) -> some View {
-        
-        factory.makeDestinationView(destination) { event(.payment($0)) }
     }
 }
 
@@ -56,7 +49,6 @@ extension PaymentsView {
     
     typealias State = PaymentsState
     typealias Event = PaymentsEvent
-    typealias Effect = PaymentsEffect
     
     typealias Factory = PaymentsViewFactory<DestinationView, PaymentButtonLabel>
 }
@@ -66,7 +58,7 @@ private enum PaymentButton: CaseIterable {
     case mobile
     case utilityService
     
-    init(_ button: PaymentsEvent.PaymentButton) {
+    init(_ button: PaymentEvent.PaymentButton) {
         
         switch button {
         case .mobile:
@@ -77,7 +69,7 @@ private enum PaymentButton: CaseIterable {
         }
     }
     
-    var button: PaymentsEvent.PaymentButton {
+    var button: PaymentEvent.PaymentButton {
         
         switch self {
         case .mobile:
@@ -146,7 +138,7 @@ struct PaymentsView_Previews: PreviewProvider {
             PaymentsView(
                 state: state,
                 event: { _ in },
-                factory: .preview
+                factory: .preview(event: { _ in })
             )
         }
         .navigationViewStyle(StackNavigationViewStyle())

@@ -59,7 +59,7 @@ struct PaymentsStateWrapperView_Previews: PreviewProvider {
             
             PaymentsStateWrapperView(
                 viewModel: .preview(initialState: state),
-                factory: .preview
+                factory: .preview(event: { _ in })
             )
         }
         .navigationViewStyle(StackNavigationViewStyle())
@@ -75,7 +75,7 @@ struct PaymentsStateWrapperView_Previews: PreviewProvider {
                 viewModel: .preview(
                     initialState: .preview(destination)
                 ),
-                factory: .preview
+                factory: .preview(event: { _ in })
             )
         }
         .navigationViewStyle(StackNavigationViewStyle())

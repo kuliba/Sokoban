@@ -51,7 +51,7 @@ struct PaymentsDestinationView_Previews: PreviewProvider {
         PaymentView(
             state: state,
             event: { _ in },
-            factory: .preview
+            factory: .preview()
         )
     }
     
@@ -62,7 +62,7 @@ struct PaymentsDestinationView_Previews: PreviewProvider {
         PaymentView(
             state: .utilityService(state),
             event: { _ in },
-            factory: .preview
+            factory: .preview()
         )
     }
 }

@@ -8,16 +8,5 @@
 enum PaymentsEvent: Equatable {
     
     case dismissDestination
-#warning("find a way to decouple from PaymentEvent")
     case payment(PaymentEvent)
-    case paymentButtonTapped(PaymentButton)
-}
-
-extension PaymentsEvent {
-    
-    enum PaymentButton {
-        
-        case mobile
-        case utilityService
-    }
 }

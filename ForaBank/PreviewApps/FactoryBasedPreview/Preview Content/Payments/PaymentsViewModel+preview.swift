@@ -9,12 +9,12 @@ extension PaymentsViewModel {
     
     static func preview(
         initialState: PaymentsState = .preview(),
-        effectHandler: PaymentEffectHandler = .preview
+        effectHandler: PaymentEffectHandler = .preview()
     ) -> Self {
         
         .init(
             initialState: initialState,
-            paymentManager: .preview,
+            paymentsManager: .preview,
             rootEvent: { _ in }
         )
     }

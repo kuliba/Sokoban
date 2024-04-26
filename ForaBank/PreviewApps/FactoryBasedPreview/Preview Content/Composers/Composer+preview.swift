@@ -11,12 +11,12 @@ extension Composer {
         result: InitiateUtilityPrepaymentResult = .success(.preview)
     ) -> Self {
         
-        .init(paymentsComposer: .preview(result: result))
+        .init(paymentsComposer: .init(paymentManager: .preview(result)))
     }
     
-    typealias InitiateUtilityPrepaymentResult = PaymentEffectHandler.InitiateUtilityPrepaymentResult
+    typealias InitiateUtilityPrepaymentResult = PaymentsEffectHandler.InitiateUtilityPrepaymentResult
     
-    private convenience init(paymentsComposer: PaymentsComposer<PaymentView<UtilityPrepaymentPickerMockView>>) {
+    private convenience init(paymentsComposer: PaymentsComposer) {
         
         self.init(makePaymentsView: paymentsComposer.makePaymentsView)
     }

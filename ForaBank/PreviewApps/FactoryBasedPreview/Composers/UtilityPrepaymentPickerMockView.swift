@@ -14,6 +14,21 @@ struct UtilityPrepaymentPickerMockView: View {
     
     var body: some View {
         
+        if state.operators.isEmpty {
+            errorView()
+        } else {
+            picker()
+        }
+    }
+    
+    private func errorView() -> some View {
+        
+        Text("error loading operators")
+            .foregroundColor(.red)
+    }
+    
+    private func picker() -> some View {
+        
         VStack(spacing: 32) {
             
             VStack(alignment: .leading, spacing: 32) {

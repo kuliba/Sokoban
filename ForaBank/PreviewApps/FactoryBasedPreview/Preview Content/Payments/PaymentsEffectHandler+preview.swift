@@ -1,13 +1,13 @@
 //
-//  PaymentManager+preview.swift
+//  PaymentsEffectHandler+preview.swift
 //  FactoryBasedPreview
 //
-//  Created by Igor Malyarov on 25.04.2024.
+//  Created by Igor Malyarov on 26.04.2024.
 //
 
 import Foundation
 
-extension PaymentManager {
+extension PaymentsEffectHandler {
     
     static var preview: Self { preview(.success(.preview)) }
     static var empty: Self { preview(.success(.empty)) }
@@ -16,24 +16,17 @@ extension PaymentManager {
     private static var initiateFailure: Error { NSError(domain: "InitiateUtilityPrepayment Failure", code: -1) }
     
     static func preview(
-        _ result: InitiateUtilityPrepaymentResult
+        _ result: InitiateUtilityPrepaymentResult = .success(.preview)
     ) -> Self {
         
-        let reducer = PaymentReducer()
-        let effectHandler = PaymentEffectHandler(
+        self.init(
             initiateUtilityPrepayment: { completion in
-                
+            
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     
                     completion(result)
                 }
             }
         )
-        return .init(
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
-        )
     }
-    
-    typealias InitiateUtilityPrepaymentResult = PaymentEffectHandler.InitiateUtilityPrepaymentResult
 }

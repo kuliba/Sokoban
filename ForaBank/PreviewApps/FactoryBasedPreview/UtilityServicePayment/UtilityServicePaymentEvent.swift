@@ -7,15 +7,5 @@
 
 enum UtilityServicePaymentEvent: Equatable {
     
-    case initiated(InitiateResponse)
     case prepayment(UtilityServicePrepaymentEvent)
-}
-
-extension UtilityServicePaymentEvent {
-    
-    struct InitiateResponse: Equatable {
-        
-        let lastPayments: [LastPayment]
-        let operators: [Operator]
-    }
 }

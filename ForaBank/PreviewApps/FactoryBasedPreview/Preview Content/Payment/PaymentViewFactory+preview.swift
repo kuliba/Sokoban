@@ -8,10 +8,13 @@
 extension PaymentViewFactory
 where UtilityPrepaymentView == UtilityPrepaymentPickerMockView {
     
-    static let preview: Self = .init(
-        makeUtilityPrepaymentView: {
-            
-            .init(state: $0, event: $1)
-        }
-    )
+    static func preview() -> Self {
+        
+        .init(
+            makeUtilityPrepaymentView: {
+                
+                .init(state: $0, event: $1)
+            }
+        )
+    }
 }

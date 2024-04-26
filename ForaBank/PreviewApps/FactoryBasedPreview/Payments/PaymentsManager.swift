@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 25.04.2024.
 //
 
-final class PaymentManager {
+final class PaymentsManager {
     
     let reduce: Reduce
     let handleEffect: HandleEffect
@@ -19,12 +19,12 @@ final class PaymentManager {
     }
 }
 
-extension PaymentManager {
+extension PaymentsManager {
 
     typealias Reduce = (State, Event) -> (State, Effect?)
     typealias HandleEffect = (Effect, @escaping (Event) -> Void) -> Void
 
-    typealias State = PaymentState
-    typealias Event = PaymentEvent
-    typealias Effect = PaymentEffect
+    typealias State = PaymentsState
+    typealias Event = PaymentsEvent
+    typealias Effect = PaymentsEffect
 }

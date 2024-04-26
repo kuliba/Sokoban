@@ -15,19 +15,20 @@ final class PaymentsViewModel: ObservableObject {
     
     private let stateSubject = PassthroughSubject<State, Never>()
     
-    private let paymentManager: PaymentManager
+    private let paymentsManager: PaymentsManager
     private let rootEvent: (RootEvent) -> Void
     
     init(
         initialState: State,
-        paymentManager: PaymentManager,
+        paymentsManager: PaymentsManager,
         rootEvent: @escaping (RootEvent) -> Void,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.state = initialState
-        self.paymentManager = paymentManager
+        self.paymentsManager = paymentsManager
         self.rootEvent = rootEvent
         
+        #warning("simplified case, real state is more complex")
         stateSubject
             .removeDuplicates()
             .receive(on: scheduler)
@@ -39,14 +40,14 @@ extension PaymentsViewModel {
     
     func event(_ event: Event) {
         
-        let (state, effect) = reduce(state, event)
+        let (state, effect) = paymentsManager.reduce(state, event)
         stateSubject.send(state)
         
-        rootEvent(.spinner((effect == nil ? .hide: .show)))
+        rootEvent(.spinner(effect == nil ? .hide: .show))
         
         if let effect {
             
-            handleEffect(effect) { [weak self] event in
+            paymentsManager.handleEffect(effect) { [weak self] event in
                 
                 self?.event(event)
             }
@@ -62,82 +63,4 @@ extension PaymentsViewModel {
     typealias State = PaymentsState
     typealias Event = PaymentsEvent
     typealias Effect = PaymentsEffect
-}
-
-private extension PaymentsViewModel {
-    
-    func reduce(
-        _ state: State,
-        _ event: Event
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        switch event {
-        case let .paymentButtonTapped(button):
-            (state, effect) = reduce(state, button)
-            
-        case .dismissDestination:
-            state.destination = nil
-
-        case let .payment(paymentEvent):
-            (state, effect) = reduce(state, paymentEvent)
-        }
-        
-        return (state, effect)
-    }
-    
-    func handleEffect(
-        _ effect: Effect,
-        _ dispatch: @escaping Dispatch
-    ) {
-        switch effect {
-        case let .payment(paymentEffect):
-            paymentManager.handleEffect(paymentEffect) { dispatch(.payment($0)) }
-        }
-    }
-}
-
-//private extension PaymentsState {
-//    
-//    var paymentFlowState: PaymentDestinationState {
-//        
-//        guard case let .prepaymentFlow(destination) = destination
-//        else { return .init() }
-//        
-//        return .init(destination: destination)
-//    }
-//}
-
-private extension PaymentsViewModel {
-    
-    func reduce(
-        _ state: State,
-        _ button: Event.PaymentButton
-    ) -> (State, Effect?) {
-        
-        var effect: Effect?
-        
-        switch button {
-        case .mobile:
-            print("`mobile` event occurred")
-            
-        case .utilityService:
-            effect = .payment(.utilityService(.initiate))
-        }
-        
-        return (state, effect)
-    }
-    
-    func reduce(
-        _ state: State,
-        _ event: PaymentEvent
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        return (state, effect)
-    }
 }
