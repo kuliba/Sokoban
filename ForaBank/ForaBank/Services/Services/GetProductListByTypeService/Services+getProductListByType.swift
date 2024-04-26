@@ -229,7 +229,7 @@ private extension ProductDepositData {
             interestRate: depositData.interestRate,
             accountId: depositData.accountID,
             creditMinimumAmount: depositData.creditMinimumAmount.map(Double.init) ?? 0,
-            minimumBalance: Double(from: depositData.minimumBalance),
+            minimumBalance: Double(from: depositData.minimumBalance ?? 0.0),
             endDate: depositData.endDate.map { Date.dateUTC(with: $0) },
             endDateNf: depositData.endDateNF,
             isDemandDeposit: depositData.demandDeposit,
