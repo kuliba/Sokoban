@@ -7,15 +7,15 @@
 
 enum PaymentsEvent: Equatable {
     
-    case buttonTapped(ButtonTapped)
     case dismissDestination
+#warning("find a way to decouple from PaymentEvent")
     case payment(PaymentEvent)
+    case paymentButtonTapped(PaymentButton)
 }
 
 extension PaymentsEvent {
     
-    #warning("move `CaseIterable` to UI matching type")
-    enum ButtonTapped: CaseIterable {
+    enum PaymentButton {
         
         case mobile
         case utilityService

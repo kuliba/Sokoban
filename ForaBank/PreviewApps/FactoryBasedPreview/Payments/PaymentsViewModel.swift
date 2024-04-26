@@ -75,8 +75,8 @@ private extension PaymentsViewModel {
         var effect: Effect?
         
         switch event {
-        case let .buttonTapped(buttonTapped):
-            (state, effect) = reduce(state, buttonTapped)
+        case let .paymentButtonTapped(button):
+            (state, effect) = reduce(state, button)
             
         case .dismissDestination:
             state.destination = nil
@@ -114,12 +114,12 @@ private extension PaymentsViewModel {
     
     func reduce(
         _ state: State,
-        _ event: Event.ButtonTapped
+        _ button: Event.PaymentButton
     ) -> (State, Effect?) {
         
         var effect: Effect?
         
-        switch event {
+        switch button {
         case .mobile:
             print("`mobile` event occurred")
             

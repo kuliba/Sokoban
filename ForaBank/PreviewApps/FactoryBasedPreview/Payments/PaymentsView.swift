@@ -22,10 +22,7 @@ where DestinationView: View,
             
             VStack(spacing: 16) {
                 
-                ForEach(
-                    PaymentsEvent.ButtonTapped.allCases,
-                    content: paymentButton
-                )
+                ForEach(PaymentButton.allCases, content: paymentButton)
             }
         }
         .navigationDestination(
@@ -38,12 +35,12 @@ where DestinationView: View,
     }
     
     private func paymentButton(
-        buttonTapped: PaymentsEvent.ButtonTapped
+        button: PaymentButton
     ) -> some View {
         
         Button(
-            action: { event(.buttonTapped(buttonTapped)) },
-            label: { factory.makePaymentButtonLabel(buttonTapped) }
+            action: { event(.paymentButtonTapped(button.button)) },
+            label: { factory.makePaymentButtonLabel(button.button) }
         )
     }
     
@@ -64,23 +61,35 @@ extension PaymentsView {
     typealias Factory = PaymentsViewFactory<DestinationView, PaymentButtonLabel>
 }
 
-extension PaymentsState.Destination: Identifiable {
+private enum PaymentButton: CaseIterable {
     
-    var id: ID {
+    case mobile
+    case utilityService
+    
+    init(_ button: PaymentsEvent.PaymentButton) {
+        
+        switch button {
+        case .mobile:
+            self = .mobile
+            
+        case .utilityService:
+            self = .utilityService
+        }
+    }
+    
+    var button: PaymentsEvent.PaymentButton {
         
         switch self {
+        case .mobile:
+            return .mobile
+            
         case .utilityService:
             return .utilityService
         }
     }
-    
-    enum ID: Hashable {
-        
-        case utilityService
-    }
 }
 
-extension PaymentsEvent.ButtonTapped: Identifiable {
+extension PaymentButton: Identifiable {
     
     var id: ID {
         
@@ -96,6 +105,22 @@ extension PaymentsEvent.ButtonTapped: Identifiable {
     enum ID {
         
         case mobile
+        case utilityService
+    }
+}
+
+extension PaymentsState.Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .utilityService:
+            return .utilityService
+        }
+    }
+    
+    enum ID: Hashable {
+        
         case utilityService
     }
 }

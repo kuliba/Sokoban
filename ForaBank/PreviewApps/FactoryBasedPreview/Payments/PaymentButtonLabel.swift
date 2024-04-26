@@ -25,7 +25,7 @@ struct PaymentButtonLabel: View {
 
 extension PaymentButtonLabel {
     
-    typealias State = PaymentsEvent.ButtonTapped
+    typealias State = PaymentsEvent.PaymentButton
 }
 
 #Preview {
