@@ -13,7 +13,7 @@ where DestinationView == PaymentsDestinationView<UtilityPrepaymentView> {
     ) -> Self {
         
         self.init(
-            prepaymentFlowEffectHandler: .preview(result),
+            prepaymentFlowManager: .preview(result),
             makeDestinationView: {
                 
                 .init(state: $0, factory: .preview)
