@@ -15,12 +15,10 @@ extension RootReducer {
     ) -> (State, Effect?) {
         
         var state = state
-
+        
         switch event {
-        case .hide:
-            state.spinner = .off
-        case .show:
-            state.spinner = .on
+        case let .spinner(spinnerEvent):
+            (state, _) = reduce(state, spinnerEvent)
         }
         
         return (state, nil)
@@ -33,3 +31,24 @@ extension RootReducer {
     typealias Event = RootEvent
     typealias Effect = Never
 }
+
+private extension RootReducer {
+    
+    func reduce(
+        _ state: State,
+        _ event: SpinnerEvent
+    ) -> (State, Effect?) {
+        
+        var state = state
+        
+        switch event {
+        case .hide:
+            state.spinner = .off
+        case .show:
+            state.spinner = .on
+        }
+        
+        return (state, nil)
+    }
+}
+

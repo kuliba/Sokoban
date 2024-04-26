@@ -29,15 +29,16 @@ extension Composer {
 
 extension Composer {
     
-    typealias MakePaymentsView = (PaymentsState, @escaping (SpinnerEvent) -> Void) -> PaymentsView
+    typealias MakePaymentsView = (PaymentsState, @escaping (RootEvent) -> Void) -> PaymentsView
     
     typealias RootView = RootStateWrapperView<_MainTabView, SpinnerView>
     typealias _MainTabView = MainTabStateWrapperView<MainView, PaymentsView, ChatView>
     
     typealias MainView = Text
-    typealias _PaymentsDestinationView = PaymentsDestinationView<UtilityPrepaymentPickerMockView>
     typealias PaymentsView = PaymentsStateWrapperView<_PaymentsDestinationView, PaymentButtonLabel>
     typealias ChatView = Text
+    
+    typealias _PaymentsDestinationView = PaymentView<UtilityPrepaymentPickerMockView>
 }
 
 private extension Composer {
@@ -62,19 +63,20 @@ private extension Composer {
     
     private func makeRootContent(
         rootState: RootState,
-        spinner: @escaping (SpinnerEvent) -> Void
+        rootEvent: @escaping (RootEvent) -> Void
     ) -> _MainTabView {
         
+        let reducer = MainTabReducer()
         let viewModel = MainTabViewModel(
             initialState: rootState.tab,
-            reduce: MainTabReducer().reduce(_:_:),
+            reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in }
         )
         let factory = MainTabFactory(
             makeMainView: makeMainView,
             makePaymentsView: _makePaymentsView(
                 initialState: rootState.payments,
-                spinner: spinner
+                rootEvent: rootEvent
             ),
             makeChatView: makeChatView
         )
@@ -90,12 +92,12 @@ private extension Composer {
     
     private func _makePaymentsView(
         initialState: PaymentsState,
-        spinner: @escaping (SpinnerEvent) -> Void
+        rootEvent: @escaping (RootEvent) -> Void
     ) -> () -> PaymentsView {
         
         return {
             
-            self.makePaymentsView(initialState, spinner)
+            self.makePaymentsView(initialState, rootEvent)
         }
     }
     

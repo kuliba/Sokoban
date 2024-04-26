@@ -5,4 +5,7 @@
 //  Created by Igor Malyarov on 24.04.2024.
 //
 
-typealias RootEvent = SpinnerEvent
+enum RootEvent: Equatable {
+    
+    case spinner(SpinnerEvent)
+}

@@ -7,5 +7,5 @@
 
 enum PaymentsEffect: Equatable {
     
-    case prepaymentFlow(PrepaymentFlowEffect)
+    case payment(PaymentEffect)
 }

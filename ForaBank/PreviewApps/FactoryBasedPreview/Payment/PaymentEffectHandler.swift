@@ -1,11 +1,11 @@
 //
-//  PrepaymentFlowEffectHandler.swift
+//  PaymentEffectHandler.swift
 //  FactoryBasedPreview
 //
 //  Created by Igor Malyarov on 24.04.2024.
 //
 
-final class PrepaymentFlowEffectHandler {
+final class PaymentEffectHandler {
     
     private let initiateUtilityPrepayment: InitiateUtilityPrepayment
     
@@ -16,34 +16,45 @@ final class PrepaymentFlowEffectHandler {
     }
 }
 
-extension PrepaymentFlowEffectHandler {
+extension PaymentEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case .initiateUtilityPayment:
+        case let .utilityService(utilityServicePaymentEffect):
+            utilityServicePaymentEffect
             initiateUtilityPayment(dispatch)
         }
     }
 }
 
-extension PrepaymentFlowEffectHandler {
+extension PaymentEffectHandler {
     
-    typealias InitiateUtilityPrepaymentResponse = PrepaymentFlowEvent.Initiated.UtilityPaymentResponse
-    typealias InitiateUtilityPrepaymentResult = Result<InitiateUtilityPrepaymentResponse, Error>
+    typealias InitiateUtilityPaymentResponse = UtilityServicePaymentEvent.InitiateResponse
+    typealias InitiateUtilityPrepaymentResult = Result<InitiateUtilityPaymentResponse, Error>
     typealias InitiateUtilityPrepaymentCompletion = (InitiateUtilityPrepaymentResult) -> Void
     typealias InitiateUtilityPrepayment = (@escaping InitiateUtilityPrepaymentCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PrepaymentFlowEvent
-    typealias Effect = PrepaymentFlowEffect
+    typealias Event = PaymentEvent
+    typealias Effect = PaymentEffect
 }
 
-private extension PrepaymentFlowEffectHandler {
+private extension PaymentEffectHandler {
     
+    func handleEffect(
+        _ effect: UtilityServicePaymentEffect,
+        _ dispatch: @escaping Dispatch
+    ) {
+        switch effect {
+        case .initiate:
+            initiateUtilityPayment(dispatch)
+        }
+    }
+
     func initiateUtilityPayment(
         _ dispatch: @escaping Dispatch
     ) {
@@ -51,24 +62,24 @@ private extension PrepaymentFlowEffectHandler {
     }
 }
 
-private extension PrepaymentFlowEvent {
+private extension PaymentEvent {
     
-    init(_ result: PrepaymentFlowEffectHandler.InitiateUtilityPrepaymentResult) {
+    init(_ result: PaymentEffectHandler.InitiateUtilityPrepaymentResult) {
         
-        self = .initiated(.utilityPayment(result.response))
+        self = .utilityService(.initiated(result.response))
     }
 }
 
-private extension PrepaymentFlowEffectHandler.InitiateUtilityPrepaymentResult {
+private extension PaymentEffectHandler.InitiateUtilityPrepaymentResult {
     
-    var response: PrepaymentFlowEvent.Initiated.UtilityPaymentResponse {
+    var response: UtilityServicePaymentEvent.InitiateResponse {
         
         let response = (try? self.get()) ?? ._empty
         return response.operators.isEmpty ? ._empty : response
     }
 }
 
-private extension PrepaymentFlowEvent.Initiated.UtilityPaymentResponse {
+private extension UtilityServicePaymentEvent.InitiateResponse {
     
     static let _empty: Self = .init(lastPayments: [], operators: [])
 }

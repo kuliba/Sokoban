@@ -9,11 +9,12 @@ enum PaymentsEvent: Equatable {
     
     case buttonTapped(ButtonTapped)
     case dismissDestination
-    case prepaymentFlow(PrepaymentFlowEvent)
+    case payment(PaymentEvent)
 }
 
 extension PaymentsEvent {
     
+    #warning("move `CaseIterable` to UI matching type")
     enum ButtonTapped: CaseIterable {
         
         case mobile

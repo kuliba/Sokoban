@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension PrepaymentFlowEffectHandler {
+extension PaymentEffectHandler {
     
     static var preview: Self { preview(.success(.preview)) }
     static var empty: Self { preview(.success(.empty)) }

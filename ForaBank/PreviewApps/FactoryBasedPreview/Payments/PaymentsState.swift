@@ -12,8 +12,5 @@ struct PaymentsState: Equatable {
 
 extension PaymentsState {
     
-    enum Destination: Equatable {
-        
-        case prepaymentFlow(PrepaymentFlowState.Destination)
-    }
+    typealias Destination = PaymentState
 }

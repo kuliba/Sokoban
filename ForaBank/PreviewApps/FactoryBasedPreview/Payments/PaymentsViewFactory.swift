@@ -17,8 +17,7 @@ where DestinationView: View,
 
 extension PaymentsViewFactory {
     
-    typealias Destination = PaymentsState.Destination
-    typealias MakeDestinationView = (Destination) -> DestinationView
+    typealias MakeDestinationView = (PaymentState, @escaping (PaymentEvent) -> Void) -> DestinationView
     
     typealias MakePaymentButtonLabel = (PaymentsEvent.ButtonTapped) -> ButtonLabel
 }

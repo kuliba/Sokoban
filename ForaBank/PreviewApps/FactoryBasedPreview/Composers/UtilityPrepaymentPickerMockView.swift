@@ -29,7 +29,7 @@ struct UtilityPrepaymentPickerMockView: View {
             VStack(alignment: .center, spacing: 32) {
                 
                 Button("Add Company") { event(.addCompany) }
-                Button("Pay by Instructions") { event(.addCompany) }
+                Button("Pay by Instructions") { event(.payByInstructions) }
             }
         }
         .padding()
@@ -58,8 +58,8 @@ struct UtilityPrepaymentPickerMockView: View {
 
 extension UtilityPrepaymentPickerMockView {
     
-    typealias State = PrepaymentFlowState.Destination.UtilityPrepaymentState
-    typealias Event = UtilityPrepaymentPickerEvent
+    typealias State = UtilityServicePrepaymentState
+    typealias Event = UtilityServicePrepaymentEvent
 }
 
 struct UtilityPrepaymentPicker_Previews: PreviewProvider {

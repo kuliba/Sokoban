@@ -33,7 +33,7 @@ where DestinationView: View,
                 get: { state.destination },
                 set: { if $0 == nil { event(.dismissDestination) }}
             ),
-            content: factory.makeDestinationView
+            content: destinationView
         )
     }
     
@@ -45,6 +45,13 @@ where DestinationView: View,
             action: { event(.buttonTapped(buttonTapped)) },
             label: { factory.makePaymentButtonLabel(buttonTapped) }
         )
+    }
+    
+    private func destinationView(
+        destination: PaymentsState.Destination
+    ) -> some View {
+        
+        factory.makeDestinationView(destination) { event(.payment($0)) }
     }
 }
 
@@ -62,22 +69,14 @@ extension PaymentsState.Destination: Identifiable {
     var id: ID {
         
         switch self {
-        case let .prepaymentFlow(destination):
-            switch destination {
-            case .utilityServicePayment:
-                return .paymentFlow(.utilityServicePayment)
-            }
+        case .utilityService:
+            return .utilityService
         }
     }
     
     enum ID: Hashable {
         
-        case paymentFlow(Destination)
-        
-        enum Destination {
-            
-            case utilityServicePayment
-        }
+        case utilityService
     }
 }
 
@@ -107,15 +106,9 @@ struct PaymentsView_Previews: PreviewProvider {
         
         Group {
             
-            preview(.init())
-            
-            preview(.init(destination: .prepaymentFlow(
-                .utilityServicePayment(.empty)
-            )))
-            
-            preview(.init(destination: .prepaymentFlow(
-                .utilityServicePayment(.preview)
-            )))
+            preview(.preview())
+            preview(.preview(.utilityService(.prepayment(.empty))))
+            preview(.preview(.utilityService(.prepayment(.preview))))
         }
     }
     

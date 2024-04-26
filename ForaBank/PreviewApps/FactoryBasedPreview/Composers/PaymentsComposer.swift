@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-final class PaymentsComposer<DestinationView> 
+final class PaymentsComposer<DestinationView>
 where DestinationView: View {
     
-    private let prepaymentFlowManager: PrepaymentFlowManager
+    private let prepaymentFlowManager: PaymentManager
     private let makeDestinationView: MakeDestinationView
     
     init(
-        prepaymentFlowManager: PrepaymentFlowManager,
+        prepaymentFlowManager: PaymentManager,
         makeDestinationView: @escaping MakeDestinationView
     ) {
         self.prepaymentFlowManager = prepaymentFlowManager
@@ -26,13 +26,13 @@ extension PaymentsComposer {
     
     func makePaymentsView(
         initialState: PaymentsState = .init(),
-        spinner: @escaping (SpinnerEvent) -> Void
+        rootEvent: @escaping (RootEvent) -> Void
     ) -> PaymentsView {
         
         let viewModel = PaymentsViewModel(
             initialState: initialState,
-            prepaymentFlowManager: prepaymentFlowManager,
-            spinner: spinner
+            paymentManager: prepaymentFlowManager,
+            rootEvent: rootEvent
         )
         
         return .init(
@@ -47,7 +47,7 @@ extension PaymentsComposer {
 
 extension PaymentsComposer {
     
-    typealias MakeDestinationView = (PaymentsState.Destination) -> DestinationView
-
+    typealias MakeDestinationView = (PaymentsState.Destination, @escaping (PaymentEvent) -> Void) -> DestinationView
+    
     typealias PaymentsView = PaymentsStateWrapperView<DestinationView, PaymentButtonLabel>
 }

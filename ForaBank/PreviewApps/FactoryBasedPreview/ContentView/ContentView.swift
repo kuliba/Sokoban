@@ -11,12 +11,17 @@ struct ContentView<RootView>: View
 where RootView: View {
     
     let state: RootState
-    let factory: ContentViewFactory<RootView>
+    let factory: Factory
     
     var body: some View {
         
         factory.makeRootView(state)
     }
+}
+
+extension ContentView {
+    
+    typealias Factory = ContentViewFactory<RootView>
 }
 
 struct ContentView_Previews: PreviewProvider {

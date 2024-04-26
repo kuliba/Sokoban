@@ -1,5 +1,5 @@
 //
-//  PrepaymentFlowManager+preview.swift
+//  PaymentManager+preview.swift
 //  FactoryBasedPreview
 //
 //  Created by Igor Malyarov on 25.04.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension PrepaymentFlowManager {
+extension PaymentManager {
     
     static var preview: Self { preview(.success(.preview)) }
     static var empty: Self { preview(.success(.empty)) }
@@ -19,8 +19,8 @@ extension PrepaymentFlowManager {
         _ result: InitiateUtilityPrepaymentResult
     ) -> Self {
         
-        let reducer = PrepaymentFlowReducer()
-        let effectHandler = PrepaymentFlowEffectHandler(
+        let reducer = PaymentReducer()
+        let effectHandler = PaymentEffectHandler(
             initiateUtilityPrepayment: { completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -35,5 +35,5 @@ extension PrepaymentFlowManager {
         )
     }
     
-    typealias InitiateUtilityPrepaymentResult = PrepaymentFlowEffectHandler.InitiateUtilityPrepaymentResult
+    typealias InitiateUtilityPrepaymentResult = PaymentEffectHandler.InitiateUtilityPrepaymentResult
 }
