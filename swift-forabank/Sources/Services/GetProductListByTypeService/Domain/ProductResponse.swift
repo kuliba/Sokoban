@@ -138,7 +138,7 @@ public extension ProductResponse {
         public let interestRate: Double
         public let accountID: Int
         public let creditMinimumAmount: Decimal?
-        public let minimumBalance: Decimal
+        public let minimumBalance: Decimal?
         public let endDate: Int?
         public let endDateNF: Bool
         public let demandDeposit: Bool
