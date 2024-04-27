@@ -38,6 +38,12 @@ class MyProductsMoneyViewModel: ObservableObject {
         self.currencyButtonVM = .init(currencySymbol: model.settingsProductsMoney.selectedCurrencySymbol,
                                       state: .disabled,
                                       model: model)
+        updateBalance(isUpdating: false,
+                      products: model.allProducts,
+                      rates: model.centralBankRates.value,
+                      selectedCurrency: (model.settingsProductsMoney.selectedCurrencyId,
+                                         model.settingsProductsMoney.selectedCurrencySymbol))
+
         bind()
         bind(currencyButtonVM)
     }
