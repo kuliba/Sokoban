@@ -10,16 +10,7 @@ import SwiftUI
 @main
 struct FactoryBasedPreviewApp: App {
     
-    private let appState = AppState(
-        root: .init(spinner: .off),
-        tab: .payments,
-        payments: .init(
-            destination: .utilityService(.prepayment(.init(
-                lastPayments: .preview,
-                operators: .preview
-            )))
-        )
-    )
+    private let appState = AppState.demo
     
     private let composer: Composer = .demo(
         paymentsComposer: .demo(
@@ -41,10 +32,21 @@ struct FactoryBasedPreviewApp: App {
 
 private extension AppState {
     
+    static let demo = AppState(
+        root: .init(spinner: .off),
+        tab: .payments,
+        payments: .init(
+            destination: .utilityService(.prepayment(.init(
+                lastPayments: .preview,
+                operators: .preview
+            )))
+        )
+    )
+    
     init(
-        root: RootState,
-        tab: MainTabState,
-        payments: PaymentsState
+        root: RootState = .init(),
+        tab: MainTabState = .main,
+        payments: PaymentsState = .init()
     ) {
         self.rootState = root
         self.tabState = tab
