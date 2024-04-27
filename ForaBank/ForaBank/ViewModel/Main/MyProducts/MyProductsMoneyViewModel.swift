@@ -278,7 +278,6 @@ class MyProductsMoneyViewModel: ObservableObject {
             
             withAnimation {
                 
-                self.balanceVM = .placeholder
                 self.currencyButtonVM.state = .disabled
             }
             
