@@ -172,7 +172,7 @@ class ProductDepositDataTests: XCTestCase {
         let deposit = Self.mutableDeposit(endDateNf: endDateNf,
                                           endDate: endDate,
                                           demandDeposit: demandDeposit)
-        let transferType = deposit.availableTransferType(with: depositInfo)
+        let transferType = deposit.availableTransferType(with: depositInfo, deposit: deposit)
         
         //then
         XCTAssertEqual(transferType, .remains)
@@ -180,7 +180,7 @@ class ProductDepositDataTests: XCTestCase {
   
     //MARK: tests otherDeposits
     
-    func test_otherDeposits_shouldAvailableTransferType_onEndDateNf() {
+    func test_otherDeposits_shouldAvailableTransferType_onEndDateNf() throws {
         
         // given
         let endDateNf = true
@@ -189,19 +189,23 @@ class ProductDepositDataTests: XCTestCase {
         let depositId = 10000001870
         let depositInfo = Self.mutableDepositInfo(sumPayPrc: sumPayPrc)
         
-        let deposit = Self.mutableDeposit(depositId: depositId,
-                                          endDateNf: endDateNf,
-                                          endDate: endDate,
-                                          demandDeposit: demandDeposit)
+        let deposit = Self.mutableDeposit(
+            depositId: depositId,
+            endDateNf: endDateNf,
+            endDate: endDate,
+            demandDeposit: demandDeposit,
+            balance: 10
+        )
         
         // when
-        let transferType = deposit.availableTransferType(with: depositInfo)
+        let transferType = deposit.availableTransferType(with: depositInfo, deposit: deposit)
         
         //then
-        XCTAssertEqual(transferType, .close(depositInfo.balance))
+        let balance = try XCTUnwrap(deposit.balance)
+        XCTAssertEqual(transferType, .close(balance))
     }
     
-    func test_otherDeposits_shouldAvailableTransferType_onEndDate_WithOuthBalance() {
+    func test_otherDeposits_shouldAvailableTransferType_onEndDate_WithOutBalance() {
         
         // given
         let endDateNf = true
@@ -210,13 +214,15 @@ class ProductDepositDataTests: XCTestCase {
         let depositId = 10000001870
         let depositInfo: DepositInfoDataItem? = nil
         
-        let deposit = Self.mutableDeposit(depositId: depositId,
-                                          endDateNf: endDateNf,
-                                          endDate: endDate,
-                                          demandDeposit: demandDeposit)
+        let deposit = Self.mutableDeposit(
+            depositId: depositId,
+            endDateNf: endDateNf,
+            endDate: endDate,
+            demandDeposit: demandDeposit
+        )
         
         // when
-        let transferType = deposit.availableTransferType(with: depositInfo)
+        let transferType = deposit.availableTransferType(with: depositInfo, deposit: deposit)
         
         //then
         XCTAssertEqual(transferType, nil)
@@ -236,7 +242,7 @@ class ProductDepositDataTests: XCTestCase {
                                            endDate: endDate,
                                            demandDeposit: demandDeposit)
         
-        let transferType = deposit.availableTransferType(with: depositInfo)
+        let transferType = deposit.availableTransferType(with: depositInfo, deposit: deposit)
         
         //then
         XCTAssertEqual(transferType, .close(balance))
@@ -255,7 +261,7 @@ class ProductDepositDataTests: XCTestCase {
                                            demandDeposit: demandDeposit)
         
         // when
-        let transferType = deposit.availableTransferType(with: depositInfo)
+        let transferType = deposit.availableTransferType(with: depositInfo, deposit: deposit)
         
         //then
         XCTAssertEqual(transferType, .interest(0))
@@ -274,7 +280,7 @@ class ProductDepositDataTests: XCTestCase {
                                            endDate: endDate,
                                            demandDeposit: demandDeposit)
         
-        let transferType = deposit.availableTransferType(with: depositInfo)
+        let transferType = deposit.availableTransferType(with: depositInfo, deposit: deposit)
         
         //then
         XCTAssertEqual(transferType, .remains)
@@ -293,7 +299,7 @@ class ProductDepositDataTests: XCTestCase {
                                            demandDeposit: demandDeposit)
         
         // when
-        let transferType = deposit.availableTransferType(with: depositInfo)
+        let transferType = deposit.availableTransferType(with: depositInfo, deposit: deposit)
         
         //then
         XCTAssertEqual(transferType, .interest(sumPayPrc))
@@ -312,7 +318,7 @@ class ProductDepositDataTests: XCTestCase {
                                            demandDeposit: demandDeposit)
         
         // when
-        let transferType = deposit.availableTransferType(with: depositInfo)
+        let transferType = deposit.availableTransferType(with: depositInfo, deposit: deposit)
         
         //then
         XCTAssertEqual(transferType, .interest(0))
@@ -331,7 +337,7 @@ class ProductDepositDataTests: XCTestCase {
                                            demandDeposit: demandDeposit)
         
         // when
-        let transferType = deposit.availableTransferType(with: depositInfo)
+        let transferType = deposit.availableTransferType(with: depositInfo, deposit: deposit)
         
         //then
         XCTAssertEqual(transferType, .remains)
@@ -362,6 +368,7 @@ private extension ProductDepositDataTests {
         endDateNf: Bool = false,
         endDate: Date?,
         demandDeposit: Bool,
+        balance: Double? = nil,
         isDebitInterestAvailable: Bool? = false
     ) -> ProductDepositData {
         
@@ -370,7 +377,7 @@ private extension ProductDepositDataTests {
                                   number: nil,
                                   numberMasked: nil,
                                   accountNumber: nil,
-                                  balance: nil,
+                                  balance: balance,
                                   balanceRub: nil,
                                   currency: "RUB",
                                   mainField: "Dep",
