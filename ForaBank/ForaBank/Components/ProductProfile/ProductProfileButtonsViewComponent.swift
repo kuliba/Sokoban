@@ -69,9 +69,12 @@ extension ProductProfileButtonsView {
                     case let cardProduct as ProductCardData:
                         return cardProduct.isBlocked ? false : true
                         
-                    case let deposit as ProductDepositData:
-                        return deposit.isCanReplenish
-                        
+                    case let depositProduct as ProductDepositData:
+                        return depositProduct.availableTransferType(
+                            with: depositInfo,
+                            deposit: depositProduct
+                        ) != nil
+
                     default: return true
                     }
                     

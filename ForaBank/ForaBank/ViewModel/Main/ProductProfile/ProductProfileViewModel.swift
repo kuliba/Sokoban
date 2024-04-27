@@ -1098,7 +1098,7 @@ private extension ProductProfileViewModel {
                         case .deposit:
                             guard let depositProduct = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData,
                                   let depositInfo = model.depositsInfo.value[self.product.activeProductId],
-                                  let transferType = depositProduct.availableTransferType(with: depositInfo) else {
+                                  let transferType = depositProduct.availableTransferType(with: depositInfo, deposit: depositProduct) else {
                                 return
                             }
                             
