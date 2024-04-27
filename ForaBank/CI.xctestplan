@@ -387,6 +387,20 @@
         "identifier" : "AnywayPaymentAdaptersTests",
         "name" : "AnywayPaymentAdaptersTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "AnywayPaymentAdaptersTests",
+        "name" : "AnywayPaymentAdaptersTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "AnywayPaymentUITests",
+        "name" : "AnywayPaymentUITests"
+      }
     }
   ],
   "version" : 1

@@ -32,6 +32,13 @@
         "identifier" : "AnywayPaymentCoreTests",
         "name" : "AnywayPaymentCoreTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "AnywayPaymentUITests",
+        "name" : "AnywayPaymentUITests"
+      }
     }
   ],
   "version" : 1
