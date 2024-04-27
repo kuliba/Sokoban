@@ -19,7 +19,7 @@ where Content: View,
         
         ZStack {
             
-            factory.makeContent(state)
+            factory.makeContent()
             
             if state.spinner == .on {
                 
@@ -53,8 +53,8 @@ struct RootView_Previews: PreviewProvider {
     ) -> some View {
         
         RootView(
-            state: .init(spinner: spinner, tab: .chat),
-            event: { _ in },
+            state: .init(spinner: spinner),
+            event: { print($0) },
             factory: makeFactory()
         )
     }
@@ -63,10 +63,7 @@ struct RootView_Previews: PreviewProvider {
     ) -> RootViewFactory<Text, SpinnerView> {
         
         .init(
-            makeContent: {
-                
-                Text("RootView Content: \(String(describing: $0))")
-            },
+            makeContent: { Text("RootView Content") },
             makeSpinner: SpinnerView.init
         )
     }

@@ -19,9 +19,6 @@ extension RootReducer {
         switch event {
         case let .spinner(spinnerEvent):
             reduce(&state, spinnerEvent)
-            
-        case let .tab(tabEvent):
-            reduce(&state, tabEvent)
         }
         
         return (state, nil)
@@ -46,16 +43,6 @@ private extension RootReducer {
             state.spinner = .off
         case .show:
             state.spinner = .on
-        }
-    }
-    
-    func reduce(
-        _ state: inout State,
-        _ event: MainTabEvent
-    ) {
-        switch event {
-        case let .switchTo(tab):
-            state.tab = tab
         }
     }
 }

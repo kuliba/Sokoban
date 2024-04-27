@@ -29,19 +29,16 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         
         preview()
-        preview(spinner: .on, tab: .payments)
+        preview(spinner: .on)
     }
     
     private static func preview(
-        spinner: SpinnerState = .off,
-        tab: MainTabState = .chat
+        spinner: SpinnerState = .off
     ) -> some View {
         
-        let composer = Composer.preview()
-        
-        return ContentView(
-            state: .init(spinner: spinner, tab: tab),
-            factory: composer.makeContentViewFactory()
+        ContentView(
+            state: .init(spinner: spinner),
+            factory: .init(makeRootView: { Text(String(describing: $0)) })
         )
     }
 }

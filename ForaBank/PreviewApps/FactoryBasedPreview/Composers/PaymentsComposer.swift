@@ -22,13 +22,13 @@ extension PaymentsComposer {
     
     func makePaymentsView(
         initialState: PaymentsState = .init(),
-        rootEvent: @escaping (RootEvent) -> Void
+        rootActions: @escaping (RootActions) -> Void
     ) -> PaymentsView {
         
         let viewModel = PaymentsViewModel(
             initialState: initialState,
             paymentsManager: paymentManager,
-            rootEvent: rootEvent
+            rootActions: rootActions
         )
         
         let makeDestinationView = makeDestinationView(

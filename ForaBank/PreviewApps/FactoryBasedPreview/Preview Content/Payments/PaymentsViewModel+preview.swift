@@ -15,7 +15,7 @@ extension PaymentsViewModel {
         .init(
             initialState: initialState,
             paymentsManager: .preview,
-            rootEvent: { _ in }
+            rootActions: { print($0) }
         )
     }
 }

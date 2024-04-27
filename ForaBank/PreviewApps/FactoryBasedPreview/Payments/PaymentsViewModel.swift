@@ -9,6 +9,25 @@ import Combine
 import CombineSchedulers
 import Foundation
 
+enum RootActions {
+    
+    case spinner(SpinnerEvent)
+    case tab(TabEvent)
+}
+
+extension RootActions {
+    
+    enum SpinnerEvent {
+        
+        case hide, show
+    }
+    
+    enum TabEvent {
+        
+        case chat, main
+    }
+}
+
 final class PaymentsViewModel: ObservableObject {
     
     @Published private(set) var state: State
@@ -16,17 +35,17 @@ final class PaymentsViewModel: ObservableObject {
     private let stateSubject = PassthroughSubject<State, Never>()
     
     private let paymentsManager: PaymentsManager
-    private let rootEvent: (RootEvent) -> Void
+    private let rootActions: (RootActions) -> Void
     
     init(
         initialState: State,
         paymentsManager: PaymentsManager,
-        rootEvent: @escaping (RootEvent) -> Void,
+        rootActions: @escaping (RootActions) -> Void,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.state = initialState
         self.paymentsManager = paymentsManager
-        self.rootEvent = rootEvent
+        self.rootActions = rootActions
         
 #warning("simplified case, real state is more complex")
         stateSubject
@@ -44,7 +63,7 @@ extension PaymentsViewModel {
         stateSubject.send(state)
         
         handle(state)
-        rootEvent(.spinner(effect == nil ? .hide: .show))
+        rootActions(.spinner(effect == nil ? .hide: .show))
         
         if let effect {
             
@@ -76,7 +95,7 @@ private extension PaymentsViewModel {
         case let .utilityService(.prepayment(prepayment)):
             if prepayment.complete == .addingCompany {
                 self.state.destination = nil
-                rootEvent(.tab(.switchTo(.chat)))
+                rootActions(.tab(.chat))
             }
             
         default:

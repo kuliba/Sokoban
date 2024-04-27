@@ -10,18 +10,29 @@ import SwiftUI
 @main
 struct FactoryBasedPreviewApp: App {
     
+    private let appState = AppState(
+        rootState: .init(spinner: .off),
+        tabState: .payments,
+        paymentsState: .init(
+            destination: .utilityService(.prepayment(.init(
+                lastPayments: .preview,
+                operators: .preview
+            )))
+        )
+    )
+    
     private let composer: Composer = .demo(
-        initiateResult: .success(.preview)
+        initiateResult: .success(.init(
+            lastPayments: .preview,
+            operators: .preview
+        ))
     )
     
     var body: some Scene {
         
         WindowGroup {
             
-            ContentView(
-                state: .demo,
-                factory: composer.makeContentViewFactory()
-            )
+            composer.makeContentView(appState: appState)
         }
     }
 }
@@ -51,17 +62,4 @@ private extension Composer {
         
         return .init(makePaymentsView: paymentsComposer.makePaymentsView)
     }
-}
-
-private extension RootState {
-    
-    static let demo: Self = .init(
-        payments: .init(destination: .deepLinkDemo),
-        tab: .payments
-    )
-}
-
-private extension PaymentsState.Destination {
-    
-    static let deepLinkDemo: Self = .utilityService(.prepayment(.preview))
 }

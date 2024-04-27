@@ -20,21 +20,28 @@ final class Composer {
 
 extension Composer {
     
-    func makeContentViewFactory(
-    ) -> ContentViewFactory<RootView> {
+    func makeContentView(
+        appState: AppState
+    ) -> ContentView<RootView> {
         
-        .init(makeRootView: makeRootView)
+        .init(
+            state: appState.rootState,
+            factory: makeContentViewFactory(
+                initialMainTabState: appState.tabState,
+                initialPaymentsState: appState.paymentsState
+            )
+        )
     }
 }
 
 extension Composer {
     
-    typealias MakePaymentsView = (PaymentsState, @escaping (RootEvent) -> Void) -> PaymentsView
+    typealias MakePaymentsView = (PaymentsState, @escaping (RootActions) -> Void) -> PaymentsView
     
     typealias RootView = RootStateWrapperView<_MainTabView, SpinnerView>
     typealias _MainTabView = MainTabStateWrapperView<MainView, PaymentsView, ChatView>
     
-    typealias MainView = Text
+    typealias MainView = MainMockView
     typealias PaymentsView = PaymentsStateWrapperView<_PaymentsDestinationView, PaymentButtonLabel>
     typealias ChatView = ChatMockView
     
@@ -43,65 +50,101 @@ extension Composer {
 
 private extension Composer {
     
-    func makeRootView(
-        initialState: RootState
-    ) -> RootView {
+    func makeContentViewFactory(
+        initialMainTabState tabState: MainTabState,
+        initialPaymentsState paymentsState: PaymentsState
+    ) -> ContentViewFactory<RootView> {
         
-        let reducer = RootReducer()
-        let viewModel = RootViewModel(
-            initialState: initialState,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: { _,_ in }
+        .init(
+            makeRootView: makeRootView(
+                initialMainTabState: tabState,
+                initialPaymentsState: paymentsState
+            )
         )
-        let factory = RootViewFactory(
-            makeContent: makeRootContent(rootEvent: viewModel.event(_:)),
-            makeSpinner: SpinnerView.init
-        )
-        
-        return .init(viewModel: viewModel, factory: factory)
     }
     
-    private func makeRootContent(
-        rootEvent: @escaping (RootEvent) -> Void
-    ) -> (RootState) -> _MainTabView {
+    func makeRootView(
+        initialMainTabState tabState: MainTabState,
+        initialPaymentsState paymentsState: PaymentsState
+    ) -> (RootState) -> RootView {
         
         return { [self] rootState in
             
-            let reducer = MainTabReducer()
-            let viewModel = MainTabViewModel(
-                initialState: rootState.tab,
+            let reducer = RootReducer()
+            let viewModel = RootViewModel(
+                initialState: rootState,
                 reduce: reducer.reduce(_:_:),
                 handleEffect: { _,_ in }
             )
-            let factory = MainTabFactory(
-                makeMainView: makeMainView,
-                makePaymentsView: _makePaymentsView(
-                    initialState: rootState.payments,
-                    rootEvent: rootEvent
+            let factory = RootViewFactory(
+                makeContent: makeRootContent(
+                    initialMainTabState: tabState,
+                    initialPaymentsState: paymentsState,
+                    spinnerEvent: { viewModel.event(.spinner($0)) }
                 ),
-                makeChatView: makeChatView(
-                    goToMain: { rootEvent(.tab(.switchTo(.main))) }
-                )
+                makeSpinner: SpinnerView.init
             )
             
             return .init(viewModel: viewModel, factory: factory)
         }
     }
     
-    private func makeMainView(
-    ) -> MainView {
+    private func makeRootContent(
+        initialMainTabState tab: MainTabState,
+        initialPaymentsState paymentsState: PaymentsState,
+        spinnerEvent: @escaping (SpinnerEvent) -> Void
+    ) -> () -> _MainTabView {
         
-        Text("Main View")
-    }
-    
-    private func _makePaymentsView(
-        initialState: PaymentsState,
-        rootEvent: @escaping (RootEvent) -> Void
-    ) -> () -> PaymentsView {
-        
-        return {
+        return { [self] in
             
-            self.makePaymentsView(initialState, rootEvent)
+            let reducer = MainTabReducer()
+            let viewModel = MainTabViewModel(
+                initialState: tab,
+                reduce: reducer.reduce(_:_:),
+                handleEffect: { _,_ in }
+            )
+            let factory = MainTabFactory(
+                makeMainView: makeMainView(
+                    event: {
+                        
+                        switch $0 {
+                        case .chat:
+                            viewModel.event(.switchTo(.chat))
+
+                        case .payments:
+                            viewModel.event(.switchTo(.payments))
+                        }
+                    }
+                ),
+                makePaymentsView: _makePaymentsView(
+                    initialState: paymentsState,
+                    rootActions: {
+                        
+                        switch $0 {
+                        case let.spinner(spinner):
+                            switch spinner {
+                            case .hide:
+                                spinnerEvent(.hide)
+                            case .show:
+                                spinnerEvent(.show)
+                            }
+                            
+                        case let .tab(tab):
+                            switch tab {
+                            case .chat:
+                                viewModel.event(.switchTo(.chat))
+                            case .main:
+                                viewModel.event(.switchTo(.main))
+                            }
+                        }
+                    }
+                ),
+                makeChatView: makeChatView(
+                    goToMain: { viewModel.event(.switchTo(.main)) }
+                )
+            )
+            
+            return .init(viewModel: viewModel, factory: factory)
         }
     }
     
@@ -118,6 +161,26 @@ private extension Composer {
                     goToMain()
                 }
             })
+        }
+    }
+    
+    private func makeMainView(
+        event: @escaping (MainMockView.Event) -> Void
+    ) -> () -> MainView {
+        
+        return {
+     
+            .init(event: event)
+        }
+    }
+    private func _makePaymentsView(
+        initialState: PaymentsState,
+        rootActions: @escaping (RootActions) -> Void
+    ) -> () -> PaymentsView {
+        
+        return {
+            
+            self.makePaymentsView(initialState, rootActions)
         }
     }
 }

@@ -59,10 +59,7 @@ struct RootStateWrapperView_Previews: PreviewProvider {
     ) -> some View {
         
         RootStateWrapperView(
-            viewModel: .preview(initialState: .init(
-                spinner: spinner,
-                tab: tab
-            )),
+            viewModel: .preview(initialState: .preview),
             factory: makeFactory()
         )
     }
@@ -71,10 +68,7 @@ struct RootStateWrapperView_Previews: PreviewProvider {
     ) -> RootViewFactory<Text, SpinnerView> {
         
         .init(
-            makeContent: {
-                
-                Text("RootView Content: \(String(describing: $0))")
-            },
+            makeContent: { Text("RootView Content") },
             makeSpinner: SpinnerView.init
         )
     }

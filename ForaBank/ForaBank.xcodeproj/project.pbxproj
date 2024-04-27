@@ -930,6 +930,9 @@
 		2AB3E78D2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB3E78C2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift */; };
 		2AB48E232BDCB7CB007F493A /* UtilityServicePrepaymentEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB48E222BDCB7CB007F493A /* UtilityServicePrepaymentEffect.swift */; };
 		2AB48E252BDCC9E1007F493A /* ChatMockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB48E242BDCC9E1007F493A /* ChatMockView.swift */; };
+		2AB48E272BDCDD48007F493A /* RootState+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB48E262BDCDD48007F493A /* RootState+preview.swift */; };
+		2AB48E292BDCE4C7007F493A /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB48E282BDCE4C7007F493A /* AppState.swift */; };
+		2AB48E2B2BDCEA00007F493A /* MainMockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB48E2A2BDCEA00007F493A /* MainMockView.swift */; };
 		2AB4FA5A2B8F46130061CBD7 /* PaymentsTransfersEffectHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB4FA592B8F46130061CBD7 /* PaymentsTransfersEffectHandlerTests.swift */; };
 		2AB4FA5C2B8F480C0061CBD7 /* ProcessSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB4FA5B2B8F480C0061CBD7 /* ProcessSpy.swift */; };
 		2AB5FEA629E681750055BE57 /* PaymentsCodeViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5FEA529E681750055BE57 /* PaymentsCodeViewComponentTests.swift */; };
@@ -3647,6 +3650,9 @@
 		2AB3E78C2AAB33A1006A0D53 /* Services+getLandingServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getLandingServiceTests.swift"; sourceTree = "<group>"; };
 		2AB48E222BDCB7CB007F493A /* UtilityServicePrepaymentEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePrepaymentEffect.swift; sourceTree = "<group>"; };
 		2AB48E242BDCC9E1007F493A /* ChatMockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMockView.swift; sourceTree = "<group>"; };
+		2AB48E262BDCDD48007F493A /* RootState+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootState+preview.swift"; sourceTree = "<group>"; };
+		2AB48E282BDCE4C7007F493A /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		2AB48E2A2BDCEA00007F493A /* MainMockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMockView.swift; sourceTree = "<group>"; };
 		2AB4FA592B8F46130061CBD7 /* PaymentsTransfersEffectHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersEffectHandlerTests.swift; sourceTree = "<group>"; };
 		2AB4FA5B2B8F480C0061CBD7 /* ProcessSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessSpy.swift; sourceTree = "<group>"; };
 		2AB4FA602B906DE30061CBD7 /* ForaTools.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = ForaTools.xctestplan; path = TestPlans/ForaTools.xctestplan; sourceTree = SOURCE_ROOT; };
@@ -7651,6 +7657,7 @@
 			isa = PBXGroup;
 			children = (
 				2A62E9692BD94F880044EB39 /* Preview Assets.xcassets */,
+				2AB48E262BDCDD48007F493A /* RootState+preview.swift */,
 				2ABD9D972BDBC8FB003830EE /* Composers */,
 				2ABD9D952BDBC864003830EE /* Payments */,
 				2ABD9D962BDBC8F0003830EE /* Payment */,
@@ -7749,10 +7756,12 @@
 		2A62E9D22BDA3A360044EB39 /* Composers */ = {
 			isa = PBXGroup;
 			children = (
+				2AB48E282BDCE4C7007F493A /* AppState.swift */,
 				2A62E97A2BD951D30044EB39 /* Composer.swift */,
 				2A62E9D32BDA3A4D0044EB39 /* PaymentsComposer.swift */,
 				2A0170422BDAAA6E0064FBA7 /* UtilityPrepaymentPickerMockView.swift */,
 				2AB48E242BDCC9E1007F493A /* ChatMockView.swift */,
+				2AB48E2A2BDCEA00007F493A /* MainMockView.swift */,
 			);
 			path = Composers;
 			sourceTree = "<group>";
@@ -15405,12 +15414,14 @@
 				2A62E9DA2BDA4A790044EB39 /* UtilityService.swift in Sources */,
 				2A62E9EC2BDA65330044EB39 /* PaymentViewFactory+preview.swift in Sources */,
 				2A62E9C02BD9920D0044EB39 /* PaymentsViewFactory.swift in Sources */,
+				2AB48E272BDCDD48007F493A /* RootState+preview.swift in Sources */,
 				2A62E9822BD9533B0044EB39 /* RootViewFactory.swift in Sources */,
 				2ABD9DA52BDBF883003830EE /* PaymentEvent.Initiated.InitiateResponse+preview.swift in Sources */,
 				2A62E9BC2BD9870F0044EB39 /* PaymentsState+preview.swift in Sources */,
 				2A62E9632BD94F870044EB39 /* FactoryBasedPreviewApp.swift in Sources */,
 				2A62E9922BD9618C0044EB39 /* MainTabEvent.swift in Sources */,
 				2A62E9BE2BD98AD40044EB39 /* PaymentsViewModel.swift in Sources */,
+				2AB48E2B2BDCEA00007F493A /* MainMockView.swift in Sources */,
 				2A62E9882BD9590F0044EB39 /* RootStateWrapperView.swift in Sources */,
 				2A62E98A2BD95C240044EB39 /* RootReducer.swift in Sources */,
 				2ABD9D9A2BDBCB5C003830EE /* UtilityServicePrepaymentState.swift in Sources */,
@@ -15423,6 +15434,7 @@
 				2A62E9E02BDA50AC0044EB39 /* Composer+preview.swift in Sources */,
 				2A62E9AC2BD984680044EB39 /* PaymentEffect.swift in Sources */,
 				2ABC98892BDBA95B00EA7CFB /* UtilityServicePaymentEvent.swift in Sources */,
+				2AB48E292BDCE4C7007F493A /* AppState.swift in Sources */,
 				2A62E9A52BD9806F0044EB39 /* ContentViewFactory.swift in Sources */,
 				2A62E9B22BD984DB0044EB39 /* PaymentsView.swift in Sources */,
 				2ABC988E2BDBAD7000EA7CFB /* UtilityServicePaymentEffect.swift in Sources */,
