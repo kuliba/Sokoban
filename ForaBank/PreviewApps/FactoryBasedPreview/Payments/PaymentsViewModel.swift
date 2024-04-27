@@ -28,7 +28,7 @@ final class PaymentsViewModel: ObservableObject {
         self.paymentsManager = paymentsManager
         self.rootEvent = rootEvent
         
-        #warning("simplified case, real state is more complex")
+#warning("simplified case, real state is more complex")
         stateSubject
             .removeDuplicates()
             .receive(on: scheduler)
@@ -43,6 +43,7 @@ extension PaymentsViewModel {
         let (state, effect) = paymentsManager.reduce(state, event)
         stateSubject.send(state)
         
+        handle(state)
         rootEvent(.spinner(effect == nil ? .hide: .show))
         
         if let effect {
@@ -59,8 +60,27 @@ extension PaymentsViewModel {
     
     typealias Dispatch = (Event) -> Void
     
-    #warning("actually more complex state here, PaymentsState is just a part of it (substate) | extract reduce & effectHandler but mind the substate case here! - see commented extension below")
+#warning("actually more complex state here, PaymentsState is just a part of it (substate) | extract reduce & effectHandler but mind the substate case here! - see commented extension below")
     typealias State = PaymentsState
     typealias Event = PaymentsEvent
     typealias Effect = PaymentsEffect
+}
+
+private extension PaymentsViewModel {
+    
+    // handle non-reducible states with side effects
+    func handle(
+        _ state: State
+    ) {
+        switch state.destination {
+        case let .utilityService(.prepayment(prepayment)):
+            if prepayment.complete == .addingCompany {
+                self.state.destination = nil
+                rootEvent(.tab(.switchTo(.chat)))
+            }
+            
+        default:
+            break
+        }
+    }
 }

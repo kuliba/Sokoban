@@ -65,7 +65,6 @@ private extension PaymentsReducer {
         _ event: PaymentEvent.PaymentButton
     ) -> (State, Effect?) {
         
-        var state = state
         var effect: Effect?
         
         switch event {
@@ -85,7 +84,6 @@ private extension PaymentsReducer {
     ) -> (State, Effect?) {
         
         var state = state
-        var effect: Effect?
         
         switch event {
         case let .utilityPayment(response):
@@ -95,7 +93,7 @@ private extension PaymentsReducer {
             )))
         }
         
-        return (state, effect)
+        return (state, nil)
     }
     
     func reduce(
@@ -119,6 +117,51 @@ private extension PaymentsReducer {
         _ event: UtilityServicePrepaymentEvent
     ) -> (State, Effect?) {
         
-        fatalError("delegate to UtilityPrepaymentPickerEventReduce?")
+        var state = state
+        
+        if var utilityServicePrepayment = state.utilityServicePrepaymentState {
+            
+            reduce(&utilityServicePrepayment, event)
+            
+            state = .init(destination: .utilityService(.prepayment(utilityServicePrepayment)))
+        }
+        
+        return (state, nil)
+    }
+    
+#warning("delegate to UtilityPrepaymentPickerEventReduce?")
+    func reduce(
+        _ state: inout UtilityServicePrepaymentState,
+        _ event: UtilityServicePrepaymentEvent
+    ) {
+        guard state.complete == nil else { return }
+        
+        switch event {
+        case .addCompany:
+            state.complete = .addingCompany
+            
+        case .payByInstructions:
+            state.complete = .payingByInstructions
+            
+        case let .select(select):
+            switch select {
+            case let .lastPayment(lastPayment):
+                state.complete = .selected(.lastPayment(lastPayment))
+                
+            case let .operator(`operator`):
+                state.complete = .selected(.operator(`operator`))
+            }
+        }
+    }
+}
+
+private extension PaymentsState {
+    
+    var utilityServicePrepaymentState: UtilityServicePrepaymentState? {
+        
+        guard case let .utilityService(.prepayment(utilityServicePrepaymentState)) = destination
+        else { return nil }
+        
+        return utilityServicePrepaymentState
     }
 }

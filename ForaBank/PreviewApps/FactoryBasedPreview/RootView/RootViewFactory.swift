@@ -17,6 +17,6 @@ where Content: View,
 
 extension RootViewFactory {
     
-    typealias MakeContent = (RootState, @escaping (RootEvent) -> Void) -> Content
+    typealias MakeContent = (RootState) -> Content
     typealias MakeSpinner = () -> Spinner
 }

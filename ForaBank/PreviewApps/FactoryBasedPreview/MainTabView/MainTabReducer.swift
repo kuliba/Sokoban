@@ -15,8 +15,8 @@ extension MainTabReducer {
     ) -> (State, Effect?) {
         
         switch event {
-        case let .switchTo(state):
-            return (state, nil)
+        case let .switchTo(tab):
+            return (tab, nil)
         }
     }
 }

@@ -36,7 +36,7 @@ extension Composer {
     
     typealias MainView = Text
     typealias PaymentsView = PaymentsStateWrapperView<_PaymentsDestinationView, PaymentButtonLabel>
-    typealias ChatView = Text
+    typealias ChatView = ChatMockView
     
     typealias _PaymentsDestinationView = PaymentView<UtilityPrepaymentPickerMockView>
 }
@@ -54,7 +54,7 @@ private extension Composer {
             handleEffect: { _,_ in }
         )
         let factory = RootViewFactory(
-            makeContent: makeRootContent,
+            makeContent: makeRootContent(rootEvent: viewModel.event(_:)),
             makeSpinner: SpinnerView.init
         )
         
@@ -62,26 +62,30 @@ private extension Composer {
     }
     
     private func makeRootContent(
-        rootState: RootState,
         rootEvent: @escaping (RootEvent) -> Void
-    ) -> _MainTabView {
+    ) -> (RootState) -> _MainTabView {
         
-        let reducer = MainTabReducer()
-        let viewModel = MainTabViewModel(
-            initialState: rootState.tab,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: { _,_ in }
-        )
-        let factory = MainTabFactory(
-            makeMainView: makeMainView,
-            makePaymentsView: _makePaymentsView(
-                initialState: rootState.payments,
-                rootEvent: rootEvent
-            ),
-            makeChatView: makeChatView
-        )
-        
-        return .init(viewModel: viewModel, factory: factory)
+        return { [self] rootState in
+            
+            let reducer = MainTabReducer()
+            let viewModel = MainTabViewModel(
+                initialState: rootState.tab,
+                reduce: reducer.reduce(_:_:),
+                handleEffect: { _,_ in }
+            )
+            let factory = MainTabFactory(
+                makeMainView: makeMainView,
+                makePaymentsView: _makePaymentsView(
+                    initialState: rootState.payments,
+                    rootEvent: rootEvent
+                ),
+                makeChatView: makeChatView(
+                    goToMain: { rootEvent(.tab(.switchTo(.main))) }
+                )
+            )
+            
+            return .init(viewModel: viewModel, factory: factory)
+        }
     }
     
     private func makeMainView(
@@ -102,8 +106,18 @@ private extension Composer {
     }
     
     private func makeChatView(
-    ) -> MainView {
+        goToMain: @escaping () -> Void
+    ) -> () -> ChatView {
         
-        Text("Chat here")
+        return {
+            
+            ChatMockView(event: {
+                
+                switch $0 {
+                case .goToMain:
+                    goToMain()
+                }
+            })
+        }
     }
 }

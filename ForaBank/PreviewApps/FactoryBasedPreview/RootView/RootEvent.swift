@@ -8,4 +8,5 @@
 enum RootEvent: Equatable {
     
     case spinner(SpinnerEvent)
+    case tab(MainTabEvent)
 }

@@ -9,4 +9,24 @@ struct UtilityServicePrepaymentState: Equatable {
     
     let lastPayments: [LastPayment]
     let operators: [Operator]
+    var complete: Complete?
+}
+
+extension UtilityServicePrepaymentState {
+    
+    enum Complete: Equatable {
+        
+        case addingCompany
+        case payingByInstructions
+        case selected(Selected)
+    }
+}
+
+extension UtilityServicePrepaymentState.Complete {
+    
+    enum Selected: Equatable {
+        
+        case lastPayment(LastPayment)
+        case `operator`(Operator)
+    }
 }
