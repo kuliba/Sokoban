@@ -134,7 +134,7 @@ private extension PaymentsReducer {
         _ state: inout UtilityServicePrepaymentState,
         _ event: UtilityServicePrepaymentEvent
     ) {
-        guard state.complete == nil else { return }
+//        guard state.complete == nil else { return }
         
         switch event {
         case .addCompany:

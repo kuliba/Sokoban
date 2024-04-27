@@ -37,6 +37,7 @@ final class PaymentsViewModel: ObservableObject {
     
     private let paymentsManager: PaymentsManager
     private let rootActions: (RootAction) -> Void
+    private var cancellables = Set<AnyCancellable>()
     
     init(
         initialState: State,
@@ -52,7 +53,34 @@ final class PaymentsViewModel: ObservableObject {
         stateSubject
             .removeDuplicates()
             .receive(on: scheduler)
+//            .handleEvents(receiveOutput: {
+//            
+//                print("stateSubject receive output")
+//                dump($0)
+//            })
             .assign(to: &$state)
+        
+        // handle state that lives outside of local state
+        // a better alternative would be `RxObservingViewModel`
+        // but App would need a huge remake to use it
+        $state
+            .compactMap(\.destination)
+            .removeDuplicates()
+            .receive(on: scheduler)
+//            .handleEvents(receiveOutput: {
+//                
+//                print("$state destination receive output")
+//                dump($0)
+//            })
+            .sink { [weak self] in self?.handle($0) }
+            .store(in: &cancellables)
+    
+        print("init: " + String(describing: self) + " " + ObjectIdentifier(self).debugDescription.suffix(5).prefix(4))
+    }
+    
+    deinit {
+        
+        print("deinit: " + String(describing: self) + " " + ObjectIdentifier(self).debugDescription.suffix(5).prefix(4))
     }
 }
 
@@ -63,7 +91,7 @@ extension PaymentsViewModel {
         let (state, effect) = paymentsManager.reduce(state, event)
         stateSubject.send(state)
         
-        handle(state)
+        // handle(state)
         rootActions(.spinner(effect == nil ? .hide: .show))
         
         if let effect {
@@ -90,9 +118,9 @@ private extension PaymentsViewModel {
     
     // handle non-reducible states with side effects
     func handle(
-        _ state: State
+        _ destination: State.Destination
     ) {
-        switch state.destination {
+        switch destination {
         case let .utilityService(.prepayment(prepayment)):
             if let complete = prepayment.complete {
                 handle(complete)
@@ -108,7 +136,7 @@ private extension PaymentsViewModel {
     ) {
         switch complete {
         case .addingCompany:
-            event(.dismissDestination)
+            // event(.dismissDestination)
             rootAction(.tab(.chat))
             
         case .payingByInstructions:

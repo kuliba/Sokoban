@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct FactoryBasedPreviewApp: App {
     
-    private let appState = AppState.demo
+    private let appState = AppState() // AppState.demo
     
     private let composer: Composer = .demo(
         paymentsComposer: .demo(
