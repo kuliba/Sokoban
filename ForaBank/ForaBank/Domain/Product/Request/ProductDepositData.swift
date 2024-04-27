@@ -20,7 +20,7 @@ class ProductDepositData: ProductData {
     let isDemandDeposit: Bool
     let isDebitInterestAvailable: Bool?
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], depositProductId: Int, depositId: Int, interestRate: Double, accountId: Int, creditMinimumAmount: Double, minimumBalance: Double, endDate: Date?, endDateNf: Bool, isDemandDeposit: Bool, isDebitInterestAvailable: Bool?, order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String,
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], depositProductId: Int, depositId: Int, interestRate: Double, accountId: Int, creditMinimumAmount: Double, minimumBalance: Double?, endDate: Date?, endDateNf: Bool, isDemandDeposit: Bool, isDebitInterestAvailable: Bool?, order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String,
         mediumDesignMd5Hash: String = "",
         largeDesignMd5Hash: String = "",
         xlDesignMd5Hash: String = ""
@@ -121,7 +121,10 @@ class ProductDepositData: ProductData {
 
 extension ProductDepositData {
         
-    func availableTransferType(with info: DepositInfoDataItem?) -> TransferType? {
+    func availableTransferType(
+        with info: DepositInfoDataItem?,
+        deposit: ProductDepositData
+    ) -> TransferType? {
         
         if isDemandDeposit, allowDebit {
             
@@ -175,7 +178,7 @@ extension ProductDepositData {
                 // All other deposits
                 
                 if endDateNf,
-                   let balance = info?.balance {
+                   let balance = deposit.balance {
                     
                     return .close(balance)
                 } else {

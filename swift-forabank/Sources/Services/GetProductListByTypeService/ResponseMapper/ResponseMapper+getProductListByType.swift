@@ -205,7 +205,7 @@ private extension ResponseMapper {
         let interestRate: Double
         let accountID: Int
         let creditMinimumAmount: Double?
-        let minimumBalance: Double
+        let minimumBalance: Double?
         let endDate: Int?
         let endDate_nf: Bool
         let demandDeposit: Bool
@@ -598,7 +598,7 @@ private extension ProductResponse.Deposit {
             interestRate: data.interestRate,
             accountID: data.accountID,
             creditMinimumAmount: data.creditMinimumAmount.map{ Decimal($0) },
-            minimumBalance: Decimal(data.minimumBalance),
+            minimumBalance: Decimal(data.minimumBalance ?? 0.0),
             endDate: data.endDate,
             endDateNF: data.endDate_nf,
             demandDeposit: data.demandDeposit,
