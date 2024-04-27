@@ -13,7 +13,7 @@ where UtilityPrepaymentView == UtilityPrepaymentPickerMockView {
         .init(
             makeUtilityPrepaymentView: {
                 
-                .init(state: $0, event: $1)
+                .init(state: $0, event: { print($0) })
             }
         )
     }

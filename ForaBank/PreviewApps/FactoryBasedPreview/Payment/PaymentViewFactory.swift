@@ -15,5 +15,5 @@ where UtilityPrepaymentView: View {
 
 extension PaymentViewFactory {
     
-    typealias MakeUtilityPrepaymentView = (UtilityServicePrepaymentState, @escaping (UtilityServicePrepaymentEvent) -> Void) -> UtilityPrepaymentView
+    typealias MakeUtilityPrepaymentView = (UtilityServicePrepaymentState) -> UtilityPrepaymentView
 }

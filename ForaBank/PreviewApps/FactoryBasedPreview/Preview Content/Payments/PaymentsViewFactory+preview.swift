@@ -12,13 +12,12 @@ where DestinationView == PaymentView<UtilityPrepaymentPickerMockView>,
       PaymentButtonLabel == FactoryBasedPreview.PaymentButtonLabel {
     
     static func preview(
-        event: @escaping (PaymentEvent) -> Void
     ) -> Self {
         
         .init(
             makeDestinationView: {
                 
-                .init(state: $0, event: event, factory: .preview())
+                .init(state: $0, factory: .preview())
             },
             makePaymentButtonLabel: FactoryBasedPreview.PaymentButtonLabel.init
         )

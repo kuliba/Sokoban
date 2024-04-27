@@ -42,10 +42,10 @@ extension Composer {
     typealias _MainTabView = MainTabStateWrapperView<MainView, PaymentsView, ChatView>
     
     typealias MainView = MainMockView
-    typealias PaymentsView = PaymentsStateWrapperView<_PaymentsDestinationView, PaymentButtonLabel>
+    typealias PaymentsView = PaymentsStateWrapperView<PaymentsDestinationView, PaymentButtonLabel>
     typealias ChatView = ChatMockView
     
-    typealias _PaymentsDestinationView = PaymentView<UtilityPrepaymentPickerMockView>
+    typealias PaymentsDestinationView = PaymentView<UtilityPrepaymentPickerMockView>
 }
 
 private extension Composer {

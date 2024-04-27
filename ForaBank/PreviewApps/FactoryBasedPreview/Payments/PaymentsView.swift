@@ -137,8 +137,8 @@ struct PaymentsView_Previews: PreviewProvider {
             
             PaymentsView(
                 state: state,
-                event: { _ in },
-                factory: .preview(event: { _ in })
+                event: { print($0) },
+                factory: .preview()
             )
         }
         .navigationViewStyle(StackNavigationViewStyle())

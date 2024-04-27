@@ -60,15 +60,21 @@ private extension PaymentsComposer {
         
         return {
             
-            .init(state: $0, event: event, factory: self.makeFactory())
+            .init(
+                state: $0,
+                factory: self.makeFactory(
+                    event: { event(.utilityService(.prepayment($0))) }
+                )
+            )
         }
     }
     
     private func makeFactory(
+        event: @escaping (UtilityServicePrepaymentEvent) -> Void
     ) -> PaymentViewFactory<UtilityPrepaymentPickerMockView> {
         
         .init(
-            makeUtilityPrepaymentView: { .init(state: $0, event: $1) }
+            makeUtilityPrepaymentView: { .init(state: $0, event: event) }
         )
     }
 }

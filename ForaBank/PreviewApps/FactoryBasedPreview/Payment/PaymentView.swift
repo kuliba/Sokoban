@@ -11,17 +11,13 @@ struct PaymentView<UtilityPrepaymentView>: View
 where UtilityPrepaymentView: View {
     
     let state: State
-    let event: (Event) -> Void
     let factory: Factory
     
     var body: some View {
         
         switch state {
         case let .utilityService(.prepayment(state)):
-            factory.makeUtilityPrepaymentView(state) {
-                
-                event(.utilityService(.prepayment($0)))
-            }
+            factory.makeUtilityPrepaymentView(state)
         }
     }
 }
@@ -45,24 +41,16 @@ struct PaymentsDestinationView_Previews: PreviewProvider {
     }
     
     private static func preview(
-        _ state: PaymentState
-    ) -> some View {
-        
-        PaymentView(
-            state: state,
-            event: { _ in },
-            factory: .preview()
-        )
-    }
-    
-    private static func preview(
         _ state: UtilityServicePaymentState
     ) -> some View {
         
-        PaymentView(
-            state: .utilityService(state),
-            event: { _ in },
-            factory: .preview()
-        )
+        preview(.utilityService(state))
+    }
+    
+    private static func preview(
+        _ state: PaymentState
+    ) -> some View {
+        
+        PaymentView(state: state, factory: .preview())
     }
 }
