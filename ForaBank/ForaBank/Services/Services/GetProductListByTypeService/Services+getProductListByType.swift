@@ -20,6 +20,7 @@ extension Services {
 
     static func getProductListByType(
         _ httpClient: HTTPClient,
+        _ timeout: TimeInterval = 120.0,
         logger: LoggerAgentProtocol
     ) -> GetProductListByType {
         
@@ -34,7 +35,7 @@ extension Services {
         
         return { productType, completion in
             
-            loggingRemoteService.process(productType) { result in
+            loggingRemoteService.process((productType, timeout)) { result in
                 
                 completion(try? result.get())
             }

@@ -879,7 +879,8 @@ extension ServerCommands {
             let endpoint = "/dict/getSvgImageList"
             let method: ServerCommandMethod = .post
             let payload: Payload?
-            
+            let timeout: TimeInterval? = 120
+
             struct Payload: Encodable {
                 
                 let md5HashList: [String]
