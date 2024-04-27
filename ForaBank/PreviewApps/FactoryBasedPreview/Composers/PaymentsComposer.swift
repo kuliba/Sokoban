@@ -32,7 +32,7 @@ extension PaymentsComposer {
         )
         
         let makeDestinationView = makeDestinationView(
-            event: { viewModel.event(.payment($0)) }
+            event: { [weak viewModel] in viewModel?.event(.payment($0)) }
         )
         
         return .init(
@@ -62,19 +62,16 @@ private extension PaymentsComposer {
             
             .init(
                 state: $0,
-                factory: self.makeFactory(
-                    event: { event(.utilityService(.prepayment($0))) }
+                factory: .init(
+                    makeUtilityPrepaymentView: {
+                        
+                        .init(
+                            state: $0, 
+                            event: { event(.utilityService(.prepayment($0))) }
+                        )
+                    }
                 )
             )
         }
-    }
-    
-    private func makeFactory(
-        event: @escaping (UtilityServicePrepaymentEvent) -> Void
-    ) -> PaymentViewFactory<UtilityPrepaymentPickerMockView> {
-        
-        .init(
-            makeUtilityPrepaymentView: { .init(state: $0, event: event) }
-        )
     }
 }

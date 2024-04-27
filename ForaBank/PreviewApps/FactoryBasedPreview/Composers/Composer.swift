@@ -80,7 +80,10 @@ private extension Composer {
                 makeContent: makeRootContent(
                     initialMainTabState: tabState,
                     initialPaymentsState: paymentsState,
-                    spinnerEvent: { viewModel.event(.spinner($0)) }
+                    spinnerEvent: { [weak viewModel] in
+                        
+                        viewModel?.event(.spinner($0))
+                    }
                 ),
                 makeSpinner: SpinnerView.init
             )
@@ -105,20 +108,20 @@ private extension Composer {
             )
             let factory = MainTabFactory(
                 makeMainView: makeMainView(
-                    event: {
+                    event: { [weak viewModel] in
                         
                         switch $0 {
                         case .chat:
-                            viewModel.event(.switchTo(.chat))
+                            viewModel?.event(.switchTo(.chat))
 
                         case .payments:
-                            viewModel.event(.switchTo(.payments))
+                            viewModel?.event(.switchTo(.payments))
                         }
                     }
                 ),
                 makePaymentsView: _makePaymentsView(
                     initialState: paymentsState,
-                    rootActions: {
+                    rootActions: { [weak viewModel] in
                         
                         switch $0 {
                         case let.spinner(spinner):
@@ -132,15 +135,18 @@ private extension Composer {
                         case let .tab(tab):
                             switch tab {
                             case .chat:
-                                viewModel.event(.switchTo(.chat))
+                                viewModel?.event(.switchTo(.chat))
                             case .main:
-                                viewModel.event(.switchTo(.main))
+                                viewModel?.event(.switchTo(.main))
                             }
                         }
                     }
                 ),
                 makeChatView: makeChatView(
-                    goToMain: { viewModel.event(.switchTo(.main)) }
+                    goToMain: { [weak viewModel] in
+                        
+                        viewModel?.event(.switchTo(.main))
+                    }
                 )
             )
             
