@@ -22,7 +22,7 @@ extension PaymentsComposer {
     
     func makePaymentsView(
         initialState: PaymentsState = .init(),
-        rootActions: @escaping (RootActions) -> Void
+        rootActions: @escaping (RootAction) -> Void
     ) -> PaymentsView {
         
         let viewModel = PaymentsViewModel(

@@ -36,7 +36,7 @@ extension Composer {
 
 extension Composer {
     
-    typealias MakePaymentsView = (PaymentsState, @escaping (RootActions) -> Void) -> PaymentsView
+    typealias MakePaymentsView = (PaymentsState, @escaping (RootAction) -> Void) -> PaymentsView
     
     typealias RootView = RootStateWrapperView<_MainTabView, SpinnerView>
     typealias _MainTabView = MainTabStateWrapperView<MainView, PaymentsView, ChatView>
@@ -175,7 +175,7 @@ private extension Composer {
     }
     private func _makePaymentsView(
         initialState: PaymentsState,
-        rootActions: @escaping (RootActions) -> Void
+        rootActions: @escaping (RootAction) -> Void
     ) -> () -> PaymentsView {
         
         return {

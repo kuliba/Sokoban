@@ -28,6 +28,7 @@ where MainView: View,
             navWrapped(factory.makePaymentsView, "Payments", .payments)
             navWrapped(factory.makeChatView, "Chat", .chat)
         }
+        .animation(.easeInOut, value: state)
     }
     
     private func navWrapped(

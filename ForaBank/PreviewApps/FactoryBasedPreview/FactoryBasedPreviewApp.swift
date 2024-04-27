@@ -11,9 +11,9 @@ import SwiftUI
 struct FactoryBasedPreviewApp: App {
     
     private let appState = AppState(
-        rootState: .init(spinner: .off),
-        tabState: .payments,
-        paymentsState: .init(
+        root: .init(spinner: .off),
+        tab: .payments,
+        payments: .init(
             destination: .utilityService(.prepayment(.init(
                 lastPayments: .preview,
                 operators: .preview
@@ -22,10 +22,12 @@ struct FactoryBasedPreviewApp: App {
     )
     
     private let composer: Composer = .demo(
-        initiateResult: .success(.init(
-            lastPayments: .preview,
-            operators: .preview
-        ))
+        paymentsComposer: .demo(
+            initiateResult: .success(.init(
+                lastPayments: .preview,
+                operators: .preview
+            ))
+        )
     )
     
     var body: some Scene {
@@ -37,10 +39,33 @@ struct FactoryBasedPreviewApp: App {
     }
 }
 
+private extension AppState {
+    
+    init(
+        root: RootState,
+        tab: MainTabState,
+        payments: PaymentsState
+    ) {
+        self.rootState = root
+        self.tabState = tab
+        self.paymentsState = payments
+    }
+}
+
 private extension Composer {
     
     static func demo(
-        initiateResult: PaymentsManager.InitiateUtilityPrepaymentResult
+        paymentsComposer: PaymentsComposer
+    ) -> Self {
+        
+        return .init(makePaymentsView: paymentsComposer.makePaymentsView)
+    }
+}
+
+private extension PaymentsComposer {
+    
+    static func demo(
+        initiateResult: InitiateUtilityPrepaymentResult
     ) -> Self {
         
         let reducer = PaymentsReducer()
@@ -58,8 +83,8 @@ private extension Composer {
             handleEffect: effectHandler.handleEffect(_:_:)
         )
         
-        let paymentsComposer = PaymentsComposer(paymentManager: paymentManager)
-        
-        return .init(makePaymentsView: paymentsComposer.makePaymentsView)
+        return .init(paymentManager: paymentManager)
     }
+    
+    typealias InitiateUtilityPrepaymentResult = PaymentsManager.InitiateUtilityPrepaymentResult
 }

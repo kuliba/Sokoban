@@ -9,13 +9,14 @@ import Combine
 import CombineSchedulers
 import Foundation
 
-enum RootActions {
+// named `Action` to preserve consistency with the App
+enum RootAction {
     
     case spinner(SpinnerEvent)
     case tab(TabEvent)
 }
 
-extension RootActions {
+extension RootAction {
     
     enum SpinnerEvent {
         
@@ -35,12 +36,12 @@ final class PaymentsViewModel: ObservableObject {
     private let stateSubject = PassthroughSubject<State, Never>()
     
     private let paymentsManager: PaymentsManager
-    private let rootActions: (RootActions) -> Void
+    private let rootActions: (RootAction) -> Void
     
     init(
         initialState: State,
         paymentsManager: PaymentsManager,
-        rootActions: @escaping (RootActions) -> Void,
+        rootActions: @escaping (RootAction) -> Void,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.state = initialState
@@ -93,13 +94,37 @@ private extension PaymentsViewModel {
     ) {
         switch state.destination {
         case let .utilityService(.prepayment(prepayment)):
-            if prepayment.complete == .addingCompany {
-                self.state.destination = nil
-                rootActions(.tab(.chat))
+            if let complete = prepayment.complete {
+                handle(complete)
             }
             
         default:
             break
         }
+    }
+    
+    private func handle(
+        _ complete: UtilityServicePrepaymentState.Complete
+    ) {
+        switch complete {
+        case .addingCompany:
+            event(.dismissDestination)
+            rootAction(.tab(.chat))
+            
+        case .payingByInstructions:
+            fatalError()
+            
+        case let .selected(selected):
+            fatalError(String(describing: selected))
+        }
+    }
+    
+    private func rootAction(
+        _ action: RootAction
+    ) {
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + 0.1,
+            execute: { [weak self] in self?.rootActions(action) }
+        )
     }
 }

@@ -27,6 +27,7 @@ where Content: View,
                     .ignoresSafeArea()
             }
         }
+        .animation(.easeInOut, value: state)
     }
 }
 
