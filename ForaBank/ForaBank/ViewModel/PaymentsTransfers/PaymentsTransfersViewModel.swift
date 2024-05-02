@@ -152,12 +152,26 @@ extension PaymentsTransfersViewModel {
         switch event {
         case .addCompany:
             state.destination = nil
-#warning("side effect, should be moved to the effect handler - how to put rootActions into effect handler?")
             switchToChat()
-            
-        case let .latestPaymentTapped(latestPayment):
-            // flow `e`
-            effect = .startPayment(.latestPayment(latestPayment))
+
+            #warning("extract to sub-reduce")
+        case let .utilityFlow(utilityFlow):
+            switch utilityFlow {
+            case let .select(select):
+                switch select {
+                case let .latestPayment(latestPayment):
+                    // flow `e`
+                    effect = .startPayment(.latestPayment(latestPayment))
+                    
+                case let .operator(`operator`):
+                    // flow `d`
+                    effect = .getServicesFor(`operator`)
+                    
+                case let .service(utilityService, for: `operator`):
+                    // flow `e`
+                    effect = .startPayment(.service(`operator`, utilityService))
+                }
+            }
             
         case let .loaded(response, for: `operator`):
             switch response {
@@ -175,10 +189,6 @@ extension PaymentsTransfersViewModel {
                 // flow `e`
                 effect = .startPayment(.service(`operator`, utilityService))
             }
-            
-        case let .operatorTapped(`operator`):
-            // flow `d`
-            effect = .getServicesFor(`operator`)
             
         case .payByInstructions:
 #warning("side effect, should be moved to the effect handler")
@@ -249,10 +259,6 @@ extension PaymentsTransfersViewModel {
             let (utilityPaymentState, utilityPaymentEffect) = navigationStateManager.utilityPaymentReduce(utilityPayment, utilityPaymentEvent)
             state.utilitiesRoute?.destination = .payment(utilityPaymentState)
             effect = utilityPaymentEffect.map { .utilityPayment($0) }
-            
-        case let .utilityServiceTap(`operator`, utilityService):
-            // flow `e`
-            effect = .startPayment(.service(`operator`, utilityService))
         }
         
         return (state, effect)

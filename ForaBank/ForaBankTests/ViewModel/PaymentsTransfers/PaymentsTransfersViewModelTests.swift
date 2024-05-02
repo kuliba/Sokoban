@@ -137,7 +137,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let (sut, _,_) = makeSUT()
         let spy = ValueSpy(sut.$route.map(\.destination?.id))
         
-        sut.event(.latestPaymentTapped(makeLatestPayment()))
+        sut.event(.utilityFlow(.select(.latestPayment(makeLatestPayment()))))
         
         XCTAssertNoDiff(spy.values, [nil, nil])
     }
@@ -147,8 +147,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let latestPayment = makeLatestPayment()
         let (sut, _, effectSpy) = makeSUT()
         
-        sut.event(.latestPaymentTapped(latestPayment))
-        
+        sut.event(.utilityFlow(.select(.latestPayment(latestPayment))))
+
         XCTAssertNoDiff(effectSpy.messages.map(\.effect), [
             .startPayment(.latestPayment(latestPayment))
         ])
@@ -241,7 +241,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         try sut.openUtilityPayments()
         XCTAssertNoDiff(spy.values, [nil, .utilities])
         
-        sut.event(.operatorTapped(`operator`))
+        sut.event(.utilityFlow(.select(.operator(`operator`))))
         
         XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
         XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
@@ -253,8 +253,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let (sut, _, effectSpy) = makeSUT()
         
         try sut.openUtilityPayments()
-        sut.event(.operatorTapped(`operator`))
-        
+        sut.event(.utilityFlow(.select(.operator(`operator`))))
+
         XCTAssertNoDiff(effectSpy.messages.map(\.effect), [.getServicesFor(`operator`)])
     }
     
@@ -298,7 +298,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
         XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil])
         
-        sut.event(.operatorTapped(`operator`))
+        sut.event(.utilityFlow(.select(.operator(`operator`))))
         effectSpy.complete(with: .loaded(.single(service), for: `operator`))
         effectSpy.complete(with: .paymentStarted(.details(details)))
         
@@ -321,9 +321,9 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
         XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil])
         
-        sut.event(.operatorTapped(`operator`))
+        sut.event(.utilityFlow(.select(.operator(`operator`))))
         effectSpy.complete(with: .loaded(.list([service, makeService()]), for: `operator`))
-        sut.event(.utilityServiceTap(`operator`, service))
+        sut.event(.utilityFlow(.select(.service(service, for: `operator`))))
         effectSpy.complete(with: .paymentStarted(.details(details)))
         
         XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
@@ -489,8 +489,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
         
         try sut.openUtilityPayments()
-        sut.event(.utilityServiceTap(`operator`, utilityService))
-        
+        sut.event(.utilityFlow(.select(.service(utilityService, for: `operator`))))
+
         XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
         XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
     }
@@ -502,8 +502,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let (sut, _, effectSpy) = makeSUT()
         
         try sut.openUtilityPayments()
-        sut.event(.utilityServiceTap(`operator`, utilityService))
-        
+        sut.event(.utilityFlow(.select(.service(utilityService, for: `operator`))))
+
         XCTAssertNoDiff(effectSpy.messages.map(\.effect), [
             .startPayment(.service(`operator`, utilityService))
         ])
