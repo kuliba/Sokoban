@@ -1017,6 +1017,7 @@ private extension Target {
             .tagged,
             // internal modules
             .anywayPaymentUI,
+            .foraTools,
             .remoteServices,
             .rxViewModel,
         ],
