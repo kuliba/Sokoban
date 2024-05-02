@@ -24,7 +24,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
         let `operator` = makeOperator()
         let (sut, _, getOperatorsListByParamSpy) = makeSUT()
         
-        sut.handleEffect(.getServicesFor(`operator`)) { _ in }
+        sut.handleEffect(.utilityFlow(.getServicesFor(`operator`))) { _ in }
         
         XCTAssertNoDiff(getOperatorsListByParamSpy.payloads, [`operator`.id])
     }
@@ -34,7 +34,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
         let `operator` = makeOperator()
         let (sut, _, getOperatorsListByParamSpy) = makeSUT()
         
-        expect(sut, with: .getServicesFor(`operator`), toDeliver: .loaded(.failure, for: `operator`), on: {
+        expect(sut, with: .utilityFlow(.getServicesFor(`operator`)), toDeliver: .utilityFlow(.loaded(.failure, for: `operator`)), on: {
             
             getOperatorsListByParamSpy.complete(with: .failure)
         })
@@ -46,7 +46,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
         let list = [makeService(), makeService()]
         let (sut, _, getOperatorsListByParamSpy) = makeSUT()
         
-        expect(sut, with: .getServicesFor(`operator`), toDeliver: .loaded(.list(list), for: `operator`), on: {
+        expect(sut, with: .utilityFlow(.getServicesFor(`operator`)), toDeliver: .utilityFlow(.loaded(.list(list), for: `operator`)), on: {
             
             getOperatorsListByParamSpy.complete(with: .list(list))
         })
@@ -58,7 +58,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
         let service = makeService()
         let (sut, _, getOperatorsListByParamSpy) = makeSUT()
         
-        expect(sut, with: .getServicesFor(`operator`), toDeliver: .loaded(.single(service), for: `operator`), on: {
+        expect(sut, with: .utilityFlow(.getServicesFor(`operator`)), toDeliver: .utilityFlow(.loaded(.single(service), for: `operator`)), on: {
             
             getOperatorsListByParamSpy.complete(with: .single(service))
         })
@@ -69,7 +69,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
         let payload = makeStartPaymentPayload()
         let (sut, createAnywayTransferSpy, _) = makeSUT()
         
-        sut.handleEffect(.startPayment(payload)) { _ in }
+        sut.handleEffect(.utilityFlow(.startPayment(payload))) { _ in }
         
         XCTAssertNoDiff(createAnywayTransferSpy.payloads, [payload])
     }
@@ -80,7 +80,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
         let details = makePaymentDetails()
         let (sut, createAnywayTransferSpy, _) = makeSUT()
         
-        expect(sut, with: .startPayment(payload), toDeliver: .paymentStarted(.details(details)), on: {
+        expect(sut, with: .utilityFlow(.startPayment(payload)), toDeliver: .utilityFlow(.paymentStarted(.details(details))), on: {
             
             createAnywayTransferSpy.complete(with: .details(details))
         })
@@ -91,7 +91,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
         let payload = makeStartPaymentPayload()
         let (sut, createAnywayTransferSpy, _) = makeSUT()
         
-        expect(sut, with: .startPayment(payload), toDeliver: .paymentStarted(.failure), on: {
+        expect(sut, with: .utilityFlow(.startPayment(payload)), toDeliver: .utilityFlow(.paymentStarted(.failure)), on: {
             
             createAnywayTransferSpy.complete(with: .failure)
         })
@@ -103,7 +103,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
         let message = UUID().uuidString
         let (sut, createAnywayTransferSpy, _) = makeSUT()
         
-        expect(sut, with: .startPayment(payload), toDeliver: .paymentStarted(.serverError(message)), on: {
+        expect(sut, with: .utilityFlow(.startPayment(payload)), toDeliver: .utilityFlow(.paymentStarted(.serverError(message))), on: {
             
             createAnywayTransferSpy.complete(with: .serverError(message))
         })
@@ -116,7 +116,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     private typealias Event = SUT.Event
     
-    private typealias CreateAnywayTransferSpy = ProcessSpy<PaymentsTransfersEffect.StartPaymentPayload, PaymentsTransfersEvent.PaymentStarted>
+    private typealias CreateAnywayTransferSpy = ProcessSpy<PaymentsTransfersEffect.UtilityServicePaymentFlowEffect.StartPaymentPayload, PaymentsTransfersEvent.PaymentStarted>
     private typealias GetOperatorsListByParamSpy = ProcessSpy<String, PaymentsTransfersEvent.GetOperatorsListByParamResponse>
     
     private func makeSUT(
@@ -182,7 +182,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     
     private func makeStartPaymentPayload(
         _ id: String = UUID().uuidString
-    ) -> PaymentsTransfersEffect.StartPaymentPayload {
+    ) -> PaymentsTransfersEffect.UtilityServicePaymentFlowEffect.StartPaymentPayload {
         
         .latestPayment(makeLatestPayment(id))
     }

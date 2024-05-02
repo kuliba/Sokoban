@@ -40,9 +40,7 @@ extension PaymentsTransfersNavigationStateManager {
 enum PaymentsTransfersEvent: Equatable {
     
     case addCompany
-    case loaded(GetOperatorsListByParamResponse, for: OperatorsListComponents.Operator)
     case payByInstructions
-    case paymentStarted(PaymentStarted)
     case resetDestination
     case resetModal
     case resetUtilityDestination
@@ -55,6 +53,8 @@ extension PaymentsTransfersEvent {
     
     enum UtilityServicePaymentFlowEvent: Equatable {
         
+        case loaded(GetOperatorsListByParamResponse, for: OperatorsListComponents.Operator)
+        case paymentStarted(PaymentStarted)
         case select(Select)
     }
 }
@@ -110,12 +110,22 @@ extension PaymentsTransfersEvent {
 
 enum PaymentsTransfersEffect: Equatable {
     
-    case getServicesFor(OperatorsListComponents.Operator)
     case utilityPayment(UtilityPaymentEffect)
-    case startPayment(StartPaymentPayload)
+    case utilityFlow(UtilityServicePaymentFlowEffect)
 }
 
 extension PaymentsTransfersEffect {
+ 
+    enum UtilityServicePaymentFlowEffect: Equatable {
+        
+        case getServicesFor(Operator)
+        case startPayment(StartPaymentPayload)
+    }
+}
+
+extension PaymentsTransfersEffect.UtilityServicePaymentFlowEffect {
+    
+    typealias Operator = OperatorsListComponents.Operator
     
     enum StartPaymentPayload: Equatable {
         

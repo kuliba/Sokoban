@@ -154,6 +154,59 @@ extension PaymentsTransfersViewModel {
             state.destination = nil
             switchToChat()
             
+        case .payByInstructions:
+            state.destination = .payments(makeByRequisitesPaymentsViewModel())
+                        
+        case .resetDestination:
+            state.utilitiesRoute?.destination = nil
+            state.destination = nil
+            
+        case .resetModal:
+            state.modal = nil
+            
+        case .resetUtilityDestination:
+            state.utilitiesRoute?.destination = nil
+            
+        case .resetUtilityListDestination:
+            guard case let .list(list) = state.utilitiesRoute?.destination
+            else { break }
+            
+            state.utilitiesRoute?.destination = .list(.init(
+                operator: list.`operator`,
+                services: list.services,
+                destination: nil
+            ))
+            
+        case let .utilityFlow(utilityFlowEvent):
+            var utilityEffect: Effect.UtilityServicePaymentFlowEffect?
+            (state, utilityEffect) = reduce(state, utilityFlowEvent)
+            effect = utilityEffect.map(Effect.utilityFlow)
+            
+        case let .utilityPayment(utilityPaymentEvent):
+            guard case let .payment(utilityPayment) = state.utilitiesRoute?.destination
+            else { break }
+            
+            let (utilityPaymentState, utilityPaymentEffect) = navigationStateManager.utilityPaymentReduce(utilityPayment, utilityPaymentEvent)
+            state.utilitiesRoute?.destination = .payment(utilityPaymentState)
+            effect = utilityPaymentEffect.map { .utilityPayment($0) }
+        }
+        
+        return (state, effect)
+    }
+    
+    // TODO: move from global `State` to local
+    private func reduce(
+        _ state: State,
+        _ event: Event.UtilityServicePaymentFlowEvent
+    ) -> (State, Effect.UtilityServicePaymentFlowEffect?) {
+        
+        var state = state
+        var effect: Effect.UtilityServicePaymentFlowEffect?
+        
+        // TODO: improve by adding state check
+        // like `guard let utilitiesRoute = state.utilitiesRoute else { break }`
+        switch event {
+            
         case let .loaded(response, for: `operator`):
             switch response {
             case .failure:
@@ -172,63 +225,14 @@ extension PaymentsTransfersViewModel {
                 effect = .startPayment(.service(`operator`, utilityService))
             }
             
-        case .payByInstructions:
-            state.destination = .payments(makeByRequisitesPaymentsViewModel())
-            
         case let .paymentStarted(paymentStartedEvent):
             reduce(&state, paymentStartedEvent)
             
-        case .resetDestination:
-            state.utilitiesRoute?.destination = nil
-            state.destination = nil
-            
-        case .resetModal:
-            state.modal = nil
-            
-        case .resetUtilityDestination:
-            state.utilitiesRoute?.destination = nil
-            
-        case .resetUtilityListDestination:
-            guard case let .list(list) = route.utilitiesRoute?.destination
-            else { break }
-            
-            state.utilitiesRoute?.destination = .list(.init(
-                operator: list.`operator`,
-                services: list.services,
-                destination: nil
-            ))
-            
-        case let .utilityFlow(utilityFlowEvent):
-            (state, effect) = reduce(route, utilityFlowEvent)
-            
-        case let .utilityPayment(utilityPaymentEvent):
-            guard case let .payment(utilityPayment) = state.utilitiesRoute?.destination
-            else { break }
-            
-            let (utilityPaymentState, utilityPaymentEffect) = navigationStateManager.utilityPaymentReduce(utilityPayment, utilityPaymentEvent)
-            state.utilitiesRoute?.destination = .payment(utilityPaymentState)
-            effect = utilityPaymentEffect.map { .utilityPayment($0) }
-        }
-        
-        return (state, effect)
-    }
-    
-    private func reduce(
-        _ state: State,
-        _ event: Event.UtilityServicePaymentFlowEvent
-    ) -> (State, Effect?) {
-        
-        var effect: Effect?
-        
-        // TODO: improve by adding state check
-        // like `guard let utilitiesRoute = state.utilitiesRoute else { break }`
-        switch event {
         case let .select(select):
             switch select {
             case let .latestPayment(latestPayment):
                 // flow `e`
                 effect = .startPayment(.latestPayment(latestPayment))
-                
             case let .operator(`operator`):
                 // flow `d`
                 effect = .getServicesFor(`operator`)
