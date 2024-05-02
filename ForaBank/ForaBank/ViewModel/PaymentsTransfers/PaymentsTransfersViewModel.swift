@@ -131,7 +131,7 @@ extension PaymentsTransfersViewModel {
         if let effect {
             
             rootActions?.spinner.show()
-
+            
             navigationStateManager.handleEffect(effect) { [weak self] in
                 
                 self?.rootActions?.spinner.hide()
@@ -140,7 +140,7 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    #warning("move to navigationStateManager")
+#warning("move to navigationStateManager")
     private func reduce(
         _ state: State,
         _ event: Event
@@ -153,25 +153,6 @@ extension PaymentsTransfersViewModel {
         case .addCompany:
             state.destination = nil
             switchToChat()
-
-            #warning("extract to sub-reduce")
-        case let .utilityFlow(utilityFlow):
-            switch utilityFlow {
-            case let .select(select):
-                switch select {
-                case let .latestPayment(latestPayment):
-                    // flow `e`
-                    effect = .startPayment(.latestPayment(latestPayment))
-                    
-                case let .operator(`operator`):
-                    // flow `d`
-                    effect = .getServicesFor(`operator`)
-                    
-                case let .service(utilityService, for: `operator`):
-                    // flow `e`
-                    effect = .startPayment(.service(`operator`, utilityService))
-                }
-            }
             
         case let .loaded(response, for: `operator`):
             switch response {
@@ -187,6 +168,7 @@ extension PaymentsTransfersViewModel {
                 
             case let .single(utilityService):
                 // flow `e`
+#warning("this is wrong - payment should start without additional effect")
                 effect = .startPayment(.service(`operator`, utilityService))
             }
             
@@ -247,10 +229,13 @@ extension PaymentsTransfersViewModel {
             else { break }
             
             state.utilitiesRoute?.destination = .list(.init(
-                operator: list.`operator`, 
+                operator: list.`operator`,
                 services: list.services,
                 destination: nil
             ))
+            
+        case let .utilityFlow(utilityFlowEvent):
+            (state, effect) = reduce(route, utilityFlowEvent)
             
         case let .utilityPayment(utilityPaymentEvent):
             guard case let .payment(utilityPayment) = state.utilitiesRoute?.destination
@@ -259,6 +244,36 @@ extension PaymentsTransfersViewModel {
             let (utilityPaymentState, utilityPaymentEffect) = navigationStateManager.utilityPaymentReduce(utilityPayment, utilityPaymentEvent)
             state.utilitiesRoute?.destination = .payment(utilityPaymentState)
             effect = utilityPaymentEffect.map { .utilityPayment($0) }
+        }
+        
+        return (state, effect)
+    }
+    
+    private func reduce(
+        _ state: State,
+        _ event: Event.UtilityServicePaymentFlowEvent
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        // TODO: improve by adding state check
+        // like `guard let utilitiesRoute = state.utilitiesRoute else { break }`
+        switch event {
+        case let .select(select):
+            switch select {
+            case let .latestPayment(latestPayment):
+                // flow `e`
+                effect = .startPayment(.latestPayment(latestPayment))
+                
+            case let .operator(`operator`):
+                // flow `d`
+                effect = .getServicesFor(`operator`)
+                
+            case let .service(utilityService, for: `operator`):
+                // flow `e`
+                effect = .startPayment(.service(`operator`, utilityService))
+            }
         }
         
         return (state, effect)
