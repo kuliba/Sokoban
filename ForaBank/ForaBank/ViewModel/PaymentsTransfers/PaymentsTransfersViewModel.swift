@@ -180,7 +180,7 @@ extension PaymentsTransfersViewModel {
             // flow `d`
             effect = .getServicesFor(`operator`)
             
-        case .payByRequisites:
+        case .payByInstructions:
 #warning("side effect, should be moved to the effect handler")
             state.destination = .payments(makeByRequisitesPaymentsViewModel())
             

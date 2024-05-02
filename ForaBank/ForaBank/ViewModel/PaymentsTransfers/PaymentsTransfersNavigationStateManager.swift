@@ -40,21 +40,23 @@ extension PaymentsTransfersNavigationStateManager {
 enum PaymentsTransfersEvent: Equatable {
     
     case addCompany
-    case latestPaymentTapped(OperatorsListComponents.LatestPayment)
-    case loaded(GetOperatorsListByParamResponse, for: OperatorsListComponents.Operator)
-    case operatorTapped(OperatorsListComponents.Operator)
-    #warning("rename to `payByInstruction`")
-    case payByRequisites
+    case latestPaymentTapped(LatestPayment)
+    case loaded(GetOperatorsListByParamResponse, for: Operator)
+    case operatorTapped(Operator)
+    case payByInstructions
     case paymentStarted(PaymentStarted)
     case resetDestination
     case resetModal
     case resetUtilityDestination
     case resetUtilityListDestination
     case utilityPayment(UtilityPaymentEvent)
-    case utilityServiceTap(OperatorsListComponents.Operator, UtilityService)
+    case utilityServiceTap(Operator, UtilityService)
 }
 
 extension PaymentsTransfersEvent {
+    
+   typealias LatestPayment = OperatorsListComponents.LatestPayment
+   typealias Operator = OperatorsListComponents.Operator
     
     enum GetOperatorsListByParamResponse: Equatable {
         

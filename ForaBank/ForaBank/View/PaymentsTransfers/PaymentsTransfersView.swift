@@ -285,7 +285,7 @@ struct PaymentsTransfersView: View {
             
             Button("Оплатить по реквизитам") {
                 
-                self.viewModel.event(.payByRequisites)
+                self.viewModel.event(.payByInstructions)
             }
         }
         .padding()

@@ -267,7 +267,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         try sut.openUtilityPayments()
         XCTAssertNoDiff(spy.values, [nil, .utilities])
         
-        sut.event(.payByRequisites)
+        sut.event(.payByInstructions)
         
         XCTAssertNoDiff(spy.values, [nil, .utilities, .payments])
         XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
@@ -278,7 +278,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let (sut, _, effectSpy) = makeSUT()
         
         try sut.openUtilityPayments()
-        sut.event(.payByRequisites)
+        sut.event(.payByInstructions)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
