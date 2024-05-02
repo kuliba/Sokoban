@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.04.2024.
 //
 
-final class UtilityServicePaymentFlowReducer {}
+final class UtilityServicePaymentFlowReducer<Icon> {}
 
 extension UtilityServicePaymentFlowReducer {
     
@@ -19,7 +19,13 @@ extension UtilityServicePaymentFlowReducer {
         
         switch event {
         case .resetDestination:
-            state = nil
+            state.destination = nil
+            
+        case let .selectUtilityService(service):
+            fatalError("what goes here???")
+            
+        case let .selectUtilityServiceOperator(`operator`):
+            effect = .selectUtilityServiceOperator(`operator`)
         }
         
         return (state, effect)
@@ -28,7 +34,7 @@ extension UtilityServicePaymentFlowReducer {
 
 extension UtilityServicePaymentFlowReducer {
     
-    typealias State = UtilityServicePaymentFlowState
-    typealias Event = UtilityServicePaymentFlowEvent
-    typealias Effect = UtilityServicePaymentFlowEffect
+    typealias State = UtilityServicePaymentFlowState<Icon>
+    typealias Event = UtilityServicePaymentFlowEvent<Icon>
+    typealias Effect = UtilityServicePaymentFlowEffect<Icon>
 }

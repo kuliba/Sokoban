@@ -1,5 +1,5 @@
 //
-//  _OperatorPicker.swift
+//  FlowView.swift
 //  NavStackPreview
 //
 //  Created by Igor Malyarov on 23.04.2024.
@@ -7,14 +7,16 @@
 
 import SwiftUI
 
-struct _OperatorPicker: View {
+struct FlowView<Flow: View>: View {
+
+    let makeFlow: () -> Flow
     
     var body: some View {
         
-        Text("TBD: OperatorPicker")
+        makeFlow()
     }
 }
 
 #Preview {
-    _OperatorPicker()
+    FlowView { Text("Flow View") }
 }

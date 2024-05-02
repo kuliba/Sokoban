@@ -5,59 +5,34 @@
 //  Created by Igor Malyarov on 23.04.2024.
 //
 
+import Combine
+import CombineSchedulers
 import RxViewModel
 import SwiftUI
+import UIPrimitives
 
 struct ContentView: View {
     
     var body: some View {
         
-        UtilityServicePaymentFlowStateWrapperView(
-            viewModel: .init(),
-            factory: .default
+        let initialState: UtilityServicePaymentFlowState<String> = .init(
+            operatorPickerState: .init(
+                lastPayments: .preview,
+                operators: .preview
+            ),
+            destination: nil
         )
-    }
-}
-
-private extension RxViewModel
-where State == UtilityServicePaymentFlowState, Event == UtilityServicePaymentFlowEvent, Effect == UtilityServicePaymentFlowEffect {
-    
-    convenience init() {
         
-        let reducer = UtilityServicePaymentFlowReducer()
-        let effectHandler = UtilityServicePaymentFlowEffectHandler()
-        
-        self.init(
-            initialState: .none,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
-            scheduler: .main
-        )
-    }
-}
-
-private extension UtilityServicePaymentFlowFactory
-where OperatorPicker == _OperatorPicker,
-      ServicePicker == _ServicePicker {
-    
-    static var `default`: Self {
-        
-        .init(
-            makeOperatorPicker: _makeOperatorPicker,
-            makeServicePicker: _makeServicePicker
-        )
-    }
-    
-    private static func _makeOperatorPicker(
-    ) -> OperatorPicker {
-        
-        _OperatorPicker()
-    }
-    
-    private static func _makeServicePicker(
-    ) -> ServicePicker {
-        
-        _ServicePicker()
+        NavigationView {
+            
+            FlowView {
+                
+                FlowComposer.makeUtilityServicePaymentFlowView(
+                    initialState: initialState,
+                    config: .preview
+                )
+            }
+        }
     }
 }
 

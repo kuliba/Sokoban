@@ -9,14 +9,25 @@ import ForaTools
 
 #warning("replace with `Stack`")
 // typealias UtilityServicePaymentFlowState = Stack<UtilityServicePaymentFlowDestination>
-typealias UtilityServicePaymentFlowState = UtilityServicePaymentFlowDestination?
 
-enum UtilityServicePaymentFlowDestination {
+struct UtilityServicePaymentFlowState<Icon> {
     
-    case services
+    #warning("this is BAD - a mix of flow state and domain state!")
+    var operatorPickerState: OperatorPickerState
+    var destination: Destination?
 }
 
-extension UtilityServicePaymentFlowDestination: Identifiable {
+extension UtilityServicePaymentFlowState {
+    
+    enum Destination {
+        
+        case services(UtilityServicePickerState<Icon>)
+    }
+    
+    typealias OperatorPickerState = UtilityPaymentOperatorPickerState<Icon>
+}
+
+extension UtilityServicePaymentFlowState.Destination: Identifiable {
     
     var id: ID {
         

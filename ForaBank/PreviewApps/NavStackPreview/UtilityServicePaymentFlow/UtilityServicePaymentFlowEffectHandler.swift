@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.04.2024.
 //
 
-final class UtilityServicePaymentFlowEffectHandler {}
+final class UtilityServicePaymentFlowEffectHandler<Icon> {}
 
 extension UtilityServicePaymentFlowEffectHandler {
     
@@ -21,6 +21,6 @@ extension UtilityServicePaymentFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityServicePaymentFlowEvent
-    typealias Effect = UtilityServicePaymentFlowEffect
+    typealias Event = UtilityServicePaymentFlowEvent<Icon>
+    typealias Effect = UtilityServicePaymentFlowEffect<Icon>
 }
