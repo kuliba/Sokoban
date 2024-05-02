@@ -15,6 +15,23 @@ extension ProductData {
 extension Array where Element == ProductData {
     
     typealias Products = [ProductData.ID: [ProductData]]
+    
+    func groupingCards() -> Products {
+        
+        return self.reduce(into: Products()) { result, productData in
+            
+            if (productData.asCard != nil) {
+                
+                let productID: Int = {
+                    if let parentID = productData.parentID {
+                        return parentID
+                    } else { return productData.id }
+                }()
+                return result[productID, default: []].append(productData)
+            }
+        }
+        .mapValues { $0.sorted(by: \.order) }
+    }
 
     func groupingByParentID() -> Products {
                 

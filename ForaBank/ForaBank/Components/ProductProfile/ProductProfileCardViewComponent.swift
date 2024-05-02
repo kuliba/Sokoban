@@ -398,6 +398,10 @@ extension ProductProfileCardView.ViewModel {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
+        let productSize: CGSize = .init(width: 48, height: 48)
+        let spacing: CGFloat = 8
+        var groupingCards: Array.Products = [:]
+        
         @Published var thumbnails: [ThumbnailViewModel]
         @Published var selected: ThumbnailViewModel.ID
         
@@ -416,7 +420,7 @@ extension ProductProfileCardView.ViewModel {
             
             self.thumbnails = []
             self.selected = selected
-            
+            self.groupingCards = products.groupingCards()
             self.thumbnails = products.map { product in
                 
                 ThumbnailViewModel(
@@ -427,6 +431,17 @@ extension ProductProfileCardView.ViewModel {
                     },
                     getImage: getImage)
             }
+        }
+        
+        func widthWithColor(by id: Int) -> (CGFloat, Color) {
+            
+            if let values = groupingCards[id] {
+                let additionalSpacing = values.count == 1 ? 0 : spacing
+                let width = CGFloat(values.count) * (productSize.width + spacing) - additionalSpacing
+        
+                return values.count == 1 ? (width, .clear) : (width, .black.opacity(0.2))
+            }
+            return (0, .clear)
         }
         
         struct ThumbnailViewModel: Identifiable {
@@ -539,27 +554,53 @@ extension ProductProfileCardView {
 
             ScrollView(.horizontal, showsIndicators: false) { proxy in
                 
-                HStack(alignment: .center, spacing: 8) {
+                ZStack {
                     
-                    ForEach(viewModel.thumbnails) { thumbnail in
+                    SelectorsView(viewModel: viewModel)
+
+                    HStack(alignment: .center, spacing: 8) {
                         
-                        ProductProfileCardView.ThumbnailView(viewModel: thumbnail, isSelected: viewModel.selected == thumbnail.id)
-                            .scrollId(thumbnail.id)
+                        ForEach(viewModel.thumbnails) { thumbnail in
+                            
+                            ProductProfileCardView.ThumbnailView(viewModel: thumbnail, isSelected: viewModel.selected == thumbnail.id)
+                                .scrollId(thumbnail.id)
+                        }
+                        
+                        ProductProfileCardView.MoreButtonView(viewModel: viewModel.moreButton)
                     }
-                    
-                    ProductProfileCardView.MoreButtonView(viewModel: viewModel.moreButton)
-                }
-                .padding(.horizontal, UIScreen.main.bounds.size.width / 2 - 48 + 48 / 2)
-                .onReceive(viewModel.$selected) { selected in
-                    proxy.scrollTo(selected, alignment: .center, animated: true)
-                }
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10)) {
-                        proxy.scrollTo(viewModel.selected, alignment: .center, animated: false)
-                        
+                    .padding(.horizontal, UIScreen.main.bounds.size.width / 2 - viewModel.productSize.width + viewModel.productSize.width / 2)
+                    .onReceive(viewModel.$selected) { selected in
+                        proxy.scrollTo(selected, alignment: .center, animated: true)
+                    }
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10)) {
+                            proxy.scrollTo(viewModel.selected, alignment: .center, animated: false)
+                            
+                        }
                     }
                 }
             }
+        }
+    }
+    
+    struct SelectorsView: View {
+        
+        let viewModel: ProductProfileCardView.ViewModel.SelectorViewModel
+        
+        var body: some View {
+            
+            HStack(alignment: .center, spacing: 0) {
+                
+                ForEach(viewModel.thumbnails) { thumbnail in
+                    
+                    let (width, color) = viewModel.widthWithColor(by: thumbnail.id)
+                    Capsule()
+                        .foregroundColor(color)
+                        .frame(width: width, height: viewModel.productSize.height)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, UIScreen.main.bounds.size.width / 2 - viewModel.productSize.width + viewModel.productSize.width / 2)
         }
     }
     

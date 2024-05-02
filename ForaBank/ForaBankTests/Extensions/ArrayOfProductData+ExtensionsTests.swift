@@ -22,6 +22,19 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
             ])
     }
     
+    func test_groupingCards_shouldReturnDictionary() {
+        
+        let groupingCards = makeProducts().groupingCards()
+
+        XCTAssertNoDiff(
+            groupingCards.mapValues { $0.map(\.id)},
+            [3:  [3, 12, 7, 11, 45, 5],
+             6:  [4, 6],
+             8:  [8],
+             34: [9]
+            ])
+    }
+    
     func test_productsWithoutAdditional_shouldReturnArray() {
         
         let productsWithoutAdditional = makeProducts().productsWithoutAdditional()
