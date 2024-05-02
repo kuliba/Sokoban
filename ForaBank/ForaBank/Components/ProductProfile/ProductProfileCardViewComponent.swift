@@ -433,13 +433,15 @@ extension ProductProfileCardView.ViewModel {
             }
         }
         
-        func width(by id: Int) -> CGFloat {
+        func widthWithColor(by id: Int) -> (CGFloat, Color) {
             
             if let values = groupingCards[id] {
                 let additionalSpacing = values.count == 1 ? 0 : spacing
-                return CGFloat(values.count) * (productSize.width + spacing) - additionalSpacing
+                let width = CGFloat(values.count) * (productSize.width + spacing) - additionalSpacing
+        
+                return values.count == 1 ? (width, .clear) : (width, .black.opacity(0.2))
             }
-            return 0
+            return (0, .clear)
         }
         
         struct ThumbnailViewModel: Identifiable {
@@ -591,16 +593,10 @@ extension ProductProfileCardView {
                 
                 ForEach(viewModel.thumbnails) { thumbnail in
                     
-                    let width = viewModel.width(by: thumbnail.id)
-                    if width > (viewModel.productSize.width + viewModel.spacing) {
-                        Capsule()
-                            .foregroundColor(.black.opacity(0.2))
-                            .frame(width: width, height: viewModel.productSize.height)
-                    } else {
-                        Capsule()
-                            .foregroundColor(.clear)
-                            .frame(width: width, height: viewModel.productSize.height)
-                    }
+                    let (width, color) = viewModel.widthWithColor(by: thumbnail.id)
+                    Capsule()
+                        .foregroundColor(color)
+                        .frame(width: width, height: viewModel.productSize.height)
                 }
                 Spacer()
             }
