@@ -219,8 +219,7 @@ extension PaymentsTransfersViewModel {
                     destination: nil
                 ))
                 
-            case let .single(utilityService):
-                // flow `e`
+            case let .single(utilityService): // flow `e`
 #warning("this is wrong - payment should start without additional effect")
                 effect = .startPayment(.service(`operator`, utilityService))
             }
@@ -228,19 +227,8 @@ extension PaymentsTransfersViewModel {
         case let .paymentStarted(paymentStartedEvent):
             reduce(&state, paymentStartedEvent)
             
-        case let .select(select):
-            switch select {
-            case let .latestPayment(latestPayment):
-                // flow `e`
-                effect = .startPayment(.latestPayment(latestPayment))
-            case let .operator(`operator`):
-                // flow `d`
-                effect = .getServicesFor(`operator`)
-                
-            case let .service(utilityService, for: `operator`):
-                // flow `e`
-                effect = .startPayment(.service(`operator`, utilityService))
-            }
+        case let .select(selectEvent):
+            effect = reduce(state, selectEvent)
         }
         
         return (state, effect)
@@ -287,6 +275,26 @@ extension PaymentsTransfersViewModel {
             ))
         }
     }
+    
+    private func reduce(
+        _ state: State,
+        _ event: Event.UtilityServicePaymentFlowEvent.Select<LatestPayment, Operator>
+    ) -> Effect.UtilityServicePaymentFlowEffect {
+        
+        switch event {
+        case let .latestPayment(latestPayment): // flow `e`
+            return .startPayment(.latestPayment(latestPayment))
+            
+        case let .operator(`operator`): // flow `d`
+            return .getServicesFor(`operator`)
+            
+        case let .service(utilityService, for: `operator`): // flow `e`
+            return .startPayment(.service(`operator`, utilityService))
+        }
+    }
+    
+    typealias LatestPayment = OperatorsListComponents.LatestPayment
+    typealias Operator = OperatorsListComponents.Operator
     
     typealias State = PaymentsTransfersViewModel.Route
     typealias Event = PaymentsTransfersEvent
