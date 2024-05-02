@@ -116,7 +116,12 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     private typealias Effect = SUT.Effect
     private typealias Event = SUT.Event
     
-    private typealias CreateAnywayTransferSpy = ProcessSpy<PaymentsTransfersEffect.UtilityServicePaymentFlowEffect.StartPaymentPayload, PaymentsTransfersEvent.PaymentStarted>
+    private typealias LatestPayment = OperatorsListComponents.LatestPayment
+    private typealias Operator = OperatorsListComponents.Operator
+
+    private typealias StartPaymentPayload = PaymentsTransfersEffect.UtilityServicePaymentFlowEffect.StartPaymentPayload<LatestPayment, Operator>
+    
+    private typealias CreateAnywayTransferSpy = ProcessSpy<StartPaymentPayload, PaymentsTransfersEvent.PaymentStarted>
     private typealias GetOperatorsListByParamSpy = ProcessSpy<String, PaymentsTransfersEvent.GetOperatorsListByParamResponse>
     
     private func makeSUT(
@@ -168,21 +173,21 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     
     private func makeOperator(
         _ id: String = UUID().uuidString
-    ) -> OperatorsListComponents.Operator {
+    ) -> Operator {
         
         .init(id: id, title: id, subtitle: nil, image: nil)
     }
     
     private func makeLatestPayment(
         _ title: String = UUID().uuidString
-    ) -> OperatorsListComponents.LatestPayment {
+    ) -> LatestPayment {
         
         .init(image: nil, title: title, amount: "")
     }
     
     private func makeStartPaymentPayload(
         _ id: String = UUID().uuidString
-    ) -> PaymentsTransfersEffect.UtilityServicePaymentFlowEffect.StartPaymentPayload {
+    ) -> StartPaymentPayload {
         
         .latestPayment(makeLatestPayment(id))
     }

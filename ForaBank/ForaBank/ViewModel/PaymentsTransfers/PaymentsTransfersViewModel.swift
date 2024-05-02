@@ -156,7 +156,7 @@ extension PaymentsTransfersViewModel {
             
         case .payByInstructions:
             state.destination = .payments(makeByRequisitesPaymentsViewModel())
-                        
+            
         case .resetDestination:
             state.utilitiesRoute?.destination = nil
             state.destination = nil

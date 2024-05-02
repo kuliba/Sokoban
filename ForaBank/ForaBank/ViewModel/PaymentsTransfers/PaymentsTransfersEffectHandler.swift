@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OperatorsListComponents
 
 final class PaymentsTransfersEffectHandler {
     
@@ -36,9 +37,12 @@ extension PaymentsTransfersEffectHandler {
 
 extension PaymentsTransfersEffectHandler {
     
+    typealias LatestPayment = OperatorsListComponents.LatestPayment
+    typealias Operator = OperatorsListComponents.Operator
+    
     typealias CreateAnywayTransferPayload = PaymentsTransfersEffect.UtilityServicePaymentFlowEffect.StartPaymentPayload
     typealias CreateAnywayTransferCompletion = (Event.PaymentStarted) -> Void
-    typealias CreateAnywayTransfer = (CreateAnywayTransferPayload, @escaping CreateAnywayTransferCompletion) -> Void
+    typealias CreateAnywayTransfer = (CreateAnywayTransferPayload<LatestPayment, Operator>, @escaping CreateAnywayTransferCompletion) -> Void
     
     typealias GetOperatorsListByParamPayload = String
     typealias GetOperatorsListByParamCompletion = (Event.GetOperatorsListByParamResponse) -> Void

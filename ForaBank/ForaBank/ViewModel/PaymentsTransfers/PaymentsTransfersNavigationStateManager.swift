@@ -31,11 +31,13 @@ extension PaymentsTransfersNavigationStateManager {
 }
 
 extension PaymentsTransfersNavigationStateManager {
-
+    
     typealias State = PaymentsTransfersViewModel.Route
     typealias Event = PaymentsTransfersEvent
     typealias Effect = PaymentsTransfersEffect
 }
+
+// MARK: - Event
 
 enum PaymentsTransfersEvent: Equatable {
     
@@ -53,15 +55,18 @@ extension PaymentsTransfersEvent {
     
     enum UtilityServicePaymentFlowEvent: Equatable {
         
-        case loaded(GetOperatorsListByParamResponse, for: OperatorsListComponents.Operator)
+        case loaded(GetOperatorsListByParamResponse, for: Operator)
         case paymentStarted(PaymentStarted)
-        case select(Select)
+        case select(Select<LatestPayment, Operator>)
     }
 }
 
 extension PaymentsTransfersEvent.UtilityServicePaymentFlowEvent {
     
-    enum Select: Equatable {
+    typealias LatestPayment = OperatorsListComponents.LatestPayment
+    typealias Operator = OperatorsListComponents.Operator
+    
+    enum Select<LatestPayment, Operator> {
         
         case latestPayment(LatestPayment)
         case `operator`(Operator)
@@ -69,11 +74,7 @@ extension PaymentsTransfersEvent.UtilityServicePaymentFlowEvent {
     }
 }
 
-extension PaymentsTransfersEvent.UtilityServicePaymentFlowEvent.Select {
-    
-    typealias LatestPayment = OperatorsListComponents.LatestPayment
-    typealias Operator = OperatorsListComponents.Operator
-}
+extension PaymentsTransfersEvent.UtilityServicePaymentFlowEvent.Select: Equatable where LatestPayment: Equatable, Operator: Equatable {}
 
 extension PaymentsTransfersEvent {
     
@@ -101,38 +102,43 @@ extension PaymentsTransfersEvent {
             let value: String
             
             init(value: String = UUID().uuidString) {
-             
+                
                 self.value = value
             }
         }
     }
 }
 
+// MARK: - Effect
+
 enum PaymentsTransfersEffect: Equatable {
     
-    case utilityPayment(UtilityPaymentEffect)
     case utilityFlow(UtilityServicePaymentFlowEffect)
+    case utilityPayment(UtilityPaymentEffect)
 }
 
 extension PaymentsTransfersEffect {
- 
+    
     enum UtilityServicePaymentFlowEffect: Equatable {
         
         case getServicesFor(Operator)
-        case startPayment(StartPaymentPayload)
+        case startPayment(StartPaymentPayload<LatestPayment, Operator>)
     }
 }
 
 extension PaymentsTransfersEffect.UtilityServicePaymentFlowEffect {
     
+    typealias LatestPayment = OperatorsListComponents.LatestPayment
     typealias Operator = OperatorsListComponents.Operator
     
-    enum StartPaymentPayload: Equatable {
+    enum StartPaymentPayload<LatestPayment, Operator> {
         
-        case latestPayment(OperatorsListComponents.LatestPayment)
-        case service(OperatorsListComponents.Operator, UtilityService)
+        case latestPayment(LatestPayment)
+        case service(Operator, UtilityService)
     }
 }
+
+extension PaymentsTransfersEffect.UtilityServicePaymentFlowEffect.StartPaymentPayload: Equatable where LatestPayment: Equatable, Operator: Equatable {}
 
 // MARK: - Preview Content
 
