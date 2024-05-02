@@ -173,46 +173,10 @@ extension PaymentsTransfersViewModel {
             }
             
         case .payByInstructions:
-#warning("side effect, should be moved to the effect handler")
             state.destination = .payments(makeByRequisitesPaymentsViewModel())
             
-        case let .paymentStarted(paymentStarted):
-            switch paymentStarted {
-            case let .details(paymentDetails):
-                guard let utilitiesRoute = state.utilitiesRoute
-                else { break }
-                
-                switch utilitiesRoute.destination {
-                case .none:
-                    state.utilitiesRoute?.destination = .payment(.init(paymentDetails))
-                    
-                case let .some(destination):
-                    switch destination {
-                    case let .list(list):
-                        // state.utilitiesRoute?.destination?.utilityPaymentState = .init(paymentDetails)
-                        state.utilitiesRoute?.destination = .list(.init(
-                            operator: list.operator,
-                            services: list.services,
-                            destination: .payment(.init(paymentDetails))
-                        ))
-                        
-                    default:
-                        break
-                    }
-                }
-                
-            case .failure:
-                state.modal = .alert(.techError(
-                    message: "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.",
-                    primaryAction: { [weak self] in self?.switchToMain() }
-                ))
-                
-            case let .serverError(message):
-                state.modal = .alert(.techError(
-                    message: message,
-                    primaryAction: { [weak self] in self?.switchToMain() }
-                ))
-            }
+        case let .paymentStarted(paymentStartedEvent):
+            reduce(&state, paymentStartedEvent)
             
         case .resetDestination:
             state.utilitiesRoute?.destination = nil
@@ -254,7 +218,6 @@ extension PaymentsTransfersViewModel {
         _ event: Event.UtilityServicePaymentFlowEvent
     ) -> (State, Effect?) {
         
-        var state = state
         var effect: Effect?
         
         // TODO: improve by adding state check
@@ -277,6 +240,48 @@ extension PaymentsTransfersViewModel {
         }
         
         return (state, effect)
+    }
+    
+    private func reduce(
+        _ state: inout State,
+        _ event: Event.PaymentStarted
+    ) {
+        switch event {
+        case let .details(paymentDetails):
+            guard let utilitiesRoute = state.utilitiesRoute
+            else { break }
+            
+            switch utilitiesRoute.destination {
+            case .none:
+                state.utilitiesRoute?.destination = .payment(.init(paymentDetails))
+                
+            case let .some(destination):
+                switch destination {
+                case let .list(list):
+                    // state.utilitiesRoute?.destination?.utilityPaymentState = .init(paymentDetails)
+                    state.utilitiesRoute?.destination = .list(.init(
+                        operator: list.operator,
+                        services: list.services,
+                        destination: .payment(.init(paymentDetails))
+                    ))
+                    
+                default:
+                    break
+                }
+            }
+            
+        case .failure:
+            state.modal = .alert(.techError(
+                message: "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.",
+                primaryAction: { [weak self] in self?.switchToMain() }
+            ))
+            
+        case let .serverError(message):
+            state.modal = .alert(.techError(
+                message: message,
+                primaryAction: { [weak self] in self?.switchToMain() }
+            ))
+        }
     }
     
     typealias State = PaymentsTransfersViewModel.Route
