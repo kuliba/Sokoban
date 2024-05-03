@@ -22,11 +22,11 @@ extension PaymentsTransfersEffect.UtilityPaymentFlowEffect {
     
     enum UtilityPrepaymentFlowEffect: Equatable {
         
-        case select(Select)
+        case startPayment(with: Select)
     }
 }
 
 extension PaymentsTransfersEffect.UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect {
     
-    typealias Select = PaymentsTransfersEvent.UtilityPaymentFlowEvent.Select
+    typealias Select = PaymentsTransfersEvent.UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.Select
 }

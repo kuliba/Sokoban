@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 03.05.2024.
 //
 
+import ForaTools
 import Foundation
 
 final class PaymentsTransfersViewModel: ObservableObject {
@@ -67,7 +68,7 @@ extension PaymentsTransfersViewModel {
 
 private extension PaymentsTransfersViewModel {
     
-    // reduce is not injected due to 
+    // reduce is not injected due to
     // - complexity of existing `PaymentsTransfersViewModel`
     // - side effects (changes of outside state, like `tab`)
     private func reduce(
@@ -120,23 +121,48 @@ private extension PaymentsTransfersViewModel {
             rootActions.switchTab("chat")
             
         case .dismissDestination:
-            state.route.destination?.setUtilityFlowDestination(to: nil)
-            
-        case let .loaded(loaded):
-#warning("FIXME")
-            print(loaded)
+            state.route.setUtilityFlowDestination(to: nil)
             
         case .payByInstructions:
-            state.route.destination?.setUtilityFlowDestination(to: .payByInstructions)
+            state.route.setUtilityFlowDestination(to: .payByInstructions)
             
         case .payByInstructionsFromError:
             state.route.destination = .payByInstructions
             
+        case let .paymentStarted(startPaymentResult):
+            reduce(&state, startPaymentResult)
+            
         case let .select(select):
-            effect = .select(select)
+            effect = .startPayment(with: select)
         }
         
         return (state, effect)
+    }
+    
+    func reduce(
+        _ state: inout State,
+        _ result: PaymentsTransfersEvent.UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentResult
+    ) {
+        switch result {
+        case let .failure(failure):
+            switch failure {
+            case let .operatorFailure(`operator`):
+                state.route.setUtilityFlowDestination(to: .operatorFailure(`operator`))
+                
+            case let .serviceFailure(serviceFailure):
+                state.route.setUtilityFlowDestination(to: .serviceFailure(serviceFailure))
+            }
+            
+        case let .success(success):
+            switch success {
+            case let .services(services, `operator`):
+#warning("set destination of destination!!!")
+                state.route.setUtilityFlowDestination(to: .services(services, for: `operator`))
+                
+            case let .startPayment(response):
+                state.route.setUtilityFlowDestination(to: .payment)
+            }
+        }
     }
 }
 
@@ -188,21 +214,41 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow {
     
     enum Destination {
         
+        case operatorFailure(Operator)
         case payByInstructions
+        case payment
+        case serviceFailure(ServiceFailure)
+        case services(MultiElementArray<UtilityService>, for: Operator)
     }
 }
 
 // MARK: - Helpers
 
-private extension PaymentsTransfersViewModel.State.Route.Destination {
+private extension PaymentsTransfersViewModel.State.Route {
+    
+    var utilityFlow: PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow? {
+        
+        guard case let .utilityFlow(utilityFlow) = destination
+        else { return nil }
+        
+        return utilityFlow
+    }
+    
+    var utilityFlowDestination: PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow.Destination? {
+        
+        return utilityFlow?.destination
+    }
+}
+
+private extension PaymentsTransfersViewModel.State.Route {
     
     mutating func setUtilityFlowDestination(
         to destination: PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow.Destination?
     ) {
         
-        guard case let .utilityFlow(utilityFlow) = self else { return }
+        guard let utilityFlow else { return }
         
-        self = .utilityFlow(.init(
+        self.destination = .utilityFlow(.init(
             viewModel: utilityFlow.viewModel,
             destination: destination
         ))

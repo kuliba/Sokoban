@@ -6,19 +6,20 @@
 //
 
 import Foundation
+import ForaTools
 
 extension PaymentsTransfersFlowManager {
     
     static func preview(
-        selectStub: PaymentsTransfersEffectHandler.SelectResult? = nil
+        startPaymentStub: PaymentsTransfersEffectHandler.StartPaymentResult? = nil
     ) -> Self {
         
         let effectHandler = PaymentsTransfersEffectHandler(
-            select: { payload, completion in
+            startPayment: { payload, completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     
-                    completion(selectStub ?? .stub(for: payload))
+                    completion(startPaymentStub ?? .stub(for: payload))
                 }
             }
         )
@@ -29,31 +30,45 @@ extension PaymentsTransfersFlowManager {
     }
 }
 
-private extension PaymentsTransfersEffectHandler.SelectResult {
+private extension PaymentsTransfersEffectHandler.StartPaymentResult {
     
     static func stub(
-        for payload: PaymentsTransfersEffectHandler.SelectPayload,
+        for payload: PaymentsTransfersEffectHandler.StartPaymentPayload,
         fallback: Self = .preview
     ) -> Self {
         
         switch payload {
         case let .lastPayment(lastPayment):
             switch lastPayment.id {
-            case "last": return 1
-            default:     return fallback
+            case "failure": return .failure(.serviceFailure(.connectivityError))
+            default:        return .preview
             }
             
         case let .operator(`operator`):
             switch `operator`.id {
-            case "single":          return 1
-            case "singleFailure":   return 2
-            case "multiple":        return 3
-            case "multipleFailure": return 4
+            case "single":          return .preview
+            case "singleFailure":   return .failure(.operatorFailure(`operator`))
+            case "multiple":        return .success(.services(.preview, for: `operator`))
+            case "multipleFailure": return .failure(.serviceFailure(.serverError("Server Failure")))
             default:                return fallback
+            }
+            
+        case let .service(service, _):
+            switch service.id {
+            case "failure": return .failure(.serviceFailure(.serverError("Server Failure")))
+            default: return .preview
             }
         }
     }
     
-    static let preview: Self = .init()
+    static let preview: Self = .success(.startPayment(.init()))
 }
 
+private extension MultiElementArray where Element == UtilityService {
+    
+    static let preview: Self = .init([
+        
+        .init(id: "failure"),
+        .init(id: UUID().uuidString),
+    ])!
+}

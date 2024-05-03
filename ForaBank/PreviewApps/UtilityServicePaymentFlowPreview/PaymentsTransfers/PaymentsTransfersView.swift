@@ -75,8 +75,29 @@ struct PaymentsTransfersView: View {
     ) -> some View {
         
         switch destination {
+        case let .operatorFailure(`operator`):
+            Text("TBD: Operator Failure view for \(`operator`) with Pay by Instructions Button (!!!)")
+            
         case .payByInstructions:
             Text("Pay by Instructions")
+            
+        case .payment:
+            Text("TBD: Payment")
+            
+        case let .serviceFailure(serviceFailure):
+            Text("TBD: Alerts with OK that resets destination")
+            
+        case let .services(services, for: `operator`):
+            List {
+                ForEach(services.elements) {service in
+                    
+                    Button(String(service.id.prefix(24))) {
+                        
+                        viewModel.event(.utilityFlow(.prepayment(.select(.service(service, for: `operator`)))))
+                    }
+                }
+            }
+#warning("add navigation destination")
         }
     }
 }
@@ -115,14 +136,30 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow.Destina
     var id: ID {
         
         switch self {
+        case let .operatorFailure(`operator`):
+            return .operatorFailure(`operator`.id)
             
-        case .payByInstructions: return .payByInstructions
+        case .payByInstructions:
+            return .payByInstructions
+            
+        case .payment:
+            return .payment
+            
+        case let .serviceFailure(serviceFailure):
+            return  .serviceFailure(serviceFailure)
+            
+        case let .services(_, for: `operator`):
+            return .services(for: `operator`.id)
         }
     }
     
     enum ID: Hashable {
         
+        case operatorFailure(Operator.ID)
         case payByInstructions
+        case payment
+        case serviceFailure(ServiceFailure)
+        case services(for: Operator.ID)
     }
 }
 

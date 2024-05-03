@@ -16,7 +16,9 @@ struct UtilityPrepaymentView: View {
     
     // MARK: - Stubs
     
-    private let lastPayment: LastPayment = .init(id: "last")
+    private let lastPayment: LastPayment = .preview
+    private let lastPaymentFailure: LastPayment = .init(id: "failure")
+    
     private let single = Operator(id: "single")
     private let singleFailure = Operator(id: "singleFailure")
     private let multiple = Operator(id: "multiple")
@@ -26,25 +28,25 @@ struct UtilityPrepaymentView: View {
         
         VStack(spacing: 32) {
             
-            Text("UtilityPrepaymentView")
-
             Button("LastPayment", action: { flowEvent(.select(.lastPayment(lastPayment))) })
+
+            Button("LastPayment Failure", action: { flowEvent(.select(.lastPayment(lastPaymentFailure))) })
 
             Button("Single service Operator", action: { flowEvent(.select(.operator(single))) })
             
+            Button("Single service Operator Failure", action: { flowEvent(.select(.operator(singleFailure))) })
+            
             Button("Multi service Operator", action: { flowEvent(.select(.operator(multiple))) })
             
-            Button("Multi service Operator Failure", action: { flowEvent(.select(.operator(multiple))) })
-            
-            Button("Start Payment Failure", action: { flowEvent(.select(.operator(multiple))) })
+            Button("Multi service Operator Failure", action: { flowEvent(.select(.operator(multipleFailure))) })
             
             Divider()
             
             Button("Add Company", action: { flowEvent(.addCompany) })
             
-            Button("Pay by Instructions From Empty Operator List", action: { flowEvent(.payByInstructionsFromError) })
-            
             Button("Pay by Instructions", action: { flowEvent(.payByInstructions) })
+            
+            Button("Pay by Instructions From Empty Operator List", action: { flowEvent(.payByInstructionsFromError) })
         }
         .padding()
     }

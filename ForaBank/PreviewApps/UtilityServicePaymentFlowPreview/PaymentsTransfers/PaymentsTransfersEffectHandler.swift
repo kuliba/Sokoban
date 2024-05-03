@@ -7,12 +7,12 @@
 
 final class PaymentsTransfersEffectHandler {
     
-    private let select: Select
+    private let startPayment: StartPayment
     
     init(
-        select: @escaping Select
+        startPayment: @escaping StartPayment
     ) {
-        self.select = select
+        self.startPayment = startPayment
     }
 }
 
@@ -31,11 +31,16 @@ extension PaymentsTransfersEffectHandler {
 
 extension PaymentsTransfersEffectHandler {
     
-    typealias SelectPayload = PaymentsTransfersEffect.UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect.Select
-    typealias SelectResult = Int
-    typealias SelectCompletion = (SelectResult) -> Void
-    typealias Select = (SelectPayload, @escaping SelectCompletion) -> Void
-    
+    // StartPayment is a micro-service, that combines
+    // - `e` from LastPayment
+    // - `d1`
+    // - `d2e`
+    // - `d3`, `d4`, `d5`
+    typealias StartPaymentPayload = PaymentsTransfersEffect.UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect.Select
+    typealias StartPaymentResult = Event.UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentResult
+    typealias StartPaymentCompletion = (StartPaymentResult) -> Void
+    typealias StartPayment = (StartPaymentPayload, @escaping StartPaymentCompletion) -> Void
+
     typealias Dispatch = (Event) -> Void
     
     typealias Event = PaymentsTransfersEvent
@@ -53,7 +58,6 @@ private extension PaymentsTransfersEffectHandler {
         switch effect {
         case let .prepayment(effect):
             handleEffect(effect) { dispatch(.prepayment($0)) }
-
         }
     }
     
@@ -66,8 +70,11 @@ private extension PaymentsTransfersEffectHandler {
         _ dispatch: @escaping UtilityPrepaymentDispatch
     ) {
         switch effect {
-        case let .select(select):
-            self.select(select) { dispatch(.loaded($0)) }
+        case let .startPayment(with: payload):
+            startPayment(payload) {
+                
+                dispatch(.paymentStarted($0))
+            }
         }
     }
 }

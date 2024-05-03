@@ -797,6 +797,9 @@
 		2A69C2152BE5155800FE91B0 /* PaymentsTransfersFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C2142BE5155800FE91B0 /* PaymentsTransfersFlowManager.swift */; };
 		2A69C2172BE5162900FE91B0 /* PaymentsTransfersFlowManager+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C2162BE5162900FE91B0 /* PaymentsTransfersFlowManager+preview.swift */; };
 		2A69C2192BE5164E00FE91B0 /* PaymentsTransfersEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C2182BE5164E00FE91B0 /* PaymentsTransfersEffectHandler.swift */; };
+		2A69C21B2BE53E4000FE91B0 /* UtilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C21A2BE53E4000FE91B0 /* UtilityService.swift */; };
+		2A69C21D2BE53EDE00FE91B0 /* ServiceFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C21C2BE53EDD00FE91B0 /* ServiceFailure.swift */; };
+		2A69C21F2BE57A7B00FE91B0 /* ForaTools in Frameworks */ = {isa = PBXBuildFile; productRef = 2A69C21E2BE57A7B00FE91B0 /* ForaTools */; };
 		2A6AD34B2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AD34A2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift */; };
 		2A6AF2132AF8178100655156 /* Services+makeShowCVVService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */; };
 		2A6AF2152AF81C1400655156 /* Services+makeChangePINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */; };
@@ -3559,6 +3562,8 @@
 		2A69C2142BE5155800FE91B0 /* PaymentsTransfersFlowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFlowManager.swift; sourceTree = "<group>"; };
 		2A69C2162BE5162900FE91B0 /* PaymentsTransfersFlowManager+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersFlowManager+preview.swift"; sourceTree = "<group>"; };
 		2A69C2182BE5164E00FE91B0 /* PaymentsTransfersEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersEffectHandler.swift; sourceTree = "<group>"; };
+		2A69C21A2BE53E4000FE91B0 /* UtilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityService.swift; sourceTree = "<group>"; };
+		2A69C21C2BE53EDD00FE91B0 /* ServiceFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceFailure.swift; sourceTree = "<group>"; };
 		2A6AD34A2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCVVPINServiceTests.swift; sourceTree = "<group>"; };
 		2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeShowCVVService.swift"; sourceTree = "<group>"; };
 		2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeChangePINService.swift"; sourceTree = "<group>"; };
@@ -5479,6 +5484,7 @@
 			files = (
 				2A69C1C12BE4E75300FE91B0 /* UIPrimitives in Frameworks */,
 				2A69C1C32BE4E75800FE91B0 /* RxViewModel in Frameworks */,
+				2A69C21F2BE57A7B00FE91B0 /* ForaTools in Frameworks */,
 				2A69C1BF2BE4E74600FE91B0 /* CombineSchedulers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7942,6 +7948,7 @@
 			isa = PBXGroup;
 			children = (
 				2A69C20C2BE50A3E00FE91B0 /* PaymentsTransfersEvent.swift */,
+				2A69C21C2BE53EDD00FE91B0 /* ServiceFailure.swift */,
 				2A69C2122BE514BC00FE91B0 /* PaymentsTransfersEffect.swift */,
 				2A69C1C52BE4E78A00FE91B0 /* PaymentsTransfersViewModel.swift */,
 				2A69C2142BE5155800FE91B0 /* PaymentsTransfersFlowManager.swift */,
@@ -7972,6 +7979,7 @@
 				2A69C1E42BE4F84800FE91B0 /* UtilityPrepaymentFlowEvent.swift */,
 				2A69C1E62BE4F8F800FE91B0 /* LastPayment.swift */,
 				2A69C1E82BE4F90B00FE91B0 /* Operator.swift */,
+				2A69C21A2BE53E4000FE91B0 /* UtilityService.swift */,
 			);
 			path = UtilityPrepaymentWrapper;
 			sourceTree = "<group>";
@@ -14337,6 +14345,7 @@
 				2A69C1BE2BE4E74600FE91B0 /* CombineSchedulers */,
 				2A69C1C02BE4E75300FE91B0 /* UIPrimitives */,
 				2A69C1C22BE4E75800FE91B0 /* RxViewModel */,
+				2A69C21E2BE57A7B00FE91B0 /* ForaTools */,
 			);
 			productName = UtilityServicePaymentFlowPreview;
 			productReference = 2A69C1AA2BE4E3AF00FE91B0 /* UtilityServicePaymentFlowPreview.app */;
@@ -15684,6 +15693,7 @@
 				2A69C1E72BE4F8F800FE91B0 /* LastPayment.swift in Sources */,
 				2A69C2112BE5135200FE91B0 /* Operator+preview.swift in Sources */,
 				2A69C1D92BE4F03800FE91B0 /* RootActions+preview.swift in Sources */,
+				2A69C21B2BE53E4000FE91B0 /* UtilityService.swift in Sources */,
 				2A69C1E92BE4F90B00FE91B0 /* Operator.swift in Sources */,
 				2A69C2052BE4FDB200FE91B0 /* UtilityPaymentStateWrapperView.ViewModel+preview.swift in Sources */,
 				2A69C2192BE5164E00FE91B0 /* PaymentsTransfersEffectHandler.swift in Sources */,
@@ -15697,6 +15707,7 @@
 				2A69C1FF2BE4FC9A00FE91B0 /* PaymentsTransfersDestinationViewFactory.swift in Sources */,
 				2A69C1D32BE4E9A700FE91B0 /* PaymentsTransfersViewModel.State+preview.swift in Sources */,
 				2A69C1F12BE4FB3800FE91B0 /* UtilityPrepaymentViewConfig+preview.swift in Sources */,
+				2A69C21D2BE53EDE00FE91B0 /* ServiceFailure.swift in Sources */,
 				2A69C1C82BE4E79C00FE91B0 /* PaymentsTransfersViewModelFactory.swift in Sources */,
 				2A69C1FB2BE4FBD900FE91B0 /* UtilityPrepaymentReducer.swift in Sources */,
 				2A69C1AF2BE4E3AF00FE91B0 /* ContentView.swift in Sources */,
@@ -21689,6 +21700,10 @@
 		2A69C1C22BE4E75800FE91B0 /* RxViewModel */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RxViewModel;
+		};
+		2A69C21E2BE57A7B00FE91B0 /* ForaTools */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ForaTools;
 		};
 		2A727A252A9381A700235EFF /* TransferPublicKey */ = {
 			isa = XCSwiftPackageProductDependency;
