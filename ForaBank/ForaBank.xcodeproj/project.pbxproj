@@ -760,6 +760,8 @@
 		2A69C1AF2BE4E3AF00FE91B0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C1AE2BE4E3AF00FE91B0 /* ContentView.swift */; };
 		2A69C1B12BE4E3B100FE91B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A69C1B02BE4E3B100FE91B0 /* Assets.xcassets */; };
 		2A69C1B42BE4E3B100FE91B0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A69C1B32BE4E3B100FE91B0 /* Preview Assets.xcassets */; };
+		2A69C1BB2BE4E42000FE91B0 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C1BA2BE4E42000FE91B0 /* Route.swift */; };
+		2A69C1BD2BE4E70500FE91B0 /* SampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C1BC2BE4E70500FE91B0 /* SampleViewModel.swift */; };
 		2A6AD34B2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AD34A2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift */; };
 		2A6AF2132AF8178100655156 /* Services+makeShowCVVService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */; };
 		2A6AF2152AF81C1400655156 /* Services+makeChangePINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */; };
@@ -3488,6 +3490,8 @@
 		2A69C1AE2BE4E3AF00FE91B0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2A69C1B02BE4E3B100FE91B0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2A69C1B32BE4E3B100FE91B0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2A69C1BA2BE4E42000FE91B0 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		2A69C1BC2BE4E70500FE91B0 /* SampleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleViewModel.swift; sourceTree = "<group>"; };
 		2A6AD34A2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCVVPINServiceTests.swift; sourceTree = "<group>"; };
 		2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeShowCVVService.swift"; sourceTree = "<group>"; };
 		2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeChangePINService.swift"; sourceTree = "<group>"; };
@@ -7840,6 +7844,8 @@
 			children = (
 				2A69C1AC2BE4E3AF00FE91B0 /* UtilityServicePaymentFlowPreviewApp.swift */,
 				2A69C1AE2BE4E3AF00FE91B0 /* ContentView.swift */,
+				2A69C1BA2BE4E42000FE91B0 /* Route.swift */,
+				2A69C1BC2BE4E70500FE91B0 /* SampleViewModel.swift */,
 				2A69C1B02BE4E3B100FE91B0 /* Assets.xcassets */,
 				2A69C1B22BE4E3B100FE91B0 /* Preview Content */,
 			);
@@ -15517,7 +15523,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A69C1BB2BE4E42000FE91B0 /* Route.swift in Sources */,
 				2A69C1AF2BE4E3AF00FE91B0 /* ContentView.swift in Sources */,
+				2A69C1BD2BE4E70500FE91B0 /* SampleViewModel.swift in Sources */,
 				2A69C1AD2BE4E3AF00FE91B0 /* UtilityServicePaymentFlowPreviewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
