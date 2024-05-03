@@ -45,7 +45,7 @@ extension PaymentsTransfersEffectHandler {
     typealias CreateAnywayTransfer = (CreateAnywayTransferPayload<LatestPayment, Operator>, @escaping CreateAnywayTransferCompletion) -> Void
     
     typealias GetOperatorsListByParamPayload = String
-    typealias GetOperatorsListByParamCompletion = (Event.GetOperatorsListByParamResponse) -> Void
+    typealias GetOperatorsListByParamCompletion = (Event.UtilityServicePaymentFlowEvent.GetOperatorsListByParamResponse) -> Void
     typealias GetOperatorsListByParam = (GetOperatorsListByParamPayload, @escaping GetOperatorsListByParamCompletion) -> Void
 }
 

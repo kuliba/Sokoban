@@ -122,7 +122,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     private typealias StartPaymentPayload = PaymentsTransfersEffect.UtilityServicePaymentFlowEffect.StartPaymentPayload<LatestPayment, Operator>
     
     private typealias CreateAnywayTransferSpy = ProcessSpy<StartPaymentPayload, PaymentsTransfersEvent.PaymentStarted>
-    private typealias GetOperatorsListByParamSpy = ProcessSpy<String, PaymentsTransfersEvent.GetOperatorsListByParamResponse>
+    private typealias GetOperatorsListByParamSpy = ProcessSpy<String, PaymentsTransfersEvent.UtilityServicePaymentFlowEvent.GetOperatorsListByParamResponse>
     
     private func makeSUT(
         file: StaticString = #file,

@@ -53,41 +53,6 @@ enum PaymentsTransfersEvent: Equatable {
 
 extension PaymentsTransfersEvent {
     
-    enum UtilityServicePaymentFlowEvent: Equatable {
-        
-        case loaded(GetOperatorsListByParamResponse, for: Operator)
-        case paymentStarted(PaymentStarted)
-        case select(Select<LatestPayment, Operator>)
-    }
-}
-
-extension PaymentsTransfersEvent.UtilityServicePaymentFlowEvent {
-    
-    typealias LatestPayment = OperatorsListComponents.LatestPayment
-    typealias Operator = OperatorsListComponents.Operator
-    
-    enum Select<LatestPayment, Operator> {
-        
-        case latestPayment(LatestPayment)
-        case `operator`(Operator)
-        case service(UtilityService, for: Operator)
-    }
-}
-
-extension PaymentsTransfersEvent.UtilityServicePaymentFlowEvent.Select: Equatable where LatestPayment: Equatable, Operator: Equatable {}
-
-extension PaymentsTransfersEvent {
-    
-    enum GetOperatorsListByParamResponse: Equatable {
-        
-        // `d3/d4/d5`
-        case failure
-        // `d1` TODO: replace with NonEmpty
-        case list([UtilityService])
-        // `d2` https://shorturl.at/csvCT
-        case single(UtilityService)
-    }
-    
     enum PaymentStarted: Equatable {
         
         // `e1` https://shorturl.at/jlmJ9
@@ -107,7 +72,40 @@ extension PaymentsTransfersEvent {
             }
         }
     }
+    
+    enum UtilityServicePaymentFlowEvent: Equatable {
+        
+        case loaded(GetOperatorsListByParamResponse, for: Operator)
+        case paymentStarted(PaymentStarted)
+        case select(Select<LatestPayment, Operator>)
+    }
 }
+
+extension PaymentsTransfersEvent.UtilityServicePaymentFlowEvent {
+    
+    enum GetOperatorsListByParamResponse: Equatable {
+        
+        // `d3/d4/d5`
+        case failure
+        // `d1` TODO: replace with NonEmpty
+        case list([UtilityService])
+        // `d2` https://shorturl.at/csvCT
+        case single(UtilityService)
+    }
+    
+    typealias LatestPayment = OperatorsListComponents.LatestPayment
+    typealias Operator = OperatorsListComponents.Operator
+    
+    enum Select<LatestPayment, Operator> {
+        
+        case latestPayment(LatestPayment)
+        case `operator`(Operator)
+        case service(UtilityService, for: Operator)
+    }
+}
+
+extension PaymentsTransfersEvent.UtilityServicePaymentFlowEvent.Select: Equatable where LatestPayment: Equatable, Operator: Equatable {}
+
 
 // MARK: - Effect
 

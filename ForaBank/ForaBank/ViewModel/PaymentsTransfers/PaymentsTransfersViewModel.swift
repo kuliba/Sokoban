@@ -208,27 +208,43 @@ extension PaymentsTransfersViewModel {
         switch event {
             
         case let .loaded(response, for: `operator`):
-            switch response {
-            case .failure:
-                state.utilitiesRoute?.destination = .failure(`operator`)
-                
-            case let .list(services):
-                state.utilitiesRoute?.destination = .list(.init(
-                    operator: `operator`,
-                    services: services,
-                    destination: nil
-                ))
-                
-            case let .single(utilityService): // flow `e`
-#warning("this is wrong - payment should start without additional effect")
-                effect = .startPayment(.service(`operator`, utilityService))
-            }
+            (state, effect) = reduce(state, response, `operator`)
             
         case let .paymentStarted(paymentStartedEvent):
             reduce(&state, paymentStartedEvent)
             
         case let .select(selectEvent):
             effect = reduce(state, selectEvent)
+        }
+        
+        return (state, effect)
+    }
+    
+    private func reduce(
+        _ state: State,
+        _ response: PaymentsTransfersEvent.UtilityServicePaymentFlowEvent.GetOperatorsListByParamResponse,
+        _ `operator`: Operator
+    ) -> (State, Effect.UtilityServicePaymentFlowEffect?) {
+        
+        var state = state
+        var effect: Effect.UtilityServicePaymentFlowEffect?
+        
+        // TODO: improve by adding state check
+        // like `guard let utilitiesRoute = state.utilitiesRoute else { break }`
+        switch response {
+        case .failure:
+            state.utilitiesRoute?.destination = .failure(`operator`)
+            
+        case let .list(services):
+            state.utilitiesRoute?.destination = .list(.init(
+                operator: `operator`,
+                services: services,
+                destination: nil
+            ))
+            
+        case let .single(utilityService): // flow `e`
+#warning("this is wrong - payment should start without additional effect")
+            effect = .startPayment(.service(`operator`, utilityService))
         }
         
         return (state, effect)
