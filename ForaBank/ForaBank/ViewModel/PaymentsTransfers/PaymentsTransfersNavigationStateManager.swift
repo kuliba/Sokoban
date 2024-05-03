@@ -42,6 +42,8 @@ extension PaymentsTransfersNavigationStateManager {
 enum PaymentsTransfersEvent: Equatable {
     
     case addCompany
+//    case buttonTapped(ButtonTapped)
+    #warning("payByInstructions calls and flows depend on context - move to utilityFlow")
     case payByInstructions
     case resetDestination
     case resetModal
@@ -52,26 +54,6 @@ enum PaymentsTransfersEvent: Equatable {
 }
 
 extension PaymentsTransfersEvent {
-    
-    enum PaymentStarted: Equatable {
-        
-        // `e1` https://shorturl.at/jlmJ9
-        case details(PaymentDetails)
-        // `e3`, `e4`
-        case failure
-        // `e2`
-        case serverError(String)
-        
-        struct PaymentDetails: Equatable {
-            
-            let value: String
-            
-            init(value: String = UUID().uuidString) {
-                
-                self.value = value
-            }
-        }
-    }
     
     enum UtilityServicePaymentFlowEvent: Equatable {
         
@@ -96,11 +78,34 @@ extension PaymentsTransfersEvent.UtilityServicePaymentFlowEvent {
     typealias LatestPayment = OperatorsListComponents.LatestPayment
     typealias Operator = OperatorsListComponents.Operator
     
+    enum PaymentStarted: Equatable {
+        
+        // `e1` https://shorturl.at/jlmJ9
+        case details(PaymentDetails)
+        // `e3`, `e4`
+        case failure
+        // `e2`
+        case serverError(String)
+    }
+    
     enum Select<LatestPayment, Operator> {
         
         case latestPayment(LatestPayment)
         case `operator`(Operator)
         case service(UtilityService, for: Operator)
+    }
+}
+
+extension PaymentsTransfersEvent.UtilityServicePaymentFlowEvent.PaymentStarted {
+    
+    struct PaymentDetails: Equatable {
+        
+        let value: String
+        
+        init(value: String = UUID().uuidString) {
+            
+            self.value = value
+        }
     }
 }
 

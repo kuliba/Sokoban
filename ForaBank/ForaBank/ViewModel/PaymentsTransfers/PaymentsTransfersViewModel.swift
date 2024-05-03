@@ -252,7 +252,7 @@ extension PaymentsTransfersViewModel {
     
     private func reduce(
         _ state: inout State,
-        _ event: Event.PaymentStarted
+        _ event: Event.UtilityServicePaymentFlowEvent.PaymentStarted
     ) {
         switch event {
         case let .details(paymentDetails):

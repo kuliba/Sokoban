@@ -40,18 +40,19 @@ extension PaymentsTransfersEffectHandler {
     typealias LatestPayment = OperatorsListComponents.LatestPayment
     typealias Operator = OperatorsListComponents.Operator
     
-    typealias CreateAnywayTransferPayload = PaymentsTransfersEffect.UtilityServicePaymentFlowEffect.StartPaymentPayload
-    typealias CreateAnywayTransferCompletion = (Event.PaymentStarted) -> Void
+    typealias CreateAnywayTransferPayload = UtilityFlowEffect.StartPaymentPayload
+    typealias CreateAnywayTransferCompletion = (UtilityFlowEvent.PaymentStarted) -> Void
     typealias CreateAnywayTransfer = (CreateAnywayTransferPayload<LatestPayment, Operator>, @escaping CreateAnywayTransferCompletion) -> Void
     
     typealias GetOperatorsListByParamPayload = String
-    typealias GetOperatorsListByParamCompletion = (Event.UtilityServicePaymentFlowEvent.GetOperatorsListByParamResponse) -> Void
+    typealias GetOperatorsListByParamCompletion = (UtilityFlowEvent.GetOperatorsListByParamResponse) -> Void
     typealias GetOperatorsListByParam = (GetOperatorsListByParamPayload, @escaping GetOperatorsListByParamCompletion) -> Void
 }
 
 extension PaymentsTransfersEffectHandler {
     
     typealias UtilityFlowEvent = Event.UtilityServicePaymentFlowEvent
+    typealias UtilityFlowEffect = Effect.UtilityServicePaymentFlowEffect
     typealias UtilityFlowDispatch = (UtilityFlowEvent) -> Void
     
     typealias Dispatch = (Event) -> Void

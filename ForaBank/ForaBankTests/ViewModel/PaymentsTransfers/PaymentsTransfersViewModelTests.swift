@@ -148,7 +148,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let (sut, _, effectSpy) = makeSUT()
         
         sut.event(.utilityFlow(.select(.latestPayment(latestPayment))))
-
+        
         XCTAssertNoDiff(effectSpy.messages.map(\.effect), [
             .utilityFlow(.startPayment(.latestPayment(latestPayment)))
         ])
@@ -254,7 +254,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         try sut.openUtilityPayments()
         sut.event(.utilityFlow(.select(.operator(`operator`))))
-
+        
         XCTAssertNoDiff(effectSpy.messages.map(\.effect), [.utilityFlow(.getServicesFor(`operator`))])
     }
     
@@ -333,7 +333,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_paymentStarted_shouldNotDeliverEffectOnDetails() throws {
         
-        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .details(makePaymentDetails())
+        let paymentStarted: PaymentStarted = .details(makePaymentDetails())
         let (sut, _, effectSpy) = makeSUT()
         
         try sut.openUtilityPayments()
@@ -345,7 +345,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_paymentStarted_shouldChangeStateOnFailure() throws {
         
-        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .failure
+        let paymentStarted: PaymentStarted = .failure
         let (sut, _,_) = makeSUT()
         let spy = ValueSpy(sut.$route.map(\.destination?.id))
         let modalSpy = ValueSpy(sut.$route.map(\.modal?.equatable))
@@ -363,7 +363,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_paymentStarted_shouldNotDeliverEffectOnFailure() throws {
         
-        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .failure
+        let paymentStarted: PaymentStarted = .failure
         let (sut, _, effectSpy) = makeSUT()
         
         try sut.openUtilityPayments()
@@ -375,7 +375,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_paymentStarted_shouldChangeStateOnServerError() throws {
         
-        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .serverError(UUID().uuidString)
+        let paymentStarted: PaymentStarted = .serverError(UUID().uuidString)
         let (sut, _,_) = makeSUT()
         let spy = ValueSpy(sut.$route.map(\.destination?.id))
         let modalSpy = ValueSpy(sut.$route.map(\.modal?.equatable))
@@ -393,7 +393,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_paymentStarted_shouldNotDeliverEffectOnServerError() throws {
         
-        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .serverError(UUID().uuidString)
+        let paymentStarted: PaymentStarted = .serverError(UUID().uuidString)
         let (sut, _, effectSpy) = makeSUT()
         
         try sut.openUtilityPayments()
@@ -427,7 +427,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_resetModal_shouldResetModal() throws {
         
-        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .serverError(UUID().uuidString)
+        let paymentStarted: PaymentStarted = .serverError(UUID().uuidString)
         let (sut, _,_) = makeSUT()
         
         try sut.openUtilityPayments()
@@ -442,7 +442,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_resetModal_shouldNotDeliverEffect() throws {
         
-        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .serverError(UUID().uuidString)
+        let paymentStarted: PaymentStarted = .serverError(UUID().uuidString)
         let (sut, _, effectSpy) = makeSUT()
         
         try sut.openUtilityPayments()
@@ -454,7 +454,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_resetUtilityDestination_shouldResetUtilityDestination() throws {
         
-        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .details(makePaymentDetails())
+        let paymentStarted: PaymentStarted = .details(makePaymentDetails())
         let (sut, _,_) = makeSUT()
         let utilityPaymentDestinationSpy = ValueSpy(sut.utilityPaymentDestinationPublisher)
         
@@ -470,7 +470,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     func test_resetUtilityDestination_shouldNotDeliverEffect() throws {
         
-        let paymentStarted: PaymentsTransfersEvent.PaymentStarted = .details(makePaymentDetails())
+        let paymentStarted: PaymentStarted = .details(makePaymentDetails())
         let (sut, _, effectSpy) = makeSUT()
         
         try sut.openUtilityPayments()
@@ -490,7 +490,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         try sut.openUtilityPayments()
         sut.event(.utilityFlow(.select(.service(utilityService, for: `operator`))))
-
+        
         XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
         XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
     }
@@ -503,7 +503,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         try sut.openUtilityPayments()
         sut.event(.utilityFlow(.select(.service(utilityService, for: `operator`))))
-
+        
         XCTAssertNoDiff(effectSpy.messages.map(\.effect), [
             .utilityFlow(.startPayment(.service(`operator`, utilityService)))
         ])
@@ -679,6 +679,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     // MARK: - Helpers
     
+    private typealias PaymentStarted = PaymentsTransfersEvent.UtilityServicePaymentFlowEvent.PaymentStarted
+    
     fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
     private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
     
@@ -792,7 +794,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     private func makePaymentDetails(
         _ value: String = UUID().uuidString
-    ) -> PaymentsTransfersEvent.PaymentStarted.PaymentDetails {
+    ) -> PaymentStarted.PaymentDetails {
         
         .init()
     }
