@@ -8,6 +8,7 @@
 struct RootActions {
     
     let spinner: Spinner
+    let switchTab: (String) -> Void
     
     struct Spinner {
         

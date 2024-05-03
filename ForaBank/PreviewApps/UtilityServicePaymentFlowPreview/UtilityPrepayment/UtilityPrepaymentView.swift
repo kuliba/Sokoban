@@ -14,10 +14,11 @@ struct UtilityPrepaymentView: View {
     let flowEvent: (FlowEvent) -> Void
     let config: Config
     
-    // MARK: - Stub
+    // MARK: - Stubs
     
-    private let lastPayment: LastPayment = .preview
-    private let `operator` = Operator(id: UUID().uuidString)
+    private let lastPayment: LastPayment = .init(id: "last")
+    private let single = Operator(id: "single")
+    private let multiple = Operator(id: "multiple")
     
     var body: some View {
         
@@ -25,13 +26,17 @@ struct UtilityPrepaymentView: View {
             
             Text("UtilityPrepaymentView")
 
-            Button("select LastPayment", action: { flowEvent(.select(.lastPayment(lastPayment))) })
+            Button("LastPayment", action: { flowEvent(.select(.lastPayment(lastPayment))) })
 
-            Button("select Operator", action: { flowEvent(.select(.operator(`operator`))) })
+            Button("Single service Operator", action: { flowEvent(.select(.operator(single))) })
+            
+            Button("Multi service Operator", action: { flowEvent(.select(.operator(multiple))) })
             
             Divider()
             
             Button("Add Company", action: { flowEvent(.addCompany) })
+            
+            Button("Pay by Instructions From Empty Operator List", action: { flowEvent(.payByInstructionsFromError) })
             
             Button("Pay by Instructions", action: { flowEvent(.payByInstructions) })
         }

@@ -33,18 +33,24 @@ struct PaymentsTransfersView: View {
             )
     }
     
+    @ViewBuilder
     private func destinationView(
         destination: Destination
     ) -> some View {
         
         switch destination {
+        case .payByInstructions:
+            Text("TBD: Pay by Instructions")
+                .navigationTitle("Pay by Instructions")
+                .navigationBarTitleDisplayMode(.inline)
+            
         case let .utilityFlow(utilityPaymentViewModel):
             UtilityPrepaymentWrapperView(
                 viewModel: utilityPaymentViewModel,
-                flowEvent: { viewModel.event(.utilityFlow($0.flowEvent)) },
+                flowEvent: { viewModel.event(.utilityFlow(.prepayment($0.flowEvent))) },
                 config: config
             )
-            .navigationTitle("UtilityPrepaymentView")
+            .navigationTitle("Utility Prepayment View")
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -59,7 +65,7 @@ extension PaymentsTransfersView {
 
 private extension UtilityPrepaymentFlowEvent {
     
-    var flowEvent: PaymentsTransfersEvent.UtilityFlowEvent {
+    var flowEvent: PaymentsTransfersEvent.UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
         
         switch self {
         case .addCompany:
@@ -67,6 +73,9 @@ private extension UtilityPrepaymentFlowEvent {
             
         case .payByInstructions:
             return .payByInstructions
+            
+        case .payByInstructionsFromError:
+            return .payByInstructionsFromError
             
         case let .select(select):
             switch select {

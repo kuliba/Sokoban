@@ -9,6 +9,7 @@ enum UtilityPrepaymentFlowEvent: Equatable {
     
     case addCompany
     case payByInstructions
+    case payByInstructionsFromError
     case select(Select)
 }
 

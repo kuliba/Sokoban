@@ -7,20 +7,30 @@
 
 enum PaymentsTransfersEvent: Equatable {
     
-    case utilityFlow(UtilityFlowEvent)
+    case utilityFlow(UtilityPaymentFlowEvent)
 }
 
 extension PaymentsTransfersEvent {
     
-    enum UtilityFlowEvent: Equatable {
+    enum UtilityPaymentFlowEvent: Equatable {
+        
+        case prepayment(UtilityPrepaymentFlowEvent)
+    }
+}
+
+extension PaymentsTransfersEvent.UtilityPaymentFlowEvent {
+    
+    enum UtilityPrepaymentFlowEvent: Equatable {
         
         case addCompany
+        case loaded(Int)
         case payByInstructions
+        case payByInstructionsFromError
         case select(Select)
     }
 }
 
-extension PaymentsTransfersEvent.UtilityFlowEvent {
+extension PaymentsTransfersEvent.UtilityPaymentFlowEvent {
     
     enum Select: Equatable {
         

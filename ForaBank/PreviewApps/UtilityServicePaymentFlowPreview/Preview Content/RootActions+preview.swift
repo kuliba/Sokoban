@@ -7,7 +7,10 @@
 
 extension RootActions {
     
-    static let preview: Self = .init(spinner: .preview)
+    static let preview: Self = .init(
+        spinner: .preview,
+        switchTab: { print($0) }
+    )
 }
 
 extension RootActions.Spinner {

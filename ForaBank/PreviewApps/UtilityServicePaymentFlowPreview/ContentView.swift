@@ -11,7 +11,8 @@ struct ContentView: View {
     
     @StateObject private var viewModel = PaymentsTransfersViewModel(
         state: .init(route: .init()),
-        factory: .preview,
+        factory: .preview, 
+        navigationStateManager: .preview(),
         rootActions: .preview
     )
     
