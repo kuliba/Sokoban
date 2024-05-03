@@ -8,14 +8,20 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @StateObject private var viewModel = PaymentsTransfersViewModel(
+        state: .init(route: .init()),
+        factory: .preview,
+        rootActions: .preview
+    )
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-
-            Text("Hello, world!")
+        
+        NavigationView {
+            
+            PaymentsTransfersView(viewModel: viewModel, config: .preview)
         }
-        .padding()
+        .navigationViewStyle(.stack)
     }
 }
 

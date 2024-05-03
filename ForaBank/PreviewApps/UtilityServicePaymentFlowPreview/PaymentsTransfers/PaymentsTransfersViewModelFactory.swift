@@ -7,11 +7,11 @@
 
 struct PaymentsTransfersViewModelFactory {
     
-    let makeUtilityPaymentViewModel: MakeUtilityPaymentViewModel
+    let makeUtilityPrepaymentViewModel: MakeUtilityPrepaymentViewModel
 }
 
 extension PaymentsTransfersViewModelFactory {
     
-    typealias MakeUtilityPaymentViewModelCompletion = (UtilityPaymentViewModel) -> Void
-    typealias MakeUtilityPaymentViewModel = (@escaping MakeUtilityPaymentViewModelCompletion) -> Void
+    typealias MakeUtilityPrepaymentViewModelCompletion = (UtilityPrepaymentViewModel) -> Void
+    typealias MakeUtilityPrepaymentViewModel = (@escaping MakeUtilityPrepaymentViewModelCompletion) -> Void
 }

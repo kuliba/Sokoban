@@ -31,7 +31,7 @@ extension PaymentsTransfersViewModel {
         
         rootActions.spinner.show()
         
-        factory.makeUtilityPaymentViewModel { [weak self] in
+        factory.makeUtilityPrepaymentViewModel { [weak self] in
             
             self?.rootActions.spinner.hide()
             self?.state.route.destination = .utilityFlow($0)
@@ -42,12 +42,17 @@ extension PaymentsTransfersViewModel {
         
         state.route.destination = nil
     }
+    
+    func event(_ event: Event) {
+        
+    }
 }
 
 // MARK: - Types
 
 extension PaymentsTransfersViewModel {
     
+    typealias Event = PaymentsTransfersEvent
     typealias Factory = PaymentsTransfersViewModelFactory
     
     struct State {
@@ -69,7 +74,7 @@ extension PaymentsTransfersViewModel.State.Route {
     
     enum Destination {
         
-        case utilityFlow(UtilityPaymentViewModel)
+        case utilityFlow(UtilityPrepaymentViewModel)
     }
     
     enum Modal {}

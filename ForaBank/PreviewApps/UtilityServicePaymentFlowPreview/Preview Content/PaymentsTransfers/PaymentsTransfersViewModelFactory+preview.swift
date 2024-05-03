@@ -12,11 +12,11 @@ extension PaymentsTransfersViewModelFactory {
     static var preview: Self {
         
         return .init(
-            makeUtilityPaymentViewModel: { completion in
+            makeUtilityPrepaymentViewModel: { completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     
-                    completion(.init())
+                    completion(.preview())
                 }
             }
         )
