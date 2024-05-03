@@ -233,8 +233,8 @@ extension Services.Endpoint {
     
     static let getCardStatementForPeriod: Self = .init(
         pathPrefix: .rest,
-        version: nil,
-        serviceName: .getCardStatementForPeriod_V3
+        version: .v4,
+        serviceName: .getCardStatementForPeriod
     )
     
     static let getClientConsentMe2MePull: Self = .init(
