@@ -217,7 +217,7 @@ public struct SelectView: View {
             (option.isSelected ? config.icon : config.selectIcon)
                 .resizable()
                 .renderingMode(.template)
-                .frame(width: CGFloat(config.kind.rawValue), height: CGFloat(config.kind.rawValue))
+                .frame(width: config.size, height: config.size)
                 .foregroundColor(option.isSelected ? config.selectForeground : config.foreground)
         }
     }
@@ -322,7 +322,7 @@ struct SelectView_Previews: PreviewProvider {
             selectForeground: .red,
             selectBackground: .clear,
             mainBackground: .clear,
-            kind: .normal
+            size: 24
         )
     }
     
@@ -368,7 +368,7 @@ public extension SelectConfig.OptionConfig {
         selectForeground: .blue,
         selectBackground: .blue,
         mainBackground: .green,
-        kind: .small
+        size: 16
     )
 }
 
