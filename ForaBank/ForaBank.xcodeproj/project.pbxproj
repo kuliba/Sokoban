@@ -762,6 +762,9 @@
 		2A69C1B42BE4E3B100FE91B0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A69C1B32BE4E3B100FE91B0 /* Preview Assets.xcassets */; };
 		2A69C1BB2BE4E42000FE91B0 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C1BA2BE4E42000FE91B0 /* Route.swift */; };
 		2A69C1BD2BE4E70500FE91B0 /* SampleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C1BC2BE4E70500FE91B0 /* SampleViewModel.swift */; };
+		2A69C1BF2BE4E74600FE91B0 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A69C1BE2BE4E74600FE91B0 /* CombineSchedulers */; };
+		2A69C1C12BE4E75300FE91B0 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2A69C1C02BE4E75300FE91B0 /* UIPrimitives */; };
+		2A69C1C32BE4E75800FE91B0 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2A69C1C22BE4E75800FE91B0 /* RxViewModel */; };
 		2A6AD34B2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AD34A2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift */; };
 		2A6AF2132AF8178100655156 /* Services+makeShowCVVService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */; };
 		2A6AF2152AF81C1400655156 /* Services+makeChangePINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */; };
@@ -5410,6 +5413,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A69C1C12BE4E75300FE91B0 /* UIPrimitives in Frameworks */,
+				2A69C1C32BE4E75800FE91B0 /* RxViewModel in Frameworks */,
+				2A69C1BF2BE4E74600FE91B0 /* CombineSchedulers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -14183,6 +14189,11 @@
 			dependencies = (
 			);
 			name = UtilityServicePaymentFlowPreview;
+			packageProductDependencies = (
+				2A69C1BE2BE4E74600FE91B0 /* CombineSchedulers */,
+				2A69C1C02BE4E75300FE91B0 /* UIPrimitives */,
+				2A69C1C22BE4E75800FE91B0 /* RxViewModel */,
+			);
 			productName = UtilityServicePaymentFlowPreview;
 			productReference = 2A69C1AA2BE4E3AF00FE91B0 /* UtilityServicePaymentFlowPreview.app */;
 			productType = "com.apple.product-type.application";
@@ -21489,6 +21500,19 @@
 		2A669EAB2AE50674009A2F12 /* CVVPIN_Services */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CVVPIN_Services;
+		};
+		2A69C1BE2BE4E74600FE91B0 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
+		};
+		2A69C1C02BE4E75300FE91B0 /* UIPrimitives */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIPrimitives;
+		};
+		2A69C1C22BE4E75800FE91B0 /* RxViewModel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RxViewModel;
 		};
 		2A727A252A9381A700235EFF /* TransferPublicKey */ = {
 			isa = XCSwiftPackageProductDependency;
