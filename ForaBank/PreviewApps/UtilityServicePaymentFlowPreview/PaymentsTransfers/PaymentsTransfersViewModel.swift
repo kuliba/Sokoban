@@ -114,20 +114,14 @@ private extension PaymentsTransfersViewModel {
             rootActions.switchTab("chat")
             
         case .dismissDestination:
-            #warning("add helper to set prepayment destination")
-            guard case let .utilityFlow(utilityFlow) = state.route.destination
-            else { break }
-            state.route.destination = .utilityFlow(.init(viewModel: utilityFlow.viewModel, destination: nil))
+            state.route.destination?.setUtilityFlowDestination(to: nil)
             
         case let .loaded(loaded):
-            #warning("FIXME")
+#warning("FIXME")
             print(loaded)
             
         case .payByInstructions:
-            #warning("add helper to set prepayment destination")
-            guard case let .utilityFlow(utilityFlow) = state.route.destination
-            else { break }
-            state.route.destination = .utilityFlow(.init(viewModel: utilityFlow.viewModel, destination: .payByInstructions))
+            state.route.destination?.setUtilityFlowDestination(to: .payByInstructions)
             
         case .payByInstructionsFromError:
             state.route.destination = .payByInstructions
@@ -189,5 +183,22 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow {
     enum Destination {
         
         case payByInstructions
+    }
+}
+
+// MARK: - Helpers
+
+private extension PaymentsTransfersViewModel.State.Route.Destination {
+    
+    mutating func setUtilityFlowDestination(
+        to destination: PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow.Destination?
+    ) {
+        
+        guard case let .utilityFlow(utilityFlow) = self else { return }
+        
+        self = .utilityFlow(.init(
+            viewModel: utilityFlow.viewModel,
+            destination: destination
+        ))
     }
 }
