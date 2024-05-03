@@ -61,7 +61,7 @@ public extension SelectConfig {
         
         let mainBackground: Color
         
-        let size: Double
+        let size: CGFloat
         
         public init(
             icon: Image,
@@ -71,7 +71,7 @@ public extension SelectConfig {
             selectForeground: Color,
             selectBackground: Color,
             mainBackground: Color,
-            size: Double
+            size: CGFloat
         ) {
             self.icon = icon
             self.foreground = foreground

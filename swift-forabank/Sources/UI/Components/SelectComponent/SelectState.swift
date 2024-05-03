@@ -28,9 +28,9 @@ public enum SelectState {
         self = state
     }
     
-    public struct Option {
+    public struct Option: Identifiable {
         
-        let id: String
+        public let id: String
         let title: String
         let isSelected: Bool
         

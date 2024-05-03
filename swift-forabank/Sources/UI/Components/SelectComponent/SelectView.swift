@@ -65,11 +65,7 @@ public struct SelectView: View {
             
             VStack(spacing: 20) {
                 
-                ForEach(options, id: \.id) { option in
-                    
-                    optionView(option)
-                    
-                }
+                ForEach(options, content: optionView)
             }
         }
         .frame(height: 200)
