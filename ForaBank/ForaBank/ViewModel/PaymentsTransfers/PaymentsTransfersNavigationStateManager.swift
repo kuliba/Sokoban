@@ -42,9 +42,6 @@ extension PaymentsTransfersNavigationStateManager {
 enum PaymentsTransfersEvent: Equatable {
     
     case addCompany
-//    case buttonTapped(ButtonTapped)
-    #warning("payByInstructions calls and flows depend on context - move to utilityFlow")
-    case payByInstructions
     case resetDestination
     case resetModal
     case resetUtilityDestination
@@ -58,6 +55,7 @@ extension PaymentsTransfersEvent {
     enum UtilityServicePaymentFlowEvent: Equatable {
         
         case loaded(GetOperatorsListByParamResponse, for: Operator)
+        case payByInstructions
         case paymentStarted(PaymentStarted)
         case select(Select<LatestPayment, Operator>)
     }

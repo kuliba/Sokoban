@@ -154,9 +154,6 @@ extension PaymentsTransfersViewModel {
             state.destination = nil
             switchToChat()
             
-        case .payByInstructions:
-            state.destination = .payments(makeByRequisitesPaymentsViewModel())
-            
         case .resetDestination:
             state.utilitiesRoute?.destination = nil
             state.destination = nil
@@ -188,7 +185,7 @@ extension PaymentsTransfersViewModel {
             
             let (utilityPaymentState, utilityPaymentEffect) = navigationStateManager.utilityPaymentReduce(utilityPayment, utilityPaymentEvent)
             state.utilitiesRoute?.destination = .payment(utilityPaymentState)
-            effect = utilityPaymentEffect.map { .utilityPayment($0) }
+            effect = utilityPaymentEffect.map(Effect.utilityPayment)
         }
         
         return (state, effect)
@@ -206,9 +203,11 @@ extension PaymentsTransfersViewModel {
         // TODO: improve by adding state check
         // like `guard let utilitiesRoute = state.utilitiesRoute else { break }`
         switch event {
-            
         case let .loaded(response, for: `operator`):
             (state, effect) = reduce(state, response, `operator`)
+            
+        case .payByInstructions:
+            state.destination = .payments(makeByRequisitesPaymentsViewModel())
             
         case let .paymentStarted(paymentStartedEvent):
             reduce(&state, paymentStartedEvent)
