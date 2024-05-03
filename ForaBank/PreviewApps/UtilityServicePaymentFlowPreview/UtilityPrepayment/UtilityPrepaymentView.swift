@@ -18,7 +18,9 @@ struct UtilityPrepaymentView: View {
     
     private let lastPayment: LastPayment = .init(id: "last")
     private let single = Operator(id: "single")
+    private let singleFailure = Operator(id: "singleFailure")
     private let multiple = Operator(id: "multiple")
+    private let multipleFailure = Operator(id: "multipleFailure")
     
     var body: some View {
         
@@ -31,6 +33,10 @@ struct UtilityPrepaymentView: View {
             Button("Single service Operator", action: { flowEvent(.select(.operator(single))) })
             
             Button("Multi service Operator", action: { flowEvent(.select(.operator(multiple))) })
+            
+            Button("Multi service Operator Failure", action: { flowEvent(.select(.operator(multiple))) })
+            
+            Button("Start Payment Failure", action: { flowEvent(.select(.operator(multiple))) })
             
             Divider()
             

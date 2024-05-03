@@ -67,7 +67,9 @@ extension PaymentsTransfersViewModel {
 
 private extension PaymentsTransfersViewModel {
     
-    // reduce is not injected due to complexity of existing PaymentsTransfersViewModel
+    // reduce is not injected due to 
+    // - complexity of existing `PaymentsTransfersViewModel`
+    // - side effects (changes of outside state, like `tab`)
     private func reduce(
         _ state: State,
         _ event: Event
@@ -78,7 +80,9 @@ private extension PaymentsTransfersViewModel {
         
         switch event {
         case let .utilityFlow(utilityFlow):
-            (state, effect) = reduce(state, utilityFlow)
+            let utilityFlowEffect: Effect.UtilityPaymentFlowEffect?
+            (state, utilityFlowEffect) = reduce(state, utilityFlow)
+            effect = utilityFlowEffect.map(Effect.utilityFlow)
         }
         
         return (state, effect)
@@ -87,14 +91,16 @@ private extension PaymentsTransfersViewModel {
     private func reduce(
         _ state: State,
         _ event: Event.UtilityPaymentFlowEvent
-    ) -> (State, Effect?) {
+    ) -> (State, Effect.UtilityPaymentFlowEffect?) {
         
         var state = state
-        var effect: Effect?
+        var effect: Effect.UtilityPaymentFlowEffect?
         
         switch event {
         case let .prepayment(prepayment):
-            (state, effect) = reduce(state, prepayment)
+            let prepaymentEffect: Effect.UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect?
+            (state, prepaymentEffect) = reduce(state, prepayment)
+            effect = prepaymentEffect.map(Effect.UtilityPaymentFlowEffect.prepayment)
         }
         
         return (state, effect)
@@ -103,10 +109,10 @@ private extension PaymentsTransfersViewModel {
     private func reduce(
         _ state: State,
         _ event: Event.UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent
-    ) -> (State, Effect?) {
+    ) -> (State, Effect.UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect?) {
         
         var state = state
-        var effect: Effect?
+        var effect: Effect.UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect?
         
         switch event {
         case .addCompany:
@@ -127,7 +133,7 @@ private extension PaymentsTransfersViewModel {
             state.route.destination = .payByInstructions
             
         case let .select(select):
-            effect = .utilityFlow(.prepayment(.select(select)))
+            effect = .select(select)
         }
         
         return (state, effect)

@@ -46,6 +46,8 @@ struct PaymentsTransfersView: View {
             
         case let .utilityFlow(utilityFlow):
             utilityPrepaymentView(utilityFlow)
+                .navigationTitle("Utility Prepayment View")
+                .navigationBarTitleDisplayMode(.inline)
         }
     }
     
@@ -58,8 +60,6 @@ struct PaymentsTransfersView: View {
             flowEvent: { viewModel.event(.utilityFlow(.prepayment($0.flowEvent))) },
             config: config
         )
-        .navigationTitle("Utility Prepayment View")
-        .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(
             item: .init(
                 get: { utilityFlow.destination },

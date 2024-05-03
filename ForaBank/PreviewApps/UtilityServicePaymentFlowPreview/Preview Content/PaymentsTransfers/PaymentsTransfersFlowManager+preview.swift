@@ -45,9 +45,11 @@ private extension PaymentsTransfersEffectHandler.SelectResult {
             
         case let .operator(`operator`):
             switch `operator`.id {
-            case "single":   return 1
-            case "multiple": return 2
-            default:         return fallback
+            case "single":          return 1
+            case "singleFailure":   return 2
+            case "multiple":        return 3
+            case "multipleFailure": return 4
+            default:                return fallback
             }
         }
     }
