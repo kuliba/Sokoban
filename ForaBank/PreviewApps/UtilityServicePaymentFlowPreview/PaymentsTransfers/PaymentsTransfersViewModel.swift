@@ -37,7 +37,7 @@ extension PaymentsTransfersViewModel {
         factory.makeUtilityPrepaymentViewModel { [weak self] in
             
             self?.rootActions.spinner.hide()
-            self?.state.route.destination = .utilityFlow($0)
+            self?.state.route.destination = .utilityFlow(.init(viewModel: $0, destination: nil))
         }
     }
     
@@ -113,13 +113,21 @@ private extension PaymentsTransfersViewModel {
             state.route.destination = nil
             rootActions.switchTab("chat")
             
+        case .dismissDestination:
+            #warning("add helper to set prepayment destination")
+            guard case let .utilityFlow(utilityFlow) = state.route.destination
+            else { break }
+            state.route.destination = .utilityFlow(.init(viewModel: utilityFlow.viewModel, destination: nil))
+            
         case let .loaded(loaded):
             #warning("FIXME")
             print(loaded)
             
         case .payByInstructions:
-            #warning("FIXME")
-//            fatalError("add prepayment destination")
+            #warning("add helper to set prepayment destination")
+            guard case let .utilityFlow(utilityFlow) = state.route.destination
+            else { break }
+            state.route.destination = .utilityFlow(.init(viewModel: utilityFlow.viewModel, destination: .payByInstructions))
             
         case .payByInstructionsFromError:
             state.route.destination = .payByInstructions
@@ -161,28 +169,25 @@ extension PaymentsTransfersViewModel.State.Route {
     enum Destination {
         
         case payByInstructions
-        case utilityFlow(UtilityPrepaymentViewModel)
+        case utilityFlow(UtilityFlow)
     }
     
     enum Modal {}
 }
 
-extension PaymentsTransfersViewModel.State.Route.Destination: Identifiable {
+extension PaymentsTransfersViewModel.State.Route.Destination {
     
-    var id: ID {
+    struct UtilityFlow {
         
-        switch self {
-        case .payByInstructions:
-            return .payByInstructions
-            
-        case let .utilityFlow(utilityPaymentViewModel):
-            return .utilityFlow(ObjectIdentifier(utilityPaymentViewModel))
-        }
+        let viewModel: UtilityPrepaymentViewModel
+        let destination: Destination?
     }
+}
+
+extension PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow {
     
-    enum ID: Hashable {
+    enum Destination {
         
         case payByInstructions
-        case utilityFlow(ObjectIdentifier)
     }
 }

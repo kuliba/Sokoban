@@ -44,23 +44,86 @@ struct PaymentsTransfersView: View {
                 .navigationTitle("Pay by Instructions")
                 .navigationBarTitleDisplayMode(.inline)
             
-        case let .utilityFlow(utilityPaymentViewModel):
-            UtilityPrepaymentWrapperView(
-                viewModel: utilityPaymentViewModel,
-                flowEvent: { viewModel.event(.utilityFlow(.prepayment($0.flowEvent))) },
-                config: config
-            )
-            .navigationTitle("Utility Prepayment View")
-            .navigationBarTitleDisplayMode(.inline)
+        case let .utilityFlow(utilityFlow):
+            utilityPrepaymentView(utilityFlow)
+        }
+    }
+    
+    private func utilityPrepaymentView(
+        _ utilityFlow: UtilityFlow
+    ) -> some View {
+        
+        UtilityPrepaymentWrapperView(
+            viewModel: utilityFlow.viewModel,
+            flowEvent: { viewModel.event(.utilityFlow(.prepayment($0.flowEvent))) },
+            config: config
+        )
+        .navigationTitle("Utility Prepayment View")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(
+            item: .init(
+                get: { utilityFlow.destination },
+                set: { if $0 == nil { viewModel.event(.utilityFlow(.prepayment(.dismissDestination))) }}
+            ),
+            content: utilityFlowDestinationView
+        )
+    }
+    
+    @ViewBuilder
+    private func utilityFlowDestinationView(
+        _ destination: UtilityFlow.Destination
+    ) -> some View {
+        
+        switch destination {
+        case .payByInstructions:
+            Text("Pay by Instructions")
         }
     }
 }
 
 extension PaymentsTransfersView {
     
+    typealias UtilityFlow = PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow
+    
     typealias Config = UtilityPrepaymentWrapperView.Config
     typealias Destination = ViewModel.State.Route.Destination
     typealias ViewModel = PaymentsTransfersViewModel
+}
+
+extension PaymentsTransfersViewModel.State.Route.Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .payByInstructions:
+            return .payByInstructions
+            
+        case let .utilityFlow(utilityFlow):
+            return .utilityFlow(ObjectIdentifier(utilityFlow.viewModel))
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case payByInstructions
+        case utilityFlow(ObjectIdentifier)
+    }
+}
+
+extension PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow.Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+            
+        case .payByInstructions: return .payByInstructions
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case payByInstructions
+    }
 }
 
 private extension UtilityPrepaymentFlowEvent {

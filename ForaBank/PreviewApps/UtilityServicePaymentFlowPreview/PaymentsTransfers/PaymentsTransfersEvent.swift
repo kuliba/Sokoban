@@ -23,6 +23,7 @@ extension PaymentsTransfersEvent.UtilityPaymentFlowEvent {
     enum UtilityPrepaymentFlowEvent: Equatable {
         
         case addCompany
+        case dismissDestination
         case loaded(Int)
         case payByInstructions
         case payByInstructionsFromError
