@@ -18,11 +18,7 @@ extension CheckBoxReducer {
         
         switch event {
         case .buttonTapped:
-            if isChecked {
-                return false
-            } else {
-                return true
-            }
+            return !isChecked
         }
     }
 }
