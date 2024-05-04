@@ -38,7 +38,7 @@ extension PaymentsTransfersViewModel {
         factory.makeUtilityPrepaymentViewModel { [weak self] in
             
             self?.rootActions.spinner.hide()
-            self?.state.route.destination = .utilityFlow(.init(viewModel: $0, destination: nil))
+            self?.state.route.destination = .utilityPrepayment(.init(viewModel: $0, destination: nil))
         }
     }
     
@@ -121,10 +121,10 @@ private extension PaymentsTransfersViewModel {
             rootActions.switchTab("chat")
             
         case .dismissDestination:
-            state.route.setUtilityFlowDestination(to: nil)
+            state.route.setUtilityPrepaymentDestination(to: nil)
             
         case .payByInstructions:
-            state.route.setUtilityFlowDestination(to: .payByInstructions)
+            state.route.setUtilityPrepaymentDestination(to: .payByInstructions)
             
         case .payByInstructionsFromError:
             state.route.destination = .payByInstructions
@@ -147,20 +147,20 @@ private extension PaymentsTransfersViewModel {
         case let .failure(failure):
             switch failure {
             case let .operatorFailure(`operator`):
-                state.route.setUtilityFlowDestination(to: .operatorFailure(`operator`))
+                state.route.setUtilityPrepaymentDestination(to: .operatorFailure(`operator`))
                 
             case let .serviceFailure(serviceFailure):
-                state.route.setUtilityFlowDestination(to: .serviceFailure(serviceFailure))
+                state.route.setUtilityPrepaymentDestination(to: .serviceFailure(serviceFailure))
             }
             
         case let .success(success):
             switch success {
             case let .services(services, `operator`):
 #warning("set destination of destination!!!")
-                state.route.setUtilityFlowDestination(to: .services(services, for: `operator`))
+                state.route.setUtilityPrepaymentDestination(to: .services(services, for: `operator`))
                 
             case let .startPayment(response):
-                state.route.setUtilityFlowDestination(to: .payment)
+                state.route.setUtilityPrepaymentDestination(to: .payment)
             }
         }
     }
@@ -195,7 +195,7 @@ extension PaymentsTransfersViewModel.State.Route {
     enum Destination {
         
         case payByInstructions
-        case utilityFlow(UtilityFlow)
+        case utilityPrepayment(UtilityPrepayment)
     }
     
     enum Modal {}
@@ -203,14 +203,14 @@ extension PaymentsTransfersViewModel.State.Route {
 
 extension PaymentsTransfersViewModel.State.Route.Destination {
     
-    struct UtilityFlow {
+    struct UtilityPrepayment {
         
         let viewModel: UtilityPrepaymentViewModel
         let destination: Destination?
     }
 }
 
-extension PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow {
+extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment {
     
     enum Destination {
         
@@ -226,30 +226,27 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow {
 
 private extension PaymentsTransfersViewModel.State.Route {
     
-    var utilityFlow: PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow? {
+    var utilityPrepayment: Destination.UtilityPrepayment? {
         
-        guard case let .utilityFlow(utilityFlow) = destination
+        guard case let .utilityPrepayment(utilityPrepayment) = destination
         else { return nil }
         
-        return utilityFlow
+        return utilityPrepayment
     }
     
-    var utilityFlowDestination: PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow.Destination? {
+    var utilityPrepaymentDestination: Destination.UtilityPrepayment.Destination? {
         
-        return utilityFlow?.destination
+        return utilityPrepayment?.destination
     }
-}
-
-private extension PaymentsTransfersViewModel.State.Route {
     
-    mutating func setUtilityFlowDestination(
-        to destination: PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow.Destination?
+    mutating func setUtilityPrepaymentDestination(
+        to destination: Destination.UtilityPrepayment.Destination?
     ) {
         
-        guard let utilityFlow else { return }
+        guard let utilityPrepayment else { return }
         
-        self.destination = .utilityFlow(.init(
-            viewModel: utilityFlow.viewModel,
+        self.destination = .utilityPrepayment(.init(
+            viewModel: utilityPrepayment.viewModel,
             destination: destination
         ))
     }

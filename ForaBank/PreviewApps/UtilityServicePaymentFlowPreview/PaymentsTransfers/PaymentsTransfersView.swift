@@ -44,34 +44,34 @@ struct PaymentsTransfersView: View {
                 .navigationTitle("Pay by Instructions")
                 .navigationBarTitleDisplayMode(.inline)
             
-        case let .utilityFlow(utilityFlow):
-            utilityPrepaymentView(utilityFlow)
+        case let .utilityPrepayment(utilityPrepayment):
+            utilityPrepaymentView(utilityPrepayment)
                 .navigationTitle("Utility Prepayment View")
                 .navigationBarTitleDisplayMode(.inline)
         }
     }
     
     private func utilityPrepaymentView(
-        _ utilityFlow: UtilityFlow
+        _ utilityPrepayment: UtilityPrepayment
     ) -> some View {
         
         UtilityPrepaymentWrapperView(
-            viewModel: utilityFlow.viewModel,
+            viewModel: utilityPrepayment.viewModel,
             flowEvent: { viewModel.event(.utilityFlow(.prepayment($0.flowEvent))) },
             config: config
         )
         .navigationDestination(
             item: .init(
-                get: { utilityFlow.destination },
+                get: { utilityPrepayment.destination },
                 set: { if $0 == nil { viewModel.event(.utilityFlow(.prepayment(.dismissDestination))) }}
             ),
-            content: utilityFlowDestinationView
+            content: utilityPrepaymentDestinationView
         )
     }
     
     @ViewBuilder
-    private func utilityFlowDestinationView(
-        _ destination: UtilityFlow.Destination
+    private func utilityPrepaymentDestinationView(
+        _ destination: UtilityPrepayment.Destination
     ) -> some View {
         
         switch destination {
@@ -104,7 +104,7 @@ struct PaymentsTransfersView: View {
 
 extension PaymentsTransfersView {
     
-    typealias UtilityFlow = PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow
+    typealias UtilityPrepayment = PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment
     
     typealias Config = UtilityPrepaymentWrapperView.Config
     typealias Destination = ViewModel.State.Route.Destination
@@ -119,8 +119,8 @@ extension PaymentsTransfersViewModel.State.Route.Destination: Identifiable {
         case .payByInstructions:
             return .payByInstructions
             
-        case let .utilityFlow(utilityFlow):
-            return .utilityFlow(ObjectIdentifier(utilityFlow.viewModel))
+        case let .utilityPrepayment(utilityPrepayment):
+            return .utilityFlow(ObjectIdentifier(utilityPrepayment.viewModel))
         }
     }
     
@@ -131,7 +131,7 @@ extension PaymentsTransfersViewModel.State.Route.Destination: Identifiable {
     }
 }
 
-extension PaymentsTransfersViewModel.State.Route.Destination.UtilityFlow.Destination: Identifiable {
+extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination: Identifiable {
     
     var id: ID {
         
