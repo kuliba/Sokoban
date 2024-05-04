@@ -37,5 +37,19 @@ extension View {
             content: content
         )
     }
+    
+    func sheet<Modal: Identifiable, Content: View>(
+        modal: Modal?,
+        dismissModal: @escaping () -> Void,
+        @ViewBuilder content: @escaping (Modal) -> Content
+    ) -> some View {
+        
+        sheet(
+            item: .init(
+                get: { modal },
+                set: { if $0 == nil { dismissModal() }}
+            ),
+            content: content
+        )
+    }
 }
-

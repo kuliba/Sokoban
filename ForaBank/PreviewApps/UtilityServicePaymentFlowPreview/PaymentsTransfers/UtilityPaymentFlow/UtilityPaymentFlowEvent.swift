@@ -9,6 +9,7 @@ import ForaTools
 
 enum UtilityPaymentFlowEvent: Equatable {
     
+    case payment(UtilityServicePaymentFlowEvent)
     case prepayment(UtilityPrepaymentFlowEvent)
     case servicePicker(ServicePickerFlowEvent)
 }

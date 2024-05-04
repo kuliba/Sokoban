@@ -80,8 +80,22 @@ struct PaymentsTransfersView: View {
         case .payByInstructions:
             Text("Pay by Instructions")
             
-        case let .payment(response):
-            Text("TBD: Payment with \(response)")
+        case let .payment(paymentFlowState):
+            PaymentFlowMockView(viewModel: paymentFlowState.viewModel)
+                .sheet(
+                    modal: paymentFlowState.modal,
+                    dismissModal: { viewModel.event(.utilityFlow(.payment(.dismissFraud))) },
+                    content: { modal in
+                        
+                        #warning("extract to helper")
+                        switch modal {
+                        case let .fraud(fraud):
+                            Text("Fraud detected: " + String(describing: fraud))
+                        }
+                    }
+                )
+                .navigationTitle("Payment")
+                .navigationBarTitleDisplayMode(.inline)
             
         case let .servicePicker(servicePickerState):
             servicePicker(servicePickerState)
@@ -316,6 +330,21 @@ extension UtilityPaymentFlowState.Destination.ServicePickerState.Alert: Identifi
     enum ID: Hashable {
         
         case serviceFailure(ServiceFailure)
+    }
+}
+
+extension PaymentFlowState.Modal: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .fraud: return  .fraud
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case fraud
     }
 }
 

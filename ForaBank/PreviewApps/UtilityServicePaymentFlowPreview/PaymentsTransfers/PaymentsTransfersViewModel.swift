@@ -134,6 +134,9 @@ private extension PaymentsTransfersViewModel {
         var effect: UtilityPaymentFlowEffect?
         
         switch event {
+        case let .payment(event):
+            (state, effect) = reduce(state, event)
+            
         case let .prepayment(prepaymentEvent):
             let prepaymentEffect: UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect?
             (state, prepaymentEffect) = reduce(state, prepaymentEvent)
@@ -141,6 +144,26 @@ private extension PaymentsTransfersViewModel {
             
         case let .servicePicker(servicePickerEvent):
             reduce(&state, servicePickerEvent)
+        }
+        
+        return (state, effect)
+    }
+    
+    private func reduce(
+        _ state: State,
+        _ event: UtilityServicePaymentFlowEvent
+    ) -> (State, UtilityPaymentFlowEffect?) {
+        
+        var state = state
+        var effect: UtilityPaymentFlowEffect?
+        
+        switch event {
+        case .dismissFraud:
+            state.route.setPaymentModal(to: nil)
+            
+        case let .fraud(fraud):
+            #warning("depends on state - payment could be in 2 places - as a destination of prepayment and as a destination of service picker")
+            state.route.setPaymentModal(to: .fraud(fraud))
         }
         
         return (state, effect)
@@ -235,12 +258,17 @@ private extension PaymentsTransfersViewModel {
                 )))
                 
             case let .startPayment(response):
+                let paymentViewModel = factory.makePaymentViewModel(response) { [weak self] in
+                    
+                    self?.event(.utilityFlow(.payment(.fraud($0))))
+                }
+        
                 switch state.route.utilityPrepaymentDestination {
                 case .none:
-                    state.route.setUtilityPrepaymentDestination(to: .payment(response))
+                    state.route.setUtilityPrepaymentDestination(to: .payment(.init(viewModel: paymentViewModel)))
                     
                 case .servicePicker:
-                    state.route.setUtilityServicePickerDestination(to: .payment(response))
+                    state.route.setUtilityServicePickerDestination(to: .payment(.init(viewModel: paymentViewModel)))
                     
                 default:
                     break
@@ -282,7 +310,7 @@ private extension PaymentsTransfersViewModel.State.Route {
     ) {
         guard var utilityPrepayment else { return }
         
-        utilityPrepayment[keyPath: \.destination] = destination
+        utilityPrepayment.destination = destination
         self.destination = .utilityPayment(utilityPrepayment)
     }
     
@@ -291,7 +319,7 @@ private extension PaymentsTransfersViewModel.State.Route {
     ) {
         guard var utilityPrepayment else { return }
         
-        utilityPrepayment[keyPath: \.alert] = alert
+        utilityPrepayment.alert = alert
         self.destination = .utilityPayment(utilityPrepayment)
     }
     
@@ -308,7 +336,7 @@ private extension PaymentsTransfersViewModel.State.Route {
     ) {
         guard var operatorFailure else { return }
         
-        operatorFailure[keyPath: \.destination] = destination
+        operatorFailure.destination = destination
         self.setUtilityPrepaymentDestination(to: .operatorFailure(operatorFailure))
     }
     
@@ -327,7 +355,7 @@ private extension PaymentsTransfersViewModel.State.Route {
     ) {
         guard var servicePicker else { return }
         
-        servicePicker[keyPath: \.destination] = destination
+        servicePicker.destination = destination
         self.setUtilityPrepaymentDestination(to: .servicePicker(servicePicker))
     }
     
@@ -336,7 +364,24 @@ private extension PaymentsTransfersViewModel.State.Route {
     ) {
         guard var servicePicker else { return }
         
-        servicePicker[keyPath: \.alert] = alert
+        servicePicker.alert = alert
         self.setUtilityPrepaymentDestination(to: .servicePicker(servicePicker))
+    }
+    
+    private var paymentFlowState: PaymentFlowState? {
+        
+        guard case let .payment(paymentFlowState) = utilityPrepayment?.destination
+        else { return nil }
+        
+        return paymentFlowState
+    }
+    
+    mutating func setPaymentModal(
+        to modal: PaymentFlowState.Modal?
+    ) {
+        guard var paymentFlowState else { return }
+        
+        paymentFlowState.modal = modal
+        self.setUtilityPrepaymentDestination(to: .payment(paymentFlowState))
     }
 }

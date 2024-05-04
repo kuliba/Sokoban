@@ -76,6 +76,7 @@ struct UtilityPrepaymentView: View {
         
         Button(item.id.prefix(16), action: action)
             .foregroundColor(isFailure ? .red : .primary)
+            .contentShape(Rectangle())
     }
 }
 
