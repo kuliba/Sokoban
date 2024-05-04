@@ -7,4 +7,6 @@
 
 struct UtilityPrepaymentState: Equatable {
     
+    let lastPayments: [LastPayment]
+    let operators: [Operator]
 }

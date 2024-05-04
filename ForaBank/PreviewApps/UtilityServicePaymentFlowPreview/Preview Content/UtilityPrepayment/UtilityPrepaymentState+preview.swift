@@ -7,5 +7,5 @@
 
 extension UtilityPrepaymentState {
     
-    static let preview: Self = .init()
+    static let preview: Self = .init(lastPayments: .preview, operators: .preview)
 }

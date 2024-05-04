@@ -14,45 +14,68 @@ struct UtilityPrepaymentView: View {
     let flowEvent: (FlowEvent) -> Void
     let config: Config
     
-    #warning("replace stub with state")
-    // MARK: - Stubs
-    
-    private let lastPayment: LastPayment = .preview
-    private let lastPaymentFailure: LastPayment = .init(id: "failure")
-    
-    private let single = Operator(id: "single")
-    private let singleFailure = Operator(id: "singleFailure")
-    private let multiple = Operator(id: "multiple")
-    private let multipleFailure = Operator(id: "multipleFailure")
-    
     var body: some View {
         
-        VStack(spacing: 32) {
+        List {
             
-            Button("LastPayment", action: { flowEvent(.select(.lastPayment(lastPayment))) })
+            section("Last Payments", state.lastPayments, content: lastPaymentView)
             
-            Button("LastPayment Failure", action: { flowEvent(.select(.lastPayment(lastPaymentFailure))) })
-                .foregroundColor(.red)
+            section("Operators", state.operators, content: operatorView)
             
-            Button("Single service Operator", action: { flowEvent(.select(.operator(single))) })
-            
-            Button("Single service Operator Failure", action: { flowEvent(.select(.operator(singleFailure))) })
-                .foregroundColor(.red)
-            
-            Button("Multi service Operator", action: { flowEvent(.select(.operator(multiple))) })
-            
-            Button("Multi service Operator Failure", action: { flowEvent(.select(.operator(multipleFailure))) })
-                .foregroundColor(.red)
-            
-            Divider()
-            
-            Button("Add Company", action: { flowEvent(.addCompany) })
-            
-            Button("Pay by Instructions", action: { flowEvent(.payByInstructions) })
-            
-            Button("Pay by Instructions From Empty Operator List", action: { flowEvent(.payByInstructionsFromError) })
+            Section {
+                
+                Button("Add Company", action: { flowEvent(.addCompany) })
+                
+                Button("Pay by Instructions", action: { flowEvent(.payByInstructions) })
+                
+                Button("Pay by Instructions From Empty Operator List", action: { flowEvent(.payByInstructionsFromError) })
+            }
         }
-        .padding()
+    }
+    
+    private func section<Item: Identifiable, Content: View>(
+        _ header: String,
+        _ data: [Item],
+        content: @escaping (Item) -> Content
+    ) -> some View {
+        
+        Section {
+            ForEach(data, content: content)
+        } header: {
+            Text(header)
+        }
+    }
+    
+    private func lastPaymentView(
+        lastPayment: LastPayment
+    ) -> some View {
+        
+        itemView(
+            item: lastPayment,
+            action: { flowEvent(.select(.lastPayment(lastPayment))) }
+        )
+    }
+    
+    private func operatorView(
+        `operator`: Operator
+    ) -> some View {
+        
+        itemView(
+            item: `operator`,
+            action: { flowEvent(.select(.operator(`operator`))) }
+        )
+    }
+    
+    @ViewBuilder
+    private func itemView<Item: Identifiable>(
+        item: Item,
+        action: @escaping () -> Void
+    ) -> some View where Item.ID == String {
+        
+        let isFailure = item.id.localizedCaseInsensitiveContains("failure")
+        
+        Button(item.id.prefix(16), action: action)
+            .foregroundColor(isFailure ? .red : .primary)
     }
 }
 
