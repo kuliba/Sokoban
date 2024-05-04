@@ -23,6 +23,21 @@ extension View {
         )
     }
     
+    func fullScreenCover<FullScreenCover: Identifiable, Content: View>(
+        cover: FullScreenCover?,
+        dismissFullScreenCover: @escaping () -> Void,
+        @ViewBuilder content: @escaping (FullScreenCover) -> Content
+    ) -> some View {
+        
+        fullScreenCover(
+            item: .init(
+                get: { cover },
+                set: { if $0 == nil { dismissFullScreenCover() }}
+            ),
+            content: content
+        )
+    }
+    
     func navigationDestination<Destination: Identifiable, Content: View>(
         destination: Destination?,
         dismissDestination: @escaping () -> Void,

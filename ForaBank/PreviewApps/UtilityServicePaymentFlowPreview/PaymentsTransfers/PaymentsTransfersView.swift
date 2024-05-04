@@ -29,6 +29,29 @@ struct PaymentsTransfersView: View {
                 dismissDestination: viewModel.resetDestination,
                 content: destinationView
             )
+            .fullScreenCover(
+                cover: viewModel.state.route.modal,
+                dismissFullScreenCover: { viewModel.event(.dismissFullScreenCover) },
+                content: { modal in
+                
+                    #warning("extract to helper")
+                    switch modal {
+                    case let .paymentCancelled(expired: expired):
+                        VStack(spacing: 32) {
+                            
+                            Text("Payment cancelled!")
+                                .foregroundColor(.red)
+                            
+                            if expired {
+                                
+                                Text("time expired")
+                            }
+                            
+                            Button("Go to main", action: { viewModel.event(.goToMain) })
+                        }
+                    }
+                }
+            )
     }
     
     @ViewBuilder
@@ -90,7 +113,10 @@ struct PaymentsTransfersView: View {
                         #warning("extract to helper")
                         switch modal {
                         case let .fraud(fraud):
-                            Text("Fraud detected: " + String(describing: fraud))
+                            PaymentFraudMockView(
+                                state: fraud,
+                                event: { viewModel.event(.utilityFlow(.payment(.fraud($0)))) }
+                            )
                         }
                     }
                 )
@@ -240,6 +266,22 @@ extension PaymentsTransfersViewModel.State.Route.Destination: Identifiable {
         
         case payByInstructions
         case utilityFlow(ObjectIdentifier)
+    }
+}
+
+extension PaymentsTransfersViewModel.State.Route.Modal: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .paymentCancelled:
+            return .paymentCancelled
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case paymentCancelled
     }
 }
 

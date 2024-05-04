@@ -97,7 +97,10 @@ extension PaymentsTransfersViewModel.State.Route {
         case utilityPayment(UtilityPaymentFlowState)
     }
     
-    enum Modal {}
+    enum Modal: Equatable {
+        
+        case paymentCancelled(expired: Bool)
+    }
 }
 
 // MARK: -
@@ -106,7 +109,7 @@ private extension PaymentsTransfersViewModel {
     
     // reduce is not injected due to
     // - complexity of existing `PaymentsTransfersViewModel`
-    // - side effects (changes of outside state, like `tab`)
+    // - side effects (changes of outside state, like tab switching)
     private func reduce(
         _ state: State,
         _ event: Event
@@ -116,10 +119,19 @@ private extension PaymentsTransfersViewModel {
         var effect: Effect?
         
         switch event {
+        case .dismissFullScreenCover:
+            state.route.modal = nil
+            
+        case .goToMain:
+            #warning("FIXME")
+            state.route = .init()
+            print("go to main")
+            
+        case let .setModal(to: modal):
+            state.route.modal = modal
+            
         case let .utilityFlow(utilityFlow):
-            let utilityFlowEffect: UtilityPaymentFlowEffect?
-            (state, utilityFlowEffect) = reduce(state, utilityFlow)
-            effect = utilityFlowEffect.map(Effect.utilityFlow)
+            (state, effect) = reduce(state, utilityFlow)
         }
         
         return (state, effect)
@@ -128,10 +140,10 @@ private extension PaymentsTransfersViewModel {
     private func reduce(
         _ state: State,
         _ event: UtilityPaymentFlowEvent
-    ) -> (State, UtilityPaymentFlowEffect?) {
+    ) -> (State, Effect?) {
         
         var state = state
-        var effect: UtilityPaymentFlowEffect?
+        var effect: Effect?
         
         switch event {
         case let .payment(event):
@@ -140,7 +152,11 @@ private extension PaymentsTransfersViewModel {
         case let .prepayment(prepaymentEvent):
             let prepaymentEffect: UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect?
             (state, prepaymentEffect) = reduce(state, prepaymentEvent)
-            effect = prepaymentEffect.map(UtilityPaymentFlowEffect.prepayment)
+           
+            if let prepaymentEffect {
+                
+                effect = .utilityFlow(.prepayment(prepaymentEffect))
+            }
             
         case let .servicePicker(servicePickerEvent):
             reduce(&state, servicePickerEvent)
@@ -152,17 +168,33 @@ private extension PaymentsTransfersViewModel {
     private func reduce(
         _ state: State,
         _ event: UtilityServicePaymentFlowEvent
-    ) -> (State, UtilityPaymentFlowEffect?) {
+    ) -> (State, Effect?) {
         
         var state = state
-        var effect: UtilityPaymentFlowEffect?
+        var effect: Effect?
         
         switch event {
         case .dismissFraud:
             state.route.setPaymentModal(to: nil)
             
         case let .fraud(fraud):
-            #warning("depends on state - payment could be in 2 places - as a destination of prepayment and as a destination of service picker")
+            state.route.setPaymentModal(to: nil)
+            
+            switch fraud {
+            case .cancel:
+                state.route.destination = nil
+                effect = .delayModalSet(to: .paymentCancelled(expired: false))
+                
+            case .continue:
+                break
+                
+            case .expire:
+                state.route.destination = nil
+                effect = .delayModalSet(to: .paymentCancelled(expired: true))
+            }
+            
+        case let .fraudDetected(fraud):
+#warning("depends on state - payment could be in 2 places - as a destination of prepayment and as a destination of service picker")
             state.route.setPaymentModal(to: .fraud(fraud))
         }
         
@@ -260,7 +292,7 @@ private extension PaymentsTransfersViewModel {
             case let .startPayment(response):
                 let paymentViewModel = factory.makePaymentViewModel(response) { [weak self] in
                     
-                    self?.event(.utilityFlow(.payment(.fraud($0))))
+                    self?.event(.utilityFlow(.payment(.fraudDetected($0))))
                 }
         
                 switch state.route.utilityPrepaymentDestination {
@@ -289,6 +321,19 @@ private extension PaymentsTransfersViewModel {
 }
 
 // MARK: - Helpers
+
+private extension PaymentsTransfersEffect {
+    
+    static func delayModalSet(
+        to modal: Modal,
+        delayFor interval: DispatchTimeInterval = .seconds(1)
+    ) -> Self {
+        
+        .delay(.setModal(to: modal), for: interval)
+    }
+    
+    typealias Modal = PaymentsTransfersViewModel.State.Route.Modal
+}
 
 private extension PaymentsTransfersViewModel.State.Route {
     

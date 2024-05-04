@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 03.05.2024.
 //
 
+import Foundation
+
 final class PaymentsTransfersEffectHandler {
     
     private let utilityEffectHandle: UtilityFlowEffectHandle
@@ -23,6 +25,13 @@ extension PaymentsTransfersEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
+        case let .delay(event, for: interval):
+            #warning("replace with scheduler!!")
+            DispatchQueue.main.asyncAfter(deadline: .now() + interval) {
+                
+                dispatch(event)
+            }
+            
         case let .utilityFlow(effect):
             utilityEffectHandle(effect) { dispatch(.utilityFlow($0)) }
         }
