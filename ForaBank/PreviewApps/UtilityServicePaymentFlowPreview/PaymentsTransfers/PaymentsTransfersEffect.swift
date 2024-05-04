@@ -9,24 +9,3 @@ enum PaymentsTransfersEffect: Equatable {
     
     case utilityFlow(UtilityPaymentFlowEffect)
 }
-
-extension PaymentsTransfersEffect {
-    
-    enum UtilityPaymentFlowEffect: Equatable {
-        
-        case prepayment(UtilityPrepaymentFlowEffect)
-    }
-}
-
-extension PaymentsTransfersEffect.UtilityPaymentFlowEffect {
-    
-    enum UtilityPrepaymentFlowEffect: Equatable {
-        
-        case startPayment(with: Select)
-    }
-}
-
-extension PaymentsTransfersEffect.UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect {
-    
-    typealias Select = PaymentsTransfersEvent.UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.Select
-}

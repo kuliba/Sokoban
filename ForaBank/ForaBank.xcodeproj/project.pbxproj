@@ -533,6 +533,9 @@
 		2A3BD61C2B6D262B009B16F7 /* RequestFactory+createCreateFastPaymentContractRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BD61B2B6D262B009B16F7 /* RequestFactory+createCreateFastPaymentContractRequestTests.swift */; };
 		2A3BD6222B6D33FA009B16F7 /* RequestFactory+createUpdateFastPaymentContractRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BD6212B6D33FA009B16F7 /* RequestFactory+createUpdateFastPaymentContractRequest.swift */; };
 		2A3BD6252B6D3501009B16F7 /* RequestFactory+createUpdateFastPaymentContractRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BD6242B6D3501009B16F7 /* RequestFactory+createUpdateFastPaymentContractRequestTests.swift */; };
+		2A3BF0722BE63FD60099FBD3 /* UtilityPaymentFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0712BE63FD60099FBD3 /* UtilityPaymentFlowState.swift */; };
+		2A3BF0742BE641410099FBD3 /* UtilityPaymentFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0732BE641410099FBD3 /* UtilityPaymentFlowEvent.swift */; };
+		2A3BF0762BE643E70099FBD3 /* UtilityPaymentFlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0752BE643E70099FBD3 /* UtilityPaymentFlowEffect.swift */; };
 		2A3C42BD2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C42BC2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift */; };
 		2A3D03D12A3E63000074E4D6 /* ActiveSessionAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */; };
 		2A3D6F042B61902700D19379 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3D6F032B61902700D19379 /* PaymentComponents */; };
@@ -3289,6 +3292,9 @@
 		2A3BD61B2B6D262B009B16F7 /* RequestFactory+createCreateFastPaymentContractRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateFastPaymentContractRequestTests.swift"; sourceTree = "<group>"; };
 		2A3BD6212B6D33FA009B16F7 /* RequestFactory+createUpdateFastPaymentContractRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createUpdateFastPaymentContractRequest.swift"; sourceTree = "<group>"; };
 		2A3BD6242B6D3501009B16F7 /* RequestFactory+createUpdateFastPaymentContractRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createUpdateFastPaymentContractRequestTests.swift"; sourceTree = "<group>"; };
+		2A3BF0712BE63FD60099FBD3 /* UtilityPaymentFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentFlowState.swift; sourceTree = "<group>"; };
+		2A3BF0732BE641410099FBD3 /* UtilityPaymentFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentFlowEvent.swift; sourceTree = "<group>"; };
+		2A3BF0752BE643E70099FBD3 /* UtilityPaymentFlowEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentFlowEffect.swift; sourceTree = "<group>"; };
 		2A3C42BC2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeCVVPINInitiateActivationServiceTests.swift"; sourceTree = "<group>"; };
 		2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionAgentStub.swift; sourceTree = "<group>"; };
 		2A3D6F1F2B62A16000D19379 /* GetC2BSubResponse+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetC2BSubResponse+preview.swift"; sourceTree = "<group>"; };
@@ -7232,6 +7238,16 @@
 			path = FastPaymentsSettings;
 			sourceTree = "<group>";
 		};
+		2A3BF0702BE63FCB0099FBD3 /* UtilityPaymentFlow */ = {
+			isa = PBXGroup;
+			children = (
+				2A3BF0712BE63FD60099FBD3 /* UtilityPaymentFlowState.swift */,
+				2A3BF0732BE641410099FBD3 /* UtilityPaymentFlowEvent.swift */,
+				2A3BF0752BE643E70099FBD3 /* UtilityPaymentFlowEffect.swift */,
+			);
+			path = UtilityPaymentFlow;
+			sourceTree = "<group>";
+		};
 		2A3E03272B74BD2700A4494D /* FastPaymentsSettings */ = {
 			isa = PBXGroup;
 			children = (
@@ -7954,6 +7970,7 @@
 		2A69C1C42BE4E77500FE91B0 /* PaymentsTransfers */ = {
 			isa = PBXGroup;
 			children = (
+				2A3BF0702BE63FCB0099FBD3 /* UtilityPaymentFlow */,
 				2A69C20C2BE50A3E00FE91B0 /* PaymentsTransfersEvent.swift */,
 				2A69C21C2BE53EDD00FE91B0 /* ServiceFailure.swift */,
 				2A69C2122BE514BC00FE91B0 /* PaymentsTransfersEffect.swift */,
@@ -15708,6 +15725,7 @@
 				2A69C2262BE61D1200FE91B0 /* Array.Operator+preview.swift in Sources */,
 				2A69C1CF2BE4E96C00FE91B0 /* PaymentsTransfersViewModel+preview.swift in Sources */,
 				2A69C2012BE4FCD100FE91B0 /* PaymentsTransfersDestinationViewFactory+preview.swift in Sources */,
+				2A3BF0722BE63FD60099FBD3 /* UtilityPaymentFlowState.swift in Sources */,
 				2A69C1E72BE4F8F800FE91B0 /* LastPayment.swift in Sources */,
 				2A69C2112BE5135200FE91B0 /* Operator+preview.swift in Sources */,
 				2A69C1D92BE4F03800FE91B0 /* RootActions+preview.swift in Sources */,
@@ -15727,8 +15745,10 @@
 				2A69C1D32BE4E9A700FE91B0 /* PaymentsTransfersViewModel.State+preview.swift in Sources */,
 				2A69C1F12BE4FB3800FE91B0 /* UtilityPrepaymentViewConfig+preview.swift in Sources */,
 				2A69C21D2BE53EDE00FE91B0 /* ServiceFailure.swift in Sources */,
+				2A3BF0762BE643E70099FBD3 /* UtilityPaymentFlowEffect.swift in Sources */,
 				2A69C1C82BE4E79C00FE91B0 /* PaymentsTransfersViewModelFactory.swift in Sources */,
 				2A69C1FB2BE4FBD900FE91B0 /* UtilityPrepaymentReducer.swift in Sources */,
+				2A3BF0742BE641410099FBD3 /* UtilityPaymentFlowEvent.swift in Sources */,
 				2A69C2222BE60AC900FE91B0 /* View+ext.swift in Sources */,
 				2A69C1AF2BE4E3AF00FE91B0 /* ContentView.swift in Sources */,
 				2A69C1F32BE4FB6500FE91B0 /* UtilityPrepaymentViewModel.swift in Sources */,

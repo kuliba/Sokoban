@@ -42,7 +42,7 @@ struct PaymentsTransfersView: View {
                 .navigationTitle("Pay by Instructions")
                 .navigationBarTitleDisplayMode(.inline)
             
-        case let .utilityPrepayment(utilityPrepayment):
+        case let .utilityPayment(utilityPrepayment):
             utilityPrepaymentView(utilityPrepayment)
                 .navigationTitle("Utility Prepayment View")
                 .navigationBarTitleDisplayMode(.inline)
@@ -50,7 +50,7 @@ struct PaymentsTransfersView: View {
     }
     
     private func utilityPrepaymentView(
-        _ utilityPrepayment: UtilityPrepayment
+        _ utilityPrepayment: UtilityPaymentFlowState
     ) -> some View {
         
         UtilityPrepaymentWrapperView(
@@ -68,7 +68,7 @@ struct PaymentsTransfersView: View {
     
     @ViewBuilder
     private func utilityPrepaymentDestinationView(
-        destination: UtilityPrepayment.Destination
+        destination: UtilityPaymentFlowState.Destination
     ) -> some View {
         
         switch destination {
@@ -91,7 +91,7 @@ struct PaymentsTransfersView: View {
     }
     
     private func utilityPrepaymentAlert(
-        alert: UtilityPrepayment.Alert
+        alert: UtilityPaymentFlowState.Alert
     ) -> Alert {
         
         switch alert {
@@ -118,7 +118,7 @@ struct PaymentsTransfersView: View {
         )
     }
     
-    #warning("multiple closures could be encapsulated into one `event: (Event) -> Void closure`")
+#warning("multiple closures could be encapsulated into one `event: (Event) -> Void closure`")
     private func _operatorFailureView(
         _ operatorFailure: OperatorFailure,
         payByInstructions: @escaping () -> Void,
@@ -137,7 +137,7 @@ struct PaymentsTransfersView: View {
             content: operatorFailureDestinationView
         )
     }
-
+    
     @ViewBuilder
     private func operatorFailureDestinationView(
         destination: OperatorFailure.Destination
@@ -145,7 +145,7 @@ struct PaymentsTransfersView: View {
         
         Text("TBD: OperatorFailure.Destination")
     }
-
+    
     private func servicePicker(
         _ servicePickerState: ServicePickerState
     ) -> some View {
@@ -201,9 +201,8 @@ struct PaymentsTransfersView: View {
 
 extension PaymentsTransfersView {
     
-    typealias UtilityPrepayment = PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment
-    typealias OperatorFailure = UtilityPrepayment.Destination.OperatorFailure
-    typealias ServicePickerState = UtilityPrepayment.Destination.ServicePickerState
+    typealias OperatorFailure = UtilityPaymentFlowState.Destination.OperatorFailure
+    typealias ServicePickerState = UtilityPaymentFlowState.Destination.ServicePickerState
     
     typealias Config = UtilityPrepaymentWrapperView.Config
     typealias Destination = ViewModel.State.Route.Destination
@@ -218,7 +217,7 @@ extension PaymentsTransfersViewModel.State.Route.Destination: Identifiable {
         case .payByInstructions:
             return .payByInstructions
             
-        case let .utilityPrepayment(utilityPrepayment):
+        case let .utilityPayment(utilityPrepayment):
             return .utilityFlow(ObjectIdentifier(utilityPrepayment.viewModel))
         }
     }
@@ -230,7 +229,7 @@ extension PaymentsTransfersViewModel.State.Route.Destination: Identifiable {
     }
 }
 
-extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination: Identifiable {
+extension UtilityPaymentFlowState.Destination: Identifiable {
     
     var id: ID {
         
@@ -258,7 +257,7 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.D
     }
 }
 
-extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Alert: Identifiable {
+extension UtilityPaymentFlowState.Alert: Identifiable {
     
     var id: ID {
         
@@ -274,7 +273,7 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.A
     }
 }
 
-extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination.OperatorFailure.Destination: Identifiable {
+extension UtilityPaymentFlowState.Destination.OperatorFailure.Destination: Identifiable {
     
     var id: ID {
         
@@ -289,7 +288,7 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.D
     }
 }
 
-extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination.ServicePickerState.Destination: Identifiable {
+extension UtilityPaymentFlowState.Destination.ServicePickerState.Destination: Identifiable {
     
     var id: ID {
         
@@ -304,7 +303,7 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.D
     }
 }
 
-extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination.ServicePickerState.Alert: Identifiable {
+extension UtilityPaymentFlowState.Destination.ServicePickerState.Alert: Identifiable {
     
     var id: ID {
         
@@ -369,7 +368,7 @@ private extension ServiceFailure {
 
 private extension UtilityPrepaymentFlowEvent {
     
-    var flowEvent: PaymentsTransfersEvent.UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
+    var flowEvent: UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
         
         switch self {
         case .addCompany:

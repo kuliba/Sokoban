@@ -36,8 +36,8 @@ extension PaymentsTransfersEffectHandler {
     // - `d1`
     // - `d2e`
     // - `d3`, `d4`, `d5`
-    typealias StartPaymentPayload = PaymentsTransfersEffect.UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect.Select
-    typealias StartPaymentResult = Event.UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentResult
+    typealias StartPaymentPayload = UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect.Select
+    typealias StartPaymentResult = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentResult
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     typealias StartPayment = (StartPaymentPayload, @escaping StartPaymentCompletion) -> Void
 
@@ -49,10 +49,10 @@ extension PaymentsTransfersEffectHandler {
 
 private extension PaymentsTransfersEffectHandler {
     
-    typealias UtilityFlowDispatch = (Event.UtilityPaymentFlowEvent) -> Void
+    typealias UtilityFlowDispatch = (UtilityPaymentFlowEvent) -> Void
     
     func handleEffect(
-        _ effect: Effect.UtilityPaymentFlowEffect,
+        _ effect: UtilityPaymentFlowEffect,
         _ dispatch: @escaping UtilityFlowDispatch
     ) {
         switch effect {
@@ -61,8 +61,8 @@ private extension PaymentsTransfersEffectHandler {
         }
     }
     
-    typealias UtilityPrepaymentEffect = Effect.UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect
-    typealias UtilityPrepaymentEvent = Event.UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent
+    typealias UtilityPrepaymentEffect = UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect
+    typealias UtilityPrepaymentEvent = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent
     typealias UtilityPrepaymentDispatch = (UtilityPrepaymentEvent) -> Void
     
     func handleEffect(
