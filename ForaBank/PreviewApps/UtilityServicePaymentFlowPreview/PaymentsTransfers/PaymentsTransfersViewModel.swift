@@ -131,10 +131,10 @@ private extension PaymentsTransfersViewModel {
             
         case .dismissOperatorFailureDestination:
             state.route.setUtilityServiceOperatorFailureDestination(to: nil)
-
+            
         case .dismissServicesDestination:
             state.route.setUtilityServicePickerDestination(to: nil)
-
+            
         case .payByInstructions:
             payByInstructions(&state)
             
@@ -202,7 +202,7 @@ private extension PaymentsTransfersViewModel {
                 switch state.route.utilityPrepaymentDestination {
                 case .none:
                     state.route.setUtilityPrepaymentDestination(to: .payment(response))
-
+                    
                 case .servicePicker:
                     state.route.setUtilityServicePickerDestination(to: .payment(response))
                     
@@ -264,11 +264,11 @@ extension PaymentsTransfersViewModel.State.Route.Destination {
     struct UtilityPrepayment {
         
         let viewModel: UtilityPrepaymentViewModel
-        let destination: Destination?
-        let alert: Alert?
+        var destination: Destination?
+        var alert: Alert?
         
         init(
-            viewModel: UtilityPrepaymentViewModel, 
+            viewModel: UtilityPrepaymentViewModel,
             destination: Destination? = nil,
             alert: Alert? = nil
         ) {
@@ -300,7 +300,7 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.D
     struct OperatorFailure {
         
         let `operator`: Operator
-        let destination: Destination?
+        var destination: Destination?
         
         init(
             `operator`: Operator,
@@ -315,8 +315,8 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.D
         
         let services: MultiElementArray<UtilityService>
         let `operator`: Operator
-        let destination: Destination?
-        let alert: Alert?
+        var destination: Destination?
+        var alert: Alert?
         
         init(
             services: MultiElementArray<UtilityService>,
@@ -348,7 +348,7 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.D
         
         case serviceFailure(ServiceFailure)
     }
-
+    
     enum Destination {
         
         case payment(StartPaymentResponse)
@@ -380,60 +380,63 @@ private extension PaymentsTransfersViewModel.State.Route {
     mutating func setUtilityPrepaymentDestination(
         to destination: Destination.UtilityPrepayment.Destination?
     ) {
-        guard let utilityPrepayment else { return }
+        guard var utilityPrepayment else { return }
         
-        self.destination = .utilityPrepayment(.init(
-            viewModel: utilityPrepayment.viewModel,
-            destination: destination
-        ))
+        utilityPrepayment[keyPath: \.destination] = destination
+        self.destination = .utilityPrepayment(utilityPrepayment)
     }
     
     mutating func setUtilityPrepaymentAlert(
         to alert: Destination.UtilityPrepayment.Alert?
     ) {
-        guard let utilityPrepayment else { return }
+        guard var utilityPrepayment else { return }
         
-        self.destination = .utilityPrepayment(.init(
-            viewModel: utilityPrepayment.viewModel,
-            alert: alert
-        ))
+        utilityPrepayment[keyPath: \.alert] = alert
+        self.destination = .utilityPrepayment(utilityPrepayment)
+    }
+    
+    private var operatorFailure: Destination.UtilityPrepayment.Destination.OperatorFailure? {
+        
+        guard case let .operatorFailure(operatorFailure) = utilityPrepaymentDestination
+        else { return nil }
+        
+        return operatorFailure
     }
     
     mutating func setUtilityServiceOperatorFailureDestination(
         to destination: Destination.UtilityPrepayment.Destination.OperatorFailure.Destination?
     ) {
-        guard case let .operatorFailure(operatorFailure) = utilityPrepaymentDestination
-        else { return }
-        #warning("add set helper")
-        self.setUtilityPrepaymentDestination(to: .operatorFailure(.init(
-            operator: operatorFailure.operator,
-            destination: destination
-        )))
+        guard var operatorFailure else { return }
+        
+        operatorFailure[keyPath: \.destination] = destination
+        self.setUtilityPrepaymentDestination(to: .operatorFailure(operatorFailure))
+    }
+    
+    typealias ServicePickerState = Destination.UtilityPrepayment.Destination.ServicePickerState
+    
+    private var servicePicker: ServicePickerState? {
+        
+        guard case let .servicePicker(servicePicker) = utilityPrepaymentDestination
+        else { return nil }
+        
+        return servicePicker
     }
     
     mutating func setUtilityServicePickerDestination(
-        to destination: Destination.UtilityPrepayment.Destination.ServicePickerState.Destination?
+        to destination: ServicePickerState.Destination?
     ) {
-        guard case let .servicePicker(services) = utilityPrepaymentDestination
-        else { return }
-        #warning("add set helper")
-        self.setUtilityPrepaymentDestination(to: .servicePicker(.init(
-            services: services.services,
-            operator: services.operator,
-            destination: destination
-        )))
+        guard var servicePicker else { return }
+        
+        servicePicker[keyPath: \.destination] = destination
+        self.setUtilityPrepaymentDestination(to: .servicePicker(servicePicker))
     }
     
     mutating func setUtilityServicePickerAlert(
-        to alert: Destination.UtilityPrepayment.Destination.ServicePickerState.Alert?
+        to alert: ServicePickerState.Alert?
     ) {
-        guard case let .servicePicker(services) = utilityPrepaymentDestination
-        else { return }
-        #warning("add set helper")
-        self.setUtilityPrepaymentDestination(to: .servicePicker(.init(
-            services: services.services,
-            operator: services.operator,
-            alert: alert
-        )))
+        guard var servicePicker else { return }
+        
+        servicePicker[keyPath: \.alert] = alert
+        self.setUtilityPrepaymentDestination(to: .servicePicker(servicePicker))
     }
 }
