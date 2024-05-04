@@ -123,6 +123,9 @@ private extension PaymentsTransfersViewModel {
         case .dismissDestination:
             state.route.setUtilityPrepaymentDestination(to: nil)
             
+        case .dismissServicesDestination:
+            state.route.setUtilityServicePickerDestination(to: nil)
+
         case .payByInstructions:
             state.route.setUtilityPrepaymentDestination(to: .payByInstructions)
             
@@ -156,11 +159,23 @@ private extension PaymentsTransfersViewModel {
         case let .success(success):
             switch success {
             case let .services(services, `operator`):
-#warning("set destination of destination!!!")
-                state.route.setUtilityPrepaymentDestination(to: .services(services, for: `operator`))
+                state.route.setUtilityPrepaymentDestination(to: .servicePicker(.init(
+                    services: services,
+                    operator: `operator`,
+                    destination: nil
+                )))
                 
             case let .startPayment(response):
-                state.route.setUtilityPrepaymentDestination(to: .payment)
+                switch state.route.utilityPrepaymentDestination {
+                case .none:
+                    state.route.setUtilityPrepaymentDestination(to: .payment(response))
+
+                case .servicePicker:
+                    state.route.setUtilityServicePickerDestination(to: .payment(response))
+                    
+                default:
+                    break
+                }
             }
         }
     }
@@ -216,10 +231,36 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment {
         
         case operatorFailure(Operator)
         case payByInstructions
-        case payment
+        case payment(StartPaymentResponse)
         case serviceFailure(ServiceFailure)
-        case services(MultiElementArray<UtilityService>, for: Operator)
+        case servicePicker(ServicePickerState)
     }
+}
+
+extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination {
+    
+    struct ServicePickerState {
+        
+        let services: MultiElementArray<UtilityService>
+        let `operator`: Operator
+        let destination: Destination?
+    }
+    
+    typealias StartPaymentResponse = PaymentsTransfersEvent.UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentSuccess.StartPaymentResponse
+}
+
+extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination.ServicePickerState {
+    
+    
+    enum Destination {
+        
+        case payment(StartPaymentResponse)
+    }
+}
+
+extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination.ServicePickerState.Destination {
+    
+    typealias StartPaymentResponse = PaymentsTransfersEvent.UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentSuccess.StartPaymentResponse
 }
 
 // MARK: - Helpers
@@ -242,12 +283,24 @@ private extension PaymentsTransfersViewModel.State.Route {
     mutating func setUtilityPrepaymentDestination(
         to destination: Destination.UtilityPrepayment.Destination?
     ) {
-        
         guard let utilityPrepayment else { return }
         
         self.destination = .utilityPrepayment(.init(
             viewModel: utilityPrepayment.viewModel,
             destination: destination
         ))
+    }
+    
+    mutating func setUtilityServicePickerDestination(
+        to destination: Destination.UtilityPrepayment.Destination.ServicePickerState.Destination?
+    ) {
+        guard case let .servicePicker(services) = utilityPrepaymentDestination
+        else { return }
+        
+        self.setUtilityPrepaymentDestination(to: .servicePicker(.init(
+            services: services.services,
+            operator: services.operator,
+            destination: destination
+        )))
     }
 }

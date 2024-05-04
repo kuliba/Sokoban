@@ -5,8 +5,8 @@
 //  Created by Igor Malyarov on 03.05.2024.
 //
 
-import UIPrimitives
 import SwiftUI
+import UIPrimitives
 
 struct PaymentsTransfersView: View {
     
@@ -81,23 +81,52 @@ struct PaymentsTransfersView: View {
         case .payByInstructions:
             Text("Pay by Instructions")
             
-        case .payment:
-            Text("TBD: Payment")
+        case let .payment(response):
+            Text("TBD: Payment with \(response)")
             
         case let .serviceFailure(serviceFailure):
-            Text("TBD: Alerts with OK that resets destination")
+            Text("TBD: Alerts for \(serviceFailure) with OK that resets destination")
             
-        case let .services(services, for: `operator`):
-            List {
-                ForEach(services.elements) {service in
+        case let .servicePicker(servicePickerState):
+            servicePicker(servicePickerState)
+                .navigationTitle(String(describing: servicePickerState.operator))
+                .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+    
+    private func servicePicker(
+        _ servicePickerState: PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination.ServicePickerState
+    ) -> some View {
+        
+        List {
+            ForEach(servicePickerState.services.elements) { service in
+                
+                Button(String(service.id.prefix(24))) {
                     
-                    Button(String(service.id.prefix(24))) {
-                        
-                        viewModel.event(.utilityFlow(.prepayment(.select(.service(service, for: `operator`)))))
-                    }
+                    viewModel.event(.utilityFlow(.prepayment(.select(.service(
+                        service,
+                        for: servicePickerState.`operator`
+                    )))))
                 }
             }
-#warning("add navigation destination")
+        }
+        .navigationDestination(
+            item: .init(
+                get: { servicePickerState.destination },
+                set: { if $0 == nil { viewModel.event(.utilityFlow(.prepayment(.dismissServicesDestination))) }}
+            ),
+            content: servicesDestinationView
+        )
+    }
+    
+    @ViewBuilder
+    private func servicesDestinationView(
+        destination: PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination.ServicePickerState.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .payment(response):
+            Text("TBD: Payment with \(response)")
         }
     }
 }
@@ -148,8 +177,8 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.D
         case let .serviceFailure(serviceFailure):
             return  .serviceFailure(serviceFailure)
             
-        case let .services(_, for: `operator`):
-            return .services(for: `operator`.id)
+        case let .servicePicker(services):
+            return .services(for: services.`operator`.id)
         }
     }
     
@@ -160,6 +189,21 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.D
         case payment
         case serviceFailure(ServiceFailure)
         case services(for: Operator.ID)
+    }
+}
+
+extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination.ServicePickerState.Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .payment: return .payment
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case payment
     }
 }
 

@@ -26,6 +26,7 @@ extension PaymentsTransfersEvent.UtilityPaymentFlowEvent {
         
         case addCompany
         case dismissDestination
+        case dismissServicesDestination
         case payByInstructions
         case payByInstructionsFromError
         case paymentStarted(StartPaymentResult)
@@ -50,7 +51,7 @@ extension PaymentsTransfersEvent.UtilityPaymentFlowEvent.UtilityPrepaymentFlowEv
         case startPayment(StartPaymentResponse)
         
         #warning("FIXME")
-        typealias StartPaymentResponse = Int
+        struct StartPaymentResponse: Equatable {}
     }
     
     enum StartPaymentFailure: Error, Equatable {
