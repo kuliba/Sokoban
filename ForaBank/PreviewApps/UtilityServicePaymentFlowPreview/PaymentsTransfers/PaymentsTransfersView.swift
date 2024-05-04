@@ -72,8 +72,10 @@ struct PaymentsTransfersView: View {
     ) -> some View {
         
         switch destination {
-        case let .operatorFailure(`operator`):
-            Text("TBD: Operator Failure view for \(`operator`) with Pay by Instructions Button (!!!)")
+        case let .operatorFailure(operatorFailure):
+            operatorFailureView(operatorFailure)
+                .navigationTitle(String(describing: operatorFailure.operator))
+                .navigationBarTitleDisplayMode(.inline)
             
         case .payByInstructions:
             Text("Pay by Instructions")
@@ -105,6 +107,45 @@ struct PaymentsTransfersView: View {
         }
     }
     
+    private func operatorFailureView(
+        _ operatorFailure: OperatorFailure
+    ) -> some View {
+        
+        _operatorFailureView(
+            operatorFailure,
+            payByInstructions: { viewModel.event(.utilityFlow(.prepayment(.payByInstructions))) },
+            dismissDestination: { viewModel.event(.utilityFlow(.prepayment(.dismissOperatorFailureDestination))) }
+        )
+    }
+    
+    #warning("multiple closures could be encapsulated into one `event: (Event) -> Void closure`")
+    private func _operatorFailureView(
+        _ operatorFailure: OperatorFailure,
+        payByInstructions: @escaping () -> Void,
+        dismissDestination: @escaping () -> Void
+    ) -> some View {
+        
+        VStack(spacing: 32) {
+            
+            Text("TBD: Operator Failure view for \(operatorFailure.operator)")
+            
+            Button("Pay by Instructions", action: payByInstructions)
+        }
+        .navigationDestination(
+            destination: operatorFailure.destination,
+            dismissDestination: dismissDestination,
+            content: operatorFailureDestinationView
+        )
+    }
+
+    @ViewBuilder
+    private func operatorFailureDestinationView(
+        destination: OperatorFailure.Destination
+    ) -> some View {
+        
+        Text("TBD: OperatorFailure.Destination")
+    }
+
     private func servicePicker(
         _ servicePickerState: ServicePickerState
     ) -> some View {
@@ -161,6 +202,7 @@ struct PaymentsTransfersView: View {
 extension PaymentsTransfersView {
     
     typealias UtilityPrepayment = PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment
+    typealias OperatorFailure = UtilityPrepayment.Destination.OperatorFailure
     typealias ServicePickerState = UtilityPrepayment.Destination.ServicePickerState
     
     typealias Config = UtilityPrepaymentWrapperView.Config
@@ -193,8 +235,8 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.D
     var id: ID {
         
         switch self {
-        case let .operatorFailure(`operator`):
-            return .operatorFailure(`operator`.id)
+        case let .operatorFailure(operatorFailure):
+            return .operatorFailure(operatorFailure.operator.id)
             
         case .payByInstructions:
             return .payByInstructions
@@ -229,6 +271,21 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.A
     enum ID: Hashable {
         
         case serviceFailure(ServiceFailure)
+    }
+}
+
+extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination.OperatorFailure.Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .payByInstructions: return .payByInstructions
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case payByInstructions
     }
 }
 

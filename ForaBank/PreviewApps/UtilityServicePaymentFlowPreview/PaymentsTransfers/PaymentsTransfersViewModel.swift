@@ -129,11 +129,14 @@ private extension PaymentsTransfersViewModel {
         case .dismissDestination:
             state.route.setUtilityPrepaymentDestination(to: nil)
             
+        case .dismissOperatorFailureDestination:
+            state.route.setUtilityServiceOperatorFailureDestination(to: nil)
+
         case .dismissServicesDestination:
             state.route.setUtilityServicePickerDestination(to: nil)
 
         case .payByInstructions:
-            state.route.setUtilityPrepaymentDestination(to: .payByInstructions)
+            payByInstructions(&state)
             
         case .payByInstructionsFromError:
             state.route.destination = .payByInstructions
@@ -148,6 +151,21 @@ private extension PaymentsTransfersViewModel {
         return (state, effect)
     }
     
+    func payByInstructions(
+        _ state: inout State
+    ) {
+        switch state.route.utilityPrepaymentDestination {
+        case .none:
+            state.route.setUtilityPrepaymentDestination(to: .payByInstructions)
+            
+        case .operatorFailure:
+            state.route.setUtilityServiceOperatorFailureDestination(to: .payByInstructions)
+            
+        default:
+            break
+        }
+    }
+    
     func reduce(
         _ state: inout State,
         _ result: PaymentsTransfersEvent.UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentResult
@@ -156,7 +174,7 @@ private extension PaymentsTransfersViewModel {
         case let .failure(failure):
             switch failure {
             case let .operatorFailure(`operator`):
-                state.route.setUtilityPrepaymentDestination(to: .operatorFailure(`operator`))
+                state.route.setUtilityPrepaymentDestination(to: .operatorFailure(.init(operator: `operator`)))
                 
             case let .serviceFailure(serviceFailure):
                 switch state.route.utilityPrepaymentDestination {
@@ -270,7 +288,7 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment {
     
     enum Destination {
         
-        case operatorFailure(Operator)
+        case operatorFailure(OperatorFailure)
         case payByInstructions
         case payment(StartPaymentResponse)
         case servicePicker(ServicePickerState)
@@ -278,6 +296,20 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment {
 }
 
 extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination {
+    
+    struct OperatorFailure {
+        
+        let `operator`: Operator
+        let destination: Destination?
+        
+        init(
+            `operator`: Operator,
+            destination: Destination? = nil
+        ) {
+            self.operator = `operator`
+            self.destination = destination
+        }
+    }
     
     struct ServicePickerState {
         
@@ -300,6 +332,14 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.D
     }
     
     typealias StartPaymentResponse = PaymentsTransfersEvent.UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentSuccess.StartPaymentResponse
+}
+
+extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination.OperatorFailure {
+    
+    enum Destination {
+        
+        case payByInstructions
+    }
 }
 
 extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination.ServicePickerState {
@@ -357,6 +397,18 @@ private extension PaymentsTransfersViewModel.State.Route {
             viewModel: utilityPrepayment.viewModel,
             alert: alert
         ))
+    }
+    
+    mutating func setUtilityServiceOperatorFailureDestination(
+        to destination: Destination.UtilityPrepayment.Destination.OperatorFailure.Destination?
+    ) {
+        guard case let .operatorFailure(operatorFailure) = utilityPrepaymentDestination
+        else { return }
+        #warning("add set helper")
+        self.setUtilityPrepaymentDestination(to: .operatorFailure(.init(
+            operator: operatorFailure.operator,
+            destination: destination
+        )))
     }
     
     mutating func setUtilityServicePickerDestination(

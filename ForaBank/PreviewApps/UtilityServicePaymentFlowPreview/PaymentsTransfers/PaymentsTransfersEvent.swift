@@ -28,6 +28,7 @@ extension PaymentsTransfersEvent.UtilityPaymentFlowEvent {
         case addCompany
         case dismissAlert
         case dismissDestination
+        case dismissOperatorFailureDestination
         case dismissServicesDestination
         case payByInstructions
         case payByInstructionsFromError
