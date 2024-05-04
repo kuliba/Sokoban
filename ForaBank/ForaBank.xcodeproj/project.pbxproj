@@ -800,6 +800,7 @@
 		2A69C21B2BE53E4000FE91B0 /* UtilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C21A2BE53E4000FE91B0 /* UtilityService.swift */; };
 		2A69C21D2BE53EDE00FE91B0 /* ServiceFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C21C2BE53EDD00FE91B0 /* ServiceFailure.swift */; };
 		2A69C21F2BE57A7B00FE91B0 /* ForaTools in Frameworks */ = {isa = PBXBuildFile; productRef = 2A69C21E2BE57A7B00FE91B0 /* ForaTools */; };
+		2A69C2222BE60AC900FE91B0 /* View+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C2212BE60AC900FE91B0 /* View+ext.swift */; };
 		2A6AD34B2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AD34A2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift */; };
 		2A6AF2132AF8178100655156 /* Services+makeShowCVVService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */; };
 		2A6AF2152AF81C1400655156 /* Services+makeChangePINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */; };
@@ -3564,6 +3565,7 @@
 		2A69C2182BE5164E00FE91B0 /* PaymentsTransfersEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersEffectHandler.swift; sourceTree = "<group>"; };
 		2A69C21A2BE53E4000FE91B0 /* UtilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityService.swift; sourceTree = "<group>"; };
 		2A69C21C2BE53EDD00FE91B0 /* ServiceFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceFailure.swift; sourceTree = "<group>"; };
+		2A69C2212BE60AC900FE91B0 /* View+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ext.swift"; sourceTree = "<group>"; };
 		2A6AD34A2AFA0C7B005B48B3 /* ComposedCVVPINServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCVVPINServiceTests.swift; sourceTree = "<group>"; };
 		2A6AF2122AF8178100655156 /* Services+makeShowCVVService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeShowCVVService.swift"; sourceTree = "<group>"; };
 		2A6AF2142AF81C1400655156 /* Services+makeChangePINService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeChangePINService.swift"; sourceTree = "<group>"; };
@@ -7926,6 +7928,7 @@
 				2A69C1EA2BE4FACB00FE91B0 /* UtilityPrepayment */,
 				2A69C1C42BE4E77500FE91B0 /* PaymentsTransfers */,
 				2A69C1DC2BE4F58500FE91B0 /* UtilityPrepaymentWrapper */,
+				2A69C2202BE60AB400FE91B0 /* View+ext */,
 				2A69C1B02BE4E3B100FE91B0 /* Assets.xcassets */,
 				2A69C1B22BE4E3B100FE91B0 /* Preview Content */,
 			);
@@ -8016,6 +8019,14 @@
 				2A69C1F02BE4FB3800FE91B0 /* UtilityPrepaymentViewConfig+preview.swift */,
 			);
 			path = UtilityPrepayment;
+			sourceTree = "<group>";
+		};
+		2A69C2202BE60AB400FE91B0 /* View+ext */ = {
+			isa = PBXGroup;
+			children = (
+				2A69C2212BE60AC900FE91B0 /* View+ext.swift */,
+			);
+			path = "View+ext";
 			sourceTree = "<group>";
 		};
 		2A6BF2B12B5B1107003E3765 /* Settings */ = {
@@ -15710,6 +15721,7 @@
 				2A69C21D2BE53EDE00FE91B0 /* ServiceFailure.swift in Sources */,
 				2A69C1C82BE4E79C00FE91B0 /* PaymentsTransfersViewModelFactory.swift in Sources */,
 				2A69C1FB2BE4FBD900FE91B0 /* UtilityPrepaymentReducer.swift in Sources */,
+				2A69C2222BE60AC900FE91B0 /* View+ext.swift in Sources */,
 				2A69C1AF2BE4E3AF00FE91B0 /* ContentView.swift in Sources */,
 				2A69C1F32BE4FB6500FE91B0 /* UtilityPrepaymentViewModel.swift in Sources */,
 				2A69C1F52BE4FB9700FE91B0 /* UtilityPrepaymentState.swift in Sources */,

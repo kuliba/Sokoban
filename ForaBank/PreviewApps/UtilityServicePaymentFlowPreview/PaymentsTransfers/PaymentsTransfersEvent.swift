@@ -17,6 +17,7 @@ extension PaymentsTransfersEvent {
     enum UtilityPaymentFlowEvent: Equatable {
         
         case prepayment(UtilityPrepaymentFlowEvent)
+        case servicePicker(ServicePickerFlowEvent)
     }
 }
 
@@ -25,12 +26,18 @@ extension PaymentsTransfersEvent.UtilityPaymentFlowEvent {
     enum UtilityPrepaymentFlowEvent: Equatable {
         
         case addCompany
+        case dismissAlert
         case dismissDestination
         case dismissServicesDestination
         case payByInstructions
         case payByInstructionsFromError
         case paymentStarted(StartPaymentResult)
         case select(Select)
+    }
+    
+    enum ServicePickerFlowEvent: Equatable {
+        
+        case dismissAlert
     }
 }
 

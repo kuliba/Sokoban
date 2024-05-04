@@ -25,10 +25,8 @@ struct PaymentsTransfersView: View {
         
         Button("Utility", action: viewModel.openUtilityPayment)
             .navigationDestination(
-                item: .init(
-                    get: { viewModel.state.route.destination },
-                    set: { if $0 == nil { viewModel.resetDestination() }}
-                ),
+                destination: viewModel.state.route.destination,
+                dismissDestination: viewModel.resetDestination,
                 content: destinationView
             )
     }
@@ -61,17 +59,16 @@ struct PaymentsTransfersView: View {
             config: config
         )
         .navigationDestination(
-            item: .init(
-                get: { utilityPrepayment.destination },
-                set: { if $0 == nil { viewModel.event(.utilityFlow(.prepayment(.dismissDestination))) }}
-            ),
+            destination: utilityPrepayment.destination,
+            dismissDestination: { viewModel.event(.utilityFlow(.prepayment(.dismissDestination))) },
             content: utilityPrepaymentDestinationView
         )
+        .alert(item: utilityPrepayment.alert, content: utilityPrepaymentAlert)
     }
     
     @ViewBuilder
     private func utilityPrepaymentDestinationView(
-        _ destination: UtilityPrepayment.Destination
+        destination: UtilityPrepayment.Destination
     ) -> some View {
         
         switch destination {
@@ -84,9 +81,6 @@ struct PaymentsTransfersView: View {
         case let .payment(response):
             Text("TBD: Payment with \(response)")
             
-        case let .serviceFailure(serviceFailure):
-            Text("TBD: Alerts for \(serviceFailure) with OK that resets destination")
-            
         case let .servicePicker(servicePickerState):
             servicePicker(servicePickerState)
                 .navigationTitle(String(describing: servicePickerState.operator))
@@ -94,8 +88,25 @@ struct PaymentsTransfersView: View {
         }
     }
     
+    private func utilityPrepaymentAlert(
+        alert: UtilityPrepayment.Alert
+    ) -> Alert {
+        
+        switch alert {
+        case let .serviceFailure(serviceFailure):
+            return serviceFailure.alert(
+                event: { viewModel.event(.utilityFlow(.prepayment($0))) },
+                map: {
+                    switch $0 {
+                    case .dismissAlert: return .dismissAlert
+                    }
+                }
+            )
+        }
+    }
+    
     private func servicePicker(
-        _ servicePickerState: PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination.ServicePickerState
+        _ servicePickerState: ServicePickerState
     ) -> some View {
         
         List {
@@ -111,17 +122,16 @@ struct PaymentsTransfersView: View {
             }
         }
         .navigationDestination(
-            item: .init(
-                get: { servicePickerState.destination },
-                set: { if $0 == nil { viewModel.event(.utilityFlow(.prepayment(.dismissServicesDestination))) }}
-            ),
+            destination: servicePickerState.destination,
+            dismissDestination: { viewModel.event(.utilityFlow(.prepayment(.dismissServicesDestination))) },
             content: servicesDestinationView
         )
+        .alert(item: servicePickerState.alert, content: servicePickerAlert)
     }
     
     @ViewBuilder
     private func servicesDestinationView(
-        destination: PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination.ServicePickerState.Destination
+        destination: ServicePickerState.Destination
     ) -> some View {
         
         switch destination {
@@ -129,11 +139,29 @@ struct PaymentsTransfersView: View {
             Text("TBD: Payment with \(response)")
         }
     }
+    
+    private func servicePickerAlert(
+        alert: ServicePickerState.Alert
+    ) -> Alert {
+        
+        switch alert {
+        case let .serviceFailure(serviceFailure):
+            return serviceFailure.alert(
+                event: { viewModel.event(.utilityFlow(.servicePicker($0))) },
+                map: {
+                    switch $0 {
+                    case .dismissAlert: return .dismissAlert
+                    }
+                }
+            )
+        }
+    }
 }
 
 extension PaymentsTransfersView {
     
     typealias UtilityPrepayment = PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment
+    typealias ServicePickerState = UtilityPrepayment.Destination.ServicePickerState
     
     typealias Config = UtilityPrepaymentWrapperView.Config
     typealias Destination = ViewModel.State.Route.Destination
@@ -174,9 +202,6 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.D
         case .payment:
             return .payment
             
-        case let .serviceFailure(serviceFailure):
-            return  .serviceFailure(serviceFailure)
-            
         case let .servicePicker(services):
             return .services(for: services.`operator`.id)
         }
@@ -187,8 +212,23 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.D
         case operatorFailure(Operator.ID)
         case payByInstructions
         case payment
-        case serviceFailure(ServiceFailure)
         case services(for: Operator.ID)
+    }
+}
+
+extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Alert: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case let .serviceFailure(serviceFailure):
+            return  .serviceFailure(serviceFailure)
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case serviceFailure(ServiceFailure)
     }
 }
 
@@ -204,6 +244,69 @@ extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.D
     enum ID: Hashable {
         
         case payment
+    }
+}
+
+extension PaymentsTransfersViewModel.State.Route.Destination.UtilityPrepayment.Destination.ServicePickerState.Alert: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case let .serviceFailure(serviceFailure):
+            return  .serviceFailure(serviceFailure)
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case serviceFailure(ServiceFailure)
+    }
+}
+
+private extension ServiceFailure {
+    
+    func alert<Event>(
+        event: @escaping (Event) -> Void,
+        map: @escaping (ServiceFailureEvent) -> Event
+    ) -> Alert {
+        
+        self.alert(event: { event(map($0)) })
+    }
+    
+    enum ServiceFailureEvent {
+        
+        case dismissAlert
+    }
+    
+    private func alert(
+        event: @escaping (ServiceFailureEvent) -> Void
+    ) -> Alert {
+        
+        switch self {
+        case .connectivityError:
+            let model = alertModelOf(title: "Error!", message: "alert message")
+            return .init(with: model, event: event)
+            
+        case let .serverError(message):
+            let model = alertModelOf(title: "Error!", message: message)
+            return .init(with: model, event: event)
+        }
+    }
+    
+    private func alertModelOf(
+        title: String,
+        message: String? = nil
+    ) -> AlertModelOf<ServiceFailureEvent> {
+        
+        .init(
+            title: title,
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: .dismissAlert
+            )
+        )
     }
 }
 

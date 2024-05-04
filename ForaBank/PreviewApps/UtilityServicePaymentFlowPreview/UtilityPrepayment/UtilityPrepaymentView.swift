@@ -14,6 +14,7 @@ struct UtilityPrepaymentView: View {
     let flowEvent: (FlowEvent) -> Void
     let config: Config
     
+    #warning("replace stub with state")
     // MARK: - Stubs
     
     private let lastPayment: LastPayment = .preview
@@ -29,16 +30,19 @@ struct UtilityPrepaymentView: View {
         VStack(spacing: 32) {
             
             Button("LastPayment", action: { flowEvent(.select(.lastPayment(lastPayment))) })
-
+            
             Button("LastPayment Failure", action: { flowEvent(.select(.lastPayment(lastPaymentFailure))) })
-
+                .foregroundColor(.red)
+            
             Button("Single service Operator", action: { flowEvent(.select(.operator(single))) })
             
             Button("Single service Operator Failure", action: { flowEvent(.select(.operator(singleFailure))) })
+                .foregroundColor(.red)
             
             Button("Multi service Operator", action: { flowEvent(.select(.operator(multiple))) })
             
             Button("Multi service Operator Failure", action: { flowEvent(.select(.operator(multipleFailure))) })
+                .foregroundColor(.red)
             
             Divider()
             
@@ -54,8 +58,8 @@ struct UtilityPrepaymentView: View {
 
 extension UtilityPrepaymentView {
     
-   typealias State = UtilityPrepaymentState
-   typealias Event = UtilityPrepaymentEvent
-   typealias FlowEvent = UtilityPrepaymentFlowEvent
-   typealias Config = UtilityPrepaymentViewConfig
+    typealias State = UtilityPrepaymentState
+    typealias Event = UtilityPrepaymentEvent
+    typealias FlowEvent = UtilityPrepaymentFlowEvent
+    typealias Config = UtilityPrepaymentViewConfig
 }
