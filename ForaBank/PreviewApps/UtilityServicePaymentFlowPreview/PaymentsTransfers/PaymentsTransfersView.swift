@@ -23,10 +23,10 @@ struct PaymentsTransfersView: View {
     
     var body: some View {
         
-        Button("Utility", action: viewModel.openUtilityPayment)
+        Button("Utility", action: viewModel.startUtilityPaymentProcess)
             .navigationDestination(
                 destination: viewModel.state.route.destination,
-                dismissDestination: viewModel.resetDestination,
+                dismissDestination: viewModel.dismissDestination,
                 content: destinationView
             )
             .fullScreenCover(
@@ -41,11 +41,14 @@ struct PaymentsTransfersView: View {
                             
                             Text("Payment cancelled!")
                                 .foregroundColor(.red)
+                                .frame(maxHeight: .infinity)
                             
                             if expired {
                                 
                                 Text("time expired")
                             }
+                            
+                            Divider()
                             
                             Button("Go to main", action: { viewModel.event(.goToMain) })
                         }

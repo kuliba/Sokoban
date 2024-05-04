@@ -30,7 +30,7 @@ final class PaymentsTransfersViewModel: ObservableObject {
 
 extension PaymentsTransfersViewModel {
     
-    func openUtilityPayment() {
+    func startUtilityPaymentProcess() {
         
         rootActions.spinner.show()
         
@@ -41,7 +41,7 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    func resetDestination() {
+    func dismissDestination() {
         
         state.route.destination = nil
     }
