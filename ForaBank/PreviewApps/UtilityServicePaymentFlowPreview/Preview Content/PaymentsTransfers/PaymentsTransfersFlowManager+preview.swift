@@ -11,10 +11,10 @@ import ForaTools
 extension PaymentsTransfersFlowManager {
     
     static func preview(
-        startPaymentStub: PaymentsTransfersEffectHandler.StartPaymentResult? = nil
+        startPaymentStub: UtilityPaymentFlowEffectHandler.StartPaymentResult? = nil
     ) -> Self {
         
-        let effectHandler = PaymentsTransfersEffectHandler(
+        let utilityFlowEffectHandler = UtilityPaymentFlowEffectHandler(
             startPayment: { payload, completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -24,16 +24,20 @@ extension PaymentsTransfersFlowManager {
             }
         )
         
+        let effectHandler = PaymentsTransfersEffectHandler(
+            utilityEffectHandle: utilityFlowEffectHandler.handleEffect(_:_:)
+        )
+        
         return .init(
             handleEffect: effectHandler.handleEffect(_:_:)
         )
     }
 }
 
-private extension PaymentsTransfersEffectHandler.StartPaymentResult {
+private extension UtilityPaymentFlowEffectHandler.StartPaymentResult {
     
     static func stub(
-        for payload: PaymentsTransfersEffectHandler.StartPaymentPayload,
+        for payload: UtilityPaymentFlowEffectHandler.StartPaymentPayload,
         fallback: Self = .preview
     ) -> Self {
         
