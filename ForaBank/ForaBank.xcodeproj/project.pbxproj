@@ -541,6 +541,8 @@
 		2A3BF0842BE683880099FBD3 /* UtilityServicePaymentFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0832BE683880099FBD3 /* UtilityServicePaymentFlowEvent.swift */; };
 		2A3BF0862BE6921E0099FBD3 /* PaymentFlowMockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0852BE6921E0099FBD3 /* PaymentFlowMockView.swift */; };
 		2A3BF0882BE697280099FBD3 /* PaymentFlowMockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0872BE697280099FBD3 /* PaymentFlowMockViewModel.swift */; };
+		2A3BF08A2BE699130099FBD3 /* PaymentFraudMockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0892BE699130099FBD3 /* PaymentFraudMockView.swift */; };
+		2A3BF08C2BE6996A0099FBD3 /* FraudEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF08B2BE6996A0099FBD3 /* FraudEvent.swift */; };
 		2A3C42BD2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C42BC2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift */; };
 		2A3D03D12A3E63000074E4D6 /* ActiveSessionAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */; };
 		2A3D6F042B61902700D19379 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3D6F032B61902700D19379 /* PaymentComponents */; };
@@ -3305,6 +3307,8 @@
 		2A3BF0832BE683880099FBD3 /* UtilityServicePaymentFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowEvent.swift; sourceTree = "<group>"; };
 		2A3BF0852BE6921E0099FBD3 /* PaymentFlowMockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFlowMockView.swift; sourceTree = "<group>"; };
 		2A3BF0872BE697280099FBD3 /* PaymentFlowMockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFlowMockViewModel.swift; sourceTree = "<group>"; };
+		2A3BF0892BE699130099FBD3 /* PaymentFraudMockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFraudMockView.swift; sourceTree = "<group>"; };
+		2A3BF08B2BE6996A0099FBD3 /* FraudEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FraudEvent.swift; sourceTree = "<group>"; };
 		2A3C42BC2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeCVVPINInitiateActivationServiceTests.swift"; sourceTree = "<group>"; };
 		2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionAgentStub.swift; sourceTree = "<group>"; };
 		2A3D6F1F2B62A16000D19379 /* GetC2BSubResponse+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetC2BSubResponse+preview.swift"; sourceTree = "<group>"; };
@@ -7267,6 +7271,8 @@
 				2A3BF0832BE683880099FBD3 /* UtilityServicePaymentFlowEvent.swift */,
 				2A3BF0852BE6921E0099FBD3 /* PaymentFlowMockView.swift */,
 				2A3BF0872BE697280099FBD3 /* PaymentFlowMockViewModel.swift */,
+				2A3BF0892BE699130099FBD3 /* PaymentFraudMockView.swift */,
+				2A3BF08B2BE6996A0099FBD3 /* FraudEvent.swift */,
 			);
 			path = PaymentFlow;
 			sourceTree = "<group>";
@@ -15756,6 +15762,7 @@
 				2A69C1E92BE4F90B00FE91B0 /* Operator.swift in Sources */,
 				2A69C2052BE4FDB200FE91B0 /* UtilityPaymentStateWrapperView.ViewModel+preview.swift in Sources */,
 				2A69C2192BE5164E00FE91B0 /* PaymentsTransfersEffectHandler.swift in Sources */,
+				2A3BF08C2BE6996A0099FBD3 /* FraudEvent.swift in Sources */,
 				2A3BF0842BE683880099FBD3 /* UtilityServicePaymentFlowEvent.swift in Sources */,
 				2A69C2132BE514BC00FE91B0 /* PaymentsTransfersEffect.swift in Sources */,
 				2A69C1FD2BE4FBEB00FE91B0 /* UtilityPrepaymentEffectHandler.swift in Sources */,
@@ -15764,6 +15771,7 @@
 				2A69C2152BE5155800FE91B0 /* PaymentsTransfersFlowManager.swift in Sources */,
 				2A69C2242BE61CFC00FE91B0 /* Array.LastPayment+preview.swift in Sources */,
 				2A69C1F72BE4FBAB00FE91B0 /* UtilityPrepaymentEvent.swift in Sources */,
+				2A3BF08A2BE699130099FBD3 /* PaymentFraudMockView.swift in Sources */,
 				2A69C2072BE4FDD800FE91B0 /* UtilityPrepaymentState+preview.swift in Sources */,
 				2A69C2172BE5162900FE91B0 /* PaymentsTransfersFlowManager+preview.swift in Sources */,
 				2A69C1FF2BE4FC9A00FE91B0 /* PaymentsTransfersDestinationViewFactory.swift in Sources */,
