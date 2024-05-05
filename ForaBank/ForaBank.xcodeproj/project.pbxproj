@@ -548,6 +548,8 @@
 		2A3BF0922BE76E880099FBD3 /* PaymentFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0912BE76E880099FBD3 /* PaymentFlowView.swift */; };
 		2A3BF0942BE773F40099FBD3 /* UtilityPrepaymentFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0932BE773F40099FBD3 /* UtilityPrepaymentFlowView.swift */; };
 		2A3BF09A2BE786A10099FBD3 /* PaymentCancelledView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0992BE786A10099FBD3 /* PaymentCancelledView.swift */; };
+		2A3BF09C2BE78A830099FBD3 /* OperatorFailureFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF09B2BE78A830099FBD3 /* OperatorFailureFlowView.swift */; };
+		2A3BF09E2BE78CD50099FBD3 /* OperatorFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF09D2BE78CD50099FBD3 /* OperatorFailureView.swift */; };
 		2A3C42BD2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3C42BC2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift */; };
 		2A3D03D12A3E63000074E4D6 /* ActiveSessionAgentStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */; };
 		2A3D6F042B61902700D19379 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3D6F032B61902700D19379 /* PaymentComponents */; };
@@ -3319,6 +3321,8 @@
 		2A3BF0912BE76E880099FBD3 /* PaymentFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFlowView.swift; sourceTree = "<group>"; };
 		2A3BF0932BE773F40099FBD3 /* UtilityPrepaymentFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowView.swift; sourceTree = "<group>"; };
 		2A3BF0992BE786A10099FBD3 /* PaymentCancelledView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCancelledView.swift; sourceTree = "<group>"; };
+		2A3BF09B2BE78A830099FBD3 /* OperatorFailureFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorFailureFlowView.swift; sourceTree = "<group>"; };
+		2A3BF09D2BE78CD50099FBD3 /* OperatorFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorFailureView.swift; sourceTree = "<group>"; };
 		2A3C42BC2B027BB4001791F6 /* Services+makeCVVPINInitiateActivationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeCVVPINInitiateActivationServiceTests.swift"; sourceTree = "<group>"; };
 		2A3D03D02A3E63000074E4D6 /* ActiveSessionAgentStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionAgentStub.swift; sourceTree = "<group>"; };
 		2A3D6F1F2B62A16000D19379 /* GetC2BSubResponse+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GetC2BSubResponse+preview.swift"; sourceTree = "<group>"; };
@@ -8020,9 +8024,11 @@
 				2A69C2182BE5164E00FE91B0 /* PaymentsTransfersEffectHandler.swift */,
 				2A69C1C72BE4E79C00FE91B0 /* PaymentsTransfersViewModelFactory.swift */,
 				2A69C1C92BE4E8D500FE91B0 /* PaymentsTransfersView.swift */,
+				2A69C1FE2BE4FC9A00FE91B0 /* PaymentsTransfersDestinationViewFactory.swift */,
 				2A3BF0932BE773F40099FBD3 /* UtilityPrepaymentFlowView.swift */,
 				2A3BF0912BE76E880099FBD3 /* PaymentFlowView.swift */,
-				2A69C1FE2BE4FC9A00FE91B0 /* PaymentsTransfersDestinationViewFactory.swift */,
+				2A3BF09B2BE78A830099FBD3 /* OperatorFailureFlowView.swift */,
+				2A3BF09D2BE78CD50099FBD3 /* OperatorFailureView.swift */,
 				2A3BF0992BE786A10099FBD3 /* PaymentCancelledView.swift */,
 			);
 			path = PaymentsTransfers;
@@ -15771,6 +15777,7 @@
 				2A69C2012BE4FCD100FE91B0 /* PaymentsTransfersDestinationViewFactory+preview.swift in Sources */,
 				2A3BF0722BE63FD60099FBD3 /* UtilityPaymentFlowState.swift in Sources */,
 				2A69C1E72BE4F8F800FE91B0 /* LastPayment.swift in Sources */,
+				2A3BF09C2BE78A830099FBD3 /* OperatorFailureFlowView.swift in Sources */,
 				2A69C2112BE5135200FE91B0 /* Operator+preview.swift in Sources */,
 				2A3BF0922BE76E880099FBD3 /* PaymentFlowView.swift in Sources */,
 				2A69C1D92BE4F03800FE91B0 /* RootActions+preview.swift in Sources */,
@@ -15821,6 +15828,7 @@
 				2A69C1AD2BE4E3AF00FE91B0 /* UtilityServicePaymentFlowPreviewApp.swift in Sources */,
 				2A69C1CA2BE4E8D500FE91B0 /* PaymentsTransfersView.swift in Sources */,
 				2A69C1EE2BE4FB1F00FE91B0 /* UtilityPrepaymentViewConfig.swift in Sources */,
+				2A3BF09E2BE78CD50099FBD3 /* OperatorFailureView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

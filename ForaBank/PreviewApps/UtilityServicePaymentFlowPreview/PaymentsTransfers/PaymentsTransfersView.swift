@@ -99,11 +99,14 @@ struct PaymentsTransfersView: View {
         switch state {
         case let .operatorFailure(operatorFailure):
             operatorFailureView(
-                operatorFailure,
+                operatorFailure: operatorFailure,
                 payByInstructions: { event(.prepayment(.payByInstructions)) },
                 dismissDestination: { event(.prepayment(.dismissOperatorFailureDestination)) }
             )
-
+            .navigationTitle(String(describing: operatorFailure.operator))
+            .navigationBarTitleDisplayMode(.inline)
+            
+            
         case .payByInstructions:
             Text("Pay by Instructions")
                 .navigationTitle("Pay by Instructions")
@@ -117,27 +120,24 @@ struct PaymentsTransfersView: View {
         }
     }
     
-#warning("multiple closures could be encapsulated into one `event: (Event) -> Void closure`")
-#warning("move to factory")
     private func operatorFailureView(
-        _ operatorFailure: OperatorFailure,
+        operatorFailure: UtilityPaymentFlowState.Destination.OperatorFailure,
         payByInstructions: @escaping () -> Void,
         dismissDestination: @escaping () -> Void
     ) -> some View {
         
-        VStack(spacing: 32) {
-            
-            Text("TBD: Operator Failure view for \(operatorFailure.operator)")
-            
-            Button("Pay by Instructions", action: payByInstructions)
-        }
-        .navigationDestination(
-            destination: operatorFailure.destination,
-            dismissDestination: dismissDestination,
-            content: operatorFailureDestinationView
+        OperatorFailureFlowView(
+            state: operatorFailure,
+            event: dismissDestination,
+            content: {
+                
+                OperatorFailureView(
+                    state: operatorFailure.operator,
+                    event: payByInstructions
+                )
+            },
+            destinationView: operatorFailureDestinationView
         )
-        .navigationTitle(String(describing: operatorFailure.operator))
-        .navigationBarTitleDisplayMode(.inline)
     }
     
     @ViewBuilder
