@@ -7,32 +7,26 @@
 
 import SwiftUI
 
-struct UtilityPrepaymentDestinationView<OperatorFailureView, PaymentFlowView, ServicePicker>: View
+struct UtilityPrepaymentDestinationView<OperatorFailureView, PayByInstructionsView, PaymentFlowView, ServicePicker>: View
 where OperatorFailureView: View,
+      PayByInstructionsView: View,
       PaymentFlowView: View,
       ServicePicker: View {
     
     let state: State
-    let event: (Event) -> Void
     let factory: Factory
     
     var body: some View {
         
         switch state {
         case let .operatorFailure(operatorFailure):
-            factory.makeOperatorFailureView(
-                operatorFailure,
-                { event(.prepayment(.payByInstructions)) },
-                { event(.prepayment(.dismissOperatorFailureDestination)) }
-            )
-            .navigationTitle(String(describing: operatorFailure.operator))
-            .navigationBarTitleDisplayMode(.inline)
+            factory.makeOperatorFailureView(operatorFailure)
             
         case .payByInstructions:
-            Text("Pay by Instructions")
+            factory.makePayByInstructionsView()
             
         case let .payment(state):
-            factory.makePaymentFlowView(state, { event(.payment($0)) })
+            factory.makePaymentFlowView(state)
             
         case let .servicePicker(servicePickerState):
             factory.makeServicePicker(servicePickerState)
@@ -46,9 +40,7 @@ extension UtilityPrepaymentDestinationView {
     typealias OperatorFailure = UtilityPaymentFlowState.Destination.OperatorFailure
     
     typealias State = UtilityPaymentFlowState.Destination
-#warning("`UtilityPaymentFlowEvent` is too brad here - need new narrower scope type and mapping at call site")
-    typealias Event = UtilityPaymentFlowEvent
-    typealias Factory = UtilityPrepaymentDestinationViewFactory<OperatorFailureView, PaymentFlowView, ServicePicker>
+    typealias Factory = UtilityPrepaymentDestinationViewFactory<OperatorFailureView, PayByInstructionsView, PaymentFlowView, ServicePicker>
 }
 
 //#Preview {
