@@ -21,12 +21,14 @@ final class ObservingPaymentFlowMockViewModel: ObservableObject {
         
         $state
             .compactMap(\.errorMessage)
+            .removeDuplicates()
             .map(Projection.errorMessage)
             .sink(receiveValue: notify)
             .store(in: &cancellables)
         
         $state
             .compactMap(\.fraud)
+            .removeDuplicates()
             .map(Projection.fraud)
             .sink(receiveValue: notify)
             .store(in: &cancellables)
