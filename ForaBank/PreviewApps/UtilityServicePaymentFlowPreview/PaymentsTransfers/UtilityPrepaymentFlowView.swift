@@ -1,0 +1,112 @@
+//
+//  UtilityPrepaymentFlowView.swift
+//  UtilityServicePaymentFlowPreview
+//
+//  Created by Igor Malyarov on 05.05.2024.
+//
+
+import SwiftUI
+import UIPrimitives
+
+struct UtilityPrepaymentFlowView<Content: View, DestinationView: View>: View
+where Content: View,
+      DestinationView: View {
+    
+    let state: State
+    let event: (Event) -> Void
+    let content: () -> Content
+    let destinationView: (Destination) -> DestinationView
+    
+    var body: some View {
+        
+        content()
+            .navigationDestination(
+                destination: state.destination,
+                dismissDestination: { event(.prepayment(.dismissDestination)) },
+                content: destinationView
+            )
+            .alert(
+                item: state.alert,
+                content: utilityPrepaymentAlert(event: { event(.prepayment($0)) })
+            )
+    }
+    
+    private func utilityPrepaymentAlert(
+        event: @escaping (UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent) -> Void
+    ) -> (UtilityPaymentFlowState.Alert) -> Alert {
+        
+        return { alert in
+            
+            switch alert {
+            case let .serviceFailure(serviceFailure):
+                return serviceFailure.alert(
+                    event: event,
+                    map: {
+                        switch $0 {
+                        case .dismissAlert: return .dismissAlert
+                        }
+                    }
+                )
+            }
+        }
+    }
+}
+
+extension UtilityPrepaymentFlowView {
+    
+    typealias Destination = State.Destination
+    
+    typealias State = UtilityPaymentFlowState
+    typealias Event = UtilityPaymentFlowEvent
+}
+
+//#Preview {
+//    UtilityPrepaymentFlowView()
+//}
+
+private extension ServiceFailure {
+    
+    func alert<Event>(
+        event: @escaping (Event) -> Void,
+        map: @escaping (ServiceFailureEvent) -> Event
+    ) -> Alert {
+        
+        self.alert(event: { event(map($0)) })
+    }
+    
+    enum ServiceFailureEvent {
+        
+        case dismissAlert
+    }
+    
+    private func alert(
+        event: @escaping (ServiceFailureEvent) -> Void
+    ) -> Alert {
+        
+        switch self {
+        case .connectivityError:
+            let model = alertModelOf(title: "Error!", message: "alert message")
+            return .init(with: model, event: event)
+            
+        case let .serverError(message):
+            let model = alertModelOf(title: "Error!", message: message)
+            return .init(with: model, event: event)
+        }
+    }
+    
+    private func alertModelOf(
+        title: String,
+        message: String? = nil
+    ) -> AlertModelOf<ServiceFailureEvent> {
+        
+        .init(
+            title: title,
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: .dismissAlert
+            )
+        )
+    }
+}

@@ -69,134 +69,77 @@ struct PaymentsTransfersView: View {
                 .navigationBarTitleDisplayMode(.inline)
             
         case let .utilityPayment(utilityPrepayment):
-            utilityPrepaymentView(utilityPrepayment)
-                .navigationTitle("Utility Prepayment View")
-                .navigationBarTitleDisplayMode(.inline)
+            utilityPrepaymentView(
+                state: utilityPrepayment,
+                event: { viewModel.event(.utilityFlow($0)) }
+            )
+            .navigationTitle("Utility Prepayment View")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
     
     private func utilityPrepaymentView(
-        _ utilityPrepayment: UtilityPaymentFlowState
+        state: UtilityPaymentFlowState,
+        event: @escaping (UtilityPaymentFlowEvent) -> ()
     ) -> some View {
         
-        UtilityPrepaymentWrapperView(
-            viewModel: utilityPrepayment.viewModel,
-            flowEvent: { viewModel.event(.utilityFlow(.prepayment($0.flowEvent))) },
-            config: config
-        )
-        .navigationDestination(
-            destination: utilityPrepayment.destination,
-            dismissDestination: { viewModel.event(.utilityFlow(.prepayment(.dismissDestination))) },
-            content: utilityPrepaymentDestinationView
-        )
-        .alert(item: utilityPrepayment.alert, content: utilityPrepaymentAlert)
+         UtilityPrepaymentFlowView(
+            state: state,
+            event: event,
+            content: {
+                
+                UtilityPrepaymentWrapperView(
+                    viewModel: state.viewModel,
+                    flowEvent: { event(.prepayment($0.flowEvent)) },
+                    config: config
+                )
+            },
+            destinationView: {
+                
+                utilityPrepaymentDestinationView(state: $0, event: event)
+            }
+         )
     }
     
-    @ViewBuilder
     private func utilityPrepaymentDestinationView(
-        destination: UtilityPaymentFlowState.Destination
+        state: UtilityPaymentFlowState.Destination,
+        event: @escaping (UtilityPaymentFlowEvent) -> Void
     ) -> some View {
         
-        switch destination {
-        case let .operatorFailure(operatorFailure):
-            operatorFailureView(operatorFailure)
-                .navigationTitle(String(describing: operatorFailure.operator))
-                .navigationBarTitleDisplayMode(.inline)
-            
-        case .payByInstructions:
-            Text("Pay by Instructions")
-            
-        case let .payment(state):
-            let event = { viewModel.event(.utilityFlow(.payment($0))) }
-            paymentFlowView(state: state, event: event)
-                .navigationTitle("Payment")
-                .navigationBarTitleDisplayMode(.inline)
-            
-        case let .servicePicker(servicePickerState):
-            servicePicker(servicePickerState)
-                .navigationTitle(String(describing: servicePickerState.operator))
-                .navigationBarTitleDisplayMode(.inline)
-        }
-    }
-    
-    private func utilityPrepaymentAlert(
-        alert: UtilityPaymentFlowState.Alert
-    ) -> Alert {
-        
-        switch alert {
-        case let .serviceFailure(serviceFailure):
-            return serviceFailure.alert(
-                event: { viewModel.event(.utilityFlow(.prepayment($0))) },
-                map: {
-                    switch $0 {
-                    case .dismissAlert: return .dismissAlert
-                    }
-                }
-            )
-        }
-    }
-    
-    private func operatorFailureView(
-        _ operatorFailure: OperatorFailure
-    ) -> some View {
-        
-        _operatorFailureView(
-            operatorFailure,
-            payByInstructions: { viewModel.event(.utilityFlow(.prepayment(.payByInstructions))) },
-            dismissDestination: { viewModel.event(.utilityFlow(.prepayment(.dismissOperatorFailureDestination))) }
+        UtilityPrepaymentDestinationView(
+            state: state,
+            event: event,
+            paymentFlowView: paymentFlowView,
+            servicePicker: { servicePicker(state: $0, event: event) }
         )
-    }
-    
-#warning("multiple closures could be encapsulated into one `event: (Event) -> Void closure`")
-    private func _operatorFailureView(
-        _ operatorFailure: OperatorFailure,
-        payByInstructions: @escaping () -> Void,
-        dismissDestination: @escaping () -> Void
-    ) -> some View {
-        
-        VStack(spacing: 32) {
-            
-            Text("TBD: Operator Failure view for \(operatorFailure.operator)")
-            
-            Button("Pay by Instructions", action: payByInstructions)
-        }
-        .navigationDestination(
-            destination: operatorFailure.destination,
-            dismissDestination: dismissDestination,
-            content: operatorFailureDestinationView
-        )
-    }
-    
-    @ViewBuilder
-    private func operatorFailureDestinationView(
-        destination: OperatorFailure.Destination
-    ) -> some View {
-        
-        Text("TBD: OperatorFailure.Destination")
     }
     
     private func servicePicker(
-        _ servicePickerState: ServicePickerState
+        state: ServicePickerState,
+        event: @escaping (UtilityPaymentFlowEvent) -> Void
     ) -> some View {
         
         List {
-            ForEach(servicePickerState.services.elements) { service in
+            ForEach(state.services.elements) { service in
                 
                 Button(String(service.id.prefix(24))) {
                     
-                    viewModel.event(.utilityFlow(.prepayment(.select(.service(
+                    event(.prepayment(.select(.service(
                         service,
-                        for: servicePickerState.`operator`
-                    )))))
+                        for: state.`operator`
+                    ))))
                 }
             }
         }
         .navigationDestination(
-            destination: servicePickerState.destination,
-            dismissDestination: { viewModel.event(.utilityFlow(.prepayment(.dismissServicesDestination))) },
+            destination: state.destination,
+            dismissDestination: { event(.prepayment(.dismissServicesDestination)) },
             content: servicesDestinationView
         )
-        .alert(item: servicePickerState.alert, content: servicePickerAlert)
+        .alert(
+            item: state.alert,
+            content: servicePickerAlert(event: { event(.servicePicker($0)) })
+        )
     }
     
     @ViewBuilder
@@ -211,19 +154,22 @@ struct PaymentsTransfersView: View {
     }
     
     private func servicePickerAlert(
-        alert: ServicePickerState.Alert
-    ) -> Alert {
+        event: @escaping (UtilityPaymentFlowEvent.ServicePickerFlowEvent) -> Void
+    ) -> (ServicePickerState.Alert) -> Alert {
         
-        switch alert {
-        case let .serviceFailure(serviceFailure):
-            return serviceFailure.alert(
-                event: { viewModel.event(.utilityFlow(.servicePicker($0))) },
-                map: {
-                    switch $0 {
-                    case .dismissAlert: return .dismissAlert
+        return { alert in
+            
+            switch alert {
+            case let .serviceFailure(serviceFailure):
+                return serviceFailure.alert(
+                    event: event,
+                    map: {
+                        switch $0 {
+                        case .dismissAlert: return .dismissAlert
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
     
