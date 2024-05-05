@@ -123,7 +123,7 @@ private extension PaymentsTransfersViewModel {
             state.route.modal = nil
             
         case .goToMain:
-            #warning("FIXME")
+#warning("FIXME")
             state.route = .init()
             print("go to main")
             
@@ -152,7 +152,7 @@ private extension PaymentsTransfersViewModel {
         case let .prepayment(prepaymentEvent):
             let prepaymentEffect: UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect?
             (state, prepaymentEffect) = reduce(state, prepaymentEvent)
-           
+            
             if let prepaymentEffect {
                 
                 effect = .utilityFlow(.prepayment(prepaymentEffect))
@@ -197,7 +197,6 @@ private extension PaymentsTransfersViewModel {
             }
             
         case let .notified(projection):
-#warning("depends on state - payment could be in 2 places - as a destination of prepayment and as a destination of service picker")
             switch projection {
             case let .errorMessage(errorMessage):
                 state.route.setPaymentAlert(to: .terminalError(errorMessage))
@@ -302,7 +301,7 @@ private extension PaymentsTransfersViewModel {
                     
                     self?.event(.utilityFlow(.payment(.notified($0))))
                 }
-        
+                
                 switch state.route.utilityPrepaymentDestination {
                 case .none:
                     state.route.setUtilityPrepaymentDestination(to: .payment(.init(viewModel: paymentViewModel)))
@@ -432,18 +431,66 @@ private extension PaymentsTransfersViewModel.State.Route {
     mutating func setPaymentAlert(
         to alert: UtilityServicePaymentFlowState.Alert?
     ) {
+        // try to change payment node in the tree if found
+        // in prepayment destination
+        setPrepaymentPaymentAlert(to: alert)
+        // or in servicePicker destination
+        setServicePickerPaymentAlert(to: alert)
+    }
+    
+    mutating func setPaymentModal(
+        to modal: UtilityServicePaymentFlowState.Modal?
+    ) {
+        // try to change payment node in the tree if found
+        // in prepayment destination
+        setPrepaymentPaymentModal(to: modal)
+        // or in servicePicker destination
+        setServicePickerPaymentModal(to: modal)
+    }
+    
+    private mutating func setPrepaymentPaymentAlert(
+        to alert: UtilityServicePaymentFlowState.Alert?
+    ) {
         guard var paymentFlowState else { return }
         
         paymentFlowState.alert = alert
         self.setUtilityPrepaymentDestination(to: .payment(paymentFlowState))
     }
     
-    mutating func setPaymentModal(
+    private mutating func setPrepaymentPaymentModal(
         to modal: UtilityServicePaymentFlowState.Modal?
     ) {
         guard var paymentFlowState else { return }
         
         paymentFlowState.modal = modal
         self.setUtilityPrepaymentDestination(to: .payment(paymentFlowState))
+    }
+    
+    private mutating func setServicePickerPaymentAlert(
+        to alert: UtilityServicePaymentFlowState.Alert?
+    ) {
+        guard case var .utilityPayment(utilityPrepayment) = destination,
+              case var .servicePicker(servicePicker) = utilityPrepayment.destination,
+              case var .payment(paymentFlowState) = servicePicker.destination
+        else { return }
+        
+        paymentFlowState.alert = alert
+        servicePicker.destination = .payment(paymentFlowState)
+        utilityPrepayment.destination = .servicePicker(servicePicker)
+        destination = .utilityPayment(utilityPrepayment)
+    }
+    
+    private mutating func setServicePickerPaymentModal(
+        to modal: UtilityServicePaymentFlowState.Modal?
+    ) {
+        guard case var .utilityPayment(utilityPrepayment) = destination,
+              case var .servicePicker(servicePicker) = utilityPrepayment.destination,
+              case var .payment(paymentFlowState) = servicePicker.destination
+        else { return }
+        
+        paymentFlowState.modal = modal
+        servicePicker.destination = .payment(paymentFlowState)
+        utilityPrepayment.destination = .servicePicker(servicePicker)
+        destination = .utilityPayment(utilityPrepayment)
     }
 }

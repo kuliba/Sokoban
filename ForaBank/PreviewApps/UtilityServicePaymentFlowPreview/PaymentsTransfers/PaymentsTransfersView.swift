@@ -196,7 +196,13 @@ private extension PaymentsTransfersView {
                     event: { event(.prepayment(.select($0))) }
                 )
             },
-            destinationView: servicesDestinationView
+            destinationView: {
+                
+                servicesDestinationView(
+                    destination: $0,
+                    event: { event(.payment($0)) }
+                )
+            }
         )
         .navigationTitle(String(describing: state.content))
         .navigationBarTitleDisplayMode(.inline)
@@ -204,12 +210,13 @@ private extension PaymentsTransfersView {
     
     @ViewBuilder
     func servicesDestinationView(
-        destination: ServicePickerState.Destination
+        destination: ServicePickerState.Destination,
+        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
         switch destination {
-        case let .payment(response):
-            Text("TBD: Payment with \(response)")
+        case let .payment(state):
+            paymentFlowView(state: state, event: event)
         }
     }
     

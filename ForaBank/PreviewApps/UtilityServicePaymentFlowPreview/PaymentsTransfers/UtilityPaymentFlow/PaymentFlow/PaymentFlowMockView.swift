@@ -12,16 +12,16 @@ struct PaymentFlowMockView: View {
     @StateObject private var viewModel: ViewModel
     
     init(viewModel: ViewModel) {
-     
+        
         self._viewModel = .init(wrappedValue: viewModel)
     }
     
     var body: some View {
         
         VStack(spacing: 32) {
-                        
+            
             Button("Detect Fraud", action: viewModel.detectFraud)
-                        
+            
             Button("Produce Payment Error", action: viewModel.produceError)
         }
         .foregroundColor(.red)
