@@ -18,6 +18,7 @@ extension PaymentsTransfersViewModelFactory {
     #warning("move from factory - but where?")
     enum PaymentStateProjection: Equatable {
         
+        case completed
         case errorMessage(String)
         case fraud(Fraud)
     }

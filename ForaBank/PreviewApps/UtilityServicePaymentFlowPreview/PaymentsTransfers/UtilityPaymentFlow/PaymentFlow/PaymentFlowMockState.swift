@@ -7,6 +7,7 @@
 
 struct PaymentFlowMockState: Equatable {
     
+    var isComplete: Bool = false
     var fraud: Fraud?
     var errorMessage: String?
 }

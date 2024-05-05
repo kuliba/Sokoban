@@ -26,8 +26,21 @@ struct PaymentFlowView<Content: View>: View {
                 content: paymentFlowAlert(event: event)
             )
     }
+}
+
+extension PaymentFlowView {
     
-    private func paymentFlowModalView(
+    typealias State = UtilityServicePaymentFlowState
+    typealias Event = UtilityServicePaymentFlowEvent
+}
+
+//#Preview {
+//    PaymentFlowView()
+//}
+
+private extension PaymentFlowView {
+    
+    func paymentFlowModalView(
         event: @escaping (PaymentFraudMockView.Event) -> Void
     ) -> (State.Modal) -> PaymentFlowModalView {
         
@@ -37,8 +50,8 @@ struct PaymentFlowView<Content: View>: View {
         }
     }
     
-    private func paymentFlowAlert(
-        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
+    func paymentFlowAlert(
+        event: @escaping (Event) -> Void
     ) -> (State.Alert) -> Alert {
         
         return { alert in
@@ -63,16 +76,6 @@ struct PaymentFlowView<Content: View>: View {
     }
 }
 
-extension PaymentFlowView {
-    
-    typealias State = UtilityServicePaymentFlowState
-    typealias Event = UtilityServicePaymentFlowEvent
-}
-
-//#Preview {
-//    PaymentFlowView()
-//}
-
 extension UtilityServicePaymentFlowState.Alert: Identifiable {
     
     var id: ID {
@@ -85,6 +88,21 @@ extension UtilityServicePaymentFlowState.Alert: Identifiable {
     enum ID: Hashable {
         
         case terminalError
+    }
+}
+
+extension UtilityServicePaymentFlowState.FullScreenCover: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .completed: return  .completed
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case completed
     }
 }
 

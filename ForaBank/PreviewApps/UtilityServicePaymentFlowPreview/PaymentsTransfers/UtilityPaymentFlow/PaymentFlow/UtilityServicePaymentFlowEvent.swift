@@ -7,6 +7,7 @@
 
 enum UtilityServicePaymentFlowEvent: Equatable {
     
+    case dismissFullScreenCover
     case dismissFraud
     case dismissPaymentError
     case fraud(FraudEvent)

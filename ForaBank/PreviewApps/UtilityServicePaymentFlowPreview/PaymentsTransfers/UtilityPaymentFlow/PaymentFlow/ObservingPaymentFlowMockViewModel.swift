@@ -20,6 +20,12 @@ final class ObservingPaymentFlowMockViewModel: ObservableObject {
         self.state = state
         
         $state
+            .compactMap { $0.isComplete ? Projection.completed : nil }
+            .removeDuplicates()
+            .sink(receiveValue: notify)
+            .store(in: &cancellables)
+        
+        $state
             .compactMap(\.errorMessage)
             .removeDuplicates()
             .map(Projection.errorMessage)
@@ -32,6 +38,11 @@ final class ObservingPaymentFlowMockViewModel: ObservableObject {
             .map(Projection.fraud)
             .sink(receiveValue: notify)
             .store(in: &cancellables)
+    }
+    
+    func completePayment() {
+        
+        state.isComplete = true
     }
     
     func detectFraud() {

@@ -9,18 +9,18 @@ struct UtilityServicePaymentFlowState {
     
     let viewModel: ViewModel
     var alert: Alert?
-    var destination: Destination?
+    var fullScreenCover: FullScreenCover?
     var modal: Modal?
     
     init(
         viewModel: ViewModel,
         alert: Alert? = nil,
-        destination: Destination? = nil,
+        fullScreenCover: FullScreenCover? = nil,
         modal: Modal? = nil
     ) {
         self.viewModel = viewModel
         self.alert = alert
-        self.destination = destination
+        self.fullScreenCover = fullScreenCover
         self.modal = modal
     }
 }
@@ -37,9 +37,9 @@ extension UtilityServicePaymentFlowState {
         case terminalError(String)
     }
     
-    enum Destination {
+    enum FullScreenCover {
         
-        
+        case completed
     }
     
     enum Modal {

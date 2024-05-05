@@ -177,9 +177,33 @@ private extension PaymentsTransfersView {
             
             PaymentFlowMockView(viewModel: state.viewModel)
         }
+        .fullScreenCover(
+            cover: state.fullScreenCover,
+            dismissFullScreenCover: { event(.dismissFullScreenCover) },
+            content: paymentFlowFullScreenCoverView
+        )
         .navigationTitle("Payment")
         .navigationBarTitleDisplayMode(.inline)
     }
+    
+    func paymentFlowFullScreenCoverView(
+        fullScreenCover: UtilityServicePaymentFlowState.FullScreenCover
+    ) -> some View {
+        
+        switch fullScreenCover {
+        case .completed:
+            VStack(spacing: 32) {
+                
+                Text("TBD: Payment Complete View")
+                    .frame(maxHeight: .infinity)
+                
+                Divider()
+
+                Button("go to Main", action: { viewModel.event(.goToMain) })
+            }
+        }
+    }
+
     
     func servicePicker(
         state: ServicePickerState,

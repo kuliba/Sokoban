@@ -20,6 +20,9 @@ struct PaymentFlowMockView: View {
         
         VStack(spacing: 32) {
             
+            Button("Payment success", action: viewModel.completePayment)
+                .foregroundColor(.blue)
+            
             Button("Detect Fraud", action: viewModel.detectFraud)
             
             Button("Produce Payment Error", action: viewModel.produceError)
