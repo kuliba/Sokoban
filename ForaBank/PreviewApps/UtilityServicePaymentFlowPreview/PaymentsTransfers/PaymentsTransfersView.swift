@@ -110,12 +110,54 @@ struct PaymentsTransfersView: View {
             state: state,
             event: event,
             factory: .init(
+                makeOperatorFailureView: operatorFailureView,
                 makePaymentFlowView: paymentFlowView,
                 makeServicePicker: { servicePicker(state: $0, event: event) }
             )
         )
     }
     
+#warning("multiple closures could be encapsulated into one `event: (Event) -> Void closure`")
+    #warning("move to factory")
+    private func operatorFailureView(
+        _ operatorFailure: OperatorFailure,
+        payByInstructions: @escaping () -> Void,
+        dismissDestination: @escaping () -> Void
+    ) -> some View {
+        
+        VStack(spacing: 32) {
+            
+            Text("TBD: Operator Failure view for \(operatorFailure.operator)")
+            
+            Button("Pay by Instructions", action: payByInstructions)
+        }
+        .navigationDestination(
+            destination: operatorFailure.destination,
+            dismissDestination: dismissDestination,
+            content: operatorFailureDestinationView
+        )
+    }
+    
+    @ViewBuilder
+    private func operatorFailureDestinationView(
+        destination: OperatorFailure.Destination
+    ) -> some View {
+        
+        Text("TBD: Pay by Instructions (OperatorFailure.Destination)")
+    }
+    private func paymentFlowView(
+        state: PaymentFlowState,
+        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
+    ) -> some View {
+        
+        PaymentFlowView(state: state, event: event) {
+            
+            PaymentFlowMockView(viewModel: state.viewModel)
+        }
+        .navigationTitle("Payment")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
     private func servicePicker(
         state: ServicePickerState,
         event: @escaping (UtilityPaymentFlowEvent) -> Void
@@ -142,6 +184,8 @@ struct PaymentsTransfersView: View {
             item: state.alert,
             content: servicePickerAlert(event: { event(.servicePicker($0)) })
         )
+        .navigationTitle(String(describing: state.operator))
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     @ViewBuilder
@@ -172,17 +216,6 @@ struct PaymentsTransfersView: View {
                     }
                 )
             }
-        }
-    }
-    
-    private func paymentFlowView(
-        state: PaymentFlowState,
-        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
-    ) -> some View {
-        
-        PaymentFlowView(state: state, event: event) {
-            
-            PaymentFlowMockView(viewModel: state.viewModel)
         }
     }
 }

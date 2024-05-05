@@ -7,15 +7,20 @@
 
 import SwiftUI
 
-struct UtilityPrepaymentDestinationViewFactory<PaymentFlowView, ServicePicker>
-where PaymentFlowView: View,
+struct UtilityPrepaymentDestinationViewFactory<OperatorFailureView, PaymentFlowView, ServicePicker>
+where OperatorFailureView: View,
+      PaymentFlowView: View,
       ServicePicker: View {
     
+    let makeOperatorFailureView: MakeOperatorFailureView
     let makePaymentFlowView: MakePaymentFlowView
     let makeServicePicker: (ServicePickerState) -> ServicePicker
 }
 
 extension UtilityPrepaymentDestinationViewFactory {
+    
+    typealias OperatorFailure = UtilityPaymentFlowState.Destination.OperatorFailure
+    typealias MakeOperatorFailureView = (OperatorFailure, @escaping () -> Void, @escaping () -> Void) -> OperatorFailureView
     
     typealias MakePaymentFlowView = (PaymentFlowState, @escaping (UtilityServicePaymentFlowEvent) -> Void) -> PaymentFlowView
     

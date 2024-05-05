@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-struct UtilityPrepaymentDestinationView<PaymentFlowView, ServicePicker>: View
-where PaymentFlowView: View,
+struct UtilityPrepaymentDestinationView<OperatorFailureView, PaymentFlowView, ServicePicker>: View
+where OperatorFailureView: View,
+      PaymentFlowView: View,
       ServicePicker: View {
     
     let state: State
@@ -19,10 +20,10 @@ where PaymentFlowView: View,
         
         switch state {
         case let .operatorFailure(operatorFailure):
-            operatorFailureView(
+            factory.makeOperatorFailureView(
                 operatorFailure,
-                payByInstructions: { event(.prepayment(.payByInstructions)) },
-                dismissDestination: { event(.prepayment(.dismissOperatorFailureDestination)) }
+                { event(.prepayment(.payByInstructions)) },
+                { event(.prepayment(.dismissOperatorFailureDestination)) }
             )
             .navigationTitle(String(describing: operatorFailure.operator))
             .navigationBarTitleDisplayMode(.inline)
@@ -32,44 +33,12 @@ where PaymentFlowView: View,
             
         case let .payment(state):
             factory.makePaymentFlowView(state, { event(.payment($0)) })
-                .navigationTitle("Payment")
-                .navigationBarTitleDisplayMode(.inline)
             
         case let .servicePicker(servicePickerState):
             factory.makeServicePicker(servicePickerState)
-                .navigationTitle(String(describing: servicePickerState.operator))
-                .navigationBarTitleDisplayMode(.inline)
         }
     }
     
-#warning("multiple closures could be encapsulated into one `event: (Event) -> Void closure`")
-    #warning("move to factory")
-    private func operatorFailureView(
-        _ operatorFailure: OperatorFailure,
-        payByInstructions: @escaping () -> Void,
-        dismissDestination: @escaping () -> Void
-    ) -> some View {
-        
-        VStack(spacing: 32) {
-            
-            Text("TBD: Operator Failure view for \(operatorFailure.operator)")
-            
-            Button("Pay by Instructions", action: payByInstructions)
-        }
-        .navigationDestination(
-            destination: operatorFailure.destination,
-            dismissDestination: dismissDestination,
-            content: operatorFailureDestinationView
-        )
-    }
-    
-    @ViewBuilder
-    private func operatorFailureDestinationView(
-        destination: OperatorFailure.Destination
-    ) -> some View {
-        
-        Text("TBD: Pay by Instructions (OperatorFailure.Destination)")
-    }
 }
 
 extension UtilityPrepaymentDestinationView {
@@ -79,7 +48,7 @@ extension UtilityPrepaymentDestinationView {
     typealias State = UtilityPaymentFlowState.Destination
 #warning("`UtilityPaymentFlowEvent` is too brad here - need new narrower scope type and mapping at call site")
     typealias Event = UtilityPaymentFlowEvent
-    typealias Factory = UtilityPrepaymentDestinationViewFactory<PaymentFlowView, ServicePicker>
+    typealias Factory = UtilityPrepaymentDestinationViewFactory<OperatorFailureView, PaymentFlowView, ServicePicker>
 }
 
 //#Preview {
