@@ -64,6 +64,50 @@ extension UtilityPrepaymentFlowView {
 //    UtilityPrepaymentFlowView()
 //}
 
+extension UtilityPaymentFlowState.Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case let .operatorFailure(operatorFailure):
+            return .operatorFailure(operatorFailure.operator.id)
+            
+        case .payByInstructions:
+            return .payByInstructions
+            
+        case .payment:
+            return .payment
+            
+        case let .servicePicker(services):
+            return .services(for: services.`operator`.id)
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case operatorFailure(Operator.ID)
+        case payByInstructions
+        case payment
+        case services(for: Operator.ID)
+    }
+}
+
+extension UtilityPaymentFlowState.Alert: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case let .serviceFailure(serviceFailure):
+            return  .serviceFailure(serviceFailure)
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case serviceFailure(ServiceFailure)
+    }
+}
+
 private extension ServiceFailure {
     
     func alert<Event>(

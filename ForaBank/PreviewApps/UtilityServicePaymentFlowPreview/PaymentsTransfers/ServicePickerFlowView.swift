@@ -64,6 +64,37 @@ extension ServicePickerFlowView {
 //    ServicePickerFlowView()
 //}
 
+extension UtilityPaymentFlowState.Destination.ServicePickerState.Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .payment: return .payment
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case payment
+    }
+}
+
+extension UtilityPaymentFlowState.Destination.ServicePickerState.Alert: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case let .serviceFailure(serviceFailure):
+            return  .serviceFailure(serviceFailure)
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case serviceFailure(ServiceFailure)
+    }
+}
+
 private extension ServiceFailure {
     
     func alert<Event>(

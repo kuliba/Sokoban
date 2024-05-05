@@ -72,3 +72,33 @@ extension PaymentFlowView {
 //#Preview {
 //    PaymentFlowView()
 //}
+
+extension PaymentFlowState.Modal: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .fraud: return  .fraud
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case fraud
+    }
+}
+
+extension PaymentFlowState.Alert: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .terminalError: return  .terminalError
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case terminalError
+    }
+}

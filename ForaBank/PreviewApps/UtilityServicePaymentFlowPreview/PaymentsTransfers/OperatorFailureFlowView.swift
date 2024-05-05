@@ -38,3 +38,18 @@ extension OperatorFailureFlowView {
 //#Preview {
 //    OperatorFailureView()
 //}
+
+extension UtilityPaymentFlowState.Destination.OperatorFailure.Destination: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .payByInstructions: return .payByInstructions
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case payByInstructions
+    }
+}
