@@ -33,8 +33,8 @@ struct PaymentsTransfersView: View {
                 cover: viewModel.state.route.modal,
                 dismissFullScreenCover: { viewModel.event(.dismissFullScreenCover) },
                 content: { modal in
-                
-                    #warning("extract to helper")
+                    
+#warning("extract to helper")
                     switch modal {
                     case let .paymentCancelled(expired: expired):
                         VStack(spacing: 32) {
@@ -106,43 +106,9 @@ struct PaymentsTransfersView: View {
         case .payByInstructions:
             Text("Pay by Instructions")
             
-        case let .payment(paymentFlowState):
-            PaymentFlowMockView(viewModel: paymentFlowState.viewModel)
-                .sheet(
-                    modal: paymentFlowState.modal,
-                    dismissModal: { viewModel.event(.utilityFlow(.payment(.dismissFraud))) },
-                    content: { modal in
-                        
-                        #warning("extract to helper")
-                        switch modal {
-                        case let .fraud(fraud):
-                            PaymentFraudMockView(
-                                state: fraud,
-                                event: { viewModel.event(.utilityFlow(.payment(.fraud($0)))) }
-                            )
-                        }
-                    }
-                )
-                .alert(item: paymentFlowState.alert, content: { alert in
-                    
-                    #warning("extract to helper")
-                    switch alert {
-                    case let .terminalError(errorMessage):
-                        
-                        return .init(
-                            with: .init(
-                                title: "Error!",
-                                message: errorMessage,
-                                primaryButton: .init(
-                                    type: .default,
-                                    title: "OK",
-                                    event: .dismissPaymentError
-                                )
-                            ),
-                            event: { viewModel.event(.utilityFlow(.payment($0))) }
-                        )
-                    }
-                })
+        case let .payment(state):
+            let event = { viewModel.event(.utilityFlow(.payment($0))) }
+            paymentFlowView(state: state, event: event)
                 .navigationTitle("Payment")
                 .navigationBarTitleDisplayMode(.inline)
             
@@ -258,6 +224,17 @@ struct PaymentsTransfersView: View {
                     }
                 }
             )
+        }
+    }
+    
+    private func paymentFlowView(
+        state: PaymentFlowState,
+        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
+    ) -> some View {
+        
+        PaymentFlowView(state: state, event: event) {
+            
+            PaymentFlowMockView(viewModel: state.viewModel)
         }
     }
 }

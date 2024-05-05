@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 04.05.2024.
 //
 
+#warning("rename to `UtilityServicePaymentFlowState`")
 struct PaymentFlowState {
     
     let viewModel: ViewModel
