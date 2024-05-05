@@ -90,35 +90,31 @@ struct PaymentsTransfersView: View {
         )
     }
     
+    @ViewBuilder
     private func utilityPrepaymentDestinationView(
         state: UtilityPaymentFlowState.Destination,
         event: @escaping (UtilityPaymentFlowEvent) -> Void
     ) -> some View {
         
-        UtilityPrepaymentDestinationView(
-            state: state,
-            factory: .init(
-                makeOperatorFailureView: { state in
-                    
-                    operatorFailureView(
-                        state,
-                        payByInstructions: { event(.prepayment(.payByInstructions)) },
-                        dismissDestination: { event(.prepayment(.dismissOperatorFailureDestination)) }
-                    )
-                },
-                makePayByInstructionsView: {
-                    
-                    Text("Pay by Instructions")
-                        .navigationTitle("Pay by Instructions")
-                        .navigationBarTitleDisplayMode(.inline)
-                },
-                makePaymentFlowView: { state in
-                    
-                    paymentFlowView(state: state, event: { event(.payment($0)) })
-                },
-                makeServicePicker: { servicePicker(state: $0, event: event) }
+        switch state {
+        case let .operatorFailure(operatorFailure):
+            operatorFailureView(
+                operatorFailure,
+                payByInstructions: { event(.prepayment(.payByInstructions)) },
+                dismissDestination: { event(.prepayment(.dismissOperatorFailureDestination)) }
             )
-        )
+
+        case .payByInstructions:
+            Text("Pay by Instructions")
+                .navigationTitle("Pay by Instructions")
+                .navigationBarTitleDisplayMode(.inline)
+            
+        case let .payment(state):
+            paymentFlowView(state: state, event: { event(.payment($0)) })
+            
+        case let .servicePicker(state):
+            servicePicker(state: state, event: event)
+        }
     }
     
 #warning("multiple closures could be encapsulated into one `event: (Event) -> Void closure`")
@@ -150,7 +146,10 @@ struct PaymentsTransfersView: View {
     ) -> some View {
         
         Text("TBD: Pay by Instructions (OperatorFailure.Destination)")
+            .navigationTitle("Pay by Instructions")
+            .navigationBarTitleDisplayMode(.inline)
     }
+    
     private func paymentFlowView(
         state: PaymentFlowState,
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
