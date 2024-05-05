@@ -168,26 +168,17 @@ struct PaymentsTransfersView: View {
         event: @escaping (UtilityPaymentFlowEvent) -> Void
     ) -> some View {
         
-        List {
-            ForEach(state.services.elements) { service in
+        ServicePickerFlowView(
+            state: state,
+            event: event,
+            content: {
                 
-                Button(String(service.id.prefix(24))) {
-                    
-                    event(.prepayment(.select(.service(
-                        service,
-                        for: state.`operator`
-                    ))))
-                }
-            }
-        }
-        .navigationDestination(
-            destination: state.destination,
-            dismissDestination: { event(.prepayment(.dismissServicesDestination)) },
-            content: servicesDestinationView
-        )
-        .alert(
-            item: state.alert,
-            content: servicePickerAlert(event: { event(.servicePicker($0)) })
+                ServicePickerView(
+                    state: state,
+                    event: { event(.prepayment(.select($0))) }
+                )
+            },
+            destinationView: servicesDestinationView
         )
         .navigationTitle(String(describing: state.operator))
         .navigationBarTitleDisplayMode(.inline)
@@ -201,26 +192,6 @@ struct PaymentsTransfersView: View {
         switch destination {
         case let .payment(response):
             Text("TBD: Payment with \(response)")
-        }
-    }
-    
-    private func servicePickerAlert(
-        event: @escaping (UtilityPaymentFlowEvent.ServicePickerFlowEvent) -> Void
-    ) -> (ServicePickerState.Alert) -> Alert {
-        
-        return { alert in
-            
-            switch alert {
-            case let .serviceFailure(serviceFailure):
-                return serviceFailure.alert(
-                    event: event,
-                    map: {
-                        switch $0 {
-                        case .dismissAlert: return .dismissAlert
-                        }
-                    }
-                )
-            }
         }
     }
     
