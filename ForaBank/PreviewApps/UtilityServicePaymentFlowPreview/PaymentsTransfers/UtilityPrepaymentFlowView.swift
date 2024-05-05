@@ -22,12 +22,12 @@ where Content: View,
         content()
             .navigationDestination(
                 destination: state.destination,
-                dismissDestination: { event(.prepayment(.dismissDestination)) },
+                dismissDestination: { event(.dismissDestination) },
                 content: destinationView
             )
             .alert(
                 item: state.alert,
-                content: utilityPrepaymentAlert(event: { event(.prepayment($0)) })
+                content: utilityPrepaymentAlert(event: { event($0) })
             )
     }
     
@@ -57,7 +57,7 @@ extension UtilityPrepaymentFlowView {
     typealias Destination = State.Destination
     
     typealias State = UtilityPaymentFlowState
-    typealias Event = UtilityPaymentFlowEvent
+    typealias Event = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent
 }
 
 //#Preview {

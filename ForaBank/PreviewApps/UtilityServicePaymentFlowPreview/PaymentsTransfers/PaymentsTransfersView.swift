@@ -85,7 +85,7 @@ struct PaymentsTransfersView: View {
         
          UtilityPrepaymentFlowView(
             state: state,
-            event: event,
+            event: { event(.prepayment($0)) },
             content: {
                 
                 UtilityPrepaymentWrapperView(
