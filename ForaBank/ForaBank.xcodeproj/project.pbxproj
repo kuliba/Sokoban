@@ -537,7 +537,7 @@
 		2A3BF0742BE641410099FBD3 /* UtilityPaymentFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0732BE641410099FBD3 /* UtilityPaymentFlowEvent.swift */; };
 		2A3BF0762BE643E70099FBD3 /* UtilityPaymentFlowEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0752BE643E70099FBD3 /* UtilityPaymentFlowEffect.swift */; };
 		2A3BF0782BE644820099FBD3 /* UtilityPaymentFlowEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0772BE644820099FBD3 /* UtilityPaymentFlowEffectHandler.swift */; };
-		2A3BF07F2BE67ED30099FBD3 /* PaymentFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF07E2BE67ED30099FBD3 /* PaymentFlowState.swift */; };
+		2A3BF07F2BE67ED30099FBD3 /* UtilityServicePaymentFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF07E2BE67ED30099FBD3 /* UtilityServicePaymentFlowState.swift */; };
 		2A3BF0842BE683880099FBD3 /* UtilityServicePaymentFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0832BE683880099FBD3 /* UtilityServicePaymentFlowEvent.swift */; };
 		2A3BF0862BE6921E0099FBD3 /* PaymentFlowMockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0852BE6921E0099FBD3 /* PaymentFlowMockView.swift */; };
 		2A3BF0882BE697280099FBD3 /* ObservingPaymentFlowMockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0872BE697280099FBD3 /* ObservingPaymentFlowMockViewModel.swift */; };
@@ -3312,7 +3312,7 @@
 		2A3BF0732BE641410099FBD3 /* UtilityPaymentFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentFlowEvent.swift; sourceTree = "<group>"; };
 		2A3BF0752BE643E70099FBD3 /* UtilityPaymentFlowEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentFlowEffect.swift; sourceTree = "<group>"; };
 		2A3BF0772BE644820099FBD3 /* UtilityPaymentFlowEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentFlowEffectHandler.swift; sourceTree = "<group>"; };
-		2A3BF07E2BE67ED30099FBD3 /* PaymentFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFlowState.swift; sourceTree = "<group>"; };
+		2A3BF07E2BE67ED30099FBD3 /* UtilityServicePaymentFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowState.swift; sourceTree = "<group>"; };
 		2A3BF0832BE683880099FBD3 /* UtilityServicePaymentFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowEvent.swift; sourceTree = "<group>"; };
 		2A3BF0852BE6921E0099FBD3 /* PaymentFlowMockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFlowMockView.swift; sourceTree = "<group>"; };
 		2A3BF0872BE697280099FBD3 /* ObservingPaymentFlowMockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservingPaymentFlowMockViewModel.swift; sourceTree = "<group>"; };
@@ -7285,7 +7285,7 @@
 		2A3BF0822BE683760099FBD3 /* PaymentFlow */ = {
 			isa = PBXGroup;
 			children = (
-				2A3BF07E2BE67ED30099FBD3 /* PaymentFlowState.swift */,
+				2A3BF07E2BE67ED30099FBD3 /* UtilityServicePaymentFlowState.swift */,
 				2A3BF0832BE683880099FBD3 /* UtilityServicePaymentFlowEvent.swift */,
 				2A3BF0852BE6921E0099FBD3 /* PaymentFlowMockView.swift */,
 				2A3BF08D2BE74FDE0099FBD3 /* PaymentFlowMockState.swift */,
@@ -15813,7 +15813,7 @@
 				2A3BF0A02BE78E590099FBD3 /* ServicePickerFlowView.swift in Sources */,
 				2A3BF0782BE644820099FBD3 /* UtilityPaymentFlowEffectHandler.swift in Sources */,
 				2A69C1F12BE4FB3800FE91B0 /* UtilityPrepaymentViewConfig+preview.swift in Sources */,
-				2A3BF07F2BE67ED30099FBD3 /* PaymentFlowState.swift in Sources */,
+				2A3BF07F2BE67ED30099FBD3 /* UtilityServicePaymentFlowState.swift in Sources */,
 				2A3BF09A2BE786A10099FBD3 /* PaymentCancelledView.swift in Sources */,
 				2A69C21D2BE53EDE00FE91B0 /* ServiceFailure.swift in Sources */,
 				2A3BF0762BE643E70099FBD3 /* UtilityPaymentFlowEffect.swift in Sources */,

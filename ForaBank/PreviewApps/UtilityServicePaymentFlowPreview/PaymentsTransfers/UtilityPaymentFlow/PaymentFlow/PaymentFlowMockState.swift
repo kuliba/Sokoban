@@ -13,5 +13,5 @@ struct PaymentFlowMockState: Equatable {
 
 extension PaymentFlowMockState {
     
-    typealias Fraud = PaymentFlowState.Modal.Fraud
+    typealias Fraud = UtilityServicePaymentFlowState.Modal.Fraud
 }

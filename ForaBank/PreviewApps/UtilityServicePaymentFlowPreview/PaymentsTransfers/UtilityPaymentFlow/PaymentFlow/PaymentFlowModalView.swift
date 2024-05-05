@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PaymentFlowModalView: View {
     
-    let state: PaymentFlowState.Modal
+    let state: State
     let event: (Event) -> Void
     
     var body: some View {
@@ -23,7 +23,7 @@ struct PaymentFlowModalView: View {
 
 extension PaymentFlowModalView {
     
-    typealias State = PaymentFlowState.Modal
+    typealias State = UtilityServicePaymentFlowState.Modal
     typealias Event = ModalEvent
     typealias ModalEvent = FraudEvent // while only one Modal
 }

@@ -421,7 +421,7 @@ private extension PaymentsTransfersViewModel.State.Route {
         self.setUtilityPrepaymentDestination(to: .servicePicker(servicePicker))
     }
     
-    private var paymentFlowState: PaymentFlowState? {
+    private var paymentFlowState: UtilityServicePaymentFlowState? {
         
         guard case let .payment(paymentFlowState) = utilityPrepayment?.destination
         else { return nil }
@@ -430,7 +430,7 @@ private extension PaymentsTransfersViewModel.State.Route {
     }
     
     mutating func setPaymentAlert(
-        to alert: PaymentFlowState.Alert?
+        to alert: UtilityServicePaymentFlowState.Alert?
     ) {
         guard var paymentFlowState else { return }
         
@@ -439,7 +439,7 @@ private extension PaymentsTransfersViewModel.State.Route {
     }
     
     mutating func setPaymentModal(
-        to modal: PaymentFlowState.Modal?
+        to modal: UtilityServicePaymentFlowState.Modal?
     ) {
         guard var paymentFlowState else { return }
         

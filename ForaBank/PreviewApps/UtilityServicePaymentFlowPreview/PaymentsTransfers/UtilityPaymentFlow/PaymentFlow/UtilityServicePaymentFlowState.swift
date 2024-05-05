@@ -1,12 +1,11 @@
 //
-//  PaymentFlowState.swift
+//  UtilityServicePaymentFlowState.swift
 //  UtilityServicePaymentFlowPreview
 //
 //  Created by Igor Malyarov on 04.05.2024.
 //
 
-#warning("rename to `UtilityServicePaymentFlowState`")
-struct PaymentFlowState {
+struct UtilityServicePaymentFlowState {
     
     let viewModel: ViewModel
     var alert: Alert?
@@ -26,12 +25,12 @@ struct PaymentFlowState {
     }
 }
 
-extension PaymentFlowState {
+extension UtilityServicePaymentFlowState {
     
     typealias ViewModel = ObservingPaymentFlowMockViewModel
 }
 
-extension PaymentFlowState {
+extension UtilityServicePaymentFlowState {
     
     enum Alert {
         
@@ -49,7 +48,7 @@ extension PaymentFlowState {
     }
 }
 
-extension PaymentFlowState.Modal {
+extension UtilityServicePaymentFlowState.Modal {
     
     struct Fraud: Equatable {}
 }

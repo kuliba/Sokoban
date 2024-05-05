@@ -31,5 +31,5 @@ extension PaymentsTransfersViewModelFactory {
 
 extension PaymentsTransfersViewModelFactory.PaymentStateProjection {
     
-    typealias Fraud = PaymentFlowState.Modal.Fraud
+    typealias Fraud = UtilityServicePaymentFlowState.Modal.Fraud
 }

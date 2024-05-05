@@ -35,7 +35,7 @@ extension UtilityPaymentFlowState {
         
         case operatorFailure(OperatorFailureFlowState)
         case payByInstructions
-        case payment(PaymentFlowState)
+        case payment(UtilityServicePaymentFlowState)
         case servicePicker(ServicePickerFlowState)
     }
 }
@@ -99,7 +99,7 @@ extension UtilityPaymentFlowState.Destination.ServicePickerFlowState {
     
     enum Destination {
         
-        case payment(PaymentFlowState)
+        case payment(UtilityServicePaymentFlowState)
     }
 }
 

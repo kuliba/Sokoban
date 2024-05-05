@@ -29,7 +29,7 @@ struct PaymentFlowView<Content: View>: View {
     
     private func paymentFlowModalView(
         event: @escaping (PaymentFraudMockView.Event) -> Void
-    ) -> (PaymentFlowState.Modal) -> PaymentFlowModalView {
+    ) -> (State.Modal) -> PaymentFlowModalView {
         
         return {
             
@@ -39,7 +39,7 @@ struct PaymentFlowView<Content: View>: View {
     
     private func paymentFlowAlert(
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
-    ) -> (PaymentFlowState.Alert) -> Alert {
+    ) -> (State.Alert) -> Alert {
         
         return { alert in
             
@@ -65,7 +65,7 @@ struct PaymentFlowView<Content: View>: View {
 
 extension PaymentFlowView {
     
-    typealias State = PaymentFlowState
+    typealias State = UtilityServicePaymentFlowState
     typealias Event = UtilityServicePaymentFlowEvent
 }
 
@@ -73,22 +73,7 @@ extension PaymentFlowView {
 //    PaymentFlowView()
 //}
 
-extension PaymentFlowState.Modal: Identifiable {
-    
-    var id: ID {
-        
-        switch self {
-        case .fraud: return  .fraud
-        }
-    }
-    
-    enum ID: Hashable {
-        
-        case fraud
-    }
-}
-
-extension PaymentFlowState.Alert: Identifiable {
+extension UtilityServicePaymentFlowState.Alert: Identifiable {
     
     var id: ID {
         
@@ -100,5 +85,20 @@ extension PaymentFlowState.Alert: Identifiable {
     enum ID: Hashable {
         
         case terminalError
+    }
+}
+
+extension UtilityServicePaymentFlowState.Modal: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .fraud: return  .fraud
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case fraud
     }
 }

@@ -39,7 +39,7 @@ struct PaymentFraudMockView: View {
 
 extension PaymentFraudMockView {
     
-    typealias State = PaymentFlowState.Modal.Fraud
+    typealias State = UtilityServicePaymentFlowState.Modal.Fraud
     typealias Event = FraudEvent
 }
 

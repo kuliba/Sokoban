@@ -169,7 +169,7 @@ private extension PaymentsTransfersView {
     }
     
     func paymentFlowView(
-        state: PaymentFlowState,
+        state: UtilityServicePaymentFlowState,
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
