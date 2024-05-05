@@ -8,11 +8,12 @@
 enum UtilityServicePaymentFlowEvent: Equatable {
     
     case dismissFraud
-    case fraudDetected(Fraud)
+    case dismissPaymentError
     case fraud(FraudEvent)
+    case notified(PaymentStateProjection)
 }
 
 extension UtilityServicePaymentFlowEvent {
     
-    typealias Fraud = PaymentFlowState.Modal.Fraud
+    typealias PaymentStateProjection = PaymentsTransfersViewModelFactory.PaymentStateProjection
 }

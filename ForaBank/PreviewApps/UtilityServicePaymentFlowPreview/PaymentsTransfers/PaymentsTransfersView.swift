@@ -123,6 +123,26 @@ struct PaymentsTransfersView: View {
                         }
                     }
                 )
+                .alert(item: paymentFlowState.alert, content: { alert in
+                    
+                    #warning("extract to helper")
+                    switch alert {
+                    case let .terminalError(errorMessage):
+                        
+                        return .init(
+                            with: .init(
+                                title: "Error!",
+                                message: errorMessage,
+                                primaryButton: .init(
+                                    type: .default,
+                                    title: "OK",
+                                    event: .dismissPaymentError
+                                )
+                            ),
+                            event: { viewModel.event(.utilityFlow(.payment($0))) }
+                        )
+                    }
+                })
                 .navigationTitle("Payment")
                 .navigationBarTitleDisplayMode(.inline)
             
@@ -375,6 +395,21 @@ extension UtilityPaymentFlowState.Destination.ServicePickerState.Alert: Identifi
     enum ID: Hashable {
         
         case serviceFailure(ServiceFailure)
+    }
+}
+
+extension PaymentFlowState.Alert: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .terminalError: return  .terminalError
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case terminalError
     }
 }
 

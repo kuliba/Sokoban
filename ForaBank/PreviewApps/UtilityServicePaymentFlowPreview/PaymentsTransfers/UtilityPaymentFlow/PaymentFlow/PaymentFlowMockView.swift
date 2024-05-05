@@ -21,12 +21,15 @@ struct PaymentFlowMockView: View {
         VStack(spacing: 32) {
                         
             Button("Detect Fraud", action: viewModel.detectFraud)
-                .foregroundColor(.red)
+                        
+            Button("Produce Payment Error", action: viewModel.produceError)
         }
+        .foregroundColor(.red)
+        .padding()
     }
 }
 
 extension PaymentFlowMockView {
     
-    typealias ViewModel = PaymentFlowMockViewModel
+    typealias ViewModel = ObservingPaymentFlowMockViewModel
 }

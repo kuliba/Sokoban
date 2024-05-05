@@ -177,6 +177,9 @@ private extension PaymentsTransfersViewModel {
         case .dismissFraud:
             state.route.setPaymentModal(to: nil)
             
+        case .dismissPaymentError:
+            state.route.destination = nil
+            
         case let .fraud(fraud):
             state.route.setPaymentModal(to: nil)
             
@@ -193,9 +196,15 @@ private extension PaymentsTransfersViewModel {
                 effect = .delayModalSet(to: .paymentCancelled(expired: true))
             }
             
-        case let .fraudDetected(fraud):
+        case let .notified(projection):
 #warning("depends on state - payment could be in 2 places - as a destination of prepayment and as a destination of service picker")
-            state.route.setPaymentModal(to: .fraud(fraud))
+            switch projection {
+            case let .errorMessage(errorMessage):
+                state.route.setPaymentAlert(to: .terminalError(errorMessage))
+                
+            case let .fraud(fraud):
+                state.route.setPaymentModal(to: .fraud(fraud))
+            }
         }
         
         return (state, effect)
@@ -292,7 +301,7 @@ private extension PaymentsTransfersViewModel {
             case let .startPayment(response):
                 let paymentViewModel = factory.makePaymentViewModel(response) { [weak self] in
                     
-                    self?.event(.utilityFlow(.payment(.fraudDetected($0))))
+                    self?.event(.utilityFlow(.payment(.notified($0))))
                 }
         
                 switch state.route.utilityPrepaymentDestination {
@@ -419,6 +428,15 @@ private extension PaymentsTransfersViewModel.State.Route {
         else { return nil }
         
         return paymentFlowState
+    }
+    
+    mutating func setPaymentAlert(
+        to alert: PaymentFlowState.Alert?
+    ) {
+        guard var paymentFlowState else { return }
+        
+        paymentFlowState.alert = alert
+        self.setUtilityPrepaymentDestination(to: .payment(paymentFlowState))
     }
     
     mutating func setPaymentModal(

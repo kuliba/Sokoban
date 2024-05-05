@@ -15,11 +15,21 @@ extension PaymentsTransfersViewModelFactory {
     
     typealias MakePaymentViewModelPayload = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent
         .StartPaymentSuccess.StartPaymentResponse
-    typealias Fraud = PaymentFlowState.Modal.Fraud
-    typealias FraudNotify = (Fraud) -> Void
-    typealias PaymentViewModel = PaymentFlowMockViewModel
-    typealias MakePaymentViewModel = (MakePaymentViewModelPayload, @escaping FraudNotify) -> PaymentViewModel
+    #warning("move from factory - but where?")
+    enum PaymentStateProjection: Equatable {
+        
+        case errorMessage(String)
+        case fraud(Fraud)
+    }
+    typealias Notify = (PaymentStateProjection) -> Void
+    typealias PaymentViewModel = ObservingPaymentFlowMockViewModel
+    typealias MakePaymentViewModel = (MakePaymentViewModelPayload, @escaping Notify) -> PaymentViewModel
     
     typealias MakeUtilityPrepaymentViewModelCompletion = (UtilityPrepaymentViewModel) -> Void
     typealias MakeUtilityPrepaymentViewModel = (@escaping MakeUtilityPrepaymentViewModelCompletion) -> Void
+}
+
+extension PaymentsTransfersViewModelFactory.PaymentStateProjection {
+    
+    typealias Fraud = PaymentFlowState.Modal.Fraud
 }

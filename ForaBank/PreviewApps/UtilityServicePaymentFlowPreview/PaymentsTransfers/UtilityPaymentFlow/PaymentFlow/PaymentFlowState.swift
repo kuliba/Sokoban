@@ -8,6 +8,7 @@
 struct PaymentFlowState {
     
     let viewModel: ViewModel
+    var alert: Alert?
     var destination: Destination?
     var modal: Modal?
     
@@ -20,11 +21,19 @@ struct PaymentFlowState {
         self.destination = destination
         self.modal = modal
     }
-    
-    typealias ViewModel = PaymentFlowMockViewModel
 }
 
 extension PaymentFlowState {
+    
+    typealias ViewModel = ObservingPaymentFlowMockViewModel
+}
+
+extension PaymentFlowState {
+    
+    enum Alert {
+        
+        case terminalError(String)
+    }
     
     enum Destination {
         
