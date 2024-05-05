@@ -15,10 +15,12 @@ struct PaymentFlowState {
     
     init(
         viewModel: ViewModel,
+        alert: Alert? = nil,
         destination: Destination? = nil,
         modal: Modal? = nil
     ) {
         self.viewModel = viewModel
+        self.alert = alert
         self.destination = destination
         self.modal = modal
     }

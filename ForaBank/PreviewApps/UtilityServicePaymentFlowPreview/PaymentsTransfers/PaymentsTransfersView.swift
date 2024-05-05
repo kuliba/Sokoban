@@ -51,8 +51,8 @@ struct PaymentsTransfersView: View {
 
 extension PaymentsTransfersView {
     
-    typealias OperatorFailure = UtilityPaymentFlowState.Destination.OperatorFailure
-    typealias ServicePickerState = UtilityPaymentFlowState.Destination.ServicePickerState
+    typealias OperatorFailure = UtilityPaymentFlowState.Destination.OperatorFailureFlowState
+    typealias ServicePickerState = UtilityPaymentFlowState.Destination.ServicePickerFlowState
     
     typealias Config = UtilityPrepaymentWrapperView.Config
     typealias Destination = ViewModel.State.Route.Destination
@@ -121,7 +121,7 @@ private extension PaymentsTransfersView {
                 payByInstructions: { event(.prepayment(.payByInstructions)) },
                 dismissDestination: { event(.prepayment(.dismissOperatorFailureDestination)) }
             )
-            .navigationTitle(String(describing: operatorFailure.operator))
+            .navigationTitle(String(describing: operatorFailure.content))
             .navigationBarTitleDisplayMode(.inline)
             
             
@@ -139,7 +139,7 @@ private extension PaymentsTransfersView {
     }
     
     func operatorFailureView(
-        operatorFailure: UtilityPaymentFlowState.Destination.OperatorFailure,
+        operatorFailure: UtilityPaymentFlowState.Destination.OperatorFailureFlowState,
         payByInstructions: @escaping () -> Void,
         dismissDestination: @escaping () -> Void
     ) -> some View {
@@ -150,7 +150,7 @@ private extension PaymentsTransfersView {
             content: {
                 
                 OperatorFailureView(
-                    state: operatorFailure.operator,
+                    state: operatorFailure.content,
                     event: payByInstructions
                 )
             },
@@ -192,13 +192,13 @@ private extension PaymentsTransfersView {
             content: {
                 
                 ServicePickerView(
-                    state: state,
+                    state: state.content,
                     event: { event(.prepayment(.select($0))) }
                 )
             },
             destinationView: servicesDestinationView
         )
-        .navigationTitle(String(describing: state.operator))
+        .navigationTitle(String(describing: state.content))
         .navigationBarTitleDisplayMode(.inline)
     }
     

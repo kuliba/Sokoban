@@ -274,7 +274,7 @@ private extension PaymentsTransfersViewModel {
         case let .failure(failure):
             switch failure {
             case let .operatorFailure(`operator`):
-                state.route.setUtilityPrepaymentDestination(to: .operatorFailure(.init(operator: `operator`)))
+                state.route.setUtilityPrepaymentDestination(to: .operatorFailure(.init(content: `operator`)))
                 
             case let .serviceFailure(serviceFailure):
                 switch state.route.utilityPrepaymentDestination {
@@ -293,8 +293,7 @@ private extension PaymentsTransfersViewModel {
             switch success {
             case let .services(services, `operator`):
                 state.route.setUtilityPrepaymentDestination(to: .servicePicker(.init(
-                    services: services,
-                    operator: `operator`,
+                    content: .init(services: services, operator: `operator`),
                     destination: nil
                 )))
                 
@@ -377,7 +376,7 @@ private extension PaymentsTransfersViewModel.State.Route {
         self.destination = .utilityPayment(utilityPrepayment)
     }
     
-    private var operatorFailure: UtilityPaymentFlowState.Destination.OperatorFailure? {
+    private var operatorFailure: UtilityPaymentFlowState.Destination.OperatorFailureFlowState? {
         
         guard case let .operatorFailure(operatorFailure) = utilityPrepaymentDestination
         else { return nil }
@@ -386,7 +385,7 @@ private extension PaymentsTransfersViewModel.State.Route {
     }
     
     mutating func setUtilityServiceOperatorFailureDestination(
-        to destination: UtilityPaymentFlowState.Destination.OperatorFailure.Destination?
+        to destination: UtilityPaymentFlowState.Destination.OperatorFailureFlowState.Destination?
     ) {
         guard var operatorFailure else { return }
         
@@ -394,7 +393,7 @@ private extension PaymentsTransfersViewModel.State.Route {
         self.setUtilityPrepaymentDestination(to: .operatorFailure(operatorFailure))
     }
     
-    typealias ServicePickerState = UtilityPaymentFlowState.Destination.ServicePickerState
+    typealias ServicePickerState = UtilityPaymentFlowState.Destination.ServicePickerFlowState
     
     private var servicePicker: ServicePickerState? {
         

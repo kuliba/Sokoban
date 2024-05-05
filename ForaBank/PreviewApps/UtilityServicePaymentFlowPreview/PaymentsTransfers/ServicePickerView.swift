@@ -29,7 +29,7 @@ struct ServicePickerView: View {
 
 extension ServicePickerView {
     
-    typealias State = UtilityPaymentFlowState.Destination.ServicePickerState
+    typealias State = UtilityPaymentFlowState.Destination.ServicePickerFlowState.Content
     typealias Event = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.Select
 }
 

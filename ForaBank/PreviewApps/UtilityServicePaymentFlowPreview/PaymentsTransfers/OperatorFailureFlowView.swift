@@ -31,7 +31,7 @@ extension OperatorFailureFlowView {
     
     typealias Destination = State.Destination
     
-    typealias State = UtilityPaymentFlowState.Destination.OperatorFailure
+    typealias State = UtilityPaymentFlowState.Destination.OperatorFailureFlowState
     typealias Event = ()
 }
 
@@ -39,7 +39,7 @@ extension OperatorFailureFlowView {
 //    OperatorFailureView()
 //}
 
-extension UtilityPaymentFlowState.Destination.OperatorFailure.Destination: Identifiable {
+extension UtilityPaymentFlowState.Destination.OperatorFailureFlowState.Destination: Identifiable {
     
     var id: ID {
         

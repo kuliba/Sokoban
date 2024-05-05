@@ -70,7 +70,7 @@ extension UtilityPaymentFlowState.Destination: Identifiable {
         
         switch self {
         case let .operatorFailure(operatorFailure):
-            return .operatorFailure(operatorFailure.operator.id)
+            return .operatorFailure(operatorFailure.content.id)
             
         case .payByInstructions:
             return .payByInstructions
@@ -78,8 +78,8 @@ extension UtilityPaymentFlowState.Destination: Identifiable {
         case .payment:
             return .payment
             
-        case let .servicePicker(services):
-            return .services(for: services.`operator`.id)
+        case let .servicePicker(state):
+            return .services(for: state.content.`operator`.id)
         }
     }
     

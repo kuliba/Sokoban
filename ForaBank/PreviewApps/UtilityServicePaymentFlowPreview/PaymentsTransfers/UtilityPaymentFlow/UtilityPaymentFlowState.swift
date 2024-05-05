@@ -33,53 +33,50 @@ extension UtilityPaymentFlowState {
     
     enum Destination {
         
-        case operatorFailure(OperatorFailure)
+        case operatorFailure(OperatorFailureFlowState)
         case payByInstructions
         case payment(PaymentFlowState)
-        case servicePicker(ServicePickerState)
+        case servicePicker(ServicePickerFlowState)
     }
 }
 
 extension UtilityPaymentFlowState.Destination {
     
-    struct OperatorFailure {
+    struct OperatorFailureFlowState {
         
-        let `operator`: Operator
+        let content: Content
         var destination: Destination?
         
         init(
-            `operator`: Operator,
+            content: Content,
             destination: Destination? = nil
         ) {
-            self.operator = `operator`
+            self.content = content
             self.destination = destination
         }
+        
+        typealias Content = Operator
     }
     
-    struct ServicePickerState {
+    struct ServicePickerFlowState {
         
-        let services: MultiElementArray<UtilityService>
-        let `operator`: Operator
+        let content: Content
         var destination: Destination?
         var alert: Alert?
         
         init(
-            services: MultiElementArray<UtilityService>,
-            `operator`: Operator,
+            content: Content,
             destination: Destination? = nil,
             alert: Alert? = nil
         ) {
-            self.services = services
-            self.operator = `operator`
+            self.content = content
             self.destination = destination
             self.alert = alert
         }
     }
-    
-    typealias StartPaymentResponse = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentSuccess.StartPaymentResponse
 }
 
-extension UtilityPaymentFlowState.Destination.OperatorFailure {
+extension UtilityPaymentFlowState.Destination.OperatorFailureFlowState {
     
     enum Destination {
         
@@ -87,7 +84,13 @@ extension UtilityPaymentFlowState.Destination.OperatorFailure {
     }
 }
 
-extension UtilityPaymentFlowState.Destination.ServicePickerState {
+extension UtilityPaymentFlowState.Destination.ServicePickerFlowState {
+    
+    struct Content: Equatable {
+        
+        let services: MultiElementArray<UtilityService>
+        let `operator`: Operator
+    }
     
     enum Alert {
         
@@ -100,7 +103,7 @@ extension UtilityPaymentFlowState.Destination.ServicePickerState {
     }
 }
 
-extension UtilityPaymentFlowState.Destination.ServicePickerState.Destination {
+extension UtilityPaymentFlowState.Destination.ServicePickerFlowState.Destination {
     
     typealias StartPaymentResponse = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentSuccess.StartPaymentResponse
 }
