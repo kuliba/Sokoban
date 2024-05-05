@@ -23,7 +23,7 @@ struct PaymentsTransfersView: View {
     
     var body: some View {
         
-        Button("Utility", action: viewModel.startUtilityPaymentProcess)
+        content()
             .navigationDestination(
                 destination: viewModel.state.route.destination,
                 dismissDestination: viewModel.dismissDestination,
@@ -47,9 +47,27 @@ struct PaymentsTransfersView: View {
                 }
             )
     }
+}
+
+extension PaymentsTransfersView {
+    
+    typealias OperatorFailure = UtilityPaymentFlowState.Destination.OperatorFailure
+    typealias ServicePickerState = UtilityPaymentFlowState.Destination.ServicePickerState
+    
+    typealias Config = UtilityPrepaymentWrapperView.Config
+    typealias Destination = ViewModel.State.Route.Destination
+    typealias ViewModel = PaymentsTransfersViewModel
+}
+
+private extension PaymentsTransfersView {
+    
+    func content() -> some View {
+        
+        Button("Utility", action: viewModel.startUtilityPaymentProcess)
+    }
     
     @ViewBuilder
-    private func destinationView(
+    func destinationView(
         destination: Destination,
         event: @escaping (UtilityPaymentFlowEvent) -> Void
     ) -> some View {
@@ -67,7 +85,7 @@ struct PaymentsTransfersView: View {
         }
     }
     
-    private func utilityPrepaymentView(
+    func utilityPrepaymentView(
         state: UtilityPaymentFlowState,
         event: @escaping (UtilityPaymentFlowEvent) -> ()
     ) -> some View {
@@ -91,7 +109,7 @@ struct PaymentsTransfersView: View {
     }
     
     @ViewBuilder
-    private func utilityPrepaymentDestinationView(
+    func utilityPrepaymentDestinationView(
         state: UtilityPaymentFlowState.Destination,
         event: @escaping (UtilityPaymentFlowEvent) -> Void
     ) -> some View {
@@ -120,7 +138,7 @@ struct PaymentsTransfersView: View {
         }
     }
     
-    private func operatorFailureView(
+    func operatorFailureView(
         operatorFailure: UtilityPaymentFlowState.Destination.OperatorFailure,
         payByInstructions: @escaping () -> Void,
         dismissDestination: @escaping () -> Void
@@ -141,7 +159,7 @@ struct PaymentsTransfersView: View {
     }
     
     @ViewBuilder
-    private func operatorFailureDestinationView(
+    func operatorFailureDestinationView(
         destination: OperatorFailure.Destination
     ) -> some View {
         
@@ -150,7 +168,7 @@ struct PaymentsTransfersView: View {
             .navigationBarTitleDisplayMode(.inline)
     }
     
-    private func paymentFlowView(
+    func paymentFlowView(
         state: PaymentFlowState,
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
@@ -163,7 +181,7 @@ struct PaymentsTransfersView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
     
-    private func servicePicker(
+    func servicePicker(
         state: ServicePickerState,
         event: @escaping (UtilityPaymentFlowEvent) -> Void
     ) -> some View {
@@ -185,7 +203,7 @@ struct PaymentsTransfersView: View {
     }
     
     @ViewBuilder
-    private func servicesDestinationView(
+    func servicesDestinationView(
         destination: ServicePickerState.Destination
     ) -> some View {
         
@@ -196,7 +214,7 @@ struct PaymentsTransfersView: View {
     }
     
     @ViewBuilder
-    private func fullScreenCoverView(
+    func fullScreenCoverView(
         modal: PaymentsTransfersViewModel.State.Route.Modal,
         event: @escaping () -> Void
     ) -> some View {
@@ -206,16 +224,6 @@ struct PaymentsTransfersView: View {
             PaymentCancelledView(state: expired, event: event)
         }
     }
-}
-
-extension PaymentsTransfersView {
-    
-    typealias OperatorFailure = UtilityPaymentFlowState.Destination.OperatorFailure
-    typealias ServicePickerState = UtilityPaymentFlowState.Destination.ServicePickerState
-    
-    typealias Config = UtilityPrepaymentWrapperView.Config
-    typealias Destination = ViewModel.State.Route.Destination
-    typealias ViewModel = PaymentsTransfersViewModel
 }
 
 extension PaymentsTransfersViewModel.State.Route.Destination: Identifiable {
