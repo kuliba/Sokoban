@@ -27,39 +27,31 @@ struct PaymentsTransfersView: View {
             .navigationDestination(
                 destination: viewModel.state.route.destination,
                 dismissDestination: viewModel.dismissDestination,
-                content: destinationView
+                content: { destination in
+                    
+                    destinationView(
+                        destination: destination,
+                        event: { viewModel.event(.utilityFlow($0)) }
+                    )
+                }
             )
             .fullScreenCover(
                 cover: viewModel.state.route.modal,
                 dismissFullScreenCover: { viewModel.event(.dismissFullScreenCover) },
                 content: { modal in
                     
-#warning("extract to helper")
-                    switch modal {
-                    case let .paymentCancelled(expired: expired):
-                        VStack(spacing: 32) {
-                            
-                            Text("Payment cancelled!")
-                                .foregroundColor(.red)
-                                .frame(maxHeight: .infinity)
-                            
-                            if expired {
-                                
-                                Text("time expired")
-                            }
-                            
-                            Divider()
-                            
-                            Button("Go to main", action: { viewModel.event(.goToMain) })
-                        }
-                    }
+                    fullScreenCoverView(
+                        modal: modal,
+                        event: { viewModel.event(.goToMain) }
+                    )
                 }
             )
     }
     
     @ViewBuilder
     private func destinationView(
-        destination: Destination
+        destination: Destination,
+        event: @escaping (UtilityPaymentFlowEvent) -> Void
     ) -> some View {
         
         switch destination {
@@ -69,12 +61,9 @@ struct PaymentsTransfersView: View {
                 .navigationBarTitleDisplayMode(.inline)
             
         case let .utilityPayment(utilityPrepayment):
-            utilityPrepaymentView(
-                state: utilityPrepayment,
-                event: { viewModel.event(.utilityFlow($0)) }
-            )
-            .navigationTitle("Utility Prepayment View")
-            .navigationBarTitleDisplayMode(.inline)
+            utilityPrepaymentView(state: utilityPrepayment, event: event)
+                .navigationTitle("Utility Prepayment View")
+                .navigationBarTitleDisplayMode(.inline)
         }
     }
     
@@ -233,6 +222,18 @@ struct PaymentsTransfersView: View {
                     }
                 )
             }
+        }
+    }
+    
+    @ViewBuilder
+    private func fullScreenCoverView(
+        modal: PaymentsTransfersViewModel.State.Route.Modal,
+        event: @escaping () -> Void
+    ) -> some View {
+        
+        switch modal {
+        case let .paymentCancelled(expired: expired):
+            PaymentCancelledView(state: expired, event: event)
         }
     }
 }
