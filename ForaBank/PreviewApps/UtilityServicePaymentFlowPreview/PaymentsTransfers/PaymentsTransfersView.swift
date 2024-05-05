@@ -173,17 +173,48 @@ private extension PaymentsTransfersView {
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
-        PaymentFlowView(state: state, event: event) {
+        PaymentFlowMockView(viewModel: state.viewModel)
+            .alert(
+                item: state.alert,
+                content: paymentFlowAlert(event: event)
+            )
+            .fullScreenCover(
+                cover: state.fullScreenCover,
+                dismissFullScreenCover: { event(.dismissFullScreenCover) },
+                content: paymentFlowFullScreenCoverView
+            )
+            .sheet(
+                modal: state.modal,
+                dismissModal: { event(.dismissFraud) },
+                content: paymentFlowModalView(event: { event(.fraud($0)) })
+            )
+            .navigationTitle("Payment")
+            .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    func paymentFlowAlert(
+        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
+    ) -> (UtilityServicePaymentFlowState.Alert) -> Alert {
+        
+        return { alert in
             
-            PaymentFlowMockView(viewModel: state.viewModel)
+            switch alert {
+            case let .terminalError(errorMessage):
+                
+                return .init(
+                    with: .init(
+                        title: "Error!",
+                        message: errorMessage,
+                        primaryButton: .init(
+                            type: .default,
+                            title: "OK",
+                            event: .dismissPaymentError
+                        )
+                    ),
+                    event: event
+                )
+            }
         }
-        .fullScreenCover(
-            cover: state.fullScreenCover,
-            dismissFullScreenCover: { event(.dismissFullScreenCover) },
-            content: paymentFlowFullScreenCoverView
-        )
-        .navigationTitle("Payment")
-        .navigationBarTitleDisplayMode(.inline)
     }
     
     func paymentFlowFullScreenCoverView(
@@ -204,7 +235,16 @@ private extension PaymentsTransfersView {
         }
     }
 
-    
+    func paymentFlowModalView(
+        event: @escaping (PaymentFraudMockView.Event) -> Void
+    ) -> (UtilityServicePaymentFlowState.Modal) -> PaymentFlowModalView {
+        
+        return {
+            
+            PaymentFlowModalView(state: $0, event: event)
+        }
+    }
+
     func servicePicker(
         state: ServicePickerState,
         event: @escaping (UtilityPaymentFlowEvent) -> Void
@@ -290,6 +330,51 @@ extension PaymentsTransfersViewModel.State.Route.Modal: Identifiable {
     enum ID: Hashable {
         
         case paymentCancelled
+    }
+}
+
+extension UtilityServicePaymentFlowState.Alert: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .terminalError: return  .terminalError
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case terminalError
+    }
+}
+
+extension UtilityServicePaymentFlowState.FullScreenCover: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .completed: return  .completed
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case completed
+    }
+}
+
+extension UtilityServicePaymentFlowState.Modal: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .fraud: return  .fraud
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case fraud
     }
 }
 
