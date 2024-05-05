@@ -109,8 +109,10 @@ struct PaymentsTransfersView: View {
         UtilityPrepaymentDestinationView(
             state: state,
             event: event,
-            paymentFlowView: paymentFlowView,
-            servicePicker: { servicePicker(state: $0, event: event) }
+            factory: .init(
+                makePaymentFlowView: paymentFlowView,
+                makeServicePicker: { servicePicker(state: $0, event: event) }
+            )
         )
     }
     

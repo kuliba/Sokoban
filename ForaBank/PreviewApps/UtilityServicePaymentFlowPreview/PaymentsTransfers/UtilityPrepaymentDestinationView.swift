@@ -13,9 +13,7 @@ where PaymentFlowView: View,
     
     let state: State
     let event: (Event) -> Void
-#warning("move to factory")
-    let paymentFlowView: (PaymentFlowState, @escaping (UtilityServicePaymentFlowEvent) -> Void) -> PaymentFlowView
-    let servicePicker: (ServicePickerState) -> ServicePicker
+    let factory: Factory
     
     var body: some View {
         
@@ -33,12 +31,12 @@ where PaymentFlowView: View,
             Text("Pay by Instructions")
             
         case let .payment(state):
-            paymentFlowView(state, { event(.payment($0)) })
+            factory.makePaymentFlowView(state, { event(.payment($0)) })
                 .navigationTitle("Payment")
                 .navigationBarTitleDisplayMode(.inline)
             
         case let .servicePicker(servicePickerState):
-            servicePicker(servicePickerState)
+            factory.makeServicePicker(servicePickerState)
                 .navigationTitle(String(describing: servicePickerState.operator))
                 .navigationBarTitleDisplayMode(.inline)
         }
@@ -77,11 +75,11 @@ where PaymentFlowView: View,
 extension UtilityPrepaymentDestinationView {
     
     typealias OperatorFailure = UtilityPaymentFlowState.Destination.OperatorFailure
-    typealias ServicePickerState = UtilityPaymentFlowState.Destination.ServicePickerState
     
     typealias State = UtilityPaymentFlowState.Destination
 #warning("`UtilityPaymentFlowEvent` is too brad here - need new narrower scope type and mapping at call site")
     typealias Event = UtilityPaymentFlowEvent
+    typealias Factory = UtilityPrepaymentDestinationViewFactory<PaymentFlowView, ServicePicker>
 }
 
 //#Preview {
