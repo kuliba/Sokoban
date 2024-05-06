@@ -50,13 +50,13 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     convenience init(productData: ProductData, model: Model) {
 
         let icon = IconViewModel(with: productData, model: model)
-        let paymentSystemIcon = ProductView.ViewModel.paymentSystemIcon(from: productData, getImage: { model.images.value[.init($0)]?.image })
-        let name = ProductView.ViewModel.name(
+        let paymentSystemIcon = ProductViewModel.paymentSystemIcon(from: productData, getImage: { model.images.value[.init($0)]?.image })
+        let name = ProductViewModel.name(
             product: productData,
             style: .profile,
             creditProductName: .myProductsSectionItem
         )
-        let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
+        let balance = ProductViewModel.balanceFormatted(product: productData, style: .main, model: model)
         let descriptions = productData.description
         var orderModePadding: CGFloat = 0
         
@@ -88,8 +88,8 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     func update(with productData: ProductData) {
         
         icon = IconViewModel(with: productData, model: model)
-        name = ProductView.ViewModel.name(product: productData, style: .profile, creditProductName: .myProductsSectionItem)
-        balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
+        name = ProductViewModel.name(product: productData, style: .profile, creditProductName: .myProductsSectionItem)
+        balance = ProductViewModel.balanceFormatted(product: productData, style: .main, model: model)
     }
     
     private func bind() {

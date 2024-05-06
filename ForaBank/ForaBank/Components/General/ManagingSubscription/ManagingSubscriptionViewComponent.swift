@@ -97,7 +97,7 @@ extension SubscriptionsViewModel {
         let isLocked: Bool
         var subscriptions: [ManageSubscriptionsUI.SubscriptionViewModel]
         
-        var productViewModel: ProductViewModel {
+        var productViewModel: ManageSubscriptionsUI.ProductViewModel {
             .init(image: image,
                   title: title,
                   name: name,

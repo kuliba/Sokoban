@@ -12,7 +12,7 @@ import UIPrimitives
 public struct ActivateSliderWrapperView: View {
     
     @ObservedObject var viewModel: GlobalViewModel
-    
+    // StateObject need
     let config: SliderConfig
     
     public init(

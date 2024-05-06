@@ -532,7 +532,7 @@ final class ProductGroupViewModelTests: XCTestCase {
     
     private func makeSUT(
         productType: ProductType = .card,
-        products: [ProductView.ViewModel] = [],
+        products: [ProductViewModel] = [],
         settings: ProductsGroupSettings = .base,
         dimensions: ProductGroupView.ViewModel.Dimensions = .regular,
         model: Model = .productsMock,

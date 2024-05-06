@@ -56,10 +56,11 @@ final class CardReducerTests: XCTestCase {
     private typealias Result = (State, Effect?)
     
     private func makeSUT(
+        activate: @escaping () -> Void = {},
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
-        let sut = SUT()
+        let sut = SUT(activate: activate)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut)

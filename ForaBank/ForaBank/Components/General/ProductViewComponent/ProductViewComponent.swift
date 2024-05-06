@@ -11,422 +11,421 @@ import SwiftUI
 import Tagged
 import PinCodeUI
 import CardUI
+import ActivateSlider
 import UIKit
 
 //MARK: - ViewModel
-
-extension ProductView {
     
-    class ViewModel: Identifiable, ObservableObject, Hashable {
+class ProductViewModel: Identifiable, ObservableObject, Hashable {
+    
+    @AppStorage(.isNeedOnboardingShow) var isNeedOnboardingShow: Bool = true
+    typealias CardAction = (CardDomain.CardEvent) -> Void
+    let action: PassthroughSubject<Action, Never> = .init()
+    
+    let id: ProductData.ID
+    var header: HeaderDetails
+    let isChecked: Bool
+    let productType: ProductType
+    
+    let cardAction: CardAction?
+    let cvvInfo: CvvInfo?
+    
+    @Published var cardInfo: CardInfo
+    @Published var footer: FooterDetails
+    @Published var statusAction: StatusActionViewModel?
+    @Published var isUpdating: Bool
+    
+    var appearance: Appearance
+    var config: CardUI.Config
+    
+    private var bindings = Set<AnyCancellable>()
+    private let pasteboard = UIPasteboard.general
+    
+    private let event: (Event) -> Void
+    
+    internal init(
+        id: ProductData.ID,
+        header: HeaderDetails,
+        cardInfo: CardInfo,
+        footer: FooterDetails,
+        statusAction: StatusActionViewModel?,
+        isChecked: Bool = false,
+        appearance: Appearance,
+        isUpdating: Bool,
+        productType: ProductType,
+        cardAction: CardAction? = nil,
+        cvvInfo: CvvInfo? = nil,
+        event: @escaping (Event) -> Void = { _ in }
+    ) {
+        self.id = id
+        self.header = header
+        self.cardInfo = cardInfo
+        self.footer = footer
+        self.statusAction = statusAction
+        self.isChecked = isChecked
+        self.appearance = appearance
+        self.isUpdating = isUpdating
+        self.productType = productType
+        self.cardAction = cardAction
+        self.cvvInfo = cvvInfo
+        self.config = .config(appearance: appearance)
+        self.event = event
+    }
+    
+    convenience init(
+        with productData: ProductData,
+        isChecked: Bool = false,
+        size: Appearance.Size,
+        style: Appearance.Style,
+        model: Model,
+        cardAction: CardAction? = nil,
+        cvvInfo: CvvInfo? = nil,
+        event: @escaping (Event) -> Void = { _ in }
+    ) {
+        let balance = Self.balanceFormatted(product: productData, style: style, model: model)
+        let number = productData.displayNumber
+        let numberMasked = Self.maskedValue(
+            productData.numberMasked,
+            replacements: .replacements)
         
-        @AppStorage(.isNeedOnboardingShow) var isNeedOnboardingShow: Bool = true
-        typealias CardAction = (CardDomain.CardEvent) -> Void
-        let action: PassthroughSubject<Action, Never> = .init()
+        let period = Self.period(product: productData, style: style)
+        let name = Self.name(
+            product: productData,
+            style: style,
+            creditProductName: .productView
+        )
+        let owner = Self.owner(from: productData)
+        let cvvTitle = (productData is ProductCardData) ? .cvvTitle : ""
+        let cardInfo: CardInfo = .init(
+            name: name,
+            owner: owner,
+            cvvTitle: .init(value: cvvTitle),
+            cardWiggle: false,
+            fullNumber: .init(value: productData.number ?? ""),
+            numberMasked: .init(value: numberMasked)
+        )
+        let textColor = productData.fontDesignColor.color
+        let productType = productData.productType
+        let backgroundColor = productData.backgroundColor
+        let backgroundImage = Self.backgroundImage(with: productData, size: size, getImage: { model.images.value[.init($0)]?.image })
+        let statusAction = Self.statusAction(product: productData)
+        let interestRate = Self.rateFormatted(product: productData)
+        self.init(
+            id: productData.id,
+            header: .init(number: number, period: period, icon: productData.cloverImage),
+            cardInfo: cardInfo,
+            footer: .init(balance: balance, interestRate: interestRate),
+            statusAction: statusAction,
+            isChecked: isChecked,
+            appearance: .init(
+                textColor: textColor,
+                background: .init(
+                    color: backgroundColor,
+                    image: backgroundImage),
+                size: size,
+                style: style
+            ),
+            isUpdating: false,
+            productType: productType,
+            cardAction: cardAction,
+            cvvInfo: cvvInfo,
+            event: event
+        )
         
-        let id: ProductData.ID
-        var header: HeaderDetails
-        let isChecked: Bool
-        let productType: ProductType
-
-        let cardAction: CardAction?
-        let cvvInfo: CvvInfo?
+        bind()
+        bind(statusAction)
+    }
+    
+    private func bind() {
         
-        @Published var cardInfo: CardInfo
-        @Published var footer: FooterDetails
-        @Published var statusAction: StatusActionViewModel?
-        @Published var isUpdating: Bool
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as ProductViewModelAction.CardActivation.Complete:
+                    statusAction?.action.send(ProductViewModel.StatusActionViewModelAction.CardActivation.Complete())
+                    
+                case _ as ProductViewModelAction.CardActivation.Failed:
+                    statusAction?.action.send(ProductViewModel.StatusActionViewModelAction.CardActivation.Failed())
+                    
+                default:
+                    return
+                }
+                
+            }.store(in: &bindings)
         
-        var appearance: Appearance
-        var config: CardUI.Config
-
-        private var bindings = Set<AnyCancellable>()
-        private let pasteboard = UIPasteboard.general
+        // CVV
         
-        private let event: (Event) -> Void
-
-        internal init(
-            id: ProductData.ID,
-            header: HeaderDetails,
-            cardInfo: CardInfo,
-            footer: FooterDetails,
-            statusAction: StatusActionViewModel?,
-            isChecked: Bool = false,
-            appearance: Appearance,
-            isUpdating: Bool,
-            productType: ProductType,
-            cardAction: CardAction? = nil,
-            cvvInfo: CvvInfo? = nil,
-            event: @escaping (Event) -> Void = { _ in }
-        ) {
-            self.id = id
-            self.header = header
-            self.cardInfo = cardInfo
-            self.footer = footer
-            self.statusAction = statusAction
-            self.isChecked = isChecked
-            self.appearance = appearance
-            self.isUpdating = isUpdating
-            self.productType = productType
-            self.cardAction = cardAction
-            self.cvvInfo = cvvInfo
-            self.config = .config(appearance: appearance)
-            self.event = event
-        }
+        action
+            .compactMap { $0 as? ProductViewModelAction.ShowCVV }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                if action.cardId.rawValue == self.id {
+                    self.cardInfo.state = .maskedNumberCVV(.init(action.cvv.rawValue))
+                }
+            }.store(in: &bindings)
         
-        convenience init(
-            with productData: ProductData,
-            isChecked: Bool = false,
-            size: Appearance.Size,
-            style: Appearance.Style,
-            model: Model,
-            cardAction: CardAction? = nil,
-            cvvInfo: CvvInfo? = nil,
-            event: @escaping (Event) -> Void = { _ in }
-        ) {
-            let balance = Self.balanceFormatted(product: productData, style: style, model: model)
-            let number = productData.displayNumber
-            let numberMasked = Self.maskedValue(
-                productData.numberMasked,
-                replacements: .replacements)
+        $statusAction
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] statusAction in
+                
+                if statusAction != nil {
+                    self.appearance.opacity = 0.5
+                    
+                } else {
+                    self.appearance.opacity = 1
+                }
+                
+            }.store(in: &bindings)
+        
+    }
+    
+    private func bind(_ statusAction: StatusActionViewModel?) {
+        
+        statusAction?.action
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [unowned self] action in
+                
+                switch action {
+                case _ as ProductViewModel.StatusActionViewModelAction.CardActivation.Started:
+                    self.action.send(ProductViewModelAction.CardActivation.Started())
+                    
+                default:
+                    break
+                }
+                
+            }).store(in: &bindings)
+    }
+    
+    func update(with productData: ProductData, model: Model) {
+        
+        cardInfo.name = Self.name(product: productData, style: appearance.style, creditProductName: .cardTitle)
+        cardInfo.owner = Self.owner(from: productData)
+        statusAction = Self.statusAction(product: productData)
+        header.updateIcon(productData.cloverImage)
+        footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
+        let backgroundImage = Self.backgroundImage(with: productData, size: appearance.size, getImage: { model.images.value[.init($0)]?.image })
+        appearance.background = .init(color: productData.backgroundColor, image: backgroundImage)
+        config = .config(appearance: appearance)
+        bind(statusAction)
+    }
+    
+    static func rateFormatted(product: ProductData) -> String? {
+        
+        switch product {
+        case let depositProduct as ProductDepositData:
+            return String(format: "%.2f", depositProduct.interestRate) + "%"
             
-            let period = Self.period(product: productData, style: style)
-            let name = Self.name(
-                product: productData,
+        default:
+            return nil
+        }
+    }
+    
+    static func balanceFormatted(product: ProductData, style: Appearance.Style, model: Model) -> String {
+        
+        switch product {
+        case let loanProduct as ProductLoanData:
+            return Self.balanceFormatted(
+                amount: loanProduct.amount,
+                debt: loanProduct.totalAmountDebtValue,
+                currency: loanProduct.currency,
                 style: style,
-                creditProductName: .productView
+                model: model
             )
-            let owner = Self.owner(from: productData)
-            let cvvTitle = (productData is ProductCardData) ? .cvvTitle : ""
-            let cardInfo: CardInfo = .init(
-                name: name,
-                owner: owner,
-                cvvTitle: .init(value: cvvTitle),
-                cardWiggle: false,
-                fullNumber: .init(value: productData.number ?? ""),
-                numberMasked: .init(value: numberMasked)
+        default:
+            return Self.balanceFormatted(
+                balance: product.balanceValue,
+                currency: product.currency,
+                style: style,
+                model: model
             )
-            let textColor = productData.fontDesignColor.color
-            let productType = productData.productType
-            let backgroundColor = productData.backgroundColor
-            let backgroundImage = Self.backgroundImage(with: productData, size: size, getImage: { model.images.value[.init($0)]?.image })
-            let statusAction = Self.statusAction(product: productData)
-            let interestRate = Self.rateFormatted(product: productData)
-            self.init(
-                id: productData.id,
-                header: .init(number: number, period: period, icon: productData.cloverImage),
-                cardInfo: cardInfo,
-                footer: .init(balance: balance, interestRate: interestRate),
-                statusAction: statusAction,
-                isChecked: isChecked,
-                appearance: .init(
-                    textColor: textColor,
-                    background: .init(
-                        color: backgroundColor,
-                        image: backgroundImage),
-                    size: size,
-                    style: style
-                ),
-                isUpdating: false,
-                productType: productType,
-                cardAction: cardAction,
-                cvvInfo: cvvInfo,
-                event: event
-            )
-            
-            bind()
-            bind(statusAction)
         }
+    }
+    
+    static func balanceFormatted(balance: Double, currency: String, style: Appearance.Style, model: Model) -> String {
         
-        private func bind() {
+        switch style {
+        case .main:
+            return model.amountFormatted(amount: balance, currencyCode: currency, style: .clipped) ?? String(balance)
             
-            action
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
-                    
-                    switch action {
-                    case _ as ProductViewModelAction.CardActivation.Complete:
-                        statusAction?.action.send(ProductView.ViewModel.StatusActionViewModelAction.CardActivation.Complete())
-                        
-                    case _ as ProductViewModelAction.CardActivation.Failed:
-                        statusAction?.action.send(ProductView.ViewModel.StatusActionViewModelAction.CardActivation.Failed())
-                        
-                    default:
-                        return
-                    }
-                    
-                }.store(in: &bindings)
-            
-            // CVV
-
-            action
-                .compactMap { $0 as? ProductViewModelAction.ShowCVV }
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
-                    if action.cardId.rawValue == self.id {
-                        self.cardInfo.state = .maskedNumberCVV(.init(action.cvv.rawValue))
-                    }
-                }.store(in: &bindings)
-            
-            $statusAction
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] statusAction in
-                    
-                    if statusAction != nil {
-                        self.appearance.opacity = 0.5
-                        
-                    } else {
-                        self.appearance.opacity = 1
-                    }
-                    
-                }.store(in: &bindings)
-            
+        case .profile:
+            return model.amountFormatted(amount: balance, currencyCode: currency, style: .normal) ?? String(balance)
         }
+    }
+    
+    static func balanceFormatted(amount: Double, debt: Double, currency: String, style: Appearance.Style, model: Model) -> String {
         
-        private func bind(_ statusAction: StatusActionViewModel?) {
+        switch style {
+        case .main:
+            return model.amountFormatted(amount: debt, currencyCode: currency, style: .clipped) ?? String(amount)
             
-            statusAction?.action
-                .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [unowned self] action in
-                    
-                    switch action {
-                    case _ as ProductView.ViewModel.StatusActionViewModelAction.CardActivation.Started:
-                        self.action.send(ProductViewModelAction.CardActivation.Started())
-                        
-                    default:
-                        break
-                    }
-                    
-                }).store(in: &bindings)
+        case .profile:
+            let debtFormatted = model.amountFormatted(amount: debt, currencyCode: currency, style: .normal) ?? String(debt)
+            let amountFormatted = model.amountFormatted(amount: amount, currencyCode: currency, style: .normal) ?? String(amount)
+            
+            return debtFormatted + " / " + amountFormatted
         }
+    }
+    
+    static func createSubtitle(from data: ProductData) -> String? {
         
-        func update(with productData: ProductData, model: Model) {
+        switch data {
             
-            cardInfo.name = Self.name(product: productData, style: appearance.style, creditProductName: .cardTitle)
-            cardInfo.owner = Self.owner(from: productData)
-            statusAction = Self.statusAction(product: productData)
-            header.updateIcon(productData.cloverImage)
-            footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
-            let backgroundImage = Self.backgroundImage(with: productData, size: appearance.size, getImage: { model.images.value[.init($0)]?.image })
-            appearance.background = .init(color: productData.backgroundColor, image: backgroundImage)
-            config = .config(appearance: appearance)
-            bind(statusAction)
+        case let cardProduct as ProductCardData:
+            guard let subtitle = cardProduct.additionalField else { return nil }
+            return subtitle
+            
+        case let depositProduct as ProductDepositData:
+            let subtitle = depositProduct.interestRate
+            return "Ставка \(subtitle)%"
+            
+        case let loanProduct as ProductLoanData:
+            let subtitle = loanProduct.currentInterestRate
+            return "Ставка \(subtitle)%"
+            
+        default: return nil
         }
+    }
+    
+    static func name(product: ProductData, style: Appearance.Style, creditProductName: Appearance.NameOfCreditProduct) -> String {
         
-        static func rateFormatted(product: ProductData) -> String? {
-            
-            switch product {
-            case let depositProduct as ProductDepositData:
-                return String(format: "%.2f", depositProduct.interestRate) + "%"
-                
-            default:
-                return nil
-            }
-        }
-        
-        static func balanceFormatted(product: ProductData, style: Appearance.Style, model: Model) -> String {
-            
-            switch product {
-            case let loanProduct as ProductLoanData:
-                return Self.balanceFormatted(
-                    amount: loanProduct.amount,
-                    debt: loanProduct.totalAmountDebtValue,
-                    currency: loanProduct.currency,
-                    style: style,
-                    model: model
-                )
-            default:
-                return Self.balanceFormatted(
-                    balance: product.balanceValue,
-                    currency: product.currency,
-                    style: style,
-                    model: model
-                )
-            }
-        }
-        
-        static func balanceFormatted(balance: Double, currency: String, style: Appearance.Style, model: Model) -> String {
-            
+        switch product {
+        case let cardProduct as ProductCardData:
             switch style {
             case .main:
-                return model.amountFormatted(amount: balance, currencyCode: currency, style: .clipped) ?? String(balance)
+                return !cardProduct.displayName.isEmpty ? cardProduct.displayName : "Кредитная карта"
                 
             case .profile:
-                return model.amountFormatted(amount: balance, currencyCode: currency, style: .normal) ?? String(balance)
+                switch creditProductName {
+                    
+                case .cardTitle:
+                    return cardProduct.isCreditCard ? "Кредитная\n\(cardProduct.displayName)" : cardProduct.displayName
+                    
+                case .productView, .myProductsSectionItem: 
+                    return cardProduct.displayName
+                }
             }
-        }
-        
-        static func balanceFormatted(amount: Double, debt: Double, currency: String, style: Appearance.Style, model: Model) -> String {
             
+        case let loanProduct as ProductLoanData:
             switch style {
             case .main:
-                return model.amountFormatted(amount: debt, currencyCode: currency, style: .clipped) ?? String(amount)
+                return loanProduct.displayName
                 
             case .profile:
-                let debtFormatted = model.amountFormatted(amount: debt, currencyCode: currency, style: .normal) ?? String(debt)
-                let amountFormatted = model.amountFormatted(amount: amount, currencyCode: currency, style: .normal) ?? String(amount)
-                
-                return debtFormatted + " / " + amountFormatted
+                return loanProduct.additionalField ?? loanProduct.displayName
             }
+            
+        default:
+            return product.displayName
         }
+    }
+    
+    static func owner(from productData: ProductData) -> String {
         
-        static func createSubtitle(from data: ProductData) -> String? {
+        switch productData {
             
-            switch data {
-                
-            case let cardProduct as ProductCardData:
-                guard let subtitle = cardProduct.additionalField else { return nil }
-                return subtitle
-                
-            case let depositProduct as ProductDepositData:
-                let subtitle = depositProduct.interestRate
-                return "Ставка \(subtitle)%"
-                
-            case let loanProduct as ProductLoanData:
-                let subtitle = loanProduct.currentInterestRate
-                return "Ставка \(subtitle)%"
-                
-            default: return nil
-            }
-        }
-        
-        static func name(product: ProductData, style: Appearance.Style, creditProductName: Appearance.NameOfCreditProduct) -> String {
+        case let card as ProductCardData:
+            return card.holderName ?? ""
             
-            switch product {
-            case let cardProduct as ProductCardData:
-                switch style {
-                case .main:
-                    return !cardProduct.displayName.isEmpty ? cardProduct.displayName : "Кредитная карта"
-                    
-                case .profile:
-                    switch creditProductName {
-                        
-                    case .cardTitle:
-                        return cardProduct.isCreditCard ? "Кредитная\n\(cardProduct.displayName)" : cardProduct.displayName
-                        
-                    case .productView, .myProductsSectionItem: 
-                        return cardProduct.displayName
-                    }
-                }
-                
-            case let loanProduct as ProductLoanData:
-                switch style {
-                case .main:
-                    return loanProduct.displayName
-                    
-                case .profile:
-                    return loanProduct.additionalField ?? loanProduct.displayName
-                }
-                
-            default:
-                return product.displayName
-            }
-        }
-        
-        static func owner(from productData: ProductData) -> String {
-            
-            switch productData {
-                
-            case let card as ProductCardData:
-                return card.holderName ?? ""
-                
-            default:
-                return ""
-            }
-        }
-        
-        static func dateLong(from data: ProductData) -> String? {
-            
-            switch data {
-                
-            case let depositProduct as ProductDepositData:
-                guard let endDate = depositProduct.endDate else { return nil }
-                return DateFormatter.shortDate.string(from: endDate)
-                
-            case let loanProduct as ProductLoanData:
-                return DateFormatter.shortDate.string(from: loanProduct.dateLong)
-                
-            default: return nil
-            }
-        }
-        
-        static func period(product: ProductData, style: Appearance.Style) -> String? {
-            
-            switch style {
-            case .profile: return product.displayPeriod
-            default: return nil
-            }
-        }
-        
-        static func paymentSystemIcon(
-            from data: ProductData,
-            getImage: (MD5Hash) -> Image?
-        ) -> Image? {
-            
-            guard let cardData = data as? ProductCardData else { return nil }
-            return  getImage(.init(cardData.paymentSystemImageMd5Hash))
-        }
-        
-        static func statusAction(product: ProductData) -> StatusActionViewModel? {
-            
-            guard let cardProduct = product as? ProductCardData, let statusCard = cardProduct.statusCard else {
-                return nil
-            }
-            
-            switch statusCard {
-            case .active:
-                if !cardProduct.isVisible { return .init(status: .show) }
-                else { return nil }
-
-            case .blockedUnlockAvailable, .blockedUnlockNotAvailable:
-                if cardProduct.isVisible { return .init(status: .unblock) }
-                else { return .init(status: .unblockShow) }
-                
-            case .notActivated:
-                return .init(status: .activation(.init(state: .notActivated)))
-            }
-        }
-        
-        static func backgroundImage(with productData: ProductData, size: Appearance.Size, getImage: @escaping (MD5Hash) -> Image?) -> Image? {
-            
-            switch size {
-            case .large: return getImage(.init(productData.xlDesignMd5Hash))
-            case .normal:
-                return getImage(.init(productData.largeDesignMd5Hash))
-            case .small: return getImage(.init(productData.mediumDesignMd5Hash))
-            }
-        }
-        
-        static func maskedValue(_ value: String?, replacements: [(String, String)]) -> String {
-            
-            if let value {
-                
-                return replacements.reduce(value) { string, replacement in
-                    
-                    string.replacingOccurrences(
-                        of: replacement.0,
-                        with: replacement.1
-                    )
-                }
-            }
-            
+        default:
             return ""
         }
+    }
+    
+    static func dateLong(from data: ProductData) -> String? {
         
-        func resetToFront() {
-            Task { @MainActor [weak self] in
+        switch data {
+            
+        case let depositProduct as ProductDepositData:
+            guard let endDate = depositProduct.endDate else { return nil }
+            return DateFormatter.shortDate.string(from: endDate)
+            
+        case let loanProduct as ProductLoanData:
+            return DateFormatter.shortDate.string(from: loanProduct.dateLong)
+            
+        default: return nil
+        }
+    }
+    
+    static func period(product: ProductData, style: Appearance.Style) -> String? {
+        
+        switch style {
+        case .profile: return product.displayPeriod
+        default: return nil
+        }
+    }
+    
+    static func paymentSystemIcon(
+        from data: ProductData,
+        getImage: (MD5Hash) -> Image?
+    ) -> Image? {
+        
+        guard let cardData = data as? ProductCardData else { return nil }
+        return  getImage(.init(cardData.paymentSystemImageMd5Hash))
+    }
+    
+    static func statusAction(product: ProductData) -> StatusActionViewModel? {
+        
+        guard let cardProduct = product as? ProductCardData, let statusCard = cardProduct.statusCard else {
+            return nil
+        }
+        
+        switch statusCard {
+        case .active:
+            if !cardProduct.isVisible { return .init(status: .show) }
+            else { return nil }
+            
+        case .blockedUnlockAvailable, .blockedUnlockNotAvailable:
+            if cardProduct.isVisible { return .init(status: .unblock) }
+            else { return .init(status: .unblockShow) }
+            
+        case .notActivated:
+            return .init(status: .activation(.init(state: .notActivated)))
+        }
+    }
+    
+    static func backgroundImage(with productData: ProductData, size: Appearance.Size, getImage: @escaping (MD5Hash) -> Image?) -> Image? {
+        
+        switch size {
+        case .large: return getImage(.init(productData.xlDesignMd5Hash))
+        case .normal:
+            return getImage(.init(productData.largeDesignMd5Hash))
+        case .small: return getImage(.init(productData.mediumDesignMd5Hash))
+        }
+    }
+    
+    static func maskedValue(_ value: String?, replacements: [(String, String)]) -> String {
+        
+        if let value {
+            
+            return replacements.reduce(value) { string, replacement in
                 
-                self?.cardInfo.state = .showFront
+                string.replacingOccurrences(
+                    of: replacement.0,
+                    with: replacement.1
+                )
             }
         }
         
-        func resetToFrontIfNotAwaiting() {
+        return ""
+    }
+    
+    func resetToFront() {
+        Task { @MainActor [weak self] in
             
-            if cardInfo.state != .awaitingCVV {
-                resetToFront()
-            }
+            self?.cardInfo.state = .showFront
+        }
+    }
+    
+    func resetToFrontIfNotAwaiting() {
+        
+        if cardInfo.state != .awaitingCVV {
+            resetToFront()
         }
     }
 }
+
 
 //MARK: - Action
 
@@ -453,7 +452,7 @@ enum ProductViewModelAction {
 
 //MARK: - Internal ViewModels
 
-extension ProductView.ViewModel {
+extension ProductViewModel {
             
     class StatusActionViewModel {
         
@@ -483,7 +482,7 @@ extension ProductView.ViewModel {
                 .sink { [unowned self] action in
                     
                     switch action {
-                    case _ as ProductView.ViewModel.StatusActionViewModelAction.CardActivation.Complete:
+                    case _ as ProductViewModel.StatusActionViewModelAction.CardActivation.Complete:
                         switch status {
                         case .activation(let cardActivateSliderViewModel):
                             cardActivateSliderViewModel.state = .activated
@@ -492,7 +491,7 @@ extension ProductView.ViewModel {
                             break
                         }
                         
-                    case _ as ProductView.ViewModel.StatusActionViewModelAction.CardActivation.Failed:
+                    case _ as ProductViewModel.StatusActionViewModelAction.CardActivation.Failed:
                         switch status {
                         case .activation(let cardActivateSliderViewModel):
                             cardActivateSliderViewModel.state = .notActivated
@@ -516,7 +515,7 @@ extension ProductView.ViewModel {
                     
                     if state == .activating {
                         
-                        action.send(ProductView.ViewModel.StatusActionViewModelAction.CardActivation.Started())
+                        action.send(ProductViewModel.StatusActionViewModelAction.CardActivation.Started())
                     }
                     
                 }.store(in: &bindings)
@@ -587,29 +586,50 @@ extension ProductView.ViewModel {
     }
 }
 
-extension ProductView.ViewModel {
+extension ProductViewModel {
     
     func hash(into hasher: inout Hasher) {
         
         hasher.combine(id)
     }
     
-    static func == (lhs: ProductView.ViewModel, rhs: ProductView.ViewModel) -> Bool {
+    static func == (lhs: ProductViewModel, rhs: ProductViewModel) -> Bool {
         
         return lhs.id == rhs.id
     }
 }
 
 //MARK: - View
-
-struct ProductView: View {
+struct ProductViewFactory<Slider: View> {
     
-    @StateObject private var viewModel: ViewModel
+    let makeSlider: MakeSlider
+    
+    typealias MakeSlider = () -> Slider
+}
+
+extension GenericProductView where Slider == EmptyView {
+    
+    init(viewModel: ProductViewModel) {
+        
+        self.init(viewModel: viewModel, factory: .init(makeSlider: EmptyView.init))
+    }
+}
+
+typealias ProductView = GenericProductView<EmptyView>
+
+struct GenericProductView<Slider: View>: View {
+    
+    @StateObject private var viewModel: ProductViewModel
+    private let factory: Factory
+    
+    typealias Factory = ProductViewFactory<Slider>// Slider stateWrapper
     
     init(
-        viewModel: ViewModel
+        viewModel: ProductViewModel,
+        factory: Factory
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
+        self.factory = factory
     }
 
     var body: some View {
@@ -619,7 +639,8 @@ struct ProductView: View {
             headerDetails: viewModel.header,
             footerDetails: viewModel.footer,
             modifierConfig: modifierConfig(viewModel.cardInfo.cardWiggle),
-            activationView: activationView,
+            activationView: factory.makeSlider,
+            statusView: statusView,
             config: viewModel.config
         )
         .animation(
@@ -649,11 +670,11 @@ struct ProductView: View {
     }
     
     @ViewBuilder
-    private func activationView() -> (some View)? {
+    private func statusView() -> some View {
         
         viewModel.statusAction.map {
             
-            return ProductView.StatusActionView(
+            return StatusActionView(
                 viewModel: $0,
                 color: viewModel.config.appearance.textColor,
                 style: viewModel.config.appearance.style)
@@ -674,11 +695,11 @@ struct ProductView: View {
 
 //MARK: - Internal Views
 
-extension ProductView {
+extension GenericProductView {
     
     struct StatusActionView: View {
         
-        let viewModel: ViewModel.StatusActionViewModel
+        let viewModel: ProductViewModel.StatusActionViewModel
         let color: Color
         let style: Appearance.Style
         
@@ -692,8 +713,47 @@ extension ProductView {
                                            color: color,
                                            size: viewModel.iconSize(with: style))
                     
+                /*case .profile:
+                    makeSlider()
+                    // add fabric
+                    //() -> ActivateSliderWrapperView
+                   /* ActivateSliderWrapperView(
+                        viewModel: .init(
+                            initialState: .initialState,
+                            reduce: CardActivateReducer.reduce(
+                                .init(
+                                    cardReduce: CardReducer(activate: {
+                                        print("Start activate")
+                                    }).reduce(_:_:),
+                                    sliderReduce: SliderReducer(maxOffsetX: .maxOffsetX).reduce(_:_:),
+                                    maxOffset: .maxOffsetX)
+                            ),
+                            handleEffect: CardActivateEffectHandler(
+                                handleCardEffect: CardEffectHandler(
+                                    activate: { result in
+                                        
+                                    }
+                                    
+                                ).handleEffect(_:_:)
+                            ).handleEffect(_:_:)),
+                        config: .default)
+                */
+                    /*ActivateSliderWrapperView(
+                        viewModel: .init(
+                            initialState: .initialState,
+                            reduce: CardActivateReducer.default(maxOffsetX: .maxOffsetX).reduce(_:_:),
+                            handleEffect: CardActivateEffectHandler(
+                                handleCardEffect: CardEffectHandler(
+                                    activate: { result in
+                                        
+                                    }
+                                                                   
+                                ).handleEffect(_:_:)
+                            ).handleEffect(_:_:)),
+                        config: .default)*/
+*/
                 case .profile:
-                    CardActivateSliderView(viewModel: cardActivateViewModel)
+                    EmptyView()
                 }
                 
             case .unblock:
@@ -731,7 +791,7 @@ extension ProductView {
     }
 }
 
-extension ProductView.ViewModel {
+extension ProductViewModel {
     
     func productDidTapped() {
         
@@ -802,7 +862,7 @@ extension ProductView.ViewModel {
     }
 }
 
-extension ProductView.ViewModel {
+extension ProductViewModel {
     
     typealias Event = AlertEvent
 }
@@ -811,52 +871,60 @@ extension ProductView.ViewModel {
 
 struct ProductView_Previews: PreviewProvider {
     
+    private static func preview(
+        _ viewModel: ProductViewModel
+    ) -> some View {
+        ProductView(viewModel: viewModel)
+    }
+    
     static func previewsGroup() -> some View {
         
         Group {
             
+            GenericProductView(viewModel: .notActivateProfile, factory: .init(makeSlider: { Color.red.frame(width: 32, height: 32) }))
+            
             Group {
                 
-                ProductView(viewModel: .updating)
+                preview(.updating)
                     .previewDisplayName("updating")
-                ProductView(viewModel: .notActivate)
+                preview(.notActivate)
                     .previewDisplayName("notActivate")
-                ProductView(viewModel: .blocked)
+                preview(.blocked)
                     .previewDisplayName("blocked")
-                ProductView(viewModel: .classic)
+                preview(.classic)
                     .previewDisplayName("classic")
-                ProductView(viewModel: .account)
+                preview(.account)
                     .previewDisplayName("account")
             }
             .frame(width: 164, height: 104)
             
-            ProductView(viewModel: .notActivateProfile)
+            preview(.notActivateProfile)
                 .previewDisplayName("notActivateProfile")
                 .frame(width: 268, height: 160)
             
-            ProductView(viewModel: .blockedProfile)
+            preview(.blockedProfile)
                 .previewDisplayName("blockedProfile")
                 .frame(width: 268, height: 160)
                 .frame(width: 375, height: 200)
             
             Group {
                 
-                ProductView(viewModel: .classicProfile)
+                preview(.classicProfile)
                     .previewDisplayName("classicProfile")
-                ProductView(viewModel: .accountProfile)
+                preview(.accountProfile)
                     .previewDisplayName("accountProfile")
             }
             .frame(width: 268, height: 160)
             
-            ProductView(viewModel: .depositProfile)
+            preview(.depositProfile)
                 .previewDisplayName("depositProfile")
                 .frame(width: 228, height: 160)
             
             Group {
                 
-                ProductView(viewModel: .classicSmall)
+                preview(.classicSmall)
                     .previewDisplayName("classicSmall")
-                ProductView(viewModel: .accountSmall)
+                preview(.accountSmall)
                     .previewDisplayName("accountSmall")
             }
             .frame(width: 112, height: 72)

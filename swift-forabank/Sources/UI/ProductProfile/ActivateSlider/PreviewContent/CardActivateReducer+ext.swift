@@ -15,7 +15,7 @@ public extension CardActivateReducer {
     ) -> CardActivateReducer {
         
         .init(
-            cardReduce: CardReducer().reduce,
+            cardReduce: CardReducer(activate: {}).reduce,
             sliderReduce: SliderReducer(maxOffsetX: maxOffsetX).reduce,
             maxOffset: maxOffsetX
         )

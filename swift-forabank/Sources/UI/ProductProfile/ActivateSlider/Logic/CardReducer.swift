@@ -10,9 +10,14 @@ import Foundation
 public final class CardReducer {
     
     private let sliderLifespan: DispatchTimeInterval
+    private let activate: () -> Void
     
-    public init(sliderLifespan: DispatchTimeInterval = .seconds(1)) {
+    public init(
+        sliderLifespan: DispatchTimeInterval = .seconds(1),
+        activate: @escaping () -> Void
+    ) {
         self.sliderLifespan = sliderLifespan
+        self.activate = activate
     }
 }
 
@@ -46,6 +51,7 @@ public extension CardReducer {
                 switch tap {
                 case .activate:
                     state = .status(.inflight)
+                    activate()
                     effect = .activate
                 case .cancel:
                     state = .status(nil)

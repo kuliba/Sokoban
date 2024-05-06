@@ -7,14 +7,24 @@
 
 import SwiftUI
 
-struct ActivateSliderView: View {
+public struct ActivateSliderView: View {
         
     let state: CardActivateState
     let event: (SliderEvent) -> Void
     
     let config: SliderConfig
+    
+    public init(
+        state: CardActivateState,
+        event: @escaping (SliderEvent) -> Void,
+        config: SliderConfig
+    ) {
+        self.state = state
+        self.event = event
+        self.config = config
+    }
         
-    var body: some View {
+    public var body: some View {
         
         VStack {
             

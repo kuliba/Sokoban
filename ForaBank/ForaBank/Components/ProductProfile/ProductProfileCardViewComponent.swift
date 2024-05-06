@@ -22,7 +22,7 @@ extension ProductProfileCardView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var selector: SelectorViewModel
-        @Published var products: [ProductView.ViewModel]
+        @Published var products: [ProductViewModel]
         @Published var activeProductId: ProductData.ID
         
         let productType: ProductType
@@ -36,7 +36,7 @@ extension ProductProfileCardView {
         
         fileprivate init(
             selector: SelectorViewModel,
-            products: [ProductView.ViewModel],
+            products: [ProductViewModel],
             activeProductId: ProductData.ID,
             productType: ProductType,
             model: Model = .emptyMock,
@@ -69,7 +69,7 @@ extension ProductProfileCardView {
             
             // generate products view models
             let productsWithRelated = Self.reduce(products: productsForType, with: model.products.value)
-            var productsViewModels = [ProductView.ViewModel]()
+            var productsViewModels = [ProductViewModel]()
             for product in productsWithRelated {
                 
                 let cvvInfo: CvvInfo? = {
@@ -83,7 +83,7 @@ extension ProductProfileCardView {
                     return nil
                 }()
                 
-                let productViewModel = ProductView.ViewModel(
+                let productViewModel = ProductViewModel(
                     with: product,
                     size: .large,
                     style: .profile,
@@ -180,7 +180,7 @@ extension ProductProfileCardView {
                         let productsWithRelated = Self.reduce(products: productsForType, with: productsData)
                         
                         // update products view models
-                        var updatedProducts = [ProductView.ViewModel]()
+                        var updatedProducts = [ProductViewModel]()
                         for product in productsWithRelated {
                             
                             if let productViewModel = self.products.first(where: { $0.id == product.id }) {
@@ -201,7 +201,7 @@ extension ProductProfileCardView {
                                     return nil
                                 }()
                                 
-                                let productViewModel = ProductView.ViewModel(
+                                let productViewModel = ProductViewModel(
                                     with: product,
                                     size: .large,
                                     style: .profile,
@@ -321,7 +321,7 @@ extension ProductProfileCardView {
                 }.store(in: &bindings)
         }
         
-        private func bind(_ product: ProductView.ViewModel) {
+        private func bind(_ product: ProductViewModel) {
             
             product.action
                 .receive(on: DispatchQueue.main)
@@ -529,9 +529,14 @@ struct ProductProfileCardView: View {
                             .opacity(0.3)
                             .blur(radius: 10)
                             .frame(width: 268 - 20, height: 165)
+                     
+                            GenericProductView(viewModel: product, factory: .init(makeSlider: { Color.red.frame(width: 32, height: 32) }))
+                                .frame(width: 268, height: 160)
+
                         
-                        ProductView(viewModel: product)
-                            .frame(width: 268, height: 160)
+
+                      /*  ProductView(viewModel: product)
+                            .frame(width: 268, height: 160)*/
                         
                     }.tag(product.id)
                 }

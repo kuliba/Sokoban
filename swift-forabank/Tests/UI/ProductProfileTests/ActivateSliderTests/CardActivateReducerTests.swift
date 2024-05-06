@@ -177,12 +177,13 @@ final class CardActivateReducerTestsTests: XCTestCase {
     private typealias Result = (State, Effect?)
     
     private func makeSUT(
+        activate: @escaping () -> Void = {},
         maxOffset: CGFloat = 100,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let cardReduce = CardReducer().reduce
+        let cardReduce = CardReducer(activate: activate).reduce
         let sliderReduce = SliderReducer(
             maxOffsetX: maxOffset
         ).reduce
