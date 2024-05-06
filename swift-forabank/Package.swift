@@ -193,6 +193,13 @@ let package = Package(
         .amountComponent,
         .buttonComponent,
         .infoComponent,
+        .checkBoxComponent,
+        .codeComponent,
+        .footerComponent,
+        .nameComponent,
+        .selectComponent,
+        .inputPhoneComponent,
+        .inputComponent,
         .paymentComponents,
         .productProfileComponents,
         .productSelectComponent,
@@ -471,6 +478,12 @@ private extension Product {
             .amountComponent,
             .buttonComponent,
             .carouselComponent,
+            .checkBoxComponent,
+            .footerComponent,
+            .nameComponent,
+            .selectComponent,
+            .inputComponent,
+            .inputPhoneComponent,
             .infoComponent,
             .paymentComponents,
             .productSelectComponent,
@@ -1115,6 +1128,7 @@ private extension Target {
         name: .operatorsListComponents,
         dependencies: [
             // internal packages
+            .rxViewModel,
             .prePaymentPicker,
             .remoteServices
         ]
@@ -1694,6 +1708,66 @@ private extension Target {
         path: "Sources/UI/Components/\(String.infoComponent)"
     )
     
+    static let checkBoxComponent = target(
+        name: .checkBoxComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.checkBoxComponent)"
+    )
+    
+    static let codeComponent = target(
+        name: .codeComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.codeComponent)"
+    )
+    
+    static let footerComponent = target(
+        name: .footerComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.footerComponent)"
+    )
+      
+    static let nameComponent = target(
+        name: .nameComponent,
+        dependencies: [
+            .inputComponent,
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.nameComponent)"
+    )
+       
+    static let selectComponent = target(
+        name: .selectComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.selectComponent)"
+    )
+    
+    static let inputPhoneComponent = target(
+        name: .inputPhoneComponent,
+        dependencies: [
+            .phoneNumberKit,
+            .phoneNumberWrapper,
+            .searchBarComponent,
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.inputPhoneComponent)"
+    )
+       
+    static let inputComponent = target(
+        name: .inputComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.inputComponent)"
+    )
+    
     static let paymentComponents = target(
         name: .paymentComponents,
         dependencies: [
@@ -1704,6 +1778,12 @@ private extension Target {
             .buttonComponent,
             .carouselComponent,
             .infoComponent,
+            .checkBoxComponent,
+            .footerComponent,
+            .nameComponent,
+            .selectComponent,
+            .inputComponent,
+            .inputPhoneComponent,
             .productSelectComponent,
             .rxViewModel,
             .sharedConfigs,
@@ -1754,7 +1834,11 @@ private extension Target {
             .foraTools,
             .paymentComponents,
             .productSelectComponent,
-            .prePaymentPicker
+            .prePaymentPicker,
+            .rxViewModel,
+            .textFieldComponent,
+            .searchBarComponent,
+            .phoneNumberWrapper
         ]
     )
     
@@ -2036,6 +2120,34 @@ private extension Target.Dependency {
         name: .infoComponent
     )
     
+    static let checkBoxComponent = byName(
+        name: .checkBoxComponent
+    )
+      
+    static let codeComponent = byName(
+        name: .codeComponent
+    )
+    
+    static let footerComponent = byName(
+        name: .footerComponent
+    )
+       
+    static let nameComponent = byName(
+        name: .nameComponent
+    )
+    
+    static let selectComponent = byName(
+        name: .selectComponent
+    )
+     
+    static let inputPhoneComponent = byName(
+        name: .inputPhoneComponent
+    )
+      
+    static let inputComponent = byName(
+        name: .inputComponent
+    )
+    
     static let paymentComponents = byName(
         name: .paymentComponents
     )
@@ -2264,6 +2376,20 @@ private extension String {
     static let buttonComponent = "ButtonComponent"
     
     static let infoComponent = "InfoComponent"
+    
+    static let checkBoxComponent = "CheckBoxComponent"
+    
+    static let codeComponent = "CodeComponent"
+    
+    static let footerComponent = "FooterComponent"
+    
+    static let nameComponent = "NameComponent"
+    
+    static let selectComponent = "SelectComponent"
+    
+    static let inputComponent = "InputComponent"
+    
+    static let inputPhoneComponent = "InputPhoneComponent"
     
     static let paymentComponents = "PaymentComponents"
     

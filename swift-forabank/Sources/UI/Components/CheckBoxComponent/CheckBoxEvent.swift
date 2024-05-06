@@ -1,5 +1,5 @@
 //
-//  InputEvent.swift
+//  CheckBoxEvent.swift
 //
 //
 //  Created by Дмитрий Савушкин on 04.03.2024.
@@ -7,8 +7,7 @@
 
 import Foundation
 
-public enum InputEvent {
+public enum CheckBoxEvent {
 
-    case updateText
-    case loadImage
+    case buttonTapped
 }

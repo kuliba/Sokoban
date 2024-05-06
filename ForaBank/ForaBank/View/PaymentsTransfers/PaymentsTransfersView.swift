@@ -241,7 +241,12 @@ struct PaymentsTransfersView: View {
                     ),
                     content: utilitiesDestinationView
                 )
-#warning("add nav bar")
+                .navigationBarTitle(Text("Услуги ЖКХ"), displayMode: .inline)
+                .navigationBarItems(trailing: Button(action: {}, label: {
+                    
+                    Image.ic24BarcodeScanner2
+                }))
+                .ignoresSafeArea(edges: .bottom)
         }
     }
     

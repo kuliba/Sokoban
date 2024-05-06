@@ -1,12 +1,13 @@
 //
-//  NameEvent.swift
-//  
+//  InputEvent.swift
+//
 //
 //  Created by Дмитрий Савушкин on 04.03.2024.
 //
 
 import Foundation
 
-enum NameEvent {
-    case changeState
+public enum InputEvent {
+
+    case edit(String)
 }
