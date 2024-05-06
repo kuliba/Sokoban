@@ -49,17 +49,26 @@ extension PaymentsTransfersViewModel {
     func event(_ event: Event) {
         
         let (state, effect) = reduce(state, event)
-        // routeSubject.send(state)
-        DispatchQueue.main.async { [weak self] in self?.state = state }
         
-        if let effect {
+        if let outside = state.route.outside {
             
-            rootActions.spinner.show()
+            self.state.route = .init()
+            self.handleOutside(outside)
             
-            navigationStateManager.handleEffect(effect) { [weak self] in
+        } else {
+            
+            // routeSubject.send(state)
+            DispatchQueue.main.async { [weak self] in self?.state = state }
+            
+            if let effect {
                 
-                self?.rootActions.spinner.hide()
-                self?.event($0)
+                rootActions.spinner.show()
+                
+                navigationStateManager.handleEffect(effect) { [weak self] in
+                    
+                    self?.rootActions.spinner.hide()
+                    self?.event($0)
+                }
             }
         }
     }
@@ -86,6 +95,8 @@ extension PaymentsTransfersViewModel.State {
         
         var destination: Destination?
         var modal: Modal?
+#warning("change to enum to make impossible simultaneous outside and destination/modal")
+        var outside: Outside?
     }
 }
 
@@ -101,15 +112,17 @@ extension PaymentsTransfersViewModel.State.Route {
         
         case paymentCancelled(expired: Bool)
     }
+    
+    enum Outside {
+        
+        case chat, main
+    }
 }
 
 // MARK: -
 
 private extension PaymentsTransfersViewModel {
     
-    // reduce is not injected due to
-    // - complexity of existing `PaymentsTransfersViewModel`
-    // - side effects (changes of outside state, like tab switching)
     private func reduce(
         _ state: State,
         _ event: Event
@@ -123,9 +136,7 @@ private extension PaymentsTransfersViewModel {
             state.route.modal = nil
             
         case .goToMain:
-#warning("FIXME")
-            state.route = .init()
-            print("go to main")
+            state.route.outside = .main
             
         case let .setModal(to: modal):
             state.route.modal = modal
@@ -179,7 +190,7 @@ private extension PaymentsTransfersViewModel {
             
         case .dismissFullScreenCover:
             state.route.setFullScreenCover(to: nil)
-
+            
         case .dismissPaymentError:
             state.route.destination = nil
             
@@ -225,8 +236,7 @@ private extension PaymentsTransfersViewModel {
         
         switch event {
         case .addCompany:
-            state.route.destination = nil
-            rootActions.switchTab("chat")
+            state.route.outside = .chat
             
         case .dismissAlert:
             state.route.setUtilityPrepaymentAlert(to: nil)
@@ -329,6 +339,25 @@ private extension PaymentsTransfersViewModel {
         switch event {
         case .dismissAlert:
             state.route.setUtilityServicePickerAlert(to: nil)
+        }
+    }
+    
+    // MARK: - outside
+    
+    private func handleOutside(
+        _ outside: State.Route.Outside
+    ) {
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + 0.3
+        ) { [weak self] in
+            
+            switch outside {
+            case .chat:
+                self?.rootActions.switchTab("chat")
+                
+            case .main:
+                self?.rootActions.switchTab("main")
+            }
         }
     }
 }
