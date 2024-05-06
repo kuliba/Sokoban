@@ -59,6 +59,6 @@ final class ObservingPaymentFlowMockViewModel: ObservableObject {
 extension ObservingPaymentFlowMockViewModel {
     
     typealias State = PaymentFlowMockState
-    typealias Projection = PaymentsTransfersViewModelFactory.PaymentStateProjection
+    typealias Projection = PaymentsTransfersReducerFactory.PaymentStateProjection
     typealias Notify = (Projection) -> Void
 }

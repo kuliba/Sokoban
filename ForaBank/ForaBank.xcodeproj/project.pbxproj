@@ -774,6 +774,9 @@
 		2A6724122ADB30D000FAD522 /* KeyChainStore+Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6724112ADB30D000FAD522 /* KeyChainStore+Store.swift */; };
 		2A6724142ADB313A00FAD522 /* KeyTagKeyChainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6724132ADB313A00FAD522 /* KeyTagKeyChainStore.swift */; };
 		2A67A01E2A433135003BE637 /* MosParkingDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A67A01D2A433135003BE637 /* MosParkingDataMapper.swift */; };
+		2A6930302BE8C95800C9B6D2 /* PaymentsTransfersReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69302F2BE8C95800C9B6D2 /* PaymentsTransfersReducer.swift */; };
+		2A6930322BE8CCEB00C9B6D2 /* PaymentsTransfersReducerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6930312BE8CCEB00C9B6D2 /* PaymentsTransfersReducerFactory.swift */; };
+		2A6930342BE8DB1500C9B6D2 /* PaymentsTransfersReducerFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6930332BE8DB1500C9B6D2 /* PaymentsTransfersReducerFactory+preview.swift */; };
 		2A69C1AD2BE4E3AF00FE91B0 /* UtilityServicePaymentFlowPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C1AC2BE4E3AF00FE91B0 /* UtilityServicePaymentFlowPreviewApp.swift */; };
 		2A69C1AF2BE4E3AF00FE91B0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C1AE2BE4E3AF00FE91B0 /* ContentView.swift */; };
 		2A69C1B12BE4E3B100FE91B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A69C1B02BE4E3B100FE91B0 /* Assets.xcassets */; };
@@ -3562,6 +3565,9 @@
 		2A6724112ADB30D000FAD522 /* KeyChainStore+Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyChainStore+Store.swift"; sourceTree = "<group>"; };
 		2A6724132ADB313A00FAD522 /* KeyTagKeyChainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyTagKeyChainStore.swift; sourceTree = "<group>"; };
 		2A67A01D2A433135003BE637 /* MosParkingDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingDataMapper.swift; sourceTree = "<group>"; };
+		2A69302F2BE8C95800C9B6D2 /* PaymentsTransfersReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersReducer.swift; sourceTree = "<group>"; };
+		2A6930312BE8CCEB00C9B6D2 /* PaymentsTransfersReducerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersReducerFactory.swift; sourceTree = "<group>"; };
+		2A6930332BE8DB1500C9B6D2 /* PaymentsTransfersReducerFactory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersReducerFactory+preview.swift"; sourceTree = "<group>"; };
 		2A69C1AA2BE4E3AF00FE91B0 /* UtilityServicePaymentFlowPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UtilityServicePaymentFlowPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A69C1AC2BE4E3AF00FE91B0 /* UtilityServicePaymentFlowPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowPreviewApp.swift; sourceTree = "<group>"; };
 		2A69C1AE2BE4E3AF00FE91B0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -8023,6 +8029,8 @@
 				2A69C2122BE514BC00FE91B0 /* PaymentsTransfersEffect.swift */,
 				2A69C1C52BE4E78A00FE91B0 /* PaymentsTransfersViewModel.swift */,
 				2A69C2142BE5155800FE91B0 /* PaymentsTransfersFlowManager.swift */,
+				2A69302F2BE8C95800C9B6D2 /* PaymentsTransfersReducer.swift */,
+				2A6930312BE8CCEB00C9B6D2 /* PaymentsTransfersReducerFactory.swift */,
 				2A69C2182BE5164E00FE91B0 /* PaymentsTransfersEffectHandler.swift */,
 				2A69C1C72BE4E79C00FE91B0 /* PaymentsTransfersViewModelFactory.swift */,
 				2A69C1C92BE4E8D500FE91B0 /* PaymentsTransfersView.swift */,
@@ -8043,6 +8051,7 @@
 				2A69C1CE2BE4E96C00FE91B0 /* PaymentsTransfersViewModel+preview.swift */,
 				2A69C2162BE5162900FE91B0 /* PaymentsTransfersFlowManager+preview.swift */,
 				2A69C1D02BE4E98E00FE91B0 /* PaymentsTransfersViewModelFactory+preview.swift */,
+				2A6930332BE8DB1500C9B6D2 /* PaymentsTransfersReducerFactory+preview.swift */,
 				2A69C1D22BE4E9A700FE91B0 /* PaymentsTransfersViewModel.State+preview.swift */,
 				2A69C2002BE4FCD100FE91B0 /* PaymentsTransfersDestinationViewFactory+preview.swift */,
 			);
@@ -15781,6 +15790,7 @@
 				2A3BF0722BE63FD60099FBD3 /* UtilityPaymentFlowState.swift in Sources */,
 				2A69C1E72BE4F8F800FE91B0 /* LastPayment.swift in Sources */,
 				2A3BF09C2BE78A830099FBD3 /* OperatorFailureFlowView.swift in Sources */,
+				2A6930322BE8CCEB00C9B6D2 /* PaymentsTransfersReducerFactory.swift in Sources */,
 				2A69C2112BE5135200FE91B0 /* Operator+preview.swift in Sources */,
 				2A69C1D92BE4F03800FE91B0 /* RootActions+preview.swift in Sources */,
 				2A69C21B2BE53E4000FE91B0 /* UtilityService.swift in Sources */,
@@ -15795,6 +15805,7 @@
 				2A3BF0862BE6921E0099FBD3 /* PaymentFlowMockView.swift in Sources */,
 				2A69C2152BE5155800FE91B0 /* PaymentsTransfersFlowManager.swift in Sources */,
 				2A69C2242BE61CFC00FE91B0 /* Array.LastPayment+preview.swift in Sources */,
+				2A6930342BE8DB1500C9B6D2 /* PaymentsTransfersReducerFactory+preview.swift in Sources */,
 				2A69C1F72BE4FBAB00FE91B0 /* UtilityPrepaymentEvent.swift in Sources */,
 				2A3BF0942BE773F40099FBD3 /* UtilityPrepaymentFlowView.swift in Sources */,
 				2A3BF0902BE76B670099FBD3 /* PaymentFlowModalView.swift in Sources */,
@@ -15814,6 +15825,7 @@
 				2A69C21D2BE53EDE00FE91B0 /* ServiceFailure.swift in Sources */,
 				2A3BF0762BE643E70099FBD3 /* UtilityPaymentFlowEffect.swift in Sources */,
 				2A69C1C82BE4E79C00FE91B0 /* PaymentsTransfersViewModelFactory.swift in Sources */,
+				2A6930302BE8C95800C9B6D2 /* PaymentsTransfersReducer.swift in Sources */,
 				2A69C1FB2BE4FBD900FE91B0 /* UtilityPrepaymentReducer.swift in Sources */,
 				2A3BF0742BE641410099FBD3 /* UtilityPaymentFlowEvent.swift in Sources */,
 				2A69C2222BE60AC900FE91B0 /* View+ext.swift in Sources */,

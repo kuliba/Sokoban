@@ -8,6 +8,7 @@
 struct PaymentsTransfersFlowManager {
     
     let handleEffect: HandleEffect
+    let makeReduce: MakeReduce
 }
 
 extension PaymentsTransfersFlowManager {
@@ -15,6 +16,11 @@ extension PaymentsTransfersFlowManager {
     typealias Dispatch = (Event) -> Void
     typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
     
+    typealias Reduce = (State, Event) -> (State, Effect?)
+    typealias Notify = (PaymentsTransfersReducerFactory.PaymentStateProjection) -> Void
+    typealias MakeReduce = (@escaping Notify) -> Reduce
+    
+    typealias State = PaymentsTransfersViewModel.State.Route
     typealias Event = PaymentsTransfersEvent
     typealias Effect = PaymentsTransfersEffect
 }

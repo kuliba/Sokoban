@@ -16,5 +16,5 @@ enum UtilityServicePaymentFlowEvent: Equatable {
 
 extension UtilityServicePaymentFlowEvent {
     
-    typealias PaymentStateProjection = PaymentsTransfersViewModelFactory.PaymentStateProjection
+    typealias PaymentStateProjection = PaymentsTransfersReducerFactory.PaymentStateProjection
 }
