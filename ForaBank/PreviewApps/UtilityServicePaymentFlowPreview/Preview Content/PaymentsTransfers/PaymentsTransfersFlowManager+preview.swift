@@ -29,7 +29,11 @@ extension PaymentsTransfersFlowManager {
         )
         
         return .init(
-            handleEffect: effectHandler.handleEffect(_:_:)
+            handleEffect: effectHandler.handleEffect(_:_:),
+            makeReducer: {
+                
+                return .init(factory: .preview, notify: $0)
+            }
         )
     }
 }
