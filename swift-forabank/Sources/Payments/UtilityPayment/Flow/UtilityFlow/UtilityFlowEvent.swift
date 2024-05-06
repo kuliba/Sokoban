@@ -1,5 +1,5 @@
 //
-//  UtilityPaymentFlowEvent.swift
+//  UtilityFlowEvent.swift
 //  
 //
 //  Created by Igor Malyarov on 15.03.2024.

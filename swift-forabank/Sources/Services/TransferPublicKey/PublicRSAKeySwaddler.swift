@@ -75,7 +75,7 @@ public final class PublicRSAKeySwaddler<OTP, PrivateKey, PublicKey> {
                 dump(exponent.hexEncodedString())
                 dump(exponent.base64EncodedString())
             } catch {
-                print(">>> ", errorMessage.localizedDescription, "\(#file):\(#line)")
+                print(">>> ", error.localizedDescription, "\(#file):\(#line)")
             }
         }
 #endif
