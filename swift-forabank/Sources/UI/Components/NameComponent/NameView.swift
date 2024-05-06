@@ -135,7 +135,7 @@ private extension InputConfig {
         placeholder: "placeholder",
         hintConfig: .init(textFont: .system(size: 10), textColor: .gray.opacity(0.7)),
         backgroundColor: .clear,
-        imageSize: .small
+        imageSize: 16
     )
 }
 

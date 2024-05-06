@@ -9,9 +9,6 @@ import Foundation
 import SwiftUI
 import SharedConfigs
 
-//0. Перенести в UIComponents
-//3. Добавить Reducer (ProductSelectComponent)
-
 public struct SelectView: View {
     
     var state: SelectUIState
@@ -35,14 +32,14 @@ public struct SelectView: View {
     public var body: some View {
         
         switch state.state {
-        case let .collapsed(option):
+        case let .collapsed(selectOption, options):
             
-            horizontalView(option)
+            horizontalView(selectOption)
                 .padding(.horizontal, 16)
                 .background(Color.gray.opacity(0.1))
                 .cornerRadius(12)
                 .onTapGesture {
-                    event(.chevronTapped)
+                    event(.chevronTapped(options: options, selectOption: selectOption))
                 }
             
         case let .expanded(_, options, _):
@@ -68,11 +65,7 @@ public struct SelectView: View {
             
             VStack(spacing: 20) {
                 
-                ForEach(options, id: \.id) { option in
-                    
-                    optionView(option)
-                    
-                }
+                ForEach(options, content: optionView)
             }
         }
         .frame(height: 200)
@@ -100,10 +93,10 @@ public struct SelectView: View {
             }
             
             switch state.state {
-            case let .collapsed(option):
+            case let .collapsed(selectOption, options):
                 
-                Text(option?.title ?? config.title)
-                    .foregroundColor(option?.title != nil ? .black : Color.gray.opacity(0.6))
+                Text(selectOption?.title ?? config.title)
+                    .foregroundColor(selectOption?.title != nil ? .black : Color.gray.opacity(0.6))
                     .frame(height: 72, alignment: .center)
                 
             case .expanded:
@@ -142,7 +135,7 @@ public struct SelectView: View {
             
             chevronButton()
                 .onTapGesture {
-                    event(.chevronTapped)
+                    event(.chevronTapped(options: self.state.state.options, selectOption: option))
                 }
         }
     }
@@ -162,7 +155,7 @@ public struct SelectView: View {
         _ option: SelectState.Option
     ) -> some View {
         
-        Button(action: { event(.optionTapped) }) {
+        Button(action: { event(.optionTapped(option)) }) {
             
             HStack(alignment: .top, spacing: 20) {
                 
@@ -191,7 +184,7 @@ public struct SelectView: View {
     
     private func chevronButton() -> some View {
         
-        Button(action: { event(.chevronTapped) }, label: {
+        Button(action: { event(.chevronTapped(options: self.state.state.options, selectOption: nil)) }, label: {
             
             switch state.state {
             case .collapsed:
@@ -220,7 +213,7 @@ public struct SelectView: View {
             (option.isSelected ? config.icon : config.selectIcon)
                 .resizable()
                 .renderingMode(.template)
-                .frame(width: CGFloat(config.kind.rawValue), height: CGFloat(config.kind.rawValue))
+                .frame(width: config.size, height: config.size)
                 .foregroundColor(option.isSelected ? config.selectForeground : config.foreground)
         }
     }
@@ -230,14 +223,14 @@ struct SelectView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        selectView(.preview, .collapsed(option: nil))
+        selectView(.preview, .collapsed(option: nil, options: []))
             .previewDisplayName("collapse")
         
         selectView(.preview, .collapsed(option: .init(
             id: UUID().description,
             title: "Имущественный налог",
             isSelected: false
-        )))
+        ), options: []))
         .previewDisplayName("collapse with Option")
         
         
@@ -325,7 +318,7 @@ struct SelectView_Previews: PreviewProvider {
             selectForeground: .red,
             selectBackground: .clear,
             mainBackground: .clear,
-            kind: .normal
+            size: 24
         )
     }
     
@@ -371,7 +364,7 @@ public extension SelectConfig.OptionConfig {
         selectForeground: .blue,
         selectBackground: .blue,
         mainBackground: .green,
-        kind: .small
+        size: 16
     )
 }
 

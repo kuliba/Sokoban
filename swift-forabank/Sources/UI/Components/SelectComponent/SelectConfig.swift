@@ -61,7 +61,7 @@ public extension SelectConfig {
         
         let mainBackground: Color
         
-        let kind: Kind
+        let size: CGFloat
         
         public init(
             icon: Image,
@@ -71,7 +71,7 @@ public extension SelectConfig {
             selectForeground: Color,
             selectBackground: Color,
             mainBackground: Color,
-            kind: Kind
+            size: CGFloat
         ) {
             self.icon = icon
             self.foreground = foreground
@@ -80,13 +80,7 @@ public extension SelectConfig {
             self.selectForeground = selectForeground
             self.selectBackground = selectBackground
             self.mainBackground = mainBackground
-            self.kind = kind
-        }
-        
-        public enum Kind: Int {
-            
-            case small = 16
-            case normal = 24
+            self.size = size
         }
     }
 }
