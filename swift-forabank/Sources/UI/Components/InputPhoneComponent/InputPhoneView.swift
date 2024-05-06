@@ -36,20 +36,17 @@ public struct InputPhoneView: View {
             
             switch state {
             case .placeholder:
-                Text(config.placeholder)
-                    .foregroundColor(config.placeholderForeground)
+                config.placeholder.text(withConfig: config.placeholderConfig)
                 
-            case .entered:
+            case let .entered(text):
                 VStack(alignment: .leading, spacing: 0) {
                     
-                    Text(config.title)
-                        .font(config.titleFont)
-                        .foregroundColor(config.titleForeground)
+                    config.title.text(withConfig: config.titleConfig)
                         .multilineTextAlignment(.leading)
                     
                     TextFieldComponent.TextFieldView(
                         viewModel: TextFieldFactory.makePhoneKitTextField(
-                            initialPhoneNumber: "7 982",
+                            initialPhoneNumber: text,
                             placeholderText:
                                 config.placeholder,
                             filterSymbols: [],
@@ -85,60 +82,15 @@ public struct InputPhoneView: View {
     }
 }
 
-public extension InputPhoneView {
-    
-    struct InputPhoneConfig {
-        
-        let icon: Image
-        let iconForeground: Color
-        
-        let placeholder: String
-        let placeholderForeground: Color
-        
-        let title: String
-        let titleFont: Font
-        let titleForeground: Color
-        
-        let buttonIcon: Image
-        let buttonForeground: Color
-        
-        let textFieldConfig: TextFieldView.TextFieldConfig
-        
-        public init(
-            icon: Image,
-            iconForeground: Color,
-            placeholder: String,
-            placeholderForeground: Color,
-            title: String,
-            titleFont: Font,
-            titleForeground: Color,
-            buttonIcon: Image,
-            buttonForeground: Color,
-            textFieldConfig: TextFieldView.TextFieldConfig
-        ) {
-            self.icon = icon
-            self.iconForeground = iconForeground
-            self.placeholder = placeholder
-            self.placeholderForeground = placeholderForeground
-            self.title = title
-            self.titleFont = titleFont
-            self.titleForeground = titleForeground
-            self.buttonIcon = buttonIcon
-            self.buttonForeground = buttonForeground
-            self.textFieldConfig = textFieldConfig
-        }
-    }
-}
-public extension InputPhoneView.InputPhoneConfig {
+public extension InputPhoneConfig {
     
     static let preview: Self = .init(
         icon: .init(systemName: "iphone"),
         iconForeground: .gray.opacity(0.7),
         placeholder: "Введите номер телефона",
-        placeholderForeground: .gray.opacity(0.7),
+        placeholderConfig: .init(textFont: .body, textColor: .gray.opacity(0.7)),
         title: "Номер телефона",
-        titleFont: .system(size: 14),
-        titleForeground: .gray.opacity(0.7),
+        titleConfig: .init(textFont: .system(size: 14), textColor: .gray.opacity(0.7)),
         buttonIcon: .init(systemName: "person"),
         buttonForeground: .gray.opacity(0.7),
         textFieldConfig: .preview
@@ -157,7 +109,7 @@ struct InputPhoneView_Previews: PreviewProvider {
             )
             
             InputPhoneView(
-                state: .entered,
+                state: .entered("7 982"),
                 event: { _ in },
                 config: .preview
             )

@@ -55,7 +55,7 @@ public struct InputView<Icon, IconView: View>: View {
                 HStack(alignment: .center, spacing: 16) {
                     
                     Color.clear
-                        .frame(width: config.imageSize.rawValue, height: config.imageSize.rawValue, alignment: .leading)
+                        .frame(width: config.imageSize, height: config.imageSize, alignment: .leading)
                     
                     Text(hint)
                         .font(config.hintConfig.textFont)
@@ -63,7 +63,7 @@ public struct InputView<Icon, IconView: View>: View {
                 }
             }
         }
-        .padding(.horizontal, config.imageSize == .small ? 16 : 12)
+        .padding(.horizontal, config.imageSize == 16 ? 16 : 12)
         .padding(.vertical, 13)
         .background(config.backgroundColor)
         .cornerRadius(12)
@@ -78,7 +78,7 @@ public extension InputConfig {
         placeholder: "Введите лицевой счет",
         hintConfig: .init(textFont: .body, textColor: .gray),
         backgroundColor: .gray.opacity(0.1),
-        imageSize: .small
+        imageSize: 16
     )
 }
 

@@ -7,4 +7,7 @@
 
 import Foundation
 
-public struct InputPhoneEvent {}
+public enum InputPhoneEvent {
+    
+    case edit(String)
+}

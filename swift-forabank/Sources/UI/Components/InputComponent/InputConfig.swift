@@ -16,7 +16,7 @@ public struct InputConfig {
     let placeholder: String
     let hintConfig: TextConfig
     public let backgroundColor: Color
-    let imageSize: ImageSize
+    let imageSize: CGFloat
     
     public init(
         titleConfig: TextConfig,
@@ -24,7 +24,7 @@ public struct InputConfig {
         placeholder: String,
         hintConfig: TextConfig,
         backgroundColor: Color,
-        imageSize: InputConfig.ImageSize
+        imageSize: CGFloat
     ) {
         self.titleConfig = titleConfig
         self.textFieldFont = textFieldFont
@@ -32,11 +32,5 @@ public struct InputConfig {
         self.hintConfig = hintConfig
         self.backgroundColor = backgroundColor
         self.imageSize = imageSize
-    }
-    
-    public enum ImageSize: CGFloat {
-        
-        case small = 24
-        case large = 32
     }
 }
