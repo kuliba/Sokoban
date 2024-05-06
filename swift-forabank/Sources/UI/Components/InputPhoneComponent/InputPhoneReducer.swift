@@ -19,7 +19,6 @@ extension InputPhoneReducer {
         switch event {
         case let .edit(text):
             return .entered(text)
-            
         }
     }
 }
