@@ -52,7 +52,9 @@ platform :ios do
       scheme: ENV["XCODE_SCHEME_TESTS"],
       devices: ['iPhone 11 Pro Max (16.4)'],
       clean: true,
-      suppress_xcode_output: true)
+      suppress_xcode_output: false,
+      parallel_testing: true,
+      concurrent_workers: 2)
 
   end
 
