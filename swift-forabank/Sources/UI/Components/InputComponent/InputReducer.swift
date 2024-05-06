@@ -12,9 +12,9 @@ final class InputReducer<Icon> {}
 extension InputReducer {
     
     func reduce(
-        _ state: State<Icon>,
+        _ state: State,
         _ event: Event
-    ) -> State<Icon> {
+    ) -> State {
         
         switch event {
         case let .edit(text):
@@ -28,6 +28,6 @@ extension InputReducer {
 
 extension InputReducer {
     
-    typealias State = InputState
+    typealias State = InputState<Icon>
     typealias Event = InputEvent
 }
