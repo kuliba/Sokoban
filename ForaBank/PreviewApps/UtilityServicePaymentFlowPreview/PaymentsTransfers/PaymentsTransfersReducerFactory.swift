@@ -1,17 +1,16 @@
 //
-//  PaymentsTransfersViewModelFactory.swift
+//  PaymentsTransfersReducerFactory.swift
 //  UtilityServicePaymentFlowPreview
 //
-//  Created by Igor Malyarov on 03.05.2024.
+//  Created by Igor Malyarov on 06.05.2024.
 //
 
-struct PaymentsTransfersViewModelFactory {
-    #warning("remove MakePaymentViewModel")
+struct PaymentsTransfersReducerFactory {
+    
     let makePaymentViewModel: MakePaymentViewModel
-    let makeUtilityPrepaymentViewModel: MakeUtilityPrepaymentViewModel
 }
 
-extension PaymentsTransfersViewModelFactory {
+extension PaymentsTransfersReducerFactory {
     
     typealias MakePaymentViewModelPayload = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent
         .StartPaymentSuccess.StartPaymentResponse
@@ -25,12 +24,10 @@ extension PaymentsTransfersViewModelFactory {
     typealias Notify = (PaymentStateProjection) -> Void
     typealias PaymentViewModel = ObservingPaymentFlowMockViewModel
     typealias MakePaymentViewModel = (MakePaymentViewModelPayload, @escaping Notify) -> PaymentViewModel
-    
-    typealias MakeUtilityPrepaymentViewModelCompletion = (UtilityPrepaymentViewModel) -> Void
-    typealias MakeUtilityPrepaymentViewModel = (@escaping MakeUtilityPrepaymentViewModelCompletion) -> Void
 }
 
-extension PaymentsTransfersViewModelFactory.PaymentStateProjection {
+extension PaymentsTransfersReducerFactory.PaymentStateProjection {
     
     typealias Fraud = UtilityServicePaymentFlowState.Modal.Fraud
 }
+
