@@ -256,7 +256,7 @@ private extension PaymentsTransfersViewModel {
         return (state, effect)
     }
     
-    func payByInstructions(
+    private func payByInstructions(
         _ state: inout State
     ) {
         switch state.route.utilityPrepaymentDestination {
@@ -271,7 +271,7 @@ private extension PaymentsTransfersViewModel {
         }
     }
     
-    func reduce(
+    private func reduce(
         _ state: inout State,
         _ result: UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentResult
     ) {
@@ -322,7 +322,7 @@ private extension PaymentsTransfersViewModel {
         }
     }
     
-    func reduce(
+    private func reduce(
         _ state: inout State,
         _ event: UtilityPaymentFlowEvent.ServicePickerFlowEvent
     ) {
