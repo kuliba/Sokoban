@@ -9,36 +9,44 @@ import SwiftUI
 import TextFieldComponent
 import SearchBarComponent
 
-struct InputPhoneView: View {
+public struct InputPhoneView: View {
     
     let state: InputPhoneState
-    let event: InputPhoneEvent
+    let event: (InputPhoneEvent) -> Void
     let config: InputPhoneConfig
     
-    var body: some View {
+    public init(
+        state: InputPhoneState,
+        event: @escaping (InputPhoneEvent) -> Void,
+        config: InputPhoneConfig
+    ) {
+        self.state = state
+        self.event = event
+        self.config = config
+    }
+    
+    public var body: some View {
         
         HStack(spacing: 12) {
             
             config.icon
+                .resizable()
                 .frame(width: 24, height: 24, alignment: .center)
                 .foregroundColor(config.iconForeground)
             
             switch state {
             case .placeholder:
-                Text(config.placeholder)
-                    .foregroundColor(config.placeholderForeground)
+                config.placeholder.text(withConfig: config.placeholderConfig)
                 
-            case .entered:
+            case let .entered(text):
                 VStack(alignment: .leading, spacing: 0) {
                     
-                    Text(config.title)
-                        .font(config.titleFont)
-                        .foregroundColor(config.titleForeground)
+                    config.title.text(withConfig: config.titleConfig)
                         .multilineTextAlignment(.leading)
                     
                     TextFieldComponent.TextFieldView(
                         viewModel: TextFieldFactory.makePhoneKitTextField(
-                            initialPhoneNumber: "7 982",
+                            initialPhoneNumber: text,
                             placeholderText:
                                 config.placeholder,
                             filterSymbols: [],
@@ -60,6 +68,7 @@ struct InputPhoneView: View {
                 label: {
                     
                     config.buttonIcon
+                        .resizable()
                         .frame(width: 24, height: 24, alignment: .center)
                         .foregroundColor(config.buttonForeground)
                 })
@@ -73,25 +82,19 @@ struct InputPhoneView: View {
     }
 }
 
-extension InputPhoneView {
+public extension InputPhoneConfig {
     
-    struct InputPhoneConfig {
-        
-        let icon: Image
-        let iconForeground: Color
-        
-        let placeholder: String
-        let placeholderForeground: Color
-        
-        let title: String
-        let titleFont: Font
-        let titleForeground: Color
-        
-        let buttonIcon: Image
-        let buttonForeground: Color
-        
-        let textFieldConfig: TextFieldView.TextFieldConfig
-    }
+    static let preview: Self = .init(
+        icon: .init(systemName: "iphone"),
+        iconForeground: .gray.opacity(0.7),
+        placeholder: "Введите номер телефона",
+        placeholderConfig: .init(textFont: .body, textColor: .gray.opacity(0.7)),
+        title: "Номер телефона",
+        titleConfig: .init(textFont: .system(size: 14), textColor: .gray.opacity(0.7)),
+        buttonIcon: .init(systemName: "person"),
+        buttonForeground: .gray.opacity(0.7),
+        textFieldConfig: .preview
+    )
 }
 
 struct InputPhoneView_Previews: PreviewProvider {
@@ -101,39 +104,16 @@ struct InputPhoneView_Previews: PreviewProvider {
             
             InputPhoneView(
                 state: .placeholder,
-                event: .init(),
-                config: .init(
-                    icon: .init(systemName: "photo.artframe"),
-                    iconForeground: .gray.opacity(0.7),
-                    placeholder: "Введите номер телефона",
-                    placeholderForeground: .gray.opacity(0.7),
-                    title: "Номер телефона",
-                    titleFont: .system(size: 14),
-                    titleForeground: .gray.opacity(0.7),
-                    buttonIcon: .init(systemName: "person"),
-                    buttonForeground: .gray.opacity(0.7),
-                    textFieldConfig: .preview
-                )
+                event: { _ in },
+                config: .preview
             )
-            .padding(20)
             
             InputPhoneView(
-                state: .entered,
-                event: .init(),
-                config: .init(
-                    icon: .init(systemName: "photo.artframe"),
-                    iconForeground: .gray.opacity(0.7),
-                    placeholder: "Введите номер телефона",
-                    placeholderForeground: .gray.opacity(0.7),
-                    title: "Номер телефона",
-                    titleFont: .system(size: 14),
-                    titleForeground: .gray.opacity(0.7),
-                    buttonIcon: .init(systemName: "person"),
-                    buttonForeground: .gray.opacity(0.7),
-                    textFieldConfig: .preview
-                )
+                state: .entered("7 982"),
+                event: { _ in },
+                config: .preview
             )
-            .padding(20)
         }
+        .padding(20)
     }
 }

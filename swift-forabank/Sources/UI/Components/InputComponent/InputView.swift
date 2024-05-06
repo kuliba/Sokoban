@@ -6,22 +6,25 @@
 //
 
 import SwiftUI
+import SharedConfigs
 
-public struct InputView: View {
-    
-    @State private var text: String = ""
-    let state: InputState
+public struct InputView<Icon, IconView: View>: View {
+
+    let state: InputState<Icon>
     let event: (InputEvent) -> Void
-    let config: Config
+    let config: InputConfig
+    let iconView: () -> IconView
     
     public init(
-        state: InputState,
+        state: InputState<Icon>,
         event: @escaping (InputEvent) -> Void,
-        config: InputView.Config
+        config: InputConfig,
+        iconView: @escaping () -> IconView
     ) {
         self.state = state
         self.event = event
         self.config = config
+        self.iconView = iconView
     }
     
     public var body: some View {
@@ -30,102 +33,52 @@ public struct InputView: View {
             
             HStack(alignment: .center, spacing: 16) {
                 
-                state.image()
-                    .resizable()
-                    .frame(width: config.imageSize.rawValue, height: config.imageSize.rawValue, alignment: .center)
+                iconView()
                 
                 VStack(alignment: .leading, spacing: 4) {
                     
-                    Text(config.title)
-                        .font(config.titleFont)
-                        .foregroundColor(config.titleColor)
+                    state.settings.title.text(withConfig: config.titleConfig)
                     
-                    TextField(config.placeholder, text: $text)
+                    
+                    TextField(
+                        config.placeholder,
+                        text: .init(
+                            get: { state.dynamic.value },
+                            set: { event(.edit($0)) }
+                        )
+                    )
                 }
             }
             
-            if let hint = config.hint {
+            if let hint = state.settings.hint {
                 
                 HStack(alignment: .center, spacing: 16) {
                     
                     Color.clear
-                        .frame(width: config.imageSize.rawValue, height: config.imageSize.rawValue, alignment: .leading)
+                        .frame(width: config.imageSize, height: config.imageSize, alignment: .leading)
                     
                     Text(hint)
-                        .font(config.hintFont)
-                        .foregroundColor(config.hintColor)
+                        .font(config.hintConfig.textFont)
+                        .foregroundColor(config.hintConfig.textColor)
                 }
             }
         }
-        .padding(.horizontal, config.imageSize == .small ? 16 : 12)
+        .padding(.horizontal, config.imageSize == 16 ? 16 : 12)
         .padding(.vertical, 13)
         .background(config.backgroundColor)
         .cornerRadius(12)
     }
-    
-    public struct Config {
-        
-        public let title: String
-        public let titleFont: Font
-        public let titleColor: Color
-        
-        public let textFieldFont: Font
-        
-        public let placeholder: String
-        
-        public let hint: String?
-        public let hintFont: Font
-        public let hintColor: Color
-        
-        public let backgroundColor: Color
-        
-        public let imageSize: ImageSize
-        
-        public init(
-            title: String,
-            titleFont: Font,
-            titleColor: Color,
-            textFieldFont: Font,
-            placeholder: String,
-            hint: String? = nil,
-            hintFont: Font,
-            hintColor: Color,
-            backgroundColor: Color,
-            imageSize: InputView.Config.ImageSize
-        ) {
-            self.title = title
-            self.titleFont = titleFont
-            self.titleColor = titleColor
-            self.textFieldFont = textFieldFont
-            self.placeholder = placeholder
-            self.hint = hint
-            self.hintFont = hintFont
-            self.hintColor = hintColor
-            self.backgroundColor = backgroundColor
-            self.imageSize = imageSize
-        }
-        
-        public enum ImageSize: CGFloat {
-            
-            case small = 24
-            case large = 32
-        }
-    }
 }
 
-private extension InputView.Config {
+public extension InputConfig {
     
     static let preview: Self = .init(
-        title: "Лицевой счет",
-        titleFont: .title3,
-        titleColor: .gray,
-        textFieldFont: .body,
+        titleConfig: .init(textFont: .title3, textColor: .gray),
+        textFieldFont: .init(textFont: .title3, textColor: .gray),
         placeholder: "Введите лицевой счет",
-        hint: nil,
-        hintFont: .body,
-        hintColor: .gray,
+        hintConfig: .init(textFont: .body, textColor: .gray),
         backgroundColor: .gray.opacity(0.1),
-        imageSize: .large
+        imageSize: 16
     )
 }
 
@@ -135,18 +88,39 @@ struct InputView_Previews: PreviewProvider {
         Group {
             
             InputView(
-                state: .init(image: { .init(systemName: "photo.artframe") }),
+                state: .preview,
                 event: { _ in },
-                config: .preview
+                config: .preview,
+                iconView: { Text("Icon view") }
             )
-            .padding(20)
-            
-            InputView(
-                state: .init(image: { .init(systemName: "photo.artframe") }),
-                event: { _ in },
-                config: .preview
-            )
-            .padding(20)
         }
+        .padding(20)
     }
+}
+
+extension InputState where Icon == String {
+    
+    static var preview: Self = .init(
+        dynamic: .preview,
+        settings: .preview
+    )
+}
+
+private extension InputState.Dynamic where Icon == String {
+    
+    static var preview: Self = .init(
+        value: "some value",
+        warning: nil
+    )
+}
+
+private extension InputState.Settings where Icon == String {
+    
+    static var preview: Self = .init(
+        hint: "hint here",
+        icon: "inputIcon",
+        keyboard: .default,
+        title: "input title",
+        subtitle: "input subtitle"
+    )
 }

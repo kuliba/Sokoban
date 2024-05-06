@@ -9,26 +9,40 @@ import Foundation
 import SwiftUI
 import SharedConfigs
 
-struct SelectView: View {
+public struct SelectView: View {
     
-    let state: SelectState
+    var state: SelectUIState
     let event: (SelectEvent) -> Void
-    let config: Config
+    let config: SelectConfig
     
     var searchText: String
     
-    var body: some View {
+    public init(
+        state: SelectUIState,
+        event: @escaping (SelectEvent) -> Void,
+        searchText: String,
+        config: SelectConfig
+    ) {
+        self.state = state
+        self.event = event
+        self.searchText = searchText
+        self.config = config
+    }
+    
+    public var body: some View {
         
-        switch state {
-        case let .collapsed(option):
+        switch state.state {
+        case let .collapsed(selectOption, options):
             
-            horizontalView(option)
-                .padding(.vertical, 13)
+            horizontalView(selectOption)
                 .padding(.horizontal, 16)
-                .background(Color.gray.opacity(0.3))
+                .background(Color.gray.opacity(0.1))
                 .cornerRadius(12)
+                .onTapGesture {
+                    event(.chevronTapped(options: options, selectOption: selectOption))
+                }
             
-        case let .expanded(options):
+        case let .expanded(_, options, _):
             
             VStack(spacing: 20) {
                 
@@ -51,11 +65,7 @@ struct SelectView: View {
             
             VStack(spacing: 20) {
                 
-                ForEach(options, id: \.id) { option in
-                    
-                    optionView(option)
-                    
-                }
+                ForEach(options, content: optionView)
             }
         }
         .frame(height: 200)
@@ -69,7 +79,7 @@ struct SelectView: View {
             
             if let option {
                 
-                circleIcon(option, option.config)
+                circleIcon(option, config.optionConfig)
                     .cornerRadius(20)
                 
             } else {
@@ -82,14 +92,15 @@ struct SelectView: View {
                     .cornerRadius(20)
             }
             
-            switch state {
-            case let .collapsed(option):
+            switch state.state {
+            case let .collapsed(selectOption, options):
                 
-                Text(option?.title ?? config.title)
-                    .foregroundColor(option?.title != nil ? .black : Color.gray.opacity(0.6))
+                Text(selectOption?.title ?? config.title)
+                    .foregroundColor(selectOption?.title != nil ? .black : Color.gray.opacity(0.6))
+                    .frame(height: 72, alignment: .center)
                 
             case .expanded:
-            
+                
                 VStack(spacing: 4) {
                     
                     HStack {
@@ -103,7 +114,7 @@ struct SelectView: View {
                     }
                     
                     HStack {
-                    
+                        
                         if config.isSearchable {
                             
                             textField()
@@ -123,6 +134,9 @@ struct SelectView: View {
             Spacer()
             
             chevronButton()
+                .onTapGesture {
+                    event(.chevronTapped(options: self.state.state.options, selectOption: option))
+                }
         }
     }
     
@@ -132,7 +146,7 @@ struct SelectView: View {
             "Начните ввод для поиска",
             text: .init(
                 get: { searchText },
-                set: { _ in event(.search) }
+                set: { _ in event(.search("")) }
             )
         )
     }
@@ -141,11 +155,11 @@ struct SelectView: View {
         _ option: SelectState.Option
     ) -> some View {
         
-        Button(action: { event(.optionTapped) }) {
+        Button(action: { event(.optionTapped(option)) }) {
             
             HStack(alignment: .top, spacing: 20) {
                 
-                circleIcon(option, option.config)
+                circleIcon(option, config.optionConfig)
                     .cornerRadius(20)
                     .frame(height: 50, alignment: .top)
             }
@@ -170,9 +184,9 @@ struct SelectView: View {
     
     private func chevronButton() -> some View {
         
-        Button(action: { event(.chevronTapped) }, label: {
+        Button(action: { event(.chevronTapped(options: self.state.state.options, selectOption: nil)) }, label: {
             
-            switch state {
+            switch state.state {
             case .collapsed:
                 Image(systemName: "chevron.down")
                     .foregroundColor(.gray)
@@ -186,7 +200,7 @@ struct SelectView: View {
     
     private func circleIcon(
         _ option: SelectState.Option,
-        _ config: SelectState.Option.Config
+        _ config: SelectConfig.OptionConfig
     ) -> some View {
         
         ZStack {
@@ -199,27 +213,9 @@ struct SelectView: View {
             (option.isSelected ? config.icon : config.selectIcon)
                 .resizable()
                 .renderingMode(.template)
-                .frame(width: CGFloat(config.kind.rawValue), height: CGFloat(config.kind.rawValue))
+                .frame(width: config.size, height: config.size)
                 .foregroundColor(option.isSelected ? config.selectForeground : config.foreground)
         }
-    }
-}
-
-extension SelectView {
-    
-    struct Config {
-        
-        let title: String
-        let titleConfig: TextConfig
-        
-        let placeholder: String
-        let placeholderConfig: TextConfig
-        
-        let backgroundIcon: Color
-        let foregroundIcon: Color
-        let icon: Image
-        
-        let isSearchable: Bool
     }
 }
 
@@ -227,65 +223,51 @@ struct SelectView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        selectView(configPreview(), .collapsed(option: nil))
+        selectView(.preview, .collapsed(option: nil, options: []))
             .previewDisplayName("collapse")
         
-        selectView(configPreview(), .collapsed(option: .init(
+        selectView(.preview, .collapsed(option: .init(
             id: UUID().description,
             title: "Имущественный налог",
-            isSelected: false,
-            config: randomConfig()
-        )))
+            isSelected: false
+        ), options: []))
         .previewDisplayName("collapse with Option")
         
         
-        selectView(configPreview(), .expanded(options: previewOptions()))
+        selectView(.preview, .expanded(selectOption: .init(id: "1", title: "title", isSelected: true), options: previewOptionsWithCircleIcon(), searchText: ""))
             .previewDisplayName("expanded")
         
         selectView(
             configPreview2(isSearchable: false),
-            .expanded(options: previewOptionsWithCircleIcon())
+            .expanded(selectOption: .init(id: "1", title: "title", isSelected: true), options: previewOptionsWithCircleIcon(), searchText: "")
         )
         .previewDisplayName("preview Option with Circle icon")
         
         selectView(
             configPreview2(isSearchable: true),
-            .expanded(options: previewOptionsWithCircleIcon())
+            .expanded(selectOption: .init(id: "1", title: "title", isSelected: true), options: previewOptionsWithCircleIcon(), searchText: "")
         )
         .previewDisplayName("preview with searchable")
     }
     
     private static func selectView(
-        _ config: SelectView.Config,
+        _ config: SelectConfig,
         _ state: SelectState
     ) -> some View {
         
         SelectView(
-            state: state,
+            state: .init(image: config.icon, state: state),
             event: { _ in },
-            config: config,
-            searchText: ""
+            searchText: "",
+            config: config
+            
         )
         .padding(.all, 20)
     }
     
-    private static func configPreview() -> SelectView.Config {
-        
-        .init(
-            title: "Тип услуги",
-            titleConfig: .init(textFont: .title3, textColor: .black),
-            placeholder: "Выберите услугу",
-            placeholderConfig: .init(textFont: .body, textColor: .gray),
-            backgroundIcon: .clear,
-            foregroundIcon: .gray.opacity(0.6),
-            icon: .init(systemName: "photo.artframe"),
-            isSearchable: false
-        )
-    }
-    
     private static func configPreview2(
         isSearchable: Bool
-    ) -> SelectView.Config {
+    ) -> SelectConfig {
         
         .init(
             title: "Вид платежа",
@@ -294,8 +276,9 @@ struct SelectView_Previews: PreviewProvider {
             placeholderConfig: .init(textFont: .body, textColor: .gray),
             backgroundIcon: .clear,
             foregroundIcon: .gray.opacity(0.4),
-            icon: .init(systemName: "doc"), 
-            isSearchable: isSearchable
+            icon: .init(systemName: "doc"),
+            isSearchable: isSearchable,
+            optionConfig: .preview
         )
     }
     
@@ -305,53 +288,27 @@ struct SelectView_Previews: PreviewProvider {
             .init(
                 id: UUID().uuidString,
                 title: "Имущественный налог",
-                isSelected: false,
-                config: randomConfig()
+                isSelected: false
             ),
             .init(
                 id: UUID().uuidString,
                 title: "Транспортный налог",
-                isSelected: false,
-                config: randomConfig()
+                isSelected: false
             ),
             .init(
                 id: UUID().uuidString,
                 title: "Земельный налог",
-                isSelected: false,
-                config: randomConfig()
+                isSelected: false
             ),
             .init(
                 id: UUID().uuidString,
                 title: "Водный налог",
-                isSelected: false,
-                config: randomConfig()
+                isSelected: false
             )
         ]
     }
     
-    private static func randomConfig() -> SelectState.Option.Config {
-        
-        let icons = [
-            Image(systemName: "house"),
-            Image(systemName: "car"),
-            Image(systemName: "square.dashed"),
-            Image(systemName: "drop.degreesign")
-            
-        ]
-        
-        return .init(
-            icon: icons.randomElement() ?? Image(systemName: "house"),
-            foreground: .white,
-            background: .blue,
-            selectIcon: icons.randomElement() ?? Image(systemName: "house"),
-            selectForeground: .blue,
-            selectBackground: .blue,
-            mainBackground: .green,
-            kind: .small
-        )
-    }
-    
-    private static func circleConfig() -> SelectState.Option.Config {
+    private static func circleConfig() -> SelectConfig.OptionConfig {
         
         return .init(
             icon: Image(systemName: "circle"),
@@ -361,7 +318,7 @@ struct SelectView_Previews: PreviewProvider {
             selectForeground: .red,
             selectBackground: .clear,
             mainBackground: .clear,
-            kind: .normal
+            size: 24
         )
     }
     
@@ -371,33 +328,57 @@ struct SelectView_Previews: PreviewProvider {
             .init(
                 id: UUID().uuidString,
                 title: "Оплата пакета МАТЧ! Футбол месяц",
-                isSelected: false,
-                config: circleConfig()
+                isSelected: false
             ),
             .init(
                 id: UUID().uuidString,
                 title: "Оплата пакета Новый год",
-                isSelected: false,
-                config: circleConfig()
+                isSelected: false
             ),
             .init(
                 id: UUID().uuidString,
                 title: "Оплата пакета Детский год",
-                isSelected: false,
-                config: circleConfig()
+                isSelected: false
             ),
             .init(
                 id: UUID().uuidString,
                 title: "Триколор ТВ - Ночной месяц",
-                isSelected: true,
-                config: circleConfig()
+                isSelected: true
             ),
             .init(
                 id: UUID().uuidString,
                 title: "Оплата пакета Единый/Единый\n UND/Экстра/Триколор Онлайн.",
-                isSelected: false,
-                config: circleConfig()
+                isSelected: false
             )
         ]
     }
+}
+
+public extension SelectConfig.OptionConfig {
+    
+    static let preview: Self = .init(
+        icon: Image(systemName: "house"),
+        foreground: .white,
+        background: .blue,
+        selectIcon: Image(systemName: "house"),
+        selectForeground: .blue,
+        selectBackground: .blue,
+        mainBackground: .green,
+        size: 16
+    )
+}
+
+public extension SelectConfig {
+    
+    static let preview: Self = .init(
+        title: "Тип услуги",
+        titleConfig: .init(textFont: .title3, textColor: .black),
+        placeholder: "Выберите услугу",
+        placeholderConfig: .init(textFont: .body, textColor: .gray),
+        backgroundIcon: .clear,
+        foregroundIcon: .gray.opacity(0.6),
+        icon: .init(systemName: "photo.artframe"),
+        isSearchable: false,
+        optionConfig: .preview
+    )
 }

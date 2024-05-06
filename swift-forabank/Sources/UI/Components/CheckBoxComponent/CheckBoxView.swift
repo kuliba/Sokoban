@@ -10,11 +10,11 @@ import SharedConfigs
 
 public struct CheckBoxView: View {
     
-    let isChecked: Bool
-    let checkBoxEvent: (CheckBoxEvent) -> Void
-    let config: Config
+    private let isChecked: Bool
+    private let checkBoxEvent: (CheckBoxEvent) -> Void
+    private let config: Config
     
-    init(
+    public init(
         isChecked: Bool,
         checkBoxEvent: @escaping (CheckBoxEvent) -> Void,
         config: Config
@@ -39,6 +39,8 @@ public struct CheckBoxView: View {
             .frame(width: 24, height: 24)
             
             config.title.text(withConfig: config.titleConfig)
+            
+            Spacer()
         }
         .contentShape(Rectangle())
         .onTapGesture {
@@ -51,12 +53,18 @@ public struct CheckBoxView: View {
 
 extension CheckBoxView {
     
-    struct CheckView: View {
+    public struct CheckView: View {
         
-        let isChecked: Bool
-        let config: Config
+        private let isChecked: Bool
+        private let config: Config
         
-        var body: some View {
+        init(isChecked: Bool, config: Config) {
+            
+            self.isChecked = isChecked
+            self.config = config
+        }
+        
+        public var body: some View {
             
             if isChecked {
                 
@@ -114,9 +122,33 @@ public extension CheckBoxView {
                 dashPhase: dashPhase
             )
         }
+        
+        public init(
+            title: String,
+            titleConfig: TextConfig,
+            lineWidth: CGFloat,
+            strokeColor: Color,
+            dashPhase: CGFloat
+        ) {
+            self.title = title
+            self.titleConfig = titleConfig
+            self.lineWidth = lineWidth
+            self.strokeColor = strokeColor
+            self.dashPhase = dashPhase
+        }
     }
 }
 
+public extension CheckBoxView.Config {
+    
+    static let preview: Self = .init(
+        title: "Оплата ЖКХ",
+        titleConfig: .init(textFont: .body, textColor: .black),
+        lineWidth: 2,
+        strokeColor: .green,
+        dashPhase: 70
+    )
+}
 // MARK: - Preview
 
 struct CheckBoxView_Previews: PreviewProvider {
@@ -126,13 +158,7 @@ struct CheckBoxView_Previews: PreviewProvider {
         CheckBoxView(
             isChecked: true,
             checkBoxEvent: { _ in },
-            config: .init(
-                title: "Оплата ЖКХ",
-                titleConfig: .init(textFont: .body, textColor: .black),
-                lineWidth: 2,
-                strokeColor: .green,
-                dashPhase: 70
-            )
+            config: .preview
         )
         .previewLayout(.sizeThatFits)
         .padding()

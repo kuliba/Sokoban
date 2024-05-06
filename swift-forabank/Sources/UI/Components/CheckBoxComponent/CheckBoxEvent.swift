@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum CheckBoxEvent {
+public enum CheckBoxEvent {
 
     case buttonTapped
 }

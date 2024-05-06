@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum NameEvent {
+public enum NameEvent {
     
     case collapse
     case expanded
