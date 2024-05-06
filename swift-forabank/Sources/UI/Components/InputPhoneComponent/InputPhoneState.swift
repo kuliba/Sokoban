@@ -10,5 +10,5 @@ import Foundation
 public enum InputPhoneState {
     
     case placeholder
-    case entered
+    case entered(String)
 }

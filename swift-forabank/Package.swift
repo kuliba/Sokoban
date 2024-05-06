@@ -195,6 +195,7 @@ let package = Package(
         .codeComponent,
         .footerComponent,
         .nameComponent,
+        .selectComponent,
         .inputPhoneComponent,
         .inputComponent,
         .paymentComponents,
@@ -478,6 +479,7 @@ private extension Product {
             .checkBoxComponent,
             .footerComponent,
             .nameComponent,
+            .selectComponent,
             .inputComponent,
             .inputPhoneComponent,
             .infoComponent,
@@ -1711,6 +1713,14 @@ private extension Target {
         path: "Sources/UI/Components/\(String.nameComponent)"
     )
        
+    static let selectComponent = target(
+        name: .selectComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.selectComponent)"
+    )
+    
     static let inputPhoneComponent = target(
         name: .inputPhoneComponent,
         dependencies: [
@@ -1743,6 +1753,7 @@ private extension Target {
             .checkBoxComponent,
             .footerComponent,
             .nameComponent,
+            .selectComponent,
             .inputComponent,
             .inputPhoneComponent,
             .productSelectComponent,
@@ -2096,6 +2107,10 @@ private extension Target.Dependency {
     static let nameComponent = byName(
         name: .nameComponent
     )
+    
+    static let selectComponent = byName(
+        name: .selectComponent
+    )
      
     static let inputPhoneComponent = byName(
         name: .inputPhoneComponent
@@ -2337,6 +2352,8 @@ private extension String {
     static let footerComponent = "FooterComponent"
     
     static let nameComponent = "NameComponent"
+    
+    static let selectComponent = "SelectComponent"
     
     static let inputComponent = "InputComponent"
     

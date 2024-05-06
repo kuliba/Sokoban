@@ -10,9 +10,9 @@ import SharedConfigs
 
 public struct CheckBoxView: View {
     
-    let isChecked: Bool
-    let checkBoxEvent: (CheckBoxEvent) -> Void
-    let config: Config
+    private let isChecked: Bool
+    private let checkBoxEvent: (CheckBoxEvent) -> Void
+    private let config: Config
     
     public init(
         isChecked: Bool,
@@ -53,12 +53,18 @@ public struct CheckBoxView: View {
 
 extension CheckBoxView {
     
-    struct CheckView: View {
+    public struct CheckView: View {
         
-        let isChecked: Bool
-        let config: Config
+        private let isChecked: Bool
+        private let config: Config
         
-        var body: some View {
+        init(isChecked: Bool, config: Config) {
+            
+            self.isChecked = isChecked
+            self.config = config
+        }
+        
+        public var body: some View {
             
             if isChecked {
                 

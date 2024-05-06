@@ -41,10 +41,10 @@ public extension PaymentComponents {
     typealias InfoView = InfoComponent.InfoView
     
     typealias InputView = InputComponent.InputView
-    typealias InputConfig = InputComponent.InputView.Config
+    typealias InputConfig = InputComponent.InputConfig
     
     typealias InputPhoneView = InputPhoneComponent.InputPhoneView
-    typealias InputPhoneConfig = InputPhoneComponent.InputPhoneView.InputPhoneConfig
+    typealias InputPhoneConfig = InputPhoneComponent.InputPhoneConfig
     
     typealias ProductSelect = ProductSelectComponent.ProductSelect
     typealias ProductSelectConfig = ProductSelectComponent.ProductSelectConfig
@@ -58,7 +58,7 @@ public extension PaymentComponents {
     typealias CheckBoxConfig = CheckBoxComponent.CheckBoxView.Config
     
     typealias NameView = NameComponent.NameView
-    typealias NameConfig = InputComponent.InputView.Config
+    typealias NameConfig = InputComponent.InputConfig
     
     typealias FooterView = FooterComponent.FooterView
     typealias FooterConfig = FooterComponent.FooterView.Config
