@@ -48,11 +48,11 @@ extension PaymentsTransfersViewModel {
     
     func event(_ event: Event) {
         
-        let reducer = navigationStateManager.makeReducer { [weak self] in
+        let reduce = navigationStateManager.makeReduce { [weak self] in
             
             self?.event(.utilityFlow(.payment(.notified($0))))
         }
-        let (route, effect) = reducer.reduce(state.route, event)
+        let (route, effect) = reduce(state.route, event)
         
         if let outside = route.outside {
             

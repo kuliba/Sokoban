@@ -28,12 +28,13 @@ extension PaymentsTransfersFlowManager {
             utilityEffectHandle: utilityFlowEffectHandler.handleEffect(_:_:)
         )
         
+        let makeReducer = { notify in
+            
+            PaymentsTransfersReducer(factory: .preview, notify: notify)
+        }
         return .init(
             handleEffect: effectHandler.handleEffect(_:_:),
-            makeReducer: {
-                
-                return .init(factory: .preview, notify: $0)
-            }
+            makeReduce: { makeReducer($0).reduce(_:_:) }
         )
     }
 }
