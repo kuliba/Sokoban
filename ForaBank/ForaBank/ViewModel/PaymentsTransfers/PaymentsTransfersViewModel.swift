@@ -188,20 +188,7 @@ extension PaymentsTransfersViewModel {
                     showOpenDeposit()
                     
                 case _ as PaymentsTransfersViewModelAction.ButtonTapped.UserAccount:
-                    guard let clientInfo = model.clientInfo.value
-                    else {return }
-                    
-                    model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
-                    // TODO: replace with factory
-                    route.destination = .userAccount(.init(
-                        navigationStateManager: userAccountNavigationStateManager,
-                        model: model,
-                        clientInfo: clientInfo,
-                        dismissAction: { [weak self] in
-                            
-                            self?.event(.resetDestination)
-                        }
-                    ))
+                    handleUserAccountButtonTapped()
                     
                 case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
                     // на экране платежей верхний переход
@@ -349,6 +336,21 @@ extension PaymentsTransfersViewModel {
             }
         )
         route.destination = .openDepositsList(openDepositViewModel)
+    }
+    
+    private func handleUserAccountButtonTapped() {
+        
+        guard let clientInfo = model.clientInfo.value
+        else {return }
+        
+        model.action.send(ModelAction.C2B.GetC2BSubscription.Request())
+        // TODO: replace with factory
+        route.destination = .userAccount(.init(
+            navigationStateManager: userAccountNavigationStateManager,
+            model: model,
+            clientInfo: clientInfo,
+            dismissAction: { [weak self] in self?.event(.resetDestination) }
+        ))
     }
     
     private func bindSections(
