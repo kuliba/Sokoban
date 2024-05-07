@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OperatorsListComponents
 
 final class PaymentsTransfersEffectHandler {
     
@@ -28,6 +29,46 @@ extension PaymentsTransfersEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
+        case let .utilityFlow(utilityFlowEffect):
+            handleEffect(utilityFlowEffect, { dispatch(.utilityFlow($0)) })
+        }
+    }
+}
+
+extension PaymentsTransfersEffectHandler {
+    
+    typealias LatestPayment = OperatorsListComponents.LatestPayment
+    typealias Operator = OperatorsListComponents.Operator
+    
+    typealias CreateAnywayTransferPayload = UtilityFlowEffect.StartPaymentPayload
+    typealias CreateAnywayTransferCompletion = (UtilityFlowEvent.PaymentStarted) -> Void
+    typealias CreateAnywayTransfer = (CreateAnywayTransferPayload<LatestPayment, Operator>, @escaping CreateAnywayTransferCompletion) -> Void
+    
+    typealias GetOperatorsListByParamPayload = String
+    typealias GetOperatorsListByParamCompletion = (UtilityFlowEvent.GetOperatorsListByParamResponse) -> Void
+    typealias GetOperatorsListByParam = (GetOperatorsListByParamPayload, @escaping GetOperatorsListByParamCompletion) -> Void
+}
+
+extension PaymentsTransfersEffectHandler {
+    
+    typealias UtilityFlowEvent = Event.UtilityServicePaymentFlowEvent
+    typealias UtilityFlowEffect = Effect.UtilityServicePaymentFlowEffect
+    typealias UtilityFlowDispatch = (UtilityFlowEvent) -> Void
+    
+    typealias Dispatch = (Event) -> Void
+    
+    typealias Event = PaymentsTransfersEvent
+    typealias Effect = PaymentsTransfersEffect
+}
+
+private extension PaymentsTransfersEffectHandler {
+    
+    #warning("extractable")
+    func handleEffect(
+        _ effect: Effect.UtilityServicePaymentFlowEffect,
+        _ dispatch: @escaping UtilityFlowDispatch
+    ) {
+        switch effect {
         case let .getServicesFor(`operator`):
             getOperatorsListByParam(`operator`.id) {
             
@@ -41,23 +82,4 @@ extension PaymentsTransfersEffectHandler {
             }
         }
     }
-}
-
-extension PaymentsTransfersEffectHandler {
-    
-    typealias CreateAnywayTransferPayload = PaymentsTransfersEffect.StartPaymentPayload
-    typealias CreateAnywayTransferCompletion = (Event.PaymentStarted) -> Void
-    typealias CreateAnywayTransfer = (CreateAnywayTransferPayload, @escaping CreateAnywayTransferCompletion) -> Void
-    
-    typealias GetOperatorsListByParamPayload = String
-    typealias GetOperatorsListByParamCompletion = (Event.GetOperatorsListByParamResponse) -> Void
-    typealias GetOperatorsListByParam = (GetOperatorsListByParamPayload, @escaping GetOperatorsListByParamCompletion) -> Void
-}
-
-extension PaymentsTransfersEffectHandler {
-    
-    typealias Dispatch = (Event) -> Void
-    
-    typealias Event = PaymentsTransfersEvent
-    typealias Effect = PaymentsTransfersEffect
 }

@@ -24,7 +24,8 @@ extension RootViewFactory {
                                 id: info.infoID,
                                 value: info.value,
                                 title: info.title,
-                                image: imageCache.imagePublisher(for: info.icon)
+                                image: imageCache.imagePublisher(for: info.icon),
+                                style: .expanded
                             )
                     },
                     config: .iFora

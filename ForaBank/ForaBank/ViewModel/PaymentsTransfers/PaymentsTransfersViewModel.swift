@@ -131,7 +131,7 @@ extension PaymentsTransfersViewModel {
         if let effect {
             
             rootActions?.spinner.show()
-
+            
             navigationStateManager.handleEffect(effect) { [weak self] in
                 
                 self?.rootActions?.spinner.hide()
@@ -140,7 +140,7 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    #warning("move to navigationStateManager")
+#warning("move to navigationStateManager")
     private func reduce(
         _ state: State,
         _ event: Event
@@ -152,75 +152,7 @@ extension PaymentsTransfersViewModel {
         switch event {
         case .addCompany:
             state.destination = nil
-#warning("side effect, should be moved to the effect handler - how to put rootActions into effect handler?")
             switchToChat()
-            
-        case let .latestPaymentTapped(latestPayment):
-            // flow `e`
-            effect = .startPayment(.latestPayment(latestPayment))
-            
-        case let .loaded(response, for: `operator`):
-            switch response {
-            case .failure:
-                state.utilitiesRoute?.destination = .failure(`operator`)
-                
-            case let .list(services):
-                state.utilitiesRoute?.destination = .list(.init(
-                    operator: `operator`,
-                    services: services,
-                    destination: nil
-                ))
-                
-            case let .single(utilityService):
-                // flow `e`
-                effect = .startPayment(.service(`operator`, utilityService))
-            }
-            
-        case let .operatorTapped(`operator`):
-            // flow `d`
-            effect = .getServicesFor(`operator`)
-            
-        case .payByRequisites:
-#warning("side effect, should be moved to the effect handler")
-            state.destination = .payments(makeByRequisitesPaymentsViewModel())
-            
-        case let .paymentStarted(paymentStarted):
-            switch paymentStarted {
-            case let .details(paymentDetails):
-                guard let utilitiesRoute = state.utilitiesRoute
-                else { break }
-                
-                switch utilitiesRoute.destination {
-                case .none:
-                    state.utilitiesRoute?.destination = .payment(.init(paymentDetails))
-                    
-                case let .some(destination):
-                    switch destination {
-                    case let .list(list):
-                        // state.utilitiesRoute?.destination?.utilityPaymentState = .init(paymentDetails)
-                        state.utilitiesRoute?.destination = .list(.init(
-                            operator: list.operator,
-                            services: list.services,
-                            destination: .payment(.init(paymentDetails))
-                        ))
-                        
-                    default:
-                        break
-                    }
-                }
-                
-            case .failure:
-                state.modal = .alert(.techError(
-                    message: "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.",
-                    primaryAction: { [weak self] in self?.switchToMain() }
-                ))
-                
-            case let .serverError(message):
-                state.modal = .alert(.techError(
-                    message: message,
-                    primaryAction: { [weak self] in self?.switchToMain() }
-                ))
-            }
             
         case .resetDestination:
             state.utilitiesRoute?.destination = nil
@@ -233,14 +165,19 @@ extension PaymentsTransfersViewModel {
             state.utilitiesRoute?.destination = nil
             
         case .resetUtilityListDestination:
-            guard case let .list(list) = route.utilitiesRoute?.destination
+            guard case let .list(list) = state.utilitiesRoute?.destination
             else { break }
             
             state.utilitiesRoute?.destination = .list(.init(
-                operator: list.`operator`, 
+                operator: list.`operator`,
                 services: list.services,
                 destination: nil
             ))
+            
+        case let .utilityFlow(utilityFlowEvent):
+            var utilityEffect: Effect.UtilityServicePaymentFlowEffect?
+            (state, utilityEffect) = reduce(state, utilityFlowEvent)
+            effect = utilityEffect.map(Effect.utilityFlow)
             
         case let .utilityPayment(utilityPaymentEvent):
             guard case let .payment(utilityPayment) = state.utilitiesRoute?.destination
@@ -248,15 +185,131 @@ extension PaymentsTransfersViewModel {
             
             let (utilityPaymentState, utilityPaymentEffect) = navigationStateManager.utilityPaymentReduce(utilityPayment, utilityPaymentEvent)
             state.utilitiesRoute?.destination = .payment(utilityPaymentState)
-            effect = utilityPaymentEffect.map { .utilityPayment($0) }
+            effect = utilityPaymentEffect.map(Effect.utilityPayment)
+        }
+        
+        return (state, effect)
+    }
+    
+    // TODO: move from global `State` to local
+    private func reduce(
+        _ state: State,
+        _ event: Event.UtilityServicePaymentFlowEvent
+    ) -> (State, Effect.UtilityServicePaymentFlowEffect?) {
+        
+        var state = state
+        var effect: Effect.UtilityServicePaymentFlowEffect?
+        
+        // TODO: improve by adding state check
+        // like `guard let utilitiesRoute = state.utilitiesRoute else { break }`
+        switch event {
+        case let .loaded(response, for: `operator`):
+            (state, effect) = reduce(state, response, `operator`)
             
-        case let .utilityServiceTap(`operator`, utilityService):
-            // flow `e`
+        case .payByInstructions:
+            state.destination = .payments(makeByRequisitesPaymentsViewModel())
+            
+        case let .paymentStarted(paymentStartedEvent):
+            reduce(&state, paymentStartedEvent)
+            
+        case let .select(selectEvent):
+            effect = reduce(state, selectEvent)
+        }
+        
+        return (state, effect)
+    }
+    
+    private func reduce(
+        _ state: State,
+        _ response: PaymentsTransfersEvent.UtilityServicePaymentFlowEvent.GetOperatorsListByParamResponse,
+        _ `operator`: Operator
+    ) -> (State, Effect.UtilityServicePaymentFlowEffect?) {
+        
+        var state = state
+        var effect: Effect.UtilityServicePaymentFlowEffect?
+        
+        // TODO: improve by adding state check
+        // like `guard let utilitiesRoute = state.utilitiesRoute else { break }`
+        switch response {
+        case .failure:
+            state.utilitiesRoute?.destination = .failure(`operator`)
+            
+        case let .list(services):
+            state.utilitiesRoute?.destination = .list(.init(
+                operator: `operator`,
+                services: services,
+                destination: nil
+            ))
+            
+        case let .single(utilityService): // flow `e`
+#warning("this is wrong - payment should start without additional effect")
             effect = .startPayment(.service(`operator`, utilityService))
         }
         
         return (state, effect)
     }
+    
+    private func reduce(
+        _ state: inout State,
+        _ event: Event.UtilityServicePaymentFlowEvent.PaymentStarted
+    ) {
+        switch event {
+        case let .details(paymentDetails):
+            guard let utilitiesRoute = state.utilitiesRoute
+            else { break }
+            
+            switch utilitiesRoute.destination {
+            case .none:
+                state.utilitiesRoute?.destination = .payment(.init(paymentDetails))
+                
+            case let .some(destination):
+                switch destination {
+                case let .list(list):
+                    // state.utilitiesRoute?.destination?.utilityPaymentState = .init(paymentDetails)
+                    state.utilitiesRoute?.destination = .list(.init(
+                        operator: list.operator,
+                        services: list.services,
+                        destination: .payment(.init(paymentDetails))
+                    ))
+                    
+                default:
+                    break
+                }
+            }
+            
+        case .failure:
+            state.modal = .alert(.techError(
+                message: "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже.",
+                primaryAction: { [weak self] in self?.switchToMain() }
+            ))
+            
+        case let .serverError(message):
+            state.modal = .alert(.techError(
+                message: message,
+                primaryAction: { [weak self] in self?.switchToMain() }
+            ))
+        }
+    }
+    
+    private func reduce(
+        _ state: State,
+        _ event: Event.UtilityServicePaymentFlowEvent.Select<LatestPayment, Operator>
+    ) -> Effect.UtilityServicePaymentFlowEffect {
+        
+        switch event {
+        case let .latestPayment(latestPayment): // flow `e`
+            return .startPayment(.latestPayment(latestPayment))
+            
+        case let .operator(`operator`): // flow `d`
+            return .getServicesFor(`operator`)
+            
+        case let .service(utilityService, for: `operator`): // flow `e`
+            return .startPayment(.service(`operator`, utilityService))
+        }
+    }
+    
+    typealias LatestPayment = OperatorsListComponents.LatestPayment
+    typealias Operator = OperatorsListComponents.Operator
     
     typealias State = PaymentsTransfersViewModel.Route
     typealias Event = PaymentsTransfersEvent

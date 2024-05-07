@@ -7,6 +7,7 @@
 
 import OperatorsListComponents
 import PrePaymentPicker
+import FooterComponent
 import SwiftUI
 
 struct UtilityOperatorPicker: View {
@@ -59,8 +60,8 @@ struct UtilityOperatorPicker: View {
     }
     
     private func failureView() -> some View {
-        return OperatorsListComponents.FooterView(
-            state: .failure(.failure),
+        return FooterComponent.FooterView(
+            state: .failure(.preview),
             event: { events in event(.addCompany) },
             config: .iFora
         )
@@ -68,8 +69,8 @@ struct UtilityOperatorPicker: View {
     
     private func footerView() -> some View {
         
-        OperatorsListComponents.FooterView(
-            state: .footer(.footer),
+        FooterComponent.FooterView(
+            state: .footer(.preview),
             event: { events in
                 switch events {
                 case .payByInstruction:
@@ -133,24 +134,24 @@ private extension OperatorView.OperatorViewConfig {
     )
 }
 
-private extension OperatorsListComponents.FooterState.Footer {
+private extension FooterComponent.FooterState.Footer {
         
-    static let footer: Self = .init(
+    static let preview: Self = .init(
         title: "Нет компании в списке?",
         description: "Воспользуйтесь другими способами оплаты",
         subtitle: "Сообщите нам, и мы подключим новую организацию"
     )
 }
 
-private extension OperatorsListComponents.FooterState.Failure {
+private extension FooterComponent.FooterState.Failure {
 
-    static let failure: Self = .init(
+    static let preview: Self = .init(
         image: .init(systemName: "photo.artframe"),
         description: "Что-то пошло не так.\nПопробуйте позже."
     )
 }
 
-private extension OperatorsListComponents.FooterView.Config {
+private extension FooterComponent.FooterView.Config {
     
     static let iFora: Self = .init(
         titleConfig: .init(textFont: .title3, textColor: .black),
