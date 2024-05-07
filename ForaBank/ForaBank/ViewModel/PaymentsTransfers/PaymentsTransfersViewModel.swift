@@ -620,7 +620,7 @@ extension PaymentsTransfersViewModel {
                 
                 self.event(.resetDestination)
                 self.delay(for: .milliseconds(800)) {
-
+                    
                     self.action.send(PaymentsTransfersViewModelAction.Show.OpenDeposit())
                 }
             }
@@ -936,8 +936,7 @@ extension PaymentsTransfersViewModel {
                         }
                     }
                 } else {
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [self] in
+                    self.delay(for: .milliseconds(700)) { [self] in
                         
                         let viewModel = InternetTVDetailsViewModel(
                             model: model,
@@ -950,7 +949,7 @@ extension PaymentsTransfersViewModel {
             } else {
                 
                 self.event(.resetModal)
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                self.delay(for: .milliseconds(700)) {
                     
                     let navigationBarViewModel = NavigationBarView.ViewModel(
                         title: "Все регионы",
@@ -993,8 +992,8 @@ extension PaymentsTransfersViewModel {
     
     private func handleUnknownQR() {
         
-        self.event(.resetModal)
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+        event(.resetModal)
+        delay(for: .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
                 model: self.model,
@@ -1026,8 +1025,8 @@ extension PaymentsTransfersViewModel {
     
     private func handleFailure(qr: QRCode) {
         
-        self.event(.resetModal)
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+        event(.resetModal)
+        delay(for: .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
                 model: self.model,
@@ -1044,18 +1043,15 @@ extension PaymentsTransfersViewModel {
     
     private func handleC2bURL(_ url: URL) {
         
-        self.event(.resetModal)
+        event(.resetModal)
         let paymentsViewModel = PaymentsViewModel(
             source: .c2b(url),
             model: model,
-            closeAction: {[weak self] in
-                
-                self?.event(.resetDestination)
-            }
+            closeAction: { [weak self] in self?.event(.resetDestination) }
         )
         bind(paymentsViewModel)
         
-        self.action.send(DelayWrappedAction(
+        action.send(DelayWrappedAction(
             delayMS: 700,
             action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
         )
@@ -1067,10 +1063,7 @@ extension PaymentsTransfersViewModel {
         let paymentsViewModel = PaymentsViewModel(
             source: .c2bSubscribe(url),
             model: model,
-            closeAction: { [weak self] in
-                
-                self?.event(.resetDestination)
-            }
+            closeAction: { [weak self] in self?.event(.resetDestination) }
         )
         bind(paymentsViewModel)
         
@@ -1145,9 +1138,7 @@ extension PaymentsTransfersViewModel {
         rootActions?.spinner.hide()
         event(.resetDestination)
         
-        DispatchQueue.main.asyncAfter(
-            deadline: .now() + .milliseconds(400)
-        ) { [weak self] in
+        delay(for: .milliseconds(400)) { [weak self] in
             
             guard let self else { return }
             
@@ -1164,8 +1155,8 @@ extension PaymentsTransfersViewModel {
     
     private func handleURL() {
         
-        self.event(.resetModal)
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+        event(.resetModal)
+        delay(for: .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
                 model: self.model,
