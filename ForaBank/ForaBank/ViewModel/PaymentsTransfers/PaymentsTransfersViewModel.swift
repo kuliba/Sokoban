@@ -433,28 +433,10 @@ extension PaymentsTransfersViewModel {
             self.action.send(PaymentsTransfersViewModelAction.Show.Countries())
             
         case .anotherCard:
-            model.action.send(ModelAction.ProductTemplate.List.Request())
-            let paymentsViewModel = PaymentsViewModel(
-                model,
-                service: .toAnotherCard,
-                closeAction: { [weak self] in
-                    
-                    self?.event(.resetDestination)
-                }
-            )
-            bind(paymentsViewModel)
-            
-            self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            handleAnotherCardTransferButtonTapped()
             
         case .betweenSelf:
-            
-            guard let viewModel = PaymentsMeToMeViewModel(model, mode: .demandDeposit) else {
-                return
-            }
-            
-            bind(viewModel)
-            
-            route.modal = .bottomSheet(.init(type: .meToMe(viewModel)))
+            handleBetweenSelfTransferButtonTapped()
             
         case .requisites:
             payByRequisites()
@@ -462,6 +444,29 @@ extension PaymentsTransfersViewModel {
         case .byPhoneNumber:
             self.action.send(PaymentsTransfersViewModelAction.Show.Contacts())
         }
+    }
+    
+    private func handleAnotherCardTransferButtonTapped() {
+        
+        model.action.send(ModelAction.ProductTemplate.List.Request())
+        let paymentsViewModel = PaymentsViewModel(
+            model,
+            service: .toAnotherCard,
+            closeAction: { [weak self] in self?.event(.resetDestination) }
+        )
+        bind(paymentsViewModel)
+        
+        self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+    }
+    
+    private func handleBetweenSelfTransferButtonTapped() {
+        
+        guard let viewModel = PaymentsMeToMeViewModel(model, mode: .demandDeposit) 
+        else { return }
+        
+        bind(viewModel)
+        
+        route.modal = .bottomSheet(.init(type: .meToMe(viewModel)))
     }
     
     private func handlePaymentButtonTapped(
