@@ -474,17 +474,7 @@ extension PaymentsTransfersViewModel {
     ) {
         switch type {
         case .mobile:
-            let paymentsViewModel = PaymentsViewModel(
-                model,
-                service: .mobileConnection,
-                closeAction: { [weak self] in
-                    
-                    self?.event(.resetDestination)
-                }
-            )
-            bind(paymentsViewModel)
-            
-            self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            handleMobilePaymentButtonTapped()
             
         case .qrPayment:
             // на экране платежей нижний переход
@@ -516,6 +506,18 @@ extension PaymentsTransfersViewModel {
         case .others:
             route.modal = .bottomSheet(.init(type: .exampleDetail(type.rawValue))) //TODO:
         }
+    }
+    
+    private func handleMobilePaymentButtonTapped() {
+        
+        let paymentsViewModel = PaymentsViewModel(
+            model,
+            service: .mobileConnection,
+            closeAction: { [weak self] in self?.event(.resetDestination) }
+        )
+        bind(paymentsViewModel)
+        
+        self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
     }
     
     private func makeByRequisitesPaymentsViewModel() -> PaymentsViewModel {
