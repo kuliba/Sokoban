@@ -911,29 +911,7 @@ extension PaymentsTransfersViewModel {
                     
                     Task { [weak self] in
                         
-                        guard let self = self else { return }
-                        
-                        let puref = operatorValue.code
-                        let additionalList = model.additionalList(for: operatorValue, qrCode: qr)
-                        let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
-                        let paymentsViewModel = PaymentsViewModel(
-                            source: .servicePayment(
-                                puref: puref,
-                                additionalList: additionalList,
-                                amount: amount/100
-                            ),
-                            model: model,
-                            closeAction: { [weak self] in
-                                
-                                self?.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }
-                        )
-                        self.bind(paymentsViewModel)
-                        
-                        await MainActor.run { [weak self] in
-                            
-                            self?.route.destination = .init(.payments(paymentsViewModel))
-                        }
+                        await self?.handleQRMappingWithSingleOperator(qr, operatorValue)
                     }
                 } else {
                     self.delay(for: .milliseconds(700)) { [self] in
@@ -956,6 +934,34 @@ extension PaymentsTransfersViewModel {
         } else {
             event(.resetModal)
             action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
+        }
+    }
+    
+    private func handleQRMappingWithSingleOperator(
+        _ qr: QRCode,
+        _ operatorValue: OperatorGroupData.OperatorData
+    ) async {
+        
+        let puref = operatorValue.code
+        let additionalList = model.additionalList(for: operatorValue, qrCode: qr)
+        let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
+        let paymentsViewModel = PaymentsViewModel(
+            source: .servicePayment(
+                puref: puref,
+                additionalList: additionalList,
+                amount: amount/100
+            ),
+            model: model,
+            closeAction: { [weak self] in
+                
+                self?.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }
+        )
+        bind(paymentsViewModel)
+        
+        await MainActor.run { [weak self] in
+            
+            self?.route.destination = .init(.payments(paymentsViewModel))
         }
     }
     
