@@ -332,7 +332,9 @@ extension PaymentsTransfersViewModel {
             }.store(in: &bindings)
     }
     
-    private func bindSections(_ sections: [PaymentsTransfersSectionViewModel]) {
+    private func bindSections(
+        _ sections: [PaymentsTransfersSectionViewModel]
+    ) {
         for section in sections {
             
             section.action
@@ -340,7 +342,6 @@ extension PaymentsTransfersViewModel {
                 .sink { [unowned self] action in
                     
                     switch action {
-                        
                         //LatestPayments Section Buttons
                     case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
                         handle(latestPayment: payload.latestPayment)
@@ -348,28 +349,9 @@ extension PaymentsTransfersViewModel {
                         //LatestPayment Section TemplateButton
                     case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
                         handleTemplatesButtonTapped()
-                                                
+                        
                     case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
-                        guard let firstCurrencyWalletData = model.currencyWalletList.value.first else {
-                            return
-                        }
-                        
-                        let currency = Currency(description: firstCurrencyWalletData.code)
-                        
-                        guard let walletViewModel = CurrencyWalletViewModel(
-                            currency: currency,
-                            currencyOperation: .buy,
-                            model: model,
-                            dismissAction: { [weak self] in
-                                
-                                self?.event(.resetDestination)
-                            }
-                        )
-                        else { return }
-                        
-                        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList, .countriesWithService]))
-                        
-                        route.destination = .currencyWallet(walletViewModel)
+                        handleCurrencyWalletButtonTapped()
                         
                         //Transfers Section
                     case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
@@ -396,6 +378,25 @@ extension PaymentsTransfersViewModel {
         
         bind(viewModel)
         route.destination = .template(viewModel)
+    }
+    
+    private func handleCurrencyWalletButtonTapped() {
+        
+        guard let firstCurrencyWalletData = model.currencyWalletList.value.first
+        else { return }
+        
+        let currency = Currency(description: firstCurrencyWalletData.code)
+        
+        guard let walletViewModel = CurrencyWalletViewModel(
+            currency: currency,
+            currencyOperation: .buy,
+            model: model,
+            dismissAction: { [weak self] in self?.event(.resetDestination) })
+        else { return }
+        
+        model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList, .countriesWithService]))
+        
+        route.destination = .currencyWallet(walletViewModel)
     }
     
     private func handleTransferButtonTapped(
