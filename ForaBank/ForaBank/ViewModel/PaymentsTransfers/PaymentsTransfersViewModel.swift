@@ -265,13 +265,21 @@ extension PaymentsTransfersViewModel {
             .store(in: &bindings)
         
         action
-            .compactMap({ $0 as? PaymentsTransfersViewModelAction.Show.Alert })
+            .compactMap { $0 as? PaymentsTransfersViewModelAction.Show.Alert }
             .receive(on: scheduler)
             .sink { [unowned self] in
                 
-                self.route.modal = .alert(.init(title: $0.title, message: $0.message, primary: .init(type: .default, title: "Ок", action: {})))
-                
-            }.store(in: &bindings)
+                self.route.modal = .alert(.init(
+                    title: $0.title,
+                    message: $0.message,
+                    primary: .init(
+                        type: .default,
+                        title: "Ок",
+                        action: {}
+                    )
+                ))
+            }
+            .store(in: &bindings)
         
         action
             .compactMap { $0 as? PaymentsTransfersViewModelAction.Show.Payment }
@@ -284,7 +292,7 @@ extension PaymentsTransfersViewModel {
             .store(in: &bindings)
         
         action
-            .compactMap({ $0 as? PaymentsTransfersViewModelAction.Show.Contacts })
+            .compactMap { $0 as? PaymentsTransfersViewModelAction.Show.Contacts }
             .receive(on: scheduler)
             .sink { [unowned self] _ in
                 
@@ -292,11 +300,11 @@ extension PaymentsTransfersViewModel {
                 bind(contactsViewModel)
                 
                 route.modal = .sheet(.init(type: .fastPayment(contactsViewModel)))
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         action
-            .compactMap({ $0 as? PaymentsTransfersViewModelAction.Show.Countries })
+            .compactMap{ $0 as? PaymentsTransfersViewModelAction.Show.Countries }
             .receive(on: scheduler)
             .sink { [unowned self] _ in
                 
@@ -304,32 +312,32 @@ extension PaymentsTransfersViewModel {
                 bind(contactsViewModel)
                 
                 route.modal = .sheet(.init(type: .country(contactsViewModel)))
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         action
-            .compactMap({ $0 as? DelayWrappedAction })
-            .flatMap({
+            .compactMap { $0 as? DelayWrappedAction }
+            .flatMap {
                 
                 Just($0.action)
                     .delay(for: .milliseconds($0.delayMS), scheduler: DispatchQueue.main)
                 
-            })
-            .sink(receiveValue: { [weak self] in
-                
-                self?.action.send($0)
-                
-            }).store(in: &bindings)
+            }
+            .sink { [weak self] in self?.action.send($0) }
+            .store(in: &bindings)
         
         model.clientInfo
             .combineLatest(model.clientPhoto, model.clientName)
             .receive(on: scheduler)
             .sink { [unowned self] clientData in
                 
-                userAccountButton.update(clientInfo: clientData.0,
-                                         clientPhoto: clientData.1,
-                                         clientName: clientData.2)
-            }.store(in: &bindings)
+                userAccountButton.update(
+                    clientInfo: clientData.0,
+                    clientPhoto: clientData.1,
+                    clientName: clientData.2
+                )
+            }
+            .store(in: &bindings)
     }
     
     private func bindSections(
