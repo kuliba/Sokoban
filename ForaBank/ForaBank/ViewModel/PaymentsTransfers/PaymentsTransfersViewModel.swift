@@ -163,7 +163,7 @@ extension PaymentsTransfersViewModel {
         fullCover = nil
         route = .empty
     }
-            
+    
     func openScanner() {
         
         let qrScannerModel = qrViewModelFactory.makeQRScannerModel { [weak self] in
@@ -524,7 +524,7 @@ extension PaymentsTransfersViewModel {
         
         return paymentsViewModel
     }
-
+    
     private func payByRequisites() {
         
         action.send(PaymentsTransfersViewModelAction.Show.Payment(
@@ -596,8 +596,8 @@ extension PaymentsTransfersViewModel {
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     private func bind(_ productProfile: ProductProfileViewModel) {
@@ -646,8 +646,8 @@ extension PaymentsTransfersViewModel {
                     
                 default: break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     private func bind(_ viewModel: PaymentsMeToMeViewModel) {
@@ -690,8 +690,8 @@ extension PaymentsTransfersViewModel {
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     private func bind(_ viewModel: PaymentsSuccessViewModel) {
@@ -717,8 +717,8 @@ extension PaymentsTransfersViewModel {
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     private func bind(_ viewModel: ContactsViewModel) {
@@ -810,8 +810,8 @@ extension PaymentsTransfersViewModel {
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     func bind(_ qrViewModel: QRViewModel) {
@@ -929,7 +929,7 @@ extension PaymentsTransfersViewModel {
                     let operatorsViewModel = QRSearchOperatorViewModel(
                         searchBar: .nameOrTaxCode(),
                         navigationBar: navigationBarViewModel, model: self.model,
-                        operators: operators, 
+                        operators: operators,
                         addCompanyAction: { [weak self] in self?.event(.addCompany) },
                         requisitesAction: { [weak self] in
                             
@@ -1134,7 +1134,7 @@ extension PaymentsTransfersViewModel {
                     
                     self.event(.resetModal)
                     let paymentsViewModel = PaymentsViewModel(
-                        model, 
+                        model,
                         service: .requisites,
                         closeAction: { [weak self] in
                             
@@ -1590,7 +1590,7 @@ extension PaymentsTransfersViewModel.Route {
         case payment(UtilityPaymentState)
     }
 }
- 
+
 extension PaymentsTransfersViewModel.Route.UtilitiesDestination {
     
     struct List {
@@ -1759,7 +1759,7 @@ extension PaymentsTransfersViewModel.Route {
     var utilitiesRoute: UtilitiesRoute? {
         
         get {
-   
+            
             guard case let .utilities(utilitiesRoute) = destination
             else { return nil }
             
