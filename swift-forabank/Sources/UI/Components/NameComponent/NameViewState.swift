@@ -7,15 +7,15 @@
 
 import Foundation
 
-struct NameViewState {
+public struct NameViewState {
     
     let state: NameState
     
-    init(state: NameState) {
+    public init(state: NameState) {
         self.state = state
     }
     
-    enum NameState {
+    public enum NameState {
         
         case collapse
         case expended

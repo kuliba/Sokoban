@@ -401,6 +401,13 @@
         "identifier" : "AnywayPaymentUITests",
         "name" : "AnywayPaymentUITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ProductDetailsUITests",
+        "name" : "ProductDetailsUITests"
+      }
     }
   ],
   "version" : 1

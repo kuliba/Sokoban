@@ -1,14 +1,15 @@
 //
-//  OTPInputFieldView.swift
-//  OTPInputComponentPreview
+//  CodeInputFieldView.swift
+//
 //
 //  Created by Igor Malyarov on 19.01.2024.
 //
 
 import SwiftUI
+import OTPInputComponent
 import UIPrimitives
 
-struct OTPInputFieldView: View {
+struct CodeInputFieldView: View {
     
     let state: OTPFieldState
     let event: (OTPFieldEvent) -> Void
@@ -20,34 +21,21 @@ struct OTPInputFieldView: View {
         
         ZStack {
             
-            tabula()
-            
             autofocusTextField()
                 .fixedSize()
-        }
-    }
-    
-    private func tabula() -> some View {
-        
-        HStack {
-            
-            ForEach(state.digitModels) {
-                
-                DigitModelView(model: $0, config: config)
-            }
         }
     }
     
     private func autofocusTextField() -> some View {
         
         AutofocusTextField(
-            placeholder: "",
+            placeholder: "Введите код",
             text: .init(
                 get: { state.text },
                 set: { event(.edit($0)) }
             ),
             isFirstResponder: isFocused,
-            textColor: .clear,
+            textColor: .black,
             backgroundColor: .clear,
             keyboardType: .numberPad
         )
@@ -64,24 +52,7 @@ struct OTPInputFieldView: View {
     }
 }
 
-private extension OTPFieldState {
-    
-    var digitModels: [DigitModel] {
-        
-        // TODO: move maxLength to init
-        let maxLength = 6
-        
-        return text
-            .filter(\.isNumber)
-            .padding(toLength: maxLength, withPad: " ", startingAt: 0)
-            .map { String($0) }
-            .enumerated()
-            .map { .init(id: $0.offset, value: $0.element) }
-    }
-}
-
-
-struct OTPInputFieldView_Previews: PreviewProvider {
+struct CodeInputFieldView_Previews: PreviewProvider {
     
     static var previews: some View {
         
@@ -94,25 +65,31 @@ struct OTPInputFieldView_Previews: PreviewProvider {
         
         Group {
             
-            otpInputView(.init())
+            codeInputView(.init())
                 .previewDisplayName("empty")
             
-            otpInputView(.init(text: "1234"))
+            codeInputView(.init(text: "1234"))
                 .previewDisplayName("partial")
             
-            otpInputView(.init(text: "123456", isInputComplete: true))
+            codeInputView(.init(text: "123456", isInputComplete: true))
                 .previewDisplayName("full")
         }
     }
     
-    private static func otpInputView(
+    private static func codeInputView(
         _ state: OTPFieldState
     ) -> some View {
         
-        OTPInputFieldView(
+        CodeInputFieldView(
             state: state,
             event: { _ in },
-            config: .preview
+            config: .init(
+                digitConfig: .init(
+                    textFont: .body,
+                    textColor: .red
+                ),
+                rectColor: .black
+            )
         )
     }
 }
