@@ -461,7 +461,7 @@ extension PaymentsTransfersViewModel {
     
     private func handleBetweenSelfTransferButtonTapped() {
         
-        guard let viewModel = PaymentsMeToMeViewModel(model, mode: .demandDeposit) 
+        guard let viewModel = PaymentsMeToMeViewModel(model, mode: .demandDeposit)
         else { return }
         
         bind(viewModel)
@@ -707,7 +707,7 @@ extension PaymentsTransfersViewModel {
         successViewModel: PaymentsSuccessViewModel
     ) {
         guard let productIdFrom = meToMeViewModel?.swapViewModel.productIdFrom,
-              let productIdTo = meToMeViewModel?.swapViewModel.productIdTo 
+              let productIdTo = meToMeViewModel?.swapViewModel.productIdTo
         else { return }
         
         model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
@@ -947,47 +947,52 @@ extension PaymentsTransfersViewModel {
                     }
                 }
             } else {
-                
-                self.event(.resetModal)
-                self.delay(for: .milliseconds(700)) {
+                event(.resetModal)
+                delay(for: .milliseconds(700)) { [weak self] in
                     
-                    let navigationBarViewModel = NavigationBarView.ViewModel(
-                        title: "Все регионы",
-                        titleButton: .init(
-                            icon: Image.ic24ChevronDown,
-                            action: { [weak self] in
-                                
-                                self?.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
-                            }
-                        ),
-                        leftItems: [
-                            NavigationBarView.ViewModel.BackButtonItemViewModel(
-                                icon: .ic24ChevronLeft,
-                                action: { [weak self] in self?.event(.resetDestination) })
-                        ]
-                    )
-                    
-                    let operatorsViewModel = QRSearchOperatorViewModel(
-                        searchBar: .nameOrTaxCode(),
-                        navigationBar: navigationBarViewModel, model: self.model,
-                        operators: operators,
-                        addCompanyAction: { [weak self] in self?.event(.addCompany) },
-                        requisitesAction: { [weak self] in
-                            
-                            self?.event(.resetDestination)
-                            self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
-                        },
-                        qrCode: qr
-                    )
-                    
-                    self.route.destination = .searchOperators(operatorsViewModel)
+                    self?.handleQRMappingWithMultipleOperators(qr, operators)
                 }
             }
         } else {
-            
-            self.event(.resetModal)
-            self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
+            event(.resetModal)
+            action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
         }
+    }
+    
+    private func handleQRMappingWithMultipleOperators(
+        _ qr: QRCode,
+        _ operators: [OperatorGroupData.OperatorData]
+    ) {
+        let navigationBarViewModel = NavigationBarView.ViewModel(
+            title: "Все регионы",
+            titleButton: .init(
+                icon: Image.ic24ChevronDown,
+                action: { [weak self] in
+                    
+                    self?.model.action.send(QRSearchOperatorViewModelAction.OpenCityView())
+                }
+            ),
+            leftItems: [
+                NavigationBarView.ViewModel.BackButtonItemViewModel(
+                    icon: .ic24ChevronLeft,
+                    action: { [weak self] in self?.event(.resetDestination) })
+            ]
+        )
+        
+        let operatorsViewModel = QRSearchOperatorViewModel(
+            searchBar: .nameOrTaxCode(),
+            navigationBar: navigationBarViewModel, model: self.model,
+            operators: operators,
+            addCompanyAction: { [weak self] in self?.event(.addCompany) },
+            requisitesAction: { [weak self] in
+                
+                self?.event(.resetDestination)
+                self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
+            },
+            qrCode: qr
+        )
+        
+        route.destination = .searchOperators(operatorsViewModel)
     }
     
     private func handleUnknownQR() {
