@@ -213,20 +213,7 @@ extension PaymentsTransfersViewModel {
                     model.action.send(ModelAction.Contacts.PermissionStatus.Request())
                     
                 case let payload as PaymentsTransfersViewModelAction.Show.Requisites:
-                    self.event(.resetModal)
-                    let paymentsViewModel = PaymentsViewModel(
-                        source: .requisites(qrCode: payload.qrCode),
-                        model: model,
-                        closeAction: { [weak self] in
-                            
-                            self?.event(.resetDestination)
-                        }
-                    )
-                    bind(paymentsViewModel)
-                    
-                    self.action.send(DelayWrappedAction(
-                        delayMS: 700,
-                        action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel)))
+                    showRequisites(qrCode: payload.qrCode)
                     
                 default:
                     break
@@ -351,6 +338,24 @@ extension PaymentsTransfersViewModel {
             clientInfo: clientInfo,
             dismissAction: { [weak self] in self?.event(.resetDestination) }
         ))
+    }
+    
+    private func showRequisites(qrCode: QRCode) {
+        
+        self.event(.resetModal)
+        let paymentsViewModel = PaymentsViewModel(
+            source: .requisites(qrCode: qrCode),
+            model: model,
+            closeAction: { [weak self] in
+                
+                self?.event(.resetDestination)
+            }
+        )
+        bind(paymentsViewModel)
+        
+        self.action.send(DelayWrappedAction(
+            delayMS: 700,
+            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel)))
     }
     
     private func bindSections(
