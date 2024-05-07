@@ -164,6 +164,11 @@ extension PaymentsTransfersViewModel {
         route = .empty
     }
     
+    func dismiss() {
+        
+        self.event(.resetDestination)
+    }
+    
     func openScanner() {
         
         let qrScannerModel = qrViewModelFactory.makeQRScannerModel { [weak self] in
@@ -173,6 +178,678 @@ extension PaymentsTransfersViewModel {
         bind(qrScannerModel)
         self.route.modal = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
     }
+    
+    func getMosParkingPickerData() async throws -> MosParkingPickerData {
+        
+        let (_, data) = try await model.getMosParkingListData()
+        let (state, options, refillID) = try MosParkingDataMapper.map(data: data)
+        
+        return .init(
+            state: state,
+            options: options,
+            refillID: refillID
+        )
+    }
+}
+
+extension Model {
+    
+    func getMosParkingListData() async throws -> (serial: String, data: [MosParkingData]) {
+        
+        guard let token else {
+            
+            throw Payments.Error.notAuthorized
+        }
+        
+        typealias GetMosParkingList = ServerCommands.DictionaryController.GetMosParkingList
+        typealias MosParkingListData = ServerCommands.DictionaryController.GetMosParkingList.Response.MosParkingListData
+        
+        let command = GetMosParkingList(token: token, serial: nil)
+        let listData: MosParkingListData = try await serverAgent.executeCommand(command: command)
+        
+        return (listData.serial, listData.mosParkingList)
+    }
+}
+
+private extension Model {
+    
+    // TODO: rename `makeTransportPaymentsViewModel`
+    // TODO: rename `TransportPaymentsViewModel` to reflect generic nature of the component that gets operators and last operations for a given type
+    // TODO: `substitutingAvtodors` from reuse as generic case for any PTSectionPaymentsView.ViewModel.PaymentsType
+    func makeTransportPaymentsViewModel(
+        type: PTSectionPaymentsView.ViewModel.PaymentsType,
+        handleError: @escaping (String) -> Void
+    ) -> TransportPaymentsViewModel? {
+        
+        guard let anywayOperators = dictionaryAnywayOperators(),
+              let operatorValue = Payments.operatorByPaymentsType(type)
+        else { return nil }
+        
+        let operators = anywayOperators
+            .filter { $0.parentCode == operatorValue.rawValue }
+        // TODO: Remove filter after GIBDD & MosParking fix
+        // .filter { $0.code != Purefs.iForaGibdd && $0.code != Purefs.iForaMosParking  }
+            .sorted { $0.name.lowercased() < $1.name.lowercased() }
+            .sorted { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending }
+        // TODO: `replacingAvtodors` from reuse as generic case for any PTSectionPaymentsView.ViewModel.PaymentsType
+            .replacingAvtodors(with: avtodorGroup)
+        
+        let latestPayments = makeLatestPaymentsSectionViewModel(forType: type)
+        
+        return .init(
+            operators: operators,
+            latestPayments: latestPayments,
+            makePaymentsViewModel: makePaymentsViewModel(source:),
+            handleError: handleError
+        )
+    }
+    
+    func makeLatestPaymentsSectionViewModel(
+        forType type: PTSectionPaymentsView.ViewModel.PaymentsType
+    ) -> PaymentsServicesLatestPaymentsSectionViewModel {
+        
+        let kind = LatestPaymentData.Kind(rawValue: type.rawValue)
+        let including = Set([kind].compactMap { $0 })
+        
+        return .init(model: self, including: including)
+    }
+}
+
+extension Array where Element == OperatorGroupData.OperatorData {
+    
+    func replacingAvtodors(
+        with avtodor: OperatorGroupData.OperatorData?
+    ) -> Self {
+        
+        guard let avtodor else { return self }
+        
+        var copy = self
+        
+        copy.removeAll { $0.synonymList == [TaxCodes.avtodor] }
+        copy.insert(avtodor, at: 0)
+        
+        return copy
+    }
+}
+
+private extension Model {
+    
+    var avtodorGroup: OperatorGroupData.OperatorData? {
+        
+        guard let avtodorContract = dictionaryAnywayOperator(for: Purefs.avtodorContract)
+        else { return nil }
+        
+        return .init(
+            city: avtodorContract.city,
+            code: Purefs.avtodorGroup,
+            isGroup: true,
+            logotypeList: avtodorContract.logotypeList,
+            name: .avtodorGroupTitle,
+            parameterList: avtodorContract.parameterList,
+            parentCode: Purefs.transport,
+            region: avtodorContract.region,
+            synonymList: []
+        )
+    }
+}
+
+private extension PaymentsTransfersViewModel {
+    
+    func handle(latestPayment: LatestPaymentData) {
+        
+        switch (latestPayment.type, latestPayment) {
+            
+        case (.internet, let paymentData),
+            (.service, let paymentData),
+            (.mobile, let paymentData),
+            (.outside, let paymentData),
+            (.phone, let paymentData),
+            (.transport, let paymentData),
+            (.taxAndStateService, let paymentData):
+            
+            let paymentsViewModel = PaymentsViewModel(
+                source: .latestPayment(paymentData.id),
+                model: model
+            ) { [weak self] in
+                
+                self?.event(.resetDestination)
+            }
+            
+            bind(paymentsViewModel)
+            
+            self.action.send(DelayWrappedAction(
+                delayMS: 300,
+                action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            )
+            
+        default: //error matching
+            route.modal = .bottomSheet(.init(type: .exampleDetail(latestPayment.type.rawValue))) //TODO:
+        }
+    }
+}
+
+//MARK: - Types
+
+extension PaymentsTransfersViewModel {
+    
+    enum Mode {
+        
+        /// view presented in main tab view
+        case normal
+        
+        /// view presented in navigation stack
+        case link
+    }
+    
+    struct Route {
+        
+        var destination: Link?
+        var modal: Modal?
+        /// - Note: not ideal, but modelling `Route` as an enum to remove impossible states
+        /// would lead to significant complications
+        var outside: Outside?
+        
+        enum Outside { case chat, main }
+        
+        static let empty: Self = .init(destination: nil, modal: nil)
+    }
+    
+    enum Modal {
+        
+        case alert(Alert.ViewModel)
+        case bottomSheet(BottomSheet)
+        case fullScreenSheet(FullScreenSheet)
+        case sheet(Sheet)
+        
+        var alert: Alert.ViewModel? {
+            guard case let .alert(alert) = self
+            else { return nil }
+            
+            return alert
+        }
+        
+        var bottomSheet: BottomSheet? {
+            guard case let .bottomSheet(bottomSheet) = self
+            else { return nil }
+            
+            return bottomSheet
+        }
+        
+        var fullScreenSheet: FullScreenSheet? {
+            guard case let .fullScreenSheet(fullScreenSheet) = self
+            else { return nil }
+            
+            return fullScreenSheet
+        }
+        
+        var sheet: Sheet? {
+            guard case let .sheet(sheet) = self
+            else { return nil }
+            
+            return sheet
+        }
+    }
+    
+    struct BottomSheet: BottomSheetCustomizable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        let isUserInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(true)
+        
+        var keyboardOffsetMultiplier: CGFloat {
+            
+            switch type {
+            case .meToMe: return 1
+            default: return 0
+            }
+        }
+        
+        var animationSpeed: Double {
+            
+            switch type {
+            case .meToMe: return 0.4
+            default: return 0.5
+            }
+        }
+        
+        enum Kind {
+            
+            case exampleDetail(String)
+            case meToMe(PaymentsMeToMeViewModel)
+        }
+    }
+    
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            
+            case meToMe(PaymentsMeToMeViewModel)
+            case successMeToMe(PaymentsSuccessViewModel)
+            case transferByPhone(TransferByPhoneViewModel)
+            case anotherCard(AnotherCardViewModel)
+            case fastPayment(ContactsViewModel)
+            case country(ContactsViewModel)
+        }
+    }
+    
+    struct FullCover: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            case successMeToMe(PaymentsSuccessViewModel)
+        }
+    }
+    
+    enum Link: Identifiable {
+        
+        case exampleDetail(String)
+        case userAccount(UserAccountViewModel)
+        case mobile(MobilePayViewModel)
+        case phone(PaymentByPhoneViewModel)
+        case payments(PaymentsViewModel)
+        case serviceOperators(OperatorsViewModel)
+        case internetOperators(OperatorsViewModel)
+        case transportOperators(OperatorsViewModel)
+        case service(OperatorsViewModel)
+        case internet(OperatorsViewModel)
+        case transport(OperatorsViewModel)
+        case template(TemplatesListViewModel)
+        case country(CountryPaymentView.ViewModel)
+        case currencyWallet(CurrencyWalletViewModel)
+        case failedView(QRFailedViewModel)
+        case c2b(C2BViewModel)
+        case searchOperators(QRSearchOperatorViewModel)
+        case operatorView(InternetTVDetailsViewModel)
+        case paymentsServices(PaymentsServicesViewModel)
+        case transportPayments(TransportPaymentsViewModel)
+        case productProfile(ProductProfileViewModel)
+        case openDeposit(OpenDepositDetailViewModel)
+        case sberQRPayment(SberQRConfirmPaymentViewModel)
+        case openDepositsList(OpenDepositListViewModel)
+        case utilities(Route.UtilitiesRoute)
+        
+        var id: Case {
+            
+            switch self {
+            case .exampleDetail:
+                return .exampleDetail
+            case .userAccount:
+                return .userAccount
+            case .mobile:
+                return .mobile
+            case .phone:
+                return .phone
+            case .payments:
+                return .payments
+            case .serviceOperators:
+                return .serviceOperators
+            case .internetOperators:
+                return .internetOperators
+            case .transportOperators:
+                return .transportOperators
+            case .service:
+                return .service
+            case .internet:
+                return .internet
+            case .transport:
+                return .transport
+            case .template:
+                return .template
+            case .country:
+                return .country
+            case .currencyWallet:
+                return .currencyWallet
+            case .failedView:
+                return .failedView
+            case .c2b:
+                return .c2b
+            case .searchOperators:
+                return .searchOperators
+            case .operatorView:
+                return .operatorView
+            case .paymentsServices:
+                return .paymentsServices
+            case .transportPayments:
+                return .transportPayments
+            case .productProfile:
+                return .productProfile
+            case .openDeposit:
+                return .openDeposit
+            case .openDepositsList:
+                return .openDepositsList
+            case .sberQRPayment:
+                return .sberQRPayment
+            case .utilities:
+                return .utilities
+            }
+        }
+        
+        enum Case {
+            case exampleDetail
+            case userAccount
+            case mobile
+            case phone
+            case payments
+            case serviceOperators
+            case internetOperators
+            case transportOperators
+            case service
+            case internet
+            case transport
+            case template
+            case country
+            case currencyWallet
+            case failedView
+            case c2b
+            case searchOperators
+            case operatorView
+            case paymentsServices
+            case transportPayments
+            case productProfile
+            case openDeposit
+            case openDepositsList
+            case sberQRPayment
+            case utilities
+        }
+    }
+    
+    struct FullScreenSheet: Identifiable, Equatable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            
+            case qrScanner(QRViewModel)
+            case success(PaymentsSuccessViewModel)
+        }
+        
+        static func == (lhs: PaymentsTransfersViewModel.FullScreenSheet, rhs: PaymentsTransfersViewModel.FullScreenSheet) -> Bool {
+            lhs.id == rhs.id
+        }
+    }
+}
+
+extension PaymentsTransfersViewModel.Route {
+    
+    typealias UtilitiesRoute = (viewModel: UtilitiesViewModel, destination: UtilitiesDestination?)
+    
+    enum UtilitiesDestination: Identifiable {
+        
+        case failure(OperatorsListComponents.Operator)
+        case list(List)
+        case payment(UtilityPaymentState)
+    }
+}
+
+extension PaymentsTransfersViewModel.Route.UtilitiesDestination {
+    
+    struct List {
+        
+        let `operator`: OperatorsListComponents.Operator
+        let services: [UtilityService]
+        let destination: UtilityServicePickerDestination?
+    }
+    
+    var id: ID {
+        
+        switch self {
+        case .failure:
+            return .failure
+        case .list:
+            return .list
+        case .payment:
+            return .payment
+        }
+    }
+    
+    enum ID {
+        
+        case failure, list, payment
+    }
+    
+    enum UtilityServicePickerDestination: Identifiable {
+        
+        case payment(UtilityPaymentState)
+        
+        var id: ID {
+            switch self {
+            case .payment:
+                return .payment
+            }
+        }
+        
+        enum ID {
+            
+            case payment
+        }
+    }
+}
+
+extension PaymentsTransfersViewModel.Route {
+    
+    var utilityPaymentState: UtilityPaymentState? {
+        
+        get {
+            
+            utilitiesRoute?.destination?.utilityPaymentState
+        }
+        
+        set(newValue) {
+            
+            utilitiesRoute?.destination?.utilityPaymentState = newValue
+        }
+    }
+}
+
+extension PaymentsTransfersViewModel.Route.UtilitiesDestination {
+    
+    var utilityPaymentState: UtilityPaymentState? {
+        
+        get {
+            
+            switch self {
+            case let .list(list):
+                guard case let .payment(utilityPaymentState) = list.destination
+                else { return nil }
+                
+                return utilityPaymentState
+                
+            case let .payment(utilityPaymentState):
+                return utilityPaymentState
+                
+            default:
+                return nil
+            }
+        }
+        
+        set(newValue) {
+            
+            switch self {
+            case let .list(list):
+                guard case .payment = list.destination
+                else { return }
+                
+                self = .list(.init(
+                    operator: list.`operator`,
+                    services: list.services,
+                    destination: newValue.map { .payment($0) }
+                ))
+                
+            case let .payment(utilityPaymentState):
+                self = .payment(utilityPaymentState)
+                
+            default:
+                return
+            }
+        }
+    }
+}
+
+//MARK: - Action
+
+enum PaymentsTransfersViewModelAction {
+    
+    enum ButtonTapped {
+        
+        struct UserAccount: Action {}
+        
+        struct Scanner: Action {}
+    }
+    
+    enum Close {
+        
+        struct BottomSheet: Action {}
+        
+        struct FullCover: Action {}
+        
+        struct Link: Action {}
+        
+        struct DismissAll: Action {}
+    }
+    
+    struct OpenQr: Action {}
+    
+    enum Show {
+        
+        struct ProductProfile: Action {
+            
+            let productId: ProductData.ID
+        }
+        
+        struct Alert: Action {
+            
+            let title: String
+            let message: String
+        }
+        
+        struct Payment: Action {
+            
+            let viewModel: PaymentsViewModel
+        }
+        
+        struct Requisites: Action {
+            
+            let qrCode: QRCode
+        }
+        
+        struct Contacts: Action {}
+        
+        struct Countries: Action {}
+        
+        struct OpenDeposit: Action {}
+    }
+    
+    struct ViewDidApear: Action {}
+}
+
+// MARK: - Helpers
+
+extension PaymentsTransfersViewModel.Route {
+    
+    var utilitiesRoute: UtilitiesRoute? {
+        
+        get {
+            
+            guard case let .utilities(utilitiesRoute) = destination
+            else { return nil }
+            
+            return utilitiesRoute
+        }
+        
+        set(newValue) {
+            
+            guard case let .utilities(utilitiesRoute) = destination
+            else { return }
+            
+            if let newValue {
+                destination = .utilities(newValue)
+            } else {
+                destination = .utilities((utilitiesRoute.viewModel, destination: nil))
+            }
+        }
+    }
+}
+
+private extension PaymentsTransfersViewModel {
+    
+    private func makeUtilitiesViewModel(
+        for type: PTSectionPaymentsView.ViewModel.PaymentsType
+    ) {
+        rootActions?.spinner.show()
+        
+        paymentsTransfersFactory.makeUtilitiesViewModel(
+            makeUtilitiesPayload(forType: type)
+        ) { [weak self] in
+            
+            self?.rootActions?.spinner.hide()
+            
+            switch $0 {
+            case let .legacy(paymentsServicesViewModel):
+                self?.route.destination = .paymentsServices(paymentsServicesViewModel)
+                
+            case let .utilities(utilitiesViewModel):
+                self?.route.destination = .utilities((utilitiesViewModel, nil))
+            }
+        }
+    }
+    
+    private func handleOutside(
+        _ outside: Route.Outside
+    ) {
+        switch outside {
+        case .chat: switchToChat()
+        case .main: switchToMain()
+        }
+    }
+    
+    private func switchToChat() {
+        
+        rootActions?.spinner.show()
+        
+        delay(for: .milliseconds(300)) { [weak self] in
+            
+            self?.rootActions?.spinner.hide()
+            self?.rootActions?.switchTab(.chat)
+        }
+    }
+    
+    private func switchToMain() {
+        
+        withAnimation { [weak self] in
+            
+            self?.event(.resetDestination)
+            self?.rootActions?.switchTab(.main)
+        }
+    }
+    
+    private func delay(
+        for timeout: DispatchTimeInterval,
+        _ action: @escaping () -> Void
+    ) {
+        scheduler.delay(for: timeout, action)
+    }
+}
+
+extension AnySchedulerOfDispatchQueue {
+    
+    func delay(
+        for timeout: DispatchTimeInterval,
+        _ action: @escaping () -> Void
+    ) {
+        schedule(after: .init(.now() + timeout), action)
+    }
+}
+
+// MARK: - Bindings
+
+private extension PaymentsTransfersViewModel {
     
     private func bind() {
         
@@ -1190,684 +1867,6 @@ extension PaymentsTransfersViewModel {
             icon: .ic24BarcodeScanner2,
             action: { [weak self] in self?.openScanner() }
         )]
-    }
-}
-
-// MARK: - Helpers
-
-extension PaymentsTransfersViewModel {
-    
-    func dismiss() {
-        
-        self.event(.resetDestination)
-    }
-    
-    func getMosParkingPickerData() async throws -> MosParkingPickerData {
-        
-        let (_, data) = try await model.getMosParkingListData()
-        let (state, options, refillID) = try MosParkingDataMapper.map(data: data)
-        
-        return .init(
-            state: state,
-            options: options,
-            refillID: refillID
-        )
-    }
-}
-
-extension Model {
-    
-    func getMosParkingListData() async throws -> (serial: String, data: [MosParkingData]) {
-        
-        guard let token else {
-            
-            throw Payments.Error.notAuthorized
-        }
-        
-        typealias GetMosParkingList = ServerCommands.DictionaryController.GetMosParkingList
-        typealias MosParkingListData = ServerCommands.DictionaryController.GetMosParkingList.Response.MosParkingListData
-        
-        let command = GetMosParkingList(token: token, serial: nil)
-        let listData: MosParkingListData = try await serverAgent.executeCommand(command: command)
-        
-        return (listData.serial, listData.mosParkingList)
-    }
-}
-
-private extension Model {
-    
-    // TODO: rename `makeTransportPaymentsViewModel`
-    // TODO: rename `TransportPaymentsViewModel` to reflect generic nature of the component that gets operators and last operations for a given type
-    // TODO: `substitutingAvtodors` from reuse as generic case for any PTSectionPaymentsView.ViewModel.PaymentsType
-    func makeTransportPaymentsViewModel(
-        type: PTSectionPaymentsView.ViewModel.PaymentsType,
-        handleError: @escaping (String) -> Void
-    ) -> TransportPaymentsViewModel? {
-        
-        guard let anywayOperators = dictionaryAnywayOperators(),
-              let operatorValue = Payments.operatorByPaymentsType(type)
-        else { return nil }
-        
-        let operators = anywayOperators
-            .filter { $0.parentCode == operatorValue.rawValue }
-        // TODO: Remove filter after GIBDD & MosParking fix
-        // .filter { $0.code != Purefs.iForaGibdd && $0.code != Purefs.iForaMosParking  }
-            .sorted { $0.name.lowercased() < $1.name.lowercased() }
-            .sorted { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending }
-        // TODO: `replacingAvtodors` from reuse as generic case for any PTSectionPaymentsView.ViewModel.PaymentsType
-            .replacingAvtodors(with: avtodorGroup)
-        
-        let latestPayments = makeLatestPaymentsSectionViewModel(forType: type)
-        
-        return .init(
-            operators: operators,
-            latestPayments: latestPayments,
-            makePaymentsViewModel: makePaymentsViewModel(source:),
-            handleError: handleError
-        )
-    }
-    
-    func makeLatestPaymentsSectionViewModel(
-        forType type: PTSectionPaymentsView.ViewModel.PaymentsType
-    ) -> PaymentsServicesLatestPaymentsSectionViewModel {
-        
-        let kind = LatestPaymentData.Kind(rawValue: type.rawValue)
-        let including = Set([kind].compactMap { $0 })
-        
-        return .init(model: self, including: including)
-    }
-}
-
-extension Array where Element == OperatorGroupData.OperatorData {
-    
-    func replacingAvtodors(
-        with avtodor: OperatorGroupData.OperatorData?
-    ) -> Self {
-        
-        guard let avtodor else { return self }
-        
-        var copy = self
-        
-        copy.removeAll { $0.synonymList == [TaxCodes.avtodor] }
-        copy.insert(avtodor, at: 0)
-        
-        return copy
-    }
-}
-
-private extension Model {
-    
-    var avtodorGroup: OperatorGroupData.OperatorData? {
-        
-        guard let avtodorContract = dictionaryAnywayOperator(for: Purefs.avtodorContract)
-        else { return nil }
-        
-        return .init(
-            city: avtodorContract.city,
-            code: Purefs.avtodorGroup,
-            isGroup: true,
-            logotypeList: avtodorContract.logotypeList,
-            name: .avtodorGroupTitle,
-            parameterList: avtodorContract.parameterList,
-            parentCode: Purefs.transport,
-            region: avtodorContract.region,
-            synonymList: []
-        )
-    }
-}
-
-extension PaymentsTransfersViewModel {
-    
-    func handle(latestPayment: LatestPaymentData) {
-        
-        switch (latestPayment.type, latestPayment) {
-            
-        case (.internet, let paymentData),
-            (.service, let paymentData),
-            (.mobile, let paymentData),
-            (.outside, let paymentData),
-            (.phone, let paymentData),
-            (.transport, let paymentData),
-            (.taxAndStateService, let paymentData):
-            
-            let paymentsViewModel = PaymentsViewModel(
-                source: .latestPayment(paymentData.id),
-                model: model
-            ) { [weak self] in
-                
-                self?.event(.resetDestination)
-            }
-            
-            bind(paymentsViewModel)
-            
-            self.action.send(DelayWrappedAction(
-                delayMS: 300,
-                action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-            )
-            
-        default: //error matching
-            route.modal = .bottomSheet(.init(type: .exampleDetail(latestPayment.type.rawValue))) //TODO:
-        }
-    }
-    
-}
-
-//MARK: - Types
-
-extension PaymentsTransfersViewModel {
-    
-    enum Mode {
-        
-        /// view presented in main tab view
-        case normal
-        
-        /// view presented in navigation stack
-        case link
-    }
-    
-    struct Route {
-        
-        var destination: Link?
-        var modal: Modal?
-        /// - Note: not ideal, but modelling `Route` as an enum to remove impossible states
-        /// would lead to significant complications
-        var outside: Outside?
-        
-        enum Outside { case chat, main }
-        
-        static let empty: Self = .init(destination: nil, modal: nil)
-    }
-    
-    enum Modal {
-        
-        case alert(Alert.ViewModel)
-        case bottomSheet(BottomSheet)
-        case fullScreenSheet(FullScreenSheet)
-        case sheet(Sheet)
-        
-        var alert: Alert.ViewModel? {
-            guard case let .alert(alert) = self
-            else { return nil }
-            
-            return alert
-        }
-        
-        var bottomSheet: BottomSheet? {
-            guard case let .bottomSheet(bottomSheet) = self
-            else { return nil }
-            
-            return bottomSheet
-        }
-        
-        var fullScreenSheet: FullScreenSheet? {
-            guard case let .fullScreenSheet(fullScreenSheet) = self
-            else { return nil }
-            
-            return fullScreenSheet
-        }
-        
-        var sheet: Sheet? {
-            guard case let .sheet(sheet) = self
-            else { return nil }
-            
-            return sheet
-        }
-    }
-    
-    struct BottomSheet: BottomSheetCustomizable {
-        
-        let id = UUID()
-        let type: Kind
-        
-        let isUserInteractionEnabled: CurrentValueSubject<Bool, Never> = .init(true)
-        
-        var keyboardOffsetMultiplier: CGFloat {
-            
-            switch type {
-            case .meToMe: return 1
-            default: return 0
-            }
-        }
-        
-        var animationSpeed: Double {
-            
-            switch type {
-            case .meToMe: return 0.4
-            default: return 0.5
-            }
-        }
-        
-        enum Kind {
-            
-            case exampleDetail(String)
-            case meToMe(PaymentsMeToMeViewModel)
-        }
-    }
-    
-    struct Sheet: Identifiable {
-        
-        let id = UUID()
-        let type: Kind
-        
-        enum Kind {
-            
-            case meToMe(PaymentsMeToMeViewModel)
-            case successMeToMe(PaymentsSuccessViewModel)
-            case transferByPhone(TransferByPhoneViewModel)
-            case anotherCard(AnotherCardViewModel)
-            case fastPayment(ContactsViewModel)
-            case country(ContactsViewModel)
-        }
-    }
-    
-    struct FullCover: Identifiable {
-        
-        let id = UUID()
-        let type: Kind
-        
-        enum Kind {
-            case successMeToMe(PaymentsSuccessViewModel)
-        }
-    }
-    
-    enum Link: Identifiable {
-        
-        case exampleDetail(String)
-        case userAccount(UserAccountViewModel)
-        case mobile(MobilePayViewModel)
-        case phone(PaymentByPhoneViewModel)
-        case payments(PaymentsViewModel)
-        case serviceOperators(OperatorsViewModel)
-        case internetOperators(OperatorsViewModel)
-        case transportOperators(OperatorsViewModel)
-        case service(OperatorsViewModel)
-        case internet(OperatorsViewModel)
-        case transport(OperatorsViewModel)
-        case template(TemplatesListViewModel)
-        case country(CountryPaymentView.ViewModel)
-        case currencyWallet(CurrencyWalletViewModel)
-        case failedView(QRFailedViewModel)
-        case c2b(C2BViewModel)
-        case searchOperators(QRSearchOperatorViewModel)
-        case operatorView(InternetTVDetailsViewModel)
-        case paymentsServices(PaymentsServicesViewModel)
-        case transportPayments(TransportPaymentsViewModel)
-        case productProfile(ProductProfileViewModel)
-        case openDeposit(OpenDepositDetailViewModel)
-        case sberQRPayment(SberQRConfirmPaymentViewModel)
-        case openDepositsList(OpenDepositListViewModel)
-        case utilities(Route.UtilitiesRoute)
-        
-        var id: Case {
-            
-            switch self {
-            case .exampleDetail:
-                return .exampleDetail
-            case .userAccount:
-                return .userAccount
-            case .mobile:
-                return .mobile
-            case .phone:
-                return .phone
-            case .payments:
-                return .payments
-            case .serviceOperators:
-                return .serviceOperators
-            case .internetOperators:
-                return .internetOperators
-            case .transportOperators:
-                return .transportOperators
-            case .service:
-                return .service
-            case .internet:
-                return .internet
-            case .transport:
-                return .transport
-            case .template:
-                return .template
-            case .country:
-                return .country
-            case .currencyWallet:
-                return .currencyWallet
-            case .failedView:
-                return .failedView
-            case .c2b:
-                return .c2b
-            case .searchOperators:
-                return .searchOperators
-            case .operatorView:
-                return .operatorView
-            case .paymentsServices:
-                return .paymentsServices
-            case .transportPayments:
-                return .transportPayments
-            case .productProfile:
-                return .productProfile
-            case .openDeposit:
-                return .openDeposit
-            case .openDepositsList:
-                return .openDepositsList
-            case .sberQRPayment:
-                return .sberQRPayment
-            case .utilities:
-                return .utilities
-            }
-        }
-        
-        enum Case {
-            case exampleDetail
-            case userAccount
-            case mobile
-            case phone
-            case payments
-            case serviceOperators
-            case internetOperators
-            case transportOperators
-            case service
-            case internet
-            case transport
-            case template
-            case country
-            case currencyWallet
-            case failedView
-            case c2b
-            case searchOperators
-            case operatorView
-            case paymentsServices
-            case transportPayments
-            case productProfile
-            case openDeposit
-            case openDepositsList
-            case sberQRPayment
-            case utilities
-        }
-    }
-    
-    struct FullScreenSheet: Identifiable, Equatable {
-        
-        let id = UUID()
-        let type: Kind
-        
-        enum Kind {
-            
-            case qrScanner(QRViewModel)
-            case success(PaymentsSuccessViewModel)
-        }
-        
-        static func == (lhs: PaymentsTransfersViewModel.FullScreenSheet, rhs: PaymentsTransfersViewModel.FullScreenSheet) -> Bool {
-            lhs.id == rhs.id
-        }
-    }
-}
-
-extension PaymentsTransfersViewModel.Route {
-    
-    typealias UtilitiesRoute = (viewModel: UtilitiesViewModel, destination: UtilitiesDestination?)
-    
-    enum UtilitiesDestination: Identifiable {
-        
-        case failure(OperatorsListComponents.Operator)
-        case list(List)
-        case payment(UtilityPaymentState)
-    }
-}
-
-extension PaymentsTransfersViewModel.Route.UtilitiesDestination {
-    
-    struct List {
-        
-        let `operator`: OperatorsListComponents.Operator
-        let services: [UtilityService]
-        let destination: UtilityServicePickerDestination?
-    }
-    
-    var id: ID {
-        
-        switch self {
-        case .failure:
-            return .failure
-        case .list:
-            return .list
-        case .payment:
-            return .payment
-        }
-    }
-    
-    enum ID {
-        
-        case failure, list, payment
-    }
-    
-    enum UtilityServicePickerDestination: Identifiable {
-        
-        case payment(UtilityPaymentState)
-        
-        var id: ID {
-            switch self {
-            case .payment:
-                return .payment
-            }
-        }
-        
-        enum ID {
-            
-            case payment
-        }
-    }
-}
-
-extension PaymentsTransfersViewModel.Route {
-    
-    var utilityPaymentState: UtilityPaymentState? {
-        
-        get {
-            
-            utilitiesRoute?.destination?.utilityPaymentState
-        }
-        
-        set(newValue) {
-            
-            utilitiesRoute?.destination?.utilityPaymentState = newValue
-        }
-    }
-}
-
-extension PaymentsTransfersViewModel.Route.UtilitiesDestination {
-    
-    var utilityPaymentState: UtilityPaymentState? {
-        
-        get {
-            
-            switch self {
-            case let .list(list):
-                guard case let .payment(utilityPaymentState) = list.destination
-                else { return nil }
-                
-                return utilityPaymentState
-                
-            case let .payment(utilityPaymentState):
-                return utilityPaymentState
-                
-            default:
-                return nil
-            }
-        }
-        
-        set(newValue) {
-            
-            switch self {
-            case let .list(list):
-                guard case .payment = list.destination
-                else { return }
-                
-                self = .list(.init(
-                    operator: list.`operator`,
-                    services: list.services,
-                    destination: newValue.map { .payment($0) }
-                ))
-                
-            case let .payment(utilityPaymentState):
-                self = .payment(utilityPaymentState)
-                
-            default:
-                return
-            }
-        }
-    }
-}
-
-//MARK: - Action
-
-enum PaymentsTransfersViewModelAction {
-    
-    enum ButtonTapped {
-        
-        struct UserAccount: Action {}
-        
-        struct Scanner: Action {}
-    }
-    
-    enum Close {
-        
-        struct BottomSheet: Action {}
-        
-        struct FullCover: Action {}
-        
-        struct Link: Action {}
-        
-        struct DismissAll: Action {}
-    }
-    
-    struct OpenQr: Action {}
-    
-    enum Show {
-        
-        struct ProductProfile: Action {
-            
-            let productId: ProductData.ID
-        }
-        
-        struct Alert: Action {
-            
-            let title: String
-            let message: String
-        }
-        
-        struct Payment: Action {
-            
-            let viewModel: PaymentsViewModel
-        }
-        
-        struct Requisites: Action {
-            
-            let qrCode: QRCode
-        }
-        
-        struct Contacts: Action {}
-        
-        struct Countries: Action {}
-        
-        struct OpenDeposit: Action {}
-    }
-    
-    struct ViewDidApear: Action {}
-}
-
-// MARK: - Helpers
-
-extension PaymentsTransfersViewModel.Route {
-    
-    var utilitiesRoute: UtilitiesRoute? {
-        
-        get {
-            
-            guard case let .utilities(utilitiesRoute) = destination
-            else { return nil }
-            
-            return utilitiesRoute
-        }
-        
-        set(newValue) {
-            
-            guard case let .utilities(utilitiesRoute) = destination
-            else { return }
-            
-            if let newValue {
-                destination = .utilities(newValue)
-            } else {
-                destination = .utilities((utilitiesRoute.viewModel, destination: nil))
-            }
-        }
-    }
-}
-
-private extension PaymentsTransfersViewModel {
-    
-    private func makeUtilitiesViewModel(
-        for type: PTSectionPaymentsView.ViewModel.PaymentsType
-    ) {
-        rootActions?.spinner.show()
-        
-        paymentsTransfersFactory.makeUtilitiesViewModel(
-            makeUtilitiesPayload(forType: type)
-        ) { [weak self] in
-            
-            self?.rootActions?.spinner.hide()
-            
-            switch $0 {
-            case let .legacy(paymentsServicesViewModel):
-                self?.route.destination = .paymentsServices(paymentsServicesViewModel)
-                
-            case let .utilities(utilitiesViewModel):
-                self?.route.destination = .utilities((utilitiesViewModel, nil))
-            }
-        }
-    }
-    
-    private func handleOutside(
-        _ outside: Route.Outside
-    ) {
-        switch outside {
-        case .chat: switchToChat()
-        case .main: switchToMain()
-        }
-    }
-    
-    private func switchToChat() {
-        
-        rootActions?.spinner.show()
-        
-        delay(for: .milliseconds(300)) { [weak self] in
-            
-            self?.rootActions?.spinner.hide()
-            self?.rootActions?.switchTab(.chat)
-        }
-    }
-    
-    private func switchToMain() {
-        
-        withAnimation { [weak self] in
-            
-            self?.event(.resetDestination)
-            self?.rootActions?.switchTab(.main)
-        }
-    }
-    
-    private func delay(
-        for timeout: DispatchTimeInterval,
-        _ action: @escaping () -> Void
-    ) {
-        scheduler.delay(for: timeout, action)
-    }
-}
-
-extension AnySchedulerOfDispatchQueue {
-    
-    func delay(
-        for timeout: DispatchTimeInterval,
-        _ action: @escaping () -> Void
-    ) {
-        schedule(after: .init(.now() + timeout), action)
     }
 }
 
