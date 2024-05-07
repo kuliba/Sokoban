@@ -760,51 +760,8 @@ extension PaymentsTransfersViewModel {
                 
                 switch action {
                 case let payload as ContactsViewModelAction.PaymentRequested:
-                    
-                    self.event(.resetModal)
-                    
-                    switch payload.source {
-                    case let .latestPayment(latestPaymentId):
-                        guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) else {
-                            return
-                        }
-                        handle(latestPayment: latestPayment)
-                        
-                    default:
-                        let paymentsViewModel = PaymentsViewModel(
-                            source: payload.source,
-                            model: model
-                        ) { [weak self] in
-                            
-                            guard let self else { return }
-                            
-                            self.event(.resetDestination)
-                            
-                            switch payload.source {
-                            case .direct:
-                                self.action.send(DelayWrappedAction(
-                                    delayMS: 300,
-                                    action: PaymentsTransfersViewModelAction.Show.Countries())
-                                )
-                                
-                            case .sfp:
-                                self.action.send(DelayWrappedAction(
-                                    delayMS: 300,
-                                    action: PaymentsTransfersViewModelAction.Show.Contacts())
-                                )
-                                
-                            default: break
-                            }
-                        }
-                        
-                        bind(paymentsViewModel)
-                        
-                        self.action.send(DelayWrappedAction(
-                            delayMS: 300,
-                            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-                        )
-                    }
-                    
+                    requestContactsPayment(source: payload.source)
+
                 case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
                     let paymentsViewModel = PaymentsViewModel(
                         source: payload.source,
@@ -843,6 +800,54 @@ extension PaymentsTransfersViewModel {
                 }
             }
             .store(in: &bindings)
+    }
+    
+    private func requestContactsPayment(
+        source: Payments.Operation.Source
+    ) {
+        self.event(.resetModal)
+        
+        switch source {
+        case let .latestPayment(latestPaymentId):
+            guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) 
+            else { return }
+            
+            handle(latestPayment: latestPayment)
+            
+        default:
+            let paymentsViewModel = PaymentsViewModel(
+                source: source,
+                model: model
+            ) { [weak self] in
+                
+                guard let self else { return }
+                
+                self.event(.resetDestination)
+                
+                switch source {
+                case .direct:
+                    self.action.send(DelayWrappedAction(
+                        delayMS: 300,
+                        action: PaymentsTransfersViewModelAction.Show.Countries())
+                    )
+                    
+                case .sfp:
+                    self.action.send(DelayWrappedAction(
+                        delayMS: 300,
+                        action: PaymentsTransfersViewModelAction.Show.Contacts())
+                    )
+                    
+                default: break
+                }
+            }
+            
+            bind(paymentsViewModel)
+            
+            self.action.send(DelayWrappedAction(
+                delayMS: 300,
+                action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            )
+        }
     }
     
     func bind(_ qrViewModel: QRViewModel) {
