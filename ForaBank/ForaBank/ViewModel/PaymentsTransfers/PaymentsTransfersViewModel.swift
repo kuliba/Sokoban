@@ -185,15 +185,7 @@ extension PaymentsTransfersViewModel {
                     showProductProfile(payload.productId)
                     
                 case _ as PaymentsTransfersViewModelAction.Show.OpenDeposit:
-                    let openDepositViewModel = OpenDepositListViewModel(
-                        model,
-                        catalogType: .deposit,
-                        dismissAction: { [weak self] in
-                            
-                            self?.event(.resetDestination)
-                        }
-                    )
-                    route.destination = .openDepositsList(openDepositViewModel)
+                    showOpenDeposit()
                     
                 case _ as PaymentsTransfersViewModelAction.ButtonTapped.UserAccount:
                     guard let clientInfo = model.clientInfo.value
@@ -344,6 +336,19 @@ extension PaymentsTransfersViewModel {
         productProfileViewModel.rootActions = rootActions
         bind(productProfileViewModel)
         route.destination = .productProfile(productProfileViewModel)
+    }
+    
+    private func showOpenDeposit() {
+        
+        let openDepositViewModel = OpenDepositListViewModel(
+            model,
+            catalogType: .deposit,
+            dismissAction: { [weak self] in
+                
+                self?.event(.resetDestination)
+            }
+        )
+        route.destination = .openDepositsList(openDepositViewModel)
     }
     
     private func bindSections(
