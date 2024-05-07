@@ -62,7 +62,8 @@ struct ProductProfileView: View {
                         
                         ProductProfileCardView(
                             viewModel: viewModel.product,
-                            makeSliderActivateView: productProfileViewFactory.makeActivateSliderView
+                            makeSliderActivateView: productProfileViewFactory.makeActivateSliderView,
+                            makeSliderViewModel: viewModel.makeSliderViewModel()
                         )
                         
                         VStack(spacing: 32) {

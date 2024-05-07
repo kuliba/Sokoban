@@ -531,7 +531,9 @@ struct ProductProfileCardView: View {
     
     @ObservedObject var viewModel: ProductProfileCardView.ViewModel
     let makeSliderActivateView: MakeActivateSliderView
-
+    let makeSliderViewModel: ActivateSliderViewModel
+    let sliderConfig: SliderConfig = .config
+    
     var body: some View {
         
         VStack(spacing: 0) {
@@ -552,19 +554,19 @@ struct ProductProfileCardView: View {
                             .frame(width: 268 - 20, height: 165)
 
                         if viewModel.needSlider(product)  {
-                            GenericProductView<ActivateSliderStateWrapperView>(viewModel: product, factory: .init(makeSlider: { makeSliderActivateView(
-                                product.id,
-                                .previewActivateSuccess,
-                                .default
-                            )}))
-                                .frame(width: 268, height: 160)
+                            GenericProductView<ActivateSliderStateWrapperView>(viewModel: product, factory: .init(
+                                makeSlider: {
+                                    makeSliderActivateView(
+                                        product.id,
+                                        makeSliderViewModel,
+                                        sliderConfig
+                                    )}))
+                            .frame(width: 268, height: 160)
 
                         } else {
                             ProductView(viewModel: product)
                                   .frame(width: 268, height: 160)
                         }
-                      /*  ProductView(viewModel: product)
-                            .frame(width: 268, height: 160)*/
                         
                     }.tag(product.id)
                 }
@@ -722,7 +724,11 @@ struct ProductProfileCardView_Previews: PreviewProvider {
         
         Group {
             
-            ProductProfileCardView(viewModel: .sample, makeSliderActivateView: ActivateSliderStateWrapperView.init(payload:viewModel:config:))
+            ProductProfileCardView(
+                viewModel: .sample,
+                makeSliderActivateView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
+                makeSliderViewModel: .previewActivateSuccess
+            )
                 .previewLayout(.fixed(width: 375, height: 500))
             
             ProductProfileCardView.SelectorView(viewModel: .sample)

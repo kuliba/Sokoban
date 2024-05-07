@@ -5,6 +5,7 @@
 //  Created by Дмитрий on 09.03.2022.
 //
 
+import ActivateSlider
 import Foundation
 import Combine
 import SwiftUI
@@ -2572,6 +2573,38 @@ extension ProductProfileViewModel {
             
         default:
             return
+        }
+    }
+}
+
+extension ProductProfileViewModel {
+    
+    func makeSliderViewModel() -> ActivateSliderViewModel {
+        
+        .init(
+            initialState: .initialState,
+            reduce: CardActivateReducer.default,
+            handleEffect: CardActivateEffectHandler(handleCardEffect: CardEffectHandler(
+                activate: unblockCardService
+            ).handleEffect(_:_:)).handleEffect(_:_:)
+        )
+    }
+    
+    private func unblockCardService(
+        cardID: ProductData.ID,
+        completion: @escaping CardEffectHandler.ActivateCompletion
+    ) {
+        
+        let cardNumber: String = model.product(productId: cardID)?.asCard?.number ?? ""
+        
+        unblockCardServices.createUnblockCard(.init(cardId: .init(cardID), cardNumber: .init(cardNumber))) { result in
+            switch result {
+            case .failure:
+                completion(.serverError("failure"))
+                
+            case .success:
+                completion(.success)
+            }
         }
     }
 }

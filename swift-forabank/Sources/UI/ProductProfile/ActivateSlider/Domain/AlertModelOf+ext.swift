@@ -6,6 +6,7 @@
 //
 
 import UIPrimitives
+import Foundation
 
 extension AlertModelOf<CardActivateEvent> {
     
@@ -14,6 +15,7 @@ extension AlertModelOf<CardActivateEvent> {
     static func activateAlert(_ payload: ActivatePayload) -> AlertModelOf {
         
         .init(
+            id: .default,
             title: "Активировать карту?",
             message: "После активации карта будет готова к использованию",
             primaryButton: .init(
@@ -28,4 +30,9 @@ extension AlertModelOf<CardActivateEvent> {
             )
         )
     }
+}
+
+private extension UUID {
+    
+    static let `default`: UUID = UUID(uuidString: "68b696d7-320b-4402-a412-d9cee10fc6a3")!
 }
