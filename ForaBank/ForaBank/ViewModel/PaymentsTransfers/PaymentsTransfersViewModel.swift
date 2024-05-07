@@ -674,17 +674,10 @@ extension PaymentsTransfersViewModel {
                 
                 switch action {
                 case let payload as PaymentsMeToMeAction.Response.Success:
-                    
-                    guard let productIdFrom = viewModel?.swapViewModel.productIdFrom,
-                          let productIdTo = viewModel?.swapViewModel.productIdTo else {
-                        return
-                    }
-                    
-                    model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
-                    model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
-                    
-                    bind(payload.viewModel)
-                    fullCover = .init(type: .successMeToMe(payload.viewModel))
+                    handleSuccessResponseMeToMe(
+                        meToMeViewModel: viewModel,
+                        successViewModel: payload.viewModel
+                    )
                     
                 case _ as PaymentsMeToMeAction.Response.Failed:
                     
@@ -708,6 +701,21 @@ extension PaymentsTransfersViewModel {
                 }
             }
             .store(in: &bindings)
+    }
+    
+    func handleSuccessResponseMeToMe(
+        meToMeViewModel: PaymentsMeToMeViewModel?,
+        successViewModel: PaymentsSuccessViewModel
+    ) {
+        guard let productIdFrom = meToMeViewModel?.swapViewModel.productIdFrom,
+              let productIdTo = meToMeViewModel?.swapViewModel.productIdTo 
+        else { return }
+        
+        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
+        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+        
+        bind(successViewModel)
+        fullCover = .init(type: .successMeToMe(successViewModel))
     }
     
     private func bind(_ viewModel: PaymentsSuccessViewModel) {
