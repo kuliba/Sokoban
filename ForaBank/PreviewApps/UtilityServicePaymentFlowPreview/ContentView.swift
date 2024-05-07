@@ -17,7 +17,6 @@ struct ContentView: View {
                 ))
             )
         ),
-        factory: .preview,
         navigationStateManager: .preview(),
         rootActions: .preview
     )

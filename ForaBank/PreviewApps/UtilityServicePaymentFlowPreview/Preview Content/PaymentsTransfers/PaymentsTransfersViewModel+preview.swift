@@ -9,6 +9,10 @@ extension PaymentsTransfersViewModel {
     
     static func preview() -> Self {
         
-        return .init(state: .preview, factory: .preview, navigationStateManager: .preview(), rootActions: .preview)
+        return .init(
+            state: .preview,
+            navigationStateManager: .preview(),
+            rootActions: .preview
+        )
     }
 }

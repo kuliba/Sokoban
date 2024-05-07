@@ -9,6 +9,7 @@ enum PaymentsTransfersEvent: Equatable {
     
     case dismissFullScreenCover
     case goToMain
+    case paymentButtonTapped(PaymentButton)
     case setModal(to: Modal)
     case utilityFlow(UtilityPaymentFlowEvent)
 }
@@ -16,4 +17,9 @@ enum PaymentsTransfersEvent: Equatable {
 extension PaymentsTransfersEvent {
     
     typealias Modal = PaymentsTransfersViewModel.State.Route.Modal
+    
+    enum PaymentButton: Equatable {
+        
+        case utilityService
+    }
 }

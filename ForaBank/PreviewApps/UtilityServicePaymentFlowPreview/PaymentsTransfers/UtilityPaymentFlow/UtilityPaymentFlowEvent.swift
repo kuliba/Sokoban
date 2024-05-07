@@ -9,12 +9,18 @@ import ForaTools
 
 enum UtilityPaymentFlowEvent: Equatable {
     
+    case initiated(UtilityPrepaymentPayload)
     case payment(UtilityServicePaymentFlowEvent)
     case prepayment(UtilityPrepaymentFlowEvent)
     case servicePicker(ServicePickerFlowEvent)
 }
 
 extension UtilityPaymentFlowEvent {
+    
+    enum ServicePickerFlowEvent: Equatable {
+        
+        case dismissAlert
+    }
     
     enum UtilityPrepaymentFlowEvent: Equatable {
         
@@ -29,9 +35,10 @@ extension UtilityPaymentFlowEvent {
         case select(Select)
     }
     
-    enum ServicePickerFlowEvent: Equatable {
+    struct UtilityPrepaymentPayload: Equatable {
         
-        case dismissAlert
+        let lastPayments: [LastPayment]
+        let operators: [Operator]
     }
 }
 

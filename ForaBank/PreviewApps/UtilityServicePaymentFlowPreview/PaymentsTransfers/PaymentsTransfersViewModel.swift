@@ -11,18 +11,15 @@ final class PaymentsTransfersViewModel: ObservableObject {
     
     @Published private(set) var state: State
     
-    private let factory: Factory
     private let navigationStateManager: NavigationStateManager
     private let rootActions: RootActions
     
     init(
         state: State,
-        factory: Factory,
         navigationStateManager: NavigationStateManager,
         rootActions: RootActions
     ) {
         self.state = state
-        self.factory = factory
         self.navigationStateManager = navigationStateManager
         self.rootActions = rootActions
     }
@@ -32,13 +29,7 @@ extension PaymentsTransfersViewModel {
     
     func startUtilityPaymentProcess() {
         
-        rootActions.spinner.show()
-        
-        factory.makeUtilityPrepaymentViewModel { [weak self] in
-            
-            self?.rootActions.spinner.hide()
-            self?.state.route.destination = .utilityPayment(.init(viewModel: $0))
-        }
+        event(.paymentButtonTapped(.utilityService))
     }
     
     func dismissDestination() {
@@ -92,7 +83,6 @@ extension PaymentsTransfersViewModel {
     
     typealias Event = PaymentsTransfersEvent
     typealias Effect = PaymentsTransfersEffect
-    typealias Factory = PaymentsTransfersViewModelFactory
     typealias NavigationStateManager = PaymentsTransfersFlowManager
 }
 

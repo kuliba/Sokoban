@@ -10,6 +10,5 @@ import Foundation
 enum PaymentsTransfersEffect: Equatable {
     
     case delay(PaymentsTransfersEvent, for: DispatchTimeInterval)
-
     case utilityFlow(UtilityPaymentFlowEffect)
 }

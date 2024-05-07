@@ -10,10 +10,24 @@ extension PaymentsTransfersReducerFactory {
     static var preview: Self {
         
         return .init(
+            makeUtilityPrepaymentViewModel: { .preview(initialState: .init($0)) },
             makePaymentViewModel: { _, notify in
                 
                 return .init(notify: notify)
             }
+        )
+    }
+}
+
+// MARK: - Adapters
+
+private extension UtilityPrepaymentState {
+    
+    init(_ payload: UtilityPaymentFlowEvent.UtilityPrepaymentPayload) {
+        
+        self.init(
+            lastPayments: payload.lastPayments,
+            operators: payload.operators
         )
     }
 }

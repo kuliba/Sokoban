@@ -38,6 +38,9 @@ extension PaymentsTransfersReducer {
         case .goToMain:
             state.outside = .main
             
+        case let .paymentButtonTapped(paymentButton):
+            (state, effect) = reduce(state, paymentButton)
+            
         case let .setModal(to: modal):
             state.modal = modal
             
@@ -53,13 +56,27 @@ extension PaymentsTransfersReducer {
     
     typealias Factory = PaymentsTransfersReducerFactory
     
-    #warning("change to enum to make impossible simultaneous outside and inside")
     typealias State = PaymentsTransfersViewModel.State.Route
     typealias Event = PaymentsTransfersEvent
     typealias Effect = PaymentsTransfersEffect
 }
 
 private extension PaymentsTransfersReducer {
+    
+    private func reduce(
+        _ state: State,
+        _ button: Event.PaymentButton
+    ) -> (State, Effect?) {
+        
+        var effect: Effect?
+        
+        switch button {
+        case .utilityService:
+            effect = .utilityFlow(.initiate)
+        }
+        
+        return (state, effect)
+    }
     
     private func reduce(
         _ state: State,
@@ -70,6 +87,10 @@ private extension PaymentsTransfersReducer {
         var effect: Effect?
         
         switch event {
+        case let .initiated(payload):
+            let viewModel = factory.makeUtilityPrepaymentViewModel(payload)
+            state.destination = .utilityPayment(.init(viewModel: viewModel))
+            
         case let .payment(event):
             (state, effect) = reduce(state, event)
             

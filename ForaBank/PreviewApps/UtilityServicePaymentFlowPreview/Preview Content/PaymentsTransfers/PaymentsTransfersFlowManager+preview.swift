@@ -15,6 +15,13 @@ extension PaymentsTransfersFlowManager {
     ) -> Self {
         
         let utilityFlowEffectHandler = UtilityPaymentFlowEffectHandler(
+            initiateUtilityPayment: { completion in
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    completion(.preview)
+                }
+            },
             startPayment: { payload, completion in
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

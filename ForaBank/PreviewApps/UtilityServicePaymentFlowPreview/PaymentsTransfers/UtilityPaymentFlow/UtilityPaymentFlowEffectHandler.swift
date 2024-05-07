@@ -7,11 +7,14 @@
 
 final class UtilityPaymentFlowEffectHandler {
     
+    private let initiateUtilityPayment: InitiateUtilityPayment
     private let startPayment: StartPayment
     
     init(
+        initiateUtilityPayment: @escaping InitiateUtilityPayment,
         startPayment: @escaping StartPayment
     ) {
+        self.initiateUtilityPayment = initiateUtilityPayment
         self.startPayment = startPayment
     }
 }
@@ -23,6 +26,9 @@ extension UtilityPaymentFlowEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
+        case .initiate:
+            initiateUtilityPayment { dispatch(.initiated($0)) }
+            
         case let .prepayment(effect):
             handleEffect(effect) { dispatch(.prepayment($0)) }
         }
@@ -30,6 +36,9 @@ extension UtilityPaymentFlowEffectHandler {
 }
 
 extension UtilityPaymentFlowEffectHandler {
+    
+    typealias InitiateUtilityPaymentCompletion = (Event.UtilityPrepaymentPayload) -> Void
+    typealias InitiateUtilityPayment = (@escaping InitiateUtilityPaymentCompletion) -> Void
     
     // StartPayment is a micro-service, that combines
     // - `e` from LastPayment
