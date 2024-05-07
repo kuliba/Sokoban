@@ -53,6 +53,7 @@ class ProductProfileViewModel: ObservableObject {
     private let paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
+    private let unblockCardServices: UnblockCardServices
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let operationDetailFactory: OperationDetailFactory
@@ -84,6 +85,7 @@ class ProductProfileViewModel: ObservableObject {
          paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
          userAccountNavigationStateManager: UserAccountNavigationStateManager,
          sberQRServices: SberQRServices,
+         unblockCardServices: UnblockCardServices,
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
          operationDetailFactory: OperationDetailFactory,
@@ -106,6 +108,7 @@ class ProductProfileViewModel: ObservableObject {
         self.paymentsTransfersNavigationStateManager = paymentsTransfersNavigationStateManager
         self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
+        self.unblockCardServices = unblockCardServices
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.operationDetailFactory = operationDetailFactory
@@ -139,6 +142,7 @@ class ProductProfileViewModel: ObservableObject {
         paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
+        unblockCardServices: UnblockCardServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         operationDetailFactory: OperationDetailFactory,
@@ -174,6 +178,7 @@ class ProductProfileViewModel: ObservableObject {
             paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
+            unblockCardServices: unblockCardServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
             operationDetailFactory: operationDetailFactory,
@@ -1593,7 +1598,8 @@ private extension ProductProfileViewModel {
             paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory, 
+            unblockCardServices: unblockCardServices,
+            qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory, 
             operationDetailFactory: operationDetailFactory,
             cvvPINServicesClient: cvvPINServicesClient,

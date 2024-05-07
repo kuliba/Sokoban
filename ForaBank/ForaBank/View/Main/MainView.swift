@@ -452,8 +452,9 @@ extension MainViewModel {
             paymentsTransfersNavigationStateManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient(), 
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview
         ),
         navigationStateManager: .preview,
@@ -472,6 +473,7 @@ extension MainViewModel {
             paymentsTransfersNavigationStateManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview
@@ -492,6 +494,7 @@ extension MainViewModel {
             paymentsTransfersNavigationStateManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview

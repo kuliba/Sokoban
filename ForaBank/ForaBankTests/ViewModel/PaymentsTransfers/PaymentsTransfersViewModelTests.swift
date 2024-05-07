@@ -699,6 +699,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     private func makeSUT(
         createSberQRPaymentResultStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
+        createUnblockCardStub: UnblockCardServices.UnblockCardResult = .success(.init(statusBrief: "", statusDescription: "")),
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         file: StaticString = #file,
@@ -718,6 +719,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             getSberQRDataResultStub: getSberQRDataResultStub
         )
         
+        let unblockCardServices = UnblockCardServices.preview(createUnblockCardStub: createUnblockCardStub)
+        
         let qrViewModelFactory = QRViewModelFactory.preview()
         
         let effectSpy = EffectSpy()
@@ -734,6 +737,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             paymentsTransfersNavigationStateManager: navigationStateManager,
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
+            unblockCardServices: unblockCardServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient, 
             productNavigationStateManager: .preview

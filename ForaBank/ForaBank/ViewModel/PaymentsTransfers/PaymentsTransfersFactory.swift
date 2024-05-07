@@ -48,6 +48,7 @@ extension PaymentsTransfersFactory {
             paymentsTransfersNavigationStateManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .init(
