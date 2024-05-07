@@ -641,23 +641,29 @@ extension PaymentsTransfersViewModel {
                     }
                     
                 case let payload as PaymentsViewModelAction.ContactAbroad:
-                    let paymentsViewModel = PaymentsViewModel(
-                        source: payload.source,
-                        model: model
-                    ) { [weak self] in
-                        
-                        self?.event(.resetDestination)
-                    }
-                    
-                    self.action.send(DelayWrappedAction(
-                        delayMS: 700,
-                        action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-                    )
+                    handleContactAbroad(source: payload.source)
                     
                 default: break
                 }
             }
             .store(in: &bindings)
+    }
+    
+    private func handleContactAbroad(
+        source: Payments.Operation.Source
+    ) {
+        let paymentsViewModel = PaymentsViewModel(
+            source: source,
+            model: model
+        ) { [weak self] in
+            
+            self?.event(.resetDestination)
+        }
+        
+        self.action.send(DelayWrappedAction(
+            delayMS: 700,
+            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+        )
     }
     
     private func bind(_ viewModel: PaymentsMeToMeViewModel) {
