@@ -690,9 +690,8 @@ extension PaymentsTransfersViewModel {
                     
                 case let payload as PaymentsMeToMeAction.InteractionEnabled:
                     
-                    guard case let .bottomSheet(bottomSheet) = route.modal else {
-                        return
-                    }
+                    guard case let .bottomSheet(bottomSheet) = route.modal
+                    else { return }
                     
                     bottomSheet.isUserInteractionEnabled.value = payload.isUserInteractionEnabled
                     
@@ -726,23 +725,31 @@ extension PaymentsTransfersViewModel {
                 
                 switch action {
                 case _ as PaymentsSuccessAction.Button.Close:
-                    model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
-                    
-                    self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
-                    self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
-                    
-                    self.rootActions?.switchTab(.main)
+                    closeSuccess()
                     
                 case _ as PaymentsSuccessAction.Button.Repeat:
-                    
-                    self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
-                    self.rootActions?.switchTab(.payments)
+                    repeatSuccess()
                     
                 default:
                     break
                 }
             }
             .store(in: &bindings)
+    }
+    
+    private func closeSuccess() {
+        
+        model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
+        
+        self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
+        self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
+        self.rootActions?.switchTab(.main)
+    }
+    
+    private func repeatSuccess() {
+        
+        self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
+        self.rootActions?.switchTab(.payments)
     }
     
     private func bind(_ viewModel: ContactsViewModel) {
