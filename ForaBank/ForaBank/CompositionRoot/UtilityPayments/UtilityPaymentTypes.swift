@@ -50,7 +50,7 @@ final class UtilityPaymentEffectHandler {}
 #warning("mapping in the Composition Route")
 extension UtilityPaymentState {
     
-    init(_ details: PaymentsTransfersEvent.PaymentStarted.PaymentDetails) {
+    init(_ details: PaymentsTransfersEvent.UtilityServicePaymentFlowEvent.PaymentStarted.PaymentDetails) {
         
         self.init()
     }

@@ -45,3 +45,5 @@ extension MultiElementArray {
     
     public var elements: [Element] { _elements }
 }
+
+extension MultiElementArray: Equatable where Element: Equatable {}

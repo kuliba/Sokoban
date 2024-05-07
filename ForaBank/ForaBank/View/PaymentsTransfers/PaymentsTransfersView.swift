@@ -244,7 +244,12 @@ struct PaymentsTransfersView: View {
                     ),
                     content: utilitiesDestinationView
                 )
-#warning("add nav bar")
+                .navigationBarTitle(Text("Услуги ЖКХ"), displayMode: .inline)
+                .navigationBarItems(trailing: Button(action: {}, label: {
+                    
+                    Image.ic24BarcodeScanner2
+                }))
+                .ignoresSafeArea(edges: .bottom)
         }
     }
     
@@ -288,7 +293,7 @@ struct PaymentsTransfersView: View {
             
             Button("Оплатить по реквизитам") {
                 
-                self.viewModel.event(.payByRequisites)
+                self.viewModel.event(.utilityFlow(.payByInstructions))
             }
         }
         .padding()
@@ -305,7 +310,7 @@ struct PaymentsTransfersView: View {
             
             UtilityServicePicker(
                 state: utilityServices,
-                event: { self.viewModel.event(.utilityServiceTap(`operator`, $0)) }
+                event: { self.viewModel.event(.utilityFlow(.select(.service($0, for: `operator`)))) }
             )
         }
     }

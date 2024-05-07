@@ -40,17 +40,23 @@ final class RxObservingViewModelTests: XCTestCase {
     
     func test_event_shouldObserveStateChange() {
         
-        let newValue = anyMessage()
-        var values = [State]()
+        let (initialValue, newValue) = (anyMessage(), anyMessage())
+        var values = [(State, State)]()
         let (sut, _) = makeSUT(
-            initialState: .init(value: anyMessage()),
+            initialState: .init(value: initialValue),
             stub: (.init(value: newValue), nil),
-            observe: { values.append($0) }
+            observe: { values.append(($0, $1)) }
         )
         
         sut.event(.changeValueTo("abc"))
         
-        XCTAssertNoDiff(values, [.init(value: newValue)])
+        XCTAssertNoDiff(values.map(\.0), [
+            .init(value: initialValue)
+        ])
+        
+        XCTAssertNoDiff(values.map(\.1), [
+            .init(value: newValue)
+        ])
     }
     
     // MARK: - Helpers
@@ -63,7 +69,7 @@ final class RxObservingViewModelTests: XCTestCase {
     private func makeSUT(
         initialState: State = makeState(),
         stub: (State, Effect?)...,
-        observe: @escaping (State) -> Void = { _ in },
+        observe: @escaping (State, State) -> Void = { _,_ in },
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
