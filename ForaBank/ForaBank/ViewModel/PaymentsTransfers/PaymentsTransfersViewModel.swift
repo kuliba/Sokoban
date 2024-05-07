@@ -319,9 +319,7 @@ extension PaymentsTransfersViewModel {
         
         rootActions?.spinner.show()
         
-        scheduler.schedule(
-            after: .init(.now() + .milliseconds(300))
-        ) { [weak self] in
+        delay(for: .milliseconds(300)) { [weak self] in
             
             self?.rootActions?.spinner.hide()
             self?.rootActions?.switchTab(.chat)
@@ -335,6 +333,23 @@ extension PaymentsTransfersViewModel {
             self?.event(.resetDestination)
             self?.rootActions?.switchTab(.main)
         }
+    }
+    
+    private func delay(
+        for timeout: DispatchTimeInterval,
+        _ action: @escaping () -> Void
+    ) {
+        scheduler.delay(for: timeout, action)
+    }
+}
+
+extension AnySchedulerOfDispatchQueue {
+    
+    func delay(
+        for timeout: DispatchTimeInterval,
+        _ action: @escaping () -> Void
+    ) {
+        schedule(after: .init(.now() + timeout), action)
     }
 }
 
