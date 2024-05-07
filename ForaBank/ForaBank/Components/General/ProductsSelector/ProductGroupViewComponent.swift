@@ -460,16 +460,9 @@ extension ProductGroupView {
                     .offset(x: 0, y: 13)
                     .blur(radius: 8)
                 
-                switch productViewModel.appearance.style {
-                case .main:
-                    ProductView(viewModel: productViewModel)
-                        .frame(dimensions, for: \.product)
-                        .accessibilityIdentifier("mainProduct")
-                case .profile:
-                    GenericProductView(viewModel: productViewModel, factory: .init(makeSlider: { Color.red.frame(width: 32, height: 32) }))
-                        .frame(dimensions, for: \.product)
-                        .accessibilityIdentifier("mainProduct")
-                }
+                ProductView(viewModel: productViewModel)
+                    .frame(dimensions, for: \.product)
+                    .accessibilityIdentifier("mainProduct")
             }
         }
     }

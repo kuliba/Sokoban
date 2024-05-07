@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 13.12.2023.
 //
 
+import ActivateSlider
 import Combine
 import InfoComponent
 import SberQR
@@ -32,7 +33,8 @@ extension RootViewFactory {
         }
         
         let makeUserAccountView = UserAccountView.init(viewModel:)
-        
+        let makeActivateSliderView = ActivateSliderStateWrapperView.init(payload:viewModel:config:)
+
         self.init(
             makePaymentsTransfersView: { viewModel in
                 
@@ -42,11 +44,13 @@ extension RootViewFactory {
                             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                             makeUserAccountView: makeUserAccountView
                         ), 
+                        productProfileViewFactory: .init(makeActivateSliderView: makeActivateSliderView),
                         getUImage: getUImage
                     )
             },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: makeUserAccountView
+            makeUserAccountView: makeUserAccountView,
+            makeActivateSliderView: makeActivateSliderView
         )
     }
 }

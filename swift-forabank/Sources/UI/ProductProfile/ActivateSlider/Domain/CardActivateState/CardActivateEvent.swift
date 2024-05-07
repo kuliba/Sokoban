@@ -8,5 +8,7 @@
 public enum CardActivateEvent: Equatable {
     
     case card(CardEvent)
-    case slider(SliderEvent)
+    case slider(ActivatePayload, SliderEvent)
+    
+    public typealias ActivatePayload = Int
 }

@@ -7,15 +7,15 @@
 
 import Foundation
 
-public extension GlobalViewModel {
+public extension ActivateSliderViewModel {
     
-    static let previewActivateSuccess = GlobalViewModel(
+    static let previewActivateSuccess = ActivateSliderViewModel(
         initialState: .initialState,
         reduce: CardActivateReducer.reduceForPreview(),
         handleEffect: CardActivateEffectHandler.handleEffectActivateSuccess()
     )
     
-    static let previewActivateFailure = GlobalViewModel(
+    static let previewActivateFailure = ActivateSliderViewModel(
         initialState: .initialState,
         reduce: CardActivateReducer.reduceForPreview(),
         handleEffect: CardActivateEffectHandler.handleEffectActivateFailure()

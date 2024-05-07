@@ -9,6 +9,7 @@ import InfoComponent
 import PinCodeUI
 import SberQR
 import SwiftUI
+import ActivateSlider
 
 struct ProductProfileView: View {
     
@@ -16,6 +17,7 @@ struct ProductProfileView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
     let viewFactory: PaymentsTransfersViewFactory
+    let productProfileViewFactory: ProductProfileViewFactory
     let getUImage: (Md5hash) -> UIImage?
     
     var accentColor: some View {
@@ -58,7 +60,10 @@ struct ProductProfileView: View {
                     
                     VStack(spacing: 12) {
                         
-                        ProductProfileCardView(viewModel: viewModel.product)
+                        ProductProfileCardView(
+                            viewModel: viewModel.product,
+                            makeSliderActivateView: productProfileViewFactory.makeActivateSliderView
+                        )
                         
                         VStack(spacing: 32) {
                             
@@ -167,6 +172,7 @@ struct ProductProfileView: View {
             MyProductsView(
                 viewModel: viewModel,
                 viewFactory: viewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
             
@@ -174,6 +180,7 @@ struct ProductProfileView: View {
             PaymentsTransfersView(
                 viewModel: viewModel,
                 viewFactory: viewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
         }
@@ -413,6 +420,9 @@ struct ProfileView_Previews: PreviewProvider {
                 },
                 makeUserAccountView: UserAccountView.init(viewModel:)
             ), 
+            productProfileViewFactory: .init(
+                makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)
+            ),
             getUImage: { _ in nil }
         )
     }

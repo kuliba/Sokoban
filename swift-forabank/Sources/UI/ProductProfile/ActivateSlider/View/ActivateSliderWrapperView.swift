@@ -11,14 +11,19 @@ import UIPrimitives
 
 public struct ActivateSliderWrapperView: View {
     
-    @ObservedObject var viewModel: GlobalViewModel
+    @ObservedObject var viewModel: ActivateSliderViewModel
     // StateObject need
     let config: SliderConfig
+    let payload: ActivatePayload
     
+    public typealias ActivatePayload = Int
+
     public init(
-        viewModel: GlobalViewModel,
+        payload: ActivatePayload,
+        viewModel: ActivateSliderViewModel,
         config: SliderConfig
     ) {
+        self.payload = payload
         self.viewModel = viewModel
         self.config = config
     }
@@ -27,14 +32,14 @@ public struct ActivateSliderWrapperView: View {
         
         ActivateSliderView(
             state: viewModel.state,
-            event: { viewModel.event(.slider($0)) },
+            event: { viewModel.event(.slider(payload, $0)) },
             config: config
         )
         .alert(item: .init(
             get: {
                 guard case .status(.confirmActivate) = viewModel.state.cardState
                 else { return nil }
-                return .activateAlert()
+                return .activateAlert(payload)
             },
             set: { _ in }),
                content: { .init(with: $0, event: viewModel.event) })
@@ -60,6 +65,7 @@ struct ActivateSliderWrapperView_Previews: PreviewProvider {
                 .frame(width: 300, height: 100)
             
             ActivateSliderWrapperView(
+                payload: 1,
                 viewModel: .init(
                     initialState: .initialState,
                     reduce: CardActivateReducer.reduceForPreview(),
@@ -76,6 +82,7 @@ struct ActivateSliderWrapperView_Previews: PreviewProvider {
                 .frame(width: 300, height: 100)
             
             ActivateSliderWrapperView(
+                payload: 2,
                 viewModel: .init(
                     initialState: .initialState,
                     reduce: CardActivateReducer.reduceForPreview(),

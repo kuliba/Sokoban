@@ -9,6 +9,8 @@ import SwiftUI
 import Combine
 import PinCodeUI
 import CardUI
+import ActivateSlider
+import Foundation
 
 //MARK: - ViewModel
 
@@ -338,8 +340,8 @@ extension ProductProfileCardView {
                             
                             return
                         }
-                        model.action.send(ModelAction.Card.Unblock.Request(cardId: cardProduct.id, cardNumber: cardNumber))
-                    
+                        self.activateCard(cardProduct, cardNumber)
+                        
                     default:
                         break
                     }
@@ -372,6 +374,24 @@ extension ProductProfileCardView {
                     }
                     
                 }.store(in: &bindings)
+        }
+        
+        func activateCard(
+            _ cardProduct: ProductCardData?,
+            _ cardNumber: String?
+        ) {
+            guard let cardProduct, let cardNumber else { return }
+            
+            model.action.send(ModelAction.Card.Unblock.Request(cardId: cardProduct.id, cardNumber: cardNumber))
+        }
+        
+        func needSlider(_ product: ProductViewModel) -> Bool {
+            
+            guard let productData = model.product(productId: product.id),
+                  let cardProduct = productData.asCard 
+            else { return false }
+                    
+            return cardProduct.statusCard == .notActivated
         }
     }
 }
@@ -510,7 +530,8 @@ extension ProductProfileCardView.ViewModel {
 struct ProductProfileCardView: View {
     
     @ObservedObject var viewModel: ProductProfileCardView.ViewModel
-        
+    let makeSliderActivateView: MakeActivateSliderView
+
     var body: some View {
         
         VStack(spacing: 0) {
@@ -529,12 +550,19 @@ struct ProductProfileCardView: View {
                             .opacity(0.3)
                             .blur(radius: 10)
                             .frame(width: 268 - 20, height: 165)
-                     
-                            GenericProductView(viewModel: product, factory: .init(makeSlider: { Color.red.frame(width: 32, height: 32) }))
+
+                        if viewModel.needSlider(product)  {
+                            GenericProductView<ActivateSliderStateWrapperView>(viewModel: product, factory: .init(makeSlider: { makeSliderActivateView(
+                                product.id,
+                                .previewActivateSuccess,
+                                .default
+                            )}))
                                 .frame(width: 268, height: 160)
 
-                        
-
+                        } else {
+                            ProductView(viewModel: product)
+                                  .frame(width: 268, height: 160)
+                        }
                       /*  ProductView(viewModel: product)
                             .frame(width: 268, height: 160)*/
                         
@@ -694,7 +722,7 @@ struct ProductProfileCardView_Previews: PreviewProvider {
         
         Group {
             
-            ProductProfileCardView(viewModel: .sample)
+            ProductProfileCardView(viewModel: .sample, makeSliderActivateView: ActivateSliderStateWrapperView.init(payload:viewModel:config:))
                 .previewLayout(.fixed(width: 375, height: 500))
             
             ProductProfileCardView.SelectorView(viewModel: .sample)

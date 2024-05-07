@@ -10,14 +10,11 @@ import Foundation
 public final class CardReducer {
     
     private let sliderLifespan: DispatchTimeInterval
-    private let activate: () -> Void
     
     public init(
-        sliderLifespan: DispatchTimeInterval = .seconds(1),
-        activate: @escaping () -> Void
+        sliderLifespan: DispatchTimeInterval = .seconds(1)
     ) {
         self.sliderLifespan = sliderLifespan
-        self.activate = activate
     }
 }
 
@@ -38,6 +35,9 @@ public extension CardReducer {
             
         case .status:
             switch event {
+            case let .activateCard(payload):
+                state = .status(.confirmActivate(payload)) // alert
+                
             case let .activateCardResponse(response):
                 switch response {
                 case .connectivityError, .serverError:
@@ -49,16 +49,12 @@ public extension CardReducer {
                 
             case let .confirmActivate(tap):
                 switch tap {
-                case .activate:
+                case let .activate(payload):
                     state = .status(.inflight)
-                    activate()
-                    effect = .activate
+                    effect = .activate(payload)
                 case .cancel:
                     state = .status(nil)
                 }
-                
-            case .activateCard:
-                state = .status(.confirmActivate) // alert
                 
             case .dismissActivate:
                 state = .active

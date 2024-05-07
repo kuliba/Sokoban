@@ -120,7 +120,7 @@ struct ActivateSliderView_Previews: PreviewProvider {
                 Color.gray
                     .frame(width: 300, height: 100)
                 ActivateSliderView(
-                    state: .init(cardState: .status(.confirmActivate), offsetX: 0),
+                    state: .init(cardState: .status(.confirmActivate(1)), offsetX: 0),
                     event: {_ in },
                     config: .default
                 )

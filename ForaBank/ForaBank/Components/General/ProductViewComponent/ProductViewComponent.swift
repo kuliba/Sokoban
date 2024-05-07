@@ -622,7 +622,7 @@ struct GenericProductView<Slider: View>: View {
     @StateObject private var viewModel: ProductViewModel
     private let factory: Factory
     
-    typealias Factory = ProductViewFactory<Slider>// Slider stateWrapper
+    typealias Factory = ProductViewFactory<Slider>
     
     init(
         viewModel: ProductViewModel,
@@ -713,45 +713,6 @@ extension GenericProductView {
                                            color: color,
                                            size: viewModel.iconSize(with: style))
                     
-                /*case .profile:
-                    makeSlider()
-                    // add fabric
-                    //() -> ActivateSliderWrapperView
-                   /* ActivateSliderWrapperView(
-                        viewModel: .init(
-                            initialState: .initialState,
-                            reduce: CardActivateReducer.reduce(
-                                .init(
-                                    cardReduce: CardReducer(activate: {
-                                        print("Start activate")
-                                    }).reduce(_:_:),
-                                    sliderReduce: SliderReducer(maxOffsetX: .maxOffsetX).reduce(_:_:),
-                                    maxOffset: .maxOffsetX)
-                            ),
-                            handleEffect: CardActivateEffectHandler(
-                                handleCardEffect: CardEffectHandler(
-                                    activate: { result in
-                                        
-                                    }
-                                    
-                                ).handleEffect(_:_:)
-                            ).handleEffect(_:_:)),
-                        config: .default)
-                */
-                    /*ActivateSliderWrapperView(
-                        viewModel: .init(
-                            initialState: .initialState,
-                            reduce: CardActivateReducer.default(maxOffsetX: .maxOffsetX).reduce(_:_:),
-                            handleEffect: CardActivateEffectHandler(
-                                handleCardEffect: CardEffectHandler(
-                                    activate: { result in
-                                        
-                                    }
-                                                                   
-                                ).handleEffect(_:_:)
-                            ).handleEffect(_:_:)),
-                        config: .default)*/
-*/
                 case .profile:
                     EmptyView()
                 }

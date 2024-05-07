@@ -5,6 +5,7 @@
 //  Created by Max Gribov on 15.02.2022.
 //
 
+import ActivateSlider
 import InfoComponent
 import SberQR
 import SwiftUI
@@ -55,6 +56,7 @@ struct RootView: View {
                 ),
                 viewFactory: rootViewFactory.mainViewFactory,
                 paymentsTransfersViewFactory: rootViewFactory.paymentsTransfersViewFactory, 
+                productProfileViewFactory: rootViewFactory.productProfileViewFactory,
                 getUImage: { viewModel.model.images.value[$0]?.uiImage }
             )
         }
@@ -216,12 +218,14 @@ private extension RootViewFactory {
                     viewFactory: .init(
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeUserAccountView: UserAccountView.init(viewModel:)
-                    ), 
+                    ),
+                    productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)),
                     getUImage: { _ in nil }
                 )
             },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: UserAccountView.init(viewModel:)
+            makeUserAccountView: UserAccountView.init(viewModel:), 
+            makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)
         )
     }
 }

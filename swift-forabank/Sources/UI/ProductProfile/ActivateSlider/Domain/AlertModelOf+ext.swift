@@ -9,7 +9,9 @@ import UIPrimitives
 
 extension AlertModelOf<CardActivateEvent> {
     
-    static func activateAlert() -> AlertModelOf {
+    public typealias ActivatePayload = Int
+
+    static func activateAlert(_ payload: ActivatePayload) -> AlertModelOf {
         
         .init(
             title: "Активировать карту?",
@@ -22,7 +24,7 @@ extension AlertModelOf<CardActivateEvent> {
             secondaryButton: .init(
                 type: .default,
                 title: "ОК",
-                event: CardActivateEvent.card(.confirmActivate(.activate))
+                event: CardActivateEvent.card(.confirmActivate(.activate(payload)))
             )
         )
     }

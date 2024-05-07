@@ -1,6 +1,6 @@
 //
 //  ActivateSliderStateWrapperView.swift
-//  
+//
 //
 //  Created by Andryusina Nataly on 06.05.2024.
 //
@@ -11,13 +11,19 @@ import UIPrimitives
 
 public struct ActivateSliderStateWrapperView: View {
     
-    @StateObject var viewModel: GlobalViewModel
+    @StateObject var viewModel: ActivateSliderViewModel
+    let payload: ActivatePayload
+    
     let config: SliderConfig
     
+    public typealias ActivatePayload = Int
+
     public init(
-        viewModel: GlobalViewModel,
+        payload: ActivatePayload,
+        viewModel: ActivateSliderViewModel,
         config: SliderConfig
     ) {
+        self.payload = payload
         self._viewModel = .init(wrappedValue: viewModel)
         self.config = config
     }
@@ -26,14 +32,14 @@ public struct ActivateSliderStateWrapperView: View {
         
         ActivateSliderView(
             state: viewModel.state,
-            event: { viewModel.event(.slider($0)) },
+            event: { viewModel.event(.slider(payload, $0)) },
             config: config
         )
         .alert(item: .init(
             get: {
                 guard case .status(.confirmActivate) = viewModel.state.cardState
                 else { return nil }
-                return .activateAlert()
+                return .activateAlert(payload)
             },
             set: { _ in }),
                content: { .init(with: $0, event: viewModel.event) })
@@ -59,6 +65,7 @@ struct ActivateSliderStateWrapperView_Previews: PreviewProvider {
                 .frame(width: 300, height: 100)
             
             ActivateSliderStateWrapperView(
+                payload: 1,
                 viewModel: .init(
                     initialState: .initialState,
                     reduce: CardActivateReducer.reduceForPreview(),
@@ -75,6 +82,7 @@ struct ActivateSliderStateWrapperView_Previews: PreviewProvider {
                 .frame(width: 300, height: 100)
             
             ActivateSliderStateWrapperView(
+                payload: 2,
                 viewModel: .init(
                     initialState: .initialState,
                     reduce: CardActivateReducer.reduceForPreview(),
