@@ -520,7 +520,7 @@ extension PaymentsTransfersViewModel {
         self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
     }
     
-    private func makeByRequisitesPaymentsViewModel() -> PaymentsViewModel {
+    private func makeByInstructionsPaymentsViewModel() -> PaymentsViewModel {
         
         let paymentsViewModel = PaymentsViewModel(
             model,
@@ -535,7 +535,7 @@ extension PaymentsTransfersViewModel {
     private func payByRequisites() {
         
         action.send(PaymentsTransfersViewModelAction.Show.Payment(
-            viewModel: makeByRequisitesPaymentsViewModel()
+            viewModel: makeByInstructionsPaymentsViewModel()
         ))
     }
     
@@ -1019,12 +1019,7 @@ extension PaymentsTransfersViewModel {
         
         event(.resetModal)
         
-        let paymentsViewModel = PaymentsViewModel(
-            model,
-            service: .requisites,
-            closeAction: { self.event(.resetDestination) }
-        )
-        bind(paymentsViewModel)
+        let paymentsViewModel = makeByInstructionsPaymentsViewModel()
         
         action.send(DelayWrappedAction(
             delayMS: 800,
@@ -1035,7 +1030,9 @@ extension PaymentsTransfersViewModel {
     private func handleFailure(qr: QRCode) {
         
         event(.resetModal)
-        delay(for: .milliseconds(700)) {
+        delay(for: .milliseconds(700)) { [weak self] in
+            
+            guard let self else { return }
             
             let failedView = QRFailedViewModel(
                 model: self.model,
@@ -1046,7 +1043,8 @@ extension PaymentsTransfersViewModel {
                     self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
                 }
             )
-            self.route.destination = .failedView(failedView)
+            
+            route.destination = .failedView(failedView)
         }
     }
     
@@ -1944,7 +1942,7 @@ private extension PaymentsTransfersViewModel {
             (state, effect) = reduce(state, response, `operator`)
             
         case .payByInstructions:
-            state.destination = .payments(makeByRequisitesPaymentsViewModel())
+            state.destination = .payments(makeByInstructionsPaymentsViewModel())
             
         case let .paymentStarted(paymentStartedEvent):
             reduce(&state, paymentStartedEvent)
