@@ -347,15 +347,8 @@ extension PaymentsTransfersViewModel {
                         
                         //LatestPayment Section TemplateButton
                     case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
-                        
-                        let viewModel = paymentsTransfersFactory.makeTemplatesListViewModel { [weak self] in
-                            
-                            self?.event(.resetDestination)
-                        }
-                        
-                        bind(viewModel)
-                        route.destination = .template(viewModel)
-                        
+                        handleTemplatesButtonTapped()
+                                                
                     case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
                         guard let firstCurrencyWalletData = model.currencyWalletList.value.first else {
                             return
@@ -392,6 +385,17 @@ extension PaymentsTransfersViewModel {
                 }
                 .store(in: &bindings)
         }
+    }
+    
+    private func handleTemplatesButtonTapped() {
+        
+        let viewModel = paymentsTransfersFactory.makeTemplatesListViewModel { [weak self] in
+            
+            self?.event(.resetDestination)
+        }
+        
+        bind(viewModel)
+        route.destination = .template(viewModel)
     }
     
     private func handleTransferButtonTapped(
