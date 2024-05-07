@@ -182,16 +182,7 @@ extension PaymentsTransfersViewModel {
                 
                 switch action {
                 case let payload as PaymentsTransfersViewModelAction.Show.ProductProfile:
-                    guard let product = model.product(productId: payload.productId),
-                          let productProfileViewModel = paymentsTransfersFactory.makeProductProfileViewModel(
-                            product,
-                            "\(type(of: self))",
-                            { [weak self] in self?.event(.resetDestination) })
-                    else { return }
-                    
-                    productProfileViewModel.rootActions = rootActions
-                    bind(productProfileViewModel)
-                    route.destination = .productProfile(productProfileViewModel)
+                    showProductProfile(payload.productId)
                     
                 case _ as PaymentsTransfersViewModelAction.Show.OpenDeposit:
                     let openDepositViewModel = OpenDepositListViewModel(
@@ -338,6 +329,21 @@ extension PaymentsTransfersViewModel {
                 )
             }
             .store(in: &bindings)
+    }
+    
+    private func showProductProfile(
+        _ productID: ProductData.ID
+    ) {
+        guard let product = model.product(productId: productID),
+              let productProfileViewModel = paymentsTransfersFactory.makeProductProfileViewModel(
+                product,
+                "\(type(of: self))",
+                { [weak self] in self?.event(.resetDestination) })
+        else { return }
+        
+        productProfileViewModel.rootActions = rootActions
+        bind(productProfileViewModel)
+        route.destination = .productProfile(productProfileViewModel)
     }
     
     private func bindSections(
