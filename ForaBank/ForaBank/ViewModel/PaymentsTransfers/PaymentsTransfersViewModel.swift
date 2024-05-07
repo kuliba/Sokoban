@@ -761,39 +761,9 @@ extension PaymentsTransfersViewModel {
                 switch action {
                 case let payload as ContactsViewModelAction.PaymentRequested:
                     requestContactsPayment(source: payload.source)
-
-                case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
-                    let paymentsViewModel = PaymentsViewModel(
-                        source: payload.source,
-                        model: model
-                    ) { [weak self] in
-                        
-                        guard let self else { return }
-                        
-                        self.event(.resetDestination)
-                        
-                        switch payload.source {
-                        case .direct:
-                            self.action.send(DelayWrappedAction(
-                                delayMS: 300,
-                                action: PaymentsTransfersViewModelAction.Show.Countries())
-                            )
-                            
-                        case .sfp:
-                            self.action.send(DelayWrappedAction(
-                                delayMS: 300,
-                                action: PaymentsTransfersViewModelAction.Show.Contacts())
-                            )
-                            
-                        default: break
-                        }
-                    }
                     
-                    bind(paymentsViewModel)
-                    self.action.send(DelayWrappedAction(
-                        delayMS: 300,
-                        action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-                    )
+                case let payload as ContactsSectionViewModelAction.Countries.ItemDidTapped:
+                    handleCountriesItemTapped(source: payload.source)
                     
                 default:
                     break
@@ -809,7 +779,7 @@ extension PaymentsTransfersViewModel {
         
         switch source {
         case let .latestPayment(latestPaymentId):
-            guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) 
+            guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId })
             else { return }
             
             handle(latestPayment: latestPayment)
@@ -848,6 +818,42 @@ extension PaymentsTransfersViewModel {
                 action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
             )
         }
+    }
+    
+    private func handleCountriesItemTapped(
+        source: Payments.Operation.Source
+    ) {
+        let paymentsViewModel = PaymentsViewModel(
+            source: source,
+            model: model
+        ) { [weak self] in
+            
+            guard let self else { return }
+            
+            self.event(.resetDestination)
+            
+            switch source {
+            case .direct:
+                self.action.send(DelayWrappedAction(
+                    delayMS: 300,
+                    action: PaymentsTransfersViewModelAction.Show.Countries())
+                )
+                
+            case .sfp:
+                self.action.send(DelayWrappedAction(
+                    delayMS: 300,
+                    action: PaymentsTransfersViewModelAction.Show.Contacts())
+                )
+                
+            default: break
+            }
+        }
+        
+        bind(paymentsViewModel)
+        self.action.send(DelayWrappedAction(
+            delayMS: 300,
+            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+        )
     }
     
     func bind(_ qrViewModel: QRViewModel) {
