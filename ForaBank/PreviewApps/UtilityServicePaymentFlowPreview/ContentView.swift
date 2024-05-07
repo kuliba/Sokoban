@@ -10,12 +10,11 @@ import SwiftUI
 struct ContentView: View {
     
     @StateObject private var viewModel = PaymentsTransfersViewModel(
-        state: .init(
-            route: .init(
-                destination: .utilityPayment(.init(
-                    viewModel: .preview()
-                ))
-            )
+        state: .init(),
+        route: .init(
+            destination: .utilityPayment(.init(
+                viewModel: .preview()
+            ))
         ),
         navigationStateManager: .preview(),
         rootActions: .preview

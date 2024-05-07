@@ -25,7 +25,7 @@ struct PaymentsTransfersView: View {
         
         content()
             .navigationDestination(
-                destination: viewModel.state.route.destination,
+                destination: viewModel.route.destination,
                 dismissDestination: viewModel.dismissDestination,
                 content: { destination in
                     
@@ -36,7 +36,7 @@ struct PaymentsTransfersView: View {
                 }
             )
             .fullScreenCover(
-                cover: viewModel.state.route.modal,
+                cover: viewModel.route.modal,
                 dismissFullScreenCover: { viewModel.event(.dismissFullScreenCover) },
                 content: { modal in
                     
@@ -55,7 +55,7 @@ extension PaymentsTransfersView {
     typealias ServicePickerState = UtilityPaymentFlowState.Destination.ServicePickerFlowState
     
     typealias Config = UtilityPrepaymentWrapperView.Config
-    typealias Destination = ViewModel.State.Route.Destination
+    typealias Destination = ViewModel.Route.Destination
     typealias ViewModel = PaymentsTransfersViewModel
 }
 
@@ -286,7 +286,7 @@ private extension PaymentsTransfersView {
     
     @ViewBuilder
     func fullScreenCoverView(
-        modal: PaymentsTransfersViewModel.State.Route.Modal,
+        modal: PaymentsTransfersViewModel.Route.Modal,
         event: @escaping () -> Void
     ) -> some View {
         
@@ -297,7 +297,7 @@ private extension PaymentsTransfersView {
     }
 }
 
-extension PaymentsTransfersViewModel.State.Route.Destination: Identifiable {
+extension PaymentsTransfersViewModel.Route.Destination: Identifiable {
     
     var id: ID {
         
@@ -317,7 +317,7 @@ extension PaymentsTransfersViewModel.State.Route.Destination: Identifiable {
     }
 }
 
-extension PaymentsTransfersViewModel.State.Route.Modal: Identifiable {
+extension PaymentsTransfersViewModel.Route.Modal: Identifiable {
     
     var id: ID {
         

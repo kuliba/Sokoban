@@ -56,7 +56,7 @@ extension PaymentsTransfersReducer {
     
     typealias Factory = PaymentsTransfersReducerFactory
     
-    typealias State = PaymentsTransfersViewModel.State.Route
+    typealias State = PaymentsTransfersViewModel.Route
     typealias Event = PaymentsTransfersEvent
     typealias Effect = PaymentsTransfersEffect
 }
@@ -286,10 +286,10 @@ private extension PaymentsTransfersEffect {
         .delay(.setModal(to: modal), for: interval)
     }
     
-    typealias Modal = PaymentsTransfersViewModel.State.Route.Modal
+    typealias Modal = PaymentsTransfersViewModel.Route.Modal
 }
 
-private extension PaymentsTransfersViewModel.State.Route {
+private extension PaymentsTransfersViewModel.Route {
     
     var utilityPrepayment: UtilityPaymentFlowState? {
         

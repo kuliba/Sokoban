@@ -16,7 +16,7 @@ enum PaymentsTransfersEvent: Equatable {
 
 extension PaymentsTransfersEvent {
     
-    typealias Modal = PaymentsTransfersViewModel.State.Route.Modal
+    typealias Modal = PaymentsTransfersViewModel.Route.Modal
     
     enum PaymentButton: Equatable {
         

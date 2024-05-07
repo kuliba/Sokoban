@@ -11,6 +11,7 @@ extension PaymentsTransfersViewModel {
         
         return .init(
             state: .preview,
+            route: .preview,
             navigationStateManager: .preview(),
             rootActions: .preview
         )

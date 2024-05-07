@@ -20,7 +20,7 @@ extension PaymentsTransfersFlowManager {
     typealias Notify = (PaymentsTransfersReducerFactory.PaymentStateProjection) -> Void
     typealias MakeReduce = (@escaping Notify) -> Reduce
     
-    typealias State = PaymentsTransfersViewModel.State.Route
+    typealias State = PaymentsTransfersViewModel.Route
     typealias Event = PaymentsTransfersEvent
     typealias Effect = PaymentsTransfersEffect
 }

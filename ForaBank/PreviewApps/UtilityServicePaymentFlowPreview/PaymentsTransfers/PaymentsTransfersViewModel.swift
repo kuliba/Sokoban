@@ -10,16 +10,19 @@ import Foundation
 final class PaymentsTransfersViewModel: ObservableObject {
     
     @Published private(set) var state: State
+    @Published private(set) var route: Route
     
     private let navigationStateManager: NavigationStateManager
     private let rootActions: RootActions
     
     init(
         state: State,
+        route: Route,
         navigationStateManager: NavigationStateManager,
         rootActions: RootActions
     ) {
         self.state = state
+        self.route = route
         self.navigationStateManager = navigationStateManager
         self.rootActions = rootActions
     }
@@ -34,7 +37,7 @@ extension PaymentsTransfersViewModel {
     
     func dismissDestination() {
         
-        state.route.destination = nil
+        route.destination = nil
     }
     
     func event(_ event: Event) {
@@ -43,11 +46,11 @@ extension PaymentsTransfersViewModel {
             
             self?.event(.utilityFlow(.payment(.notified($0))))
         }
-        let (route, effect) = reduce(state.route, event)
+        let (route, effect) = reduce(route, event)
         
         if let outside = route.outside {
             
-            self.state.route = .init()
+            self.route = .init()
             self.handleOutside(outside)
             
         } else {
@@ -55,7 +58,7 @@ extension PaymentsTransfersViewModel {
             // routeSubject.send(state)
             DispatchQueue.main.async { [weak self] in
                 
-                self?.state.route = route
+                self?.route = route
             }
             
             if let effect {
@@ -76,28 +79,21 @@ extension PaymentsTransfersViewModel {
 
 extension PaymentsTransfersViewModel {
     
-    struct State {
+    struct Route {
         
-        var route: Route
+        var destination: Destination?
+        var modal: Modal?
+        var outside: Outside?
     }
+
+    struct State {}
     
     typealias Event = PaymentsTransfersEvent
     typealias Effect = PaymentsTransfersEffect
     typealias NavigationStateManager = PaymentsTransfersFlowManager
 }
 
-extension PaymentsTransfersViewModel.State {
-    
-    struct Route {
-        
-        var destination: Destination?
-        var modal: Modal?
-#warning("change to enum to make impossible simultaneous outside and destination/modal")
-        var outside: Outside?
-    }
-}
-
-extension PaymentsTransfersViewModel.State.Route {
+extension PaymentsTransfersViewModel.Route {
     
     enum Destination {
         
@@ -121,7 +117,7 @@ extension PaymentsTransfersViewModel.State.Route {
 private extension PaymentsTransfersViewModel {
     
     private func handleOutside(
-        _ outside: State.Route.Outside
+        _ outside: Route.Outside
     ) {
         DispatchQueue.main.asyncAfter(
             deadline: .now() + 0.3
