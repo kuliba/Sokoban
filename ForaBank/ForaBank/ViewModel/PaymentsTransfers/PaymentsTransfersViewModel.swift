@@ -1009,29 +1009,27 @@ extension PaymentsTransfersViewModel {
             let failedView = QRFailedViewModel(
                 model: self.model,
                 addCompanyAction: { [weak self] in self?.event(.addCompany) },
-                requisitsAction: { [weak self] in
-                    
-                    guard let self else { return }
-                    
-                    self.event(.resetModal)
-                    let paymentsViewModel = PaymentsViewModel(
-                        model,
-                        service: .requisites,
-                        closeAction: {
-                            
-                            self.event(.resetDestination)
-                        }
-                    )
-                    self.bind(paymentsViewModel)
-                    
-                    self.action.send(DelayWrappedAction(
-                        delayMS: 800,
-                        action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-                    )
-                }
+                requisitsAction: { [weak self] in self?.payByInstructions() }
             )
             self.route.destination = .failedView(failedView)
         }
+    }
+    
+    private func payByInstructions() {
+        
+        event(.resetModal)
+        
+        let paymentsViewModel = PaymentsViewModel(
+            model,
+            service: .requisites,
+            closeAction: { self.event(.resetDestination) }
+        )
+        bind(paymentsViewModel)
+        
+        action.send(DelayWrappedAction(
+            delayMS: 800,
+            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+        )
     }
     
     private func handleFailure(qr: QRCode) {
@@ -1172,31 +1170,12 @@ extension PaymentsTransfersViewModel {
             let failedView = QRFailedViewModel(
                 model: self.model,
                 addCompanyAction: { [weak self] in self?.event(.addCompany) },
-                requisitsAction: { [weak self] in
-                    
-                    guard let self else { return }
-                    
-                    self.event(.resetModal)
-                    let paymentsViewModel = PaymentsViewModel(
-                        model,
-                        service: .requisites,
-                        closeAction: { [weak self] in
-                            
-                            self?.event(.resetDestination)
-                        }
-                    )
-                    self.bind(paymentsViewModel)
-                    
-                    self.action.send(DelayWrappedAction(
-                        delayMS: 800,
-                        action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-                    )
-                }
+                requisitsAction: { [weak self] in self?.payByInstructions() }
             )
+            
             self.route.destination = .failedView(failedView)
         }
     }
-    
     
     private func makeAlert(_ message: String) {
         
