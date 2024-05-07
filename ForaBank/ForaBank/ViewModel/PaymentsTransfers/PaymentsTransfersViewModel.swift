@@ -1546,43 +1546,31 @@ extension PaymentsTransfersViewModel {
         case sheet(Sheet)
         
         var alert: Alert.ViewModel? {
-            if case let .alert(alert) = self {
-                
-                return alert
-            } else {
-                
-                return nil
-            }
+            guard case let .alert(alert) = self
+            else { return nil }
+            
+            return alert
         }
         
         var bottomSheet: BottomSheet? {
-            if case let .bottomSheet(bottomSheet) = self {
-                
-                return bottomSheet
-            } else {
-                
-                return nil
-            }
+            guard case let .bottomSheet(bottomSheet) = self
+            else { return nil }
+            
+            return bottomSheet
         }
         
         var fullScreenSheet: FullScreenSheet? {
-            if case let .fullScreenSheet(fullScreenSheet) = self {
-                
-                return fullScreenSheet
-            } else {
-                
-                return nil
-            }
+            guard case let .fullScreenSheet(fullScreenSheet) = self
+            else { return nil }
+            
+            return fullScreenSheet
         }
         
         var sheet: Sheet? {
-            if case let .sheet(sheet) = self {
-                
-                return sheet
-            } else {
-                
-                return nil
-            }
+            guard case let .sheet(sheet) = self
+            else { return nil }
+            
+            return sheet
         }
     }
     
