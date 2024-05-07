@@ -595,11 +595,15 @@ extension PaymentsTransfersViewModel {
                 case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     
                     self.event(.resetDestination)
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                        self.action.send(PaymentsTransfersViewModelAction.Show.ProductProfile
-                            .init(productId: payload.productId))
+                    self.delay(for: .milliseconds(800)) {
+                        
+                        self.action.send(
+                            PaymentsTransfersViewModelAction.Show.ProductProfile(
+                                productId: payload.productId
+                            )
+                        )
                     }
+                    
                 default:
                     break
                 }
@@ -615,9 +619,8 @@ extension PaymentsTransfersViewModel {
             .sink { [unowned self] _ in
                 
                 self.event(.resetDestination)
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                    
+                self.delay(for: .milliseconds(800)) {
+
                     self.action.send(PaymentsTransfersViewModelAction.Show.OpenDeposit())
                 }
             }
@@ -633,7 +636,7 @@ extension PaymentsTransfersViewModel {
                 switch action {
                 case _ as PaymentsViewModelAction.ScanQrCode:
                     self.event(.resetDestination)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    self.delay(for: .milliseconds(800)) {
                         self.openScanner()
                     }
                     
