@@ -434,30 +434,13 @@ extension PaymentsTransfersViewModel {
                             self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
                             
                         case .qrPayment:
-                            
                             // на экране платежей нижний переход
                             self.openScanner()
                             
                         case .service, .internet:
-                            self.rootActions?.spinner.show()
-                            
-                            paymentsTransfersFactory.makeUtilitiesViewModel(
-                                makeUtilitiesPayload(forType: payload.type)
-                            ) { [weak self] in
-                            
-                                self?.rootActions?.spinner.hide()
-                                
-                                switch $0 {
-                                case let .legacy(paymentsServicesViewModel):
-                                    self?.route.destination = .paymentsServices(paymentsServicesViewModel)
-    
-                                case let .utilities(utilitiesViewModel):
-                                    self?.route.destination = .utilities((utilitiesViewModel, nil))
-                                }
-                            }
+                            makeUtilitiesViewModel(for: payload.type)
                             
                         case .transport:
-                            
                             bindTransport()
                             
                         case .taxAndStateService:
@@ -484,8 +467,8 @@ extension PaymentsTransfersViewModel {
                     default:
                         break
                     }
-                    
-                }.store(in: &bindings)
+                }
+                .store(in: &bindings)
         }
     }
     
@@ -1728,7 +1711,7 @@ enum PaymentsTransfersViewModelAction {
     struct ViewDidApear: Action {}
 }
 
-// MARK: - helpers
+// MARK: - Helpers
 
 extension PaymentsTransfersViewModel.Route {
     
@@ -1757,6 +1740,27 @@ extension PaymentsTransfersViewModel.Route {
 }
 
 private extension PaymentsTransfersViewModel {
+    
+    private func makeUtilitiesViewModel(
+        for type: PTSectionPaymentsView.ViewModel.PaymentsType
+    ) {
+        rootActions?.spinner.show()
+        
+        paymentsTransfersFactory.makeUtilitiesViewModel(
+            makeUtilitiesPayload(forType: type)
+        ) { [weak self] in
+            
+            self?.rootActions?.spinner.hide()
+            
+            switch $0 {
+            case let .legacy(paymentsServicesViewModel):
+                self?.route.destination = .paymentsServices(paymentsServicesViewModel)
+                
+            case let .utilities(utilitiesViewModel):
+                self?.route.destination = .utilities((utilitiesViewModel, nil))
+            }
+        }
+    }
     
     private func handleOutside(
         _ outside: Route.Outside
