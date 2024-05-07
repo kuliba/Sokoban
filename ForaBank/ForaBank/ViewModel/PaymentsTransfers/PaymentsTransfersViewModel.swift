@@ -126,20 +126,29 @@ extension PaymentsTransfersViewModel {
     func event(_ event: Event) {
         
         let (state, effect) = reduce(route, event)
-        routeSubject.send(state)
         
-        if let effect {
+        if let outside = route.outside {
             
-            rootActions?.spinner.show()
+            routeSubject.send(.empty)
+            self.handleOutside(outside)
             
-            navigationStateManager.handleEffect(effect) { [weak self] in
+        } else {
+            
+            routeSubject.send(state)
+            
+            if let effect {
                 
-                self?.rootActions?.spinner.hide()
-                self?.event($0)
+                rootActions?.spinner.show()
+                
+                navigationStateManager.handleEffect(effect) { [weak self] in
+                    
+                    self?.rootActions?.spinner.hide()
+                    self?.event($0)
+                }
             }
         }
     }
-        
+    
     typealias State = PaymentsTransfersViewModel.Route
     typealias Event = PaymentsTransfersEvent
     typealias Effect = PaymentsTransfersEffect
@@ -1315,6 +1324,11 @@ extension PaymentsTransfersViewModel {
         
         var destination: Link?
         var modal: Modal?
+        /// - Note: not ideal, but modelling `Route` as an enum to remove impossible states
+        /// would lead to significant complications
+        var outside: Outside?
+        
+        enum Outside { case chat, main }
         
         static let empty: Self = .init(destination: nil, modal: nil)
     }
@@ -1743,6 +1757,15 @@ extension PaymentsTransfersViewModel.Route {
 }
 
 private extension PaymentsTransfersViewModel {
+    
+    private func handleOutside(
+        _ outside: Route.Outside
+    ) {
+        switch outside {
+        case .chat: switchToChat()
+        case .main: switchToMain()
+        }
+    }
     
     private func switchToChat() {
         
