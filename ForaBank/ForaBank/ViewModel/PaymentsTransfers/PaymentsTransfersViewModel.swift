@@ -380,41 +380,7 @@ extension PaymentsTransfersViewModel {
                         
                         //Transfers Section
                     case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
-                        
-                        switch payload.type {
-                        case .abroad:
-                            self.action.send(PaymentsTransfersViewModelAction.Show.Countries())
-                            
-                        case .anotherCard:
-                            model.action.send(ModelAction.ProductTemplate.List.Request())
-                            let paymentsViewModel = PaymentsViewModel(
-                                model,
-                                service: .toAnotherCard,
-                                closeAction: { [weak self] in
-                                    
-                                    self?.event(.resetDestination)
-                                }
-                            )
-                            bind(paymentsViewModel)
-                            
-                            self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-                            
-                        case .betweenSelf:
-                            
-                            guard let viewModel = PaymentsMeToMeViewModel(model, mode: .demandDeposit) else {
-                                return
-                            }
-                            
-                            bind(viewModel)
-                            
-                            route.modal = .bottomSheet(.init(type: .meToMe(viewModel)))
-                            
-                        case .requisites:
-                            payByRequisites()
-                            
-                        case .byPhoneNumber:
-                            self.action.send(PaymentsTransfersViewModelAction.Show.Contacts())
-                        }
+                        handleTransferButtonTapped(for: payload.type)
                         
                         //Payments Section
                     case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
@@ -425,6 +391,45 @@ extension PaymentsTransfersViewModel {
                     }
                 }
                 .store(in: &bindings)
+        }
+    }
+    
+    private func handleTransferButtonTapped(
+        for type: PTSectionTransfersView.ViewModel.TransfersButtonType
+    ) {
+        switch type {
+        case .abroad:
+            self.action.send(PaymentsTransfersViewModelAction.Show.Countries())
+            
+        case .anotherCard:
+            model.action.send(ModelAction.ProductTemplate.List.Request())
+            let paymentsViewModel = PaymentsViewModel(
+                model,
+                service: .toAnotherCard,
+                closeAction: { [weak self] in
+                    
+                    self?.event(.resetDestination)
+                }
+            )
+            bind(paymentsViewModel)
+            
+            self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            
+        case .betweenSelf:
+            
+            guard let viewModel = PaymentsMeToMeViewModel(model, mode: .demandDeposit) else {
+                return
+            }
+            
+            bind(viewModel)
+            
+            route.modal = .bottomSheet(.init(type: .meToMe(viewModel)))
+            
+        case .requisites:
+            payByRequisites()
+            
+        case .byPhoneNumber:
+            self.action.send(PaymentsTransfersViewModelAction.Show.Contacts())
         }
     }
     
