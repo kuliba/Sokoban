@@ -418,57 +418,62 @@ extension PaymentsTransfersViewModel {
                         
                         //Payments Section
                     case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
-                        
-                        switch payload.type {
-                        case .mobile:
-                            let paymentsViewModel = PaymentsViewModel(
-                                model,
-                                service: .mobileConnection,
-                                closeAction: { [weak self] in
-                                    
-                                    self?.event(.resetDestination)
-                                }
-                            )
-                            bind(paymentsViewModel)
-                            
-                            self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-                            
-                        case .qrPayment:
-                            // на экране платежей нижний переход
-                            self.openScanner()
-                            
-                        case .service, .internet:
-                            makeUtilitiesViewModel(for: payload.type)
-                            
-                        case .transport:
-                            bindTransport()
-                            
-                        case .taxAndStateService:
-                            let paymentsViewModel = PaymentsViewModel(
-                                category: Payments.Category.taxes,
-                                model: model
-                            ) { [weak self] in
-                                
-                                self?.event(.resetDestination)
-                            }
-                            route.destination = .payments(paymentsViewModel)
-                            
-                        case .socialAndGame:
-                            route.modal = .bottomSheet(.init(type: .exampleDetail(payload.type.rawValue))) //TODO:
-                            
-                        case .security:
-                            route.modal = .bottomSheet(.init(type: .exampleDetail(payload.type.rawValue)))
-                            //TODO:
-                            
-                        case .others:
-                            route.modal = .bottomSheet(.init(type: .exampleDetail(payload.type.rawValue))) //TODO:
-                        }
+                        handlePaymentButtonTapped(for: payload.type)
                         
                     default:
                         break
                     }
                 }
                 .store(in: &bindings)
+        }
+    }
+    
+    private func handlePaymentButtonTapped(
+        for type: PTSectionPaymentsView.ViewModel.PaymentsType
+    ) {
+        switch type {
+        case .mobile:
+            let paymentsViewModel = PaymentsViewModel(
+                model,
+                service: .mobileConnection,
+                closeAction: { [weak self] in
+                    
+                    self?.event(.resetDestination)
+                }
+            )
+            bind(paymentsViewModel)
+            
+            self.action.send(PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+            
+        case .qrPayment:
+            // на экране платежей нижний переход
+            self.openScanner()
+            
+        case .service, .internet:
+            makeUtilitiesViewModel(for: type)
+            
+        case .transport:
+            bindTransport()
+            
+        case .taxAndStateService:
+            let paymentsViewModel = PaymentsViewModel(
+                category: Payments.Category.taxes,
+                model: model
+            ) { [weak self] in
+                
+                self?.event(.resetDestination)
+            }
+            route.destination = .payments(paymentsViewModel)
+            
+        case .socialAndGame:
+            route.modal = .bottomSheet(.init(type: .exampleDetail(type.rawValue))) //TODO:
+            
+        case .security:
+            route.modal = .bottomSheet(.init(type: .exampleDetail(type.rawValue)))
+            //TODO:
+            
+        case .others:
+            route.modal = .bottomSheet(.init(type: .exampleDetail(type.rawValue))) //TODO:
         }
     }
     
