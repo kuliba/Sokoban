@@ -51,8 +51,11 @@ struct PaymentsTransfersView: View {
 
 extension PaymentsTransfersView {
     
-    typealias OperatorFailure = UtilityPaymentFlowState.Destination.OperatorFailureFlowState
-    typealias ServicePickerState = UtilityPaymentFlowState.Destination.ServicePickerFlowState
+    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias OperatorFailure = UtilityFlowState.Destination.OperatorFailureFlowState
+    typealias ServicePickerState = UtilityFlowState.Destination.ServicePickerFlowState
+    
+    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<ObservingPaymentFlowMockViewModel>
     
     typealias Config = UtilityPrepaymentWrapperView.Config
     typealias Destination = ViewModel.Route.Destination
@@ -86,7 +89,7 @@ private extension PaymentsTransfersView {
     }
     
     func utilityPrepaymentView(
-        state: UtilityPaymentFlowState,
+        state: UtilityFlowState,
         event: @escaping (UtilityPaymentFlowEvent) -> ()
     ) -> some View {
         
@@ -110,7 +113,7 @@ private extension PaymentsTransfersView {
     
     @ViewBuilder
     func utilityPrepaymentDestinationView(
-        state: UtilityPaymentFlowState.Destination,
+        state: UtilityFlowState.Destination,
         event: @escaping (UtilityPaymentFlowEvent) -> Void
     ) -> some View {
         
@@ -139,7 +142,7 @@ private extension PaymentsTransfersView {
     }
     
     func operatorFailureView(
-        operatorFailure: UtilityPaymentFlowState.Destination.OperatorFailureFlowState,
+        operatorFailure: UtilityFlowState.Destination.OperatorFailureFlowState,
         payByInstructions: @escaping () -> Void,
         dismissDestination: @escaping () -> Void
     ) -> some View {
@@ -169,7 +172,7 @@ private extension PaymentsTransfersView {
     }
     
     func paymentFlowView(
-        state: UtilityServicePaymentFlowState,
+        state: UtilityServiceFlowState,
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
@@ -194,7 +197,7 @@ private extension PaymentsTransfersView {
     
     func paymentFlowAlert(
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
-    ) -> (UtilityServicePaymentFlowState.Alert) -> Alert {
+    ) -> (UtilityServiceFlowState.Alert) -> Alert {
         
         return { alert in
             
@@ -218,7 +221,7 @@ private extension PaymentsTransfersView {
     }
     
     func paymentFlowFullScreenCoverView(
-        fullScreenCover: UtilityServicePaymentFlowState.FullScreenCover
+        fullScreenCover: UtilityServiceFlowState.FullScreenCover
     ) -> some View {
         
         switch fullScreenCover {
@@ -237,7 +240,7 @@ private extension PaymentsTransfersView {
 
     func paymentFlowModalView(
         event: @escaping (PaymentFraudMockView.Event) -> Void
-    ) -> (UtilityServicePaymentFlowState.Modal) -> PaymentFlowModalView {
+    ) -> (UtilityServiceFlowState.Modal) -> PaymentFlowModalView {
         
         return {
             

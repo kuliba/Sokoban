@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 06.05.2024.
 //
 
-extension PaymentsTransfersReducerFactory {
+extension PaymentsTransfersReducerFactory
+where UtilityPrepaymentViewModel == UtilityServicePaymentFlowPreview.UtilityPrepaymentViewModel,
+      PaymentViewModel == ObservingPaymentFlowMockViewModel {
     
     static var preview: Self {
         

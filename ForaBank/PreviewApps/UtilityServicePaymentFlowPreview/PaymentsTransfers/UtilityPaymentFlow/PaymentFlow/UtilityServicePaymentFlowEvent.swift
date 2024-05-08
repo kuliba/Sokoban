@@ -13,8 +13,3 @@ enum UtilityServicePaymentFlowEvent: Equatable {
     case fraud(FraudEvent)
     case notified(PaymentStateProjection)
 }
-
-extension UtilityServicePaymentFlowEvent {
-    
-    typealias PaymentStateProjection = PaymentsTransfersReducerFactory.PaymentStateProjection
-}

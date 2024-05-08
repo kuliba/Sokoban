@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 03.05.2024.
 //
 
-enum PaymentsTransfersEvent: Equatable {
+enum PaymentsTransfersEvent<UtilityPrepaymentViewModel, PaymentViewModel> {
     
     case dismissFullScreenCover
     case goToMain
@@ -16,10 +16,13 @@ enum PaymentsTransfersEvent: Equatable {
 
 extension PaymentsTransfersEvent {
     
-    typealias Modal = PaymentsTransfersViewModel.Route.Modal
+    typealias Route = PaymentsTransfersViewModel._Route<UtilityPrepaymentViewModel, PaymentViewModel>
+    typealias Modal = Route.Modal
     
     enum PaymentButton: Equatable {
         
         case utilityService
     }
 }
+
+extension PaymentsTransfersEvent: Equatable where UtilityPrepaymentViewModel: Equatable, PaymentViewModel: Equatable {}

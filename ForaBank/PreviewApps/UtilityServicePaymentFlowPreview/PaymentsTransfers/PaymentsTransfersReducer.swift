@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class PaymentsTransfersReducer {
+final class PaymentsTransfersReducer<UtilityPrepaymentViewModel, PaymentViewModel> {
     
     private let factory: Factory
     private let notify: Factory.Notify
@@ -54,11 +54,11 @@ extension PaymentsTransfersReducer {
 
 extension PaymentsTransfersReducer {
     
-    typealias Factory = PaymentsTransfersReducerFactory
+    typealias Factory = PaymentsTransfersReducerFactory<UtilityPrepaymentViewModel, PaymentViewModel>
     
-    typealias State = PaymentsTransfersViewModel.Route
-    typealias Event = PaymentsTransfersEvent
-    typealias Effect = PaymentsTransfersEffect
+    typealias State = PaymentsTransfersViewModel._Route<UtilityPrepaymentViewModel, PaymentViewModel>
+    typealias Event = PaymentsTransfersEvent<UtilityPrepaymentViewModel, PaymentViewModel>
+    typealias Effect = PaymentsTransfersEffect<UtilityPrepaymentViewModel, PaymentViewModel>
 }
 
 private extension PaymentsTransfersReducer {
@@ -162,7 +162,7 @@ private extension PaymentsTransfersReducer {
     
     private func reduce(
         _ state: inout State,
-        with projection: UtilityServicePaymentFlowEvent.PaymentStateProjection
+        with projection: PaymentStateProjection
     ) {
         switch projection {
         case .completed:
@@ -332,12 +332,14 @@ private extension PaymentsTransfersEffect {
         .delay(.setModal(to: modal), for: interval)
     }
     
-    typealias Modal = PaymentsTransfersViewModel.Route.Modal
+    typealias Modal = PaymentsTransfersViewModel._Route<UtilityPrepaymentViewModel, PaymentViewModel>.Modal
 }
 
-private extension PaymentsTransfersViewModel.Route {
+private extension PaymentsTransfersViewModel._Route {
     
-    var utilityPrepayment: UtilityPaymentFlowState? {
+    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPrepaymentViewModel, PaymentViewModel>
+
+    var utilityPrepayment: UtilityFlowState? {
         
         guard case let .utilityPayment(utilityPrepayment) = destination
         else { return nil }
@@ -345,13 +347,13 @@ private extension PaymentsTransfersViewModel.Route {
         return utilityPrepayment
     }
     
-    var utilityPrepaymentDestination: UtilityPaymentFlowState.Destination? {
+    var utilityPrepaymentDestination: UtilityFlowState.Destination? {
         
         return utilityPrepayment?.destination
     }
     
     mutating func setUtilityPrepaymentDestination(
-        to destination: UtilityPaymentFlowState.Destination?
+        to destination: UtilityFlowState.Destination?
     ) {
         guard var utilityPrepayment else { return }
         
@@ -360,7 +362,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     mutating func setUtilityPrepaymentAlert(
-        to alert: UtilityPaymentFlowState.Alert?
+        to alert: UtilityFlowState.Alert?
     ) {
         guard var utilityPrepayment else { return }
         
@@ -368,7 +370,9 @@ private extension PaymentsTransfersViewModel.Route {
         self.destination = .utilityPayment(utilityPrepayment)
     }
     
-    private var operatorFailure: UtilityPaymentFlowState.Destination.OperatorFailureFlowState? {
+    typealias OperatorFailure = UtilityFlowState.Destination.OperatorFailureFlowState
+    
+    private var operatorFailure: OperatorFailure? {
         
         guard case let .operatorFailure(operatorFailure) = utilityPrepaymentDestination
         else { return nil }
@@ -377,7 +381,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     mutating func setUtilityServiceOperatorFailureDestination(
-        to destination: UtilityPaymentFlowState.Destination.OperatorFailureFlowState.Destination?
+        to destination: OperatorFailure.Destination?
     ) {
         guard var operatorFailure else { return }
         
@@ -385,7 +389,7 @@ private extension PaymentsTransfersViewModel.Route {
         self.setUtilityPrepaymentDestination(to: .operatorFailure(operatorFailure))
     }
     
-    typealias ServicePickerState = UtilityPaymentFlowState.Destination.ServicePickerFlowState
+    typealias ServicePickerState = UtilityFlowState.Destination.ServicePickerFlowState
     
     private var servicePicker: ServicePickerState? {
         
@@ -413,7 +417,9 @@ private extension PaymentsTransfersViewModel.Route {
         self.setUtilityPrepaymentDestination(to: .servicePicker(servicePicker))
     }
     
-    private var paymentFlowState: UtilityServicePaymentFlowState? {
+    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<PaymentViewModel>
+    
+    private var paymentFlowState: UtilityServiceFlowState? {
         
         guard case let .payment(paymentFlowState) = utilityPrepayment?.destination
         else { return nil }
@@ -422,7 +428,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     mutating func setPaymentAlert(
-        to alert: UtilityServicePaymentFlowState.Alert?
+        to alert: UtilityServiceFlowState.Alert?
     ) {
         // try to change payment node in the tree if found
         // in prepayment destination
@@ -432,7 +438,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     mutating func setFullScreenCover(
-        to fullScreenCover: UtilityServicePaymentFlowState.FullScreenCover?
+        to fullScreenCover: UtilityServiceFlowState.FullScreenCover?
     ) {
         // try to change payment node in the tree if found
         // in prepayment destination
@@ -442,7 +448,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     mutating func setPaymentModal(
-        to modal: UtilityServicePaymentFlowState.Modal?
+        to modal: UtilityServiceFlowState.Modal?
     ) {
         // try to change payment node in the tree if found
         // in prepayment destination
@@ -452,7 +458,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setPrepaymentPaymentAlert(
-        to alert: UtilityServicePaymentFlowState.Alert?
+        to alert: UtilityServiceFlowState.Alert?
     ) {
         guard var paymentFlowState else { return }
         
@@ -461,7 +467,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setPrepaymentPaymentFullScreenCover(
-        to fullScreenCover: UtilityServicePaymentFlowState.FullScreenCover?
+        to fullScreenCover: UtilityServiceFlowState.FullScreenCover?
     ) {
         guard var paymentFlowState else { return }
         
@@ -470,7 +476,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setPrepaymentPaymentModal(
-        to modal: UtilityServicePaymentFlowState.Modal?
+        to modal: UtilityServiceFlowState.Modal?
     ) {
         guard var paymentFlowState else { return }
         
@@ -479,7 +485,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setServicePickerPaymentAlert(
-        to alert: UtilityServicePaymentFlowState.Alert?
+        to alert: UtilityServiceFlowState.Alert?
     ) {
         guard case var .utilityPayment(utilityPrepayment) = destination,
               case var .servicePicker(servicePicker) = utilityPrepayment.destination,
@@ -493,7 +499,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setServicePickerPaymentFullScreenCover(
-        to fullScreenCover: UtilityServicePaymentFlowState.FullScreenCover?
+        to fullScreenCover: UtilityServiceFlowState.FullScreenCover?
     ) {
         guard case var .utilityPayment(utilityPrepayment) = destination,
               case var .servicePicker(servicePicker) = utilityPrepayment.destination,
@@ -507,7 +513,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setServicePickerPaymentModal(
-        to modal: UtilityServicePaymentFlowState.Modal?
+        to modal: UtilityServiceFlowState.Modal?
     ) {
         guard case var .utilityPayment(utilityPrepayment) = destination,
               case var .servicePicker(servicePicker) = utilityPrepayment.destination,

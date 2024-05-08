@@ -12,18 +12,18 @@ final class PaymentsTransfersViewModel: ObservableObject {
     @Published private(set) var state: State
     @Published private(set) var route: Route
     
-    private let navigationStateManager: NavigationStateManager
+    private let flowManager: FlowManager
     private let rootActions: RootActions
     
     init(
         state: State,
         route: Route,
-        navigationStateManager: NavigationStateManager,
+        flowManager: FlowManager,
         rootActions: RootActions
     ) {
         self.state = state
         self.route = route
-        self.navigationStateManager = navigationStateManager
+        self.flowManager = flowManager
         self.rootActions = rootActions
     }
 }
@@ -42,7 +42,7 @@ extension PaymentsTransfersViewModel {
     
     func event(_ event: Event) {
         
-        let reduce = navigationStateManager.makeReduce { [weak self] in
+        let reduce = flowManager.makeReduce { [weak self] in
             
             self?.event(.utilityFlow(.payment(.notified($0))))
         }
@@ -63,7 +63,7 @@ extension PaymentsTransfersViewModel {
                 
                 rootActions.spinner.show()
                 
-                navigationStateManager.handleEffect(effect) { [weak self] in
+                flowManager.handleEffect(effect) { [weak self] in
                     
                     self?.rootActions.spinner.hide()
                     self?.event($0)
@@ -77,26 +77,29 @@ extension PaymentsTransfersViewModel {
 
 extension PaymentsTransfersViewModel {
     
-    struct Route {
+    typealias Route = _Route<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    
+    struct _Route<UtilityPrepaymentViewModel, PaymentViewModel> {
         
         var destination: Destination?
         var modal: Modal?
         var outside: Outside?
     }
-
+    
     struct State {}
     
-    typealias Event = PaymentsTransfersEvent
-    typealias Effect = PaymentsTransfersEffect
-    typealias NavigationStateManager = PaymentsTransfersFlowManager
+    typealias Event = PaymentsTransfersEvent<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias Effect = PaymentsTransfersEffect<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    
+    typealias FlowManager = PaymentsTransfersFlowManager<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 }
 
-extension PaymentsTransfersViewModel.Route {
+extension PaymentsTransfersViewModel._Route {
     
     enum Destination {
         
         case payByInstructions
-        case utilityPayment(UtilityPaymentFlowState)
+        case utilityPayment(UtilityFlowState)
     }
     
     enum Modal: Equatable {
@@ -108,6 +111,11 @@ extension PaymentsTransfersViewModel.Route {
         
         case chat, main
     }
+}
+
+extension PaymentsTransfersViewModel._Route.Destination {
+    
+    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPrepaymentViewModel, PaymentViewModel>
 }
 
 // MARK: - handle outside

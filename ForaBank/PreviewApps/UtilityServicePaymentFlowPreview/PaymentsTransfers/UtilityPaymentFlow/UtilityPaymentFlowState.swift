@@ -7,7 +7,7 @@
 
 import ForaTools
 
-struct UtilityPaymentFlowState {
+struct UtilityPaymentFlowState<UtilityPrepaymentViewModel, PaymentViewModel> {
     
     let viewModel: UtilityPrepaymentViewModel
     var destination: Destination?
@@ -30,18 +30,18 @@ extension UtilityPaymentFlowState {
         
         case serviceFailure(ServiceFailure)
     }
-    
+    #warning("make generic?")
     enum Destination {
         
         case operatorFailure(OperatorFailureFlowState)
         case payByInstructions
-        case payment(UtilityServicePaymentFlowState)
+        case payment(UtilityServicePaymentFlowState<PaymentViewModel>)
         case servicePicker(ServicePickerFlowState)
     }
 }
 
 extension UtilityPaymentFlowState.Destination {
-    
+    #warning("extract subtypes to get rid of generics where they are not needed")
     struct OperatorFailureFlowState {
         
         let content: Content
@@ -99,7 +99,7 @@ extension UtilityPaymentFlowState.Destination.ServicePickerFlowState {
     
     enum Destination {
         
-        case payment(UtilityServicePaymentFlowState)
+        case payment(UtilityServicePaymentFlowState<PaymentViewModel>)
     }
 }
 

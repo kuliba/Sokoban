@@ -16,7 +16,7 @@ struct ContentView: View {
                 viewModel: .preview()
             ))
         ),
-        navigationStateManager: .preview(),
+        flowManager: .preview(),
         rootActions: .preview
     )
     
