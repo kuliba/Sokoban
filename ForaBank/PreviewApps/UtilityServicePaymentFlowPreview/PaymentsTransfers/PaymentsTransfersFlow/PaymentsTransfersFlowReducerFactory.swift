@@ -1,17 +1,17 @@
 //
-//  PaymentsTransfersReducerFactory.swift
+//  PaymentsTransfersFlowReducerFactory.swift
 //  UtilityServicePaymentFlowPreview
 //
 //  Created by Igor Malyarov on 06.05.2024.
 //
 
-struct PaymentsTransfersReducerFactory<Content, PaymentViewModel> {
+struct PaymentsTransfersFlowReducerFactory<Content, PaymentViewModel> {
     
     let makeUtilityPrepaymentViewModel: MakeUtilityPrepaymentViewModel
     let makePaymentViewModel: MakePaymentViewModel
 }
 
-extension PaymentsTransfersReducerFactory {
+extension PaymentsTransfersFlowReducerFactory {
     
     typealias Payload = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
     typealias MakeUtilityPrepaymentViewModel = (Payload) -> Content
