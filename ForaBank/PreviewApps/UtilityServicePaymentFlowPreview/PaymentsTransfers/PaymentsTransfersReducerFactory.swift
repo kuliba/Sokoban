@@ -13,7 +13,7 @@ struct PaymentsTransfersReducerFactory {
 
 extension PaymentsTransfersReducerFactory {
     
-    typealias Payload = UtilityPaymentFlowEvent.UtilityPrepaymentPayload
+    typealias Payload = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
     typealias MakeUtilityPrepaymentViewModel = (Payload) -> UtilityPrepaymentViewModel
     
     typealias MakePaymentViewModelPayload = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent

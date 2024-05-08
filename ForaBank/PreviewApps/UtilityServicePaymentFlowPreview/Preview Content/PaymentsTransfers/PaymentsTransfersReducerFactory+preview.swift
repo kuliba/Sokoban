@@ -23,7 +23,7 @@ extension PaymentsTransfersReducerFactory {
 
 private extension UtilityPrepaymentState {
     
-    init(_ payload: UtilityPaymentFlowEvent.UtilityPrepaymentPayload) {
+    init(_ payload: UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload) {
         
         self.init(
             lastPayments: payload.lastPayments,
