@@ -15,7 +15,7 @@ where Content == UtilityPrepaymentViewModel,
         startPaymentStub: UtilityPrepaymentFlowEffectHandler.StartPaymentResult? = nil
     ) -> Self {
         
-        typealias EffectHandler = PaymentsTransfersFlowEffectHandler<Content, PaymentViewModel>
+        typealias EffectHandler = PaymentsTransfersFlowEffectHandler
         
         let effectHandler = EffectHandler.preview(
             startPaymentStub: startPaymentStub

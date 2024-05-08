@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 03.05.2024.
 //
 
-enum PaymentsTransfersFlowEvent<Content, PaymentViewModel> {
+enum PaymentsTransfersFlowEvent: Equatable {
     
     case dismissFullScreenCover
     case goToMain
@@ -23,5 +23,3 @@ extension PaymentsTransfersFlowEvent {
         case utilityService
     }
 }
-
-extension PaymentsTransfersFlowEvent: Equatable where Content: Equatable, PaymentViewModel: Equatable {}

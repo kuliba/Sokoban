@@ -98,8 +98,8 @@ extension PaymentsTransfersViewModel {
     
     struct State {}
     
-    typealias Event = PaymentsTransfersFlowEvent<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
-    typealias Effect = PaymentsTransfersFlowEffect<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias Event = PaymentsTransfersFlowEvent
+    typealias Effect = PaymentsTransfersFlowEffect
     
     typealias FlowManager = PaymentsTransfersFlowManager<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 }

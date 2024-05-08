@@ -21,6 +21,6 @@ extension PaymentsTransfersFlowManager {
     typealias MakeReduce = (@escaping Notify) -> Reduce
     
     typealias State = PaymentsTransfersViewModel._Route<Content, PaymentViewModel>
-    typealias Event = PaymentsTransfersFlowEvent<Content, PaymentViewModel>
-    typealias Effect = PaymentsTransfersFlowEffect<Content, PaymentViewModel>
+    typealias Event = PaymentsTransfersFlowEvent
+    typealias Effect = PaymentsTransfersFlowEffect
 }

@@ -57,8 +57,8 @@ extension PaymentsTransfersFlowReducer {
     typealias Factory = PaymentsTransfersFlowReducerFactory<Content, PaymentViewModel>
     
     typealias State = PaymentsTransfersViewModel._Route<Content, PaymentViewModel>
-    typealias Event = PaymentsTransfersFlowEvent<Content, PaymentViewModel>
-    typealias Effect = PaymentsTransfersFlowEffect<Content, PaymentViewModel>
+    typealias Event = PaymentsTransfersFlowEvent
+    typealias Effect = PaymentsTransfersFlowEffect
 }
 
 private extension PaymentsTransfersFlowReducer {
