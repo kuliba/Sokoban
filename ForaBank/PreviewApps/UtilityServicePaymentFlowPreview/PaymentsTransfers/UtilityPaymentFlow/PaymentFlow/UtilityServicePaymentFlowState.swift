@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 04.05.2024.
 //
 
-struct UtilityServicePaymentFlowState {
+struct UtilityServicePaymentFlowState<ViewModel> {
     
     let viewModel: ViewModel
     var alert: Alert?
@@ -27,11 +27,6 @@ struct UtilityServicePaymentFlowState {
 
 extension UtilityServicePaymentFlowState {
     
-    typealias ViewModel = ObservingPaymentFlowMockViewModel
-}
-
-extension UtilityServicePaymentFlowState {
-    
     enum Alert {
         
         case terminalError(String)
@@ -48,7 +43,4 @@ extension UtilityServicePaymentFlowState {
     }
 }
 
-extension UtilityServicePaymentFlowState.Modal {
-    
-    struct Fraud: Equatable {}
-}
+struct Fraud: Equatable {}

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 03.05.2024.
 //
 
-struct PaymentsTransfersFlowManager {
+struct PaymentsTransfersFlowManager<Content, PaymentViewModel> {
     
     let handleEffect: HandleEffect
     let makeReduce: MakeReduce
@@ -17,10 +17,10 @@ extension PaymentsTransfersFlowManager {
     typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
     
     typealias Reduce = (State, Event) -> (State, Effect?)
-    typealias Notify = (PaymentsTransfersReducerFactory.PaymentStateProjection) -> Void
+    typealias Notify = (PaymentStateProjection) -> Void
     typealias MakeReduce = (@escaping Notify) -> Reduce
     
-    typealias State = PaymentsTransfersViewModel.State.Route
-    typealias Event = PaymentsTransfersEvent
-    typealias Effect = PaymentsTransfersEffect
+    typealias State = PaymentsTransfersViewModel._Route<Content, PaymentViewModel>
+    typealias Event = PaymentsTransfersEvent<Content, PaymentViewModel>
+    typealias Effect = PaymentsTransfersEffect<Content, PaymentViewModel>
 }

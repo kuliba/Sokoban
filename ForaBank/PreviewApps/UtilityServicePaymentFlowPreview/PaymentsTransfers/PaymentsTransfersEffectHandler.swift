@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class PaymentsTransfersEffectHandler {
+final class PaymentsTransfersEffectHandler<Content, PaymentViewModel> {
     
     private let utilityEffectHandle: UtilityFlowEffectHandle
     
@@ -27,10 +27,7 @@ extension PaymentsTransfersEffectHandler {
         switch effect {
         case let .delay(event, for: interval):
             #warning("replace with scheduler!!")
-            DispatchQueue.main.asyncAfter(deadline: .now() + interval) {
-                
-                dispatch(event)
-            }
+            DispatchQueue.main.delay(for: interval) { dispatch(event) }
             
         case let .utilityFlow(effect):
             utilityEffectHandle(effect) { dispatch(.utilityFlow($0)) }
@@ -45,6 +42,6 @@ extension PaymentsTransfersEffectHandler {
 
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentsTransfersEvent
-    typealias Effect = PaymentsTransfersEffect
+    typealias Event = PaymentsTransfersEvent<Content, PaymentViewModel>
+    typealias Effect = PaymentsTransfersEffect<Content, PaymentViewModel>
 }

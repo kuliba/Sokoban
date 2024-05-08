@@ -32,8 +32,8 @@ where Content: View,
     }
     
     private func utilityPrepaymentAlert(
-        event: @escaping (UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent) -> Void
-    ) -> (UtilityPaymentFlowState.Alert) -> Alert {
+        event: @escaping (Event) -> Void
+    ) -> (State.Alert) -> Alert {
         
         return { alert in
             
@@ -56,7 +56,8 @@ extension UtilityPrepaymentFlowView {
     
     typealias Destination = State.Destination
     
-    typealias State = UtilityPaymentFlowState
+    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias State = UtilityFlowState
     typealias Event = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent
 }
 

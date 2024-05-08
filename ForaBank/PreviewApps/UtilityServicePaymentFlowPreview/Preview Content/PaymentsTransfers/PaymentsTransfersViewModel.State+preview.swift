@@ -7,5 +7,5 @@
 
 extension PaymentsTransfersViewModel.State {
     
-    static let preview: Self = .init(route: .init())
+    static let preview: Self = .init()
 }

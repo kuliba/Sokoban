@@ -16,6 +16,11 @@ enum UtilityPaymentFlowEvent: Equatable {
 
 extension UtilityPaymentFlowEvent {
     
+    enum ServicePickerFlowEvent: Equatable {
+        
+        case dismissAlert
+    }
+    
     enum UtilityPrepaymentFlowEvent: Equatable {
         
         case addCompany
@@ -23,15 +28,11 @@ extension UtilityPaymentFlowEvent {
         case dismissDestination
         case dismissOperatorFailureDestination
         case dismissServicesDestination
+        case initiated(UtilityPrepaymentPayload)
         case payByInstructions
         case payByInstructionsFromError
         case paymentStarted(StartPaymentResult)
         case select(Select)
-    }
-    
-    enum ServicePickerFlowEvent: Equatable {
-        
-        case dismissAlert
     }
 }
 
@@ -59,5 +60,11 @@ extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
         
         case operatorFailure(Operator)
         case serviceFailure(ServiceFailure)
+    }
+    
+    struct UtilityPrepaymentPayload: Equatable {
+        
+        let lastPayments: [LastPayment]
+        let operators: [Operator]
     }
 }

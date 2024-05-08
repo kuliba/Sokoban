@@ -14,6 +14,7 @@ extension UtilityPaymentFlowEffect {
     
     enum UtilityPrepaymentFlowEffect: Equatable {
         
+        case initiate
         case startPayment(with: Select)
     }
 }

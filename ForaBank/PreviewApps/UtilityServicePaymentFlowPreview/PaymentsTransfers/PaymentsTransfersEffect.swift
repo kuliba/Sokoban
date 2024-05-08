@@ -7,9 +7,15 @@
 
 import Foundation
 
-enum PaymentsTransfersEffect: Equatable {
+enum PaymentsTransfersEffect<Content, PaymentViewModel> {
     
-    case delay(PaymentsTransfersEvent, for: DispatchTimeInterval)
-
+    case delay(Event, for: DispatchTimeInterval)
     case utilityFlow(UtilityPaymentFlowEffect)
 }
+
+extension PaymentsTransfersEffect {
+    
+    typealias Event = PaymentsTransfersEvent<Content, PaymentViewModel>
+}
+
+extension PaymentsTransfersEffect: Equatable where Content: Equatable, PaymentViewModel: Equatable {}

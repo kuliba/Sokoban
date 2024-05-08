@@ -10,20 +10,20 @@ import Foundation
 final class PaymentsTransfersViewModel: ObservableObject {
     
     @Published private(set) var state: State
+    @Published private(set) var route: Route
     
-    private let factory: Factory
-    private let navigationStateManager: NavigationStateManager
+    private let flowManager: FlowManager
     private let rootActions: RootActions
     
     init(
         state: State,
-        factory: Factory,
-        navigationStateManager: NavigationStateManager,
+        route: Route,
+        flowManager: FlowManager,
         rootActions: RootActions
     ) {
         self.state = state
-        self.factory = factory
-        self.navigationStateManager = navigationStateManager
+        self.route = route
+        self.flowManager = flowManager
         self.rootActions = rootActions
     }
 }
@@ -32,46 +32,38 @@ extension PaymentsTransfersViewModel {
     
     func startUtilityPaymentProcess() {
         
-        rootActions.spinner.show()
-        
-        factory.makeUtilityPrepaymentViewModel { [weak self] in
-            
-            self?.rootActions.spinner.hide()
-            self?.state.route.destination = .utilityPayment(.init(viewModel: $0))
-        }
+        event(.paymentButtonTapped(.utilityService))
     }
     
     func dismissDestination() {
         
-        state.route.destination = nil
+        route.destination = nil
     }
     
     func event(_ event: Event) {
         
-        let reduce = navigationStateManager.makeReduce { [weak self] in
+        let reduce = flowManager.makeReduce { [weak self] in
             
             self?.event(.utilityFlow(.payment(.notified($0))))
         }
-        let (route, effect) = reduce(state.route, event)
+        let (route, effect) = reduce(route, event)
         
         if let outside = route.outside {
             
-            self.state.route = .init()
+            // routeSubject.send(route)
+            self.route = .init()
             self.handleOutside(outside)
             
         } else {
             
-            // routeSubject.send(state)
-            DispatchQueue.main.async { [weak self] in
-                
-                self?.state.route = route
-            }
+            // routeSubject.send(route)
+            DispatchQueue.main.async { [weak self] in self?.route = route }
             
             if let effect {
                 
                 rootActions.spinner.show()
                 
-                navigationStateManager.handleEffect(effect) { [weak self] in
+                flowManager.handleEffect(effect) { [weak self] in
                     
                     self?.rootActions.spinner.hide()
                     self?.event($0)
@@ -85,34 +77,29 @@ extension PaymentsTransfersViewModel {
 
 extension PaymentsTransfersViewModel {
     
-    struct State {
-        
-        var route: Route
-    }
+    typealias Route = _Route<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     
-    typealias Event = PaymentsTransfersEvent
-    typealias Effect = PaymentsTransfersEffect
-    typealias Factory = PaymentsTransfersViewModelFactory
-    typealias NavigationStateManager = PaymentsTransfersFlowManager
-}
-
-extension PaymentsTransfersViewModel.State {
-    
-    struct Route {
+    struct _Route<Content, PaymentViewModel> {
         
         var destination: Destination?
         var modal: Modal?
-#warning("change to enum to make impossible simultaneous outside and destination/modal")
         var outside: Outside?
     }
+    
+    struct State {}
+    
+    typealias Event = PaymentsTransfersEvent<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias Effect = PaymentsTransfersEffect<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    
+    typealias FlowManager = PaymentsTransfersFlowManager<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 }
 
-extension PaymentsTransfersViewModel.State.Route {
+extension PaymentsTransfersViewModel._Route {
     
     enum Destination {
         
         case payByInstructions
-        case utilityPayment(UtilityPaymentFlowState)
+        case utilityPayment(UtilityFlowState)
     }
     
     enum Modal: Equatable {
@@ -126,16 +113,19 @@ extension PaymentsTransfersViewModel.State.Route {
     }
 }
 
+extension PaymentsTransfersViewModel._Route.Destination {
+    
+    typealias UtilityFlowState = UtilityPaymentFlowState<Content, PaymentViewModel>
+}
+
 // MARK: - handle outside
 
 private extension PaymentsTransfersViewModel {
     
     private func handleOutside(
-        _ outside: State.Route.Outside
+        _ outside: Route.Outside
     ) {
-        DispatchQueue.main.asyncAfter(
-            deadline: .now() + 0.3
-        ) { [weak self] in
+        DispatchQueue.main.delay(for: .milliseconds(300)) { [weak self] in
             
             switch outside {
             case .chat:
