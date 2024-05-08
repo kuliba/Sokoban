@@ -15,13 +15,13 @@ where Content == UtilityPrepaymentViewModel,
         startPaymentStub: UtilityPrepaymentFlowEffectHandler.StartPaymentResult? = nil
     ) -> Self {
         
-        typealias EffectHandler = PaymentsTransfersEffectHandler<Content, PaymentViewModel>
+        typealias EffectHandler = PaymentsTransfersFlowEffectHandler<Content, PaymentViewModel>
         
         let effectHandler = EffectHandler.preview(
             startPaymentStub: startPaymentStub
         )
         
-        typealias Reducer = PaymentsTransfersReducer<Content, PaymentViewModel>
+        typealias Reducer = PaymentsTransfersFlowReducer<Content, PaymentViewModel>
         
         let makeReducer = { notify in
             

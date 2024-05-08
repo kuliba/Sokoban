@@ -1,11 +1,11 @@
 //
-//  PaymentsTransfersReducerFactory+preview.swift
+//  PaymentsTransfersFlowReducerFactory+preview.swift
 //  UtilityServicePaymentFlowPreview
 //
 //  Created by Igor Malyarov on 06.05.2024.
 //
 
-extension PaymentsTransfersReducerFactory
+extension PaymentsTransfersFlowReducerFactory
 where Content == UtilityPrepaymentViewModel,
       PaymentViewModel == ObservingPaymentFlowMockViewModel {
     

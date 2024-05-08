@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersEffectHandler+preview.swift
+//  PaymentsTransfersFlowEffectHandler+preview.swift
 //  UtilityServicePaymentFlowPreview
 //
 //  Created by Igor Malyarov on 08.05.2024.
@@ -8,7 +8,7 @@
 import Foundation
 import ForaTools
 
-extension PaymentsTransfersEffectHandler {
+extension PaymentsTransfersFlowEffectHandler {
     
     static func preview(
         startPaymentStub: UtilityPrepaymentFlowEffectHandler.StartPaymentResult? = nil

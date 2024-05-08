@@ -1,11 +1,11 @@
 //
-//  PaymentsTransfersEvent.swift
+//  PaymentsTransfersFlowEvent.swift
 //  UtilityServicePaymentFlowPreview
 //
 //  Created by Igor Malyarov on 03.05.2024.
 //
 
-enum PaymentsTransfersEvent<Content, PaymentViewModel> {
+enum PaymentsTransfersFlowEvent<Content, PaymentViewModel> {
     
     case dismissFullScreenCover
     case goToMain
@@ -14,7 +14,7 @@ enum PaymentsTransfersEvent<Content, PaymentViewModel> {
     case utilityFlow(UtilityPaymentFlowEvent)
 }
 
-extension PaymentsTransfersEvent {
+extension PaymentsTransfersFlowEvent {
     
     typealias Route = PaymentsTransfersViewModel._Route<Content, PaymentViewModel>
     typealias Modal = Route.Modal
@@ -25,4 +25,4 @@ extension PaymentsTransfersEvent {
     }
 }
 
-extension PaymentsTransfersEvent: Equatable where Content: Equatable, PaymentViewModel: Equatable {}
+extension PaymentsTransfersFlowEvent: Equatable where Content: Equatable, PaymentViewModel: Equatable {}

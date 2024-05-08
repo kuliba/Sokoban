@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersEffectHandler.swift
+//  PaymentsTransfersFlowEffectHandler.swift
 //  UtilityServicePaymentFlowPreview
 //
 //  Created by Igor Malyarov on 03.05.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class PaymentsTransfersEffectHandler<Content, PaymentViewModel> {
+final class PaymentsTransfersFlowEffectHandler<Content, PaymentViewModel> {
     
     private let utilityEffectHandle: UtilityFlowEffectHandle
     
@@ -18,7 +18,7 @@ final class PaymentsTransfersEffectHandler<Content, PaymentViewModel> {
     }
 }
 
-extension PaymentsTransfersEffectHandler {
+extension PaymentsTransfersFlowEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -35,13 +35,13 @@ extension PaymentsTransfersEffectHandler {
     }
 }
 
-extension PaymentsTransfersEffectHandler {
+extension PaymentsTransfersFlowEffectHandler {
     
     typealias UtilityFlowDispatch = (UtilityPaymentFlowEvent) -> Void
     typealias UtilityFlowEffectHandle = (UtilityPaymentFlowEffect, @escaping UtilityFlowDispatch) -> Void
 
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentsTransfersEvent<Content, PaymentViewModel>
-    typealias Effect = PaymentsTransfersEffect<Content, PaymentViewModel>
+    typealias Event = PaymentsTransfersFlowEvent<Content, PaymentViewModel>
+    typealias Effect = PaymentsTransfersFlowEffect<Content, PaymentViewModel>
 }

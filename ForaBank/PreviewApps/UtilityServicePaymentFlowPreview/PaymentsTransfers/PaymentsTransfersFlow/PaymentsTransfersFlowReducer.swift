@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersReducer.swift
+//  PaymentsTransfersFlowReducer.swift
 //  UtilityServicePaymentFlowPreview
 //
 //  Created by Igor Malyarov on 06.05.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class PaymentsTransfersReducer<Content, PaymentViewModel> {
+final class PaymentsTransfersFlowReducer<Content, PaymentViewModel> {
     
     private let factory: Factory
     private let notify: Factory.Notify
@@ -21,7 +21,7 @@ final class PaymentsTransfersReducer<Content, PaymentViewModel> {
     }
 }
 
-extension PaymentsTransfersReducer {
+extension PaymentsTransfersFlowReducer {
     
     func reduce(
         _ state: State,
@@ -52,16 +52,16 @@ extension PaymentsTransfersReducer {
     }
 }
 
-extension PaymentsTransfersReducer {
+extension PaymentsTransfersFlowReducer {
     
-    typealias Factory = PaymentsTransfersReducerFactory<Content, PaymentViewModel>
+    typealias Factory = PaymentsTransfersFlowReducerFactory<Content, PaymentViewModel>
     
     typealias State = PaymentsTransfersViewModel._Route<Content, PaymentViewModel>
-    typealias Event = PaymentsTransfersEvent<Content, PaymentViewModel>
-    typealias Effect = PaymentsTransfersEffect<Content, PaymentViewModel>
+    typealias Event = PaymentsTransfersFlowEvent<Content, PaymentViewModel>
+    typealias Effect = PaymentsTransfersFlowEffect<Content, PaymentViewModel>
 }
 
-private extension PaymentsTransfersReducer {
+private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: State,
@@ -322,7 +322,7 @@ private extension PaymentsTransfersReducer {
 
 // MARK: - Helpers
 
-private extension PaymentsTransfersEffect {
+private extension PaymentsTransfersFlowEffect {
     
     static func delayModalSet(
         to modal: Modal,
