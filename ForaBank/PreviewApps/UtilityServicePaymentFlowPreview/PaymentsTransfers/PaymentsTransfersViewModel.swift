@@ -86,6 +86,16 @@ extension PaymentsTransfersViewModel {
         var outside: Outside?
     }
     
+    enum Modal: Equatable {
+        
+        case paymentCancelled(expired: Bool)
+    }
+    
+    enum Outside {
+        
+        case chat, main
+    }
+    
     struct State {}
     
     typealias Event = PaymentsTransfersFlowEvent<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
@@ -101,16 +111,6 @@ extension PaymentsTransfersViewModel._Route {
         case payByInstructions
         case utilityPayment(UtilityFlowState)
     }
-    
-    enum Modal: Equatable {
-        
-        case paymentCancelled(expired: Bool)
-    }
-    
-    enum Outside {
-        
-        case chat, main
-    }
 }
 
 extension PaymentsTransfersViewModel._Route.Destination {
@@ -123,7 +123,7 @@ extension PaymentsTransfersViewModel._Route.Destination {
 private extension PaymentsTransfersViewModel {
     
     private func handleOutside(
-        _ outside: Route.Outside
+        _ outside: Outside
     ) {
         DispatchQueue.main.delay(for: .milliseconds(300)) { [weak self] in
             

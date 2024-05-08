@@ -289,7 +289,7 @@ private extension PaymentsTransfersView {
     
     @ViewBuilder
     func fullScreenCoverView(
-        modal: PaymentsTransfersViewModel.Route.Modal,
+        modal: PaymentsTransfersViewModel.Modal,
         event: @escaping () -> Void
     ) -> some View {
         
@@ -321,7 +321,7 @@ extension PaymentsTransfersViewModel.Route.Destination: Identifiable {
     }
 }
 
-extension PaymentsTransfersViewModel.Route.Modal: Identifiable {
+extension PaymentsTransfersViewModel.Modal: Identifiable {
     
     var id: ID {
         

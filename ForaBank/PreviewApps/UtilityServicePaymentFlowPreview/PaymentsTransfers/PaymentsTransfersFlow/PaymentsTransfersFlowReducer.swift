@@ -332,7 +332,7 @@ private extension PaymentsTransfersFlowEffect {
         .delay(.setModal(to: modal), for: interval)
     }
     
-    typealias Modal = PaymentsTransfersViewModel._Route<Content, PaymentViewModel>.Modal
+    typealias Modal = PaymentsTransfersViewModel.Modal
 }
 
 private extension PaymentsTransfersViewModel._Route {
