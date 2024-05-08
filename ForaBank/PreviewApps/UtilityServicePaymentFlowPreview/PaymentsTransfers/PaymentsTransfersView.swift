@@ -58,7 +58,7 @@ extension PaymentsTransfersView {
     typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<ObservingPaymentFlowMockViewModel>
     
     typealias Config = UtilityPrepaymentWrapperView.Config
-    typealias Destination = ViewModel.Route.Destination
+    typealias Destination = ViewModel.Destination
     typealias ViewModel = PaymentsTransfersViewModel
 }
 
@@ -300,7 +300,7 @@ private extension PaymentsTransfersView {
     }
 }
 
-extension PaymentsTransfersViewModel.Route.Destination: Identifiable {
+extension PaymentsTransfersViewModel.Destination: Identifiable {
     
     var id: ID {
         

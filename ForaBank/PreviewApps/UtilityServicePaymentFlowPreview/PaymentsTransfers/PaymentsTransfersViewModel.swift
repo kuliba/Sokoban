@@ -78,12 +78,19 @@ extension PaymentsTransfersViewModel {
 extension PaymentsTransfersViewModel {
     
     typealias Route = _Route<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias Destination = _Destination<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     
     struct _Route<Content, PaymentViewModel> {
         
-        var destination: Destination?
+        var destination: _Destination<Content, PaymentViewModel>?
         var modal: Modal?
         var outside: Outside?
+    }
+    
+    enum _Destination<Content, PaymentViewModel> {
+        
+        case payByInstructions
+        case utilityPayment(UtilityFlowState)
     }
     
     enum Modal: Equatable {
@@ -104,16 +111,7 @@ extension PaymentsTransfersViewModel {
     typealias FlowManager = PaymentsTransfersFlowManager<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 }
 
-extension PaymentsTransfersViewModel._Route {
-    
-    enum Destination {
-        
-        case payByInstructions
-        case utilityPayment(UtilityFlowState)
-    }
-}
-
-extension PaymentsTransfersViewModel._Route.Destination {
+extension PaymentsTransfersViewModel._Destination {
     
     typealias UtilityFlowState = UtilityPaymentFlowState<Content, PaymentViewModel>
 }
