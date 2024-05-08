@@ -722,10 +722,11 @@ extension GenericProductView {
                                        color: color,
                                        size: viewModel.iconSize(with: style))
             case .show:
-                ProductView.StatusView(icon: viewModel.icon(with: style),
-                                       color: color,
-                                       size: viewModel.iconSize(with: style))
-
+                if case .profile = style {
+                    ProductView.StatusView(icon: viewModel.icon(with: style),
+                                           color: color,
+                                           size: viewModel.iconSize(with: style))
+                }
             case .unblockShow:
                 let countImages = 2.0 // 2 images: unblock + show
                 let size = viewModel.iconSize(with: style)
