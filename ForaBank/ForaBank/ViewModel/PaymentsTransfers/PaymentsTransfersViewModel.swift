@@ -341,9 +341,12 @@ extension PaymentsTransfersViewModel {
         case link
     }
     
-    struct Route {
+    typealias Route = _Route<Int, String>
+    typealias Link = _Link<Int, String>
+
+    struct _Route<Content, PaymentViewModel> {
         
-        var destination: Link?
+        var destination: _Link<Content, PaymentViewModel>?
         var modal: Modal?
         /// - Note: not ideal, but modelling `Route` as an enum to remove impossible states
         /// would lead to significant complications
@@ -351,7 +354,7 @@ extension PaymentsTransfersViewModel {
         
         enum Outside { case chat, main }
         
-        static let empty: Self = .init(destination: nil, modal: nil)
+        static var empty: Self { .init(destination: nil, modal: nil) }
     }
     
     enum Modal {
@@ -446,7 +449,7 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    enum Link: Identifiable {
+    enum _Link<Content, PaymentViewModel>: Identifiable {
         
         case exampleDetail(String)
         case userAccount(UserAccountViewModel)
