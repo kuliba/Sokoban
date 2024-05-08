@@ -27,10 +27,7 @@ extension PaymentsTransfersEffectHandler {
         switch effect {
         case let .delay(event, for: interval):
             #warning("replace with scheduler!!")
-            DispatchQueue.main.asyncAfter(deadline: .now() + interval) {
-                
-                dispatch(event)
-            }
+            DispatchQueue.main.delay(for: interval) { dispatch(event) }
             
         case let .utilityFlow(effect):
             utilityEffectHandle(effect) { dispatch(.utilityFlow($0)) }

@@ -17,15 +17,15 @@ extension PaymentsTransfersFlowManager {
         let utilityFlowEffectHandler = UtilityPaymentFlowEffectHandler(
             initiateUtilityPayment: { completion in
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                DispatchQueue.main.delay(for: .seconds(1)) {
                     
                     completion(.preview)
                 }
             },
             startPayment: { payload, completion in
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    
+                DispatchQueue.main.delay(for: .seconds(1)) {
+
                     completion(startPaymentStub ?? .stub(for: payload))
                 }
             }

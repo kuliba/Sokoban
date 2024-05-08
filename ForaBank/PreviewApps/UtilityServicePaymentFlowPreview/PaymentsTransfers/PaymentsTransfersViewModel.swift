@@ -50,16 +50,14 @@ extension PaymentsTransfersViewModel {
         
         if let outside = route.outside {
             
+            // routeSubject.send(route)
             self.route = .init()
             self.handleOutside(outside)
             
         } else {
             
-            // routeSubject.send(state)
-            DispatchQueue.main.async { [weak self] in
-                
-                self?.route = route
-            }
+            // routeSubject.send(route)
+            DispatchQueue.main.async { [weak self] in self?.route = route }
             
             if let effect {
                 
@@ -119,9 +117,7 @@ private extension PaymentsTransfersViewModel {
     private func handleOutside(
         _ outside: Route.Outside
     ) {
-        DispatchQueue.main.asyncAfter(
-            deadline: .now() + 0.3
-        ) { [weak self] in
+        DispatchQueue.main.delay(for: .milliseconds(300)) { [weak self] in
             
             switch outside {
             case .chat:
