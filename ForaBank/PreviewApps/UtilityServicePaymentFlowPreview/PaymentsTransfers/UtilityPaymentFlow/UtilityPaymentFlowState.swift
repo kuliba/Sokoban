@@ -7,18 +7,18 @@
 
 import ForaTools
 
-struct UtilityPaymentFlowState<UtilityPrepaymentViewModel, PaymentViewModel> {
+struct UtilityPaymentFlowState<Content, PaymentViewModel> {
     
-    let viewModel: UtilityPrepaymentViewModel
+    let content: Content
     var destination: Destination?
     var alert: Alert?
     
     init(
-        viewModel: UtilityPrepaymentViewModel,
+        content: Content,
         destination: Destination? = nil,
         alert: Alert? = nil
     ) {
-        self.viewModel = viewModel
+        self.content = content
         self.destination = destination
         self.alert = alert
     }

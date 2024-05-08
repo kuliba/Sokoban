@@ -13,7 +13,7 @@ struct ContentView: View {
         state: .init(),
         route: .init(
             destination: .utilityPayment(.init(
-                viewModel: .preview()
+                content: .preview()
             ))
         ),
         flowManager: .preview(),

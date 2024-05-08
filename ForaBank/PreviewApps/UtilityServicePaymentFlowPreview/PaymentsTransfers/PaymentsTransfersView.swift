@@ -99,7 +99,7 @@ private extension PaymentsTransfersView {
             content: {
                 
                 UtilityPrepaymentWrapperView(
-                    viewModel: state.viewModel,
+                    viewModel: state.content,
                     flowEvent: { event(.prepayment($0.flowEvent)) },
                     config: config
                 )
@@ -309,7 +309,8 @@ extension PaymentsTransfersViewModel.Route.Destination: Identifiable {
             return .payByInstructions
             
         case let .utilityPayment(utilityPrepayment):
-            return .utilityFlow(ObjectIdentifier(utilityPrepayment.viewModel))
+            #warning("also use destination to create id")
+            return .utilityFlow(ObjectIdentifier(utilityPrepayment.content))
         }
     }
     

@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class PaymentsTransfersEffectHandler<UtilityPrepaymentViewModel, PaymentViewModel> {
+final class PaymentsTransfersEffectHandler<Content, PaymentViewModel> {
     
     private let utilityEffectHandle: UtilityFlowEffectHandle
     
@@ -42,6 +42,6 @@ extension PaymentsTransfersEffectHandler {
 
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentsTransfersEvent<UtilityPrepaymentViewModel, PaymentViewModel>
-    typealias Effect = PaymentsTransfersEffect<UtilityPrepaymentViewModel, PaymentViewModel>
+    typealias Event = PaymentsTransfersEvent<Content, PaymentViewModel>
+    typealias Effect = PaymentsTransfersEffect<Content, PaymentViewModel>
 }

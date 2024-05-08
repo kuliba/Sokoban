@@ -8,22 +8,24 @@
 import Foundation
 
 extension PaymentsTransfersFlowManager
-where UtilityPrepaymentViewModel == UtilityServicePaymentFlowPreview.UtilityPrepaymentViewModel,
+where Content == UtilityPrepaymentViewModel,
       PaymentViewModel == ObservingPaymentFlowMockViewModel {
     
     static func preview(
         startPaymentStub: UtilityPrepaymentFlowEffectHandler.StartPaymentResult? = nil
     ) -> Self {
         
-        typealias EffectHandler = PaymentsTransfersEffectHandler<UtilityPrepaymentViewModel, PaymentViewModel>
+        typealias EffectHandler = PaymentsTransfersEffectHandler<Content, PaymentViewModel>
         
         let effectHandler = EffectHandler.preview(
             startPaymentStub: startPaymentStub
         )
         
+        typealias Reducer = PaymentsTransfersReducer<Content, PaymentViewModel>
+        
         let makeReducer = { notify in
             
-            PaymentsTransfersReducer(factory: .preview, notify: notify)
+            Reducer(factory: .preview, notify: notify)
         }
         return .init(
             handleEffect: effectHandler.handleEffect(_:_:),

@@ -79,7 +79,7 @@ extension PaymentsTransfersViewModel {
     
     typealias Route = _Route<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     
-    struct _Route<UtilityPrepaymentViewModel, PaymentViewModel> {
+    struct _Route<Content, PaymentViewModel> {
         
         var destination: Destination?
         var modal: Modal?
@@ -115,7 +115,7 @@ extension PaymentsTransfersViewModel._Route {
 
 extension PaymentsTransfersViewModel._Route.Destination {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPrepaymentViewModel, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Content, PaymentViewModel>
 }
 
 // MARK: - handle outside

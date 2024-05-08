@@ -6,7 +6,7 @@
 //
 
 extension PaymentsTransfersReducerFactory
-where UtilityPrepaymentViewModel == UtilityServicePaymentFlowPreview.UtilityPrepaymentViewModel,
+where Content == UtilityPrepaymentViewModel,
       PaymentViewModel == ObservingPaymentFlowMockViewModel {
     
     static var preview: Self {

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 06.05.2024.
 //
 
-struct PaymentsTransfersReducerFactory<UtilityPrepaymentViewModel, PaymentViewModel> {
+struct PaymentsTransfersReducerFactory<Content, PaymentViewModel> {
     
     let makeUtilityPrepaymentViewModel: MakeUtilityPrepaymentViewModel
     let makePaymentViewModel: MakePaymentViewModel
@@ -14,7 +14,7 @@ struct PaymentsTransfersReducerFactory<UtilityPrepaymentViewModel, PaymentViewMo
 extension PaymentsTransfersReducerFactory {
     
     typealias Payload = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
-    typealias MakeUtilityPrepaymentViewModel = (Payload) -> UtilityPrepaymentViewModel
+    typealias MakeUtilityPrepaymentViewModel = (Payload) -> Content
     
     typealias MakePaymentViewModelPayload = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent
         .StartPaymentSuccess.StartPaymentResponse

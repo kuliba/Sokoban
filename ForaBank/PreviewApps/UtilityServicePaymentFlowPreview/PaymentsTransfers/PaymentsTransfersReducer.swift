@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class PaymentsTransfersReducer<UtilityPrepaymentViewModel, PaymentViewModel> {
+final class PaymentsTransfersReducer<Content, PaymentViewModel> {
     
     private let factory: Factory
     private let notify: Factory.Notify
@@ -54,11 +54,11 @@ extension PaymentsTransfersReducer {
 
 extension PaymentsTransfersReducer {
     
-    typealias Factory = PaymentsTransfersReducerFactory<UtilityPrepaymentViewModel, PaymentViewModel>
+    typealias Factory = PaymentsTransfersReducerFactory<Content, PaymentViewModel>
     
-    typealias State = PaymentsTransfersViewModel._Route<UtilityPrepaymentViewModel, PaymentViewModel>
-    typealias Event = PaymentsTransfersEvent<UtilityPrepaymentViewModel, PaymentViewModel>
-    typealias Effect = PaymentsTransfersEffect<UtilityPrepaymentViewModel, PaymentViewModel>
+    typealias State = PaymentsTransfersViewModel._Route<Content, PaymentViewModel>
+    typealias Event = PaymentsTransfersEvent<Content, PaymentViewModel>
+    typealias Effect = PaymentsTransfersEffect<Content, PaymentViewModel>
 }
 
 private extension PaymentsTransfersReducer {
@@ -205,7 +205,7 @@ private extension PaymentsTransfersReducer {
             
         case let .initiated(payload):
             let viewModel = factory.makeUtilityPrepaymentViewModel(payload)
-            state.destination = .utilityPayment(.init(viewModel: viewModel))
+            state.destination = .utilityPayment(.init(content: viewModel))
             
         case .payByInstructions:
             payByInstructions(&state)
@@ -332,12 +332,12 @@ private extension PaymentsTransfersEffect {
         .delay(.setModal(to: modal), for: interval)
     }
     
-    typealias Modal = PaymentsTransfersViewModel._Route<UtilityPrepaymentViewModel, PaymentViewModel>.Modal
+    typealias Modal = PaymentsTransfersViewModel._Route<Content, PaymentViewModel>.Modal
 }
 
 private extension PaymentsTransfersViewModel._Route {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPrepaymentViewModel, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Content, PaymentViewModel>
 
     var utilityPrepayment: UtilityFlowState? {
         
