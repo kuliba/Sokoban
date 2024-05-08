@@ -341,12 +341,12 @@ extension PaymentsTransfersViewModel {
         case link
     }
     
-    typealias Route = _Route<Int, String>
-    typealias Link = _Link<Int, String>
+    typealias Route = _Route<Int, Int, UtilityService, Int, String>
+    typealias Link = _Link<Int, Int, UtilityService, Int, String>
 
-    struct _Route<Content, PaymentViewModel> {
+    struct _Route<LastPayment, Operator, UtilityService, Content, PaymentViewModel> {
         
-        var destination: _Link<Content, PaymentViewModel>?
+        var destination: _Link<LastPayment, Operator, UtilityService, Content, PaymentViewModel>?
         var modal: Modal?
         /// - Note: not ideal, but modelling `Route` as an enum to remove impossible states
         /// would lead to significant complications
@@ -449,7 +449,7 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    enum _Link<Content, PaymentViewModel>: Identifiable {
+    enum _Link<LastPayment, Operator, UtilityService, Content, PaymentViewModel>: Identifiable {
         
         case exampleDetail(String)
         case userAccount(UserAccountViewModel)
