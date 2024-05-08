@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 05.05.2024.
 //
 
+import Foundation
 import SwiftUI
 
 struct ServicePickerView: View {
@@ -16,14 +17,19 @@ struct ServicePickerView: View {
         
         List {
             
-            ForEach(state.services.elements) { service in
-                
-                Button(String(service.id.prefix(24))) {
-                    
-                    event(.service(service, for: state.`operator`))
-                }
-            }
+            ForEach(state.services.elements, content: serviceView)
         }
+    }
+    
+    private func serviceView(
+        service: UtilityService
+    ) -> some View {
+        
+        Button(String(service.id.prefix(23))) {
+            
+            event(.service(service, for: state.`operator`))
+        }
+        .foregroundColor(service.id.localizedCaseInsensitiveContains("failure") ? .red : .primary)
     }
 }
 
