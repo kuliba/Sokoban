@@ -31,7 +31,7 @@ extension OperatorFailureFlowView {
     
     typealias Destination = State.Destination
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     typealias State = UtilityFlowState.Destination.OperatorFailureFlowState
     typealias Event = ()
 }

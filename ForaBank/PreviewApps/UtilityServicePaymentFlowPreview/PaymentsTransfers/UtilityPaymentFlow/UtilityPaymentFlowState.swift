@@ -7,7 +7,7 @@
 
 import ForaTools
 
-struct UtilityPaymentFlowState<Content, PaymentViewModel> {
+struct UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, PaymentViewModel> {
     
     let content: Content
     var destination: Destination?
@@ -86,7 +86,7 @@ extension UtilityPaymentFlowState.Destination.OperatorFailureFlowState {
 
 extension UtilityPaymentFlowState.Destination.ServicePickerFlowState {
     
-    struct Content: Equatable {
+    struct Content {
         
         let services: MultiElementArray<UtilityService>
         let `operator`: Operator
@@ -105,5 +105,7 @@ extension UtilityPaymentFlowState.Destination.ServicePickerFlowState {
 
 extension UtilityPaymentFlowState.Destination.ServicePickerFlowState.Destination {
     
-    typealias StartPaymentResponse = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentSuccess.StartPaymentResponse
+    typealias StartPaymentResponse = StartUtilityPaymentResponse
 }
+
+extension UtilityPaymentFlowState.Destination.ServicePickerFlowState.Content: Equatable where Operator: Equatable, UtilityService: Equatable {}

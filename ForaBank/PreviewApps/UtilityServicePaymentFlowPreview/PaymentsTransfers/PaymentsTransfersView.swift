@@ -51,9 +51,11 @@ struct PaymentsTransfersView: View {
 
 extension PaymentsTransfersView {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     typealias OperatorFailure = UtilityFlowState.Destination.OperatorFailureFlowState
     typealias ServicePickerState = UtilityFlowState.Destination.ServicePickerFlowState
+    
+    typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
     
     typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<ObservingPaymentFlowMockViewModel>
     
@@ -72,7 +74,7 @@ private extension PaymentsTransfersView {
     @ViewBuilder
     func destinationView(
         destination: Destination,
-        event: @escaping (UtilityPaymentFlowEvent) -> Void
+        event: @escaping (UtilityPaymentEvent) -> Void
     ) -> some View {
         
         switch destination {
@@ -90,7 +92,7 @@ private extension PaymentsTransfersView {
     
     func utilityPrepaymentView(
         state: UtilityFlowState,
-        event: @escaping (UtilityPaymentFlowEvent) -> ()
+        event: @escaping (UtilityPaymentEvent) -> ()
     ) -> some View {
         
         UtilityPrepaymentFlowView(
@@ -114,7 +116,7 @@ private extension PaymentsTransfersView {
     @ViewBuilder
     func utilityPrepaymentDestinationView(
         state: UtilityFlowState.Destination,
-        event: @escaping (UtilityPaymentFlowEvent) -> Void
+        event: @escaping (UtilityPaymentEvent) -> Void
     ) -> some View {
         
         switch state {
@@ -250,7 +252,7 @@ private extension PaymentsTransfersView {
 
     func servicePicker(
         state: ServicePickerState,
-        event: @escaping (UtilityPaymentFlowEvent) -> Void
+        event: @escaping (UtilityPaymentEvent) -> Void
     ) -> some View {
         
         ServicePickerFlowView(
@@ -431,7 +433,7 @@ private extension ServiceFailure {
 
 private extension UtilityPrepaymentFlowEvent {
     
-    var flowEvent: UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
+    var flowEvent: UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent {
         
         switch self {
         case .addCompany:

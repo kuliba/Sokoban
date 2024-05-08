@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
-final class UtilityPrepaymentFlowEffectHandler {
+final class UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService> {
     
     private let initiateUtilityPayment: InitiateUtilityPayment
     private let startPayment: StartPayment
@@ -45,13 +45,13 @@ extension UtilityPrepaymentFlowEffectHandler {
     // - `d1`
     // - `d2e`
     // - `d3`, `d4`, `d5`
-    typealias StartPaymentPayload = UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect.Select
-    typealias StartPaymentResult = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentResult
+    typealias StartPaymentPayload = Effect.Select
+    typealias StartPaymentResult = Event.StartPaymentResult
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     typealias StartPayment = (StartPaymentPayload, @escaping StartPaymentCompletion) -> Void
 
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent
-    typealias Effect = UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEffect
 }

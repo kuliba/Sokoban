@@ -7,7 +7,7 @@
 
 import ForaTools
 
-enum UtilityPaymentFlowEvent: Equatable {
+enum UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService> {
     
     case payment(UtilityServicePaymentFlowEvent)
     case prepayment(UtilityPrepaymentFlowEvent)
@@ -21,7 +21,7 @@ extension UtilityPaymentFlowEvent {
         case dismissAlert
     }
     
-    enum UtilityPrepaymentFlowEvent: Equatable {
+    enum UtilityPrepaymentFlowEvent {
         
         case addCompany
         case dismissAlert
@@ -38,7 +38,7 @@ extension UtilityPaymentFlowEvent {
 
 extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
     
-    enum Select: Equatable {
+    enum Select {
         
         case lastPayment(LastPayment)
         case `operator`(Operator)
@@ -47,24 +47,33 @@ extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
     
     typealias StartPaymentResult = Result<StartPaymentSuccess, StartPaymentFailure>
     
-    enum StartPaymentSuccess: Equatable {
+    enum StartPaymentSuccess {
         
         case services(MultiElementArray<UtilityService>, for: Operator)
         case startPayment(StartPaymentResponse)
         
-        #warning("FIXME")
-        struct StartPaymentResponse: Equatable {}
+        typealias StartPaymentResponse = StartUtilityPaymentResponse
     }
     
-    enum StartPaymentFailure: Error, Equatable {
+    enum StartPaymentFailure: Error {
         
         case operatorFailure(Operator)
         case serviceFailure(ServiceFailure)
     }
     
-    struct UtilityPrepaymentPayload: Equatable {
+    struct UtilityPrepaymentPayload {
         
         let lastPayments: [LastPayment]
         let operators: [Operator]
     }
 }
+
+extension UtilityPaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
+extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
+extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.Select: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
+extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentSuccess: Equatable where Operator: Equatable, UtilityService: Equatable {}
+extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentFailure: Equatable where Operator: Equatable {}
+extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable {}
+
+#warning("FIXME")
+struct StartUtilityPaymentResponse: Equatable {}

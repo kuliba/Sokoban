@@ -6,7 +6,10 @@
 //
 
 extension PaymentsTransfersFlowReducerFactory
-where Content == UtilityPrepaymentViewModel,
+where LastPayment == UtilityServicePaymentFlowPreview.LastPayment,
+      Operator == UtilityServicePaymentFlowPreview.Operator,
+      UtilityService == UtilityServicePaymentFlowPreview.UtilityService,
+      Content == UtilityPrepaymentViewModel,
       PaymentViewModel == ObservingPaymentFlowMockViewModel {
     
     static var preview: Self {
@@ -25,7 +28,10 @@ where Content == UtilityPrepaymentViewModel,
 
 private extension UtilityPrepaymentState {
     
-    init(_ payload: UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload) {
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias Payload = Event.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
+    
+    init(_ payload: Payload) {
         
         self.init(
             lastPayments: payload.lastPayments,

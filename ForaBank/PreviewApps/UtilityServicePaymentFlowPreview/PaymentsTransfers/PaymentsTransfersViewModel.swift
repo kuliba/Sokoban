@@ -77,17 +77,17 @@ extension PaymentsTransfersViewModel {
 
 extension PaymentsTransfersViewModel {
     
-    typealias Route = _Route<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
-    typealias Destination = _Destination<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias Route = _Route<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias Destination = _Destination<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     
-    struct _Route<Content, PaymentViewModel> {
+    struct _Route<LastPayment, Operator, UtilityService, Content, PaymentViewModel> {
         
-        var destination: _Destination<Content, PaymentViewModel>?
+        var destination: _Destination<LastPayment, Operator, UtilityService, Content, PaymentViewModel>?
         var modal: Modal?
         var outside: Outside?
     }
     
-    enum _Destination<Content, PaymentViewModel> {
+    enum _Destination<LastPayment, Operator, UtilityService, Content, PaymentViewModel> {
         
         case payByInstructions
         case utilityPayment(UtilityFlowState)
@@ -105,15 +105,15 @@ extension PaymentsTransfersViewModel {
     
     struct State {}
     
-    typealias Event = PaymentsTransfersFlowEvent
-    typealias Effect = PaymentsTransfersFlowEffect
+    typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService>
+    typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, UtilityService>
     
-    typealias FlowManager = PaymentsTransfersFlowManager<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias FlowManager = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 }
 
 extension PaymentsTransfersViewModel._Destination {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Content, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
 }
 
 // MARK: - handle outside

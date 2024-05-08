@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class PaymentsTransfersFlowEffectHandler {
+final class PaymentsTransfersFlowEffectHandler<LastPayment, Operator, UtilityService> {
     
     private let utilityEffectHandle: UtilityFlowEffectHandle
     
@@ -37,11 +37,13 @@ extension PaymentsTransfersFlowEffectHandler {
 
 extension PaymentsTransfersFlowEffectHandler {
     
-    typealias UtilityFlowDispatch = (UtilityPaymentFlowEvent) -> Void
-    typealias UtilityFlowEffectHandle = (UtilityPaymentFlowEffect, @escaping UtilityFlowDispatch) -> Void
+    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias UtilityFlowEffect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
+    typealias UtilityFlowDispatch = (UtilityFlowEvent) -> Void
+    typealias UtilityFlowEffectHandle = (UtilityFlowEffect, @escaping UtilityFlowDispatch) -> Void
 
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = PaymentsTransfersFlowEvent
-    typealias Effect = PaymentsTransfersFlowEffect
+    typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService>
+    typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, UtilityService>
 }

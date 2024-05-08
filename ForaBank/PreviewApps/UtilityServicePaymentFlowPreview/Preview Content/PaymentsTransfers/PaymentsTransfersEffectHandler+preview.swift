@@ -8,13 +8,18 @@
 import Foundation
 import ForaTools
 
-extension PaymentsTransfersFlowEffectHandler {
+extension PaymentsTransfersFlowEffectHandler
+where LastPayment == UtilityServicePaymentFlowPreview.LastPayment,
+      Operator == UtilityServicePaymentFlowPreview.Operator,
+      UtilityService == UtilityServicePaymentFlowPreview.UtilityService {
     
     static func preview(
-        startPaymentStub: UtilityPrepaymentFlowEffectHandler.StartPaymentResult? = nil
+        startPaymentStub: UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>.StartPaymentResult? = nil
     ) -> Self {
         
-        let utilityPrepaymentEffectHandler = UtilityPrepaymentFlowEffectHandler(
+        typealias UtilityPrepaymentEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+        
+        let utilityPrepaymentEffectHandler = UtilityPrepaymentEffectHandler(
             initiateUtilityPayment: { completion in
                 
                 DispatchQueue.main.delay(for: .seconds(1)) {
@@ -25,25 +30,30 @@ extension PaymentsTransfersFlowEffectHandler {
             startPayment: { payload, completion in
                 
                 DispatchQueue.main.delay(for: .seconds(1)) {
-
+                    
                     completion(startPaymentStub ?? .stub(for: payload))
                 }
             }
         )
-        let utilityFlowEffectHandler = UtilityPaymentFlowEffectHandler(
+        
+        typealias EffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+        
+        let effectHandler = EffectHandler(
             utilityPrepaymentEffectHandle: utilityPrepaymentEffectHandler.handleEffect(_:_:)
         )
         
         return .init(
-            utilityEffectHandle: utilityFlowEffectHandler.handleEffect(_:_:)
+            utilityEffectHandle: effectHandler.handleEffect(_:_:)
         )
     }
 }
 
-private extension UtilityPrepaymentFlowEffectHandler.StartPaymentResult {
+private extension UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>.StartPaymentResult {
+    
+    typealias Payload = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>.StartPaymentPayload
     
     static func stub(
-        for payload: UtilityPrepaymentFlowEffectHandler.StartPaymentPayload,
+        for payload: Payload,
         fallback: Self = .preview
     ) -> Self {
         
@@ -71,7 +81,7 @@ private extension UtilityPrepaymentFlowEffectHandler.StartPaymentResult {
         }
     }
     
-    static let preview: Self = .success(.startPayment(.init()))
+    static var preview: Self { .success(.startPayment(.init())) }
 }
 
 private extension MultiElementArray where Element == UtilityService {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class PaymentsTransfersFlowReducer<Content, PaymentViewModel> {
+final class PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, Content, PaymentViewModel> {
     
     private let factory: Factory
     private let notify: Factory.Notify
@@ -54,11 +54,11 @@ extension PaymentsTransfersFlowReducer {
 
 extension PaymentsTransfersFlowReducer {
     
-    typealias Factory = PaymentsTransfersFlowReducerFactory<Content, PaymentViewModel>
+    typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
     
-    typealias State = PaymentsTransfersViewModel._Route<Content, PaymentViewModel>
-    typealias Event = PaymentsTransfersFlowEvent
-    typealias Effect = PaymentsTransfersFlowEffect
+    typealias State = PaymentsTransfersViewModel._Route<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
+    typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService>
+    typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, UtilityService>
 }
 
 private extension PaymentsTransfersFlowReducer {
@@ -78,9 +78,13 @@ private extension PaymentsTransfersFlowReducer {
         return (state, effect)
     }
     
+    private typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    private typealias UtilityPaymentEffect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
+    private typealias UtilityPrepaymentEffect = UtilityPaymentEffect.UtilityPrepaymentFlowEffect
+    
     private func reduce(
         _ state: State,
-        _ event: UtilityPaymentFlowEvent
+        _ event: UtilityPaymentEvent
     ) -> (State, Effect?) {
         
         var state = state
@@ -91,7 +95,7 @@ private extension PaymentsTransfersFlowReducer {
             (state, effect) = reduce(state, event)
             
         case let .prepayment(prepaymentEvent):
-            let prepaymentEffect: UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect?
+            let prepaymentEffect: UtilityPrepaymentEffect?
             (state, prepaymentEffect) = reduce(state, prepaymentEvent)
             
             if let prepaymentEffect {
@@ -176,8 +180,8 @@ private extension PaymentsTransfersFlowReducer {
         }
     }
     
-    private typealias UtilityPrepaymentFlowEvent = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent
-    private typealias UtilityPrepaymentFlowEffect = UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect
+    private typealias UtilityPrepaymentFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
+    private typealias UtilityPrepaymentFlowEffect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEffect
     
     private func reduce(
         _ state: State,
@@ -311,7 +315,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        _ event: UtilityPaymentFlowEvent.ServicePickerFlowEvent
+        _ event: UtilityPaymentEvent.ServicePickerFlowEvent
     ) {
         switch event {
         case .dismissAlert:
@@ -337,7 +341,7 @@ private extension PaymentsTransfersFlowEffect {
 
 private extension PaymentsTransfersViewModel._Route {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Content, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
 
     var utilityPrepayment: UtilityFlowState? {
         

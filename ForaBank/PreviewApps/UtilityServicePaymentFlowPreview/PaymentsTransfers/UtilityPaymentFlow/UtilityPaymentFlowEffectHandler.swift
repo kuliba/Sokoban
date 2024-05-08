@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 04.05.2024.
 //
 
-final class UtilityPaymentFlowEffectHandler {
+final class UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService> {
     
     private let utilityPrepaymentEffectHandle: UtilityPrepaymentFlowEffectHandle
     
@@ -36,6 +36,6 @@ extension UtilityPaymentFlowEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent
-    typealias Effect = UtilityPaymentFlowEffect
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
 }
