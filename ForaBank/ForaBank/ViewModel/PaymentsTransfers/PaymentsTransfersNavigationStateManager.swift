@@ -7,7 +7,7 @@
 
 import Foundation
 import OperatorsListComponents
-
+#warning("remove file")
 struct PaymentsTransfersNavigationStateManager {
     
     // TODO: - move into reduce in the Composition

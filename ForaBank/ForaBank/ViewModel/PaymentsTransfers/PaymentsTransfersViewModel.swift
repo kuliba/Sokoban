@@ -40,7 +40,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
-    private let flowManager: PaymentsTransfersNavigationStateManager
+    private let flowManager: FlowManger
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
@@ -50,7 +50,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     init(
         model: Model,
-        flowManager: PaymentsTransfersNavigationStateManager,
+        flowManager: FlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -90,7 +90,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     init(
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
-        flowManager: PaymentsTransfersNavigationStateManager,
+        flowManager: FlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -123,6 +123,15 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 
 extension PaymentsTransfersViewModel {
     
+    typealias FlowManger = PaymentsTransfersNavigationStateManager
+    
+    typealias State = PaymentsTransfersViewModel.Route
+    typealias Event = PaymentsTransfersEvent
+    typealias Effect = PaymentsTransfersEffect
+}
+
+extension PaymentsTransfersViewModel {
+    
     func event(_ event: Event) {
         
         let (state, effect) = reduce(route, event)
@@ -148,10 +157,6 @@ extension PaymentsTransfersViewModel {
             }
         }
     }
-    
-    typealias State = PaymentsTransfersViewModel.Route
-    typealias Event = PaymentsTransfersEvent
-    typealias Effect = PaymentsTransfersEffect
 }
 
 extension PaymentsTransfersViewModel {
