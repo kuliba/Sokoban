@@ -731,7 +731,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             with: model,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            paymentsTransfersNavigationStateManager: navigationStateManager,
+            paymentsTransfersFlowManager: navigationStateManager,
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -755,7 +755,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let sut = PaymentsTransfersViewModel(
             model: model,
-            navigationStateManager: navigationStateManager,
+            flowManager: navigationStateManager,
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
