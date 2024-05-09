@@ -38,3 +38,14 @@ extension Tagged where RawValue == StubbedFeatureFlag {
         return false
     }
 }
+
+extension Tagged where RawValue == StubbedFeatureFlag {
+
+    var optionOrStub: RawValue.Option {
+        
+        switch rawValue {
+        case .active(.live): return .live
+        default:             return .stub
+        }
+    }
+}

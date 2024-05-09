@@ -112,11 +112,13 @@ extension RootViewModelFactory {
             isActive: utilitiesPaymentsFlag.isActive
         )
         
+        let reducerFactoryComposer = PaymentsTransfersFlowReducerFactoryComposer()
         let utilityPaymentsComposer = UtilityPaymentsFlowComposer(
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag
+            flag: utilitiesPaymentsFlag.optionOrStub
         )
         let paymentsTransfersComposer = PaymentsTransfersFlowComposer(
-            makeUtilityFlowEffectHandler: utilityPaymentsComposer.makeUtilityFlowEffectHandler
+            makeReducerFactory: reducerFactoryComposer.makeFactory,
+            makeUtilityFlowEffectHandler: utilityPaymentsComposer.makeEffectHandler
         )
         let paymentsTransfersFlowManager = paymentsTransfersComposer.makeFlowManager()
 
@@ -149,6 +151,7 @@ extension RootViewModelFactory {
 
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 
+    #warning("move to composer")
     static func makeUtilitiesViewModel(
         httpClient: HTTPClient,
         model: Model,
@@ -166,7 +169,7 @@ extension RootViewModelFactory {
                 
             case .service:
                 if isActive {
-                    makeUtilitiesViewModel(httpClient, model, log, completion)
+                    completion(.utilities)
                 } else {
                     makeLegacyUtilitiesViewModel(payload, model)
                         .map(PaymentsTransfersFactory.UtilitiesVM.legacy)
@@ -175,71 +178,6 @@ extension RootViewModelFactory {
                 
             default:
                 return
-            }
-        }
-    }
-    
-    static func makeUtilitiesViewModel(
-        _ httpClient: HTTPClient,
-        _ model: Model,
-        _ log: @escaping (String, StaticString, UInt) -> Void,
-        _ completion: @escaping (PaymentsTransfersFactory.UtilitiesVM) -> Void
-    ) {
-        
-#warning("connect solution from MR")
-        // from https://git.inn4b.ru/dbs/ios/-/merge_requests/1800
-        // model.loadOperators
-        let loadOperators: UtilitiesViewModel.LoadOperators = { _, completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion([
-                    .failure,
-                    .list,
-                    .single,
-                ])
-            }
-        }
-        
-        /*
-         rest/v2/getAllLatestPayments?isServicePayments=true
-         https://shorturl.at/suCL9
-         
-         let getAllLatestPayments = NanoServices.adaptedLoggingFetch(
-         createRequest: { fatalError() },
-         httpClient: httpClient,
-         mapResponse: { _,_ in fatalError() },
-         mapResult: { (try? $0.get()) ?? [] }, // mapResult to non-Result type!!
-         log: log
-         )
-         */
-        
-#warning("connect real type; move typealiases")
-        
-        typealias GetAllLatestPaymentsCompletion = ([OperatorsListComponents.LatestPayment]) -> Void
-        typealias GetAllLatestPayments = (@escaping GetAllLatestPaymentsCompletion) -> Void
-        
-        let getAllLatestPayments: GetAllLatestPayments = { completion in
-        
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                
-                completion([])
-            }
-        }
-        
-        getAllLatestPayments { latestPayments in
-            
-            loadOperators(.init()) { operators in
-                
-                let viewModel = UtilitiesViewModel(
-                    initialState: .init(
-                        lastPayments: latestPayments,
-                        operators: operators
-                    ),
-                    loadOperators: loadOperators
-                )
-                
-                completion(.utilities(viewModel))
             }
         }
     }

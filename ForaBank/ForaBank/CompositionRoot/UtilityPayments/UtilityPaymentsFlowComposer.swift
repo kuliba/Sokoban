@@ -62,18 +62,16 @@ private func a() {
 
 final class UtilityPaymentsFlowComposer {
     
-    private let utilitiesPaymentsFlag: UtilitiesPaymentsFlag
+    private let flag: Flag
     
-    init(
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag
-    ) {
-        self.utilitiesPaymentsFlag = utilitiesPaymentsFlag
+    init(flag: Flag) {
+        self.flag = flag
     }
 }
 
 extension UtilityPaymentsFlowComposer {
     
-    func makeUtilityFlowEffectHandler(
+    func makeEffectHandler(
     ) -> UtilityFlowEffectHandler {
         
         let prepaymentEffectHandler = PrepaymentEffectHandler(
@@ -89,6 +87,8 @@ extension UtilityPaymentsFlowComposer {
 
 extension UtilityPaymentsFlowComposer {
     
+    typealias Flag = StubbedFeatureFlag.Option
+    
     typealias LastPayment = OperatorsListComponents.LatestPayment
     typealias Operator = OperatorsListComponents.Operator
     
@@ -102,14 +102,11 @@ private extension UtilityPaymentsFlowComposer {
     func initiateUtilityPayment(
     ) -> PrepaymentEffectHandler.InitiateUtilityPayment {
         
-        switch utilitiesPaymentsFlag.rawValue {
-        case .inactive:
-            fatalError("legacy")
-            
-        case .active(.live):
+        switch flag {
+        case .live:
             fatalError("unimplemented live")
             
-        case .active(.stub):
+        case .stub:
             return stub(.init(
                 lastPayments: [],
                 operators: [.failure, .list, .single]
@@ -120,14 +117,11 @@ private extension UtilityPaymentsFlowComposer {
     func startPayment(
     ) -> PrepaymentEffectHandler.StartPayment {
         
-        switch utilitiesPaymentsFlag.rawValue {
-        case .inactive:
-            fatalError("legacy")
-            
-        case .active(.live):
+        switch flag {
+        case .live:
             fatalError("unimplemented live")
             
-        case .active(.stub):
+        case .stub:
             return stub()
         }
     }

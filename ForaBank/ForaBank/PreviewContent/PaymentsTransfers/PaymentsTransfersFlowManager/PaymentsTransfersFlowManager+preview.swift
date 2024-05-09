@@ -14,23 +14,11 @@ where LastPayment == OperatorsListComponents.LatestPayment,
       Content == UtilityPrepaymentViewModel,
       PaymentViewModel == ObservingPaymentFlowMockViewModel {
     
-    typealias EffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
-    
     static var preview: Self {
         
-        typealias EffectHandler = PaymentsTransfersFlowEffectHandler
-        
-        let effectHandler = EffectHandler.preview()
-        
-        typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
-        
-        let makeReducer = { notify in
-            
-            Reducer(factory: .preview, notify: notify)
-        }
         return .init(
-            handleEffect: effectHandler.handleEffect(_:_:),
-            makeReduce: { makeReducer($0).reduce(_:_:) }
+            handleEffect: { _,_ in },
+            makeReduce: { _ in  { state,_ in (state, nil) }}
         )
     }
 }

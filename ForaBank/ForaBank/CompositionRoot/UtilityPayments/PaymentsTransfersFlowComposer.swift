@@ -11,11 +11,14 @@ import Foundation
 
 final class PaymentsTransfersFlowComposer {
     
-    let makeUtilityFlowEffectHandler: MakeUtilityFlowEffectHandler
+    private let makeReducerFactory: MakeReducerFactory
+    private let makeUtilityFlowEffectHandler: MakeUtilityFlowEffectHandler
     
     init(
+        makeReducerFactory: @escaping MakeReducerFactory,
         makeUtilityFlowEffectHandler: @escaping MakeUtilityFlowEffectHandler
     ) {
+        self.makeReducerFactory = makeReducerFactory
         self.makeUtilityFlowEffectHandler = makeUtilityFlowEffectHandler
     }
 }
@@ -28,52 +31,32 @@ extension PaymentsTransfersFlowComposer {
 #warning("replace UtilityFlowEffectHandler with closure")
     typealias UtilityFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
     typealias MakeUtilityFlowEffectHandler = () -> UtilityFlowEffectHandler
+    
+    typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, UtilityContent, ObservingPaymentFlowMockViewModel>
+
+    typealias MakeReducerFactory = () -> Reducer.Factory
 }
 
 extension PaymentsTransfersFlowComposer {
-    
-    typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     
     func makeFlowManager(
     ) -> PTFlowManger {
         
         let utilityFlowEffectHandler = makeUtilityFlowEffectHandler()
         
-        typealias EffectHandler = PaymentsTransfersFlowEffectHandler<LastPayment, Operator, UtilityService>
-        
-        let effectHandler = EffectHandler(
+        let effectHandler = PaymentsTransfersFlowEffectHandler(
             utilityEffectHandle: utilityFlowEffectHandler.handleEffect(_:_:)
         )
         
-        typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
-
-#warning("extract to helper")
-        let factory = Reducer.Factory(
-            makeUtilityPrepaymentViewModel: { payload in
-                
-                let reducer = UtilityPrepaymentReducer()
-                let effectHandler = UtilityPrepaymentEffectHandler()
-                
-                return .init(
-                    initialState: payload.state,
-                    reduce: reducer.reduce(_:_:),
-                    handleEffect: effectHandler.handleEffect(_:_:)
-                )
-            },
-            makePaymentViewModel: { _, notify in
-                
-                return .init(notify: notify)
-            }
-        )
-        
-        let makeReducer = { notify in
-            
-            Reducer(factory: factory, notify: notify)
-        }
+        let factory = makeReducerFactory()
+        let makeReducer = { Reducer(factory: factory, notify: $0) }
         
         return .init(
             handleEffect: effectHandler.handleEffect(_:_:),
             makeReduce: { makeReducer($0).reduce(_:_:) }
         )
     }
+    
+    typealias UtilityContent = UtilityPrepaymentViewModel
+    typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityContent, ObservingPaymentFlowMockViewModel>
 }

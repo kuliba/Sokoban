@@ -810,8 +810,8 @@ private extension PaymentsTransfersViewModel {
             case let .legacy(paymentsServicesViewModel):
                 self?.route.destination = .paymentsServices(paymentsServicesViewModel)
                 
-            case let .utilities(utilitiesViewModel):
-                self?.route.destination = .utilities((utilitiesViewModel, nil))
+            case .utilities:
+                self?.event(.paymentButtonTapped(.utilityService))
             }
         }
     }
