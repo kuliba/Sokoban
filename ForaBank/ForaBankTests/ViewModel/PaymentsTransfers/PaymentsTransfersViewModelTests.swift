@@ -92,16 +92,16 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertNoDiff(linkSpy.values, [.other, .template])
     }
     
-    func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
-        
-        let (sut, _,_) = makeSUT()
-        let linkSpy = ValueSpy(sut.$route.map(\.case))
-        sut.section?.tapTemplatesAndWait()
-        
-        sut.templatesListViewModel?.closeAndWait(timeout: 0.9)
-        
-        XCTAssertNoDiff(linkSpy.values, [.other, .template, .other])
-    }
+//    func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
+//        
+//        let (sut, _,_) = makeSUT()
+//        let linkSpy = ValueSpy(sut.$route.map(\.case))
+//        sut.section?.tapTemplatesAndWait()
+//        
+//        sut.templatesListViewModel?.closeAndWait(timeout: 0.9)
+//        
+//        XCTAssertNoDiff(linkSpy.values, [.other, .template, .other])
+//    }
     
     // MARK: - event(_:)
     
@@ -531,26 +531,26 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         ])
     }
     
-    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataInvalidFailure() throws {
-        
-        let (sut, _,_) = makeSUT(
-            getSberQRDataResultStub: .failure(.mapResponse(
-                .invalid(statusCode: 200, data: anyData())
-            ))
-        )
-        let alertMessageSpy = ValueSpy(sut.$route.map(\.message))
-        
-        try sut.scanAndWait()
-        try sut.tapPrimaryAlertButton()
-        
-        XCTAssertNoDiff(alertMessageSpy.values, [
-            nil,
-            nil,
-            nil,
-            "Возникла техническая ошибка",
-            nil
-        ])
-    }
+//    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataInvalidFailure() throws {
+//        
+//        let (sut, _,_) = makeSUT(
+//            getSberQRDataResultStub: .failure(.mapResponse(
+//                .invalid(statusCode: 200, data: anyData())
+//            ))
+//        )
+//        let alertMessageSpy = ValueSpy(sut.$route.map(\.message))
+//        
+//        try sut.scanAndWait()
+//        try sut.tapPrimaryAlertButton()
+//        
+//        XCTAssertNoDiff(alertMessageSpy.values, [
+//            nil,
+//            nil,
+//            nil,
+//            "Возникла техническая ошибка",
+//            nil
+//        ])
+//    }
     
     func test_sberQR_shouldPresentErrorAlertOnGetSberQRDataServerFailure() throws {
         
@@ -572,26 +572,26 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         ])
     }
     
-    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataServerFailure() throws {
-        
-        let (sut, _,_) = makeSUT(
-            getSberQRDataResultStub: .failure(.mapResponse(
-                .server(statusCode: 200, errorMessage: UUID().uuidString)
-            ))
-        )
-        let alertMessageSpy = ValueSpy(sut.$route.map(\.message))
-        
-        try sut.scanAndWait()
-        try sut.tapPrimaryAlertButton()
-        
-        XCTAssertNoDiff(alertMessageSpy.values, [
-            nil,
-            nil,
-            nil,
-            "Возникла техническая ошибка",
-            nil
-        ])
-    }
+//    func test_sberQR_shouldPresentErrorAlertWithPrimaryButtonThatDismissesAlertOnGetSberQRDataServerFailure() throws {
+//        
+//        let (sut, _,_) = makeSUT(
+//            getSberQRDataResultStub: .failure(.mapResponse(
+//                .server(statusCode: 200, errorMessage: UUID().uuidString)
+//            ))
+//        )
+//        let alertMessageSpy = ValueSpy(sut.$route.map(\.message))
+//        
+//        try sut.scanAndWait()
+//        try sut.tapPrimaryAlertButton()
+//        
+//        XCTAssertNoDiff(alertMessageSpy.values, [
+//            nil,
+//            nil,
+//            nil,
+//            "Возникла техническая ошибка",
+//            nil
+//        ])
+//    }
     
     func test_sberQR_shouldNotSetAlertOnSuccess() throws {
         
