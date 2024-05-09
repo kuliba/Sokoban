@@ -475,7 +475,11 @@ extension PaymentsTransfersViewModel {
         case openDeposit(OpenDepositDetailViewModel)
         case sberQRPayment(SberQRConfirmPaymentViewModel)
         case openDepositsList(OpenDepositListViewModel)
+        #warning("remove if unused")
         case utilities(Route.UtilitiesRoute)
+        case utilityPayment(UtilityFlowState)
+        #warning("remove if unused")
+        case payByInstructions
         
         var id: Case {
             
@@ -530,6 +534,10 @@ extension PaymentsTransfersViewModel {
                 return .sberQRPayment
             case .utilities:
                 return .utilities
+            case .utilityPayment:
+                return .utilityPayment
+            case .payByInstructions:
+                return .payByInstructions
             }
         }
         
@@ -558,7 +566,11 @@ extension PaymentsTransfersViewModel {
             case openDeposit
             case openDepositsList
             case sberQRPayment
+            #warning("remove if unused")
             case utilities
+            case utilityPayment
+            #warning("remove if unused")
+            case payByInstructions
         }
     }
     
@@ -570,13 +582,19 @@ extension PaymentsTransfersViewModel {
         enum Kind {
             
             case qrScanner(QRViewModel)
+            case paymentCancelled
             case success(PaymentsSuccessViewModel)
         }
         
-        static func == (lhs: PaymentsTransfersViewModel.FullScreenSheet, rhs: PaymentsTransfersViewModel.FullScreenSheet) -> Bool {
+        static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.id == rhs.id
         }
     }
+}
+
+extension PaymentsTransfersViewModel._Link {
+    
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
 }
 
 extension PaymentsTransfersViewModel.Route {

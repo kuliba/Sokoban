@@ -247,6 +247,12 @@ struct PaymentsTransfersView: View {
                     Image.ic24BarcodeScanner2
                 }))
                 .ignoresSafeArea(edges: .bottom)
+            
+        case let .utilityPayment(s):
+            Text("\(s)")
+            
+        case .payByInstructions:
+            Text("payByInstructions")
         }
     }
     
@@ -460,6 +466,9 @@ struct PaymentsTransfersView: View {
                     .navigationBarBackButtonHidden(true)
                     .edgesIgnoringSafeArea(.all)
             }
+            
+        case .paymentCancelled:
+            Text("TBD: Payment cancelled")
             
         case let .success(viewModel):
             PaymentsSuccessView(viewModel: viewModel)

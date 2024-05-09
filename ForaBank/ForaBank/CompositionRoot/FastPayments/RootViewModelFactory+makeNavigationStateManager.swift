@@ -88,6 +88,8 @@ struct FastPaymentsSettingsOTPServices {
         _ httpClient: HTTPClient,
         _ log: @escaping (String, StaticString, UInt) -> Void
     ) {
+        typealias ServiceFailure = OTPInputComponent.ServiceFailure
+
         typealias ForaRequestFactory = ForaBank.RequestFactory
         typealias FastResponseMapper = RemoteServices.ResponseMapper
         
