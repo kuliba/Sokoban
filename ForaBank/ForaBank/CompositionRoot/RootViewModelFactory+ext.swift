@@ -112,8 +112,11 @@ extension RootViewModelFactory {
             isActive: utilitiesPaymentsFlag.isActive
         )
         
-        let paymentsTransfersComposer = PaymentsTransfersComposer(
+        let utilityPaymentsComposer = UtilityPaymentsFlowComposer(
             utilitiesPaymentsFlag: utilitiesPaymentsFlag
+        )
+        let paymentsTransfersComposer = PaymentsTransfersFlowComposer(
+            makeUtilityFlowEffectHandler: utilityPaymentsComposer.makeUtilityFlowEffectHandler
         )
         let paymentsTransfersFlowManager = paymentsTransfersComposer.makeFlowManager()
 
