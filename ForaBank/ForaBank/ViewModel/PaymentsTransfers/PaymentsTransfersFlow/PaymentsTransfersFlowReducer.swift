@@ -32,7 +32,16 @@ extension PaymentsTransfersFlowReducer {
         var effect: Effect?
         
         switch event {
+        case .addCompany:
+            state.outside = .chat
+            
+        case .dismissDestination:
+            state.destination = nil
+            
         case .dismissFullScreenCover:
+            state.modal = nil
+            
+        case .dismissModal:
             state.modal = nil
             
         case .goToMain:

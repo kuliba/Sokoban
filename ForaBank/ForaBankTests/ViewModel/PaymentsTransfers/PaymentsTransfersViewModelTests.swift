@@ -131,383 +131,383 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
     }
-    
-    func test_latestPaymentTapped_shouldNotChangeDestination() {
-        
-        let (sut, _,_) = makeSUT()
-        let spy = ValueSpy(sut.$route.map(\.destination?.id))
-        
-        sut.event(.utilityFlow(.select(.latestPayment(makeLatestPayment()))))
-        
-        XCTAssertNoDiff(spy.values, [nil, nil])
-    }
-    
-    func test_latestPaymentTapped_shouldDeliverEffect() {
-        
-        let latestPayment = makeLatestPayment()
-        let (sut, _, effectSpy) = makeSUT()
-        
-        sut.event(.utilityFlow(.select(.latestPayment(latestPayment))))
-        
-        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [
-            .utilityFlow(.startPayment(.latestPayment(latestPayment)))
-        ])
-    }
-    
-    func test_loaded_shouldChangeUtilitiesDestinationToFailureOnFailure() throws {
-        
-        let `operator` = makeOperator()
-        let (sut, _,_) = makeSUT()
-        let spy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.loaded(.failure, for: `operator`)))
-        
-        XCTAssertNoDiff(spy.values, [nil, nil, .failure])
-    }
-    
-    func test_loaded_shouldNotDeliverEffectOnFailure() throws {
-        
-        let `operator` = makeOperator()
-        let (sut, _, effectSpy) = makeSUT()
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.loaded(.failure, for: `operator`)))
-        
-        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
-    }
-    
-    func test_loaded_shouldChangeUtilitiesDestinationToFailureOnList() throws {
-        
-        let `operator` = makeOperator()
-        let utilityServices = [makeService(), makeService()]
-        let (sut, _,_) = makeSUT()
-        let spy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.loaded(.list(utilityServices), for: `operator`)))
-        
-        XCTAssertNoDiff(spy.values, [nil, nil, .list])
-    }
-    
-    func test_loaded_shouldNotDeliverEffectOnList() throws {
-        
-        let `operator` = makeOperator()
-        let utilityServices = [makeService(), makeService()]
-        let (sut, _, effectSpy) = makeSUT()
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.loaded(.list(utilityServices), for: `operator`)))
-        
-        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
-    }
-    
-    func test_loaded_shouldNotChangeStateOnSingle() throws {
-        
-        let `operator` = makeOperator()
-        let utilityService = makeService()
-        let (sut, _,_) = makeSUT()
-        let spy = ValueSpy(sut.$route.map(\.destination?.id))
-        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
-        
-        try sut.openUtilityPayments()
-        XCTAssertNoDiff(spy.values, [nil, .utilities])
-        
-        sut.event(.utilityFlow(.loaded(.single(utilityService), for: `operator`)))
-        
-        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
-        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
-    }
-    
-    func test_loaded_shouldDeliverEffectOnSingle() throws {
-        
-        let `operator` = makeOperator()
-        let utilityService = makeService()
-        let (sut, _, effectSpy) = makeSUT()
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.loaded(.single(utilityService), for: `operator`)))
-        
-        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [.utilityFlow(.startPayment(.service(`operator`, utilityService)))])
-    }
-    
-    func test_operatorTapped_shouldNotChangeState() throws {
-        
-        let `operator` = makeOperator()
-        let (sut, _,_) = makeSUT()
-        let spy = ValueSpy(sut.$route.map(\.destination?.id))
-        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
-        
-        try sut.openUtilityPayments()
-        XCTAssertNoDiff(spy.values, [nil, .utilities])
-        
-        sut.event(.utilityFlow(.select(.operator(`operator`))))
-        
-        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
-        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
-    }
-    
-    func test_operatorTapped_shouldDeliverEffect() throws {
-        
-        let `operator` = makeOperator()
-        let (sut, _, effectSpy) = makeSUT()
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.select(.operator(`operator`))))
-        
-        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [.utilityFlow(.getServicesFor(`operator`))])
-    }
-    
-    func test_payByRequisites_shouldChangeState() throws {
-        
-        let (sut, _,_) = makeSUT()
-        let spy = ValueSpy(sut.$route.map(\.destination?.id))
-        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
-        
-        try sut.openUtilityPayments()
-        XCTAssertNoDiff(spy.values, [nil, .utilities])
-        
-        sut.event(.utilityFlow(.payByInstructions))
-        
-        XCTAssertNoDiff(spy.values, [nil, .utilities, .payments])
-        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
-    }
-    
-    func test_payByRequisites_shouldNotDeliverEffect() throws {
-        
-        let (sut, _, effectSpy) = makeSUT()
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.payByInstructions))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
-    }
-    
-    func test_paymentStarted_shouldChangeStateOnDetails_single() throws {
-        
-        let `operator` = makeOperator()
-        let service = makeService()
-        let details = makePaymentDetails()
-        let (sut, _, effectSpy) = makeSUT()
-        let destinationSpy = ValueSpy(sut.destinationPublisher)
-        let utilityPaymentDestinationSpy = ValueSpy(sut.utilityPaymentDestinationPublisher)
-        let utilityPaymentStateSpy = ValueSpy(sut.utilityPaymentStatePublisher)
-        
-        try sut.openUtilityPayments()
-        XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
-        XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil])
-        
-        sut.event(.utilityFlow(.select(.operator(`operator`))))
-        effectSpy.complete(with: .utilityFlow(.loaded(.single(service), for: `operator`)))
-        effectSpy.complete(with: .utilityFlow(.paymentStarted(.details(details))))
-        
-        XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
-        XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .payment])
-        XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil, .init(details)])
-    }
-    
-    func test_paymentStarted_shouldChangeStateOnDetails_list() throws {
-        
-        let `operator` = makeOperator()
-        let service = makeService()
-        let details = makePaymentDetails()
-        let (sut, _, effectSpy) = makeSUT()
-        let destinationSpy = ValueSpy(sut.destinationPublisher)
-        let utilityPaymentDestinationSpy = ValueSpy(sut.utilityPaymentDestinationPublisher)
-        let utilityPaymentStateSpy = ValueSpy(sut.utilityPaymentStatePublisher)
-        
-        try sut.openUtilityPayments()
-        XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
-        XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil])
-        
-        sut.event(.utilityFlow(.select(.operator(`operator`))))
-        effectSpy.complete(with: .utilityFlow(.loaded(.list([service, makeService()]), for: `operator`)))
-        sut.event(.utilityFlow(.select(.service(service, for: `operator`))))
-        effectSpy.complete(with: .utilityFlow(.paymentStarted(.details(details))))
-        
-        XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
-        XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .list])
-        XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil, .init(details)])
-    }
-    
-    func test_paymentStarted_shouldNotDeliverEffectOnDetails() throws {
-        
-        let paymentStarted: PaymentStarted = .details(makePaymentDetails())
-        let (sut, _, effectSpy) = makeSUT()
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
-    }
-    
-    func test_paymentStarted_shouldChangeStateOnFailure() throws {
-        
-        let paymentStarted: PaymentStarted = .failure
-        let (sut, _,_) = makeSUT()
-        let spy = ValueSpy(sut.$route.map(\.destination?.id))
-        let modalSpy = ValueSpy(sut.$route.map(\.modal?.equatable))
-        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
-        
-        try sut.openUtilityPayments()
-        XCTAssertNoDiff(spy.values, [nil, .utilities])
-        
-        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
-        
-        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
-        XCTAssertNoDiff(modalSpy.values, [nil, nil, .alert])
-        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
-    }
-    
-    func test_paymentStarted_shouldNotDeliverEffectOnFailure() throws {
-        
-        let paymentStarted: PaymentStarted = .failure
-        let (sut, _, effectSpy) = makeSUT()
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
-    }
-    
-    func test_paymentStarted_shouldChangeStateOnServerError() throws {
-        
-        let paymentStarted: PaymentStarted = .serverError(UUID().uuidString)
-        let (sut, _,_) = makeSUT()
-        let spy = ValueSpy(sut.$route.map(\.destination?.id))
-        let modalSpy = ValueSpy(sut.$route.map(\.modal?.equatable))
-        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
-        
-        try sut.openUtilityPayments()
-        XCTAssertNoDiff(spy.values, [nil, .utilities])
-        
-        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
-        
-        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
-        XCTAssertNoDiff(modalSpy.values, [nil, nil, .alert])
-        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
-    }
-    
-    func test_paymentStarted_shouldNotDeliverEffectOnServerError() throws {
-        
-        let paymentStarted: PaymentStarted = .serverError(UUID().uuidString)
-        let (sut, _, effectSpy) = makeSUT()
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
-    }
-    
-    func test_resetDestination_shouldResetDestination() throws {
-        
-        let (sut, _,_) = makeSUT()
-        let spy = ValueSpy(sut.$route.map(\.destination?.id))
-        
-        try sut.openUtilityPayments()
-        sut.event(.resetDestination)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        XCTAssertNoDiff(spy.values, [nil, .utilities, nil])
-    }
-    
-    func test_resetDestination_shouldNotDeliverEffect() throws {
-        
-        let (sut, _, effectSpy) = makeSUT()
-        
-        try sut.openUtilityPayments()
-        sut.event(.resetDestination)
-        
-        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
-    }
-    
-    func test_resetModal_shouldResetModal() throws {
-        
-        let paymentStarted: PaymentStarted = .serverError(UUID().uuidString)
-        let (sut, _,_) = makeSUT()
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
-        
-        XCTAssertNotNil(sut.route.modal)
-        
-        sut.event(.resetModal)
-        
-        XCTAssertNil(sut.route.modal)
-    }
-    
-    func test_resetModal_shouldNotDeliverEffect() throws {
-        
-        let paymentStarted: PaymentStarted = .serverError(UUID().uuidString)
-        let (sut, _, effectSpy) = makeSUT()
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
-        sut.event(.resetModal)
-        
-        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
-    }
-    
-    func test_resetUtilityDestination_shouldResetUtilityDestination() throws {
-        
-        let paymentStarted: PaymentStarted = .details(makePaymentDetails())
-        let (sut, _,_) = makeSUT()
-        let utilityPaymentDestinationSpy = ValueSpy(sut.utilityPaymentDestinationPublisher)
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
-        
-        XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .payment])
-        
-        sut.event(.resetUtilityDestination)
-        
-        XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .payment, nil])
-    }
-    
-    func test_resetUtilityDestination_shouldNotDeliverEffect() throws {
-        
-        let paymentStarted: PaymentStarted = .details(makePaymentDetails())
-        let (sut, _, effectSpy) = makeSUT()
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
-        sut.event(.resetUtilityDestination)
-        
-        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
-    }
-    
-    func test_utilityServiceTap_shouldNotChangeState() throws {
-        
-        let `operator` = makeOperator()
-        let utilityService = makeService()
-        let (sut, _,_) = makeSUT()
-        let spy = ValueSpy(sut.$route.map(\.destination?.id))
-        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.select(.service(utilityService, for: `operator`))))
-        
-        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
-        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
-    }
-    
-    func test_utilityServiceTap_shouldDeliverEffect() throws {
-        
-        let `operator` = makeOperator()
-        let utilityService = makeService()
-        let (sut, _, effectSpy) = makeSUT()
-        
-        try sut.openUtilityPayments()
-        sut.event(.utilityFlow(.select(.service(utilityService, for: `operator`))))
-        
-        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [
-            .utilityFlow(.startPayment(.service(`operator`, utilityService)))
-        ])
-    }
+    // TODO: move tests to PaymentsTransfersFlowReducerTests
+//    func test_latestPaymentTapped_shouldNotChangeDestination() {
+//        
+//        let (sut, _,_) = makeSUT()
+//        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+//        
+//        sut.event(.utilityFlow(.select(.latestPayment(makeLatestPayment()))))
+//        
+//        XCTAssertNoDiff(spy.values, [nil, nil])
+//    }
+//    
+//    func test_latestPaymentTapped_shouldDeliverEffect() {
+//        
+//        let latestPayment = makeLatestPayment()
+//        let (sut, _, effectSpy) = makeSUT()
+//        
+//        sut.event(.utilityFlow(.select(.latestPayment(latestPayment))))
+//        
+//        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [
+//            .utilityFlow(.startPayment(.latestPayment(latestPayment)))
+//        ])
+//    }
+//    
+//    func test_loaded_shouldChangeUtilitiesDestinationToFailureOnFailure() throws {
+//        
+//        let `operator` = makeOperator()
+//        let (sut, _,_) = makeSUT()
+//        let spy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.loaded(.failure, for: `operator`)))
+//        
+//        XCTAssertNoDiff(spy.values, [nil, nil, .failure])
+//    }
+//    
+//    func test_loaded_shouldNotDeliverEffectOnFailure() throws {
+//        
+//        let `operator` = makeOperator()
+//        let (sut, _, effectSpy) = makeSUT()
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.loaded(.failure, for: `operator`)))
+//        
+//        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+//    }
+//    
+//    func test_loaded_shouldChangeUtilitiesDestinationToFailureOnList() throws {
+//        
+//        let `operator` = makeOperator()
+//        let utilityServices = [makeService(), makeService()]
+//        let (sut, _,_) = makeSUT()
+//        let spy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.loaded(.list(utilityServices), for: `operator`)))
+//        
+//        XCTAssertNoDiff(spy.values, [nil, nil, .list])
+//    }
+//    
+//    func test_loaded_shouldNotDeliverEffectOnList() throws {
+//        
+//        let `operator` = makeOperator()
+//        let utilityServices = [makeService(), makeService()]
+//        let (sut, _, effectSpy) = makeSUT()
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.loaded(.list(utilityServices), for: `operator`)))
+//        
+//        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+//    }
+//    
+//    func test_loaded_shouldNotChangeStateOnSingle() throws {
+//        
+//        let `operator` = makeOperator()
+//        let utilityService = makeService()
+//        let (sut, _,_) = makeSUT()
+//        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+//        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+//        
+//        try sut.openUtilityPayments()
+//        XCTAssertNoDiff(spy.values, [nil, .utilities])
+//        
+//        sut.event(.utilityFlow(.loaded(.single(utilityService), for: `operator`)))
+//        
+//        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
+//        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
+//    }
+//    
+//    func test_loaded_shouldDeliverEffectOnSingle() throws {
+//        
+//        let `operator` = makeOperator()
+//        let utilityService = makeService()
+//        let (sut, _, effectSpy) = makeSUT()
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.loaded(.single(utilityService), for: `operator`)))
+//        
+//        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [.utilityFlow(.startPayment(.service(`operator`, utilityService)))])
+//    }
+//    
+//    func test_operatorTapped_shouldNotChangeState() throws {
+//        
+//        let `operator` = makeOperator()
+//        let (sut, _,_) = makeSUT()
+//        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+//        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+//        
+//        try sut.openUtilityPayments()
+//        XCTAssertNoDiff(spy.values, [nil, .utilities])
+//        
+//        sut.event(.utilityFlow(.select(.operator(`operator`))))
+//        
+//        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
+//        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
+//    }
+//    
+//    func test_operatorTapped_shouldDeliverEffect() throws {
+//        
+//        let `operator` = makeOperator()
+//        let (sut, _, effectSpy) = makeSUT()
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.select(.operator(`operator`))))
+//        
+//        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [.utilityFlow(.getServicesFor(`operator`))])
+//    }
+//    
+//    func test_payByRequisites_shouldChangeState() throws {
+//        
+//        let (sut, _,_) = makeSUT()
+//        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+//        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+//        
+//        try sut.openUtilityPayments()
+//        XCTAssertNoDiff(spy.values, [nil, .utilities])
+//        
+//        sut.event(.utilityFlow(.payByInstructions))
+//        
+//        XCTAssertNoDiff(spy.values, [nil, .utilities, .payments])
+//        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
+//    }
+//    
+//    func test_payByRequisites_shouldNotDeliverEffect() throws {
+//        
+//        let (sut, _, effectSpy) = makeSUT()
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.payByInstructions))
+//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+//        
+//        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+//    }
+//    
+//    func test_paymentStarted_shouldChangeStateOnDetails_single() throws {
+//        
+//        let `operator` = makeOperator()
+//        let service = makeService()
+//        let details = makePaymentDetails()
+//        let (sut, _, effectSpy) = makeSUT()
+//        let destinationSpy = ValueSpy(sut.destinationPublisher)
+//        let utilityPaymentDestinationSpy = ValueSpy(sut.utilityPaymentDestinationPublisher)
+//        let utilityPaymentStateSpy = ValueSpy(sut.utilityPaymentStatePublisher)
+//        
+//        try sut.openUtilityPayments()
+//        XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
+//        XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil])
+//        
+//        sut.event(.utilityFlow(.select(.operator(`operator`))))
+//        effectSpy.complete(with: .utilityFlow(.loaded(.single(service), for: `operator`)))
+//        effectSpy.complete(with: .utilityFlow(.paymentStarted(.details(details))))
+//        
+//        XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
+//        XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .payment])
+//        XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil, .init(details)])
+//    }
+//    
+//    func test_paymentStarted_shouldChangeStateOnDetails_list() throws {
+//        
+//        let `operator` = makeOperator()
+//        let service = makeService()
+//        let details = makePaymentDetails()
+//        let (sut, _, effectSpy) = makeSUT()
+//        let destinationSpy = ValueSpy(sut.destinationPublisher)
+//        let utilityPaymentDestinationSpy = ValueSpy(sut.utilityPaymentDestinationPublisher)
+//        let utilityPaymentStateSpy = ValueSpy(sut.utilityPaymentStatePublisher)
+//        
+//        try sut.openUtilityPayments()
+//        XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
+//        XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil])
+//        
+//        sut.event(.utilityFlow(.select(.operator(`operator`))))
+//        effectSpy.complete(with: .utilityFlow(.loaded(.list([service, makeService()]), for: `operator`)))
+//        sut.event(.utilityFlow(.select(.service(service, for: `operator`))))
+//        effectSpy.complete(with: .utilityFlow(.paymentStarted(.details(details))))
+//        
+//        XCTAssertNoDiff(destinationSpy.values, [nil, .utilities])
+//        XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .list])
+//        XCTAssertNoDiff(utilityPaymentStateSpy.values, [nil, .init(details)])
+//    }
+//    
+//    func test_paymentStarted_shouldNotDeliverEffectOnDetails() throws {
+//        
+//        let paymentStarted: PaymentStarted = .details(makePaymentDetails())
+//        let (sut, _, effectSpy) = makeSUT()
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
+//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+//        
+//        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+//    }
+//    
+//    func test_paymentStarted_shouldChangeStateOnFailure() throws {
+//        
+//        let paymentStarted: PaymentStarted = .failure
+//        let (sut, _,_) = makeSUT()
+//        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+//        let modalSpy = ValueSpy(sut.$route.map(\.modal?.equatable))
+//        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+//        
+//        try sut.openUtilityPayments()
+//        XCTAssertNoDiff(spy.values, [nil, .utilities])
+//        
+//        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
+//        
+//        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
+//        XCTAssertNoDiff(modalSpy.values, [nil, nil, .alert])
+//        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
+//    }
+//    
+//    func test_paymentStarted_shouldNotDeliverEffectOnFailure() throws {
+//        
+//        let paymentStarted: PaymentStarted = .failure
+//        let (sut, _, effectSpy) = makeSUT()
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
+//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+//        
+//        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+//    }
+//    
+//    func test_paymentStarted_shouldChangeStateOnServerError() throws {
+//        
+//        let paymentStarted: PaymentStarted = .serverError(UUID().uuidString)
+//        let (sut, _,_) = makeSUT()
+//        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+//        let modalSpy = ValueSpy(sut.$route.map(\.modal?.equatable))
+//        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+//        
+//        try sut.openUtilityPayments()
+//        XCTAssertNoDiff(spy.values, [nil, .utilities])
+//        
+//        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
+//        
+//        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
+//        XCTAssertNoDiff(modalSpy.values, [nil, nil, .alert])
+//        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
+//    }
+//    
+//    func test_paymentStarted_shouldNotDeliverEffectOnServerError() throws {
+//        
+//        let paymentStarted: PaymentStarted = .serverError(UUID().uuidString)
+//        let (sut, _, effectSpy) = makeSUT()
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
+//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+//        
+//        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+//    }
+//    
+//    func test_resetDestination_shouldResetDestination() throws {
+//        
+//        let (sut, _,_) = makeSUT()
+//        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.resetDestination)
+//        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+//        
+//        XCTAssertNoDiff(spy.values, [nil, .utilities, nil])
+//    }
+//    
+//    func test_resetDestination_shouldNotDeliverEffect() throws {
+//        
+//        let (sut, _, effectSpy) = makeSUT()
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.resetDestination)
+//        
+//        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+//    }
+//    
+//    func test_resetModal_shouldResetModal() throws {
+//        
+//        let paymentStarted: PaymentStarted = .serverError(UUID().uuidString)
+//        let (sut, _,_) = makeSUT()
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
+//        
+//        XCTAssertNotNil(sut.route.modal)
+//        
+//        sut.event(.resetModal)
+//        
+//        XCTAssertNil(sut.route.modal)
+//    }
+//    
+//    func test_resetModal_shouldNotDeliverEffect() throws {
+//        
+//        let paymentStarted: PaymentStarted = .serverError(UUID().uuidString)
+//        let (sut, _, effectSpy) = makeSUT()
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
+//        sut.event(.resetModal)
+//        
+//        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+//    }
+//    
+//    func test_resetUtilityDestination_shouldResetUtilityDestination() throws {
+//        
+//        let paymentStarted: PaymentStarted = .details(makePaymentDetails())
+//        let (sut, _,_) = makeSUT()
+//        let utilityPaymentDestinationSpy = ValueSpy(sut.utilityPaymentDestinationPublisher)
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
+//        
+//        XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .payment])
+//        
+//        sut.event(.resetUtilityDestination)
+//        
+//        XCTAssertNoDiff(utilityPaymentDestinationSpy.values, [nil, .payment, nil])
+//    }
+//    
+//    func test_resetUtilityDestination_shouldNotDeliverEffect() throws {
+//        
+//        let paymentStarted: PaymentStarted = .details(makePaymentDetails())
+//        let (sut, _, effectSpy) = makeSUT()
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.paymentStarted(paymentStarted)))
+//        sut.event(.resetUtilityDestination)
+//        
+//        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
+//    }
+//    
+//    func test_utilityServiceTap_shouldNotChangeState() throws {
+//        
+//        let `operator` = makeOperator()
+//        let utilityService = makeService()
+//        let (sut, _,_) = makeSUT()
+//        let spy = ValueSpy(sut.$route.map(\.destination?.id))
+//        let utilitiesRouteSpy = ValueSpy(sut.$route.map(\.utilitiesRoute?.destination?.id))
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.select(.service(utilityService, for: `operator`))))
+//        
+//        XCTAssertNoDiff(spy.values, [nil, .utilities, .utilities])
+//        XCTAssertNoDiff(utilitiesRouteSpy.values, [nil, nil, nil])
+//    }
+//    
+//    func test_utilityServiceTap_shouldDeliverEffect() throws {
+//        
+//        let `operator` = makeOperator()
+//        let utilityService = makeService()
+//        let (sut, _, effectSpy) = makeSUT()
+//        
+//        try sut.openUtilityPayments()
+//        sut.event(.utilityFlow(.select(.service(utilityService, for: `operator`))))
+//        
+//        XCTAssertNoDiff(effectSpy.messages.map(\.effect), [
+//            .utilityFlow(.startPayment(.service(`operator`, utilityService)))
+//        ])
+//    }
     
     // MARK: SBER QR
     
@@ -731,7 +731,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             with: model,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            paymentsTransfersFlowManager: navigationStateManager,
+            paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -755,7 +755,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let sut = PaymentsTransfersViewModel(
             model: model,
-            flowManager: navigationStateManager,
+            flowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,

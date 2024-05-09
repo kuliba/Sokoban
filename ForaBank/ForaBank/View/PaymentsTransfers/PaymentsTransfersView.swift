@@ -34,7 +34,7 @@ struct PaymentsTransfersView: View {
                 .sheet(
                     item: .init(
                         get: { viewModel.route.modal?.sheet },
-                        set: { if $0 == nil { viewModel.event(.resetModal) } }),
+                        set: { if $0 == nil { viewModel.event(.dismissModal) } }),
                     content: sheetView
                 )
             
@@ -42,7 +42,7 @@ struct PaymentsTransfersView: View {
                 .fullScreenCover(
                     item: .init(
                         get: { viewModel.route.modal?.fullScreenSheet },
-                        set: { if $0 == nil { viewModel.event(.resetModal) } }
+                        set: { if $0 == nil { viewModel.event(.dismissModal) } }
                     ),
                     content: fullScreenCoverView
                 )
@@ -53,21 +53,21 @@ struct PaymentsTransfersView: View {
         .alert(
             item: .init(
                 get: { viewModel.route.modal?.alert },
-                set: { if $0 == nil { viewModel.event(.resetModal) } }
+                set: { if $0 == nil { viewModel.event(.dismissModal) } }
             ),
             content: Alert.init(with:)
         )
         .bottomSheet(
             item: .init(
                 get: { viewModel.route.modal?.bottomSheet },
-                set: { if $0 == nil { viewModel.event(.resetModal) } }
+                set: { if $0 == nil { viewModel.event(.dismissModal) } }
             ),
             content: bottomSheetView
         )
         .navigationDestination(
             item: .init(
                 get: { viewModel.route.destination },
-                set: { if $0 == nil { viewModel.event(.resetDestination) } }
+                set: { if $0 == nil { viewModel.event(.dismissDestination) } }
             ),
             content: destinationView(link:)
         )
@@ -228,16 +228,17 @@ struct PaymentsTransfersView: View {
             viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
                 .navigationBar(
                     sberQRPaymentViewModel.navTitle,
-                    dismiss: { viewModel.event(.resetDestination) }
+                    dismiss: { viewModel.event(.dismissDestination) }
                 )
             
         case let .utilities(utilitiesRoute):
+            #warning("replace implementation")
             utilityOperatorPicker(utilitiesRoute.viewModel)
                 .navigationDestination(
                     item: .init(
                         get: { viewModel.route.utilitiesRoute?.destination },
-                        set: { if $0 == nil {
-                            viewModel.event(.resetUtilityDestination) }}
+                        set: { if $0 == nil { fatalError()
+                            /*viewModel.event(.resetUtilityDestination)*/ }}
                     ),
                     content: utilitiesDestinationView
                 )
@@ -266,11 +267,12 @@ struct PaymentsTransfersView: View {
 #warning("add nav bar")
             
         case let .list(list):
+            #warning("replace implementation")
             utilityServicePicker(list.operator, list.services)
                 .navigationDestination(
                     item: .init(
                         get: { list.destination },
-                        set: { if $0 == nil { viewModel.event(.resetUtilityListDestination)}}
+                        set: { if $0 == nil { fatalError() /*viewModel.event(.resetUtilityListDestination)*/}}
                     ),
                     content: utilityServicePickerDestinationView
                 )
@@ -282,6 +284,7 @@ struct PaymentsTransfersView: View {
         }
     }
     
+    #warning("replace implementation")
     private func failureView(
         _ `operator`: OperatorsListComponents.Operator
     ) -> some View {
@@ -296,7 +299,8 @@ struct PaymentsTransfersView: View {
             
             Button("Оплатить по реквизитам") {
                 
-                self.viewModel.event(.utilityFlow(.payByInstructions))
+                fatalError()
+                // self.viewModel.event(.utilityFlow(.payByInstructions))
             }
         }
         .padding()
@@ -310,20 +314,21 @@ struct PaymentsTransfersView: View {
             
             Text("Services for \(String(describing: `operator`))")
                 .font(.title3.bold())
-            
+#warning("replace implementation")
             UtilityServicePicker(
                 state: utilityServices,
-                event: { self.viewModel.event(.utilityFlow(.select(.service($0, for: `operator`)))) }
+                event: { _ in fatalError() /*self.viewModel.event(.utilityFlow(.select(.service($0, for: `operator`))))*/ }
             )
         }
     }
     
+#warning("replace implementation")
     private func utilityPaymentWrapperView(
         _ utilityPaymentState: UtilityPaymentState
     ) -> some View {
         UtilityPaymentWrapperView(
             state: utilityPaymentState,
-            event: { viewModel.event(.utilityPayment($0)) }
+            event: { _ in fatalError() /*viewModel.event(.utilityPayment($0))*/ }
         )
     }
     
@@ -389,10 +394,11 @@ struct PaymentsTransfersView: View {
     private func utilityOperatorPicker(
         _ viewModel: UtilitiesViewModel
     ) -> some View {
-        
         UtilityOperatorPicker(
             state: viewModel.state,
-            event: { self.viewModel.event(.utilityPayment($0)) }
+            event: { _ in fatalError()
+#warning("replace implementation")
+                /*self.viewModel.event(.utilityPayment($0))*/ }
         )
     }
     

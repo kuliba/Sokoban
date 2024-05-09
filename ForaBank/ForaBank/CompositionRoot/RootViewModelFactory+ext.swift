@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ForaTools
 import ManageSubscriptionsUI
 import OperatorsListComponents
 import PaymentSticker
@@ -138,6 +139,11 @@ extension RootViewModelFactory {
         )
     }
     
+    typealias LatestPayment = OperatorsListComponents.LatestPayment
+    typealias Operator = OperatorsListComponents.Operator
+
+    typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+
     static func makeUtilitiesViewModel(
         httpClient: HTTPClient,
         model: Model,
@@ -265,12 +271,13 @@ extension RootViewModelFactory {
     }
     
     static func makePaymentsTransfersFlowManager(
-    ) -> PaymentsTransfersNavigationStateManager {
+    ) -> PTFlowManger {
         
+        #warning("use in factory")
         let createAnywayTransfer: PaymentsTransfersEffectHandler.CreateAnywayTransfer = { payload, completion in
             
 #warning("replace with NanoService.createAnywayTransfer")
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.main.delay(for: .seconds(2)) {
                 
                 switch payload {
                 case let .latestPayment(latestPayment):
@@ -295,7 +302,7 @@ extension RootViewModelFactory {
             
 #warning("replace with NanoService.getOperatorsListByParam")
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.main.delay(for: .seconds(2)) {
                 
                 switch payload {
                 case "list":
@@ -315,17 +322,128 @@ extension RootViewModelFactory {
             }
         }
         
-        let effectHandler = PaymentsTransfersEffectHandler(
+        let _effectHandler = PaymentsTransfersEffectHandler(
             createAnywayTransfer: createAnywayTransfer,
             getOperatorsListByParam: getOperatorsListByParam
         )
         
         let utilityPaymentReducer = UtilityPaymentReducer()
         
+        typealias LastPayment = OperatorsListComponents.LatestPayment
+        typealias Operator = OperatorsListComponents.Operator
+
+        typealias PTFlowManger = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+        typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+        typealias ReducerFactory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+
+        typealias PrepaymentEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+
+       typealias PrepaymentPayload = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
+        
+        let prepaymentPayloadStub = PrepaymentPayload(
+            lastPayments: [],
+            operators: [.failure, .list, .single]
+        )
+        
+        func stub(
+            for payload: PrepaymentEffectHandler.StartPaymentPayload
+        ) -> PrepaymentEffectHandler.StartPaymentResult {
+            
+            switch payload {
+            case let .lastPayment(lastPayment):
+                switch lastPayment.id {
+                case "failure":
+                    return .failure(.serviceFailure(.connectivityError))
+                default:
+                    return .success(.startPayment(.init()))
+                }
+                
+            case let .operator(`operator`):
+                switch `operator`.id {
+                case "single":
+                    return .success(.startPayment(.init()))
+                case "singleFailure":
+                    return .failure(.operatorFailure(`operator`))
+                case "multiple":
+                    let services = MultiElementArray<UtilityService>([
+                        
+                        .init(id: "failure"),
+                        .init(id: UUID().uuidString),
+                    ])!
+                    return .success(.services(services, for: `operator`))
+                case "multipleFailure":
+                    return .failure(.serviceFailure(.serverError("Server Failure")))
+                default:
+                    return .success(.startPayment(.init()))
+                }
+                
+            case let .service(service, _):
+                switch service.id {
+                case "failure":
+                    return .failure(.serviceFailure(.serverError("Server Failure")))
+                default:
+                    return .success(.startPayment(.init()))
+                }
+            }
+        }
+        
+        #warning("extract to helper")
+        let prepaymentEffectHandler = PrepaymentEffectHandler(
+            initiateUtilityPayment: { completion in
+                
+                DispatchQueue.main.delay(for: .seconds(1)) {
+                    
+                    completion(prepaymentPayloadStub)
+                }
+            },
+            startPayment: { payload, completion in
+                
+                DispatchQueue.main.delay(for: .seconds(1)) {
+                    
+                    completion(stub(for: payload))
+                }
+            }
+        )
+        
+        typealias UtilityFlowEffectHandle = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+        
+        let utilityFlowEffectHandler = UtilityFlowEffectHandle(
+            utilityPrepaymentEffectHandle: prepaymentEffectHandler.handleEffect(_:_:)
+        )
+
+        typealias EffectHandler = PaymentsTransfersFlowEffectHandler<LastPayment, Operator, UtilityService>
+        
+        let effectHandler = EffectHandler(
+            utilityEffectHandle: utilityFlowEffectHandler.handleEffect(_:_:)
+        )
+        
+        #warning("extract to helper")
+        let factory = ReducerFactory(
+            makeUtilityPrepaymentViewModel: { payload in
+                
+                let reducer = UtilityPrepaymentReducer()
+                let effectHandler = UtilityPrepaymentEffectHandler()
+                
+                return .init(
+                    initialState: payload.state,
+                    reduce: reducer.reduce(_:_:),
+                    handleEffect: effectHandler.handleEffect(_:_:)
+                )
+            },
+            makePaymentViewModel: { _, notify in
+                
+                return .init(notify: notify)
+            }
+        )
+        
+        let makeReducer = { notify in
+            
+            Reducer(factory: factory, notify: notify)
+        }
+        
         return .init(
-            utilityPaymentReduce: utilityPaymentReducer.reduce(_:_:),
-            reduce: { _,_ in fatalError() },
-            handleEffect: effectHandler.handleEffect
+            handleEffect: effectHandler.handleEffect(_:_:),
+            makeReduce: { makeReducer($0).reduce(_:_:) }
         )
     }
     
@@ -485,13 +603,18 @@ typealias MakeUtilitiesViewModel = PaymentsTransfersFactory.MakeUtilitiesViewMod
 
 extension ProductProfileViewModel {
     
+    typealias LatestPayment = OperatorsListComponents.LatestPayment
+    typealias Operator = OperatorsListComponents.Operator
+
+    typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
     static func make(
         with model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
-        paymentsTransfersFlowManager: PaymentsTransfersNavigationStateManager,
+        paymentsTransfersFlowManager: PTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -546,7 +669,7 @@ extension ProductProfileViewModel {
             return .init(
                 model,
                 fastPaymentsFactory: fastPaymentsFactory,
-                paymentsTransfersNavigationStateManager: paymentsTransfersFlowManager,
+                paymentsTransfersFlowManager: paymentsTransfersFlowManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
                 qrViewModelFactory: qrViewModelFactory,
@@ -614,7 +737,7 @@ private extension RootViewModelFactory {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         fastPaymentsFactory: FastPaymentsFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
-        paymentsTransfersFlowManager: PaymentsTransfersNavigationStateManager,
+        paymentsTransfersFlowManager: PTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -707,6 +830,14 @@ private extension UserAccountModelEffectHandler {
                 model.auth.value = .unlockRequiredManual
             }
         )
+    }
+}
+
+extension UtilityPaymentFlowEvent<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService>.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload {
+    
+    var state: UtilityPrepaymentState {
+    
+        .init(lastPayments: lastPayments, operators: operators)
     }
 }
 
