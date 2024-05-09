@@ -40,7 +40,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
-    private let navigationStateManager: PaymentsTransfersNavigationStateManager
+    private let flowManager: PaymentsTransfersNavigationStateManager
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
@@ -50,7 +50,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     init(
         model: Model,
-        navigationStateManager: PaymentsTransfersNavigationStateManager,
+        flowManager: PaymentsTransfersNavigationStateManager,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -73,7 +73,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
-        self.navigationStateManager = navigationStateManager
+        self.flowManager = flowManager
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
         
@@ -90,7 +90,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     init(
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
-        navigationStateManager: PaymentsTransfersNavigationStateManager,
+        flowManager: PaymentsTransfersNavigationStateManager,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -104,7 +104,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.route = route
-        self.navigationStateManager = navigationStateManager
+        self.flowManager = flowManager
         self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
@@ -140,7 +140,7 @@ extension PaymentsTransfersViewModel {
                 
                 rootActions?.spinner.show()
                 
-                navigationStateManager.handleEffect(effect) { [weak self] in
+                flowManager.handleEffect(effect) { [weak self] in
                     
                     self?.rootActions?.spinner.hide()
                     self?.event($0)
@@ -1895,7 +1895,7 @@ private extension PaymentsTransfersViewModel {
 
 private extension PaymentsTransfersViewModel {
     
-#warning("move to navigationStateManager")
+#warning("move to flowManager")
     private func reduce(
         _ state: State,
         _ event: Event
@@ -1938,7 +1938,7 @@ private extension PaymentsTransfersViewModel {
             guard case let .payment(utilityPayment) = state.utilitiesRoute?.destination
             else { break }
             
-            let (utilityPaymentState, utilityPaymentEffect) = navigationStateManager.utilityPaymentReduce(utilityPayment, utilityPaymentEvent)
+            let (utilityPaymentState, utilityPaymentEffect) = flowManager.utilityPaymentReduce(utilityPayment, utilityPaymentEvent)
             state.utilitiesRoute?.destination = .payment(utilityPaymentState)
             effect = utilityPaymentEffect.map(Effect.utilityPayment)
         }
