@@ -1,8 +1,8 @@
 //
 //  PaymentsTransfersFlowEffectHandler.swift
-//  UtilityServicePaymentFlowPreview
+//  ForaBank
 //
-//  Created by Igor Malyarov on 03.05.2024.
+//  Created by Igor Malyarov on 08.05.2024.
 //
 
 import Foundation

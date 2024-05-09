@@ -77,26 +77,17 @@ extension PaymentsTransfersViewModel {
 
 extension PaymentsTransfersViewModel {
     
-    typealias Route = _Route<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias Route = _Route<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias Destination = _Destination<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     
-    struct _Route<Content, PaymentViewModel> {
+    struct _Route<LastPayment, Operator, UtilityService, Content, PaymentViewModel> {
         
-        var destination: Destination?
+        var destination: _Destination<LastPayment, Operator, UtilityService, Content, PaymentViewModel>?
         var modal: Modal?
         var outside: Outside?
     }
     
-    struct State {}
-    
-    typealias Event = PaymentsTransfersFlowEvent<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
-    typealias Effect = PaymentsTransfersFlowEffect<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
-    
-    typealias FlowManager = PaymentsTransfersFlowManager<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
-}
-
-extension PaymentsTransfersViewModel._Route {
-    
-    enum Destination {
+    enum _Destination<LastPayment, Operator, UtilityService, Content, PaymentViewModel> {
         
         case payByInstructions
         case utilityPayment(UtilityFlowState)
@@ -111,11 +102,18 @@ extension PaymentsTransfersViewModel._Route {
         
         case chat, main
     }
+    
+    struct State {}
+    
+    typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService>
+    typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, UtilityService>
+    
+    typealias FlowManager = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 }
 
-extension PaymentsTransfersViewModel._Route.Destination {
+extension PaymentsTransfersViewModel._Destination {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Content, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
 }
 
 // MARK: - handle outside
@@ -123,7 +121,7 @@ extension PaymentsTransfersViewModel._Route.Destination {
 private extension PaymentsTransfersViewModel {
     
     private func handleOutside(
-        _ outside: Route.Outside
+        _ outside: Outside
     ) {
         DispatchQueue.main.delay(for: .milliseconds(300)) { [weak self] in
             

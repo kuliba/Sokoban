@@ -1,8 +1,8 @@
 //
 //  PaymentsTransfersFlowEffect.swift
-//  UtilityServicePaymentFlowPreview
+//  ForaBank
 //
-//  Created by Igor Malyarov on 03.05.2024.
+//  Created by Igor Malyarov on 08.05.2024.
 //
 
 import Foundation
@@ -19,4 +19,4 @@ extension PaymentsTransfersFlowEffect {
     typealias UtilityFlowEffect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
 }
 
-extension PaymentsTransfersFlowEffect: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
+//extension PaymentsTransfersFlowEffect: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}

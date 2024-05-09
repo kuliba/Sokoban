@@ -1,8 +1,8 @@
 //
 //  UtilityPaymentFlowEffect.swift
-//  UtilityServicePaymentFlowPreview
+//  ForaBank
 //
-//  Created by Igor Malyarov on 04.05.2024.
+//  Created by Igor Malyarov on 08.05.2024.
 //
 
 enum UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService> {

@@ -377,7 +377,7 @@ private extension ProductProfileViewModel {
                 
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
-                    navigationStateManager: paymentsTransfersNavigationStateManager,
+                    flowManager: paymentsTransfersNavigationStateManager,
                     userAccountNavigationStateManager: userAccountNavigationStateManager,
                     sberQRServices: sberQRServices,
                     qrViewModelFactory: qrViewModelFactory,

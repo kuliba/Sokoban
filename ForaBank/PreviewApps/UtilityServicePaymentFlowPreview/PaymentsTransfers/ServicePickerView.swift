@@ -35,9 +35,9 @@ struct ServicePickerView: View {
 
 extension ServicePickerView {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     typealias State = UtilityFlowState.Destination.ServicePickerFlowState.Content
-    typealias Event = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.Select
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent.Select
 }
 
 //#Preview {

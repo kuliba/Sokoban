@@ -139,7 +139,7 @@ private extension RemoteServices.RequestFactory.UpdateFastPaymentContractPayload
     }
 }
 
-extension ServiceFailure {
+extension FastPaymentsSettings.ServiceFailure {
     
     init(
         error: RemoteServiceErrorOf<RemoteServices.ResponseMapper.MappingError>

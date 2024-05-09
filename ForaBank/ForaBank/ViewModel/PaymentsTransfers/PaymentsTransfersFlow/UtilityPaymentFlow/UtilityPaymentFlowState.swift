@@ -1,8 +1,8 @@
 //
 //  UtilityPaymentFlowState.swift
-//  UtilityServicePaymentFlowPreview
+//  ForaBank
 //
-//  Created by Igor Malyarov on 04.05.2024.
+//  Created by Igor Malyarov on 08.05.2024.
 //
 
 import ForaTools
@@ -26,10 +26,8 @@ struct UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, P
 
 extension UtilityPaymentFlowState {
     
-    enum Alert {
-        
-        case serviceFailure(ServiceFailure)
-    }
+    typealias Alert = ServiceFailureAlert
+    
     #warning("make generic?")
     enum Destination {
         
@@ -92,11 +90,8 @@ extension UtilityPaymentFlowState.Destination.ServicePickerFlowState {
         let `operator`: Operator
     }
     
-    enum Alert {
-        
-        case serviceFailure(ServiceFailure)
-    }
-    
+    typealias Alert = ServiceFailureAlert
+
     enum Destination {
         
         case payment(UtilityServicePaymentFlowState<PaymentViewModel>)

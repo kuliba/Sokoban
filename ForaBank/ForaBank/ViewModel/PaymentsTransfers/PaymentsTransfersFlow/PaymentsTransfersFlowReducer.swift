@@ -1,8 +1,8 @@
 //
 //  PaymentsTransfersFlowReducer.swift
-//  UtilityServicePaymentFlowPreview
+//  ForaBank
 //
-//  Created by Igor Malyarov on 06.05.2024.
+//  Created by Igor Malyarov on 08.05.2024.
 //
 
 import Foundation
@@ -264,12 +264,23 @@ private extension PaymentsTransfersFlowReducer {
             state.setUtilityPrepaymentDestination(to: .operatorFailure(.init(content: `operator`)))
             
         case let .serviceFailure(serviceFailure):
+            #warning("extract helper")
+            let alert: ServiceFailureAlert = {
+                switch serviceFailure {
+                case .connectivityError:
+                    return .init(serviceFailure: .connectivityError)
+                    
+                case let .serverError(message):
+                    return .init(serviceFailure: .serverError(message))
+                }
+            }()
+            
             switch state.utilityPrepaymentDestination {
             case .none:
-                state.setUtilityPrepaymentAlert(to: .serviceFailure(serviceFailure))
+                state.setUtilityPrepaymentAlert(to: alert)
                 
             case .servicePicker:
-                state.setUtilityServicePickerAlert(to: .serviceFailure(serviceFailure))
+                state.setUtilityServicePickerAlert(to: alert)
                 
             default:
                 break
@@ -325,6 +336,16 @@ private extension PaymentsTransfersFlowReducer {
 }
 
 // MARK: - Helpers
+
+private extension PaymentsTransfersViewModel.Modal {
+    
+    static func paymentCancelled(
+        expired: Bool
+    ) -> Self {
+        
+        .fullScreenSheet(.init(type: .paymentCancelled))
+    }
+}
 
 private extension PaymentsTransfersFlowEffect {
     

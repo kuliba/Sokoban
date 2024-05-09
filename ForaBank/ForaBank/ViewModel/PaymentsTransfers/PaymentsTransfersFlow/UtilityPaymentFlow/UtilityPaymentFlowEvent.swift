@@ -1,8 +1,8 @@
 //
 //  UtilityPaymentFlowEvent.swift
-//  UtilityServicePaymentFlowPreview
+//  ForaBank
 //
-//  Created by Igor Malyarov on 04.05.2024.
+//  Created by Igor Malyarov on 08.05.2024.
 //
 
 import ForaTools
@@ -59,6 +59,13 @@ extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
         
         case operatorFailure(Operator)
         case serviceFailure(ServiceFailure)
+        
+        #warning("extract…")
+        enum ServiceFailure: Error, Hashable {
+        
+            case connectivityError
+            case serverError(String)
+        }
     }
     
     struct UtilityPrepaymentPayload {

@@ -1,8 +1,8 @@
 //
 //  PaymentsTransfersFlowEvent.swift
-//  UtilityServicePaymentFlowPreview
+//  ForaBank
 //
-//  Created by Igor Malyarov on 03.05.2024.
+//  Created by Igor Malyarov on 08.05.2024.
 //
 
 enum PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService> {
@@ -26,4 +26,4 @@ extension PaymentsTransfersFlowEvent {
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
 }
 
-extension PaymentsTransfersFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
+//extension PaymentsTransfersFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
