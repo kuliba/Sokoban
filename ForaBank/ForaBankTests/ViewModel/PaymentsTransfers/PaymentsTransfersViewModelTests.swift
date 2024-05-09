@@ -741,13 +741,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let paymentsTransfersFactory = PaymentsTransfersFactory(
             makeUtilitiesViewModel: { _, completion in
                 
-                completion(.utilities(.init(
-                    initialState: .init(
-                        lastPayments: [],
-                        operators: []
-                    ),
-                    loadOperators: { _,_ in }
-                )))
+                completion(.utilities)
             },
             makeProductProfileViewModel: productProfileViewModel,
             makeTemplatesListViewModel: { _ in .sampleComplete }

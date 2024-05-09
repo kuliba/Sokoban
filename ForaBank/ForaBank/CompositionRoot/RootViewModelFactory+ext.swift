@@ -105,9 +105,11 @@ extension RootViewModelFactory {
         ? HTTPClientStub.utilityPayments()
         : httpClient
         
-        let makeUtilitiesViewModel = makeUtilitiesViewModel(
+        let paymentsTransfersFactoryComposer = PaymentsTransfersFactoryComposer(
             httpClient: utilitiesHTTPClient,
-            model: model,
+            model: model
+        )
+        let makeUtilitiesViewModel = paymentsTransfersFactoryComposer.makeUtilitiesViewModel(
             log: infoNetworkLog,
             isActive: utilitiesPaymentsFlag.isActive
         )
@@ -151,68 +153,6 @@ extension RootViewModelFactory {
 
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 
-    #warning("move to composer")
-    static func makeUtilitiesViewModel(
-        httpClient: HTTPClient,
-        model: Model,
-        log: @escaping (String, StaticString, UInt) -> Void,
-        isActive: Bool
-    ) -> MakeUtilitiesViewModel {
-        
-        return { payload, completion in
-            
-            switch payload.type {
-            case .internet:
-                makeLegacyUtilitiesViewModel(payload, model)
-                    .map(PaymentsTransfersFactory.UtilitiesVM.legacy)
-                    .map(completion)
-                
-            case .service:
-                if isActive {
-                    completion(.utilities)
-                } else {
-                    makeLegacyUtilitiesViewModel(payload, model)
-                        .map(PaymentsTransfersFactory.UtilitiesVM.legacy)
-                        .map(completion)
-                }
-                
-            default:
-                return
-            }
-        }
-    }
-    
-    static func makeLegacyUtilitiesViewModel(
-        _ payload: PaymentsTransfersFactory.MakeUtilitiesPayload,
-        _ model: Model
-    ) -> PaymentsServicesViewModel? {
-        
-        guard let operators = model.operators(for: payload.type)
-        else { return nil }
-        
-        let navigationBarViewModel = NavigationBarView.ViewModel.allRegions(
-            titleButtonAction: { [weak model] in
-                
-                model?.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
-            },
-            navLeadingAction: payload.navLeadingAction,
-            navTrailingAction: payload.navTrailingAction
-        )
-        
-        let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
-        let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: model, including: [lastPaymentsKind])
-        
-        return .init(
-            searchBar: .withText("Наименование или ИНН"),
-            navigationBar: navigationBarViewModel,
-            model: model,
-            latestPayments: latestPayments,
-            allOperators: operators,
-            addCompanyAction: payload.addCompany,
-            requisitesAction: payload.requisites
-        )
-    }
-    
     static func makeNavigationOperationView(
         httpClient: HTTPClient,
         model: Model,
@@ -335,36 +275,6 @@ extension RootViewModelFactory {
     }
 }
 
-private extension NavigationBarView.ViewModel {
-    
-    static func allRegions(
-        titleButtonAction: @escaping () -> Void,
-        navLeadingAction: @escaping () -> Void,
-        navTrailingAction: @escaping () -> Void
-    ) -> NavigationBarView.ViewModel {
-        
-        .init(
-            title: PaymentsServicesViewModel.allRegion,
-            titleButton: .init(
-                icon: .ic24ChevronDown,
-                action: titleButtonAction
-            ),
-            leftItems: [
-                NavigationBarView.ViewModel.BackButtonItemViewModel(
-                    icon: .ic24ChevronLeft,
-                    action: navLeadingAction
-                )
-            ],
-            rightItems: [
-                NavigationBarView.ViewModel.ButtonItemViewModel(
-                    icon: Image("qr_Icon"),
-                    action: navTrailingAction
-                )
-            ]
-        )
-    }
-}
-
 typealias MakeUtilitiesViewModel = PaymentsTransfersFactory.MakeUtilitiesViewModel
 
 extension ProductProfileViewModel {
@@ -447,25 +357,6 @@ extension ProductProfileViewModel {
                 dismissAction: dismissAction
             )
         }
-    }
-}
-
-private extension Model {
-    
-    func operators(
-        for type: PTSectionPaymentsView.ViewModel.PaymentsType
-    ) -> [OperatorGroupData.OperatorData]? {
-        
-        guard let dictionaryAnywayOperators = dictionaryAnywayOperators(),
-              let operatorValue = Payments.operatorByPaymentsType(type)
-        else { return nil }
-        #warning("suboptimal sort + missing sort condition")
-        // TODO: fix sorting: remove excessive iterations
-        // TODO: fix sorting according to https://shorturl.at/ehxIQ
-        return  dictionaryAnywayOperators
-            .filter { $0.parentCode == operatorValue.rawValue }
-            .sorted(by: { $0.name.lowercased() < $1.name.lowercased() })
-            .sorted(by: { $0.name.caseInsensitiveCompare($1.name) == .orderedAscending })
     }
 }
 
