@@ -1,6 +1,6 @@
 //
 //  ServicePickerView.swift
-//  UtilityServicePaymentFlowPreview
+//  
 //
 //  Created by Igor Malyarov on 05.05.2024.
 //
@@ -41,7 +41,3 @@ extension ServicePickerView {
     typealias State = UtilityFlowState.Destination.ServicePickerFlowState.Content
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Service>.UtilityPrepaymentFlowEvent.Select
 }
-
-//#Preview {
-//    ServicePickerView()
-//}

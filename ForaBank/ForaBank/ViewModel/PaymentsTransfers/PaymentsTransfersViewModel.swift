@@ -571,7 +571,7 @@ extension PaymentsTransfersViewModel {
         enum Kind {
             
             case qrScanner(QRViewModel)
-            case paymentCancelled
+            case paymentCancelled(expired: Bool)
             case success(PaymentsSuccessViewModel)
         }
         

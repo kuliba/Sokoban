@@ -352,7 +352,9 @@ private extension PaymentsTransfersViewModel.Modal {
         expired: Bool
     ) -> Self {
         
-        .fullScreenSheet(.init(type: .paymentCancelled))
+        .fullScreenSheet(.init(
+            type: .paymentCancelled(expired: expired)
+        ))
     }
 }
 

@@ -1,14 +1,14 @@
 //
 //  ServicePickerFlowView.swift
-//  UtilityServicePaymentFlowPreview
+//  
 //
-//  Created by Igor Malyarov on 05.05.2024.
+//  Created by Igor Malyarov on 10.05.2024.
 //
 
 import SwiftUI
 import UIPrimitives
 
-struct ServicePickerFlowView<ContentView, DestinationView>: View
+struct ServicePickerFlowView<LastPayment, Operator, Service, ContentView, DestinationView>: View
 where ContentView: View,
       DestinationView: View {
     
@@ -37,17 +37,14 @@ where ContentView: View,
         
         return { alert in
             
-            switch alert {
-            case let .serviceFailure(serviceFailure):
-                return serviceFailure.alert(
-                    event: event,
-                    map: {
-                        switch $0 {
-                        case .dismissAlert: return .dismissAlert
-                        }
+            return alert.serviceFailure.alert(
+                event: event,
+                map: {
+                    switch $0 {
+                    case .dismissAlert: return .dismissAlert
                     }
-                )
-            }
+                }
+            )
         }
     }
 }
@@ -56,9 +53,9 @@ extension ServicePickerFlowView {
     
     typealias Destination = State.Destination
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, Service, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     typealias State = UtilityFlowState.Destination.ServicePickerFlowState
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
 }
 
 //#Preview {
@@ -80,23 +77,7 @@ extension UtilityPaymentFlowState.Destination.ServicePickerFlowState.Destination
     }
 }
 
-extension UtilityPaymentFlowState.Destination.ServicePickerFlowState.Alert: Identifiable {
-    
-    var id: ID {
-        
-        switch self {
-        case let .serviceFailure(serviceFailure):
-            return  .serviceFailure(serviceFailure)
-        }
-    }
-    
-    enum ID: Hashable {
-        
-        case serviceFailure(ServiceFailure)
-    }
-}
-
-private extension ServiceFailure {
+private extension ServiceFailureAlert.ServiceFailure {
     
     func alert<Event>(
         event: @escaping (Event) -> Void,
