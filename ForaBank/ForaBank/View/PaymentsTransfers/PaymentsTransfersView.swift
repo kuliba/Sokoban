@@ -255,7 +255,7 @@ struct PaymentsTransfersView: View {
         case let .utilityPayment(flowState):
             let event = { viewModel.event(.utilityFlow($0)) }
      
-            viewFactory.makeUtilityPrepaymentView(flowState, event)
+            viewFactory.makeUtilityPaymentFlowView(flowState, event)
                 .navigationTitle("Utility Prepayment View")
                 .navigationBarTitleDisplayMode(.inline)
         }

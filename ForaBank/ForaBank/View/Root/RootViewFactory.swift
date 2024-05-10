@@ -22,7 +22,7 @@ struct RootViewFactory {
 
 extension RootViewFactory {
     
-    typealias MakeUtilityPrepaymentView = PaymentsTransfersViewFactory.MakeUtilityPrepaymentView
+    typealias MakeUtilityPrepaymentView = PaymentsTransfersViewFactory.MakeUtilityPaymentFlowView
 }
 
 extension RootViewFactory {
@@ -43,7 +43,7 @@ extension RootViewFactory {
         return .init(
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView,
-            makeUtilityPrepaymentView: makeUtilityPrepaymentView
+            makeUtilityPaymentFlowView: makeUtilityPrepaymentView
         )
     }
 }
