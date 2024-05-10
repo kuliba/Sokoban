@@ -214,13 +214,15 @@ private extension RootViewFactory {
                     viewModel: $0,
                     viewFactory: .init(
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                        makeUserAccountView: UserAccountView.init(viewModel:)
-                    ), 
+                        makeUserAccountView: UserAccountView.init(viewModel:),
+                        makeUtilityPrepaymentView: { .init(state: $0, event: $1) }
+                    ),
                     getUImage: { _ in nil }
                 )
             },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: UserAccountView.init(viewModel:)
+            makeUserAccountView: UserAccountView.init(viewModel:),
+            makeUtilityPrepaymentView: { .init(state: $0, event: $1) }
         )
     }
 }

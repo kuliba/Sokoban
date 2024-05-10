@@ -33,6 +33,7 @@ extension RootViewFactory {
         }
         
         let makeUserAccountView = UserAccountView.init(viewModel:)
+        let makeUtilityPrepaymentView = UtilityPrepaymentFlowWrapperView.init
         
         self.init(
             makePaymentsTransfersView: { viewModel in
@@ -41,13 +42,15 @@ extension RootViewFactory {
                         viewModel: viewModel,
                         viewFactory: .init(
                             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                            makeUserAccountView: makeUserAccountView
-                        ), 
+                            makeUserAccountView: makeUserAccountView,
+                            makeUtilityPrepaymentView: makeUtilityPrepaymentView
+                        ),
                         getUImage: getUImage
                     )
             },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: makeUserAccountView
+            makeUserAccountView: makeUserAccountView,
+            makeUtilityPrepaymentView: makeUtilityPrepaymentView
         )
     }
 }

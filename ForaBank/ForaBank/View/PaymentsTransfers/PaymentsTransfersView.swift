@@ -214,7 +214,7 @@ struct PaymentsTransfersView: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                viewFactory: viewFactory, 
+                viewFactory: viewFactory,
                 getUImage: getUImage
             )
             
@@ -232,7 +232,7 @@ struct PaymentsTransfersView: View {
                 )
             
         case let .utilities(utilitiesRoute):
-            #warning("replace implementation")
+#warning("replace implementation")
             utilityOperatorPicker(utilitiesRoute.viewModel)
                 .navigationDestination(
                     item: .init(
@@ -249,14 +249,18 @@ struct PaymentsTransfersView: View {
                 }))
                 .ignoresSafeArea(edges: .bottom)
             
-        case let .utilityPayment(s):
-            Text("\(s)")
-            
         case .payByInstructions:
-            Text("payByInstructions")
+            Text("payByInstructions - TBD - replace with payment")
+            
+        case let .utilityPayment(flowState):
+            let event = { viewModel.event(.utilityFlow($0)) }
+            viewFactory.makeUtilityPrepaymentView(flowState, event)
+                .navigationTitle("Utility Prepayment View")
+                .navigationBarTitleDisplayMode(.inline)
         }
     }
     
+    #warning("remove")
     @ViewBuilder
     private func utilitiesDestinationView(
         destination: PaymentsTransfersViewModel.Route.UtilitiesDestination
@@ -284,6 +288,7 @@ struct PaymentsTransfersView: View {
         }
     }
     
+    #warning("remove")
     #warning("replace implementation")
     private func failureView(
         _ `operator`: OperatorsListComponents.Operator
@@ -306,6 +311,7 @@ struct PaymentsTransfersView: View {
         .padding()
     }
     
+    #warning("remove")
     private func utilityServicePicker(
         _ `operator`: OperatorsListComponents.Operator,
         _ utilityServices: [UtilityService]
@@ -321,7 +327,8 @@ struct PaymentsTransfersView: View {
             )
         }
     }
-    
+
+    #warning("remove")
 #warning("replace implementation")
     private func utilityPaymentWrapperView(
         _ utilityPaymentState: UtilityPaymentState
@@ -332,6 +339,7 @@ struct PaymentsTransfersView: View {
         )
     }
     
+    #warning("remove")
     @ViewBuilder
     private func utilityServicePickerDestinationView(
         _ utilityListDestination: PaymentsTransfersViewModel.Route.UtilitiesDestination.UtilityServicePickerDestination
@@ -584,17 +592,7 @@ struct Payments_TransfersView_Previews: PreviewProvider {
         
         PaymentsTransfersView(
             viewModel: .sample,
-            viewFactory: .init(
-                makeSberQRConfirmPaymentView: {
-                    
-                    .init(
-                        viewModel: $0,
-                        map: Info.preview(info:),
-                        config: .iFora
-                    )
-                },
-                makeUserAccountView: UserAccountView.init(viewModel:)
-            ),
+            viewFactory: .preview,
             getUImage: { _ in nil }
         )
     }

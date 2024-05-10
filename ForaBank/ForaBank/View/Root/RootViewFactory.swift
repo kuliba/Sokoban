@@ -17,38 +17,33 @@ struct RootViewFactory {
     let makePaymentsTransfersView: MakePaymentsTransfersView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeUserAccountView: MakeUserAccountView
+    let makeUtilityPrepaymentView: MakeUtilityPrepaymentView
 }
 
-struct MainViewFactory {
+extension RootViewFactory {
     
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
-    let makeUserAccountView: MakeUserAccountView
+    typealias MakeUtilityPrepaymentView = PaymentsTransfersViewFactory.MakeUtilityPrepaymentView
 }
 
 extension RootViewFactory {
     
     var mainViewFactory: MainViewFactory {
         
-        .init(
+        return .init(
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView
         )
     }
 }
 
-struct PaymentsTransfersViewFactory {
-    
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
-    let makeUserAccountView: MakeUserAccountView
-}
-
 extension RootViewFactory {
     
     var paymentsTransfersViewFactory: PaymentsTransfersViewFactory {
- 
-        .init(
+        
+        return .init(
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: makeUserAccountView
+            makeUserAccountView: makeUserAccountView,
+            makeUtilityPrepaymentView: makeUtilityPrepaymentView
         )
     }
 }

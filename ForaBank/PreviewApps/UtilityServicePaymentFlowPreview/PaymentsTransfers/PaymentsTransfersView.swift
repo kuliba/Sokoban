@@ -83,8 +83,8 @@ private extension PaymentsTransfersView {
                 .navigationTitle("Pay by Instructions")
                 .navigationBarTitleDisplayMode(.inline)
             
-        case let .utilityPayment(utilityPrepayment):
-            utilityPrepaymentView(state: utilityPrepayment, event: event)
+        case let .utilityPayment(flowState):
+            utilityPrepaymentView(state: flowState, event: event)
                 .navigationTitle("Utility Prepayment View")
                 .navigationBarTitleDisplayMode(.inline)
         }
