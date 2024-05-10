@@ -33,10 +33,6 @@ extension RootViewFactory {
         }
         
         let makeUserAccountView = UserAccountView.init(viewModel:)
-        let makeUtilityPrepaymentView = {
-            
-            ComposedUtilityPaymentFlowView(state: $0, event: $1, config: .iFora)
-        }
         
         self.init(
             makePaymentsTransfersView: { viewModel in
@@ -45,15 +41,13 @@ extension RootViewFactory {
                         viewModel: viewModel,
                         viewFactory: .init(
                             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                            makeUserAccountView: makeUserAccountView,
-                            makeUtilityPaymentFlowView: makeUtilityPrepaymentView
+                            makeUserAccountView: makeUserAccountView
                         ),
                         getUImage: getUImage
                     )
             },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: makeUserAccountView,
-            makeUtilityPrepaymentView: makeUtilityPrepaymentView
+            makeUserAccountView: makeUserAccountView
         )
     }
 }

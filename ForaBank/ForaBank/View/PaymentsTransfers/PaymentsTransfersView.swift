@@ -236,9 +236,9 @@ struct PaymentsTransfersView: View {
             
         case let .utilityPayment(flowState):
             let event = { viewModel.event(.utilityFlow($0)) }
-
+            
             #warning("add nav bar")
-            viewFactory.makeUtilityPaymentFlowView(flowState, event)
+            utilityPaymentFlowView(state: flowState, event: event)
                 .navigationTitle("Utility Prepayment View")
                 .navigationBarTitleDisplayMode(.inline)
         }
@@ -372,6 +372,71 @@ struct PaymentsTransfersView: View {
     }
 }
 
+// MARK: - Utility Payment Flow
+
+private extension PaymentsTransfersView {
+
+    func utilityPaymentFlowView(
+        state: UtilityFlowState,
+        event: @escaping (UtilityFlowEvent) -> Void
+    ) -> some View {
+        
+        UtilityPaymentFlowView(
+            state: state,
+            event: { event(.prepayment($0)) },
+            content: {
+                
+                UtilityPrepaymentWrapperView(
+                    viewModel: state.content,
+                    flowEvent: { event(.prepayment($0.flowEvent)) },
+                    config: .iFora
+                )
+            },
+            destinationView: {
+                
+                utilityFlowDestinationView(state: $0, event: event)
+            }
+        )
+    }
+    
+    @ViewBuilder
+    func utilityFlowDestinationView(
+        state: UtilityFlowState.Destination,
+        event: @escaping (UtilityFlowEvent) -> Void
+    ) -> some View {
+        
+        switch state {
+        case let .operatorFailure(operatorFailure):
+            Text("Operator Failure View: \(operatorFailure)")
+//            operatorFailureView(
+//                operatorFailure: operatorFailure,
+//                payByInstructions: { event(.prepayment(.payByInstructions)) },
+//                dismissDestination: { event(.prepayment(.dismissOperatorFailureDestination)) }
+//            )
+            .navigationTitle(String(describing: operatorFailure.content))
+            .navigationBarTitleDisplayMode(.inline)
+            
+            
+        case .payByInstructions:
+            Text("Pay by Instructions")
+                .navigationTitle("Pay by Instructions")
+                .navigationBarTitleDisplayMode(.inline)
+            
+        case let .payment(state):
+            Text("Payment View: \(state)")
+//            paymentFlowView(state: state, event: { event(.payment($0)) })
+            
+        case let .servicePicker(state):
+            Text("servicePicker: \(state)")
+            // servicePicker(state: state, event: event)
+        }
+    }
+    
+    typealias UtilityFlowState = UtilityPaymentFlowState<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+
+    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService>
+}
+
 private extension NavigationBarView.ViewModel {
     
     static func with(
@@ -437,6 +502,32 @@ extension PaymentsTransfersView {
                 viewModel.icon
                     .renderingMode(.template)
                     .foregroundColor(.iconBlack)
+            }
+        }
+    }
+}
+
+private extension UtilityPrepaymentFlowEvent {
+    
+    var flowEvent: UtilityPaymentFlowEvent<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService>.UtilityPrepaymentFlowEvent {
+        
+        switch self {
+        case .addCompany:
+            return .addCompany
+            
+        case .payByInstructions:
+            return .payByInstructions
+            
+        case .payByInstructionsFromError:
+            return .payByInstructionsFromError
+            
+        case let .select(select):
+            switch select {
+            case let .lastPayment(lastPayment):
+                return .select(.lastPayment(lastPayment))
+                
+            case let .operator(`operator`):
+                return .select(.operator(`operator`))
             }
         }
     }

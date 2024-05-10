@@ -9,7 +9,7 @@ import OperatorsListComponents
 import SwiftUI
 import UIPrimitives
 
-struct UtilityPaymentFlowView<Content: View, DestinationView: View>: View
+struct UtilityPaymentFlowView<Content, DestinationView>: View
 where Content: View,
       DestinationView: View {
     

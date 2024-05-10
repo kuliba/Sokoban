@@ -200,8 +200,7 @@ extension PaymentsTransfersViewFactory {
                     config: .iFora
                 )
             },
-            makeUserAccountView: UserAccountView.init(viewModel:),
-            makeUtilityPaymentFlowView: { .init(state: $0, event: $1, config: .iFora) }
+            makeUserAccountView: UserAccountView.init(viewModel:)
         )
     }
 }

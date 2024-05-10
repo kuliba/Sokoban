@@ -55,7 +55,7 @@ extension PaymentsTransfersView {
     typealias OperatorFailure = UtilityFlowState.Destination.OperatorFailureFlowState
     typealias ServicePickerState = UtilityFlowState.Destination.ServicePickerFlowState
     
-    typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
     
     typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<ObservingPaymentFlowMockViewModel>
     
@@ -74,7 +74,7 @@ private extension PaymentsTransfersView {
     @ViewBuilder
     func destinationView(
         destination: Destination,
-        event: @escaping (UtilityPaymentEvent) -> Void
+        event: @escaping (UtilityFlowEvent) -> Void
     ) -> some View {
         
         switch destination {
@@ -92,7 +92,7 @@ private extension PaymentsTransfersView {
     
     func utilityPaymentFlowView(
         state: UtilityFlowState,
-        event: @escaping (UtilityPaymentEvent) -> ()
+        event: @escaping (UtilityFlowEvent) -> ()
     ) -> some View {
         
         UtilityPaymentFlowView(
@@ -116,7 +116,7 @@ private extension PaymentsTransfersView {
     @ViewBuilder
     func utilityFlowDestinationView(
         state: UtilityFlowState.Destination,
-        event: @escaping (UtilityPaymentEvent) -> Void
+        event: @escaping (UtilityFlowEvent) -> Void
     ) -> some View {
         
         switch state {
@@ -252,7 +252,7 @@ private extension PaymentsTransfersView {
 
     func servicePicker(
         state: ServicePickerState,
-        event: @escaping (UtilityPaymentEvent) -> Void
+        event: @escaping (UtilityFlowEvent) -> Void
     ) -> some View {
         
         ServicePickerFlowView(
