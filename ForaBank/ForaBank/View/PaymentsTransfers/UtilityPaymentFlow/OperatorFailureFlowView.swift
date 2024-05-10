@@ -1,13 +1,13 @@
 //
 //  OperatorFailureFlowView.swift
-//  UtilityServicePaymentFlowPreview
+//
 //
 //  Created by Igor Malyarov on 05.05.2024.
 //
 
 import SwiftUI
 
-struct OperatorFailureFlowView<ContentView, DestinationView>: View
+struct OperatorFailureFlowView<LastPayment, Operator, Service, ContentView, DestinationView>: View
 where ContentView: View,
       DestinationView: View {
     
@@ -31,14 +31,10 @@ extension OperatorFailureFlowView {
     
     typealias Destination = State.Destination
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, Service, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     typealias State = UtilityFlowState.Destination.OperatorFailureFlowState
     typealias Event = ()
 }
-
-//#Preview {
-//    OperatorFailureView()
-//}
 
 extension UtilityPaymentFlowState.Destination.OperatorFailureFlowState.Destination: Identifiable {
     

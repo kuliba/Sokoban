@@ -407,12 +407,11 @@ private extension PaymentsTransfersView {
         
         switch state {
         case let .operatorFailure(operatorFailure):
-            Text("Operator Failure View: \(operatorFailure)")
-//            operatorFailureView(
-//                operatorFailure: operatorFailure,
-//                payByInstructions: { event(.prepayment(.payByInstructions)) },
-//                dismissDestination: { event(.prepayment(.dismissOperatorFailureDestination)) }
-//            )
+            operatorFailureView(
+                operatorFailure: operatorFailure,
+                payByInstructions: { event(.prepayment(.payByInstructions)) },
+                dismissDestination: { event(.prepayment(.dismissOperatorFailureDestination)) }
+            )
             .navigationTitle(String(describing: operatorFailure.content))
             .navigationBarTitleDisplayMode(.inline)
             
@@ -432,9 +431,42 @@ private extension PaymentsTransfersView {
         }
     }
     
+    func operatorFailureView(
+        operatorFailure: UtilityFlowState.Destination.OperatorFailureFlowState,
+        payByInstructions: @escaping () -> Void,
+        dismissDestination: @escaping () -> Void
+    ) -> some View {
+        
+        OperatorFailureFlowView(
+            state: operatorFailure,
+            event: dismissDestination,
+            content: {
+                
+                OperatorFailureView(
+                    state: operatorFailure.content,
+                    event: payByInstructions
+                )
+            },
+            destinationView: operatorFailureDestinationView
+        )
+    }
+    
+    func operatorFailureDestinationView(
+        destination: OperatorFailure.Destination
+    ) -> some View {
+        
+        Text("TBD: Pay by Instructions (OperatorFailure.Destination)")
+            .navigationTitle("Pay by Instructions")
+            .navigationBarTitleDisplayMode(.inline)
+    }
+
     typealias UtilityFlowState = UtilityPaymentFlowState<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService>
+    
+    typealias OperatorFailure = UtilityFlowState.Destination.OperatorFailureFlowState
+    typealias ServicePickerState = UtilityFlowState.Destination.ServicePickerFlowState
+
 }
 
 private extension NavigationBarView.ViewModel {
