@@ -16,7 +16,22 @@ struct ComposedUtilityPaymentFlowView: View {
 
     var body: some View {
         
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        UtilityPaymentFlowView(
+            state: state,
+            event: { event(.prepayment($0)) },
+            content: {
+                
+                UtilityPrepaymentWrapperView(
+                    viewModel: state.content,
+                    flowEvent: { event(.prepayment($0.flowEvent)) },
+                    config: config
+                )
+            },
+            destinationView: {
+                
+                utilityFlowDestinationView(state: $0, event: event)
+            }
+        )
     }
 }
 
@@ -26,4 +41,42 @@ extension ComposedUtilityPaymentFlowView {
     typealias Event = UtilityPaymentFlowEvent<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService>
     
     typealias Config = UtilityPrepaymentViewConfig
+}
+
+private extension ComposedUtilityPaymentFlowView {
+    
+    @ViewBuilder
+    func utilityFlowDestinationView(
+        state: State.Destination,
+        event: @escaping (Event) -> Void
+    ) -> some View {
+     
+        Text("TBD: destination")
+    }
+}
+
+private extension UtilityPrepaymentFlowEvent {
+    
+    var flowEvent: UtilityPaymentFlowEvent<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService>.UtilityPrepaymentFlowEvent {
+        
+        switch self {
+        case .addCompany:
+            return .addCompany
+            
+        case .payByInstructions:
+            return .payByInstructions
+            
+        case .payByInstructionsFromError:
+            return .payByInstructionsFromError
+            
+        case let .select(select):
+            switch select {
+            case let .lastPayment(lastPayment):
+                return .select(.lastPayment(lastPayment))
+                
+            case let .operator(`operator`):
+                return .select(.operator(`operator`))
+            }
+        }
+    }
 }
