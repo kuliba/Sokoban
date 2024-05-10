@@ -18,5 +18,5 @@ extension PaymentsTransfersViewFactory {
     
     typealias _UtilityPaymentFlowState = UtilityPaymentFlowState<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     typealias _UtilityPaymentFlowEvent = UtilityPaymentFlowEvent<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService>
-    typealias MakeUtilityPrepaymentView = (_UtilityPaymentFlowState, @escaping (_UtilityPaymentFlowEvent) -> Void) -> UtilityPrepaymentFlowWrapperView
+    typealias MakeUtilityPrepaymentView = (_UtilityPaymentFlowState, @escaping (_UtilityPaymentFlowEvent) -> Void) -> UtilityPrepaymentFlowComposedView
 }

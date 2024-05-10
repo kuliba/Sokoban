@@ -33,7 +33,7 @@ extension RootViewFactory {
         }
         
         let makeUserAccountView = UserAccountView.init(viewModel:)
-        let makeUtilityPrepaymentView = UtilityPrepaymentFlowWrapperView.init
+        let makeUtilityPrepaymentView = UtilityPrepaymentFlowComposedView.init
         
         self.init(
             makePaymentsTransfersView: { viewModel in

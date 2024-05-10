@@ -1,5 +1,5 @@
 //
-//  UtilityPrepaymentFlowWrapperView.swift
+//  UtilityPrepaymentFlowComposedView.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 10.05.2024.
@@ -8,7 +8,7 @@
 import OperatorsListComponents
 import SwiftUI
 
-struct UtilityPrepaymentFlowWrapperView: View {
+struct UtilityPrepaymentFlowComposedView: View {
     
     let state: State
     let event: (Event) -> Void
@@ -19,7 +19,7 @@ struct UtilityPrepaymentFlowWrapperView: View {
     }
 }
 
-extension UtilityPrepaymentFlowWrapperView {
+extension UtilityPrepaymentFlowComposedView {
     
     typealias State = UtilityPaymentFlowState<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     typealias Event = UtilityPaymentFlowEvent<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService>
