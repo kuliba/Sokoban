@@ -422,8 +422,7 @@ private extension PaymentsTransfersView {
                 .navigationBarTitleDisplayMode(.inline)
             
         case let .payment(state):
-            Text("Payment View: \(state)")
-//            paymentFlowView(state: state, event: { event(.payment($0)) })
+            paymentFlowView(state: state, event: { event(.payment($0)) })
             
         case let .servicePicker(state):
             Text("servicePicker: \(state)")
@@ -459,6 +458,83 @@ private extension PaymentsTransfersView {
             .navigationTitle("Pay by Instructions")
             .navigationBarTitleDisplayMode(.inline)
     }
+    
+    func paymentFlowView(
+        state: UtilityServiceFlowState,
+        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
+    ) -> some View {
+        
+        PaymentFlowMockView(viewModel: state.viewModel)
+            .alert(
+                item: state.alert,
+                content: paymentFlowAlert(event: event)
+            )
+            .fullScreenCover(
+                cover: state.fullScreenCover,
+                dismissFullScreenCover: { event(.dismissFullScreenCover) },
+                content: paymentFlowFullScreenCoverView
+            )
+            .sheet(
+                modal: state.modal,
+                dismissModal: { event(.dismissFraud) },
+                content: paymentFlowModalView(event: { event(.fraud($0)) })
+            )
+            .navigationTitle("Payment")
+            .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    func paymentFlowAlert(
+        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
+    ) -> (UtilityServiceFlowState.Alert) -> Alert {
+        
+        return { alert in
+            
+            switch alert {
+            case let .terminalError(errorMessage):
+                
+                return .init(
+                    with: .init(
+                        title: "Error!",
+                        message: errorMessage,
+                        primaryButton: .init(
+                            type: .default,
+                            title: "OK",
+                            event: .dismissPaymentError
+                        )
+                    ),
+                    event: event
+                )
+            }
+        }
+    }
+    
+    func paymentFlowFullScreenCoverView(
+        fullScreenCover: UtilityServiceFlowState.FullScreenCover
+    ) -> some View {
+        
+        switch fullScreenCover {
+        case .completed:
+            VStack(spacing: 32) {
+                
+                Text("TBD: Payment Complete View")
+                    .frame(maxHeight: .infinity)
+                
+                Divider()
+
+                Button("go to Main", action: { viewModel.event(.goToMain) })
+            }
+        }
+    }
+
+    func paymentFlowModalView(
+        event: @escaping (PaymentFraudMockView.Event) -> Void
+    ) -> (UtilityServiceFlowState.Modal) -> PaymentFlowModalView {
+        
+        return {
+            
+            PaymentFlowModalView(state: $0, event: event)
+        }
+    }
 
     typealias UtilityFlowState = UtilityPaymentFlowState<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 
@@ -466,7 +542,53 @@ private extension PaymentsTransfersView {
     
     typealias OperatorFailure = UtilityFlowState.Destination.OperatorFailureFlowState
     typealias ServicePickerState = UtilityFlowState.Destination.ServicePickerFlowState
+    
+    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<ObservingPaymentFlowMockViewModel>
+}
 
+extension UtilityServicePaymentFlowState.Alert: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .terminalError: return  .terminalError
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case terminalError
+    }
+}
+
+extension UtilityServicePaymentFlowState.FullScreenCover: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .completed: return  .completed
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case completed
+    }
+}
+
+extension UtilityServicePaymentFlowState.Modal: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .fraud: return  .fraud
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case fraud
+    }
 }
 
 private extension NavigationBarView.ViewModel {
