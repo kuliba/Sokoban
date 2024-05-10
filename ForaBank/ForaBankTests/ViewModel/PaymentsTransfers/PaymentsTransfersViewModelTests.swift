@@ -1004,21 +1004,21 @@ extension PaymentsTransfersViewModel {
             .eraseToAnyPublisher()
     }
     
-    var utilityPaymentDestinationPublisher: AnyPublisher<PaymentsTransfersViewModel.Route.UtilitiesDestination.ID?, Never> {
-        
-        $route
-            .map(\.utilitiesRoute?.destination?.id)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
+//    var utilityPaymentDestinationPublisher: AnyPublisher<PaymentsTransfersViewModel.Route.UtilitiesDestination.ID?, Never> {
+//        
+//        $route
+//            .map(\.utilitiesRoute?.destination?.id)
+//            .removeDuplicates()
+//            .eraseToAnyPublisher()
+//    }
     
-    var utilityPaymentStatePublisher: AnyPublisher<UtilityPaymentState?, Never> {
-        
-        $route
-            .map(\.utilityPaymentState)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
+//    var utilityPaymentStatePublisher: AnyPublisher<UtilityPaymentState?, Never> {
+//        
+//        $route
+//            .map(\.utilityPaymentState)
+//            .removeDuplicates()
+//            .eraseToAnyPublisher()
+//    }
     
     func paymentButton(
         ofType type: PTSectionPaymentsView.ViewModel.PaymentsType,
@@ -1036,20 +1036,20 @@ extension PaymentsTransfersViewModel {
         
         return try XCTUnwrap(button, "\nExpected \"Payments Button\", but got nil instead.", file: file, line: line)
     }
-    
-    @discardableResult
-    func openUtilityPayments(
-        timeout: TimeInterval = 0.05,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) throws -> PaymentsTransfersViewModel.Route.UtilitiesRoute {
-        
-        let button = try paymentButton(ofType: .service, file: file, line: line)
-        button.action()
-        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
-        
-        return try XCTUnwrap(route.utilitiesRoute, "\nExpected \"Utility Payments Button\", but got nil instead.", file: file, line: line)
-    }
+//    
+//    @discardableResult
+//    func openUtilityPayments(
+//        timeout: TimeInterval = 0.05,
+//        file: StaticString = #file,
+//        line: UInt = #line
+//    ) throws -> PaymentsTransfersViewModel.Route.UtilitiesRoute {
+//        
+//        let button = try paymentButton(ofType: .service, file: file, line: line)
+//        button.action()
+//        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
+//        
+//        return try XCTUnwrap(route.utilitiesRoute, "\nExpected \"Utility Payments Button\", but got nil instead.", file: file, line: line)
+//    }
 }
 
 extension PaymentsTransfersViewModel.Modal {

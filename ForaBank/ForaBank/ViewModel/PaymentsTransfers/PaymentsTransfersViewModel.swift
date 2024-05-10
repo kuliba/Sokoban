@@ -326,7 +326,7 @@ private extension PaymentsTransfersViewModel {
     }
 }
 
-//MARK: - Types
+// MARK: - Types
 
 extension PaymentsTransfersViewModel {
     
@@ -470,8 +470,6 @@ extension PaymentsTransfersViewModel {
         case openDeposit(OpenDepositDetailViewModel)
         case sberQRPayment(SberQRConfirmPaymentViewModel)
         case openDepositsList(OpenDepositListViewModel)
-#warning("remove if unused")
-        case utilities(Route.UtilitiesRoute)
         case utilityPayment(UtilityFlowState)
 #warning("remove if unused")
         case payByInstructions
@@ -527,8 +525,6 @@ extension PaymentsTransfersViewModel {
                 return .openDepositsList
             case .sberQRPayment:
                 return .sberQRPayment
-            case .utilities:
-                return .utilities
             case .utilityPayment:
                 return .utilityPayment
             case .payByInstructions:
@@ -561,8 +557,6 @@ extension PaymentsTransfersViewModel {
             case openDeposit
             case openDepositsList
             case sberQRPayment
-#warning("remove if unused")
-            case utilities
             case utilityPayment
 #warning("remove if unused")
             case payByInstructions
@@ -592,123 +586,7 @@ extension PaymentsTransfersViewModel._Link {
     typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
 }
 
-extension PaymentsTransfersViewModel.Route {
-    
-    typealias UtilitiesRoute = (viewModel: UtilitiesViewModel, destination: UtilitiesDestination?)
-    
-    enum UtilitiesDestination: Identifiable {
-        
-        case failure(OperatorsListComponents.Operator)
-        case list(List)
-        case payment(UtilityPaymentState)
-    }
-}
-
-extension PaymentsTransfersViewModel.Route.UtilitiesDestination {
-    
-    struct List {
-        
-        let `operator`: OperatorsListComponents.Operator
-        let services: [UtilityService]
-        let destination: UtilityServicePickerDestination?
-    }
-    
-    var id: ID {
-        
-        switch self {
-        case .failure:
-            return .failure
-        case .list:
-            return .list
-        case .payment:
-            return .payment
-        }
-    }
-    
-    enum ID {
-        
-        case failure, list, payment
-    }
-    
-    enum UtilityServicePickerDestination: Identifiable {
-        
-        case payment(UtilityPaymentState)
-        
-        var id: ID {
-            switch self {
-            case .payment:
-                return .payment
-            }
-        }
-        
-        enum ID {
-            
-            case payment
-        }
-    }
-}
-
-extension PaymentsTransfersViewModel.Route {
-    
-    var utilityPaymentState: UtilityPaymentState? {
-        
-        get {
-            
-            utilitiesRoute?.destination?.utilityPaymentState
-        }
-        
-        set(newValue) {
-            
-            utilitiesRoute?.destination?.utilityPaymentState = newValue
-        }
-    }
-}
-
-extension PaymentsTransfersViewModel.Route.UtilitiesDestination {
-    
-    var utilityPaymentState: UtilityPaymentState? {
-        
-        get {
-            
-            switch self {
-            case let .list(list):
-                guard case let .payment(utilityPaymentState) = list.destination
-                else { return nil }
-                
-                return utilityPaymentState
-                
-            case let .payment(utilityPaymentState):
-                return utilityPaymentState
-                
-            default:
-                return nil
-            }
-        }
-        
-        set(newValue) {
-            
-            switch self {
-            case let .list(list):
-                guard case .payment = list.destination
-                else { return }
-                
-                self = .list(.init(
-                    operator: list.`operator`,
-                    services: list.services,
-                    destination: newValue.map { .payment($0) }
-                ))
-                
-            case let .payment(utilityPaymentState):
-                self = .payment(utilityPaymentState)
-                
-            default:
-                return
-            }
-        }
-    }
-}
-
-//MARK: - Action
+// MARK: - Action
 
 enum PaymentsTransfersViewModelAction {
     
@@ -766,32 +644,6 @@ enum PaymentsTransfersViewModelAction {
 }
 
 // MARK: - Helpers
-
-extension PaymentsTransfersViewModel.Route {
-    
-    var utilitiesRoute: UtilitiesRoute? {
-        
-        get {
-            
-            guard case let .utilities(utilitiesRoute) = destination
-            else { return nil }
-            
-            return utilitiesRoute
-        }
-        
-        set(newValue) {
-            
-            guard case let .utilities(utilitiesRoute) = destination
-            else { return }
-            
-            if let newValue {
-                destination = .utilities(newValue)
-            } else {
-                destination = .utilities((utilitiesRoute.viewModel, destination: nil))
-            }
-        }
-    }
-}
 
 private extension PaymentsTransfersViewModel {
     

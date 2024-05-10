@@ -231,126 +231,17 @@ struct PaymentsTransfersView: View {
                     dismiss: { viewModel.event(.dismissDestination) }
                 )
             
-        case let .utilities(utilitiesRoute):
-#warning("replace implementation")
-            utilityOperatorPicker(utilitiesRoute.viewModel)
-                .navigationDestination(
-                    item: .init(
-                        get: { viewModel.route.utilitiesRoute?.destination },
-                        set: { if $0 == nil { fatalError()
-                            /*viewModel.event(.resetUtilityDestination)*/ }}
-                    ),
-                    content: utilitiesDestinationView
-                )
-                .navigationBarTitle(Text("Услуги ЖКХ"), displayMode: .inline)
-                .navigationBarItems(trailing: Button(action: {}, label: {
-                    
-                    Image.ic24BarcodeScanner2
-                }))
-                .ignoresSafeArea(edges: .bottom)
-            
         case .payByInstructions:
             Text("payByInstructions - TBD - replace with payment")
             
         case let .utilityPayment(flowState):
             let event = { viewModel.event(.utilityFlow($0)) }
-     
+
+            #warning("add nav bar")
             viewFactory.makeUtilityPaymentFlowView(flowState, event)
                 .navigationTitle("Utility Prepayment View")
                 .navigationBarTitleDisplayMode(.inline)
         }
-    }
-    
-    #warning("remove")
-    @ViewBuilder
-    private func utilitiesDestinationView(
-        destination: PaymentsTransfersViewModel.Route.UtilitiesDestination
-    ) -> some View {
-        switch destination {
-        case let .failure(`operator`):
-            failureView(`operator`)
-#warning("add nav bar")
-            
-        case let .list(list):
-            #warning("replace implementation")
-            utilityServicePicker(list.operator, list.services)
-                .navigationDestination(
-                    item: .init(
-                        get: { list.destination },
-                        set: { if $0 == nil { fatalError() /*viewModel.event(.resetUtilityListDestination)*/}}
-                    ),
-                    content: utilityServicePickerDestinationView
-                )
-#warning("add nav bar")
-            
-        case let .payment(utilityPaymentState):
-            utilityPaymentWrapperView(utilityPaymentState)
-#warning("add nav bar")
-        }
-    }
-    
-    #warning("remove")
-    #warning("replace implementation")
-    private func failureView(
-        _ `operator`: OperatorsListComponents.Operator
-    ) -> some View {
-        
-        VStack(spacing: 32) {
-            
-            Text(String(describing: `operator`))
-                .font(.title3.bold())
-            
-            Text("Что-то пошло не так.\nПопробуйте позже или воспользуйтесь другим способом оплаты.")
-                .foregroundColor(.secondary)
-            
-            Button("Оплатить по реквизитам") {
-                
-                fatalError()
-                // self.viewModel.event(.utilityFlow(.payByInstructions))
-            }
-        }
-        .padding()
-    }
-    
-    #warning("remove")
-    private func utilityServicePicker(
-        _ `operator`: OperatorsListComponents.Operator,
-        _ utilityServices: [UtilityService]
-    ) -> some View {
-        VStack(spacing: 32) {
-            
-            Text("Services for \(String(describing: `operator`))")
-                .font(.title3.bold())
-#warning("replace implementation")
-            UtilityServicePicker(
-                state: utilityServices,
-                event: { _ in fatalError() /*self.viewModel.event(.utilityFlow(.select(.service($0, for: `operator`))))*/ }
-            )
-        }
-    }
-
-    #warning("remove")
-#warning("replace implementation")
-    private func utilityPaymentWrapperView(
-        _ utilityPaymentState: UtilityPaymentState
-    ) -> some View {
-        UtilityPaymentWrapperView(
-            state: utilityPaymentState,
-            event: { _ in fatalError() /*viewModel.event(.utilityPayment($0))*/ }
-        )
-    }
-    
-    #warning("remove")
-    @ViewBuilder
-    private func utilityServicePickerDestinationView(
-        _ utilityListDestination: PaymentsTransfersViewModel.Route.UtilitiesDestination.UtilityServicePickerDestination
-    ) -> some View {
-        
-        switch utilityListDestination {
-        case let .payment(utilityPaymentState):
-            utilityPaymentWrapperView(utilityPaymentState)
-        }
-#warning("add nav bar")
     }
     
     private func transportPaymentsView(
@@ -397,17 +288,6 @@ struct PaymentsTransfersView: View {
                 navLeadingAction: viewModel.dismiss,
                 navTrailingAction: viewModel.openScanner
             )
-        )
-    }
-    
-    private func utilityOperatorPicker(
-        _ viewModel: UtilitiesViewModel
-    ) -> some View {
-        UtilityOperatorPicker(
-            state: viewModel.state,
-            event: { _ in fatalError()
-#warning("replace implementation")
-                /*self.viewModel.event(.utilityPayment($0))*/ }
         )
     }
     

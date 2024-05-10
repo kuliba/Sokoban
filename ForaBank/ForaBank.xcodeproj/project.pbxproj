@@ -6602,7 +6602,6 @@
 				C113225428CFA79200F90072 /* FastPayments */,
 				C1F8F5FC294A508600FE5703 /* Requisites */,
 				2A3F1B202A4988E300D8FE55 /* Transport */,
-				2AE2B9AA2B8DBF6900B86D56 /* Utilities */,
 			);
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
@@ -9413,6 +9412,7 @@
 				2A8CC2442B29D44D00191B8E /* ImageCache.swift */,
 				2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */,
 				2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */,
+				2AE2B9AA2B8DBF6900B86D56 /* Utilities */,
 				2A2E3FCA2BB2D1D100730D37 /* AnywayPayment */,
 				2AFD59EA2B6F98FE00C86FBF /* Infra */,
 				2AC2ADC82B22FDE30049EE9B /* FeatureFlags */,
