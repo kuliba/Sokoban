@@ -33,7 +33,7 @@ extension PaymentsTransfersFlowComposer {
     typealias MakeUtilityFlowEffectHandler = () -> UtilityFlowEffectHandler
     
     typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, UtilityContent, ObservingPaymentFlowMockViewModel>
-
+    
     typealias MakeReducerFactory = () -> Reducer.Factory
 }
 
@@ -49,11 +49,14 @@ extension PaymentsTransfersFlowComposer {
         )
         
         let factory = makeReducerFactory()
-        let makeReducer = { Reducer(factory: factory, notify: $0) }
+        let makeReducer = {
+            
+            Reducer(factory: factory, closeAction: $0, notify: $1)
+        }
         
         return .init(
             handleEffect: effectHandler.handleEffect(_:_:),
-            makeReduce: { makeReducer($0).reduce(_:_:) }
+            makeReduce: { makeReducer($0, $1).reduce(_:_:) }
         )
     }
     

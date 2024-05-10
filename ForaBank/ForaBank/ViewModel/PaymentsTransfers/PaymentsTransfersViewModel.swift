@@ -140,10 +140,16 @@ extension PaymentsTransfersViewModel {
     
     func event(_ event: Event) {
         
-        let reduce = flowManager.makeReduce { [weak self] in
+        let closeAction: () -> Void = { [weak self] in
+            
+            self?.event(.dismissDestination)
+        }
+        let notify: (PaymentStateProjection) -> Void = { [weak self] in
             
             self?.event(.utilityFlow(.payment(.notified($0))))
         }
+        
+        let reduce = flowManager.makeReduce(closeAction, notify)
         let (route, effect) = reduce(route, event)
         
         if let outside = route.outside {
@@ -471,8 +477,6 @@ extension PaymentsTransfersViewModel {
         case sberQRPayment(SberQRConfirmPaymentViewModel)
         case openDepositsList(OpenDepositListViewModel)
         case utilityPayment(UtilityFlowState)
-#warning("remove if unused")
-        case payByInstructions
         
         var id: Case {
             
@@ -527,8 +531,6 @@ extension PaymentsTransfersViewModel {
                 return .sberQRPayment
             case .utilityPayment:
                 return .utilityPayment
-            case .payByInstructions:
-                return .payByInstructions
             }
         }
         
@@ -558,8 +560,6 @@ extension PaymentsTransfersViewModel {
             case openDepositsList
             case sberQRPayment
             case utilityPayment
-#warning("remove if unused")
-            case payByInstructions
         }
     }
     

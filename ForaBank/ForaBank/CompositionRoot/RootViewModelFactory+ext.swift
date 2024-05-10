@@ -114,7 +114,7 @@ extension RootViewModelFactory {
             isActive: utilitiesPaymentsFlag.isActive
         )
         
-        let reducerFactoryComposer = PaymentsTransfersFlowReducerFactoryComposer()
+        let reducerFactoryComposer = PaymentsTransfersFlowReducerFactoryComposer(model: model)
         let utilityPaymentsComposer = UtilityPaymentsFlowComposer(
             flag: utilitiesPaymentsFlag.optionOrStub
         )

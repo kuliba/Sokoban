@@ -236,9 +236,6 @@ struct PaymentsTransfersView: View {
                     dismiss: { viewModel.event(.dismissDestination) }
                 )
             
-        case .payByInstructions:
-            Text("payByInstructions - TBD - replace with payment")
-            
         case let .utilityPayment(flowState):
             let event = { viewModel.event(.utilityFlow($0)) }
             

@@ -18,7 +18,7 @@ where LastPayment == OperatorsListComponents.LatestPayment,
         
         return .init(
             handleEffect: { _,_ in },
-            makeReduce: { _ in  { state,_ in (state, nil) }}
+            makeReduce: { _,_ in  { state,_ in (state, nil) }}
         )
     }
 }
