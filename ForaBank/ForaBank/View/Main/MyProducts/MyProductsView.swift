@@ -201,7 +201,7 @@ extension PaymentsTransfersViewFactory {
                 )
             },
             makeUserAccountView: UserAccountView.init(viewModel:),
-            makeUtilityPrepaymentView: { .init(state: $0, event: $1) }
+            makeUtilityPrepaymentView: { .init(state: $0, event: $1, config: .iFora) }
         )
     }
 }

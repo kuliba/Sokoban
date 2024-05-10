@@ -545,7 +545,7 @@
 		2A3BF08C2BE6996A0099FBD3 /* FraudEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF08B2BE6996A0099FBD3 /* FraudEvent.swift */; };
 		2A3BF08E2BE74FDE0099FBD3 /* PaymentFlowMockState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF08D2BE74FDE0099FBD3 /* PaymentFlowMockState.swift */; };
 		2A3BF0902BE76B670099FBD3 /* PaymentFlowModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF08F2BE76B670099FBD3 /* PaymentFlowModalView.swift */; };
-		2A3BF0942BE773F40099FBD3 /* UtilityPrepaymentFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0932BE773F40099FBD3 /* UtilityPrepaymentFlowView.swift */; };
+		2A3BF0942BE773F40099FBD3 /* UtilityPaymentFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0932BE773F40099FBD3 /* UtilityPaymentFlowView.swift */; };
 		2A3BF09A2BE786A10099FBD3 /* PaymentCancelledView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF0992BE786A10099FBD3 /* PaymentCancelledView.swift */; };
 		2A3BF09C2BE78A830099FBD3 /* OperatorFailureFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF09B2BE78A830099FBD3 /* OperatorFailureFlowView.swift */; };
 		2A3BF09E2BE78CD50099FBD3 /* OperatorFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BF09D2BE78CD50099FBD3 /* OperatorFailureView.swift */; };
@@ -676,10 +676,13 @@
 		2A5AEF292B7A191B00E935B6 /* ButtonConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5AEF282B7A191B00E935B6 /* ButtonConfig+iFora.swift */; };
 		2A5AEF2C2B7A3DD900E935B6 /* FastPaymentsSettingsConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5AEF2B2B7A3DD900E935B6 /* FastPaymentsSettingsConfig+iFora.swift */; };
 		2A5AEF2E2B7A485E00E935B6 /* TextConfig+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5AEF2D2B7A485E00E935B6 /* TextConfig+ext.swift */; };
-		2A5B22FA2BEDDE5300270D50 /* UtilityPrepaymentFlowComposedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B22F92BEDDE5300270D50 /* UtilityPrepaymentFlowComposedView.swift */; };
+		2A5B22FA2BEDDE5300270D50 /* ComposedUtilityPaymentFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B22F92BEDDE5300270D50 /* ComposedUtilityPaymentFlowView.swift */; };
 		2A5B22FC2BEDE02A00270D50 /* MainViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B22FB2BEDE02A00270D50 /* MainViewFactory.swift */; };
 		2A5B22FE2BEDE03F00270D50 /* PaymentsTransfersViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B22FD2BEDE03F00270D50 /* PaymentsTransfersViewFactory.swift */; };
 		2A5B23112BEE03CE00270D50 /* View+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23102BEE03CE00270D50 /* View+ext.swift */; };
+		2A5B23152BEE05E300270D50 /* UtilityPaymentFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23142BEE05E300270D50 /* UtilityPaymentFlowView.swift */; };
+		2A5B23182BEE0B9300270D50 /* UtilityPrepaymentWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23172BEE0B9300270D50 /* UtilityPrepaymentWrapperView.swift */; };
+		2A5B231B2BEE107D00270D50 /* UtilityPrepaymentViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B231A2BEE107D00270D50 /* UtilityPrepaymentViewConfig+iFora.swift */; };
 		2A5C11592A179345009A288A /* AnywayOperatorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1722C362989731900C503E3 /* AnywayOperatorData.swift */; };
 		2A5C115A2A179364009A288A /* PaymentsServiceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBE127BBF75600A30D6D /* PaymentsServiceViewModel.swift */; };
 		2A5D17912B243F8700597159 /* Model+SberQRProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D17902B243F8700597159 /* Model+SberQRProductTests.swift */; };
@@ -3366,7 +3369,7 @@
 		2A3BF08B2BE6996A0099FBD3 /* FraudEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FraudEvent.swift; sourceTree = "<group>"; };
 		2A3BF08D2BE74FDE0099FBD3 /* PaymentFlowMockState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFlowMockState.swift; sourceTree = "<group>"; };
 		2A3BF08F2BE76B670099FBD3 /* PaymentFlowModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFlowModalView.swift; sourceTree = "<group>"; };
-		2A3BF0932BE773F40099FBD3 /* UtilityPrepaymentFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowView.swift; sourceTree = "<group>"; };
+		2A3BF0932BE773F40099FBD3 /* UtilityPaymentFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentFlowView.swift; sourceTree = "<group>"; };
 		2A3BF0992BE786A10099FBD3 /* PaymentCancelledView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCancelledView.swift; sourceTree = "<group>"; };
 		2A3BF09B2BE78A830099FBD3 /* OperatorFailureFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorFailureFlowView.swift; sourceTree = "<group>"; };
 		2A3BF09D2BE78CD50099FBD3 /* OperatorFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorFailureView.swift; sourceTree = "<group>"; };
@@ -3519,10 +3522,13 @@
 		2A5AEF2B2B7A3DD900E935B6 /* FastPaymentsSettingsConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FastPaymentsSettingsConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A5AEF2D2B7A485E00E935B6 /* TextConfig+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextConfig+ext.swift"; sourceTree = "<group>"; };
 		2A5B1B482B1C438300C17A35 /* QRViewModelScanResultTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRViewModelScanResultTests.swift; sourceTree = "<group>"; };
-		2A5B22F92BEDDE5300270D50 /* UtilityPrepaymentFlowComposedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowComposedView.swift; sourceTree = "<group>"; };
+		2A5B22F92BEDDE5300270D50 /* ComposedUtilityPaymentFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedUtilityPaymentFlowView.swift; sourceTree = "<group>"; };
 		2A5B22FB2BEDE02A00270D50 /* MainViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewFactory.swift; sourceTree = "<group>"; };
 		2A5B22FD2BEDE03F00270D50 /* PaymentsTransfersViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewFactory.swift; sourceTree = "<group>"; };
 		2A5B23102BEE03CE00270D50 /* View+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ext.swift"; sourceTree = "<group>"; };
+		2A5B23142BEE05E300270D50 /* UtilityPaymentFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentFlowView.swift; sourceTree = "<group>"; };
+		2A5B23172BEE0B9300270D50 /* UtilityPrepaymentWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentWrapperView.swift; sourceTree = "<group>"; };
+		2A5B231A2BEE107D00270D50 /* UtilityPrepaymentViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UtilityPrepaymentViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A5D17902B243F8700597159 /* Model+SberQRProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SberQRProductTests.swift"; sourceTree = "<group>"; };
 		2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutgoingTransferResponse.swift; sourceTree = "<group>"; };
 		2A6097342B9D760D00AA6C75 /* UtilityPayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityPayment.xctestplan; sourceTree = "<group>"; };
@@ -6588,6 +6594,7 @@
 			children = (
 				83FAD89729CDD01B00474B06 /* InternetTV */,
 				0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */,
+				2A5B23132BEE05D400270D50 /* UtilityPaymentFlow */,
 				833764EF2A37015800F7C1AB /* MosParkingSelectorView.swift */,
 				0B04EBCE27B0847000893687 /* Payments */,
 				EDE70907279865960048CA94 /* Templates */,
@@ -7864,20 +7871,30 @@
 			path = Configs;
 			sourceTree = "<group>";
 		};
-		2A5B22F82BEDDE4500270D50 /* PaymentsTransfers */ = {
+		2A5B23132BEE05D400270D50 /* UtilityPaymentFlow */ = {
 			isa = PBXGroup;
 			children = (
-				2A5B23122BEE04A300270D50 /* UtilityPaymentFlow */,
-			);
-			path = PaymentsTransfers;
-			sourceTree = "<group>";
-		};
-		2A5B23122BEE04A300270D50 /* UtilityPaymentFlow */ = {
-			isa = PBXGroup;
-			children = (
-				2A5B22F92BEDDE5300270D50 /* UtilityPrepaymentFlowComposedView.swift */,
+				2A5B22F92BEDDE5300270D50 /* ComposedUtilityPaymentFlowView.swift */,
+				2A5B23142BEE05E300270D50 /* UtilityPaymentFlowView.swift */,
+				2A5B23162BEE0B8600270D50 /* UtilityPrepaymentWrapper */,
 			);
 			path = UtilityPaymentFlow;
+			sourceTree = "<group>";
+		};
+		2A5B23162BEE0B8600270D50 /* UtilityPrepaymentWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				2A5B23172BEE0B9300270D50 /* UtilityPrepaymentWrapperView.swift */,
+			);
+			path = UtilityPrepaymentWrapper;
+			sourceTree = "<group>";
+		};
+		2A5B23192BEE106B00270D50 /* Configs */ = {
+			isa = PBXGroup;
+			children = (
+				2A5B231A2BEE107D00270D50 /* UtilityPrepaymentViewConfig+iFora.swift */,
+			);
+			path = Configs;
 			sourceTree = "<group>";
 		};
 		2A5D6D232A27808000B4BCAD /* PaymentsSelectBankViewComponent */ = {
@@ -8170,7 +8187,7 @@
 				2AECBBDD2BEB67E7000B0C0E /* PaymentsTransfersFlow */,
 				2A69C1C92BE4E8D500FE91B0 /* PaymentsTransfersView.swift */,
 				2A69C1FE2BE4FC9A00FE91B0 /* PaymentsTransfersDestinationViewFactory.swift */,
-				2A3BF0932BE773F40099FBD3 /* UtilityPrepaymentFlowView.swift */,
+				2A3BF0932BE773F40099FBD3 /* UtilityPaymentFlowView.swift */,
 				2A3BF09B2BE78A830099FBD3 /* OperatorFailureFlowView.swift */,
 				2A3BF09D2BE78CD50099FBD3 /* OperatorFailureView.swift */,
 				2A3BF09F2BE78E590099FBD3 /* ServicePickerFlowView.swift */,
@@ -9431,9 +9448,9 @@
 			isa = PBXGroup;
 			children = (
 				2A8CC2422B29B4C100191B8E /* RootViewFactory+ext.swift */,
+				2A5B23192BEE106B00270D50 /* Configs */,
 				2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */,
 				2A5B23102BEE03CE00270D50 /* View+ext.swift */,
-				2A5B22F82BEDDE4500270D50 /* PaymentsTransfers */,
 			);
 			path = RootViewFactory;
 			sourceTree = "<group>";
@@ -16012,7 +16029,7 @@
 				2A69C2242BE61CFC00FE91B0 /* Array.LastPayment+preview.swift in Sources */,
 				2A6930342BE8DB1500C9B6D2 /* PaymentsTransfersReducerFactory+preview.swift in Sources */,
 				2A69C1F72BE4FBAB00FE91B0 /* UtilityPrepaymentEvent.swift in Sources */,
-				2A3BF0942BE773F40099FBD3 /* UtilityPrepaymentFlowView.swift in Sources */,
+				2A3BF0942BE773F40099FBD3 /* UtilityPaymentFlowView.swift in Sources */,
 				2AD3892D2BEA6298007E0298 /* UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload+preview.swift in Sources */,
 				2A3BF0902BE76B670099FBD3 /* PaymentFlowModalView.swift in Sources */,
 				2A3BF08A2BE699130099FBD3 /* PaymentFraudMockView.swift in Sources */,
@@ -16810,6 +16827,7 @@
 				2A872E912B00DE6C007A8E72 /* SessionKey.swift in Sources */,
 				C10423952A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift in Sources */,
 				5063064E286E07B800CEA12F /* InformerViewComponent.swift in Sources */,
+				2A5B231B2BEE107D00270D50 /* UtilityPrepaymentViewConfig+iFora.swift in Sources */,
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
 				775F2B99286B6ECE000C33E1 /* HideTabBarModifier.swift in Sources */,
 				68E765262796B38B005860FE /* ServerCommands+Registration.swift in Sources */,
@@ -16937,6 +16955,7 @@
 				7769F5BC27D3A2EA00F80607 /* MainView.swift in Sources */,
 				2A2ECBBB2AE51D6F00F3C946 /* GenericLoaderOf.swift in Sources */,
 				2AB197AD2B25D6E600F0F87B /* QRTypealiases.swift in Sources */,
+				2A5B23182BEE0B9300270D50 /* UtilityPrepaymentWrapperView.swift in Sources */,
 				A5C7A1BB275C0A2A003BEF6D /* InternetLatestOpsDO.swift in Sources */,
 				503FBEEF294DEB1600F25630 /* TransfersCoverViewComponent.swift in Sources */,
 				0C5D7D9C2982FE1C00BC0CCF /* NetworkMonitorAgent.swift in Sources */,
@@ -17155,6 +17174,7 @@
 				770DCE9127BBF7F4004099C1 /* RootViewModel.swift in Sources */,
 				2A65FB432B4E85D400A84F9E /* MainQueueReducerDecorator.swift in Sources */,
 				6833E0B62732B763004C070F /* DetailOperationTableViewCell.swift in Sources */,
+				2A5B23152BEE05E300270D50 /* UtilityPaymentFlowView.swift in Sources */,
 				774A8B2D2865FC6F00B81140 /* MyProductsSectionViewModel.swift in Sources */,
 				2AB197AA2B24A93E00F0F87B /* RequestFactory+createCreateSberQRPaymentRequest.swift in Sources */,
 				2A61D0642BECB59E00802C95 /* UtilityPaymentWrapperView.swift in Sources */,
@@ -17637,7 +17657,7 @@
 				EDBEEA1A26B1AEA200265683 /* FullBankInfoListViewModel.swift in Sources */,
 				0B7A18C92685BF700007CC75 /* GetPaymentSystemListDecodableModel.swift in Sources */,
 				777460FB2922F07600D3FF46 /* ContactsBanksSectionView.swift in Sources */,
-				2A5B22FA2BEDDE5300270D50 /* UtilityPrepaymentFlowComposedView.swift in Sources */,
+				2A5B22FA2BEDDE5300270D50 /* ComposedUtilityPaymentFlowView.swift in Sources */,
 				0BA14E16270DD1940098E422 /* BackgoundTimerInit.swift in Sources */,
 				A5B55E9627E260FA00C0B695 /* C2BApiRequests.swift in Sources */,
 				2A5AEF292B7A191B00E935B6 /* ButtonConfig+iFora.swift in Sources */,

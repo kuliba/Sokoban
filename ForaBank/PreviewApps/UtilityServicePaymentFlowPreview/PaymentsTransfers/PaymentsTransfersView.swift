@@ -84,18 +84,18 @@ private extension PaymentsTransfersView {
                 .navigationBarTitleDisplayMode(.inline)
             
         case let .utilityPayment(flowState):
-            utilityPrepaymentView(state: flowState, event: event)
+            utilityPaymentFlowView(state: flowState, event: event)
                 .navigationTitle("Utility Prepayment View")
                 .navigationBarTitleDisplayMode(.inline)
         }
     }
     
-    func utilityPrepaymentView(
+    func utilityPaymentFlowView(
         state: UtilityFlowState,
         event: @escaping (UtilityPaymentEvent) -> ()
     ) -> some View {
         
-        UtilityPrepaymentFlowView(
+        UtilityPaymentFlowView(
             state: state,
             event: { event(.prepayment($0)) },
             content: {
@@ -108,13 +108,13 @@ private extension PaymentsTransfersView {
             },
             destinationView: {
                 
-                utilityPrepaymentDestinationView(state: $0, event: event)
+                utilityFlowDestinationView(state: $0, event: event)
             }
         )
     }
     
     @ViewBuilder
-    func utilityPrepaymentDestinationView(
+    func utilityFlowDestinationView(
         state: UtilityFlowState.Destination,
         event: @escaping (UtilityPaymentEvent) -> Void
     ) -> some View {

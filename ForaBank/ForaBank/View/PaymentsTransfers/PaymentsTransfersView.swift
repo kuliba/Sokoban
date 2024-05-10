@@ -254,12 +254,50 @@ struct PaymentsTransfersView: View {
             
         case let .utilityPayment(flowState):
             let event = { viewModel.event(.utilityFlow($0)) }
-            viewFactory.makeUtilityPrepaymentView(flowState, event)
+            #warning("restore factory call")
+            utilityPaymentFlowView(state: flowState, event: event, config: .init())
+            // viewFactory.makeUtilityPrepaymentView(flowState, event)
                 .navigationTitle("Utility Prepayment View")
                 .navigationBarTitleDisplayMode(.inline)
         }
     }
     
+    typealias UtilityFlowState = UtilityPaymentFlowState<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService>
+
+    func utilityPaymentFlowView(
+        state: UtilityFlowState,
+        event: @escaping (UtilityPaymentEvent) -> (),
+        config: UtilityPrepaymentViewConfig
+    ) -> some View {
+        
+        UtilityPaymentFlowView(
+            state: state,
+            event: { event(.prepayment($0)) },
+            content: {
+                
+                UtilityPrepaymentWrapperView(
+                    viewModel: state.content,
+                    flowEvent: { event(.prepayment($0.flowEvent)) },
+                    config: config
+                )
+            },
+            destinationView: {
+                
+                utilityFlowDestinationView(state: $0, event: event)
+            }
+        )
+    }
+
+    @ViewBuilder
+    func utilityFlowDestinationView(
+        state: UtilityFlowState.Destination,
+        event: @escaping (UtilityPaymentEvent) -> Void
+    ) -> some View {
+     
+        Text("TBD: destination")
+    }
+
     #warning("remove")
     @ViewBuilder
     private func utilitiesDestinationView(
@@ -487,6 +525,32 @@ struct PaymentsTransfersView: View {
         case let .success(viewModel):
             PaymentsSuccessView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.all)
+        }
+    }
+}
+
+private extension UtilityPrepaymentFlowEvent {
+    
+    var flowEvent: UtilityPaymentFlowEvent<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService>.UtilityPrepaymentFlowEvent {
+        
+        switch self {
+        case .addCompany:
+            return .addCompany
+            
+        case .payByInstructions:
+            return .payByInstructions
+            
+        case .payByInstructionsFromError:
+            return .payByInstructionsFromError
+            
+        case let .select(select):
+            switch select {
+            case let .lastPayment(lastPayment):
+                return .select(.lastPayment(lastPayment))
+                
+            case let .operator(`operator`):
+                return .select(.operator(`operator`))
+            }
         }
     }
 }

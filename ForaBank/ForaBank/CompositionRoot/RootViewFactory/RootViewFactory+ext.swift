@@ -33,7 +33,10 @@ extension RootViewFactory {
         }
         
         let makeUserAccountView = UserAccountView.init(viewModel:)
-        let makeUtilityPrepaymentView = UtilityPrepaymentFlowComposedView.init
+        let makeUtilityPrepaymentView = {
+            
+            ComposedUtilityPaymentFlowView(state: $0, event: $1, config: .iFora)
+        }
         
         self.init(
             makePaymentsTransfersView: { viewModel in
