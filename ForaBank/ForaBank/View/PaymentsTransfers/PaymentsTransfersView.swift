@@ -52,7 +52,7 @@ struct PaymentsTransfersView: View {
         )
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
-            leading: leadingBarItems, 
+            leading: leadingBarItems,
             trailing: trailingBarItems
         )
         .tabBar(isHidden: .init(
@@ -239,7 +239,7 @@ struct PaymentsTransfersView: View {
         case let .utilityPayment(flowState):
             let event = { viewModel.event(.utilityFlow($0)) }
             
-            #warning("add nav bar")
+#warning("add nav bar")
             utilityPaymentFlowView(state: flowState, event: event)
                 .navigationTitle("Utility Prepayment View")
                 .navigationBarTitleDisplayMode(.inline)
@@ -367,11 +367,19 @@ struct PaymentsTransfersView: View {
             
         case let .paymentCancelled(expired: expired):
             PaymentCancelledView(state: expired, event: goToMain)
-
+            
         case let .success(viewModel):
             PaymentsSuccessView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.all)
         }
+    }
+    
+    private func payByInstructionsView(
+        _ paymentsViewModel: PaymentsViewModel
+    ) -> some View {
+        
+        PaymentsView(viewModel: paymentsViewModel)
+            .navigationBarHidden(true)
     }
     
     @ViewBuilder
@@ -382,7 +390,7 @@ struct PaymentsTransfersView: View {
             UserAccountButton(viewModel: viewModel.userAccountButton)
         }
     }
-
+    
     var trailingBarItems: some View {
         
         HStack {
@@ -435,11 +443,8 @@ private extension PaymentsTransfersView {
             .navigationTitle(String(describing: operatorFailure.content))
             .navigationBarTitleDisplayMode(.inline)
             
-            
-        case .payByInstructions:
-            Text("Pay by Instructions")
-                .navigationTitle("Pay by Instructions")
-                .navigationBarTitleDisplayMode(.inline)
+        case let .payByInstructions(paymentsViewModel):
+            payByInstructionsView(paymentsViewModel)
             
         case let .payment(state):
             paymentFlowView(state: state, event: { event(.payment($0)) })
@@ -469,13 +474,15 @@ private extension PaymentsTransfersView {
         )
     }
     
+    @ViewBuilder
     func operatorFailureDestinationView(
         destination: OperatorFailure.Destination
     ) -> some View {
         
-        Text("TBD: Pay by Instructions (OperatorFailure.Destination)")
-            .navigationTitle("Pay by Instructions")
-            .navigationBarTitleDisplayMode(.inline)
+        switch destination {
+        case let .payByInstructions(paymentsViewModel):
+            payByInstructionsView(paymentsViewModel)
+        }
     }
     
     func paymentFlowView(
@@ -549,10 +556,7 @@ private extension PaymentsTransfersView {
         event: @escaping (PaymentFraudMockView.Event) -> Void
     ) -> (UtilityServiceFlowState.Modal) -> PaymentFlowModalView {
         
-        return {
-            
-            PaymentFlowModalView(state: $0, event: event)
-        }
+        return { PaymentFlowModalView(state: $0, event: event) }
     }
     
     func servicePicker(

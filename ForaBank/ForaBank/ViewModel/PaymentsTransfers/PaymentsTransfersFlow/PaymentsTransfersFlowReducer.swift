@@ -242,12 +242,14 @@ private extension PaymentsTransfersFlowReducer {
     private func payByInstructions(
         _ state: inout State
     ) {
+        let viewModel = factory.makePaymentsViewModel(closeAction)
+        
         switch state.utilityPrepaymentDestination {
         case .none:
-            state.setUtilityPrepaymentDestination(to: .payByInstructions)
+            state.setUtilityPrepaymentDestination(to: .payByInstructions(viewModel))
             
         case .operatorFailure:
-            state.setUtilityServiceOperatorFailureDestination(to: .payByInstructions)
+            state.setUtilityServiceOperatorFailureDestination(to: .payByInstructions(viewModel))
             
         default:
             break
