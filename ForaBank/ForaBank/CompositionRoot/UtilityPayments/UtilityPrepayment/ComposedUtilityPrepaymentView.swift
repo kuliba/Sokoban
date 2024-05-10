@@ -1,5 +1,5 @@
 //
-//  UtilityPrepaymentView.swift
+//  ComposedUtilityPrepaymentView.swift
 //  
 //
 //  Created by Igor Malyarov on 09.05.2024.
@@ -8,7 +8,7 @@
 import OperatorsListComponents
 import SwiftUI
 
-struct UtilityPrepaymentView: View {
+struct ComposedUtilityPrepaymentView: View {
     
     let state: State
     let event: (Event) -> Void
@@ -17,6 +17,7 @@ struct UtilityPrepaymentView: View {
     
     var body: some View {
         
+#warning("this is a mock view, should be replaced with one from the module")
         List {
             
             section("Last Payments", state.lastPayments, content: lastPaymentView)
@@ -35,7 +36,7 @@ struct UtilityPrepaymentView: View {
     }
 }
 
-extension UtilityPrepaymentView {
+extension ComposedUtilityPrepaymentView {
     
     typealias LastPayment = OperatorsListComponents.LatestPayment
     typealias Operator = OperatorsListComponents.Operator
@@ -46,7 +47,7 @@ extension UtilityPrepaymentView {
     typealias Config = UtilityPrepaymentViewConfig
 }
 
-extension UtilityPrepaymentView {
+extension ComposedUtilityPrepaymentView {
     
     private func section<Item: Identifiable, Content: View>(
         _ header: String,

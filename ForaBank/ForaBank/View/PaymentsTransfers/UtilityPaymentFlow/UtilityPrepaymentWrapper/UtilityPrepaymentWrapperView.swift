@@ -16,7 +16,7 @@ struct UtilityPrepaymentWrapperView: View {
     
     var body: some View {
         
-        UtilityPrepaymentView(
+        ComposedUtilityPrepaymentView(
             state: viewModel.state,
             event: viewModel.event(_:),
             flowEvent: flowEvent,
@@ -27,7 +27,7 @@ struct UtilityPrepaymentWrapperView: View {
 
 extension UtilityPrepaymentWrapperView {
     
-    typealias Config = UtilityPrepaymentView.Config
+    typealias Config = ComposedUtilityPrepaymentView.Config
     typealias Event = UtilityPrepaymentFlowEvent
     typealias ViewModel = UtilityPrepaymentViewModel
 }

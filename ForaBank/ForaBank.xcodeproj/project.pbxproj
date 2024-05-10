@@ -703,7 +703,7 @@
 		2A61D06D2BECBA7600802C95 /* UtilityPrepaymentEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D06C2BECBA7600802C95 /* UtilityPrepaymentEffect.swift */; };
 		2A61D0702BECBAC000802C95 /* UtilityPrepaymentReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D06F2BECBAC000802C95 /* UtilityPrepaymentReducer.swift */; };
 		2A61D0722BECBAD200802C95 /* UtilityPrepaymentEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D0712BECBAD100802C95 /* UtilityPrepaymentEffectHandler.swift */; };
-		2A61D0742BECBAEC00802C95 /* UtilityPrepaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D0732BECBAEB00802C95 /* UtilityPrepaymentView.swift */; };
+		2A61D0742BECBAEC00802C95 /* ComposedUtilityPrepaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D0732BECBAEB00802C95 /* ComposedUtilityPrepaymentView.swift */; };
 		2A61D0762BECBB3000802C95 /* UtilityPrepaymentViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D0752BECBB3000802C95 /* UtilityPrepaymentViewConfig.swift */; };
 		2A61D07B2BECCCFC00802C95 /* PaymentsTransfersFlowManager+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D07A2BECCCFC00802C95 /* PaymentsTransfersFlowManager+preview.swift */; };
 		2A61D07D2BECCD7300802C95 /* PaymentsTransfersFlowEffectHandler+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D07C2BECCD7300802C95 /* PaymentsTransfersFlowEffectHandler+preview.swift */; };
@@ -3546,7 +3546,7 @@
 		2A61D06C2BECBA7600802C95 /* UtilityPrepaymentEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentEffect.swift; sourceTree = "<group>"; };
 		2A61D06F2BECBAC000802C95 /* UtilityPrepaymentReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentReducer.swift; sourceTree = "<group>"; };
 		2A61D0712BECBAD100802C95 /* UtilityPrepaymentEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentEffectHandler.swift; sourceTree = "<group>"; };
-		2A61D0732BECBAEB00802C95 /* UtilityPrepaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentView.swift; sourceTree = "<group>"; };
+		2A61D0732BECBAEB00802C95 /* ComposedUtilityPrepaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedUtilityPrepaymentView.swift; sourceTree = "<group>"; };
 		2A61D0752BECBB3000802C95 /* UtilityPrepaymentViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentViewConfig.swift; sourceTree = "<group>"; };
 		2A61D0782BECBCCA00802C95 /* UtilityPrepaymentFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowEvent.swift; sourceTree = "<group>"; };
 		2A61D07A2BECCCFC00802C95 /* PaymentsTransfersFlowManager+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersFlowManager+preview.swift"; sourceTree = "<group>"; };
@@ -7923,7 +7923,7 @@
 				2A61D06C2BECBA7600802C95 /* UtilityPrepaymentEffect.swift */,
 				2A61D06F2BECBAC000802C95 /* UtilityPrepaymentReducer.swift */,
 				2A61D0712BECBAD100802C95 /* UtilityPrepaymentEffectHandler.swift */,
-				2A61D0732BECBAEB00802C95 /* UtilityPrepaymentView.swift */,
+				2A61D0732BECBAEB00802C95 /* ComposedUtilityPrepaymentView.swift */,
 				2A61D0752BECBB3000802C95 /* UtilityPrepaymentViewConfig.swift */,
 				2A61D0662BECB65A00802C95 /* UtilityPrepaymentViewModel.swift */,
 			);
@@ -8684,6 +8684,8 @@
 		2A9BD5142B85F04100B88395 /* UtilityPayments */ = {
 			isa = PBXGroup;
 			children = (
+				2A5B23192BEE106B00270D50 /* Configs */,
+				2AE2B9AA2B8DBF6900B86D56 /* Utilities */,
 				2AC067DF2BECEBF1004CBC0B /* PaymentsTransfersFlowComposer.swift */,
 				2AC067E32BED0910004CBC0B /* PaymentsTransfersFlowReducerFactoryComposer.swift */,
 				2AC067E12BECF152004CBC0B /* UtilityPaymentsFlowComposer.swift */,
@@ -9412,7 +9414,6 @@
 				2A8CC2442B29D44D00191B8E /* ImageCache.swift */,
 				2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */,
 				2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */,
-				2AE2B9AA2B8DBF6900B86D56 /* Utilities */,
 				2A2E3FCA2BB2D1D100730D37 /* AnywayPayment */,
 				2AFD59EA2B6F98FE00C86FBF /* Infra */,
 				2AC2ADC82B22FDE30049EE9B /* FeatureFlags */,
@@ -9448,7 +9449,6 @@
 			isa = PBXGroup;
 			children = (
 				2A8CC2422B29B4C100191B8E /* RootViewFactory+ext.swift */,
-				2A5B23192BEE106B00270D50 /* Configs */,
 				2AF50A152B315CC9009CB9E5 /* Model+imageCache.swift */,
 				2A5B23102BEE03CE00270D50 /* View+ext.swift */,
 			);
@@ -17478,7 +17478,7 @@
 				7772979F27C8EADF0099EF91 /* CatalogProductData.swift in Sources */,
 				2ABD78332AF91781001B5860 /* FormSessionKeyService+Fetcher.swift in Sources */,
 				0C27658E290683770007D31D /* OnboardingPlayerView.swift in Sources */,
-				2A61D0742BECBAEC00802C95 /* UtilityPrepaymentView.swift in Sources */,
+				2A61D0742BECBAEC00802C95 /* ComposedUtilityPrepaymentView.swift in Sources */,
 				0B7A18C326852D6B0007CC75 /* CreatTransferDecodableModel.swift in Sources */,
 				77A76A7327FAF4E800A271B3 /* ServerCommands+Atm.swift in Sources */,
 				2AECBC502BEBADD9000B0C0E /* PaymentFlowModalView.swift in Sources */,
