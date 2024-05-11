@@ -8,11 +8,13 @@
 extension OperatorViewConfig {
     
     static let preview: Self = .init(
-        titleFont: .title3,
-        titleColor: .black,
-        descriptionFont: .body,
-        descriptionColor: .gray,
-        defaultIconBackgroundColor: .black,
-        defaultIcon: .init(systemName: "photo.artframe")
+        title: .init(
+            textFont: .title3,
+            textColor: .black
+        ),
+        subtitle: .init(
+            textFont: .body,
+            textColor: .gray
+        )
     )
 }

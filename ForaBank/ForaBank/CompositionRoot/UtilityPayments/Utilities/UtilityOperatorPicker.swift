@@ -53,16 +53,22 @@ struct UtilityOperatorPicker: View {
     
     typealias Operator = OperatorsListComponents.Operator<String>
     
+#warning("fix `makeIconView`")
     private func operatorView(
         `operator`: Operator
     ) -> some View {
         
-        OperatorView(
-            state: `operator`,
-            event: { event(.composed(.selectOperator($0))) },
-            config: .iFora,
-            makeIconView: { Text("TBD Icon View \($0)") }
-        )
+        Button {
+            event(.composed(.selectOperator(`operator`)))
+        } label: {
+            OperatorLabel(
+                title: `operator`.title,
+                subtitle: `operator`.subtitle,
+                config: .iFora,
+                iconView: Text("TBD Icon View \(`operator`)")
+            )
+            .contentShape(Rectangle())
+        }
     }
     
     private func failureView() -> some View {
@@ -109,7 +115,7 @@ private extension PrePaymentOptionsState {
     
     var uiState: UIState {
         
-        guard operators != nil else { return .failure }
+        guard !operators.isEmpty else { return .failure }
         
         return .options(self)
     }
@@ -135,12 +141,14 @@ struct UtilityOperatorPicker_Previews: PreviewProvider {
 private extension OperatorViewConfig {
     
     static let iFora: Self = .init(
-        titleFont: .title3,
-        titleColor: .black,
-        descriptionFont: .footnote,
-        descriptionColor: .gray,
-        defaultIconBackgroundColor: .clear,
-        defaultIcon: .init(systemName: "photo.artframe")
+        title: .init(
+            textFont: .title3,
+            textColor: .black
+        ),
+        subtitle: .init(
+            textFont: .footnote,
+            textColor: .gray
+        )
     )
 }
 

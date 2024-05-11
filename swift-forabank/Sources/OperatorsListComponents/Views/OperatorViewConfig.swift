@@ -1,36 +1,23 @@
 //
 //  OperatorViewConfig.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 11.05.2024.
 //
 
 import SwiftUI
+import SharedConfigs
 
 public struct OperatorViewConfig {
-    #warning("remove unused fields")
-    let titleFont: Font
-    let titleColor: Color
     
-    let descriptionFont: Font
-    let descriptionColor: Color
-    
-    let defaultIconBackgroundColor: Color
-    let defaultIcon: Image
+    let title: TextConfig
+    let subtitle: TextConfig
     
     public init(
-        titleFont: Font,
-        titleColor: Color,
-        descriptionFont: Font,
-        descriptionColor: Color,
-        defaultIconBackgroundColor: Color,
-        defaultIcon: Image
+        title: TextConfig,
+        subtitle: TextConfig
     ) {
-        self.titleFont = titleFont
-        self.titleColor = titleColor
-        self.descriptionFont = descriptionFont
-        self.descriptionColor = descriptionColor
-        self.defaultIconBackgroundColor = defaultIconBackgroundColor
-        self.defaultIcon = defaultIcon
+        self.title = title
+        self.subtitle = subtitle
     }
 }
