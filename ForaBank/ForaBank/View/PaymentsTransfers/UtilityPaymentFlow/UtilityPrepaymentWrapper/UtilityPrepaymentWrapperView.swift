@@ -52,11 +52,11 @@ extension UtilityPrepaymentWrapperView {
 private extension UtilityPrepaymentWrapperView {
     
     func makeFooterView(
-        isExpanded: Bool
+        isFailure: Bool
     ) -> some View {
         
         FooterView(
-            state: !isExpanded ? .footer(.iFora) : .failure(.iFora),
+            state: isFailure ? .failure(.iFora) : .footer(.iFora),
             event: { flowEvent($0.event) },
             config: .iFora
         )

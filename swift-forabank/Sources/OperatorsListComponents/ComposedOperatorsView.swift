@@ -62,7 +62,6 @@ private extension ComposedOperatorsView {
                     
                     _lastPaymentsView(state.lastPayments)
                     _operatorsView(state.operators)
-                    
                     factory.makeFooterView(state.operators.isEmpty)
                 }
             }

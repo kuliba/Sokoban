@@ -183,21 +183,30 @@ struct UtilityOperatorPicker_Previews: PreviewProvider {
 /*private*/ extension FooterComponent.FooterView.Config {
     
     static let iFora: Self = .init(
-        titleConfig: .init(textFont: .title3, textColor: .black),
-        descriptionConfig: .init(textFont: .body, textColor: .gray.opacity(0.3)),
-        subtitleConfig: .init(textFont: .body, textColor: .gray.opacity(0.3)),
-        backgroundIcon: .gray,
+        title: .init(
+            textFont: .body,
+            textColor: .black
+        ),
+        description: .init(
+            textFont: .footnote,
+            textColor: .gray.opacity(0.3)
+        ),
+        subtitle: .init(
+            textFont: .footnote,
+            textColor: .gray.opacity(0.3)
+        ),
+        background: .gray,
         requisitesButtonTitle: "Оплатить по реквизитам",
         requisitesButtonConfig: .init(
             titleFont: .body,
-            titleForeground: .red,
-            backgroundColor: .gray
+            titleForeground: .white,
+            backgroundColor: .blue
         ),
         addCompanyButtonTitle: "Добавить организацию",
         addCompanyButtonConfiguration: .init(
             titleFont: .body,
-            titleForeground: .blue,
-            backgroundColor: .gray
+            titleForeground: .white,
+            backgroundColor: .green
         )
     )
 }

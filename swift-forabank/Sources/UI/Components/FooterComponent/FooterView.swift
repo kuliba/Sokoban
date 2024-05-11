@@ -34,8 +34,11 @@ public struct FooterView: View {
             failureView(failure)
         }
     }
+}
+
+private extension FooterView {
     
-    private func footerView(
+    func footerView(
         _ footer: FooterState.Footer
     ) -> some View {
         
@@ -43,8 +46,7 @@ public struct FooterView: View {
             
             VStack(spacing: 16) {
                 
-                footer.title.text(withConfig: config.titleConfig)
-                
+                footer.title.text(withConfig: config.title)
                 descriptionView(footer.description)
             }
             .padding(.horizontal, 16)
@@ -56,28 +58,27 @@ public struct FooterView: View {
                     Group {
                         
                         addCompanyButton()
-                        
                         payByInstructionButton()
                     }
                     .frame(height: 56)
                     .padding(.horizontal, 16)
                 }
                 
-                footer.subtitle.text(withConfig: config.subtitleConfig)
+                footer.subtitle.text(withConfig: config.subtitle)
                     .padding(.horizontal, 16)
                     .multilineTextAlignment(.center)
             }
         }
     }
     
-    private func failureView(
+    func failureView(
         _ failure: FooterState.Failure
     ) -> some View {
         
         VStack(spacing: 24) {
             
             Image.defaultIcon(
-                backgroundColor: config.backgroundIcon,
+                backgroundColor: config.background,
                 icon: failure.image
             )
             
@@ -90,44 +91,95 @@ public struct FooterView: View {
         }
     }
     
-    private func descriptionView(
+    func descriptionView(
         _ description: String
     ) -> some View {
         
-        description.text(withConfig: config.descriptionConfig)
+        description.text(withConfig: config.description)
             .multilineTextAlignment(.center)
     }
     
-    private func addCompanyButton() -> some View {
+    func addCompanyButton() -> some View {
         
         ButtonSimpleView(
             viewModel: .init(
-                title: config.requisitesButtonTitle,
-                buttonConfiguration: config.requisitesButtonConfig,
+                title: config.addCompanyButtonTitle,
+                buttonConfiguration: config.addCompanyButtonConfiguration,
                 action: { event(.addCompany) }
-            ))
+            )
+        )
     }
     
-    private func payByInstructionButton() -> some View {
+    func payByInstructionButton() -> some View {
         
         ButtonSimpleView(
             viewModel: .init(
                 title: config.requisitesButtonTitle,
                 buttonConfiguration: config.requisitesButtonConfig,
                 action: { event(.payByInstruction) }
-            ))
+            )
+        )
     }
+}
+
+// MARK: - Previews
+
+struct FooterView_Previews: PreviewProvider {
+    static var previews: some View {
+        
+        FooterView(
+            state: .failure(.preview),
+            event: { print($0) },
+            config: .preview
+        )
+        
+        FooterView(
+            state: .footer(.preview),
+            event: { print($0) },
+            config: .preview
+        )
+    }
+}
+
+private extension FooterState.Failure {
+    
+    static let preview: Self = .init(
+        image: .init(systemName: "magnifyingglass"),
+        description: "Что-то пошло не так.\n Попробуйте позже или воспользуйтесь\n другим способом оплаты."
+    )
+}
+
+private extension FooterState.Footer {
+    
+    static let preview: Self = .init(
+        title: "Нет компании в списке?",
+        description: "Воспользуйтесь другими способами оплаты",
+        subtitle: "Сообщите нам, и мы подключим новую организацию"
+    )
 }
 
 private extension FooterView.Config {
     
-    static let previewConfig: Self = .init(
-        titleConfig: .init(textFont: .title3, textColor: .black),
-        descriptionConfig: .init(textFont: .body, textColor: .gray),
-        subtitleConfig: .init(textFont: .body, textColor: .black),
-        backgroundIcon: .gray,
+    static let preview: Self = .init(
+        title: .init(
+            textFont: .title3,
+            textColor: .black
+        ),
+        description: .init(
+            textFont: .body,
+            textColor: .gray
+        ),
+        subtitle: .init(
+            textFont: .body,
+            textColor: .black
+        ),
+        background: .gray,
         requisitesButtonTitle: "Оплатить по реквизитам",
-        requisitesButtonConfig: .init(titleFont: .body, titleForeground: .black, backgroundColor: .gray),
+        requisitesButtonConfig: .init(
+            titleFont: .body,
+            titleForeground: .black,
+            backgroundColor: .gray
+        ),
         addCompanyButtonTitle: "Добавить организацию",
         addCompanyButtonConfiguration: .init(
             titleFont: .body,
@@ -135,28 +187,4 @@ private extension FooterView.Config {
             backgroundColor: .gray
         )
     )
-}
-
-struct FooterView_Previews: PreviewProvider {
-    static var previews: some View {
-        
-        FooterView(
-            state: .failure(.init(
-                image: .init(systemName: "magnifyingglass"),
-                description: "Что-то пошло не так.\n Попробуйте позже или воспользуйтесь\n другим способом оплаты."
-            )),
-            event: { _ in },
-            config: .previewConfig
-        )
-        
-        FooterView(
-            state: .footer(.init(
-                title: "Нет компании в списке?",
-                description: "Воспользуйтесь другими способами оплаты",
-                subtitle: "Сообщите нам, и мы подключим новую организацию"
-            )),
-            event: { _ in },
-            config: .previewConfig
-        )
-    }
 }
