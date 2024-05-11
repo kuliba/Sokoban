@@ -40,15 +40,22 @@ struct UtilityOperatorPicker: View {
         }
     }
     
+#warning("fix `makeIconView`")
     private func lastPaymentView(
         latestPayment: OperatorsListComponents.LastPayment
     ) -> some View {
         
-        LastPaymentView(
-            lastPayment: latestPayment,
-            event: { event(.composed(.selectLastOperation($0))) },
-            config: .iFora
-        )
+        Button {
+            event(.composed(.selectLastOperation(latestPayment)))
+        } label: {
+            LastPaymentLabel(
+                amount: latestPayment.amount,
+                title: latestPayment.title,
+                config: .iFora,
+                iconView: Text("TBD Icon View \(latestPayment)")
+            )
+            .contentShape(Rectangle())
+        }
     }
     
     typealias Operator = OperatorsListComponents.Operator<String>
@@ -138,20 +145,6 @@ struct UtilityOperatorPicker_Previews: PreviewProvider {
     }
 }
 
-private extension OperatorViewConfig {
-    
-    static let iFora: Self = .init(
-        title: .init(
-            textFont: .title3,
-            textColor: .black
-        ),
-        subtitle: .init(
-            textFont: .footnote,
-            textColor: .gray
-        )
-    )
-}
-
 private extension FooterComponent.FooterState.Footer {
         
     static let preview: Self = .init(
@@ -191,10 +184,30 @@ private extension FooterComponent.FooterView.Config {
     )
 }
 
-private extension LastPaymentConfig {
+private extension LastPaymentLabelConfig {
     
     static let iFora: Self = .init(
-        defaultImage: .init(systemName: "photo.artframe"),
-        backgroundColor: .clear
+        amount: .init(
+            textFont: .title3,
+            textColor: .black
+        ),
+        title: .init(
+            textFont: .footnote,
+            textColor: .gray
+        )
+    )
+}
+
+private extension OperatorLabelConfig {
+    
+    static let iFora: Self = .init(
+        title: .init(
+            textFont: .title3,
+            textColor: .black
+        ),
+        subtitle: .init(
+            textFont: .footnote,
+            textColor: .gray
+        )
     )
 }

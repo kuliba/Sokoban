@@ -45,7 +45,7 @@ where IconView: View {
 public extension OperatorLabel {
     
     typealias Event = State
-    typealias Config = OperatorViewConfig
+    typealias Config = OperatorLabelConfig
 }
 
 private extension OperatorLabel {

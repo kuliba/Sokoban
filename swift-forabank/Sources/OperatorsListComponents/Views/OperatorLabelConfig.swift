@@ -1,14 +1,13 @@
 //
-//  OperatorViewConfig.swift
+//  OperatorLabelConfig.swift
 //
 //
 //  Created by Igor Malyarov on 11.05.2024.
 //
 
-import SwiftUI
 import SharedConfigs
 
-public struct OperatorViewConfig {
+public struct OperatorLabelConfig {
     
     let title: TextConfig
     let subtitle: TextConfig

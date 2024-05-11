@@ -1,18 +1,18 @@
 //
-//  OperatorLabelConfig+preview.swift
+//  LastPaymentLabelConfig+preview.swift
 //
 //
 //  Created by Igor Malyarov on 11.05.2024.
 //
 
-extension OperatorLabelConfig {
+extension LastPaymentLabelConfig {
     
     static let preview: Self = .init(
-        title: .init(
+        amount: .init(
             textFont: .title3,
             textColor: .black
         ),
-        subtitle: .init(
+        title: .init(
             textFont: .body,
             textColor: .gray
         )
