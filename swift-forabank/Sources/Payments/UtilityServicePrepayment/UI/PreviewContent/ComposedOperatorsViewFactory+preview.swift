@@ -1,5 +1,5 @@
 //
-//  ComposedOperatorsViewFactory+preview.swift
+//  PrepaymentPickerFactory+preview.swift
 //
 //
 //  Created by Igor Malyarov on 11.05.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension ComposedOperatorsViewFactory
+extension PrepaymentPickerFactory
 where FooterView == Text,
       LastPaymentView == Text,
       OperatorView == Text,

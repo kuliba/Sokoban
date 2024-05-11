@@ -20,7 +20,7 @@ struct UtilityPrepaymentWrapperView: View {
     
     var body: some View {
         
-        ComposedOperatorsView(
+        PrepaymentPicker(
             state: viewModel.state,
             event: { viewModel.event($0.event) },
             factory: .init(
@@ -118,7 +118,7 @@ private extension UtilityPrepaymentWrapperView {
 
 // MARK: - Adapters
 
-private extension ComposedOperatorsEvent where OperatorID == String {
+private extension PrepaymentPickerEvent where OperatorID == String {
     
     var event: UtilityPrepaymentEvent {
         

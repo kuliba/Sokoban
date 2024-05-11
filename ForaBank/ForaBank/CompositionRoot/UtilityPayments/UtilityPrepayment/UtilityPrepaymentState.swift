@@ -7,4 +7,4 @@
 
 import UtilityServicePrepaymentDomain
 
-typealias UtilityPrepaymentState = ComposedOperatorsState<UtilityPaymentLastPayment, UtilityPaymentOperator<String>>
+typealias UtilityPrepaymentState = PrepaymentPickerState<UtilityPaymentLastPayment, UtilityPaymentOperator<String>>

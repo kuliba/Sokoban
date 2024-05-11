@@ -24,7 +24,7 @@ struct UtilityOperatorPicker: View {
             failureView()
             
         case let .options(state):
-            ComposedOperatorsView(
+            PrepaymentPicker(
                 state: .init(
                     lastPayments: state.lastPayments,
                     operators: state.operators,

@@ -1,11 +1,11 @@
 //
-//  ComposedOperatorsState.swift
+//  PrepaymentPickerState.swift
 //
 //
 //  Created by Дмитрий Савушкин on 19.02.2024.
 //
 
-public struct ComposedOperatorsState<LastPayment, Operator> {
+public struct PrepaymentPickerState<LastPayment, Operator> {
     
     public let lastPayments: [LastPayment]
     public let operators: [Operator]
@@ -22,4 +22,4 @@ public struct ComposedOperatorsState<LastPayment, Operator> {
     }
 }
 
-extension ComposedOperatorsState: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension PrepaymentPickerState: Equatable where LastPayment: Equatable, Operator: Equatable {}

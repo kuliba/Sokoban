@@ -1,5 +1,5 @@
 //
-//  ComposedOperatorsState+preview.swift
+//  PrepaymentPickerState+preview.swift
 //
 //
 //  Created by Igor Malyarov on 11.05.2024.
@@ -7,7 +7,7 @@
 
 import UtilityServicePrepaymentDomain
 
-extension ComposedOperatorsState
+extension PrepaymentPickerState
 where LastPayment == PreviewLastPayment,
       Operator == PreviewOperator {
     

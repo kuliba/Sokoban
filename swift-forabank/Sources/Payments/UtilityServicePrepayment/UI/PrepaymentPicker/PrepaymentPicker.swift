@@ -1,5 +1,5 @@
 //
-//  ComposedOperatorsView.swift
+//  PrepaymentPicker.swift
 //
 //
 //  Created by Дмитрий Савушкин on 08.02.2024.
@@ -8,8 +8,7 @@
 import SwiftUI
 import UtilityServicePrepaymentDomain
 
-#warning("`Composed` does not fit well here")
-public struct ComposedOperatorsView<LastPayment, Operator, FooterView, LastPaymentView, OperatorView, SearchView>: View
+public struct PrepaymentPicker<LastPayment, Operator, FooterView, LastPaymentView, OperatorView, SearchView>: View
 where LastPayment: Identifiable,
       Operator: Identifiable,
       FooterView: View,
@@ -41,15 +40,15 @@ where LastPayment: Identifiable,
     }
 }
 
-public extension ComposedOperatorsView {
+public extension PrepaymentPicker {
     
-    typealias State = ComposedOperatorsState<LastPayment, Operator>
-    typealias Event = ComposedOperatorsEvent<Operator.ID>
+    typealias State = PrepaymentPickerState<LastPayment, Operator>
+    typealias Event = PrepaymentPickerEvent<Operator.ID>
     
-    typealias Factory = ComposedOperatorsViewFactory<LastPayment, Operator, SearchView, LastPaymentView, OperatorView, FooterView>
+    typealias Factory = PrepaymentPickerFactory<LastPayment, Operator, SearchView, LastPaymentView, OperatorView, FooterView>
 }
 
-private extension ComposedOperatorsView {
+private extension PrepaymentPicker {
     
     func list() -> some View {
         
@@ -116,7 +115,7 @@ struct ComposedOperatorsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ComposedOperatorsView(
+        PrepaymentPicker(
             state: .preview,
             event: { print($0) },
             factory: .preview
