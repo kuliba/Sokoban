@@ -89,7 +89,7 @@ extension UtilityPaymentsFlowComposer {
     
     typealias Flag = StubbedFeatureFlag.Option
     
-    typealias LastPayment = OperatorsListComponents.LatestPayment
+    typealias LastPayment = OperatorsListComponents.LastPayment
     typealias Operator = OperatorsListComponents.Operator
     
     typealias UtilityFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
@@ -216,7 +216,7 @@ private extension UtilityPaymentsFlowComposer {
     }
 }
 
-private extension Array where Element == OperatorsListComponents.LatestPayment {
+private extension Array where Element == OperatorsListComponents.LastPayment {
     
     static let stub: Self = [
         .init(image: nil, title: UUID().uuidString, amount: "123.45"),

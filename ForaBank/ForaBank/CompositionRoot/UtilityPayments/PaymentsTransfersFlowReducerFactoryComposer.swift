@@ -38,7 +38,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
 
 extension PaymentsTransfersFlowReducerFactoryComposer {
     
-    typealias LastPayment = OperatorsListComponents.LatestPayment
+    typealias LastPayment = OperatorsListComponents.LastPayment
     typealias Operator = OperatorsListComponents.Operator
     
     typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>

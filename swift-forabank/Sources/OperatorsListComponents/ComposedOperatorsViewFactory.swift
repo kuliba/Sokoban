@@ -13,20 +13,28 @@ where SearchView: View,
       OperatorView: View,
       FooterView: View {
     
-    let lastPaymentView: (LatestPayment) -> LastPaymentView
-    let operatorView: (Operator) -> OperatorView
-    let footerView: () -> FooterView
-    let searchView: () -> SearchView
+    let makeLastPaymentView: MakeLastPaymentView
+    let makeOperatorView: MakeOperatorView
+    let makeFooterView: MakeFooterView
+    let makeSearchView: MakeSearchView
     
     public init(
-        lastPaymentView: @escaping (LatestPayment) -> LastPaymentView,
-        operatorView: @escaping (Operator) -> OperatorView,
-        footerView: @escaping () -> FooterView,
-        searchView: @escaping () -> SearchView
+        makeLastPaymentView: @escaping MakeLastPaymentView,
+        makeOperatorView: @escaping MakeOperatorView,
+        makeFooterView: @escaping MakeFooterView,
+        makeSearchView: @escaping MakeSearchView
     ) {
-        self.lastPaymentView = lastPaymentView
-        self.operatorView = operatorView
-        self.footerView = footerView
-        self.searchView = searchView
+        self.makeLastPaymentView = makeLastPaymentView
+        self.makeOperatorView = makeOperatorView
+        self.makeFooterView = makeFooterView
+        self.makeSearchView = makeSearchView
     }
+}
+
+public extension ComposedOperatorsViewFactory {
+    
+    typealias MakeLastPaymentView = (LastPayment) -> LastPaymentView
+    typealias MakeOperatorView = (Operator) -> OperatorView
+    typealias MakeFooterView = (Bool) -> FooterView
+    typealias MakeSearchView = (String) -> SearchView
 }

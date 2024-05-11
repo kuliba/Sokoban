@@ -25,22 +25,23 @@ struct UtilityOperatorPicker: View {
         case let .options(state):
             ComposedOperatorsView(
                 state: .init(
+                    lastPayments: state.lastPayments,
                     operators: state.operators,
-                    latestPayments: state.lastPayments
+                    searchText: state.searchText
                 ),
                 event: { event(.composed($0)) },
                 factory: .init(
-                    lastPaymentView: lastPaymentView,
-                    operatorView: operatorView,
-                    footerView: footerView,
-                    searchView: searchView
+                    makeLastPaymentView: lastPaymentView,
+                    makeOperatorView: operatorView,
+                    makeFooterView: footerView,
+                    makeSearchView: searchView
                 )
             )
         }
     }
     
     private func lastPaymentView(
-        latestPayment: OperatorsListComponents.LatestPayment
+        latestPayment: OperatorsListComponents.LastPayment
     ) -> some View {
         
         LatestPaymentView(
@@ -69,7 +70,9 @@ struct UtilityOperatorPicker: View {
         )
     }
     
-    private func footerView() -> some View {
+    private func footerView(
+        isExpanded: Bool
+    ) -> some View {
         
         FooterComponent.FooterView(
             state: .footer(.preview),
@@ -85,12 +88,14 @@ struct UtilityOperatorPicker: View {
         )
     }
     
-    private func searchView() -> some View {
+    private func searchView(
+        _ searchText: String
+    ) -> some View {
         
         TextField(
             "Search",
             text: .init(
-                get: { state.searchText },
+                get: { searchText },
                 set: { event(.composed(.utility(.search(.entered($0))))) }
             )
         )
@@ -175,7 +180,7 @@ private extension FooterComponent.FooterView.Config {
     )
 }
 
-private extension LatestPayment.LatestPaymentConfig {
+private extension LastPayment.LatestPaymentConfig {
     
     static let iFora: Self = .init(
         defaultImage: .init(systemName: "photo.artframe"),

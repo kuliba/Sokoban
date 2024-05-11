@@ -9,14 +9,14 @@ import SwiftUI
 
 public struct LatestPaymentView: View {
     
-    let latestPayment: LatestPayment
-    let event: (LatestPayment) -> Void
-    let config: LatestPayment.LatestPaymentConfig
+    let latestPayment: LastPayment
+    let event: (LastPayment) -> Void
+    let config: LastPayment.LatestPaymentConfig
     
     public init(
-        latestPayment: LatestPayment,
-        event: @escaping (LatestPayment) -> Void,
-        config: LatestPayment.LatestPaymentConfig
+        latestPayment: LastPayment,
+        event: @escaping (LastPayment) -> Void,
+        config: LastPayment.LatestPaymentConfig
     ) {
         self.latestPayment = latestPayment
         self.config = config

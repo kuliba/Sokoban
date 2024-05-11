@@ -10,8 +10,8 @@ import PrePaymentPicker
 
 public enum ComposedOperatorsEvent: Equatable {
 
-    case selectLastOperation(LatestPayment)
+    case selectLastOperation(LastPayment)
     case selectOperator(Operator)
     
-    case utility(PrePaymentOptionsEvent<LatestPayment, Operator>)
+    case utility(PrePaymentOptionsEvent<LastPayment, Operator>)
 }

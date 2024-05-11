@@ -26,7 +26,7 @@ final class UtilitiesViewModel: ObservableObject {
     
     // MARK: - types
     
-    typealias State = PrePaymentOptionsState<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator>
+    typealias State = PrePaymentOptionsState<OperatorsListComponents.LastPayment, OperatorsListComponents.Operator>
     
     struct Payload {}
     

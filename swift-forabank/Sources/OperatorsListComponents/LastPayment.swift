@@ -1,5 +1,5 @@
 //
-//  LatestPayment.swift
+//  LastPayment.swift
 //
 //
 //  Created by Igor Malyarov on 11.05.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct LatestPayment: Equatable, Identifiable {
+public struct LastPayment: Equatable, Identifiable {
     
     public var id: String { title }
     let image: Image?

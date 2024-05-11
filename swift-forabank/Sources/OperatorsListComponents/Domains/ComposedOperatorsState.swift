@@ -9,14 +9,17 @@ import Foundation
 
 public struct ComposedOperatorsState {
     
-    let operators: [Operator]?
-    let latestPayments: [LatestPayment]?
+    let lastPayments: [LastPayment]
+    let operators: [Operator]
+    let searchText: String
     
     public init(
-        operators: [Operator]?,
-        latestPayments: [LatestPayment]?
+        lastPayments: [LastPayment],
+        operators: [Operator],
+        searchText: String
     ) {
+        self.lastPayments = lastPayments
         self.operators = operators
-        self.latestPayments = latestPayments
+        self.searchText = searchText
     }
 }

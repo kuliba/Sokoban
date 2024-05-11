@@ -123,7 +123,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 
 extension PaymentsTransfersViewModel {
     
-    typealias LastPayment = OperatorsListComponents.LatestPayment
+    typealias LastPayment = OperatorsListComponents.LastPayment
     typealias Operator = OperatorsListComponents.Operator
     
     typealias FlowManger = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>

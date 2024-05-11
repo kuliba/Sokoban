@@ -10,7 +10,7 @@ import Foundation
 import OperatorsListComponents
 
 extension PaymentsTransfersFlowEffectHandler
-where LastPayment == OperatorsListComponents.LatestPayment,
+where LastPayment == OperatorsListComponents.LastPayment,
       Operator == OperatorsListComponents.Operator,
       UtilityService == ForaBank.UtilityService {
     

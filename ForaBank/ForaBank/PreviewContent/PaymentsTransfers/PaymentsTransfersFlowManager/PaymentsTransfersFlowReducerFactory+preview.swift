@@ -9,7 +9,7 @@ import OperatorsListComponents
 import RxViewModel
 
 extension PaymentsTransfersFlowReducerFactory
-where LastPayment == OperatorsListComponents.LatestPayment,
+where LastPayment == OperatorsListComponents.LastPayment,
       Operator == OperatorsListComponents.Operator,
       UtilityService == ForaBank.UtilityService,
       Content == UtilityPrepaymentViewModel,

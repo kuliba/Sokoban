@@ -38,7 +38,7 @@ struct ComposedUtilityPrepaymentView: View {
 
 extension ComposedUtilityPrepaymentView {
     
-    typealias LastPayment = OperatorsListComponents.LatestPayment
+    typealias LastPayment = OperatorsListComponents.LastPayment
     typealias Operator = OperatorsListComponents.Operator
     
     typealias State = UtilityPrepaymentState

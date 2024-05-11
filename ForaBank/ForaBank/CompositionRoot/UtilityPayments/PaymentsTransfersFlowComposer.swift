@@ -25,7 +25,7 @@ final class PaymentsTransfersFlowComposer {
 
 extension PaymentsTransfersFlowComposer {
     
-    typealias LastPayment = OperatorsListComponents.LatestPayment
+    typealias LastPayment = OperatorsListComponents.LastPayment
     typealias Operator = OperatorsListComponents.Operator
     
 #warning("replace UtilityFlowEffectHandler with closure")
@@ -61,5 +61,5 @@ extension PaymentsTransfersFlowComposer {
     }
     
     typealias UtilityContent = UtilityPrepaymentViewModel
-    typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityContent, ObservingPaymentFlowMockViewModel>
+    typealias PTFlowManger = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, UtilityContent, ObservingPaymentFlowMockViewModel>
 }
