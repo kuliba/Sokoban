@@ -28,5 +28,5 @@ extension UtilityPrepaymentFlowEvent {
 extension UtilityPrepaymentFlowEvent.Select {
     
     typealias LastPayment = OperatorsListComponents.LastPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias Operator = OperatorsListComponents.Operator<String>
 }

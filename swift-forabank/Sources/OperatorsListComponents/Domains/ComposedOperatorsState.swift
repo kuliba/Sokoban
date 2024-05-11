@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ComposedOperatorsState {
+public struct ComposedOperatorsState<LastPayment, Operator> {
     
     let lastPayments: [LastPayment]
     let operators: [Operator]

@@ -8,10 +8,14 @@
 import Foundation
 import PrePaymentPicker
 
-public enum ComposedOperatorsEvent: Equatable {
-
+public enum ComposedOperatorsEvent<LastPayment, Operator>
+where LastPayment: Identifiable,
+      Operator: Identifiable {
+    
     case selectLastOperation(LastPayment)
     case selectOperator(Operator)
     
     case utility(PrePaymentOptionsEvent<LastPayment, Operator>)
 }
+
+extension ComposedOperatorsEvent: Equatable where LastPayment: Equatable, Operator: Equatable {}

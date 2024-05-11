@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct OperatorViewConfig {
-    
+    #warning("remove unused fields")
     let titleFont: Font
     let titleColor: Color
     

@@ -7,30 +7,38 @@
 
 import SwiftUI
 
-public struct OperatorView: View {
+public struct OperatorView<Icon, IconView>: View
+where IconView: View {
     
-    let `operator`: Operator
-    let event: (Operator) -> Void
+    let state: State
+    let event: (Event) -> Void
     let config: Config
+    let makeIconView: MakeIconView
     
     public init(
-        `operator`: Operator,
-        event: @escaping (Operator) -> Void,
-        config: Config
+        state: State,
+        event: @escaping (State) -> Void,
+        config: Config,
+        makeIconView: @escaping MakeIconView
     ) {
-        self.`operator` = `operator`
+        self.state = state
         self.config = config
         self.event = event
+        self.makeIconView = makeIconView
     }
     
     public var body: some View {
         
-        Button(action: { event(`operator`) }, label: label)
+        Button(action: { event(state) }, label: label)
     }
 }
 
 public extension OperatorView {
     
+    typealias MakeIconView = (Icon) -> IconView
+    
+    typealias State = Operator<Icon>
+    typealias Event = State
     typealias Config = OperatorViewConfig
 }
 
@@ -40,7 +48,7 @@ private extension OperatorView {
         
         HStack(spacing: 16) {
             
-            image()
+            makeIconView(state.icon)
                 .frame(width: 40, height: 40)
             
             title()
@@ -52,30 +60,16 @@ private extension OperatorView {
     }
     
     @ViewBuilder
-    func image() -> some View {
-        
-        if let image = `operator`.image {
-            image.resizable()
-        } else {
-            Image.defaultIcon(
-                backgroundColor: config.defaultIconBackgroundColor,
-                foregroundColor: .white,
-                icon: config.defaultIcon
-            )
-        }
-    }
-    
-    @ViewBuilder
     func title() -> some View {
         
         VStack(alignment: .leading, spacing: 4) {
             
-            Text(`operator`.title)
+            Text(state.title)
                 .lineLimit(1)
                 .font(config.titleFont)
                 .foregroundColor(config.titleColor)
             
-            if let description = `operator`.subtitle {
+            if let description = state.subtitle {
                 
                 Text(description)
                     .lineLimit(1)
@@ -93,21 +87,15 @@ struct OperatorView_Previews: PreviewProvider {
     static var previews: some View {
         
         OperatorView(
-            operator: .init(
+            state: .init(
                 id: "id",
                 title: "ЖКУ Москвы (ЕИРЦ)",
                 subtitle: "ИНН 7702070139",
-                image: .init(systemName: "")
+                icon: "abc"
             ),
             event: { _ in },
-            config: .init(
-                titleFont: .title3,
-                titleColor: .black,
-                descriptionFont: .body,
-                descriptionColor: .gray,
-                defaultIconBackgroundColor: .black,
-                defaultIcon: .init(systemName: "photo.artframe")
-            )
+            config: .preview,
+            makeIconView: { Text("Icon View \($0)") }
         )
     }
 }

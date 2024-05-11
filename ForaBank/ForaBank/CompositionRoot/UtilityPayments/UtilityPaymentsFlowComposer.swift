@@ -90,7 +90,7 @@ extension UtilityPaymentsFlowComposer {
     typealias Flag = StubbedFeatureFlag.Option
     
     typealias LastPayment = OperatorsListComponents.LastPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias Operator = OperatorsListComponents.Operator<String>
     
     typealias UtilityFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
 }
@@ -203,7 +203,7 @@ private extension UtilityPaymentsFlowComposer {
 }
 
 // TODO: make private
-/*private*/ extension OperatorsListComponents.Operator {
+/*private*/ extension OperatorsListComponents.Operator<String> {
     
     static let multiple: Self = .init("multiple", "Multiple")
     static let multipleFailure: Self = .init("multipleFailure", "MultipleFailure")
@@ -212,7 +212,7 @@ private extension UtilityPaymentsFlowComposer {
     
     private init(_ id: String, _ title: String) {
         
-        self.init(id: id, title: title, subtitle: nil, image: nil)
+        self.init(id: id, title: title, subtitle: nil, icon: "abc")
     }
 }
 
@@ -224,7 +224,7 @@ private extension Array where Element == OperatorsListComponents.LastPayment {
     ]
 }
 
-private extension Array where Element == OperatorsListComponents.Operator {
+private extension Array where Element == OperatorsListComponents.Operator<String> {
     
     static let stub: Self = [
         .single,

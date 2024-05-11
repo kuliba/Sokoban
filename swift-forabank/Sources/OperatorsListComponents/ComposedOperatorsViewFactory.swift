@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ComposedOperatorsViewFactory<SearchView, LastPaymentView, OperatorView, FooterView>
+public struct ComposedOperatorsViewFactory<Icon, SearchView, LastPaymentView, OperatorView, FooterView>
 where SearchView: View,
       LastPaymentView: View,
       OperatorView: View,
@@ -34,7 +34,7 @@ where SearchView: View,
 public extension ComposedOperatorsViewFactory {
     
     typealias MakeLastPaymentView = (LastPayment) -> LastPaymentView
-    typealias MakeOperatorView = (Operator) -> OperatorView
+    typealias MakeOperatorView = (Operator<Icon>) -> OperatorView
     typealias MakeFooterView = (Bool) -> FooterView
     typealias MakeSearchView = (String) -> SearchView
 }

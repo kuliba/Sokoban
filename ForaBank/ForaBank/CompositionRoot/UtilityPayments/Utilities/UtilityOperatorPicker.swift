@@ -51,14 +51,17 @@ struct UtilityOperatorPicker: View {
         )
     }
     
+    typealias Operator = OperatorsListComponents.Operator<String>
+    
     private func operatorView(
-        `operator`: OperatorsListComponents.Operator
+        `operator`: Operator
     ) -> some View {
         
         OperatorView(
-            operator: `operator`,
+            state: `operator`,
             event: { event(.composed(.selectOperator($0))) },
-            config: .iFora
+            config: .iFora,
+            makeIconView: { Text("TBD Icon View \($0)") }
         )
     }
     

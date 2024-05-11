@@ -26,7 +26,7 @@ final class PaymentsTransfersFlowComposer {
 extension PaymentsTransfersFlowComposer {
     
     typealias LastPayment = OperatorsListComponents.LastPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias Operator = OperatorsListComponents.Operator<String>
     
 #warning("replace UtilityFlowEffectHandler with closure")
     typealias UtilityFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>

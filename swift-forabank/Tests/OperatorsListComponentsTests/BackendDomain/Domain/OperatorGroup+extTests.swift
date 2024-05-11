@@ -173,7 +173,7 @@ final class OperatorGroup_extTests: XCTestCase {
         operatorID: Operator.ID? = nil,
         searchText: String = "",
         pageSize: Int = 10
-    ) -> LoadOperatorsPayload {
+    ) -> LoadOperatorsPayload<String> {
         
         .init(
             afterOperatorID: operatorID,

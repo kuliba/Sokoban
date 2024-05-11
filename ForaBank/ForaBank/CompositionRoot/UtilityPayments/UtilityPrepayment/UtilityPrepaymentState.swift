@@ -16,5 +16,5 @@ struct UtilityPrepaymentState: Equatable {
 extension UtilityPrepaymentState {
     
     typealias LastPayment = OperatorsListComponents.LastPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias Operator = OperatorsListComponents.Operator<String>
 }

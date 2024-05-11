@@ -11,7 +11,7 @@ import OperatorsListComponents
 
 extension PaymentsTransfersFlowEffectHandler
 where LastPayment == OperatorsListComponents.LastPayment,
-      Operator == OperatorsListComponents.Operator,
+      Operator == OperatorsListComponents.Operator<String>,
       UtilityService == ForaBank.UtilityService {
     
     static func preview(

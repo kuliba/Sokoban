@@ -117,7 +117,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     private typealias Event = SUT.Event
     
     private typealias LatestPayment = OperatorsListComponents.LastPayment
-    private typealias Operator = OperatorsListComponents.Operator
+    private typealias Operator = OperatorsListComponents.Operator<String>
 
     private typealias StartPaymentPayload = PaymentsTransfersEffect.UtilityServicePaymentFlowEffect.StartPaymentPayload<LatestPayment, Operator>
     
@@ -175,7 +175,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
         _ id: String = UUID().uuidString
     ) -> Operator {
         
-        .init(id: id, title: id, subtitle: nil, image: nil)
+        .init(id: id, title: id, subtitle: nil, icon: "abc")
     }
     
     private func makeLatestPayment(

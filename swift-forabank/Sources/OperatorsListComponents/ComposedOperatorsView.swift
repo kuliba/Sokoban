@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ComposedOperatorsView<SearchView, LastPaymentView, OperatorView, FooterView>: View
+public struct ComposedOperatorsView<Icon, SearchView, LastPaymentView, OperatorView, FooterView>: View
 where SearchView: View,
       LastPaymentView: View,
       OperatorView: View,
@@ -30,8 +30,8 @@ where SearchView: View,
 
 public extension ComposedOperatorsView {
     
+#warning("this layout is incorrect - check with design - there is no search in case of empty operators, etc")
     var body: some View {
-        
         VStack(spacing: 16) {
             
             factory.makeSearchView(state.searchText)
@@ -57,10 +57,12 @@ public extension ComposedOperatorsView {
 
 public extension ComposedOperatorsView {
     
-    typealias State = ComposedOperatorsState
-    typealias Event = ComposedOperatorsEvent
+    typealias _Operator = Operator<Icon>
     
-    typealias Factory = ComposedOperatorsViewFactory<SearchView, LastPaymentView, OperatorView, FooterView>
+    typealias State = ComposedOperatorsState<LastPayment, _Operator>
+    typealias Event = ComposedOperatorsEvent<LastPayment, _Operator>
+    
+    typealias Factory = ComposedOperatorsViewFactory<Icon, SearchView, LastPaymentView, OperatorView, FooterView>
 }
 
 private extension ComposedOperatorsView {
@@ -84,7 +86,7 @@ private extension ComposedOperatorsView {
     
     @ViewBuilder
     func _operatorsView(
-        _ operators: [Operator]
+        _ operators: [_Operator]
     ) -> some View {
         
         if !operators.isEmpty {
@@ -97,7 +99,7 @@ private extension ComposedOperatorsView {
     }
     
     func _operatorView(
-        operator: Operator
+        operator: _Operator
     ) -> some View {
         
         factory.makeOperatorView(`operator`)

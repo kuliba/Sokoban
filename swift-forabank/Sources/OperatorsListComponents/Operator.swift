@@ -1,38 +1,41 @@
 //
 //  Operator.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 11.05.2024.
 //
 
 import SwiftUI
 
-public struct Operator: Equatable, Identifiable {
+public struct Operator<Icon>: Identifiable {
     
     public var id: String
     public let title: String
-    let subtitle: String?
-    let image: Image?
+    public let subtitle: String?
+    public let icon: Icon
     
     public init(
         id: String,
         title: String,
         subtitle: String?,
-        image: Image?
+        icon: Icon
     ) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
-        self.image = image
+        self.icon = icon
     }
+}
+
+extension Operator: Equatable where Icon: Equatable {}
+
+public extension Operator where Icon == String {
     
-    public init(
-        _operatorGroup: _OperatorGroup
-    ) {
+    init(_ operatorGroup: _OperatorGroup) {
         
-        self.id = _operatorGroup.id
-        self.title = _operatorGroup.title
-        self.subtitle = _operatorGroup.description
-        self.image = nil
+        self.id = operatorGroup.id
+        self.title = operatorGroup.title
+        self.subtitle = operatorGroup.description
+        self.icon = operatorGroup.md5hash
     }
 }
