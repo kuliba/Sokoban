@@ -1116,6 +1116,7 @@ private extension Target {
             .tagged,
             // internal modules
             .rxViewModel,
+            .utilityServicePrepaymentCore,
             .utilityServicePrepaymentDomain,
         ],
         path: "Tests/Payments/UtilityServicePrepayment/CoreTests"
@@ -2265,6 +2266,10 @@ private extension Target.Dependency {
 
     static let utilityPayment = byName(
         name: .utilityPayment
+    )
+
+    static let utilityServicePrepaymentCore = byName(
+        name: .utilityServicePrepaymentCore
     )
 
     static let utilityServicePrepaymentDomain = byName(
