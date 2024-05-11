@@ -44,8 +44,8 @@ struct UtilityOperatorPicker: View {
         latestPayment: OperatorsListComponents.LastPayment
     ) -> some View {
         
-        LatestPaymentView(
-            latestPayment: latestPayment,
+        LastPaymentView(
+            lastPayment: latestPayment,
             event: { event(.composed(.selectLastOperation($0))) },
             config: .iFora
         )
@@ -180,7 +180,7 @@ private extension FooterComponent.FooterView.Config {
     )
 }
 
-private extension LastPayment.LatestPaymentConfig {
+private extension LastPaymentConfig {
     
     static let iFora: Self = .init(
         defaultImage: .init(systemName: "photo.artframe"),

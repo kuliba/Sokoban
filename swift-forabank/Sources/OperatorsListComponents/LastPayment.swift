@@ -23,18 +23,4 @@ public struct LastPayment: Equatable, Identifiable {
         self.title = title
         self.amount = amount
     }
-    
-    public struct LatestPaymentConfig {
-        
-        let defaultImage: Image
-        let backgroundColor: Color
-        
-        public init(
-            defaultImage: Image,
-            backgroundColor: Color
-        ) {
-            self.defaultImage = defaultImage
-            self.backgroundColor = backgroundColor
-        }
-    }
 }
