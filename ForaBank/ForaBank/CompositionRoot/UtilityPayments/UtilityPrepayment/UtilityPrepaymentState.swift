@@ -7,14 +7,4 @@
 
 import OperatorsListComponents
 
-struct UtilityPrepaymentState: Equatable {
-    
-    let lastPayments: [LastPayment]
-    let operators: [Operator]
-}
-
-extension UtilityPrepaymentState {
-    
-    typealias LastPayment = OperatorsListComponents.LastPayment
-    typealias Operator = OperatorsListComponents.Operator<String>
-}
+typealias UtilityPrepaymentState = ComposedOperatorsState<OperatorsListComponents.LastPayment, OperatorsListComponents.Operator<String>>

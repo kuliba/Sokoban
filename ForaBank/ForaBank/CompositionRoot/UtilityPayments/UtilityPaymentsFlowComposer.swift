@@ -107,7 +107,7 @@ private extension UtilityPaymentsFlowComposer {
             fatalError("unimplemented live")
             
         case .stub:
-            return stub(.init(lastPayments: .stub, operators: .stub))
+            return stub(.init(lastPayments: .stub, operators: .stub, searchText: ""))
         }
     }
     

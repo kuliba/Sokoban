@@ -656,6 +656,8 @@ extension UtilityServicePaymentFlowState.Modal: Identifiable {
     }
 }
 
+// MARK: - NavBar
+
 private extension NavigationBarView.ViewModel {
     
     static func with(

@@ -494,6 +494,6 @@ extension UtilityPaymentFlowEvent<OperatorsListComponents.LastPayment, Operators
     
     var state: UtilityPrepaymentState {
     
-        .init(lastPayments: lastPayments, operators: operators)
+        .init(lastPayments: lastPayments, operators: operators, searchText: searchText)
     }
 }

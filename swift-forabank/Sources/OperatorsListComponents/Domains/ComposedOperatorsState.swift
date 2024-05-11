@@ -9,9 +9,9 @@ import Foundation
 
 public struct ComposedOperatorsState<LastPayment, Operator> {
     
-    let lastPayments: [LastPayment]
-    let operators: [Operator]
-    let searchText: String
+    public let lastPayments: [LastPayment]
+    public let operators: [Operator]
+    public let searchText: String
     
     public init(
         lastPayments: [LastPayment],
@@ -23,3 +23,5 @@ public struct ComposedOperatorsState<LastPayment, Operator> {
         self.searchText = searchText
     }
 }
+
+extension ComposedOperatorsState: Equatable where LastPayment: Equatable, Operator: Equatable {}

@@ -53,7 +53,7 @@ where State == UtilityPrepaymentState,
 
 private extension UtilityPrepaymentState {
     
-    static let preview: Self = .init(lastPayments: [], operators: [])
+    static let preview: Self = .init(lastPayments: [], operators: [], searchText: "")
 }
 
 // MARK: - Adapters
@@ -67,7 +67,8 @@ private extension UtilityPrepaymentState {
         
         self.init(
             lastPayments: payload.lastPayments,
-            operators: payload.operators
+            operators: payload.operators,
+            searchText: payload.searchText
         )
     }
 }
