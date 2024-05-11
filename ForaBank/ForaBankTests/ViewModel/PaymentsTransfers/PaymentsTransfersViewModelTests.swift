@@ -773,10 +773,11 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     }
     
     private func makeLatestPayment(
-        _ title: String = UUID().uuidString
+        _ title: String = UUID().uuidString,
+        _ amount: String = UUID().uuidString
     ) -> OperatorsListComponents.LastPayment {
         
-        .init(image: nil, title: title, amount: "")
+        .init(id: title, title: title, subtitle: amount, icon: "")
     }
     
     private func makeService(

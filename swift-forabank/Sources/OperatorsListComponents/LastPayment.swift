@@ -5,36 +5,5 @@
 //  Created by Igor Malyarov on 11.05.2024.
 //
 
-import SwiftUI
-
-public struct LastPayment: Equatable, Identifiable {
-    
-    public var id: String { title }
-    public let image: Image?
-    public let title: String
-    public let amount: String
-    
-    public init(
-        image: Image?,
-        title: String,
-        amount: String
-    ) {
-        self.image = image
-        self.title = title
-        self.amount = amount
-    }
-    
-    public struct LatestPaymentConfig {
-        
-        let defaultImage: Image
-        let backgroundColor: Color
-        
-        public init(
-            defaultImage: Image,
-            backgroundColor: Color
-        ) {
-            self.defaultImage = defaultImage
-            self.backgroundColor = backgroundColor
-        }
-    }
-}
+public typealias LastPayment = Item<_LastPayment, String, String>
+public enum _LastPayment: Equatable {}

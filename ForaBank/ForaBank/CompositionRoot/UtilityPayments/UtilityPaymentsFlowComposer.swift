@@ -202,6 +202,20 @@ private extension UtilityPaymentsFlowComposer {
     }
 }
 
+private extension Array where Element == OperatorsListComponents.LastPayment {
+    
+    static let stub: Self = [
+        .failure,
+        .preview,
+    ]
+}
+
+private extension OperatorsListComponents.LastPayment {
+    
+    static let failure: Self = .init(id: "failure", title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
+    static let preview: Self = .init(id: UUID().uuidString, title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
+}
+
 // TODO: make private
 /*private*/ extension OperatorsListComponents.Operator<String> {
     
@@ -214,14 +228,6 @@ private extension UtilityPaymentsFlowComposer {
         
         self.init(id: id, title: title, subtitle: nil, icon: "abc")
     }
-}
-
-private extension Array where Element == OperatorsListComponents.LastPayment {
-    
-    static let stub: Self = [
-        .init(image: nil, title: UUID().uuidString, amount: "123.45"),
-        .init(image: nil, title: "failure", amount: "-"),
-    ]
 }
 
 private extension Array where Element == OperatorsListComponents.Operator<String> {

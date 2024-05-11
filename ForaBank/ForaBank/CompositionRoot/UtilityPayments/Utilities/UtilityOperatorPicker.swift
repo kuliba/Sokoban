@@ -118,6 +118,11 @@ struct UtilityOperatorPicker: View {
     }
 }
 
+private extension OperatorsListComponents.LastPayment {
+    
+    var amount: String { subtitle }
+}
+
 private extension PrePaymentOptionsState {
     
     var uiState: UIState {
