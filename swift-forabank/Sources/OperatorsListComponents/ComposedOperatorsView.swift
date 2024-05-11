@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-public struct ComposedOperatorsView<LastPayment, Operator, SearchView, LastPaymentView, OperatorView, FooterView>: View
+public struct ComposedOperatorsView<LastPayment, Operator, FooterView, LastPaymentView, OperatorView, SearchView>: View
 where LastPayment: Identifiable,
       Operator: Identifiable,
-      SearchView: View,
+      FooterView: View,
       LastPaymentView: View,
       OperatorView: View,
-      FooterView: View {
+      SearchView: View {
     
     let state: State
     let event: (Event) -> Void
@@ -28,14 +28,32 @@ where LastPayment: Identifiable,
         self.event = event
         self.factory = factory
     }
+
+    public var body: some View {
+        
+        if state.operators.isEmpty {
+            factory.makeFooterView(false)
+        } else {
+            list()
+        }
+    }
 }
 
 public extension ComposedOperatorsView {
     
-#warning("this layout is incorrect - check with design - there is no search in case of empty operators, etc")
-    var body: some View {
+    typealias State = ComposedOperatorsState<LastPayment, Operator>
+    typealias Event = ComposedOperatorsEvent<Operator.ID>
+    
+    typealias Factory = ComposedOperatorsViewFactory<LastPayment, Operator, SearchView, LastPaymentView, OperatorView, FooterView>
+}
+
+private extension ComposedOperatorsView {
+    
+    func list() -> some View {
+        
         VStack(spacing: 16) {
             
+            #warning("looks like `makeSearchView` could be constructed without parameters")
             factory.makeSearchView(state.searchText)
             
             ScrollView(.vertical, showsIndicators: false) {
@@ -45,9 +63,7 @@ public extension ComposedOperatorsView {
                     _lastPaymentsView(state.lastPayments)
                     _operatorsView(state.operators)
                     
-#warning("remove `onAppear` - that is a flow event")
                     factory.makeFooterView(state.operators.isEmpty)
-                        .onAppear { event(.utility(.initiate)) }
                 }
             }
         }
@@ -55,18 +71,7 @@ public extension ComposedOperatorsView {
         .padding(.top, 8)
         .padding(.bottom, 20)
     }
-}
 
-public extension ComposedOperatorsView {
-    
-    typealias State = ComposedOperatorsState<LastPayment, Operator>
-    typealias Event = ComposedOperatorsEvent<LastPayment, Operator>
-    
-    typealias Factory = ComposedOperatorsViewFactory<LastPayment, Operator, SearchView, LastPaymentView, OperatorView, FooterView>
-}
-
-private extension ComposedOperatorsView {
-    
     @ViewBuilder
     func _lastPaymentsView(
         _ lastPayments: [LastPayment]
@@ -103,7 +108,7 @@ private extension ComposedOperatorsView {
     ) -> some View {
         
         factory.makeOperatorView(`operator`)
-            .onAppear { event(.utility(.didScrollTo(`operator`.id))) }
+            .onAppear { event(.didScrollTo(`operator`.id)) }
     }
 }
 

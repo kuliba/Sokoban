@@ -31,9 +31,9 @@ struct UtilityOperatorPicker: View {
                 ),
                 event: { event(.composed($0)) },
                 factory: .init(
+                    makeFooterView: footerView,
                     makeLastPaymentView: lastPaymentView,
                     makeOperatorView: operatorView,
-                    makeFooterView: footerView,
                     makeSearchView: searchView
                 )
             )
@@ -46,7 +46,9 @@ struct UtilityOperatorPicker: View {
     ) -> some View {
         
         Button {
-            event(.composed(.selectLastOperation(latestPayment)))
+            // event(.composed(.selectLastOperation(latestPayment)))
+            #warning("FIXME")
+            fatalError()
         } label: {
             LastPaymentLabel(
                 amount: latestPayment.amount,
@@ -66,7 +68,9 @@ struct UtilityOperatorPicker: View {
     ) -> some View {
         
         Button {
-            event(.composed(.selectOperator(`operator`)))
+            // event(.composed(.selectOperator(`operator`)))
+            #warning("FIXME")
+            fatalError()
         } label: {
             OperatorLabel(
                 title: `operator`.title,
@@ -112,7 +116,11 @@ struct UtilityOperatorPicker: View {
             "Search",
             text: .init(
                 get: { searchText },
-                set: { event(.composed(.utility(.search(.entered($0))))) }
+                set: {
+                    // event(.composed(.utility(.search(.entered($0)))))
+                    #warning("FIXME")
+                    fatalError("\($0)")
+                }
             )
         )
     }
