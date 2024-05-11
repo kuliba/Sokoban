@@ -29,10 +29,12 @@ struct UtilityOperatorPicker: View {
                     latestPayments: state.lastPayments
                 ),
                 event: { event(.composed($0)) },
-                lastPaymentView: lastPaymentView,
-                operatorView: operatorView,
-                footerView: footerView,
-                searchView: searchView
+                factory: .init(
+                    lastPaymentView: lastPaymentView,
+                    operatorView: operatorView,
+                    footerView: footerView,
+                    searchView: searchView
+                )
             )
         }
     }

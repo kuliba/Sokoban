@@ -15,26 +15,16 @@ where SearchView: View,
     
     let state: State
     let event: (Event) -> Void
-    
-    let lastPaymentView: (LatestPayment) -> LastPaymentView
-    let operatorView: (Operator) -> OperatorView
-    let footerView: () -> FooterView
-    let searchView: () -> SearchView
+    let factory: Factory
     
     public init(
         state: State,
         event: @escaping (Event) -> Void,
-        lastPaymentView: @escaping (LatestPayment) -> LastPaymentView,
-        operatorView: @escaping (Operator) -> OperatorView,
-        footerView: @escaping () -> FooterView,
-        searchView: @escaping () -> SearchView
+        factory: Factory
     ) {
         self.state = state
         self.event = event
-        self.lastPaymentView = lastPaymentView
-        self.operatorView = operatorView
-        self.footerView = footerView
-        self.searchView = searchView
+        self.factory = factory
     }
 }
 
@@ -44,7 +34,7 @@ public extension ComposedOperatorsView {
         
         VStack(spacing: 16) {
             
-            searchView()
+            factory.searchView()
             
             ScrollView(.vertical, showsIndicators: false) {
                 
@@ -53,7 +43,8 @@ public extension ComposedOperatorsView {
                     _lastPaymentsView(state.latestPayments)
                     _operatorsView(state.operators)
                     
-                    footerView()
+#warning("remove `onAppear` - that is a flow event")
+                    factory.footerView()
                         .onAppear { event(.utility(.initiate)) }
                 }
             }
@@ -69,13 +60,15 @@ public extension ComposedOperatorsView {
     typealias LastPayment = LatestPayment
     typealias State = ComposedOperatorsState
     typealias Event = ComposedOperatorsEvent
+    
+    typealias Factory = ComposedOperatorsViewFactory<SearchView, LastPaymentView, OperatorView, FooterView>
 }
 
 private extension ComposedOperatorsView {
     
     @ViewBuilder
     func _lastPaymentsView(
-        _ lastPayments: [LatestPayment]?
+        _ lastPayments: [LastPayment]?
     ) -> some View {
         
         if let lastPayments,
@@ -85,7 +78,7 @@ private extension ComposedOperatorsView {
                 
                 LazyHStack {
                     
-                    ForEach(lastPayments, content: lastPaymentView)
+                    ForEach(lastPayments, content: factory.lastPaymentView)
                 }
             }
         }
@@ -110,7 +103,7 @@ private extension ComposedOperatorsView {
         operator: Operator
     ) -> some View {
         
-        operatorView(`operator`)
+        factory.operatorView(`operator`)
             .onAppear { event(.utility(.didScrollTo(`operator`.id))) }
     }
 }
@@ -122,10 +115,21 @@ struct ComposedOperatorsView_Previews: PreviewProvider {
         ComposedOperatorsView(
             state: .init(operators: [], latestPayments: []),
             event: { print($0) },
-            lastPaymentView: { _ in  EmptyView() },
-            operatorView: { _ in  EmptyView() },
-            footerView: EmptyView.init,
-            searchView: EmptyView.init
+            factory: .preview
         )
     }
+}
+
+private extension ComposedOperatorsViewFactory
+where SearchView == EmptyView,
+      LastPaymentView == Text,
+      OperatorView == Text,
+      FooterView == EmptyView {
+    
+    static let preview: Self = .init(
+        lastPaymentView: { .init("LastPaymentView: \($0)") },
+        operatorView: { .init("OperatorView: \($0)") },
+        footerView: EmptyView.init,
+        searchView: EmptyView.init
+    )
 }
