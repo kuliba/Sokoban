@@ -5,8 +5,6 @@
 //  Created by Дмитрий Савушкин on 19.02.2024.
 //
 
-import Foundation
-
 public struct ComposedOperatorsState<LastPayment, Operator> {
     
     public let lastPayments: [LastPayment]

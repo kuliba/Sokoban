@@ -209,7 +209,7 @@ private extension Array where Element == _OperatorGroup {
     }
 }
 
-private extension Array where Element == OperatorsListComponents.Operator<String> {
+private extension Array where Element == UtilityPaymentOperator<String> {
     
     static func stub(
         names: [String] = []

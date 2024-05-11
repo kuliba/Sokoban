@@ -8,6 +8,8 @@
 import FooterComponent
 import OperatorsListComponents
 import SwiftUI
+import UtilityServicePrepaymentDomain
+import UtilityServicePrepaymentUI
 
 struct UtilityPrepaymentWrapperView: View {
     
@@ -41,8 +43,8 @@ struct UtilityPrepaymentWrapperView: View {
 
 extension UtilityPrepaymentWrapperView {
     
-    typealias LastPayment = OperatorsListComponents.LastPayment
-    typealias Operator = OperatorsListComponents.Operator<String>
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
     
     typealias FlowEvent = UtilityPrepaymentFlowEvent
     typealias ViewModel = UtilityPrepaymentViewModel

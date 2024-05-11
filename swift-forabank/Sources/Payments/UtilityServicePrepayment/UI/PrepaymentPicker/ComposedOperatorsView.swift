@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UtilityServicePrepaymentDomain
 
 #warning("`Composed` does not fit well here")
 public struct ComposedOperatorsView<LastPayment, Operator, FooterView, LastPaymentView, OperatorView, SearchView>: View

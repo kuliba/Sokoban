@@ -148,8 +148,8 @@ extension RootViewModelFactory {
         )
     }
     
-    typealias LatestPayment = OperatorsListComponents.LastPayment
-    typealias Operator = OperatorsListComponents.Operator<String>
+    typealias LatestPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
 
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 
@@ -279,8 +279,8 @@ typealias MakeUtilitiesViewModel = PaymentsTransfersFactory.MakeUtilitiesViewMod
 
 extension ProductProfileViewModel {
     
-    typealias LatestPayment = OperatorsListComponents.LastPayment
-    typealias Operator = OperatorsListComponents.Operator<String>
+    typealias LatestPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
 
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 
@@ -490,7 +490,7 @@ private extension UserAccountModelEffectHandler {
     }
 }
 
-extension UtilityPaymentFlowEvent<OperatorsListComponents.LastPayment, OperatorsListComponents.Operator<String>, UtilityService>.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload {
+extension UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator<String>, UtilityService>.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload {
     
     var state: UtilityPrepaymentState {
     

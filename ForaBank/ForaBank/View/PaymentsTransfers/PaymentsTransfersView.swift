@@ -598,8 +598,8 @@ private extension PaymentsTransfersView {
         }
     }
     
-    typealias LastPayment = OperatorsListComponents.LastPayment
-    typealias Operator = OperatorsListComponents.Operator<String>
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
     
     typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     
@@ -730,7 +730,7 @@ extension PaymentsTransfersView {
 
 private extension UtilityPrepaymentFlowEvent {
     
-    var flowEvent: UtilityPaymentFlowEvent<OperatorsListComponents.LastPayment, OperatorsListComponents.Operator<String>, UtilityService>.UtilityPrepaymentFlowEvent {
+    var flowEvent: UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator<String>, UtilityService>.UtilityPrepaymentFlowEvent {
         
         switch self {
         case .addCompany:
