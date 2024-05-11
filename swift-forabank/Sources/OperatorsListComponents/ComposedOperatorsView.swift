@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-public struct ComposedOperatorsView<Icon, SearchView, LastPaymentView, OperatorView, FooterView>: View
-where SearchView: View,
+public struct ComposedOperatorsView<LastPayment, Operator, SearchView, LastPaymentView, OperatorView, FooterView>: View
+where LastPayment: Identifiable,
+      Operator: Identifiable,
+      SearchView: View,
       LastPaymentView: View,
       OperatorView: View,
       FooterView: View {
@@ -57,12 +59,10 @@ public extension ComposedOperatorsView {
 
 public extension ComposedOperatorsView {
     
-    typealias _Operator = Operator<Icon>
+    typealias State = ComposedOperatorsState<LastPayment, Operator>
+    typealias Event = ComposedOperatorsEvent<LastPayment, Operator>
     
-    typealias State = ComposedOperatorsState<LastPayment, _Operator>
-    typealias Event = ComposedOperatorsEvent<LastPayment, _Operator>
-    
-    typealias Factory = ComposedOperatorsViewFactory<Icon, SearchView, LastPaymentView, OperatorView, FooterView>
+    typealias Factory = ComposedOperatorsViewFactory<LastPayment, Operator, SearchView, LastPaymentView, OperatorView, FooterView>
 }
 
 private extension ComposedOperatorsView {
@@ -86,7 +86,7 @@ private extension ComposedOperatorsView {
     
     @ViewBuilder
     func _operatorsView(
-        _ operators: [_Operator]
+        _ operators: [Operator]
     ) -> some View {
         
         if !operators.isEmpty {
@@ -99,7 +99,7 @@ private extension ComposedOperatorsView {
     }
     
     func _operatorView(
-        operator: _Operator
+        operator: Operator
     ) -> some View {
         
         factory.makeOperatorView(`operator`)

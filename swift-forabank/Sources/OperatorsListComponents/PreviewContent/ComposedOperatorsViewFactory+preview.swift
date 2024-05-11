@@ -8,8 +8,7 @@
 import SwiftUI
 
 extension ComposedOperatorsViewFactory
-where Icon == String,
-      SearchView == Text,
+where SearchView == Text,
       LastPaymentView == Text,
       OperatorView == Text,
       FooterView == Text {
