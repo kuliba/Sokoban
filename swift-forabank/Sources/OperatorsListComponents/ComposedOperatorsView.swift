@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-public struct ComposedOperatorsView<
-    SearchView: View,
-    LastPaymentView: View,
-    OperatorView: View,
-    FooterView: View>: View {
+public struct ComposedOperatorsView<SearchView, LastPaymentView, OperatorView, FooterView>: View
+where SearchView: View,
+      LastPaymentView: View,
+      OperatorView: View,
+      FooterView: View {
     
-    let state: ComposedOperatorsState
-    let event: (ComposedOperatorsEvent) -> Void
+    let state: State
+    let event: (Event) -> Void
     
     let lastPaymentView: (LatestPayment) -> LastPaymentView
     let operatorView: (Operator) -> OperatorView
@@ -22,8 +22,8 @@ public struct ComposedOperatorsView<
     let searchView: () -> SearchView
     
     public init(
-        state: ComposedOperatorsState,
-        event: @escaping (ComposedOperatorsEvent) -> Void,
+        state: State,
+        event: @escaping (Event) -> Void,
         lastPaymentView: @escaping (LatestPayment) -> LastPaymentView,
         operatorView: @escaping (Operator) -> OperatorView,
         footerView: @escaping () -> FooterView,
@@ -36,8 +36,11 @@ public struct ComposedOperatorsView<
         self.footerView = footerView
         self.searchView = searchView
     }
+}
+
+public extension ComposedOperatorsView {
     
-    public var body: some View {
+    var body: some View {
         
         VStack(spacing: 16) {
             
@@ -47,26 +50,8 @@ public struct ComposedOperatorsView<
                 
                 VStack(spacing: 16) {
                     
-                    if let latestPayments = state.latestPayments,
-                        !latestPayments.isEmpty {
-                        
-                        ScrollView(.horizontal) {
-                            
-                            LazyHStack {
-                                
-                                ForEach(latestPayments, content: lastPaymentView)
-                            }
-                        }
-                    }
-                    
-                    if let operators = state.operators,
-                       !operators.isEmpty {
-                        
-                        LazyVStack(alignment: .leading, spacing: 8) {
-                            
-                            ForEach(operators, content: _operatorView)
-                        }
-                    }
+                    _lastPaymentsView(state.latestPayments)
+                    _operatorsView(state.operators)
                     
                     footerView()
                         .onAppear { event(.utility(.initiate)) }
@@ -77,8 +62,51 @@ public struct ComposedOperatorsView<
         .padding(.top, 8)
         .padding(.bottom, 20)
     }
+}
+
+public extension ComposedOperatorsView {
     
-    private func _operatorView(
+    typealias LastPayment = LatestPayment
+    typealias State = ComposedOperatorsState
+    typealias Event = ComposedOperatorsEvent
+}
+
+private extension ComposedOperatorsView {
+    
+    @ViewBuilder
+    func _lastPaymentsView(
+        _ lastPayments: [LatestPayment]?
+    ) -> some View {
+        
+        if let lastPayments,
+           !lastPayments.isEmpty {
+            
+            ScrollView(.horizontal) {
+                
+                LazyHStack {
+                    
+                    ForEach(lastPayments, content: lastPaymentView)
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func _operatorsView(
+        _ operators: [Operator]?
+    ) -> some View {
+        
+        if let operators = state.operators,
+           !operators.isEmpty {
+            
+            LazyVStack(alignment: .leading, spacing: 8) {
+                
+                ForEach(operators, content: _operatorView)
+            }
+        }
+    }
+    
+    func _operatorView(
         operator: Operator
     ) -> some View {
         
@@ -87,79 +115,17 @@ public struct ComposedOperatorsView<
     }
 }
 
-public struct Operator: Equatable, Identifiable {
-    
-    public var id: String
-    public let title: String
-    let subtitle: String?
-    let image: Image?
-    
-    public init(
-        id: String,
-        title: String,
-        subtitle: String?,
-        image: Image?
-    ) {
-        self.id = id
-        self.title = title
-        self.subtitle = subtitle
-        self.image = image
-    }
-    
-    public init(
-        _operatorGroup: _OperatorGroup
-    ) {
-        
-        self.id = _operatorGroup.id
-        self.title = _operatorGroup.title
-        self.subtitle = _operatorGroup.description
-        self.image = nil
-    }
-}
-
-public struct LatestPayment: Equatable, Identifiable {
-    
-    public var id: String { title }
-    let image: Image?
-    let title: String
-    let amount: String
-    
-    public init(
-        image: Image?,
-        title: String,
-        amount: String
-    ) {
-        self.image = image
-        self.title = title
-        self.amount = amount
-    }
-    
-    public struct LatestPaymentConfig {
-        
-        let defaultImage: Image
-        let backgroundColor: Color
-        
-        public init(
-            defaultImage: Image,
-            backgroundColor: Color
-        ) {
-            self.defaultImage = defaultImage
-            self.backgroundColor = backgroundColor
-        }
-    }
-}
-
 struct ComposedOperatorsView_Previews: PreviewProvider {
-   
+    
     static var previews: some View {
         
         ComposedOperatorsView(
             state: .init(operators: [], latestPayments: []),
-            event: { _ in },
+            event: { print($0) },
             lastPaymentView: { _ in  EmptyView() },
             operatorView: { _ in  EmptyView() },
-            footerView: { EmptyView() },
-            searchView: { EmptyView() }
+            footerView: EmptyView.init,
+            searchView: EmptyView.init
         )
     }
 }
