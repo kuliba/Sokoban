@@ -1,6 +1,6 @@
 //
 //  OperatorView.swift
-//  
+//
 //
 //  Created by Дмитрий Савушкин on 07.02.2024.
 //
@@ -11,12 +11,12 @@ public struct OperatorView: View {
     
     let `operator`: Operator
     let event: (Operator) -> Void
-    let config: OperatorViewConfig
+    let config: Config
     
     public init(
         `operator`: Operator,
         event: @escaping (Operator) -> Void,
-        config: OperatorViewConfig
+        config: Config
     ) {
         self.`operator` = `operator`
         self.config = config
@@ -25,82 +25,71 @@ public struct OperatorView: View {
     
     public var body: some View {
         
-        Button(action: { event(`operator`) }) {
-            
-            HStack(spacing: 16) {
-                 
-                if let image = `operator`.image {
-                    
-                    image
-                        .resizable()
-                        .frame(width: 40, height: 40)
-                } else {
-                    
-                    Image.defaultIcon(
-                        backgroundColor: config.defaultIconBackgroundColor,
-                        foregroundColor: .white,
-                        icon: config.defaultIcon
-                    )
-                }
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    
-                    Text(`operator`.title)
-                        .lineLimit(1)
-                        .font(config.titleFont)
-                        .foregroundColor(config.titleColor)
-                    
-                    if let description = `operator`.subtitle {
-                        
-                        Text(description)
-                            .lineLimit(1)
-                            .font(config.descriptionFont)
-                            .foregroundColor(config.descriptionColor)
-                    }
-                }
-                
-                Spacer()
-            }
-            .padding(.vertical, 8)
-            .frame(height: 46)
-            .contentShape(Rectangle())
-        }
+        Button(action: { event(`operator`) }, label: label)
     }
 }
 
 public extension OperatorView {
     
-    struct OperatorViewConfig {
+    typealias Config = OperatorViewConfig
+}
+
+private extension OperatorView {
+    
+    func label() -> some View {
         
-        let titleFont: Font
-        let titleColor: Color
+        HStack(spacing: 16) {
+            
+            image()
+                .frame(width: 40, height: 40)
+            
+            title()
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.vertical, 8)
+        .frame(height: 46)
+        .contentShape(Rectangle())
+    }
+    
+    @ViewBuilder
+    func image() -> some View {
         
-        let descriptionFont: Font
-        let descriptionColor: Color
+        if let image = `operator`.image {
+            image.resizable()
+        } else {
+            Image.defaultIcon(
+                backgroundColor: config.defaultIconBackgroundColor,
+                foregroundColor: .white,
+                icon: config.defaultIcon
+            )
+        }
+    }
+    
+    @ViewBuilder
+    func title() -> some View {
         
-        let defaultIconBackgroundColor: Color
-        let defaultIcon: Image
-        
-        public init(
-            titleFont: Font,
-            titleColor: Color,
-            descriptionFont: Font,
-            descriptionColor: Color,
-            defaultIconBackgroundColor: Color,
-            defaultIcon: Image
-        ) {
-            self.titleFont = titleFont
-            self.titleColor = titleColor
-            self.descriptionFont = descriptionFont
-            self.descriptionColor = descriptionColor
-            self.defaultIconBackgroundColor = defaultIconBackgroundColor
-            self.defaultIcon = defaultIcon
+        VStack(alignment: .leading, spacing: 4) {
+            
+            Text(`operator`.title)
+                .lineLimit(1)
+                .font(config.titleFont)
+                .foregroundColor(config.titleColor)
+            
+            if let description = `operator`.subtitle {
+                
+                Text(description)
+                    .lineLimit(1)
+                    .font(config.descriptionFont)
+                    .foregroundColor(config.descriptionColor)
+            }
         }
     }
 }
 
+// MARK: - Previews
+
 struct OperatorView_Previews: PreviewProvider {
-   
+    
     static var previews: some View {
         
         OperatorView(

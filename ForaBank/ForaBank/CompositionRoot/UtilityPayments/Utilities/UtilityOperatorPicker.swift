@@ -129,7 +129,7 @@ struct UtilityOperatorPicker_Previews: PreviewProvider {
     }
 }
 
-private extension OperatorView.OperatorViewConfig {
+private extension OperatorViewConfig {
     
     static let iFora: Self = .init(
         titleFont: .title3,

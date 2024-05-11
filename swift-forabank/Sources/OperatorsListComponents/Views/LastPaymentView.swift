@@ -45,8 +45,8 @@ private extension LastPaymentView {
             
             title()
         }
-        .contentShape(Rectangle())
         .frame(width: 80, height: 80)
+        .contentShape(Rectangle())
     }
     
     @ViewBuilder
