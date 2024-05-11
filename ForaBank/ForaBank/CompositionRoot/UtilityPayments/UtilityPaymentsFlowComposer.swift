@@ -216,7 +216,7 @@ private extension OperatorsListComponents.LastPayment {
     static let preview: Self = .init(id: UUID().uuidString, title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
 }
 
-// TODO: make private
+#warning("move to the call site and make private")
 /*private*/ extension OperatorsListComponents.Operator<String> {
     
     static let multiple: Self = .init("multiple", "Multiple")

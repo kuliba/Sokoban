@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+#warning("`Composed` does not fit well here")
 public struct ComposedOperatorsView<LastPayment, Operator, FooterView, LastPaymentView, OperatorView, SearchView>: View
 where LastPayment: Identifiable,
       Operator: Identifiable,
@@ -28,7 +29,7 @@ where LastPayment: Identifiable,
         self.event = event
         self.factory = factory
     }
-
+    
     public var body: some View {
         
         if state.operators.isEmpty {
@@ -53,8 +54,7 @@ private extension ComposedOperatorsView {
         
         VStack(spacing: 16) {
             
-            #warning("looks like `makeSearchView` could be constructed without parameters")
-            factory.makeSearchView(state.searchText)
+            factory.makeSearchView()
             
             ScrollView(.vertical, showsIndicators: false) {
                 
@@ -71,7 +71,7 @@ private extension ComposedOperatorsView {
         .padding(.top, 8)
         .padding(.bottom, 20)
     }
-
+    
     @ViewBuilder
     func _lastPaymentsView(
         _ lastPayments: [LastPayment]

@@ -19,7 +19,7 @@ where FooterView == Text,
             makeFooterView: { .init("Footer View: \($0)") },
             makeLastPaymentView: { .init("LastPayment View: \($0)") },
             makeOperatorView: { .init("Operator View: \($0)") },
-            makeSearchView: { .init("Search View: \($0)") }
+            makeSearchView: { .init("Search View") }
         )
     }
 }

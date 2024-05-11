@@ -8,6 +8,7 @@
 import OperatorsListComponents
 import SwiftUI
 
+#warning("remove `ComposedUtilityPrepaymentView`")
 struct ComposedUtilityPrepaymentView: View {
     
     let state: State

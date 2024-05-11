@@ -84,7 +84,7 @@ struct UtilityOperatorPicker: View {
     
     private func failureView() -> some View {
         return FooterComponent.FooterView(
-            state: .failure(.preview),
+            state: .failure(.iFora),
             event: { events in event(.addCompany) },
             config: .iFora
         )
@@ -95,7 +95,7 @@ struct UtilityOperatorPicker: View {
     ) -> some View {
         
         FooterComponent.FooterView(
-            state: .footer(.preview),
+            state: .footer(.iFora),
             event: { events in
                 switch events {
                 case .payByInstruction:
@@ -109,13 +109,12 @@ struct UtilityOperatorPicker: View {
     }
     
     private func searchView(
-        _ searchText: String
     ) -> some View {
         
         TextField(
             "Search",
             text: .init(
-                get: { searchText },
+                get: { state.searchText },
                 set: {
                     // event(.composed(.utility(.search(.entered($0)))))
                     #warning("FIXME")
@@ -126,7 +125,8 @@ struct UtilityOperatorPicker: View {
     }
 }
 
-private extension OperatorsListComponents.LastPayment {
+#warning("move to the call site and make private")
+/*private*/ extension OperatorsListComponents.LastPayment {
     
     var amount: String { subtitle }
 }
@@ -158,24 +158,29 @@ struct UtilityOperatorPicker_Previews: PreviewProvider {
     }
 }
 
-private extension FooterComponent.FooterState.Footer {
+// MARK: - Static helpers
+
+#warning("move to the call site and make private")
+/*private*/ extension FooterComponent.FooterState.Footer {
         
-    static let preview: Self = .init(
+    static let iFora: Self = .init(
         title: "Нет компании в списке?",
         description: "Воспользуйтесь другими способами оплаты",
         subtitle: "Сообщите нам, и мы подключим новую организацию"
     )
 }
 
-private extension FooterComponent.FooterState.Failure {
+#warning("move to the call site and make private")
+/*private*/ extension FooterComponent.FooterState.Failure {
 
-    static let preview: Self = .init(
+    static let iFora: Self = .init(
         image: .init(systemName: "photo.artframe"),
         description: "Что-то пошло не так.\nПопробуйте позже."
     )
 }
 
-private extension FooterComponent.FooterView.Config {
+#warning("move to the call site and make private")
+/*private*/ extension FooterComponent.FooterView.Config {
     
     static let iFora: Self = .init(
         titleConfig: .init(textFont: .title3, textColor: .black),
@@ -197,25 +202,27 @@ private extension FooterComponent.FooterView.Config {
     )
 }
 
-private extension LastPaymentLabelConfig {
+#warning("move to the call site and make private")
+/*private*/ extension LastPaymentLabelConfig {
     
     static let iFora: Self = .init(
         amount: .init(
-            textFont: .title3,
-            textColor: .black
+            textFont: .caption2,
+            textColor: .red
         ),
         title: .init(
-            textFont: .footnote,
+            textFont: .caption2,
             textColor: .gray
         )
     )
 }
 
-private extension OperatorLabelConfig {
+#warning("move to the call site and make private")
+/*private*/ extension OperatorLabelConfig {
     
     static let iFora: Self = .init(
         title: .init(
-            textFont: .title3,
+            textFont: .headline,
             textColor: .black
         ),
         subtitle: .init(

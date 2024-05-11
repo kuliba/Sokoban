@@ -36,5 +36,5 @@ public extension ComposedOperatorsViewFactory {
     typealias MakeFooterView = (Bool) -> FooterView
     typealias MakeLastPaymentView = (LastPayment) -> LastPaymentView
     typealias MakeOperatorView = (Operator) -> OperatorView
-    typealias MakeSearchView = (String) -> SearchView
+    typealias MakeSearchView = () -> SearchView
 }
