@@ -72,17 +72,41 @@ final class PrepaymentPickerReducerTests: XCTestCase {
         assertState(sut: sut, .didScrollTo(oneOf.id), on: state)
     }
     
-    func test_didScrollTo_shouldDeliverEffect() {
+    func test_didScrollTo_shouldDeliverEffectWithLastOperatorID() {
         
         let (observeLast, pageSize) = (2, 33)
-        let oneOf = makeOperator()
-        let state = makeState(operators: [oneOf, makeOperator()])
+        let (first, last) = (makeOperator(), makeOperator())
+        let state = makeState(operators: [first, last])
         let sut = makeSUT(
             observeLast: observeLast,
             pageSize: pageSize
         )
         
-        assert(sut: sut, .didScrollTo(oneOf.id), on: state, effect: .paginate(oneOf.id, pageSize))
+        assert(sut: sut, .didScrollTo(first.id), on: state, effect: makePaginateEffect(operatorID: last.id, pageSize: pageSize, searchText: ""))
+    }
+    
+    func test_didScrollTo_shouldNotChangeNonEmptySearchTextState() {
+        
+        let observeLast = 2
+        let oneOf = makeOperator()
+        let state = makeState(operators: [oneOf, makeOperator()], searchText: "abc")
+        let sut = makeSUT(observeLast: observeLast)
+        
+        assertState(sut: sut, .didScrollTo(oneOf.id), on: state)
+    }
+    
+    func test_didScrollTo_shouldDeliverEffectWithLastOperatorIDOnNonEmptySearchText() {
+        
+        let (observeLast, pageSize) = (2, 33)
+        let (first, last) = (makeOperator(), makeOperator())
+        let searchText = anyMessage()
+        let state = makeState(operators: [first, last], searchText: searchText)
+        let sut = makeSUT(
+            observeLast: observeLast,
+            pageSize: pageSize
+        )
+        
+        assert(sut: sut, .didScrollTo(first.id), on: state, effect: makePaginateEffect(operatorID: last.id, pageSize: pageSize, searchText: searchText))
     }
     
     // MARK: - page
@@ -95,6 +119,26 @@ final class PrepaymentPickerReducerTests: XCTestCase {
     func test_page_shouldNotDeliverEffectOnEmpty() {
         
         assert(.page([]), on: makeState(), effect: nil)
+    }
+    
+    func test_page_shouldToggleIsSearchingAndReplaceOperatorsOnIsSearching() {
+        
+        let (oldOperator, newOperator) = (makeOperator(), makeOperator())
+        let state = makeState(operators: [oldOperator], isSearching: true)
+        
+        assertState(.page([newOperator]), on: state) {
+            
+            $0.isSearching = false
+            $0.operators = [newOperator]
+        }
+    }
+    
+    func test_page_shouldNotDeliverEffectOnIsSearching() {
+        
+        let newOperators = [makeOperator()]
+        let state = makeState(isSearching: true)
+
+        assert(.page(newOperators), on: state, effect: nil)
     }
     
     func test_page_shouldAppendOperators() {
@@ -113,6 +157,100 @@ final class PrepaymentPickerReducerTests: XCTestCase {
         let newOperators = [makeOperator()]
         
         assert(.page(newOperators), on: makeState(), effect: nil)
+    }
+    
+    // MARK: - search
+    
+    func test_search_shouldNotChangeEmptyState() {
+        
+        assertState(.search(anyMessage()), on: makeEmptyState())
+    }
+    
+    func test_search_shouldNotDeliverEffectOnEmptyState() {
+        
+        assert(.search(anyMessage()), on: makeEmptyState(), effect: nil)
+    }
+    
+    func test_search_shouldChangeEmptySearchTextState() {
+        
+        let emptySearchTextState = makeState(searchText: "")
+        let searchText = anyMessage()
+        
+        assertState(.search(searchText), on: emptySearchTextState) {
+            
+            $0.isSearching = true
+            $0.searchText = searchText
+        }
+    }
+    
+    func test_search_shouldDeliverEffectOnEmptySearchText() {
+        
+        let pageSize = makePageSize()
+        let sut = makeSUT(pageSize: pageSize)
+        let emptySearchTextState = makeState(searchText: "")
+        let searchText = anyMessage()
+
+        let effect = makePaginateEffect(
+            operatorID: nil, 
+            pageSize: pageSize,
+            searchText: searchText
+        )
+        
+        assert(sut: sut, .search(searchText), on: emptySearchTextState, effect: effect)
+    }
+    
+    func test_search_shouldChangeNonEmptySearchTextState() {
+        
+        let nonEmptySearchTextState = makeState(searchText: "abc")
+        let searchText = anyMessage()
+        
+        assertState(.search(searchText), on: nonEmptySearchTextState) {
+            
+            $0.isSearching = true
+            $0.searchText = searchText
+        }
+    }
+    
+    func test_search_shouldDeliverEffect() {
+        
+        let pageSize = makePageSize()
+        let sut = makeSUT(pageSize: pageSize)
+        let nonEmptySearchTextState = makeState(searchText: "abc")
+        let searchText = anyMessage()
+        
+        let effect = makePaginateEffect(
+            operatorID: nil,
+            pageSize: pageSize,
+            searchText: searchText
+        )
+        
+        assert(sut: sut, .search(searchText), on: nonEmptySearchTextState, effect: effect)
+    }
+    
+    func test_search_shouldChangeNonEmptySearchTextStateWithEmptySearch() {
+        
+        let nonEmptySearchTextState = makeState(searchText: "abc")
+        
+        assertState(.search(""), on: nonEmptySearchTextState) {
+            
+            $0.isSearching = true
+            $0.searchText = ""
+        }
+    }
+    
+    func test_search_shouldDeliverEffectWithEmptySearch() {
+        
+        let pageSize = makePageSize()
+        let sut = makeSUT(pageSize: pageSize)
+        let nonEmptySearchTextState = makeState(searchText: "abc")
+        
+        let effect = makePaginateEffect(
+            operatorID: nil,
+            pageSize: pageSize,
+            searchText: ""
+        )
+        
+        assert(sut: sut, .search(""), on: nonEmptySearchTextState, effect: effect)
     }
     
     // MARK: - Helpers

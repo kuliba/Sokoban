@@ -1,19 +1,19 @@
 //
 //  PrepaymentPickerReducer.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 12.05.2024.
 //
 
 import UtilityServicePrepaymentDomain
 
-final class PrepaymentPickerReducer<LastPayment, Operator>
+public final class PrepaymentPickerReducer<LastPayment, Operator>
 where Operator: Identifiable {
     
     private let observeLast: Int
     private let pageSize: Int
     
-    init(
+    public init(
         observeLast: Int,
         pageSize: Int
     ) {
@@ -22,7 +22,7 @@ where Operator: Identifiable {
     }
 }
 
-extension PrepaymentPickerReducer {
+public extension PrepaymentPickerReducer {
     
     func reduce(
         _ state: State,
@@ -36,6 +36,9 @@ extension PrepaymentPickerReducer {
         case let .didScrollTo(operatorID):
             reduce(&state, &effect, with: operatorID)
             
+        case let .search(text):
+            reduce(&state, &effect, with: text)
+            
         case let .page(operators):
             reduce(&state, with: operators)
         }
@@ -44,7 +47,7 @@ extension PrepaymentPickerReducer {
     }
 }
 
-extension PrepaymentPickerReducer {
+public extension PrepaymentPickerReducer {
     
     typealias State = PrepaymentPickerState<LastPayment, Operator>
     typealias Event = PrepaymentPickerEvent<Operator>
@@ -60,17 +63,44 @@ private extension PrepaymentPickerReducer {
     ) {
         let lastObserved = state.operators.map(\.id).suffix(observeLast)
         
-        guard Set(lastObserved).contains(operatorID) else { return }
+        guard Set(lastObserved).contains(operatorID),
+              let last = state.operators.last
+        else { return }
         
-        effect = .paginate(operatorID, pageSize)
+        effect = .paginate(.init(
+            operatorID: last.id,
+            pageSize: pageSize,
+            searchText: state.searchText
+        ))
+    }
+    
+    func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with text: String
+    ) {
+        guard !state.operators.isEmpty else { return }
+        
+        state.isSearching = true
+        state.searchText = text
+        effect = .paginate(.init(
+            operatorID: nil,
+            pageSize: pageSize,
+            searchText: text
+        ))
     }
     
     func reduce(
         _ state: inout State,
         with newOperators: [Operator]
     ) {
-        var operators = state.operators
-        operators.append(contentsOf: newOperators)
-        state.operators = operators
+        if state.isSearching {
+            state.isSearching = false
+            state.operators = newOperators
+        } else {
+            var operators = state.operators
+            operators.append(contentsOf: newOperators)
+            state.operators = operators
+        }
     }
 }

@@ -10,6 +10,7 @@ where Operator: Identifiable {
     
     case didScrollTo(Operator.ID)
     case page([Operator])
+    case search(String)
 }
 
 extension PrepaymentPickerEvent: Equatable where Operator: Equatable {}

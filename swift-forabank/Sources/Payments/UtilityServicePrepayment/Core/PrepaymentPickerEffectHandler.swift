@@ -8,35 +8,34 @@
 import UtilityServicePrepaymentDomain
 
 #warning("TODO: throttle, debounce, remove duplicates")
-final class PrepaymentPickerEffectHandler<Operator>
+public final class PrepaymentPickerEffectHandler<Operator>
 where Operator: Identifiable {
     
     private let paginate: Paginate
     
-    init(
+    public init(
         paginate: @escaping Paginate
     ) {
         self.paginate = paginate
     }
 }
 
-extension PrepaymentPickerEffectHandler {
+public extension PrepaymentPickerEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case let .paginate(operatorID, pageSize):
-            paginate(operatorID, pageSize, dispatch)
+        case let .paginate(payload):
+            paginate(payload, dispatch)
         }
     }
 }
 
-extension PrepaymentPickerEffectHandler {
+public extension PrepaymentPickerEffectHandler {
     
-    typealias PageSize = Effect.PageSize
-    typealias PaginatePayload = (Operator.ID, PageSize)
+    typealias PaginatePayload = Effect.PaginatePayload
     typealias PaginateResult = [Operator]
     typealias PaginateCompletion = (PaginateResult) -> Void
     typealias Paginate = (PaginatePayload, @escaping PaginateCompletion) -> Void
@@ -47,13 +46,12 @@ extension PrepaymentPickerEffectHandler {
     typealias Effect = PrepaymentPickerEffect<Operator.ID>
 }
 
-extension PrepaymentPickerEffectHandler {
+private extension PrepaymentPickerEffectHandler {
     
     func paginate(
-        _ operatorID: Operator.ID,
-        _ pageSize: PageSize,
+        _ payload: PaginatePayload,
         _ dispatch: @escaping Dispatch
     ) {
-        paginate((operatorID, pageSize)) { dispatch(.page($0)) }
+        paginate(payload) { dispatch(.page($0)) }
     }
 }

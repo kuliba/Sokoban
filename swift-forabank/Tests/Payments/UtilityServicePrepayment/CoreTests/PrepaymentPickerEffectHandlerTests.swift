@@ -5,9 +5,12 @@
 //  Created by Igor Malyarov on 12.05.2024.
 //
 
+import UtilityServicePrepaymentCore
 import XCTest
 
 final class PrepaymentPickerEffectHandlerTests: XCTestCase {
+    
+    // MARK: - init
     
     func test_init_shouldNotCallCollaborators() {
         
@@ -16,15 +19,22 @@ final class PrepaymentPickerEffectHandlerTests: XCTestCase {
         XCTAssertEqual(paginateSpy.callCount, 0)
     }
     
+    // MARK: - paginate
+    
     func test_paginate_shouldCallPaginateWithPayload() {
         
-        let (operatorID, pageSize) = (makeOperatorID(), makePageSize())
+        let payload = makePaginatePayload()
         let (sut, paginateSpy) = makeSUT()
         
-        sut.handleEffect(.paginate(operatorID, pageSize)) { _ in }
+        sut.handleEffect(.paginate(payload)) { _ in }
         
-        XCTAssertNoDiff(paginateSpy.payloads.map(\.0), [operatorID])
-        XCTAssertNoDiff(paginateSpy.payloads.map(\.1), [pageSize])
+        XCTAssertNoDiff(paginateSpy.payloads, [
+            .init(
+                operatorID: payload.operatorID,
+                pageSize: payload.pageSize,
+                searchText: payload.searchText
+            )
+        ])
     }
     
     func test_paginate_shouldDeliverPageEventWithPayload() {
@@ -38,10 +48,24 @@ final class PrepaymentPickerEffectHandlerTests: XCTestCase {
         }
     }
     
+    // MARK: - search
+    
+//    func test_search_shouldCallPaginateWithPayload() {
+//        
+//        let payload = makePaginatePayload()
+//        let (sut, paginateSpy) = makeSUT()
+//        
+//        sut.handleEffect(.search(text)) { _ in }
+//        
+//        XCTAssertNoDiff(paginateSpy.payloads, [
+//            .init(op)
+//        ])
+//    }
+    
     // MARK: - Helpers
     
     private typealias SUT = PrepaymentPickerEffectHandler<Operator>
-    private typealias PaginateSpy = Spy<(Operator.ID, Effect.PageSize), [Operator]>
+    private typealias PaginateSpy = Spy<Effect.PaginatePayload, [Operator]>
     
     private func makeSUT(
         file: StaticString = #file,

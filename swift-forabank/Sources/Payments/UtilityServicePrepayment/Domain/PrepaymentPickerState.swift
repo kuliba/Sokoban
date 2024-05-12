@@ -9,16 +9,19 @@ public struct PrepaymentPickerState<LastPayment, Operator> {
     
     public let lastPayments: [LastPayment]
     public var operators: [Operator]
-    public let searchText: String
+    public var searchText: String
+    public var isSearching: Bool
     
     public init(
         lastPayments: [LastPayment],
         operators: [Operator],
-        searchText: String
+        searchText: String,
+        isSearching: Bool = false
     ) {
         self.lastPayments = lastPayments
         self.operators = operators
         self.searchText = searchText
+        self.isSearching = isSearching
     }
 }
 

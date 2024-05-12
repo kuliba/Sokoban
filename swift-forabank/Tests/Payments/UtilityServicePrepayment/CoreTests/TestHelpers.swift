@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
 
 // MARK: - Types
@@ -24,6 +25,8 @@ typealias State = PrepaymentPickerState<LastPayment, Operator>
 typealias Event = PrepaymentPickerEvent<Operator>
 typealias Effect = PrepaymentPickerEffect<Operator.ID>
 
+typealias EffectHandler = PrepaymentPickerEffectHandler<Operator>
+
 // MARK: - Helpers
 
 func makeEmptyState() -> State {
@@ -34,13 +37,15 @@ func makeEmptyState() -> State {
 func makeState(
     lastPayments: [LastPayment] = [],
     operators: [Operator] = [makeOperator()],
-    searchText: String = ""
+    searchText: String = "",
+    isSearching: Bool = false
 ) -> State {
     
     return .init(
         lastPayments: lastPayments,
         operators: operators,
-        searchText: searchText
+        searchText: searchText,
+        isSearching: isSearching
     )
 }
 
@@ -66,15 +71,29 @@ func makeOperatorID(
 }
 
 func makePageSize(
-) -> Effect.PageSize {
+) -> Effect.PaginatePayload.PageSize {
     
     Int.random(in: 1...(.max))
 }
 
 func makePaginateEffect(
-    operatorID: Operator.ID = makeOperatorID(),
-    pageSize: Effect.PageSize = makePageSize()
+    operatorID: Operator.ID? = makeOperatorID(),
+    pageSize: Effect.PaginatePayload.PageSize = makePageSize(),
+    searchText: String = ""
 ) -> Effect {
     
-    .paginate(operatorID, pageSize)
+    .paginate(.init(
+        operatorID: operatorID,
+        pageSize: pageSize,
+        searchText: searchText
+    ))
+}
+
+func makePaginatePayload(
+    operatorID: Operator.ID? = makeOperatorID(),
+    pageSize: Effect.PaginatePayload.PageSize = makePageSize(),
+    searchText: String = ""
+) -> EffectHandler.PaginatePayload {
+    
+    .init(operatorID: operatorID, pageSize: pageSize, searchText: searchText)
 }

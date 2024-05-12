@@ -126,6 +126,9 @@ private extension PrepaymentPickerEvent where Operator == UtilityPaymentOperator
         case let .didScrollTo(operatorID):
             return .didScrollTo(operatorID)
             
+        case let .search(text):
+            return .search(.entered(text))
+            
         case let .page(operators):
             return .page(operators)
         }
