@@ -8,7 +8,7 @@
 public struct PrepaymentPickerState<LastPayment, Operator> {
     
     public let lastPayments: [LastPayment]
-    public let operators: [Operator]
+    public var operators: [Operator]
     public let searchText: String
     
     public init(

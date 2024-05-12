@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 09.05.2024.
 //
 
+#warning("remove?")
 final class UtilityPrepaymentReducer {}
 
 extension UtilityPrepaymentReducer {
@@ -19,6 +20,9 @@ extension UtilityPrepaymentReducer {
         
         switch event {
         case let .didScrollTo(operatorID):
+#warning("add event processing")
+            
+        case let .page(operators):
 #warning("add event processing")
             
         case let .search(search):

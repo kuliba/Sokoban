@@ -43,7 +43,7 @@ where LastPayment: Identifiable,
 public extension PrepaymentPicker {
     
     typealias State = PrepaymentPickerState<LastPayment, Operator>
-    typealias Event = PrepaymentPickerEvent<Operator.ID>
+    typealias Event = PrepaymentPickerEvent<Operator>
     
     typealias Factory = PrepaymentPickerFactory<LastPayment, Operator, SearchView, LastPaymentView, OperatorView, FooterView>
 }

@@ -7,9 +7,11 @@
 
 import OperatorsListComponents
 
+#warning("remove?")
 enum UtilityPrepaymentEvent: Equatable {
     
     case didScrollTo(Operator.ID)
+    case page([Operator])
     case search(Search)
 }
 

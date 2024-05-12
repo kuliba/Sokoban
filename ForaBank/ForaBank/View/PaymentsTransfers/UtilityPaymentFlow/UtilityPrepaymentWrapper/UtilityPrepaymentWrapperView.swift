@@ -118,13 +118,16 @@ private extension UtilityPrepaymentWrapperView {
 
 // MARK: - Adapters
 
-private extension PrepaymentPickerEvent where OperatorID == String {
+private extension PrepaymentPickerEvent where Operator == UtilityPaymentOperator<String> {
     
     var event: UtilityPrepaymentEvent {
         
         switch self {
         case let .didScrollTo(operatorID):
             return .didScrollTo(operatorID)
+            
+        case let .page(operators):
+            return .page(operators)
         }
     }
 }
