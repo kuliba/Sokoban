@@ -128,7 +128,7 @@ extension MyProductsSectionItemView {
                     baseImage.renderingMode(.original)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 32)
+                        .frame(width: 32, height: 30)
                         .accessibilityIdentifier("MyProductsProductIcon")
                     
                 case let .color(baseColor):

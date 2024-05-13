@@ -16,15 +16,15 @@ struct MyProductsSectionView: View {
     var body: some View {
         
         VStack(spacing: 0) {
-
+            
             HStack(alignment: .center) {
-
+                
                 Text(viewModel.title)
                     .font(.textH3Sb18240())
                     .foregroundColor(.textSecondary)
-
+                
                 Color.barsBars
-
+                
                 Image.ic24ChevronDown
                     .rotationEffect(viewModel.isCollapsed ? .degrees(0) : .degrees(-180))
                     .foregroundColor(.iconGray)
@@ -32,101 +32,63 @@ struct MyProductsSectionView: View {
             .padding(.horizontal, 12)
             .frame(height: 48)
             .onTapGesture {
-
+                
                 withAnimation { viewModel.isCollapsed.toggle() }
             }
-
+            
             List {
                 ForEach($viewModel.items) { $item in
                     
                     switch item {
-                        
                     case let .item(itemVM):
-                    
-                    if #available(iOS 15.0, *) {
-                        
-                        MyProductsSectionItemView.BaseItemView(viewModel: itemVM, editMode: $editMode)
-                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                            .listRowSeparator(separatorVisibility(item: item), edges: .bottom)
-                            .listRowSeparatorTint(.mainColorsGrayMedium.opacity(0.6))
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                
-                                if let actionButtonViewModel = itemVM.actionButton(for: .init(with: .trailing)) {
-                                    
-                                    Button(action: actionButtonViewModel.action) {
-                                        
-                                        Text(actionButtonViewModel.type.title)
-                                        
-                                    }.tint(actionButtonViewModel.type.color)
-                                    
-                                } else {
-                                    
-                                    EmptyView()
-                                }
-                                
-                            } //swipe
-                            .frame(height: 72, alignment: .leading)
-                            .listRowBackground(Color.barsBars)
-                        
-                    } else { //iOS 14
-                        
-                        MyProductsSectionItemView(viewModel: itemVM, editMode: $editMode)
-                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                            .frame(height: 72, alignment: .bottomLeading)
-                            .listRowBackground(Color.barsBars)
-                            .modifier(SwipeSidesModifier(leftAction: {
-                                
-                                itemVM.action.send(MyProductsSectionItemAction.Swiped(
-                                                    direction: .left, editMode: editMode))
-                            }, rightAction: {
-                                
-                                itemVM.action.send(MyProductsSectionItemAction.Swiped(
-                                                    direction: .right, editMode: editMode))
-                            }))
-                        
-                    } //iOS15
+                        itemView(itemVM)
                         
                     case .placeholder:
-                        if #available(iOS 15.0, *) {
-                            MyProductsSectionItemView.PlaceholderItemView(editMode: $editMode)
-                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                .listRowSeparator(separatorVisibility(item: item), edges: .bottom)
-                                .listRowSeparatorTint(.mainColorsGrayMedium.opacity(0.6))
-                                .listRowBackground(Color.barsBars)
-                        } else {
-                            MyProductsSectionItemView.PlaceholderItemView(editMode: $editMode)
-                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                .listRowBackground(Color.barsBars)
-                        }
+                        MyProductsSectionItemView.PlaceholderItemView(editMode: $editMode)
+                            .modifier(PlaceholderItemModifier())
                     } //switch
-                    } //for
-                    .onMove { indexes, destination in
-                        guard let first = indexes.first else { return }
-                        
-                        viewModel.action.send(MyProductsSectionViewModelAction
-                                                .Events.ItemMoved(sectionId: viewModel.id, move: (first, destination)))
-                    }
-                    .moveDisabled(editMode != .active)
-                } //List
-                .frame(height: viewModel.isCollapsed ? 0 : 72 * CGFloat(viewModel.items.count) + 0)
-                .listStyle(.plain)
-                .environment(\.editMode, $editMode)
-                .opacity(viewModel.isCollapsed ? 0 : 1)
-                .id(viewModel.idList)
-                
+                } //for
+                .onMove { indexes, destination in
+                    guard let first = indexes.first else { return }
+                    
+                    viewModel.action.send(MyProductsSectionViewModelAction
+                        .Events.ItemMoved(sectionId: viewModel.id, move: (first, destination)))
+                }
+                .moveDisabled(editMode != .active)
+            } //List
+            .frame(height: viewModel.isCollapsed ? 0 : 72 * CGFloat(viewModel.items.count) + 0)
+            .listStyle(.plain)
+            .environment(\.editMode, $editMode)
+            .opacity(viewModel.isCollapsed ? 0 : 1)
+            .id(viewModel.idList)
+            
         } //VStack section
         .background(Color.barsBars)
         .cornerRadius(12)
         .padding(.horizontal, 16)
-
-    } //body
-     
-    @available(iOS 15.0, *)
-    func separatorVisibility(item: MyProductsSectionViewModel.ItemViewModel) -> Visibility {
         
-        viewModel.items[viewModel.items.count - 1].itemVM?.id == item.id ? .hidden : .visible
-    }
+    } //body
+}
+
+private extension MyProductsSectionView {
     
+    struct PlaceholderItemModifier : ViewModifier {
+        
+        func body(content: Content) -> some View {
+            
+            if #available(iOS 15.0, *) {
+                content
+                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .listSectionSeparator(.hidden, edges: .bottom)
+                    .listRowSeparatorTint(.mainColorsGrayMedium.opacity(0.6))
+                    .listRowBackground(Color.barsBars)
+            } else {
+                content
+                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .listRowBackground(Color.barsBars)
+            }
+        }
+    }
 }
 
 struct MyProductsSectionView_Previews: PreviewProvider {
