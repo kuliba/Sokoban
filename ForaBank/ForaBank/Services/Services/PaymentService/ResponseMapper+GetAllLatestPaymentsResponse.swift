@@ -10,12 +10,14 @@ import OperatorsListComponents
 
 extension ResponseMapper {
     
+    typealias Mapper = OperatorsListComponents.ResponseMapper
+    
     static func mapGetAllLatestPaymentsResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> MappingResult<[LatestPaymentCodable]?> {
+    ) -> Mapper.MappingResult<[LatestPayment]?> {
         
-        map(data, httpURLResponse, mapOrThrow: map)
+        Mapper.map(data, httpURLResponse, mapOrThrow: map)
     }
     
     private static func map(
