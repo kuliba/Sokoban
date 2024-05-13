@@ -9,6 +9,7 @@ import OperatorsListComponents
 import PrePaymentPicker
 import FooterComponent
 import SwiftUI
+import UtilityServicePrepaymentUI
 
 struct UtilityOperatorPicker: View {
     
@@ -23,7 +24,7 @@ struct UtilityOperatorPicker: View {
             failureView()
             
         case let .options(state):
-            ComposedOperatorsView(
+            PrepaymentPicker(
                 state: .init(
                     lastPayments: state.lastPayments,
                     operators: state.operators,
@@ -40,9 +41,11 @@ struct UtilityOperatorPicker: View {
         }
     }
     
+    typealias LastPayment = UtilityPaymentLastPayment
+    
 #warning("fix `makeIconView`")
     private func lastPaymentView(
-        latestPayment: OperatorsListComponents.LastPayment
+        latestPayment: LastPayment
     ) -> some View {
         
         Button {
@@ -60,7 +63,7 @@ struct UtilityOperatorPicker: View {
         }
     }
     
-    typealias Operator = OperatorsListComponents.Operator<String>
+    typealias Operator = UtilityPaymentOperator<String>
     
 #warning("fix `makeIconView`")
     private func operatorView(
@@ -126,7 +129,7 @@ struct UtilityOperatorPicker: View {
 }
 
 #warning("move to the call site and make private")
-/*private*/ extension OperatorsListComponents.LastPayment {
+/*private*/ extension UtilityPaymentLastPayment {
     
     var amount: String { subtitle }
 }

@@ -1,10 +1,10 @@
 //
 //  UtilityPrepaymentState.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 09.05.2024.
 //
 
-import OperatorsListComponents
+import UtilityServicePrepaymentDomain
 
-typealias UtilityPrepaymentState = ComposedOperatorsState<OperatorsListComponents.LastPayment, OperatorsListComponents.Operator<String>>
+typealias UtilityPrepaymentState = PrepaymentPickerState<UtilityPaymentLastPayment, UtilityPaymentOperator<String>>

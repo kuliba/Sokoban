@@ -8,7 +8,7 @@
 import ForaTools
 import Foundation
 
-public struct LoadOperatorsPayload<Icon> {
+public struct LoadOperatorsPayload<OperatorID: Hashable> {
     
     let operatorID: OperatorID?
     let searchText: String
@@ -23,11 +23,6 @@ public struct LoadOperatorsPayload<Icon> {
         self.searchText = searchText
         self.pageSize = pageSize
     }
-}
-
-public extension LoadOperatorsPayload {
-    
-    typealias OperatorID = Operator<Icon>.ID
 }
 
 public extension Array where Element == _OperatorGroup {

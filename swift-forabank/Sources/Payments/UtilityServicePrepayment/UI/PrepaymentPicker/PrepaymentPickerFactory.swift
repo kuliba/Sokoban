@@ -1,5 +1,5 @@
 //
-//  ComposedOperatorsViewFactory.swift
+//  PrepaymentPickerFactory.swift
 //
 //
 //  Created by Igor Malyarov on 11.05.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ComposedOperatorsViewFactory<LastPayment, Operator, FooterView, LastPaymentView, OperatorView, SearchView>
+public struct PrepaymentPickerFactory<LastPayment, Operator, FooterView, LastPaymentView, OperatorView, SearchView>
 where FooterView: View,
       LastPaymentView: View,
       OperatorView: View,
@@ -31,7 +31,7 @@ where FooterView: View,
     }
 }
 
-public extension ComposedOperatorsViewFactory {
+public extension PrepaymentPickerFactory {
     
     typealias MakeFooterView = (Bool) -> FooterView
     typealias MakeLastPaymentView = (LastPayment) -> LastPaymentView

@@ -15,8 +15,8 @@ struct PaymentsTransfersViewFactory {
 
 extension PaymentsTransfersViewFactory {
     
-    typealias LastPayment = OperatorsListComponents.LastPayment
-    typealias Operator = OperatorsListComponents.Operator<String>
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
     
     typealias _UtilityPaymentFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     typealias _UtilityPaymentFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>

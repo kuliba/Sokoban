@@ -15,7 +15,7 @@ enum UtilityPrepaymentEvent: Equatable {
 
 extension UtilityPrepaymentEvent {
     
-    typealias Operator = OperatorsListComponents.Operator<String>
+    typealias Operator = UtilityPaymentOperator<String>
     
     enum Search: Equatable {
         

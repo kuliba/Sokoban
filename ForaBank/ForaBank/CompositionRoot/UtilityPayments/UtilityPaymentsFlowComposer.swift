@@ -89,8 +89,8 @@ extension UtilityPaymentsFlowComposer {
     
     typealias Flag = StubbedFeatureFlag.Option
     
-    typealias LastPayment = OperatorsListComponents.LastPayment
-    typealias Operator = OperatorsListComponents.Operator<String>
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
     
     typealias UtilityFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
 }
@@ -202,7 +202,7 @@ private extension UtilityPaymentsFlowComposer {
     }
 }
 
-private extension Array where Element == OperatorsListComponents.LastPayment {
+private extension Array where Element == UtilityPaymentLastPayment {
     
     static let stub: Self = [
         .failure,
@@ -210,14 +210,14 @@ private extension Array where Element == OperatorsListComponents.LastPayment {
     ]
 }
 
-private extension OperatorsListComponents.LastPayment {
+private extension UtilityPaymentLastPayment {
     
     static let failure: Self = .init(id: "failure", title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
     static let preview: Self = .init(id: UUID().uuidString, title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
 }
 
 #warning("move to the call site and make private")
-/*private*/ extension OperatorsListComponents.Operator<String> {
+/*private*/ extension UtilityPaymentOperator<String> {
     
     static let multiple: Self = .init("multiple", "Multiple")
     static let multipleFailure: Self = .init("multipleFailure", "MultipleFailure")
@@ -230,7 +230,7 @@ private extension OperatorsListComponents.LastPayment {
     }
 }
 
-private extension Array where Element == OperatorsListComponents.Operator<String> {
+private extension Array where Element == UtilityPaymentOperator<String> {
     
     static let stub: Self = [
         .single,
