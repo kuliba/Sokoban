@@ -27,7 +27,7 @@ extension UtilityPaymentEvent {
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator<String>
-    typealias ComposedEvent = PrepaymentPickerEvent<Operator.ID>
+    typealias ComposedEvent = PrepaymentPickerEvent<Operator>
 }
 
 enum UtilityPaymentEffect: Equatable {}
