@@ -21,7 +21,7 @@ struct UtilityPrepaymentWrapperView: View {
         
         PrepaymentPicker(
             state: viewModel.state,
-            event: { viewModel.event($0.event) },
+            event: { viewModel.event($0) },
             factory: .init(
                 makeFooterView: makeFooterView,
                 makeLastPaymentView: makeLastPaymentView,
@@ -100,33 +100,13 @@ private extension UtilityPrepaymentWrapperView {
             "Type to search",
             text: .init(
                 get: { viewModel.state.searchText },
-                set: { viewModel.event(.search(.entered($0))) }
+                set: { viewModel.event(.search($0)) }
             )
         )
     }
 }
 
 // MARK: - Adapters
-
-private extension PrepaymentPickerEvent where Operator == UtilityPaymentOperator<String> {
-    
-    var event: UtilityPrepaymentEvent {
-        
-        switch self {
-        case let .didScrollTo(operatorID):
-            return .didScrollTo(operatorID)
-            
-        case let .load(operators):
-            return .load(operators)
-            
-        case let .page(operators):
-            return .page(operators)
-            
-        case let .search(text):
-            return .search(.entered(text))
-        }
-    }
-}
 
 private extension FooterEvent {
     
