@@ -81,18 +81,18 @@ private extension ResponseMapper {
     
     struct LatestPaymentCodable: Codable {
         
-        let date: Int
+        let name: String
         let paymentDate: String
         let type: LatestPaymentKind
-        var additionalList: [AdditionalListData]
-        var amount: Double
-        var puref: String
-        var lastPaymentName: String?
+        let additionalList: [AdditionalListData]
+        let amount: Double
+        let puref: String
+        let lastPaymentName: String?
         let md5hash: String
-        let name: String
+        let date: Int
         
         enum CodingKeys: String, CodingKey {
-            case id, date, paymentDate, type, additionalList, amount, puref, md5hash, name
+            case date, paymentDate, type, additionalList, amount, puref, md5hash, name
             case lastPaymentName = "lpName"
 
         }

@@ -26,7 +26,7 @@ extension RequestFactory {
         )
         
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        request.httpMethod = "GET"
         
         return request
     }
