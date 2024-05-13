@@ -6,6 +6,7 @@
 //  Full refactored by Dmitry Martynov on 18.09.2022
 //
 
+import ActivateSlider
 import Combine
 import UIKit
 import SwiftUI

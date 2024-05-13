@@ -7,14 +7,15 @@
 
 import SwiftUI
 
-struct CardModifier<StatusAction: View>: ViewModifier {
+struct CardModifier<ActivationView: View, StatusView: View>: ViewModifier {
 
     let isChecked: Bool
     let isUpdating: Bool
     let isFrontView: Bool
     let config: CardUI.Config
-    let statusAction: () -> StatusAction?
-    
+    let activationView: () -> ActivationView
+    let statusView: () -> StatusView
+
     @ViewBuilder
     private func checkView() -> some View {
         
@@ -22,16 +23,7 @@ struct CardModifier<StatusAction: View>: ViewModifier {
             CheckView(config: config)
         }
     }
-    
-    @ViewBuilder
-    private func statusActionView() -> some View {
         
-        if let statusAction = statusAction() {
-            
-            statusAction
-        }
-    }
-    
     @ViewBuilder
     private func updatingView() -> some View {
         
@@ -71,7 +63,8 @@ struct CardModifier<StatusAction: View>: ViewModifier {
             .padding(config.front.cardPadding)
             .background(background())
             .overlay(checkView(), alignment: .topLeading)
-            .overlay(statusActionView(), alignment: .center)
+            .overlay(activationView(), alignment: .center)
+            .overlay(statusView(), alignment: .center)
             .overlay(updatingView(), alignment: .center)
             .clipShape(RoundedRectangle(cornerRadius: config.front.cornerRadius, style: .circular))
     }

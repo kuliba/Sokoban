@@ -110,11 +110,11 @@ final class ProductCarouselViewViewModelContentTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
-        sut: ProductView.ViewModel,
+        sut: ProductViewModel,
         model: Model
     ) {
         let model: Model = .mockWithEmptyExcept()
-        let sut = ProductView.ViewModel(with: .stub(), size: .normal, style: .main, model: .emptyMock)
+        let sut = ProductViewModel(with: .stub(), size: .normal, style: .main, model: .emptyMock)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -130,7 +130,7 @@ final class ProductCarouselViewViewModelContentTests: XCTestCase {
         productTypesCounts.map { (productType, count) in
 
             let productsData: [ProductData] = makeProducts(count: count, ofType: productType)
-            let products: [ProductView.ViewModel] = productsData.map(makeProductViewVM)
+            let products: [ProductViewModel] = productsData.map(makeProductViewVM)
             
             return .init(
                 productType: productType,

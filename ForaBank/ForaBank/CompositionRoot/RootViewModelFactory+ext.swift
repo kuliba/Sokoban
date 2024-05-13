@@ -114,6 +114,11 @@ extension RootViewModelFactory {
         let paymentsTransfersNavigationStateManager = makePaymentsTransfersNavigationStateManager(
         )
 
+        let unblockCardServices = Services.makeUnblockCardServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+
         let productNavigationStateManager = makeProductNavigationStateManager(
             alertsReduce: AlertReducer(productAlertsViewModel: .default),
             bottomSheetReduce: BottomSheetReducer(),
@@ -127,8 +132,9 @@ extension RootViewModelFactory {
             paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
+            unblockCardServices: unblockCardServices,
             qrViewModelFactory: qrViewModelFactory,
-            cvvPINServicesClient: cvvPINServicesClient, 
+            cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager
         )
         
@@ -502,6 +508,7 @@ extension ProductProfileViewModel {
         paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
+        unblockCardServices: UnblockCardServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         productNavigationStateManager: ProductNavigationStateManager
@@ -516,8 +523,9 @@ extension ProductProfileViewModel {
                 paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
+                unblockCardServices: unblockCardServices,
                 qrViewModelFactory: qrViewModelFactory,
-                cvvPINServicesClient: cvvPINServicesClient, 
+                cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager
             )
             
@@ -579,6 +587,7 @@ extension ProductProfileViewModel {
                 paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
+                unblockCardServices: unblockCardServices,
                 qrViewModelFactory: qrViewModelFactory,
                 paymentsTransfersFactory: paymentsTransfersFactory, 
                 operationDetailFactory: operationDetailFactory,

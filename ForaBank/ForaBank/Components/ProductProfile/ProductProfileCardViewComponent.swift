@@ -9,6 +9,8 @@ import SwiftUI
 import Combine
 import PinCodeUI
 import CardUI
+import ActivateSlider
+import Foundation
 
 //MARK: - ViewModel
 
@@ -22,7 +24,7 @@ extension ProductProfileCardView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var selector: SelectorViewModel
-        @Published var products: [ProductView.ViewModel]
+        @Published var products: [ProductViewModel]
         @Published var activeProductId: ProductData.ID
         
         let productType: ProductType
@@ -36,7 +38,7 @@ extension ProductProfileCardView {
         
         fileprivate init(
             selector: SelectorViewModel,
-            products: [ProductView.ViewModel],
+            products: [ProductViewModel],
             activeProductId: ProductData.ID,
             productType: ProductType,
             model: Model = .emptyMock,
@@ -69,7 +71,7 @@ extension ProductProfileCardView {
             
             // generate products view models
             let productsWithRelated = Self.reduce(products: productsForType, with: model.products.value)
-            var productsViewModels = [ProductView.ViewModel]()
+            var productsViewModels = [ProductViewModel]()
             for product in productsWithRelated {
                 
                 let cvvInfo: CvvInfo? = {
@@ -83,7 +85,7 @@ extension ProductProfileCardView {
                     return nil
                 }()
                 
-                let productViewModel = ProductView.ViewModel(
+                let productViewModel = ProductViewModel(
                     with: product,
                     size: .large,
                     style: .profile,
@@ -180,7 +182,7 @@ extension ProductProfileCardView {
                         let productsWithRelated = Self.reduce(products: productsForType, with: productsData)
                         
                         // update products view models
-                        var updatedProducts = [ProductView.ViewModel]()
+                        var updatedProducts = [ProductViewModel]()
                         for product in productsWithRelated {
                             
                             if let productViewModel = self.products.first(where: { $0.id == product.id }) {
@@ -201,7 +203,7 @@ extension ProductProfileCardView {
                                     return nil
                                 }()
                                 
-                                let productViewModel = ProductView.ViewModel(
+                                let productViewModel = ProductViewModel(
                                     with: product,
                                     size: .large,
                                     style: .profile,
@@ -321,7 +323,7 @@ extension ProductProfileCardView {
                 }.store(in: &bindings)
         }
         
-        private func bind(_ product: ProductView.ViewModel) {
+        private func bind(_ product: ProductViewModel) {
             
             product.action
                 .receive(on: DispatchQueue.main)
@@ -338,8 +340,8 @@ extension ProductProfileCardView {
                             
                             return
                         }
-                        model.action.send(ModelAction.Card.Unblock.Request(cardId: cardProduct.id, cardNumber: cardNumber))
-                    
+                        self.activateCard(cardProduct, cardNumber)
+                        
                     default:
                         break
                     }
@@ -372,6 +374,24 @@ extension ProductProfileCardView {
                     }
                     
                 }.store(in: &bindings)
+        }
+        
+        func activateCard(
+            _ cardProduct: ProductCardData?,
+            _ cardNumber: String?
+        ) {
+            guard let cardProduct, let cardNumber else { return }
+            
+            model.action.send(ModelAction.Card.Unblock.Request(cardId: cardProduct.id, cardNumber: cardNumber))
+        }
+        
+        func needSlider(_ product: ProductViewModel) -> Bool {
+            
+            guard let productData = model.product(productId: product.id),
+                  let cardProduct = productData.asCard 
+            else { return false }
+                    
+            return cardProduct.statusCard == .notActivated
         }
     }
 }
@@ -510,7 +530,10 @@ extension ProductProfileCardView.ViewModel {
 struct ProductProfileCardView: View {
     
     @ObservedObject var viewModel: ProductProfileCardView.ViewModel
-        
+    let makeSliderActivateView: MakeActivateSliderView
+    let makeSliderViewModel: ActivateSliderViewModel
+    let sliderConfig: SliderConfig = .config
+    
     var body: some View {
         
         VStack(spacing: 0) {
@@ -529,9 +552,21 @@ struct ProductProfileCardView: View {
                             .opacity(0.3)
                             .blur(radius: 10)
                             .frame(width: 268 - 20, height: 165)
-                        
-                        ProductView(viewModel: product)
+
+                        if viewModel.needSlider(product)  {
+                            GenericProductView<ActivateSliderStateWrapperView>(viewModel: product, factory: .init(
+                                makeSlider: {
+                                    makeSliderActivateView(
+                                        product.id,
+                                        makeSliderViewModel,
+                                        sliderConfig
+                                    )}))
                             .frame(width: 268, height: 160)
+
+                        } else {
+                            ProductView(viewModel: product)
+                                  .frame(width: 268, height: 160)
+                        }
                         
                     }.tag(product.id)
                 }
@@ -689,7 +724,11 @@ struct ProductProfileCardView_Previews: PreviewProvider {
         
         Group {
             
-            ProductProfileCardView(viewModel: .sample)
+            ProductProfileCardView(
+                viewModel: .sample,
+                makeSliderActivateView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
+                makeSliderViewModel: .previewActivateSuccess
+            )
                 .previewLayout(.fixed(width: 375, height: 500))
             
             ProductProfileCardView.SelectorView(viewModel: .sample)

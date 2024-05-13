@@ -96,6 +96,7 @@ extension Services {
             case processPublicKeyAuthenticationRequest
             case showCVV
             case updateFastPaymentContract
+            case unblockCard
         }
     }
 }
@@ -339,6 +340,12 @@ extension Services.Endpoint {
         serviceName: .showCVV
     )
     
+    static let unblockCard: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .unblockCard
+    )
+
     static let updateFastPaymentContract: Self = .init(
         pathPrefix: .rest,
         version: .none,

@@ -58,7 +58,7 @@ struct ThumbView_Previews: PreviewProvider {
             ZStack {
                 Color.gray
                     .frame(width: 100, height: 100)
-                ThumbView(config: SliderConfig.default.thumbConfig(.confirmActivate))
+                ThumbView(config: SliderConfig.default.thumbConfig(.confirmActivate(1)))
             }
         }
     }

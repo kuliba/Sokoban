@@ -10,9 +10,9 @@ import CardUI
 
 //MARK: - Preview Content
 
-extension ProductView.ViewModel {
+extension ProductViewModel {
     
-    static let notActivate = ProductView.ViewModel(
+    static let notActivate = ProductViewModel(
         id: 0,
         header: .make(period: nil),
         cardInfo: .classicCard,
@@ -31,7 +31,7 @@ extension ProductView.ViewModel {
     private static func blockedCard(
         id: ProductData.ID,
         _ appearance: Appearance
-    ) -> ProductView.ViewModel {
+    ) -> ProductViewModel {
         
         .init(
             id: id,
@@ -53,7 +53,7 @@ extension ProductView.ViewModel {
     private static func classicCard(
         id: ProductData.ID,
         _ appearance: Appearance
-    ) -> ProductView.ViewModel {
+    ) -> ProductViewModel {
         
         .init(
             id: id,
@@ -69,7 +69,7 @@ extension ProductView.ViewModel {
         )
     }
     
-    static let account = ProductView.ViewModel(
+    static let account = ProductViewModel(
         id: 3,
         header: .make(period: nil),
         cardInfo: .salaryAccount,
@@ -82,7 +82,7 @@ extension ProductView.ViewModel {
         cvvInfo: nil
     )
     
-    static let accountSmall = ProductView.ViewModel(
+    static let accountSmall = ProductViewModel(
         id: 13,
         header: .make(period: nil),
         cardInfo: .salaryAccount,
@@ -96,7 +96,7 @@ extension ProductView.ViewModel {
         cvvInfo: nil
     )
     
-    static let notActivateProfile = ProductView.ViewModel(
+    static let notActivateProfile = ProductViewModel(
         id: 4, header: .make(),
         cardInfo: .classicCard,
         footer: .visa,
@@ -112,7 +112,7 @@ extension ProductView.ViewModel {
         cvvInfo: nil
     )
     
-    static let blockedProfile = ProductView.ViewModel(
+    static let blockedProfile = ProductViewModel(
         id: 5,
         header: .make(),
         cardInfo: .classicCard,
@@ -127,7 +127,7 @@ extension ProductView.ViewModel {
         cardAction: { _ in },
         cvvInfo: nil
     )
-    static let classicProfile = ProductView.ViewModel(
+    static let classicProfile = ProductViewModel(
         id: 6,
         header: .make(),
         cardInfo: .init(
@@ -147,7 +147,7 @@ extension ProductView.ViewModel {
         cvvInfo: nil
     )
     
-    static let accountProfile = ProductView.ViewModel(
+    static let accountProfile = ProductViewModel(
         id: 7,
         header: .make(),
         cardInfo: .salaryAccount,
@@ -160,7 +160,7 @@ extension ProductView.ViewModel {
         cvvInfo: nil
     )
     
-    static let depositProfile = ProductView.ViewModel(
+    static let depositProfile = ProductViewModel(
         id: 8,
         header: .make(),
         cardInfo: .init(
@@ -182,7 +182,7 @@ extension ProductView.ViewModel {
         cvvInfo: nil
     )
     
-    static let updating = ProductView.ViewModel(
+    static let updating = ProductViewModel(
         id: 9,
         header: .make(period: nil),
         cardInfo: .init(

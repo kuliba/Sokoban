@@ -26,6 +26,7 @@ extension MyProductsViewModel {
             paymentsTransfersNavigationStateManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview
@@ -51,6 +52,7 @@ extension MyProductsViewModel {
             paymentsTransfersNavigationStateManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview

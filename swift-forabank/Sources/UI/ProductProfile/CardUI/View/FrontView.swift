@@ -10,7 +10,7 @@ import SwiftUI
 
 //MARK: - View
 
-struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
+struct FrontView<Header: View, Footer: View, ActivationView: View, StatusView: View>: View {
     
     let name: String
     let modifierConfig: ModifierConfig
@@ -18,22 +18,25 @@ struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
     let headerView: () -> Header
     let footerView: () -> Footer
     
-    let statusActionView: () -> StatusAction?
-    
+    let activationView: () -> ActivationView
+    let statusView: () -> StatusView
+
     init(
         name: String,
         modifierConfig: ModifierConfig,
         config: Config,
         headerView: @escaping () -> Header,
         footerView: @escaping () -> Footer,
-        statusActionView: @escaping () -> StatusAction?
+        activationView: @escaping () -> ActivationView = EmptyView.init,
+        statusView: @escaping () -> StatusView = EmptyView.init
     ) {
         self.name = name
         self.modifierConfig = modifierConfig
         self.config = config
         self.headerView = headerView
         self.footerView = footerView
-        self.statusActionView = statusActionView
+        self.activationView = activationView
+        self.statusView = statusView
     }
     
     var body: some View {
@@ -59,7 +62,8 @@ struct FrontView<Header: View, Footer: View, StatusAction: View>: View {
         .card(
             isChecked: modifierConfig.isChecked,
             isUpdating: modifierConfig.isUpdating,
-            statusActionView: statusActionView(),
+            activationView: activationView(),
+            statusView: statusView(),
             config: config,
             isFrontView: true,
             action: modifierConfig.action
@@ -98,7 +102,7 @@ struct FrontView_Previews: PreviewProvider {
                         config: .config(.previewCard),
                         footer: .init(balance: "123 RUB"))
                 },
-                statusActionView: {
+                activationView: {
                     EmptyView()
                 })
             .fixedSize()
@@ -120,7 +124,7 @@ struct FrontView_Previews: PreviewProvider {
                         config: .config(.previewCard),
                         footer: .init(balance: "123012 RUB", interestRate: "8.05"))
                 },
-                statusActionView: {
+                activationView: {
                     EmptyView()
                 })
             .fixedSize()
@@ -142,7 +146,7 @@ struct FrontView_Previews: PreviewProvider {
                         config: .config(.previewCard),
                         footer: .init(balance: "123012 RUB", interestRate: "8.05"))
                 },
-                statusActionView: {
+                activationView: {
                     EmptyView()
                 })
             .fixedSize()

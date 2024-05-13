@@ -5,6 +5,7 @@
 //  Created by Дмитрий on 09.03.2022.
 //
 
+import ActivateSlider
 import Foundation
 import Combine
 import SwiftUI
@@ -53,6 +54,7 @@ class ProductProfileViewModel: ObservableObject {
     private let paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
+    private let unblockCardServices: UnblockCardServices
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let operationDetailFactory: OperationDetailFactory
@@ -84,6 +86,7 @@ class ProductProfileViewModel: ObservableObject {
          paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
          userAccountNavigationStateManager: UserAccountNavigationStateManager,
          sberQRServices: SberQRServices,
+         unblockCardServices: UnblockCardServices,
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
          operationDetailFactory: OperationDetailFactory,
@@ -106,6 +109,7 @@ class ProductProfileViewModel: ObservableObject {
         self.paymentsTransfersNavigationStateManager = paymentsTransfersNavigationStateManager
         self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
+        self.unblockCardServices = unblockCardServices
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.operationDetailFactory = operationDetailFactory
@@ -139,6 +143,7 @@ class ProductProfileViewModel: ObservableObject {
         paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
+        unblockCardServices: UnblockCardServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         operationDetailFactory: OperationDetailFactory,
@@ -174,6 +179,7 @@ class ProductProfileViewModel: ObservableObject {
             paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
+            unblockCardServices: unblockCardServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
             operationDetailFactory: operationDetailFactory,
@@ -1593,7 +1599,8 @@ private extension ProductProfileViewModel {
             paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
-            qrViewModelFactory: qrViewModelFactory, 
+            unblockCardServices: unblockCardServices,
+            qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory, 
             operationDetailFactory: operationDetailFactory,
             cvvPINServicesClient: cvvPINServicesClient,
@@ -1834,7 +1841,7 @@ fileprivate extension NavigationBarView.ViewModel {
         rightButtons: [ButtonItemViewModel] = []
     ) {
         self.init(
-            title: ProductView.ViewModel.name(product: product, style: .profile, creditProductName: .cardTitle),
+            title: ProductViewModel.name(product: product, style: .profile, creditProductName: .cardTitle),
             subtitle: Self.subtitle(with: product),
             leftItems: [BackButtonItemViewModel(icon: .ic24ChevronLeft, action: dismissAction)],
             rightItems: rightButtons,
@@ -1877,7 +1884,7 @@ fileprivate extension NavigationBarView.ViewModel {
     
     func update(with product: ProductData) {
         
-        self.title = ProductView.ViewModel.name(
+        self.title = ProductViewModel.name(
             product: product,
             style: .profile,
             creditProductName: .productView
@@ -2566,6 +2573,38 @@ extension ProductProfileViewModel {
             
         default:
             return
+        }
+    }
+}
+
+extension ProductProfileViewModel {
+    
+    func makeSliderViewModel() -> ActivateSliderViewModel {
+        
+        .init(
+            initialState: .initialState,
+            reduce: CardActivateReducer.default,
+            handleEffect: CardActivateEffectHandler(handleCardEffect: CardEffectHandler(
+                activate: unblockCardService
+            ).handleEffect(_:_:)).handleEffect(_:_:)
+        )
+    }
+    
+    private func unblockCardService(
+        cardID: ProductData.ID,
+        completion: @escaping CardEffectHandler.ActivateCompletion
+    ) {
+        
+        let cardNumber: String = model.product(productId: cardID)?.asCard?.number ?? ""
+        
+        unblockCardServices.createUnblockCard(.init(cardId: .init(cardID), cardNumber: .init(cardNumber))) { result in
+            switch result {
+            case .failure:
+                completion(.serverError("failure"))
+                
+            case .success:
+                completion(.success)
+            }
         }
     }
 }

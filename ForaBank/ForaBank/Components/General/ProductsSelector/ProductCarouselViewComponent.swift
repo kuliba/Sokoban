@@ -36,7 +36,7 @@ extension ProductCarouselView {
             }
         }
         
-        private let products: CurrentValueSubject<[ProductType: [ProductView.ViewModel]], Never> = .init([:])
+        private let products: CurrentValueSubject<[ProductType: [ProductViewModel]], Never> = .init([:])
         let stickerViewModel: ProductCarouselView.StickerViewModel?
         
         private var groups: [ProductGroupView.ViewModel] = []
@@ -149,7 +149,7 @@ extension ProductCarouselView {
                     // all existing products view models list
                     let currentProductsViewModels = products.value.values.flatMap { $0 }
                     
-                    let updatedProducts: [ProductType: [ProductView.ViewModel]] = mode
+                    let updatedProducts: [ProductType: [ProductViewModel]] = mode
                         .filtered(products: productsUpdate)
                         .mapValues {
                             
@@ -166,7 +166,7 @@ extension ProductCarouselView {
                                 } else {
                                     
                                     // create new product view model
-                                    let productViewModel = ProductView.ViewModel(
+                                    let productViewModel = ProductViewModel(
                                         with: product,
                                         isChecked: (selectedProductId == product.id),
                                         size: style.productAppearanceSize,
@@ -269,7 +269,7 @@ extension ProductCarouselView {
                 .store(in: &bindings)
         }
         
-        private func bind(_ product: ProductView.ViewModel) {
+        private func bind(_ product: ProductViewModel) {
             
             typealias ProductDidTapped = ProductViewModelAction.ProductDidTapped
             typealias CarouselProductDidTapped = ProductCarouselViewModelAction.Products.ProductDidTapped
@@ -453,7 +453,7 @@ private extension Model {
     
     func update(
         groups: [ProductGroupView.ViewModel],
-        products: [ProductType : [ProductView.ViewModel]],
+        products: [ProductType : [ProductViewModel]],
         productsUpdating: [ProductType],
         productGroupDimensions: ProductGroupView.ViewModel.Dimensions
     ) -> [ProductGroupView.ViewModel] {
@@ -1048,25 +1048,29 @@ extension ProductCarouselView {
 
 struct ProdCarouselView_Previews: PreviewProvider {
     
+    private static func preview(_ viewModel: ProductCarouselView.ViewModel) -> some View {
+        ProductCarouselView(viewModel: viewModel)
+    }
+
     static func previewsGroup() -> some View {
         
         Group {
             
-            ProductCarouselView(viewModel: .placeholders)
+            preview(.placeholders)
                 .previewDisplayName("placeholders")
-            ProductCarouselView(viewModel: .placeholdersSmall)
+            preview(.placeholdersSmall)
                 .previewDisplayName("placeholdersSmall")
-            ProductCarouselView(viewModel: .placeholdersSmallWithSelector)
+            preview(.placeholdersSmallWithSelector)
                 .previewDisplayName("placeholdersSmallWithSelector")
-            ProductCarouselView(viewModel: .preview)
+            preview(.preview)
                 .previewDisplayName("preview")
-            ProductCarouselView(viewModel: .previewSmall)
+            preview(.previewSmall)
                 .previewDisplayName("previewSmall")
-            ProductCarouselView(viewModel: .sampleProducts)
+            preview(.sampleProducts)
                 .previewDisplayName("sampleProducts")
-            ProductCarouselView(viewModel: .sampleProductsSmall)
+            preview(.sampleProductsSmall)
                 .previewDisplayName("sampleProductsSmall")
-            ProductCarouselView(viewModel: .oneProductSmall)
+            preview(.oneProductSmall)
                 .previewDisplayName("oneProductSmall")
         }
         .previewLayout(.sizeThatFits)

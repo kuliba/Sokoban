@@ -1,20 +1,20 @@
 //
-//  ActivateSliderWrapperView.swift
+//  ActivateSliderStateWrapperView.swift
 //
 //
-//  Created by Andryusina Nataly on 21.02.2024.
+//  Created by Andryusina Nataly on 06.05.2024.
 //
 
 import SwiftUI
 import RxViewModel
 import UIPrimitives
 
-public struct ActivateSliderWrapperView: View {
+public struct ActivateSliderStateWrapperView: View {
     
-    @ObservedObject var viewModel: ActivateSliderViewModel
-    // StateObject need
-    let config: SliderConfig
+    @StateObject var viewModel: ActivateSliderViewModel
     let payload: ActivatePayload
+    
+    let config: SliderConfig
     
     public typealias ActivatePayload = Int
 
@@ -24,7 +24,7 @@ public struct ActivateSliderWrapperView: View {
         config: SliderConfig
     ) {
         self.payload = payload
-        self.viewModel = viewModel
+        self._viewModel = .init(wrappedValue: viewModel)
         self.config = config
     }
     
@@ -46,7 +46,7 @@ public struct ActivateSliderWrapperView: View {
     }
 }
 
-struct ActivateSliderWrapperView_Previews: PreviewProvider {
+struct ActivateSliderStateWrapperView_Previews: PreviewProvider {
     
     static var previews: some View {
         
@@ -64,7 +64,7 @@ struct ActivateSliderWrapperView_Previews: PreviewProvider {
             Color.gray
                 .frame(width: 300, height: 100)
             
-            ActivateSliderWrapperView(
+            ActivateSliderStateWrapperView(
                 payload: 1,
                 viewModel: .init(
                     initialState: .initialState,
@@ -81,7 +81,7 @@ struct ActivateSliderWrapperView_Previews: PreviewProvider {
             Color.gray
                 .frame(width: 300, height: 100)
             
-            ActivateSliderWrapperView(
+            ActivateSliderStateWrapperView(
                 payload: 2,
                 viewModel: .init(
                     initialState: .initialState,
@@ -92,4 +92,3 @@ struct ActivateSliderWrapperView_Previews: PreviewProvider {
         }
     }
 }
-

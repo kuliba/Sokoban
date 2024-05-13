@@ -17,7 +17,7 @@ extension CurrencyWalletListView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var optionSelector: OptionSelectorView.ViewModel?
-        @Published var products: [ProductView.ViewModel]
+        @Published var products: [ProductViewModel]
         @Published var productType: ProductType
         @Published var currencyOperation: CurrencyOperation
         @Published var currency: Currency
@@ -36,7 +36,7 @@ extension CurrencyWalletListView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(_ model: Model, currencyOperation: CurrencyOperation, currency: Currency, productType: ProductType, products: [ProductView.ViewModel]) {
+        init(_ model: Model, currencyOperation: CurrencyOperation, currency: Currency, productType: ProductType, products: [ProductViewModel]) {
             
             self.model = model
             self.currencyOperation = currencyOperation
@@ -108,7 +108,7 @@ extension CurrencyWalletListView {
             }
         }
         
-        func bind(_ products: [ProductView.ViewModel]) {
+        func bind(_ products: [ProductViewModel]) {
             
             for product in products {
                 
@@ -210,14 +210,14 @@ extension CurrencyWalletListViewModel {
         return options
     }
     
-    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType, filter: ProductData.Filter, selectedProductId: Int) -> [ProductView.ViewModel] {
+    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType, filter: ProductData.Filter, selectedProductId: Int) -> [ProductViewModel] {
 
         let sortedProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
         let filteredProducts = filter.filteredProducts(sortedProducts)
         
         let products = filteredProducts.map {
          
-            ProductView.ViewModel(
+            ProductViewModel(
                 with: $0, 
                 isChecked: ($0.id == selectedProductId),
                 size: .small,
@@ -231,11 +231,11 @@ extension CurrencyWalletListViewModel {
         return products
     }
 
-    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, selectedProductId: Int) -> [ProductView.ViewModel] {
+    static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, selectedProductId: Int) -> [ProductViewModel] {
 
         let filteredProducts = model.products(currency: currency, currencyOperation: currencyOperation).sorted { $0.productType.order < $1.productType.order }
 
-        let products = filteredProducts.map { ProductView.ViewModel(with: $0, isChecked: ($0.id == selectedProductId), size: .small, style: .main, model: model) }
+        let products = filteredProducts.map { ProductViewModel(with: $0, isChecked: ($0.id == selectedProductId), size: .small, style: .main, model: model) }
 
         return products
     }

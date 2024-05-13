@@ -6,17 +6,20 @@
 //
 
 import SberQR
+import ActivateSlider
 import SwiftUI
 
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
+typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
 
 struct RootViewFactory {
     
     let makePaymentsTransfersView: MakePaymentsTransfersView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeUserAccountView: MakeUserAccountView
+    let makeActivateSliderView: MakeActivateSliderView
 }
 
 struct MainViewFactory {
@@ -49,6 +52,21 @@ extension RootViewFactory {
         .init(
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView
+        )
+    }
+}
+
+struct ProductProfileViewFactory {
+    
+    let makeActivateSliderView: MakeActivateSliderView
+}
+
+extension RootViewFactory {
+    
+    var productProfileViewFactory: ProductProfileViewFactory {
+ 
+        .init(
+            makeActivateSliderView: makeActivateSliderView
         )
     }
 }
