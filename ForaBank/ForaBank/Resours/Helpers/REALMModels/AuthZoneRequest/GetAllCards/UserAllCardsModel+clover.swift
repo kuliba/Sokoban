@@ -16,7 +16,7 @@ extension UserAllCardsModel {
             let isDark = (background.first?.description == "F6F6F7")
             switch cardType {
             case .main:
-                return UIImage(named: isDark ? "ic16MainCardGrey" : "ic16MainCardWhite")
+                return UIImage(named: isDark ? "ic16MainCardGreyFixed2" : "ic16MainCardWhiteFixed2")
             case .additionalOther, .additionalSelf, .additionalSelfAccOwn:
                 return UIImage(named: isDark ? "ic16AdditionalCardGrey" : "ic16AdditionalCardWhite")
             default:

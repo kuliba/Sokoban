@@ -107,7 +107,7 @@ extension ProductData {
             let isDark = (background.first?.description == "F6F6F7")
             switch card.cardType {
             case .main:
-                return isDark ? .ic16MainCardGrey : .ic16MainCardWhite
+                return isDark ? .ic16MainCardGreyFixed2 : .ic16MainCardWhiteFixed2
             case .additionalOther, .additionalSelf, .additionalSelfAccOwn:
                 return isDark ? .ic16AdditionalCardGrey : .ic16AdditionalCardWhite
             default:

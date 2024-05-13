@@ -55,3 +55,8 @@ extension Image {
         }
     }
 }
+
+extension Image {
+    
+    static var cardPlaceholder: Image { Image(#function) }
+}
