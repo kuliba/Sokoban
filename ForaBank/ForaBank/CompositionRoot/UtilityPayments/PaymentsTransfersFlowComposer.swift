@@ -86,7 +86,7 @@ extension PaymentsTransfersFlowComposer {
     }
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator<String>
+    typealias Operator = UtilityPaymentOperator
     
     typealias Content = UtilityPrepaymentViewModel
     typealias PaymentViewModel = ObservingPaymentFlowMockViewModel

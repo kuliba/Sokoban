@@ -38,7 +38,7 @@ extension UtilityPrepaymentWrapperView {
     typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator<String>
+    typealias Operator = UtilityPaymentOperator
     
     typealias FlowEvent = UtilityPrepaymentFlowEvent
     typealias ViewModel = UtilityPrepaymentViewModel

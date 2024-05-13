@@ -117,7 +117,7 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     private typealias Event = SUT.Event
     
     private typealias LatestPayment = UtilityPaymentLastPayment
-    private typealias Operator = UtilityPaymentOperator<String>
+    private typealias Operator = UtilityPaymentOperator
 
     private typealias StartPaymentPayload = PaymentsTransfersEffect.UtilityServicePaymentFlowEffect.StartPaymentPayload<LatestPayment, Operator>
     

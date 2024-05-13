@@ -10,6 +10,6 @@ import RxViewModel
 
 typealias UtilityPrepaymentViewModel = RxViewModel<UtilityPrepaymentState, UtilityPrepaymentEvent, UtilityPrepaymentEffect>
 
-typealias UtilityPrepaymentState = PrepaymentPickerState<UtilityPaymentLastPayment, UtilityPaymentOperator<String>>
-typealias UtilityPrepaymentEvent = PrepaymentPickerEvent<UtilityPaymentOperator<String>>
+typealias UtilityPrepaymentState = PrepaymentPickerState<UtilityPaymentLastPayment, UtilityPaymentOperator>
+typealias UtilityPrepaymentEvent = PrepaymentPickerEvent<UtilityPaymentOperator>
 typealias UtilityPrepaymentEffect = PrepaymentPickerEffect<String>
