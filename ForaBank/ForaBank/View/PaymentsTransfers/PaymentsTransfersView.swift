@@ -416,7 +416,8 @@ private extension PaymentsTransfersView {
                 
                 UtilityPrepaymentWrapperView(
                     viewModel: state.content,
-                    flowEvent: { event(.prepayment($0.flowEvent)) }
+                    flowEvent: { event(.prepayment($0.flowEvent)) },
+                    makeIconView: { viewFactory.makeIconView(.md5Hash(.init($0))) }
                 )
             },
             destinationView: {
