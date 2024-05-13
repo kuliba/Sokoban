@@ -12,7 +12,7 @@ import OperatorsListComponents
 extension Services {
     
     typealias GetAllPaymentsResult = [LatestPaymentService]
-    typealias GetAllPaymentsService = RemoteServiceOf<String, GetAllPaymentsResult>
+    typealias GetAllPaymentsService = RemoteServiceOf<LatestPaymentKind, GetAllPaymentsResult>
     
     static func getAllLatestPayments(
         httpClient: HTTPClient

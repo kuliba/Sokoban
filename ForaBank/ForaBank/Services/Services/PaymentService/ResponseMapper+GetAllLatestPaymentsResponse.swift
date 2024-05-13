@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RemoteServices
+import OperatorsListComponents
 
 extension ResponseMapper {
     
@@ -38,6 +38,41 @@ struct LatestPaymentService: Identifiable {
     let amount: Amount
 }
 
+enum LatestPaymentKind: String, Codable {
+    
+    case phone
+    case service
+    case mobile
+    case internet
+    case transport
+    case taxAndStateService
+    case outside
+}
+
+extension LatestPaymentKind {
+
+    func parameterService() -> (String, String) {
+        
+        switch self {
+        case .internet:
+            return ("isInternetPayments", "true")
+        case .mobile:
+            return ("isMobilePayments", "true")
+        case .phone:
+            return ("isPhonePayments", "true")
+        case .transport:
+            return ("isTransportPayments", "true")
+        case .taxAndStateService:
+            return ("isTaxAndStateServicePayments", "true")
+        case .outside:
+            return ("isOutsidePayments", "true")
+        case .service:
+            return ("isServicePayments", "true")
+        }
+    }
+}
+
+
 private extension ResponseMapper {
     
     struct LatestPaymentCodable: Codable {
@@ -45,7 +80,7 @@ private extension ResponseMapper {
         let id: Int
         let date: Date
         let paymentDate: String
-        let type: Kind
+        let type: LatestPaymentKind
         var additionalList: [AdditionalListData]
         var amount: Double
         var puref: String
@@ -63,18 +98,6 @@ private extension ResponseMapper {
             let fieldName: String
             let fieldValue: String
             let svgImage: String?
-        }
-        
-        enum Kind: String, Codable {
-            
-            case phone
-            case service
-            case mobile
-            case internet
-            case transport
-            case taxAndStateService
-            case outside
-            case unknown
         }
     }
 }

@@ -12,11 +12,11 @@ import OperatorsListComponents
 extension RequestFactory {
     
     static func getAllLatestPaymentRequest(
-        _ type: String
+        _ kind: LatestPaymentKind
     ) throws -> URLRequest {
         
         let parameters: [(String, String)] = [
-            ("isServicePayment", "true")
+            kind.parameterService()
         ]
         
         let endpoint = Services.Endpoint.getAllLatestPayments
