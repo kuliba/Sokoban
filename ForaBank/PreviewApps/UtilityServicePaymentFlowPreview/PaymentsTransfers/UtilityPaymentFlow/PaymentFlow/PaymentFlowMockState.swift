@@ -11,8 +11,3 @@ struct PaymentFlowMockState: Equatable {
     var fraud: Fraud?
     var errorMessage: String?
 }
-
-extension PaymentFlowMockState {
-    
-    typealias Fraud = UtilityServicePaymentFlowState.Modal.Fraud
-}

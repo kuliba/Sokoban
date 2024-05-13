@@ -5,14 +5,14 @@
 //  Created by Igor Malyarov on 04.05.2024.
 //
 
-final class UtilityPaymentFlowEffectHandler {
+final class UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService> {
     
-    private let startPayment: StartPayment
+    private let utilityPrepaymentEffectHandle: UtilityPrepaymentFlowEffectHandle
     
     init(
-        startPayment: @escaping StartPayment
+        utilityPrepaymentEffectHandle: @escaping UtilityPrepaymentFlowEffectHandle
     ) {
-        self.startPayment = startPayment
+        self.utilityPrepaymentEffectHandle = utilityPrepaymentEffectHandle
     }
 }
 
@@ -24,45 +24,18 @@ extension UtilityPaymentFlowEffectHandler {
     ) {
         switch effect {
         case let .prepayment(effect):
-            handleEffect(effect) { dispatch(.prepayment($0)) }
+            utilityPrepaymentEffectHandle(effect) { dispatch(.prepayment($0)) }
         }
     }
 }
 
 extension UtilityPaymentFlowEffectHandler {
     
-    // StartPayment is a micro-service, that combines
-    // - `e` from LastPayment
-    // - `d1`
-    // - `d2e`
-    // - `d3`, `d4`, `d5`
-    typealias StartPaymentPayload = UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect.Select
-    typealias StartPaymentResult = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentResult
-    typealias StartPaymentCompletion = (StartPaymentResult) -> Void
-    typealias StartPayment = (StartPaymentPayload, @escaping StartPaymentCompletion) -> Void
-
+    typealias UtilityPrepaymentFlowDispatch = (Event.UtilityPrepaymentFlowEvent) -> Void
+    typealias UtilityPrepaymentFlowEffectHandle = (Effect.UtilityPrepaymentFlowEffect, @escaping UtilityPrepaymentFlowDispatch) -> Void
+    
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent
-    typealias Effect = UtilityPaymentFlowEffect
-}
-
-private extension UtilityPaymentFlowEffectHandler {
-    
-    typealias UtilityPrepaymentEffect = UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect
-    typealias UtilityPrepaymentEvent = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent
-    typealias UtilityPrepaymentDispatch = (UtilityPrepaymentEvent) -> Void
-    
-    func handleEffect(
-        _ effect: UtilityPrepaymentEffect,
-        _ dispatch: @escaping UtilityPrepaymentDispatch
-    ) {
-        switch effect {
-        case let .startPayment(with: payload):
-            startPayment(payload) {
-                
-                dispatch(.paymentStarted($0))
-            }
-        }
-    }
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
 }

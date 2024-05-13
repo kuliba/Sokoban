@@ -1,0 +1,13 @@
+//
+//  PaymentFlowMockState.swift
+//  ForaBank
+//
+//  Created by Igor Malyarov on 08.05.2024.
+//
+
+struct PaymentFlowMockState: Equatable {
+    
+    var isComplete: Bool = false
+    var fraud: Fraud?
+    var errorMessage: String?
+}

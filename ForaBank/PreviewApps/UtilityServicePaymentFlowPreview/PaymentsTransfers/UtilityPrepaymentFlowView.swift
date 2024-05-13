@@ -32,8 +32,8 @@ where Content: View,
     }
     
     private func utilityPrepaymentAlert(
-        event: @escaping (UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent) -> Void
-    ) -> (UtilityPaymentFlowState.Alert) -> Alert {
+        event: @escaping (Event) -> Void
+    ) -> (State.Alert) -> Alert {
         
         return { alert in
             
@@ -56,15 +56,17 @@ extension UtilityPrepaymentFlowView {
     
     typealias Destination = State.Destination
     
-    typealias State = UtilityPaymentFlowState
-    typealias Event = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias State = UtilityFlowState
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
 }
 
 //#Preview {
 //    UtilityPrepaymentFlowView()
 //}
 
-extension UtilityPaymentFlowState.Destination: Identifiable {
+extension UtilityPaymentFlowState.Destination: Identifiable 
+where Operator: Identifiable {
     
     var id: ID {
         

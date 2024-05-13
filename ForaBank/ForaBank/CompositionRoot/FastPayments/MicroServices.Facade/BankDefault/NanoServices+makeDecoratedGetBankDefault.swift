@@ -18,6 +18,8 @@ extension NanoServices {
         _ log: @escaping (String, StaticString, UInt) -> Void
     ) -> MicroServices.Facade.GetBankDefaultResponse {
         
+        typealias ServiceFailure = FastPaymentsSettings.ServiceFailure
+
         let bankDefaultStore = BankDefaultStore(keyTag: .bankDefault)
         
         let bankDefaultCacheRead: BankDefaultCacheRead = {
@@ -86,7 +88,7 @@ private extension BankDefault {
     }
 }
 
-private extension ServiceFailure {
+private extension FastPaymentsSettings.ServiceFailure {
     
     var requestLimitMessage: String? {
         

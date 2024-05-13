@@ -23,7 +23,9 @@ struct PaymentFlowModalView: View {
 
 extension PaymentFlowModalView {
     
-    typealias State = UtilityServicePaymentFlowState.Modal
+    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<ObservingPaymentFlowMockViewModel>
+
+    typealias State = UtilityServiceFlowState.Modal
     typealias Event = ModalEvent
     typealias ModalEvent = FraudEvent // while only one Modal
 }

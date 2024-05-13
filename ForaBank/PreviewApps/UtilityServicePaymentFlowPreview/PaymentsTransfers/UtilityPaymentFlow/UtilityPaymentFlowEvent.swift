@@ -7,7 +7,7 @@
 
 import ForaTools
 
-enum UtilityPaymentFlowEvent: Equatable {
+enum UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService> {
     
     case payment(UtilityServicePaymentFlowEvent)
     case prepayment(UtilityPrepaymentFlowEvent)
@@ -16,28 +16,29 @@ enum UtilityPaymentFlowEvent: Equatable {
 
 extension UtilityPaymentFlowEvent {
     
-    enum UtilityPrepaymentFlowEvent: Equatable {
+    enum ServicePickerFlowEvent: Equatable {
+        
+        case dismissAlert
+    }
+    
+    enum UtilityPrepaymentFlowEvent {
         
         case addCompany
         case dismissAlert
         case dismissDestination
         case dismissOperatorFailureDestination
         case dismissServicesDestination
+        case initiated(UtilityPrepaymentPayload)
         case payByInstructions
         case payByInstructionsFromError
         case paymentStarted(StartPaymentResult)
         case select(Select)
     }
-    
-    enum ServicePickerFlowEvent: Equatable {
-        
-        case dismissAlert
-    }
 }
 
 extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
     
-    enum Select: Equatable {
+    enum Select {
         
         case lastPayment(LastPayment)
         case `operator`(Operator)
@@ -46,18 +47,33 @@ extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
     
     typealias StartPaymentResult = Result<StartPaymentSuccess, StartPaymentFailure>
     
-    enum StartPaymentSuccess: Equatable {
+    enum StartPaymentSuccess {
         
         case services(MultiElementArray<UtilityService>, for: Operator)
         case startPayment(StartPaymentResponse)
         
-        #warning("FIXME")
-        struct StartPaymentResponse: Equatable {}
+        typealias StartPaymentResponse = StartUtilityPaymentResponse
     }
     
-    enum StartPaymentFailure: Error, Equatable {
+    enum StartPaymentFailure: Error {
         
         case operatorFailure(Operator)
         case serviceFailure(ServiceFailure)
     }
+    
+    struct UtilityPrepaymentPayload {
+        
+        let lastPayments: [LastPayment]
+        let operators: [Operator]
+    }
 }
+
+extension UtilityPaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
+extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
+extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.Select: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
+extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentSuccess: Equatable where Operator: Equatable, UtilityService: Equatable {}
+extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentFailure: Equatable where Operator: Equatable {}
+extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable {}
+
+#warning("FIXME")
+struct StartUtilityPaymentResponse: Equatable {}

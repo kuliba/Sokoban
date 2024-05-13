@@ -111,7 +111,7 @@ extension RootViewModelFactory {
             isActive: utilitiesPaymentsFlag.isActive
         )
         
-        let paymentsTransfersNavigationStateManager = makePaymentsTransfersNavigationStateManager(
+        let paymentsTransfersFlowManager = makePaymentsTransfersFlowManager(
         )
 
         let unblockCardServices = Services.makeUnblockCardServices(
@@ -129,7 +129,7 @@ extension RootViewModelFactory {
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
+            paymentsTransfersFlowManager: paymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             unblockCardServices: unblockCardServices,
@@ -143,7 +143,7 @@ extension RootViewModelFactory {
             makeProductProfileViewModel: makeProductProfileViewModel,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
+            paymentsTransfersFlowManager: paymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
             sberQRServices: sberQRServices,
@@ -278,7 +278,7 @@ extension RootViewModelFactory {
         )
     }
     
-    static func makePaymentsTransfersNavigationStateManager(
+    static func makePaymentsTransfersFlowManager(
     ) -> PaymentsTransfersNavigationStateManager {
         
         let createAnywayTransfer: PaymentsTransfersEffectHandler.CreateAnywayTransfer = { payload, completion in
@@ -505,7 +505,7 @@ extension ProductProfileViewModel {
         with model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
-        paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
+        paymentsTransfersFlowManager: PaymentsTransfersNavigationStateManager,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         unblockCardServices: UnblockCardServices,
@@ -520,7 +520,7 @@ extension ProductProfileViewModel {
                 with: model,
                 fastPaymentsFactory: fastPaymentsFactory,
                 makeUtilitiesViewModel: makeUtilitiesViewModel,
-                paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
+                paymentsTransfersFlowManager: paymentsTransfersFlowManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
                 unblockCardServices: unblockCardServices,
@@ -584,7 +584,7 @@ extension ProductProfileViewModel {
             return .init(
                 model,
                 fastPaymentsFactory: fastPaymentsFactory,
-                paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
+                paymentsTransfersNavigationStateManager: paymentsTransfersFlowManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
                 unblockCardServices: unblockCardServices,
@@ -655,7 +655,7 @@ private extension RootViewModelFactory {
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         fastPaymentsFactory: FastPaymentsFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
-        paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
+        paymentsTransfersFlowManager: PaymentsTransfersNavigationStateManager,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         productNavigationStateManager: ProductNavigationStateManager,
         sberQRServices: SberQRServices,
@@ -691,7 +691,7 @@ private extension RootViewModelFactory {
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            navigationStateManager: paymentsTransfersNavigationStateManager,
+            flowManager: paymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,

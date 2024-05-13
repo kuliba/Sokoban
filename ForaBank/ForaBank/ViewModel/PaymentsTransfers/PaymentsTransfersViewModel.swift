@@ -40,7 +40,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
-    private let navigationStateManager: PaymentsTransfersNavigationStateManager
+    private let flowManager: PaymentsTransfersNavigationStateManager
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
@@ -50,7 +50,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     init(
         model: Model,
-        navigationStateManager: PaymentsTransfersNavigationStateManager,
+        flowManager: PaymentsTransfersNavigationStateManager,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -73,7 +73,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
-        self.navigationStateManager = navigationStateManager
+        self.flowManager = flowManager
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
         
@@ -90,7 +90,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     init(
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
-        navigationStateManager: PaymentsTransfersNavigationStateManager,
+        flowManager: PaymentsTransfersNavigationStateManager,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -104,7 +104,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.route = route
-        self.navigationStateManager = navigationStateManager
+        self.flowManager = flowManager
         self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
@@ -140,7 +140,7 @@ extension PaymentsTransfersViewModel {
                 
                 rootActions?.spinner.show()
                 
-                navigationStateManager.handleEffect(effect) { [weak self] in
+                flowManager.handleEffect(effect) { [weak self] in
                     
                     self?.rootActions?.spinner.hide()
                     self?.event($0)
@@ -341,9 +341,12 @@ extension PaymentsTransfersViewModel {
         case link
     }
     
-    struct Route {
+    typealias Route = _Route<Int, Int, UtilityService, Int, String>
+    typealias Link = _Link<Int, Int, UtilityService, Int, String>
+
+    struct _Route<LastPayment, Operator, UtilityService, Content, PaymentViewModel> {
         
-        var destination: Link?
+        var destination: _Link<LastPayment, Operator, UtilityService, Content, PaymentViewModel>?
         var modal: Modal?
         /// - Note: not ideal, but modelling `Route` as an enum to remove impossible states
         /// would lead to significant complications
@@ -351,7 +354,7 @@ extension PaymentsTransfersViewModel {
         
         enum Outside { case chat, main }
         
-        static let empty: Self = .init(destination: nil, modal: nil)
+        static var empty: Self { .init(destination: nil, modal: nil) }
     }
     
     enum Modal {
@@ -446,7 +449,7 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    enum Link: Identifiable {
+    enum _Link<LastPayment, Operator, UtilityService, Content, PaymentViewModel>: Identifiable {
         
         case exampleDetail(String)
         case userAccount(UserAccountViewModel)
@@ -472,7 +475,11 @@ extension PaymentsTransfersViewModel {
         case openDeposit(OpenDepositDetailViewModel)
         case sberQRPayment(SberQRConfirmPaymentViewModel)
         case openDepositsList(OpenDepositListViewModel)
+        #warning("remove if unused")
         case utilities(Route.UtilitiesRoute)
+        case utilityPayment(UtilityFlowState)
+        #warning("remove if unused")
+        case payByInstructions
         
         var id: Case {
             
@@ -527,6 +534,10 @@ extension PaymentsTransfersViewModel {
                 return .sberQRPayment
             case .utilities:
                 return .utilities
+            case .utilityPayment:
+                return .utilityPayment
+            case .payByInstructions:
+                return .payByInstructions
             }
         }
         
@@ -555,7 +566,11 @@ extension PaymentsTransfersViewModel {
             case openDeposit
             case openDepositsList
             case sberQRPayment
+            #warning("remove if unused")
             case utilities
+            case utilityPayment
+            #warning("remove if unused")
+            case payByInstructions
         }
     }
     
@@ -567,13 +582,19 @@ extension PaymentsTransfersViewModel {
         enum Kind {
             
             case qrScanner(QRViewModel)
+            case paymentCancelled
             case success(PaymentsSuccessViewModel)
         }
         
-        static func == (lhs: PaymentsTransfersViewModel.FullScreenSheet, rhs: PaymentsTransfersViewModel.FullScreenSheet) -> Bool {
+        static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.id == rhs.id
         }
     }
+}
+
+extension PaymentsTransfersViewModel._Link {
+    
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
 }
 
 extension PaymentsTransfersViewModel.Route {
@@ -1874,7 +1895,7 @@ private extension PaymentsTransfersViewModel {
 
 private extension PaymentsTransfersViewModel {
     
-#warning("move to navigationStateManager")
+#warning("move to flowManager")
     private func reduce(
         _ state: State,
         _ event: Event
@@ -1917,7 +1938,7 @@ private extension PaymentsTransfersViewModel {
             guard case let .payment(utilityPayment) = state.utilitiesRoute?.destination
             else { break }
             
-            let (utilityPaymentState, utilityPaymentEffect) = navigationStateManager.utilityPaymentReduce(utilityPayment, utilityPaymentEvent)
+            let (utilityPaymentState, utilityPaymentEffect) = flowManager.utilityPaymentReduce(utilityPayment, utilityPaymentEvent)
             state.utilitiesRoute?.destination = .payment(utilityPaymentState)
             effect = utilityPaymentEffect.map(Effect.utilityPayment)
         }

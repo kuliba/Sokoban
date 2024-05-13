@@ -7,18 +7,18 @@
 
 import ForaTools
 
-struct UtilityPaymentFlowState {
+struct UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, PaymentViewModel> {
     
-    let viewModel: UtilityPrepaymentViewModel
+    let content: Content
     var destination: Destination?
     var alert: Alert?
     
     init(
-        viewModel: UtilityPrepaymentViewModel,
+        content: Content,
         destination: Destination? = nil,
         alert: Alert? = nil
     ) {
-        self.viewModel = viewModel
+        self.content = content
         self.destination = destination
         self.alert = alert
     }
@@ -30,18 +30,18 @@ extension UtilityPaymentFlowState {
         
         case serviceFailure(ServiceFailure)
     }
-    
+    #warning("make generic?")
     enum Destination {
         
         case operatorFailure(OperatorFailureFlowState)
         case payByInstructions
-        case payment(UtilityServicePaymentFlowState)
+        case payment(UtilityServicePaymentFlowState<PaymentViewModel>)
         case servicePicker(ServicePickerFlowState)
     }
 }
 
 extension UtilityPaymentFlowState.Destination {
-    
+    #warning("extract subtypes to get rid of generics where they are not needed")
     struct OperatorFailureFlowState {
         
         let content: Content
@@ -86,7 +86,7 @@ extension UtilityPaymentFlowState.Destination.OperatorFailureFlowState {
 
 extension UtilityPaymentFlowState.Destination.ServicePickerFlowState {
     
-    struct Content: Equatable {
+    struct Content {
         
         let services: MultiElementArray<UtilityService>
         let `operator`: Operator
@@ -99,11 +99,13 @@ extension UtilityPaymentFlowState.Destination.ServicePickerFlowState {
     
     enum Destination {
         
-        case payment(UtilityServicePaymentFlowState)
+        case payment(UtilityServicePaymentFlowState<PaymentViewModel>)
     }
 }
 
 extension UtilityPaymentFlowState.Destination.ServicePickerFlowState.Destination {
     
-    typealias StartPaymentResponse = UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentSuccess.StartPaymentResponse
+    typealias StartPaymentResponse = StartUtilityPaymentResponse
 }
+
+extension UtilityPaymentFlowState.Destination.ServicePickerFlowState.Content: Equatable where Operator: Equatable, UtilityService: Equatable {}

@@ -25,7 +25,7 @@ struct PaymentsTransfersView: View {
         
         content()
             .navigationDestination(
-                destination: viewModel.state.route.destination,
+                destination: viewModel.route.destination,
                 dismissDestination: viewModel.dismissDestination,
                 content: { destination in
                     
@@ -36,7 +36,7 @@ struct PaymentsTransfersView: View {
                 }
             )
             .fullScreenCover(
-                cover: viewModel.state.route.modal,
+                cover: viewModel.route.modal,
                 dismissFullScreenCover: { viewModel.event(.dismissFullScreenCover) },
                 content: { modal in
                     
@@ -51,11 +51,16 @@ struct PaymentsTransfersView: View {
 
 extension PaymentsTransfersView {
     
-    typealias OperatorFailure = UtilityPaymentFlowState.Destination.OperatorFailureFlowState
-    typealias ServicePickerState = UtilityPaymentFlowState.Destination.ServicePickerFlowState
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias OperatorFailure = UtilityFlowState.Destination.OperatorFailureFlowState
+    typealias ServicePickerState = UtilityFlowState.Destination.ServicePickerFlowState
+    
+    typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    
+    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<ObservingPaymentFlowMockViewModel>
     
     typealias Config = UtilityPrepaymentWrapperView.Config
-    typealias Destination = ViewModel.State.Route.Destination
+    typealias Destination = ViewModel.Destination
     typealias ViewModel = PaymentsTransfersViewModel
 }
 
@@ -69,7 +74,7 @@ private extension PaymentsTransfersView {
     @ViewBuilder
     func destinationView(
         destination: Destination,
-        event: @escaping (UtilityPaymentFlowEvent) -> Void
+        event: @escaping (UtilityPaymentEvent) -> Void
     ) -> some View {
         
         switch destination {
@@ -86,8 +91,8 @@ private extension PaymentsTransfersView {
     }
     
     func utilityPrepaymentView(
-        state: UtilityPaymentFlowState,
-        event: @escaping (UtilityPaymentFlowEvent) -> ()
+        state: UtilityFlowState,
+        event: @escaping (UtilityPaymentEvent) -> ()
     ) -> some View {
         
         UtilityPrepaymentFlowView(
@@ -96,7 +101,7 @@ private extension PaymentsTransfersView {
             content: {
                 
                 UtilityPrepaymentWrapperView(
-                    viewModel: state.viewModel,
+                    viewModel: state.content,
                     flowEvent: { event(.prepayment($0.flowEvent)) },
                     config: config
                 )
@@ -110,8 +115,8 @@ private extension PaymentsTransfersView {
     
     @ViewBuilder
     func utilityPrepaymentDestinationView(
-        state: UtilityPaymentFlowState.Destination,
-        event: @escaping (UtilityPaymentFlowEvent) -> Void
+        state: UtilityFlowState.Destination,
+        event: @escaping (UtilityPaymentEvent) -> Void
     ) -> some View {
         
         switch state {
@@ -139,7 +144,7 @@ private extension PaymentsTransfersView {
     }
     
     func operatorFailureView(
-        operatorFailure: UtilityPaymentFlowState.Destination.OperatorFailureFlowState,
+        operatorFailure: UtilityFlowState.Destination.OperatorFailureFlowState,
         payByInstructions: @escaping () -> Void,
         dismissDestination: @escaping () -> Void
     ) -> some View {
@@ -169,7 +174,7 @@ private extension PaymentsTransfersView {
     }
     
     func paymentFlowView(
-        state: UtilityServicePaymentFlowState,
+        state: UtilityServiceFlowState,
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
@@ -194,7 +199,7 @@ private extension PaymentsTransfersView {
     
     func paymentFlowAlert(
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
-    ) -> (UtilityServicePaymentFlowState.Alert) -> Alert {
+    ) -> (UtilityServiceFlowState.Alert) -> Alert {
         
         return { alert in
             
@@ -218,7 +223,7 @@ private extension PaymentsTransfersView {
     }
     
     func paymentFlowFullScreenCoverView(
-        fullScreenCover: UtilityServicePaymentFlowState.FullScreenCover
+        fullScreenCover: UtilityServiceFlowState.FullScreenCover
     ) -> some View {
         
         switch fullScreenCover {
@@ -237,7 +242,7 @@ private extension PaymentsTransfersView {
 
     func paymentFlowModalView(
         event: @escaping (PaymentFraudMockView.Event) -> Void
-    ) -> (UtilityServicePaymentFlowState.Modal) -> PaymentFlowModalView {
+    ) -> (UtilityServiceFlowState.Modal) -> PaymentFlowModalView {
         
         return {
             
@@ -247,7 +252,7 @@ private extension PaymentsTransfersView {
 
     func servicePicker(
         state: ServicePickerState,
-        event: @escaping (UtilityPaymentFlowEvent) -> Void
+        event: @escaping (UtilityPaymentEvent) -> Void
     ) -> some View {
         
         ServicePickerFlowView(
@@ -286,7 +291,7 @@ private extension PaymentsTransfersView {
     
     @ViewBuilder
     func fullScreenCoverView(
-        modal: PaymentsTransfersViewModel.State.Route.Modal,
+        modal: PaymentsTransfersViewModel.Modal,
         event: @escaping () -> Void
     ) -> some View {
         
@@ -297,7 +302,7 @@ private extension PaymentsTransfersView {
     }
 }
 
-extension PaymentsTransfersViewModel.State.Route.Destination: Identifiable {
+extension PaymentsTransfersViewModel.Destination: Identifiable {
     
     var id: ID {
         
@@ -306,7 +311,8 @@ extension PaymentsTransfersViewModel.State.Route.Destination: Identifiable {
             return .payByInstructions
             
         case let .utilityPayment(utilityPrepayment):
-            return .utilityFlow(ObjectIdentifier(utilityPrepayment.viewModel))
+            #warning("also use destination to create id")
+            return .utilityFlow(ObjectIdentifier(utilityPrepayment.content))
         }
     }
     
@@ -317,7 +323,7 @@ extension PaymentsTransfersViewModel.State.Route.Destination: Identifiable {
     }
 }
 
-extension PaymentsTransfersViewModel.State.Route.Modal: Identifiable {
+extension PaymentsTransfersViewModel.Modal: Identifiable {
     
     var id: ID {
         
@@ -427,7 +433,7 @@ private extension ServiceFailure {
 
 private extension UtilityPrepaymentFlowEvent {
     
-    var flowEvent: UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
+    var flowEvent: UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent {
         
         switch self {
         case .addCompany:

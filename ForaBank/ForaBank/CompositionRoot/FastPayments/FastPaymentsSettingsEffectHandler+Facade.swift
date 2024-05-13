@@ -22,6 +22,8 @@ extension FastPaymentsSettingsEffectHandler {
         getProducts: @escaping () -> [C2BSubscriptionUI.Product],
         log: @escaping (String, StaticString, UInt) -> Void
     ) {
+        typealias ServiceFailure = FastPaymentsSettings.ServiceFailure
+        
         let changeConsentList: ConsentListRxEffectHandler.ChangeConsentList = NanoServices.adaptedLoggingFetch(
             createRequest: {
                 try ForaRequestFactory.createChangeClientConsentMe2MePullRequest($0.map { .init($0.rawValue) })
