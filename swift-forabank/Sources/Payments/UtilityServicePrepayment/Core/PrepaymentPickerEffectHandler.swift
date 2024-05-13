@@ -12,11 +12,14 @@ public final class PrepaymentPickerEffectHandler<Operator>
 where Operator: Identifiable {
     
     private let paginate: Paginate
+    private let search: Search
     
     public init(
-        paginate: @escaping Paginate
+        paginate: @escaping Paginate,
+        search: @escaping Search
     ) {
         self.paginate = paginate
+        self.search = search
     }
 }
 
@@ -29,16 +32,23 @@ public extension PrepaymentPickerEffectHandler {
         switch effect {
         case let .paginate(payload):
             paginate(payload, dispatch)
+            
+        case let .search(payload):
+            search(payload, dispatch)
         }
     }
 }
 
 public extension PrepaymentPickerEffectHandler {
     
-    typealias PaginatePayload = Effect.PaginatePayload
+    typealias _PaginatePayload = PaginatePayload<Operator.ID>
     typealias PaginateResult = [Operator]
     typealias PaginateCompletion = (PaginateResult) -> Void
-    typealias Paginate = (PaginatePayload, @escaping PaginateCompletion) -> Void
+    typealias Paginate = (_PaginatePayload, @escaping PaginateCompletion) -> Void
+    
+    typealias SearchResult = [Operator]
+    typealias SearchCompletion = (SearchResult) -> Void
+    typealias Search = (SearchPayload, @escaping SearchCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
     
@@ -49,9 +59,18 @@ public extension PrepaymentPickerEffectHandler {
 private extension PrepaymentPickerEffectHandler {
     
     func paginate(
-        _ payload: PaginatePayload,
+        _ payload: _PaginatePayload,
         _ dispatch: @escaping Dispatch
     ) {
+#warning("add remove duplicates and throttling")
         paginate(payload) { dispatch(.page($0)) }
+    }
+    
+    func search(
+        _ payload: SearchPayload,
+        _ dispatch: @escaping Dispatch
+    ) {
+#warning("add remove duplicates and debouncing")
+        search(payload) { dispatch(.load($0)) }
     }
 }

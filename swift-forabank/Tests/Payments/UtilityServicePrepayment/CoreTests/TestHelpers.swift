@@ -37,52 +37,49 @@ func makeEmptyState() -> State {
 func makeState(
     lastPayments: [LastPayment] = [],
     operators: [Operator] = [makeOperator()],
-    searchText: String = "",
-    isSearching: Bool = false
+    searchText: String = ""
 ) -> State {
     
     return .init(
         lastPayments: lastPayments,
         operators: operators,
-        searchText: searchText,
-        isSearching: isSearching
+        searchText: searchText
     )
 }
 
 func makeLastPayment(
-    _ value: String = UUID().uuidString
+    _ value: String = anyMessage()
 ) -> LastPayment {
     
     .init(value: value)
 }
 
 func makeOperator(
-    _ id: String = UUID().uuidString
+    _ id: String = anyMessage()
 ) -> Operator {
     
     .init(id: id)
 }
 
 func makeOperatorID(
-    _ id: String = UUID().uuidString
+    _ id: String = anyMessage()
 ) -> Operator.ID {
     
     return id
 }
 
-func makePageSize(
-) -> Effect.PaginatePayload.PageSize {
+func makePageSize() -> Int {
     
     Int.random(in: 1...(.max))
 }
 
 func makePaginateEffect(
-    operatorID: Operator.ID? = makeOperatorID(),
-    pageSize: Effect.PaginatePayload.PageSize = makePageSize(),
+    operatorID: Operator.ID = makeOperatorID(),
+    pageSize: Int = makePageSize(),
     searchText: String = ""
 ) -> Effect {
     
-    .paginate(.init(
+    .paginate(makePaginatePayload(
         operatorID: operatorID,
         pageSize: pageSize,
         searchText: searchText
@@ -90,10 +87,29 @@ func makePaginateEffect(
 }
 
 func makePaginatePayload(
-    operatorID: Operator.ID? = makeOperatorID(),
-    pageSize: Effect.PaginatePayload.PageSize = makePageSize(),
+    operatorID: Operator.ID = makeOperatorID(),
+    pageSize: Int = makePageSize(),
     searchText: String = ""
-) -> EffectHandler.PaginatePayload {
+) -> PaginatePayload<Operator.ID> {
     
     .init(operatorID: operatorID, pageSize: pageSize, searchText: searchText)
+}
+
+func makeSearchEffect(
+    pageSize: Int = makePageSize(),
+    searchText: String = ""
+) -> Effect {
+    
+    .search(makeSearchPayload(
+        pageSize: pageSize,
+        searchText: searchText
+    ))
+}
+
+func makeSearchPayload(
+    pageSize: Int = makePageSize(),
+    searchText: String = ""
+) -> SearchPayload {
+    
+    .init(pageSize: pageSize, searchText: searchText)
 }
