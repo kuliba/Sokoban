@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "81AF88CC-95AB-4A5F-8709-4897488F0242",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UtilityServicePrepaymentCoreTests",
+        "name" : "UtilityServicePrepaymentCoreTests"
+      }
+    }
+  ],
+  "version" : 1
+}

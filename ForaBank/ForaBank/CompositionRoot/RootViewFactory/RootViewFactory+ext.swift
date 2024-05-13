@@ -42,7 +42,7 @@ extension RootViewFactory {
                         viewFactory: .init(
                             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                             makeUserAccountView: makeUserAccountView
-                        ), 
+                        ),
                         getUImage: getUImage
                     )
             },
