@@ -26,14 +26,12 @@ public extension ThrottleDecorator {
     ) {
         queue.sync { [weak self] in
             
-            guard let self else { return }
-            
             let currentTime = Date().timeIntervalSince1970
             
-            guard currentTime - lastCallTime >= delay else { return }
+            guard let self, currentTime - lastCallTime >= delay
+            else { return }
             
             lastCallTime = currentTime
-            
             block()
         }
     }
