@@ -598,9 +598,12 @@ private extension PaymentsTransfersView {
         }
     }
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias LastPayment = OperatorsListComponents.LastPayment
+    typealias Operator = OperatorsListComponents.Operator<String>
     
-    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService>
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    
+    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
     
     typealias OperatorFailure = UtilityFlowState.Destination.OperatorFailureFlowState
     typealias ServicePickerState = UtilityFlowState.Destination.ServicePickerFlowState
@@ -652,6 +655,8 @@ extension UtilityServicePaymentFlowState.Modal: Identifiable {
         case fraud
     }
 }
+
+// MARK: - NavBar
 
 private extension NavigationBarView.ViewModel {
     
@@ -725,7 +730,7 @@ extension PaymentsTransfersView {
 
 private extension UtilityPrepaymentFlowEvent {
     
-    var flowEvent: UtilityPaymentFlowEvent<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService>.UtilityPrepaymentFlowEvent {
+    var flowEvent: UtilityPaymentFlowEvent<OperatorsListComponents.LastPayment, OperatorsListComponents.Operator<String>, UtilityService>.UtilityPrepaymentFlowEvent {
         
         switch self {
         case .addCompany:

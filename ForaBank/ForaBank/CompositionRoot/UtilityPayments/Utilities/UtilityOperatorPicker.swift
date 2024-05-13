@@ -25,52 +25,77 @@ struct UtilityOperatorPicker: View {
         case let .options(state):
             ComposedOperatorsView(
                 state: .init(
+                    lastPayments: state.lastPayments,
                     operators: state.operators,
-                    latestPayments: state.lastPayments
+                    searchText: state.searchText
                 ),
                 event: { event(.composed($0)) },
-                lastPaymentView: lastPaymentView,
-                operatorView: operatorView,
-                footerView: footerView,
-                searchView: searchView
+                factory: .init(
+                    makeFooterView: footerView,
+                    makeLastPaymentView: lastPaymentView,
+                    makeOperatorView: operatorView,
+                    makeSearchView: searchView
+                )
             )
         }
     }
     
+#warning("fix `makeIconView`")
     private func lastPaymentView(
-        latestPayment: OperatorsListComponents.LatestPayment
+        latestPayment: OperatorsListComponents.LastPayment
     ) -> some View {
         
-        LatestPaymentView(
-            latestPayment: latestPayment,
-            event: { event(.composed(.selectLastOperation($0))) },
-            config: .iFora
-        )
+        Button {
+            // event(.composed(.selectLastOperation(latestPayment)))
+            #warning("FIXME")
+            fatalError()
+        } label: {
+            LastPaymentLabel(
+                amount: latestPayment.amount,
+                title: latestPayment.title,
+                config: .iFora,
+                iconView: Text("TBD Icon View \(latestPayment)")
+            )
+            .contentShape(Rectangle())
+        }
     }
     
+    typealias Operator = OperatorsListComponents.Operator<String>
+    
+#warning("fix `makeIconView`")
     private func operatorView(
-        `operator`: OperatorsListComponents.Operator
+        `operator`: Operator
     ) -> some View {
         
-        OperatorView(
-            operator: `operator`,
-            event: { event(.composed(.selectOperator($0))) },
-            config: .iFora
-        )
+        Button {
+            // event(.composed(.selectOperator(`operator`)))
+            #warning("FIXME")
+            fatalError()
+        } label: {
+            OperatorLabel(
+                title: `operator`.title,
+                subtitle: `operator`.subtitle,
+                config: .iFora,
+                iconView: Text("TBD Icon View \(`operator`)")
+            )
+            .contentShape(Rectangle())
+        }
     }
     
     private func failureView() -> some View {
         return FooterComponent.FooterView(
-            state: .failure(.preview),
+            state: .failure(.iFora),
             event: { events in event(.addCompany) },
             config: .iFora
         )
     }
     
-    private func footerView() -> some View {
+    private func footerView(
+        isExpanded: Bool
+    ) -> some View {
         
         FooterComponent.FooterView(
-            state: .footer(.preview),
+            state: .footer(.iFora),
             event: { events in
                 switch events {
                 case .payByInstruction:
@@ -83,23 +108,34 @@ struct UtilityOperatorPicker: View {
         )
     }
     
-    private func searchView() -> some View {
+    private func searchView(
+    ) -> some View {
         
         TextField(
             "Search",
             text: .init(
                 get: { state.searchText },
-                set: { event(.composed(.utility(.search(.entered($0))))) }
+                set: {
+                    // event(.composed(.utility(.search(.entered($0)))))
+                    #warning("FIXME")
+                    fatalError("\($0)")
+                }
             )
         )
     }
+}
+
+#warning("move to the call site and make private")
+/*private*/ extension OperatorsListComponents.LastPayment {
+    
+    var amount: String { subtitle }
 }
 
 private extension PrePaymentOptionsState {
     
     var uiState: UIState {
         
-        guard operators != nil else { return .failure }
+        guard !operators.isEmpty else { return .failure }
         
         return .options(self)
     }
@@ -122,61 +158,85 @@ struct UtilityOperatorPicker_Previews: PreviewProvider {
     }
 }
 
-private extension OperatorView.OperatorViewConfig {
-    
-    static let iFora: Self = .init(
-        titleFont: .title3,
-        titleColor: .black,
-        descriptionFont: .footnote,
-        descriptionColor: .gray,
-        defaultIconBackgroundColor: .clear,
-        defaultIcon: .init(systemName: "photo.artframe")
-    )
-}
+// MARK: - Static helpers
 
-private extension FooterComponent.FooterState.Footer {
+#warning("move to the call site and make private")
+/*private*/ extension FooterComponent.FooterState.Footer {
         
-    static let preview: Self = .init(
+    static let iFora: Self = .init(
         title: "Нет компании в списке?",
         description: "Воспользуйтесь другими способами оплаты",
         subtitle: "Сообщите нам, и мы подключим новую организацию"
     )
 }
 
-private extension FooterComponent.FooterState.Failure {
+#warning("move to the call site and make private")
+/*private*/ extension FooterComponent.FooterState.Failure {
 
-    static let preview: Self = .init(
+    static let iFora: Self = .init(
         image: .init(systemName: "photo.artframe"),
         description: "Что-то пошло не так.\nПопробуйте позже."
     )
 }
 
-private extension FooterComponent.FooterView.Config {
+#warning("move to the call site and make private")
+/*private*/ extension FooterComponent.FooterView.Config {
     
     static let iFora: Self = .init(
-        titleConfig: .init(textFont: .title3, textColor: .black),
-        descriptionConfig: .init(textFont: .body, textColor: .gray.opacity(0.3)),
-        subtitleConfig: .init(textFont: .body, textColor: .gray.opacity(0.3)),
-        backgroundIcon: .gray,
+        title: .init(
+            textFont: .body,
+            textColor: .black
+        ),
+        description: .init(
+            textFont: .footnote,
+            textColor: .gray.opacity(0.3)
+        ),
+        subtitle: .init(
+            textFont: .footnote,
+            textColor: .gray.opacity(0.3)
+        ),
+        background: .gray,
         requisitesButtonTitle: "Оплатить по реквизитам",
         requisitesButtonConfig: .init(
             titleFont: .body,
-            titleForeground: .red,
-            backgroundColor: .gray
+            titleForeground: .white,
+            backgroundColor: .blue
         ),
         addCompanyButtonTitle: "Добавить организацию",
         addCompanyButtonConfiguration: .init(
             titleFont: .body,
-            titleForeground: .blue,
-            backgroundColor: .gray
+            titleForeground: .white,
+            backgroundColor: .green
         )
     )
 }
 
-private extension LatestPayment.LatestPaymentConfig {
+#warning("move to the call site and make private")
+/*private*/ extension LastPaymentLabelConfig {
     
     static let iFora: Self = .init(
-        defaultImage: .init(systemName: "photo.artframe"),
-        backgroundColor: .clear
+        amount: .init(
+            textFont: .caption2,
+            textColor: .red
+        ),
+        title: .init(
+            textFont: .caption2,
+            textColor: .gray
+        )
+    )
+}
+
+#warning("move to the call site and make private")
+/*private*/ extension OperatorLabelConfig {
+    
+    static let iFora: Self = .init(
+        title: .init(
+            textFont: .headline,
+            textColor: .black
+        ),
+        subtitle: .init(
+            textFont: .footnote,
+            textColor: .gray
+        )
     )
 }

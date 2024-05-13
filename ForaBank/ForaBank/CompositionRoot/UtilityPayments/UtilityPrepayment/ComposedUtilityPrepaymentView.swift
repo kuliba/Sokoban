@@ -8,6 +8,7 @@
 import OperatorsListComponents
 import SwiftUI
 
+#warning("remove `ComposedUtilityPrepaymentView`")
 struct ComposedUtilityPrepaymentView: View {
     
     let state: State
@@ -38,8 +39,8 @@ struct ComposedUtilityPrepaymentView: View {
 
 extension ComposedUtilityPrepaymentView {
     
-    typealias LastPayment = OperatorsListComponents.LatestPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias LastPayment = OperatorsListComponents.LastPayment
+    typealias Operator = OperatorsListComponents.Operator<String>
     
     typealias State = UtilityPrepaymentState
     typealias Event = UtilityPrepaymentEvent

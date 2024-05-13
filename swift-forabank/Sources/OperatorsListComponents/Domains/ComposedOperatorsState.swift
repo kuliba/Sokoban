@@ -7,16 +7,21 @@
 
 import Foundation
 
-public struct ComposedOperatorsState {
+public struct ComposedOperatorsState<LastPayment, Operator> {
     
-    let operators: [Operator]?
-    let latestPayments: [LatestPayment]?
+    public let lastPayments: [LastPayment]
+    public let operators: [Operator]
+    public let searchText: String
     
     public init(
-        operators: [Operator]?,
-        latestPayments: [LatestPayment]?
+        lastPayments: [LastPayment],
+        operators: [Operator],
+        searchText: String
     ) {
+        self.lastPayments = lastPayments
         self.operators = operators
-        self.latestPayments = latestPayments
+        self.searchText = searchText
     }
 }
+
+extension ComposedOperatorsState: Equatable where LastPayment: Equatable, Operator: Equatable {}

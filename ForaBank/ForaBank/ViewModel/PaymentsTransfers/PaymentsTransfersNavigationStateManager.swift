@@ -73,8 +73,8 @@ extension PaymentsTransfersEvent.UtilityServicePaymentFlowEvent {
         case single(UtilityService)
     }
     
-    typealias LatestPayment = OperatorsListComponents.LatestPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias LatestPayment = OperatorsListComponents.LastPayment
+    typealias Operator = OperatorsListComponents.Operator<String>
     
     enum PaymentStarted: Equatable {
         
@@ -129,8 +129,8 @@ extension PaymentsTransfersEffect {
 
 extension PaymentsTransfersEffect.UtilityServicePaymentFlowEffect {
     
-    typealias LatestPayment = OperatorsListComponents.LatestPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias LatestPayment = OperatorsListComponents.LastPayment
+    typealias Operator = OperatorsListComponents.Operator<String>
     
     enum StartPaymentPayload<LatestPayment, Operator> {
         

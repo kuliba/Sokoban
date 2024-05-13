@@ -209,7 +209,7 @@ private extension Array where Element == _OperatorGroup {
     }
 }
 
-private extension Array where Element == OperatorsListComponents.Operator {
+private extension Array where Element == OperatorsListComponents.Operator<String> {
     
     static func stub(
         names: [String] = []
@@ -217,7 +217,7 @@ private extension Array where Element == OperatorsListComponents.Operator {
         
         names.map {
             
-            .init(id: $0, title: $0, subtitle: "", image: nil)
+            .init(id: $0, title: $0, subtitle: "", icon: "abc")
         }
     }
 }

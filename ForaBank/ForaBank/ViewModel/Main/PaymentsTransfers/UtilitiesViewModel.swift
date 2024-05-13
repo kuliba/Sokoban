@@ -26,11 +26,13 @@ final class UtilitiesViewModel: ObservableObject {
     
     // MARK: - types
     
-    typealias State = PrePaymentOptionsState<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator>
+    typealias LastPayment = OperatorsListComponents.LastPayment
+    typealias Operator = OperatorsListComponents.Operator<String>
+    typealias State = PrePaymentOptionsState<LastPayment, Operator>
     
     struct Payload {}
     
-    typealias LoadOperatorsCompletion = ([OperatorsListComponents.Operator]) -> Void
+    typealias LoadOperatorsCompletion = ([Operator]) -> Void
     typealias LoadOperators = (Payload, @escaping LoadOperatorsCompletion) -> Void
 }
 

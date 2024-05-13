@@ -767,16 +767,17 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     private func makeOperator(
         _ id: String = UUID().uuidString
-    ) -> OperatorsListComponents.Operator {
+    ) -> OperatorsListComponents.Operator<String> {
         
-        .init(id: id, title: id, subtitle: nil, image: nil)
+        .init(id: id, title: id, subtitle: nil, icon: "abc")
     }
     
     private func makeLatestPayment(
-        _ title: String = UUID().uuidString
-    ) -> OperatorsListComponents.LatestPayment {
+        _ title: String = UUID().uuidString,
+        _ amount: String = UUID().uuidString
+    ) -> OperatorsListComponents.LastPayment {
         
-        .init(image: nil, title: title, amount: "")
+        .init(id: title, title: title, subtitle: amount, icon: "")
     }
     
     private func makeService(

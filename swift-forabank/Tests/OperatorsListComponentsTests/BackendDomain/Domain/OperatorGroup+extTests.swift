@@ -170,10 +170,10 @@ final class OperatorGroup_extTests: XCTestCase {
     }
     
     private func makeLoadOperatorsPayload(
-        operatorID: Operator.ID? = nil,
+        operatorID: Operator<String>.ID? = nil,
         searchText: String = "",
         pageSize: Int = 10
-    ) -> LoadOperatorsPayload {
+    ) -> LoadOperatorsPayload<String> {
         
         .init(
             afterOperatorID: operatorID,

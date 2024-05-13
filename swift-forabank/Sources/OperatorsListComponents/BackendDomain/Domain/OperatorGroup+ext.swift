@@ -8,14 +8,14 @@
 import ForaTools
 import Foundation
 
-public struct LoadOperatorsPayload {
+public struct LoadOperatorsPayload<Icon> {
     
-    let operatorID: Operator.ID?
+    let operatorID: OperatorID?
     let searchText: String
     let pageSize: Int
     
     public init(
-        afterOperatorID operatorID: Operator.ID? = nil,
+        afterOperatorID operatorID: OperatorID? = nil,
         searchText: String = "",
         pageSize: Int
     ) {
@@ -25,9 +25,14 @@ public struct LoadOperatorsPayload {
     }
 }
 
+public extension LoadOperatorsPayload {
+    
+    typealias OperatorID = Operator<Icon>.ID
+}
+
 public extension Array where Element == _OperatorGroup {
 
-    func paged(with payload: LoadOperatorsPayload) -> Self {
+    func paged(with payload: LoadOperatorsPayload<String>) -> Self {
         
         let filtered = containing(payload.searchText)
         

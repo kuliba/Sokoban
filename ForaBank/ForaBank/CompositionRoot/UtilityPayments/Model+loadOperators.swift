@@ -10,8 +10,8 @@ import OperatorsListComponents
 
 extension Model {
     
-    typealias Payload = LoadOperatorsPayload
-    typealias LoadOperatorsResult = Result<[OperatorsListComponents.Operator], Error>
+    typealias Payload = LoadOperatorsPayload<String>
+    typealias LoadOperatorsResult = Result<[OperatorsListComponents.Operator<String>], Error>
     typealias LoadOperatorsCompletion = (LoadOperatorsResult) -> Void
     
     func loadOperators(
@@ -47,7 +47,7 @@ extension Model {
     struct LoadOperatorsFailure: Error {}
 }
 
-private extension OperatorsListComponents.Operator {
+private extension OperatorsListComponents.Operator<String> {
     
     init(_ operatorGroup: OperatorGroup) {
         
@@ -55,7 +55,7 @@ private extension OperatorsListComponents.Operator {
             id: operatorGroup.title,
             title: operatorGroup.title,
             subtitle: operatorGroup.description,
-            image: nil
+            icon: operatorGroup.title
         )
     }
 }

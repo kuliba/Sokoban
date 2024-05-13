@@ -89,8 +89,8 @@ extension UtilityPaymentsFlowComposer {
     
     typealias Flag = StubbedFeatureFlag.Option
     
-    typealias LastPayment = OperatorsListComponents.LatestPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias LastPayment = OperatorsListComponents.LastPayment
+    typealias Operator = OperatorsListComponents.Operator<String>
     
     typealias UtilityFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
 }
@@ -107,7 +107,7 @@ private extension UtilityPaymentsFlowComposer {
             fatalError("unimplemented live")
             
         case .stub:
-            return stub(.init(lastPayments: .stub, operators: .stub))
+            return stub(.init(lastPayments: .stub, operators: .stub, searchText: ""))
         }
     }
     
@@ -202,8 +202,22 @@ private extension UtilityPaymentsFlowComposer {
     }
 }
 
-// TODO: make private
-/*private*/ extension OperatorsListComponents.Operator {
+private extension Array where Element == OperatorsListComponents.LastPayment {
+    
+    static let stub: Self = [
+        .failure,
+        .preview,
+    ]
+}
+
+private extension OperatorsListComponents.LastPayment {
+    
+    static let failure: Self = .init(id: "failure", title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
+    static let preview: Self = .init(id: UUID().uuidString, title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
+}
+
+#warning("move to the call site and make private")
+/*private*/ extension OperatorsListComponents.Operator<String> {
     
     static let multiple: Self = .init("multiple", "Multiple")
     static let multipleFailure: Self = .init("multipleFailure", "MultipleFailure")
@@ -212,19 +226,11 @@ private extension UtilityPaymentsFlowComposer {
     
     private init(_ id: String, _ title: String) {
         
-        self.init(id: id, title: title, subtitle: nil, image: nil)
+        self.init(id: id, title: title, subtitle: nil, icon: "abc")
     }
 }
 
-private extension Array where Element == OperatorsListComponents.LatestPayment {
-    
-    static let stub: Self = [
-        .init(image: nil, title: UUID().uuidString, amount: "123.45"),
-        .init(image: nil, title: "failure", amount: "-"),
-    ]
-}
-
-private extension Array where Element == OperatorsListComponents.Operator {
+private extension Array where Element == OperatorsListComponents.Operator<String> {
     
     static let stub: Self = [
         .single,
