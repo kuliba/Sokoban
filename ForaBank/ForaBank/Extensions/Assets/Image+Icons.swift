@@ -219,7 +219,9 @@ public extension Image {
     static var ic16LogoForaOneColor: Image { Image(#function) }
     static var ic16Mail: Image { Image(#function) }
     static var ic16MainCardGrey: Image { Image(#function) }
+    static var ic16MainCardGreyFixed2: Image { Image(#function) }
     static var ic16MainCardWhite: Image { Image(#function) }
+    static var ic16MainCardWhiteFixed2: Image { Image(#function) }
     static var ic16Map: Image { Image(#function) }
     static var ic16MapPin: Image { Image(#function) }
     static var ic16MathMinus: Image { Image(#function) }
@@ -878,5 +880,4 @@ public extension Image {
     static var ic64Goods: Image { Image(#function) }
     static var ic72Sbp: Image { Image(#function) }
     static var ic96Sbp: Image { Image(#function) }
-    static var cardPlaceholder: Image { Image(#function) }
 }
