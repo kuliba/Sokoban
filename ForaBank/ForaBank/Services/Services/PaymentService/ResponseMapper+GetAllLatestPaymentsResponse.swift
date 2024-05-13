@@ -25,8 +25,7 @@ extension ResponseMapper {
     ) throws -> [LatestPayment]? {
         
         data.map { LatestPayment(
-            id: $0.id,
-            title: $0.lastPaymentName ?? "",
+            title: $0.name,
             amount: .double($0.amount)
         )}
     }
@@ -37,7 +36,7 @@ extension ResponseMapper {
  
     struct LatestPayment: Identifiable {
         
-        let id: Int
+        var id: String { title }
         let title: String
         let amount: Amount
     }
@@ -82,19 +81,20 @@ private extension ResponseMapper {
     
     struct LatestPaymentCodable: Codable {
         
-        let id: Int
-        let date: Date
+        let date: Int
         let paymentDate: String
         let type: LatestPaymentKind
         var additionalList: [AdditionalListData]
         var amount: Double
         var puref: String
         var lastPaymentName: String?
+        let md5hash: String
+        let name: String
         
-        private enum CodingKeys: String, CodingKey {
-            
-            case id, date, paymentDate, type, additionalList, amount, puref
+        enum CodingKeys: String, CodingKey {
+            case id, date, paymentDate, type, additionalList, amount, puref, md5hash, name
             case lastPaymentName = "lpName"
+
         }
         
         struct AdditionalListData: Codable, Equatable {
@@ -103,6 +103,8 @@ private extension ResponseMapper {
             let fieldName: String
             let fieldValue: String
             let svgImage: String?
+            let recycle: String?
+            let typeIdParameterList: String?
         }
     }
 }
