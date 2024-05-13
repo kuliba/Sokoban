@@ -10,9 +10,9 @@ import Foundation
 
 public struct LoadOperatorsPayload<OperatorID: Hashable> {
     
-    let operatorID: OperatorID?
-    let searchText: String
-    let pageSize: Int
+    public let operatorID: OperatorID?
+    public let searchText: String
+    public let pageSize: Int
     
     public init(
         afterOperatorID operatorID: OperatorID? = nil,

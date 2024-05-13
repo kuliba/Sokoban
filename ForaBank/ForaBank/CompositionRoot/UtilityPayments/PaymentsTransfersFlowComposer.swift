@@ -43,17 +43,11 @@ extension PaymentsTransfersFlowComposer {
             log: log,
             paginate: { [loadOperators = model.loadOperators] payload, completion in
                 
-                loadOperators(payload.loadPayload) { result in
-                
-                    completion((try? result.get()) ?? [])
-                }
+                loadOperators(payload.loadPayload, completion)
             },
             search: { [loadOperators = model.loadOperators] payload, completion in
                 
-                loadOperators(payload.loadPayload) { result in
-                
-                    completion((try? result.get()) ?? [])
-                }
+                loadOperators(payload.loadPayload, completion)
             }
         )
         

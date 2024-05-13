@@ -28,7 +28,7 @@ public struct OperatorGroup: Equatable, Identifiable {
 public struct _OperatorGroup: Codable, Equatable, Identifiable {
     
     public var id: String { title }
-    let md5hash: String
+    public let md5hash: String
     public let title: String
     public let description: String
     

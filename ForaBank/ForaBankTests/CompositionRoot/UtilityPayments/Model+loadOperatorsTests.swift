@@ -172,29 +172,29 @@ private typealias SUT = Model
 //    }
 //}
 
-private func assert(
-    _ receivedResult: SUT.LoadOperatorsResult,
-    _ expectedResult: SUT.LoadOperatorsResult,
-    file: StaticString = #file,
-    line: UInt = #line
-) {
-    switch (receivedResult, expectedResult) {
-    case let (
-        .failure(receivedError as NSError),
-        .failure(expectedError as NSError)
-    ):
-        XCTAssertNoDiff(receivedError, expectedError, file: file, line: line)
-        
-    case let (
-        .success(received),
-        .success(expected)
-    ):
-        XCTAssertNoDiff(received, expected, file: file, line: line)
-        
-    default:
-        XCTFail("\nExpected \(expectedResult), but got \(receivedResult) instead.", file: file, line: line)
-    }
-}
+//private func assert(
+//    _ receivedResult: SUT.LoadOperatorsResult,
+//    _ expectedResult: SUT.LoadOperatorsResult,
+//    file: StaticString = #file,
+//    line: UInt = #line
+//) {
+//    switch (receivedResult, expectedResult) {
+//    case let (
+//        .failure(receivedError as NSError),
+//        .failure(expectedError as NSError)
+//    ):
+//        XCTAssertNoDiff(receivedError, expectedError, file: file, line: line)
+//        
+//    case let (
+//        .success(received),
+//        .success(expected)
+//    ):
+//        XCTAssertNoDiff(received, expected, file: file, line: line)
+//        
+//    default:
+//        XCTFail("\nExpected \(expectedResult), but got \(receivedResult) instead.", file: file, line: line)
+//    }
+//}
 
 private extension Array where Element == _OperatorGroup {
     
@@ -209,7 +209,7 @@ private extension Array where Element == _OperatorGroup {
     }
 }
 
-private extension Array where Element == UtilityPaymentOperator<String> {
+private extension Array where Element == UtilityPaymentOperator {
     
     static func stub(
         names: [String] = []

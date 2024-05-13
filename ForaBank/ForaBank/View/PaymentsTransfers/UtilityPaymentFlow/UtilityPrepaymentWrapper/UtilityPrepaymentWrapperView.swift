@@ -6,7 +6,6 @@
 //
 
 import FooterComponent
-import OperatorsListComponents
 import SwiftUI
 import UIPrimitives
 import UtilityServicePrepaymentDomain
