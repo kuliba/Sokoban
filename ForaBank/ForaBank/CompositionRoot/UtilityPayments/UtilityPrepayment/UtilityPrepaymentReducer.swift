@@ -22,6 +22,9 @@ extension UtilityPrepaymentReducer {
         case let .didScrollTo(operatorID):
 #warning("add event processing")
             
+        case let .load(operators):
+#warning("add event processing")
+            
         case let .page(operators):
 #warning("add event processing")
             

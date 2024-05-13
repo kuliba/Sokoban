@@ -9,6 +9,7 @@ public enum PrepaymentPickerEvent<Operator>
 where Operator: Identifiable {
     
     case didScrollTo(Operator.ID)
+    case load([Operator])
     case page([Operator])
     case search(String)
 }

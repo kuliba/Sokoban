@@ -36,11 +36,14 @@ public extension PrepaymentPickerReducer {
         case let .didScrollTo(operatorID):
             reduce(&state, &effect, with: operatorID)
             
-        case let .search(text):
-            reduce(&state, &effect, with: text)
+        case let .load(operators):
+            state.replace(operators)
             
         case let .page(operators):
-            reduce(&state, with: operators)
+            state.append(operators)
+            
+        case let .search(text):
+            reduce(&state, &effect, with: text)
         }
         
         return (state, effect)
@@ -52,6 +55,22 @@ public extension PrepaymentPickerReducer {
     typealias State = PrepaymentPickerState<LastPayment, Operator>
     typealias Event = PrepaymentPickerEvent<Operator>
     typealias Effect = PrepaymentPickerEffect<Operator.ID>
+}
+
+private extension PrepaymentPickerState {
+    
+    mutating func append(
+        _ operators: [Operator]
+    ) {
+        let operators = self.operators + operators
+        self.operators = operators
+    }
+    
+    mutating func replace(
+        _ operators: [Operator]
+    ) {
+        self.operators = operators
+    }
 }
 
 private extension PrepaymentPickerReducer {
@@ -79,28 +98,10 @@ private extension PrepaymentPickerReducer {
         _ effect: inout Effect?,
         with text: String
     ) {
-        guard !state.operators.isEmpty else { return }
-        
-        state.isSearching = true
         state.searchText = text
-        effect = .paginate(.init(
-            operatorID: nil,
+        effect = .search(.init(
             pageSize: pageSize,
             searchText: text
         ))
-    }
-    
-    func reduce(
-        _ state: inout State,
-        with newOperators: [Operator]
-    ) {
-        if state.isSearching {
-            state.isSearching = false
-            state.operators = newOperators
-        } else {
-            var operators = state.operators
-            operators.append(contentsOf: newOperators)
-            state.operators = operators
-        }
     }
 }

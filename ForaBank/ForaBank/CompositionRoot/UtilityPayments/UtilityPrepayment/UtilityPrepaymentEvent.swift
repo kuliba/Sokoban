@@ -11,6 +11,7 @@ import OperatorsListComponents
 enum UtilityPrepaymentEvent: Equatable {
     
     case didScrollTo(Operator.ID)
+    case load([Operator])
     case page([Operator])
     case search(Search)
 }

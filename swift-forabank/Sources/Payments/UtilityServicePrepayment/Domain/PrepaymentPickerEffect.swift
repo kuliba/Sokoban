@@ -7,30 +7,13 @@
 
 public enum PrepaymentPickerEffect<OperatorID> {
     
-    case paginate(PaginatePayload)
+    case paginate(Paginate)
+    case search(SearchPayload)
 }
 
-extension PrepaymentPickerEffect {
+public extension PrepaymentPickerEffect {
     
-    public struct PaginatePayload {
-        
-        public let operatorID: OperatorID?
-        public let pageSize: PageSize
-        public let searchText: String
-        
-        public init(
-            operatorID: OperatorID?,
-            pageSize: PageSize,
-            searchText: String
-        ) {
-            self.operatorID = operatorID
-            self.pageSize = pageSize
-            self.searchText = searchText
-        }
-        
-        public typealias PageSize = Int
-    }
+    typealias Paginate = PaginatePayload<OperatorID>
 }
 
 extension PrepaymentPickerEffect: Equatable where OperatorID: Equatable {}
-extension PrepaymentPickerEffect.PaginatePayload: Equatable where OperatorID: Equatable {}
