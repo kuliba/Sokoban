@@ -2009,12 +2009,14 @@ private extension Target {
     static let foraTools = target(
         name: .foraTools,
         dependencies: [
+            .combineSchedulers,
             .svgKit
         ]
     )
     static let foraToolsTests = testTarget(
         name: .foraToolsTests,
         dependencies: [
+            .combineSchedulers,
             .customDump,
             .foraTools
         ]

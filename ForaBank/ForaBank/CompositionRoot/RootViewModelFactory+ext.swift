@@ -28,7 +28,7 @@ extension RootViewModelFactory {
     ) -> RootViewModel {
         
         model.getProducts = Services.getProductListByType(httpClient, logger: logger)
-
+        
         let rsaKeyPairStore = makeLoggingStore(
             store: KeyTagKeyChainStore<RSADomain.KeyPair>(
                 keyTag: .rsa
@@ -114,15 +114,14 @@ extension RootViewModelFactory {
             isActive: utilitiesPaymentsFlag.isActive
         )
         
-        let reducerFactoryComposer = PaymentsTransfersFlowReducerFactoryComposer(model: model)
-        let utilityPaymentsComposer = UtilityPaymentsFlowComposer(
+        let paymentsTransfersFlowComposer = PaymentsTransfersFlowComposer(
+            httpClient: httpClient,
+            model: model,
+            log: infoNetworkLog
+        )
+        let paymentsTransfersFlowManager = paymentsTransfersFlowComposer.makeFlowManager(
             flag: utilitiesPaymentsFlag.optionOrStub
         )
-        let paymentsTransfersComposer = PaymentsTransfersFlowComposer(
-            makeReducerFactory: reducerFactoryComposer.makeFactory,
-            makeUtilityFlowEffectHandler: utilityPaymentsComposer.makeEffectHandler
-        )
-        let paymentsTransfersFlowManager = paymentsTransfersComposer.makeFlowManager()
 
         let unblockCardServices = Services.makeUnblockCardServices(
             httpClient: httpClient,
@@ -164,21 +163,21 @@ extension RootViewModelFactory {
     
     typealias LatestPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator<String>
-
+    
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
-
+    
     static func makeNavigationOperationView(
         httpClient: HTTPClient,
         model: Model,
         dismissAll: @escaping() -> Void
     ) -> () -> some View {
-     
+        
         return makeNavigationOperationView
         
         func operationView(
             setSelection: (@escaping (Location, @escaping NavigationFeatureViewModel.Completion) -> Void)
         ) -> some View {
-         
+            
             let makeOperationStateViewModel = makeOperationStateViewModel(
                 httpClient,
                 model: model
@@ -295,9 +294,9 @@ extension ProductProfileViewModel {
     
     typealias LatestPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator<String>
-
+    
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
-
+    
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
     static func make(
@@ -355,7 +354,7 @@ extension ProductProfileViewModel {
                     model: model
                 )
             }
-
+            
             let operationDetailFactory = OperationDetailFactory(
                 makeOperationDetailViewModel: makeOperationDetailViewModel
             )
@@ -388,7 +387,7 @@ extension ProductProfileViewModel {
                 sberQRServices: sberQRServices,
                 unblockCardServices: unblockCardServices,
                 qrViewModelFactory: qrViewModelFactory,
-                paymentsTransfersFactory: paymentsTransfersFactory, 
+                paymentsTransfersFactory: paymentsTransfersFactory,
                 operationDetailFactory: operationDetailFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: product, 
@@ -458,7 +457,7 @@ private extension RootViewModelFactory {
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplatesListViewModel: makeTemplatesListViewModel
         )
-                
+        
         let mainViewModel = MainViewModel(
             model,
             makeProductProfileViewModel: makeProductProfileViewModel,
@@ -536,7 +535,7 @@ private extension UserAccountModelEffectHandler {
 extension UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator<String>, UtilityService>.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload {
     
     var state: UtilityPrepaymentState {
-    
+        
         .init(lastPayments: lastPayments, operators: operators, searchText: searchText)
     }
 }

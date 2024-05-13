@@ -16,13 +16,12 @@ struct UtilityPrepaymentWrapperView: View {
     @ObservedObject var viewModel: ViewModel
     
     let flowEvent: (FlowEvent) -> Void
-    let config: Config
     
     var body: some View {
         
         PrepaymentPicker(
             state: viewModel.state,
-            event: { viewModel.event($0.event) },
+            event: { viewModel.event($0) },
             factory: .init(
                 makeFooterView: makeFooterView,
                 makeLastPaymentView: makeLastPaymentView,
@@ -30,14 +29,6 @@ struct UtilityPrepaymentWrapperView: View {
                 makeSearchView: makeSearchView
             )
         )
-        
-        #warning("remove `ComposedUtilityPrepaymentView`")
-//        ComposedUtilityPrepaymentView(
-//            state: viewModel.state,
-//            event: viewModel.event(_:),
-//            flowEvent: flowEvent,
-//            config: config
-//        )
     }
 }
 
@@ -48,7 +39,6 @@ extension UtilityPrepaymentWrapperView {
     
     typealias FlowEvent = UtilityPrepaymentFlowEvent
     typealias ViewModel = UtilityPrepaymentViewModel
-    typealias Config = ComposedUtilityPrepaymentView.Config
 }
 
 private extension UtilityPrepaymentWrapperView {
@@ -110,24 +100,13 @@ private extension UtilityPrepaymentWrapperView {
             "Type to search",
             text: .init(
                 get: { viewModel.state.searchText },
-                set: { viewModel.event(.search(.entered($0))) }
+                set: { viewModel.event(.search($0)) }
             )
         )
     }
 }
 
 // MARK: - Adapters
-
-private extension PrepaymentPickerEvent where OperatorID == String {
-    
-    var event: UtilityPrepaymentEvent {
-        
-        switch self {
-        case let .didScrollTo(operatorID):
-            return .didScrollTo(operatorID)
-        }
-    }
-}
 
 private extension FooterEvent {
     

@@ -419,8 +419,7 @@ private extension PaymentsTransfersView {
                 
                 UtilityPrepaymentWrapperView(
                     viewModel: state.content,
-                    flowEvent: { event(.prepayment($0.flowEvent)) },
-                    config: .iFora
+                    flowEvent: { event(.prepayment($0.flowEvent)) }
                 )
             },
             destinationView: {
