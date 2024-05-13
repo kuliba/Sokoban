@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct OperatorFailureView: View {
+struct OperatorFailureView<State>: View {
     
-    let state: Operator
+    let state: State
     let event: () -> Void
     
     var body: some View {

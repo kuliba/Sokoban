@@ -185,19 +185,27 @@ struct MyProductsView_Previews: PreviewProvider {
         
         MyProductsView(
             viewModel: viewModel,
-            viewFactory: .init(
-                makeSberQRConfirmPaymentView: {
-                    
-                    .init(
-                        viewModel: $0,
-                        map: Info.preview(info:),
-                        config: .iFora
-                    )
-                },
-                makeUserAccountView: UserAccountView.init(viewModel:)
-            ), 
+            viewFactory: .preview,
             productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)),
             getUImage: { _ in nil }
+        )
+    }
+}
+
+extension PaymentsTransfersViewFactory {
+    
+    static var preview: Self {
+        
+        return .init(
+            makeSberQRConfirmPaymentView: {
+                
+                .init(
+                    viewModel: $0,
+                    map: Info.preview(info:),
+                    config: .iFora
+                )
+            },
+            makeUserAccountView: UserAccountView.init(viewModel:)
         )
     }
 }

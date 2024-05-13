@@ -29,6 +29,7 @@ let package = Package(
         // Payments
         .anywayPayment,
         .utilityPayment,
+        .utilityServicePrepayment,
         // Services
         .cardStatementAPI,
         .cryptoSwaddler,
@@ -122,6 +123,10 @@ let package = Package(
         .anywayPaymentUITests,
         .utilityPayment,
         .utilityPaymentTests,
+        .utilityServicePrepaymentCore,
+        .utilityServicePrepaymentCoreTests,
+        .utilityServicePrepaymentDomain,
+        .utilityServicePrepaymentUI,
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
@@ -553,6 +558,15 @@ private extension Product {
         name: .utilityPayment,
         targets: [
             .utilityPayment,
+        ]
+    )
+
+    static let utilityServicePrepayment = library(
+        name: .utilityServicePrepayment,
+        targets: [
+            .utilityServicePrepaymentCore,
+            .utilityServicePrepaymentDomain,
+            .utilityServicePrepaymentUI,
         ]
     )
 
@@ -1058,6 +1072,54 @@ private extension Target {
             .utilityPayment,
         ],
         path: "Tests/Payments/\(String.utilityPaymentTests)"
+    )
+    
+    static let utilityServicePrepaymentCore = target(
+        name: .utilityServicePrepaymentCore,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+            .foraTools,
+            .utilityServicePrepaymentDomain,
+        ],
+        path: "Sources/Payments/UtilityServicePrepayment/Core"
+    )
+    static let utilityServicePrepaymentDomain = target(
+        name: .utilityServicePrepaymentDomain,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+            .foraTools,
+        ],
+        path: "Sources/Payments/UtilityServicePrepayment/Domain"
+    )
+    static let utilityServicePrepaymentUI = target(
+        name: .utilityServicePrepaymentUI,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+            .foraTools,
+            .uiPrimitives,
+            .utilityServicePrepaymentDomain,
+        ],
+        path: "Sources/Payments/UtilityServicePrepayment/UI"
+    )
+    static let utilityServicePrepaymentCoreTests = testTarget(
+        name: .utilityServicePrepaymentCoreTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .utilityServicePrepaymentCore,
+            .utilityServicePrepaymentDomain,
+        ],
+        path: "Tests/Payments/UtilityServicePrepayment/CoreTests"
     )
     
     // MARK: - Services
@@ -2207,6 +2269,14 @@ private extension Target.Dependency {
         name: .utilityPayment
     )
 
+    static let utilityServicePrepaymentCore = byName(
+        name: .utilityServicePrepaymentCore
+    )
+
+    static let utilityServicePrepaymentDomain = byName(
+        name: .utilityServicePrepaymentDomain
+    )
+
     // MARK: - Services
     
     static let cardStatementAPI = byName(
@@ -2434,6 +2504,12 @@ private extension String {
 
     static let utilityPayment = "UtilityPayment"
     static let utilityPaymentTests = "UtilityPaymentTests"
+
+    static let utilityServicePrepayment = "UtilityServicePrepayment"
+    static let utilityServicePrepaymentCore = "UtilityServicePrepaymentCore"
+    static let utilityServicePrepaymentDomain = "UtilityServicePrepaymentDomain"
+    static let utilityServicePrepaymentUI = "UtilityServicePrepaymentUI"
+    static let utilityServicePrepaymentCoreTests = "UtilityServicePrepaymentCoreTests"
 
     // MARK: - Services
     

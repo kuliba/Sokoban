@@ -11,12 +11,15 @@ final class PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, 
     
     private let factory: Factory
     private let notify: Factory.Notify
+    private let closeAction: () -> Void
     
     init(
         factory: Factory,
+        closeAction: @escaping () -> Void,
         notify: @escaping Factory.Notify
     ) {
         self.factory = factory
+        self.closeAction = closeAction
         self.notify = notify
     }
 }
@@ -32,7 +35,16 @@ extension PaymentsTransfersFlowReducer {
         var effect: Effect?
         
         switch event {
+        case .addCompany:
+            state.outside = .chat
+            
+        case .dismissDestination:
+            state.destination = nil
+            
         case .dismissFullScreenCover:
+            state.modal = nil
+            
+        case .dismissModal:
             state.modal = nil
             
         case .goToMain:
@@ -215,7 +227,7 @@ private extension PaymentsTransfersFlowReducer {
             payByInstructions(&state)
             
         case .payByInstructionsFromError:
-            state.destination = .payByInstructions
+            state.destination = .payments(factory.makePaymentsViewModel(closeAction))
             
         case let .paymentStarted(startPaymentResult):
             reduce(&state, with: startPaymentResult)
@@ -230,12 +242,14 @@ private extension PaymentsTransfersFlowReducer {
     private func payByInstructions(
         _ state: inout State
     ) {
+        let viewModel = factory.makePaymentsViewModel(closeAction)
+        
         switch state.utilityPrepaymentDestination {
         case .none:
-            state.setUtilityPrepaymentDestination(to: .payByInstructions)
+            state.setUtilityPrepaymentDestination(to: .payByInstructions(viewModel))
             
         case .operatorFailure:
-            state.setUtilityServiceOperatorFailureDestination(to: .payByInstructions)
+            state.setUtilityServiceOperatorFailureDestination(to: .payByInstructions(viewModel))
             
         default:
             break
@@ -310,7 +324,7 @@ private extension PaymentsTransfersFlowReducer {
         _ state: inout State,
         with response: StartPaymentResponse
     ) {
-        let paymentViewModel = factory.makePaymentViewModel(response, notify)
+        let paymentViewModel = factory.makeUtilityPaymentViewModel(response, notify)
         
         switch state.utilityPrepaymentDestination {
         case .none:
@@ -343,7 +357,9 @@ private extension PaymentsTransfersViewModel.Modal {
         expired: Bool
     ) -> Self {
         
-        .fullScreenSheet(.init(type: .paymentCancelled))
+        .fullScreenSheet(.init(
+            type: .paymentCancelled(expired: expired)
+        ))
     }
 }
 

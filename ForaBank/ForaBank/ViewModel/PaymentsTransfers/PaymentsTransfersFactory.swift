@@ -13,7 +13,7 @@ struct PaymentsTransfersFactory {
 }
 
 extension PaymentsTransfersFactory {
-    
+    #warning("move to PaymentsTransfersFlowReducerFactory")
     struct MakeUtilitiesPayload {
         
         let type: PTSectionPaymentsView.ViewModel.PaymentsType
@@ -26,7 +26,7 @@ extension PaymentsTransfersFactory {
     enum UtilitiesVM {
         
         case legacy(PaymentsServicesViewModel)
-        case utilities(UtilitiesViewModel)
+        case utilities
     }
     
     typealias MakeUtilitiesViewModel = (MakeUtilitiesPayload, @escaping (UtilitiesVM) -> Void) -> Void

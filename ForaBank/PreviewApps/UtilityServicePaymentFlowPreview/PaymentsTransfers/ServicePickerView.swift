@@ -8,7 +8,9 @@
 import Foundation
 import SwiftUI
 
-struct ServicePickerView: View {
+struct ServicePickerView<LastPayment, Operator, Service>: View
+where Service: Identifiable,
+      Service.ID: StringProtocol {
     
     let state: State
     let event: (Event) -> Void
@@ -22,7 +24,7 @@ struct ServicePickerView: View {
     }
     
     private func serviceView(
-        service: UtilityService
+        service: Service
     ) -> some View {
         
         Button(String(service.id.prefix(23))) {
@@ -35,9 +37,9 @@ struct ServicePickerView: View {
 
 extension ServicePickerView {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, Service, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     typealias State = UtilityFlowState.Destination.ServicePickerFlowState.Content
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent.Select
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Service>.UtilityPrepaymentFlowEvent.Select
 }
 
 //#Preview {

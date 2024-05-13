@@ -24,11 +24,11 @@ struct ButtonSimpleView: View {
             ZStack {
                 
                 RoundedRectangle(cornerRadius: 8)
-                    .foregroundColor(viewModel.buttonConfiguration.backgroundColor)
+                    .foregroundColor(viewModel.buttonConfig.backgroundColor)
                 
                 Text(viewModel.title)
-                    .font(viewModel.buttonConfiguration.titleFont)
-                    .foregroundColor(viewModel.buttonConfiguration.titleForeground)
+                    .font(viewModel.buttonConfig.titleFont)
+                    .foregroundColor(viewModel.buttonConfig.titleForeground)
             }
         }
     }

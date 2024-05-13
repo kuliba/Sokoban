@@ -22,34 +22,22 @@ struct RootViewFactory {
     let makeActivateSliderView: MakeActivateSliderView
 }
 
-struct MainViewFactory {
-    
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
-    let makeUserAccountView: MakeUserAccountView
-}
-
 extension RootViewFactory {
     
     var mainViewFactory: MainViewFactory {
         
-        .init(
+        return .init(
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView
         )
     }
 }
 
-struct PaymentsTransfersViewFactory {
-    
-    let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
-    let makeUserAccountView: MakeUserAccountView
-}
-
 extension RootViewFactory {
     
     var paymentsTransfersViewFactory: PaymentsTransfersViewFactory {
- 
-        .init(
+        
+        return .init(
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView
         )

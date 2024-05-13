@@ -1,0 +1,11 @@
+//
+//  UtilityPrepaymentViewConfig+iFora.swift
+//  ForaBank
+//
+//  Created by Igor Malyarov on 10.05.2024.
+//
+
+extension UtilityPrepaymentViewConfig {
+    
+    static let iFora: Self = .init()
+}

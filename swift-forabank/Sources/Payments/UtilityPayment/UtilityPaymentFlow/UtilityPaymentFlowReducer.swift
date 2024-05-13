@@ -83,8 +83,8 @@ private extension UtilityPaymentFlowReducer {
             case let .loaded(loadLastPaymentsResult, loadOperatorsResult):
                 state.isInflight = false
                 state.current = .prePaymentOptions(.init(
-                    lastPayments: try? loadLastPaymentsResult.get(),
-                    operators: try? loadOperatorsResult.get()
+                    lastPayments: (try? loadLastPaymentsResult.get()) ?? [],
+                    operators: (try? loadOperatorsResult.get()) ?? []
                 ))
                 
             case .initiate:

@@ -21,7 +21,7 @@ struct ComposedOperatorsWrapperView: View {
     @StateObject var searchViewModel: SearchViewModel
     @StateObject var viewModel: PrePaymentOptionsViewModel = .preview(initialState: .init())
  
-    let selectLast: (LatestPayment.ID) -> Void
+    let selectLast: (LastPayment.ID) -> Void
     let selectOperator: (OperatorsListComponents.Operator.ID) -> Void
     
     let configView: ConfigView
@@ -29,7 +29,7 @@ struct ComposedOperatorsWrapperView: View {
     init(
         searchViewModel: SearchViewModel,
         viewModel: PrePaymentOptionsViewModel,
-        selectLast: @escaping (LatestPayment.ID) -> Void,
+        selectLast: @escaping (LastPayment.ID) -> Void,
         selectOperator: @escaping (OperatorsListComponents.Operator.ID) -> Void,
         configView: ConfigView
     ) {
@@ -98,7 +98,7 @@ struct ComposedOperatorsWrapperView: View {
 
 struct ConfigView {
     
-    let latestConfig: LatestPayment.LatestPaymentConfig
+    let latestConfig: LastPayment.LatestPaymentConfig
 }
 
 struct ContentView: View {

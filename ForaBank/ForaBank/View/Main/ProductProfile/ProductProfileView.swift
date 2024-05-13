@@ -410,17 +410,7 @@ struct ProfileView_Previews: PreviewProvider {
         
         ProductProfileView(
             viewModel: viewModel,
-            viewFactory: .init(
-                makeSberQRConfirmPaymentView: {
-                    
-                    .init(
-                        viewModel: $0,
-                        map: Info.preview(info:),
-                        config: .iFora
-                    )
-                },
-                makeUserAccountView: UserAccountView.init(viewModel:)
-            ), 
+            viewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)
             ),
@@ -440,7 +430,7 @@ extension ProductProfileViewModel {
         detail: .sample,
         history: .sampleHistory,
         fastPaymentsFactory: .legacy,
-        paymentsTransfersNavigationStateManager: .preview,
+        paymentsTransfersFlowManager: .preview,
         userAccountNavigationStateManager: .preview,
         sberQRServices: .empty(),
         unblockCardServices: .preview(),
@@ -460,7 +450,7 @@ extension ProductProfileViewModel {
         detail: .sample,
         history: .sampleHistory,
         fastPaymentsFactory: .legacy,
-        paymentsTransfersNavigationStateManager: .preview,
+        paymentsTransfersFlowManager: .preview,
         userAccountNavigationStateManager: .preview,
         sberQRServices: .empty(),
         unblockCardServices: .preview(),
