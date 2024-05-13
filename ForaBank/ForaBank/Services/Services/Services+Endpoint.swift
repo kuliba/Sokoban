@@ -72,6 +72,7 @@ extension Services {
             case createStickerPayment
             case fastPaymentContractFindList
             case formSessionKey
+            case getAllLatestPayments
             case getBankDefault
             case getC2BSub
             case getCardStatementForPeriod
@@ -96,7 +97,6 @@ extension Services {
             case processPublicKeyAuthenticationRequest
             case showCVV
             case updateFastPaymentContract
-            case getAllLatestPayments
         }
     }
 }
