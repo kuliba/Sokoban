@@ -20,9 +20,9 @@ extension ResponseMapper {
     
     private static func map(
         _ data: [LatestPaymentCodable]
-    ) throws -> [LatestPaymentService]? {
+    ) throws -> [LatestPayment]? {
         
-        data.map { LatestPaymentService(
+        data.map { LatestPayment(
             id: $0.id,
             title: $0.lastPaymentName ?? "",
             amount: .double($0.amount)
@@ -31,11 +31,14 @@ extension ResponseMapper {
 }
 
 //TODO: move to module
-struct LatestPaymentService: Identifiable {
-    
-    let id: Int
-    let title: String
-    let amount: Amount
+extension ResponseMapper {
+ 
+    struct LatestPayment: Identifiable {
+        
+        let id: Int
+        let title: String
+        let amount: Amount
+    }
 }
 
 enum LatestPaymentKind: String, Codable {
