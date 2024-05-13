@@ -200,7 +200,8 @@ extension PaymentsTransfersViewFactory {
                     config: .iFora
                 )
             },
-            makeUserAccountView: UserAccountView.init(viewModel:)
+            makeUserAccountView: UserAccountView.init(viewModel:),
+            makeIconView: IconDomain.preview
         )
     }
 }

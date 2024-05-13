@@ -6,7 +6,6 @@
 //
 
 import SberQR
-import SwiftUI
 
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
@@ -17,6 +16,12 @@ struct RootViewFactory {
     let makePaymentsTransfersView: MakePaymentsTransfersView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeUserAccountView: MakeUserAccountView
+    let makeIconView: MakeIconView
+}
+
+extension RootViewFactory {
+    
+    typealias MakeIconView = IconDomain.MakeIconView
 }
 
 extension RootViewFactory {
@@ -36,7 +41,8 @@ extension RootViewFactory {
         
         return .init(
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: makeUserAccountView
+            makeUserAccountView: makeUserAccountView,
+            makeIconView: makeIconView
         )
     }
 }
