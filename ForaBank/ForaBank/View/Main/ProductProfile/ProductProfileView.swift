@@ -395,17 +395,7 @@ struct ProfileView_Previews: PreviewProvider {
         
         ProductProfileView(
             viewModel: viewModel,
-            viewFactory: .init(
-                makeSberQRConfirmPaymentView: {
-                    
-                    .init(
-                        viewModel: $0,
-                        map: Info.preview(info:),
-                        config: .iFora
-                    )
-                },
-                makeUserAccountView: UserAccountView.init(viewModel:)
-            ), 
+            viewFactory: .preview,
             getUImage: { _ in nil }
         )
     }

@@ -72,6 +72,7 @@ extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
         
         let lastPayments: [LastPayment]
         let operators: [Operator]
+        let searchText: String
     }
 }
 

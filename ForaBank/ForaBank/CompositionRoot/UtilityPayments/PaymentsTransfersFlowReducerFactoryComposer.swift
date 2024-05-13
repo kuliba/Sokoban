@@ -7,7 +7,16 @@
 
 import OperatorsListComponents
 
-final class PaymentsTransfersFlowReducerFactoryComposer {}
+final class PaymentsTransfersFlowReducerFactoryComposer {
+    
+    private let model: Model
+    
+    init(
+        model: Model
+    ) {
+        self.model = model
+    }
+}
 
 extension PaymentsTransfersFlowReducerFactoryComposer {
     
@@ -15,9 +24,13 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
         
         return .init(
             makeUtilityPrepaymentViewModel: makeUtilityPrepaymentViewModel,
-            makePaymentViewModel: { _, notify in
+            makeUtilityPaymentViewModel: { _, notify in
                 
                 return .init(notify: notify)
+            },
+            makePaymentsViewModel: { [self] in
+                
+                return .init(model, service: .requisites, closeAction: $0)
             }
         )
     }
@@ -25,8 +38,8 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
 
 extension PaymentsTransfersFlowReducerFactoryComposer {
     
-    typealias LastPayment = OperatorsListComponents.LatestPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
     
     typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 }

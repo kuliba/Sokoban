@@ -1052,8 +1052,8 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     }
     
     private func makePPOStub(
-        lastPaymentsCount: Int? = nil,
-        operatorsCount: Int? = nil,
+        lastPaymentsCount: Int = 0,
+        operatorsCount: Int = 0,
         searchText: String = "",
         isInflight: Bool = false,
         ppoEffect: PPOEffect? = nil
@@ -1070,18 +1070,18 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     }
     
     private func makePrePaymentOptionsState(
-        lastPaymentsCount: Int? = nil,
-        operatorsCount: Int? = nil,
+        lastPaymentsCount: Int = 0,
+        operatorsCount: Int = 0,
         searchText: String = "",
         isInflight: Bool = false
     ) -> PPOState {
         
         .init(
-            lastPayments: lastPaymentsCount.map {
-                (0..<$0).map { _ in makeLastPayment() }
+            lastPayments: (0..<lastPaymentsCount).map { _ in
+                makeLastPayment()
             },
-            operators: operatorsCount.map {
-                (0..<$0).map { _ in makeOperator() }
+            operators: (0..<operatorsCount).map { _ in
+                makeOperator()
             },
             searchText: searchText,
             isInflight: isInflight

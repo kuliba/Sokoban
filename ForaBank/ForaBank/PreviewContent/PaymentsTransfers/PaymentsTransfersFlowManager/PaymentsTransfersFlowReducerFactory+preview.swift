@@ -9,19 +9,23 @@ import OperatorsListComponents
 import RxViewModel
 
 extension PaymentsTransfersFlowReducerFactory
-where LastPayment == OperatorsListComponents.LatestPayment,
-      Operator == OperatorsListComponents.Operator,
+where LastPayment == UtilityPaymentLastPayment,
+      Operator == UtilityPaymentOperator<String>,
       UtilityService == ForaBank.UtilityService,
       Content == UtilityPrepaymentViewModel,
-      PaymentViewModel == ObservingPaymentFlowMockViewModel {
+      UtilityPaymentViewModel == ObservingPaymentFlowMockViewModel {
     
     static var preview: Self {
         
         return .init(
             makeUtilityPrepaymentViewModel: { .preview(initialState: .init($0)) },
-            makePaymentViewModel: { _, notify in
+            makeUtilityPaymentViewModel: { _, notify in
                 
                 return .init(notify: notify)
+            },
+            makePaymentsViewModel: { 
+                
+                return .init(.emptyMock, service: .abroad, closeAction: $0)
             }
         )
     }
@@ -49,7 +53,7 @@ where State == UtilityPrepaymentState,
 
 private extension UtilityPrepaymentState {
     
-    static let preview: Self = .init(lastPayments: [], operators: [])
+    static let preview: Self = .init(lastPayments: [], operators: [], searchText: "")
 }
 
 // MARK: - Adapters
@@ -63,7 +67,8 @@ private extension UtilityPrepaymentState {
         
         self.init(
             lastPayments: payload.lastPayments,
-            operators: payload.operators
+            operators: payload.operators,
+            searchText: payload.searchText
         )
     }
 }

@@ -25,15 +25,15 @@ final class PaymentsTransfersFlowComposer {
 
 extension PaymentsTransfersFlowComposer {
     
-    typealias LastPayment = OperatorsListComponents.LatestPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
     
 #warning("replace UtilityFlowEffectHandler with closure")
     typealias UtilityFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
     typealias MakeUtilityFlowEffectHandler = () -> UtilityFlowEffectHandler
     
     typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, UtilityContent, ObservingPaymentFlowMockViewModel>
-
+    
     typealias MakeReducerFactory = () -> Reducer.Factory
 }
 
@@ -49,14 +49,17 @@ extension PaymentsTransfersFlowComposer {
         )
         
         let factory = makeReducerFactory()
-        let makeReducer = { Reducer(factory: factory, notify: $0) }
+        let makeReducer = {
+            
+            Reducer(factory: factory, closeAction: $0, notify: $1)
+        }
         
         return .init(
             handleEffect: effectHandler.handleEffect(_:_:),
-            makeReduce: { makeReducer($0).reduce(_:_:) }
+            makeReduce: { makeReducer($0, $1).reduce(_:_:) }
         )
     }
     
     typealias UtilityContent = UtilityPrepaymentViewModel
-    typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityContent, ObservingPaymentFlowMockViewModel>
+    typealias PTFlowManger = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, UtilityContent, ObservingPaymentFlowMockViewModel>
 }

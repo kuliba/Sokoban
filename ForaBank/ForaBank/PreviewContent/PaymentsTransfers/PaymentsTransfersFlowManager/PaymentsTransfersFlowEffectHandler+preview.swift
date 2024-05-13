@@ -10,8 +10,8 @@ import Foundation
 import OperatorsListComponents
 
 extension PaymentsTransfersFlowEffectHandler
-where LastPayment == OperatorsListComponents.LatestPayment,
-      Operator == OperatorsListComponents.Operator,
+where LastPayment == UtilityPaymentLastPayment,
+      Operator == UtilityPaymentOperator<String>,
       UtilityService == ForaBank.UtilityService {
     
     static func preview(

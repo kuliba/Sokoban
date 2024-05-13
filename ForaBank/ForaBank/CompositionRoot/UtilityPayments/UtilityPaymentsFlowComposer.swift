@@ -89,8 +89,8 @@ extension UtilityPaymentsFlowComposer {
     
     typealias Flag = StubbedFeatureFlag.Option
     
-    typealias LastPayment = OperatorsListComponents.LatestPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
     
     typealias UtilityFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
 }
@@ -107,10 +107,7 @@ private extension UtilityPaymentsFlowComposer {
             fatalError("unimplemented live")
             
         case .stub:
-            return stub(.init(
-                lastPayments: [],
-                operators: [.failure, .list, .single]
-            ))
+            return stub(.init(lastPayments: .stub, operators: .stub, searchText: ""))
         }
     }
     
@@ -165,6 +162,7 @@ private extension UtilityPaymentsFlowComposer {
                 switch lastPayment.id {
                 case "failure":
                     return .failure(.serviceFailure(.connectivityError))
+                    
                 default:
                     return .success(.startPayment(.init()))
                 }
@@ -173,17 +171,20 @@ private extension UtilityPaymentsFlowComposer {
                 switch `operator`.id {
                 case "single":
                     return .success(.startPayment(.init()))
+                    
                 case "singleFailure":
                     return .failure(.operatorFailure(`operator`))
+                    
                 case "multiple":
                     let services = MultiElementArray<UtilityService>([
-                        
                         .init(id: "failure"),
                         .init(id: UUID().uuidString),
                     ])!
                     return .success(.services(services, for: `operator`))
+                    
                 case "multipleFailure":
                     return .failure(.serviceFailure(.serverError("Server Failure")))
+                    
                 default:
                     return .success(.startPayment(.init()))
                 }
@@ -192,6 +193,7 @@ private extension UtilityPaymentsFlowComposer {
                 switch service.id {
                 case "failure":
                     return .failure(.serviceFailure(.serverError("Server Failure")))
+                    
                 default:
                     return .success(.startPayment(.init()))
                 }
@@ -200,15 +202,40 @@ private extension UtilityPaymentsFlowComposer {
     }
 }
 
-// TODO: make private
-/*private*/ extension OperatorsListComponents.Operator {
+private extension Array where Element == UtilityPaymentLastPayment {
     
-    static let failure: Self = .init("failure", "Failure")
-    static let list: Self = .init("list", "List")
+    static let stub: Self = [
+        .failure,
+        .preview,
+    ]
+}
+
+private extension UtilityPaymentLastPayment {
+    
+    static let failure: Self = .init(id: "failure", title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
+    static let preview: Self = .init(id: UUID().uuidString, title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
+}
+
+#warning("move to the call site and make private")
+/*private*/ extension UtilityPaymentOperator<String> {
+    
+    static let multiple: Self = .init("multiple", "Multiple")
+    static let multipleFailure: Self = .init("multipleFailure", "MultipleFailure")
     static let single: Self = .init("single", "Single")
+    static let singleFailure: Self = .init("singleFailure", "SingleFailure")
     
     private init(_ id: String, _ title: String) {
         
-        self.init(id: id, title: title, subtitle: nil, image: nil)
+        self.init(id: id, title: title, subtitle: nil, icon: "abc")
     }
+}
+
+private extension Array where Element == UtilityPaymentOperator<String> {
+    
+    static let stub: Self = [
+        .single,
+        .singleFailure,
+        .multiple,
+        .multipleFailure,
+    ]
 }

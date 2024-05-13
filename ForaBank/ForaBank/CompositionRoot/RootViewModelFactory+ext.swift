@@ -114,7 +114,7 @@ extension RootViewModelFactory {
             isActive: utilitiesPaymentsFlag.isActive
         )
         
-        let reducerFactoryComposer = PaymentsTransfersFlowReducerFactoryComposer()
+        let reducerFactoryComposer = PaymentsTransfersFlowReducerFactoryComposer(model: model)
         let utilityPaymentsComposer = UtilityPaymentsFlowComposer(
             flag: utilitiesPaymentsFlag.optionOrStub
         )
@@ -148,8 +148,8 @@ extension RootViewModelFactory {
         )
     }
     
-    typealias LatestPayment = OperatorsListComponents.LatestPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias LatestPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
 
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 
@@ -279,8 +279,8 @@ typealias MakeUtilitiesViewModel = PaymentsTransfersFactory.MakeUtilitiesViewMod
 
 extension ProductProfileViewModel {
     
-    typealias LatestPayment = OperatorsListComponents.LatestPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias LatestPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
 
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
 
@@ -490,10 +490,10 @@ private extension UserAccountModelEffectHandler {
     }
 }
 
-extension UtilityPaymentFlowEvent<OperatorsListComponents.LatestPayment, OperatorsListComponents.Operator, UtilityService>.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload {
+extension UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator<String>, UtilityService>.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload {
     
     var state: UtilityPrepaymentState {
     
-        .init(lastPayments: lastPayments, operators: operators)
+        .init(lastPayments: lastPayments, operators: operators, searchText: searchText)
     }
 }

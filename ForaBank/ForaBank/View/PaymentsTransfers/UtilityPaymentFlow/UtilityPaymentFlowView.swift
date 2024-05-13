@@ -1,14 +1,15 @@
 //
-//  UtilityPrepaymentFlowView.swift
-//  UtilityServicePaymentFlowPreview
+//  UtilityPaymentFlowView.swift
+//
 //
 //  Created by Igor Malyarov on 05.05.2024.
 //
 
+import OperatorsListComponents
 import SwiftUI
 import UIPrimitives
 
-struct UtilityPrepaymentFlowView<Content: View, DestinationView: View>: View
+struct UtilityPaymentFlowView<Content, DestinationView>: View
 where Content: View,
       DestinationView: View {
     
@@ -37,35 +38,34 @@ where Content: View,
         
         return { alert in
             
-            switch alert {
-            case let .serviceFailure(serviceFailure):
-                return serviceFailure.alert(
-                    event: event,
-                    map: {
-                        switch $0 {
-                        case .dismissAlert: return .dismissAlert
-                        }
+            return alert.serviceFailure.alert(
+                event: event,
+                map: {
+                    switch $0 {
+                    case .dismissAlert: return .dismissAlert
                     }
-                )
-            }
+                }
+            )
         }
     }
 }
 
-extension UtilityPrepaymentFlowView {
+extension UtilityPaymentFlowView {
     
     typealias Destination = State.Destination
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
-    typealias State = UtilityFlowState
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
+
+    typealias State = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
 }
 
 //#Preview {
-//    UtilityPrepaymentFlowView()
+//    UtilityPaymentFlowView()
 //}
 
-extension UtilityPaymentFlowState.Destination: Identifiable 
+extension UtilityPaymentFlowState.Destination: Identifiable
 where Operator: Identifiable {
     
     var id: ID {
@@ -98,9 +98,12 @@ extension UtilityPaymentFlowState.Alert: Identifiable {
     
     var id: ID {
         
-        switch self {
-        case let .serviceFailure(serviceFailure):
-            return  .serviceFailure(serviceFailure)
+        switch serviceFailure {
+        case .connectivityError:
+            return .serviceFailure(.connectivityError)
+            
+        case let .serverError(message):
+            return .serviceFailure(.serverError(message))
         }
     }
     
@@ -110,7 +113,7 @@ extension UtilityPaymentFlowState.Alert: Identifiable {
     }
 }
 
-private extension ServiceFailure {
+private extension ServiceFailureAlert.ServiceFailure {
     
     func alert<Event>(
         event: @escaping (Event) -> Void,

@@ -7,6 +7,7 @@
 
 import Foundation
 import OperatorsListComponents
+import UtilityServicePrepaymentDomain
 
 #warning("replace with `UtilityPayment` types from module, like `typealias UtilityPaymentState = UtilityPayment.UtilityPaymentState`, etc")
 
@@ -18,8 +19,15 @@ struct UtilityPaymentState: Equatable {
 enum UtilityPaymentEvent: Equatable {
     
     case addCompany
-    case composed(ComposedOperatorsEvent)
+    case composed(ComposedEvent)
     case payByInstruction
+}
+
+extension UtilityPaymentEvent {
+    
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
+    typealias ComposedEvent = PrepaymentPickerEvent<Operator.ID>
 }
 
 enum UtilityPaymentEffect: Equatable {}

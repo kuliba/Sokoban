@@ -8,8 +8,8 @@
 import OperatorsListComponents
 
 extension PaymentsTransfersFlowManager
-where LastPayment == OperatorsListComponents.LatestPayment,
-      Operator == OperatorsListComponents.Operator,
+where LastPayment == UtilityPaymentLastPayment,
+      Operator == UtilityPaymentOperator<String>,
       UtilityService == ForaBank.UtilityService,
       Content == UtilityPrepaymentViewModel,
       PaymentViewModel == ObservingPaymentFlowMockViewModel {
@@ -18,7 +18,7 @@ where LastPayment == OperatorsListComponents.LatestPayment,
         
         return .init(
             handleEffect: { _,_ in },
-            makeReduce: { _ in  { state,_ in (state, nil) }}
+            makeReduce: { _,_ in  { state,_ in (state, nil) }}
         )
     }
 }

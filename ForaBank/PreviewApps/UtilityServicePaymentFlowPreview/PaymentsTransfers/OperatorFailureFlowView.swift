@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct OperatorFailureFlowView<Content: View, DestinationView: View>: View
-where Content: View,
+struct OperatorFailureFlowView<ContentView, DestinationView>: View
+where ContentView: View,
       DestinationView: View {
     
     let state: State
     let event: (Event) -> Void
-    let content: () -> Content
+    let content: () -> ContentView
     let destinationView: (Destination) -> DestinationView
     
     var body: some View {

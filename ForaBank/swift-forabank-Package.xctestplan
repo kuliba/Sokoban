@@ -378,9 +378,16 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "AnywayPaymentUITests",
         "name" : "AnywayPaymentUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UtilityServicePrepaymentCoreTests",
+        "name" : "UtilityServicePrepaymentCoreTests"
       }
     }
   ],

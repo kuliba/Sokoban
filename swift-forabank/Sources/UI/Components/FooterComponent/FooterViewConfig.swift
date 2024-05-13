@@ -11,15 +11,15 @@ import SharedConfigs
 
 public extension FooterView {
     
-    typealias ButtonConfig = ButtonSimpleViewModel.ButtonConfiguration
+    typealias ButtonConfig = ButtonSimpleViewModel.Config
     
     struct Config {
         
-        let titleConfig: TextConfig
-        let descriptionConfig: TextConfig
-        let subtitleConfig: TextConfig
+        let title: TextConfig
+        let description: TextConfig
+        let subtitle: TextConfig
         
-        let backgroundIcon: Color
+        let background: Color
         
         let requisitesButtonTitle: String
         let requisitesButtonConfig: ButtonConfig
@@ -28,19 +28,19 @@ public extension FooterView {
         let addCompanyButtonConfiguration: ButtonConfig
         
         public init(
-            titleConfig: TextConfig,
-            descriptionConfig: TextConfig,
-            subtitleConfig: TextConfig,
-            backgroundIcon: Color,
+            title: TextConfig,
+            description: TextConfig,
+            subtitle: TextConfig,
+            background: Color,
             requisitesButtonTitle: String,
             requisitesButtonConfig: ButtonConfig,
             addCompanyButtonTitle: String,
             addCompanyButtonConfiguration: ButtonConfig
         ) {
-            self.titleConfig = titleConfig
-            self.descriptionConfig = descriptionConfig
-            self.subtitleConfig = subtitleConfig
-            self.backgroundIcon = backgroundIcon
+            self.title = title
+            self.description = description
+            self.subtitle = subtitle
+            self.background = background
             self.requisitesButtonTitle = requisitesButtonTitle
             self.requisitesButtonConfig = requisitesButtonConfig
             self.addCompanyButtonTitle = addCompanyButtonTitle
