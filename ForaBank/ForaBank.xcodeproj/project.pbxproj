@@ -681,7 +681,6 @@
 		2A5B23112BEE03CE00270D50 /* View+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23102BEE03CE00270D50 /* View+ext.swift */; };
 		2A5B23152BEE05E300270D50 /* UtilityPaymentFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23142BEE05E300270D50 /* UtilityPaymentFlowView.swift */; };
 		2A5B23182BEE0B9300270D50 /* UtilityPrepaymentWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23172BEE0B9300270D50 /* UtilityPrepaymentWrapperView.swift */; };
-		2A5B231B2BEE107D00270D50 /* UtilityPrepaymentViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B231A2BEE107D00270D50 /* UtilityPrepaymentViewConfig+iFora.swift */; };
 		2A5B23212BEE329200270D50 /* OperatorFailureFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23202BEE329200270D50 /* OperatorFailureFlowView.swift */; };
 		2A5B23232BEE330F00270D50 /* OperatorFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23222BEE330F00270D50 /* OperatorFailureView.swift */; };
 		2A5B23252BEE379E00270D50 /* ServicePickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23242BEE379E00270D50 /* ServicePickerFlowView.swift */; };
@@ -707,8 +706,6 @@
 		2A61D06D2BECBA7600802C95 /* UtilityPrepaymentEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D06C2BECBA7600802C95 /* UtilityPrepaymentEffect.swift */; };
 		2A61D0702BECBAC000802C95 /* UtilityPrepaymentReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D06F2BECBAC000802C95 /* UtilityPrepaymentReducer.swift */; };
 		2A61D0722BECBAD200802C95 /* UtilityPrepaymentEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D0712BECBAD100802C95 /* UtilityPrepaymentEffectHandler.swift */; };
-		2A61D0742BECBAEC00802C95 /* ComposedUtilityPrepaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D0732BECBAEB00802C95 /* ComposedUtilityPrepaymentView.swift */; };
-		2A61D0762BECBB3000802C95 /* UtilityPrepaymentViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D0752BECBB3000802C95 /* UtilityPrepaymentViewConfig.swift */; };
 		2A61D07B2BECCCFC00802C95 /* PaymentsTransfersFlowManager+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D07A2BECCCFC00802C95 /* PaymentsTransfersFlowManager+preview.swift */; };
 		2A61D07D2BECCD7300802C95 /* PaymentsTransfersFlowEffectHandler+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D07C2BECCD7300802C95 /* PaymentsTransfersFlowEffectHandler+preview.swift */; };
 		2A61D07F2BECCEEC00802C95 /* PaymentsTransfersFlowReducerFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D07E2BECCEEC00802C95 /* PaymentsTransfersFlowReducerFactory+preview.swift */; };
@@ -3535,7 +3532,6 @@
 		2A5B23102BEE03CE00270D50 /* View+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ext.swift"; sourceTree = "<group>"; };
 		2A5B23142BEE05E300270D50 /* UtilityPaymentFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentFlowView.swift; sourceTree = "<group>"; };
 		2A5B23172BEE0B9300270D50 /* UtilityPrepaymentWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentWrapperView.swift; sourceTree = "<group>"; };
-		2A5B231A2BEE107D00270D50 /* UtilityPrepaymentViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UtilityPrepaymentViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A5B23202BEE329200270D50 /* OperatorFailureFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorFailureFlowView.swift; sourceTree = "<group>"; };
 		2A5B23222BEE330F00270D50 /* OperatorFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorFailureView.swift; sourceTree = "<group>"; };
 		2A5B23242BEE379E00270D50 /* ServicePickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePickerFlowView.swift; sourceTree = "<group>"; };
@@ -3558,8 +3554,6 @@
 		2A61D06C2BECBA7600802C95 /* UtilityPrepaymentEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentEffect.swift; sourceTree = "<group>"; };
 		2A61D06F2BECBAC000802C95 /* UtilityPrepaymentReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentReducer.swift; sourceTree = "<group>"; };
 		2A61D0712BECBAD100802C95 /* UtilityPrepaymentEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentEffectHandler.swift; sourceTree = "<group>"; };
-		2A61D0732BECBAEB00802C95 /* ComposedUtilityPrepaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedUtilityPrepaymentView.swift; sourceTree = "<group>"; };
-		2A61D0752BECBB3000802C95 /* UtilityPrepaymentViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentViewConfig.swift; sourceTree = "<group>"; };
 		2A61D0782BECBCCA00802C95 /* UtilityPrepaymentFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowEvent.swift; sourceTree = "<group>"; };
 		2A61D07A2BECCCFC00802C95 /* PaymentsTransfersFlowManager+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersFlowManager+preview.swift"; sourceTree = "<group>"; };
 		2A61D07C2BECCD7300802C95 /* PaymentsTransfersFlowEffectHandler+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersFlowEffectHandler+preview.swift"; sourceTree = "<group>"; };
@@ -7912,7 +7906,6 @@
 		2A5B23192BEE106B00270D50 /* Configs */ = {
 			isa = PBXGroup;
 			children = (
-				2A5B231A2BEE107D00270D50 /* UtilityPrepaymentViewConfig+iFora.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -7947,8 +7940,6 @@
 				2A61D06C2BECBA7600802C95 /* UtilityPrepaymentEffect.swift */,
 				2A61D06F2BECBAC000802C95 /* UtilityPrepaymentReducer.swift */,
 				2A61D0712BECBAD100802C95 /* UtilityPrepaymentEffectHandler.swift */,
-				2A61D0732BECBAEB00802C95 /* ComposedUtilityPrepaymentView.swift */,
-				2A61D0752BECBB3000802C95 /* UtilityPrepaymentViewConfig.swift */,
 				2A61D0662BECB65A00802C95 /* UtilityPrepaymentViewModel.swift */,
 			);
 			path = UtilityPrepayment;
@@ -16854,7 +16845,6 @@
 				2A872E912B00DE6C007A8E72 /* SessionKey.swift in Sources */,
 				C10423952A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift in Sources */,
 				5063064E286E07B800CEA12F /* InformerViewComponent.swift in Sources */,
-				2A5B231B2BEE107D00270D50 /* UtilityPrepaymentViewConfig+iFora.swift in Sources */,
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
 				775F2B99286B6ECE000C33E1 /* HideTabBarModifier.swift in Sources */,
 				68E765262796B38B005860FE /* ServerCommands+Registration.swift in Sources */,
@@ -17270,7 +17260,6 @@
 				6833E0CC273920CE004C070F /* CodeVerificationCoordinator.swift in Sources */,
 				83DB5BF929A4D3C4005CBD87 /* VerifyOTPData.swift in Sources */,
 				77A76A9427FB69D200A271B3 /* AtmCollectionViewCell.swift in Sources */,
-				2A61D0762BECBB3000802C95 /* UtilityPrepaymentViewConfig.swift in Sources */,
 				0BB015DA26C9378200E7A85B /* GKHOperatorsModel.swift in Sources */,
 				0C42457C2846D51700899EB2 /* Model+Contacts.swift in Sources */,
 				2A8CC2452B29D44D00191B8E /* ImageCache.swift in Sources */,
@@ -17509,7 +17498,6 @@
 				7772979F27C8EADF0099EF91 /* CatalogProductData.swift in Sources */,
 				2ABD78332AF91781001B5860 /* FormSessionKeyService+Fetcher.swift in Sources */,
 				0C27658E290683770007D31D /* OnboardingPlayerView.swift in Sources */,
-				2A61D0742BECBAEC00802C95 /* ComposedUtilityPrepaymentView.swift in Sources */,
 				0B7A18C326852D6B0007CC75 /* CreatTransferDecodableModel.swift in Sources */,
 				77A76A7327FAF4E800A271B3 /* ServerCommands+Atm.swift in Sources */,
 				2AECBC502BEBADD9000B0C0E /* PaymentFlowModalView.swift in Sources */,

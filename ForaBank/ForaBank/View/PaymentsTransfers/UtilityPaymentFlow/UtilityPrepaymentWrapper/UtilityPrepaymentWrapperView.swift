@@ -16,7 +16,6 @@ struct UtilityPrepaymentWrapperView: View {
     @ObservedObject var viewModel: ViewModel
     
     let flowEvent: (FlowEvent) -> Void
-    let config: Config
     
     var body: some View {
         
@@ -30,14 +29,6 @@ struct UtilityPrepaymentWrapperView: View {
                 makeSearchView: makeSearchView
             )
         )
-        
-        #warning("remove `ComposedUtilityPrepaymentView`")
-//        ComposedUtilityPrepaymentView(
-//            state: viewModel.state,
-//            event: viewModel.event(_:),
-//            flowEvent: flowEvent,
-//            config: config
-//        )
     }
 }
 
@@ -48,7 +39,6 @@ extension UtilityPrepaymentWrapperView {
     
     typealias FlowEvent = UtilityPrepaymentFlowEvent
     typealias ViewModel = UtilityPrepaymentViewModel
-    typealias Config = ComposedUtilityPrepaymentView.Config
 }
 
 private extension UtilityPrepaymentWrapperView {
