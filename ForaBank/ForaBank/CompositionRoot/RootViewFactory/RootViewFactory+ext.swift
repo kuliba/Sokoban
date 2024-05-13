@@ -17,23 +17,7 @@ extension RootViewFactory {
         with imageCache: ImageCache,
         getUImage: @escaping (Md5hash) -> UIImage?
     ) {
-        let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView = { viewModel in
-            
-                .init(
-                    viewModel: viewModel,
-                    map: { info in
-                        
-                        return  .init(
-                            id: info.infoID,
-                            value: info.value,
-                            title: info.title,
-                            image: imageCache.imagePublisher(for: info.icon),
-                            style: .expanded
-                        )
-                    },
-                    config: .iFora
-                )
-        }
+        let makeSberQRConfirmPaymentView = Self.makeSberQRConfirmPaymentView(imageCache: imageCache)
         
         let makeUserAccountView = UserAccountView.init(viewModel:)
         
@@ -54,6 +38,29 @@ extension RootViewFactory {
             makeUserAccountView: makeUserAccountView,
             makeIconView: imageCache.makeIconView(for:)
         )
+    }
+    
+    static func makeSberQRConfirmPaymentView(
+        imageCache: ImageCache
+    ) -> (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView {
+        
+        return { viewModel in
+            
+            return .init(
+                viewModel: viewModel,
+                map: { info in
+                    
+                    return  .init(
+                        id: info.infoID,
+                        value: info.value,
+                        title: info.title,
+                        image: imageCache.imagePublisher(for: info.icon),
+                        style: .expanded
+                    )
+                },
+                config: .iFora
+            )
+        }
     }
 }
 
