@@ -7,7 +7,7 @@
 
 import Foundation
 import OperatorsListComponents
-
+#warning("remove file")
 struct PaymentsTransfersNavigationStateManager {
     
     // TODO: - move into reduce in the Composition
@@ -73,8 +73,8 @@ extension PaymentsTransfersEvent.UtilityServicePaymentFlowEvent {
         case single(UtilityService)
     }
     
-    typealias LatestPayment = OperatorsListComponents.LatestPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias LatestPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
     
     enum PaymentStarted: Equatable {
         
@@ -129,8 +129,8 @@ extension PaymentsTransfersEffect {
 
 extension PaymentsTransfersEffect.UtilityServicePaymentFlowEffect {
     
-    typealias LatestPayment = OperatorsListComponents.LatestPayment
-    typealias Operator = OperatorsListComponents.Operator
+    typealias LatestPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator<String>
     
     enum StartPaymentPayload<LatestPayment, Operator> {
         

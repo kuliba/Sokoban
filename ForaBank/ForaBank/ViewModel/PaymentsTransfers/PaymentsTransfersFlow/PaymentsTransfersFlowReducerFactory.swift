@@ -5,10 +5,11 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
-struct PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, PaymentViewModel> {
+struct PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, UtilityPaymentViewModel> {
     
     let makeUtilityPrepaymentViewModel: MakeUtilityPrepaymentViewModel
-    let makePaymentViewModel: MakePaymentViewModel
+    let makeUtilityPaymentViewModel: MakeUtilityPaymentViewModel
+    let makePaymentsViewModel: MakePaymentsViewModel
 }
 
 extension PaymentsTransfersFlowReducerFactory {
@@ -17,8 +18,11 @@ extension PaymentsTransfersFlowReducerFactory {
     typealias Payload = UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
     typealias MakeUtilityPrepaymentViewModel = (Payload) -> Content
     
-    typealias MakePaymentViewModelPayload = UtilityPrepaymentFlowEvent
+    typealias MakeUtilityPaymentViewModelPayload = UtilityPrepaymentFlowEvent
         .StartPaymentSuccess.StartPaymentResponse
     typealias Notify = (PaymentStateProjection) -> Void
-    typealias MakePaymentViewModel = (MakePaymentViewModelPayload, @escaping Notify) -> PaymentViewModel
+    typealias MakeUtilityPaymentViewModel = (MakeUtilityPaymentViewModelPayload, @escaping Notify) -> UtilityPaymentViewModel
+    
+    typealias CloseAction = () -> Void
+    typealias MakePaymentsViewModel = (@escaping CloseAction) -> PaymentsViewModel
 }

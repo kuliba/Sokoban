@@ -55,7 +55,7 @@ extension PaymentsTransfersView {
     typealias OperatorFailure = UtilityFlowState.Destination.OperatorFailureFlowState
     typealias ServicePickerState = UtilityFlowState.Destination.ServicePickerFlowState
     
-    typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
     
     typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<ObservingPaymentFlowMockViewModel>
     
@@ -74,7 +74,7 @@ private extension PaymentsTransfersView {
     @ViewBuilder
     func destinationView(
         destination: Destination,
-        event: @escaping (UtilityPaymentEvent) -> Void
+        event: @escaping (UtilityFlowEvent) -> Void
     ) -> some View {
         
         switch destination {
@@ -83,19 +83,19 @@ private extension PaymentsTransfersView {
                 .navigationTitle("Pay by Instructions")
                 .navigationBarTitleDisplayMode(.inline)
             
-        case let .utilityPayment(utilityPrepayment):
-            utilityPrepaymentView(state: utilityPrepayment, event: event)
+        case let .utilityPayment(flowState):
+            utilityPaymentFlowView(state: flowState, event: event)
                 .navigationTitle("Utility Prepayment View")
                 .navigationBarTitleDisplayMode(.inline)
         }
     }
     
-    func utilityPrepaymentView(
+    func utilityPaymentFlowView(
         state: UtilityFlowState,
-        event: @escaping (UtilityPaymentEvent) -> ()
+        event: @escaping (UtilityFlowEvent) -> ()
     ) -> some View {
         
-        UtilityPrepaymentFlowView(
+        UtilityPaymentFlowView(
             state: state,
             event: { event(.prepayment($0)) },
             content: {
@@ -108,15 +108,15 @@ private extension PaymentsTransfersView {
             },
             destinationView: {
                 
-                utilityPrepaymentDestinationView(state: $0, event: event)
+                utilityFlowDestinationView(state: $0, event: event)
             }
         )
     }
     
     @ViewBuilder
-    func utilityPrepaymentDestinationView(
+    func utilityFlowDestinationView(
         state: UtilityFlowState.Destination,
-        event: @escaping (UtilityPaymentEvent) -> Void
+        event: @escaping (UtilityFlowEvent) -> Void
     ) -> some View {
         
         switch state {
@@ -252,7 +252,7 @@ private extension PaymentsTransfersView {
 
     func servicePicker(
         state: ServicePickerState,
-        event: @escaping (UtilityPaymentEvent) -> Void
+        event: @escaping (UtilityFlowEvent) -> Void
     ) -> some View {
         
         ServicePickerFlowView(

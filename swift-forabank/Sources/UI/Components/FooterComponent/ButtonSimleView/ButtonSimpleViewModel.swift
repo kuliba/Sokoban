@@ -14,22 +14,22 @@ public final class ButtonSimpleViewModel: Identifiable {
     let title: String
     let action: () -> Void
 
-    let buttonConfiguration: ButtonConfiguration
+    let buttonConfig: Config
     
     public init(
         id: UUID = UUID(),
         title: String,
-        buttonConfiguration: ButtonConfiguration,
+        buttonConfiguration: Config,
         action: @escaping () -> Void
     ) {
 
         self.id = id
         self.title = title
         self.action = action
-        self.buttonConfiguration = buttonConfiguration
+        self.buttonConfig = buttonConfiguration
     }
     
-    public struct ButtonConfiguration {
+    public struct Config {
     
         let titleFont: Font
         let titleForeground: Color
