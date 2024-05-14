@@ -9424,7 +9424,7 @@
 				2A09C2AD2B3C588C0076DC93 /* FastPayments */,
 				C18FDF0C2B0A2D17003F5FC0 /* PaymentSticker */,
 				2AC2ADBC2B2243780049EE9B /* SberQR */,
-				2A9BD5142B85F04100B88395 /* UtilityPayments */,
+				2AF511E92BF3312300F97610 /* PaymentsTransfers */,
 			);
 			path = CompositionRoot;
 			sourceTree = "<group>";
@@ -9454,6 +9454,14 @@
 				2A5B23102BEE03CE00270D50 /* View+ext.swift */,
 			);
 			path = RootViewFactory;
+			sourceTree = "<group>";
+		};
+		2AF511E92BF3312300F97610 /* PaymentsTransfers */ = {
+			isa = PBXGroup;
+			children = (
+				2A9BD5142B85F04100B88395 /* UtilityPayments */,
+			);
+			path = PaymentsTransfers;
 			sourceTree = "<group>";
 		};
 		2AFD59EA2B6F98FE00C86FBF /* Infra */ = {
