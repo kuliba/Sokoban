@@ -11,7 +11,7 @@ import OperatorsListComponents
 extension Model {
     
     typealias Payload = LoadOperatorsPayload<String>
-    typealias LoadOperatorsResult = [UtilityPaymentOperator<String>]
+    typealias LoadOperatorsResult = [UtilityPaymentOperator]
     typealias LoadOperatorsCompletion = (LoadOperatorsResult) -> Void
     
     func loadOperators(
@@ -38,13 +38,13 @@ extension Array where Element == _OperatorGroup {
     /// - Warning: expensive with sorting and search. Sorting could be moved to cache.
     func operators(
         for payload: LoadOperatorsPayload<String>
-    ) -> [UtilityPaymentOperator<String>] {
+    ) -> [UtilityPaymentOperator] {
         
         self.search(searchText: payload.searchText)
         // TODO: - move sorting to caching
             .sorted { $0.precedes($1) }
             .page(startingAt: payload.operatorID, pageSize: payload.pageSize)
-            .map(UtilityPaymentOperator<String>.init(with:))
+            .map(UtilityPaymentOperator.init(with:))
     }
 }
 
@@ -200,15 +200,15 @@ extension ArraySlice where Element: Identifiable {
 
 // MARK: - Adapters
 
-private extension UtilityPaymentOperator<String> {
+private extension UtilityPaymentOperator {
     
     init(with operatorGroup: _OperatorGroup) {
         
         self.init(
             id: operatorGroup.id,
             title: operatorGroup.title,
-            subtitle: operatorGroup.description,
-            icon: operatorGroup.md5hash
+            subtitle: operatorGroup.description as! Subtitle,
+            icon: operatorGroup.md5hash as! Icon
         )
     }
 }

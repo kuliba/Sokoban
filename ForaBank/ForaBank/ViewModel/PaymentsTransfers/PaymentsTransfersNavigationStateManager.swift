@@ -74,7 +74,7 @@ extension PaymentsTransfersEvent.UtilityServicePaymentFlowEvent {
     }
     
     typealias LatestPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator<String>
+    typealias Operator = UtilityPaymentOperator
     
     enum PaymentStarted: Equatable {
         
@@ -130,7 +130,7 @@ extension PaymentsTransfersEffect {
 extension PaymentsTransfersEffect.UtilityServicePaymentFlowEffect {
     
     typealias LatestPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator<String>
+    typealias Operator = UtilityPaymentOperator
     
     enum StartPaymentPayload<LatestPayment, Operator> {
         

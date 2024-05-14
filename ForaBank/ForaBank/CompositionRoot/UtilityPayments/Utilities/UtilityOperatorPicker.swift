@@ -63,7 +63,7 @@ struct UtilityOperatorPicker: View {
         }
     }
     
-    typealias Operator = UtilityPaymentOperator<String>
+    typealias Operator = UtilityPaymentOperator
     
 #warning("fix `makeIconView`")
     private func operatorView(
