@@ -196,28 +196,28 @@ private typealias SUT = Model
 //    }
 //}
 
-private extension Array where Element == _OperatorGroup {
-    
-    static func stub(
-        titles: [String] = []
-    ) -> Self {
-        
-        titles.map {
-            
-            .init(md5hash: "", title: $0, description: "")
-        }
-    }
-}
-
-private extension Array where Element == UtilityPaymentOperator {
-    
-    static func stub(
-        names: [String] = []
-    ) -> Self {
-        
-        names.map {
-            
-            .init(id: $0, title: $0, subtitle: "", icon: "abc")
-        }
-    }
-}
+//private extension Array where Element == SberOperator {
+//    
+//    static func stub(
+//        titles: [String] = []
+//    ) -> Self {
+//        
+//        titles.map {
+//            
+//            .init(md5hash: "", title: $0, description: "")
+//        }
+//    }
+//}
+//
+//private extension Array where Element == UtilityPaymentOperator {
+//    
+//    static func stub(
+//        names: [String] = []
+//    ) -> Self {
+//        
+//        names.map {
+//            
+//            .init(id: $0, title: $0, subtitle: "", icon: "abc")
+//        }
+//    }
+//}

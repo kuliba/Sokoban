@@ -13,7 +13,7 @@ final class ResponseMapper_mapAnywayOperatorsListResponseTests: XCTestCase {
     func test_map_shouldDeliverInvalidErrorOnInvalidData() throws {
         
         let invalidData = "invalid data".data(using: .utf8)!
-
+        
         let result = map(invalidData)
         
         assert(result, equals: .failure(.invalid(
@@ -83,18 +83,18 @@ final class ResponseMapper_mapAnywayOperatorsListResponseTests: XCTestCase {
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.MappingResult<[_OperatorGroup]?> {
+    ) -> ResponseMapper.MappingResult<[SberOperator]> {
         
         ResponseMapper.mapAnywayOperatorsListResponse(data, httpURLResponse)
     }
 }
 
-private extension OperatorGroup {
+private extension SberOperator {
     
     static let `default`: Self = .init(
-        md5hash: "md5hash",
-        title: "title",
-        description: "ИНН description"
+        icon: "md5hash",
+        inn: "ИНН description",
+        title: "title"
     )
 }
 

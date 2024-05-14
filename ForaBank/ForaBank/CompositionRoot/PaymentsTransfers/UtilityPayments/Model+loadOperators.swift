@@ -20,7 +20,7 @@ extension Model {
     ) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             
-            if let operatorGroups = self?.localAgent.load(type: [_OperatorGroup].self) {
+            if let operatorGroups = self?.localAgent.load(type: [SberOperator].self) {
                 completion(operatorGroups.operators(for: payload))
             } else {
                 completion([])
@@ -32,7 +32,7 @@ extension Model {
 // MARK: - Mapping
 
 // TODO: - add tests
-extension Array where Element == _OperatorGroup {
+extension Array where Element == SberOperator {
     
 #warning("sort is very expensive, should be moved to cache")
     /// - Warning: expensive with sorting and search. Sorting could be moved to cache.
@@ -51,7 +51,7 @@ extension Array where Element == _OperatorGroup {
 // MARK: - Sorting
 
 // TODO: add tests
-extension _OperatorGroup {
+extension SberOperator {
     
     var inn: String { description }
     
@@ -76,7 +76,7 @@ extension _OperatorGroup {
 // MARK: - Search
 
 //TODO: complete search and add tests
-extension Array where Element == _OperatorGroup {
+extension Array where Element == SberOperator {
     
     func search(searchText: String) -> [Element] {
         
@@ -202,7 +202,7 @@ extension ArraySlice where Element: Identifiable {
 
 private extension UtilityPaymentOperator {
     
-    init(with operatorGroup: _OperatorGroup) {
+    init(with operatorGroup: SberOperator) {
         
         self.init(
             id: operatorGroup.id,
