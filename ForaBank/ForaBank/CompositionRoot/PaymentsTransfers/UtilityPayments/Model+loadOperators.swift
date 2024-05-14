@@ -75,40 +75,6 @@ extension CachingSberOperator {
 
 extension CachingSberOperator: Identifiable {}
 
-//TODO: add test and move to ForaTools
-extension Array where Element: Identifiable {
-    
-    func page(
-        startingAt id: Element.ID?,
-        pageSize: Int
-    ) -> Self {
-        
-        switch id {
-        case .none:
-            return .init(prefix(pageSize))
-            
-        case let .some(id):
-            return page(startingAt: id, pageSize: pageSize)
-        }
-        
-    }
-}
-
-extension ArraySlice where Element: Identifiable {
-    
-    func page(startingAt id: Element.ID?, pageSize: Int) -> Self {
-        
-        switch id {
-        case .none:
-            return prefix(pageSize)
-            
-        case let .some(id):
-            return page(startingAt: id, pageSize: pageSize)
-        }
-        
-    }
-}
-
 // MARK: - Adapters
 
 private extension UtilityPaymentOperator {
