@@ -128,70 +128,7 @@ class MyProductsViewModel: ObservableObject {
                     }
                     
                 case let payload as MyProductsViewModelAction.Tapped.EditMode:
-                    
-                    guard editModeState != .transient else { return }
-                    
-                    if editModeState == .active  { //finished ordered mode
-                        
-                        self.editModeState = .inactive
-                        updateNavBar(state: .normal)
-                        
-                        if !settingsOnboarding.isHideOnboardingShown {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                self.playHideOnboarding()
-                            }
-                        }
-                        
-                        if payload.needSave { //change Orders in Sections
-                            
-                            let newOrders = sections.reduce(into: [ProductType: [ProductData.ID]]()) { dict, sectionVM in
-                                
-                                if let productType = ProductType(rawValue: sectionVM.id) {
-                                    dict[productType] = sectionVM.items.compactMap { $0.itemVM?.id }
-                                }
-                            }
-                            
-                            guard !newOrders.isEmpty else { return }
-                            model.action.send(ModelAction.Products.UpdateOrders(orders: newOrders))
-                            
-                        } else { //rollback ordered
-                            
-                            let updatedSections = Self.updateViewModel(
-                                with: model.products.value,
-                                sections: self.sections,
-                                productsOpening: model.productsOpening.value,
-                                settingsProductsSections: model.settingsProductsSections,
-                                model: model
-                            )
-                            
-                            withAnimation {
-                                sections = updatedSections
-                            }
-                            
-                            bind(sections)
-                        }
-                        
-                    } else { //start ordered mode
-                        
-                        sections.flatMap { $0.items }
-                            .compactMap { $0.itemVM }
-                            .filter { $0.sideButton != nil }
-                            .forEach { $0.sideButton = nil }
-                        
-                        self.editModeState = .active
-                        sections.forEach { $0.idList = UUID() }
-                        
-                        if !self.settingsOnboarding.isOpenedReorder {
-                            self.settingsOnboarding.isOpenedReorder = true
-                            self.model.settingsMyProductsOnboardingUpdate(self.settingsOnboarding)
-                        }
-                        
-                        if let isShow = showOnboarding[.ordered], isShow {
-                            withAnimation { showOnboarding[.ordered] = false }
-                        }
-                        
-                        updateNavBar(state: .orderedNotMove)
-                    }
+                    tappedEditMode(needSave: payload.needSave)
                     
                 case _ as MyProductsViewModelAction.Tapped.NewProductLauncher:
                     bottomSheet = .init(type: .newProductLauncher(self.openProductVM))
@@ -527,6 +464,73 @@ class MyProductsViewModel: ObservableObject {
         self.navigationBar.title = title
         self.navigationBar.rightItems = [ rightButton ]
         self.navigationBar.leftItems = [ leftButton ]
+    }
+    
+    func tappedEditMode(needSave: Bool) {
+        
+        guard editModeState != .transient else { return }
+        
+        if editModeState == .active  { //finished ordered mode
+            
+            self.editModeState = .inactive
+            updateNavBar(state: .normal)
+            
+            if !settingsOnboarding.isHideOnboardingShown {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    self.playHideOnboarding()
+                }
+            }
+            
+            if needSave { //change Orders in Sections
+                
+                let newOrders = sections.reduce(into: [ProductType: [ProductData.ID]]()) { dict, sectionVM in
+                    
+                    if let productType = ProductType(rawValue: sectionVM.id) {
+                        dict[productType] = sectionVM.items.compactMap { $0.itemVM?.id }
+                    }
+                }
+                
+                guard !newOrders.isEmpty else { return }
+                model.action.send(ModelAction.Products.UpdateOrders(orders: newOrders))
+                
+            } else { //rollback ordered
+                
+                let updatedSections = Self.updateViewModel(
+                    with: model.products.value,
+                    sections: self.sections,
+                    productsOpening: model.productsOpening.value,
+                    settingsProductsSections: model.settingsProductsSections,
+                    model: model
+                )
+                
+                withAnimation {
+                    sections = updatedSections
+                }
+                
+                bind(sections)
+            }
+            
+        } else { //start ordered mode
+            
+            sections.flatMap { $0.items }
+                .compactMap { $0.itemVM }
+                .filter { $0.sideButton != nil }
+                .forEach { $0.sideButton = nil }
+            
+            self.editModeState = .active
+            sections.forEach { $0.idList = UUID() }
+            
+            if !self.settingsOnboarding.isOpenedReorder {
+                self.settingsOnboarding.isOpenedReorder = true
+                self.model.settingsMyProductsOnboardingUpdate(self.settingsOnboarding)
+            }
+            
+            if let isShow = showOnboarding[.ordered], isShow {
+                withAnimation { showOnboarding[.ordered] = false }
+            }
+            
+            updateNavBar(state: .orderedNotMove)
+        }
     }
 }
 

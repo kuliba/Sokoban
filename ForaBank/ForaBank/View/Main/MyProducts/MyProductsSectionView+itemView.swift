@@ -18,8 +18,19 @@ extension MyProductsSectionView {
                 
                 switch item {
                 case let .item(itemVM):
-                    itemView(itemVM)
-                    
+                    if !viewModel.groupingCards.isEmpty {
+                        let products: [ProductData] = viewModel.groupingCards[itemVM.id] ?? []
+                        if products.isEmpty || products.count == 1 {
+                            itemView(itemVM)
+                        } else {
+                            _itemsList(products.map {
+                                .init(productData: $0, model: viewModel.model)
+                            })
+                            .listRowInsets(EdgeInsets())
+                        }
+                    } else {
+                        itemView(itemVM)
+                    }
                 case .placeholder:
                     MyProductsSectionItemView.PlaceholderItemView(editMode: $editMode)
                         .modifier(PlaceholderItemModifier())
@@ -37,6 +48,28 @@ extension MyProductsSectionView {
         .listStyle(.plain)
         .environment(\.editMode, $editMode)
         .opacity(viewModel.isCollapsed ? 0 : 1)
+        .id(viewModel.idList)
+    }
+    
+    func _itemsList(
+        _ items: [MyProductsSectionItemViewModel]
+    ) -> some View {
+
+        List {
+            ForEach(items, id: \.id) { item in
+                    itemView(item)
+            } //for
+            .onMove { indexes, destination in
+                guard let first = indexes.first else { return }
+                
+                viewModel.action.send(MyProductsSectionViewModelAction
+                    .Events.ItemMoved(sectionId: viewModel.id, move: (first, destination)))
+            }
+            .moveDisabled(editMode != .active)
+        } //List
+        .frame(height: 72 * CGFloat(items.count))
+        .listStyle(.plain)
+        .environment(\.editMode, $editMode)
         .id(viewModel.idList)
     }
     

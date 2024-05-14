@@ -21,9 +21,11 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
     let id: String
     let title: String
     
-    private let model: Model
+    let model: Model
     private var bindings = Set<AnyCancellable>()
     
+    var groupingCards: Array.Products = [:]
+
     enum ItemViewModel: Identifiable {
         case item(MyProductsSectionItemViewModel)
         case placeholder(Int)
@@ -43,28 +45,35 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         }
     }
     
-    init(id: String,
-         title: String,
-         items: [ItemViewModel],
-         isCollapsed: Bool,
-         model: Model) {
+    init(
+        id: String,
+        title: String,
+        items: [ItemViewModel],
+        groupingCards: Array.Products = [:],
+        isCollapsed: Bool,
+        model: Model
+    ) {
 
         self.id = id
         self.title = title
         self.isCollapsed = isCollapsed
         self.items = items
         self.model = model
+        self.groupingCards = groupingCards
     }
     
-    convenience init?(productType: ProductType,
-                      products: [ProductData]?,
-                      settings: ProductsSectionsSettings,
-                      model: Model) {
+    convenience init?(
+        productType: ProductType,
+        products: [ProductData]?,
+        settings: ProductsSectionsSettings,
+        model: Model
+    ) {
      
         var itemsVM: [ItemViewModel] = []
-        
+        var groupingCards : Array.Products = [:]
         if let products = products {
             itemsVM = products.map { .item(.init(productData: $0, model: model)) }
+            if productType == .card { groupingCards = products.groupingCards() }
         }
         
         if model.productsOpening.value.contains(productType) {
@@ -76,6 +85,7 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         self.init(id: productType.rawValue,
                   title: productType.pluralName,
                   items: itemsVM,
+                  groupingCards: groupingCards,
                   isCollapsed: settings.collapsed[productType.rawValue] ?? false,
                   model: model)
         
