@@ -27,6 +27,13 @@ final class RequestFactory_createGetAllLatestPaymentsRequestTests: XCTestCase {
         
         XCTAssertEqual(request.httpMethod, "GET")
     }
+    
+    func test_createRequest_shouldSetRequestBodyToNil() throws {
+        
+        let request = try createRequest()
+        
+        XCTAssertNil(request.httpBody)
+    }
   
     // MARK: - Helpers
     
