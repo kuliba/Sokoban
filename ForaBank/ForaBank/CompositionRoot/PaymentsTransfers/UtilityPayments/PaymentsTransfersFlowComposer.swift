@@ -16,21 +16,25 @@ final class PaymentsTransfersFlowComposer {
     private let httpClient: HTTPClient
     private let model: Model
     private let log: Log
+    private let utilityMicroServices: UtilityMicroServices
     
     init(
         httpClient: HTTPClient,
         model: Model,
-        log: @escaping (String, StaticString, UInt) -> Void
+        log: @escaping (String, StaticString, UInt) -> Void,
+        utilityMicroServices: UtilityMicroServices
     ) {
         self.httpClient = httpClient
         self.model = model
         self.log = log
+        self.utilityMicroServices = utilityMicroServices
     }
 }
 
 extension PaymentsTransfersFlowComposer {
     
     typealias Log = (String, StaticString, UInt) -> Void
+    typealias UtilityMicroServices = UtilityPaymentMicroServices<LastPayment, Operator>
 }
 
 extension PaymentsTransfersFlowComposer {
@@ -39,23 +43,11 @@ extension PaymentsTransfersFlowComposer {
         flag: StubbedFeatureFlag.Option
     ) -> PaymentsTransfersManager {
         
-        let utilityPrepaymentViewModelComposer = UtilityPrepaymentViewModelComposer(
-            log: log,
-            paginate: { [loadOperators = model.loadOperators] payload, completion in
-                
-                loadOperators(payload.loadPayload, completion)
-            },
-            search: { [loadOperators = model.loadOperators] payload, completion in
-                
-                loadOperators(payload.loadPayload, completion)
-            }
-        )
-        
         typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
         typealias ReducerFactory = Reducer.Factory
         
         let factory = ReducerFactory(
-            makeUtilityPrepaymentViewModel: utilityPrepaymentViewModelComposer.makeViewModel,
+            makeUtilityPrepaymentViewModel: makeUtilityPrepaymentViewModel,
             makeUtilityPaymentViewModel: { _, notify in
                 
                 return .init(notify: notify)
@@ -94,30 +86,33 @@ extension PaymentsTransfersFlowComposer {
     typealias PaymentsTransfersManager = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
 }
 
-// MARK: - Adapters
-
-#warning("change `loadOperators` parameters and remove adapter")
-extension PaginatePayload<String> {
+private extension PaymentsTransfersFlowComposer {
     
-    var loadPayload: LoadOperatorsPayload<String> {
+    func makeUtilityPrepaymentViewModel(
+        payload: PrepaymentPayload
+    ) -> UtilityPrepaymentViewModel {
         
-        .init(
-            afterOperatorID: operatorID,
-            searchText: searchText,
-            pageSize: pageSize
+        let reducer = UtilityPrepaymentReducer(
+            observeLast: 5,
+            pageSize: 20
+        )
+        
+#warning("TODO: throttle, debounce, remove duplicates")
+        let effectHandler = UtilityPrepaymentEffectHandler(
+            paginate: utilityMicroServices.paginate,
+            search: utilityMicroServices.search
+        )
+        
+        return .init(
+            initialState: payload.state,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:)
         )
     }
-}
 
-#warning("change `loadOperators` parameters and remove adapter")
-extension SearchPayload {
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias PrepaymentPayload = Event.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
     
-    var loadPayload: LoadOperatorsPayload<String> {
-        
-        .init(
-            afterOperatorID: nil,
-            searchText: searchText,
-            pageSize: pageSize
-        )
-    }
+    typealias UtilityPrepaymentReducer = PrepaymentPickerReducer<UtilityPaymentLastPayment, UtilityPaymentOperator>
+    typealias UtilityPrepaymentEffectHandler = PrepaymentPickerEffectHandler<UtilityPaymentOperator>
 }

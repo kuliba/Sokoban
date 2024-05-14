@@ -19,10 +19,12 @@ final class UtilityPaymentNanoServicesComposer {
 extension UtilityPaymentNanoServicesComposer {
     
     func compose() -> NanoServices {
-        
+        #warning("add flag and switch between loadOperators and stub")
         return .init(
             getOperatorsListByParam: getOperatorsListByParam,
-            getAllLatestPayments: getAllLatestPayments)
+            getAllLatestPayments: getAllLatestPayments,
+            loadOperators: model.loadOperators(_:_:)
+        )
     }
 }
 

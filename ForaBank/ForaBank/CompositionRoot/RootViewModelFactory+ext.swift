@@ -114,10 +114,19 @@ extension RootViewModelFactory {
             isActive: utilitiesPaymentsFlag.isActive
         )
         
+        let upnsComposer = UtilityPaymentNanoServicesComposer(model: model)
+        let nanoServices = upnsComposer.compose()
+        let upmsComposer = UtilityPaymentMicroServicesComposer(
+            nanoServices: nanoServices
+        )
+        #warning("add to settings(?)")
+        let pageSize = 20
+        let utilityMicroServices = upmsComposer.compose(pageSize: pageSize)
         let paymentsTransfersFlowComposer = PaymentsTransfersFlowComposer(
             httpClient: httpClient,
             model: model,
-            log: infoNetworkLog
+            log: infoNetworkLog,
+            utilityMicroServices: utilityMicroServices
         )
         let paymentsTransfersFlowManager = paymentsTransfersFlowComposer.makeFlowManager(
             flag: utilitiesPaymentsFlag.optionOrStub
