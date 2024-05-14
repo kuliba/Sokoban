@@ -13,20 +13,17 @@ import UtilityServicePrepaymentDomain
 
 final class PaymentsTransfersFlowComposer {
     
-    private let httpClient: HTTPClient
     private let model: Model
-    private let log: Log
+    private let observeLast: Int
     private let utilityMicroServices: UtilityMicroServices
     
     init(
-        httpClient: HTTPClient,
         model: Model,
-        log: @escaping (String, StaticString, UInt) -> Void,
+        observeLast: Int,
         utilityMicroServices: UtilityMicroServices
     ) {
-        self.httpClient = httpClient
         self.model = model
-        self.log = log
+        self.observeLast = observeLast
         self.utilityMicroServices = utilityMicroServices
     }
 }
@@ -91,9 +88,7 @@ private extension PaymentsTransfersFlowComposer {
     func makeUtilityPrepaymentViewModel(
         payload: PrepaymentPayload
     ) -> UtilityPrepaymentViewModel {
-
-        #warning("add to settings")
-    let observeLast = 5
+        
         let reducer = UtilityPrepaymentReducer(observeLast: 5)
         
 #warning("TODO: throttle, debounce, remove duplicates")
@@ -108,7 +103,7 @@ private extension PaymentsTransfersFlowComposer {
             handleEffect: effectHandler.handleEffect(_:_:)
         )
     }
-
+    
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
     typealias PrepaymentPayload = Event.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
     

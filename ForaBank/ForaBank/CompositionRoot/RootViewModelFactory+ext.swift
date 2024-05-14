@@ -122,10 +122,11 @@ extension RootViewModelFactory {
         #warning("add to settings(?)")
         let pageSize = 20
         let utilityMicroServices = upmsComposer.compose(pageSize: pageSize)
+        #warning("add to settings")
+        let observeLast = 5
         let paymentsTransfersFlowComposer = PaymentsTransfersFlowComposer(
-            httpClient: httpClient,
             model: model,
-            log: infoNetworkLog,
+            observeLast: observeLast
             utilityMicroServices: utilityMicroServices
         )
         let paymentsTransfersFlowManager = paymentsTransfersFlowComposer.makeFlowManager(
