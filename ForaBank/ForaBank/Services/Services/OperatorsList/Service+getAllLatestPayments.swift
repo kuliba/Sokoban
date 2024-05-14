@@ -11,7 +11,7 @@ import OperatorsListComponents
 
 extension Services {
     
-    typealias GetAllPaymentsResult = Swift.Result<[ResponseMapper.LatestPayment]?, OperatorsListComponents.ResponseMapper.MappingError>
+    typealias GetAllPaymentsResult = [ResponseMapper.LatestPayment]
     typealias GetAllPaymentsService = RemoteServiceOf<LatestPaymentKind, GetAllPaymentsResult>
     
     static func getAllLatestPayments(

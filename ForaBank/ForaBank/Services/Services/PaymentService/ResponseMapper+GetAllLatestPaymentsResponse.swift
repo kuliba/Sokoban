@@ -15,14 +15,25 @@ extension ResponseMapper {
     static func mapGetAllLatestPaymentsResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> Mapper.MappingResult<[LatestPayment]?> {
+    ) -> [LatestPayment] {
         
-        Mapper.map(data, httpURLResponse, mapOrThrow: map)
+        do {
+            switch httpURLResponse.statusCode {
+            case 200:
+                let operators = try JSONDecoder().decode([LatestPaymentCodable].self, from: data)
+                return map(operators)
+                
+            default:
+                return []
+            }
+        } catch {
+            return []
+        }
     }
     
     private static func map(
         _ data: [LatestPaymentCodable]
-    ) throws -> [LatestPayment]? {
+    ) -> [LatestPayment] {
         
         data.map { LatestPayment(
             title: $0.name,
