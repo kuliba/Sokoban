@@ -7,7 +7,9 @@
 
 import Foundation
 
-func anyMessage() -> String {
+func anyMessage(
+    _ string: String = UUID().uuidString
+) -> String {
     
-    UUID().uuidString
+    string
 }

@@ -11,14 +11,11 @@ public final class PrepaymentPickerReducer<LastPayment, Operator>
 where Operator: Identifiable {
     
     private let observeLast: Int
-    private let pageSize: Int
     
     public init(
-        observeLast: Int,
-        pageSize: Int
+        observeLast: Int
     ) {
         self.observeLast = observeLast
-        self.pageSize = pageSize
     }
 }
 
@@ -88,7 +85,6 @@ private extension PrepaymentPickerReducer {
         
         effect = .paginate(.init(
             operatorID: last.id,
-            pageSize: pageSize,
             searchText: state.searchText
         ))
     }
@@ -99,9 +95,6 @@ private extension PrepaymentPickerReducer {
         with text: String
     ) {
         state.searchText = text
-        effect = .search(.init(
-            pageSize: pageSize,
-            searchText: text
-        ))
+        effect = .search(text)
     }
 }

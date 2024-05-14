@@ -8,7 +8,7 @@
 public enum PrepaymentPickerEffect<OperatorID> {
     
     case paginate(Paginate)
-    case search(SearchPayload)
+    case search(String)
 }
 
 public extension PrepaymentPickerEffect {

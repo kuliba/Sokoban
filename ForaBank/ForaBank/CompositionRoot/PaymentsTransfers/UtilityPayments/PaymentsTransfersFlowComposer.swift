@@ -91,11 +91,10 @@ private extension PaymentsTransfersFlowComposer {
     func makeUtilityPrepaymentViewModel(
         payload: PrepaymentPayload
     ) -> UtilityPrepaymentViewModel {
-        
-        let reducer = UtilityPrepaymentReducer(
-            observeLast: 5,
-            pageSize: 20
-        )
+
+        #warning("add to settings")
+    let observeLast = 5
+        let reducer = UtilityPrepaymentReducer(observeLast: 5)
         
 #warning("TODO: throttle, debounce, remove duplicates")
         let effectHandler = UtilityPrepaymentEffectHandler(

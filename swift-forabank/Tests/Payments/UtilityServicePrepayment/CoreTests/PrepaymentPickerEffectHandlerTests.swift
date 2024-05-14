@@ -26,14 +26,13 @@ final class PrepaymentPickerEffectHandlerTests: XCTestCase {
     func test_paginate_shouldCallPaginateWithPayload() {
         
         let payload = makePaginatePayload()
-        let (sut, paginateSpy, searchSpy) = makeSUT()
+        let (sut, paginateSpy, _) = makeSUT()
         
         sut.handleEffect(.paginate(payload)) { _ in }
         
         XCTAssertNoDiff(paginateSpy.payloads, [
             .init(
                 operatorID: payload.operatorID,
-                pageSize: payload.pageSize,
                 searchText: payload.searchText
             )
         ])
@@ -42,7 +41,7 @@ final class PrepaymentPickerEffectHandlerTests: XCTestCase {
     func test_paginate_shouldDeliverPageEventWithEmptyOperators() {
         
         let operators = [Operator]()
-        let (sut, paginateSpy, searchSpy) = makeSUT()
+        let (sut, paginateSpy, _) = makeSUT()
         
         expect(sut, with: makePaginateEffect(), toDeliver: .page(operators)) {
             
@@ -53,7 +52,7 @@ final class PrepaymentPickerEffectHandlerTests: XCTestCase {
     func test_paginate_shouldDeliverPageEventWithOneOperator() {
         
         let operators = [makeOperator()]
-        let (sut, paginateSpy, searchSpy) = makeSUT()
+        let (sut, paginateSpy, _) = makeSUT()
         
         expect(sut, with: makePaginateEffect(), toDeliver: .page(operators)) {
             
@@ -64,7 +63,7 @@ final class PrepaymentPickerEffectHandlerTests: XCTestCase {
     func test_paginate_shouldDeliverPageEventWithTwoOperators() {
         
         let operators = [makeOperator(), makeOperator()]
-        let (sut, paginateSpy, searchSpy) = makeSUT()
+        let (sut, paginateSpy, _) = makeSUT()
         
         expect(sut, with: makePaginateEffect(), toDeliver: .page(operators)) {
             
@@ -76,23 +75,18 @@ final class PrepaymentPickerEffectHandlerTests: XCTestCase {
     
     func test_search_shouldCallPaginateWithPayload() {
         
-        let payload = makeSearchPayload()
-        let (sut, paginateSpy, searchSpy) = makeSUT()
+        let searchText = anyMessage()
+        let (sut, _, searchSpy) = makeSUT()
         
-        sut.handleEffect(.search(payload)) { _ in }
+        sut.handleEffect(.search(searchText)) { _ in }
         
-        XCTAssertNoDiff(searchSpy.payloads, [
-            .init(
-                pageSize: payload.pageSize,
-                searchText: payload.searchText
-            )
-        ])
+        XCTAssertNoDiff(searchSpy.payloads, [searchText])
     }
     
     func test_search_shouldDeliverPageEventWithEmptyOperators() {
         
         let operators = [Operator]()
-        let (sut, paginateSpy, searchSpy) = makeSUT()
+        let (sut, _, searchSpy) = makeSUT()
         
         expect(sut, with: makeSearchEffect(), toDeliver: .load(operators)) {
             
@@ -103,7 +97,7 @@ final class PrepaymentPickerEffectHandlerTests: XCTestCase {
     func test_search_shouldDeliverPageEventWithOneOperator() {
         
         let operators = [makeOperator()]
-        let (sut, paginateSpy, searchSpy) = makeSUT()
+        let (sut, _, searchSpy) = makeSUT()
         
         expect(sut, with: makeSearchEffect(), toDeliver: .load(operators)) {
             
@@ -114,7 +108,7 @@ final class PrepaymentPickerEffectHandlerTests: XCTestCase {
     func test_search_shouldDeliverPageEventWithTwoOperators() {
         
         let operators = [makeOperator(), makeOperator()]
-        let (sut, paginateSpy, searchSpy) = makeSUT()
+        let (sut, _, searchSpy) = makeSUT()
         
         expect(sut, with: makeSearchEffect(), toDeliver: .load(operators)) {
             
@@ -126,7 +120,7 @@ final class PrepaymentPickerEffectHandlerTests: XCTestCase {
     
     private typealias SUT = PrepaymentPickerEffectHandler<Operator>
     private typealias PaginateSpy = Spy<PaginatePayload<Operator.ID>, [Operator]>
-    private typealias SearchSpy = Spy<SearchPayload, [Operator]>
+    private typealias SearchSpy = Spy<String, [Operator]>
     
     private func makeSUT(
         file: StaticString = #file,

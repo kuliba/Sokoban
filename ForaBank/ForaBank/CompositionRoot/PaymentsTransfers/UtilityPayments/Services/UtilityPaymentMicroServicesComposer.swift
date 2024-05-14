@@ -82,8 +82,6 @@ private extension UtilityPaymentMicroServicesComposer {
         
         return { [weak self] payload, completion in
             
-            // guard let self else { return }
-#warning("remove pageSize from payload")
             self?.nanoServices.loadOperators(.init(afterOperatorID: payload.operatorID, searchText: payload.searchText, pageSize: pageSize), completion)
         }
     }
@@ -92,11 +90,9 @@ private extension UtilityPaymentMicroServicesComposer {
         pageSize: PageSize
     ) -> MicroServices.Search {
         
-        return { [weak self] payload, completion in
+        return { [weak self] searchText, completion in
             
-            // guard let self else { return }
-#warning("remove pageSize from payload")
-            self?.nanoServices.loadOperators(.init(afterOperatorID: nil, searchText: payload.searchText, pageSize: pageSize), completion)
+            self?.nanoServices.loadOperators(.init(afterOperatorID: nil, searchText: searchText, pageSize: pageSize), completion)
         }
     }
     
