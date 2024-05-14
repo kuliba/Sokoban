@@ -14,29 +14,31 @@ import UtilityServicePrepaymentDomain
 final class PaymentsTransfersFlowComposer {
     
     private let model: Model
-    private let observeLast: Int
+    private let makeUtilityPrepaymentViewModel: MakeUtilityPrepaymentViewModel
     private let utilityMicroServices: UtilityMicroServices
     
     init(
         model: Model,
-        observeLast: Int,
+        makeUtilityPrepaymentViewModel: @escaping MakeUtilityPrepaymentViewModel,
         utilityMicroServices: UtilityMicroServices
     ) {
         self.model = model
-        self.observeLast = observeLast
+        self.makeUtilityPrepaymentViewModel = makeUtilityPrepaymentViewModel
         self.utilityMicroServices = utilityMicroServices
     }
 }
 
 extension PaymentsTransfersFlowComposer {
     
-    typealias Log = (String, StaticString, UInt) -> Void
+    typealias UtilityPrepaymentPayload = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
+    typealias MakeUtilityPrepaymentViewModel = (UtilityPrepaymentPayload) -> UtilityPrepaymentViewModel
+    
     typealias UtilityMicroServices = UtilityPaymentMicroServices<LastPayment, Operator>
 }
 
 extension PaymentsTransfersFlowComposer {
     
-    func makeFlowManager(
+    func compose(
         flag: StubbedFeatureFlag.Option
     ) -> PaymentsTransfersManager {
         
@@ -81,32 +83,4 @@ extension PaymentsTransfersFlowComposer {
     typealias PaymentViewModel = ObservingPaymentFlowMockViewModel
     
     typealias PaymentsTransfersManager = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
-}
-
-private extension PaymentsTransfersFlowComposer {
-    
-    func makeUtilityPrepaymentViewModel(
-        payload: PrepaymentPayload
-    ) -> UtilityPrepaymentViewModel {
-        
-        let reducer = UtilityPrepaymentReducer(observeLast: 5)
-        
-#warning("TODO: throttle, debounce, remove duplicates")
-        let effectHandler = UtilityPrepaymentEffectHandler(
-            paginate: utilityMicroServices.paginate,
-            search: utilityMicroServices.search
-        )
-        
-        return .init(
-            initialState: payload.state,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
-        )
-    }
-    
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
-    typealias PrepaymentPayload = Event.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
-    
-    typealias UtilityPrepaymentReducer = PrepaymentPickerReducer<UtilityPaymentLastPayment, UtilityPaymentOperator>
-    typealias UtilityPrepaymentEffectHandler = PrepaymentPickerEffectHandler<UtilityPaymentOperator>
 }

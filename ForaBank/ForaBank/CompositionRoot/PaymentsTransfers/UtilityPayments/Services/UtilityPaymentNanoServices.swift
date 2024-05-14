@@ -18,9 +18,6 @@ where Operator: Identifiable {
     /// Получение последних платежей по ЖКХ
     /// rest/v2/getAllLatestPayments?isServicePayments=true
     let getAllLatestPayments: GetAllLatestPayments
-    
-    /// Load cached operators.
-    let loadOperators: LoadOperators
 }
 
 extension UtilityPaymentNanoServices {
@@ -36,8 +33,4 @@ extension UtilityPaymentNanoServices {
     /// Получение последних платежей по ЖКХ
     /// rest/v2/getAllLatestPayments?isServicePayments=true
     typealias GetAllLatestPayments = (@escaping GetAllLatestPaymentsCompletion) -> Void
-    
-    typealias _LoadOperatorsPayload = LoadOperatorsPayload<Operator.ID>
-    typealias LoadOperatorsCompletion = ([Operator]) -> Void
-    typealias LoadOperators = (_LoadOperatorsPayload, @escaping LoadOperatorsCompletion) -> Void
 }

@@ -11,23 +11,24 @@ import UtilityServicePrepaymentDomain
 final class UtilityPaymentMicroServicesComposer<LastPayment, Operator>
 where Operator: Identifiable {
     
+    private let pageSize: PageSize
     private let nanoServices: NanoServices
     
     init(
+        pageSize: PageSize,
         nanoServices: NanoServices
     ) {
+        self.pageSize = pageSize
         self.nanoServices = nanoServices
     }
 }
 
 extension UtilityPaymentMicroServicesComposer {
     
-    func compose(pageSize: PageSize) -> MicroServices {
+    func compose() -> MicroServices {
         
         return .init(
-            initiateUtilityPayment: initiateUtilityPayment(pageSize: pageSize),
-            paginate: paginate(pageSize: pageSize),
-            search: search(pageSize: pageSize)
+            initiateUtilityPayment: initiateUtilityPayment(pageSize: pageSize)
         )
     }
 }
@@ -72,29 +73,4 @@ private extension UtilityPaymentMicroServicesComposer {
     }
     
     typealias InitiateUtilityPaymentCompletion = MicroServices.InitiateUtilityPaymentCompletion
-}
-
-private extension UtilityPaymentMicroServicesComposer {
-    
-    func paginate(
-        pageSize: PageSize
-    ) -> MicroServices.Paginate {
-        
-        return { [weak self] payload, completion in
-            
-            self?.nanoServices.loadOperators(.init(afterOperatorID: payload.operatorID, searchText: payload.searchText, pageSize: pageSize), completion)
-        }
-    }
-    
-    func search(
-        pageSize: PageSize
-    ) -> MicroServices.Search {
-        
-        return { [weak self] searchText, completion in
-            
-            self?.nanoServices.loadOperators(.init(afterOperatorID: nil, searchText: searchText, pageSize: pageSize), completion)
-        }
-    }
-    
-    typealias LoadOperatorsCompletion = ([Operator]) -> Void
 }

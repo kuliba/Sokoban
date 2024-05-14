@@ -114,24 +114,17 @@ extension RootViewModelFactory {
             isActive: utilitiesPaymentsFlag.isActive
         )
         
-        let upnsComposer = UtilityPaymentNanoServicesComposer(model: model)
-        let nanoServices = upnsComposer.compose()
-        let upmsComposer = UtilityPaymentMicroServicesComposer(
-            nanoServices: nanoServices
-        )
-        #warning("add to settings(?)")
+#warning("add to settings(?)")
         let pageSize = 20
-        let utilityMicroServices = upmsComposer.compose(pageSize: pageSize)
-        #warning("add to settings")
+#warning("add to settings")
         let observeLast = 5
-        let paymentsTransfersFlowComposer = PaymentsTransfersFlowComposer(
-            model: model,
-            observeLast: observeLast
-            utilityMicroServices: utilityMicroServices
+        let paymentsTransfersFlowManager = makePaymentsTransfersFlowManager(
+            model: model, 
+            pageSize: pageSize,
+            observeLast: observeLast,
+            utilitiesPaymentsFlag: utilitiesPaymentsFlag
         )
-        let paymentsTransfersFlowManager = paymentsTransfersFlowComposer.makeFlowManager(
-            flag: utilitiesPaymentsFlag.optionOrStub
-        )
+        
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -154,6 +147,51 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             onRegister: resetCVVPINActivation
         )
+    }
+    
+    static func makePaymentsTransfersFlowManager(
+        model: Model,
+        pageSize: Int,
+        observeLast: Int,
+        utilitiesPaymentsFlag: UtilitiesPaymentsFlag
+    ) -> PTFlowManger {
+        
+        let prepayNanoComposer = UtilityPrepaymentNanoServicesComposer(
+            model: model,
+            flag: utilitiesPaymentsFlag.optionOrStub
+        )
+        let prepayMicroComposer = UtilityPrepaymentMicroServicesComposer(
+            pageSize: pageSize,
+            nanoServices: prepayNanoComposer.compose()
+        )
+        let preViewModelComposer = UtilityPrepaymentViewModelComposer(
+            observeLast: observeLast,
+            microServices: prepayMicroComposer.compose()
+        )
+        let payNanoComposer = UtilityPaymentNanoServicesComposer(
+            model: model,
+            flag: utilitiesPaymentsFlag.optionOrStub
+        )
+        let payMicroComposer = UtilityPaymentMicroServicesComposer(
+            pageSize: pageSize,
+            nanoServices: payNanoComposer.compose()
+        )
+        let ptFlowComposer = PaymentsTransfersFlowComposer(
+            model: model,
+            makeUtilityPrepaymentViewModel: { payload in
+                
+                preViewModelComposer.compose(payload: .init(
+                    lastPayments: payload.lastPayments,
+                    operators: payload.operators
+                ))
+            },
+            utilityMicroServices: payMicroComposer.compose()
+        )
+        let ptFlowManager = ptFlowComposer.compose(
+            flag: utilitiesPaymentsFlag.optionOrStub
+        )
+        
+        return ptFlowManager
     }
     
     typealias LatestPayment = UtilityPaymentLastPayment

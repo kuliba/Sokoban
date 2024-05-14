@@ -8,29 +8,34 @@
 final class UtilityPaymentNanoServicesComposer {
     
     private let model: Model
+    private let flag: Flag
     
     init(
-        model: Model
+        model: Model,
+        flag: Flag
     ) {
         self.model = model
+        self.flag = flag
     }
 }
 
 extension UtilityPaymentNanoServicesComposer {
     
     func compose() -> NanoServices {
-        #warning("add flag and switch between loadOperators and stub")
+        #warning("add flag and switch between live and stub")
         return .init(
             getOperatorsListByParam: getOperatorsListByParam,
-            getAllLatestPayments: getAllLatestPayments,
-            loadOperators: model.loadOperators(_:_:)
+            getAllLatestPayments: getAllLatestPayments
         )
     }
 }
 
 extension UtilityPaymentNanoServicesComposer {
     
+    typealias Flag = StubbedFeatureFlag.Option
+    
     typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator>
+    
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
 }
