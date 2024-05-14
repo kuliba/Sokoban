@@ -2407,6 +2407,7 @@
 		C1750D4C290FFBBF00122D2B /* ServerCommandsSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1750D4B290FFBBF00122D2B /* ServerCommandsSettingsTests.swift */; };
 		C1750D4E290FFCA500122D2B /* GetAppSettingsResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = C1750D4D290FFCA500122D2B /* GetAppSettingsResponseGeneric.json */; };
 		C1750D50290FFE7C00122D2B /* BeforeClosingResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = C1750D4F290FFE7C00122D2B /* BeforeClosingResponseGeneric.json */; };
+		C17F3C952BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17F3C942BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsRequestTests.swift */; };
 		C181083928E3535E002FCC3A /* Model+DeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C181083828E3535E002FCC3A /* Model+DeepLink.swift */; };
 		C182A3682B16FB8E0087DC72 /* GetBannerCatalogLandingListResponseGenericFromServer.json in Resources */ = {isa = PBXBuildFile; fileRef = C182A3672B16FB8E0087DC72 /* GetBannerCatalogLandingListResponseGenericFromServer.json */; };
 		C182B00B2AAADC9400F0DEAB /* LatestPaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C182B00A2AAADC9400F0DEAB /* LatestPaymentsTests.swift */; };
@@ -2459,6 +2460,9 @@
 		C1E8A0572B84D628000DA998 /* LastPayments+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E8A0562B84D628000DA998 /* LastPayments+Preview.swift */; };
 		C1EA35CB2A316D7A00403E51 /* OperationDetailDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */; };
 		C1ECBA9D28FD1F4100C0FCAC /* LatestPaymentsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ECBA9C28FD1F4100C0FCAC /* LatestPaymentsViewComponent.swift */; };
+		C1F1BECF2BF244820022C59B /* RequestFactory+getAllLatestPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F1BECE2BF244820022C59B /* RequestFactory+getAllLatestPayments.swift */; };
+		C1F1BED12BF246060022C59B /* Service+getAllLatestPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F1BED02BF246060022C59B /* Service+getAllLatestPayments.swift */; };
+		C1F1BED32BF247120022C59B /* ResponseMapper+GetAllLatestPaymentsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F1BED22BF247120022C59B /* ResponseMapper+GetAllLatestPaymentsResponse.swift */; };
 		C1F2FC112B84D031007BAA4A /* Operators+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F2FC102B84D031007BAA4A /* Operators+Preview.swift */; };
 		C1F2FC132B84D128007BAA4A /* StubbedOperatorLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F2FC122B84D128007BAA4A /* StubbedOperatorLoader.swift */; };
 		C1F346D62AE25C6000EE1E87 /* StickerPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F346D52AE25C6000EE1E87 /* StickerPreviewApp.swift */; };
@@ -5199,6 +5203,7 @@
 		C1750D4B290FFBBF00122D2B /* ServerCommandsSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsSettingsTests.swift; sourceTree = "<group>"; };
 		C1750D4D290FFCA500122D2B /* GetAppSettingsResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAppSettingsResponseGeneric.json; sourceTree = "<group>"; };
 		C1750D4F290FFE7C00122D2B /* BeforeClosingResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BeforeClosingResponseGeneric.json; sourceTree = "<group>"; };
+		C17F3C942BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetAllLatestPaymentsRequestTests.swift"; sourceTree = "<group>"; };
 		C181083828E3535E002FCC3A /* Model+DeepLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+DeepLink.swift"; sourceTree = "<group>"; };
 		C182A3672B16FB8E0087DC72 /* GetBannerCatalogLandingListResponseGenericFromServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetBannerCatalogLandingListResponseGenericFromServer.json; sourceTree = "<group>"; };
 		C182B00A2AAADC9400F0DEAB /* LatestPaymentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPaymentsTests.swift; sourceTree = "<group>"; };
@@ -5246,6 +5251,9 @@
 		C1E8A0562B84D628000DA998 /* LastPayments+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LastPayments+Preview.swift"; sourceTree = "<group>"; };
 		C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailDataTests.swift; sourceTree = "<group>"; };
 		C1ECBA9C28FD1F4100C0FCAC /* LatestPaymentsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPaymentsViewComponent.swift; sourceTree = "<group>"; };
+		C1F1BECE2BF244820022C59B /* RequestFactory+getAllLatestPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getAllLatestPayments.swift"; sourceTree = "<group>"; };
+		C1F1BED02BF246060022C59B /* Service+getAllLatestPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Service+getAllLatestPayments.swift"; sourceTree = "<group>"; };
+		C1F1BED22BF247120022C59B /* ResponseMapper+GetAllLatestPaymentsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+GetAllLatestPaymentsResponse.swift"; sourceTree = "<group>"; };
 		C1F2FC102B84D031007BAA4A /* Operators+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Operators+Preview.swift"; sourceTree = "<group>"; };
 		C1F2FC122B84D128007BAA4A /* StubbedOperatorLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubbedOperatorLoader.swift; sourceTree = "<group>"; };
 		C1F346D32AE25C6000EE1E87 /* StickerPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StickerPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -7070,6 +7078,7 @@
 		2A2E3FBE2BB2C6D500730D37 /* RequestFactory */ = {
 			isa = PBXGroup;
 			children = (
+				C17F3C932BF2631800AE1EB4 /* LatestPayments */,
 				2A2E3FBF2BB2C6DF00730D37 /* AnywayPayment */,
 			);
 			path = RequestFactory;
@@ -7747,6 +7756,7 @@
 				8343FE292BB29C9200D0C128 /* RequestFactory+createGetProductListByTypeRequest.swift */,
 				2A3BD6232B6D3403009B16F7 /* FastPaymentsSettings */,
 				8353CD4E2B56A609005F7D1A /* CardStatementForPeriod */,
+				C1F1BECE2BF244820022C59B /* RequestFactory+getAllLatestPayments.swift */,
 			);
 			path = RequestFactory;
 			sourceTree = "<group>";
@@ -12736,6 +12746,7 @@
 			isa = PBXGroup;
 			children = (
 				C15CB8E32B7EF26B00718B49 /* Service+getOperatorsListByParam.swift */,
+				C1F1BED02BF246060022C59B /* Service+getAllLatestPayments.swift */,
 			);
 			path = OperatorsList;
 			sourceTree = "<group>";
@@ -12754,6 +12765,14 @@
 				C16DDBF32B314E26001BF988 /* GetSberQRDataResult+emptySuccess.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		C17F3C932BF2631800AE1EB4 /* LatestPayments */ = {
+			isa = PBXGroup;
+			children = (
+				C17F3C942BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsRequestTests.swift */,
+			);
+			path = LatestPayments;
 			sourceTree = "<group>";
 		};
 		C18D25F22A25A67B00DF5643 /* TemplateButton */ = {
@@ -12827,6 +12846,7 @@
 				2ADFE5A42B0D225D0020B382 /* ResponseMapper+mapOperationDetailByPaymentIDResponse.swift */,
 				2A0D9B802B0E27EC00F1DFD1 /* ResponseMapper+mapGetPrintFormResponse.swift */,
 				2A0D9B822B0E289900F1DFD1 /* ResponseMapper+ServerResponse.swift */,
+				C1F1BED22BF247120022C59B /* ResponseMapper+GetAllLatestPaymentsResponse.swift */,
 			);
 			path = PaymentService;
 			sourceTree = "<group>";
@@ -16796,6 +16816,7 @@
 				2A5AEF272B7A075900E935B6 /* OTPInputConfig+iFora.swift in Sources */,
 				686857D8274FA73C00BBF562 /* PaymentsViewCoordinator.swift in Sources */,
 				0BDE453326E3EA4A00B64A0A /* ExtensionQRReadPDF.swift in Sources */,
+				C1F1BECF2BF244820022C59B /* RequestFactory+getAllLatestPayments.swift in Sources */,
 				777460ED291E5BE900D3FF46 /* ContactsPersonItemViewComponent.swift in Sources */,
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
 				7705408F27BD1C6900094006 /* BiometricAgent.swift in Sources */,
@@ -17480,6 +17501,7 @@
 				2A58FABF2AD7355700BD1967 /* SessionID.swift in Sources */,
 				688B9BB426E03B3000407A75 /* TotalMoneyView.swift in Sources */,
 				7758754927996D510080115D /* LocalAgentProtocol.swift in Sources */,
+				C1F1BED12BF246060022C59B /* Service+getAllLatestPayments.swift in Sources */,
 				ED84994526A6F647005205C6 /* ChooseCountryHeaderView.swift in Sources */,
 				774A8B222865FC4200B81140 /* MessagesHistoryDetailViewModel.swift in Sources */,
 				6820928127AB0E49003DCAFD /* CountryData.swift in Sources */,
@@ -17553,6 +17575,7 @@
 				774A8B382865FCDD00B81140 /* UserAccountDocumentsView.swift in Sources */,
 				ED8AB45526C116DB006F0D03 /* MeToMeViewController.swift in Sources */,
 				2A3039452A17D6970008701D /* TextFieldState+ext.swift in Sources */,
+				C1F1BED32BF247120022C59B /* ResponseMapper+GetAllLatestPaymentsResponse.swift in Sources */,
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
 				684192EA2799B1B100B4E184 /* ServerCommands+Consent.swift in Sources */,
 				C113225A28CFAC0C00F90072 /* ContactsView.swift in Sources */,
@@ -18048,6 +18071,7 @@
 				2AF5E28A29BB3F46004D69F3 /* MCError.swift in Sources */,
 				C1DFF16D2A872AC40044B7A6 /* Model+SuccessTests.swift in Sources */,
 				5A5ABF9227AAF60000D548AA /* ServerCommandsPaymentOperationDetailTests.swift in Sources */,
+				C17F3C952BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsRequestTests.swift in Sources */,
 				2AEDAD4C29A4F1C900017F73 /* CurrencyData+Extension.swift in Sources */,
 				2ACF584E29AA2FAA00737902 /* OptionSelectorViewModelTests.swift in Sources */,
 				2AF5E28A29BB3F46004D69F3 /* MCError.swift in Sources */,
