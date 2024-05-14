@@ -35,7 +35,7 @@ extension ResponseMapper {
         _ data: [LatestPaymentCodable]
     ) -> [LatestPayment] {
         
-        data.map { LatestPayment(
+        data.map { .init(
             title: $0.name,
             amount: .init($0.amount)
         )}
