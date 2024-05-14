@@ -13,24 +13,8 @@ extension MyProductsSectionView {
         _ itemVM: MyProductsSectionItemViewModel
     ) -> some View {
         
-        if #available(iOS 15.0, *) {
-            
-            return MyProductsSectionItemView.BaseItemView(viewModel: itemVM, editMode: $editMode)
-                .modifier(ItemModifier(itemVM: itemVM))
-        } else {
-            
-            return MyProductsSectionItemView(viewModel: itemVM, editMode: $editMode)
-                .modifier(ItemModifier(itemVM: itemVM))
-                .modifier(SwipeSidesModifier(leftAction: {
-                    
-                    itemVM.action.send(MyProductsSectionItemAction.Swiped(
-                                        direction: .left, editMode: editMode))
-                }, rightAction: {
-                    
-                    itemVM.action.send(MyProductsSectionItemAction.Swiped(
-                                        direction: .right, editMode: editMode))
-                }))
-        }
+        return MyProductsSectionItemView(viewModel: itemVM, editMode: $editMode)
+            .modifier(ItemModifier(itemVM: itemVM, editMode: editMode))
     }
 }
 
@@ -39,6 +23,7 @@ private extension MyProductsSectionView {
     struct ItemModifier : ViewModifier {
         
         let itemVM: MyProductsSectionItemViewModel
+        let editMode: EditMode
         
         func body(content: Content) -> some View {
             
@@ -70,6 +55,18 @@ private extension MyProductsSectionView {
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     .frame(height: 72, alignment: .bottomLeading)
                     .listRowBackground(Color.barsBars)
+                    .modifier(
+                        SwipeSidesModifier(
+                            leftAction: {
+                                
+                                itemVM.action.send(MyProductsSectionItemAction.Swiped(
+                                    direction: .left, editMode: editMode))
+                            }, rightAction: {
+                                
+                                itemVM.action.send(MyProductsSectionItemAction.Swiped(
+                                    direction: .right, editMode: editMode))
+                            })
+                    )
             }
         }
     }
