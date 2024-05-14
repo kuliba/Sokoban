@@ -37,7 +37,7 @@ extension ResponseMapper {
         
         data.map { LatestPayment(
             title: $0.name,
-            amount: .double($0.amount)
+            amount: .init($0.amount)
         )}
     }
 }
@@ -49,11 +49,11 @@ extension ResponseMapper {
         
         var id: String { title }
         let title: String
-        let amount: Amount
+        let amount: Decimal
     }
 }
 
-enum LatestPaymentKind: String, Codable {
+enum LatestPaymentKind: String, Decodable {
     
     case phone
     case service
@@ -90,7 +90,7 @@ extension LatestPaymentKind {
 
 private extension ResponseMapper {
     
-    struct LatestPaymentCodable: Codable {
+    struct LatestPaymentCodable: Decodable {
         
         let name: String
         let paymentDate: String
@@ -108,7 +108,7 @@ private extension ResponseMapper {
 
         }
         
-        struct AdditionalListData: Codable, Equatable {
+        struct AdditionalListData: Decodable, Equatable {
             
             let fieldTitle: String?
             let fieldName: String
