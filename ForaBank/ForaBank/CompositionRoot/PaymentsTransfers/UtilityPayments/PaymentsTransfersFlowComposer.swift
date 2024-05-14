@@ -43,17 +43,11 @@ extension PaymentsTransfersFlowComposer {
             log: log,
             paginate: { [loadOperators = model.loadOperators] payload, completion in
                 
-                loadOperators(payload.loadPayload) { result in
-                
-                    completion((try? result.get()) ?? [])
-                }
+                loadOperators(payload.loadPayload, completion)
             },
             search: { [loadOperators = model.loadOperators] payload, completion in
                 
-                loadOperators(payload.loadPayload) { result in
-                
-                    completion((try? result.get()) ?? [])
-                }
+                loadOperators(payload.loadPayload, completion)
             }
         )
         
@@ -92,7 +86,7 @@ extension PaymentsTransfersFlowComposer {
     }
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator<String>
+    typealias Operator = UtilityPaymentOperator
     
     typealias Content = UtilityPrepaymentViewModel
     typealias PaymentViewModel = ObservingPaymentFlowMockViewModel

@@ -172,52 +172,52 @@ private typealias SUT = Model
 //    }
 //}
 
-private func assert(
-    _ receivedResult: SUT.LoadOperatorsResult,
-    _ expectedResult: SUT.LoadOperatorsResult,
-    file: StaticString = #file,
-    line: UInt = #line
-) {
-    switch (receivedResult, expectedResult) {
-    case let (
-        .failure(receivedError as NSError),
-        .failure(expectedError as NSError)
-    ):
-        XCTAssertNoDiff(receivedError, expectedError, file: file, line: line)
-        
-    case let (
-        .success(received),
-        .success(expected)
-    ):
-        XCTAssertNoDiff(received, expected, file: file, line: line)
-        
-    default:
-        XCTFail("\nExpected \(expectedResult), but got \(receivedResult) instead.", file: file, line: line)
-    }
-}
+//private func assert(
+//    _ receivedResult: SUT.LoadOperatorsResult,
+//    _ expectedResult: SUT.LoadOperatorsResult,
+//    file: StaticString = #file,
+//    line: UInt = #line
+//) {
+//    switch (receivedResult, expectedResult) {
+//    case let (
+//        .failure(receivedError as NSError),
+//        .failure(expectedError as NSError)
+//    ):
+//        XCTAssertNoDiff(receivedError, expectedError, file: file, line: line)
+//        
+//    case let (
+//        .success(received),
+//        .success(expected)
+//    ):
+//        XCTAssertNoDiff(received, expected, file: file, line: line)
+//        
+//    default:
+//        XCTFail("\nExpected \(expectedResult), but got \(receivedResult) instead.", file: file, line: line)
+//    }
+//}
 
-private extension Array where Element == _OperatorGroup {
-    
-    static func stub(
-        titles: [String] = []
-    ) -> Self {
-        
-        titles.map {
-            
-            .init(md5hash: "", title: $0, description: "")
-        }
-    }
-}
-
-private extension Array where Element == UtilityPaymentOperator<String> {
-    
-    static func stub(
-        names: [String] = []
-    ) -> Self {
-        
-        names.map {
-            
-            .init(id: $0, title: $0, subtitle: "", icon: "abc")
-        }
-    }
-}
+//private extension Array where Element == SberOperator {
+//    
+//    static func stub(
+//        titles: [String] = []
+//    ) -> Self {
+//        
+//        titles.map {
+//            
+//            .init(md5hash: "", title: $0, description: "")
+//        }
+//    }
+//}
+//
+//private extension Array where Element == UtilityPaymentOperator {
+//    
+//    static func stub(
+//        names: [String] = []
+//    ) -> Self {
+//        
+//        names.map {
+//            
+//            .init(id: $0, title: $0, subtitle: "", icon: "abc")
+//        }
+//    }
+//}

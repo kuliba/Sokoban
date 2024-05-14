@@ -26,7 +26,7 @@ enum UtilityPaymentEvent: Equatable {
 extension UtilityPaymentEvent {
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator<String>
+    typealias Operator = UtilityPaymentOperator
     typealias ComposedEvent = PrepaymentPickerEvent<Operator>
 }
 

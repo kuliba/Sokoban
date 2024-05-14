@@ -38,7 +38,7 @@ extension PaymentsTransfersEffectHandler {
 extension PaymentsTransfersEffectHandler {
     
     typealias LatestPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator<String>
+    typealias Operator = UtilityPaymentOperator
     
     typealias CreateAnywayTransferPayload = UtilityFlowEffect.StartPaymentPayload
     typealias CreateAnywayTransferCompletion = (UtilityFlowEvent.PaymentStarted) -> Void

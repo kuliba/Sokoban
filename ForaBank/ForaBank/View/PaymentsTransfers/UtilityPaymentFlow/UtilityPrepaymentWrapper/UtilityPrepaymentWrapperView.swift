@@ -6,7 +6,6 @@
 //
 
 import FooterComponent
-import OperatorsListComponents
 import SwiftUI
 import UIPrimitives
 import UtilityServicePrepaymentDomain
@@ -39,7 +38,7 @@ extension UtilityPrepaymentWrapperView {
     typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator<String>
+    typealias Operator = UtilityPaymentOperator
     
     typealias FlowEvent = UtilityPrepaymentFlowEvent
     typealias ViewModel = UtilityPrepaymentViewModel

@@ -9,7 +9,7 @@ import OperatorsListComponents
 
 extension PaymentsTransfersFlowManager
 where LastPayment == UtilityPaymentLastPayment,
-      Operator == UtilityPaymentOperator<String>,
+      Operator == UtilityPaymentOperator,
       UtilityService == ForaBank.UtilityService,
       Content == UtilityPrepaymentViewModel,
       PaymentViewModel == ObservingPaymentFlowMockViewModel {
