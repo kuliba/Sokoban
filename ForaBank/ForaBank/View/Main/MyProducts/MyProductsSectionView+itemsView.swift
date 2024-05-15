@@ -77,27 +77,25 @@ extension MyProductsSectionView {
         _ mainProductID: ProductData.ID
     ) -> some View {
         
-        VStack(spacing: 0) {
-            
+        List {
             mainCardView(mainProductID)
-            List {
-                ForEach(items, id: \.id) { item in
-                    itemView(item)
-                        .listRowInsets(EdgeInsets())
-                }
-                .onMove { indexes, destination in
-                    guard let first = indexes.first else { return }
-                    
-                    viewModel.action.send(MyProductsSectionViewModelAction
-                        .Events.ItemMoved(sectionId: "\(mainProductID)", move: (first, destination)))
-                }
-                .moveDisabled(editMode != .active)
+            
+            ForEach(items, id: \.id) { item in
+                itemView(item)
+                    .listRowInsets(EdgeInsets())
             }
-            .frame(height: 72 * CGFloat(items.count))
-            .listStyle(.plain)
-            .environment(\.editMode, $editMode)
-            .id(mainProductID)
+            .onMove { indexes, destination in
+                guard let first = indexes.first else { return }
+                
+                viewModel.action.send(MyProductsSectionViewModelAction
+                    .Events.ItemMoved(sectionId: "\(mainProductID)", move: (first, destination)))
+            }
+            .moveDisabled(editMode != .active)
         }
+        .frame(height: 72 * CGFloat(items.count + 1))
+        .listStyle(.plain)
+        .environment(\.editMode, $editMode)
+        .id(mainProductID)
     }
     
     func itemView(
