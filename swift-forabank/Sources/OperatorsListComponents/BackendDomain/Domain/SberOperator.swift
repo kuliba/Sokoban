@@ -7,24 +7,22 @@
 
 import Foundation
 
-public struct SberOperator: Equatable {
+public struct SberOperator: Identifiable, Equatable {
     
-    public let icon: String?
+    public let id: String
     public let inn: String?
+    public let md5Hash: String?
     public let title: String
     
     public init(
-        icon: String?,
+        id: String,
         inn: String?,
+        md5Hash: String?,
         title: String
     ) {
-        self.icon = icon
+        self.id = id
         self.inn = inn
+        self.md5Hash = md5Hash
         self.title = title
     }
-}
-
-extension SberOperator: Identifiable {
-    
-    public var id: String { title }
 }

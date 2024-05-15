@@ -28,9 +28,9 @@ extension Model {
 struct CachingSberOperator: Codable {
     
     let id: String
-    let icon: String?
     let inn: String?
-    let name: String
+    let md5Hash: String?
+    let title: String
     let sortedOrder: Int
 }
 
@@ -52,9 +52,9 @@ private extension CachingSberOperator {
         
         self.init(
             id: sberOperator.id,
-            icon: sberOperator.icon, 
             inn: sberOperator.inn,
-            name: sberOperator.title,
+            md5Hash: sberOperator.md5Hash,
+            title: sberOperator.title,
             sortedOrder: index
         )
     }
@@ -71,7 +71,7 @@ extension SberOperator {
             return title.customLexicographicallyPrecedes(other.title)
         }
         
-        #warning("extract to helper")
+#warning("extract to helper")
         switch (inn, other.inn) {
         case let (.some(inn), .some(otherINN)):
             return inn.customLexicographicallyPrecedes(otherINN)

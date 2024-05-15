@@ -151,7 +151,7 @@ extension CachingSberOperator {
         
         guard !searchText.isEmpty else { return true }
         
-        return name.localizedCaseInsensitiveContains(searchText)
+        return title.localizedCaseInsensitiveContains(searchText)
         || (inn?.localizedCaseInsensitiveContains(searchText) ?? false)
     }
 }
@@ -168,9 +168,9 @@ private extension UtilityPaymentOperator {
         
         self.init(
             id: sberOperator.id,
-            title: sberOperator.name,
+            title: sberOperator.title,
             subtitle: sberOperator.inn,
-            icon: sberOperator.icon ?? ""
+            icon: sberOperator.md5Hash ?? ""
         )
     }
 }
