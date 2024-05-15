@@ -7,11 +7,11 @@
 
 final class UtilityPrepaymentMicroServicesComposer {
     
-    private let pageSize: PageSize
+    private let pageSize: Int
     private let nanoServices: NanoServices
     
     init(
-        pageSize: PageSize,
+        pageSize: Int,
         nanoServices: NanoServices
     ) {
         self.pageSize = pageSize
@@ -32,7 +32,6 @@ extension UtilityPrepaymentMicroServicesComposer {
 
 extension UtilityPrepaymentMicroServicesComposer {
     
-    typealias PageSize = Int
     typealias MicroServices = UtilityPrepaymentMicroServices<UtilityPaymentOperator>
     typealias NanoServices = UtilityPrepaymentNanoServices<UtilityPaymentOperator>
 }
@@ -40,7 +39,7 @@ extension UtilityPrepaymentMicroServicesComposer {
 private extension UtilityPrepaymentMicroServicesComposer {
     
     func paginate(
-        pageSize: PageSize
+        pageSize: Int
     ) -> MicroServices.Paginate {
         
         return { [weak self] payload, completion in
@@ -50,7 +49,7 @@ private extension UtilityPrepaymentMicroServicesComposer {
     }
     
     func search(
-        pageSize: PageSize
+        pageSize: Int
     ) -> MicroServices.Search {
         
         return { [weak self] searchText, completion in

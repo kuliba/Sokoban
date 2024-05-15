@@ -118,13 +118,14 @@ extension RootViewModelFactory {
         let pageSize = 20
 #warning("add to settings")
         let observeLast = 5
-        let paymentsTransfersFlowManager = makePaymentsTransfersFlowManager(
+        let ptFlowComposer = PaymentsTransfersFlowComposer(
             httpClient: httpClient,
             model: model, 
             pageSize: pageSize,
             observeLast: observeLast,
-            utilitiesPaymentsFlag: utilitiesPaymentsFlag
+            flag: utilitiesPaymentsFlag.optionOrStub
         )
+        let paymentsTransfersFlowManager = ptFlowComposer.compose()
         
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
@@ -148,51 +149,6 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             onRegister: resetCVVPINActivation
         )
-    }
-    
-    static func makePaymentsTransfersFlowManager(
-        httpClient: HTTPClient,
-        model: Model,
-        pageSize: Int,
-        observeLast: Int,
-        utilitiesPaymentsFlag: UtilitiesPaymentsFlag
-    ) -> PTFlowManger {
-        
-        let prepayNanoComposer = UtilityPrepaymentNanoServicesComposer(
-            model: model,
-            flag: utilitiesPaymentsFlag.optionOrStub
-        )
-        let prepayMicroComposer = UtilityPrepaymentMicroServicesComposer(
-            pageSize: pageSize,
-            nanoServices: prepayNanoComposer.compose()
-        )
-        let payNanoComposer = UtilityPaymentNanoServicesComposer(
-            httpClient: httpClient,
-            model: model,
-            flag: utilitiesPaymentsFlag.optionOrStub
-        )
-        let payMicroComposer = UtilityPaymentMicroServicesComposer(
-            pageSize: pageSize,
-            nanoServices: payNanoComposer.compose()
-        )
-        let ptFlowReducerFactoryComposer = PaymentsTransfersFlowReducerFactoryComposer(
-            model: model,
-            observeLast: observeLast,
-            microServices: prepayMicroComposer.compose()
-        )
-        let utilityPaymentsComposer = UtilityPaymentsFlowComposer(
-            flag: utilitiesPaymentsFlag.optionOrStub
-        )
-        let utilityFlowEffectHandler = utilityPaymentsComposer.makeEffectHandler()
-        let ptFlowComposer = PaymentsTransfersFlowComposer(
-            factory: ptFlowReducerFactoryComposer.compose(),
-            utilityFlowEffectHandler: utilityFlowEffectHandler
-        )
-        let manager = ptFlowComposer.compose(
-            flag: utilitiesPaymentsFlag.optionOrStub
-        )
-        
-        return manager
     }
     
     typealias LatestPayment = UtilityPaymentLastPayment
