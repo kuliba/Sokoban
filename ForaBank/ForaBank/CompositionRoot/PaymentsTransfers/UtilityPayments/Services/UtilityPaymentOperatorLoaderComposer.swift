@@ -5,8 +5,8 @@
 //  Created by Igor Malyarov on 15.05.2024.
 //
 
+import ForaTools
 import Foundation
-import OperatorsListComponents
 
 final class UtilityPaymentOperatorLoaderComposer {
     
@@ -43,9 +43,10 @@ extension UtilityPaymentOperatorLoaderComposer {
             case .live:
                 model.loadOperators(
                     .init(
-                        afterOperatorID: payload.operatorID,
+                        operatorID: payload.operatorID,
                         searchText: payload.searchText,
-                        pageSize: pageSize),
+                        pageSize: pageSize
+                    ),
                     completion
                 )
                 
@@ -81,6 +82,97 @@ extension UtilityPaymentOperatorLoaderComposer {
     typealias LoadOperators = (Payload, @escaping LoadOperatorsCompletion) -> Void
     
     typealias Operator = UtilityPaymentOperator
+}
+
+// MARK: - Live
+
+private extension Model {
+    
+    func loadOperators(
+        _ payload: LoadOperatorsPayload,
+        _ completion: @escaping LoadOperatorsCompletion
+    ) {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            
+            if let operators = self?.localAgent.load(type: [CachingSberOperator].self) {
+                completion(operators.operators(for: payload))
+            } else {
+                completion([])
+            }
+        }
+    }
+    
+    typealias LoadOperatorsCompletion = ([UtilityPaymentOperator]) -> Void
+}
+
+struct LoadOperatorsPayload: Equatable {
+    
+    let operatorID: String?
+    let searchText: String
+    let pageSize: Int
+}
+
+// MARK: - Mapping
+
+// TODO: - add tests
+extension Array where Element == CachingSberOperator {
+    
+    /// - Warning: expensive with sorting and search. Sorting could be moved to cache.
+    func operators(
+        for payload: LoadOperatorsPayload
+    ) -> [UtilityPaymentOperator] {
+        
+        // sorting is performed at cache phase
+        let operators = self
+            .search(searchText: payload.searchText)
+            .page(startingAt: payload.operatorID, pageSize: payload.pageSize)
+            .map(UtilityPaymentOperator.init(with:))
+        
+        return operators
+    }
+}
+
+// MARK: - Search
+
+//TODO: complete search and add tests
+extension Array where Element == CachingSberOperator {
+    
+    func search(searchText: String) -> [Element] {
+        
+        guard !searchText.isEmpty else { return self }
+        
+        return filter { $0.contains(searchText) }
+    }
+}
+
+extension CachingSberOperator {
+    
+    func contains(_ searchText: String) -> Bool {
+        
+        guard !searchText.isEmpty else { return true }
+        
+        return name.localizedCaseInsensitiveContains(searchText)
+        || (inn?.localizedCaseInsensitiveContains(searchText) ?? false)
+    }
+}
+
+// MARK: - Page
+
+extension CachingSberOperator: Identifiable {}
+
+// MARK: - Adapters
+
+private extension UtilityPaymentOperator {
+    
+    init(with sberOperator: CachingSberOperator) {
+        
+        self.init(
+            id: sberOperator.id,
+            title: sberOperator.name,
+            subtitle: sberOperator.inn,
+            icon: sberOperator.icon ?? ""
+        )
+    }
 }
 
 // MARK: - Stubs
