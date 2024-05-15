@@ -180,8 +180,13 @@ extension RootViewModelFactory {
             observeLast: observeLast,
             microServices: prepayMicroComposer.compose()
         )
+        let utilityPaymentsComposer = UtilityPaymentsFlowComposer(
+            flag: utilitiesPaymentsFlag.optionOrStub
+        )
+        let utilityFlowEffectHandler = utilityPaymentsComposer.makeEffectHandler()
         let ptFlowComposer = PaymentsTransfersFlowComposer(
-            factory: ptFlowReducerFactoryComposer.compose()
+            factory: ptFlowReducerFactoryComposer.compose(),
+            utilityFlowEffectHandler: utilityFlowEffectHandler
         )
         let manager = ptFlowComposer.compose(
             flag: utilitiesPaymentsFlag.optionOrStub

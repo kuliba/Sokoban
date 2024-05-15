@@ -14,11 +14,14 @@ import UtilityServicePrepaymentDomain
 final class PaymentsTransfersFlowComposer {
     
     private let factory: Factory
+    private let utilityFlowEffectHandler: UtilityFlowEffectHandler
     
     init(
-        factory: Factory
+        factory: Factory,
+        utilityFlowEffectHandler: UtilityFlowEffectHandler
     ) {
         self.factory = factory
+        self.utilityFlowEffectHandler = utilityFlowEffectHandler
     }
 }
 
@@ -26,6 +29,11 @@ extension PaymentsTransfersFlowComposer {
     
     typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
     typealias Factory = Reducer.Factory
+    
+    typealias UtilityFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+    
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator
 }
 
 extension PaymentsTransfersFlowComposer {
@@ -33,10 +41,6 @@ extension PaymentsTransfersFlowComposer {
     func compose(
         flag: StubbedFeatureFlag.Option
     ) -> PTFlowManager {
-        
-        let utilityPaymentsComposer = UtilityPaymentsFlowComposer(flag: flag)
-        
-        let utilityFlowEffectHandler = utilityPaymentsComposer.makeEffectHandler()
         
         let effectHandler = PaymentsTransfersFlowEffectHandler(
             utilityEffectHandle: utilityFlowEffectHandler.handleEffect(_:_:)
@@ -52,10 +56,6 @@ extension PaymentsTransfersFlowComposer {
             makeReduce: { makeReducer($0, $1).reduce(_:_:) }
         )
     }
-    
-    typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
-    
     typealias Content = UtilityPrepaymentViewModel
     typealias PaymentViewModel = ObservingPaymentFlowMockViewModel
     
