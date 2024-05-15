@@ -118,18 +118,19 @@ extension RootViewModelFactory {
         let pageSize = 20
 #warning("add to settings")
         let observeLast = 5
+#warning("uncomment flag")
         let loaderComposer = UtilityPaymentOperatorLoaderComposer(
+            flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
-            flag: .live,//flag,
             pageSize: pageSize
         )
         let ptFlowComposer = PaymentsTransfersFlowComposer(
+            flag: utilitiesPaymentsFlag.optionOrStub,
             httpClient: httpClient,
             model: model,
             loaderComposer: loaderComposer,
             pageSize: pageSize,
-            observeLast: observeLast,
-            flag: utilitiesPaymentsFlag.optionOrStub
+            observeLast: observeLast
         )
         let paymentsTransfersFlowManager = ptFlowComposer.compose()
         

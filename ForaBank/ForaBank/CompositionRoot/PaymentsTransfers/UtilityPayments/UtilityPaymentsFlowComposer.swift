@@ -7,58 +7,7 @@
 
 import ForaTools
 import Foundation
-import OperatorsListComponents
-
-#warning("use in factory and delete")
-private func a() {
-    let createAnywayTransfer: PaymentsTransfersEffectHandler.CreateAnywayTransfer = { payload, completion in
-        
-#warning("replace with NanoService.createAnywayTransfer")
-        DispatchQueue.main.delay(for: .seconds(2)) {
-            
-            switch payload {
-            case let .latestPayment(latestPayment):
-                completion(.details(.init()))
-                
-            case let .service(`operator`, utilityService):
-                switch utilityService.id {
-                case "server error":
-                    completion(.serverError("Error [#12345]."))
-                    
-                case "empty", "just sad":
-                    completion(.failure)
-                    
-                default:
-                    completion(.details(.init()))
-                }
-            }
-        }
-    }
-    
-    let getOperatorsListByParam: PaymentsTransfersEffectHandler.GetOperatorsListByParam = { payload, completion in
-        
-#warning("replace with NanoService.getOperatorsListByParam")
-        
-        DispatchQueue.main.delay(for: .seconds(2)) {
-            
-            switch payload {
-            case "list":
-                completion(.list([
-                    .init(id: "happy"),
-                    .init(id: "server error"),
-                    .init(id: "empty"),
-                    .init(id: "just sad"),
-                ]))
-                
-            case "single":
-                completion(.single(.init()))
-                
-            default:
-                completion(.failure)
-            }
-        }
-    }
-}
+//import OperatorsListComponents
 
 final class UtilityPaymentsFlowComposer {
     

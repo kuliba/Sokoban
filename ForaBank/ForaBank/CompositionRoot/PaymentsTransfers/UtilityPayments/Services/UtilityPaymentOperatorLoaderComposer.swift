@@ -10,17 +10,17 @@ import Foundation
 
 final class UtilityPaymentOperatorLoaderComposer {
     
-    private let model: Model
     private let flag: Flag
+    private let model: Model
     private let pageSize: PageSize
     
     init(
-        model: Model,
         flag: Flag,
+        model: Model,
         pageSize: PageSize
     ) {
-        self.model = model
         self.flag = flag
+        self.model = model
         self.pageSize = pageSize
     }
 }

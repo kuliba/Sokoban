@@ -13,27 +13,27 @@ import UtilityServicePrepaymentDomain
 
 final class PaymentsTransfersFlowComposer {
     
+    private let flag: StubbedFeatureFlag.Option
     private let httpClient: HTTPClient
     private let model: Model
     private let loaderComposer: LoaderComposer
     private let pageSize: Int
     private let observeLast: Int
-    private let flag: StubbedFeatureFlag.Option
     
     init(
+        flag: StubbedFeatureFlag.Option,
         httpClient: HTTPClient,
         model: Model,
         loaderComposer: LoaderComposer,
         pageSize: Int,
-        observeLast: Int,
-        flag: StubbedFeatureFlag.Option
+        observeLast: Int
     ) {
+        self.flag = flag
         self.httpClient = httpClient
         self.model = model
         self.loaderComposer = loaderComposer
         self.pageSize = pageSize
         self.observeLast = observeLast
-        self.flag = flag
     }
 }
 
@@ -63,9 +63,9 @@ private extension PaymentsTransfersFlowComposer {
     func makeEffectHandler() -> EffectHandler {
         
         let nanoComposer = UtilityPaymentNanoServicesComposer(
+            flag: flag,
             httpClient: httpClient,
-            loadOperators: { self.loaderComposer.compose()(.init(), $0) },
-            flag: flag
+            loadOperators: { self.loaderComposer.compose()(.init(), $0) }
         )
         let microComposer = UtilityPaymentMicroServicesComposer(
             nanoServices: nanoComposer.compose()

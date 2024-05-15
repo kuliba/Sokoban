@@ -59,5 +59,7 @@ private extension UtilityPaymentMicroServicesComposer {
         }
     }
     
-    typealias InitiateUtilityPaymentCompletion = MicroServices.InitiateUtilityPaymentCompletion
+    typealias InitiateUtilityPaymentCompletion = PrepaymentFlowEffectHandler.InitiateUtilityPaymentCompletion
+    
+    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
 }

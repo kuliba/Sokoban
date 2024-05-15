@@ -9,18 +9,18 @@ import Foundation
 
 final class UtilityPaymentNanoServicesComposer {
     
+    private let flag: Flag
     private let httpClient: HTTPClient
     private let loadOperators: LoadOperators
-    private let flag: Flag
     
     init(
+        flag: Flag,
         httpClient: HTTPClient,
-        loadOperators: @escaping LoadOperators,
-        flag: Flag
+        loadOperators: @escaping LoadOperators
     ) {
+        self.flag = flag
         self.httpClient = httpClient
         self.loadOperators = loadOperators
-        self.flag = flag
     }
 }
 
@@ -66,15 +66,8 @@ private extension UtilityPaymentNanoServicesComposer {
     ) {
         switch flag {
         case .live:
-#warning("FIXME")
-            
 #warning("add logging // NanoServices.adaptedLoggingFetch")
-            let service = RemoteService(
-                createRequest: RequestFactory.getAllLatestPaymentsRequest(_:),
-                performRequest: httpClient.performRequest,
-                mapResponse: ResponseMapper.mapGetAllLatestPaymentsResponse
-            )
-            
+            let service = Services.getAllLatestPayments(httpClient: httpClient)
             service.process(.service) { [service] result in
                 
                 completion((try? result.get().map(LastPayment.init(with:))) ?? [])
