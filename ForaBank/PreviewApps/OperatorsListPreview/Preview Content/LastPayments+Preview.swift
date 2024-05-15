@@ -8,7 +8,7 @@
 import Foundation
 import OperatorsListComponents
 
-extension Array where Element == LatestPayment {
+extension Array where Element == LastPayment {
     
     static let preview: Self = [
         .init(

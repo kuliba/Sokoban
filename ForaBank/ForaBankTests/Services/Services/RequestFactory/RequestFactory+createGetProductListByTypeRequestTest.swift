@@ -33,13 +33,21 @@ final class RequestFactory_createGetProductListByTypeRequestTests: XCTestCase {
         
         XCTAssertNil(request.httpBody)
     }
+    
+    func test_createRequest_shouldSetTimeout() throws {
+        
+        let request = try createRequest(timeout: 120.0)
+        
+        XCTAssertEqual(request.timeoutInterval, 120.0)
+    }
 
     // MARK: - Helpers
     
     private func createRequest(
-        payload: ProductType = .card
+        payload: ProductType = .card,
+        timeout: TimeInterval = 0
     ) throws -> URLRequest {
         
-        try ForaBank.RequestFactory.createGetProductListByTypeRequest(payload)
+        try ForaBank.RequestFactory.createGetProductListByTypeRequest(payload, timeout)
     }
 }

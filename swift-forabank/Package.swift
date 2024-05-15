@@ -29,6 +29,7 @@ let package = Package(
         // Payments
         .anywayPayment,
         .utilityPayment,
+        .utilityServicePrepayment,
         // Services
         .cardStatementAPI,
         .cryptoSwaddler,
@@ -118,8 +119,14 @@ let package = Package(
         .anywayPaymentBackendTests,
         .anywayPaymentCore,
         .anywayPaymentCoreTests,
+        .anywayPaymentUI,
+        .anywayPaymentUITests,
         .utilityPayment,
         .utilityPaymentTests,
+        .utilityServicePrepaymentCore,
+        .utilityServicePrepaymentCoreTests,
+        .utilityServicePrepaymentDomain,
+        .utilityServicePrepaymentUI,
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
@@ -191,6 +198,13 @@ let package = Package(
         .amountComponent,
         .buttonComponent,
         .infoComponent,
+        .checkBoxComponent,
+        .codeComponent,
+        .footerComponent,
+        .nameComponent,
+        .selectComponent,
+        .inputPhoneComponent,
+        .inputComponent,
         .paymentComponents,
         .productProfileComponents,
         .productSelectComponent,
@@ -469,6 +483,12 @@ private extension Product {
             .amountComponent,
             .buttonComponent,
             .carouselComponent,
+            .checkBoxComponent,
+            .footerComponent,
+            .nameComponent,
+            .selectComponent,
+            .inputComponent,
+            .inputPhoneComponent,
             .infoComponent,
             .paymentComponents,
             .productSelectComponent,
@@ -530,6 +550,7 @@ private extension Product {
             .anywayPaymentAdapters,
             .anywayPaymentBackend,
             .anywayPaymentCore,
+            .anywayPaymentUI,
         ]
     )
 
@@ -537,6 +558,15 @@ private extension Product {
         name: .utilityPayment,
         targets: [
             .utilityPayment,
+        ]
+    )
+
+    static let utilityServicePrepayment = library(
+        name: .utilityServicePrepayment,
+        targets: [
+            .utilityServicePrepaymentCore,
+            .utilityServicePrepaymentDomain,
+            .utilityServicePrepaymentUI,
         ]
     )
 
@@ -934,6 +964,7 @@ private extension Target {
         name: .anywayPaymentAdapters,
         dependencies: [
             .anywayPaymentCore,
+            .anywayPaymentUI,
             .anywayPaymentBackend,
             .remoteServices,
             .tagged,
@@ -996,6 +1027,30 @@ private extension Target {
         path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentCoreTests)"
     )
     
+    static let anywayPaymentUI = target(
+        name: .anywayPaymentUI,
+        dependencies: [
+            .anywayPaymentCore,
+            .paymentComponents,
+            .rxViewModel,
+        ],
+        path: "Sources/Payments/AnywayPayment/\(String.anywayPaymentUI)"
+    )
+    static let anywayPaymentUITests = testTarget(
+        name: .anywayPaymentUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .tagged,
+            // internal modules
+            .anywayPaymentUI,
+            .foraTools,
+            .remoteServices,
+            .rxViewModel,
+        ],
+        path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentUITests)"
+    )
+    
     static let utilityPayment = target(
         name: .utilityPayment,
         dependencies: [
@@ -1017,6 +1072,54 @@ private extension Target {
             .utilityPayment,
         ],
         path: "Tests/Payments/\(String.utilityPaymentTests)"
+    )
+    
+    static let utilityServicePrepaymentCore = target(
+        name: .utilityServicePrepaymentCore,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+            .foraTools,
+            .utilityServicePrepaymentDomain,
+        ],
+        path: "Sources/Payments/UtilityServicePrepayment/Core"
+    )
+    static let utilityServicePrepaymentDomain = target(
+        name: .utilityServicePrepaymentDomain,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+            .foraTools,
+        ],
+        path: "Sources/Payments/UtilityServicePrepayment/Domain"
+    )
+    static let utilityServicePrepaymentUI = target(
+        name: .utilityServicePrepaymentUI,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+            .foraTools,
+            .uiPrimitives,
+            .utilityServicePrepaymentDomain,
+        ],
+        path: "Sources/Payments/UtilityServicePrepayment/UI"
+    )
+    static let utilityServicePrepaymentCoreTests = testTarget(
+        name: .utilityServicePrepaymentCoreTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .utilityServicePrepaymentCore,
+            .utilityServicePrepaymentDomain,
+        ],
+        path: "Tests/Payments/UtilityServicePrepayment/CoreTests"
     )
     
     // MARK: - Services
@@ -1087,6 +1190,7 @@ private extension Target {
         name: .operatorsListComponents,
         dependencies: [
             // internal packages
+            .rxViewModel,
             .prePaymentPicker,
             .remoteServices
         ]
@@ -1666,6 +1770,66 @@ private extension Target {
         path: "Sources/UI/Components/\(String.infoComponent)"
     )
     
+    static let checkBoxComponent = target(
+        name: .checkBoxComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.checkBoxComponent)"
+    )
+    
+    static let codeComponent = target(
+        name: .codeComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.codeComponent)"
+    )
+    
+    static let footerComponent = target(
+        name: .footerComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.footerComponent)"
+    )
+      
+    static let nameComponent = target(
+        name: .nameComponent,
+        dependencies: [
+            .inputComponent,
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.nameComponent)"
+    )
+       
+    static let selectComponent = target(
+        name: .selectComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.selectComponent)"
+    )
+    
+    static let inputPhoneComponent = target(
+        name: .inputPhoneComponent,
+        dependencies: [
+            .phoneNumberKit,
+            .phoneNumberWrapper,
+            .searchBarComponent,
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.inputPhoneComponent)"
+    )
+       
+    static let inputComponent = target(
+        name: .inputComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.inputComponent)"
+    )
+    
     static let paymentComponents = target(
         name: .paymentComponents,
         dependencies: [
@@ -1676,6 +1840,12 @@ private extension Target {
             .buttonComponent,
             .carouselComponent,
             .infoComponent,
+            .checkBoxComponent,
+            .footerComponent,
+            .nameComponent,
+            .selectComponent,
+            .inputComponent,
+            .inputPhoneComponent,
             .productSelectComponent,
             .rxViewModel,
             .sharedConfigs,
@@ -1726,7 +1896,11 @@ private extension Target {
             .foraTools,
             .paymentComponents,
             .productSelectComponent,
-            .prePaymentPicker
+            .prePaymentPicker,
+            .rxViewModel,
+            .textFieldComponent,
+            .searchBarComponent,
+            .phoneNumberWrapper
         ]
     )
     
@@ -1834,12 +2008,14 @@ private extension Target {
     static let foraTools = target(
         name: .foraTools,
         dependencies: [
+            .combineSchedulers,
             .svgKit
         ]
     )
     static let foraToolsTests = testTarget(
         name: .foraToolsTests,
         dependencies: [
+            .combineSchedulers,
             .customDump,
             .foraTools
         ]
@@ -2008,6 +2184,34 @@ private extension Target.Dependency {
         name: .infoComponent
     )
     
+    static let checkBoxComponent = byName(
+        name: .checkBoxComponent
+    )
+      
+    static let codeComponent = byName(
+        name: .codeComponent
+    )
+    
+    static let footerComponent = byName(
+        name: .footerComponent
+    )
+       
+    static let nameComponent = byName(
+        name: .nameComponent
+    )
+    
+    static let selectComponent = byName(
+        name: .selectComponent
+    )
+     
+    static let inputPhoneComponent = byName(
+        name: .inputPhoneComponent
+    )
+      
+    static let inputComponent = byName(
+        name: .inputComponent
+    )
+    
     static let paymentComponents = byName(
         name: .paymentComponents
     )
@@ -2058,8 +2262,20 @@ private extension Target.Dependency {
         name: .anywayPaymentCore
     )
 
+    static let anywayPaymentUI = byName(
+        name: .anywayPaymentUI
+    )
+
     static let utilityPayment = byName(
         name: .utilityPayment
+    )
+
+    static let utilityServicePrepaymentCore = byName(
+        name: .utilityServicePrepaymentCore
+    )
+
+    static let utilityServicePrepaymentDomain = byName(
+        name: .utilityServicePrepaymentDomain
     )
 
     // MARK: - Services
@@ -2233,6 +2449,20 @@ private extension String {
     
     static let infoComponent = "InfoComponent"
     
+    static let checkBoxComponent = "CheckBoxComponent"
+    
+    static let codeComponent = "CodeComponent"
+    
+    static let footerComponent = "FooterComponent"
+    
+    static let nameComponent = "NameComponent"
+    
+    static let selectComponent = "SelectComponent"
+    
+    static let inputComponent = "InputComponent"
+    
+    static let inputPhoneComponent = "InputPhoneComponent"
+    
     static let paymentComponents = "PaymentComponents"
     
     static let productProfileComponents = "ProductProfileComponents"
@@ -2270,9 +2500,17 @@ private extension String {
     static let anywayPaymentBackendTests = "AnywayPaymentBackendTests"
     static let anywayPaymentCore = "AnywayPaymentCore"
     static let anywayPaymentCoreTests = "AnywayPaymentCoreTests"
+    static let anywayPaymentUI = "AnywayPaymentUI"
+    static let anywayPaymentUITests = "AnywayPaymentUITests"
 
     static let utilityPayment = "UtilityPayment"
     static let utilityPaymentTests = "UtilityPaymentTests"
+
+    static let utilityServicePrepayment = "UtilityServicePrepayment"
+    static let utilityServicePrepaymentCore = "UtilityServicePrepaymentCore"
+    static let utilityServicePrepaymentDomain = "UtilityServicePrepaymentDomain"
+    static let utilityServicePrepaymentUI = "UtilityServicePrepaymentUI"
+    static let utilityServicePrepaymentCoreTests = "UtilityServicePrepaymentCoreTests"
 
     // MARK: - Services
     

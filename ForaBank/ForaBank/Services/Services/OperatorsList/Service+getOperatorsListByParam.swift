@@ -11,7 +11,7 @@ import OperatorsListComponents
 
 extension Services {
     
-    typealias GetOperatorListResult = Swift.Result<[OperatorsListComponents._OperatorGroup]?, OperatorsListComponents.ResponseMapper.MappingError>
+    typealias GetOperatorListResult = Swift.Result<[OperatorsListComponents.SberOperator], OperatorsListComponents.ResponseMapper.MappingError>
     typealias GetOperatorListService = RemoteServiceOf<String, GetOperatorListResult>
     
     static func getOperatorsListByParam(

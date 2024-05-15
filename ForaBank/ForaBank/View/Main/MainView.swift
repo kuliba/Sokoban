@@ -408,29 +408,27 @@ struct MainView_Previews: PreviewProvider {
         MainView(
             viewModel: .sample,
             navigationOperationView: EmptyView.init,
-            viewFactory: .init(
-                makeSberQRConfirmPaymentView: {
-                    
-                    .init(
-                        viewModel: $0,
-                        map: Info.preview(info:),
-                        config: .iFora
-                    )
-                },
-                makeUserAccountView: UserAccountView.init(viewModel:)
-            ),
-            paymentsTransfersViewFactory: .init(
-                makeSberQRConfirmPaymentView: {
-                    
-                    .init(
-                        viewModel: $0,
-                        map: Info.preview(info:),
-                        config: .iFora
-                    )
-                },
-                makeUserAccountView: UserAccountView.init(viewModel:)
-            ), 
+            viewFactory: .preview,
+            paymentsTransfersViewFactory: .preview,
             getUImage: { _ in nil }
+        )
+    }
+}
+
+extension MainViewFactory {
+    
+    static var preview: Self {
+        
+        return .init(
+            makeSberQRConfirmPaymentView: {
+                
+                .init(
+                    viewModel: $0,
+                    map: Info.preview(info:),
+                    config: .iFora
+                )
+            },
+            makeUserAccountView: UserAccountView.init(viewModel:)
         )
     }
 }
@@ -443,7 +441,7 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            paymentsTransfersNavigationStateManager: .preview,
+            paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
@@ -462,7 +460,7 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            paymentsTransfersNavigationStateManager: .preview,
+            paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
@@ -481,7 +479,7 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            paymentsTransfersNavigationStateManager: .preview,
+            paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),

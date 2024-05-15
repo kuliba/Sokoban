@@ -16,17 +16,20 @@ public struct Info {
     let value: String
     let title: String
     let image: ImagePublisher
+    let style: Style
     
     public init(
         id: ID,
         value: String,
         title: String,
-        image: ImagePublisher
+        image: ImagePublisher,
+        style: Style
     ) {
         self.id = id
         self.value = value
         self.title = title
         self.image = image
+        self.style = style
     }
 }
 
@@ -35,5 +38,11 @@ public extension Info {
     enum ID: Equatable {
         
         case amount, brandName, recipientBank
+    }
+
+    enum Style {
+        
+        case expanded
+        case compressed
     }
 }

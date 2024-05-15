@@ -14,21 +14,24 @@ public extension Info {
         id: .amount,
         value: "220 ₽",
         title: "Сумма",
-        image: .init(.init("dollarsign.circle.fill"))
+        image: .init(.init("dollarsign.circle.fill")),
+        style: .expanded
     )
     
     static let brandName: Self = .init(
         id: .brandName,
         value: "сббол енот_QR",
         title: "Получатель",
-        image: .init(.init("house"))
+        image: .init(.init("house")),
+        style: .expanded
     )
     
     static let recipientBank: Self = .init(
         id: .recipientBank,
         value: "Сбербанк",
         title: "Банк получателя",
-        image: .init(.init("building.columns"))
+        image: .init(.init("building.columns")),
+        style: .expanded
     )
     
     private static func just(

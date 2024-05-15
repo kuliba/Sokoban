@@ -162,8 +162,8 @@ final class PrePaymentPickerReducerTests: XCTestCase {
     }
     
     private func makeOptionsState(
-        lastPayments: [TestLastPayment]? = nil,
-        operators: [TestOperator]? = nil,
+        lastPayments: [TestLastPayment] = [],
+        operators: [TestOperator] = [],
         searchText: String = "",
         isInflight: Bool = false
     ) -> SUT.OptionsState {
