@@ -13,49 +13,26 @@ import UtilityServicePrepaymentDomain
 
 final class PaymentsTransfersFlowComposer {
     
-    private let model: Model
-    private let makeUtilityPrepaymentViewModel: MakeUtilityPrepaymentViewModel
-    private let utilityMicroServices: UtilityMicroServices
+    private let factory: Factory
     
     init(
-        model: Model,
-        makeUtilityPrepaymentViewModel: @escaping MakeUtilityPrepaymentViewModel,
-        utilityMicroServices: UtilityMicroServices
+        factory: Factory
     ) {
-        self.model = model
-        self.makeUtilityPrepaymentViewModel = makeUtilityPrepaymentViewModel
-        self.utilityMicroServices = utilityMicroServices
+        self.factory = factory
     }
 }
 
 extension PaymentsTransfersFlowComposer {
     
-    typealias UtilityPrepaymentPayload = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
-    typealias MakeUtilityPrepaymentViewModel = (UtilityPrepaymentPayload) -> UtilityPrepaymentViewModel
-    
-    typealias UtilityMicroServices = UtilityPaymentMicroServices<LastPayment, Operator>
+    typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
+    typealias Factory = Reducer.Factory
 }
 
 extension PaymentsTransfersFlowComposer {
     
     func compose(
         flag: StubbedFeatureFlag.Option
-    ) -> PaymentsTransfersManager {
-        
-        typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
-        typealias ReducerFactory = Reducer.Factory
-        
-        let factory = ReducerFactory(
-            makeUtilityPrepaymentViewModel: makeUtilityPrepaymentViewModel,
-            makeUtilityPaymentViewModel: { _, notify in
-                
-                return .init(notify: notify)
-            },
-            makePaymentsViewModel: { [model = self.model] in
-                
-                return .init(model, service: .requisites, closeAction: $0)
-            }
-        )
+    ) -> PTFlowManager {
         
         let utilityPaymentsComposer = UtilityPaymentsFlowComposer(flag: flag)
         
@@ -65,7 +42,7 @@ extension PaymentsTransfersFlowComposer {
             utilityEffectHandle: utilityFlowEffectHandler.handleEffect(_:_:)
         )
         
-        let makeReducer = {
+        let makeReducer = { [factory] in
             
             Reducer(factory: factory, closeAction: $0, notify: $1)
         }
@@ -82,5 +59,5 @@ extension PaymentsTransfersFlowComposer {
     typealias Content = UtilityPrepaymentViewModel
     typealias PaymentViewModel = ObservingPaymentFlowMockViewModel
     
-    typealias PaymentsTransfersManager = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
+    typealias PTFlowManager = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
 }

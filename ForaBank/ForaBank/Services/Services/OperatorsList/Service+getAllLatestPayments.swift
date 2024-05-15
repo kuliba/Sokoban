@@ -19,7 +19,7 @@ extension Services {
     ) -> GetAllPaymentsService {
         
         return .init(
-            createRequest: RequestFactory.getAllLatestPaymentRequest(_:),
+            createRequest: RequestFactory.getAllLatestPaymentsRequest(_:),
             performRequest: httpClient.performRequest,
             mapResponse: ResponseMapper.mapGetAllLatestPaymentsResponse
         )

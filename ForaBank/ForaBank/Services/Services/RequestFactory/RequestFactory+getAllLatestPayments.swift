@@ -11,7 +11,7 @@ import OperatorsListComponents
 
 extension RequestFactory {
     
-    static func getAllLatestPaymentRequest(
+    static func getAllLatestPaymentsRequest(
         _ kind: LatestPaymentKind
     ) throws -> URLRequest {
         

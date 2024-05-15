@@ -7,13 +7,16 @@
 
 final class UtilityPaymentNanoServicesComposer {
     
+    private let httpClient: HTTPClient
     private let model: Model
     private let flag: Flag
     
     init(
+        httpClient: HTTPClient,
         model: Model,
         flag: Flag
     ) {
+        self.httpClient = httpClient
         self.model = model
         self.flag = flag
     }
@@ -22,7 +25,7 @@ final class UtilityPaymentNanoServicesComposer {
 extension UtilityPaymentNanoServicesComposer {
     
     func compose() -> NanoServices {
-        #warning("add flag and switch between live and stub")
+        
         return .init(
             getOperatorsListByParam: getOperatorsListByParam,
             getAllLatestPayments: getAllLatestPayments
@@ -48,6 +51,7 @@ private extension UtilityPaymentNanoServicesComposer {
         pageSize: Int,
         _ completion: @escaping ([Operator]) -> Void
     ) {
+#warning("add flag and switch between live and stub")
         model.loadOperators(.init(pageSize: pageSize), completion)
     }
     
@@ -57,7 +61,56 @@ private extension UtilityPaymentNanoServicesComposer {
     func getAllLatestPayments(
         _ completion: @escaping ([LastPayment]) -> Void
     ) {
-        #warning("FIXME")
-        fatalError("unimplemented")
+#warning("add flag and switch between live and stub")
+        
+#warning("FIXME")
+        
+#warning("add logging // NanoServices.adaptedLoggingFetch")
+        let service = RemoteService(
+            createRequest: RequestFactory.getAllLatestPaymentsRequest(_:),
+            performRequest: httpClient.performRequest,
+            mapResponse: ResponseMapper.mapGetAllLatestPaymentsResponse
+        )
+        
+        service.process(.service) { [service] result in
+            
+            completion((try? result.get().map(LastPayment.init(with:))) ?? [])
+            _ = service
+        }
     }
 }
+
+private extension UtilityPaymentLastPayment {
+    
+    init(with lastPayment: ResponseMapper.LatestPayment) {
+        
+        self.init(
+            id: lastPayment.id,
+            title: lastPayment.title,
+            subtitle: "\(lastPayment.amount)",
+            icon: lastPayment.md5Hash ?? ""
+        )
+    }
+}
+
+import GenericRemoteService
+//
+//extension NanoServices {
+//    
+//    static func all(
+//        httpClient: HTTPClient
+//    ) -> GetAllPayments {
+//        
+//        
+//        adaptedLoggingFetch(
+//            createRequest: RequestFactory.getAllLatestPaymentRequest,
+//            httpClient: httpClient,
+//            mapResponse: ResponseMapper.mapGetAllLatestPaymentsResponse,
+//            mapError: <#T##(RemoteServiceError<any Error, any Error, Error>) -> Error#>,
+//            log: <#T##(String, StaticString, UInt) -> Void#>
+//        )
+//    }
+//    
+//    typealias GetAllPaymentsCompletion = ([UtilityPaymentLastPayment]) -> Void
+//    typealias GetAllPayments = (@escaping GetAllPaymentsCompletion) -> Void
+//}

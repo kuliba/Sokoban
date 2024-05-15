@@ -119,6 +119,7 @@ extension RootViewModelFactory {
 #warning("add to settings")
         let observeLast = 5
         let paymentsTransfersFlowManager = makePaymentsTransfersFlowManager(
+            httpClient: httpClient,
             model: model, 
             pageSize: pageSize,
             observeLast: observeLast,
@@ -150,6 +151,7 @@ extension RootViewModelFactory {
     }
     
     static func makePaymentsTransfersFlowManager(
+        httpClient: HTTPClient,
         model: Model,
         pageSize: Int,
         observeLast: Int,
@@ -164,11 +166,8 @@ extension RootViewModelFactory {
             pageSize: pageSize,
             nanoServices: prepayNanoComposer.compose()
         )
-        let preViewModelComposer = UtilityPrepaymentViewModelComposer(
-            observeLast: observeLast,
-            microServices: prepayMicroComposer.compose()
-        )
         let payNanoComposer = UtilityPaymentNanoServicesComposer(
+            httpClient: httpClient,
             model: model,
             flag: utilitiesPaymentsFlag.optionOrStub
         )
@@ -176,22 +175,19 @@ extension RootViewModelFactory {
             pageSize: pageSize,
             nanoServices: payNanoComposer.compose()
         )
-        let ptFlowComposer = PaymentsTransfersFlowComposer(
+        let ptFlowReducerFactoryComposer = PaymentsTransfersFlowReducerFactoryComposer(
             model: model,
-            makeUtilityPrepaymentViewModel: { payload in
-                
-                preViewModelComposer.compose(payload: .init(
-                    lastPayments: payload.lastPayments,
-                    operators: payload.operators
-                ))
-            },
-            utilityMicroServices: payMicroComposer.compose()
+            observeLast: observeLast,
+            microServices: prepayMicroComposer.compose()
         )
-        let ptFlowManager = ptFlowComposer.compose(
+        let ptFlowComposer = PaymentsTransfersFlowComposer(
+            factory: ptFlowReducerFactoryComposer.compose()
+        )
+        let manager = ptFlowComposer.compose(
             flag: utilitiesPaymentsFlag.optionOrStub
         )
         
-        return ptFlowManager
+        return manager
     }
     
     typealias LatestPayment = UtilityPaymentLastPayment
