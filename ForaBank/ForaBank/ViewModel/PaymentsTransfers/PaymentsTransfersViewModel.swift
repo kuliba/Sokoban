@@ -162,8 +162,6 @@ extension PaymentsTransfersViewModel {
     
     func reset() {
         
-        event(.dismissDestination)
-        event(.dismissModal)
         fullCover = nil
         route = .empty
     }
