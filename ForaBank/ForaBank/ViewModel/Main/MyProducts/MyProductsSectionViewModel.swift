@@ -45,6 +45,14 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         }
     }
     
+    var itemsId: [ProductData.ID] {
+        
+        items.map {
+            let id = $0.itemVM?.parentID == -1 ? $0.id : $0.itemVM?.parentID
+            return id ?? $0.id
+        }.uniqued()
+    }
+    
     init(
         id: String,
         title: String,
@@ -100,8 +108,12 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
                 
                 switch action {
                 case let payload as MyProductsSectionViewModelAction.Events.ItemMoved:
+                    if payload.sectionId == id {
+                        self.items = Self.reduce(items: self.items, move: payload.move)
+                    } else {
+                        // TODO: add reduce for additional
 
-                    self.items = Self.reduce(items: self.items, move: payload.move)
+                    }
                     
                 default: break
                 }
@@ -170,9 +182,6 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
                                         }
                                     }
                                 }
-
-                            case _ as MyProductsSectionItemAction.ItemTapped:
-                                self.action.send(MyProductsSectionViewModelAction.Events.ItemTapped(productId: item.id))
                                 
                             default: break
                             }
@@ -255,6 +264,10 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         }
     }
     
+    func openProfile(productID: ProductData.ID) {
+        
+        self.action.send(MyProductsSectionViewModelAction.Events.ItemTapped(productId: productID))
+    }
 }
 
 enum MyProductsSectionViewModelAction {

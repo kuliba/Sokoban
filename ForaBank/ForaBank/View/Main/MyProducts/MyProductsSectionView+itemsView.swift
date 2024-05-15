@@ -1,5 +1,5 @@
 //
-//  MyProductsSectionView+itemView.swift
+//  MyProductsSectionView+itemsView.swift
 //  ForaBank
 //
 //  Created by Andryusina Nataly on 13.05.2024.
@@ -12,30 +12,16 @@ extension MyProductsSectionView {
     func itemsList(
         _ items: [MyProductsSectionViewModel.ItemViewModel]
     ) -> some View {
-
+        
         List {
             ForEach(items) { item in
-                
                 switch item {
                 case let .item(itemVM):
-                    if !viewModel.groupingCards.isEmpty {
-                        let products: [ProductData] = viewModel.groupingCards[itemVM.id] ?? []
-                        if products.isEmpty || products.count == 1 {
-                            itemView(itemVM)
-                        } else {
-                            _itemsList(products.map {
-                                .init(productData: $0, model: viewModel.model)
-                            })
-                            .listRowInsets(EdgeInsets())
-                        }
-                    } else {
-                        itemView(itemVM)
-                    }
+                    itemView(itemVM)
                 case .placeholder:
-                    MyProductsSectionItemView.PlaceholderItemView(editMode: $editMode)
-                        .modifier(PlaceholderItemModifier())
-                } //switch
-            } //for
+                    placeholderView()
+                }
+            }
             .onMove { indexes, destination in
                 guard let first = indexes.first else { return }
                 
@@ -43,7 +29,42 @@ extension MyProductsSectionView {
                     .Events.ItemMoved(sectionId: viewModel.id, move: (first, destination)))
             }
             .moveDisabled(editMode != .active)
-        } //List
+        }
+        .frame(height: viewModel.isCollapsed ? 0 : 72 * CGFloat(viewModel.items.count) + 0)
+        .listStyle(.plain)
+        .environment(\.editMode, $editMode)
+        .opacity(viewModel.isCollapsed ? 0 : 1)
+        .id(viewModel.idList)
+    }
+    
+    func itemsList(
+        _ items: [ProductData.ID]
+    ) -> some View {
+        
+        List {
+            ForEach(items, id: \.self) { id in
+                
+                let products: [ProductData] = viewModel.groupingCards[id] ?? []
+                if products.count == 1, let productData = products.first {
+                    itemView(MyProductsSectionItemViewModel.init(productData: productData, model: viewModel.model))
+                    
+                } else {
+                    _itemsList(products.compactMap {
+                        if $0.id != id {
+                            return .init(productData: $0, model: viewModel.model)
+                        } else { return nil}
+                    }, id)
+                    .listRowInsets(EdgeInsets())
+                }
+            }
+            .onMove { indexes, destination in
+                guard let first = indexes.first else { return }
+                
+                viewModel.action.send(MyProductsSectionViewModelAction
+                    .Events.ItemMoved(sectionId: viewModel.id, move: (first, destination)))
+            }
+            .moveDisabled(editMode != .active)
+        }
         .frame(height: viewModel.isCollapsed ? 0 : 72 * CGFloat(viewModel.items.count) + 0)
         .listStyle(.plain)
         .environment(\.editMode, $editMode)
@@ -52,33 +73,45 @@ extension MyProductsSectionView {
     }
     
     func _itemsList(
-        _ items: [MyProductsSectionItemViewModel]
-    ) -> some View {
-
-        List {
-            ForEach(items, id: \.id) { item in
-                    itemView(item)
-            } //for
-            .onMove { indexes, destination in
-                guard let first = indexes.first else { return }
-                
-                viewModel.action.send(MyProductsSectionViewModelAction
-                    .Events.ItemMoved(sectionId: viewModel.id, move: (first, destination)))
-            }
-            .moveDisabled(editMode != .active)
-        } //List
-        .frame(height: 72 * CGFloat(items.count))
-        .listStyle(.plain)
-        .environment(\.editMode, $editMode)
-        .id(viewModel.idList)
-    }
-    
-    private func itemView(
-        _ viewModel: MyProductsSectionItemViewModel
+        _ items: [MyProductsSectionItemViewModel],
+        _ mainProductID: ProductData.ID
     ) -> some View {
         
-        return MyProductsSectionItemView(viewModel: viewModel, editMode: $editMode)
-            .modifier(ItemModifier(viewModel: viewModel, editMode: editMode))
+        VStack(spacing: 0) {
+            
+            mainCardView(mainProductID)
+            List {
+                ForEach(items, id: \.id) { item in
+                    itemView(item)
+                        .listRowInsets(EdgeInsets())
+                }
+                .onMove { indexes, destination in
+                    guard let first = indexes.first else { return }
+                    
+                    viewModel.action.send(MyProductsSectionViewModelAction
+                        .Events.ItemMoved(sectionId: "\(mainProductID)", move: (first, destination)))
+                }
+                .moveDisabled(editMode != .active)
+            }
+            .frame(height: 72 * CGFloat(items.count))
+            .listStyle(.plain)
+            .environment(\.editMode, $editMode)
+            .id(mainProductID)
+        }
+    }
+    
+    func itemView(
+        _ itemModel: MyProductsSectionItemViewModel
+    ) -> some View {
+        
+        return MyProductsSectionItemView(viewModel: itemModel, editMode: $editMode, openProfile: { viewModel.openProfile(productID: itemModel.id)})
+            .modifier(ItemModifier(viewModel: itemModel, editMode: editMode))
+    }
+    
+    private func placeholderView() -> some View {
+        
+        return MyProductsSectionItemView.PlaceholderItemView(editMode: $editMode)
+            .modifier(PlaceholderItemModifier())
     }
 }
 
@@ -110,7 +143,6 @@ private extension MyProductsSectionView {
                             
                             EmptyView()
                         }
-                        
                     } //swipe
                     .frame(height: 72, alignment: .leading)
                     .listRowBackground(Color.barsBars)

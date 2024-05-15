@@ -17,17 +17,21 @@ struct MyProductsSectionView: View {
         
         VStack(spacing: 0) {
             
-            title()
-            itemsList(viewModel.items)
+            header()
+            if viewModel.groupingCards.isEmpty {
+                itemsList(viewModel.items)
+            } else {
+                itemsList(viewModel.itemsId)
+            }
         }
         .background(Color.barsBars)
         .cornerRadius(12)
         .padding(.horizontal, 16)
     }
     
-    private func title() -> some View {
+    private func header() -> some View {
+        
         return HStack(alignment: .center) {
-            
             Text(viewModel.title)
                 .font(.textH3Sb18240())
                 .foregroundColor(.textSecondary)
