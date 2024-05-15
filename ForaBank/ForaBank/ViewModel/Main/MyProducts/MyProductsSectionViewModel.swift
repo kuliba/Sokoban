@@ -45,19 +45,14 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         }
     }
     
-    var itemsId: [ProductData.ID] {
-        
-        items.map {
-            let id = $0.itemVM?.parentID == -1 ? $0.id : $0.itemVM?.parentID
-            return id ?? $0.id
-        }.uniqued()
-    }
+    var itemsId: [ProductData.ID] = []
     
     init(
         id: String,
         title: String,
         items: [ItemViewModel],
         groupingCards: Array.Products = [:],
+        itemsId: [ProductData.ID] = [],
         isCollapsed: Bool,
         model: Model
     ) {
@@ -66,6 +61,7 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         self.title = title
         self.isCollapsed = isCollapsed
         self.items = items
+        self.itemsId = itemsId
         self.model = model
         self.groupingCards = groupingCards
     }
@@ -78,10 +74,19 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
     ) {
      
         var itemsVM: [ItemViewModel] = []
-        var groupingCards : Array.Products = [:]
+        var groupingCards: Array.Products = [:]
+        var itemsID: [ProductData.ID] = []
         if let products = products {
             itemsVM = products.map { .item(.init(productData: $0, model: model)) }
-            if productType == .card { groupingCards = products.groupingCards() }
+            if productType == .card {
+                groupingCards = products.groupingCards()
+                itemsID = {
+                    return products.map {
+                        let id = $0.asCard?.parentID == -1 ? $0.id : $0.asCard?.parentID
+                        return id ?? $0.id
+                    }.uniqued()
+                }()
+            }
         }
         
         if model.productsOpening.value.contains(productType) {
@@ -94,6 +99,7 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
                   title: productType.pluralName,
                   items: itemsVM,
                   groupingCards: groupingCards,
+                  itemsId: itemsID,
                   isCollapsed: settings.collapsed[productType.rawValue] ?? false,
                   model: model)
         
@@ -108,13 +114,20 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
                 
                 switch action {
                 case let payload as MyProductsSectionViewModelAction.Events.ItemMoved:
-                    if payload.sectionId == id {
+                    
+                    if self.itemsId.isEmpty {
                         self.items = Self.reduce(items: self.items, move: payload.move)
                     } else {
-                        // TODO: add reduce for additional
-
+                        if payload.sectionId == id {
+                            self.itemsId = Self.reduce(items: self.itemsId, move: payload.move)
+                        } else {
+                            let productId: ProductData.ID = Int(payload.sectionId) ?? -1
+                            if var productsById = self.groupingCards[productId] {
+                                productsById = Self.reduce(items: productsById, move: payload.move)
+                                self.groupingCards[productId] = productsById
+                            }
+                        }
                     }
-                    
                 default: break
                 }
        
@@ -192,7 +205,10 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         
     }
     
-    static func reduce(items: [ItemViewModel], move: (from: IndexSet.Element, to: Int)) -> [ItemViewModel] {
+    static func reduce<T>(
+        items: [T],
+        move: (from: IndexSet.Element, to: Int)
+    ) -> [T] {
         
         var updatedItems = items
         let removed = updatedItems.remove(at: move.from)
@@ -205,7 +221,6 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         }
         
         return updatedItems
-        
     }
     
     static func reduce(items: [ItemViewModel],
