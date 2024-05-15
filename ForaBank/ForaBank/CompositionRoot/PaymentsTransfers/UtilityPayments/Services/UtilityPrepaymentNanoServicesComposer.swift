@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
+import Foundation
 import OperatorsListComponents
 
 final class UtilityPrepaymentNanoServicesComposer {
@@ -45,8 +46,12 @@ private extension UtilityPrepaymentNanoServicesComposer {
         payload: Payload,
         completion: @escaping ([Operator]) -> Void
     ) {
-#warning("add flag and switch between live and stub")
-        
-        model.loadOperators(payload, completion)
+        switch flag {
+        case .live:
+            model.loadOperators(payload, completion)
+            
+        case .stub:
+            DispatchQueue.main.delay(for: .seconds(1)) { completion([]) }
+        }
     }
 }

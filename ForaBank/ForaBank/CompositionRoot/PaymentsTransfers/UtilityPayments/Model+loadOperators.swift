@@ -41,9 +41,11 @@ extension Array where Element == CachingSberOperator {
     ) -> [UtilityPaymentOperator] {
         
         // sorting is performed at cache phase
-        self.search(searchText: payload.searchText)
+        let operators = search(searchText: payload.searchText)
             .page(startingAt: payload.operatorID, pageSize: payload.pageSize)
             .map(UtilityPaymentOperator.init(with:))
+        
+        return operators
     }
 }
 

@@ -29,9 +29,9 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     func compose() -> Factory {
         
         return .init(
-            makeUtilityPrepaymentViewModel: { [makeUtilityPrepaymentViewModel] in
+            makeUtilityPrepaymentViewModel: { [self] in
                 
-                makeUtilityPrepaymentViewModel(.init(
+                makeUtilityPrepaymentViewModel(payload: .init(
                     lastPayments: $0.lastPayments,
                     operators: $0.operators
                 ))

@@ -5,7 +5,10 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
-final class UtilityPrepaymentMicroServicesComposer {
+import UtilityServicePrepaymentDomain
+
+final class UtilityPrepaymentMicroServicesComposer<Operator>
+where Operator: Identifiable {
     
     private let pageSize: Int
     private let nanoServices: NanoServices
@@ -23,40 +26,29 @@ extension UtilityPrepaymentMicroServicesComposer {
     
     func compose() -> MicroServices {
         
-        return .init(
-            paginate: paginate(pageSize: pageSize),
-            search: search(pageSize: pageSize)
-        )
+        return .init(paginate: paginate, search: search)
     }
 }
 
 extension UtilityPrepaymentMicroServicesComposer {
     
-    typealias MicroServices = UtilityPrepaymentMicroServices<UtilityPaymentOperator>
-    typealias NanoServices = UtilityPrepaymentNanoServices<UtilityPaymentOperator>
+    typealias MicroServices = UtilityPrepaymentMicroServices<Operator>
+    typealias NanoServices = UtilityPrepaymentNanoServices<Operator>
 }
 
 private extension UtilityPrepaymentMicroServicesComposer {
     
     func paginate(
-        pageSize: Int
-    ) -> MicroServices.Paginate {
-        
-        return { [weak self] payload, completion in
-            
-            self?.nanoServices.loadOperators(.init(afterOperatorID: payload.operatorID, searchText: payload.searchText, pageSize: pageSize), completion)
-        }
+        payload: PaginatePayload<Operator.ID>,
+        completion: @escaping ([Operator]) -> Void
+    ) {
+        nanoServices.loadOperators(.init(afterOperatorID: payload.operatorID, searchText: payload.searchText, pageSize: pageSize), completion)
     }
     
     func search(
-        pageSize: Int
-    ) -> MicroServices.Search {
-        
-        return { [weak self] searchText, completion in
-            
-            self?.nanoServices.loadOperators(.init(afterOperatorID: nil, searchText: searchText, pageSize: pageSize), completion)
-        }
+        searchText: String,
+        completion: @escaping ([Operator]) -> Void
+    ) {
+        nanoServices.loadOperators(.init(afterOperatorID: nil, searchText: searchText, pageSize: pageSize), completion)
     }
-    
-    typealias LoadOperatorsCompletion = ([Operator]) -> Void
 }
