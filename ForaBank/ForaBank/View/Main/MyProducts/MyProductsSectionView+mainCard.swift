@@ -45,6 +45,7 @@ extension MyProductsSectionView {
                 .font(.textH4M16240())
                 .foregroundColor(.mainColorsBlack)
         }
+        .listRowInsets(EdgeInsets())
         .frame(maxWidth: .infinity, alignment: .leading)
         .frame(height: 72)
         .padding(.leading, 12)
