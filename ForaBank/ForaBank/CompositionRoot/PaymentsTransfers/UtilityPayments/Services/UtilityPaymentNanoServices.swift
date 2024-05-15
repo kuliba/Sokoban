@@ -21,12 +21,11 @@ where Operator: Identifiable {
 }
 
 extension UtilityPaymentNanoServices {
-    
-    typealias PageSize = Int
+
     typealias GetOperatorsListByParamCompletion = ([Operator]) -> Void
     /// `b`
     /// Получаем список ЮЛ НКОРР по типу ЖКХ из локального справочника dict/getOperatorsListByParam?operatorOnly=true&type=housingAndCommunalService (b)
-    typealias GetOperatorsListByParam = (PageSize, @escaping GetOperatorsListByParamCompletion) -> Void
+    typealias GetOperatorsListByParam = (@escaping GetOperatorsListByParamCompletion) -> Void
     
     typealias GetAllLatestPaymentsCompletion = ([LastPayment]) -> Void
     /// `c`

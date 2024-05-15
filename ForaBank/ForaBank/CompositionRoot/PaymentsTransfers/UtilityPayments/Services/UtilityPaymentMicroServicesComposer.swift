@@ -11,14 +11,11 @@ import UtilityServicePrepaymentDomain
 final class UtilityPaymentMicroServicesComposer<LastPayment, Operator>
 where Operator: Identifiable {
     
-    private let pageSize: Int
     private let nanoServices: NanoServices
     
     init(
-        pageSize: Int,
         nanoServices: NanoServices
     ) {
-        self.pageSize = pageSize
         self.nanoServices = nanoServices
     }
 }
@@ -44,7 +41,7 @@ private extension UtilityPaymentMicroServicesComposer {
     func initiateUtilityPayment(
         completion: @escaping InitiateUtilityPaymentCompletion
     ) {
-        nanoServices.getOperatorsListByParam(pageSize) { [weak self] in
+        nanoServices.getOperatorsListByParam { [weak self] in
             
             self?.getAllLatestPayments($0, completion)
         }

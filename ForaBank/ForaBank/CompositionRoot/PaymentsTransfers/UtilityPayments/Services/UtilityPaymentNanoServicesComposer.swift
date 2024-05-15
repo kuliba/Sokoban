@@ -11,15 +11,18 @@ final class UtilityPaymentNanoServicesComposer {
     
     private let httpClient: HTTPClient
     private let model: Model
+    private let pageSize: Int
     private let flag: Flag
     
     init(
         httpClient: HTTPClient,
         model: Model,
+        pageSize: Int,
         flag: Flag
     ) {
         self.httpClient = httpClient
         self.model = model
+        self.pageSize = pageSize
         self.flag = flag
     }
 }
@@ -50,7 +53,6 @@ private extension UtilityPaymentNanoServicesComposer {
     /// `b`
     /// Получаем список ЮЛ НКОРР по типу ЖКХ из локального справочника dict/getOperatorsListByParam?operatorOnly=true&type=housingAndCommunalService (b)
     func getOperatorsListByParam(
-        pageSize: Int,
         _ completion: @escaping ([Operator]) -> Void
     ) {
         switch flag {

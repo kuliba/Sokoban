@@ -60,10 +60,10 @@ private extension PaymentsTransfersFlowComposer {
         let nanoComposer = UtilityPaymentNanoServicesComposer(
             httpClient: httpClient,
             model: model,
+            pageSize: pageSize,
             flag: flag
         )
         let microComposer = UtilityPaymentMicroServicesComposer(
-            pageSize: pageSize,
             nanoServices: nanoComposer.compose()
         )
         let composer = UtilityPaymentsFlowComposer(
