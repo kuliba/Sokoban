@@ -5,8 +5,6 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
-import OperatorsListComponents
-
 struct UtilityPrepaymentNanoServices<Operator>
 where Operator: Identifiable {
     
@@ -16,9 +14,23 @@ where Operator: Identifiable {
 
 extension UtilityPrepaymentNanoServices {
     
+    struct LoadOperatorsPayload: Equatable {
+        
+        let operatorID: Operator.ID?
+        let searchText: String
+        let pageSize: Int
+        
+        init(
+            afterOperatorID operatorID: Operator.ID?,
+            searchText: String,
+            pageSize: Int
+        ) {
+            self.operatorID = operatorID
+            self.searchText = searchText
+            self.pageSize = pageSize
+        }
+    }
     
-    typealias _LoadOperatorsPayload = LoadOperatorsPayload<Operator.ID>
     typealias LoadOperatorsCompletion = ([Operator]) -> Void
-    typealias LoadOperators = (_LoadOperatorsPayload, @escaping LoadOperatorsCompletion) -> Void
-
+    typealias LoadOperators = (LoadOperatorsPayload, @escaping LoadOperatorsCompletion) -> Void
 }

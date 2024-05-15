@@ -15,6 +15,7 @@ final class PaymentsTransfersFlowComposer {
     
     private let httpClient: HTTPClient
     private let model: Model
+    private let loaderComposer: LoaderComposer
     private let pageSize: Int
     private let observeLast: Int
     private let flag: StubbedFeatureFlag.Option
@@ -22,12 +23,14 @@ final class PaymentsTransfersFlowComposer {
     init(
         httpClient: HTTPClient,
         model: Model,
+        loaderComposer: LoaderComposer,
         pageSize: Int,
         observeLast: Int,
         flag: StubbedFeatureFlag.Option
     ) {
         self.httpClient = httpClient
         self.model = model
+        self.loaderComposer = loaderComposer
         self.pageSize = pageSize
         self.observeLast = observeLast
         self.flag = flag
@@ -44,6 +47,8 @@ extension PaymentsTransfersFlowComposer {
         )
     }
     
+    typealias LoaderComposer = UtilityPaymentOperatorLoaderComposer
+    
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     
@@ -59,8 +64,7 @@ private extension PaymentsTransfersFlowComposer {
         
         let nanoComposer = UtilityPaymentNanoServicesComposer(
             httpClient: httpClient,
-            model: model,
-            pageSize: pageSize,
+            loadOperators: { self.loaderComposer.compose()(.init(), $0) },
             flag: flag
         )
         let microComposer = UtilityPaymentMicroServicesComposer(
@@ -81,9 +85,7 @@ private extension PaymentsTransfersFlowComposer {
     
     func makeReduce() -> FlowManager.MakeReduce {
         
-        let composer = makePaymentsTransfersFlowReducerFactoryComposer()
-        let factory = composer.compose()
-        
+        let factory = makeReducerFactoryComposer().compose()
         let makeReducer = {
             
             Reducer(factory: factory, closeAction: $0, notify: $1)
@@ -92,18 +94,17 @@ private extension PaymentsTransfersFlowComposer {
         return { makeReducer($0, $1).reduce(_:_:) }
     }
     
-    typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
+    private typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
     
-    func makePaymentsTransfersFlowReducerFactoryComposer(
+    private func makeReducerFactoryComposer(
     ) -> PaymentsTransfersFlowReducerFactoryComposer {
         
-        let nanoComposer = UtilityPrepaymentNanoServicesComposer(
-            model: model,
-            flag: flag
+        let nanoServices = UtilityPrepaymentNanoServices(
+            loadOperators: loadOperators
         )
         let microComposer = UtilityPrepaymentMicroServicesComposer(
             pageSize: pageSize,
-            nanoServices: nanoComposer.compose()
+            nanoServices: nanoServices
         )
         
         return .init(
@@ -112,4 +113,13 @@ private extension PaymentsTransfersFlowComposer {
             microServices: microComposer.compose()
         )
     }
+    
+    private func loadOperators(
+        payload: LoadOperatorsPayload,
+        completion: @escaping ([Operator]) -> Void
+    ) {
+        loaderComposer.compose()(.init(operatorID: payload.operatorID, searchText: payload.searchText), completion)
+    }
+    
+    private typealias LoadOperatorsPayload = UtilityPrepaymentNanoServices<Operator>.LoadOperatorsPayload
 }

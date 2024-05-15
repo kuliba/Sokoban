@@ -10,19 +10,16 @@ import Foundation
 final class UtilityPaymentNanoServicesComposer {
     
     private let httpClient: HTTPClient
-    private let model: Model
-    private let pageSize: Int
+    private let loadOperators: LoadOperators
     private let flag: Flag
     
     init(
         httpClient: HTTPClient,
-        model: Model,
-        pageSize: Int,
+        loadOperators: @escaping LoadOperators,
         flag: Flag
     ) {
         self.httpClient = httpClient
-        self.model = model
-        self.pageSize = pageSize
+        self.loadOperators = loadOperators
         self.flag = flag
     }
 }
@@ -40,6 +37,9 @@ extension UtilityPaymentNanoServicesComposer {
 
 extension UtilityPaymentNanoServicesComposer {
     
+    typealias LoadOperatorsCompletion = ([Operator]) -> Void
+    typealias LoadOperators = (@escaping LoadOperatorsCompletion) -> Void
+    
     typealias Flag = StubbedFeatureFlag.Option
     
     typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator>
@@ -55,13 +55,7 @@ private extension UtilityPaymentNanoServicesComposer {
     func getOperatorsListByParam(
         _ completion: @escaping ([Operator]) -> Void
     ) {
-        switch flag {
-        case .live:
-            model.loadOperators(.init(pageSize: pageSize), completion)
-            
-        case .stub:
-            DispatchQueue.main.delay(for: .seconds(1)) { completion(.stub) }
-        }
+        loadOperators(completion)
     }
     
     /// `c`
@@ -120,29 +114,6 @@ private extension UtilityPaymentLastPayment {
     
     static let failure: Self = .init(id: "failure", title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
     static let preview: Self = .init(id: UUID().uuidString, title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
-}
-
-private extension Array where Element == UtilityPaymentOperator {
-    
-    static let stub: Self = [
-        .single,
-        .singleFailure,
-        .multiple,
-        .multipleFailure,
-    ]
-}
-
-private extension UtilityPaymentOperator {
-    
-    static let multiple: Self = .init("multiple", "Multiple")
-    static let multipleFailure: Self = .init("multipleFailure", "MultipleFailure")
-    static let single: Self = .init("single", "Single")
-    static let singleFailure: Self = .init("singleFailure", "SingleFailure")
-    
-    private init(_ id: String, _ title: String) {
-        
-        self.init(id: id, title: title, subtitle: nil, icon: "abc")
-    }
 }
 
 #warning("Fix")
