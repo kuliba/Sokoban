@@ -5,14 +5,22 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
+import Foundation
+
 final class UtilityPaymentNanoServicesComposer {
     
-    private let model: Model
+    private let flag: Flag
+    private let httpClient: HTTPClient
+    private let loadOperators: LoadOperators
     
     init(
-        model: Model
+        flag: Flag,
+        httpClient: HTTPClient,
+        loadOperators: @escaping LoadOperators
     ) {
-        self.model = model
+        self.flag = flag
+        self.httpClient = httpClient
+        self.loadOperators = loadOperators
     }
 }
 
@@ -22,13 +30,20 @@ extension UtilityPaymentNanoServicesComposer {
         
         return .init(
             getOperatorsListByParam: getOperatorsListByParam,
-            getAllLatestPayments: getAllLatestPayments)
+            getAllLatestPayments: getAllLatestPayments
+        )
     }
 }
 
 extension UtilityPaymentNanoServicesComposer {
     
+    typealias LoadOperatorsCompletion = ([Operator]) -> Void
+    typealias LoadOperators = (@escaping LoadOperatorsCompletion) -> Void
+    
+    typealias Flag = StubbedFeatureFlag.Option
+    
     typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator>
+    
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
 }
@@ -38,10 +53,9 @@ private extension UtilityPaymentNanoServicesComposer {
     /// `b`
     /// Получаем список ЮЛ НКОРР по типу ЖКХ из локального справочника dict/getOperatorsListByParam?operatorOnly=true&type=housingAndCommunalService (b)
     func getOperatorsListByParam(
-        pageSize: Int,
         _ completion: @escaping ([Operator]) -> Void
     ) {
-        model.loadOperators(.init(pageSize: pageSize), completion)
+        loadOperators(completion)
     }
     
     /// `c`
@@ -50,7 +64,70 @@ private extension UtilityPaymentNanoServicesComposer {
     func getAllLatestPayments(
         _ completion: @escaping ([LastPayment]) -> Void
     ) {
-        #warning("FIXME")
-        fatalError("unimplemented")
+        switch flag {
+        case .live:
+#warning("add logging // NanoServices.adaptedLoggingFetch")
+            let service = Services.getAllLatestPayments(httpClient: httpClient)
+            service.process(.service) { [service] result in
+                
+                completion((try? result.get().map(LastPayment.init(with:))) ?? [])
+                _ = service
+            }
+            
+        case .stub:
+            DispatchQueue.main.delay(for: .seconds(1)) { completion(.stub) }
+        }
     }
 }
+
+private extension UtilityPaymentLastPayment {
+    
+    init(with lastPayment: ResponseMapper.LatestPayment) {
+        
+        self.init(
+            id: lastPayment.id,
+            title: lastPayment.title,
+            subtitle: "\(lastPayment.amount)",
+            icon: lastPayment.md5Hash ?? ""
+        )
+    }
+}
+
+// MARK: - Stubs
+
+private extension Array where Element == UtilityPaymentLastPayment {
+    
+    static let stub: Self = [
+        .failure,
+        .preview,
+    ]
+}
+
+private extension UtilityPaymentLastPayment {
+    
+    static let failure: Self = .init(id: "failure", title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
+    static let preview: Self = .init(id: UUID().uuidString, title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
+}
+
+#warning("Fix")
+import GenericRemoteService
+//
+//extension NanoServices {
+//
+//    static func all(
+//        httpClient: HTTPClient
+//    ) -> GetAllPayments {
+//
+//
+//        adaptedLoggingFetch(
+//            createRequest: RequestFactory.getAllLatestPaymentRequest,
+//            httpClient: httpClient,
+//            mapResponse: ResponseMapper.mapGetAllLatestPaymentsResponse,
+//            mapError: <#T##(RemoteServiceError<any Error, any Error, Error>) -> Error#>,
+//            log: <#T##(String, StaticString, UInt) -> Void#>
+//        )
+//    }
+//
+//    typealias GetAllPaymentsCompletion = ([UtilityPaymentLastPayment]) -> Void
+//    typealias GetAllPayments = (@escaping GetAllPaymentsCompletion) -> Void
+//}

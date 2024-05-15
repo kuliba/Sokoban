@@ -7,7 +7,6 @@
 
 import UtilityServicePrepaymentDomain
 
-#warning("TODO: throttle, debounce, remove duplicates")
 public final class PrepaymentPickerEffectHandler<Operator>
 where Operator: Identifiable {
     
@@ -48,7 +47,7 @@ public extension PrepaymentPickerEffectHandler {
     
     typealias SearchResult = [Operator]
     typealias SearchCompletion = (SearchResult) -> Void
-    typealias Search = (SearchPayload, @escaping SearchCompletion) -> Void
+    typealias Search = (String, @escaping SearchCompletion) -> Void
     
     typealias Dispatch = (Event) -> Void
     
@@ -62,15 +61,13 @@ private extension PrepaymentPickerEffectHandler {
         _ payload: _PaginatePayload,
         _ dispatch: @escaping Dispatch
     ) {
-#warning("add remove duplicates and throttling")
         paginate(payload) { dispatch(.page($0)) }
     }
     
     func search(
-        _ payload: SearchPayload,
+        _ payload: String,
         _ dispatch: @escaping Dispatch
     ) {
-#warning("add remove duplicates and debouncing")
         search(payload) { dispatch(.load($0)) }
     }
 }

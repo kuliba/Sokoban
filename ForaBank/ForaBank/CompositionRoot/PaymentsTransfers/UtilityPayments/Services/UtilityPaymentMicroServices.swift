@@ -5,14 +5,17 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
-struct UtilityPaymentMicroServices<LastPayment, Operator> {
+import UtilityServicePrepaymentCore
+
+struct UtilityPaymentMicroServices<LastPayment, Operator>
+where Operator: Identifiable {
     
     let initiateUtilityPayment: InitiateUtilityPayment
 }
 
 extension UtilityPaymentMicroServices {
     
-    typealias InitiateUtilityPaymentResponse = (lastPayments: [LastPayment], operators: [Operator])
-    typealias InitiateUtilityPaymentCompletion = (InitiateUtilityPaymentResponse) -> Void
-    typealias InitiateUtilityPayment = (@escaping InitiateUtilityPaymentCompletion) -> Void
+    typealias InitiateUtilityPayment = PrepaymentFlowEffectHandler.InitiateUtilityPayment
+    
+    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
 }

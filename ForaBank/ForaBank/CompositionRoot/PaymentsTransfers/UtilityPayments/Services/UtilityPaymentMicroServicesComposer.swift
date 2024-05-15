@@ -5,7 +5,11 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
-final class UtilityPaymentMicroServicesComposer<LastPayment, Operator> {
+import OperatorsListComponents
+import UtilityServicePrepaymentDomain
+
+final class UtilityPaymentMicroServicesComposer<LastPayment, Operator>
+where Operator: Identifiable {
     
     private let nanoServices: NanoServices
     
@@ -37,9 +41,25 @@ private extension UtilityPaymentMicroServicesComposer {
     func initiateUtilityPayment(
         completion: @escaping InitiateUtilityPaymentCompletion
     ) {
-        #warning("FIXME")
-        fatalError("unimplemented")
+        nanoServices.getOperatorsListByParam { [weak self] in
+            
+            self?.getAllLatestPayments($0, completion)
+        }
     }
     
-    typealias InitiateUtilityPaymentCompletion = MicroServices.InitiateUtilityPaymentCompletion
+    private func getAllLatestPayments(
+        _ operators: [Operator],
+        _ completion: @escaping InitiateUtilityPaymentCompletion
+    ) {
+        nanoServices.getAllLatestPayments { [weak self] in
+            
+            guard self != nil else { return }
+            
+            completion(.init(lastPayments: $0, operators: operators, searchText: ""))
+        }
+    }
+    
+    typealias InitiateUtilityPaymentCompletion = PrepaymentFlowEffectHandler.InitiateUtilityPaymentCompletion
+    
+    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
 }

@@ -35,21 +35,26 @@ extension ResponseMapper {
         _ data: [LatestPaymentCodable]
     ) -> [LatestPayment] {
         
-        data.map { .init(
-            title: $0.name,
-            amount: .init($0.amount)
-        )}
+        data.map {
+            
+            return .init(
+                title: $0.name,
+                amount: .init($0.amount),
+                md5Hash: $0.md5hash
+            )
+        }
     }
 }
 
 //TODO: move to module
 extension ResponseMapper {
- 
+    
     struct LatestPayment: Identifiable {
         
         var id: String { title }
         let title: String
         let amount: Decimal
+        let md5Hash: String?
     }
 }
 
@@ -65,7 +70,7 @@ enum LatestPaymentKind: String, Decodable {
 }
 
 extension LatestPaymentKind {
-
+    
     func parameterService() -> (String, String) {
         
         switch self {
@@ -99,13 +104,12 @@ private extension ResponseMapper {
         let amount: Double
         let puref: String
         let lastPaymentName: String?
-        let md5hash: String
+        let md5hash: String?
         let date: Int
         
         enum CodingKeys: String, CodingKey {
             case date, paymentDate, type, additionalList, amount, puref, md5hash, name
             case lastPaymentName = "lpName"
-
         }
         
         struct AdditionalListData: Decodable, Equatable {

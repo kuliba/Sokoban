@@ -13,77 +13,41 @@ import UtilityServicePrepaymentDomain
 
 final class PaymentsTransfersFlowComposer {
     
+    private let flag: StubbedFeatureFlag.Option
     private let httpClient: HTTPClient
     private let model: Model
-    private let log: Log
+    private let loaderComposer: LoaderComposer
+    private let pageSize: Int
+    private let observeLast: Int
     
     init(
+        flag: StubbedFeatureFlag.Option,
         httpClient: HTTPClient,
         model: Model,
-        log: @escaping (String, StaticString, UInt) -> Void
+        loaderComposer: LoaderComposer,
+        pageSize: Int,
+        observeLast: Int
     ) {
+        self.flag = flag
         self.httpClient = httpClient
         self.model = model
-        self.log = log
+        self.loaderComposer = loaderComposer
+        self.pageSize = pageSize
+        self.observeLast = observeLast
     }
 }
 
 extension PaymentsTransfersFlowComposer {
     
-    typealias Log = (String, StaticString, UInt) -> Void
-}
-
-extension PaymentsTransfersFlowComposer {
-    
-    func makeFlowManager(
-        flag: StubbedFeatureFlag.Option
-    ) -> PaymentsTransfersManager {
-        
-        let utilityPrepaymentViewModelComposer = UtilityPrepaymentViewModelComposer(
-            log: log,
-            paginate: { [loadOperators = model.loadOperators] payload, completion in
-                
-                loadOperators(payload.loadPayload, completion)
-            },
-            search: { [loadOperators = model.loadOperators] payload, completion in
-                
-                loadOperators(payload.loadPayload, completion)
-            }
-        )
-        
-        typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
-        typealias ReducerFactory = Reducer.Factory
-        
-        let factory = ReducerFactory(
-            makeUtilityPrepaymentViewModel: utilityPrepaymentViewModelComposer.makeViewModel,
-            makeUtilityPaymentViewModel: { _, notify in
-                
-                return .init(notify: notify)
-            },
-            makePaymentsViewModel: { [model = self.model] in
-                
-                return .init(model, service: .requisites, closeAction: $0)
-            }
-        )
-        
-        let utilityPaymentsComposer = UtilityPaymentsFlowComposer(flag: flag)
-        
-        let utilityFlowEffectHandler = utilityPaymentsComposer.makeEffectHandler()
-        
-        let effectHandler = PaymentsTransfersFlowEffectHandler(
-            utilityEffectHandle: utilityFlowEffectHandler.handleEffect(_:_:)
-        )
-        
-        let makeReducer = {
-            
-            Reducer(factory: factory, closeAction: $0, notify: $1)
-        }
+    func compose() -> FlowManager {
         
         return .init(
-            handleEffect: effectHandler.handleEffect(_:_:),
-            makeReduce: { makeReducer($0, $1).reduce(_:_:) }
+            handleEffect: makeEffectHandler().handleEffect(_:_:),
+            makeReduce: makeReduce()
         )
     }
+    
+    typealias LoaderComposer = UtilityPaymentOperatorLoaderComposer
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
@@ -91,33 +55,71 @@ extension PaymentsTransfersFlowComposer {
     typealias Content = UtilityPrepaymentViewModel
     typealias PaymentViewModel = ObservingPaymentFlowMockViewModel
     
-    typealias PaymentsTransfersManager = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
+    typealias FlowManager = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
 }
 
-// MARK: - Adapters
-
-#warning("change `loadOperators` parameters and remove adapter")
-extension PaginatePayload<String> {
+private extension PaymentsTransfersFlowComposer {
     
-    var loadPayload: LoadOperatorsPayload<String> {
+    func makeEffectHandler() -> EffectHandler {
         
-        .init(
-            afterOperatorID: operatorID,
-            searchText: searchText,
-            pageSize: pageSize
+        let nanoComposer = UtilityPaymentNanoServicesComposer(
+            flag: flag,
+            httpClient: httpClient,
+            loadOperators: { self.loaderComposer.compose()(.init(), $0) }
+        )
+        let microComposer = UtilityPaymentMicroServicesComposer(
+            nanoServices: nanoComposer.compose()
+        )
+        let composer = UtilityPaymentsFlowComposer(
+            flag: flag,
+            microServices: microComposer.compose()
+        )
+        let utilityEffectHandler = composer.makeEffectHandler()
+        
+        return .init(
+            utilityEffectHandle: utilityEffectHandler.handleEffect(_:_:)
         )
     }
-}
-
-#warning("change `loadOperators` parameters and remove adapter")
-extension SearchPayload {
     
-    var loadPayload: LoadOperatorsPayload<String> {
+    typealias EffectHandler = PaymentsTransfersFlowEffectHandler<LastPayment, Operator, UtilityService>
+    
+    func makeReduce() -> FlowManager.MakeReduce {
         
-        .init(
-            afterOperatorID: nil,
-            searchText: searchText,
-            pageSize: pageSize
+        let factory = makeReducerFactoryComposer().compose()
+        let makeReducer = {
+            
+            Reducer(factory: factory, closeAction: $0, notify: $1)
+        }
+        
+        return { makeReducer($0, $1).reduce(_:_:) }
+    }
+    
+    private typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
+    
+    private func makeReducerFactoryComposer(
+    ) -> PaymentsTransfersFlowReducerFactoryComposer {
+        
+        let nanoServices = UtilityPrepaymentNanoServices(
+            loadOperators: loadOperators
+        )
+        let microComposer = UtilityPrepaymentMicroServicesComposer(
+            pageSize: pageSize,
+            nanoServices: nanoServices
+        )
+        
+        return .init(
+            model: model,
+            observeLast: observeLast,
+            microServices: microComposer.compose()
         )
     }
+    
+    private func loadOperators(
+        payload: LoadOperatorsPayload,
+        completion: @escaping ([Operator]) -> Void
+    ) {
+        loaderComposer.compose()(.init(operatorID: payload.operatorID, searchText: payload.searchText), completion)
+    }
+    
+    private typealias LoadOperatorsPayload = UtilityPrepaymentNanoServices<Operator>.LoadOperatorsPayload
 }
