@@ -58,10 +58,7 @@ private extension UtilityPaymentNanoServicesComposer {
             model.loadOperators(.init(pageSize: pageSize), completion)
             
         case .stub:
-            DispatchQueue.main.delay(for: .seconds(1)) {
-                
-                completion(.stub)
-            }
+            DispatchQueue.main.delay(for: .seconds(1)) { completion(.stub) }
         }
     }
     
@@ -71,21 +68,25 @@ private extension UtilityPaymentNanoServicesComposer {
     func getAllLatestPayments(
         _ completion: @escaping ([LastPayment]) -> Void
     ) {
-#warning("add flag and switch between live and stub")
-        
+        switch flag {
+        case .live:
 #warning("FIXME")
-        
-#warning("add logging // NanoServices.adaptedLoggingFetch")
-        let service = RemoteService(
-            createRequest: RequestFactory.getAllLatestPaymentsRequest(_:),
-            performRequest: httpClient.performRequest,
-            mapResponse: ResponseMapper.mapGetAllLatestPaymentsResponse
-        )
-        
-        service.process(.service) { [service] result in
             
-            completion((try? result.get().map(LastPayment.init(with:))) ?? [])
-            _ = service
+#warning("add logging // NanoServices.adaptedLoggingFetch")
+            let service = RemoteService(
+                createRequest: RequestFactory.getAllLatestPaymentsRequest(_:),
+                performRequest: httpClient.performRequest,
+                mapResponse: ResponseMapper.mapGetAllLatestPaymentsResponse
+            )
+            
+            service.process(.service) { [service] result in
+                
+                completion((try? result.get().map(LastPayment.init(with:))) ?? [])
+                _ = service
+            }
+            
+        case .stub:
+            DispatchQueue.main.delay(for: .seconds(1)) { completion(.stub) }
         }
     }
 }
@@ -105,6 +106,30 @@ private extension UtilityPaymentLastPayment {
 
 // MARK: - Stubs
 
+private extension Array where Element == UtilityPaymentLastPayment {
+    
+    static let stub: Self = [
+        .failure,
+        .preview,
+    ]
+}
+
+private extension UtilityPaymentLastPayment {
+    
+    static let failure: Self = .init(id: "failure", title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
+    static let preview: Self = .init(id: UUID().uuidString, title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
+}
+
+private extension Array where Element == UtilityPaymentOperator {
+    
+    static let stub: Self = [
+        .single,
+        .singleFailure,
+        .multiple,
+        .multipleFailure,
+    ]
+}
+
 private extension UtilityPaymentOperator {
     
     static let multiple: Self = .init("multiple", "Multiple")
@@ -118,26 +143,16 @@ private extension UtilityPaymentOperator {
     }
 }
 
-private extension Array where Element == UtilityPaymentOperator {
-    
-    static let stub: Self = [
-        .single,
-        .singleFailure,
-        .multiple,
-        .multipleFailure,
-    ]
-}
-
 #warning("Fix")
 import GenericRemoteService
 //
 //extension NanoServices {
-//    
+//
 //    static func all(
 //        httpClient: HTTPClient
 //    ) -> GetAllPayments {
-//        
-//        
+//
+//
 //        adaptedLoggingFetch(
 //            createRequest: RequestFactory.getAllLatestPaymentRequest,
 //            httpClient: httpClient,
@@ -146,7 +161,7 @@ import GenericRemoteService
 //            log: <#T##(String, StaticString, UInt) -> Void#>
 //        )
 //    }
-//    
+//
 //    typealias GetAllPaymentsCompletion = ([UtilityPaymentLastPayment]) -> Void
 //    typealias GetAllPayments = (@escaping GetAllPaymentsCompletion) -> Void
 //}

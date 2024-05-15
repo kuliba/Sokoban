@@ -199,17 +199,3 @@ private extension UtilityPaymentsFlowComposer {
         }
     }
 }
-
-private extension Array where Element == UtilityPaymentLastPayment {
-    
-    static let stub: Self = [
-        .failure,
-        .preview,
-    ]
-}
-
-private extension UtilityPaymentLastPayment {
-    
-    static let failure: Self = .init(id: "failure", title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
-    static let preview: Self = .init(id: UUID().uuidString, title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
-}

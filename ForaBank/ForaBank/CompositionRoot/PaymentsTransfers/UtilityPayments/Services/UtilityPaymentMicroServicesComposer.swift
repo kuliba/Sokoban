@@ -28,7 +28,7 @@ extension UtilityPaymentMicroServicesComposer {
     func compose() -> MicroServices {
         
         return .init(
-            initiateUtilityPayment: initiateUtilityPayment()
+            initiateUtilityPayment: initiateUtilityPayment
         )
     }
 }
@@ -41,19 +41,8 @@ extension UtilityPaymentMicroServicesComposer {
 
 private extension UtilityPaymentMicroServicesComposer {
     
-    func initiateUtilityPayment() -> (@escaping InitiateUtilityPaymentCompletion) -> Void {
-        
-        return { [weak self] in
-            
-            guard let self else { return }
-            
-            getOperatorsListByParam(pageSize, $0)
-        }
-    }
-    
-    private func getOperatorsListByParam(
-        _ pageSize: Int,
-        _ completion: @escaping InitiateUtilityPaymentCompletion
+    func initiateUtilityPayment(
+        completion: @escaping InitiateUtilityPaymentCompletion
     ) {
         nanoServices.getOperatorsListByParam(pageSize) { [weak self] in
             
