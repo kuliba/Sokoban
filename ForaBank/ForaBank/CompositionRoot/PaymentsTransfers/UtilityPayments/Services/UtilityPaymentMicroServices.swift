@@ -10,12 +10,24 @@ import UtilityServicePrepaymentCore
 struct UtilityPaymentMicroServices<LastPayment, Operator>
 where Operator: Identifiable {
     
+    /// `InitiateUtilityPayment` combines
+    /// - `b`: getOperatorsListByParam
+    /// - `c`: getAllLatestPayments
     let initiateUtilityPayment: InitiateUtilityPayment
+    
+    /// `StartPayment` combines
+    /// - `e` from LastPayment
+    /// - `d1`
+    /// - `d2e`
+    /// - `d3`, `d4`, `d5`
+    let startPayment: StartPayment
 }
 
 extension UtilityPaymentMicroServices {
     
     typealias InitiateUtilityPayment = PrepaymentFlowEffectHandler.InitiateUtilityPayment
+
+    typealias StartPayment = PrepaymentFlowEffectHandler.StartPayment
     
     typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
 }

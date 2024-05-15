@@ -108,26 +108,3 @@ private extension UtilityPaymentLastPayment {
     static let failure: Self = .init(id: "failure", title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
     static let preview: Self = .init(id: UUID().uuidString, title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
 }
-
-#warning("Fix")
-import GenericRemoteService
-//
-//extension NanoServices {
-//
-//    static func all(
-//        httpClient: HTTPClient
-//    ) -> GetAllPayments {
-//
-//
-//        adaptedLoggingFetch(
-//            createRequest: RequestFactory.getAllLatestPaymentRequest,
-//            httpClient: httpClient,
-//            mapResponse: ResponseMapper.mapGetAllLatestPaymentsResponse,
-//            mapError: <#T##(RemoteServiceError<any Error, any Error, Error>) -> Error#>,
-//            log: <#T##(String, StaticString, UInt) -> Void#>
-//        )
-//    }
-//
-//    typealias GetAllPaymentsCompletion = ([UtilityPaymentLastPayment]) -> Void
-//    typealias GetAllPayments = (@escaping GetAllPaymentsCompletion) -> Void
-//}
