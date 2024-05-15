@@ -63,10 +63,25 @@ private func a() {
 final class UtilityPaymentsFlowComposer {
     
     private let flag: Flag
+    private let microServices: MicroServices
     
-    init(flag: Flag) {
+    init(
+        flag: Flag,
+        microServices: MicroServices
+    ) {
         self.flag = flag
+        self.microServices = microServices
     }
+}
+
+extension UtilityPaymentsFlowComposer {
+    
+    typealias Flag = StubbedFeatureFlag.Option
+    
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator
+    
+    typealias MicroServices = UtilityPaymentMicroServices<LastPayment, Operator>
 }
 
 extension UtilityPaymentsFlowComposer {
@@ -74,8 +89,8 @@ extension UtilityPaymentsFlowComposer {
     func makeEffectHandler(
     ) -> UtilityFlowEffectHandler {
         
-        let prepaymentEffectHandler = PrepaymentEffectHandler(
-            initiateUtilityPayment: initiateUtilityPayment(),
+        let prepaymentEffectHandler = PrepaymentFlowEffectHandler(
+            initiateUtilityPayment: microServices.initiateUtilityPayment,
             startPayment: startPayment()
         )
         
@@ -87,32 +102,15 @@ extension UtilityPaymentsFlowComposer {
 
 extension UtilityPaymentsFlowComposer {
     
-    typealias Flag = StubbedFeatureFlag.Option
-    
-    typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
-    
     typealias UtilityFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
 }
 
 private extension UtilityPaymentsFlowComposer {
     
-    typealias PrepaymentEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
-    
-    func initiateUtilityPayment(
-    ) -> PrepaymentEffectHandler.InitiateUtilityPayment {
-        
-        switch flag {
-        case .live:
-            fatalError("unimplemented live")
-            
-        case .stub:
-            return stub(.init(lastPayments: .stub, operators: .stub, searchText: ""))
-        }
-    }
+    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
     
     func startPayment(
-    ) -> PrepaymentEffectHandler.StartPayment {
+    ) -> PrepaymentFlowEffectHandler.StartPayment {
         
         switch flag {
         case .live:
@@ -132,7 +130,7 @@ private extension UtilityPaymentsFlowComposer {
     
     func stub(
         _ stub: PrepaymentPayload
-    ) -> PrepaymentEffectHandler.InitiateUtilityPayment {
+    ) -> PrepaymentFlowEffectHandler.InitiateUtilityPayment {
         
         return { completion in
             
@@ -143,7 +141,7 @@ private extension UtilityPaymentsFlowComposer {
         }
     }
     
-    func stub() -> PrepaymentEffectHandler.StartPayment {
+    func stub() -> PrepaymentFlowEffectHandler.StartPayment {
         
         return { payload, completion in
             
@@ -154,8 +152,8 @@ private extension UtilityPaymentsFlowComposer {
         }
         
         func stub(
-            for payload: PrepaymentEffectHandler.StartPaymentPayload
-        ) -> PrepaymentEffectHandler.StartPaymentResult {
+            for payload: PrepaymentFlowEffectHandler.StartPaymentPayload
+        ) -> PrepaymentFlowEffectHandler.StartPaymentResult {
             
             switch payload {
             case let .lastPayment(lastPayment):
@@ -214,28 +212,4 @@ private extension UtilityPaymentLastPayment {
     
     static let failure: Self = .init(id: "failure", title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
     static let preview: Self = .init(id: UUID().uuidString, title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
-}
-
-#warning("move to the call site and make private")
-/*private*/ extension UtilityPaymentOperator {
-    
-    static let multiple: Self = .init("multiple", "Multiple")
-    static let multipleFailure: Self = .init("multipleFailure", "MultipleFailure")
-    static let single: Self = .init("single", "Single")
-    static let singleFailure: Self = .init("singleFailure", "SingleFailure")
-    
-    private init(_ id: String, _ title: String) {
-        
-        self.init(id: id, title: title, subtitle: nil, icon: "abc")
-    }
-}
-
-private extension Array where Element == UtilityPaymentOperator {
-    
-    static let stub: Self = [
-        .single,
-        .singleFailure,
-        .multiple,
-        .multipleFailure,
-    ]
 }

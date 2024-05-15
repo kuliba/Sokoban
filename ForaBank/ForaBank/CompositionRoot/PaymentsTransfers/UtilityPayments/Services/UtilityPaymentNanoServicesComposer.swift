@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
+import Foundation
+
 final class UtilityPaymentNanoServicesComposer {
     
     private let httpClient: HTTPClient
@@ -51,8 +53,16 @@ private extension UtilityPaymentNanoServicesComposer {
         pageSize: Int,
         _ completion: @escaping ([Operator]) -> Void
     ) {
-#warning("add flag and switch between live and stub")
-        model.loadOperators(.init(pageSize: pageSize), completion)
+        switch flag {
+        case .live:
+            model.loadOperators(.init(pageSize: pageSize), completion)
+            
+        case .stub:
+            DispatchQueue.main.delay(for: .seconds(1)) {
+                
+                completion(.stub)
+            }
+        }
     }
     
     /// `c`
@@ -93,6 +103,32 @@ private extension UtilityPaymentLastPayment {
     }
 }
 
+// MARK: - Stubs
+
+private extension UtilityPaymentOperator {
+    
+    static let multiple: Self = .init("multiple", "Multiple")
+    static let multipleFailure: Self = .init("multipleFailure", "MultipleFailure")
+    static let single: Self = .init("single", "Single")
+    static let singleFailure: Self = .init("singleFailure", "SingleFailure")
+    
+    private init(_ id: String, _ title: String) {
+        
+        self.init(id: id, title: title, subtitle: nil, icon: "abc")
+    }
+}
+
+private extension Array where Element == UtilityPaymentOperator {
+    
+    static let stub: Self = [
+        .single,
+        .singleFailure,
+        .multiple,
+        .multipleFailure,
+    ]
+}
+
+#warning("Fix")
 import GenericRemoteService
 //
 //extension NanoServices {

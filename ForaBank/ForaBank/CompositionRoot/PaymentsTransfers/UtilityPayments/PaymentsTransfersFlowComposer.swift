@@ -38,16 +38,6 @@ extension PaymentsTransfersFlowComposer {
     
     func compose() -> FlowManager {
         
-        let nanoComposer = UtilityPaymentNanoServicesComposer(
-            httpClient: httpClient,
-            model: model,
-            flag: flag
-        )
-        let microComposer = UtilityPaymentMicroServicesComposer(
-            pageSize: pageSize,
-            nanoServices: nanoComposer.compose()
-        )
-        
         return .init(
             handleEffect: makeEffectHandler().handleEffect(_:_:),
             makeReduce: makeReduce()
@@ -67,7 +57,19 @@ private extension PaymentsTransfersFlowComposer {
     
     func makeEffectHandler() -> EffectHandler {
         
-        let composer = UtilityPaymentsFlowComposer(flag: flag)
+        let nanoComposer = UtilityPaymentNanoServicesComposer(
+            httpClient: httpClient,
+            model: model,
+            flag: flag
+        )
+        let microComposer = UtilityPaymentMicroServicesComposer(
+            pageSize: pageSize,
+            nanoServices: nanoComposer.compose()
+        )
+        let composer = UtilityPaymentsFlowComposer(
+            flag: flag,
+            microServices: microComposer.compose()
+        )
         let utilityEffectHandler = composer.makeEffectHandler()
         
         return .init(

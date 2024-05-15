@@ -15,7 +15,8 @@ where Operator: Identifiable {
 
 extension UtilityPaymentMicroServices {
     
-    typealias InitiateUtilityPaymentResponse = (lastPayments: [LastPayment], operators: [Operator])
-    typealias InitiateUtilityPaymentCompletion = (InitiateUtilityPaymentResponse) -> Void
-    typealias InitiateUtilityPayment = (@escaping InitiateUtilityPaymentCompletion) -> Void
+    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+
+    typealias InitiateUtilityPaymentCompletion = PrepaymentFlowEffectHandler.InitiateUtilityPaymentCompletion
+    typealias InitiateUtilityPayment = PrepaymentFlowEffectHandler.InitiateUtilityPayment
 }

@@ -69,7 +69,7 @@ private extension UtilityPaymentMicroServicesComposer {
             
             guard self != nil else { return }
             
-            completion(($0, operators))
+            completion(.init(lastPayments: $0, operators: operators, searchText: ""))
         }
     }
     
