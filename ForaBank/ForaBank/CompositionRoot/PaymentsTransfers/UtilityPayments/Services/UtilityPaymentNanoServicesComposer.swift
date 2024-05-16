@@ -7,6 +7,7 @@
 
 import Fetcher
 import Foundation
+import OperatorsListComponents
 import RemoteServices
 
 final class UtilityPaymentNanoServicesComposer {
@@ -157,8 +158,30 @@ private extension UtilityPaymentNanoServicesComposer {
     func getServicesFor(
     ) -> NanoServices.GetServicesFor {
         
-#warning("fix me")
-        return { _,_ in  }
+        let fetch = ForaBank.NanoServices.adaptedLoggingFetch(
+            createRequest: RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest,
+            httpClient: httpClient,
+            mapResponse: OperatorsListComponents.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyFalseResponse,
+            mapOutput: { $0.map(\.service) },
+            mapError: { _ in NanoServices.GetServicesForError() },
+            log: log
+        )
+        
+        let mapped = MapPayloadDecorator(
+            decoratee: fetch,
+            mapPayload: { (`operator`: Operator) in `operator`.id }
+        )
+        
+// Operator
+        // UtilityPaymentNanoServices<UtilityPaymentNanoServicesComposer.LastPayment, UtilityPaymentNanoServicesComposer.Operator>.GetServicesForCompletion
+        return { [mapped] payload, completion in
+            
+            mapped(payload) {
+                
+                completion($0)
+                _ = mapped
+            }
+        }
     }
 }
 
@@ -237,6 +260,11 @@ typealias StartAnywayPaymentResult = _UtilityPaymentNanoServices.StartAnywayPaym
 typealias StartAnywayPaymentCompletion = _UtilityPaymentNanoServices.StartAnywayPaymentCompletion
 
 typealias _UtilityPaymentNanoServices = UtilityPaymentNanoServices<UtilityPaymentLastPayment, UtilityPaymentOperator>
+
+private extension OperatorsListComponents.ResponseMapper.SberUtilityService {
+    
+    var service: UtilityService { .init(id: puref) }
+}
 
 // MARK: - Stubs
 

@@ -56,7 +56,8 @@ extension UtilityPaymentNanoServices {
     typealias StartAnywayPayment = (StartAnywayPaymentPayload, @escaping StartAnywayPaymentCompletion) -> Void
     typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
     
-    typealias GetServicesForResult = Result<[UtilityService], Error>
+    struct GetServicesForError: Error, Equatable {}
+    typealias GetServicesForResult = Result<[UtilityService], GetServicesForError>
     typealias GetServicesForCompletion = (GetServicesForResult) -> Void
     /// `d`
     /// Получение услуг юр. лица по "customerId" и типу housingAndCommunalService
