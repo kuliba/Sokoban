@@ -15,6 +15,7 @@ final class PaymentsTransfersFlowComposer {
     
     private let flag: StubbedFeatureFlag.Option
     private let httpClient: HTTPClient
+    private let log: Log
     private let model: Model
     private let loaderComposer: LoaderComposer
     private let pageSize: Int
@@ -22,16 +23,17 @@ final class PaymentsTransfersFlowComposer {
     
     init(
         flag: StubbedFeatureFlag.Option,
-        httpClient: HTTPClient,
         model: Model,
-        loaderComposer: LoaderComposer,
+        httpClient: HTTPClient,
+        log: @escaping Log,
         pageSize: Int,
         observeLast: Int
     ) {
         self.flag = flag
         self.httpClient = httpClient
+        self.log = log
         self.model = model
-        self.loaderComposer = loaderComposer
+        self.loaderComposer = .init(flag: flag, model: model, pageSize: pageSize)
         self.pageSize = pageSize
         self.observeLast = observeLast
     }
@@ -46,6 +48,8 @@ extension PaymentsTransfersFlowComposer {
             makeReduce: makeReduce()
         )
     }
+    
+    typealias Log = (String, StaticString, UInt) -> Void
     
     typealias LoaderComposer = UtilityPaymentOperatorLoaderComposer
     
@@ -63,12 +67,12 @@ private extension PaymentsTransfersFlowComposer {
     func makeEffectHandler() -> EffectHandler {
         
         let nanoComposer = UtilityPaymentNanoServicesComposer(
-            flag: flag,
+            flag: composerFlag,
             httpClient: httpClient,
+            log: log,
             loadOperators: { self.loaderComposer.compose()(.init(), $0) }
         )
         let microComposer = UtilityPaymentMicroServicesComposer(
-            flag: composerFlag,
             nanoServices: nanoComposer.compose()
         )
         let composer = UtilityPaymentsFlowComposer(
@@ -92,7 +96,7 @@ private extension PaymentsTransfersFlowComposer {
         }
     }
     
-    typealias ComposerFlag = UtilityPaymentMicroServicesComposer<LastPayment, Operator>.Flag
+    typealias ComposerFlag = UtilityPaymentNanoServicesComposer.Flag
     
     typealias EffectHandler = PaymentsTransfersFlowEffectHandler<LastPayment, Operator, UtilityService>
     
@@ -142,53 +146,73 @@ private extension PaymentsTransfersFlowComposer {
 
 private extension PaymentsTransfersFlowComposer {
     
-    typealias PrepaymentPayload = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
-    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
-    
     func stub(
         for payload: PrepaymentFlowEffectHandler.StartPaymentPayload
     ) -> PrepaymentFlowEffectHandler.StartPaymentResult {
         
         switch payload {
         case let .lastPayment(lastPayment):
-            switch lastPayment.id {
-            case "failure":
-                return .failure(.serviceFailure(.connectivityError))
-                
-            default:
-                return .success(.startPayment(.init()))
-            }
+            return stub(for: lastPayment)
             
         case let .operator(`operator`):
-            switch `operator`.id {
-            case "single":
-                return .success(.startPayment(.init()))
-                
-            case "singleFailure":
-                return .failure(.operatorFailure(`operator`))
-                
-            case "multiple":
-                let services = MultiElementArray<UtilityService>([
-                    .init(id: "failure"),
-                    .init(id: UUID().uuidString),
-                ])!
-                return .success(.services(services, for: `operator`))
-                
-            case "multipleFailure":
-                return .failure(.serviceFailure(.serverError("Server Failure")))
-                
-            default:
-                return .success(.startPayment(.init()))
-            }
+            return stub(for: `operator`)
             
         case let .service(service, _):
-            switch service.id {
-            case "failure":
-                return .failure(.serviceFailure(.serverError("Server Failure")))
-                
-            default:
-                return .success(.startPayment(.init()))
-            }
+            return stub(for: service)
+        }
+    }
+    
+    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+    
+    private func stub(
+        for lastPayment: LastPayment
+    ) -> PrepaymentFlowEffectHandler.StartPaymentResult {
+        
+        switch lastPayment.id {
+        case "failure":
+            return .failure(.serviceFailure(.connectivityError))
+            
+        default:
+            return .success(.startPayment(.init()))
+        }
+    }
+    
+    private func stub(
+        for `operator`: Operator
+    ) -> PrepaymentFlowEffectHandler.StartPaymentResult {
+        
+        switch `operator`.id {
+        case "single":
+            return .success(.startPayment(.init()))
+            
+        case "singleFailure":
+            return .failure(.operatorFailure(`operator`))
+            
+        case "multiple":
+            let services = MultiElementArray<UtilityService>([
+                .init(id: "failure"),
+                .init(id: UUID().uuidString),
+            ])!
+            return .success(.services(services, for: `operator`))
+            
+        case "multipleFailure":
+            return .failure(.serviceFailure(.serverError("Server Failure")))
+            
+        default:
+            return .success(.startPayment(.init()))
+        }
+    }
+    
+    private func stub(
+        for service: UtilityService
+    ) -> PrepaymentFlowEffectHandler.StartPaymentResult {
+        
+        switch service.id {
+        case "failure":
+            return .failure(.serviceFailure(.serverError("Server Failure")))
+            
+        default:
+            return .success(.startPayment(.init()))
         }
     }
 }

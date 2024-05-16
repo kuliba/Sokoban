@@ -11,15 +11,18 @@ final class UtilityPaymentNanoServicesComposer {
     
     private let flag: Flag
     private let httpClient: HTTPClient
+    private let log: Log
     private let loadOperators: LoadOperators
     
     init(
         flag: Flag,
         httpClient: HTTPClient,
+        log: @escaping Log,
         loadOperators: @escaping LoadOperators
     ) {
         self.flag = flag
         self.httpClient = httpClient
+        self.log = log
         self.loadOperators = loadOperators
     }
 }
@@ -30,18 +33,28 @@ extension UtilityPaymentNanoServicesComposer {
         
         return .init(
             getOperatorsListByParam: getOperatorsListByParam,
-            getAllLatestPayments: getAllLatestPayments
+            getAllLatestPayments: getAllLatestPayments,
+            startAnywayPayment: startAnywayPayment()
         )
     }
 }
 
 extension UtilityPaymentNanoServicesComposer {
     
+    typealias Log = (String, StaticString, UInt) -> Void
+    
     typealias LoadOperatorsCompletion = ([Operator]) -> Void
     typealias LoadOperators = (@escaping LoadOperatorsCompletion) -> Void
     
-    typealias Flag = StubbedFeatureFlag.Option
-    
+    enum Flag {
+        
+        case live
+        case stub((Select) -> StartPaymentResult)
+        
+        typealias Select = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent.Select
+        typealias StartPaymentResult = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>.StartPaymentResult
+    }
+
     typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator>
     
     typealias LastPayment = UtilityPaymentLastPayment
@@ -67,6 +80,7 @@ private extension UtilityPaymentNanoServicesComposer {
         switch flag {
         case .live:
 #warning("add logging // NanoServices.adaptedLoggingFetch")
+#warning("remake as ForaBank.NanoServices.startAnywayPayment")
             let service = Services.getAllLatestPayments(httpClient: httpClient)
             service.process(.service) { [service] result in
                 
@@ -78,6 +92,30 @@ private extension UtilityPaymentNanoServicesComposer {
             DispatchQueue.main.delay(for: .seconds(1)) { completion(.stub) }
         }
     }
+    
+    /// `e`
+    /// Начало выполнения перевода - 1шаг, передаем `isNewPayment=true`
+    /// POST /rest/transfer/createAnywayTransfer?isNewPayment=true
+    func startAnywayPayment(
+    ) -> PrepaymentFlowEffectHandler.StartPayment {
+        
+        switch flag {
+        case .live:
+            return ForaBank.NanoServices.startAnywayPayment(httpClient, log)
+            
+        case let .stub(stub):
+            
+            return { payload, completion in
+                
+                DispatchQueue.main.delay(for: .seconds(1)) {
+                    
+                    completion(stub(payload))
+                }
+            }
+        }
+    }
+    
+    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
 }
 
 private extension UtilityPaymentLastPayment {

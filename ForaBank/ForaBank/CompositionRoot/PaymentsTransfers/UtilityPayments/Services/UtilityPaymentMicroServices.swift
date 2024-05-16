@@ -7,8 +7,7 @@
 
 import UtilityServicePrepaymentCore
 
-struct UtilityPaymentMicroServices<LastPayment, Operator>
-where Operator: Identifiable {
+struct UtilityPaymentMicroServices<LastPayment, Operator> {
     
     /// `InitiateUtilityPayment` combines
     /// - `b`: getOperatorsListByParam

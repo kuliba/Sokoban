@@ -7,8 +7,7 @@
 
 import OperatorsListComponents
 
-struct UtilityPaymentNanoServices<LastPayment, Operator>
-where Operator: Identifiable {
+struct UtilityPaymentNanoServices<LastPayment, Operator> {
     
     /// `b`
     /// Получаем список ЮЛ НКОРР по типу ЖКХ из локального справочника dict/getOperatorsListByParam?operatorOnly=true&type=housingAndCommunalService (b)
@@ -18,10 +17,15 @@ where Operator: Identifiable {
     /// Получение последних платежей по ЖКХ
     /// rest/v2/getAllLatestPayments?isServicePayments=true
     let getAllLatestPayments: GetAllLatestPayments
+    
+    /// `e`
+    /// Начало выполнения перевода - 1шаг, передаем `isNewPayment=true`
+    /// POST /rest/transfer/createAnywayTransfer?isNewPayment=true
+    let startAnywayPayment: StartAnywayPayment
 }
 
 extension UtilityPaymentNanoServices {
-
+    
     typealias GetOperatorsListByParamCompletion = ([Operator]) -> Void
     /// `b`
     /// Получаем список ЮЛ НКОРР по типу ЖКХ из локального справочника dict/getOperatorsListByParam?operatorOnly=true&type=housingAndCommunalService (b)
@@ -32,4 +36,11 @@ extension UtilityPaymentNanoServices {
     /// Получение последних платежей по ЖКХ
     /// rest/v2/getAllLatestPayments?isServicePayments=true
     typealias GetAllLatestPayments = (@escaping GetAllLatestPaymentsCompletion) -> Void
+    
+    /// `e`
+    /// Начало выполнения перевода - 1шаг, передаем `isNewPayment=true`
+    /// POST
+    /// /rest/transfer/createAnywayTransfer?isNewPayment=true
+    typealias StartAnywayPayment = PrepaymentFlowEffectHandler.StartPayment
+    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
 }
