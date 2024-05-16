@@ -1,5 +1,5 @@
 //
-//  ResponseMapper+mapGetOperatorsListByParamOperatorOnlyFalseResponse.swift
+//  ResponseMapper+mapGetOperatorsListByParamOperatorOnlyFalseResponseTests.swift
 //
 //
 //  Created by Дмитрий Савушкин on 19.02.2024.
@@ -8,7 +8,7 @@
 import XCTest
 import OperatorsListComponents
 
-final class ResponseMapper_mapGetOperatorsListByParamOperatorOnlyFalseResponse: XCTestCase {
+final class ResponseMapper_mapGetOperatorsListByParamOperatorOnlyFalseResponseTests: XCTestCase {
     
     func test_map_shouldDeliverInvalidErrorOnInvalidData() throws {
         
