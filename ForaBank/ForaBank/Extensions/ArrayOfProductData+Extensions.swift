@@ -108,6 +108,11 @@ extension Array where Element == ProductData {
         return allProducts.sorted(by: \.productType.order)
     }
     
+    func uniqueProductIDs() -> [ProductData.ID] {
+        
+        return map { $0.parentID ?? $0.id }.uniqued()
+    }
+    
     func balanceRub() -> Double {
         
         let accountsAndDeposits = filter { $0.productType == .account || $0.productType == .deposit }

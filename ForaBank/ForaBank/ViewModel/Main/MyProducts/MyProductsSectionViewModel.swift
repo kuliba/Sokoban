@@ -24,6 +24,8 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
+    var groupingCards: Array.Products = [:]
+
     enum ItemViewModel: Identifiable {
         case item(MyProductsSectionItemViewModel)
         case placeholder(Int)
@@ -43,28 +45,43 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         }
     }
     
-    init(id: String,
-         title: String,
-         items: [ItemViewModel],
-         isCollapsed: Bool,
-         model: Model) {
+    var itemsId: [ProductData.ID] = []
+    
+    init(
+        id: String,
+        title: String,
+        items: [ItemViewModel],
+        groupingCards: Array.Products = [:],
+        itemsId: [ProductData.ID] = [],
+        isCollapsed: Bool,
+        model: Model
+    ) {
 
         self.id = id
         self.title = title
         self.isCollapsed = isCollapsed
         self.items = items
+        self.itemsId = itemsId
         self.model = model
+        self.groupingCards = groupingCards
     }
     
-    convenience init?(productType: ProductType,
-                      products: [ProductData]?,
-                      settings: ProductsSectionsSettings,
-                      model: Model) {
+    convenience init?(
+        productType: ProductType,
+        products: [ProductData]?,
+        settings: ProductsSectionsSettings,
+        model: Model
+    ) {
      
         var itemsVM: [ItemViewModel] = []
-        
+        var groupingCards: Array.Products = [:]
+        var itemsID: [ProductData.ID] = []
         if let products = products {
             itemsVM = products.map { .item(.init(productData: $0, model: model)) }
+            if productType == .card {
+                groupingCards = products.groupingCards()
+                itemsID = products.uniqueProductIDs()
+            }
         }
         
         if model.productsOpening.value.contains(productType) {
@@ -76,12 +93,14 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         self.init(id: productType.rawValue,
                   title: productType.pluralName,
                   items: itemsVM,
+                  groupingCards: groupingCards,
+                  itemsId: itemsID,
                   isCollapsed: settings.collapsed[productType.rawValue] ?? false,
                   model: model)
         
         bind()
     }
-    
+        
     private func bind() {
         
         action
@@ -90,9 +109,16 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
                 
                 switch action {
                 case let payload as MyProductsSectionViewModelAction.Events.ItemMoved:
-
-                    self.items = Self.reduce(items: self.items, move: payload.move)
                     
+                    if self.itemsId.isEmpty {
+                        self.items = Self.reduce(items: self.items, move: payload.move)
+                    } else {
+                        if payload.sectionId == id {
+                            self.itemsId = Self.reduce(items: self.itemsId, move: payload.move)
+                        } else {
+                            regroupItems(payload)
+                        }
+                    }
                 default: break
                 }
        
@@ -160,9 +186,6 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
                                         }
                                     }
                                 }
-
-                            case _ as MyProductsSectionItemAction.ItemTapped:
-                                self.action.send(MyProductsSectionViewModelAction.Events.ItemTapped(productId: item.id))
                                 
                             default: break
                             }
@@ -173,7 +196,32 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         
     }
     
-    static func reduce(items: [ItemViewModel], move: (from: IndexSet.Element, to: Int)) -> [ItemViewModel] {
+    func regroupItems(_ payload: MyProductsSectionViewModelAction.Events.ItemMoved) {
+        
+        let productId: ProductData.ID = Int(payload.sectionId) ?? -1
+        if let productsById = groupingCards[productId] {
+            var additionalProductsById = productsById.compactMap {
+                return $0.id == Int(payload.sectionId) ? nil : $0
+            }
+            additionalProductsById = Self.reduce(items: additionalProductsById, move: payload.move)
+            self.groupingCards[productId] = {
+                if let mainProduct = productByID(productId) {
+                    additionalProductsById.insert(mainProduct, at: 0)
+                }
+                return additionalProductsById
+            }()
+        }
+    }
+    
+    func createSectionItemViewModel(_ productData: ProductData) -> MyProductsSectionItemViewModel {
+        
+        return .init(productData: productData, model: model)
+    }
+    
+    static func reduce<T>(
+        items: [T],
+        move: (from: IndexSet.Element, to: Int)
+    ) -> [T] {
         
         var updatedItems = items
         let removed = updatedItems.remove(at: move.from)
@@ -186,7 +234,6 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         }
         
         return updatedItems
-        
     }
     
     static func reduce(items: [ItemViewModel],
@@ -245,6 +292,14 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         }
     }
     
+    func openProfile(productID: ProductData.ID) {
+        
+        self.action.send(MyProductsSectionViewModelAction.Events.ItemTapped(productId: productID))
+    }
+    
+    func productByID(_ productID: ProductData.ID) -> ProductData? {
+        return model.product(productId: productID)
+    }
 }
 
 enum MyProductsSectionViewModelAction {

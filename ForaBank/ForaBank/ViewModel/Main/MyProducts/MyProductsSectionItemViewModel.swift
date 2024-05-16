@@ -24,7 +24,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     let paymentSystemIcon: Image?
     let descriptions: [String]
     let orderModePadding: CGFloat
-    
+    let parentID: Int
   
     private let model: Model
     private let getProduct: (ProductData.ID) -> ProductData?
@@ -43,7 +43,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
         self.orderModePadding = orderModePadding
         self.model = model
         self.getProduct = { model.product(productId: $0) }
-
+        self.parentID = model.product(productId: id)?.asCard?.idParent ?? -1
         bind()
     }
 
@@ -343,9 +343,9 @@ enum MyProductsSectionItemAction {
     enum SideButtonTapped {
         
         struct Add: Action {}
-
+        
         struct Remove: Action {}
-
+        
         struct Activate: Action {}
     }
     
@@ -354,8 +354,6 @@ enum MyProductsSectionItemAction {
         let direction: MyProductsSectionItemViewModel.SwipeDirection
         let editMode: EditMode
     }
-    
-    struct ItemTapped: Action {}
 }
 
 extension MyProductsSectionItemViewModel {

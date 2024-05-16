@@ -71,6 +71,15 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
             [3, 12, 7, 11, 45, 5, 6, 4, 8, 9, 1, 2])
     }
     
+    func test_uniqueProductIDs_shouldReturnArray() {
+        
+        let uniqueProductIDs = makeProducts().uniqueProductIDs()
+        
+        XCTAssertNoDiff(
+            uniqueProductIDs,
+            [1, 2, 3, 6, 8, 34])
+    }
+    
     func test_balanceRub() {
         
         let products = makeProductsWithBalance()
