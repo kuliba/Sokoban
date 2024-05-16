@@ -116,7 +116,7 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
                         if payload.sectionId == id {
                             self.itemsId = Self.reduce(items: self.itemsId, move: payload.move)
                         } else {
-                            regroupingItems(payload)
+                            regroupItems(payload)
                         }
                     }
                 default: break
@@ -196,7 +196,7 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         
     }
     
-    func regroupingItems(_ payload: MyProductsSectionViewModelAction.Events.ItemMoved) {
+    func regroupItems(_ payload: MyProductsSectionViewModelAction.Events.ItemMoved) {
         
         let productId: ProductData.ID = Int(payload.sectionId) ?? -1
         if let productsById = groupingCards[productId] {
