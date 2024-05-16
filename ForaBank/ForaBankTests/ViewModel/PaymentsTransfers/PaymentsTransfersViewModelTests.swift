@@ -772,7 +772,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     private func makeOperator(
         _ id: String = UUID().uuidString
-    ) -> UtilityPaymentOperator<String> {
+    ) -> UtilityPaymentOperator {
         
         .init(id: id, title: id, subtitle: nil, icon: "abc")
     }

@@ -72,6 +72,7 @@ extension Services {
             case createStickerPayment
             case fastPaymentContractFindList
             case formSessionKey
+            case getAllLatestPayments
             case getBankDefault
             case getC2BSub
             case getCardStatementForPeriod
@@ -356,5 +357,11 @@ extension Services.Endpoint {
         pathPrefix: .dict,
         version: .none,
         serviceName: .getOperatorsListByParam
+    )
+    
+    static let getAllLatestPayments: Self = .init(
+        pathPrefix: .rest,
+        version: .v2,
+        serviceName: .getAllLatestPayments
     )
 }

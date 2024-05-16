@@ -419,7 +419,8 @@ private extension PaymentsTransfersView {
                 
                 UtilityPrepaymentWrapperView(
                     viewModel: state.content,
-                    flowEvent: { event(.prepayment($0.flowEvent)) }
+                    flowEvent: { event(.prepayment($0.flowEvent)) },
+                    makeIconView: { viewFactory.makeIconView(.md5Hash(.init($0))) }
                 )
             },
             destinationView: {
@@ -601,7 +602,7 @@ private extension PaymentsTransfersView {
     }
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator<String>
+    typealias Operator = UtilityPaymentOperator
     
     typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     
@@ -732,7 +733,7 @@ extension PaymentsTransfersView {
 
 private extension UtilityPrepaymentFlowEvent {
     
-    var flowEvent: UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator<String>, UtilityService>.UtilityPrepaymentFlowEvent {
+    var flowEvent: UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.UtilityPrepaymentFlowEvent {
         
         switch self {
         case .addCompany:

@@ -124,7 +124,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 extension PaymentsTransfersViewModel {
     
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator<String>
+    typealias Operator = UtilityPaymentOperator
     
     typealias FlowManger = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     
@@ -162,8 +162,6 @@ extension PaymentsTransfersViewModel {
     
     func reset() {
         
-        event(.dismissDestination)
-        event(.dismissModal)
         fullCover = nil
         route = .empty
     }

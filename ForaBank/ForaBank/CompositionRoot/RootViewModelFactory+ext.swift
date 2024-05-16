@@ -114,13 +114,23 @@ extension RootViewModelFactory {
             isActive: utilitiesPaymentsFlag.isActive
         )
         
-        let paymentsTransfersFlowComposer = PaymentsTransfersFlowComposer(
+#warning("add to settings(?)")
+        let pageSize = 20
+#warning("add to settings")
+        let observeLast = 5
+#warning("uncomment flag")
+        let loaderComposer = UtilityPaymentOperatorLoaderComposer(
+            flag: utilitiesPaymentsFlag.optionOrStub,
+            model: model,
+            pageSize: pageSize
+        )
+        let ptFlowComposer = PaymentsTransfersFlowComposer(
+            flag: utilitiesPaymentsFlag.optionOrStub,
             httpClient: httpClient,
             model: model,
-            log: infoNetworkLog
-        )
-        let paymentsTransfersFlowManager = paymentsTransfersFlowComposer.makeFlowManager(
-            flag: utilitiesPaymentsFlag.optionOrStub
+            loaderComposer: loaderComposer,
+            pageSize: pageSize,
+            observeLast: observeLast
         )
 
         let unblockCardServices = Services.makeUnblockCardServices(
@@ -134,6 +144,8 @@ extension RootViewModelFactory {
             handleEffect: ProductNavigationStateEffectHandler()
         )
 
+        let paymentsTransfersFlowManager = ptFlowComposer.compose()
+        
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -162,7 +174,7 @@ extension RootViewModelFactory {
     }
     
     typealias LatestPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator<String>
+    typealias Operator = UtilityPaymentOperator
     
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     
@@ -293,7 +305,7 @@ typealias MakeUtilitiesViewModel = PaymentsTransfersFactory.MakeUtilitiesViewMod
 extension ProductProfileViewModel {
     
     typealias LatestPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator<String>
+    typealias Operator = UtilityPaymentOperator
     
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
     
@@ -532,7 +544,7 @@ private extension UserAccountModelEffectHandler {
     }
 }
 
-extension UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator<String>, UtilityService>.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload {
+extension UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload {
     
     var state: UtilityPrepaymentState {
         

@@ -6,8 +6,8 @@
 //
 
 import FooterComponent
-import OperatorsListComponents
 import SwiftUI
+import UIPrimitives
 import UtilityServicePrepaymentDomain
 import UtilityServicePrepaymentUI
 
@@ -16,6 +16,7 @@ struct UtilityPrepaymentWrapperView: View {
     @ObservedObject var viewModel: ViewModel
     
     let flowEvent: (FlowEvent) -> Void
+    let makeIconView: MakeIconView
     
     var body: some View {
         
@@ -34,8 +35,10 @@ struct UtilityPrepaymentWrapperView: View {
 
 extension UtilityPrepaymentWrapperView {
     
+    typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
+    
     typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator<String>
+    typealias Operator = UtilityPaymentOperator
     
     typealias FlowEvent = UtilityPrepaymentFlowEvent
     typealias ViewModel = UtilityPrepaymentViewModel
@@ -54,7 +57,6 @@ private extension UtilityPrepaymentWrapperView {
         )
     }
     
-#warning("FIX ICON VIEW")
     func makeLastPaymentView(
         latestPayment: LastPayment
     ) -> some View {
@@ -67,14 +69,13 @@ private extension UtilityPrepaymentWrapperView {
                     amount: latestPayment.amount,
                     title: latestPayment.title,
                     config: .iFora,
-                    iconView: Text("TBD Icon View \(latestPayment)")
+                    iconView: makeIconView(latestPayment.icon)
                 )
                 .contentShape(Rectangle())
             }
         )
     }
     
-#warning("FIX ICON VIEW")
     func makeOperatorView(
         `operator`: Operator
     ) -> some View {
@@ -87,7 +88,7 @@ private extension UtilityPrepaymentWrapperView {
                     title: `operator`.title,
                     subtitle: `operator`.subtitle,
                     config: .iFora,
-                    iconView: Text("TBD Icon View \(`operator`)")
+                    iconView: makeIconView(`operator`.icon)
                 )
                 .contentShape(Rectangle())
             }
