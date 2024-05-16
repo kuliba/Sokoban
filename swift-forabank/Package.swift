@@ -159,6 +159,8 @@ let package = Package(
         .activateSliderTests,
         .accountInfoPanel,
         .accountInfoPanelTests,
+        .calendarUI,
+        .calendarUITests,
         .cardUI,
         .cardUITests,
         .productDetailsUI,
@@ -335,6 +337,14 @@ private extension Product {
             .accountInfoPanel
         ]
     )
+    
+    static let calendarUI = library(
+        name: .calendarUI,
+        targets: [
+            .calendarUI
+        ]
+    )
+    
     
     static let cardUI = library(
         name: .cardUI,
@@ -1419,6 +1429,30 @@ private extension Target {
         path: "Tests/UI/ProductProfileTests/\(String.accountInfoPanelTests)"
     )
     
+    static let calendarUI = target(
+        name: .calendarUI,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/\(String.calendarUI)"
+    )
+    
+    static let calendarUITests = target(
+        name: .calendarUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .calendarUI,
+        ],
+        path: "Tests/\(String.calendarUITests)"
+    )
+    
     static let cardUI = target(
         name: .cardUI,
         dependencies: [
@@ -2102,6 +2136,10 @@ private extension Target.Dependency {
         name: .accountInfoPanel
     )
     
+    static let calendarUI = byName(
+        name: .calendarUI
+    )
+    
     static let cardUI = byName(
         name: .cardUI
     )
@@ -2390,6 +2428,9 @@ private extension String {
 
     static let accountInfoPanel = "AccountInfoPanel"
     static let accountInfoPanelTests = "AccountInfoPanelTests"
+    
+    static let calendarUI = "CalendarUI"
+    static let calendarUITests = "CalendarUITests"
     
     static let cardUI = "CardUI"
     static let cardUITests = "CardUITests"
