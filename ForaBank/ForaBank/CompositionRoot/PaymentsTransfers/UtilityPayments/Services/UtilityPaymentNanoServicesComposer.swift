@@ -134,11 +134,7 @@ private extension UtilityPaymentNanoServicesComposer {
             mapPayload: RemoteServices.RequestFactory.CreateAnywayTransferPayload.init
         )
         
-        mapped(payload) { [mapped] result in
-            
-            completion(result)
-            _ = mapped
-        }
+        mapped(payload) { [mapped] in completion($0); _ = mapped }
     }
     
     private func startAnywayPaymentStub(
@@ -173,7 +169,7 @@ private extension UtilityPaymentNanoServicesComposer {
             mapPayload: { (`operator`: Operator) in `operator`.id }
         )
         
-        mapped(`operator`) { completion($0); _ = mapped }
+        mapped(`operator`) { [mapped] in completion($0); _ = mapped }
     }
 }
 

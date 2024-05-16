@@ -7924,13 +7924,6 @@
 			path = UtilityPrepaymentWrapper;
 			sourceTree = "<group>";
 		};
-		2A5B23192BEE106B00270D50 /* Configs */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Configs;
-			sourceTree = "<group>";
-		};
 		2A5D2FB72BF3323500BC3092 /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -8729,7 +8722,6 @@
 		2A9BD5142B85F04100B88395 /* UtilityPayments */ = {
 			isa = PBXGroup;
 			children = (
-				2A5B23192BEE106B00270D50 /* Configs */,
 				2AE2B9AA2B8DBF6900B86D56 /* Utilities */,
 				2AC067DF2BECEBF1004CBC0B /* PaymentsTransfersFlowComposer.swift */,
 				2A5D2FB72BF3323500BC3092 /* Services */,
