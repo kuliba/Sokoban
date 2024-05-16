@@ -110,10 +110,7 @@ extension Array where Element == ProductData {
     
     func uniqueProductIDs() -> [ProductData.ID] {
         
-        return self.map {
-            if let parentID = $0.parentID { return parentID }
-            return $0.id
-        }.uniqued()
+        return map { $0.parentID ?? $0.id }.uniqued()
     }
     
     func balanceRub() -> Double {
