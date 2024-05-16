@@ -773,18 +773,18 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     }
     
     private func makeLatestPayment(
-        _ title: String = UUID().uuidString,
-        _ amount: String = UUID().uuidString
+        _ title: String = UUID().uuidString
     ) -> UtilityPaymentLastPayment {
         
-        .init(id: title, title: title, subtitle: amount, icon: "")
+        .init(amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: UUID().uuidString, puref: UUID().uuidString)
     }
     
     private func makeService(
-        _ id: String = UUID().uuidString
+        name: String = UUID().uuidString,
+        _ puref: String = UUID().uuidString
     ) -> UtilityService {
         
-        .init(id: id)
+        .init(name: name, puref: puref)
     }
     
     private func makePaymentDetails(

@@ -187,8 +187,8 @@ private extension PaymentsTransfersFlowComposer {
             
         case "multiple":
             let services = MultiElementArray<UtilityService>([
-                .init(id: "failure"),
-                .init(id: UUID().uuidString),
+                .init(name: UUID().uuidString, puref: "failure"),
+                .init(name: UUID().uuidString, puref: UUID().uuidString),
             ])!
             return .success(.services(services, for: `operator`))
             
