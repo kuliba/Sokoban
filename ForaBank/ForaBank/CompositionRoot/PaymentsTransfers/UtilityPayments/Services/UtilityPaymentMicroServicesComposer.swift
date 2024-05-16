@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
+import ForaTools
 import Foundation
 import UtilityServicePrepaymentDomain
 
@@ -69,8 +70,61 @@ private extension UtilityPaymentMicroServicesComposer {
     func startPayment(
     ) -> PrepaymentFlowEffectHandler.StartPayment {
         
-        return nanoServices.startAnywayPayment
+        return { [weak self] payload, completion in
+            
+            guard let self else { return }
+            
+            switch payload {
+            case let .lastPayment(lastPayment):
+                nanoServices.startAnywayPayment(.lastPayment(lastPayment), completion)
+                
+            case let .operator(`operator`):
+                getServices(for: `operator`, completion)
+                
+            case let .service(utilityService, _):
+                nanoServices.startAnywayPayment(.service(utilityService), completion)
+            }
+        }
     }
     
     typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+    
+    private func getServices(
+        for `operator`: Operator,
+        _ completion: @escaping PrepaymentFlowEffectHandler.StartPaymentCompletion
+    ) {
+        nanoServices.getServicesFor(`operator`) { [weak self] result in
+            
+            guard let self else { return }
+            
+            switch result {
+            case .failure:
+                completion(.failure(.operatorFailure(`operator`)))
+                
+            case let .success(services):
+                handle(services, for: `operator`, with: completion)
+            }
+        }
+    }
+    
+    private func handle(
+        _ services: [UtilityService],
+        for `operator`: Operator,
+        with completion: @escaping PrepaymentFlowEffectHandler.StartPaymentCompletion
+    ) {
+        switch (services.count, services.first) {
+        case (0, _):
+            completion(.failure(.operatorFailure(`operator`)))
+            
+        case let (1, .some(utilityService)):
+            nanoServices.startAnywayPayment(.service(utilityService), completion)
+            
+        default:
+            if let services = MultiElementArray(services) {
+                completion(.success(.services(services, for: `operator`)))
+            } else {
+                completion(.failure(.operatorFailure(`operator`)))
+            }
+        }
+    }
 }

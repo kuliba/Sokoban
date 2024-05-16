@@ -147,17 +147,14 @@ private extension PaymentsTransfersFlowComposer {
 private extension PaymentsTransfersFlowComposer {
     
     func stub(
-        for payload: PrepaymentFlowEffectHandler.StartPaymentPayload
+        for payload: UtilityPaymentNanoServices<LastPayment, Operator>.StartAnywayPaymentPayload
     ) -> PrepaymentFlowEffectHandler.StartPaymentResult {
         
         switch payload {
         case let .lastPayment(lastPayment):
             return stub(for: lastPayment)
             
-        case let .operator(`operator`):
-            return stub(for: `operator`)
-            
-        case let .service(service, _):
+        case let .service(service):
             return stub(for: service)
         }
     }

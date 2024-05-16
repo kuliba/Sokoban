@@ -34,7 +34,8 @@ extension UtilityPaymentNanoServicesComposer {
         return .init(
             getOperatorsListByParam: getOperatorsListByParam,
             getAllLatestPayments: getAllLatestPayments,
-            startAnywayPayment: startAnywayPayment()
+            startAnywayPayment: startAnywayPayment(),
+            getServicesFor: getServicesFor()
         )
     }
 }
@@ -49,12 +50,13 @@ extension UtilityPaymentNanoServicesComposer {
     enum Flag {
         
         case live
-        case stub((Select) -> StartPaymentResult)
+        case stub(Stub)
         
-        typealias Select = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent.Select
-        typealias StartPaymentResult = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>.StartPaymentResult
+        typealias Stub = (Payload) -> StartPaymentResult
+        typealias Payload = NanoServices.StartAnywayPaymentPayload
+        typealias StartPaymentResult = NanoServices.StartAnywayPaymentResult
     }
-
+    
     typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator>
     
     typealias LastPayment = UtilityPaymentLastPayment
@@ -79,17 +81,23 @@ private extension UtilityPaymentNanoServicesComposer {
     ) {
         switch flag {
         case .live:
-#warning("add logging // NanoServices.adaptedLoggingFetch")
-#warning("remake as ForaBank.NanoServices.startAnywayPayment")
-            let service = Services.getAllLatestPayments(httpClient: httpClient)
-            service.process(.service) { [service] result in
-                
-                completion((try? result.get().map(LastPayment.init(with:))) ?? [])
-                _ = service
-            }
+            getAllLatestPaymentsLive(completion)
             
         case .stub:
             DispatchQueue.main.delay(for: .seconds(1)) { completion(.stub) }
+        }
+    }
+    
+    private  func getAllLatestPaymentsLive(
+        _ completion: @escaping ([LastPayment]) -> Void
+    ) {
+#warning("add logging // NanoServices.adaptedLoggingFetch")
+#warning("remake as ForaBank.NanoServices.startAnywayPayment")
+        let service = Services.getAllLatestPayments(httpClient: httpClient)
+        service.process(.service) { [service] result in
+            
+            completion((try? result.get().map(LastPayment.init(with:))) ?? [])
+            _ = service
         }
     }
     
@@ -97,26 +105,48 @@ private extension UtilityPaymentNanoServicesComposer {
     /// Начало выполнения перевода - 1шаг, передаем `isNewPayment=true`
     /// POST /rest/transfer/createAnywayTransfer?isNewPayment=true
     func startAnywayPayment(
-    ) -> PrepaymentFlowEffectHandler.StartPayment {
+    ) -> NanoServices.StartAnywayPayment {
         
         switch flag {
         case .live:
-            return ForaBank.NanoServices.startAnywayPayment(httpClient, log)
+            return startAnywayPaymentLive()
             
         case let .stub(stub):
+            return startAnywayPaymentStub(stub)
+        }
+    }
+    
+    private func startAnywayPaymentLive(
+    ) -> NanoServices.StartAnywayPayment {
+#warning("move ForaBank.NanoServices.startAnywayPayment implementation here???")
+        return ForaBank.NanoServices.startAnywayPayment(httpClient, log)
+    }
+    
+    private func startAnywayPaymentStub(
+        _ stub: @escaping Flag.Stub
+    ) -> NanoServices.StartAnywayPayment {
+        
+        return { payload, completion in
             
-            return { payload, completion in
+            DispatchQueue.main.delay(for: .seconds(1)) {
                 
-                DispatchQueue.main.delay(for: .seconds(1)) {
-                    
-                    completion(stub(payload))
-                }
+                completion(stub(payload))
             }
         }
     }
     
-    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+    /// `d`
+    /// Получение услуг юр. лица по "customerId" и типу housingAndCommunalService
+    /// dict/getOperatorsListByParam?customerId=8798&operatorOnly=false&type=housingAndCommunalService
+    func getServicesFor(
+    ) -> NanoServices.GetServicesFor {
+        
+#warning("fix me")
+        return { fatalError() }()
+    }
 }
+
+// MARK: - Adapters
 
 private extension UtilityPaymentLastPayment {
     
