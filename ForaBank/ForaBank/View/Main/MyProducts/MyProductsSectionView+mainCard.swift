@@ -41,14 +41,20 @@ extension MyProductsSectionView {
             
             Text("Основная карта")
                 .lineLimit(1)
-                .accessibilityIdentifier("DefaultMainCardName")
                 .font(.textH4M16240())
                 .foregroundColor(.mainColorsBlack)
+                .accessibilityIdentifier("DefaultMainCardName")
         }
         .listRowInsets(EdgeInsets())
         .frame(maxWidth: .infinity, alignment: .leading)
         .frame(height: 72)
         .padding(.leading, 12)
-        .background(Color.mainColorsGrayLightest)
+        .background(Color.barsBars)
+        .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
+            .onEnded({ value in
+                // disable right swipe
+                if value.translation.width > 0 {
+                }
+            }))
     }
 }
