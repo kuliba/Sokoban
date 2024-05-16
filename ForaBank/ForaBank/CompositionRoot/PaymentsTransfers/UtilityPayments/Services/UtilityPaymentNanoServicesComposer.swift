@@ -38,7 +38,7 @@ extension UtilityPaymentNanoServicesComposer {
             getOperatorsListByParam: getOperatorsListByParam,
             getAllLatestPayments: getAllLatestPayments,
             startAnywayPayment: startAnywayPayment,
-            getServicesFor: getServicesFor()
+            getServicesFor: getServicesFor
         )
     }
 }
@@ -156,8 +156,9 @@ private extension UtilityPaymentNanoServicesComposer {
     /// Получение услуг юр. лица по "customerId" и типу housingAndCommunalService
     /// dict/getOperatorsListByParam?customerId=8798&operatorOnly=false&type=housingAndCommunalService
     func getServicesFor(
-    ) -> NanoServices.GetServicesFor {
-        
+        _ `operator`: Operator,
+        _ completion: @escaping NanoServices.GetServicesForCompletion
+    ) {
         let fetch = ForaBank.NanoServices.adaptedLoggingFetch(
             createRequest: RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest,
             httpClient: httpClient,
@@ -172,16 +173,7 @@ private extension UtilityPaymentNanoServicesComposer {
             mapPayload: { (`operator`: Operator) in `operator`.id }
         )
         
-// Operator
-        // UtilityPaymentNanoServices<UtilityPaymentNanoServicesComposer.LastPayment, UtilityPaymentNanoServicesComposer.Operator>.GetServicesForCompletion
-        return { [mapped] payload, completion in
-            
-            mapped(payload) {
-                
-                completion($0)
-                _ = mapped
-            }
-        }
+        mapped(`operator`) { completion($0); _ = mapped }
     }
 }
 
