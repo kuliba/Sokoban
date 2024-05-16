@@ -122,9 +122,17 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
                             self.itemsId = Self.reduce(items: self.itemsId, move: payload.move)
                         } else {
                             let productId: ProductData.ID = Int(payload.sectionId) ?? -1
-                            if var productsById = self.groupingCards[productId] {
-                                productsById = Self.reduce(items: productsById, move: payload.move)
-                                self.groupingCards[productId] = productsById
+                            if let productsById = self.groupingCards[productId] {
+                                var additionalProductsById = productsById.compactMap {
+                                    return $0.id == Int(payload.sectionId) ? nil : $0
+                                }
+                                additionalProductsById = Self.reduce(items: additionalProductsById, move: payload.move)
+                                self.groupingCards[productId] = {
+                                    if let mainProduct = model.product(productId: productId) {
+                                        additionalProductsById.insert(mainProduct, at: 0)
+                                    }
+                                    return additionalProductsById
+                                }()
                             }
                         }
                     }

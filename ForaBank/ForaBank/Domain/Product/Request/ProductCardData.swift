@@ -345,3 +345,10 @@ extension ProductCardData {
         case additionalOther = "ADDITIONAL_OTHER"
     }
 }
+
+extension ProductCardData: CustomDebugStringConvertible {
+
+    var debugDescription: String {
+        return "\(numberMasked ?? "without number") - id \(id) order -\(order)"
+    }
+}

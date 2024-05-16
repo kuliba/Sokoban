@@ -43,18 +43,19 @@ extension MyProductsSectionView {
         
         List {
             ForEach(items, id: \.self) { id in
-                
-                let products: [ProductData] = viewModel.groupingCards[id] ?? []
-                if products.count == 1, let productData = products.first {
-                    itemView(MyProductsSectionItemViewModel.init(productData: productData, model: viewModel.model))
+                                
+                if let products = viewModel.groupingCards[id] {
                     
-                } else {
-                    _itemsList(products.compactMap {
-                        if $0.id != id {
-                            return .init(productData: $0, model: viewModel.model)
-                        } else { return nil}
-                    }, id)
-                    .listRowInsets(EdgeInsets())
+                    if products.count == 1, let productData = products.first {
+                        itemView(.init(productData: productData, model: viewModel.model))
+                    } else {
+                        _itemsList(products.compactMap {
+                            if $0.id != id {
+                                return .init(productData: $0, model: viewModel.model)
+                            } else { return nil}
+                        }, id)
+                        .listRowInsets(EdgeInsets())
+                    }
                 }
             }
             .onMove { indexes, destination in

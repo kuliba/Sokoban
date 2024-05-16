@@ -303,15 +303,6 @@ class MyProductsViewModel: ObservableObject {
                 
                 guard !section.items.isEmpty else { continue }
                 
-                if productType == .card {
-                    section.groupingCards = productsForType?.groupingCards() ?? [:]
-                    section.itemsId = {
-                        return section.items.map {
-                            let id = $0.itemVM?.parentID == -1 ? $0.id : $0.itemVM?.parentID
-                            return id ?? $0.id
-                        }.uniqued()
-                    }()
-                }
                 updatedSections.append(section)
                 
             } else {
@@ -496,7 +487,28 @@ class MyProductsViewModel: ObservableObject {
                 let newOrders = sections.reduce(into: [ProductType: [ProductData.ID]]()) { dict, sectionVM in
                     
                     if let productType = ProductType(rawValue: sectionVM.id) {
-                        dict[productType] = sectionVM.items.compactMap { $0.itemVM?.id }
+                        
+                        switch productType {
+                        case .card:
+                            var itemsID: [ProductData.ID] = []
+                            sectionVM.itemsId.forEach { itemId in
+                                if let products = sectionVM.groupingCards[itemId] {
+                                    if (model.product(productId: itemId) != nil){
+                                        itemsID.append(itemId)
+                                    }
+                                    if products.count > 0 {
+                                        itemsID.append(
+                                            contentsOf: products.compactMap {
+                                                return  $0.id != itemId ? $0.id : nil
+                                            })
+                                    }
+                                }
+                            }
+                            dict[productType] = itemsID
+                            
+                        default:
+                            dict[productType] = sectionVM.items.compactMap { $0.itemVM?.id }
+                        }
                     }
                 }
                 
