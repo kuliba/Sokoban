@@ -100,7 +100,7 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         
         bind()
     }
-    
+        
     private func bind() {
         
         action
@@ -116,19 +116,7 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
                         if payload.sectionId == id {
                             self.itemsId = Self.reduce(items: self.itemsId, move: payload.move)
                         } else {
-                            let productId: ProductData.ID = Int(payload.sectionId) ?? -1
-                            if let productsById = self.groupingCards[productId] {
-                                var additionalProductsById = productsById.compactMap {
-                                    return $0.id == Int(payload.sectionId) ? nil : $0
-                                }
-                                additionalProductsById = Self.reduce(items: additionalProductsById, move: payload.move)
-                                self.groupingCards[productId] = {
-                                    if let mainProduct = self.productByID(productId) {
-                                        additionalProductsById.insert(mainProduct, at: 0)
-                                    }
-                                    return additionalProductsById
-                                }()
-                            }
+                            regroupingItems(payload)
                         }
                     }
                 default: break
@@ -206,6 +194,23 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
                 
         }.store(in: &bindings)
         
+    }
+    
+    func regroupingItems(_ payload: MyProductsSectionViewModelAction.Events.ItemMoved) {
+        
+        let productId: ProductData.ID = Int(payload.sectionId) ?? -1
+        if let productsById = groupingCards[productId] {
+            var additionalProductsById = productsById.compactMap {
+                return $0.id == Int(payload.sectionId) ? nil : $0
+            }
+            additionalProductsById = Self.reduce(items: additionalProductsById, move: payload.move)
+            self.groupingCards[productId] = {
+                if let mainProduct = productByID(productId) {
+                    additionalProductsById.insert(mainProduct, at: 0)
+                }
+                return additionalProductsById
+            }()
+        }
     }
     
     static func reduce<T>(
