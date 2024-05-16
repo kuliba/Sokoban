@@ -110,15 +110,3 @@ extension Array where Element == ProductDataFilterRule {
     }
 }
 
-extension Array where Element: Equatable {
-
-    var unique: [Element] {
-        
-        var allowed = [Element]()
-        self.forEach {
-            if !allowed.contains($0) { allowed.append($0) }
-        }
-        return allowed
-    }
-}
-
