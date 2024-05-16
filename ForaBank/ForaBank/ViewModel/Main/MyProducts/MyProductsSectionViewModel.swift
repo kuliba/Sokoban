@@ -21,7 +21,7 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
     let id: String
     let title: String
     
-    let model: Model
+    private let model: Model
     private var bindings = Set<AnyCancellable>()
     
     var groupingCards: Array.Products = [:]
@@ -211,6 +211,11 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
                 return additionalProductsById
             }()
         }
+    }
+    
+    func createSectionItemViewModel(_ productData: ProductData) -> MyProductsSectionItemViewModel {
+        
+        return .init(productData: productData, model: model)
     }
     
     static func reduce<T>(

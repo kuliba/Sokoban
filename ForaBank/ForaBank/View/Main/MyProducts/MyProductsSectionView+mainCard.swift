@@ -14,7 +14,7 @@ extension MyProductsSectionView {
     ) -> some View {
         
         if let product = viewModel.productByID(productID) {
-            AnyView(itemView(MyProductsSectionItemViewModel.init(productData: product, model: viewModel.model)))
+            AnyView(itemView(viewModel.createSectionItemViewModel(product)))
         } else {
             AnyView(defaultMainCard())
         }

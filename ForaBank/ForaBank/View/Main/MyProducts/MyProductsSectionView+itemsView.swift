@@ -47,11 +47,11 @@ extension MyProductsSectionView {
                 if let products = viewModel.groupingCards[id] {
                     
                     if products.count == 1, let productData = products.first {
-                        itemView(.init(productData: productData, model: viewModel.model))
+                        itemView(viewModel.createSectionItemViewModel(productData))
                     } else {
                         _itemsList(products.compactMap {
                             if $0.id != id {
-                                return .init(productData: $0, model: viewModel.model)
+                                return viewModel.createSectionItemViewModel($0)
                             } else { return nil}
                         }, id)
                         .listRowInsets(EdgeInsets())
