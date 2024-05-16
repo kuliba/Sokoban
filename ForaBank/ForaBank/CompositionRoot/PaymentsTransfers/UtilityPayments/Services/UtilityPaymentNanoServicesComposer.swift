@@ -177,13 +177,13 @@ private extension UtilityPaymentNanoServicesComposer {
 
 private extension UtilityPaymentLastPayment {
     
-    init(with lastPayment: ResponseMapper.LatestPayment) {
+    init(with last: ResponseMapper.LatestServicePayment) {
         
         self.init(
-            id: lastPayment.id,
-            title: lastPayment.title,
-            subtitle: "\(lastPayment.amount)",
-            icon: lastPayment.md5Hash ?? ""
+            amount: last.amount,
+            name: last.title,
+            md5Hash: last.md5Hash,
+            puref: last.puref
         )
     }
 }
@@ -202,22 +202,19 @@ private extension RemoteServices.RequestFactory.CreateAnywayTransferPayload {
 
 private extension StartAnywayPaymentPayload {
     
-#warning("fix me")
     var puref: String {
         
-        "iFora||MOO2" // one sum
-//        "iFora||7602" // mutli sum
-        
-//        switch self {
-//        case let .lastPayment(lastPayment):
-//            return lastPayment.puref
-//
-//        case let .operator(`operator`):
-//            return `operator`.puref
-//
-//        case let .service(utilityService, _):
-//            return utilityService.puref
-//        }
+        switch self {
+        case let .lastPayment(lastPayment):
+            return lastPayment.puref
+            
+        case let .service(utilityService):
+#warning("fix me")
+            // "iFora||MOO2" // one sum
+            // "iFora||7602" // mutli sum
+            return "iFora||MOO2"
+            // return utilityService.puref
+        }
     }
 }
 
@@ -266,6 +263,6 @@ private extension Array where Element == UtilityPaymentLastPayment {
 
 private extension UtilityPaymentLastPayment {
     
-    static let failure: Self = .init(id: "failure", title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
-    static let preview: Self = .init(id: UUID().uuidString, title: UUID().uuidString, subtitle: UUID().uuidString, icon: UUID().uuidString)
+    static let failure: Self = .init(amount: 123.45, name: "failure", md5Hash: UUID().uuidString, puref: UUID().uuidString)
+    static let preview: Self = .init(amount: 567.89, name: UUID().uuidString, md5Hash: UUID().uuidString, puref: UUID().uuidString)
 }

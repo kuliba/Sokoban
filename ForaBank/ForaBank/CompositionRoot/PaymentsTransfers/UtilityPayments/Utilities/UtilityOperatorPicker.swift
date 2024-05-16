@@ -54,8 +54,8 @@ struct UtilityOperatorPicker: View {
             fatalError()
         } label: {
             LastPaymentLabel(
-                amount: latestPayment.amount,
-                title: latestPayment.title,
+                amount: "\(latestPayment.amount)",
+                title: latestPayment.name,
                 config: .iFora,
                 iconView: Text("TBD Icon View \(latestPayment)")
             )
@@ -126,12 +126,6 @@ struct UtilityOperatorPicker: View {
             )
         )
     }
-}
-
-#warning("move to the call site and make private")
-/*private*/ extension UtilityPaymentLastPayment {
-    
-    var amount: String { subtitle }
 }
 
 private extension PrePaymentOptionsState {

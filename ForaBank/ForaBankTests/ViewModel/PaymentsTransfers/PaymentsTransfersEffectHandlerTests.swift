@@ -180,11 +180,11 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     
     private func makeLatestPayment(
         _ title: String = UUID().uuidString,
-        _ subtitle: String = UUID().uuidString,
-        _ icon: String = UUID().uuidString
+        _ icon: String = UUID().uuidString,
+        _ puref: String = UUID().uuidString
     ) -> LatestPayment {
         
-        .init(id: title, title: title, subtitle: subtitle, icon: icon)
+        .init(amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: icon, puref: puref)
     }
     
     private func makeStartPaymentPayload(
