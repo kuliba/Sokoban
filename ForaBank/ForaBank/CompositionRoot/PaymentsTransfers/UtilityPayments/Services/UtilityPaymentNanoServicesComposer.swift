@@ -201,7 +201,10 @@ private extension RemoteServices.RequestFactory.CreateAnywayTransferPayload {
 }
 
 private extension StartAnywayPaymentPayload {
-    
+
+    // Можно тестировать на прелайф
+    // "iFora||MOO2" // single amount
+    // "iFora||7602" // multi amount
     var puref: String {
         
         switch self {
@@ -209,11 +212,7 @@ private extension StartAnywayPaymentPayload {
             return lastPayment.puref
             
         case let .service(utilityService):
-#warning("fix me")
-            // "iFora||MOO2" // one sum
-            // "iFora||7602" // mutli sum
-            return "iFora||MOO2"
-            // return utilityService.puref
+            return utilityService.puref
         }
     }
 }
@@ -248,7 +247,10 @@ typealias _UtilityPaymentNanoServices = UtilityPaymentNanoServices<UtilityPaymen
 
 private extension OperatorsListComponents.ResponseMapper.SberUtilityService {
     
-    var service: UtilityService { .init(id: puref) }
+    var service: UtilityService {
+    
+        .init(name: name, puref: puref)
+    }
 }
 
 // MARK: - Stubs

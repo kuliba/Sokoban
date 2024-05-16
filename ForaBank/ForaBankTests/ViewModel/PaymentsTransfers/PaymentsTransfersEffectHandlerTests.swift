@@ -195,12 +195,13 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     }
     
     private func makeService(
-        _ id: String = UUID().uuidString
+        name: String = UUID().uuidString,
+        _ puref: String = UUID().uuidString
     ) -> UtilityService {
         
-        .init(id: id)
+        .init(name: name, puref: puref)
     }
-    
+
     private func makePaymentDetails(
         _ value: String = UUID().uuidString
     ) -> PaymentsTransfersEvent.UtilityServicePaymentFlowEvent.PaymentStarted.PaymentDetails {
