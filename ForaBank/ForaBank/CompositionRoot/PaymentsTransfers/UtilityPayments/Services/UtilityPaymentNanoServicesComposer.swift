@@ -166,7 +166,14 @@ private extension UtilityPaymentNanoServicesComposer {
         
         let mapped = MapPayloadDecorator(
             decoratee: fetch,
-            mapPayload: { (`operator`: Operator) in `operator`.id }
+            mapPayload: { (`operator`: Operator) in
+                
+                #if MOCK
+                return "21757"
+                #else
+                return `operator`.id
+                #endif
+            }
         )
         
         mapped(`operator`) { [mapped] in completion($0); _ = mapped }
@@ -192,11 +199,18 @@ private extension RemoteServices.RequestFactory.CreateAnywayTransferPayload {
     
     init(_ payload: StartAnywayPaymentPayload) {
         
+        #if MOCK
+        // "puref": "iForaNKORR||126732"
+        let puref = "iForaNKORR||126732"
+        #else
+        let puref = payload.puref
+        #endif
+        
         /// - Note: `check` is optional
         /// Признак проверки операции:
         /// - если `check="true"`, то OTP не отправляется,
         /// - если `check="false"` - OTP отправляется
-        self.init(additional: [], check: true, puref: payload.puref)
+        self.init(additional: [], check: true, puref: puref)
     }
 }
 
