@@ -376,15 +376,15 @@ private extension AuthLoginViewModel {
     }
     
     func makeCardNextButton(
-        with cardState: CardViewModel.State,
-        _ sessionState: SessionState,
-        fcmToken: String?
+       with cardState: CardViewModel.State,
+       _ sessionState: SessionState,
+       fcmToken: String?
     ) -> CardViewModel.NextButtonViewModel? {
         
         switch (cardState, sessionState, fcmToken) {
-        case (.ready(let cardNumber), .active, .some):
-            LoggerAgent.shared.log(category: .ui, message: "card state: .ready, session state: .active")
+        case (.ready(let cardNumber), .active, .some), (.ready(let cardNumber), .activating, .some):
             
+            LoggerAgent.shared.log(category: .ui, message: "card state: .ready, session state: \(sessionState.debugDescription)")
             LoggerAgent.shared.log(level: .debug, category: .ui, message: "next button presented")
             
             return CardViewModel.NextButtonViewModel(
