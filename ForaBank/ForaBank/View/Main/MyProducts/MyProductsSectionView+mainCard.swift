@@ -13,7 +13,7 @@ extension MyProductsSectionView {
         _ productID: ProductData.ID
     ) -> some View {
         
-        if let product = viewModel.model.product(productId: productID) {
+        if let product = viewModel.productByID(productID) {
             AnyView(itemView(MyProductsSectionItemViewModel.init(productData: product, model: viewModel.model)))
         } else {
             AnyView(defaultMainCard())

@@ -80,12 +80,7 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
             itemsVM = products.map { .item(.init(productData: $0, model: model)) }
             if productType == .card {
                 groupingCards = products.groupingCards()
-                itemsID = {
-                    return products.map {
-                        let id = $0.asCard?.parentID == -1 ? $0.id : $0.asCard?.parentID
-                        return id ?? $0.id
-                    }.uniqued()
-                }()
+                itemsID = products.uniqueProductIDs()
             }
         }
         
@@ -128,7 +123,7 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
                                 }
                                 additionalProductsById = Self.reduce(items: additionalProductsById, move: payload.move)
                                 self.groupingCards[productId] = {
-                                    if let mainProduct = model.product(productId: productId) {
+                                    if let mainProduct = self.productByID(productId) {
                                         additionalProductsById.insert(mainProduct, at: 0)
                                     }
                                     return additionalProductsById
@@ -290,6 +285,10 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
     func openProfile(productID: ProductData.ID) {
         
         self.action.send(MyProductsSectionViewModelAction.Events.ItemTapped(productId: productID))
+    }
+    
+    func productByID(_ productID: ProductData.ID) -> ProductData? {
+        return model.product(productId: productID)
     }
 }
 
