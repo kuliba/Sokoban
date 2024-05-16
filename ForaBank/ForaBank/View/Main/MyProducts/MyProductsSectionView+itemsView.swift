@@ -96,6 +96,7 @@ extension MyProductsSectionView {
         .listStyle(.plain)
         .environment(\.editMode, $editMode)
         .id(mainProductID)
+        .listRowBackground(Color.barsBars)
     }
     
     func itemView(
