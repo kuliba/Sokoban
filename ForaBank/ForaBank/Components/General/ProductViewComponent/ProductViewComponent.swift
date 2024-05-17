@@ -759,12 +759,8 @@ extension ProductViewModel {
         
         if productType == .card, appearance.size == .large  {
             
-            if cvvInfo?.cardStatus != .active {
-                event(.delayAlert(.showBlockAlert))
-            } else {
-                withAnimation(.spring(response: 1.0, dampingFraction: 1, blendDuration: 0)) {
-                    self.cardInfo.stateToggle()
-                }
+            withAnimation(.spring(response: 1.0, dampingFraction: 1, blendDuration: 0)) {
+                self.cardInfo.stateToggle()
             }
         }
         action.send(ProductViewModelAction.ProductDidTapped())
@@ -783,20 +779,25 @@ extension ProductViewModel {
     }
     
     func showCVVButtonTap() {
-            
-        if cvvInfo?.cardType == .additionalOther {
-            event(.delayAlert(.showAdditionalOtherAlert))
+         
+        if cvvInfo?.cardStatus != .active {
+            event(.delayAlert(.showBlockAlert))
         } else {
             
-            let cardId = CardDomain.CardId.init(self.id)
-            cardInfo.state = .awaitingCVV
-            cvvInfo?.showCvv?(cardId) { cvv in
+            if cvvInfo?.cardType == .additionalOther {
+                event(.delayAlert(.showAdditionalOtherAlert))
+            } else {
                 
-                Task { @MainActor [weak self] in
-                    if let cvv {
-                        self?.cardInfo.state = .maskedNumberCVV(.init(cvv.rawValue))
-                    } else {
-                        self?.cardInfo.state = .fullNumberMaskedCVV
+                let cardId = CardDomain.CardId.init(self.id)
+                cardInfo.state = .awaitingCVV
+                cvvInfo?.showCvv?(cardId) { cvv in
+                    
+                    Task { @MainActor [weak self] in
+                        if let cvv {
+                            self?.cardInfo.state = .maskedNumberCVV(.init(cvv.rawValue))
+                        } else {
+                            self?.cardInfo.state = .fullNumberMaskedCVV
+                        }
                     }
                 }
             }
