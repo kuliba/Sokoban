@@ -72,7 +72,7 @@ private extension PaymentsTransfersFlowComposer {
             log: log,
             loadOperators: { self.loaderComposer.compose()(.init(), $0) }
         )
-        let microComposer = UtilityPaymentMicroServicesComposer(
+        let microComposer = UtilityPrepaymentFlowMicroServicesComposer(
             nanoServices: nanoComposer.compose()
         )
         let composer = UtilityPaymentsFlowComposer(

@@ -691,8 +691,8 @@
 		2A5D17912B243F8700597159 /* Model+SberQRProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D17902B243F8700597159 /* Model+SberQRProductTests.swift */; };
 		2A5D2FB92BF3325C00BC3092 /* UtilityPaymentNanoServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D2FB82BF3325C00BC3092 /* UtilityPaymentNanoServicesComposer.swift */; };
 		2A5D2FBB2BF33C5100BC3092 /* UtilityPaymentNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D2FBA2BF33C5100BC3092 /* UtilityPaymentNanoServices.swift */; };
-		2A5D2FBD2BF33D6F00BC3092 /* UtilityPaymentMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D2FBC2BF33D6F00BC3092 /* UtilityPaymentMicroServices.swift */; };
-		2A5D2FBF2BF33E0D00BC3092 /* UtilityPaymentMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D2FBE2BF33E0D00BC3092 /* UtilityPaymentMicroServicesComposer.swift */; };
+		2A5D2FBD2BF33D6F00BC3092 /* UtilityPrepaymentFlowMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D2FBC2BF33D6F00BC3092 /* UtilityPrepaymentFlowMicroServices.swift */; };
+		2A5D2FBF2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D2FBE2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift */; };
 		2A5DEB902B789E4200199538 /* C2BSubscriptionUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5DEB8F2B789E4200199538 /* C2BSubscriptionUI */; };
 		2A5EB43D2AAB29C900CA931D /* LandingUIComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5EB43C2AAB29C900CA931D /* LandingUIComponent */; };
 		2A5FFD392B17310600C89F0D /* OutgoingTransferResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */; };
@@ -3549,8 +3549,8 @@
 		2A5D17902B243F8700597159 /* Model+SberQRProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SberQRProductTests.swift"; sourceTree = "<group>"; };
 		2A5D2FB82BF3325C00BC3092 /* UtilityPaymentNanoServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentNanoServicesComposer.swift; sourceTree = "<group>"; };
 		2A5D2FBA2BF33C5100BC3092 /* UtilityPaymentNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentNanoServices.swift; sourceTree = "<group>"; };
-		2A5D2FBC2BF33D6F00BC3092 /* UtilityPaymentMicroServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentMicroServices.swift; sourceTree = "<group>"; };
-		2A5D2FBE2BF33E0D00BC3092 /* UtilityPaymentMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentMicroServicesComposer.swift; sourceTree = "<group>"; };
+		2A5D2FBC2BF33D6F00BC3092 /* UtilityPrepaymentFlowMicroServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowMicroServices.swift; sourceTree = "<group>"; };
+		2A5D2FBE2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowMicroServicesComposer.swift; sourceTree = "<group>"; };
 		2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutgoingTransferResponse.swift; sourceTree = "<group>"; };
 		2A6097342B9D760D00AA6C75 /* UtilityPayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityPayment.xctestplan; sourceTree = "<group>"; };
 		2A6097352B9D76C000AA6C75 /* UtilityPaymentPreview.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityPaymentPreview.xctestplan; sourceTree = "<group>"; };
@@ -7927,8 +7927,8 @@
 		2A5D2FB72BF3323500BC3092 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				2A5D2FBC2BF33D6F00BC3092 /* UtilityPaymentMicroServices.swift */,
-				2A5D2FBE2BF33E0D00BC3092 /* UtilityPaymentMicroServicesComposer.swift */,
+				2A5D2FBC2BF33D6F00BC3092 /* UtilityPrepaymentFlowMicroServices.swift */,
+				2A5D2FBE2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift */,
 				2A5D2FBA2BF33C5100BC3092 /* UtilityPaymentNanoServices.swift */,
 				2A5D2FB82BF3325C00BC3092 /* UtilityPaymentNanoServicesComposer.swift */,
 				2AA3A0F62BF3E96000B1D104 /* UtilityPrepaymentMicroServices.swift */,
@@ -16547,7 +16547,7 @@
 				774A8B4D2865FD3600B81140 /* MyProductsSectionView.swift in Sources */,
 				2AEF68582AE5490E00E0EBD7 /* ResponseMapper+mapFormSessionKeyResponse.swift in Sources */,
 				6820929B27AC04A4003DCAFD /* SuggestAddressData.swift in Sources */,
-				2A5D2FBF2BF33E0D00BC3092 /* UtilityPaymentMicroServicesComposer.swift in Sources */,
+				2A5D2FBF2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift in Sources */,
 				774CA5E1287C7C6000544C17 /* ProductStatementView+Legacy.swift in Sources */,
 				77DD55CE29F157D100756451 /* Decimal+Extensions.swift in Sources */,
 				77D930B62A6AAE4300C47C23 /* KeychainSymmetricKeyProviderAdapter.swift in Sources */,
@@ -17020,7 +17020,7 @@
 				83E2F6132A40D246000B64CF /* InfoProductViewModel+Extensions.swift in Sources */,
 				A5C7A1AE275BEF58003BEF6D /* RequisiteDO.swift in Sources */,
 				77DA206428453ADB00D7E005 /* MeToMeView+Legacy.swift in Sources */,
-				2A5D2FBD2BF33D6F00BC3092 /* UtilityPaymentMicroServices.swift in Sources */,
+				2A5D2FBD2BF33D6F00BC3092 /* UtilityPrepaymentFlowMicroServices.swift in Sources */,
 				ED664BB7274530320050D1E0 /* AccountStatementPDFController.swift in Sources */,
 				77D0385F2987DF0400FBE5AB /* PaymentParameter.swift in Sources */,
 				77D0385F2987DF0400FBE5AB /* PaymentParameter.swift in Sources */,

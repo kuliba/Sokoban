@@ -21,7 +21,7 @@ final class UtilityPaymentsFlowComposer {
 
 extension UtilityPaymentsFlowComposer {
     
-    typealias MicroServices = UtilityPaymentMicroServices<LastPayment, Operator>
+    typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator>
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator

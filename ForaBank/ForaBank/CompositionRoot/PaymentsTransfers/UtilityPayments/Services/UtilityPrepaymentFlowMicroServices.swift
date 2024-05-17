@@ -1,5 +1,5 @@
 //
-//  UtilityPaymentMicroServices.swift
+//  UtilityPrepaymentFlowMicroServices.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 14.05.2024.
@@ -7,7 +7,7 @@
 
 import UtilityServicePrepaymentCore
 
-struct UtilityPaymentMicroServices<LastPayment, Operator> {
+struct UtilityPrepaymentFlowMicroServices<LastPayment, Operator> {
     
     /// `InitiateUtilityPayment` combines
     /// - `b`: getOperatorsListByParam
@@ -22,7 +22,7 @@ struct UtilityPaymentMicroServices<LastPayment, Operator> {
     let startPayment: StartPayment
 }
 
-extension UtilityPaymentMicroServices {
+extension UtilityPrepaymentFlowMicroServices {
     
     typealias InitiateUtilityPayment = PrepaymentFlowEffectHandler.InitiateUtilityPayment
 
