@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
-struct UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, PaymentViewModel> {
+struct UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel> {
     
     var alert: Alert?
     let content: Content

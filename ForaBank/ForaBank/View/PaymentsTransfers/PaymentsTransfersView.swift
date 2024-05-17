@@ -604,7 +604,7 @@ private extension PaymentsTransfersView {
     typealias Content = UtilityPrepaymentViewModel
     typealias PaymentViewModel = ObservingPaymentFlowMockViewModel
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
     
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
     

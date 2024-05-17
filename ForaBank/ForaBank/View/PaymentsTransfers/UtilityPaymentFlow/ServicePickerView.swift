@@ -38,7 +38,7 @@ where Service: Identifiable,
 extension ServicePickerView {
     
     typealias PaymentViewModel = ObservingPaymentFlowMockViewModel
-    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, Service, UtilityPrepaymentViewModel, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, UtilityPrepaymentViewModel, PaymentViewModel>
     typealias State = UtilityServicePickerFlowState<Operator, Service, PaymentViewModel>.Content
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Service>.UtilityPrepaymentFlowEvent.Select
 }
