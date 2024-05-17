@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
+import RxViewModel
 import UtilityServicePrepaymentCore
 
 final class PaymentsTransfersFlowReducerFactoryComposer {
@@ -121,7 +122,30 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         notify: @escaping (PaymentStateProjection) -> Void
     ) -> ObservingPaymentFlowMockViewModel {
         
-        return .init(state: initialState, notify: notify)
+        typealias Observable = RxViewModel<PaymentFlowMockState, PaymentFlowMockEvent, Never>
+        
+        let observable = Observable(
+            initialState: initialState,
+            reduce: { state, event in
+                
+                switch event {
+                case .completePayment:
+                    return (.init(isComplete: true), nil)
+                    
+                case .detectFraud:
+                    return (.init(fraud: .init()), nil)
+                    
+                case .produceError:
+                    return (.init(errorMessage: "Error message here."), nil)
+                }
+            },
+            handleEffect: { _,_ in }
+        )
+        
+        return .init(
+            observable: observable,
+            observe: { PaymentStateProjection($0, $1).map(notify) }
+        )
     }
 }
 
@@ -132,5 +156,37 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     ) -> PaymentsViewModel {
         
         return .init(model, service: .requisites, closeAction: closeAction)
+    }
+}
+
+enum PaymentStateProjection: Equatable {
+    
+    case completed
+    case errorMessage(String)
+    case fraud(Fraud)
+}
+
+extension PaymentStateProjection {
+    
+    init?(
+        _ previous: PaymentFlowMockState,
+        _ current: PaymentFlowMockState
+    ) {
+        if let fraud = current.fraud, previous.fraud == nil {
+            self = .fraud(fraud)
+            return
+        }
+        
+        if current.isComplete {
+            self = .completed
+            return
+        }
+        
+        if let errorMessage = current.errorMessage {
+            self = .errorMessage(errorMessage)
+            return
+        }
+        
+        return nil
     }
 }

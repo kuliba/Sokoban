@@ -1195,7 +1195,6 @@
 		2AECBC2F2BEBA9E5000B0C0E /* UtilityServicePaymentFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECBC2E2BEBA9E5000B0C0E /* UtilityServicePaymentFlowEvent.swift */; };
 		2AECBC312BEBAA0C000B0C0E /* FraudEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECBC302BEBAA0C000B0C0E /* FraudEvent.swift */; };
 		2AECBC332BEBAA2C000B0C0E /* ObservingPaymentFlowMockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECBC322BEBAA2C000B0C0E /* ObservingPaymentFlowMockViewModel.swift */; };
-		2AECBC352BEBAA86000B0C0E /* PaymentFlowMockState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECBC342BEBAA86000B0C0E /* PaymentFlowMockState.swift */; };
 		2AECBC372BEBAAAD000B0C0E /* UtilityServicePaymentFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECBC362BEBAAAD000B0C0E /* UtilityServicePaymentFlowState.swift */; };
 		2AECBC3A2BEBAB00000B0C0E /* ServiceFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECBC382BEBAAE2000B0C0E /* ServiceFailure.swift */; };
 		2AECBC3C2BEBAB2C000B0C0E /* UtilityPaymentFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECBC3B2BEBAB2C000B0C0E /* UtilityPaymentFlowState.swift */; };
@@ -4038,7 +4037,6 @@
 		2AECBC2E2BEBA9E5000B0C0E /* UtilityServicePaymentFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowEvent.swift; sourceTree = "<group>"; };
 		2AECBC302BEBAA0C000B0C0E /* FraudEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FraudEvent.swift; sourceTree = "<group>"; };
 		2AECBC322BEBAA2C000B0C0E /* ObservingPaymentFlowMockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservingPaymentFlowMockViewModel.swift; sourceTree = "<group>"; };
-		2AECBC342BEBAA86000B0C0E /* PaymentFlowMockState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFlowMockState.swift; sourceTree = "<group>"; };
 		2AECBC362BEBAAAD000B0C0E /* UtilityServicePaymentFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowState.swift; sourceTree = "<group>"; };
 		2AECBC382BEBAAE2000B0C0E /* ServiceFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceFailure.swift; sourceTree = "<group>"; };
 		2AECBC3B2BEBAB2C000B0C0E /* UtilityPaymentFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentFlowState.swift; sourceTree = "<group>"; };
@@ -9432,7 +9430,6 @@
 				2AECBC362BEBAAAD000B0C0E /* UtilityServicePaymentFlowState.swift */,
 				2AECBC2E2BEBA9E5000B0C0E /* UtilityServicePaymentFlowEvent.swift */,
 				2AECBC4D2BEBADA5000B0C0E /* PaymentFlowMockView.swift */,
-				2AECBC342BEBAA86000B0C0E /* PaymentFlowMockState.swift */,
 				2AECBC322BEBAA2C000B0C0E /* ObservingPaymentFlowMockViewModel.swift */,
 				2AECBC4F2BEBADD9000B0C0E /* PaymentFlowModalView.swift */,
 				2AECBC512BEBADF6000B0C0E /* PaymentFraudMockView.swift */,
@@ -17298,7 +17295,6 @@
 				2A5AEF2E2B7A485E00E935B6 /* TextConfig+ext.swift in Sources */,
 				A5B55E9A27E2624200C0B695 /* GetQRDataDO.swift in Sources */,
 				687F9B0927FBF65F007A38A5 /* ProductAccountData.swift in Sources */,
-				2AECBC352BEBAA86000B0C0E /* PaymentFlowMockState.swift in Sources */,
 				A533EDF327F643B10001B8C0 /* GetOperationDetailByPaymentIdDO.swift in Sources */,
 				0B4145BE2810937C0097430C /* MessagesHistorySectionViewComponent.swift in Sources */,
 				83BCA20B2B987D7E002CD83D /* RequestFactory+getProductDetailsRequest.swift in Sources */,
