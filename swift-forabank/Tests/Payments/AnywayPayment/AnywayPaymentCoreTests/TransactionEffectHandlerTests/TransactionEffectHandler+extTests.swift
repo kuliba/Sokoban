@@ -284,7 +284,7 @@ final class TransactionEffectHandler_extTests: XCTestCase {
     private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
     private typealias PaymentInitiator = PaymentProcessing
     private typealias MakeTransferSpy = Spy<VerificationCode, SUT.Performer.MakeTransferResult>
-    private typealias PaymentProcessing = Spy<PaymentDigest, SUT.ProcessResult>
+    private typealias PaymentProcessing = Spy<PaymentDigest, SUT.MicroServices.ProcessResult>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -326,7 +326,7 @@ final class TransactionEffectHandler_extTests: XCTestCase {
         _ paymentProcessing: PaymentProcessing,
         toDeliver expectedEvent: SUT.Event,
         for effect: SUT.Effect,
-        onProcessing paymentProcessingResult: SUT.ProcessResult,
+        onProcessing paymentProcessingResult: SUT.MicroServices.ProcessResult,
         file: StaticString = #file,
         line: UInt = #line
     ) {

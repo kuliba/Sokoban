@@ -7,21 +7,11 @@
 
 public final class TransactionEffectHandler<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate> {
     
-    private let initiatePayment: InitiatePayment
-    private let makePayment: MakePayment
-    private let paymentEffectHandle: PaymentEffectHandle
-    private let processPayment: ProcessPayment
+    private let microServices: MicroServices
     
-    public init(
-        initiatePayment: @escaping InitiatePayment,
-        makePayment: @escaping MakePayment,
-        paymentEffectHandle: @escaping PaymentEffectHandle,
-        processPayment: @escaping ProcessPayment
-    ) {
-        self.initiatePayment = initiatePayment
-        self.makePayment = makePayment
-        self.paymentEffectHandle = paymentEffectHandle
-        self.processPayment = processPayment
+    public init(microServices: MicroServices) {
+     
+        self.microServices = microServices
     }
 }
 
@@ -49,18 +39,7 @@ public extension TransactionEffectHandler {
 
 public extension TransactionEffectHandler {
     
-    typealias InitiatePayment = ProcessPayment
-    
-    typealias ProcessResult = Event.PaymentUpdateResult
-    typealias ProcessCompletion = (ProcessResult) -> Void
-    typealias ProcessPayment = (PaymentDigest, @escaping ProcessCompletion) -> Void
-    
-    typealias MakePaymentResult = Event.TransactionResult
-    typealias MakePaymentCompletion = (MakePaymentResult) -> Void
-    typealias MakePayment = (VerificationCode, @escaping MakePaymentCompletion) -> Void
-    
-    typealias PaymentDispatch = (PaymentEvent) -> Void
-    typealias PaymentEffectHandle = (PaymentEffect, @escaping PaymentDispatch) -> Void
+    typealias MicroServices = TransactionEffectHandlerMicroServices<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
     
     typealias Dispatch = (Event) -> Void
     
@@ -74,7 +53,7 @@ private extension TransactionEffectHandler {
         _ digest: PaymentDigest,
         _ dispatch: @escaping Dispatch
     ) {
-        processPayment(digest) { [weak self] in
+        microServices.processPayment(digest) { [weak self] in
             
             guard self != nil else { return }
             
@@ -86,7 +65,7 @@ private extension TransactionEffectHandler {
         _ digest: PaymentDigest,
         _ dispatch: @escaping Dispatch
     ) {
-        initiatePayment(digest) { [weak self] in
+        microServices.initiatePayment(digest) { [weak self] in
             
             guard self != nil else { return }
             
@@ -98,7 +77,7 @@ private extension TransactionEffectHandler {
         _ verificationCode: VerificationCode,
         _ dispatch: @escaping Dispatch
     ) {
-        makePayment(verificationCode) { [weak self] in
+        microServices.makePayment(verificationCode) { [weak self] in
             
             guard self != nil else { return }
             
@@ -110,7 +89,7 @@ private extension TransactionEffectHandler {
         _ paymentEffect: PaymentEffect,
         _ dispatch: @escaping Dispatch
     ) {
-        paymentEffectHandle(paymentEffect) { [weak self] in
+        microServices.paymentEffectHandle(paymentEffect) { [weak self] in
             
             guard self != nil else { return }
             

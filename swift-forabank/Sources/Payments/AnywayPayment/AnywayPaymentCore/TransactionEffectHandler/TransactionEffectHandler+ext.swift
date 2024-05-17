@@ -10,11 +10,11 @@ public extension TransactionEffectHandler {
     typealias Performer = TransactionPerformer<DocumentStatus, OperationDetails>
     
     convenience init(
-        initiatePayment: @escaping InitiatePayment,
+        initiatePayment: @escaping MicroServices.InitiatePayment,
         getDetails: @escaping Performer.GetDetails,
         makeTransfer: @escaping Performer.MakeTransfer,
-        paymentEffectHandle: @escaping PaymentEffectHandle,
-        processPayment: @escaping ProcessPayment
+        paymentEffectHandle: @escaping MicroServices.PaymentEffectHandle,
+        processPayment: @escaping MicroServices.ProcessPayment
     ) {
         let transactionPerformer = Performer(
             getDetails: getDetails,
@@ -22,10 +22,12 @@ public extension TransactionEffectHandler {
         )
         
         self.init(
+            microServices: .init(
             initiatePayment: initiatePayment,
             makePayment: transactionPerformer.process,
             paymentEffectHandle: paymentEffectHandle,
             processPayment: processPayment
+            )
         )
     }
 }
