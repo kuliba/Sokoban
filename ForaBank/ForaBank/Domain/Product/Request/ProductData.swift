@@ -267,12 +267,10 @@ extension ProductData {
             
             switch statusCard {
             case .active:
-                if !cardProduct.isVisible { return .notVisible }
-                else { return .active }
+                return cardProduct.isVisible ? .active : .notVisible
                 
             case .blockedUnlockAvailable, .blockedUnlockNotAvailable:
-                if cardProduct.isVisible { return .blocked }
-                else { return .blockedNotVisible }
+                return cardProduct.isVisible ? .blocked : .blockedNotVisible
                 
             case .notActivated:
                 return .notActive
