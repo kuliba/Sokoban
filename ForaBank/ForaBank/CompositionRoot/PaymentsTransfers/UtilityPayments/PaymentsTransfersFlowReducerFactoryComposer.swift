@@ -50,7 +50,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
 
 extension PaymentsTransfersFlowReducerFactoryComposer {
     
-    typealias MicroServices = UtilityPrepaymentMicroServices<UtilityPaymentOperator>
+    typealias MicroServices = PrepaymentPickerMicroServices<UtilityPaymentOperator>
     
     typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
     
@@ -69,10 +69,8 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         
         let reducer = UtilityPrepaymentReducer(observeLast: observeLast)
         
-#warning("TODO: throttle, debounce, remove duplicates")
         let effectHandler = UtilityPrepaymentEffectHandler(
-            paginate: microServices.paginate,
-            search: microServices.search
+            microServices: microServices
         )
         
         return .init(

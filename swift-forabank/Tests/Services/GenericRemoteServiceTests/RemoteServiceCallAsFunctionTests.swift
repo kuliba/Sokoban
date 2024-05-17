@@ -1,14 +1,14 @@
 //
-//  RemoteServiceTests.swift
-//  
+//  RemoteServiceCallAsFunctionTests.swift
 //
-//  Created by Igor Malyarov on 01.08.2023.
+//
+//  Created by Igor Malyarov on 16.05.2024.
 //
 
 import GenericRemoteService
 import XCTest
 
-final class RemoteServiceTests: XCTestCase {
+final class RemoteServiceCallAsFunctionTests: XCTestCase {
     
     func test_init_shouldNotCallHTTPClient() {
         
@@ -18,7 +18,7 @@ final class RemoteServiceTests: XCTestCase {
         XCTAssertEqual(client.callCount, 0)
     }
     
-    func test_process_shouldDeliverErrorOnMakeRequestError() {
+    func test_callAsFunction_shouldDeliverErrorOnMakeRequestError() {
         
         let createRequestError = CreateRequestError("make request error")
         let (sut, _) = makeSUT(createRequest: { _ in .failure(createRequestError) })
@@ -26,17 +26,17 @@ final class RemoteServiceTests: XCTestCase {
         assert(sut, delivers: [.failure(.createRequest(createRequestError))])
     }
     
-    func test_process_shouldCallHTTPClientWithRequest() {
+    func test_callAsFunction_shouldCallHTTPClientWithRequest() {
         
         let request = anyRequest()
         let (sut, client) = makeSUT(createRequest: { _ in .success(request) })
         
-        sut.process(()) { _ in }
+        sut(()) { _ in }
         
         XCTAssertEqual(client.requests, [request])
     }
     
-    func test_process_shouldDeliverPerformRequestErrorOnHTTPClientError() {
+    func test_callAsFunction_shouldDeliverPerformRequestErrorOnHTTPClientError() {
         
         let httpError = PerformRequestError("HTTP Error")
         let (sut, client) = makeSUT()
@@ -49,7 +49,7 @@ final class RemoteServiceTests: XCTestCase {
         })
     }
     
-    func test_process_shouldNotDeliverHTTPClientResultOnSUTInstanceDeallocation() {
+    func test_callAsFunction_shouldNotDeliverHTTPClientResultOnSUTInstanceDeallocation() {
         
         let client = Spy()
         var sut: SUT? = .init(
@@ -68,7 +68,7 @@ final class RemoteServiceTests: XCTestCase {
         XCTAssertNil(result)
     }
     
-    func test_process_shouldDeliverMapResponseErrorOnMapResponseError() {
+    func test_callAsFunction_shouldDeliverMapResponseErrorOnMapResponseError() {
         
         let mapResponseError = MapResponseError("important!")
         let (sut, client) = makeSUT(mapResponse: { _,_ in .failure(mapResponseError) })
@@ -81,7 +81,7 @@ final class RemoteServiceTests: XCTestCase {
         })
     }
     
-    func test_process_shouldDeliverValueOnSuccess() {
+    func test_callAsFunction_shouldDeliverValueOnSuccess() {
         
         let output = Output()
         let (sut, client) = makeSUT(mapResponse: { _,_ in .success(output) })
@@ -97,7 +97,7 @@ final class RemoteServiceTests: XCTestCase {
     private typealias Input = Void
     private typealias SUT = RemoteService<Input, Output, CreateRequestError, PerformRequestError, MapResponseError>
     private typealias Spy = HTTPClientSpy<(Data, HTTPURLResponse)>
-    
+
     private func makeSUT(
         createRequest: SUT.CreateRequest? = nil,
         mapResponse: SUT.MapResponse? = nil,
@@ -116,12 +116,9 @@ final class RemoteServiceTests: XCTestCase {
             mapResponse: mapResponse
         )
         
-        trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(client, file: file, line: line)
-        
         return (sut, client)
     }
-    
+        
     private func assert(
         _ sut: SUT,
         with input: Input = (),
@@ -133,7 +130,7 @@ final class RemoteServiceTests: XCTestCase {
         var receivedResults = [SUT.ProcessResult]()
         let exp = expectation(description: "wait for completion")
         
-        sut.process(input) {
+        sut(input) {
             
             receivedResults.append($0)
             exp.fulfill()
