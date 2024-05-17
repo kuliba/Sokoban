@@ -1,5 +1,5 @@
 //
-//  UtilityPaymentMicroServicesComposer.swift
+//  UtilityPrepaymentFlowMicroServicesComposer.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 14.05.2024.
@@ -9,7 +9,7 @@ import ForaTools
 import Foundation
 import UtilityServicePrepaymentDomain
 
-final class UtilityPaymentMicroServicesComposer<LastPayment, Operator>
+final class UtilityPrepaymentFlowMicroServicesComposer<LastPayment, Operator>
 where Operator: Identifiable {
     
     private let nanoServices: NanoServices
@@ -21,7 +21,7 @@ where Operator: Identifiable {
     }
 }
 
-extension UtilityPaymentMicroServicesComposer {
+extension UtilityPrepaymentFlowMicroServicesComposer {
     
     func compose() -> MicroServices {
         
@@ -32,13 +32,13 @@ extension UtilityPaymentMicroServicesComposer {
     }
 }
 
-extension UtilityPaymentMicroServicesComposer {
+extension UtilityPrepaymentFlowMicroServicesComposer {
     
-    typealias MicroServices = UtilityPaymentMicroServices<LastPayment, Operator>
+    typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService>
     typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator>
 }
 
-private extension UtilityPaymentMicroServicesComposer {
+private extension UtilityPrepaymentFlowMicroServicesComposer {
     
     // MARK: - initiateUtilityPayment
     

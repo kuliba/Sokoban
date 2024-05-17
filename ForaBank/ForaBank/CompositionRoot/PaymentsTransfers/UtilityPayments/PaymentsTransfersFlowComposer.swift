@@ -72,7 +72,7 @@ private extension PaymentsTransfersFlowComposer {
             log: log,
             loadOperators: { self.loaderComposer.compose()(.init(), $0) }
         )
-        let microComposer = UtilityPaymentMicroServicesComposer(
+        let microComposer = UtilityPrepaymentFlowMicroServicesComposer(
             nanoServices: nanoComposer.compose()
         )
         let composer = UtilityPaymentsFlowComposer(
@@ -148,7 +148,7 @@ private extension PaymentsTransfersFlowComposer {
     
     func stub(
         for payload: UtilityPaymentNanoServices<LastPayment, Operator>.StartAnywayPaymentPayload
-    ) -> PrepaymentFlowEffectHandler.StartPaymentResult {
+    ) -> PrepaymentMicroServices.StartPaymentResult {
         
         switch payload {
         case let .lastPayment(lastPayment):
@@ -159,11 +159,11 @@ private extension PaymentsTransfersFlowComposer {
         }
     }
     
-    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+    typealias PrepaymentMicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService>
     
     private func stub(
         for lastPayment: LastPayment
-    ) -> PrepaymentFlowEffectHandler.StartPaymentResult {
+    ) -> PrepaymentMicroServices.StartPaymentResult {
         
         switch lastPayment.id {
         case "failure":
@@ -176,7 +176,7 @@ private extension PaymentsTransfersFlowComposer {
     
     private func stub(
         for `operator`: Operator
-    ) -> PrepaymentFlowEffectHandler.StartPaymentResult {
+    ) -> PrepaymentMicroServices.StartPaymentResult {
         
         switch `operator`.id {
         case "single":
@@ -202,7 +202,7 @@ private extension PaymentsTransfersFlowComposer {
     
     private func stub(
         for service: UtilityService
-    ) -> PrepaymentFlowEffectHandler.StartPaymentResult {
+    ) -> PrepaymentMicroServices.StartPaymentResult {
         
         switch service.id {
         case "failure":

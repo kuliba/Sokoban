@@ -12,16 +12,15 @@ final class UtilityPaymentsFlowComposer {
     
     private let microServices: MicroServices
     
-    init(
-        microServices: MicroServices
-    ) {
+    init(microServices: MicroServices) {
+        
         self.microServices = microServices
     }
 }
 
 extension UtilityPaymentsFlowComposer {
     
-    typealias MicroServices = UtilityPaymentMicroServices<LastPayment, Operator>
+    typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService>
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
@@ -33,8 +32,7 @@ extension UtilityPaymentsFlowComposer {
     ) -> UtilityFlowEffectHandler {
         
         let prepaymentEffectHandler = PrepaymentFlowEffectHandler(
-            initiateUtilityPayment: microServices.initiateUtilityPayment,
-            startPayment: microServices.startPayment
+            microServices: microServices
         )
         
         return .init(
