@@ -9,14 +9,6 @@ struct SberOperatorFailureFlowState<Content> {
     
     let content: Content
     var destination: Destination?
-    
-    init(
-        content: Content,
-        destination: Destination? = nil
-    ) {
-        self.content = content
-        self.destination = destination
-    }
 }
 
 extension SberOperatorFailureFlowState {

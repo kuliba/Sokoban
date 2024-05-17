@@ -53,16 +53,14 @@ extension ServicePickerFlowView {
     
     typealias Destination = State.Destination
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, Service, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
-    typealias State = UtilityFlowState.Destination.UtilityServicePickerFlowState
+    typealias PaymentViewModel = ObservingPaymentFlowMockViewModel
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, Service, UtilityPrepaymentViewModel, PaymentViewModel>
+    typealias State = UtilityServicePickerFlowState<Operator, Service, PaymentViewModel>
+
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
 }
 
-//#Preview {
-//    ServicePickerFlowView()
-//}
-
-extension UtilityPaymentFlowState.Destination.UtilityServicePickerFlowState.Destination: Identifiable {
+extension UtilityServicePickerFlowState.Destination: Identifiable {
     
     var id: ID {
         

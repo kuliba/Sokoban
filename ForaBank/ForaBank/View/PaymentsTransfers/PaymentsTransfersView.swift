@@ -601,16 +601,18 @@ private extension PaymentsTransfersView {
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
+    typealias Content = UtilityPrepaymentViewModel
+    typealias PaymentViewModel = ObservingPaymentFlowMockViewModel
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
     
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
     
     typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
     
-    typealias ServicePickerState = UtilityFlowState.Destination.UtilityServicePickerFlowState
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, UtilityService, PaymentViewModel>
     
-    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<ObservingPaymentFlowMockViewModel>
+    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<PaymentViewModel>
 }
 
 extension UtilityServicePaymentFlowState.Alert: Identifiable {

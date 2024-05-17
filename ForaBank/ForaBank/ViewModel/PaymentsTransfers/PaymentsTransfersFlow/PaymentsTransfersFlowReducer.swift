@@ -430,7 +430,7 @@ private extension PaymentsTransfersViewModel._Route {
         self.setUtilityPrepaymentDestination(to: .operatorFailure(operatorFailure))
     }
     
-    typealias ServicePickerState = UtilityFlowState.Destination.UtilityServicePickerFlowState
+    typealias ServicePickerState = UtilityServicePickerFlowState<Operator, UtilityService, PaymentViewModel>
     
     private var servicePicker: ServicePickerState? {
         
