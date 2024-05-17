@@ -31,32 +31,21 @@ extension UtilityPaymentFlowState {
     #warning("make generic?")
     enum Destination {
         
-        case operatorFailure(OperatorFailureFlowState)
-        case payByInstructions(PaymentsViewModel)
-        case payment(UtilityServicePaymentFlowState<PaymentViewModel>)
-        case servicePicker(ServicePickerFlowState)
+        case operatorFailure(OperatorFailure)
+        case payByInstructions(PayByInstructionsViewModel)
+        case payment(Payment)
+        case servicePicker(UtilityServicePickerFlowState)
     }
 }
 
 extension UtilityPaymentFlowState.Destination {
-    #warning("extract subtypes to get rid of generics where they are not needed")
-    struct OperatorFailureFlowState {
-        
-        let content: Content
-        var destination: Destination?
-        
-        init(
-            content: Content,
-            destination: Destination? = nil
-        ) {
-            self.content = content
-            self.destination = destination
-        }
-        
-        typealias Content = Operator
-    }
     
-    struct ServicePickerFlowState {
+    typealias OperatorFailure = SberOperatorFailureFlowState<Operator>
+    typealias PayByInstructionsViewModel = PaymentsViewModel
+    typealias Payment = UtilityServicePaymentFlowState<PaymentViewModel>
+    
+    #warning("extract subtypes to get rid of generics where they are not needed")
+    struct UtilityServicePickerFlowState {
         
         let content: Content
         var destination: Destination?
@@ -74,15 +63,7 @@ extension UtilityPaymentFlowState.Destination {
     }
 }
 
-extension UtilityPaymentFlowState.Destination.OperatorFailureFlowState {
-    
-    enum Destination {
-        
-        case payByInstructions(PaymentsViewModel)
-    }
-}
-
-extension UtilityPaymentFlowState.Destination.ServicePickerFlowState {
+extension UtilityPaymentFlowState.Destination.UtilityServicePickerFlowState {
     
     struct Content {
         
@@ -98,9 +79,9 @@ extension UtilityPaymentFlowState.Destination.ServicePickerFlowState {
     }
 }
 
-extension UtilityPaymentFlowState.Destination.ServicePickerFlowState.Destination {
+extension UtilityPaymentFlowState.Destination.UtilityServicePickerFlowState.Destination {
     
     typealias StartPaymentResponse = StartUtilityPaymentResponse
 }
 
-extension UtilityPaymentFlowState.Destination.ServicePickerFlowState.Content: Equatable where Operator: Equatable, UtilityService: Equatable {}
+extension UtilityPaymentFlowState.Destination.UtilityServicePickerFlowState.Content: Equatable where Operator: Equatable, UtilityService: Equatable {}

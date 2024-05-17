@@ -411,7 +411,7 @@ private extension PaymentsTransfersViewModel._Route {
         self.destination = .utilityPayment(utilityPrepayment)
     }
     
-    typealias OperatorFailure = UtilityFlowState.Destination.OperatorFailureFlowState
+    typealias OperatorFailure = SberOperatorFailureFlowState<Operator>
     
     private var operatorFailure: OperatorFailure? {
         
@@ -430,7 +430,7 @@ private extension PaymentsTransfersViewModel._Route {
         self.setUtilityPrepaymentDestination(to: .operatorFailure(operatorFailure))
     }
     
-    typealias ServicePickerState = UtilityFlowState.Destination.ServicePickerFlowState
+    typealias ServicePickerState = UtilityFlowState.Destination.UtilityServicePickerFlowState
     
     private var servicePicker: ServicePickerState? {
         

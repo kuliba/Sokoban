@@ -455,12 +455,12 @@ private extension PaymentsTransfersView {
     }
     
     func operatorFailureView(
-        operatorFailure: UtilityFlowState.Destination.OperatorFailureFlowState,
+        operatorFailure: OperatorFailure,
         payByInstructions: @escaping () -> Void,
         dismissDestination: @escaping () -> Void
     ) -> some View {
         
-        OperatorFailureFlowView(
+        SberOperatorFailureFlowView(
             state: operatorFailure,
             event: dismissDestination,
             content: {
@@ -605,8 +605,9 @@ private extension PaymentsTransfersView {
     
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
     
-    typealias OperatorFailure = UtilityFlowState.Destination.OperatorFailureFlowState
-    typealias ServicePickerState = UtilityFlowState.Destination.ServicePickerFlowState
+    typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
+    
+    typealias ServicePickerState = UtilityFlowState.Destination.UtilityServicePickerFlowState
     
     typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<ObservingPaymentFlowMockViewModel>
 }
