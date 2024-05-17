@@ -34,7 +34,7 @@ extension UtilityPrepaymentFlowMicroServicesComposer {
 
 extension UtilityPrepaymentFlowMicroServicesComposer {
     
-    typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator>
+    typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService>
     typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator>
 }
 

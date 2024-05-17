@@ -20,8 +20,7 @@ where LastPayment == UtilityPaymentLastPayment,
         typealias UtilityPrepaymentEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
         
         let utilityPrepaymentEffectHandler = UtilityPrepaymentEffectHandler(
-            initiateUtilityPayment: { _ in },
-            startPayment: { _,_ in }
+            microServices: .preview
         )
         
         typealias EffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
