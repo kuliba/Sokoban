@@ -540,7 +540,7 @@ private extension PaymentsTransfersView {
         
         switch fullScreenCover {
         case .completed:
-            VStack(spacing: 32) {
+            return VStack(spacing: 32) {
                 
                 Text("TBD: Payment Complete View")
                     .frame(maxHeight: .infinity)

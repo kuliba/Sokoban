@@ -43,6 +43,9 @@ extension PaymentFraudMockView {
     typealias Event = FraudEvent
 }
 
-#Preview {
-    PaymentFraudMockView(state: .init(), event: { print($0) })
+struct PaymentFraudMockView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        PaymentFraudMockView(state: .init(), event: { print($0) })
+    }
 }
