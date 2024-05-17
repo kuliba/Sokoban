@@ -77,7 +77,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     var isHidden: Bool {
         get {
             guard let product = getProduct(self.id) else { return true }
-            return !product.productStatus.contains(.visible) //!productData.visibility
+            return product.productStatus == .notVisible
         }
         
         set {
@@ -157,14 +157,14 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
         switch direction {
         case .right:
             
-            guard false, !product.productStatus.contains(.active) //fix if activated button need
+            guard false, product.productStatus == .notActive //fix if activated button need
             else { return nil }
             
             return ActionButtonViewModel(type: .activate, action: { [weak self] in self?.action.send(MyProductsSectionItemAction.SideButtonTapped.Activate())})
             
         case .left:
             
-            guard product.productStatus.contains(.active),
+            guard product.productStatus == .active,
                   !model.productsVisibilityUpdating.value.contains(id)
                   
             else { return nil }
@@ -219,39 +219,14 @@ extension MyProductsSectionItemViewModel {
             let backgroundImage = model.images.value[productData.smallDesignMd5hash]?.image
             let backgroundDesignImage = model.images.value[productData.smallBackgroundDesignHash]?.image
             
-            switch productData.productStatus {
-            case [.active, .blocked, .visible]:
-                self.init(background: .init(img: backgroundDesignImage, color: productData.backgroundColor),
-                          overlay: .init(image: .ic16Lock,
-                                         imageColor: productData.overlayImageColor),
-                          isUpdating: isUpdating)
-                
-            case [.active, .blocked]:
-                // active, blocked, not visible
-                self.init(background: .init(img: backgroundDesignImage, color: productData.backgroundColor),
-                          overlay: .init(image: .ic12Lockandeyeoff,
-                                         imageColor: productData.overlayImageColor),
-                          isUpdating: isUpdating)
-                
-            case [.active, .visible]:
-                // active, not blocked, visible
-                self.init(background: .init(img: backgroundImage, color: productData.backgroundColor),
-                          overlay: nil,
-                          isUpdating: isUpdating)
-                
-            case .active:
-                // active, not blocked, not visible
-                self.init(background: .init(img: backgroundDesignImage, color: productData.backgroundColor),
-                          overlay: .init(image: .ic16EyeOff,
-                                         imageColor: productData.overlayImageColor),
-                          isUpdating: isUpdating)
-            default:
-                // not active
-                self.init(background: .init(img: backgroundDesignImage, color: productData.backgroundColor),
-                          overlay: .init(image: .ic16ArrowRightCircle,
-                                         imageColor: productData.overlayImageColor),
-                          isUpdating: isUpdating)
-            }
+            self.init(
+                background: .init(
+                    img: productData.productStatus == .active ? backgroundImage : backgroundDesignImage,
+                    color: productData.backgroundColor),
+                overlay: IconViewModel.statusIcon(
+                    status: productData.productStatus,
+                    color: productData.overlayImageColor),
+                isUpdating: isUpdating)
         }
         
         enum Background {
@@ -272,6 +247,33 @@ extension MyProductsSectionItemViewModel {
             
             let image: Image
             let imageColor: Color
+        }
+        
+        static func statusIcon(
+            status: ProductStatus,
+            color: Color
+        ) -> Overlay? {
+            
+            switch status {
+            case .active:
+                return nil
+            case .blocked:
+                return .init(
+                    image: .ic16Lock,
+                    imageColor: color)
+            case .blockedNotVisible:
+                return .init(
+                    image: .ic12Lockandeyeoff,
+                    imageColor: color)
+            case .notVisible:
+                return .init(
+                    image: .ic16EyeOff,
+                    imageColor: color)
+            case .notActive:
+                return .init(
+                    image: .ic16ArrowRightCircle,
+                    imageColor: color)
+            }
         }
     }
     
