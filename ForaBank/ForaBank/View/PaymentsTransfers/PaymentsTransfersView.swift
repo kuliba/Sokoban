@@ -534,13 +534,14 @@ private extension PaymentsTransfersView {
         }
     }
     
+    @ViewBuilder
     func paymentFlowFullScreenCoverView(
         fullScreenCover: UtilityServiceFlowState.FullScreenCover
     ) -> some View {
         
         switch fullScreenCover {
         case .completed:
-            return VStack(spacing: 32) {
+            VStack(spacing: 32) {
                 
                 Text("TBD: Payment Complete View")
                     .frame(maxHeight: .infinity)
