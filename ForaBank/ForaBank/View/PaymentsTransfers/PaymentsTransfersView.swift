@@ -534,6 +534,7 @@ private extension PaymentsTransfersView {
         }
     }
     
+    @ViewBuilder
     func paymentFlowFullScreenCoverView(
         fullScreenCover: UtilityServiceFlowState.FullScreenCover
     ) -> some View {
