@@ -16,9 +16,9 @@ where FooterView == Text,
     static var preview: Self {
         
         return .init(
-            makeFooterView: { .init("Footer View: \($0)") },
-            makeLastPaymentView: { .init("LastPayment View: \($0)") },
-            makeOperatorView: { .init("Operator View: \($0)") },
+            makeFooterView: { _ in .init("Footer View") },
+            makeLastPaymentView: { _ in .init("LastPayment View") },
+            makeOperatorView: { _ in .init("Operator View") },
             makeSearchView: { .init("Search View") }
         )
     }
