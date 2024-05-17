@@ -30,6 +30,9 @@ extension PaymentFlowModalView {
     typealias ModalEvent = FraudEvent // while only one Modal
 }
 
-#Preview {
-    PaymentFlowModalView(state: .fraud(.init()), event: { print($0) })
+struct PaymentFlowModalView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        PaymentFlowModalView(state: .fraud(.init()), event: { print($0) })
+    }
 }
