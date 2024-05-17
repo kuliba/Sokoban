@@ -8,15 +8,17 @@
 import SwiftUI
 
 struct CalendarView<DateView>: View where DateView: View {
-    @Environment(\.calendar) var calendar
- 
+    
+    let calendar: Calendar
     let interval: DateInterval
     let content: (Date) -> DateView
  
     init(
+        calendar: Calendar,
         interval: DateInterval,
         @ViewBuilder content: @escaping (Date) -> DateView
     ) {
+        self.calendar = calendar
         self.interval = interval
         self.content = content
     }
@@ -33,6 +35,7 @@ struct CalendarView<DateView>: View where DateView: View {
         ScrollView(.vertical, showsIndicators: false) {
             
             VStack {
+                
                 ForEach(months, id: \.self) { month in
                     
                     MonthView(month: month, content: self.content)
