@@ -57,7 +57,7 @@ struct UtilityOperatorPicker: View {
                 amount: latestPayment.amount,
                 title: latestPayment.title,
                 config: .iFora,
-                iconView: Text("TBD Icon View \(latestPayment)")
+                iconView: Text("TBD Icon View")
             )
             .contentShape(Rectangle())
         }
@@ -79,7 +79,7 @@ struct UtilityOperatorPicker: View {
                 title: `operator`.title,
                 subtitle: `operator`.subtitle,
                 config: .iFora,
-                iconView: Text("TBD Icon View \(`operator`)")
+                iconView: Text("TBD Icon View")
             )
             .contentShape(Rectangle())
         }

@@ -16,7 +16,7 @@ struct OperatorFailureView<State>: View {
         #warning("replace with one from module")
         VStack(spacing: 32) {
             
-            Text("TBD: Operator Failure view for \(state)")
+           Text("TBD: Operator Failure view for state")
             
             Button("Pay by Instructions", action: event)
         }
