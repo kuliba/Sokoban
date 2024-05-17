@@ -681,7 +681,7 @@
 		2A5B23112BEE03CE00270D50 /* View+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23102BEE03CE00270D50 /* View+ext.swift */; };
 		2A5B23152BEE05E300270D50 /* UtilityPaymentFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23142BEE05E300270D50 /* UtilityPaymentFlowView.swift */; };
 		2A5B23182BEE0B9300270D50 /* UtilityPrepaymentWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23172BEE0B9300270D50 /* UtilityPrepaymentWrapperView.swift */; };
-		2A5B23212BEE329200270D50 /* OperatorFailureFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23202BEE329200270D50 /* OperatorFailureFlowView.swift */; };
+		2A5B23212BEE329200270D50 /* SberOperatorFailureFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23202BEE329200270D50 /* SberOperatorFailureFlowView.swift */; };
 		2A5B23232BEE330F00270D50 /* OperatorFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23222BEE330F00270D50 /* OperatorFailureView.swift */; };
 		2A5B23252BEE379E00270D50 /* ServicePickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23242BEE379E00270D50 /* ServicePickerFlowView.swift */; };
 		2A5B23272BEE385200270D50 /* ServicePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B23262BEE385200270D50 /* ServicePickerView.swift */; };
@@ -1233,6 +1233,8 @@
 		2AEF68602AE565F300E0EBD7 /* ResponseMapper+mapChangePINResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF685F2AE565F300E0EBD7 /* ResponseMapper+mapChangePINResponse.swift */; };
 		2AEF68652AE575C900E0EBD7 /* RequestFactory+makeSecretRequest2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF68642AE575C900E0EBD7 /* RequestFactory+makeSecretRequest2.swift */; };
 		2AEF68672AE58FDC00E0EBD7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF68662AE58FDC00E0EBD7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift */; };
+		2AEF6BF22BF76DBE000249A1 /* SberOperatorFailureFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF6BF12BF76DBE000249A1 /* SberOperatorFailureFlowState.swift */; };
+		2AEF6BF62BF78017000249A1 /* UtilityServicePickerFlowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF6BF52BF78017000249A1 /* UtilityServicePickerFlowState.swift */; };
 		2AF0B0D92B6AB9C100D34CA6 /* UserAccountModelEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF0B0D82B6AB9C100D34CA6 /* UserAccountModelEffectHandler.swift */; };
 		2AF1774F2AC476CD00D100DD /* RootViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */; };
 		2AF177532AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF177522AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift */; };
@@ -3541,7 +3543,7 @@
 		2A5B23102BEE03CE00270D50 /* View+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ext.swift"; sourceTree = "<group>"; };
 		2A5B23142BEE05E300270D50 /* UtilityPaymentFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentFlowView.swift; sourceTree = "<group>"; };
 		2A5B23172BEE0B9300270D50 /* UtilityPrepaymentWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentWrapperView.swift; sourceTree = "<group>"; };
-		2A5B23202BEE329200270D50 /* OperatorFailureFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorFailureFlowView.swift; sourceTree = "<group>"; };
+		2A5B23202BEE329200270D50 /* SberOperatorFailureFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberOperatorFailureFlowView.swift; sourceTree = "<group>"; };
 		2A5B23222BEE330F00270D50 /* OperatorFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorFailureView.swift; sourceTree = "<group>"; };
 		2A5B23242BEE379E00270D50 /* ServicePickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePickerFlowView.swift; sourceTree = "<group>"; };
 		2A5B23262BEE385200270D50 /* ServicePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePickerView.swift; sourceTree = "<group>"; };
@@ -4075,6 +4077,8 @@
 		2AEF685F2AE565F300E0EBD7 /* ResponseMapper+mapChangePINResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapChangePINResponse.swift"; sourceTree = "<group>"; };
 		2AEF68642AE575C900E0EBD7 /* RequestFactory+makeSecretRequest2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+makeSecretRequest2.swift"; sourceTree = "<group>"; };
 		2AEF68662AE58FDC00E0EBD7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift"; sourceTree = "<group>"; };
+		2AEF6BF12BF76DBE000249A1 /* SberOperatorFailureFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberOperatorFailureFlowState.swift; sourceTree = "<group>"; };
+		2AEF6BF52BF78017000249A1 /* UtilityServicePickerFlowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePickerFlowState.swift; sourceTree = "<group>"; };
 		2AF0B0D82B6AB9C100D34CA6 /* UserAccountModelEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountModelEffectHandler.swift; sourceTree = "<group>"; };
 		2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModelFactory.swift; sourceTree = "<group>"; };
 		2AF177522AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyExchangeCryptographer+live.swift"; sourceTree = "<group>"; };
@@ -7907,7 +7911,7 @@
 			children = (
 				2A5B23142BEE05E300270D50 /* UtilityPaymentFlowView.swift */,
 				2A5B23162BEE0B8600270D50 /* UtilityPrepaymentWrapper */,
-				2A5B23202BEE329200270D50 /* OperatorFailureFlowView.swift */,
+				2A5B23202BEE329200270D50 /* SberOperatorFailureFlowView.swift */,
 				2A5B23222BEE330F00270D50 /* OperatorFailureView.swift */,
 				2A5B23242BEE379E00270D50 /* ServicePickerFlowView.swift */,
 				2A5B23262BEE385200270D50 /* ServicePickerView.swift */,
@@ -9409,6 +9413,8 @@
 			isa = PBXGroup;
 			children = (
 				2AECBC3B2BEBAB2C000B0C0E /* UtilityPaymentFlowState.swift */,
+				2AEF6BF12BF76DBE000249A1 /* SberOperatorFailureFlowState.swift */,
+				2AEF6BF52BF78017000249A1 /* UtilityServicePickerFlowState.swift */,
 				2AECBC2B2BEBA9A2000B0C0E /* UtilityPaymentFlowEvent.swift */,
 				2AECBC3D2BEBAB4C000B0C0E /* UtilityPaymentFlowEffect.swift */,
 				2AECBC492BEBAD55000B0C0E /* UtilityPaymentFlowEffectHandler.swift */,
@@ -16594,6 +16600,7 @@
 				C1BA23E52ACD543B00425B10 /* Service+Payments.swift in Sources */,
 				77577BB12992A05100D6BD66 /* MockKeysProvider.swift in Sources */,
 				6830A02227D37821003CA4F1 /* DepositProductData.swift in Sources */,
+				2AEF6BF22BF76DBE000249A1 /* SberOperatorFailureFlowState.swift in Sources */,
 				0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */,
 				2A61D07D2BECCD7300802C95 /* PaymentsTransfersFlowEffectHandler+preview.swift in Sources */,
 				C18D25FA2A25B96100DF5643 /* TemplateButtonViewComponent.swift in Sources */,
@@ -17435,6 +17442,7 @@
 				50087821285348A90033DDD5 /* Collection+Safe.swift in Sources */,
 				2A5B23232BEE330F00270D50 /* OperatorFailureView.swift in Sources */,
 				2AEF685A2AE559AC00E0EBD7 /* ResponseMapper+ mapBindPublicKeyWithEventIDResponse.swift in Sources */,
+				2AEF6BF62BF78017000249A1 /* UtilityServicePickerFlowState.swift in Sources */,
 				ED5CB97028720EE9008D8A1E /* AccountCellFullButtonWithInfoViewComponent.swift in Sources */,
 				0C89318B28ABEDF200835694 /* CentralBankRatesData.swift in Sources */,
 				77DD55CC29F1565500756451 /* NSDecimalNumbel+Extensions.swift in Sources */,
@@ -17688,7 +17696,7 @@
 				6819084428BCAAE3003E81A3 /* SbpPayView.swift in Sources */,
 				5036B0F628E20C570052FACE /* PaymentsMeToMeViewModel.swift in Sources */,
 				681E073F273D478700551FAD /* ProductViewControllerDelegate.swift in Sources */,
-				2A5B23212BEE329200270D50 /* OperatorFailureFlowView.swift in Sources */,
+				2A5B23212BEE329200270D50 /* SberOperatorFailureFlowView.swift in Sources */,
 				7758400927B13F8700251969 /* ValidatorProtocol.swift in Sources */,
 				68D06F2426C3C0F300F9BE4C /* MainViewControllerLayout.swift in Sources */,
 				0CEA3203287618CE005B80BA /* CreateTransterResponseData.swift in Sources */,

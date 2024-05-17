@@ -581,7 +581,7 @@ extension PaymentsTransfersViewModel {
 
 extension PaymentsTransfersViewModel._Link {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
 }
 
 // MARK: - Action

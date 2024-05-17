@@ -1,5 +1,5 @@
 //
-//  OperatorFailureFlowView.swift
+//  SberOperatorFailureFlowView.swift
 //
 //
 //  Created by Igor Malyarov on 05.05.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct OperatorFailureFlowView<LastPayment, Operator, Service, ContentView, DestinationView>: View
+struct SberOperatorFailureFlowView<Operator, ContentView, DestinationView>: View
 where ContentView: View,
       DestinationView: View {
     
@@ -27,16 +27,15 @@ where ContentView: View,
     }
 }
 
-extension OperatorFailureFlowView {
+extension SberOperatorFailureFlowView {
     
     typealias Destination = State.Destination
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, Service, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
-    typealias State = UtilityFlowState.Destination.OperatorFailureFlowState
+    typealias State = SberOperatorFailureFlowState<Operator>
     typealias Event = ()
 }
 
-extension UtilityPaymentFlowState.Destination.OperatorFailureFlowState.Destination: Identifiable {
+extension SberOperatorFailureFlowState.Destination: Identifiable {
     
     var id: ID {
         

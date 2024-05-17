@@ -29,21 +29,9 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     func compose() -> Factory {
         
         return .init(
-            makeUtilityPrepaymentViewModel: { [self] in
-                
-                makeUtilityPrepaymentViewModel(payload: .init(
-                    lastPayments: $0.lastPayments,
-                    operators: $0.operators
-                ))
-            },
-            makeUtilityPaymentViewModel: { _, notify in
-                
-                return .init(notify: notify)
-            },
-            makePaymentsViewModel: { [model = self.model] in
-                
-                return .init(model, service: .requisites, closeAction: $0)
-            }
+            makeUtilityPrepaymentState: makeUtilityPrepaymentState,
+            makeUtilityPaymentState: makeUtilityPaymentState,
+            makePaymentsViewModel: makePaymentsViewModel
         )
     }
 }
@@ -63,9 +51,14 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
     
-    func makeUtilityPrepaymentViewModel(
-        payload: Payload
-    ) -> UtilityPrepaymentViewModel {
+    func makeUtilityPrepaymentState(
+        payload: UtilityPrepaymentPayload
+    ) -> UtilityFlowState {
+        
+        let payload = PrepaymentPayload(
+            lastPayments: payload.lastPayments,
+            operators: payload.operators
+        )
         
         let reducer = UtilityPrepaymentReducer(observeLast: observeLast)
         
@@ -73,7 +66,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
             microServices: microServices
         )
         
-        return .init(
+        let viewModel = UtilityPrepaymentViewModel(
             initialState: .init(
                 lastPayments: payload.lastPayments,
                 operators: payload.operators,
@@ -82,9 +75,16 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:)
         )
+        
+        return .init(content: viewModel)
     }
     
-    struct Payload {
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
+    
+    typealias UtilityPrepaymentFlowEvent = UtilityPaymentFlowEvent<PaymentsTransfersFlowReducerFactoryComposer.LastPayment, PaymentsTransfersFlowReducerFactoryComposer.Operator, UtilityService>.UtilityPrepaymentFlowEvent
+    typealias UtilityPrepaymentPayload = UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
+    
+    struct PrepaymentPayload {
         
         let lastPayments: [UtilityPaymentLastPayment]
         let operators: [UtilityPaymentOperator]
@@ -92,4 +92,45 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     
     typealias UtilityPrepaymentReducer = PrepaymentPickerReducer<UtilityPaymentLastPayment, UtilityPaymentOperator>
     typealias UtilityPrepaymentEffectHandler = PrepaymentPickerEffectHandler<UtilityPaymentOperator>
+}
+
+private extension PaymentsTransfersFlowReducerFactoryComposer {
+    
+    func makeUtilityPaymentState(
+        response: StartUtilityPaymentResponse,
+        notify: @escaping (PaymentStateProjection) -> Void
+    ) -> UtilityServicePaymentFlowState<PaymentViewModel> {
+        
+        let initialState: PaymentFlowMockState = {
+            
+#warning("map StartUtilityPaymentResponse")
+            return .init()
+        }()
+        let viewModel = makeUtilityPaymentViewModel(
+            initialState: initialState,
+            notify: notify
+        )
+        
+#warning("add subscription")
+        
+        return .init(viewModel: viewModel)
+    }
+    
+    private func makeUtilityPaymentViewModel(
+        initialState: PaymentFlowMockState,
+        notify: @escaping (PaymentStateProjection) -> Void
+    ) -> ObservingPaymentFlowMockViewModel {
+        
+        return .init(state: initialState, notify: notify)
+    }
+}
+
+private extension PaymentsTransfersFlowReducerFactoryComposer {
+    
+    func makePaymentsViewModel(
+        closeAction: @escaping () -> Void
+    ) -> PaymentsViewModel {
+        
+        return .init(model, service: .requisites, closeAction: closeAction)
+    }
 }
