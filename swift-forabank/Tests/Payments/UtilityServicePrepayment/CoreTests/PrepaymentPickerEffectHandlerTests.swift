@@ -133,8 +133,10 @@ final class PrepaymentPickerEffectHandlerTests: XCTestCase {
         let paginateSpy = PaginateSpy()
         let searchSpy = SearchSpy()
         let sut = SUT(
-            paginate: paginateSpy.process(_:completion:),
-            search: searchSpy.process(_:completion:)
+            microServices: .init(
+                paginate: paginateSpy.process(_:completion:),
+                search: searchSpy.process(_:completion:)
+            )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

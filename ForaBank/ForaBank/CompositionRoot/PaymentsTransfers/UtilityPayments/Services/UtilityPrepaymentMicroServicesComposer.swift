@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
+import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
 
 final class UtilityPrepaymentMicroServicesComposer<Operator>
@@ -32,12 +33,13 @@ extension UtilityPrepaymentMicroServicesComposer {
 
 extension UtilityPrepaymentMicroServicesComposer {
     
-    typealias MicroServices = UtilityPrepaymentMicroServices<Operator>
+    typealias MicroServices = PrepaymentPickerMicroServices<Operator>
     typealias NanoServices = UtilityPrepaymentNanoServices<Operator>
 }
 
 private extension UtilityPrepaymentMicroServicesComposer {
     
+#warning("TODO: throttle & remove duplicates")
     func paginate(
         payload: PaginatePayload<Operator.ID>,
         completion: @escaping ([Operator]) -> Void
@@ -45,6 +47,7 @@ private extension UtilityPrepaymentMicroServicesComposer {
         nanoServices.loadOperators(.init(afterOperatorID: payload.operatorID, searchText: payload.searchText, pageSize: pageSize), completion)
     }
     
+#warning("TODO: debounce & remove duplicates")
     func search(
         searchText: String,
         completion: @escaping ([Operator]) -> Void
