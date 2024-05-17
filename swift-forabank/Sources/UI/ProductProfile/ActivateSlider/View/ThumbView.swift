@@ -16,14 +16,14 @@ struct ThumbView: View {
         ZStack {
             
             Circle()
-                .foregroundColor(config.backgroundColor)
+                .foregroundColor(config.foregroundColor)
             Circle()
                 .strokeBorder(config.foregroundColor, lineWidth: 1)
             
             config.icon
                 .resizable()
                 .renderingMode(.template)
-                .foregroundColor(config.foregroundColor)
+                .foregroundColor(.gray)
                 .frame(width: 24, height: 24)
                 .modifier(AnimationModifire(isAnimated: config.isAnimated))
         }
