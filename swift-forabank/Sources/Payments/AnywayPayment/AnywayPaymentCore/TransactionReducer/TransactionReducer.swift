@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 30.03.2024.
 //
 
+import AnywayPaymentDomain
+
 public final class TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate> {
     
     private let paymentReduce: PaymentReduce

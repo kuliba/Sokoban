@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 29.03.2024.
 //
 
+import AnywayPaymentDomain
 import AnywayPaymentCore
 import XCTest
 

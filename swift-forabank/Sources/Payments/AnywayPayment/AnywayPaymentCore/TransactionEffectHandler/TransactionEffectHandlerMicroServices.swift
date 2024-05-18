@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 17.05.2024.
 //
 
+import AnywayPaymentDomain
+
 public struct TransactionEffectHandlerMicroServices<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate> {
     
     public let initiatePayment: InitiatePayment

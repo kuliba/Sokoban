@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
+import AnywayPaymentDomain
+
 public final class TransactionEffectHandler<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate> {
     
     private let microServices: MicroServices

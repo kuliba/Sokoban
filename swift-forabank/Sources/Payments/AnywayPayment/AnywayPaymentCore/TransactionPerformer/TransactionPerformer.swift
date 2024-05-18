@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 24.03.2024.
 //
 
+import AnywayPaymentDomain
+
 public final class TransactionPerformer<DocumentStatus, OperationDetails> {
     
     private let getDetails: GetDetails
@@ -99,13 +101,16 @@ private extension TransactionReport {
     ) {
         switch operationDetails {
         case .none:
-            self.documentStatus = response.documentStatus
-            self.details = .paymentOperationDetailID(response.paymentOperationDetailID)
-            
+            self.init(
+                documentStatus: response.documentStatus,
+                details: .paymentOperationDetailID(response.paymentOperationDetailID)
+            )
             
         case let .some(operationDetails):
-            self.documentStatus = response.documentStatus
-            self.details = .operationDetails(operationDetails)
+            self.init(
+                documentStatus: response.documentStatus,
+                details: .operationDetails(operationDetails)
+            )
         }
     }
 }
