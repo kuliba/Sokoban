@@ -13,7 +13,7 @@ public enum TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, Pay
     case fraud(Fraud)
     case initiatePayment
     case payment(PaymentEvent)
-    case updatePayment(PaymentUpdateResult)
+    case updatePayment(UpdatePaymentResult)
 }
 
 public extension TransactionEvent {
@@ -25,7 +25,7 @@ public extension TransactionEvent {
     
     typealias TransactionResult = TransactionReport<DocumentStatus, OperationDetails>?
     
-    typealias PaymentUpdateResult = Result<PaymentUpdate, ServiceFailure>
+    typealias UpdatePaymentResult = Result<PaymentUpdate, ServiceFailure>
 }
 
 extension TransactionEvent: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable, PaymentEvent: Equatable, PaymentUpdate: Equatable {}
