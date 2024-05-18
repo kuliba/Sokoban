@@ -10,7 +10,7 @@ import Tagged
 
 extension AnywayPayment {
     
-    public func staged() -> AnywayPaymentStaged {
+    public func getStaged() -> AnywayPaymentStaged {
         
         .init(elements.compactMap(\.parameterID))
     }
