@@ -15,7 +15,7 @@ extension AnywayPaymentContext {
         return .init(
             payment: payment,
             staged: payment.staged(),
-            outline: outline.update(with: payment)
+            outline: outline.updating(with: payment)
         )
     }
 }
