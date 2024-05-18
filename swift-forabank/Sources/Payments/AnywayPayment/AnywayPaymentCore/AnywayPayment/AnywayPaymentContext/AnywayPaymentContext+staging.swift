@@ -1,5 +1,5 @@
 //
-//  AnywayPaymentContext+stage.swift
+//  AnywayPaymentContext+staging.swift
 //
 //
 //  Created by Igor Malyarov on 06.04.2024.
@@ -10,7 +10,7 @@ import Tagged
 
 extension AnywayPaymentContext {
     
-    public func stage() -> Self {
+    public func staging() -> Self {
         
         return .init(
             payment: payment,
