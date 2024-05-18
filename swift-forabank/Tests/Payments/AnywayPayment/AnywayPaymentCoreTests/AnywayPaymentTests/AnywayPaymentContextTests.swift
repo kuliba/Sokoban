@@ -13,38 +13,38 @@ final class AnywayPaymentContextTests: XCTestCase {
     
     func test_stage_shouldNotChangeEmptyStagedOnEmptyElements() {
         
-        var context = makeAnywayPaymentContext(elements: [])
+        let context = makeAnywayPaymentContext(elements: [])
         XCTAssert(context.staged.isEmpty)
         
-        context.stage()
+        let stagedContext = context.stage()
         
-        XCTAssert(context.staged.isEmpty)
+        XCTAssert(stagedContext.staged.isEmpty)
     }
     
     func test_stage_shouldNotChangeEmptyStagedOnEmptyParameters() {
         
-        var context = makeAnywayPaymentContext(
+        let context = makeAnywayPaymentContext(
             elements: [.field(makeAnywayPaymentField())]
         )
         XCTAssert(context.staged.isEmpty)
         
-        context.stage()
-        
-        XCTAssert(context.staged.isEmpty)
+        let stagedContext = context.stage()
+
+        XCTAssert(stagedContext.staged.isEmpty)
     }
     
     func test_stage_shouldAppendParameterIDsToEmptyStaged() {
         
         let (parameter1, parameter2) = makeTwoParameters()
-        var context = makeAnywayPaymentContext(
+        let context = makeAnywayPaymentContext(
             elements: [.parameter(parameter1), .parameter(parameter2), .field(makeAnywayPaymentField())]
         )
         XCTAssert(context.staged.isEmpty)
         
-        context.stage()
-        
+        let stagedContext = context.stage()
+
         XCTAssertNoDiff(
-            context.staged,
+            stagedContext.staged,
             [parameter1.field.id, parameter2.field.id]
         )
     }
@@ -52,56 +52,56 @@ final class AnywayPaymentContextTests: XCTestCase {
     func test_stage_shouldAppendParameterIDToNonEmptyStaged() {
         
         let (parameter1, parameter2) = makeTwoParameters()
-        var context = makeAnywayPaymentContext(
+        let context = makeAnywayPaymentContext(
             elements: [.parameter(parameter1), .parameter(parameter2), .field(makeAnywayPaymentField())],
             staged: [parameter1.field.id]
         )
         XCTAssertFalse(context.staged.isEmpty)
         
-        context.stage()
-        
+        let stagedContext = context.stage()
+
         XCTAssertNoDiff(
-            context.staged,
+            stagedContext.staged,
             [parameter1.field.id, parameter2.field.id]
         )
     }
     
     func test_stage_shouldNotChangeEmptyFieldsOutlineOnEmptyElementsPayment() {
         
-        var context = makeAnywayPaymentContext(elements: [])
+        let context = makeAnywayPaymentContext(elements: [])
         XCTAssert(context.outline.fields.isEmpty)
         
-        context.stage()
-        
-        XCTAssert(context.outline.fields.isEmpty)
+        let stagedContext = context.stage()
+
+        XCTAssert(stagedContext.outline.fields.isEmpty)
     }
     
     func test_stage_shouldNotChangeOutlineFieldsOnEmptyElementsPayment() {
         
         let outline = makeAnywayPaymentOutline(["a": "1"])
-        var context = makeAnywayPaymentContext(
+        let context = makeAnywayPaymentContext(
             elements: [],
             outline: outline
         )
         XCTAssertFalse(context.outline.fields.isEmpty)
         
-        context.stage()
-        
-        XCTAssertNoDiff(context.outline, outline)
+        let stagedContext = context.stage()
+
+        XCTAssertNoDiff(stagedContext.outline, outline)
     }
     
     func test_stage_shouldNotChangeOutlineFieldsOnEmptyParametersPayment() {
         
         let outline = makeAnywayPaymentOutline(["a": "1"])
-        var context = makeAnywayPaymentContext(
+        let context = makeAnywayPaymentContext(
             elements: [.field(makeAnywayPaymentField())],
             outline: outline
         )
         XCTAssertFalse(context.outline.fields.isEmpty)
         
-        context.stage()
-        
-        XCTAssertNoDiff(context.outline, outline)
+        let stagedContext = context.stage()
+
+        XCTAssertNoDiff(stagedContext.outline, outline)
     }
     
     func test_stage_shouldAppendMissingInputToOutline() {
@@ -109,14 +109,14 @@ final class AnywayPaymentContextTests: XCTestCase {
         let outline = makeAnywayPaymentOutline(["a": "1"])
         let input1 = makeAnywayPaymentParameter(id: "x", value: "X", viewType: .input)
         let input2 = makeAnywayPaymentParameter(id: "y", value: "Y", viewType: .input)
-        var context = makeAnywayPaymentContext(
+        let context = makeAnywayPaymentContext(
             elements: [.parameter(input1), .parameter(input2), .field(makeAnywayPaymentField())],
             outline: outline
         )
         
-        context.stage()
-        
-        XCTAssertNoDiff(context.outline.fields, [
+        let stagedContext = context.stage()
+
+        XCTAssertNoDiff(stagedContext.outline.fields, [
             "a": "1",
             "x": "X",
             "y": "Y",
@@ -129,14 +129,14 @@ final class AnywayPaymentContextTests: XCTestCase {
         let constant = makeAnywayPaymentParameter(id: "x", value: "X", viewType: .constant)
         let input = makeAnywayPaymentParameter(id: "y", value: "Y", viewType: .input)
         let output = makeAnywayPaymentParameter(id: "z", value: "Z", viewType: .output)
-        var context = makeAnywayPaymentContext(
+        let context = makeAnywayPaymentContext(
             elements: [.parameter(constant), .parameter(input), .parameter(output), .field(makeAnywayPaymentField())],
             outline: outline
         )
         
-        context.stage()
-        
-        XCTAssertNoDiff(context.outline.fields, [
+        let stagedContext = context.stage()
+
+        XCTAssertNoDiff(stagedContext.outline.fields, [
             "a": "1",
             "y": "Y",
         ])
@@ -150,15 +150,15 @@ final class AnywayPaymentContextTests: XCTestCase {
             "a": "1",
             "b": "2"
         ])
-        var context = makeAnywayPaymentContext(
+        let context = makeAnywayPaymentContext(
             elements: [.parameter(parameter)],
             outline: outline
         )
         XCTAssertFalse(context.outline.fields.isEmpty)
         
-        context.stage()
-        
-        XCTAssertNoDiff(context.outline.fields, [
+        let stagedContext = context.stage()
+
+        XCTAssertNoDiff(stagedContext.outline.fields, [
             "a": "1",
             "b": "222",
         ])
@@ -173,14 +173,14 @@ final class AnywayPaymentContextTests: XCTestCase {
             "a": "1",
             "b": "2"
         ])
-        var context = makeAnywayPaymentContext(
+        let context = makeAnywayPaymentContext(
             elements: [.parameter(parameter), .parameter(parameter2), .field(makeAnywayPaymentField())],
             outline: outline
         )
         
-        context.stage()
-        
-        XCTAssertNoDiff(context.outline.fields, [
+        let stagedContext = context.stage()
+
+        XCTAssertNoDiff(stagedContext.outline.fields, [
             "a": "1",
             "b": "222",
             "y": "Y",
@@ -189,56 +189,56 @@ final class AnywayPaymentContextTests: XCTestCase {
     
     func test_stage_shouldNotChangeEmptyFieldsOutlineCoreOnEmptyElementsPayment() {
         
-        var context = makeAnywayPaymentContext(elements: [])
+        let context = makeAnywayPaymentContext(elements: [])
         XCTAssert(context.outline.fields.isEmpty)
         let core = context.outline.core
         
-        context.stage()
-        
-        XCTAssertNoDiff(context.outline.core, core)
+        let stagedContext = context.stage()
+
+        XCTAssertNoDiff(stagedContext.outline.core, core)
     }
     
     func test_stage_shouldNotChangeOutlineCoreOnEmptyElementsPayment() {
         
         let outline = makeAnywayPaymentOutline(["a": "1"])
-        var context = makeAnywayPaymentContext(
+        let context = makeAnywayPaymentContext(
             elements: [],
             outline: outline
         )
         let core = context.outline.core
 
-        context.stage()
-        
-        XCTAssertNoDiff(context.outline.core, core)
+        let stagedContext = context.stage()
+
+        XCTAssertNoDiff(stagedContext.outline.core, core)
     }
     
     func test_stage_shouldNotChangeOutlineCoreOnEmptyParametersPayment() {
         
         let outline = makeAnywayPaymentOutline(["a": "1"])
-        var context = makeAnywayPaymentContext(
+        let context = makeAnywayPaymentContext(
             elements: [.field(makeAnywayPaymentField())],
             outline: outline
         )
         let core = context.outline.core
 
-        context.stage()
-        
-        XCTAssertNoDiff(context.outline.core, core)
+        let stagedContext = context.stage()
+
+        XCTAssertNoDiff(stagedContext.outline.core, core)
     }
     
     func test_stage_shouldNotChangeOutlineCoreOnNonEmpty() {
         
         let outline = makeAnywayPaymentOutline(["a": "1"])
         let (parameter1, parameter2) = makeTwoParameters()
-        var context = makeAnywayPaymentContext(
+        let context = makeAnywayPaymentContext(
             elements: [.parameter(parameter1), .parameter(parameter2), .field(makeAnywayPaymentField())],
             outline: outline
         )
         let core = context.outline.core
         
-        context.stage()
-        
-        XCTAssertNoDiff(context.outline.core, core)
+        let stagedContext = context.stage()
+
+        XCTAssertNoDiff(stagedContext.outline.core, core)
     }
     
     // MARK: - Helpers
