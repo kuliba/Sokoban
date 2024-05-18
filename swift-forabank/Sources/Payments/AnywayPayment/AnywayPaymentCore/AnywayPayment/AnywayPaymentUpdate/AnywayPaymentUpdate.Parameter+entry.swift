@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 06.04.2024.
 //
 
+import AnywayPaymentDomain
+
 public extension AnywayPaymentUpdate.Parameter {
     
     var entry: Entry? {
@@ -87,4 +89,3 @@ public extension AnywayPaymentUpdate.Parameter.Entry {
     
     typealias Pair = AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair
 }
-

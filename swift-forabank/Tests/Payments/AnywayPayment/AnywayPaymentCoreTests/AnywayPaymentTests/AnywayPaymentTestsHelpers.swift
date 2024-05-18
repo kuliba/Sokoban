@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import Foundation
 import XCTest
 
@@ -128,8 +129,8 @@ func makeAnywayPayment(
 
 func makeAnywayPaymentOutline(
     _ fields: [String: String] = [:],
-    core: AnywayPayment.Outline.PaymentCore = makeOutlinePaymentCore(productType: .account)
-) -> AnywayPayment.Outline {
+    core: AnywayPaymentOutline.PaymentCore = makeOutlinePaymentCore(productType: .account)
+) -> AnywayPaymentOutline {
     
     .init(
         core: core,
@@ -836,8 +837,8 @@ func makeOutlinePaymentCore(
     amount: Decimal = makeAmount(),
     currency: String = anyMessage(),
     productID: Int = makeIntID(),
-    productType: AnywayPayment.Outline.PaymentCore.ProductType
-) -> AnywayPayment.Outline.PaymentCore {
+    productType: AnywayPaymentOutline.PaymentCore.ProductType
+) -> AnywayPaymentOutline.PaymentCore {
     
     .init(
         amount: amount, 
@@ -851,7 +852,7 @@ func makeWidgetPaymentCore(
     amount: Decimal = makeAmount(),
     currency: String = anyMessage(),
     productID: Int = makeIntID(),
-    productType: AnywayPayment.Outline.PaymentCore.ProductType
+    productType: AnywayPaymentOutline.PaymentCore.ProductType
 ) -> AnywayPayment.Element.Widget.PaymentCore {
     
     .init(

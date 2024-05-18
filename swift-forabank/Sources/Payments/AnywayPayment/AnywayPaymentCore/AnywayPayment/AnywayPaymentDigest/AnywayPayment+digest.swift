@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 12.04.2024.
 //
 
+import AnywayPaymentDomain
+
 extension AnywayPayment {
     
     public var digest: AnywayPaymentDigest {
@@ -79,4 +81,3 @@ private extension AnywayPayment.Element.Widget.PaymentCore {
         }
     }
 }
-

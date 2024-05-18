@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import XCTest
 
 final class AnywayPaymentContextTests: XCTestCase {
@@ -246,8 +247,8 @@ final class AnywayPaymentContextTests: XCTestCase {
     
     private func makeAnywayPaymentContext(
         elements: [AnywayPayment.Element],
-        staged: AnywayPayment.Staged = [],
-        outline: AnywayPayment.Outline = makeAnywayPaymentOutline()
+        staged: AnywayPaymentStaged = [],
+        outline: AnywayPaymentOutline = makeAnywayPaymentOutline()
     ) -> AnywayPaymentContext {
         
         let payment = makeAnywayPayment(elements: elements)

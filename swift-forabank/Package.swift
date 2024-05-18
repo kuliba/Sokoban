@@ -966,6 +966,7 @@ private extension Target {
         name: .anywayPaymentAdapters,
         dependencies: [
             .anywayPaymentCore,
+            .anywayPaymentDomain,
             .anywayPaymentUI,
             .anywayPaymentBackend,
             .remoteServices,

@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 06.04.2024.
 //
 
+import AnywayPaymentDomain
+
 public extension AnywayPayment.Element.Parameter {
     
     var entry: Entry? {

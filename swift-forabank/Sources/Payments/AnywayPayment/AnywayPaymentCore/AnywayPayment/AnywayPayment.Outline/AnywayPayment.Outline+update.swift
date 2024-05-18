@@ -1,11 +1,13 @@
 //
-//  AnywayPayment.Outline+update.swift
+//  AnywayPaymentOutline+update.swift
 //
 //
 //  Created by Igor Malyarov on 08.04.2024.
 //
 
-extension AnywayPayment.Outline {
+import AnywayPaymentDomain
+
+extension AnywayPaymentOutline {
     
     public func update(with payment: AnywayPayment) -> Self {
         
@@ -20,7 +22,7 @@ extension AnywayPayment.Outline {
 
 private extension AnywayPayment.Element {
     
-    var idValuePair: (AnywayPayment.Outline.ID, AnywayPayment.Outline.Value)? {
+    var idValuePair: (AnywayPaymentOutline.ID, AnywayPaymentOutline.Value)? {
         
         guard case let .parameter(parameter) = self,
               parameter.isOutlinable
