@@ -49,6 +49,22 @@ public extension HandleEffectDecorator {
             decoration.onEffectFinish()
         }
     }
+    
+    /// Handles an effect by invoking the decorated effect handler and dispatching the resulting event.
+    /// The decoration actions are performed before and after the effect handling.
+    ///
+    /// - Parameters:
+    ///   - effect: The effect to be handled.
+    ///   - dispatch: The function to be called with the resulting event.
+    ///
+    /// - Note: This method uses a strong reference to `self`, ensuring that the completion handler is called
+    /// even if the decorator instance is deallocated before the decorated function completes.
+    func callAsFunction(
+        _ effect: Effect,
+        _ dispatch: @escaping Dispatch
+    ) {
+        handleEffect(effect) { [self] in dispatch($0); _ = self }
+    }
 }
 
 public extension HandleEffectDecorator {
