@@ -1,5 +1,5 @@
 //
-//  AnywayPaymentDigestPropertyTests.swift
+//  AnywayPaymentMakeDigestTests.swift
 //
 //
 //  Created by Igor Malyarov on 10.04.2024.
@@ -9,20 +9,20 @@ import AnywayPaymentCore
 import AnywayPaymentDomain
 import XCTest
 
-final class AnywayPaymentDigestPropertyTests: XCTestCase {
+final class AnywayPaymentMakeDigestTests: XCTestCase {
     
     func test_shouldSetAdditionalToEmptyOnEmptyElements() {
         
         let payment = makeAnywayPayment(elements: [])
         
-        XCTAssert(payment.digest.additional.isEmpty)
+        XCTAssert(payment.makeDigest().additional.isEmpty)
     }
     
     func test_shouldSetAdditionalToEmptyOnEmptyParameters() {
         
         let payment = makeAnywayPayment(fields: [makeAnywayPaymentField()])
         
-        XCTAssert(payment.digest.additional.isEmpty)
+        XCTAssert(payment.makeDigest().additional.isEmpty)
     }
     
     func test_shouldNotSetAdditionalOnParameterWithNilValue() {
@@ -32,7 +32,7 @@ final class AnywayPaymentDigestPropertyTests: XCTestCase {
         )
         let payment = makeAnywayPayment(parameters: [parameter])
         
-        XCTAssert(payment.digest.additional.isEmpty)
+        XCTAssert(payment.makeDigest().additional.isEmpty)
     }
     
     func test_shouldSetAdditionalOnParameter() {
@@ -45,7 +45,7 @@ final class AnywayPaymentDigestPropertyTests: XCTestCase {
         )
         let payment = makeAnywayPayment(parameters: [parameter])
         
-        XCTAssertNoDiff(payment.digest.additional, [
+        XCTAssertNoDiff(payment.makeDigest().additional, [
             .init(fieldID: 0, fieldName: id, fieldValue: value),
         ])
     }
@@ -66,7 +66,7 @@ final class AnywayPaymentDigestPropertyTests: XCTestCase {
         )
         let payment = makeAnywayPayment(parameters: [parameter1, parameter2])
         
-        XCTAssertNoDiff(payment.digest.additional, [
+        XCTAssertNoDiff(payment.makeDigest().additional, [
             .init(fieldID: 0, fieldName: id0, fieldValue: value0),
             .init(fieldID: 1, fieldName: id1, fieldValue: value1),
         ])
@@ -76,7 +76,7 @@ final class AnywayPaymentDigestPropertyTests: XCTestCase {
         
         let payment = makeAnywayPaymentWithoutAmount()
         
-        XCTAssertNil(payment.digest.core)
+        XCTAssertNil(payment.makeDigest().core)
     }
     
     func test_shouldSetCoreWithAccountIDOnPaymentWithAmount() {
@@ -84,7 +84,7 @@ final class AnywayPaymentDigestPropertyTests: XCTestCase {
         let (amount, currency, id) = makeCore()
         let payment = makeAnywayPaymentWithAmount(amount, currency, .accountID(.init(id)))
         
-        XCTAssertNoDiff(payment.digest.core, .init(
+        XCTAssertNoDiff(payment.makeDigest().core, .init(
             amount: amount,
             currency: .init(currency),
             productID: .account(.init(id))
@@ -96,7 +96,7 @@ final class AnywayPaymentDigestPropertyTests: XCTestCase {
         let (amount, currency, id) = makeCore()
         let payment = makeAnywayPaymentWithAmount(amount, currency, .cardID(.init(id)))
         
-        XCTAssertNoDiff(payment.digest.core, .init(
+        XCTAssertNoDiff(payment.makeDigest().core, .init(
             amount: amount,
             currency: .init(currency),
             productID: .card(.init(id))
@@ -108,7 +108,7 @@ final class AnywayPaymentDigestPropertyTests: XCTestCase {
         let puref = anyMessage()
         let payment = makeAnywayPayment(puref: .init(puref))
         
-        XCTAssertNoDiff(payment.digest.puref, .init(puref))
+        XCTAssertNoDiff(payment.makeDigest().puref, .init(puref))
     }
     
     // MARK: - Helpers
