@@ -7,8 +7,7 @@
 
 import AnywayPaymentDomain
 
-#warning("swithc places of PaymentEffect, PaymentEvent")
-public final class TransactionReducer<TransactionReport, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate> {
+public final class TransactionReducer<TransactionReport, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate> {
     
     private let paymentReduce: PaymentReduce
     private let stagePayment: StagePayment

@@ -58,7 +58,7 @@ typealias _TransactionEffect = TransactionEffect<PaymentDigest, PaymentEffect>
 
 typealias _TransactionReport = TransactionReport<DocumentStatus, _OperationInfo>
 
-typealias _TransactionReducer = TransactionReducer<_TransactionReport, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate>
+typealias _TransactionReducer = TransactionReducer<_TransactionReport, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate>
 
  typealias _TransactionEffectHandler = TransactionEffectHandler<_TransactionReport, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
 
