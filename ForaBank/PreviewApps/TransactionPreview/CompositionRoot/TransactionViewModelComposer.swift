@@ -57,8 +57,8 @@ private extension TransactionViewModelComposer {
         )
     }
     
-    typealias Reducer = TransactionReducer<_TransactionReport, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate>
-    typealias EffectHandler = TransactionEffectHandler<_TransactionReport, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
+    typealias Reducer = TransactionReducer<Report, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate>
+    typealias EffectHandler = TransactionEffectHandler<Report, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
 }
 
 private extension TransactionViewModelComposer {

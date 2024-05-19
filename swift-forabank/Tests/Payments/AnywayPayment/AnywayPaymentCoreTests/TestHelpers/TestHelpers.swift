@@ -49,20 +49,20 @@ struct PaymentUpdate: Equatable {
 typealias OperationDetailID = Int
 
 typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails>
-typealias _TransactionReport = TransactionReport<DocumentStatus, _OperationInfo>
-typealias _TransactionStatus = TransactionStatus<_TransactionReport>
+typealias Report = TransactionReport<DocumentStatus, _OperationInfo>
+typealias _TransactionStatus = TransactionStatus<Report>
 
 typealias _Transaction = Transaction<Payment, _TransactionStatus>
-typealias _TransactionEvent = TransactionEvent<_TransactionReport, PaymentEvent, PaymentUpdate>
+typealias _TransactionEvent = TransactionEvent<Report, PaymentEvent, PaymentUpdate>
 typealias _TransactionEffect = TransactionEffect<PaymentDigest, PaymentEffect>
 
-typealias _TransactionReducer = TransactionReducer<_TransactionReport, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate>
-typealias _TransactionEffectHandler = TransactionEffectHandler<_TransactionReport, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
+typealias _TransactionReducer = TransactionReducer<Report, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate>
+typealias _TransactionEffectHandler = TransactionEffectHandler<Report, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
 
 typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
 
 typealias PaymentInitiator = PaymentProcessing
-typealias PaymentMaker = Spy<VerificationCode, _TransactionReport?>
+typealias PaymentMaker = Spy<VerificationCode, Report?>
 typealias PaymentProcessing = Spy<PaymentDigest, _TransactionEvent.UpdatePaymentResult>
 
 // MARK: - Factories

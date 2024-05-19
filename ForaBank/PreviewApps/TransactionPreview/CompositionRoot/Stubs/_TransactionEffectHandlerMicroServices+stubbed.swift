@@ -24,7 +24,7 @@ extension _TransactionEffectHandlerMicroServices {
     struct Stub {
         
         let initiatePayment: ProcessResult
-        let makePayment: _TransactionReport?
+        let makePayment: Report?
         let paymentEffectHandle: PaymentEvent
         let processPayment: ProcessResult
     }
@@ -43,7 +43,7 @@ extension _TransactionEffectHandlerMicroServices {
     }
     
     private static func _makePayment(
-        with stub: _TransactionReport?
+        with stub: Report?
     ) -> MakePayment {
         
         return { _, completion in

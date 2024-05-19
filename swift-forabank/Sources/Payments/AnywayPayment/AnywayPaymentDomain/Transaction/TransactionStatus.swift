@@ -1,11 +1,11 @@
 //
 //  TransactionStatus.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 19.05.2024.
 //
 
-public enum TransactionStatus<TransactionReport> {
+public enum TransactionStatus<Report> {
     
     case fraudSuspected
     case result(TransactionResult)
@@ -14,7 +14,7 @@ public enum TransactionStatus<TransactionReport> {
 
 public extension TransactionStatus {
     
-    typealias TransactionResult = Result<TransactionReport, Terminated>
+    typealias TransactionResult = Result<Report, Terminated>
     
     enum Terminated: Error, Equatable {
         
@@ -32,4 +32,4 @@ public extension TransactionStatus.Terminated {
     }
 }
 
-extension TransactionStatus: Equatable where TransactionReport: Equatable {}
+extension TransactionStatus: Equatable where Report: Equatable {}

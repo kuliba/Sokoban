@@ -15,7 +15,7 @@ typealias TransactionState = TransactionOf<OperationDetailID, OperationDetails, 
 
 typealias TransactionEvent = TransactionEventOf<OperationDetailID, OperationDetails, DocumentStatus, PaymentEvent, PaymentUpdate>
 
-typealias _TransactionReport = TransactionReport<DocumentStatus, _OperationInfo>
+typealias Report = TransactionReport<DocumentStatus, _OperationInfo>
 typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails>
 
 enum DocumentStatus {
@@ -26,7 +26,7 @@ enum DocumentStatus {
 typealias OperationDetailID = Int
 typealias OperationDetails = String
 
-typealias _TransactionEffectHandlerMicroServices = TransactionEffectHandlerMicroServices<_TransactionReport, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
+typealias _TransactionEffectHandlerMicroServices = TransactionEffectHandlerMicroServices<Report, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
 
 typealias Payment = Int
 
