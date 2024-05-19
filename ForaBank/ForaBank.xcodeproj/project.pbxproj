@@ -3843,7 +3843,7 @@
 		2A9602742BCC2510000D9B68 /* AnywayPaymentFooterConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentFooterConfig.swift; sourceTree = "<group>"; };
 		2A9BD5102B85105C00B88395 /* UtilitiesPaymentsFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilitiesPaymentsFlag.swift; sourceTree = "<group>"; };
 		2A9BD5122B853AEF00B88395 /* HTTPClientStub+utilityPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTPClientStub+utilityPayments.swift"; sourceTree = "<group>"; };
-		2A9CB0822BEFC2FD00DA5EF3 /* UtilityServicePrepayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = UtilityServicePrepayment.xctestplan; path = TestPlans/UtilityServicePrepayment.xctestplan; sourceTree = "<group>"; };
+		2A9CB0822BEFC2FD00DA5EF3 /* UtilityServicePrepayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityServicePrepayment.xctestplan; sourceTree = "<group>"; };
 		2A9CB0832BEFC7C400DA5EF3 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentLastPayment.swift; sourceTree = "<group>"; };
 		2A9CB0872BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperator.swift; sourceTree = "<group>"; };
@@ -3972,6 +3972,7 @@
 		2AD092BD2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServices+stubbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransactionEffectHandlerNanoServices+stubbed.swift"; sourceTree = "<group>"; };
 		2AD092BF2BFA543E00777EE4 /* DispatchQueue+delay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+delay.swift"; sourceTree = "<group>"; };
 		2AD092C12BFA613500777EE4 /* _TransactionEffectHandlerMicroServices+stubbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "_TransactionEffectHandlerMicroServices+stubbed.swift"; sourceTree = "<group>"; };
+		2AD092C42BFA78C200777EE4 /* TransactionPreview.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TransactionPreview.xctestplan; sourceTree = "<group>"; };
 		2AD0F68E2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementWidgetViewFactory.swift; sourceTree = "<group>"; };
 		2AD0F6902BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementViewFactory.swift; sourceTree = "<group>"; };
 		2AD0F6922BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentElementViewFactory+preview.swift"; sourceTree = "<group>"; };
@@ -7873,6 +7874,8 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				2AD092C42BFA78C200777EE4 /* TransactionPreview.xctestplan */,
+				2A9CB0822BEFC2FD00DA5EF3 /* UtilityServicePrepayment.xctestplan */,
 				2AA2EF962BB19C2500D5DBED /* RemoteServices.xctestplan */,
 				2A7323A92BB193070031958E /* AnywayPayment.xctestplan */,
 				2A6097352B9D76C000AA6C75 /* UtilityPaymentPreview.xctestplan */,
@@ -13821,7 +13824,6 @@
 		EDB14374265FDA410028EF5A = {
 			isa = PBXGroup;
 			children = (
-				2A9CB0822BEFC2FD00DA5EF3 /* UtilityServicePrepayment.xctestplan */,
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A87FCCA2B9310E4008257ED /* swift-forabank-Package.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* ForaBank-SELECTED_TESTS.xctestplan */,
