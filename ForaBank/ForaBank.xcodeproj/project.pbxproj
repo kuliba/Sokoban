@@ -1095,6 +1095,12 @@
 		2AD092932BFA30A100777EE4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092922BFA30A100777EE4 /* ContentView.swift */; };
 		2AD092952BFA30A200777EE4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AD092942BFA30A200777EE4 /* Assets.xcassets */; };
 		2AD092982BFA30A200777EE4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AD092972BFA30A200777EE4 /* Preview Assets.xcassets */; };
+		2AD0929F2BFA322300777EE4 /* AnywayPayment in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD0929E2BFA322300777EE4 /* AnywayPayment */; };
+		2AD092A12BFA322800777EE4 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD092A02BFA322800777EE4 /* RxViewModel */; };
+		2AD092A32BFA323A00777EE4 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD092A22BFA323A00777EE4 /* CombineSchedulers */; };
+		2AD092A52BFA324100777EE4 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD092A42BFA324100777EE4 /* UIPrimitives */; };
+		2AD092A72BFA324900777EE4 /* ForaTools in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD092A62BFA324900777EE4 /* ForaTools */; };
+		2AD092A92BFA327C00777EE4 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD092A82BFA327C00777EE4 /* PaymentComponents */; };
 		2AD0F68F2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F68E2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift */; };
 		2AD0F6912BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6902BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift */; };
 		2AD0F6932BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6922BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift */; };
@@ -5705,6 +5711,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AD0929F2BFA322300777EE4 /* AnywayPayment in Frameworks */,
+				2AD092A92BFA327C00777EE4 /* PaymentComponents in Frameworks */,
+				2AD092A12BFA322800777EE4 /* RxViewModel in Frameworks */,
+				2AD092A72BFA324900777EE4 /* ForaTools in Frameworks */,
+				2AD092A52BFA324100777EE4 /* UIPrimitives in Frameworks */,
+				2AD092A32BFA323A00777EE4 /* CombineSchedulers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -14855,6 +14867,14 @@
 			dependencies = (
 			);
 			name = TransactionPreview;
+			packageProductDependencies = (
+				2AD0929E2BFA322300777EE4 /* AnywayPayment */,
+				2AD092A02BFA322800777EE4 /* RxViewModel */,
+				2AD092A22BFA323A00777EE4 /* CombineSchedulers */,
+				2AD092A42BFA324100777EE4 /* UIPrimitives */,
+				2AD092A62BFA324900777EE4 /* ForaTools */,
+				2AD092A82BFA327C00777EE4 /* PaymentComponents */,
+			);
 			productName = TransactionPreview;
 			productReference = 2AD0928E2BFA30A100777EE4 /* TransactionPreview.app */;
 			productType = "com.apple.product-type.application";
@@ -22487,6 +22507,31 @@
 		2ACFE0402A85FA8B00EBAA3A /* ForaCrypto */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ForaCrypto;
+		};
+		2AD0929E2BFA322300777EE4 /* AnywayPayment */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AnywayPayment;
+		};
+		2AD092A02BFA322800777EE4 /* RxViewModel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RxViewModel;
+		};
+		2AD092A22BFA323A00777EE4 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
+		};
+		2AD092A42BFA324100777EE4 /* UIPrimitives */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIPrimitives;
+		};
+		2AD092A62BFA324900777EE4 /* ForaTools */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ForaTools;
+		};
+		2AD092A82BFA327C00777EE4 /* PaymentComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PaymentComponents;
 		};
 		2AD7EBDE2B0CB292009FDCAB /* ButtonWithSheet */ = {
 			isa = XCSwiftPackageProductDependency;
