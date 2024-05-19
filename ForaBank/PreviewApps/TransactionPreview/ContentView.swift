@@ -24,8 +24,20 @@ struct ContentView: View {
                 )
             ))
         )
+        
         let composer = TransactionViewModelComposer(
-            composeMicroServices: microServicesComposer.compose
+            composeMicroServices: {
+                
+                return .stubbed(with: .init(
+                    initiatePayment: .success(123),
+                    makePayment: .init(
+                        status: .completed,
+                        info: .details("Operation Detail")
+                    ),
+                    paymentEffectHandle: .anEvent,
+                    processPayment: .success(456))
+                )
+            }
         )
         
         self.viewModel = composer.compose(initialState: initialState)

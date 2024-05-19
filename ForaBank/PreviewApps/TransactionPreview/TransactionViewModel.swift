@@ -32,10 +32,12 @@ typealias Payment = Int
 
 enum PaymentEvent {
     
+    case anEvent
 }
 
 enum PaymentEffect {
     
+    case anEffect
 }
 
 typealias PaymentDigest = Int

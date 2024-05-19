@@ -68,7 +68,7 @@ private extension TransactionViewModelComposer {
         paymentEvent: PaymentEvent
     ) -> (Payment, TransactionEffect<PaymentDigest, PaymentEffect>?) {
         
-        #warning("replace with actual behaviour")
+#warning("replace with actual behaviour")
         return (payment, nil)
     }
     
@@ -76,7 +76,7 @@ private extension TransactionViewModelComposer {
         payment: Payment
     ) -> Payment {
         
-        #warning("replace with actual behaviour")
+#warning("replace with actual behaviour")
         return payment
     }
     
@@ -85,14 +85,14 @@ private extension TransactionViewModelComposer {
         paymentUpdate: PaymentUpdate
     ) -> Payment {
         
-        #warning("replace with actual behaviour")
+#warning("replace with actual behaviour")
         return payment
     }
     
     func composePaymentInspector(
     ) -> PaymentInspector<Payment, PaymentDigest> {
         
-        #warning("replace with actual behaviour")
+#warning("replace with actual behaviour")
         return .init(
             checkFraud: { _ in true },
             getVerificationCode: { _ in .init("123456") },

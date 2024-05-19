@@ -1111,6 +1111,7 @@
 		2AD092BC2BFA4FCC00777EE4 /* TransactionEffectHandlerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092BB2BFA4FCC00777EE4 /* TransactionEffectHandlerNanoServices.swift */; };
 		2AD092BE2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServices+stubbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092BD2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServices+stubbed.swift */; };
 		2AD092C02BFA543F00777EE4 /* DispatchQueue+delay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092BF2BFA543E00777EE4 /* DispatchQueue+delay.swift */; };
+		2AD092C22BFA613500777EE4 /* _TransactionEffectHandlerMicroServices+stubbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092C12BFA613500777EE4 /* _TransactionEffectHandlerMicroServices+stubbed.swift */; };
 		2AD0F68F2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F68E2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift */; };
 		2AD0F6912BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6902BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift */; };
 		2AD0F6932BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6922BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift */; };
@@ -3970,6 +3971,7 @@
 		2AD092BB2BFA4FCC00777EE4 /* TransactionEffectHandlerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionEffectHandlerNanoServices.swift; sourceTree = "<group>"; };
 		2AD092BD2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServices+stubbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransactionEffectHandlerNanoServices+stubbed.swift"; sourceTree = "<group>"; };
 		2AD092BF2BFA543E00777EE4 /* DispatchQueue+delay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+delay.swift"; sourceTree = "<group>"; };
+		2AD092C12BFA613500777EE4 /* _TransactionEffectHandlerMicroServices+stubbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "_TransactionEffectHandlerMicroServices+stubbed.swift"; sourceTree = "<group>"; };
 		2AD0F68E2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementWidgetViewFactory.swift; sourceTree = "<group>"; };
 		2AD0F6902BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementViewFactory.swift; sourceTree = "<group>"; };
 		2AD0F6922BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentElementViewFactory+preview.swift"; sourceTree = "<group>"; };
@@ -9215,9 +9217,18 @@
 				2AD092B62BFA4B2000777EE4 /* TransactionViewModelComposer.swift */,
 				2AD092B82BFA4B5900777EE4 /* TransactionEffectHandlerMicroServicesComposer.swift */,
 				2AD092BB2BFA4FCC00777EE4 /* TransactionEffectHandlerNanoServices.swift */,
-				2AD092BD2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServices+stubbed.swift */,
+				2AD092C32BFA62A600777EE4 /* Stubs */,
 			);
 			path = CompositionRoot;
+			sourceTree = "<group>";
+		};
+		2AD092C32BFA62A600777EE4 /* Stubs */ = {
+			isa = PBXGroup;
+			children = (
+				2AD092C12BFA613500777EE4 /* _TransactionEffectHandlerMicroServices+stubbed.swift */,
+				2AD092BD2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServices+stubbed.swift */,
+			);
+			path = Stubs;
 			sourceTree = "<group>";
 		};
 		2AD389302BEB3333007E0298 /* Extensions */ = {
@@ -16335,6 +16346,7 @@
 				2AD092AB2BFA332800777EE4 /* TransactionStateWrapperView.swift in Sources */,
 				2AD092AD2BFA335900777EE4 /* TransactionViewModel.swift in Sources */,
 				2AD092B72BFA4B2000777EE4 /* TransactionViewModelComposer.swift in Sources */,
+				2AD092C22BFA613500777EE4 /* _TransactionEffectHandlerMicroServices+stubbed.swift in Sources */,
 				2AD092BE2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServices+stubbed.swift in Sources */,
 				2AD092B12BFA366400777EE4 /* TransactionState+preview.swift in Sources */,
 				2AD092932BFA30A100777EE4 /* ContentView.swift in Sources */,

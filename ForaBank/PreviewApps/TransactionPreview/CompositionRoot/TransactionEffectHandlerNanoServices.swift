@@ -14,7 +14,7 @@ struct TransactionEffectHandlerNanoServices {
 }
 
 extension TransactionEffectHandlerNanoServices {
-        
+    
     typealias GetDetailsResult = OperationDetails?
     typealias GetDetailsCompletion = (GetDetailsResult) -> Void
     typealias GetDetails = (OperationDetailID, @escaping GetDetailsCompletion) -> Void

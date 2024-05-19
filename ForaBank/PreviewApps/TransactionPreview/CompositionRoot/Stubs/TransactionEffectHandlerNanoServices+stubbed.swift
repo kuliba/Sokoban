@@ -13,7 +13,7 @@ extension TransactionEffectHandlerNanoServices {
         with stub: Stub
     ) -> Self {
         
-        .init(
+        return .init(
             getDetails: _getDetails(stub: stub.getDetailsResult),
             makeTransfer: _makeTransfer(stub: stub.makeTransferResult)
         )
