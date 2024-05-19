@@ -49,18 +49,15 @@ struct PaymentUpdate: Equatable {
 typealias OperationDetailID = Int
 
 typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails>
+typealias _TransactionReport = TransactionReport<DocumentStatus, _OperationInfo>
+typealias _TransactionStatus = TransactionStatus<_TransactionReport>
 
-typealias _Transaction = Transaction<_TransactionReport, Payment>
-
+typealias _Transaction = Transaction<Payment, _TransactionStatus>
 typealias _TransactionEvent = TransactionEvent<_TransactionReport, PaymentEvent, PaymentUpdate>
-
 typealias _TransactionEffect = TransactionEffect<PaymentDigest, PaymentEffect>
 
-typealias _TransactionReport = TransactionReport<DocumentStatus, _OperationInfo>
-
 typealias _TransactionReducer = TransactionReducer<_TransactionReport, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate>
-
- typealias _TransactionEffectHandler = TransactionEffectHandler<_TransactionReport, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
+typealias _TransactionEffectHandler = TransactionEffectHandler<_TransactionReport, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
 
 typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
 
@@ -261,7 +258,7 @@ func makeTransactionEffect(
 func makeTransaction(
     _ payment: Payment = makePayment(),
     isValid: Bool = false,
-    status: _Transaction.Status? = nil
+    status: _TransactionStatus? = nil
 ) -> _Transaction {
     
     .init(payment: payment, isValid: isValid, status: status)
@@ -280,7 +277,7 @@ func makeResponse(
 
 func makeResultFailureTransaction(
     _ payment: Payment = makePayment(),
-    failure: _Transaction.Status.Terminated = .transactionFailure
+    failure: _TransactionStatus.Terminated = .transactionFailure
 ) -> _Transaction {
     
     let state = makeTransaction(payment, status: .result(.failure(failure)))
@@ -310,7 +307,7 @@ func makeServerErrorTransaction(
 
 func makeValidTransaction(
     _ payment: Payment = makePayment(),
-    status: _Transaction.Status? = nil
+    status: _TransactionStatus? = nil
 ) -> _Transaction {
     
     let state = makeTransaction(payment, isValid: true, status: status)

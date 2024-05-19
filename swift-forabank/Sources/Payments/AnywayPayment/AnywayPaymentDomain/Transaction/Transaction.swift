@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 30.03.2024.
 //
 
-public struct Transaction<TransactionReport, Payment> {
+public struct Transaction<Payment, Status> {
     
     public var payment: Payment
     public var isValid: Bool
@@ -22,9 +22,4 @@ public struct Transaction<TransactionReport, Payment> {
     }
 }
 
-public extension Transaction {
-    
-    typealias Status = TransactionStatus<TransactionReport>
-}
-
-extension Transaction: Equatable where TransactionReport: Equatable, Payment: Equatable {}
+extension Transaction: Equatable where Payment: Equatable, Status: Equatable {}

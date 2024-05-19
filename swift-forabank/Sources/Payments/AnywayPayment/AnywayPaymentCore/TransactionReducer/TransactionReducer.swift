@@ -77,7 +77,9 @@ public extension TransactionReducer {
     typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
     typealias Inspector = PaymentInspector<Payment, PaymentDigest>
     
-    typealias State = Transaction<TransactionReport, Payment>
+    typealias Status = TransactionStatus<TransactionReport>
+
+    typealias State = Transaction<Payment, Status>
     typealias Event = TransactionEvent<TransactionReport, PaymentEvent, PaymentUpdate>
     typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
