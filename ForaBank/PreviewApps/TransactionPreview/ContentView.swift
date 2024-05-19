@@ -45,7 +45,11 @@ struct ContentView: View {
     
     var body: some View {
         
-        TransactionStateWrapperView(viewModel: viewModel)
+        NavigationView {
+            
+            TransactionStateWrapperView(viewModel: viewModel)
+                .navigationTitle("Transaction View")
+        }
     }
 }
 

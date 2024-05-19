@@ -22,6 +22,7 @@ struct TransactionStateWrapperView: View {
             state: viewModel.state,
             event: viewModel.event(_:)
         )
+        .onChange(of: viewModel.state) { dump($0) }
     }
 }
 
