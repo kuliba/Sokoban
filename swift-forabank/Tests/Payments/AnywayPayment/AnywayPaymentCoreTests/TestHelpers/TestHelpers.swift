@@ -84,7 +84,7 @@ func makeContinueTransactionEffect(
 
 func makeDetailID(
     _ rawValue: Int = generateRandom11DigitNumber()
-) -> TransactionReport<DocumentStatus, OperationDetails>.Details.PaymentOperationDetailID {
+) -> TransactionReport<DocumentStatus, OperationDetails>.OperationInfo.PaymentOperationDetailID {
     
     .init(rawValue)
 }
@@ -96,7 +96,7 @@ func makeDetailIDTransactionReport(
     
     .init(
         status: status,
-        details: .paymentOperationDetailID(.init(id))
+        info: .detailID(.init(id))
     )
 }
 
@@ -168,7 +168,7 @@ func makeOperationDetailsTransactionReport(
     
     .init(
         status: status,
-        details: .operationDetails(makeOperationDetails(value))
+        info: .details(makeOperationDetails(value))
     )
 }
 
@@ -179,7 +179,7 @@ func makeOperationDetailsTransactionReport(
     
     .init(
         status: status,
-        details: .operationDetails(operationDetails)
+        info: .details(operationDetails)
     )
 }
 

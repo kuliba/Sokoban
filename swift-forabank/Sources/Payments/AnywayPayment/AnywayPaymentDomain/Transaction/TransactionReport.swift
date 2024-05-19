@@ -10,31 +10,32 @@ import Tagged
 public struct TransactionReport<DocumentStatus, OperationDetails> {
     
     public let status: DocumentStatus
-    public let details: Details
+    public let info: OperationInfo
     
     public init(
         status: DocumentStatus,
-        details: Details
+        info: OperationInfo
     ) {
         self.status = status
-        self.details = details
+        self.info = info
     }
 }
 
 public extension TransactionReport {
     
-    enum Details {
+    enum OperationInfo {
         
-        case paymentOperationDetailID(PaymentOperationDetailID)
-        case operationDetails(OperationDetails)
+        /// `paymentOperationDetailId`
+        case detailID(PaymentOperationDetailID)
+        case details(OperationDetails)
     }
 }
 
-public extension TransactionReport.Details {
+public extension TransactionReport.OperationInfo {
     
     typealias PaymentOperationDetailID = Tagged<_PaymentOperationDetailID, Int>
     enum _PaymentOperationDetailID {}
 }
 
 extension TransactionReport: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable {}
-extension TransactionReport.Details: Equatable where OperationDetails: Equatable {}
+extension TransactionReport.OperationInfo: Equatable where OperationDetails: Equatable {}

@@ -45,7 +45,7 @@ public extension TransactionPerformer {
 public extension TransactionPerformer {
     
     typealias Report = TransactionReport<DocumentStatus, OperationDetails>
-    typealias PaymentOperationDetailID = Report.Details.PaymentOperationDetailID
+    typealias PaymentOperationDetailID = Report.OperationInfo.PaymentOperationDetailID
     
     typealias GetDetailsResult = OperationDetails?
     typealias GetDetailsCompletion = (GetDetailsResult) -> Void
@@ -103,13 +103,13 @@ private extension TransactionReport {
         case .none:
             self.init(
                 status: response.documentStatus,
-                details: .paymentOperationDetailID(response.paymentOperationDetailID)
+                info: .detailID(response.paymentOperationDetailID)
             )
             
         case let .some(operationDetails):
             self.init(
                 status: response.documentStatus,
-                details: .operationDetails(operationDetails)
+                info: .details(operationDetails)
             )
         }
     }
