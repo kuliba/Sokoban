@@ -5,9 +5,7 @@
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
-import Tagged
-
-public struct TransactionReport<DocumentStatus, OperationDetails> {
+public struct TransactionReport<DocumentStatus, OperationInfo> {
     
     public let status: DocumentStatus
     public let info: OperationInfo
@@ -21,21 +19,4 @@ public struct TransactionReport<DocumentStatus, OperationDetails> {
     }
 }
 
-public extension TransactionReport {
-    
-    enum OperationInfo {
-        
-        /// `paymentOperationDetailId`
-        case detailID(PaymentOperationDetailID)
-        case details(OperationDetails)
-    }
-}
-
-public extension TransactionReport.OperationInfo {
-    
-    typealias PaymentOperationDetailID = Tagged<_PaymentOperationDetailID, Int>
-    enum _PaymentOperationDetailID {}
-}
-
-extension TransactionReport: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable {}
-extension TransactionReport.OperationInfo: Equatable where OperationDetails: Equatable {}
+extension TransactionReport: Equatable where DocumentStatus: Equatable, OperationInfo: Equatable {}

@@ -7,7 +7,7 @@
 
 import AnywayPaymentDomain
 
-public struct TransactionEffectHandlerMicroServices<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate> {
+public struct TransactionEffectHandlerMicroServices<TransactionReport, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate> {
     
     public let initiatePayment: InitiatePayment
     public let makePayment: MakePayment
@@ -35,14 +35,13 @@ public extension TransactionEffectHandlerMicroServices {
     typealias ProcessCompletion = (ProcessResult) -> Void
     typealias ProcessPayment = (PaymentDigest, @escaping ProcessCompletion) -> Void
     
-    typealias MakePaymentResult = Event.TransactionResult
-    typealias MakePaymentCompletion = (MakePaymentResult) -> Void
+    typealias MakePaymentCompletion = (TransactionReport?) -> Void
     typealias MakePayment = (VerificationCode, @escaping MakePaymentCompletion) -> Void
     
     typealias PaymentDispatch = (PaymentEvent) -> Void
     typealias PaymentEffectHandle = (PaymentEffect, @escaping PaymentDispatch) -> Void
     
-    typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate>
+    typealias Event = TransactionEvent<TransactionReport, PaymentEvent, PaymentUpdate>
     typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
 

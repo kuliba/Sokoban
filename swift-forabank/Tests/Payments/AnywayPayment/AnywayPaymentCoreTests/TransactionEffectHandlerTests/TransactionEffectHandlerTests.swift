@@ -272,13 +272,8 @@ final class TransactionEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = TransactionEffectHandler<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
-    
-    private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
-    private typealias PaymentInitiator = PaymentProcessing
-    private typealias PaymentMaker = Spy<VerificationCode, SUT.MicroServices.MakePaymentResult>
-    private typealias PaymentProcessing = Spy<PaymentDigest, SUT.MicroServices.ProcessResult>
-    
+    private typealias SUT = _TransactionEffectHandler
+        
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
@@ -340,7 +335,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
     private func expect(
         toDeliver expectedEvent: SUT.Event,
         for effect: SUT.Effect,
-        onMakePayment makePaymentResult: SUT.MicroServices.MakePaymentResult,
+        onMakePayment makePaymentResult: _TransactionReport?,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -371,8 +366,8 @@ final class TransactionEffectHandlerTests: XCTestCase {
 }
 
 private func transactionReportEvent(
-    _ transactionReport: TransactionReport<DocumentStatus, OperationDetails>
-) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate> {
+    _ transactionReport: _TransactionReport
+) -> _TransactionEvent {
     
     .completePayment(transactionReport)
 }
