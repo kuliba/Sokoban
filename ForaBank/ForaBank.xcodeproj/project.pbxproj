@@ -1109,7 +1109,8 @@
 		2AD092B72BFA4B2000777EE4 /* TransactionViewModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092B62BFA4B2000777EE4 /* TransactionViewModelComposer.swift */; };
 		2AD092B92BFA4B5900777EE4 /* TransactionEffectHandlerMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092B82BFA4B5900777EE4 /* TransactionEffectHandlerMicroServicesComposer.swift */; };
 		2AD092BC2BFA4FCC00777EE4 /* TransactionEffectHandlerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092BB2BFA4FCC00777EE4 /* TransactionEffectHandlerNanoServices.swift */; };
-		2AD092BE2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092BD2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServicesComposer.swift */; };
+		2AD092BE2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServices+stubbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092BD2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServices+stubbed.swift */; };
+		2AD092C02BFA543F00777EE4 /* DispatchQueue+delay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092BF2BFA543E00777EE4 /* DispatchQueue+delay.swift */; };
 		2AD0F68F2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F68E2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift */; };
 		2AD0F6912BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6902BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift */; };
 		2AD0F6932BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6922BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift */; };
@@ -3967,7 +3968,8 @@
 		2AD092B62BFA4B2000777EE4 /* TransactionViewModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionViewModelComposer.swift; sourceTree = "<group>"; };
 		2AD092B82BFA4B5900777EE4 /* TransactionEffectHandlerMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionEffectHandlerMicroServicesComposer.swift; sourceTree = "<group>"; };
 		2AD092BB2BFA4FCC00777EE4 /* TransactionEffectHandlerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionEffectHandlerNanoServices.swift; sourceTree = "<group>"; };
-		2AD092BD2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionEffectHandlerNanoServicesComposer.swift; sourceTree = "<group>"; };
+		2AD092BD2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServices+stubbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransactionEffectHandlerNanoServices+stubbed.swift"; sourceTree = "<group>"; };
+		2AD092BF2BFA543E00777EE4 /* DispatchQueue+delay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+delay.swift"; sourceTree = "<group>"; };
 		2AD0F68E2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementWidgetViewFactory.swift; sourceTree = "<group>"; };
 		2AD0F6902BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementViewFactory.swift; sourceTree = "<group>"; };
 		2AD0F6922BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentElementViewFactory+preview.swift"; sourceTree = "<group>"; };
@@ -9190,6 +9192,7 @@
 				2AD092AA2BFA332800777EE4 /* TransactionStateWrapperView.swift */,
 				2AD092B42BFA49DE00777EE4 /* TransactionView.swift */,
 				2AD092AC2BFA335900777EE4 /* TransactionViewModel.swift */,
+				2AD092BF2BFA543E00777EE4 /* DispatchQueue+delay.swift */,
 				2AD092942BFA30A200777EE4 /* Assets.xcassets */,
 				2AD092962BFA30A200777EE4 /* Preview Content */,
 			);
@@ -9212,7 +9215,7 @@
 				2AD092B62BFA4B2000777EE4 /* TransactionViewModelComposer.swift */,
 				2AD092B82BFA4B5900777EE4 /* TransactionEffectHandlerMicroServicesComposer.swift */,
 				2AD092BB2BFA4FCC00777EE4 /* TransactionEffectHandlerNanoServices.swift */,
-				2AD092BD2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServicesComposer.swift */,
+				2AD092BD2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServices+stubbed.swift */,
 			);
 			path = CompositionRoot;
 			sourceTree = "<group>";
@@ -16332,11 +16335,12 @@
 				2AD092AB2BFA332800777EE4 /* TransactionStateWrapperView.swift in Sources */,
 				2AD092AD2BFA335900777EE4 /* TransactionViewModel.swift in Sources */,
 				2AD092B72BFA4B2000777EE4 /* TransactionViewModelComposer.swift in Sources */,
-				2AD092BE2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServicesComposer.swift in Sources */,
+				2AD092BE2BFA52EC00777EE4 /* TransactionEffectHandlerNanoServices+stubbed.swift in Sources */,
 				2AD092B12BFA366400777EE4 /* TransactionState+preview.swift in Sources */,
 				2AD092932BFA30A100777EE4 /* ContentView.swift in Sources */,
 				2AD092B52BFA49DE00777EE4 /* TransactionView.swift in Sources */,
 				2AD092912BFA30A100777EE4 /* TransactionPreviewApp.swift in Sources */,
+				2AD092C02BFA543F00777EE4 /* DispatchQueue+delay.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

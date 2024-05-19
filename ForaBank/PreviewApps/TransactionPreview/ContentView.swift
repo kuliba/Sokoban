@@ -9,13 +9,31 @@ import SwiftUI
 
 struct ContentView: View {
     
+    private let viewModel: TransactionViewModel
+    
     init() {
         
+        let initialState: TransactionState = .preview
+        
+        let microServicesComposer = TransactionEffectHandlerMicroServicesComposer(
+            nanoServices: .stubbed(with: .init(
+                getDetailsResult: "Operation Detail",
+                makeTransferResult: .init(
+                    status: .completed,
+                    detailID: 54321
+                )
+            ))
+        )
+        let composer = TransactionViewModelComposer(
+            composeMicroServices: microServicesComposer.compose
+        )
+        
+        self.viewModel = composer.compose(initialState: initialState)
     }
     
     var body: some View {
         
-        TransactionStateWrapperView(initialState: .preview)
+        TransactionStateWrapperView(viewModel: viewModel)
     }
 }
 

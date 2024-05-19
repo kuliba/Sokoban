@@ -11,16 +11,7 @@ struct TransactionStateWrapperView: View {
     
     @StateObject private var viewModel: ViewModel
     
-    init(initialState: TransactionState) {
-        
-        let nanoServicesComposer = TransactionEffectHandlerNanoServicesComposer()
-        let microServicesComposer = TransactionEffectHandlerMicroServicesComposer(
-            nanoServices: nanoServicesComposer.compose()
-        )
-        let composer = TransactionViewModelComposer(
-            composeMicroServices: microServicesComposer.compose
-        )
-        let viewModel = composer.compose(initialState: initialState)
+    init(viewModel: ViewModel) {
         
         self._viewModel = .init(wrappedValue: viewModel)
     }
@@ -40,5 +31,5 @@ extension TransactionStateWrapperView {
 }
 
 #Preview {
-    TransactionStateWrapperView(initialState: .preview)
+    TransactionStateWrapperView(viewModel: .preview())
 }
