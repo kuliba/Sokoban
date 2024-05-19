@@ -90,12 +90,12 @@ func makeDetailID(
 }
 
 func makeDetailIDTransactionReport(
-    documentStatus: DocumentStatus = .complete,
+    status: DocumentStatus = .complete,
     _ id: Int = generateRandom11DigitNumber()
 ) -> TransactionReport<DocumentStatus, OperationDetails> {
     
     .init(
-        documentStatus: documentStatus,
+        status: status,
         details: .paymentOperationDetailID(.init(id))
     )
 }
@@ -162,23 +162,23 @@ func makeNonFraudSuspectedTransaction(
 }
 
 func makeOperationDetailsTransactionReport(
-    documentStatus: DocumentStatus = .complete,
+    status: DocumentStatus = .complete,
     _ value: String = UUID().uuidString
 ) -> TransactionReport<DocumentStatus, OperationDetails> {
     
     .init(
-        documentStatus: documentStatus,
+        status: status,
         details: .operationDetails(makeOperationDetails(value))
     )
 }
 
 func makeOperationDetailsTransactionReport(
-    documentStatus: DocumentStatus = .complete,
+    status: DocumentStatus = .complete,
     _ operationDetails: OperationDetails
 ) -> TransactionReport<DocumentStatus, OperationDetails> {
     
     .init(
-        documentStatus: documentStatus,
+        status: status,
         details: .operationDetails(operationDetails)
     )
 }

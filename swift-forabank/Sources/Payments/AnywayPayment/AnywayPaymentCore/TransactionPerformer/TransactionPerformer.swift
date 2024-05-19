@@ -102,13 +102,13 @@ private extension TransactionReport {
         switch operationDetails {
         case .none:
             self.init(
-                documentStatus: response.documentStatus,
+                status: response.documentStatus,
                 details: .paymentOperationDetailID(response.paymentOperationDetailID)
             )
             
         case let .some(operationDetails):
             self.init(
-                documentStatus: response.documentStatus,
+                status: response.documentStatus,
                 details: .operationDetails(operationDetails)
             )
         }

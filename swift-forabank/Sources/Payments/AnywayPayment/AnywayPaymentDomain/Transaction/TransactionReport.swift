@@ -9,14 +9,14 @@ import Tagged
 
 public struct TransactionReport<DocumentStatus, OperationDetails> {
     
-    public let documentStatus: DocumentStatus
+    public let status: DocumentStatus
     public let details: Details
     
     public init(
-        documentStatus: DocumentStatus,
+        status: DocumentStatus,
         details: Details
     ) {
-        self.documentStatus = documentStatus
+        self.status = status
         self.details = details
     }
 }
