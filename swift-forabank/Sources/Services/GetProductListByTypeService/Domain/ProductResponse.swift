@@ -138,7 +138,7 @@ public extension ProductResponse {
         public let interestRate: Double
         public let accountID: Int
         public let creditMinimumAmount: Decimal?
-        public let minimumBalance: Decimal
+        public let minimumBalance: Decimal?
         public let endDate: Int?
         public let endDateNF: Bool
         public let demandDeposit: Bool
@@ -190,6 +190,7 @@ public extension ProductResponse {
         case blockedDebet
         case blockedCredit
         case blocked
+        case blockedUnlockNotAvailable
     }
 
     enum CardType: Equatable {
@@ -220,5 +221,6 @@ public extension ProductResponse {
         case notActivated
         case temporarilyBlocked
         case blockedByClient
+        case blockedUnlockNotAvailable
     }
 }

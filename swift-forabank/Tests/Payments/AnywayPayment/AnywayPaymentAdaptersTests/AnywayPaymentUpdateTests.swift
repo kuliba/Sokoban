@@ -7,6 +7,7 @@
 
 import AnywayPaymentAdapters
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import RemoteServices
 import XCTest
 
@@ -145,10 +146,23 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         regExp:  "^.{1,250}$"
                     ),
                     uiAttributes: makeParameterUIAttributes(
-                        dataType: .pairs([
-                            .init(key: "ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС", value: "ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС"),
-                            .init(key: "БЕЗ СТРАХОВОГО ВЗНОСА", value: "БЕЗ СТРАХОВОГО ВЗНОСА"),
-                            .init(key: "ПРОЧИЕ ПЛАТЕЖИ", value: "ПРОЧИЕ ПЛАТЕЖИ"),
+                        dataType: .pairs(
+                            .init(
+                                key: "ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС",
+                                value: "ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС"
+                            ), [
+                                .init(
+                                    key: "ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС",
+                                    value: "ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС"
+                                ),
+                                .init(
+                                    key: "БЕЗ СТРАХОВОГО ВЗНОСА",
+                                    value: "БЕЗ СТРАХОВОГО ВЗНОСА"
+                                ),
+                                .init(
+                                    key: "ПРОЧИЕ ПЛАТЕЖИ",
+                                    value: "ПРОЧИЕ ПЛАТЕЖИ"
+                                ),
                             ]),
                         order: 2,
                         title: "Признак платежа",

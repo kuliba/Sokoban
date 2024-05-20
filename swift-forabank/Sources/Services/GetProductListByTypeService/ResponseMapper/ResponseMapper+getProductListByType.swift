@@ -205,7 +205,7 @@ private extension ResponseMapper {
         let interestRate: Double
         let accountID: Int
         let creditMinimumAmount: Double?
-        let minimumBalance: Double
+        let minimumBalance: Double?
         let endDate: Int?
         let endDate_nf: Bool
         let demandDeposit: Bool
@@ -289,6 +289,7 @@ private extension ResponseMapper {
         case notActivated = "17"
         case temporarilyBlocked = "20"
         case blockedByClient = "21"
+        case blockedUnlockNotAvailable = "23"
     }
 }
 
@@ -401,6 +402,9 @@ private extension ProductResponse.StatusPC {
             
         case .blockedByClient:
             self = .blockedByClient
+            
+        case .blockedUnlockNotAvailable:
+            self = .blockedUnlockNotAvailable
         }
     }
 }
@@ -594,7 +598,7 @@ private extension ProductResponse.Deposit {
             interestRate: data.interestRate,
             accountID: data.accountID,
             creditMinimumAmount: data.creditMinimumAmount.map{ Decimal($0) },
-            minimumBalance: Decimal(data.minimumBalance),
+            minimumBalance: Decimal(data.minimumBalance ?? 0.0),
             endDate: data.endDate,
             endDateNF: data.endDate_nf,
             demandDeposit: data.demandDeposit,

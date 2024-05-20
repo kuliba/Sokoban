@@ -5,24 +5,31 @@
 //  Created by Igor Malyarov on 14.04.2024.
 //
 
-import AnywayPaymentCore
+import AnywayPaymentDomain
 import SwiftUI
+import Tagged
 
 struct AnywayPaymentElementParameterView: View {
     
-    let state: AnywayPayment.UIComponent.Parameter
+    let state: AnywayPayment.Element.UIComponent.Parameter
     let event: (String) -> Void
     
     var body: some View {
         
         switch state.type {
-        case let .select(options):
+        case .hidden:
+            EmptyView()
+            
+        case .nonEditable:
+            Text("TBD: non editable parameter")
+            
+        case let .select(selected, options):
             ExpandablePickerStateWrapperView(
                 viewModel: .decorated(
                     initialState: .init(items: options),
-                    onSelect: { event($0.key) }
+                    onSelect: { event($0.key.rawValue) }
                 ),
-                itemView: { Text($0.value) }
+                itemView: { Text($0.value.rawValue) }
             )
             
         case .textInput:
@@ -37,9 +44,9 @@ struct AnywayPaymentElementParameterView: View {
     }
 }
 
-extension AnywayPayment.UIComponent.Parameter.Option: Identifiable {
+extension AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option: Identifiable {
     
-    public var id: String { key }
+    public var id: Key { key }
 }
 
 struct AnywayPaymentElementParameterView_Previews: PreviewProvider {

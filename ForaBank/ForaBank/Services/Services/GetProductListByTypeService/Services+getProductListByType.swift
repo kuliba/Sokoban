@@ -20,6 +20,7 @@ extension Services {
 
     static func getProductListByType(
         _ httpClient: HTTPClient,
+        _ timeout: TimeInterval = 120.0,
         logger: LoggerAgentProtocol
     ) -> GetProductListByType {
         
@@ -34,7 +35,7 @@ extension Services {
         
         return { productType, completion in
             
-            loggingRemoteService.process(productType) { result in
+            loggingRemoteService.process((productType, timeout)) { result in
                 
                 completion(try? result.get())
             }
@@ -229,7 +230,7 @@ private extension ProductDepositData {
             interestRate: depositData.interestRate,
             accountId: depositData.accountID,
             creditMinimumAmount: depositData.creditMinimumAmount.map(Double.init) ?? 0,
-            minimumBalance: Double(from: depositData.minimumBalance),
+            minimumBalance: Double(from: depositData.minimumBalance ?? 0.0),
             endDate: depositData.endDate.map { Date.dateUTC(with: $0) },
             endDateNf: depositData.endDateNF,
             isDemandDeposit: depositData.demandDeposit,
@@ -347,6 +348,9 @@ private extension ProductData.Status {
             
         case .blockedUnlockAvailable:
             self = .blockedUnlockAvailable
+            
+        case .blockedUnlockNotAvailable:
+            self = .blockedByBank
         }
     }
 }
@@ -402,6 +406,9 @@ private extension ProductData.StatusPC {
             
         case .blockedByClient:
             self = .blockedByClient
+            
+        case .blockedUnlockNotAvailable:
+            self = .blockedUnlockNotAvailable
         }
     }
 }

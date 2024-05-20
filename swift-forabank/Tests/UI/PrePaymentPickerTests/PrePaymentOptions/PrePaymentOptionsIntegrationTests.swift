@@ -129,7 +129,7 @@ final class PrePaymentOptionsIntegrationTests: XCTestCase {
             { _ in },
             {
                 var operators = $0.operators
-                operators?.append(.init(id: "111"))
+                operators.append(.init(id: "111"))
                 $0.operators = operators
             }
         )
@@ -186,10 +186,6 @@ final class PrePaymentOptionsIntegrationTests: XCTestCase {
             }, {
                 $0.isInflight = false
             }, {
-                $0.lastPayments = .init()
-                $0.operators = .init()
-                $0.isInflight = false
-            }, {
                 $0.lastPayments = .stub
                 $0.operators = .stub
             }
@@ -207,15 +203,11 @@ final class PrePaymentOptionsIntegrationTests: XCTestCase {
             }, {
                 $0.isInflight = false
             }, {
-                $0.lastPayments = .init()
-                $0.operators = .init()
-                $0.isInflight = false
-            }, {
                 $0.lastPayments = .stub
                 $0.operators = .stub
             }, {
                 var operators = $0.operators
-                operators?.append(.init(id: "111"))
+                operators.append(.init(id: "111"))
                 $0.operators = operators
             }, {
                 $0.searchText = "abc"

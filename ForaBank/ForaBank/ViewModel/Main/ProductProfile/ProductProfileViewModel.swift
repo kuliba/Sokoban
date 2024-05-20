@@ -5,13 +5,14 @@
 //  Created by Дмитрий on 09.03.2022.
 //
 
-import Foundation
+import CardUI
 import Combine
-import SwiftUI
+import Foundation
+import OperatorsListComponents
 import PDFKit
 import PinCodeUI
+import SwiftUI
 import Tagged
-import CardUI
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -48,7 +49,7 @@ class ProductProfileViewModel: ObservableObject {
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
     private let fastPaymentsFactory: FastPaymentsFactory
-    private let paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager
+    private let paymentsTransfersFlowManager: PTFlowManger
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
@@ -73,7 +74,7 @@ class ProductProfileViewModel: ObservableObject {
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
          fastPaymentsFactory: FastPaymentsFactory,
-         paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
+         paymentsTransfersFlowManager: PTFlowManger,
          userAccountNavigationStateManager: UserAccountNavigationStateManager,
          sberQRServices: SberQRServices,
          qrViewModelFactory: QRViewModelFactory,
@@ -92,7 +93,7 @@ class ProductProfileViewModel: ObservableObject {
         self.historyPool = historyPool
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
-        self.paymentsTransfersNavigationStateManager = paymentsTransfersNavigationStateManager
+        self.paymentsTransfersFlowManager = paymentsTransfersFlowManager
         self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
@@ -113,7 +114,7 @@ class ProductProfileViewModel: ObservableObject {
     convenience init?(
         _ model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
-        paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
+        paymentsTransfersFlowManager: PTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -145,7 +146,7 @@ class ProductProfileViewModel: ObservableObject {
             accentColor: accentColor,
             model: model,
             fastPaymentsFactory: fastPaymentsFactory,
-            paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
+            paymentsTransfersFlowManager: paymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -377,7 +378,7 @@ private extension ProductProfileViewModel {
                 
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
-                    navigationStateManager: paymentsTransfersNavigationStateManager,
+                    flowManager: paymentsTransfersFlowManager,
                     userAccountNavigationStateManager: userAccountNavigationStateManager,
                     sberQRServices: sberQRServices,
                     qrViewModelFactory: qrViewModelFactory,
@@ -1524,7 +1525,7 @@ private extension ProductProfileViewModel {
         .init(
             model,
             fastPaymentsFactory: fastPaymentsFactory,
-            paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
+            paymentsTransfersFlowManager: paymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory, 

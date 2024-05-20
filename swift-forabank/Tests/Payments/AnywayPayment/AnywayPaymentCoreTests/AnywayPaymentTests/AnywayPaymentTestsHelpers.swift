@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import Foundation
 import XCTest
 
@@ -128,8 +129,8 @@ func makeAnywayPayment(
 
 func makeAnywayPaymentOutline(
     _ fields: [String: String] = [:],
-    core: AnywayPayment.Outline.PaymentCore = makeOutlinePaymentCore(productType: .account)
-) -> AnywayPayment.Outline {
+    core: AnywayPaymentOutline.PaymentCore = makeOutlinePaymentCore(productType: .account)
+) -> AnywayPaymentOutline {
     
     .init(
         core: core,
@@ -233,13 +234,17 @@ func makeAnywayPaymentParameter(
 
 func makeAnywayPaymentParameter(
     id: String = anyMessage(),
-    value: String? = anyMessage()
+    value: String? = anyMessage(),
+    viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType = .input
 ) -> AnywayPayment.Element.Parameter {
     
     makeAnywayPaymentParameter(
         field: makeAnywayPaymentElementParameterField(
             id: id,
             value: value
+        ),
+        uiAttributes: makeAnywayPaymentElementParameterUIAttributes(
+            viewType: viewType
         )
     )
 }
@@ -507,7 +512,7 @@ func makeAnywayPaymentAndUpdateFields(
     return (update, updated)
 }
 
-private func makeAnywayPaymentUpdateParameter(
+func makeAnywayPaymentUpdateParameter(
     field: AnywayPaymentUpdate.Parameter.Field = makeAnywayPaymentUpdateParameterField(),
     masking: AnywayPaymentUpdate.Parameter.Masking = makeAnywayPaymentUpdateParameterMasking(),
     validation: AnywayPaymentUpdate.Parameter.Validation = makeAnywayPaymentUpdateParameterValidation(),
@@ -704,20 +709,23 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
     init(with dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType) {
         
         switch dataType {
+        case .number:
+            self = .number
+            
+        case let .pairs(pair, pairs):
+            self = .pairs(pair.pair, pairs.map(\.pair))
+            
         case .string:
             self = .string
-            
-        case let .pairs(pairs):
-            self = .pairs(pairs.map(Pair.init))
         }
     }
 }
 
-private extension AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
+private extension AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair {
     
-    init(with pairs: AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair) {
+    var pair: AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
         
-        self.init(key: pairs.key, value: pairs.value)
+        .init(key: key, value: value)
     }
 }
 
@@ -745,7 +753,7 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.ViewType {
     }
 }
 
-private func makeAnywayPaymentUpdateParameterField(
+func makeAnywayPaymentUpdateParameterField(
     content: String? = nil,
     dataDictionary: String? = nil,
     dataDictionaryРarent: String? = nil,
@@ -785,7 +793,7 @@ private func makeAnywayPaymentUpdateParameterValidation(
     )
 }
 
-private func makeAnywayPaymentUpdateParameterUIAttributes(
+func makeAnywayPaymentUpdateParameterUIAttributes(
     dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType = .string,
     group: String? = nil,
     inputFieldType: AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType? = nil,
@@ -829,8 +837,8 @@ func makeOutlinePaymentCore(
     amount: Decimal = makeAmount(),
     currency: String = anyMessage(),
     productID: Int = makeIntID(),
-    productType: AnywayPayment.Outline.PaymentCore.ProductType
-) -> AnywayPayment.Outline.PaymentCore {
+    productType: AnywayPaymentOutline.PaymentCore.ProductType
+) -> AnywayPaymentOutline.PaymentCore {
     
     .init(
         amount: amount, 
@@ -844,7 +852,7 @@ func makeWidgetPaymentCore(
     amount: Decimal = makeAmount(),
     currency: String = anyMessage(),
     productID: Int = makeIntID(),
-    productType: AnywayPayment.Outline.PaymentCore.ProductType
+    productType: AnywayPaymentOutline.PaymentCore.ProductType
 ) -> AnywayPayment.Element.Widget.PaymentCore {
     
     .init(

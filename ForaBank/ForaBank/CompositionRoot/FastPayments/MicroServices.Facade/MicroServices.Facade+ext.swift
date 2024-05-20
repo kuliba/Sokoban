@@ -11,6 +11,8 @@ import GenericRemoteService
 
 extension MicroServices.Facade {
     
+    typealias ServiceFailure = FastPaymentsSettings.ServiceFailure
+    
     typealias NanoFetch<Payload, Success> = NanoServices.Fetch<Payload, Success, ServiceFailure>
     typealias NanoVoidFetch<Success> = NanoServices.VoidFetch<Success, ServiceFailure>
     
@@ -56,7 +58,7 @@ extension MicroServices.Facade {
 #warning("add tests; find a way to move into mapper")
 extension Consent {
     
-    init?(result: Result<[ConsentMe2MePull], ServiceFailure>) {
+    init?(result: Result<[ConsentMe2MePull], FastPaymentsSettings.ServiceFailure>) {
         
         switch result {
         case .failure:
@@ -68,9 +70,9 @@ extension Consent {
     }
 }
 
-private extension Result<UserPaymentSettings.PaymentContract?, ServiceFailure> {
+private extension Result<UserPaymentSettings.PaymentContract?, FastPaymentsSettings.ServiceFailure> {
     
-    init(result: Result<FastPaymentContractFullInfo?, ServiceFailure>) {
+    init(result: Result<FastPaymentContractFullInfo?, FastPaymentsSettings.ServiceFailure>) {
         
         switch result {
         case let .failure(failure):

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 13.04.2024.
 //
 
-import AnywayPaymentCore
+import AnywayPaymentDomain
 import Foundation
 import Tagged
 
@@ -19,7 +19,7 @@ enum AnywayPaymentEvent: Equatable {
 
 extension AnywayPaymentEvent {
     
-    typealias ParameterID = AnywayPayment.Element.Parameter.Field.ID
+    typealias ParameterID = AnywayPayment.Element.UIComponent.Parameter.ID
     
     enum Widget: Equatable {
         
