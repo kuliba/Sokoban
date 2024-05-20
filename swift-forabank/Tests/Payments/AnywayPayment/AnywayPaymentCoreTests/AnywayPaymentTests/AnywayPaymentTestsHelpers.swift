@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import Foundation
 import XCTest
 
@@ -128,8 +129,8 @@ func makeAnywayPayment(
 
 func makeAnywayPaymentOutline(
     _ fields: [String: String] = [:],
-    core: AnywayPayment.Outline.PaymentCore = makeOutlinePaymentCore(productType: .account)
-) -> AnywayPayment.Outline {
+    core: AnywayPaymentOutline.PaymentCore = makeOutlinePaymentCore(productType: .account)
+) -> AnywayPaymentOutline {
     
     .init(
         core: core,
@@ -511,7 +512,7 @@ func makeAnywayPaymentAndUpdateFields(
     return (update, updated)
 }
 
-private func makeAnywayPaymentUpdateParameter(
+func makeAnywayPaymentUpdateParameter(
     field: AnywayPaymentUpdate.Parameter.Field = makeAnywayPaymentUpdateParameterField(),
     masking: AnywayPaymentUpdate.Parameter.Masking = makeAnywayPaymentUpdateParameterMasking(),
     validation: AnywayPaymentUpdate.Parameter.Validation = makeAnywayPaymentUpdateParameterValidation(),
@@ -752,7 +753,7 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.ViewType {
     }
 }
 
-private func makeAnywayPaymentUpdateParameterField(
+func makeAnywayPaymentUpdateParameterField(
     content: String? = nil,
     dataDictionary: String? = nil,
     dataDictionaryРarent: String? = nil,
@@ -792,7 +793,7 @@ private func makeAnywayPaymentUpdateParameterValidation(
     )
 }
 
-private func makeAnywayPaymentUpdateParameterUIAttributes(
+func makeAnywayPaymentUpdateParameterUIAttributes(
     dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType = .string,
     group: String? = nil,
     inputFieldType: AnywayPaymentUpdate.Parameter.UIAttributes.InputFieldType? = nil,
@@ -836,8 +837,8 @@ func makeOutlinePaymentCore(
     amount: Decimal = makeAmount(),
     currency: String = anyMessage(),
     productID: Int = makeIntID(),
-    productType: AnywayPayment.Outline.PaymentCore.ProductType
-) -> AnywayPayment.Outline.PaymentCore {
+    productType: AnywayPaymentOutline.PaymentCore.ProductType
+) -> AnywayPaymentOutline.PaymentCore {
     
     .init(
         amount: amount, 
@@ -851,7 +852,7 @@ func makeWidgetPaymentCore(
     amount: Decimal = makeAmount(),
     currency: String = anyMessage(),
     productID: Int = makeIntID(),
-    productType: AnywayPayment.Outline.PaymentCore.ProductType
+    productType: AnywayPaymentOutline.PaymentCore.ProductType
 ) -> AnywayPayment.Element.Widget.PaymentCore {
     
     .init(

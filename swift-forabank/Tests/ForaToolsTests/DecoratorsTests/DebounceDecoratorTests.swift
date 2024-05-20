@@ -42,9 +42,7 @@ final class DebounceDecoratorTests: XCTestCase {
         let sut = makeSUT(delay: 0.1)
         let expectation = expectation(description: "DebounceRace")
         
-        let block = {
-            expectation.fulfill()
-        }
+        let block = { expectation.fulfill() }
         
         DispatchQueue.global().async { sut(block: block) }
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.05) { sut(block: block) }

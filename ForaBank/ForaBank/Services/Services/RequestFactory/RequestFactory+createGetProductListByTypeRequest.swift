@@ -10,7 +10,8 @@ import Foundation
 extension RequestFactory {
     
     static func createGetProductListByTypeRequest(
-        _ productType: ProductType
+        _ productType: ProductType,
+        _ timeout: TimeInterval = 120.0
     ) throws -> URLRequest {
         
         let parameters: [(String, String)] = [
@@ -24,7 +25,7 @@ extension RequestFactory {
         
         var request = URLRequest(url: url)
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
-        
+        request.timeoutInterval = timeout
         request.httpMethod = RequestMethod.get.rawValue
         
         return request

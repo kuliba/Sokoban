@@ -5,6 +5,9 @@
 //  Created by Igor Malyarov on 01.04.2024.
 //
 
+import AnywayPaymentDomain
+
+#warning("rename to PaymentDigestor")
 public struct PaymentInspector<Payment, PaymentDigest> {
     
     public let checkFraud: CheckFraud

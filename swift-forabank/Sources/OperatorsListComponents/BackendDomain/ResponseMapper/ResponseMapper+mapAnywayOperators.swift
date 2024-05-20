@@ -12,21 +12,24 @@ public extension ResponseMapper {
     static func mapAnywayOperatorsListResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> MappingResult<[_OperatorGroup]?> {
+    ) -> MappingResult<[SberOperator]> {
         
         map(data, httpURLResponse, mapOrThrow: map)
     }
     
     private static func map(
         _ data: AnywayOperatorGroupData
-    ) throws -> [_OperatorGroup]? {
+    ) throws -> [SberOperator] {
         
-        data.operatorList.compactMap({ $0 }).first?.atributeList.map({
-            _OperatorGroup(
-                md5hash: $0.md5hash ?? "",
-                title: $0.juridicalName ?? "",
-                description: "ИНН \($0.inn ?? "")"
-            ) })
+        guard let list = data.operatorList.first?.atributeList
+        else { return [] }
+        
+        return list.compactMap {
+            
+            guard let title = $0.juridicalName else { return nil }
+            
+            return .init(id: $0.customerId, inn: $0.inn, md5Hash: $0.md5hash, title: title)
+        }
     }
 }
 
@@ -34,10 +37,10 @@ private extension ResponseMapper {
     
     struct AnywayOperatorGroupData: Decodable {
         
-        let operatorList: [OperatorGroupData]
+        let operatorList: [Operator]
         let serial: String
         
-        struct OperatorGroupData: Decodable {
+        struct Operator: Decodable {
             
             let type: String
             let atributeList: [OperatorData]
@@ -52,6 +55,7 @@ private extension ResponseMapper {
             }
             
             enum Kind: Decodable {
+                
                 case housingAndCommunalService
             }
         }

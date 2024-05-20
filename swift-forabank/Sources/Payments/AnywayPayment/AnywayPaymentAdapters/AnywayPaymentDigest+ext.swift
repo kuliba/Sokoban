@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 02.04.2024.
 //
 
+import AnywayPaymentDomain
 import AnywayPaymentCore
 import Foundation
 

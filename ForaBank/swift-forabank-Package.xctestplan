@@ -375,6 +375,20 @@
         "identifier" : "AnywayPaymentAdaptersTests",
         "name" : "AnywayPaymentAdaptersTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AnywayPaymentUITests",
+        "name" : "AnywayPaymentUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UtilityServicePrepaymentCoreTests",
+        "name" : "UtilityServicePrepaymentCoreTests"
+      }
     }
   ],
   "version" : 1

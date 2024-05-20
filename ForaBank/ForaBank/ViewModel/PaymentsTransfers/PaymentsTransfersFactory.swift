@@ -1,0 +1,60 @@
+//
+//  PaymentsTransfersFactory.swift
+//  ForaBank
+//
+//  Created by Igor Malyarov on 03.05.2024.
+//
+
+struct PaymentsTransfersFactory {
+    
+    let makeUtilitiesViewModel: MakeUtilitiesViewModel
+    let makeProductProfileViewModel: MakeProductProfileViewModel
+    let makeTemplatesListViewModel: MakeTemplatesListViewModel
+}
+
+extension PaymentsTransfersFactory {
+    #warning("move to PaymentsTransfersFlowReducerFactory")
+    struct MakeUtilitiesPayload {
+        
+        let type: PTSectionPaymentsView.ViewModel.PaymentsType
+        let navLeadingAction: () -> Void
+        let navTrailingAction: () -> Void
+        let addCompany: () -> Void
+        let requisites: () -> Void
+    }
+    
+    enum UtilitiesVM {
+        
+        case legacy(PaymentsServicesViewModel)
+        case utilities
+    }
+    
+    typealias MakeUtilitiesViewModel = (MakeUtilitiesPayload, @escaping (UtilitiesVM) -> Void) -> Void
+    
+    typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
+    
+    typealias DismissAction = () -> Void
+    typealias MakeTemplatesListViewModel = (@escaping DismissAction) -> TemplatesListViewModel
+}
+
+extension PaymentsTransfersFactory {
+    
+    static let preview: Self = {
+        
+        let productProfileViewModel = ProductProfileViewModel.make(
+            with: .emptyMock,
+            fastPaymentsFactory: .legacy,
+            makeUtilitiesViewModel: { _,_ in },
+            paymentsTransfersFlowManager: .preview,
+            userAccountNavigationStateManager: .preview,
+            sberQRServices: .empty(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient()
+        )
+        return .init(
+            makeUtilitiesViewModel: { _,_ in },
+            makeProductProfileViewModel: productProfileViewModel,
+            makeTemplatesListViewModel: { _ in .sampleComplete }
+        )
+    }()
+}

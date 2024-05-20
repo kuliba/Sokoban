@@ -12,6 +12,7 @@ import TextFieldUI
 import TextFieldComponent
 import PrePaymentPicker
 import TextFieldComponent
+import PaymentComponents
 
 typealias SearchViewModel = ReducerTextFieldViewModel<ToolbarViewModel, KeyboardType>
 
@@ -20,7 +21,7 @@ struct ComposedOperatorsWrapperView: View {
     @StateObject var searchViewModel: SearchViewModel
     @StateObject var viewModel: PrePaymentOptionsViewModel = .preview(initialState: .init())
  
-    let selectLast: (LatestPayment.ID) -> Void
+    let selectLast: (LastPayment.ID) -> Void
     let selectOperator: (OperatorsListComponents.Operator.ID) -> Void
     
     let configView: ConfigView
@@ -28,7 +29,7 @@ struct ComposedOperatorsWrapperView: View {
     init(
         searchViewModel: SearchViewModel,
         viewModel: PrePaymentOptionsViewModel,
-        selectLast: @escaping (LatestPayment.ID) -> Void,
+        selectLast: @escaping (LastPayment.ID) -> Void,
         selectOperator: @escaping (OperatorsListComponents.Operator.ID) -> Void,
         configView: ConfigView
     ) {
@@ -36,16 +37,14 @@ struct ComposedOperatorsWrapperView: View {
         self.selectOperator = selectOperator
         self.configView = configView
         
-        let regularFieldViewModel: RegularFieldViewModel = .make(
-            keyboardType: .default,
-            text: nil,
-            placeholderText: "Наименование или ИНН",
-            limit: 210
-        )
+//        let regularFieldViewModel: RegularFieldViewModel = .make(
+//            keyboardType: .default,
+//            text: nil,
+//            placeholderText: "Наименование или ИНН",
+//            limit: 210
+//        )
         
-        self._searchViewModel = .init(
-            wrappedValue: regularFieldViewModel
-        )
+        self._searchViewModel = .init(wrappedValue: searchViewModel)
     }
     
     var body: some View {
@@ -60,8 +59,8 @@ struct ComposedOperatorsWrapperView: View {
                 
                 LatestPaymentView(
                     latestPayment: payment,
-                    latestPaymentConfigView: configView.latestConfig,
-                    event: { _ in }
+                    event: { _ in },
+                    config: configView.latestConfig
                 )
             },
             operatorView: { `operator` in OperatorView(
@@ -76,18 +75,9 @@ struct ComposedOperatorsWrapperView: View {
                     defaultIcon: .init(systemName: "photo.artframe")
                 )
             )
-            .monospacedDigit()  
+            .monospacedDigit()
             },
-            footerView: { NoCompanyInListView(
-                noCompanyListViewModel: .sample,
-                config: .init(
-                    titleFont: .title,
-                    titleColor: .black,
-                    descriptionFont: .callout,
-                    descriptionColor: .gray,
-                    subtitleFont: .footnote,
-                    subtitleColor: .gray
-                )) },
+            footerView: { EmptyView() },
             searchView: {
                 CancellableSearchBarView(
                     viewModel: searchViewModel,
@@ -108,7 +98,7 @@ struct ComposedOperatorsWrapperView: View {
 
 struct ConfigView {
     
-    let latestConfig: LatestPayment.LatestPaymentConfig
+    let latestConfig: LastPayment.LatestPaymentConfig
 }
 
 struct ContentView: View {
@@ -149,10 +139,10 @@ private extension ComposedOperatorsWrapperView {
     
         switch event {
         case let .selectLastOperation(id):
-            selectLast(id)
+            break
             
         case let .selectOperator(id):
-            selectOperator(id)
+            break
             
         case let .utility(event):
             viewModel.event(event)

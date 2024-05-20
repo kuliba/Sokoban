@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 29.03.2024.
 //
 
+import AnywayPaymentDomain
 import AnywayPaymentCore
 import XCTest
 
@@ -1173,11 +1174,11 @@ final class TransactionReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate>
+    private typealias SUT = _TransactionReducer
     
-    private typealias State = SUT.State
-    private typealias Event = SUT.Event
-    private typealias Effect = SUT.Effect
+    private typealias State = _Transaction
+    private typealias Event = _TransactionEvent
+    private typealias Effect = _TransactionEffect
     
     private typealias CheckFraudSpy = CallSpy<Payment, Bool>
     private typealias MakeDigestSpy = CallSpy<Payment, PaymentDigest>

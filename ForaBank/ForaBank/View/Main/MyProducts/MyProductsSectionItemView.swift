@@ -141,7 +141,7 @@ extension MyProductsSectionItemView {
                         .accessibilityIdentifier("MyProductsProductIconStateImage")
                 }
             }
-            .shimmering(active: viewModel.isUpdating, bounce: true)
+//            .shimmering(active: viewModel.isUpdating, bounce: true)
         }
     }
     

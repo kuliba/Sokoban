@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 30.03.2024.
 //
 
-public final class TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate> {
+import AnywayPaymentDomain
+
+public final class TransactionReducer<TransactionReport, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate> {
     
     private let paymentReduce: PaymentReduce
     private let stagePayment: StagePayment
@@ -45,8 +47,8 @@ public extension TransactionReducer {
         case (.fraudSuspected, _):
             reduceFraudSuspected(&state, &effect, with: event)
             
-        case let (_, .completePayment(transactionResult)):
-            reduce(&state, with: transactionResult)
+        case let (_, .completePayment(report)):
+            reduce(&state, with: report)
             
         case (_, .continue):
             reduceContinue(&state, &effect)
@@ -70,13 +72,15 @@ public extension TransactionReducer {
 
 public extension TransactionReducer {
     
-    typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, Effect?)
+    typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, Effect?) // or `PaymentEffect?`
     typealias StagePayment = (Payment) -> Payment
     typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
     typealias Inspector = PaymentInspector<Payment, PaymentDigest>
     
-    typealias State = Transaction<DocumentStatus, OperationDetails, Payment>
-    typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate>
+    typealias Status = TransactionStatus<TransactionReport>
+
+    typealias State = Transaction<Payment, Status>
+    typealias Event = TransactionEvent<TransactionReport, PaymentEvent, PaymentUpdate>
     typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
 
@@ -121,9 +125,9 @@ private extension TransactionReducer {
     
     func reduce(
         _ state: inout State,
-        with transactionResult: Event.TransactionResult
+        with report: TransactionReport?
     ) {
-        switch transactionResult {
+        switch report {
         case .none:
             state.status = .result(.failure(.transactionFailure))
             
@@ -173,7 +177,7 @@ private extension TransactionReducer {
     
     func reduce(
         _ state: inout State,
-        with updateResult: Event.PaymentUpdateResult
+        with updateResult: Event.UpdatePaymentResult
     ) {
         switch updateResult {
         case let .failure(serviceFailure):
