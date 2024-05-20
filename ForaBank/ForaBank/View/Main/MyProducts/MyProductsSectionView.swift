@@ -173,7 +173,7 @@ extension MyProductsSectionView {
         
         HStack(spacing: 16) {
             
-            Image.cardPlaceholder
+            Image.ic32GreySimple
                 .renderingMode(.original)
                 .resizable()
                 .scaledToFit()
