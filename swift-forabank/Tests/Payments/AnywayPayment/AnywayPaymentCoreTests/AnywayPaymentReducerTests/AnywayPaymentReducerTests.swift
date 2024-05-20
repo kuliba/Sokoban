@@ -133,19 +133,6 @@ private extension AnywayPayment {
     }
 }
 
-private extension AnywayPayment.Element.Parameter {
-    
-    func updating(value: Field.Value) -> Self {
-        
-        return .init(
-            field: .init(id: field.id, value: value),
-            masking: masking,
-            validation: validation,
-            uiAttributes: uiAttributes
-        )
-    }
-}
-
 private extension AnywayPayment.Element.Widget.PaymentCore {
     
     func updating(
