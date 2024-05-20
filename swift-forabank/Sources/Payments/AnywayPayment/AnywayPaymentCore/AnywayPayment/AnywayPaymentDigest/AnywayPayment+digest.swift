@@ -1,22 +1,27 @@
 //
-//  AnywayPayment+digest.swift
+//  AnywayPayment+makeDigest.swift
 //
 //
 //  Created by Igor Malyarov on 12.04.2024.
 //
 
-extension AnywayPayment {
+import AnywayPaymentDomain
+
+public extension AnywayPayment {
     
-    public var digest: AnywayPaymentDigest {
+    func makeDigest() -> AnywayPaymentDigest {
         
-        .init(
-            additional: additional,
-            core: core,
+        return .init(
+            additional: additional(),
+            core: core(),
             puref: .init(puref.rawValue)
         )
     }
+}
+
+private extension AnywayPayment {
     
-    private var additional: [AnywayPaymentDigest.Additional] {
+    func additional() -> [AnywayPaymentDigest.Additional] {
         
         fields.enumerated().compactMap { index, field in
             
@@ -31,7 +36,7 @@ extension AnywayPayment {
         }
     }
     
-    private var core: AnywayPaymentDigest.PaymentCore? {
+    func core() -> AnywayPaymentDigest.PaymentCore? {
         
         guard case let .widget(.core(core)) = elements.first(where: { $0.widget?.id == .core })
         else { return nil}
@@ -43,7 +48,7 @@ extension AnywayPayment {
         )
     }
     
-    private var fields: [Element.Parameter.Field] {
+    var fields: [Element.Parameter.Field] {
         
         elements.compactMap(\.parameter?.field)
     }
@@ -79,4 +84,3 @@ private extension AnywayPayment.Element.Widget.PaymentCore {
         }
     }
 }
-

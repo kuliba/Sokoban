@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 31.03.2024.
 //
 
+import AnywayPaymentDomain
 import AnywayPaymentCore
 import RxViewModel
 import XCTest
@@ -341,8 +342,8 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     
     private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
     private typealias PaymentInitiator = PaymentProcessing
-    private typealias PaymentMaker = Spy<VerificationCode, EffectHandler.MakePaymentResult>
-    private typealias PaymentProcessing = Spy<PaymentDigest, EffectHandler.ProcessResult>
+    private typealias PaymentMaker = Spy<VerificationCode, EffectHandler.MicroServices.MakePaymentResult>
+    private typealias PaymentProcessing = Spy<PaymentDigest, EffectHandler.MicroServices.ProcessResult>
     
     private typealias Inspector = PaymentInspector<Payment, PaymentDigest>
 
@@ -377,12 +378,13 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         let paymentMaker = PaymentMaker()
         let paymentProcessing = PaymentProcessing()
         let effectHandler = EffectHandler(
-            initiatePayment: paymentInitiator.process,
-            makePayment: paymentMaker.process,
-            paymentEffectHandle: paymentEffectHandler.handleEffect,
-            processPayment: paymentProcessing.process
+            microServices: .init(
+                initiatePayment: paymentInitiator.process,
+                makePayment: paymentMaker.process,
+                paymentEffectHandle: paymentEffectHandler.handleEffect,
+                processPayment: paymentProcessing.process
+            )
         )
-        
         let sut = SUT(
             initialState: initialState,
             reduce: reducer.reduce,

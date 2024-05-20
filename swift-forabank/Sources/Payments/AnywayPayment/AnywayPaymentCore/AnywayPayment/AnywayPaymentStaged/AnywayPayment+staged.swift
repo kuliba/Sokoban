@@ -5,16 +5,15 @@
 //  Created by Igor Malyarov on 08.04.2024.
 //
 
+import AnywayPaymentDomain
 import Tagged
 
 extension AnywayPayment {
     
-    public func staged() -> Staged {
+    public func getStaged() -> AnywayPaymentStaged {
         
         .init(elements.compactMap(\.parameterID))
     }
-
-    public typealias Staged = Set<AnywayPayment.Element.Parameter.Field.ID>
 }
 
 private extension AnywayPayment.Element {

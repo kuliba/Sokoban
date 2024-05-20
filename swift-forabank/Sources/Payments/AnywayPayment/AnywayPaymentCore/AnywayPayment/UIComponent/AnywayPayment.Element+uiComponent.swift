@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 06.04.2024.
 //
 
+import AnywayPaymentDomain
 import Tagged
 
 extension AnywayPayment.Element {

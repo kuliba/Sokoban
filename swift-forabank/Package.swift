@@ -119,6 +119,7 @@ let package = Package(
         .anywayPaymentBackendTests,
         .anywayPaymentCore,
         .anywayPaymentCoreTests,
+        .anywayPaymentDomain,
         .anywayPaymentUI,
         .anywayPaymentUITests,
         .utilityPayment,
@@ -550,6 +551,7 @@ private extension Product {
             .anywayPaymentAdapters,
             .anywayPaymentBackend,
             .anywayPaymentCore,
+            .anywayPaymentDomain,
             .anywayPaymentUI,
         ]
     )
@@ -964,6 +966,7 @@ private extension Target {
         name: .anywayPaymentAdapters,
         dependencies: [
             .anywayPaymentCore,
+            .anywayPaymentDomain,
             .anywayPaymentUI,
             .anywayPaymentBackend,
             .remoteServices,
@@ -1008,6 +1011,7 @@ private extension Target {
     static let anywayPaymentCore = target(
         name: .anywayPaymentCore,
         dependencies: [
+            .anywayPaymentDomain,
             .remoteServices,
             .tagged,
         ],
@@ -1021,16 +1025,27 @@ private extension Target {
             .tagged,
             // internal modules
             .anywayPaymentCore,
+            .anywayPaymentDomain,
             .remoteServices,
             .rxViewModel,
         ],
         path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentCoreTests)"
+    )
+
+    static let anywayPaymentDomain = target(
+        name: .anywayPaymentDomain,
+        dependencies: [
+            .remoteServices,
+            .tagged,
+        ],
+        path: "Sources/Payments/AnywayPayment/\(String.anywayPaymentDomain)"
     )
     
     static let anywayPaymentUI = target(
         name: .anywayPaymentUI,
         dependencies: [
             .anywayPaymentCore,
+            .anywayPaymentDomain,
             .paymentComponents,
             .rxViewModel,
         ],
@@ -1991,6 +2006,7 @@ private extension Target {
             .textFieldModel,
             .anywayPaymentBackend,
             .anywayPaymentCore,
+            .anywayPaymentDomain,
             .utilityPayment,
         ]
     )
@@ -2262,6 +2278,10 @@ private extension Target.Dependency {
         name: .anywayPaymentCore
     )
 
+    static let anywayPaymentDomain = byName(
+        name: .anywayPaymentDomain
+    )
+
     static let anywayPaymentUI = byName(
         name: .anywayPaymentUI
     )
@@ -2500,6 +2520,7 @@ private extension String {
     static let anywayPaymentBackendTests = "AnywayPaymentBackendTests"
     static let anywayPaymentCore = "AnywayPaymentCore"
     static let anywayPaymentCoreTests = "AnywayPaymentCoreTests"
+    static let anywayPaymentDomain = "AnywayPaymentDomain"
     static let anywayPaymentUI = "AnywayPaymentUI"
     static let anywayPaymentUITests = "AnywayPaymentUITests"
 

@@ -7,12 +7,13 @@
 
 import Foundation
 import Tagged
+import AnywayPaymentDomain
 
 extension AnywayPayment {
     
     public func update(
         with update: AnywayPaymentUpdate,
-        and outline: Outline
+        and outline: AnywayPaymentOutline
     ) -> Self {
         
         var elements = elements
@@ -31,64 +32,11 @@ extension AnywayPayment {
             puref: puref
         )
     }
-    
-    public struct Outline: Equatable {
-        
-        public let core: PaymentCore
-        public let fields: Fields
-        
-        public init(
-            core: PaymentCore,
-            fields: Fields
-        ) {
-            self.core = core
-            self.fields = fields
-        }
-    }
-}
-
-extension AnywayPayment.Outline {
-    
-    public typealias Fields = [ID: Value]
-    
-    public typealias ID = Tagged<_ID, String>
-    public enum _ID {}
-    
-    public typealias Value = Tagged<_Value, String>
-    public enum _Value {}
-
-    public struct PaymentCore: Equatable {
-        
-        public let amount: Decimal
-        public let currency: String
-        public let productID: Int
-        public let productType: ProductType
-        
-        public init(
-            amount: Decimal,
-            currency: String,
-            productID: Int,
-            productType: ProductType
-        ) {
-            self.amount = amount
-            self.currency = currency
-            self.productID = productID
-            self.productType = productType
-        }
-    }
-}
-
-extension AnywayPayment.Outline.PaymentCore {
-    
-    public enum ProductType {
-        
-        case account, card
-    }
 }
 
 private extension AnywayPayment.Element.Widget.PaymentCore {
     
-    init(_ core: AnywayPayment.Outline.PaymentCore) {
+    init(_ core: AnywayPaymentOutline.PaymentCore) {
         
         self.init(
             amount: core.amount,
@@ -100,7 +48,7 @@ private extension AnywayPayment.Element.Widget.PaymentCore {
 
 private extension AnywayPayment.Element.Widget.PaymentCore.ProductID {
     
-    init(_ core: AnywayPayment.Outline.PaymentCore) {
+    init(_ core: AnywayPaymentOutline.PaymentCore) {
         
         switch core.productType {
         case .account: self = .accountID(.init(core.productID))
@@ -248,7 +196,7 @@ private extension Array where Element == AnywayPayment.Element {
     
     mutating func appendParameters(
         from updateParameters: [AnywayPaymentUpdate.Parameter],
-        with outline: AnywayPayment.Outline
+        with outline: AnywayPaymentOutline
     ) {
         let parameters = updateParameters.map {
             
@@ -279,7 +227,7 @@ private extension AnywayPayment.Element.Parameter {
     
     init(
         parameter: AnywayPaymentUpdate.Parameter,
-        fallbackValue: AnywayPayment.Outline.Value?
+        fallbackValue: AnywayPaymentOutline.Value?
     ) {
         self.init(
             field: .init(parameter.field, fallbackValue: fallbackValue),
@@ -294,7 +242,7 @@ private extension AnywayPayment.Element.Parameter.Field {
     
     init(
         _ field: AnywayPaymentUpdate.Parameter.Field,
-        fallbackValue: AnywayPayment.Outline.Value?
+        fallbackValue: AnywayPaymentOutline.Value?
     ) {
         self.init(
             id: .init(field.id),
