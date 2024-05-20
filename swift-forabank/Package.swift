@@ -12,6 +12,7 @@ let package = Package(
         .fastPaymentsSettings,
         .loadableModel,
         .loadableResourceComponent,
+        .operatorsListComponents,
         .paymentSticker,
         .phoneNumberWrapper,
         .sberQR,
@@ -25,6 +26,10 @@ let package = Package(
         // Infra
         .fetcher,
         .keyChainStore,
+        // Payments
+        .anywayPayment,
+        .utilityPayment,
+        .utilityServicePrepayment,
         // Services
         .cardStatementAPI,
         .cryptoSwaddler,
@@ -38,16 +43,16 @@ let package = Package(
         .symmetricEncryption,
         .transferPublicKey,
         .urlRequestFactory,
+        .getProductListByTypeService,
         // UI
-        .activateSlider,
         .buttonWithSheet,
         .c2bSubscriptionUI,
-        .cardGuardianModule,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
         .pickerWithPreviewComponent,
         .pinCodeUI,
+        .prePaymentPicker,
         .productUI,
         .rxViewModel,
         .searchBarComponent,
@@ -55,13 +60,12 @@ let package = Package(
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
-        .utilityPaymentsRx,
         // UI Components
         .paymentComponents,
+        .productProfileComponents,
         .carouselComponent,
         // Utilities
-        .services,
-        .operatorsListComponents,
+        .remoteServices,
         // tools
         .foraTools,
         // WIP: Explorations
@@ -71,6 +75,7 @@ let package = Package(
         .combineSchedulers,
         .customDump,
         .phoneNumberKit,
+        .nonEmpty,
         .tagged,
         .shimmer,
         .svgKit,
@@ -107,6 +112,22 @@ let package = Package(
         .fetcherTests,
         .keyChainStore,
         .keyChainStoreTests,
+        // Payments
+        .anywayPaymentAdapters,
+        .anywayPaymentAdaptersTests,
+        .anywayPaymentBackend,
+        .anywayPaymentBackendTests,
+        .anywayPaymentCore,
+        .anywayPaymentCoreTests,
+        .anywayPaymentDomain,
+        .anywayPaymentUI,
+        .anywayPaymentUITests,
+        .utilityPayment,
+        .utilityPaymentTests,
+        .utilityServicePrepaymentCore,
+        .utilityServicePrepaymentCoreTests,
+        .utilityServicePrepaymentDomain,
+        .utilityServicePrepaymentUI,
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
@@ -132,21 +153,34 @@ let package = Package(
         .transferPublicKeyTests,
         .urlRequestFactory,
         .urlRequestFactoryTests,
+        .getProductListByTypeService,
+        .getProductListByTypeServiceTests,
         // UI
         .activateSlider,
+        .activateSliderTests,
+        .accountInfoPanel,
+        .accountInfoPanelTests,
+        .cardUI,
+        .cardUITests,
+        .productDetailsUI,
+        .productDetailsUITests,
         .buttonWithSheet,
         .c2bSubscriptionUI,
-        .cardGuardianModule,
-        .cardGuardianModuleTests,
+        .cardGuardianUI,
+        .cardGuardianUITests,
         .linkableText,
         .linkableTextTests,
         .manageSubscriptionsUI,
         .otpInputComponent,
         .otpInputComponentTests,
+        .operatorsListComponents,
+        .operatorsListComponentsTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
         .pinCodeUITests,
+        .prePaymentPicker,
+        .prePaymentPickerTests,
         .productUI,
         .rxViewModel,
         .rxViewModelTests,
@@ -155,25 +189,33 @@ let package = Package(
         .textFieldComponentTests,
         .textFieldUI,
         .textFieldUITests,
+        .topUpCardUI,
+        .topUpCardUITests,
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
         .userAccountNavigationComponentTests,
-        .utilityPaymentsRx,
-        .utilityPaymentsRxTests,
         // UI Components
         .amountComponent,
         .buttonComponent,
         .infoComponent,
+        .checkBoxComponent,
+        .codeComponent,
+        .footerComponent,
+        .nameComponent,
+        .selectComponent,
+        .inputPhoneComponent,
+        .inputComponent,
         .paymentComponents,
+        .productProfileComponents,
         .productSelectComponent,
         .productSelectComponentTests,
         .sharedConfigs,
         .carouselComponent,
         .carouselComponentTests,
         // Utilities
-        .services,
-        .operatorsListComponents,
+        .remoteServices,
+        .remoteServicesTests,
         // tools
         .foraTools,
         .foraToolsTests,
@@ -287,6 +329,27 @@ private extension Product {
             .activateSlider
         ]
     )
+    
+    static let accountInfoPanel = library(
+        name: .accountInfoPanel,
+        targets: [
+            .accountInfoPanel
+        ]
+    )
+    
+    static let cardUI = library(
+        name: .cardUI,
+        targets: [
+            .cardUI
+        ]
+    )
+    
+    static let productDetailsUI = library(
+        name: .productDetailsUI,
+        targets: [
+            .productDetailsUI
+        ]
+    )
 
     static let buttonWithSheet = library(
         name: .buttonWithSheet,
@@ -302,10 +365,10 @@ private extension Product {
         ]
     )
     
-    static let cardGuardianModule = library(
-        name: .cardGuardianModule,
+    static let cardGuardianUI = library(
+        name: .cardGuardianUI,
         targets: [
-            .cardGuardianModule
+            .cardGuardianUI
         ]
     )
     
@@ -351,6 +414,13 @@ private extension Product {
         ]
     )
     
+    static let prePaymentPicker = library(
+        name: .prePaymentPicker,
+        targets: [
+            .prePaymentPicker,
+        ]
+    )
+    
     static let productUI = library(
         name: .productUI,
         targets: [
@@ -378,6 +448,12 @@ private extension Product {
             .textFieldComponent,
         ]
     )
+    static let topUpCardUI = library(
+        name: .topUpCardUI,
+        targets: [
+            .topUpCardUI,
+        ]
+    )
     
     static let uiKitHelpers = library(
         name: .uiKitHelpers,
@@ -400,13 +476,6 @@ private extension Product {
         ]
     )
     
-    static let utilityPaymentsRx = library(
-        name: .utilityPaymentsRx,
-        targets: [
-            .utilityPaymentsRx,
-        ]
-    )
-    
     // MARK: - UI Components
     
     static let paymentComponents = library(
@@ -414,6 +483,13 @@ private extension Product {
         targets: [
             .amountComponent,
             .buttonComponent,
+            .carouselComponent,
+            .checkBoxComponent,
+            .footerComponent,
+            .nameComponent,
+            .selectComponent,
+            .inputComponent,
+            .inputPhoneComponent,
             .infoComponent,
             .paymentComponents,
             .productSelectComponent,
@@ -421,19 +497,33 @@ private extension Product {
         ]
     )
     
+    static let productProfileComponents = library(
+        name: .productProfileComponents,
+        targets: [
+            .activateSlider,
+            .accountInfoPanel,
+            .cardUI,
+            .productDetailsUI,
+            .cardGuardianUI,
+            .productProfileComponents,
+            .topUpCardUI,
+        ]
+    )
+
     static let carouselComponent = library(
         name: .carouselComponent,
         targets: [
-            .carouselComponent
+            .carouselComponent,
+            .rxViewModel
         ]
     )
     
     // MARK: - Utilities
     
-    static let services = library(
-        name: .services,
+    static let remoteServices = library(
+        name: .remoteServices,
         targets: [
-            .services
+            .remoteServices
         ]
     )
 
@@ -453,6 +543,35 @@ private extension Product {
         ]
     )
     
+    // MARK: - Payments
+    
+    static let anywayPayment = library(
+        name: .anywayPayment,
+        targets: [
+            .anywayPaymentAdapters,
+            .anywayPaymentBackend,
+            .anywayPaymentCore,
+            .anywayPaymentDomain,
+            .anywayPaymentUI,
+        ]
+    )
+
+    static let utilityPayment = library(
+        name: .utilityPayment,
+        targets: [
+            .utilityPayment,
+        ]
+    )
+
+    static let utilityServicePrepayment = library(
+        name: .utilityServicePrepayment,
+        targets: [
+            .utilityServicePrepaymentCore,
+            .utilityServicePrepaymentDomain,
+            .utilityServicePrepaymentUI,
+        ]
+    )
+
     // MARK: - Services
     
     static let cardStatementAPI = library(
@@ -540,6 +659,13 @@ private extension Product {
         ]
     )
     
+    static let getProductListByTypeService = library(
+        name: .getProductListByTypeService,
+        targets: [
+            .getProductListByTypeService
+        ]
+    )
+    
     // MARK: - Tools
     
     static let foraTools = library(
@@ -562,6 +688,7 @@ private extension Target {
             .c2bSubscriptionUI,
             .paymentComponents,
             .rxViewModel,
+            .remoteServices,
             .uiPrimitives,
         ]
     )
@@ -657,11 +784,12 @@ private extension Target {
             .tagged,
             // internal modules
             .rxViewModel,
-            .cardGuardianModule,
+            .productProfileComponents,
             .uiPrimitives,
-            .services
+            .remoteServices
         ]
     )
+    
     static let productProfileTests = testTarget(
         name: .productProfileTests,
         dependencies: [
@@ -672,7 +800,7 @@ private extension Target {
             // internal modules
             .productProfile,
             .rxViewModel,
-            .services,
+            .remoteServices,
         ]
     )
 
@@ -832,6 +960,183 @@ private extension Target {
         path: "Tests/Infra/\(String.keyChainStoreTests)"
     )
     
+    // MARK: - Payments
+    
+    static let anywayPaymentAdapters = target(
+        name: .anywayPaymentAdapters,
+        dependencies: [
+            .anywayPaymentCore,
+            .anywayPaymentDomain,
+            .anywayPaymentUI,
+            .anywayPaymentBackend,
+            .remoteServices,
+            .tagged,
+        ],
+        path: "Sources/Payments/AnywayPayment/\(String.anywayPaymentAdapters)"
+    )
+    static let anywayPaymentAdaptersTests = testTarget(
+        name: .anywayPaymentAdaptersTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .anywayPaymentAdapters,
+            .remoteServices,
+            .tagged,
+        ],
+        path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentAdaptersTests)"
+    )
+    
+    static let anywayPaymentBackend = target(
+        name: .anywayPaymentBackend,
+        dependencies: [
+            .remoteServices,
+            .tagged,
+        ],
+        path: "Sources/Payments/AnywayPayment/\(String.anywayPaymentBackend)"
+    )
+    static let anywayPaymentBackendTests = testTarget(
+        name: .anywayPaymentBackendTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .anywayPaymentBackend,
+            .remoteServices,
+            .tagged,
+        ],
+        path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentBackendTests)"
+    )
+    
+    static let anywayPaymentCore = target(
+        name: .anywayPaymentCore,
+        dependencies: [
+            .anywayPaymentDomain,
+            .remoteServices,
+            .tagged,
+        ],
+        path: "Sources/Payments/AnywayPayment/\(String.anywayPaymentCore)"
+    )
+    static let anywayPaymentCoreTests = testTarget(
+        name: .anywayPaymentCoreTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .tagged,
+            // internal modules
+            .anywayPaymentCore,
+            .anywayPaymentDomain,
+            .remoteServices,
+            .rxViewModel,
+        ],
+        path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentCoreTests)"
+    )
+
+    static let anywayPaymentDomain = target(
+        name: .anywayPaymentDomain,
+        dependencies: [
+            .remoteServices,
+            .tagged,
+        ],
+        path: "Sources/Payments/AnywayPayment/\(String.anywayPaymentDomain)"
+    )
+    
+    static let anywayPaymentUI = target(
+        name: .anywayPaymentUI,
+        dependencies: [
+            .anywayPaymentCore,
+            .anywayPaymentDomain,
+            .paymentComponents,
+            .rxViewModel,
+        ],
+        path: "Sources/Payments/AnywayPayment/\(String.anywayPaymentUI)"
+    )
+    static let anywayPaymentUITests = testTarget(
+        name: .anywayPaymentUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .tagged,
+            // internal modules
+            .anywayPaymentUI,
+            .foraTools,
+            .remoteServices,
+            .rxViewModel,
+        ],
+        path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentUITests)"
+    )
+    
+    static let utilityPayment = target(
+        name: .utilityPayment,
+        dependencies: [
+            .foraTools,
+            .prePaymentPicker,
+            .tagged,
+        ],
+        path: "Sources/Payments/\(String.utilityPayment)"
+    )
+    static let utilityPaymentTests = testTarget(
+        name: .utilityPaymentTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .utilityPayment,
+        ],
+        path: "Tests/Payments/\(String.utilityPaymentTests)"
+    )
+    
+    static let utilityServicePrepaymentCore = target(
+        name: .utilityServicePrepaymentCore,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+            .foraTools,
+            .utilityServicePrepaymentDomain,
+        ],
+        path: "Sources/Payments/UtilityServicePrepayment/Core"
+    )
+    static let utilityServicePrepaymentDomain = target(
+        name: .utilityServicePrepaymentDomain,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+            .foraTools,
+        ],
+        path: "Sources/Payments/UtilityServicePrepayment/Domain"
+    )
+    static let utilityServicePrepaymentUI = target(
+        name: .utilityServicePrepaymentUI,
+        dependencies: [
+            // external packages
+            .tagged,
+            // internal modules
+            .foraTools,
+            .uiPrimitives,
+            .utilityServicePrepaymentDomain,
+        ],
+        path: "Sources/Payments/UtilityServicePrepayment/UI"
+    )
+    static let utilityServicePrepaymentCoreTests = testTarget(
+        name: .utilityServicePrepaymentCoreTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .utilityServicePrepaymentCore,
+            .utilityServicePrepaymentDomain,
+        ],
+        path: "Tests/Payments/UtilityServicePrepayment/CoreTests"
+    )
+    
     // MARK: - Services
     
     static let cardStatementAPI = target(
@@ -884,6 +1189,7 @@ private extension Target {
             .combineSchedulers,
         ]
     )
+    
     static let cvvPinTests = testTarget(
         name: .cvvPinTests,
         dependencies: [
@@ -895,10 +1201,29 @@ private extension Target {
         ]
     )
     
+    static let operatorsComponent = target(
+        name: .operatorsListComponents,
+        dependencies: [
+            // internal packages
+            .rxViewModel,
+            .prePaymentPicker,
+            .remoteServices
+        ]
+    )
+    
+    static let operatorsComponentTests = testTarget(
+        name: .operatorsListComponentsTests,
+        dependencies: [
+//            .operatorsListComponents
+        ],
+        path: "Tests/Services/\(String.operatorsListComponentsTests)"
+    )
+    
     static let cvvPIN_Services = target(
         name: .cvvPIN_Services,
         path: "Sources/Services/\(String.cvvPIN_Services)"
     )
+    
     static let cvvPIN_ServicesTests = testTarget(
         name: .cvvPIN_ServicesTests,
         dependencies: [
@@ -934,6 +1259,7 @@ private extension Target {
             .copy("Resources/generatepin.pem"),
         ]
     )
+    
     static let foraCryptoTests = testTarget(
         name: .foraCryptoTests,
         dependencies: [
@@ -948,6 +1274,7 @@ private extension Target {
         name: .genericRemoteService,
         path: "Sources/Services/\(String.genericRemoteService)"
     )
+    
     static let genericRemoteServiceTests = testTarget(
         name: .genericRemoteServiceTests,
         dependencies: [
@@ -1028,12 +1355,134 @@ private extension Target {
         ],
         path: "Tests/Services/\(String.urlRequestFactoryTests)"
     )
+    
+    static let getProductListByTypeService = target(
+        name: .getProductListByTypeService,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Services/\(String.getProductListByTypeService)"
+    )
+    
+    static let getProductListByTypeServiceTests = testTarget(
+        name: .getProductListByTypeServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .urlRequestFactory,
+            .getProductListByTypeService
+        ],
+        path: "Tests/Services/\(String.getProductListByTypeServiceTests)",
+        resources: [
+            .copy("Responses/GetProductListByType_Account_Response.json"),
+            .copy("Responses/GetProductListByType_Card_Response.json"),
+            .copy("Responses/GetProductListByType_Deposit_Response.json"),
+            .copy("Responses/GetProductListByType_Loan_Response.json")
+        ]
+    )
 
     // MARK: - UI
     
     static let activateSlider = target(
         name: .activateSlider,
-        path: "Sources/UI/\(String.activateSlider)"
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/ProductProfile/\(String.activateSlider)"
+    )
+    
+    static let activateSliderTests = testTarget(
+        name: .activateSliderTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .activateSlider,
+        ],
+        path: "Tests/UI/ProductProfileTests/\(String.activateSliderTests)"
+    )
+    
+    static let accountInfoPanel = target(
+        name: .accountInfoPanel,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+            .remoteServices,
+        ],
+        path: "Sources/UI/ProductProfile/\(String.accountInfoPanel)"
+    )
+    
+    static let accountInfoPanelTests = testTarget(
+        name: .accountInfoPanelTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .accountInfoPanel,
+            .remoteServices,
+        ],
+        path: "Tests/UI/ProductProfileTests/\(String.accountInfoPanelTests)"
+    )
+    
+    static let cardUI = target(
+        name: .cardUI,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/ProductProfile/\(String.cardUI)"
+    )
+
+    static let cardUITests = testTarget(
+        name: .cardUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .cardUI,
+            .remoteServices,
+        ],
+        path: "Tests/UI/ProductProfileTests/\(String.cardUITests)"
+    )
+    
+    static let productDetailsUI = target(
+        name: .productDetailsUI,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+            .remoteServices,
+        ],
+        path: "Sources/UI/ProductProfile/\(String.productDetailsUI)"
+    )
+    
+    static let productDetailsUITests = testTarget(
+        name: .productDetailsUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .productDetailsUI,
+            .remoteServices,
+        ],
+        path: "Tests/UI/ProductProfileTests/\(String.productDetailsUITests)"
     )
 
     static let buttonWithSheet = target(
@@ -1054,8 +1503,8 @@ private extension Target {
         path: "Sources/UI/\(String.c2bSubscriptionUI)"
     )
     
-    static let cardGuardianModule = target(
-        name: .cardGuardianModule,
+    static let cardGuardianUI = target(
+        name: .cardGuardianUI,
         dependencies: [
             // external packages
             .combineSchedulers,
@@ -1064,18 +1513,18 @@ private extension Target {
             .rxViewModel,
             .uiPrimitives,
         ],
-        path: "Sources/UI/\(String.cardGuardianModule)"
+        path: "Sources/UI/ProductProfile/\(String.cardGuardianUI)"
     )
     
-    static let cardGuardianModuleTests = testTarget(
-        name: .cardGuardianModuleTests,
+    static let cardGuardianUITests = testTarget(
+        name: .cardGuardianUITests,
         dependencies: [
             // external packages
             .customDump,
             // internal modules
-            .cardGuardianModule,
+            .cardGuardianUI,
         ],
-        path: "Tests/UI/\(String.cardGuardianModuleTests)"
+        path: "Tests/UI/ProductProfileTests/\(String.cardGuardianUITests)"
     )
     
     static let linkableText = target(
@@ -1151,6 +1600,30 @@ private extension Target {
         ]
     )
     
+    static let prePaymentPicker = target(
+        name: .prePaymentPicker,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+        ],
+        path: "Sources/UI/\(String.prePaymentPicker)"
+    )
+    
+    static let prePaymentPickerTests = testTarget(
+        name: .prePaymentPickerTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            // internal modules
+            .rxViewModel,
+            .prePaymentPicker,
+        ],
+        path: "Tests/UI/\(String.prePaymentPickerTests)"
+    )
+    
     static let productUI = target(
         name: .productUI
     )
@@ -1219,6 +1692,30 @@ private extension Target {
         ]
     )
     
+    static let topUpCardUI = target(
+        name: .topUpCardUI,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/ProductProfile/\(String.topUpCardUI)"
+    )
+    
+    static let topUpCardUITests = testTarget(
+        name: .topUpCardUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .topUpCardUI,
+        ],
+        path: "Tests/UI/ProductProfileTests/\(String.topUpCardUITests)"
+    )
+
     static let uiKitHelpers = target(name: .uiKitHelpers)
     
     static let uiPrimitives = target(
@@ -1256,30 +1753,6 @@ private extension Target {
         path: "Tests/UI/\(String.userAccountNavigationComponentTests)"
     )
     
-    static let utilityPaymentsRx = target(
-        name: .utilityPaymentsRx,
-        dependencies: [
-            // external packages
-            .combineSchedulers,
-            .tagged,
-            // internal modules
-        ],
-        path: "Sources/UI/\(String.utilityPaymentsRx)"
-    )
-    
-    static let utilityPaymentsRxTests = testTarget(
-        name: .utilityPaymentsRxTests,
-        dependencies: [
-            // external packages
-            .combineSchedulers,
-            .customDump,
-            // internal modules
-            .rxViewModel,
-            .utilityPaymentsRx,
-        ],
-        path: "Tests/UI/\(String.utilityPaymentsRxTests)"
-    )
-    
     // MARK: - UI Components
 
     static let amountComponent = target(
@@ -1312,16 +1785,100 @@ private extension Target {
         path: "Sources/UI/Components/\(String.infoComponent)"
     )
     
+    static let checkBoxComponent = target(
+        name: .checkBoxComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.checkBoxComponent)"
+    )
+    
+    static let codeComponent = target(
+        name: .codeComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.codeComponent)"
+    )
+    
+    static let footerComponent = target(
+        name: .footerComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.footerComponent)"
+    )
+      
+    static let nameComponent = target(
+        name: .nameComponent,
+        dependencies: [
+            .inputComponent,
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.nameComponent)"
+    )
+       
+    static let selectComponent = target(
+        name: .selectComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.selectComponent)"
+    )
+    
+    static let inputPhoneComponent = target(
+        name: .inputPhoneComponent,
+        dependencies: [
+            .phoneNumberKit,
+            .phoneNumberWrapper,
+            .searchBarComponent,
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.inputPhoneComponent)"
+    )
+       
+    static let inputComponent = target(
+        name: .inputComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.inputComponent)"
+    )
+    
     static let paymentComponents = target(
         name: .paymentComponents,
         dependencies: [
+            // external
+            .combineSchedulers,
+            // internal
             .amountComponent,
             .buttonComponent,
+            .carouselComponent,
             .infoComponent,
+            .checkBoxComponent,
+            .footerComponent,
+            .nameComponent,
+            .selectComponent,
+            .inputComponent,
+            .inputPhoneComponent,
             .productSelectComponent,
+            .rxViewModel,
             .sharedConfigs,
         ],
         path: "Sources/UI/Components/\(String.paymentComponents)"
+    )
+    
+    static let productProfileComponents = target(
+        name: .productProfileComponents,
+        dependencies: [
+            .activateSlider,
+            .accountInfoPanel,
+            .cardUI,
+            .productDetailsUI,
+            .cardGuardianUI,
+            .topUpCardUI,
+        ],
+        path: "Sources/UI/ProductProfile/\(String.productProfileComponents)"
     )
     
     static let carouselComponent = target(
@@ -1336,7 +1893,8 @@ private extension Target {
     static let carouselComponentTests = testTarget(
         name: .carouselComponentTests,
         dependencies: [
-            .carouselComponent
+            .carouselComponent,
+            .customDump
         ],
         path: "Tests/UI/Components/\(String.carouselComponentTests)"
     )
@@ -1350,9 +1908,24 @@ private extension Target {
             // internal modules
             .amountComponent,
             .buttonComponent,
+            .foraTools,
             .paymentComponents,
             .productSelectComponent,
+            .prePaymentPicker,
+            .rxViewModel,
+            .textFieldComponent,
+            .searchBarComponent,
+            .phoneNumberWrapper
         ]
+    )
+    
+    static let operatorsListComponentsTests = testTarget(
+        name: .operatorsListComponentsTests,
+        dependencies: [
+            .customDump,
+            .operatorsListComponents
+        ],
+        path: "Tests/\(String.operatorsListComponentsTests)"
     )
     
     static let productSelectComponent = target(
@@ -1390,15 +1963,29 @@ private extension Target {
     
     // MARK: - Utilities
     
-    static let services = target(
-        name: .services,
+    static let remoteServices = target(
+        name: .remoteServices,
         dependencies: [
             // external packages
             .tagged,
             // internal modules
         ],
-        path: "Sources/Utilities/\(String.services)"
+        path: "Sources/Utilities/\(String.remoteServices)"
     )
+    
+    static let remoteServicesTests = testTarget(
+        name: .remoteServicesTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            // internal modules
+            .remoteServices,
+        ],
+        path: "Tests/Utilities/\(String.remoteServicesTests)"
+    )
+
 
     // MARK: - WIP: Explorations
     
@@ -1413,9 +2000,14 @@ private extension Target {
             .cvvPin,
             .genericRemoteService,
             .getProcessingSessionCodeService,
+            .rxViewModel,
             .transferPublicKey,
             .textFieldDomain,
             .textFieldModel,
+            .anywayPaymentBackend,
+            .anywayPaymentCore,
+            .anywayPaymentDomain,
+            .utilityPayment,
         ]
     )
     
@@ -1432,12 +2024,15 @@ private extension Target {
     static let foraTools = target(
         name: .foraTools,
         dependencies: [
+            .combineSchedulers,
             .svgKit
         ]
     )
     static let foraToolsTests = testTarget(
         name: .foraToolsTests,
         dependencies: [
+            .combineSchedulers,
+            .customDump,
             .foraTools
         ]
     )
@@ -1455,6 +2050,10 @@ private extension Target.Dependency {
     
     static let loadableResourceComponent = byName(
         name: .loadableResourceComponent
+    )
+    
+    static let operatorsListComponents = byName(
+        name: .operatorsListComponents
     )
     
     static let paymentSticker = byName(
@@ -1514,7 +2113,19 @@ private extension Target.Dependency {
     static let activateSlider = byName(
         name: .activateSlider
     )
+    
+    static let accountInfoPanel = byName(
+        name: .accountInfoPanel
+    )
+    
+    static let cardUI = byName(
+        name: .cardUI
+    )
 
+    static let productDetailsUI = byName(
+        name: .productDetailsUI
+    )
+    
     static let buttonWithSheet = byName(
         name: .buttonWithSheet
     )
@@ -1523,8 +2134,8 @@ private extension Target.Dependency {
         name: .c2bSubscriptionUI
     )
     
-    static let cardGuardianModule = byName(
-        name: .cardGuardianModule
+    static let cardGuardianUI = byName(
+        name: .cardGuardianUI
     )
     
     static let linkableText = byName(
@@ -1543,6 +2154,10 @@ private extension Target.Dependency {
         name: .pinCodeUI
     )
     
+    static let prePaymentPicker = byName(
+        name: .prePaymentPicker
+    )
+    
     static let rxViewModel = byName(
         name: .rxViewModel
     )
@@ -1555,6 +2170,10 @@ private extension Target.Dependency {
         name: .textFieldUI
     )
     
+    static let topUpCardUI = byName(
+        name: .topUpCardUI
+    )
+    
     static let uiKitHelpers = byName(
         name: .uiKitHelpers
     )
@@ -1565,10 +2184,6 @@ private extension Target.Dependency {
     
     static let userAccountNavigationComponent = byName(
         name: .userAccountNavigationComponent
-    )
-    
-    static let utilityPaymentsRx = byName(
-        name: .utilityPaymentsRx
     )
     
     // MARK: - UI Components
@@ -1585,8 +2200,40 @@ private extension Target.Dependency {
         name: .infoComponent
     )
     
+    static let checkBoxComponent = byName(
+        name: .checkBoxComponent
+    )
+      
+    static let codeComponent = byName(
+        name: .codeComponent
+    )
+    
+    static let footerComponent = byName(
+        name: .footerComponent
+    )
+       
+    static let nameComponent = byName(
+        name: .nameComponent
+    )
+    
+    static let selectComponent = byName(
+        name: .selectComponent
+    )
+     
+    static let inputPhoneComponent = byName(
+        name: .inputPhoneComponent
+    )
+      
+    static let inputComponent = byName(
+        name: .inputComponent
+    )
+    
     static let paymentComponents = byName(
         name: .paymentComponents
+    )
+    
+    static let productProfileComponents = byName(
+        name: .productProfileComponents
     )
     
     static let productSelectComponent = byName(
@@ -1603,8 +2250,8 @@ private extension Target.Dependency {
     
     // MARK: - Utilities
     
-    static let services = byName(
-        name: .services
+    static let remoteServices = byName(
+        name: .remoteServices
     )
 
     // MARK: - Infra
@@ -1617,6 +2264,40 @@ private extension Target.Dependency {
         name: .keyChainStore
     )
     
+    // MARK: - Payments
+
+    static let anywayPaymentAdapters = byName(
+        name: .anywayPaymentAdapters
+    )
+
+    static let anywayPaymentBackend = byName(
+        name: .anywayPaymentBackend
+    )
+
+    static let anywayPaymentCore = byName(
+        name: .anywayPaymentCore
+    )
+
+    static let anywayPaymentDomain = byName(
+        name: .anywayPaymentDomain
+    )
+
+    static let anywayPaymentUI = byName(
+        name: .anywayPaymentUI
+    )
+
+    static let utilityPayment = byName(
+        name: .utilityPayment
+    )
+
+    static let utilityServicePrepaymentCore = byName(
+        name: .utilityServicePrepaymentCore
+    )
+
+    static let utilityServicePrepaymentDomain = byName(
+        name: .utilityServicePrepaymentDomain
+    )
+
     // MARK: - Services
     
     static let cardStatementAPI = byName(
@@ -1661,6 +2342,10 @@ private extension Target.Dependency {
     
     static let urlRequestFactory = byName(
         name: .urlRequestFactory
+    )
+    
+    static let getProductListByTypeService = byName(
+        name: .getProductListByTypeService
     )
     
     // MARK: - Tools
@@ -1721,13 +2406,23 @@ private extension String {
     // MARK: - UI
     
     static let activateSlider = "ActivateSlider"
+    static let activateSliderTests = "ActivateSliderTests"
+
+    static let accountInfoPanel = "AccountInfoPanel"
+    static let accountInfoPanelTests = "AccountInfoPanelTests"
     
+    static let cardUI = "CardUI"
+    static let cardUITests = "CardUITests"
+
+    static let productDetailsUI = "ProductDetailsUI"
+    static let productDetailsUITests = "ProductDetailsUITests"
+
     static let buttonWithSheet = "ButtonWithSheet"
     
     static let c2bSubscriptionUI = "C2BSubscriptionUI"
 
-    static let cardGuardianModule = "CardGuardianModule"
-    static let cardGuardianModuleTests = "CardGuardianModuleTests"
+    static let cardGuardianUI = "CardGuardianUI"
+    static let cardGuardianUITests = "CardGuardianUITests"
     
     static let linkableText = "LinkableText"
     static let linkableTextTests = "LinkableTextTests"
@@ -1745,6 +2440,9 @@ private extension String {
     
     static let productUI = "ProductUI"
     
+    static let prePaymentPicker = "PrePaymentPicker"
+    static let prePaymentPickerTests = "PrePaymentPickerTests"
+    
     static let rxViewModel = "RxViewModel"
     static let rxViewModelTests = "RxViewModelTests"
     
@@ -1753,15 +2451,15 @@ private extension String {
     static let textFieldUI = "TextFieldUI"
     static let textFieldUITests = "TextFieldUITests"
     
+    static let topUpCardUI = "TopUpCardUI"
+    static let topUpCardUITests = "TopUpCardUITests"
+
     static let uiKitHelpers = "UIKitHelpers"
     
     static let uiPrimitives = "UIPrimitives"
     
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
-    
-    static let utilityPaymentsRx = "UtilityPaymentsRx"
-    static let utilityPaymentsRxTests = "UtilityPaymentsRxTests"
     
     // MARK: - UI Components
 
@@ -1771,7 +2469,23 @@ private extension String {
     
     static let infoComponent = "InfoComponent"
     
+    static let checkBoxComponent = "CheckBoxComponent"
+    
+    static let codeComponent = "CodeComponent"
+    
+    static let footerComponent = "FooterComponent"
+    
+    static let nameComponent = "NameComponent"
+    
+    static let selectComponent = "SelectComponent"
+    
+    static let inputComponent = "InputComponent"
+    
+    static let inputPhoneComponent = "InputPhoneComponent"
+    
     static let paymentComponents = "PaymentComponents"
+    
+    static let productProfileComponents = "ProductProfileComponents"
 
     static let productSelectComponent = "ProductSelectComponent"
     static let productSelectComponentTests = "ProductSelectComponentTests"
@@ -1781,11 +2495,13 @@ private extension String {
     static let carouselComponent = "CarouselComponent"
     static let carouselComponentTests = "CarouselComponentTests"
     
-    static let operatorsListComponents = "OperatorsListComponents"
-    
     // MARK: - Utilities
     
-    static let services = "Services"
+    static let remoteServices = "RemoteServices"
+    static let remoteServicesTests = "RemoteServicesTests"
+    
+    static let operatorsListComponents = "OperatorsListComponents"
+    static let operatorsListComponentsTests = "OperatorsListComponentsTests"
     
     // MARK: - Infra
     
@@ -1795,6 +2511,28 @@ private extension String {
     static let keyChainStore = "KeyChainStore"
     static let keyChainStoreTests = "KeyChainStoreTests"
     
+    // MARK: - Payments
+    
+    static let anywayPayment = "AnywayPayment"
+    static let anywayPaymentAdapters = "AnywayPaymentAdapters"
+    static let anywayPaymentAdaptersTests = "AnywayPaymentAdaptersTests"
+    static let anywayPaymentBackend = "AnywayPaymentBackend"
+    static let anywayPaymentBackendTests = "AnywayPaymentBackendTests"
+    static let anywayPaymentCore = "AnywayPaymentCore"
+    static let anywayPaymentCoreTests = "AnywayPaymentCoreTests"
+    static let anywayPaymentDomain = "AnywayPaymentDomain"
+    static let anywayPaymentUI = "AnywayPaymentUI"
+    static let anywayPaymentUITests = "AnywayPaymentUITests"
+
+    static let utilityPayment = "UtilityPayment"
+    static let utilityPaymentTests = "UtilityPaymentTests"
+
+    static let utilityServicePrepayment = "UtilityServicePrepayment"
+    static let utilityServicePrepaymentCore = "UtilityServicePrepaymentCore"
+    static let utilityServicePrepaymentDomain = "UtilityServicePrepaymentDomain"
+    static let utilityServicePrepaymentUI = "UtilityServicePrepaymentUI"
+    static let utilityServicePrepaymentCoreTests = "UtilityServicePrepaymentCoreTests"
+
     // MARK: - Services
     
     static let cardStatementAPI = "CardStatementAPI"
@@ -1832,6 +2570,9 @@ private extension String {
     
     static let urlRequestFactory = "URLRequestFactory"
     static let urlRequestFactoryTests = "URLRequestFactoryTests"
+
+    static let getProductListByTypeService = "GetProductListByTypeService"
+    static let getProductListByTypeServiceTests = "GetProductListByTypeServiceTests"
 
     // MARK: - Tools
     
@@ -1883,6 +2624,10 @@ private extension Package.Dependency {
         url: .pointFreeGitHub + .swift_identified_collections,
         from: .init(0, 4, 1)
     )
+    static let nonEmpty = Package.Dependency.package(
+        url: .pointFreeGitHub + .swift_nonempty,
+        from: .init(0, 5, 0)
+    )
     static let snapshotTesting = Package.Dependency.package(
         url: .pointFreeGitHub + .swift_snapshot_testing,
         from: .init(1, 10, 0)
@@ -1923,6 +2668,10 @@ private extension Target.Dependency {
         name: .identifiedCollections,
         package: .swift_identified_collections
     )
+    static let nonEmpty = product(
+        name: .nonEmpty,
+        package: .swift_nonempty
+    )
     static let snapshotTesting = product(
         name: .snapshotTesting,
         package: .swift_snapshot_testing
@@ -1960,6 +2709,9 @@ private extension String {
     
     static let identifiedCollections = "IdentifiedCollections"
     static let swift_identified_collections = "swift-identified-collections"
+    
+    static let nonEmpty = "NonEmpty"
+    static let swift_nonempty = "swift-nonempty"
     
     static let snapshotTesting = "SnapshotTesting"
     static let swift_snapshot_testing = "swift-snapshot-testing"

@@ -11,6 +11,7 @@ import Combine
 import SwiftUI
 import Tagged
 import PinCodeUI
+import CardUI
 
 class InfoProductViewModel: ObservableObject {
     
@@ -450,7 +451,7 @@ struct InfoProductModelAction {
     
     struct ShowCVV: Action {
         let cardId: CardDomain.CardId
-        let cvv: ProductView.ViewModel.CardInfo.CVV
+        let cvv: CardInfo.CVV
     }
     
     enum Spinner {

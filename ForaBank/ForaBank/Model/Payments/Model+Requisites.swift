@@ -10,6 +10,10 @@ import UIKit
 
 extension Model {
     
+    typealias SCSuggestionsCompany = [ServerCommands.SuggestController.SuggestCompany.Response.SuggestionsCompany]
+    typealias SCGetBicAccountCheck = ServerCommands.PaymentOperationDetailContoller.GetBicAccountCheck
+    typealias SCSuggestCompany = ServerCommands.SuggestController.SuggestCompany
+    
     func paymentsStepRequisites(_ operation: Payments.Operation, for stepIndex: Int) async throws -> Payments.Operation.Step {
         
         let bicBankId = Payments.Parameter.Identifier.requisitsBankBic.rawValue
@@ -38,7 +42,7 @@ extension Model {
             
             //MARK: Bic Bank Parameter            
             let banks = self.dictionaryFullBankInfoPrefferedFirstList()
-            let options = banks.map({Payments.ParameterSelectBank.Option(id: $0.bic, name: $0.rusName ?? $0.fullName, subtitle: $0.bic, icon: .init(with: $0.svgImage), searchValue: $0.bic)})
+            let options = banks.map({Payments.ParameterSelectBank.Option(id: $0.bic, name: $0.rusName ?? $0.fullName, subtitle: $0.bic, icon: .init(with: $0.svgImage), isFavorite: false, searchValue: $0.bic)})
 
             let bicBankParameter = Payments.ParameterSelectBank(.init(id: bicBankId, value: nil), icon: defaultInputIcon, title: "БИК банка получателя", options: options, placeholder: "Начните ввод для поиска", selectAll: .init(type: .banksFullInfo), keyboardType: .number)
             
@@ -73,7 +77,7 @@ extension Model {
                 throw Payments.Error.missingParameter(accountNumberId)
             }
             
-            let command = ServerCommands.PaymentOperationDetailContoller.GetBicAccountCheck(token: token, payload: .init(bic: bicValue, account: accountNumberValue))
+            let command = SCGetBicAccountCheck(token: token, payload: .init(bic: bicValue, account: accountNumberValue))
             
             let result = try await serverAgent.executeCommand(command: command)
             
@@ -169,44 +173,21 @@ extension Model {
                 throw Payments.Error.missingParameter(innNumberId)
             }
             
-            let command = ServerCommands.SuggestController.SuggestCompany(token: token, payload: .init(branchType: nil, kpp: nil, query: innValue, type: nil))
+            let command = SCSuggestCompany(token: token, payload: .init(branchType: nil, kpp: nil, query: innValue, type: nil))
             let result = try await serverAgent.executeCommand(command: command)
             
             var parameters = [PaymentsParameterRepresentable]()
             
             //MARK: Kpp Parameter
             let kppParameterId = Payments.Parameter.Identifier.requisitsKpp.rawValue
-            let kppParameterValidator: Payments.Validation.RulesSystem = {
-                
-                var rules = [any PaymentsValidationRulesSystemRule]()
-                
-                rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
-                
-                rules.append(Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [.post: .warning("Введено некорректное значение")]))
-                
-                return .init(rules: rules)
-            }()
+            let kppParameterValidator: Payments.Validation.RulesSystem = validateKppParameter()
             
             //MARK: Company Name Parameter
             let companyNameParameterId = Payments.Parameter.Identifier.requisitsCompanyName.rawValue
-            let companyNameValidator: Payments.Validation.RulesSystem = {
-                
-                var rules = [any PaymentsValidationRulesSystemRule]()
-                
-                rules.append(Payments.Validation.MinLengthRule(minLenght: 1, actions: [.post: .warning("Заполните поле (до 160 символов)")]))
-                rules.append(Payments.Validation.MaxLengthRule(maxLenght: 160, actions: [.post: .warning("Заполните поле (до 160 символов)")]))
-
-                return .init(rules: rules)
-            }()
+            let companyNameValidator: Payments.Validation.RulesSystem = validateCompanyNameParameter()
             
-            let suggestedCompanies: [(kpp: String?, name: String)] = result.compactMap { company  in
-                
-                guard let name = company.value else {
-                    return nil
-                }
-                
-                return (company.data?.kpp, name)
-            }
+            let suggestedCompanies: [(kpp: String?, name: String)] = extractSuggestedCompanies(result)
+            
             if suggestedCompanies.isEmpty == false {
                 
                 if suggestedCompanies.count == 1 {
@@ -214,7 +195,7 @@ extension Model {
                     if innValue.count == 10 {
                         
                         //MARK: Kpp Parameter
-                        let kppParameter = Payments.ParameterInput(.init(id: kppParameterId, value: suggestedCompanies[0].kpp), icon: nil, title: "КПП получателя", validator: kppParameterValidator, limitator: .init(limit: 9), inputType: .number)
+                        let kppParameter = createKppParameterInput(id: kppParameterId, value: suggestedCompanies[0].kpp, validator: kppParameterValidator)
                         parameters.append(kppParameter)
                     }
                     
@@ -224,25 +205,15 @@ extension Model {
                         companyNameValidator,
                         suggestedCompanies
                     )
-                    
                     parameters.append(companyParameter)
                     
                 } else {
                     
                     //MARK: Kpp Parameter
-                    let options: [Payments.ParameterSelect.Option] = suggestedCompanies.compactMap { company in
-                        
-                        let kpp = company.kpp
-                        
-                        return .init(id: kpp ?? "", name: kpp ?? "", subname: company.name)
-                    }
+                    let options: [Payments.ParameterSelect.Option] = createParameterOptions(suggestedCompanies)
                     
-                    if innValue.count != 12 {
-                        
-                        let kppParameter = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), icon: .name("ic24FileHash"), title: "КПП получателя", placeholder: "Начните ввод для поиска", options: options, description: "Выберите из \(options.count)")
-                        
-                        parameters.append(kppParameter)
-                    }
+                    let kppParameterSelect = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), icon: .name("ic24FileHash"), title: "КПП получателя", placeholder: "Начните ввод для поиска", options: options, description: "Выберите из \(options.count)")
+                    parameters.append(kppParameterSelect)
                     
                     //MARK: Company Name Parameter
                     let companyNameValue = options.first?.subname
@@ -262,7 +233,7 @@ extension Model {
                 if innValue.count == 10 {
                     
                     //MARK: Kpp Parameter
-                    let kppParameter = Payments.ParameterInput(.init(id: kppParameterId, value: nil), icon: nil, title: "КПП получателя", validator: kppParameterValidator, limitator: .init(limit: 9), inputType: .number)
+                    let kppParameter = createKppParameterInput(id: kppParameterId, validator: kppParameterValidator)
                     parameters.append(kppParameter)
                 }
                 
@@ -321,6 +292,75 @@ extension Model {
             
         default:
             throw Payments.Error.unsupported
+        }
+    }
+    
+    // MARK: - Case 2
+    func validateKppParameter() -> Payments.Validation.RulesSystem {
+        
+        var rules = [any PaymentsValidationRulesSystemRule]()
+        
+        rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
+        
+        rules.append(Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [.post: .warning("Введено некорректное значение")]))
+        
+        return .init(rules: rules)
+    }
+
+    func validateCompanyNameParameter() -> Payments.Validation.RulesSystem {
+        
+        var rules = [any PaymentsValidationRulesSystemRule]()
+        
+        rules.append(Payments.Validation.MinLengthRule(minLenght: 1, actions: [.post: .warning("Заполните поле (до 160 символов)")]))
+        rules.append(Payments.Validation.MaxLengthRule(maxLenght: 160, actions: [.post: .warning("Заполните поле (до 160 символов)")]))
+
+        return .init(rules: rules)
+    }
+    
+    func extractSuggestedCompanies(_ result: SCSuggestionsCompany) -> [(kpp: String?, name: String)] {
+        return result.compactMap { company in
+            guard let name = company.value else {
+                return nil
+            }
+            return (company.data?.kpp, name)
+        }
+    }
+
+    func hasSuggestedCompanies(_ suggestedCompanies: [(kpp: String?, name: String)]) -> Bool {
+        return !suggestedCompanies.isEmpty
+    }
+    
+    func createKppParameterInput(
+        id: String,
+        value: String? = nil,
+        icon: ImageData? = nil,
+        title: String = "КПП получателя",
+        validator: Payments.Validation.RulesSystem,
+        limit: Int = 9,
+        inputType: Payments.ParameterInput.InputType = .number
+    ) -> Payments.ParameterInput {
+        
+        return Payments.ParameterInput(
+            .init(
+                id: id,
+                value: value
+            ),
+            icon: icon,
+            title: title,
+            validator: validator,
+            limitator: .init(limit: limit),
+            inputType: inputType
+        )
+    }
+    
+    func createParameterOptions(_ suggestedCompanies: [(kpp: String?, name: String)]) -> [Payments.ParameterSelect.Option] {
+        
+        return suggestedCompanies.compactMap { company in
+            guard let kpp = company.kpp else {
+                return nil
+            }
+            
+            return .init(id: kpp, name: kpp, subname: company.name)
         }
     }
     

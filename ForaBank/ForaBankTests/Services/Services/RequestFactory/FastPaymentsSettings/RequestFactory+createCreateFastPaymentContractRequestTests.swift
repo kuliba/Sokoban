@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import RemoteServices
 @testable import ForaBank
 import XCTest
 
@@ -86,7 +87,7 @@ final class RequestFactory_createCreateFastPaymentContractRequestTests: XCTestCa
     }
 }
 
-private typealias FastRequestFactory = FastPaymentsSettings.RequestFactory
+private typealias FastRequestFactory = RemoteServices.RequestFactory
 
 private func anyPayload(
     selectableProductID: SelectableProductID = .account(.init(generateRandom11DigitNumber())),

@@ -72,7 +72,7 @@ final class Model_PaymentsServicesTests: XCTestCase {
         XCTAssertNoDiff(operatorr, .utility)
         XCTAssertNoDiff(sut.dictionaryAnywayOperatorGroups()?.map(\.code), ["iFora||1031001"])
     }
-    
+
     // MARK: - Helper Tests
     
     func test_superDummyOperatorData() throws {

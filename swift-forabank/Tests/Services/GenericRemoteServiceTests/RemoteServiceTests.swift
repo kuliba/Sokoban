@@ -51,7 +51,7 @@ final class RemoteServiceTests: XCTestCase {
     
     func test_process_shouldNotDeliverHTTPClientResultOnSUTInstanceDeallocation() {
         
-        let client = HTTPClientSpy()
+        let client = Spy()
         var sut: SUT? = .init(
             createRequest: { _ in .success(anyRequest()) },
             performRequest: client.get(_:completion:),
@@ -96,6 +96,7 @@ final class RemoteServiceTests: XCTestCase {
     
     private typealias Input = Void
     private typealias SUT = RemoteService<Input, Output, CreateRequestError, PerformRequestError, MapResponseError>
+    private typealias Spy = HTTPClientSpy<(Data, HTTPURLResponse)>
     
     private func makeSUT(
         createRequest: SUT.CreateRequest? = nil,
@@ -104,11 +105,11 @@ final class RemoteServiceTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        client: HTTPClientSpy
+        client: Spy
     ) {
         let createRequest = createRequest ?? { _ in .success(anyRequest()) }
         let mapResponse = mapResponse ?? { _ in .success(.init()) }
-        let client = HTTPClientSpy()
+        let client = Spy()
         let sut = SUT(
             createRequest: createRequest,
             performRequest: client.get(_:completion:),
@@ -119,73 +120,6 @@ final class RemoteServiceTests: XCTestCase {
         trackForMemoryLeaks(client, file: file, line: line)
         
         return (sut, client)
-    }
-    
-    private struct Output: Equatable {
-        
-        let value: String
-        
-        init(_ value: String = UUID().uuidString) {
-            
-            self.value = value
-        }
-    }
-    
-    private struct CreateRequestError: Error {
-        
-        let message: String
-        
-        init(_ message: String = UUID().uuidString) {
-            
-            self.message = message
-        }
-    }
-    
-    private struct PerformRequestError: Error {
-        
-        let message: String
-        
-        init(_ message: String = UUID().uuidString) {
-            
-            self.message = message
-        }
-    }
-    
-    private struct MapResponseError: Error {
-        
-        let message: String
-        
-        init(_ message: String = UUID().uuidString) {
-            
-            self.message = message
-        }
-    }
-    
-    private final class HTTPClientSpy {
-        
-        func get(
-            _ request: URLRequest,
-            completion: @escaping SUT.PerformCompletion
-        ) {
-            messages.append((request, completion))
-        }
-        
-        private typealias Message = (
-            request: URLRequest,
-            completion: SUT.PerformCompletion
-        )
-        
-        private var messages = [Message]()
-        
-        var requests: [URLRequest] { messages.map(\.request) }
-        var callCount: Int { requests.count }
-        
-        func complete(
-            with result: SUT.PerformResult,
-            at index: Int = 0
-        ) {
-            messages[index].completion(result)
-        }
     }
     
     private func assert(
@@ -212,56 +146,3 @@ final class RemoteServiceTests: XCTestCase {
         assert(receivedResults, equalsTo: expectedResults, file: file, line: line)
     }
 }
-
-private enum ServerResponse<Response: Equatable>: Equatable {
-    
-    case response(Response)
-    case error(ServerError)
-    
-    struct ServerError: Equatable {
-        
-        let statusCode: Int
-        let errorMessage: String
-    }
-}
-
-private func anyRequest(
-    _ url: URL = anyURL()
-) -> URLRequest {
-    
-    .init(url: url)
-}
-
-private func anyURL(
-    _ urlString: String = UUID().uuidString
-) -> URL {
-    
-    .init(string: urlString)!
-}
-
-private func successResponse(
-    _ string: String = UUID().uuidString
-) -> (Data, HTTPURLResponse) {
-    
-    return (
-        makeSuccessResponseData(string),
-        makeHTTPURLResponse(statusCode: statusCodeOK)
-    )
-}
-
-private func makeSuccessResponseData(
-    _ string: String = UUID().uuidString
-) -> Data {
-    
-    .init(string.utf8)
-}
-
-private func makeHTTPURLResponse(
-    statusCode: Int
-) -> HTTPURLResponse {
-    
-    .init(url: anyURL(), statusCode: statusCode, httpVersion: nil, headerFields: nil)!
-}
-
-private let statusCodeOK = 200
-private let statusCode500 = 500

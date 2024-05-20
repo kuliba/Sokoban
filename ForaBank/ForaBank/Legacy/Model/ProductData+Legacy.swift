@@ -76,7 +76,12 @@ extension ProductData {
                                      settlementAccountId: nil,
                                      dateLong: nil,
                                      loanBaseParam: card.loanBaseParam?.loanBaseParam(),
-                                     isMain: card.isMain)
+                                     smallDesignMd5Hash: card.smallDesignMd5hash,
+                                     mediumDesignMd5Hash: card.mediumDesignMd5Hash,
+                                     largeDesignMd5Hash: card.largeDesignMd5Hash,
+                                     paymentSystemImageMd5Hash: card.paymentSystemImageMd5Hash,
+                                     isMain: card.isMain
+            )
         case let account as ProductAccountData:
               
             productListDatum = .init(number: number,
@@ -138,7 +143,12 @@ extension ProductData {
                                      settlementAccountId: nil,
                                      dateLong: nil,
                                      loanBaseParam: nil,
-                                     isMain: nil)
+                                     smallDesignMd5Hash: account.smallDesignMd5hash,
+                                     mediumDesignMd5Hash: account.mediumDesignMd5Hash,
+                                     largeDesignMd5Hash: account.largeDesignMd5Hash,
+                                     paymentSystemImageMd5Hash: nil,
+                                     isMain: nil
+            )
 
         case let deposit as ProductDepositData:
             
@@ -201,7 +211,12 @@ extension ProductData {
                                      settlementAccountId: nil,
                                      dateLong: nil,
                                      loanBaseParam: nil,
-                                     isMain: nil)
+                                     smallDesignMd5Hash: deposit.smallDesignMd5hash,
+                                     mediumDesignMd5Hash: deposit.mediumDesignMd5Hash,
+                                     largeDesignMd5Hash: deposit.largeDesignMd5Hash,
+                                     paymentSystemImageMd5Hash: nil,
+                                     isMain: nil
+            )
         case let loan as ProductLoanData:
             
             productListDatum = .init(number: number,
@@ -263,7 +278,12 @@ extension ProductData {
                                      settlementAccountId: loan.settlementAccountId,
                                      dateLong: Int(loan.dateLong.timeIntervalSince1970),
                                      loanBaseParam: nil,
-                                     isMain: nil)
+                                     smallDesignMd5Hash: loan.smallDesignMd5hash,
+                                     mediumDesignMd5Hash: loan.mediumDesignMd5Hash,
+                                     largeDesignMd5Hash: loan.largeDesignMd5Hash,
+                                     paymentSystemImageMd5Hash: nil,
+                                     isMain: nil
+)
         default:
             productListDatum = .init(number: number,
                                      numberMasked: numberMasked,
@@ -324,6 +344,10 @@ extension ProductData {
                                      settlementAccountId: nil,
                                      dateLong: nil,
                                      loanBaseParam: nil,
+                                     smallDesignMd5Hash: nil,
+                                     mediumDesignMd5Hash: nil,
+                                     largeDesignMd5Hash: nil,
+                                     paymentSystemImageMd5Hash: nil,
                                      isMain: nil)
         }
         

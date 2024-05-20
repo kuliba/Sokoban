@@ -7,18 +7,19 @@
 
 import FastPaymentsSettings
 import Foundation
+import RemoteServices
 
 extension RequestFactory {
     
     static func createCreateFastPaymentContractRequest(
-        _ payload: FastPaymentsSettings.RequestFactory.CreateFastPaymentContractPayload
+        _ payload: RemoteServices.RequestFactory.CreateFastPaymentContractPayload
     ) throws -> URLRequest {
         
         let base = Config.serverAgentEnvironment.baseURL
         let endpoint = Services.Endpoint.createFastPaymentContract
         let endpointURL = try! endpoint.url(withBase: base)
         
-        return try FastPaymentsSettings.RequestFactory.createCreateFastPaymentContractRequest(
+        return try RemoteServices.RequestFactory.createCreateFastPaymentContractRequest(
             url: endpointURL,
             payload: payload
         )

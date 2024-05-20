@@ -10,14 +10,15 @@ import SwiftUI
 
 public extension Icon {
     
-    @ViewBuilder
     var image: Image? {
         
         switch self {
-        case let .svg(svg): Image(svg: svg)
+        case let .svg(svg): return Image(svg: svg)
+        case let .image(image): return image
         }
     }
     
+
     @ViewBuilder
     func image(orColor color: Color) -> some View {
         
@@ -34,7 +35,7 @@ public extension Icon {
     func image(withFallback fallback: Image) -> Image {
         
         switch self {
-        case .svg: image ?? fallback
+        case .svg, .image: image ?? fallback
         }
     }
 }

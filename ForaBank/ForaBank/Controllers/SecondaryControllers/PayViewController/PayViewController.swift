@@ -9,12 +9,13 @@ import UIKit
 
 class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    
+    let getUImage: (Md5hash) -> UIImage?
     var tableView = UITableView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
     let card: UserAllCardsModel?
     
-    init(card: UserAllCardsModel?) {
+    init(card: UserAllCardsModel?, getUImage: @escaping (Md5hash) -> UIImage?) {
         self.card = card
+        self.getUImage = getUImage
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -107,7 +108,7 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
                                 }
                                 self?.navigationController?.pushViewController(vc, animated: true)
                             } else {
-                                let viewController = MeToMeViewController(cardFrom: self?.card)
+                                let viewController = MeToMeViewController(cardFrom: self?.card, getUImage: self?.getUImage ?? { _ in UIImage() })
                                 
                                 viewController.meToMeContract = contractList
                                 viewController.addCloseButton()

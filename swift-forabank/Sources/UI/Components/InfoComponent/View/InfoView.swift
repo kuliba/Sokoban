@@ -31,12 +31,25 @@ public struct InfoView: View {
                 .frame(info.size)
                 .frame(width: 32, height: 32)
             
-            VStack(alignment: .leading, spacing: 4) {
+            switch info.style {
+            case .expanded:
+                VStack(alignment: .leading, spacing: 4) {
+                    
+                    info.title.text(withConfig: config.title)
+                    info.value.text(withConfig: config.value)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 
-                info.title.text(withConfig: config.title)
-                info.value.text(withConfig: config.value)
+            case .compressed:
+                HStack {
+                    
+                    info.title.text(withConfig: config.title)
+                    
+                    Spacer()
+                    
+                    info.value.text(withConfig: config.value)
+                }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .onReceive(info.image, perform: { self.image = $0 })
     }
@@ -84,6 +97,12 @@ struct InfoView_Previews: PreviewProvider {
         info: Info
     ) -> some View {
         
-        InfoView(info: info, config: .preview)
+        Group {
+            
+            InfoView(info: info, config: .preview)
+            
+            InfoView(info: info, config: .preview)
+        }
+        .padding(20)
     }
 }

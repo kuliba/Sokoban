@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "4690D48E-D80A-4307-B964-C3E16E590577",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "PrePaymentPickerTests",
+        "name" : "PrePaymentPickerTests"
+      }
+    }
+  ],
+  "version" : 1
+}

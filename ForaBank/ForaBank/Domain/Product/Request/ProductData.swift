@@ -51,7 +51,16 @@ class ProductData: Identifiable, Codable {
     let smallDesignMd5hash: String
     let smallBackgroundDesignHash: String
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], order: Int, isVisible: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
+#warning("For compability with rest/v5/getProductListByType")
+    let mediumDesignMd5Hash: String
+    let largeDesignMd5Hash: String
+    let xlDesignMd5Hash: String
+    
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], order: Int, isVisible: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String,
+        mediumDesignMd5Hash: String = "",
+        largeDesignMd5Hash: String = "",
+        xlDesignMd5Hash: String = ""
+    ) {
         
         self.id = id
         self.productType = productType
@@ -80,6 +89,9 @@ class ProductData: Identifiable, Codable {
         self.isVisible = isVisible
         self.smallDesignMd5hash = smallDesignMd5hash
         self.smallBackgroundDesignHash = smallBackgroundDesignHash
+        self.mediumDesignMd5Hash = mediumDesignMd5Hash
+        self.largeDesignMd5Hash = largeDesignMd5Hash
+        self.xlDesignMd5Hash = xlDesignMd5Hash
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -87,7 +99,8 @@ class ProductData: Identifiable, Codable {
         case extraLargeDesign = "XLDesign"
         case balanceRub = "balanceRUB"
         case ownerId = "ownerID"
-        case accountNumber, additionalField, allowCredit, allowDebit, background, balance, branchId, currency, customName, fontDesignColor, id, largeDesign, mainField, mediumDesign, number, numberMasked, openDate, productName, productType, smallDesign, order, visibility, smallDesignMd5hash, smallBackgroundDesignHash
+        case accountNumber, additionalField, allowCredit, allowDebit, background, balance, branchId, currency, customName, fontDesignColor, id, largeDesign, mainField, mediumDesign, number, numberMasked, openDate, productName, productType, smallDesign, order, visibility, smallDesignMd5hash, smallBackgroundDesignHash,
+            mediumDesignMd5Hash, largeDesignMd5Hash, xlDesignMd5Hash
     }
     
     required init(from decoder: Decoder) throws {
@@ -126,6 +139,9 @@ class ProductData: Identifiable, Codable {
         isVisible = try container.decode(Bool.self, forKey: .visibility)
         smallDesignMd5hash = try container.decode(String.self, forKey: .smallDesignMd5hash)
         smallBackgroundDesignHash = try container.decode(String.self, forKey: .smallBackgroundDesignHash)
+        mediumDesignMd5Hash = try container.decodeIfPresent(String.self, forKey: .mediumDesignMd5Hash) ?? ""
+        largeDesignMd5Hash = try container.decodeIfPresent(String.self, forKey: .largeDesignMd5Hash) ?? ""
+        xlDesignMd5Hash = try container.decodeIfPresent(String.self, forKey: .xlDesignMd5Hash) ?? ""
     }
     
     func encode(to encoder: Encoder) throws {
@@ -160,6 +176,9 @@ class ProductData: Identifiable, Codable {
         try container.encode(order, forKey: .order)
         try container.encode(smallDesignMd5hash, forKey: .smallDesignMd5hash)
         try container.encode(smallBackgroundDesignHash, forKey: .smallBackgroundDesignHash)
+        try container.encodeIfPresent(mediumDesignMd5Hash, forKey: .mediumDesignMd5Hash)
+        try container.encodeIfPresent(largeDesignMd5Hash, forKey: .largeDesignMd5Hash)
+        try container.encodeIfPresent(xlDesignMd5Hash, forKey: .xlDesignMd5Hash)
     }
 }
 
@@ -337,12 +356,14 @@ extension ProductData {
         
         case blockedByClient = "Блокирована по решению Клиента"
         case active = "Действует"
+        case notActivated = "Не активирована"
         case issuedToClient = "Выдано клиенту"
+        case blockedUnlockAvailable = "Карта блокирована, разблокировка доступна"
         case blockedByBank = "Заблокирована банком"
         case notBlocked = "NOT_BLOCKED"
         case blockedDebet = "BLOCKED_DEBET"
         case blockedCredit = "BLOCKED_CREDIT"
-        case blocked = "BLOCKED"
+        case blocked = "BLOCKED" 
         case unknown
     }
     
@@ -356,6 +377,7 @@ extension ProductData {
         case notActivated = "17"
         case temporarilyBlocked = "20"
         case blockedByClient = "21"
+        case blockedUnlockNotAvailable = "23"
         case unknown
     }
     
@@ -410,24 +432,15 @@ extension ProductData {
     
     var currencyValue: Currency { .init(description: currency) }
     
-    var paymentSystem: Image? {
+    var paymentSystemMd5Hash: String {
         
         guard let paymentSystem = self as? ProductCardData else {
-            return nil
+            return ""
         }
         
-        return paymentSystem.paymentSystemImage?.image
+        return paymentSystem.paymentSystemImageMd5Hash
     }
-    
-    var paymentSystemData: Data? {
         
-        guard let paymentSystem = self as? ProductCardData else {
-            return nil
-        }
-        
-        return paymentSystem.paymentSystemImage?.imageData
-    }
-    
     var description: [String] {
         
         [

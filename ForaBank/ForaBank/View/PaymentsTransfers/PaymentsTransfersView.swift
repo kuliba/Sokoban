@@ -8,41 +8,23 @@
 import InfoComponent
 import SberQR
 import SwiftUI
+import OperatorsListComponents
+import TextFieldModel
 
 struct PaymentsTransfersView: View {
     
     @ObservedObject var viewModel: PaymentsTransfersViewModel
     
     let viewFactory: PaymentsTransfersViewFactory
+    let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
         
         ZStack(alignment: .top) {
             
-            VStack() {
-                
-                ScrollView(.vertical, showsIndicators: false) {
-                    
-                    ForEach(viewModel.sections, content: sectionView)
-                }
-            }
-            
-            Color.clear
-                .sheet(
-                    item: .init(
-                        get: { viewModel.route.modal?.sheet },
-                        set: { if $0 == nil { viewModel.resetModal() } }),
-                    content: sheetView
-                )
-            
-            Color.clear
-                .fullScreenCover(
-                    item: .init(
-                        get: { viewModel.route.modal?.fullScreenSheet },
-                        set: { if $0 == nil { viewModel.resetModal() } }
-                    ),
-                    content: fullScreenCoverView
-                )
+            content()
+            sheet()
+            fullScreenCover()
         }
         .onAppear {
             viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
@@ -50,44 +32,70 @@ struct PaymentsTransfersView: View {
         .alert(
             item: .init(
                 get: { viewModel.route.modal?.alert },
-                set: { if $0 == nil { viewModel.resetModal() } }
+                set: { if $0 == nil { viewModel.event(.dismissModal) } }
             ),
             content: Alert.init(with:)
         )
         .bottomSheet(
             item: .init(
                 get: { viewModel.route.modal?.bottomSheet },
-                set: { if $0 == nil { viewModel.resetModal() } }
+                set: { if $0 == nil { viewModel.event(.dismissModal) } }
             ),
             content: bottomSheetView
         )
         .navigationDestination(
             item: .init(
                 get: { viewModel.route.destination },
-                set: { if $0 == nil { viewModel.resetDestination() } }
+                set: { if $0 == nil { viewModel.event(.dismissDestination) } }
             ),
             content: destinationView(link:)
         )
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(
-            leading: Group {
-                
-                if viewModel.mode == .normal {
-                    
-                    UserAccountButton(
-                        viewModel: viewModel.userAccountButton
-                    )
-                }
-            },
-            trailing:
-                HStack {
-                    ForEach(viewModel.navButtonsRight, content: NavBarButton.init)
-                }
+            leading: leadingBarItems,
+            trailing: trailingBarItems
         )
         .tabBar(isHidden: .init(
-            get: { !viewModel.route.isEmpty },
+            get: { viewModel.route.destination != nil },
             set: { if !$0 { viewModel.reset() } }
         ))
+    }
+    
+    private func content() -> some View {
+        
+        VStack() {
+            
+            ScrollView(.vertical, showsIndicators: false) {
+                
+                ForEach(viewModel.sections, content: sectionView)
+            }
+        }
+    }
+    
+    private func sheet() -> some View {
+        
+        Color.clear
+            .sheet(
+                modal: viewModel.route.modal?.sheet,
+                dismissModal: { viewModel.event(.dismissModal) },
+                content: sheetView
+            )
+    }
+    
+    private func fullScreenCover() -> some View {
+        
+        Color.clear
+            .fullScreenCover(
+                cover: viewModel.route.modal?.fullScreenSheet,
+                dismissFullScreenCover: { viewModel.event(.dismissModal) },
+                content: { fullScreenCover in
+                    
+                    fullScreenCoverView(
+                        fullScreenCover: fullScreenCover,
+                        goToMain: { viewModel.event(.goToMain) }
+                    )
+                }
+            )
     }
     
     @ViewBuilder
@@ -182,7 +190,7 @@ struct PaymentsTransfersView: View {
             QRFailedView(viewModel: failedViewModel)
             
         case let .c2b(c2bViewModel):
-            C2BDetailsView(viewModel: c2bViewModel)
+            C2BDetailsView(viewModel: c2bViewModel, getUImage: getUImage)
                 .navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)
                 .edgesIgnoringSafeArea(.all)
@@ -211,21 +219,30 @@ struct PaymentsTransfersView: View {
         case let .productProfile(productProfileViewModel):
             ProductProfileView(
                 viewModel: productProfileViewModel,
-                viewFactory: viewFactory
+                viewFactory: viewFactory,
+                getUImage: getUImage
             )
             
         case let .openDeposit(depositListViewModel):
-            OpenDepositDetailView(viewModel: depositListViewModel)
+            OpenDepositDetailView(viewModel: depositListViewModel, getUImage: getUImage)
             
         case let .openDepositsList(openDepositViewModel):
-            OpenDepositListView(viewModel: openDepositViewModel)
+            OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
             
         case let .sberQRPayment(sberQRPaymentViewModel):
             viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
                 .navigationBar(
                     sberQRPaymentViewModel.navTitle,
-                    dismiss: viewModel.resetDestination
+                    dismiss: { viewModel.event(.dismissDestination) }
                 )
+            
+        case let .utilityPayment(flowState):
+            let event = { viewModel.event(.utilityFlow($0)) }
+            
+#warning("add nav bar")
+            utilityPaymentFlowView(state: flowState, event: event)
+                .navigationTitle("Utility Prepayment View")
+                .navigationBarTitleDisplayMode(.inline)
         }
     }
     
@@ -334,7 +351,8 @@ struct PaymentsTransfersView: View {
     
     @ViewBuilder
     private func fullScreenCoverView(
-        fullScreenCover: PaymentsTransfersViewModel.FullScreenSheet
+        fullScreenCover: PaymentsTransfersViewModel.FullScreenSheet,
+        goToMain: @escaping () -> Void
     ) -> some View {
         
         switch fullScreenCover.type {
@@ -347,12 +365,302 @@ struct PaymentsTransfersView: View {
                     .edgesIgnoringSafeArea(.all)
             }
             
+        case let .paymentCancelled(expired: expired):
+            PaymentCancelledView(state: expired, event: goToMain)
+            
         case let .success(viewModel):
             PaymentsSuccessView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.all)
         }
     }
+    
+    private func payByInstructionsView(
+        _ paymentsViewModel: PaymentsViewModel
+    ) -> some View {
+        
+        PaymentsView(viewModel: paymentsViewModel)
+            .navigationBarHidden(true)
+    }
+    
+    @ViewBuilder
+    var leadingBarItems: some View {
+        
+        if viewModel.mode == .normal {
+            
+            UserAccountButton(viewModel: viewModel.userAccountButton)
+        }
+    }
+    
+    var trailingBarItems: some View {
+        
+        HStack {
+            
+            ForEach(viewModel.navButtonsRight, content: NavBarButton.init)
+        }
+    }
 }
+
+// MARK: - Utility Payment Flow
+
+private extension PaymentsTransfersView {
+    
+    func utilityPaymentFlowView(
+        state: UtilityFlowState,
+        event: @escaping (UtilityFlowEvent) -> Void
+    ) -> some View {
+        
+        UtilityPaymentFlowView(
+            state: state,
+            event: { event(.prepayment($0)) },
+            content: {
+                
+                UtilityPrepaymentWrapperView(
+                    viewModel: state.content,
+                    flowEvent: { event(.prepayment($0.flowEvent)) },
+                    makeIconView: { viewFactory.makeIconView(.md5Hash(.init($0))) }
+                )
+            },
+            destinationView: {
+                
+                utilityFlowDestinationView(state: $0, event: event)
+            }
+        )
+    }
+    
+    @ViewBuilder
+    func utilityFlowDestinationView(
+        state: UtilityFlowState.Destination,
+        event: @escaping (UtilityFlowEvent) -> Void
+    ) -> some View {
+        
+        switch state {
+        case let .operatorFailure(operatorFailure):
+            operatorFailureView(
+                operatorFailure: operatorFailure,
+                payByInstructions: { event(.prepayment(.payByInstructions)) },
+                dismissDestination: { event(.prepayment(.dismissOperatorFailureDestination)) }
+            )
+            .navigationTitle(String(describing: operatorFailure.content))
+            .navigationBarTitleDisplayMode(.inline)
+            
+        case let .payByInstructions(paymentsViewModel):
+            payByInstructionsView(paymentsViewModel)
+            
+        case let .payment(state):
+            paymentFlowView(state: state, event: { event(.payment($0)) })
+            
+        case let .servicePicker(state):
+            servicePicker(state: state, event: event)
+        }
+    }
+    
+    func operatorFailureView(
+        operatorFailure: OperatorFailure,
+        payByInstructions: @escaping () -> Void,
+        dismissDestination: @escaping () -> Void
+    ) -> some View {
+        
+        SberOperatorFailureFlowView(
+            state: operatorFailure,
+            event: dismissDestination,
+            content: {
+                
+                OperatorFailureView(
+                    state: operatorFailure.content,
+                    event: payByInstructions
+                )
+            },
+            destinationView: operatorFailureDestinationView
+        )
+    }
+    
+    @ViewBuilder
+    func operatorFailureDestinationView(
+        destination: OperatorFailure.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .payByInstructions(paymentsViewModel):
+            payByInstructionsView(paymentsViewModel)
+        }
+    }
+    
+    func paymentFlowView(
+        state: UtilityServiceFlowState,
+        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
+    ) -> some View {
+        
+        PaymentFlowMockView(viewModel: state.viewModel)
+            .alert(
+                item: state.alert,
+                content: paymentFlowAlert(event: event)
+            )
+            .fullScreenCover(
+                cover: state.fullScreenCover,
+                dismissFullScreenCover: { event(.dismissFullScreenCover) },
+                content: paymentFlowFullScreenCoverView
+            )
+            .sheet(
+                modal: state.modal,
+                dismissModal: { event(.dismissFraud) },
+                content: paymentFlowModalView(event: { event(.fraud($0)) })
+            )
+            .navigationTitle("Payment")
+            .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    func paymentFlowAlert(
+        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
+    ) -> (UtilityServiceFlowState.Alert) -> Alert {
+        
+        return { alert in
+            
+            switch alert {
+            case let .terminalError(errorMessage):
+                
+                return .init(
+                    with: .init(
+                        title: "Error!",
+                        message: errorMessage,
+                        primaryButton: .init(
+                            type: .default,
+                            title: "OK",
+                            event: .dismissPaymentError
+                        )
+                    ),
+                    event: event
+                )
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func paymentFlowFullScreenCoverView(
+        fullScreenCover: UtilityServiceFlowState.FullScreenCover
+    ) -> some View {
+        
+        switch fullScreenCover {
+        case .completed:
+            VStack(spacing: 32) {
+                
+                Text("TBD: Payment Complete View")
+                    .frame(maxHeight: .infinity)
+                
+                Divider()
+                
+                Button("go to Main", action: { viewModel.event(.goToMain) })
+            }
+        }
+    }
+    
+    func paymentFlowModalView(
+        event: @escaping (PaymentFraudMockView.Event) -> Void
+    ) -> (UtilityServiceFlowState.Modal) -> PaymentFlowModalView {
+        
+        return { PaymentFlowModalView(state: $0, event: event) }
+    }
+    
+    func servicePicker(
+        state: ServicePickerState,
+        event: @escaping (UtilityFlowEvent) -> Void
+    ) -> some View {
+        
+        ServicePickerFlowView(
+            state: state,
+            event: event,
+            content: {
+                
+                ServicePickerView(
+                    state: state.content,
+                    event: { event(.prepayment(.select($0))) }
+                )
+            },
+            destinationView: {
+                
+                servicesDestinationView(
+                    destination: $0,
+                    event: { event(.payment($0)) }
+                )
+            }
+        )
+        .navigationTitle(String(describing: state.content))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    @ViewBuilder
+    func servicesDestinationView(
+        destination: ServicePickerState.Destination,
+        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
+    ) -> some View {
+        
+        switch destination {
+        case let .payment(state):
+            paymentFlowView(state: state, event: event)
+        }
+    }
+    
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator
+    typealias Content = UtilityPrepaymentViewModel
+    typealias PaymentViewModel = ObservingPaymentFlowMockViewModel
+    
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
+    
+    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    
+    typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
+    
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, UtilityService, PaymentViewModel>
+    
+    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<PaymentViewModel>
+}
+
+extension UtilityServicePaymentFlowState.Alert: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .terminalError: return  .terminalError
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case terminalError
+    }
+}
+
+extension UtilityServicePaymentFlowState.FullScreenCover: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .completed: return  .completed
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case completed
+    }
+}
+
+extension UtilityServicePaymentFlowState.Modal: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .fraud: return  .fraud
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case fraud
+    }
+}
+
+// MARK: - NavBar
 
 private extension NavigationBarView.ViewModel {
     
@@ -424,6 +732,32 @@ extension PaymentsTransfersView {
     }
 }
 
+private extension UtilityPrepaymentFlowEvent {
+    
+    var flowEvent: UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.UtilityPrepaymentFlowEvent {
+        
+        switch self {
+        case .addCompany:
+            return .addCompany
+            
+        case .payByInstructions:
+            return .payByInstructions
+            
+        case .payByInstructionsFromError:
+            return .payByInstructionsFromError
+            
+        case let .select(select):
+            switch select {
+            case let .lastPayment(lastPayment):
+                return .select(.lastPayment(lastPayment))
+                
+            case let .operator(`operator`):
+                return .select(.operator(`operator`))
+            }
+        }
+    }
+}
+
 //MARK: - Preview
 
 struct Payments_TransfersView_Previews: PreviewProvider {
@@ -455,17 +789,8 @@ struct Payments_TransfersView_Previews: PreviewProvider {
         
         PaymentsTransfersView(
             viewModel: .sample,
-            viewFactory: .init(
-                makeSberQRConfirmPaymentView: {
-                    
-                    .init(
-                        viewModel: $0,
-                        map: Info.preview(info:),
-                        config: .iFora
-                    )
-                },
-                makeUserAccountView: UserAccountView.init(viewModel:)
-            )
+            viewFactory: .preview,
+            getUImage: { _ in nil }
         )
     }
 }

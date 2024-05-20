@@ -77,8 +77,9 @@ extension PaymentsTransfersViewModel {
             )
         ],
         model: .emptyMock,
-        navigationStateManager: .preview,
-        sberQRServices: .empty(), 
+        flowManager: .preview,
+        userAccountNavigationStateManager: .preview,
+        sberQRServices: .empty(),
         qrViewModelFactory: .preview(), 
         paymentsTransfersFactory: .preview,
         navButtonsRight: [

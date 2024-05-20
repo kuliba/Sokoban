@@ -9,8 +9,9 @@
     import AnyFormatKit
     import IQKeyboardManagerSwift
 
-    class ConfurmOpenDepositViewController: PaymentViewController {
+    class ConfurmOpenDepositViewController: PaymentViewController { 
         
+        var getUImage: (Md5hash) -> UIImage? = { _ in UIImage() }
         var startAmount: Double = 5000.0
         var showSmsCode = false {
             didSet {
@@ -240,6 +241,7 @@
             smsCodeField.isHidden = true
             smsCodeField.alpha = 0
             
+            cardFromField.getUImage = getUImage
             cardFromField.titleLabel.text = "Счет списания"
             cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
             cardFromField.imageView.isHidden = false

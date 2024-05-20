@@ -16,7 +16,7 @@ extension SearchFactory {
     
     static func makeSearchBanksField() -> RegularFieldViewModel {
         
-        makeSearchFieldModel(for: .select(.banks))
+        makeSearchFieldModel(for: .select(.banks(phone: nil)))
     }
     
     static func makeSearchContactsField() -> RegularFieldViewModel {
@@ -45,6 +45,16 @@ extension SearchFactory {
                     range: .init(location: 0, length: 2),
                     with: "79"
                 )
+
+            case .fastPayments(.contacts):
+               
+                let trimmedText = $0.trimmingCharacters(in: .controlCharacters)
+                let resultWithPlus = trimmedText
+                      .replacingOccurrences(of: "\n", with: " ")
+                      .replacingOccurrences(of: "\u{00a0}", with: " ")
+                
+                return resultWithPlus
+                
             default:
                 return $0
             }

@@ -554,7 +554,8 @@ final class ProductProfileViewModelTests: XCTestCase {
         return .init(
             model, 
             fastPaymentsFactory: .legacy,
-            navigationStateManager: .preview,
+            paymentsTransfersFlowManager: .preview,
+            userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(), 
             paymentsTransfersFactory: .preview, 
@@ -590,7 +591,8 @@ final class ProductProfileViewModelTests: XCTestCase {
             ProductProfileViewModel(
                 model,
                 fastPaymentsFactory: .legacy,
-                navigationStateManager: .preview,
+                paymentsTransfersFlowManager: .preview,
+                userAccountNavigationStateManager: .preview,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(), 
                 paymentsTransfersFactory: .preview,

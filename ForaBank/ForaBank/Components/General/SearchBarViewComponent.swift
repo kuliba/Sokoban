@@ -130,7 +130,7 @@ extension SearchBarView.ViewModel {
     
     static func banks() -> SearchBarView.ViewModel {
         
-        searchBar(for: .select(.banks))
+        searchBar(for: .select(.banks(phone: nil)))
     }
     
     static func contacts() -> SearchBarView.ViewModel {

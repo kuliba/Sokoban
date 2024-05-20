@@ -22,7 +22,11 @@ class ProductLoanData: ProductData {
     let dateLong: Date
     let strDateLong: String
     
-    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], currencyNumber: Int?, bankProductId: Int, amount: Double, currentInterestRate: Double, principalDebt: Double?, defaultPrincipalDebt: Double?, totalAmountDebt: Double?, principalDebtAccount: String, settlementAccount: String, settlementAccountId: Int, dateLong: Date, strDateLong: String, order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String) {
+    init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], currencyNumber: Int?, bankProductId: Int, amount: Double, currentInterestRate: Double, principalDebt: Double?, defaultPrincipalDebt: Double?, totalAmountDebt: Double?, principalDebtAccount: String, settlementAccount: String, settlementAccountId: Int, dateLong: Date, strDateLong: String, order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String,
+        mediumDesignMd5Hash: String = "",
+        largeDesignMd5Hash: String = "",
+        xlDesignMd5Hash: String = ""
+     ) {
         
         self.currencyNumber = currencyNumber
         self.bankProductId = bankProductId
@@ -37,7 +41,7 @@ class ProductLoanData: ProductData {
         self.dateLong = dateLong
         self.strDateLong = strDateLong
         
-        super.init(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: balance, balanceRub: balanceRub, currency: currency, mainField: mainField, additionalField: additionalField, customName: customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background, order: order, isVisible: visibility, smallDesignMd5hash: smallDesignMd5hash, smallBackgroundDesignHash: smallBackgroundDesignHash)
+        super.init(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: balance, balanceRub: balanceRub, currency: currency, mainField: mainField, additionalField: additionalField, customName: customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background, order: order, isVisible: visibility, smallDesignMd5hash: smallDesignMd5hash, smallBackgroundDesignHash: smallBackgroundDesignHash, mediumDesignMd5Hash: mediumDesignMd5Hash, largeDesignMd5Hash: largeDesignMd5Hash, xlDesignMd5Hash: xlDesignMd5Hash)
     }
     
     private enum CodingKeys : String, CodingKey {

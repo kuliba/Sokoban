@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "F7A64111-7805-4049-B27F-499B8718D5E9",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ActivateSliderTests",
+        "name" : "ActivateSliderTests"
+      }
+    }
+  ],
+  "version" : 1
+}

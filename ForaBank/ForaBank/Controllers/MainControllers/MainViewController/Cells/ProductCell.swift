@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 import SwiftUI
-
+import CardUI
 
 class ProductCell: UICollectionViewCell, SelfConfiguringCell {
  
@@ -234,6 +234,7 @@ enum StatusPC: String, Decodable {
     case notActivated = "17"
     case temporarilyBlocked = "20"
     case blockedByClient = "21"
+    case blockedUnlockNotAvailable = "23"
 }
 
 
@@ -309,11 +310,11 @@ extension ProductCell {
 
     func createAnimatedGradientView() -> UIView {
         
-        UIHostingController(rootView: ProductView.AnimatedGradientView(duration: 3.0)).view
+        UIHostingController(rootView: AnimatedGradientView(duration: 3.0)).view
     }
     
     func createAnimatedDotsView() -> UIView {
         
-        UIHostingController(rootView: ProductView.AnimatedDotsView()).view
+        UIHostingController(rootView: DotsAnimations()).view
     }
 }

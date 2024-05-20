@@ -1,13 +1,13 @@
 {
-  "images" : [
-    {
-      "idiom" : "universal",
-      "filename" : "ic24Database.svg"
-    }
-  ],
   "properties" : {
     "template-rendering-intent" : "template"
   },
+  "images" : [
+    {
+      "filename" : "ic24Database.svg",
+      "idiom" : "universal"
+    }
+  ],
   "info" : {
     "version" : 1,
     "author" : "xcode"

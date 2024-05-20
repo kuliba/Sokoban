@@ -7,9 +7,9 @@
 
 public protocol Reducer<State, Event, Effect> {
     
-    associatedtype State: Equatable
-    associatedtype Event: Equatable
-    associatedtype Effect: Equatable
+    associatedtype State
+    associatedtype Event
+    associatedtype Effect
     
     func reduce(_ state: State,_ event: Event) -> (State, Effect?)
 }

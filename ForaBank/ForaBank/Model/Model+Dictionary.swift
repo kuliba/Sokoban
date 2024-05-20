@@ -8,7 +8,7 @@
 import Foundation
 import ServerAgent
 
-//MARK: - Actions
+// MARK: - Actions
 
 extension ModelAction {
     
@@ -86,7 +86,7 @@ extension ModelAction {
     }
 }
 
-//MARK: - Cache
+// MARK: - Cache
 
 extension Model {
     
@@ -358,7 +358,7 @@ extension Model {
     }
 }
 
-//MARK: - Data Helpers
+// MARK: - Data Helpers
 
 extension Model {
     
@@ -377,7 +377,7 @@ extension Model {
         dictionaryCurrency(for: code)?.currencySymbol
     }
     
-    //MARK: BankList helper
+    // MARK: BankList helper
     
     var dictionaryBankList: [BankData] {
         
@@ -389,7 +389,7 @@ extension Model {
         bankId == "100000000217"
     }
     
-    //MARK: Operators & OperatorGroups
+    // MARK: Operators & OperatorGroups
     
     static let dictionaryQRAnywayOperatorCodes = ["iFora||1031001",
                                                   "iFora||1051001",
@@ -566,7 +566,7 @@ extension Model {
     }
 }
 
-//MARK: - Reducers
+// MARK: - Reducers
 
 extension Model {
     
@@ -610,7 +610,7 @@ extension Model {
     }
 }
 
-//MARK: - Handlers
+// MARK: - Handlers
 
 extension Model {
     
@@ -641,6 +641,22 @@ extension Model {
     
     // Anyway Operators
     func handleDictionaryAnywayOperatorsRequest(_ serial: String?) {
+        
+        Task {
+            
+            do {
+                let data = try await Services.getOperatorsListByParam(httpClient: self.authenticatedHTTPClient()).process("").get()
+                
+                if !data.isEmpty {
+                    
+                    try cache(data, serial: serial)
+                }
+            } catch {
+                
+                LoggerAgent().log(category: .cache, message: "Invalid data for getOperatorsListByParam")
+
+            }
+        }
         
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
@@ -734,7 +750,7 @@ extension Model {
         }
     }
     
-    //MARK: - Banks
+    // MARK: - Banks
     
     func handleDictionaryBanks(_ serial: String?) {
         
@@ -788,7 +804,7 @@ extension Model {
         }
     }
     
-    //MARK: - Preffered Banks
+    // MARK: - Preffered Banks
     
     func handleDictionaryPrefferedBanks(_ serial: String?) {
         
@@ -2168,8 +2184,7 @@ extension Model {
     }
 }
 
-
-//MARK: - Error
+// MARK: - Error
 
 enum ModelDictionaryError: Swift.Error {
     
@@ -2177,4 +2192,3 @@ enum ModelDictionaryError: Swift.Error {
     case statusError(status: ServerStatusCode, message: String?)
     case serverCommandError(error: Error)
 }
-
