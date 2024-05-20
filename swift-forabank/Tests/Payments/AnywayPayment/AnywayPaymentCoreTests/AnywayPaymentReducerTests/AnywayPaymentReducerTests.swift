@@ -20,6 +20,7 @@ extension AnywayPaymentEvent {
     enum Widget: Equatable {
         
         case amount(Decimal)
+        case otp(Int?)
         case product(ProductID, Currency)
     }
 }
@@ -88,6 +89,9 @@ private extension AnywayPaymentReducer {
         case let .amount(amount):
             state.update(with: amount)
             
+        case let .otp(otp):
+            state.update(otp: otp)
+            
         case let .product(productID, currency):
             state.update(with: productID, and: currency)
         }
@@ -130,6 +134,16 @@ private extension AnywayPayment {
         else { return }
         
         elements[index] = .widget(.core(core.updating(with: productID, and: currency)))
+    }
+    
+    mutating func update(
+        otp: Int?
+    ) {
+        guard let index = elements.firstIndex(matching: .otp),
+              case .widget(.otp) = elements[index]
+        else { return }
+        
+        elements[index] = .widget(.otp(otp))
     }
 }
 
@@ -306,6 +320,57 @@ final class AnywayPaymentReducerTests: XCTestCase {
         assert(.widget(.amount(anyAmount())), on: state, effect: nil)
     }
     
+    func test_widget_otp_shouldNotChangeStateOnMissingOTP() {
+        
+        let state = makeEmptyState()
+        
+        assertState(.widget(anyOTP()), on: state)
+        assertMissingID(state, .otp)
+    }
+    
+    func test_widget_otp_shouldNotDeliverEffectOnMissingOTP() {
+        
+        let state = makeEmptyState()
+        
+        assert(.widget(anyOTP()), on: state, effect: nil)
+        assertMissingID(state, .otp)
+    }
+    
+    func test_widget_otp_shouldChangeStateOnNilOTP() {
+        
+        let state = makeState(elements: [.widget(anyOTP())])
+        
+        assertState(.widget(.otp(nil)), on: state) {
+            
+            $0.elements = [.widget(.otp(nil))]
+        }
+    }
+    
+    func test_widget_otp_shouldNotDeliverEffectOnNil() {
+        
+        let state = makeState(elements: [.widget(anyOTP())])
+        
+        assert(.widget(.otp(nil)), on: state, effect: nil)
+    }
+    
+    func test_widget_otp_shouldChangeStateOnOTP() {
+        
+        let otp = generateRandom11DigitNumber()
+        let state = makeState(elements: [.widget(anyOTP())])
+        
+        assertState(.widget(.otp(otp)), on: state) {
+            
+            $0.elements = [.widget(.otp(otp))]
+        }
+    }
+    
+    func test_widget_otp_shouldNotDeliverEffectOnCore() {
+        
+        let state = makeState(elements: [.widget(anyOTP())])
+        
+        assert(.widget(anyOTP()), on: state, effect: nil)
+    }
+    
     func test_widget_product_shouldNotChangeStateOnMissingProduct() {
         
         let state = makeEmptyState()
@@ -460,6 +525,20 @@ final class AnywayPaymentReducerTests: XCTestCase {
     ) -> AnywayPaymentEvent.Widget.Currency {
         
         .init(rawValue)
+    }
+    
+    private func anyOTP(
+        value: Int? = generateRandom11DigitNumber()
+    ) -> AnywayPayment.Element.Widget {
+        
+        return .otp(value)
+    }
+    
+    private func anyOTP(
+        value: Int? = generateRandom11DigitNumber()
+    ) -> AnywayPaymentEvent.Widget {
+        
+        return .otp(value)
     }
     
     private func makeEmptyState(
