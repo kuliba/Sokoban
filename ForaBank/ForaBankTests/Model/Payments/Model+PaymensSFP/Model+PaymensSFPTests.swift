@@ -136,6 +136,11 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNoDiff(bankParameter.parameter.id, Self.bankParameterTest.id)
     }
     
+    func test_foraBankID_isCorrect() {
+        
+        XCTAssertEqual(BankID.foraBankID.rawValue, "100000000217")
+    }
+    
     func test_getHeaderIconForOperation_sfpForaBank_returnsNil() {
         
         XCTAssertNil(PPIcon.init(source: makeSPFSource()))
@@ -288,7 +293,7 @@ private struct EquatableIcon: Equatable {
 
 private extension EquatableIcon {
     
-    static let testSBPIcon: Self = .init(.name("ic24Sbp"))
+    static let testSBPIcon: Self = .init(.sbpIcon)
 }
 
 private extension Payments.ParameterHeader.Icon {
@@ -307,7 +312,7 @@ private extension String {
 
 private extension Payments.ParameterHeader.Icon {
     
-    static let testSBPIcon: Self = .name("ic24Sbp")
+    static let testSBPIcon: Self = .sbpIcon
 }
 
 private extension Payments.ParameterSelectBank {
