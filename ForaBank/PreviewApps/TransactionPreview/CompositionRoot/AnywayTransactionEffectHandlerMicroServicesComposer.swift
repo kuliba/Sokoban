@@ -1,5 +1,5 @@
 //
-//  TransactionEffectHandlerMicroServicesComposer.swift
+//  AnywayTransactionEffectHandlerMicroServicesComposer.swift
 //  TransactionPreview
 //
 //  Created by Igor Malyarov on 19.05.2024.
@@ -8,7 +8,7 @@
 import AnywayPaymentCore
 import AnywayPaymentDomain
 
-final class TransactionEffectHandlerMicroServicesComposer {
+final class AnywayTransactionEffectHandlerMicroServicesComposer {
     
     private let nanoServices: NanoServices
     
@@ -19,7 +19,7 @@ final class TransactionEffectHandlerMicroServicesComposer {
     }
 }
 
-extension TransactionEffectHandlerMicroServicesComposer {
+extension AnywayTransactionEffectHandlerMicroServicesComposer {
     
     func compose() -> MicroServices {
         
@@ -32,16 +32,16 @@ extension TransactionEffectHandlerMicroServicesComposer {
     }
 }
 
-extension TransactionEffectHandlerMicroServicesComposer {
+extension AnywayTransactionEffectHandlerMicroServicesComposer {
     
-    typealias NanoServices = TransactionEffectHandlerNanoServices
-    typealias MicroServices = _TransactionEffectHandlerMicroServices
+    typealias NanoServices = AnywayTransactionEffectHandlerNanoServices
+    typealias MicroServices = AnywayTransactionEffectHandlerMicroServices
 }
 
-private extension TransactionEffectHandlerMicroServicesComposer {
+private extension AnywayTransactionEffectHandlerMicroServicesComposer {
     
     func initiatePayment(
-        _ digest: PaymentDigest,
+        _ digest: AnywayPaymentDigest,
         _ completion: @escaping MicroServices.ProcessCompletion
     ) {
 #warning("FIXME")
@@ -80,21 +80,21 @@ private extension TransactionEffectHandlerMicroServicesComposer {
     }
     
     func paymentEffectHandle(
-        _ effect: PaymentEffect,
+        _ effect: AnywayPaymentEffect,
         _ dispatch: @escaping MicroServices.PaymentDispatch
     ) {
 #warning("FIXME")
     }
     
     func processPayment(
-        _ digest: PaymentDigest,
+        _ digest: AnywayPaymentDigest,
         _ completion: @escaping MicroServices.ProcessCompletion
     ) {
 #warning("FIXME")
     }
 }
 
-private extension TransactionEffectHandlerNanoServices.MakeTransferResponse {
+private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferResponse {
     
     func makeTransactionReport(
         with operationDetails: OperationDetails?

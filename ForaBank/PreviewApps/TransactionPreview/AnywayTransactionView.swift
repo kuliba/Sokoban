@@ -1,5 +1,5 @@
 //
-//  TransactionView.swift
+//  AnywayTransactionView.swift
 //  TransactionPreview
 //
 //  Created by Igor Malyarov on 19.05.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TransactionView: View {
+struct AnywayTransactionView: View {
     
     let state: State
     let event: (Event) -> Void
@@ -17,6 +17,7 @@ struct TransactionView: View {
         List {
             
             Section {
+                Text("Payment UI")
                 button("payment", .payment(.anEvent))
             } header: {
                 Text("payment")
@@ -51,9 +52,18 @@ struct TransactionView: View {
                 button("complete with failure", .completePayment(nil))
                     .foregroundColor(.red)
                 
-                button("complete", .completePayment(.init(status: .completed, info: .detailID(123))))
-                button("inflight", .completePayment(.init(status: .inflight, info: .detailID(123))))
-                button("reject", .completePayment(.init(status: .rejected, info: .detailID(123))))
+                button(
+                    "complete",
+                    .completePayment(.init(status: .completed, info: .detailID(123)))
+                )
+                button(
+                    "inflight",
+                    .completePayment(.init(status: .inflight, info: .detailID(123)))
+                )
+                button(
+                    "reject",
+                    .completePayment(.init(status: .rejected, info: .detailID(123)))
+                )
             } header: {
                 Text("complete Payment event")
             }
@@ -66,10 +76,16 @@ struct TransactionView: View {
             
             Section {
                 
-                button("updatePayment Failure", .updatePayment(.failure(.connectivityError)))
-                    .foregroundColor(.red)
+                button(
+                    "updatePayment Failure",
+                    .updatePayment(.failure(.connectivityError))
+                )
+                .foregroundColor(.red)
                 
-                button("updatePayment Success", .updatePayment(.success(9876)))
+                button(
+                    "updatePayment Success",
+                    .updatePayment(.success(.preview))
+                )
             } header: {
                 Text("update Payment")
             }
@@ -87,12 +103,12 @@ struct TransactionView: View {
     }
 }
 
-extension TransactionView {
+extension AnywayTransactionView {
     
-    typealias State = TransactionState
-    typealias Event = TransactionEvent
+    typealias State = AnywayTransactionState
+    typealias Event = AnywayTransactionEvent
 }
 
 #Preview {
-    TransactionView(state: .preview, event: { print($0) })
+    AnywayTransactionView(state: .preview, event: { print($0) })
 }

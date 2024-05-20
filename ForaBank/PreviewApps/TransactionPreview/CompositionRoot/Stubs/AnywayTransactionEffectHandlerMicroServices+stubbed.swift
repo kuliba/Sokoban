@@ -1,5 +1,5 @@
 //
-//  _TransactionEffectHandlerMicroServices+stubbed.swift
+//  AnywayTransactionEffectHandlerMicroServices+stubbed.swift
 //  TransactionPreview
 //
 //  Created by Igor Malyarov on 19.05.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension _TransactionEffectHandlerMicroServices {
+extension AnywayTransactionEffectHandlerMicroServices {
     
     static func stubbed(
         with stub: Stub

@@ -1,5 +1,5 @@
 //
-//  TransactionStateWrapperView.swift
+//  AnywayTransactionStateWrapperView.swift
 //  TransactionPreview
 //
 //  Created by Igor Malyarov on 19.05.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TransactionStateWrapperView: View {
+struct AnywayTransactionStateWrapperView: View {
     
     @StateObject private var viewModel: ViewModel
     
@@ -18,7 +18,7 @@ struct TransactionStateWrapperView: View {
     
     var body: some View {
         
-        TransactionView(
+        AnywayTransactionView(
             state: viewModel.state,
             event: viewModel.event(_:)
         )
@@ -26,11 +26,11 @@ struct TransactionStateWrapperView: View {
     }
 }
 
-extension TransactionStateWrapperView {
+extension AnywayTransactionStateWrapperView {
     
-    typealias ViewModel = TransactionViewModel
+    typealias ViewModel = AnywayTransactionViewModel
 }
 
 #Preview {
-    TransactionStateWrapperView(viewModel: .preview())
+    AnywayTransactionStateWrapperView(viewModel: .preview())
 }
