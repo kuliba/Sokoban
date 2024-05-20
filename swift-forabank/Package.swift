@@ -1012,6 +1012,7 @@ private extension Target {
         name: .anywayPaymentCore,
         dependencies: [
             .anywayPaymentDomain,
+            .foraTools,
             .remoteServices,
             .tagged,
         ],
