@@ -7,28 +7,41 @@
 
 import Foundation
 
-public struct ProductGroup: Equatable, Identifiable {
+public struct ProductGroup<Product>: Identifiable {
     
-    public typealias ID = Product.ID.ProductType
-
-    public let id: ID
-    
+    let productType: ProductType
+    public var id: ProductType { productType }
     let products: [Product]
     var state: State
     
     public init(
-        id: ID,
+        productType: ProductType,
         products: [Product],
         state: State = .collapsed
     ) {
-        self.id = id
+        self.productType = productType
         self.products = products
         self.state = state
     }
     
-    public enum State {
+    public enum State: Identifiable {
         
         case collapsed, expanded
+        
+        public var id: _Case { _case }
+        
+        var _case: _Case {
+            
+            switch self {
+            case .collapsed: return .collapsed
+            case .expanded: return .expanded
+            }
+        }
+        
+        public enum _Case {
+            
+            case collapsed, expanded
+        }
     }
 }
 
@@ -58,6 +71,19 @@ extension ProductGroup {
             
         case .expanded:
             return nil
+        }
+    }
+}
+
+extension ProductGroup: Equatable where Product: Equatable {}
+
+extension ProductGroup.State {
+    
+    mutating func toggle() {
+        
+        switch self {
+        case .collapsed: self = .expanded
+        case .expanded:  self = .collapsed
         }
     }
 }

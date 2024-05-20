@@ -148,7 +148,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         sut.event(.prePayment(.scan))
         sut.event(.back)
         
-        let ppo = State.Flow.prePaymentOptions(.init(
+        let ppo = State.Destination.prePaymentOptions(.init(
             lastPayments: lastPayments,
             operators: operators
         ))
@@ -191,7 +191,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         startPayment.complete(with: .failure(.serverError(serverErrorMessage)))
         sut.event(.back)
         
-        let ppo = State.Flow.prePaymentOptions(.init(
+        let ppo = State.Destination.prePaymentOptions(.init(
             lastPayments: lastPayments,
             operators: operators
         ))
@@ -234,7 +234,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         startPayment.complete(with: .success(makeResponse()), at: 1)
         sut.event(.back)
         
-        let ppo = State.Flow.prePaymentOptions(.init(
+        let ppo = State.Destination.prePaymentOptions(.init(
             lastPayments: lastPayments,
             operators: operators
         ))
@@ -285,7 +285,7 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
         sut.event(.prePayment(.select(.service(service))))
         startPayment.complete(with: .success(makeResponse()))
         
-        let ppo = State.Flow.prePaymentOptions(.init(
+        let ppo = State.Destination.prePaymentOptions(.init(
             lastPayments: lastPayments,
             operators: operators
         ))
@@ -319,7 +319,6 @@ final class UtilityPaymentFlowIntegrationTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias Response = StartPaymentResponse
-    private typealias Service = UtilityService
     
     private typealias State = UtilityPaymentFlowState<LastPayment, Operator, Service>
     private typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Response, Service>

@@ -18,6 +18,7 @@ struct MyProductsView: View {
     @ObservedObject var viewModel: MyProductsViewModel
     
     let viewFactory: PaymentsTransfersViewFactory
+    let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
         
@@ -110,12 +111,13 @@ struct MyProductsView: View {
                         AuthProductsView(viewModel: authProductsViewModel)
                         
                     case let  .openDeposit(openDepositViewModel):
-                        OpenDepositListView(viewModel: openDepositViewModel)
+                        OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
                     
                     case let .productProfile(productProfileViewModel):
                         ProductProfileView(
                             viewModel: productProfileViewModel,
-                            viewFactory: viewFactory
+                            viewFactory: viewFactory,
+                            getUImage: getUImage
                         )
                     }
                 }
@@ -179,17 +181,27 @@ struct MyProductsView_Previews: PreviewProvider {
         
         MyProductsView(
             viewModel: viewModel,
-            viewFactory: .init(
-                makeSberQRConfirmPaymentView: {
-                    
-                    .init(
-                        viewModel: $0,
-                        map: Info.preview(info:),
-                        config: .iFora
-                    )
-                },
-                makeUserAccountView: UserAccountView.init(viewModel:)
-            )
+            viewFactory: .preview,
+            getUImage: { _ in nil }
+        )
+    }
+}
+
+extension PaymentsTransfersViewFactory {
+    
+    static var preview: Self {
+        
+        return .init(
+            makeSberQRConfirmPaymentView: {
+                
+                .init(
+                    viewModel: $0,
+                    map: Info.preview(info:),
+                    config: .iFora
+                )
+            },
+            makeUserAccountView: UserAccountView.init(viewModel:),
+            makeIconView: IconDomain.preview
         )
     }
 }

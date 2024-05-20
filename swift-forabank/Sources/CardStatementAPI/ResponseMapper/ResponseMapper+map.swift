@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+// TODO: use generic `map` from Utilities/RemoteServices
 internal extension ResponseMapper {
     
     /// Generic map.

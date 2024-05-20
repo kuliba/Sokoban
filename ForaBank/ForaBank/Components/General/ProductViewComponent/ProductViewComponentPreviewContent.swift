@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CardUI
 
 //MARK: - Preview Content
 
@@ -208,20 +209,20 @@ private extension Image {
     static let mastercard: Self = .init("Payment System Mastercard")
 }
 
-private extension ProductView.ViewModel.HeaderViewModel {
+private extension HeaderDetails {
     
     static func make(period: String? = "12/24") -> Self {
-        .init(logo: .ic24LogoForaColor, number: "7854", period: period)
+        .init(number: "7854", period: period)
     }
 }
 
-private extension ProductView.ViewModel.FooterViewModel {
+private extension FooterDetails {
     
-    static let visa = ProductView.ViewModel.FooterViewModel(balance: "170 897 ₽", paymentSystem: .visa)
-    static let mastercard = ProductView.ViewModel.FooterViewModel(balance: "170 897 ₽", paymentSystem: .mastercard)
+    static let visa: Self = .init(balance: "170 897 ₽", paymentSystem: .visa)
+    static let mastercard: Self = .init(balance: "170 897 ₽", paymentSystem: .mastercard)
 }
 
-private extension ProductView.ViewModel.Appearance {
+private extension Appearance {
     
     static func whiteSample(_ size: Size = .normal) -> Self {
         
@@ -268,7 +269,7 @@ private extension ProductView.ViewModel.Appearance {
     }
 }
 
-private extension ProductView.ViewModel.Appearance.Background {
+private extension Appearance.Background {
     
     static let red: Self =          .init(color: .mainColorsRed, image: nil)
     static let cardRIO: Self =      .init(color: .cardRio,       image: nil)
@@ -285,7 +286,7 @@ private extension ProductView.ViewModel.Appearance.Background {
     )
 }
 
-extension ProductView.ViewModel.CardInfo {
+extension CardInfo {
     
     static let classicCard: Self = .init(
         name: "Classic",
@@ -311,19 +312,19 @@ extension String {
     static let cvvTitle = "CVV"
 }
 
-extension ProductView.ViewModel.CardInfo.CVVTitle {
+extension CardInfo.CVVTitle {
     
     static let cvvTitle: Self = .init(value: "CVV")
     static let emptyTitle: Self = .init(value: "")
 }
 
-extension ProductView.ViewModel.CardInfo.FullNumber {
+extension CardInfo.FullNumber {
     
     static let number: Self = .init(value: "4444 4444 4444 4444")
     static let emptyNumber: Self = .init(value: "")
 }
 
-extension ProductView.ViewModel.CardInfo.MaskedNumber {
+extension CardInfo.MaskedNumber {
     
     static let maskedNumber: Self = .init(value: "4444 **** **** **44")
     static let emptyMaskedNumber: Self = .init(value: "")

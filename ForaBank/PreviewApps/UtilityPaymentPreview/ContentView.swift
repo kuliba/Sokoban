@@ -11,7 +11,7 @@ import SwiftUI
 struct ContentState {
     
     var tab: ContentView.Tab = .payments
-    var flow: Flow = .sad
+    var flowSettings: FlowSettings = .happy
     var isShowingSpinner = false
 }
 
@@ -19,13 +19,13 @@ final class ContentViewModel: ObservableObject {
     
     @Published var state: ContentState
     
-    private(set) var viewModel: PaymentsTransfersViewModel
+    private(set) var paymentsTransfersViewModel: PaymentsTransfersViewModel
     private var cancellables = Set<AnyCancellable>()
     
     init(state: ContentState = .init()) {
         
         self.state = state
-        self.viewModel = .default(flow: state.flow)
+        self.paymentsTransfersViewModel = .default(flowSettings: state.flowSettings)
         let rootActions = RootActions(
             spinner: .init(
                 hide: {
@@ -40,22 +40,22 @@ final class ContentViewModel: ObservableObject {
                     DispatchQueue.main.async { [weak self] in
                         
                         self?.state.isShowingSpinner = true
-                        
-                    }}
+                    }
+                }
             )
         )
-        self.viewModel.rootActions = rootActions
+        self.paymentsTransfersViewModel.rootActions = rootActions
         
         $state
-            .map(\.flow)
+            .map(\.flowSettings)
             .removeDuplicates()
             .sink { [weak self] in
                 
                 guard let self else { return }
                 
                 print("set PaymentsTransfersViewModel")
-                viewModel = .default(flow: $0)
-                viewModel.rootActions = rootActions
+                paymentsTransfersViewModel = .default(flowSettings: $0)
+                paymentsTransfersViewModel.rootActions = rootActions
             }
             .store(in: &cancellables)
     }
@@ -119,7 +119,7 @@ private extension ContentView {
         NavigationView {
             
             PaymentsTransfersView(
-                viewModel: viewModel.viewModel,
+                viewModel: viewModel.paymentsTransfersViewModel,
                 factory: .init()
             )
             .navigationViewStyle(StackNavigationViewStyle())
@@ -141,7 +141,7 @@ private extension ContentView {
         
         NavigationView {
             
-            FlowSettingsView(flow: $viewModel.state.flow)
+            FlowSettingsView(flowSettings: $viewModel.state.flowSettings)
                 .navigationTitle("Flow Settings")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {

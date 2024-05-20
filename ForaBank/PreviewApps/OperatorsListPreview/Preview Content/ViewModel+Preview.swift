@@ -10,23 +10,23 @@ import RxViewModel
 import PrePaymentPicker
 import OperatorsListComponents
 
-typealias PrePaymentOptionsViewModel = RxViewModel<PrePaymentOptionsState<LatestPayment, Operator>, PrePaymentOptionsEvent<LatestPayment, Operator>, PrePaymentOptionsEffect<Operator>>
+typealias PrePaymentOptionsViewModel = RxViewModel<PrePaymentOptionsState<LastPayment, Operator>, PrePaymentOptionsEvent<LastPayment, Operator>, PrePaymentOptionsEffect<Operator>>
 
 extension PrePaymentOptionsViewModel {
 
     static func preview(
-        initialState: PrePaymentOptionsState<LatestPayment, Operator>,
+        initialState: PrePaymentOptionsState<LastPayment, Operator>,
         observeLast: Int = 1,
         pageSize: Int = 20
     ) -> PrePaymentOptionsViewModel {
  
-        let reducer = PrePaymentOptionsReducer<LatestPayment, Operator>(
+        let reducer = PrePaymentOptionsReducer<LastPayment, Operator>(
             observeLast: observeLast,
             pageSize: pageSize
         )
 
         let operatorsLoader = StubbedOperatorLoader()
-        let effectHandler = PrePaymentOptionsEffectHandler<LatestPayment, Operator>(
+        let effectHandler = PrePaymentOptionsEffectHandler<LastPayment, Operator>(
             loadLastPayments: { $0(.success(.preview)) },
             loadOperators: operatorsLoader.load,
             scheduler: .immediate
@@ -63,8 +63,8 @@ extension PrePaymentOptionsState {
 
 extension StubbedOperatorLoader {
     
-    typealias UPRxPayload = PrePaymentOptionsEffectHandler<LatestPayment, Operator>.LoadOperatorsPayload
-    typealias UPRxCompletion = PrePaymentOptionsEffectHandler<LatestPayment, Operator>.LoadOperatorsCompletion
+    typealias UPRxPayload = PrePaymentOptionsEffectHandler<LastPayment, Operator>.LoadOperatorsPayload
+    typealias UPRxCompletion = PrePaymentOptionsEffectHandler<LastPayment, Operator>.LoadOperatorsCompletion
     
     func load(
         _ payload: UPRxPayload?,

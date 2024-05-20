@@ -4,6 +4,8 @@ import RealmSwift
 
 class C2BDetailsFormViewController: UIViewController {
 
+    var getUImage: (Md5hash) -> UIImage? = { _ in UIImage() }
+    
     var amountField = C2BDetailsInputView(
             viewModel: C2BDetailsInputViewModel(
                     title: "Сумма перевода",
@@ -71,6 +73,7 @@ class C2BDetailsFormViewController: UIViewController {
 
     func setupData() {
         dismissActivity()
+        cardFromField.getUImage = getUImage
         cardFromField.model = C2BDetailsViewModel.sourceModel
         cardFromField.isHidden = false
         cardFromField.choseButton?.isHidden = true

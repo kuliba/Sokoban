@@ -7,8 +7,8 @@
 
 public protocol EffectHandler<Event, Effect> {
     
-    associatedtype Event: Equatable
-    associatedtype Effect: Equatable
+    associatedtype Event
+    associatedtype Effect
     
     typealias Dispatch = (Event) -> Void
     

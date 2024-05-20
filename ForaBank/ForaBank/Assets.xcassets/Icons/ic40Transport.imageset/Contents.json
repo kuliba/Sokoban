@@ -1,14 +1,14 @@
 {
+  "images" : [
+    {
+      "filename" : "ic40Transport.svg",
+      "idiom" : "universal"
+    }
+  ],
   "info" : {
     "version" : 1,
     "author" : "xcode"
   },
-  "images" : [
-    {
-      "idiom" : "universal",
-      "filename" : "ic40Transport.svg"
-    }
-  ],
   "properties" : {
     "template-rendering-intent" : "template"
   }

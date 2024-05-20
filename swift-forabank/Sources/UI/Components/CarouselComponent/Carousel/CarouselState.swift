@@ -6,60 +6,43 @@
 //
 
 import SwiftUI
+import Foundation
 
-public struct CarouselState: Equatable {
-    
-    public typealias SelectorProductType = Product.ID.ProductType
-    public typealias ProductGroups = [ProductGroup]
-    public typealias ProductSeparators = [Product.ID.ProductType: [Product.ID]]
+public struct CarouselState<Product: CarouselProduct & Equatable>: Equatable {
     
     var selector: ProductTypeSelector
     var productGroups: ProductGroups
-    var sticker: Product?
+    var needShowSticker: Bool
     var separators: ProductSeparators
     
-    var selectedProductType: Product.ID.ProductType?
+    var selectedProductType: ProductType?
     var spoilerUnitPoints: UnitPoint = .zero
     
     var carouselDimensions: CarouselConfig.ProductDimensions
     var numberOfItemsBeforeSpoiler: Int
     
-    public init(
+    init(
         selector: ProductTypeSelector,
         productGroups: ProductGroups,
-        sticker: Product? = nil,
+        needShowSticker: Bool,
         separators: ProductSeparators = [:],
-        selectedProductType: Product.ID.ProductType? = nil,
+        selectedProductType: ProductType? = nil,
         carouselDimensions: CarouselConfig.ProductDimensions = .regular,
         numberOfItemsBeforeSpoiler: Int = 3
     ) {
         self.selector = selector
         self.productGroups = productGroups
-        self.sticker = sticker
+        self.needShowSticker = needShowSticker
         self.separators = separators
         self.selectedProductType = selectedProductType
         self.carouselDimensions = carouselDimensions
         self.numberOfItemsBeforeSpoiler = numberOfItemsBeforeSpoiler
     }
-    
-    public struct ProductTypeSelector: Equatable {
-        
-        public var selected: SelectorProductType?
-        public var items: [SelectorProductType]
-        
-        public init(
-            selected: SelectorProductType? = .card,
-            items: [SelectorProductType]
-        ) {
-            self.selected = selected
-            self.items = items
-        }
-    }
 }
 
 public extension CarouselState {
     
-    init(products: [Product], sticker: Product? = nil) {
+    init(products: [Product], needShowSticker: Bool) {
         
         let productsMapper = Self.map(products: products)
         
@@ -70,7 +53,7 @@ public extension CarouselState {
         self.init(
             selector: selector,
             productGroups: productGroups,
-            sticker: sticker,
+            needShowSticker: needShowSticker,
             separators: separators
         )
     }
@@ -80,17 +63,17 @@ public extension CarouselState {
     ) -> (ProductTypeSelector, ProductGroups, ProductSeparators)  {
         
         let productTypes = products
-            .map { $0.id.type }
+            .map { $0.type }
             .uniqueValues
             .sorted(by: { $0.order < $1.order })
         
         let groupedByType = Dictionary(
             grouping: products,
-            by: { $0.id.type }
+            by: { $0.type }
         )
                 
         let productGroups = productTypes
-            .compactMap { productType -> (Product.ID.ProductType, [Product])? in
+            .compactMap { productType -> (ProductType, [Product])? in
                                 
                 guard let productsArray = groupedByType[productType] else {
                     return nil
@@ -102,17 +85,17 @@ public extension CarouselState {
                 productGroups.append(
                     
                     ProductGroup(
-                        id: productsArray.0,
+                        productType: productsArray.0,
                         products: productsArray.1
                     )
                 )
             }
         
-        let cardProducts = products.filter { $0.id.type == .card }
+        let cardProducts = products.filter { $0.type == .card }
         
         let separators = zip(cardProducts, cardProducts.dropFirst())
             .enumerated()
-            .map { (pairIndex, products) -> Product.ID? in
+            .map { (pairIndex, products) -> Product? in
                 
                 productIdForSeparator(
                     pairIndex: pairIndex,
@@ -140,29 +123,53 @@ public extension CarouselState {
         pairIndex: Int,
         firstProduct: Product,
         secondProduct: Product
-    ) -> Product.ID? {
+    ) -> Product? {
         
-        if firstProduct.id.cardType?.isMainOrRegular == true
-            && secondProduct.id.cardType?.isAdditional == true {
+        if firstProduct.isAdditional == false
+            && secondProduct.isAdditional == true {
             
             guard pairIndex > 0 else { return nil }
             
-            return firstProduct.id
+            return firstProduct
         }
 
-        if firstProduct.id.cardType?.isAdditional == true
-            && secondProduct.id.cardType?.isMainOrRegular == true {
+        if firstProduct.isAdditional == true
+            && secondProduct.isAdditional == false {
             
-            return firstProduct.id
+            return firstProduct
         }
         
         return nil
     }
 }
 
+struct ProductTypeSelector: Equatable {
+    
+    public var selected: ProductType?
+    public var items: [ProductType]
+    
+    public init(
+        selected: ProductType? = .card,
+        items: [ProductType]
+    ) {
+        self.selected = selected
+        self.items = items
+    }
+}
+
 extension CarouselState {
     
-    func productType(with offset: CGFloat) -> ProductGroup.ID? {
+    var needShowAddNewProduct: Bool {
+        if let cards = productGroups.first(where: { $0.productType == .card }), cards.products.count > 1 {
+            return false
+        }
+        return true
+    }
+}
+
+extension CarouselState {
+    
+    func productType(with offset: CGFloat) -> ProductType? {
         
         guard offset > 0 else { return nil }
         
@@ -197,15 +204,15 @@ extension CarouselState {
 
 public extension CarouselState {
     
-    subscript(_ groupID: ProductGroup.ID) -> ProductGroup? {
+    subscript(_ productType: ProductType) -> Group? {
         
-        get { productGroups.first(matching: groupID) }
+        get { productGroups.first(matching: productType) }
         
         set(newValue) {
             
             guard
                 let newValue,
-                let index = productGroups.firstIndex(matching: groupID)
+                let index = productGroups.firstIndex(matching: productType)
             else { return }
             
             productGroups[index] = newValue
@@ -217,39 +224,39 @@ extension CarouselState {
     
     func shouldAddSeparator(for product: Product) -> Bool {
         
-        separators[product.id.type]?.contains(product.id) == true
+        separators[product.type]?.contains(product) == true
     }
     
-    func shouldAddGroupSeparator(for productGroup: ProductGroup) -> Bool {
+    func shouldAddGroupSeparator(for productGroup: Group) -> Bool {
         
         productGroups.last != productGroup
     }
     
-    func productGroupIsCollapsed(_ productGroup: ProductGroup) -> Bool {
+    func productGroupIsCollapsed(_ productGroup: Group) -> Bool {
         
         productGroups
             .contains(where: { $0 == productGroup && $0.state == .collapsed })        
     }
     
-    func shouldAddSpoiler(for productGroup: ProductGroup) -> Bool {
+    func shouldAddSpoiler(for productGroup: Group) -> Bool {
         
         productGroups
             .first(where: { $0 == productGroup && $0.products.count > numberOfItemsBeforeSpoiler }) != nil
     }
     
-    func shouldAddSticker(for productGroup: ProductGroup) -> Bool {
+    func shouldAddSticker(for productGroup: Group) -> Bool {
         
-        sticker != nil && productGroup.id == .card
+        needShowSticker && productGroup.id == .card
     }
     
-    func spoilerTitle(for productGroup: ProductGroup) -> String? {
+    func spoilerTitle(for productGroup: Group) -> String? {
         
         productGroups
             .first(where: { $0 == productGroup })?
             .spoilerTitle(count: numberOfItemsBeforeSpoiler)
     }
     
-    func visibleProducts(for productGroup: ProductGroup) -> [Product] {
+    func visibleProducts(for productGroup: Group) -> [Product] {
         
         productGroups
             .first(where: { $0 == productGroup })?
@@ -257,13 +264,10 @@ extension CarouselState {
     }
 }
 
-public extension ProductGroup.State {
+public extension CarouselState {
     
-    mutating func toggle() {
-        
-        switch self {
-        case .collapsed: self = .expanded
-        case .expanded:  self = .collapsed
-        }
-    }
+    typealias Group = ProductGroup<Product>
+    typealias ProductGroups = [ProductGroup<Product>]
+    typealias ProductSeparators = [ProductType: [Product]]
 }
+

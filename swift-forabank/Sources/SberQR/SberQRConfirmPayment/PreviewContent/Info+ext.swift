@@ -19,7 +19,8 @@ extension Info {
             id: info.infoID,
             value: info.value,
             title: info.title,
-            image: .init(.init("sparkles.tv"))
+            image: .init(.init("sparkles.tv")),
+            style: .expanded
         )
     }
 }

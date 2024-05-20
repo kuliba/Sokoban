@@ -5,17 +5,19 @@
 //  Created by Дмитрий on 09.03.2022.
 //
 
-import Foundation
+import CardUI
 import Combine
-import SwiftUI
+import Foundation
+import OperatorsListComponents
 import PDFKit
 import PinCodeUI
+import SwiftUI
 import Tagged
 
 class ProductProfileViewModel: ObservableObject {
     
     typealias CardAction = CardDomain.CardAction
-    typealias ResultShowCVV = Swift.Result<ProductView.ViewModel.CardInfo.CVV, Error>
+    typealias ResultShowCVV = Swift.Result<CardInfo.CVV, Error>
     typealias CompletionShowCVV = (ResultShowCVV) -> Void
     typealias ShowCVV = (CardDomain.CardId, @escaping CompletionShowCVV) -> Void
     
@@ -47,7 +49,7 @@ class ProductProfileViewModel: ObservableObject {
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
     private let fastPaymentsFactory: FastPaymentsFactory
-    private let paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager
+    private let paymentsTransfersFlowManager: PTFlowManger
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
@@ -72,7 +74,7 @@ class ProductProfileViewModel: ObservableObject {
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
          fastPaymentsFactory: FastPaymentsFactory,
-         paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
+         paymentsTransfersFlowManager: PTFlowManger,
          userAccountNavigationStateManager: UserAccountNavigationStateManager,
          sberQRServices: SberQRServices,
          qrViewModelFactory: QRViewModelFactory,
@@ -91,7 +93,7 @@ class ProductProfileViewModel: ObservableObject {
         self.historyPool = historyPool
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
-        self.paymentsTransfersNavigationStateManager = paymentsTransfersNavigationStateManager
+        self.paymentsTransfersFlowManager = paymentsTransfersFlowManager
         self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
@@ -112,7 +114,7 @@ class ProductProfileViewModel: ObservableObject {
     convenience init?(
         _ model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
-        paymentsTransfersNavigationStateManager: PaymentsTransfersNavigationStateManager,
+        paymentsTransfersFlowManager: PTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -144,7 +146,7 @@ class ProductProfileViewModel: ObservableObject {
             accentColor: accentColor,
             model: model,
             fastPaymentsFactory: fastPaymentsFactory,
-            paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
+            paymentsTransfersFlowManager: paymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -376,7 +378,7 @@ private extension ProductProfileViewModel {
                 
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
-                    navigationStateManager: paymentsTransfersNavigationStateManager,
+                    flowManager: paymentsTransfersFlowManager,
                     userAccountNavigationStateManager: userAccountNavigationStateManager,
                     sberQRServices: sberQRServices,
                     qrViewModelFactory: qrViewModelFactory,
@@ -543,13 +545,21 @@ private extension ProductProfileViewModel {
                 case _ as ProductProfileViewModelAction.Show.MeToMeExternal:
                     if let productData = productData as? ProductLoanData, let loanAccount = self.model.products.value[.account]?.first(where: {$0.number == productData.settlementAccount}) {
                         
-                        let meToMeExternalViewModel = MeToMeExternalViewModel(productTo: loanAccount, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())})
+                        let meToMeExternalViewModel = MeToMeExternalViewModel(
+                            productTo: loanAccount,
+                            closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())},
+                            getUImage: { self.model.images.value[$0]?.uiImage }
+                        )
                         self.link = .meToMeExternal(meToMeExternalViewModel)
                     } else {
                         
-                        let meToMeExternalViewModel = MeToMeExternalViewModel(productTo: productData, closeAction: { [weak self] in
-                            self?.action.send(ProductProfileViewModelAction.Close.Link())
-                        })
+                        let meToMeExternalViewModel = MeToMeExternalViewModel(
+                            productTo: productData,
+                            closeAction: { [weak self] in
+                                self?.action.send(ProductProfileViewModelAction.Close.Link())
+                            },
+                            getUImage: { self.model.images.value[$0]?.uiImage }
+                        )
                         self.link = .meToMeExternal(meToMeExternalViewModel)
                     }
                 default:
@@ -1243,7 +1253,11 @@ private extension ProductProfileViewModel {
                             self.link = .productInfo(productInfoViewModel)
                             
                         case .statement:
-                            let productStatementViewModel = ProductStatementViewModel(product: productData, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())})
+                            let productStatementViewModel = ProductStatementViewModel(
+                                product: productData,
+                                closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Link())},
+                                getUImage: { self.model.images.value[$0]?.uiImage }
+                            )
                             self.link = .productStatement(productStatementViewModel)
                             
                         case .refillFromOtherProduct:
@@ -1511,7 +1525,7 @@ private extension ProductProfileViewModel {
         .init(
             model,
             fastPaymentsFactory: fastPaymentsFactory,
-            paymentsTransfersNavigationStateManager: paymentsTransfersNavigationStateManager,
+            paymentsTransfersFlowManager: paymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory, 
@@ -1788,7 +1802,11 @@ fileprivate extension NavigationBarView.ViewModel {
     
     func update(with product: ProductData) {
         
-        self.title = ProductView.ViewModel.name(product: product, style: .profile, creditProductName: .navigationTitle)
+        self.title = ProductView.ViewModel.name(
+            product: product,
+            style: .profile,
+            creditProductName: .productView
+        )
         self.subtitle = Self.subtitle(with: product)
         self.foreground = Self.textColor(with: product)
         self.background = Self.accentColor(with: product)
@@ -2281,7 +2299,7 @@ extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
-    typealias ShowCVVCompletion = (ProductView.ViewModel.CardInfo.CVV?) -> Void
+    typealias ShowCVVCompletion = (CardInfo.CVV?) -> Void
     
     func showCvvByTap(
         cardId: CardDomain.CardId,

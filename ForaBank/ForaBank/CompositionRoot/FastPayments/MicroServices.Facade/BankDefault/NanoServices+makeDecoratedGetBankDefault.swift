@@ -6,6 +6,7 @@
 //
 
 import FastPaymentsSettings
+import RemoteServices
 
 extension NanoServices {
     
@@ -17,6 +18,8 @@ extension NanoServices {
         _ log: @escaping (String, StaticString, UInt) -> Void
     ) -> MicroServices.Facade.GetBankDefaultResponse {
         
+        typealias ServiceFailure = FastPaymentsSettings.ServiceFailure
+
         let bankDefaultStore = BankDefaultStore(keyTag: .bankDefault)
         
         let bankDefaultCacheRead: BankDefaultCacheRead = {
@@ -34,7 +37,7 @@ extension NanoServices {
         let getBankDefault = adaptedLoggingFetch(
             createRequest: ForaBank.RequestFactory.createGetBankDefaultRequest,
             httpClient: httpClient,
-            mapResponse: FastPaymentsSettings.ResponseMapper.mapGetBankDefaultResponse,
+            mapResponse: RemoteServices.ResponseMapper.mapGetBankDefaultResponse,
             mapError: ServiceFailure.init(error:),
             log: log
         )
@@ -85,7 +88,7 @@ private extension BankDefault {
     }
 }
 
-private extension ServiceFailure {
+private extension FastPaymentsSettings.ServiceFailure {
     
     var requestLimitMessage: String? {
         

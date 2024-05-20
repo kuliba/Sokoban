@@ -737,7 +737,6 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     func test_paymentStarted_shouldChangePrePaymentOptionsState_success() {
         
         let prePaymentOptionsState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
-        let message = anyMessage()
         let event: Event = .prePayment(.paymentStarted(.success(makeResponse())))
         
         assertState(event, on: prePaymentOptionsState) {
@@ -749,7 +748,6 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     func test_paymentStarted_shouldNotDeliverEffectOnPrePaymentOptionsState_success() {
         
         let initialState = makeState(.prePaymentOptions(makePrePaymentOptionsState()))
-        let message = anyMessage()
         let event: Event = .prePayment(.paymentStarted(.success(makeResponse())))
         
         assert(event, on: initialState, effect: nil)
@@ -761,7 +759,6 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
             .prePaymentOptions(makePrePaymentOptionsState()),
             status: .inflight
         )
-        let message = anyMessage()
         let event: Event = .prePayment(.paymentStarted(.success(makeResponse())))
         
         assertState(event, on: prePaymentOptionsState) {
@@ -777,7 +774,6 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
             .prePaymentOptions(makePrePaymentOptionsState()),
             status: .inflight
         )
-        let message = anyMessage()
         let event: Event = .prePayment(.paymentStarted(.success(makeResponse())))
         
         assert(event, on: initialState, effect: nil)
@@ -1019,13 +1015,13 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = UtilityPaymentFlowReducer<LastPayment, Operator, StartPaymentResponse, UtilityService>
+    private typealias SUT = UtilityPaymentFlowReducer<LastPayment, Operator, StartPaymentResponse, Service>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
-    private typealias Flow = SUT.State.Flow
+    private typealias Flow = SUT.State.Destination
     
     private typealias PPOState = SUT.PPOState
     private typealias PPOEvent = SUT.PPOEvent
@@ -1056,8 +1052,8 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     }
     
     private func makePPOStub(
-        lastPaymentsCount: Int? = nil,
-        operatorsCount: Int? = nil,
+        lastPaymentsCount: Int = 0,
+        operatorsCount: Int = 0,
         searchText: String = "",
         isInflight: Bool = false,
         ppoEffect: PPOEffect? = nil
@@ -1074,18 +1070,18 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     }
     
     private func makePrePaymentOptionsState(
-        lastPaymentsCount: Int? = nil,
-        operatorsCount: Int? = nil,
+        lastPaymentsCount: Int = 0,
+        operatorsCount: Int = 0,
         searchText: String = "",
         isInflight: Bool = false
     ) -> PPOState {
         
         .init(
-            lastPayments: lastPaymentsCount.map {
-                (0..<$0).map { _ in makeLastPayment() }
+            lastPayments: (0..<lastPaymentsCount).map { _ in
+                makeLastPayment()
             },
-            operators: operatorsCount.map {
-                (0..<$0).map { _ in makeOperator() }
+            operators: (0..<operatorsCount).map { _ in
+                makeOperator()
             },
             searchText: searchText,
             isInflight: isInflight
@@ -1094,7 +1090,7 @@ final class UtilityPaymentFlowReducerTests: XCTestCase {
     
     private func makeSelectingServicesState(
         _ `operator`: Operator = makeOperator(),
-        _ services: [UtilityService]? = nil
+        _ services: [Service]? = nil
     ) -> Flow {
         
         .prePaymentState(.services(`operator`, services ?? [makeService(), makeService()]))

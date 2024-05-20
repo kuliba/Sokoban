@@ -10,8 +10,8 @@ import UIPrimitives
 
 public struct ResendConfig {
     
-    let backgroundColor: Color
-    let text: TextConfig
+    public let backgroundColor: Color
+    public let text: TextConfig
     
     public init(
         backgroundColor: Color,

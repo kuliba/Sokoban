@@ -855,6 +855,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                         }
                         
                         let vc = ContactConfurmViewController()
+                        vc.getUImage = { self.model.images.value[$0]?.uiImage }
                         vc.modalPresentationStyle = .fullScreen
                         vc.title = "Подтвердите реквизиты"
                         vc.confurmVCModel = self.viewModel

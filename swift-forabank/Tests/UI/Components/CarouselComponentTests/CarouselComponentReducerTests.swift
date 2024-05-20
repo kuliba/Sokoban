@@ -55,27 +55,35 @@ final class CarouselComponentReducerTests: XCTestCase {
     
     func test_update_shouldUpdateEmptyProducts() {
         
-        assert(.empty, .update(.empty), reducedTo: .init(products: []))
+        assert(.empty, .update(.empty), reducedTo: .init(products: [], needShowSticker: true))
     }
     
     func test_update_shouldUpdateToMoreProductsFromEmptyProducts() {
         
-        assert(.empty, .update(.moreProducts), reducedTo: .init(products: .moreProducts))
+        assert(.empty, .update(.moreProducts), reducedTo: .init(products: .moreProducts, needShowSticker: true))
     }
     
     func test_update_shouldUpdateToPreviewProductsFromEmptyProducts() {
         
-        assert(.empty, .update(.cards), reducedTo: .init(products: .cards))
+        assert(.empty, .update(.cards), reducedTo: .init(products: .cards, needShowSticker: true))
     }
     
     func test_update_shouldUpdateToMoreProductsFromDefault() {
         
-        assert(.cards, .update(.moreProducts), reducedTo: .init(products: .moreProducts))
+        assert(.cards, .update(.moreProducts), reducedTo: .init(products: .moreProducts, needShowSticker: true))
     }
     
     func test_update_shouldUpdateToPreviewProductsFromDefault() {
         
-        assert(.cards, .update(.cards), reducedTo: .init(products: .cards))
+        assert(.cards, .update(.cards), reducedTo: .init(products: .cards, needShowSticker: true))
+    }
+    
+    func test_closeSticker_shouldSetNeedShowStickerToFalse() {
+        
+        assert(.closeSticker, on: .all) {
+            
+           $0.needShowSticker = false
+       }
     }
     
     // MARK: - Separators mapping
@@ -134,18 +142,7 @@ final class CarouselComponentReducerTests: XCTestCase {
             $0.separators = .separatorsForPreviewProducts
         }
     }
-    
-    // TODO: - Добавить тест для нового кейса со стикером
-//    func test_separators_shouldUpdateEmptyWithNonEmptyProductsWithSticker() {
-//        
-//        assert(.update(.cardsWithSticker), on: .empty) {
-//            
-//            $0.selector = .init(items: [.card])
-//            $0.productGroups = .cardsWithSticker
-//            $0.separators = .separatorsForPreviewProductsWithSticker
-//        }
-//    }
-    
+        
     func test_separators_shouldUpdateToMoreProductsFromNonEmpty() {
         
         assert(.update(.moreProducts), on: .cards) {
@@ -228,17 +225,7 @@ final class CarouselComponentReducerTests: XCTestCase {
         XCTAssertEqual(spoilerTitle, .spoilerTitleForAllCardProducts)
     }
     
-    func test_spoilerTitle_shouldUpdateWithAllCardProductsWithSticker() {
-                
-        let sut = makeSUT()
-        
-        let reduce = reduce(sut, event: .update(.allCardProductsWithSticker))
-        let spoilerTitle = reduce.state.spoilerTitle(for: .allCardProductsWithSticker)
-                
-        XCTAssertEqual(spoilerTitle, .spoilerTitleForAllCardProductsWithSticker)
-    }
-    
-    private typealias SUT = CarouselReducer
+    private typealias SUT = CarouselReducer<Product>
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
@@ -257,7 +244,8 @@ final class CarouselComponentReducerTests: XCTestCase {
     
     private func reduce(
         _ sut: SUT,
-        _ state: State = .init(products: .cards),
+        _ needShowSticker: Bool = true,
+        _ state: State = .init(products: .cards, needShowSticker: true),
         event: Event
     ) -> (state: State, effect: Effect?) {
         
@@ -312,7 +300,7 @@ final class CarouselComponentReducerTests: XCTestCase {
         line: UInt = #line
     ) {
         
-        let receivedEffect = reduce(sut ?? makeSUT(), state, event: event).1
+        let receivedEffect = reduce(sut ?? makeSUT(), true, state, event: event).1
         
         XCTAssertNoDiff(
             receivedEffect,
@@ -323,14 +311,14 @@ final class CarouselComponentReducerTests: XCTestCase {
     }
 }
 
-private extension CarouselReducer.State {
+private extension CarouselReducer<Product>.State {
     
-    static let empty: Self = .init(products: [])
-    static let cards: Self = .init(products: .cards)
-    static let more: Self = .init(products: .moreProducts)
-    static let all: Self = .init(products: .cards + .moreProducts)
-    static let defaultCollapsed: Self = .init(products: .cards)
-    static let nonCardProducts: Self = .init(products: .nonCardProducts)
+    static let empty: Self = .init(products: [], needShowSticker: true)
+    static let cards: Self = .init(products: .cards, needShowSticker: true)
+    static let more: Self = .init(products: .moreProducts, needShowSticker: true)
+    static let all: Self = .init(products: .cards + .moreProducts, needShowSticker: true)
+    static let defaultCollapsed: Self = .init(products: .cards, needShowSticker: true)
+    static let nonCardProducts: Self = .init(products: .nonCardProducts, needShowSticker: true)
 }
 
 extension CarouselReducer: Reducer { }

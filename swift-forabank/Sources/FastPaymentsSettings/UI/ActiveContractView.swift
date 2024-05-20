@@ -77,6 +77,7 @@ private extension Product {
         .init(
             id: productSelectProductID,
             type: productSelectProductType,
+            isAdditional: false, // TODO: add real value for Additional card
             header: header,
             title: title,
             footer: number,
@@ -127,6 +128,7 @@ private extension Product.Look.Icon {
         
         switch self {
         case let .svg(svg): return .svg(svg)
+        case let .image(image): return .image(image)
         }
     }
 }

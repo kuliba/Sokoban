@@ -7,16 +7,16 @@
 
 public struct Stack<Element> {
     
-    private var elements = [Element]()
+    private var _elements = [Element]()
     
     public init(_ elements: Element...) {
         
-        self.elements = elements
+        self._elements = elements
     }
     
     public init(_ elements: [Element]) {
         
-        self.elements = elements
+        self._elements = elements
     }
 }
 
@@ -34,49 +34,48 @@ public extension Stack {
     ///     - Assigning `nil` has no effect.
     var top: Element? {
         
-        get { elements.last }
+        get { _elements.last }
         
         set(newValue) {
             
-            if elements.isEmpty {
+            if _elements.isEmpty {
                 if let newValue {
-                    elements = [newValue]
+                    _elements = [newValue]
                 }
             } else {
                 if let newValue {
-                    elements[elements.endIndex - 1] = newValue
+                    _elements[_elements.endIndex - 1] = newValue
                 } else {
-                    elements.removeLast()
+                    _elements.removeLast()
                 }
             }
         }
     }
+    
+    var count: Int { _elements.count }
+    
+    var isEmpty: Bool { count == 0 }
+    
+    var elements: [Element] { _elements }
 }
 
 public extension Stack {
     
     func peek() -> Element? {
         
-        elements.last
+        _elements.last
     }
     
     @discardableResult
     mutating func pop() -> Element? {
         
-        elements.popLast()
+        _elements.popLast()
     }
     
     mutating func push(_ element: Element) {
         
-        elements.append(element)
+        _elements.append(element)
     }
-}
-
-public extension Stack {
-    
-    var count: Int { elements.count }
-    
-    var isEmpty: Bool { count == 0 }
 }
 
 extension Stack: Equatable where Element: Equatable {}
@@ -85,6 +84,6 @@ extension Stack: ExpressibleByArrayLiteral {
     
     public init(arrayLiteral elements: Element...) {
         
-        self.elements = elements
+        self._elements = elements
     }
 }

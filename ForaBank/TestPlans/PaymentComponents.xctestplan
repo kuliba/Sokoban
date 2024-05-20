@@ -18,6 +18,13 @@
         "identifier" : "ProductSelectComponentTests",
         "name" : "ProductSelectComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CarouselComponentTests",
+        "name" : "CarouselComponentTests"
+      }
     }
   ],
   "version" : 1

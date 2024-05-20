@@ -25,6 +25,8 @@ public extension Flow {
         set { stack.top = newValue }
     }
     
+    var isEmpty: Bool { stack.isEmpty }
+    
     mutating func push(_ destination: Destination) {
         
         stack.push(destination)

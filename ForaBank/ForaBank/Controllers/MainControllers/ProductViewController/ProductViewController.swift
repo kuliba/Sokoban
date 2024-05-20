@@ -288,7 +288,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         collectionView.centerX(inView: view)
         collectionView.contentMode = .center
         
-        //CardView set
+        //Card set
         card.anchor(top: collectionView.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 268, height: 160)
         card.backgroundColor = .clear
         card.centerX(inView: view)
@@ -925,7 +925,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     }
     
     @objc func showAlert(sender: AnyObject) {
-        let viewController = PayViewController(card: card.card)
+        let viewController = PayViewController(card: card.card, getUImage: { self.model.images.value[$0]?.uiImage })
         halfScreen = false
         let navController = UINavigationController(rootViewController: viewController)
         navController.modalPresentationStyle = .custom

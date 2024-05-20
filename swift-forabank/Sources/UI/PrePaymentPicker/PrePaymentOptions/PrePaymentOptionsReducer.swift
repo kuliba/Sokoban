@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 19.02.2024.
 //
 
+@available(*, deprecated, message: "Use `PrepaymentOptionsReducer` from `UtilityPayment` module")
 public final class PrePaymentOptionsReducer<LastPayment, Operator>
 where LastPayment: Equatable & Identifiable,
       Operator: Equatable & Identifiable {
@@ -67,8 +68,9 @@ private extension PrePaymentOptionsReducer {
         
         var effect: Effect?
         
-        guard let lastObserved = state.operators?.map(\.id).suffix(observeLast),
-              Set(lastObserved).contains(operatorID)
+        let lastObserved = state.operators.map(\.id).suffix(observeLast)
+        
+        guard Set(lastObserved).contains(operatorID)
         else { return (state, nil) }
         
         effect = .paginate(operatorID, pageSize)
@@ -84,8 +86,8 @@ private extension PrePaymentOptionsReducer {
         
         var state = state
         
-        state.lastPayments = try? latestPayments.get()
-        state.operators = try? operators.get()
+        state.lastPayments = (try? latestPayments.get()) ?? []
+        state.operators = (try? operators.get()) ?? []
         state.isInflight = false
         
         return (state, nil)

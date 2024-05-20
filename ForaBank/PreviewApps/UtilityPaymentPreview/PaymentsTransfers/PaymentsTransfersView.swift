@@ -27,12 +27,12 @@ private extension PaymentsTransfersView {
         
         Button(
             "Utility Payment",
-            action: { viewModel.event(.openUtilityPayment) }
+            action: { viewModel.event(.flow(.utilityFlow(.initiatePrepayment))) }
         )
         .navigationDestination(
             item: .init(
                 get: { viewModel.state.navigationState },
-                set: { if $0 == nil { viewModel.event(.back) }}
+                set: { if $0 == nil { viewModel.event(.flow(.back)) }}
             ),
             content: destinationView
         )
@@ -40,6 +40,56 @@ private extension PaymentsTransfersView {
     
     @ViewBuilder
     func destinationView(
+        navigationState: PaymentsTransfersState.NavigationState
+    ) -> some View {
+        
+        NavStack(
+            stack: .init(
+                get: { viewModel.navState },
+                set: { _ in
+                    #warning(" $0 ???")
+                    viewModel.event(.flow(.back))
+                }
+            ),
+            destinationView: {
+                
+                switch $0 {
+                case let .failure(serviceFailure):
+                    switch serviceFailure {
+                    case .connectivityError:
+                        Text("connectivityError")
+                        
+                    case let .serverError(message):
+                        Text(message)
+                    }
+                    
+                case .payment:
+                    Text("TBD: payment")
+                
+                case .payByInstruction:
+                    Text("TBD: payByInstruction")
+                    
+                case let .prepayment(prepayment):
+                    PrePaymentMockView(
+                        event: { _ in fatalError() },// viewModel.event(.flow(.utilityFlow(.prepayment($0)))) },
+                        addCompany: { viewModel.event(.alienScope(.addCompany)) }
+                    )
+                    
+                case .scan:
+                    Text("TBD: Scan QR")
+                    
+                case let .selectFailure(`operator`):
+                    Text("selectFailure for \(String(describing: `operator`))")
+                    
+                case let .services(services):
+                    Text("TBD: list of \(services)")
+                }
+            }
+        )
+    }
+    
+    @ViewBuilder
+    func destinationViewOLD(
         navigationState: PaymentsTransfersState.NavigationState
     ) -> some View {
         
@@ -52,7 +102,8 @@ private extension PaymentsTransfersView {
             case .failure:
                 factory.prePaymentFailureView {
                     
-                    viewModel.event(.utilityFlow(.prePayment(.payByInstruction)))
+                    // viewModel.event(.utilityFlow(.prePayment(.payByInstruction)))
+                    fatalError()
                 }
                 
             case .success:
@@ -95,6 +146,9 @@ private extension PaymentsTransfersView {
             
         case .scanning:
             Text("TBD: scanning")
+            
+        case .other:
+            Text("Just other destination")
         }
     }
     

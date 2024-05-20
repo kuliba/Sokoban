@@ -7,6 +7,7 @@
 
 import PrePaymentPicker
 
+@available(*, deprecated, message: "use `UtilityFlowReducer`")
 public final class UtilityPaymentFlowReducer<LastPayment, Operator, Response, Service>
 where Operator: Identifiable {
     
@@ -82,8 +83,8 @@ private extension UtilityPaymentFlowReducer {
             case let .loaded(loadLastPaymentsResult, loadOperatorsResult):
                 state.isInflight = false
                 state.current = .prePaymentOptions(.init(
-                    lastPayments: try? loadLastPaymentsResult.get(),
-                    operators: try? loadOperatorsResult.get()
+                    lastPayments: (try? loadLastPaymentsResult.get()) ?? [],
+                    operators: (try? loadOperatorsResult.get()) ?? []
                 ))
                 
             case .initiate:

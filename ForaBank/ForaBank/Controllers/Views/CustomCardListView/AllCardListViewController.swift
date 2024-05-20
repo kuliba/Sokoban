@@ -122,6 +122,7 @@ class AllCardListViewController: UITableViewController {
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! CardTableCell
+            cell.cardView.getUImage = { self.model.images.value[$0]?.uiImage }
             cell.cardView.model = cardModel[indexPath.row]
             return cell
         default:

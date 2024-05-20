@@ -7,6 +7,7 @@
 
 import Foundation
 
+@available(*, deprecated, message: "Use `PrepaymentOptionsEffectHandler` from `UtilityPayment` module")
 public final class PrePaymentOptionsEffectHandler<LastPayment, Operator>
 where Operator: Identifiable {
     
@@ -55,7 +56,7 @@ public extension PrePaymentOptionsEffectHandler {
     typealias LoadLastPayments = (@escaping LoadLastPaymentsCompletion) -> Void
     
     typealias PageSize = Int
-    typealias LoadOperatorsPayload = (Operator.ID, PageSize)
+    typealias LoadOperatorsPayload = (id: Operator.ID, pageSize: PageSize)
     typealias LoadOperatorsResult = Result<[Operator], ServiceFailure>
     typealias LoadOperatorsCompletion = (LoadOperatorsResult) -> Void
     typealias LoadOperators = (LoadOperatorsPayload?, @escaping LoadOperatorsCompletion) -> Void

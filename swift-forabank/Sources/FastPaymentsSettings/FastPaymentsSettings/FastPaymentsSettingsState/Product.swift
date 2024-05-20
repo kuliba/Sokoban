@@ -7,6 +7,7 @@
 
 import Foundation
 import Tagged
+import SwiftUI
 
 public struct Product: Equatable, Identifiable {
     
@@ -73,5 +74,6 @@ public extension Product.Look {
     enum Icon: Equatable {
         
         case svg(String)
+        case image(Image)
     }
 }
