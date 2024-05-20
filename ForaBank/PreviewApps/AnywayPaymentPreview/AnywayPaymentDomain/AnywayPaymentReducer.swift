@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import ForaTools
 import Foundation
 

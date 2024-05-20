@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import SwiftUI
 
 struct ComposedAnywayPaymentView<FieldView, OTPView, ParameterView, ProductPicker>: View
