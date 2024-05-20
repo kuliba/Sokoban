@@ -1026,6 +1026,7 @@ private extension Target {
             // internal modules
             .anywayPaymentCore,
             .anywayPaymentDomain,
+            .foraTools,
             .remoteServices,
             .rxViewModel,
         ],
