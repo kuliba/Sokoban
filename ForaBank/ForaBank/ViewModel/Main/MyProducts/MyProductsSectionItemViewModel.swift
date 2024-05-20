@@ -164,7 +164,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
             
         case .left:
             
-            guard product.productStatus == .active,
+            guard product.productStatus != .notActive,
                   !model.productsVisibilityUpdating.value.contains(id)
                   
             else { return nil }
