@@ -8,11 +8,17 @@
 enum AnywayPaymentEvent: Equatable {
     
     case setValue(String, for: ParameterID)
+    case widget(Widget)
 }
 
 extension AnywayPaymentEvent {
     
     typealias ParameterID = AnywayPayment.Element.Parameter.Field.ID
+    
+    enum Widget: Equatable {
+        
+        case amount(Decimal)
+    }
 }
 
 enum AnywayPaymentEffect: Equatable {}
@@ -31,6 +37,9 @@ extension AnywayPaymentReducer {
         switch event {
         case let .setValue(value, for: parameterID):
             reduce(&state, value, parameterID)
+            
+        case let .widget(widget):
+            reduce(&state, widget)
         }
         
         return (state, nil)
@@ -53,6 +62,16 @@ private extension AnywayPaymentReducer {
     ) {
         state.setValue(value, for: parameterID)
     }
+    
+    func reduce(
+        _ state: inout State,
+        _ widget: Event.Widget
+    ) {
+        switch widget {
+        case let .amount(amount):
+            state.update(with: amount)
+        }
+    }
 }
 
 import ForaTools
@@ -64,13 +83,22 @@ private extension AnywayPayment {
         for parameterID: ParameterID
     ) {
         guard let index = elements.firstIndex(matching: parameterID),
-              case var .parameter(parameter) = elements[index]
+              case let .parameter(parameter) = elements[index]
         else { return }
         
         elements[index] = .parameter(parameter.updating(value: value))
     }
     
     typealias ParameterID = AnywayPayment.Element.Parameter.Field.ID
+    
+    mutating func update(with amount: Decimal) {
+        
+        guard let index = elements.firstIndex(matching: .core),
+              case let .widget(.core(core)) = elements[index]
+        else { return }
+        
+        elements[index] = .widget(.core(core.updating(amount: amount)))
+    }
 }
 
 private extension AnywayPayment.Element.Parameter {
@@ -83,6 +111,14 @@ private extension AnywayPayment.Element.Parameter {
             validation: validation,
             uiAttributes: uiAttributes
         )
+    }
+}
+
+private extension AnywayPayment.Element.Widget.PaymentCore {
+    
+    func updating(amount: Decimal) -> Self {
+        
+        return .init(amount: amount, currency: currency, productID: productID)
     }
 }
 
@@ -103,6 +139,20 @@ private extension Array where Element == AnywayPayment.Element {
     }
     
     typealias ParameterID = AnywayPayment.Element.Parameter.Field.ID
+    
+    func firstIndex(matching id: Element.Widget.ID) -> Index? {
+        
+        firstIndex {
+            
+            switch $0 {
+            case let .widget(widget):
+                return widget.id == id
+                
+            default:
+                return false
+            }
+        }
+    }
 }
 
 private extension AnywayPaymentReducer {}
@@ -187,6 +237,47 @@ final class AnywayPaymentReducerTests: XCTestCase {
         assert(.setValue(value, for: parameterID), on: state, effect: nil)
     }
     
+    // MARK: - widget
+    
+    func test_widget_amount_shouldNotChangeStateOnMissingAmount() {
+        
+        let state = makeEmptyState()
+        
+        assertState(.widget(.amount(anyAmount())), on: state)
+        assertMissingID(state, .core)
+    }
+    
+    func test_widget_amount_shouldNotDeliverEffectOnMissingAmount() {
+        
+        let state = makeEmptyState()
+        
+        assert(.widget(.amount(anyAmount())), on: state, effect: nil)
+        assertMissingID(state, .core)
+    }
+    
+    func test_widget_amount_shouldChangeStateOnAmount() {
+        
+        let core = makeCore()
+        let amount = anyAmount()
+        let state = makeState(elements: [.widget(.core(core))])
+        
+        assertState(.widget(.amount(amount)), on: state) {
+            
+            $0.elements = [.widget(.core(.init(
+                amount: amount,
+                currency: core.currency,
+                productID: core.productID
+            )))]
+        }
+    }
+    
+    func test_widget_amount_shouldNotDeliverEffectOnCore() {
+        
+        let state = makeState(elements: [.widget(.core(makeCore()))])
+        
+        assert(.widget(.amount(anyAmount())), on: state, effect: nil)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = AnywayPaymentReducer
@@ -262,11 +353,31 @@ final class AnywayPaymentReducerTests: XCTestCase {
         XCTAssertFalse(iDs.contains(missingID), "Expected id \(missingID) to be missing but was found in state \(state).", file: file, line: line)
     }
     
+    private func assertMissingID(
+        _ state: State,
+        _ missingID: AnywayPayment.Element.Widget.ID,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let iDs = Set(state.elements.widgets.map(\.id))
+        
+        XCTAssertFalse(iDs.contains(missingID), "Expected id \(missingID) to be missing but was found in state \(state).", file: file, line: line)
+    }
+    
     private func makeParameterID(
         id: String = UUID().uuidString
     ) -> AnywayPayment.Element.Parameter.Field.ID {
         
         .init(id)
+    }
+    
+    private func makeCore(
+        amount: Decimal = anyAmount(),
+        currency: AnywayPayment.Element.Widget.PaymentCore.Currency = "RUB",
+        productID: AnywayPayment.Element.Widget.PaymentCore.ProductID = .accountID(.init(generateRandom11DigitNumber()))
+    ) -> AnywayPayment.Element.Widget.PaymentCore {
+        
+        .init(amount: amount, currency: currency, productID: productID)
     }
     
     private func makeEmptyState(
@@ -295,6 +406,13 @@ final class AnywayPaymentReducerTests: XCTestCase {
     }
 }
 
+private func anyAmount(
+    _ amount: Decimal = .init(generateRandom11DigitNumber())/100
+) -> Decimal {
+    
+    return amount
+}
+
 private extension Array where Element == AnywayPayment.Element {
     
     var parameters: [AnywayPayment.Element.Parameter] {
@@ -304,6 +422,16 @@ private extension Array where Element == AnywayPayment.Element {
             guard case let .parameter(parameter) = $0 else { return nil }
             
             return parameter
+        }
+    }
+    
+    var widgets: [AnywayPayment.Element.Widget] {
+        
+        compactMap {
+            
+            guard case let .widget(widget) = $0 else { return nil }
+            
+            return widget
         }
     }
 }
