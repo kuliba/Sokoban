@@ -15,7 +15,7 @@ public struct AnywayPaymentContext: Equatable {
     
     public init(
         payment: AnywayPayment,
-        staged: AnywayPaymentStaged = .init(),
+        staged: AnywayPaymentStaged,
         outline: AnywayPaymentOutline
     ) {
         self.payment = payment
