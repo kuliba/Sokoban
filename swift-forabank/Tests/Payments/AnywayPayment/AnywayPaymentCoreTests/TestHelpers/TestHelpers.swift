@@ -46,81 +46,100 @@ struct PaymentUpdate: Equatable {
     let value: String
 }
 
+typealias OperationDetailID = Int
+
+typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails>
+typealias _TransactionReport = TransactionReport<DocumentStatus, _OperationInfo>
+typealias _TransactionStatus = TransactionStatus<_TransactionReport>
+
+typealias _Transaction = Transaction<Payment, _TransactionStatus>
+typealias _TransactionEvent = TransactionEvent<_TransactionReport, PaymentEvent, PaymentUpdate>
+typealias _TransactionEffect = TransactionEffect<PaymentDigest, PaymentEffect>
+
+typealias _TransactionReducer = TransactionReducer<_TransactionReport, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate>
+typealias _TransactionEffectHandler = TransactionEffectHandler<_TransactionReport, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
+
+typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
+
+typealias PaymentInitiator = PaymentProcessing
+typealias PaymentMaker = Spy<VerificationCode, _TransactionReport?>
+typealias PaymentProcessing = Spy<PaymentDigest, _TransactionEvent.UpdatePaymentResult>
+
 // MARK: - Factories
 
 func isValid(
-    _ state: Transaction<DocumentStatus, OperationDetails, Payment>
+    _ state: _Transaction
 ) -> Bool {
     
     state.isValid
 }
 
 func isFraudSuspected(
-    _ state: Transaction<DocumentStatus, OperationDetails, Payment>
+    _ state: _Transaction
 ) -> Bool {
     
     state.status == .fraudSuspected
 }
 
 func makeCompletePaymentFailureEvent(
-) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate> {
+) -> _TransactionEvent {
     
     .completePayment(nil)
 }
 
 func makeCompletePaymentReportEvent(
-    _ report: TransactionReport<DocumentStatus, OperationDetails>
-) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate> {
+    _ report: TransactionReport<DocumentStatus, _OperationInfo>
+) -> _TransactionEvent {
     
     .completePayment(report)
 }
 
 func makeContinueTransactionEffect(
     _ digest: PaymentDigest = makePaymentDigest()
-) -> TransactionEffect<PaymentDigest, PaymentEffect> {
+) -> _TransactionEffect {
     
     .continue(digest)
 }
 
 func makeDetailID(
     _ rawValue: Int = generateRandom11DigitNumber()
-) -> TransactionReport<DocumentStatus, OperationDetails>.Details.PaymentOperationDetailID {
+) -> Int {
     
     .init(rawValue)
 }
 
 func makeDetailIDTransactionReport(
-    documentStatus: DocumentStatus = .complete,
+    status: DocumentStatus = .complete,
     _ id: Int = generateRandom11DigitNumber()
-) -> TransactionReport<DocumentStatus, OperationDetails> {
+) -> TransactionReport<DocumentStatus, _OperationInfo> {
     
     .init(
-        documentStatus: documentStatus,
-        details: .paymentOperationDetailID(.init(id))
+        status: status,
+        info: .detailID(.init(id))
     )
 }
 
 func makeFraudCancelTransactionEvent(
-) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate> {
+) -> _TransactionEvent {
     
     .fraud(.cancel)
 }
 
 func makeFraudContinueTransactionEvent(
-) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate> {
+) -> _TransactionEvent {
     
     .fraud(.continue)
 }
 
 func makeFraudExpiredTransactionEvent(
-) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate> {
+) -> _TransactionEvent {
     
     .fraud(.expired)
 }
 
 func makeFraudSuspectedTransaction(
     _ payment: Payment = makePayment()
-) -> Transaction<DocumentStatus, OperationDetails, Payment> {
+) -> _Transaction {
     
     let state = makeTransaction(payment, status: .fraudSuspected)
     precondition(state.status == .fraudSuspected)
@@ -129,14 +148,14 @@ func makeFraudSuspectedTransaction(
 
 func makeInitiateTransactionEffect(
     _ digest: PaymentDigest = makePaymentDigest()
-) -> TransactionEffect<PaymentDigest, PaymentEffect> {
+) -> _TransactionEffect {
     
     .initiatePayment(digest)
 }
 
 func makeInvalidTransaction(
     _ payment: Payment = makePayment()
-) -> Transaction<DocumentStatus, OperationDetails, Payment> {
+) -> _Transaction {
     
     let state = makeTransaction(payment, isValid: false)
     precondition(!isValid(state))
@@ -145,7 +164,7 @@ func makeInvalidTransaction(
 
 func makeNilStatusTransaction(
     _ payment: Payment = makePayment()
-) -> Transaction<DocumentStatus, OperationDetails, Payment> {
+) -> _Transaction {
     
     let state = makeTransaction(payment)
     precondition(state.status == nil)
@@ -154,7 +173,7 @@ func makeNilStatusTransaction(
 
 func makeNonFraudSuspectedTransaction(
     _ payment: Payment = makePayment()
-) -> Transaction<DocumentStatus, OperationDetails, Payment> {
+) -> _Transaction {
     
     let state = makeTransaction(payment)
     precondition(state.status != .fraudSuspected)
@@ -162,24 +181,24 @@ func makeNonFraudSuspectedTransaction(
 }
 
 func makeOperationDetailsTransactionReport(
-    documentStatus: DocumentStatus = .complete,
+    status: DocumentStatus = .complete,
     _ value: String = UUID().uuidString
-) -> TransactionReport<DocumentStatus, OperationDetails> {
+) -> TransactionReport<DocumentStatus, _OperationInfo> {
     
     .init(
-        documentStatus: documentStatus,
-        details: .operationDetails(makeOperationDetails(value))
+        status: status,
+        info: .details(makeOperationDetails(value))
     )
 }
 
 func makeOperationDetailsTransactionReport(
-    documentStatus: DocumentStatus = .complete,
+    status: DocumentStatus = .complete,
     _ operationDetails: OperationDetails
-) -> TransactionReport<DocumentStatus, OperationDetails> {
+) -> TransactionReport<DocumentStatus, _OperationInfo> {
     
     .init(
-        documentStatus: documentStatus,
-        details: .operationDetails(operationDetails)
+        status: status,
+        info: .details(operationDetails)
     )
 }
 
@@ -205,7 +224,7 @@ func makePaymentEffect(
 
 func makePaymentTransactionEffect(
     _ effect: PaymentEffect = makePaymentEffect()
-) -> TransactionEffect<PaymentDigest, PaymentEffect> {
+) -> _TransactionEffect {
     
     .payment(effect)
 }
@@ -217,7 +236,7 @@ func makePaymentEvent(
 }
 
 func makePaymentTransactionEvent(
-) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate> {
+) -> _TransactionEvent {
     
     .payment(.select)
 }
@@ -231,7 +250,7 @@ func makePayment(
 
 func makeTransactionEffect(
     _ verificationCode: VerificationCode = makeVerificationCode()
-) -> TransactionEffect<PaymentDigest, PaymentEffect> {
+) -> _TransactionEffect {
     
     .makePayment(verificationCode)
 }
@@ -239,8 +258,8 @@ func makeTransactionEffect(
 func makeTransaction(
     _ payment: Payment = makePayment(),
     isValid: Bool = false,
-    status: Transaction<DocumentStatus, OperationDetails, Payment>.Status? = nil
-) -> Transaction<DocumentStatus, OperationDetails, Payment> {
+    status: _TransactionStatus? = nil
+) -> _Transaction {
     
     .init(payment: payment, isValid: isValid, status: status)
 }
@@ -248,18 +267,18 @@ func makeTransaction(
 func makeResponse(
     _ documentStatus: DocumentStatus = .complete,
     id: Int = generateRandom11DigitNumber()
-) -> TransactionPerformer<DocumentStatus, OperationDetails>.MakeTransferResponse {
+) -> TransactionPerformer<DocumentStatus, OperationDetailID, OperationDetails>.MakeTransferResponse {
     
     .init(
-        documentStatus: documentStatus,
-        paymentOperationDetailID: .init(id)
+        status: documentStatus,
+        detailID: id
     )
 }
 
 func makeResultFailureTransaction(
     _ payment: Payment = makePayment(),
-    failure: Transaction<DocumentStatus, OperationDetails, Payment>.Status.Terminated = .transactionFailure
-) -> Transaction<DocumentStatus, OperationDetails, Payment> {
+    failure: _TransactionStatus.Terminated = .transactionFailure
+) -> _Transaction {
     
     let state = makeTransaction(payment, status: .result(.failure(failure)))
     precondition(state.status == .result(.failure(failure)))
@@ -268,8 +287,8 @@ func makeResultFailureTransaction(
 
 func makeResultSuccessTransaction(
     _ payment: Payment = makePayment(),
-    report: TransactionReport<DocumentStatus, OperationDetails> = makeDetailIDTransactionReport()
-) -> Transaction<DocumentStatus, OperationDetails, Payment> {
+    report: TransactionReport<DocumentStatus, _OperationInfo> = makeDetailIDTransactionReport()
+) -> _Transaction {
     
     let state = makeTransaction(payment, status: .result(.success(report)))
     precondition(state.status == .result(.success(report)))
@@ -279,7 +298,7 @@ func makeResultSuccessTransaction(
 func makeServerErrorTransaction(
     _ payment: Payment = makePayment(),
     _ message: String = anyMessage()
-) -> Transaction<DocumentStatus, OperationDetails, Payment> {
+) -> _Transaction {
     
     let state = makeTransaction(payment, status: .serverError(message))
     precondition(state.status == .serverError(message))
@@ -288,8 +307,8 @@ func makeServerErrorTransaction(
 
 func makeValidTransaction(
     _ payment: Payment = makePayment(),
-    status: Transaction<DocumentStatus, OperationDetails, Payment>.Status? = nil
-) -> Transaction<DocumentStatus, OperationDetails, Payment> {
+    status: _TransactionStatus? = nil
+) -> _Transaction {
     
     let state = makeTransaction(payment, isValid: true, status: status)
     precondition(isValid(state))
@@ -312,7 +331,7 @@ func makeUpdate(
 
 func makeUpdateFailureTransactionEvent(
     _ message: String? = nil
-) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate> {
+) -> _TransactionEvent {
     
     if let message {
         return .updatePayment(.failure(.serverError(message)))
@@ -323,7 +342,7 @@ func makeUpdateFailureTransactionEvent(
 
 func makeUpdateTransactionEvent(
     _ update: PaymentUpdate = makeUpdate()
-) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate> {
+) -> _TransactionEvent {
     
     .updatePayment(.success(update))
 }

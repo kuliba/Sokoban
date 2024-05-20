@@ -7,7 +7,7 @@
 
 import AnywayPaymentDomain
 
-public final class TransactionEffectHandler<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate> {
+public final class TransactionEffectHandler<TransactionReport, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate> {
     
     private let microServices: MicroServices
     
@@ -41,11 +41,11 @@ public extension TransactionEffectHandler {
 
 public extension TransactionEffectHandler {
     
-    typealias MicroServices = TransactionEffectHandlerMicroServices<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
+    typealias MicroServices = TransactionEffectHandlerMicroServices<TransactionReport, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate>
+    typealias Event = TransactionEvent<TransactionReport, PaymentEvent, PaymentUpdate>
     typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
 

@@ -7,6 +7,7 @@
 
 import AnywayPaymentDomain
 
+#warning("rename to PaymentDigestor")
 public struct PaymentInspector<Payment, PaymentDigest> {
     
     public let checkFraud: CheckFraud
