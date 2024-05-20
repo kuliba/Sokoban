@@ -17,20 +17,9 @@ struct TransactionView: View {
         List {
             
             Section {
-                button("complete with failure", .completePayment(nil))
-                    .foregroundColor(.red)
-                
-                button("complete", .completePayment(.init(status: .completed, info: .detailID(123))))
-                button("inflight", .completePayment(.init(status: .inflight, info: .detailID(123))))
-                button("reject", .completePayment(.init(status: .rejected, info: .detailID(123))))
+                button("payment", .payment(.anEvent))
             } header: {
-                Text("complete Payment event")
-            }
-            
-            Section {
-                button("Continue", .continue)
-            } header: {
-                Text("Continue")
+                Text("payment")
             }
             
             Section {
@@ -48,15 +37,31 @@ struct TransactionView: View {
             }
             
             Section {
-                button("initiatePayment", .initiatePayment)
+                button("Continue", .continue)
             } header: {
-                Text("initiate Payment")
+                Text("Continue")
+            }
+            
+            Section {} header: {
+                Text("\"Effect\" (non-UI) events")
+                    .foregroundColor(.orange)
             }
             
             Section {
-                button("payment", .payment(.anEvent))
+                button("complete with failure", .completePayment(nil))
+                    .foregroundColor(.red)
+                
+                button("complete", .completePayment(.init(status: .completed, info: .detailID(123))))
+                button("inflight", .completePayment(.init(status: .inflight, info: .detailID(123))))
+                button("reject", .completePayment(.init(status: .rejected, info: .detailID(123))))
             } header: {
-                Text("payment")
+                Text("complete Payment event")
+            }
+            
+            Section {
+                button("initiatePayment", .initiatePayment)
+            } header: {
+                Text("initiate Payment")
             }
             
             Section {
@@ -69,6 +74,7 @@ struct TransactionView: View {
                 Text("update Payment")
             }
         }
+        .listStyle(.grouped)
     }
     
     private func button(
