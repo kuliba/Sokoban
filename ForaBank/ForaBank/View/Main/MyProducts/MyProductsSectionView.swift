@@ -20,8 +20,11 @@ struct MyProductsSectionView: View {
             header()
             if viewModel.groupingCards.isEmpty {
                 itemsList(viewModel.items)
+                    .modifier(HideSeparatorModifier())
+
             } else {
                 itemsList(viewModel.itemsId)
+                    .modifier(HideSeparatorModifier())
             }
         }
         .background(Color.barsBars)
@@ -62,8 +65,12 @@ extension MyProductsSectionView {
                 switch item {
                 case let .item(itemVM):
                     itemView(itemVM)
+                        .modifier(HideSeparatorModifier())
+
                 case .placeholder:
                     placeholderView()
+                        .modifier(HideSeparatorModifier())
+
                 }
             }
             .onMove { indexes, destination in
@@ -92,13 +99,15 @@ extension MyProductsSectionView {
                     
                     if products.count == 1, let productData = products.first {
                         itemView(viewModel.createSectionItemViewModel(productData))
+                            .modifier(HideSeparatorModifier())
+
                     } else {
                         _itemsList(products.compactMap {
                             if $0.id != id {
                                 return viewModel.createSectionItemViewModel($0)
                             } else { return nil}
                         }, id)
-                        .listRowInsets(EdgeInsets())
+                        .modifier(HideSeparatorModifier())
                     }
                 }
             }
@@ -127,7 +136,7 @@ extension MyProductsSectionView {
             
             ForEach(items, id: \.id) { item in
                 itemView(item)
-                    .listRowInsets(EdgeInsets())
+                    .modifier(HideSeparatorModifier())
             }
             .onMove { indexes, destination in
                 guard let first = indexes.first else { return }
@@ -142,6 +151,7 @@ extension MyProductsSectionView {
         .environment(\.editMode, $editMode)
         .id(mainProductID)
         .listRowBackground(Color.barsBars)
+        .border(width: 2, edges: [.top, .bottom], color: .blurMediumGray30)
     }
     
     private func itemView(
@@ -150,6 +160,7 @@ extension MyProductsSectionView {
         
         return MyProductsSectionItemView(viewModel: itemModel, editMode: $editMode, openProfile: { viewModel.openProfile(productID: itemModel.id)})
             .modifier(ItemModifier(viewModel: itemModel, editMode: editMode))
+            .modifier(HideSeparatorModifier())
     }
     
     private func placeholderView() -> some View {
@@ -219,9 +230,6 @@ private extension MyProductsSectionView {
             
             if #available(iOS 15.0, *) {
                 content
-                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    .listSectionSeparator(.hidden, edges: .bottom)
-                    .listRowSeparatorTint(.mainColorsGrayMedium.opacity(0.6))
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         
                         if let actionButtonViewModel = viewModel.actionButton(for: .init(with: .trailing)) {
@@ -241,7 +249,6 @@ private extension MyProductsSectionView {
                     .listRowBackground(Color.barsBars)
             } else {
                 content
-                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     .frame(height: 72, alignment: .bottomLeading)
                     .listRowBackground(Color.barsBars)
                     .modifier(
@@ -267,16 +274,28 @@ private extension MyProductsSectionView {
         
         func body(content: Content) -> some View {
             
+            content
+                .listRowBackground(Color.barsBars)
+        }
+    }
+}
+
+private extension MyProductsSectionView {
+    
+    struct HideSeparatorModifier : ViewModifier {
+        
+        func body(content: Content) -> some View {
+            
             if #available(iOS 15.0, *) {
                 content
-                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    .listSectionSeparator(.hidden, edges: .bottom)
-                    .listRowSeparatorTint(.mainColorsGrayMedium.opacity(0.6))
-                    .listRowBackground(Color.barsBars)
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
+                    .border(width: 0.5, edges: [.top], color: .blurMediumGray30)
             } else {
                 content
-                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    .listRowBackground(Color.barsBars)
+                    .listRowInsets(EdgeInsets())
+                    .background(Color(UIColor.systemBackground))
+                    .border(width: 0.5, edges: [.top], color: .blurMediumGray30)
             }
         }
     }

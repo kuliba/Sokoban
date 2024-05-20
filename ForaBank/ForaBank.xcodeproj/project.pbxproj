@@ -2243,6 +2243,7 @@
 		8362FB0529DEFA050094457E /* SearchCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362FB0429DEFA050094457E /* SearchCityView.swift */; };
 		83660CEE2AD92CF80001B786 /* CVVPinErrorMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83660CED2AD92CF80001B786 /* CVVPinErrorMapper.swift */; };
 		83660CF02AD940EC0001B786 /* CvvPInErrorMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83660CEF2AD940EC0001B786 /* CvvPInErrorMapperTests.swift */; };
+		83676AF02BFB99B9004B614C /* View+border.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83676AEF2BFB99B9004B614C /* View+border.swift */; };
 		836DE2EC2AC72A7C00D4C754 /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 836DE2EB2AC72A7C00D4C754 /* Tagged */; };
 		836DE2EE2ACAE86C00D4C754 /* C2BSubscribeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836DE2ED2ACAE86C00D4C754 /* C2BSubscribeFactory.swift */; };
 		8376CE542AA7395000DCDE63 /* LandingUIComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 8376CE532AA7395000DCDE63 /* LandingUIComponent */; };
@@ -5091,6 +5092,7 @@
 		8362FB0429DEFA050094457E /* SearchCityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCityView.swift; sourceTree = "<group>"; };
 		83660CED2AD92CF80001B786 /* CVVPinErrorMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPinErrorMapper.swift; sourceTree = "<group>"; };
 		83660CEF2AD940EC0001B786 /* CvvPInErrorMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvPInErrorMapperTests.swift; sourceTree = "<group>"; };
+		83676AEF2BFB99B9004B614C /* View+border.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+border.swift"; sourceTree = "<group>"; };
 		836DE2ED2ACAE86C00D4C754 /* C2BSubscribeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C2BSubscribeFactory.swift; sourceTree = "<group>"; };
 		83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVButtonEvent.swift; sourceTree = "<group>"; };
 		83808C462B8DB97C00E9F7BF /* AlertModelOf+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlertModelOf+ext.swift"; sourceTree = "<group>"; };
@@ -12164,6 +12166,7 @@
 				ED0AF88E286B68B900F86B68 /* UIImage+Extensions.swift */,
 				509EE0E3285F8599002281BF /* Publishers+Extension.swift */,
 				509EE0DA285F820E002281BF /* View+Extension.swift */,
+				83676AEF2BFB99B9004B614C /* View+border.swift */,
 				2A65FB3B2B4E62DF00A84F9E /* View+loader.swift */,
 				2A8CC2482B29FA5A00191B8E /* View+navigationBar.swift */,
 				509EE0DC285F8313002281BF /* Notification+Extension.swift */,
@@ -18025,6 +18028,7 @@
 				F63D473F220AD92D6D04C8DD /* AvtodorDetailsFormController.swift in Sources */,
 				C1097D922947188C002459F6 /* BicAccountCheck.swift in Sources */,
 				F63D4543C2BD628A0BFB42EA /* AvtodorDetailsFormViewModel.swift in Sources */,
+				83676AF02BFB99B9004B614C /* View+border.swift in Sources */,
 				504748742856752D0007128F /* OpenAccountPerformViewComponent.swift in Sources */,
 				2A7688D12AF3900500045293 /* LoggingLoaderDecorator+CustomStringConvertible.swift in Sources */,
 				F63D41C3BB407DA15542F98F /* GIBDDFineDetailsFormController.swift in Sources */,
