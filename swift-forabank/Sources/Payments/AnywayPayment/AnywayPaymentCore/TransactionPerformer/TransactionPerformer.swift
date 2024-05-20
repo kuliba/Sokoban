@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 24.03.2024.
 //
 
-public final class TransactionPerformer<DocumentStatus, OperationDetails> {
+import AnywayPaymentDomain
+
+public final class TransactionPerformer<DocumentStatus, OperationDetailID, OperationDetails> {
     
     private let getDetails: GetDetails
     private let makeTransfer: MakeTransfer
@@ -42,39 +44,39 @@ public extension TransactionPerformer {
 
 public extension TransactionPerformer {
     
-    typealias Report = TransactionReport<DocumentStatus, OperationDetails>
-    typealias PaymentOperationDetailID = Report.Details.PaymentOperationDetailID
+    typealias Report = TransactionReport<DocumentStatus, _OperationInfo>
+    typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails>
     
     typealias GetDetailsResult = OperationDetails?
     typealias GetDetailsCompletion = (GetDetailsResult) -> Void
-    typealias GetDetails = (PaymentOperationDetailID, @escaping GetDetailsCompletion) -> Void
+    typealias GetDetails = (OperationDetailID, @escaping GetDetailsCompletion) -> Void
     
     typealias MakeTransferResult = MakeTransferResponse?
     typealias MakeTransferCompletion = (MakeTransferResult) -> Void
     typealias MakeTransfer = (VerificationCode, @escaping MakeTransferCompletion) -> Void
     
-    typealias ProcessResult = TransactionReport<DocumentStatus, OperationDetails>?
+    typealias ProcessResult = TransactionReport<DocumentStatus, OperationInfo<OperationDetailID, OperationDetails>>?
     typealias Completion = (ProcessResult) -> Void
 }
 
 extension TransactionPerformer {
-    
+#warning("reuse generic TransactionReport")
     public struct MakeTransferResponse {
         
-        public let documentStatus: DocumentStatus
-        public let paymentOperationDetailID: PaymentOperationDetailID
+        public let status: DocumentStatus
+        public let detailID: OperationDetailID
         
         public init(
-            documentStatus: DocumentStatus,
-            paymentOperationDetailID: PaymentOperationDetailID
+            status: DocumentStatus,
+            detailID: OperationDetailID
         ) {
-            self.documentStatus = documentStatus
-            self.paymentOperationDetailID = paymentOperationDetailID
+            self.status = status
+            self.detailID = detailID
         }
     }
 }
 
-extension TransactionPerformer.MakeTransferResponse: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable {}
+extension TransactionPerformer.MakeTransferResponse: Equatable where DocumentStatus: Equatable, OperationDetailID: Equatable, OperationDetails: Equatable {}
 
 private extension TransactionPerformer {
     
@@ -82,30 +84,33 @@ private extension TransactionPerformer {
         _ response: MakeTransferResponse,
         _ completion: @escaping Completion
     ) {
-        getDetails(response.paymentOperationDetailID) { [weak self] in
+        getDetails(response.detailID) { [weak self] in
             
             guard self != nil else { return }
             
-            completion(.init(response: response, operationDetails: $0))
+            completion(response.makeTransactionReport(with: $0))
         }
     }
 }
 
-private extension TransactionReport {
+private extension TransactionPerformer.MakeTransferResponse {
     
-    init(
-        response: TransactionPerformer<DocumentStatus, OperationDetails>.MakeTransferResponse,
-        operationDetails: OperationDetails?
-    ) {
+    func makeTransactionReport(
+        with operationDetails: OperationDetails?
+    ) -> TransactionReport<DocumentStatus, OperationInfo<OperationDetailID, OperationDetails>> {
+        
         switch operationDetails {
         case .none:
-            self.documentStatus = response.documentStatus
-            self.details = .paymentOperationDetailID(response.paymentOperationDetailID)
-            
+            return .init(
+                status: status,
+                info: .detailID(detailID)
+            )
             
         case let .some(operationDetails):
-            self.documentStatus = response.documentStatus
-            self.details = .operationDetails(operationDetails)
+            return .init(
+                status: status,
+                info: .details(operationDetails)
+            )
         }
     }
 }

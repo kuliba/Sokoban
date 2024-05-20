@@ -114,14 +114,20 @@ extension RootViewModelFactory {
             isActive: utilitiesPaymentsFlag.isActive
         )
         
-        let paymentsTransfersFlowComposer = PaymentsTransfersFlowComposer(
-            httpClient: httpClient,
+#warning("add to settings(?)")
+        let pageSize = 20
+#warning("add to settings")
+        let observeLast = 5
+        let ptFlowComposer = PaymentsTransfersFlowComposer(
+            flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
-            log: infoNetworkLog
+            httpClient: httpClient,
+            log: infoNetworkLog,
+            pageSize: pageSize,
+            observeLast: observeLast
         )
-        let paymentsTransfersFlowManager = paymentsTransfersFlowComposer.makeFlowManager(
-            flag: utilitiesPaymentsFlag.optionOrStub
-        )
+        let paymentsTransfersFlowManager = ptFlowComposer.compose()
+        
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,

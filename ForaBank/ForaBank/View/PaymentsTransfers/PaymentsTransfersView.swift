@@ -455,12 +455,12 @@ private extension PaymentsTransfersView {
     }
     
     func operatorFailureView(
-        operatorFailure: UtilityFlowState.Destination.OperatorFailureFlowState,
+        operatorFailure: OperatorFailure,
         payByInstructions: @escaping () -> Void,
         dismissDestination: @escaping () -> Void
     ) -> some View {
         
-        OperatorFailureFlowView(
+        SberOperatorFailureFlowView(
             state: operatorFailure,
             event: dismissDestination,
             content: {
@@ -534,6 +534,7 @@ private extension PaymentsTransfersView {
         }
     }
     
+    @ViewBuilder
     func paymentFlowFullScreenCoverView(
         fullScreenCover: UtilityServiceFlowState.FullScreenCover
     ) -> some View {
@@ -600,15 +601,18 @@ private extension PaymentsTransfersView {
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
+    typealias Content = UtilityPrepaymentViewModel
+    typealias PaymentViewModel = ObservingPaymentFlowMockViewModel
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
     
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
     
-    typealias OperatorFailure = UtilityFlowState.Destination.OperatorFailureFlowState
-    typealias ServicePickerState = UtilityFlowState.Destination.ServicePickerFlowState
+    typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
     
-    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<ObservingPaymentFlowMockViewModel>
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, UtilityService, PaymentViewModel>
+    
+    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<PaymentViewModel>
 }
 
 extension UtilityServicePaymentFlowState.Alert: Identifiable {

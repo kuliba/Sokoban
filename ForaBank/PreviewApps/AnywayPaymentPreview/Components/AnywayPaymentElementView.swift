@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 12.04.2024.
 //
 
-import AnywayPaymentCore
+import AnywayPaymentDomain
 import SwiftUI
 
 struct AnywayPaymentElementView<FieldView, ParameterView, WidgetView>: View

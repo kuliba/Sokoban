@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import XCTest
 
 final class AnywayPaymentUpdateTests: XCTestCase {
@@ -840,7 +841,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     private func updatePayment(
         _ payment: AnywayPayment,
         with update: AnywayPaymentUpdate,
-        and outline: AnywayPayment.Outline = makeAnywayPaymentOutline()
+        and outline: AnywayPaymentOutline = makeAnywayPaymentOutline()
     ) -> AnywayPayment {
         
         payment.update(with: update, and: outline)

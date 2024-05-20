@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 16.04.2024.
 //
 
-import AnywayPaymentCore
+import AnywayPaymentDomain
 import SwiftUI
 
 struct ComposedAnywayPaymentViewFactory<FieldView, OTPView, ParameterView, ProductPicker> {

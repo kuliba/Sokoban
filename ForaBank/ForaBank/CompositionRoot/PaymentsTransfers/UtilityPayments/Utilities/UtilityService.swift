@@ -7,12 +7,14 @@
 
 import Foundation
 
-struct UtilityService: Equatable, Identifiable {
+struct UtilityService: Equatable {
     
-    let id: String
-    
-    init(id: String = UUID().uuidString) {
-     
-        self.id = id
-    }
+    let name: String
+    let puref: String
 }
+
+extension UtilityService: Identifiable {
+    
+    var id: String { puref }
+}
+

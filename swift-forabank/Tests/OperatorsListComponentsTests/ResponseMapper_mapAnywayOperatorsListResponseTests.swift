@@ -92,9 +92,9 @@ final class ResponseMapper_mapAnywayOperatorsListResponseTests: XCTestCase {
 private extension SberOperator {
     
     static let `default`: Self = .init(
-        icon: "md5hash",
+        id: UUID().uuidString,
         inn: "ИНН description",
+        md5Hash: "md5hash",
         title: "title"
     )
 }
-

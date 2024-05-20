@@ -7,6 +7,7 @@
 
 import AnywayPaymentAdapters
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import RemoteServices
 import XCTest
 

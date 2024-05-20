@@ -28,7 +28,7 @@ public extension ResponseMapper {
             
             guard let title = $0.juridicalName else { return nil }
             
-            return .init(icon: $0.md5hash, inn: $0.inn, title: title)
+            return .init(id: $0.customerId, inn: $0.inn, md5Hash: $0.md5hash, title: title)
         }
     }
 }

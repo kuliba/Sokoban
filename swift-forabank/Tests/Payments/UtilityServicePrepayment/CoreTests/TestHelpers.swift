@@ -68,48 +68,28 @@ func makeOperatorID(
     return id
 }
 
-func makePageSize() -> Int {
-    
-    Int.random(in: 1...(.max))
-}
-
 func makePaginateEffect(
     operatorID: Operator.ID = makeOperatorID(),
-    pageSize: Int = makePageSize(),
     searchText: String = ""
 ) -> Effect {
     
     .paginate(makePaginatePayload(
         operatorID: operatorID,
-        pageSize: pageSize,
         searchText: searchText
     ))
 }
 
 func makePaginatePayload(
     operatorID: Operator.ID = makeOperatorID(),
-    pageSize: Int = makePageSize(),
     searchText: String = ""
 ) -> PaginatePayload<Operator.ID> {
     
-    .init(operatorID: operatorID, pageSize: pageSize, searchText: searchText)
+    .init(operatorID: operatorID, searchText: searchText)
 }
 
 func makeSearchEffect(
-    pageSize: Int = makePageSize(),
     searchText: String = ""
 ) -> Effect {
     
-    .search(makeSearchPayload(
-        pageSize: pageSize,
-        searchText: searchText
-    ))
-}
-
-func makeSearchPayload(
-    pageSize: Int = makePageSize(),
-    searchText: String = ""
-) -> SearchPayload {
-    
-    .init(pageSize: pageSize, searchText: searchText)
+    .search(searchText)
 }

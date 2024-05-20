@@ -7,6 +7,7 @@
 
 import AnywayPaymentBackend
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import RemoteServices
 
 public extension AnywayPaymentUpdate {

@@ -11,7 +11,7 @@ import OperatorsListComponents
 
 extension Services {
     
-    typealias GetAllPaymentsResult = [ResponseMapper.LatestPayment]
+    typealias GetAllPaymentsResult = [ResponseMapper.LatestServicePayment]
     typealias GetAllPaymentsService = RemoteServiceOf<LatestPaymentKind, GetAllPaymentsResult>
     
     static func getAllLatestPayments(
@@ -19,7 +19,7 @@ extension Services {
     ) -> GetAllPaymentsService {
         
         return .init(
-            createRequest: RequestFactory.getAllLatestPaymentRequest(_:),
+            createRequest: RequestFactory.getAllLatestPaymentsRequest(_:),
             performRequest: httpClient.performRequest,
             mapResponse: ResponseMapper.mapGetAllLatestPaymentsResponse
         )

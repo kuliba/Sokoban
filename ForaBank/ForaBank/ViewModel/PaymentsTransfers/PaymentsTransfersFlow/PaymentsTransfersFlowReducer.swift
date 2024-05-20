@@ -220,8 +220,8 @@ private extension PaymentsTransfersFlowReducer {
             state.setUtilityServicePickerDestination(to: nil)
             
         case let .initiated(payload):
-            let viewModel = factory.makeUtilityPrepaymentViewModel(payload)
-            state.destination = .utilityPayment(.init(content: viewModel))
+            let utilityPrepaymentState = factory.makeUtilityPrepaymentState(payload)
+            state.destination = .utilityPayment(utilityPrepaymentState)
             
         case .payByInstructions:
             payByInstructions(&state)
@@ -324,14 +324,14 @@ private extension PaymentsTransfersFlowReducer {
         _ state: inout State,
         with response: StartPaymentResponse
     ) {
-        let paymentViewModel = factory.makeUtilityPaymentViewModel(response, notify)
+        let utilityPaymentState = factory.makeUtilityPaymentState(response, notify)
         
         switch state.utilityPrepaymentDestination {
         case .none:
-            state.setUtilityPrepaymentDestination(to: .payment(.init(viewModel: paymentViewModel)))
+            state.setUtilityPrepaymentDestination(to: .payment(utilityPaymentState))
             
         case .servicePicker:
-            state.setUtilityServicePickerDestination(to: .payment(.init(viewModel: paymentViewModel)))
+            state.setUtilityServicePickerDestination(to: .payment(utilityPaymentState))
             
         default:
             break
@@ -378,7 +378,7 @@ private extension PaymentsTransfersFlowEffect {
 
 private extension PaymentsTransfersViewModel._Route {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
 
     var utilityPrepayment: UtilityFlowState? {
         
@@ -411,7 +411,7 @@ private extension PaymentsTransfersViewModel._Route {
         self.destination = .utilityPayment(utilityPrepayment)
     }
     
-    typealias OperatorFailure = UtilityFlowState.Destination.OperatorFailureFlowState
+    typealias OperatorFailure = SberOperatorFailureFlowState<Operator>
     
     private var operatorFailure: OperatorFailure? {
         
@@ -430,7 +430,7 @@ private extension PaymentsTransfersViewModel._Route {
         self.setUtilityPrepaymentDestination(to: .operatorFailure(operatorFailure))
     }
     
-    typealias ServicePickerState = UtilityFlowState.Destination.ServicePickerFlowState
+    typealias ServicePickerState = UtilityServicePickerFlowState<Operator, UtilityService, PaymentViewModel>
     
     private var servicePicker: ServicePickerState? {
         
