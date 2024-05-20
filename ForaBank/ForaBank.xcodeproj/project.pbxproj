@@ -1091,6 +1091,16 @@
 		2ACF584E29AA2FAA00737902 /* OptionSelectorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */; };
 		2ACF585129AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF585029AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift */; };
 		2ACFE0412A85FA8B00EBAA3A /* ForaCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 2ACFE0402A85FA8B00EBAA3A /* ForaCrypto */; };
+		2AD092912BFA30A100777EE4 /* TransactionPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */; };
+		2AD092932BFA30A100777EE4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092922BFA30A100777EE4 /* ContentView.swift */; };
+		2AD092952BFA30A200777EE4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AD092942BFA30A200777EE4 /* Assets.xcassets */; };
+		2AD092982BFA30A200777EE4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AD092972BFA30A200777EE4 /* Preview Assets.xcassets */; };
+		2AD0929F2BFA322300777EE4 /* AnywayPayment in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD0929E2BFA322300777EE4 /* AnywayPayment */; };
+		2AD092A12BFA322800777EE4 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD092A02BFA322800777EE4 /* RxViewModel */; };
+		2AD092A32BFA323A00777EE4 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD092A22BFA323A00777EE4 /* CombineSchedulers */; };
+		2AD092A52BFA324100777EE4 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD092A42BFA324100777EE4 /* UIPrimitives */; };
+		2AD092A72BFA324900777EE4 /* ForaTools in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD092A62BFA324900777EE4 /* ForaTools */; };
+		2AD092A92BFA327C00777EE4 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD092A82BFA327C00777EE4 /* PaymentComponents */; };
 		2AD0F68F2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F68E2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift */; };
 		2AD0F6912BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6902BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift */; };
 		2AD0F6932BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6922BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift */; };
@@ -3935,6 +3945,11 @@
 		2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteStepAbroadParametersMapperTests.swift; sourceTree = "<group>"; };
 		2ACF584D29AA2FAA00737902 /* OptionSelectorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewModelTests.swift; sourceTree = "<group>"; };
 		2ACF585029AA3D1A00737902 /* ProductCarouselViewViewModelContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCarouselViewViewModelContentTests.swift; sourceTree = "<group>"; };
+		2AD0928E2BFA30A100777EE4 /* TransactionPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TransactionPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionPreviewApp.swift; sourceTree = "<group>"; };
+		2AD092922BFA30A100777EE4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2AD092942BFA30A200777EE4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2AD092972BFA30A200777EE4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2AD0F68E2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementWidgetViewFactory.swift; sourceTree = "<group>"; };
 		2AD0F6902BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementViewFactory.swift; sourceTree = "<group>"; };
 		2AD0F6922BCEA40D007EC720 /* AnywayPaymentElementViewFactory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentElementViewFactory+preview.swift"; sourceTree = "<group>"; };
@@ -5689,6 +5704,19 @@
 			files = (
 				2A95CBB32B2C818A0041F5EC /* TextFieldComponent in Frameworks */,
 				2A95CBB12B2C80C80041F5EC /* SberQR in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2AD0928B2BFA30A100777EE4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2AD0929F2BFA322300777EE4 /* AnywayPayment in Frameworks */,
+				2AD092A92BFA327C00777EE4 /* PaymentComponents in Frameworks */,
+				2AD092A12BFA322800777EE4 /* RxViewModel in Frameworks */,
+				2AD092A72BFA324900777EE4 /* ForaTools in Frameworks */,
+				2AD092A52BFA324100777EE4 /* UIPrimitives in Frameworks */,
+				2AD092A32BFA323A00777EE4 /* CombineSchedulers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9135,6 +9163,25 @@
 			path = ProductCarouselViewComponentTests;
 			sourceTree = "<group>";
 		};
+		2AD0928F2BFA30A100777EE4 /* TransactionPreview */ = {
+			isa = PBXGroup;
+			children = (
+				2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */,
+				2AD092922BFA30A100777EE4 /* ContentView.swift */,
+				2AD092942BFA30A200777EE4 /* Assets.xcassets */,
+				2AD092962BFA30A200777EE4 /* Preview Content */,
+			);
+			path = TransactionPreview;
+			sourceTree = "<group>";
+		};
+		2AD092962BFA30A200777EE4 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				2AD092972BFA30A200777EE4 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		2AD389302BEB3333007E0298 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -9309,6 +9356,7 @@
 				2A20F8CD2B05E1D000E3AE79 /* SberQRPreview */,
 				C1F346D42AE25C6000EE1E87 /* StickerPreview */,
 				2A14A8532A2750450018511E /* TextFieldViewVithBindingPreview */,
+				2AD0928F2BFA30A100777EE4 /* TransactionPreview */,
 				2A5097E62B946A3C00CE3242 /* UtilityPaymentPreview */,
 				2A69C1AB2BE4E3AF00FE91B0 /* UtilityServicePaymentFlowPreview */,
 			);
@@ -13766,6 +13814,7 @@
 				2AD87D892BD77859004D06C0 /* NavStackPreview.app */,
 				2A62E9602BD94F870044EB39 /* FactoryBasedPreview.app */,
 				2A69C1AA2BE4E3AF00FE91B0 /* UtilityServicePaymentFlowPreview.app */,
+				2AD0928E2BFA30A100777EE4 /* TransactionPreview.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -14805,6 +14854,31 @@
 			productReference = 2A95CBA02B2C80560041F5EC /* DecimalTextFieldPreview.app */;
 			productType = "com.apple.product-type.application";
 		};
+		2AD0928D2BFA30A100777EE4 /* TransactionPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2AD0929D2BFA30A200777EE4 /* Build configuration list for PBXNativeTarget "TransactionPreview" */;
+			buildPhases = (
+				2AD0928A2BFA30A100777EE4 /* Sources */,
+				2AD0928B2BFA30A100777EE4 /* Frameworks */,
+				2AD0928C2BFA30A100777EE4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TransactionPreview;
+			packageProductDependencies = (
+				2AD0929E2BFA322300777EE4 /* AnywayPayment */,
+				2AD092A02BFA322800777EE4 /* RxViewModel */,
+				2AD092A22BFA323A00777EE4 /* CombineSchedulers */,
+				2AD092A42BFA324100777EE4 /* UIPrimitives */,
+				2AD092A62BFA324900777EE4 /* ForaTools */,
+				2AD092A82BFA327C00777EE4 /* PaymentComponents */,
+			);
+			productName = TransactionPreview;
+			productReference = 2AD0928E2BFA30A100777EE4 /* TransactionPreview.app */;
+			productType = "com.apple.product-type.application";
+		};
 		2AD87D882BD77859004D06C0 /* NavStackPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2AD87D982BD7785B004D06C0 /* Build configuration list for PBXNativeTarget "NavStackPreview" */;
@@ -15190,6 +15264,9 @@
 					2A95CB9F2B2C80560041F5EC = {
 						CreatedOnToolsVersion = 15.0.1;
 					};
+					2AD0928D2BFA30A100777EE4 = {
+						CreatedOnToolsVersion = 15.3;
+					};
 					2AD87D882BD77859004D06C0 = {
 						CreatedOnToolsVersion = 15.3;
 					};
@@ -15293,6 +15370,7 @@
 				2AD87D882BD77859004D06C0 /* NavStackPreview */,
 				2A62E95F2BD94F870044EB39 /* FactoryBasedPreview */,
 				2A69C1A92BE4E3AF00FE91B0 /* UtilityServicePaymentFlowPreview */,
+				2AD0928D2BFA30A100777EE4 /* TransactionPreview */,
 			);
 		};
 /* End PBXProject section */
@@ -15385,6 +15463,15 @@
 			files = (
 				2A95CBAA2B2C80580041F5EC /* Preview Assets.xcassets in Resources */,
 				2A95CBA72B2C80580041F5EC /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2AD0928C2BFA30A100777EE4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2AD092982BFA30A200777EE4 /* Preview Assets.xcassets in Resources */,
+				2AD092952BFA30A200777EE4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -16197,6 +16284,15 @@
 			files = (
 				2A95CBA52B2C80560041F5EC /* ContentView.swift in Sources */,
 				2A95CBA32B2C80560041F5EC /* DecimalTextFieldPreviewApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2AD0928A2BFA30A100777EE4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2AD092932BFA30A100777EE4 /* ContentView.swift in Sources */,
+				2AD092912BFA30A100777EE4 /* TransactionPreviewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -19741,6 +19837,147 @@
 			};
 			name = Preprod;
 		};
+		2AD092992BFA30A200777EE4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/TransactionPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.TransactionPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2AD0929A2BFA30A200777EE4 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/TransactionPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.TransactionPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		2AD0929B2BFA30A200777EE4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/TransactionPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.TransactionPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2AD0929C2BFA30A200777EE4 /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/TransactionPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photoigor.TransactionPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
+		};
 		2AD87D942BD7785B004D06C0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -21656,6 +21893,17 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		2AD0929D2BFA30A200777EE4 /* Build configuration list for PBXNativeTarget "TransactionPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2AD092992BFA30A200777EE4 /* Debug */,
+				2AD0929A2BFA30A200777EE4 /* Mock */,
+				2AD0929B2BFA30A200777EE4 /* Release */,
+				2AD0929C2BFA30A200777EE4 /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		2AD87D982BD7785B004D06C0 /* Build configuration list for PBXNativeTarget "NavStackPreview" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -22259,6 +22507,31 @@
 		2ACFE0402A85FA8B00EBAA3A /* ForaCrypto */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ForaCrypto;
+		};
+		2AD0929E2BFA322300777EE4 /* AnywayPayment */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AnywayPayment;
+		};
+		2AD092A02BFA322800777EE4 /* RxViewModel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RxViewModel;
+		};
+		2AD092A22BFA323A00777EE4 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
+		};
+		2AD092A42BFA324100777EE4 /* UIPrimitives */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIPrimitives;
+		};
+		2AD092A62BFA324900777EE4 /* ForaTools */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ForaTools;
+		};
+		2AD092A82BFA327C00777EE4 /* PaymentComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PaymentComponents;
 		};
 		2AD7EBDE2B0CB292009FDCAB /* ButtonWithSheet */ = {
 			isa = XCSwiftPackageProductDependency;
