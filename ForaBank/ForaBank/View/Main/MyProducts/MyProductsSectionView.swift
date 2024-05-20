@@ -119,7 +119,7 @@ extension MyProductsSectionView {
             }
             .moveDisabled(editMode != .active)
         }
-        .frame(height: viewModel.isCollapsed ? 0 : 72 * CGFloat(viewModel.items.count) + 0)
+        .frame(height: viewModel.isCollapsed ? 0 : 72 * CGFloat(viewModel.countCards()) + 0)
         .listStyle(.plain)
         .environment(\.editMode, $editMode)
         .opacity(viewModel.isCollapsed ? 0 : 1)
