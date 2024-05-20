@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 20.05.2024.
 //
 
+import Tagged
+
 enum AnywayPaymentEvent: Equatable {
     
     case setValue(String, for: ParameterID)
@@ -18,6 +20,21 @@ extension AnywayPaymentEvent {
     enum Widget: Equatable {
         
         case amount(Decimal)
+        case product(ProductID, Currency)
+    }
+}
+
+extension AnywayPaymentEvent.Widget {
+    
+    typealias Currency = AnywayPayment.Element.Widget.PaymentCore.Currency
+    typealias ProductID = AnywayPayment.Element.Widget.PaymentCore.ProductID
+}
+
+extension AnywayPaymentEvent.Widget.ProductID {
+    
+    enum ProductType: Equatable {
+        
+        case account, card
     }
 }
 
@@ -70,6 +87,9 @@ private extension AnywayPaymentReducer {
         switch widget {
         case let .amount(amount):
             state.update(with: amount)
+            
+        case let .product(productID, currency):
+            state.update(with: productID, and: currency)
         }
     }
 }
@@ -91,13 +111,25 @@ private extension AnywayPayment {
     
     typealias ParameterID = AnywayPayment.Element.Parameter.Field.ID
     
-    mutating func update(with amount: Decimal) {
-        
+    mutating func update(
+        with amount: Decimal
+    ) {
         guard let index = elements.firstIndex(matching: .core),
               case let .widget(.core(core)) = elements[index]
         else { return }
         
         elements[index] = .widget(.core(core.updating(amount: amount)))
+    }
+    
+    mutating func update(
+        with productID: Element.Widget.PaymentCore.ProductID,
+        and currency: Element.Widget.PaymentCore.Currency
+    ) {
+        guard let index = elements.firstIndex(matching: .core),
+              case let .widget(.core(core)) = elements[index]
+        else { return }
+        
+        elements[index] = .widget(.core(core.updating(with: productID, and: currency)))
     }
 }
 
@@ -116,7 +148,16 @@ private extension AnywayPayment.Element.Parameter {
 
 private extension AnywayPayment.Element.Widget.PaymentCore {
     
-    func updating(amount: Decimal) -> Self {
+    func updating(
+        amount: Decimal
+    ) -> Self {
+        return .init(amount: amount, currency: currency, productID: productID)
+    }
+    
+    func updating(
+        with productID: ProductID,
+        and currency: Currency
+    ) -> Self {
         
         return .init(amount: amount, currency: currency, productID: productID)
     }
@@ -257,8 +298,8 @@ final class AnywayPaymentReducerTests: XCTestCase {
     
     func test_widget_amount_shouldChangeStateOnAmount() {
         
-        let core = makeCore()
         let amount = anyAmount()
+        let core = makeCore()
         let state = makeState(elements: [.widget(.core(core))])
         
         assertState(.widget(.amount(amount)), on: state) {
@@ -276,6 +317,46 @@ final class AnywayPaymentReducerTests: XCTestCase {
         let state = makeState(elements: [.widget(.core(makeCore()))])
         
         assert(.widget(.amount(anyAmount())), on: state, effect: nil)
+    }
+    
+    func test_widget_product_shouldNotChangeStateOnMissingProduct() {
+        
+        let state = makeEmptyState()
+        
+        assertState(.widget(.product(anyProductID(), anyCurrency())), on: state)
+        assertMissingID(state, .core)
+    }
+    
+    func test_widget_product_shouldNotDeliverEffectOnMissingProduct() {
+        
+        let state = makeEmptyState()
+        
+        assertState(.widget(.product(anyProductID(), anyCurrency())), on: state)
+        assertMissingID(state, .core)
+    }
+    
+    func test_widget_product_shouldChangeStateOnProduct() {
+        
+        let productID = anyProductID()
+        let currency = anyCurrency()
+        let core = makeCore()
+        let state = makeState(elements: [.widget(.core(core))])
+        
+        assertState(.widget(.product(productID, currency)), on: state) {
+            
+            $0.elements = [.widget(.core(.init(
+                amount: core.amount,
+                currency: currency,
+                productID: productID
+            )))]
+        }
+    }
+    
+    func test_widget_product_shouldNotDeliverEffectOnCore() {
+        
+        let state = makeState(elements: [.widget(.core(makeCore()))])
+        
+        assert(.widget(.product(anyProductID(), anyCurrency())), on: state, effect: nil)
     }
     
     // MARK: - Helpers
@@ -378,6 +459,20 @@ final class AnywayPaymentReducerTests: XCTestCase {
     ) -> AnywayPayment.Element.Widget.PaymentCore {
         
         .init(amount: amount, currency: currency, productID: productID)
+    }
+    
+    private func anyProductID(
+        id: Int = generateRandom11DigitNumber()
+    ) -> AnywayPaymentEvent.Widget.ProductID {
+        
+        return .accountID(.init(id))
+    }
+    
+    private func anyCurrency(
+        _ rawValue: String = anyMessage()
+    ) -> AnywayPaymentEvent.Widget.Currency {
+        
+        .init(rawValue)
     }
     
     private func makeEmptyState(
