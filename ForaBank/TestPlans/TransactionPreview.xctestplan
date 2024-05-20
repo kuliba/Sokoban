@@ -1,0 +1,50 @@
+{
+  "configurations" : [
+    {
+      "id" : "425BC89E-DAA9-4102-A64C-1E159435BE35",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:ForaBank.xcodeproj",
+      "identifier" : "2AD0928D2BFA30A100777EE4",
+      "name" : "TransactionPreview"
+    },
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "AnywayPaymentAdaptersTests",
+        "name" : "AnywayPaymentAdaptersTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "AnywayPaymentBackendTests",
+        "name" : "AnywayPaymentBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "AnywayPaymentCoreTests",
+        "name" : "AnywayPaymentCoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "AnywayPaymentUITests",
+        "name" : "AnywayPaymentUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

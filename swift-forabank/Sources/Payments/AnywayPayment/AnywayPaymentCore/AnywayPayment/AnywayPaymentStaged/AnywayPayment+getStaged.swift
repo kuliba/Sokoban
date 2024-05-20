@@ -1,5 +1,5 @@
 //
-//  AnywayPayment+staged.swift
+//  AnywayPayment+getStaged.swift
 //
 //
 //  Created by Igor Malyarov on 08.04.2024.

@@ -1,5 +1,5 @@
 //
-//  TransactionEffectHandlerNanoServices.swift
+//  AnywayTransactionEffectHandlerNanoServices.swift
 //  TransactionPreview
 //
 //  Created by Igor Malyarov on 19.05.2024.
@@ -7,13 +7,13 @@
 
 import AnywayPaymentDomain
 
-struct TransactionEffectHandlerNanoServices {
+struct AnywayTransactionEffectHandlerNanoServices {
     
     let getDetails: GetDetails
     let makeTransfer: MakeTransfer
 }
 
-extension TransactionEffectHandlerNanoServices {
+extension AnywayTransactionEffectHandlerNanoServices {
     
     typealias GetDetailsResult = OperationDetails?
     typealias GetDetailsCompletion = (GetDetailsResult) -> Void
@@ -24,7 +24,7 @@ extension TransactionEffectHandlerNanoServices {
     typealias MakeTransfer = (VerificationCode, @escaping MakeTransferCompletion) -> Void
 }
 
-extension TransactionEffectHandlerNanoServices {
+extension AnywayTransactionEffectHandlerNanoServices {
     
 #warning("reuse generic TransactionReport")
     public struct MakeTransferResponse {

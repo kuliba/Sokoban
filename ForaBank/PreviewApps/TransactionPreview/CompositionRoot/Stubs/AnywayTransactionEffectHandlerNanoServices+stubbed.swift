@@ -1,5 +1,5 @@
 //
-//  TransactionEffectHandlerNanoServices+stubbed.swift
+//  AnywayTransactionEffectHandlerNanoServices+stubbed.swift
 //  TransactionPreview
 //
 //  Created by Igor Malyarov on 19.05.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension TransactionEffectHandlerNanoServices {
+extension AnywayTransactionEffectHandlerNanoServices {
     
     static func stubbed(
         with stub: Stub

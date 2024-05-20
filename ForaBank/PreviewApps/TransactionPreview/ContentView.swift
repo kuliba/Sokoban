@@ -9,13 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     
-    private let viewModel: TransactionViewModel
+    private let viewModel: AnywayTransactionViewModel
     
     init() {
         
-        let initialState: TransactionState = .preview
+        let initialState: AnywayTransactionState = .preview
         
-        let microServicesComposer = TransactionEffectHandlerMicroServicesComposer(
+        let microServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer(
             nanoServices: .stubbed(with: .init(
                 getDetailsResult: "Operation Detail",
                 makeTransferResult: .init(
@@ -25,17 +25,17 @@ struct ContentView: View {
             ))
         )
         
-        let composer = TransactionViewModelComposer(
+        let composer = AnywayTransactionViewModelComposer(
             composeMicroServices: {
                 
                 return .stubbed(with: .init(
-                    initiatePayment: .success(123),
+                    initiatePayment: .success(.preview),
                     makePayment: .init(
                         status: .completed,
                         info: .details("Operation Detail")
                     ),
                     paymentEffectHandle: .anEvent,
-                    processPayment: .success(456))
+                    processPayment: .success(.preview))
                 )
             }
         )
@@ -45,7 +45,11 @@ struct ContentView: View {
     
     var body: some View {
         
-        TransactionStateWrapperView(viewModel: viewModel)
+        NavigationView {
+            
+            AnywayTransactionStateWrapperView(viewModel: viewModel)
+                .navigationTitle("Transaction View")
+        }
     }
 }
 
