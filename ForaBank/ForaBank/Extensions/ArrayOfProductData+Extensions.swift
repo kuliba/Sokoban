@@ -113,6 +113,12 @@ extension Array where Element == ProductData {
         return map { $0.parentID ?? $0.id }.uniqued()
     }
     
+    func firstAdditionalCardByParentIDWithNoZeroBalance(_ cardID: ProductData.ID) -> ProductData? {
+                
+        cardsWithAdditional().first(where: { ($0.balanceRub ?? 0) > 0 })
+    }
+
+    
     func balanceRub() -> Double {
         
         let accountsAndDeposits = filter { $0.productType == .account || $0.productType == .deposit }
@@ -124,7 +130,12 @@ extension Array where Element == ProductData {
         
         groupingByParentIDOnlySelf().forEach { key, value in
             
-            if !cardsWithoutAdditionalIDs.contains(key), let first = value.first {
+            if cardsWithoutAdditionalIDs.contains(key) {
+                if cardsWithoutAdditional.first(where: { $0.id == key })?.balanceRub == 0,
+                   let product = firstAdditionalCardByParentIDWithNoZeroBalance(key) {
+                    productsForBalance.append(product)
+                }
+            } else if let first = value.first {
                 productsForBalance.append(first)
             }
         }
