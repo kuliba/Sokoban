@@ -31,7 +31,7 @@ public extension TransactionEffectHandlerMicroServices {
     
     typealias InitiatePayment = ProcessPayment
     
-    typealias ProcessResult = Event.PaymentUpdateResult
+    typealias ProcessResult = Event.UpdatePaymentResult
     typealias ProcessCompletion = (ProcessResult) -> Void
     typealias ProcessPayment = (PaymentDigest, @escaping ProcessCompletion) -> Void
     

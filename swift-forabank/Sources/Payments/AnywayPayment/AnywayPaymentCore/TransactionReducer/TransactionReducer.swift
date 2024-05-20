@@ -175,7 +175,7 @@ private extension TransactionReducer {
     
     func reduce(
         _ state: inout State,
-        with updateResult: Event.PaymentUpdateResult
+        with updateResult: Event.UpdatePaymentResult
     ) {
         switch updateResult {
         case let .failure(serviceFailure):
