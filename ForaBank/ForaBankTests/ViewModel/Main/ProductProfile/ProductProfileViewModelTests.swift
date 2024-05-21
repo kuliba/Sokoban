@@ -258,14 +258,14 @@ final class ProductProfileViewModelTests: XCTestCase {
         let (sut, _, product) = try makeSUT(statusCard: .active)
         
         XCTAssertNil(sut.alert)
-        XCTAssertNil(sut.optionsPanelNew)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
         XCTAssertNil(sut.optionsPannel)
 
         sut.buttons.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped(buttonType: .bottomLeft))
 
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
 
-        XCTAssertNotNil(sut.optionsPanelNew)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 2)
         XCTAssertNil(sut.optionsPannel)
 
         XCTAssertNil(sut.link)
@@ -316,12 +316,12 @@ final class ProductProfileViewModelTests: XCTestCase {
         let (sut, _, product) = try makeSUT(statusCard: .active)
                 
         XCTAssertNil(sut.alert)
-        XCTAssertNil(sut.optionsPanelNew)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
         XCTAssertNil(sut.optionsPannel)
 
         sut.createCardGuardianPanel(product)
         
-        XCTAssertNotNil(sut.optionsPanelNew)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
         XCTAssertNil(sut.optionsPannel)
 
         sut.event(.init(productID: product.id, type: .cardGuardian))
@@ -356,12 +356,12 @@ final class ProductProfileViewModelTests: XCTestCase {
         )
         
         XCTAssertNil(sut.alert)
-        XCTAssertNil(sut.optionsPanelNew)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
         
         sut.createCardGuardianPanel(product)
         
-        XCTAssertNotNil(sut.optionsPanelNew)
-        
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
+
         sut.event(.init(productID: product.id, type: .cardGuardian))
          
         //в коде now + .milliseconds(300)
@@ -394,12 +394,13 @@ final class ProductProfileViewModelTests: XCTestCase {
         )
         
         XCTAssertNil(sut.alert)
-        XCTAssertNil(sut.optionsPanelNew)
-        
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
+
         sut.createCardGuardianPanel(product)
         
-        XCTAssertNotNil(sut.optionsPanelNew)
-        
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 2)
+        XCTAssertTrue(sut.optionsPanelNew.containsTitle("Разблокировать"))
+
         sut.event(.init(productID: product.id, type: .cardGuardian))
          
         //в коде now + .milliseconds(300)
@@ -430,12 +431,12 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         let (sut, _, product) = try makeSUT(cvvPINServicesClient: SadCVVPINServicesClient())
         
-        XCTAssertNil(sut.optionsPanelNew)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
         XCTAssertNil(sut.alert)
 
         sut.createCardGuardianPanel(product)
         
-        XCTAssertNotNil(sut.optionsPanelNew)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
         XCTAssertNil(sut.alert)
         
         sut.event(.init(productID: product.id, type: .changePin))
@@ -459,11 +460,11 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         let (sut, _, product) = try makeSUT(cvvPINServicesClient: HappyCVVPINServicesClient())
         
-        XCTAssertNil(sut.optionsPanelNew)
-        
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
+
         sut.createCardGuardianPanel(product)
         
-        XCTAssertNotNil(sut.optionsPanelNew)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
         XCTAssertNil(sut.fullScreenCoverState)
         
         sut.event(.init(productID: product.id, type: .changePin))
@@ -686,7 +687,7 @@ private extension ProductProfileViewModel {
         }
     }
     
-    var optionsPanelNew: [PanelButton.Details]? {
+    var optionsPanelNew: [PanelButton.Details] {
         
         switch bottomSheet?.type {
             
@@ -695,7 +696,7 @@ private extension ProductProfileViewModel {
             return optionsPanel
             
         default:
-            return nil
+            return []
         }
     }
 
@@ -726,6 +727,13 @@ private extension ProductProfileViewModel {
         case let .paymentsTransfers(viewModel):
             return viewModel
         }
+    }
+}
+
+private extension Array where Element == PanelButton.Details {
+    
+    func containsTitle(_ title: String) -> Bool {
+        return self.filter { $0.title == "Разблокировать" }.first != nil
     }
 }
 
