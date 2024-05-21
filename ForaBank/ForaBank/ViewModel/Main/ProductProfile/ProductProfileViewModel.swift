@@ -2266,20 +2266,15 @@ extension ProductProfileViewModel {
     
     func hideSpinner() {
         
-        DispatchQueue.main.async { [weak self] in
-            
-            guard let self else { return }
-            
-            if case let .productInfo(productInfoViewModel) = self.link {
-                productInfoViewModel.action.send(DelayWrappedAction(
-                    delayMS: 10,
-                    action: InfoProductModelAction.Spinner.Hide()))
-            }
-            else {
-                self.action.send(DelayWrappedAction(
-                    delayMS: 10,
-                    action:ProductProfileViewModelAction.Spinner.Hide()))
-            }
+        if case let .productInfo(productInfoViewModel) = self.link {
+            productInfoViewModel.action.send(DelayWrappedAction(
+                delayMS: 10,
+                action: InfoProductModelAction.Spinner.Hide()))
+        }
+        else {
+            self.action.send(DelayWrappedAction(
+                delayMS: 10,
+                action:ProductProfileViewModelAction.Spinner.Hide()))
         }
     }
     
