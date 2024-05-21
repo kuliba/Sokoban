@@ -26,17 +26,14 @@ struct ContentView: View {
         )
         
         let composer = AnywayTransactionViewModelComposer(
-            composeMicroServices: {
-                
-                return .stubbed(with: .init(
-                    initiatePayment: .success(.preview),
-                    makePayment: .init(
-                        status: .completed,
-                        info: .details("Operation Detail")
-                    ),
-                    processPayment: .success(.preview))
-                )
-            }
+            microServices: .stubbed(with: .init(
+                initiatePayment: .success(.preview),
+                makePayment: .init(
+                    status: .completed,
+                    info: .details("Operation Detail")
+                ),
+                processPayment: .success(.preview))
+            )
         )
         
         self.viewModel = composer.compose(initialState: initialState)

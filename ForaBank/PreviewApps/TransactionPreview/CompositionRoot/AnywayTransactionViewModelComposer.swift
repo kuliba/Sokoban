@@ -10,12 +10,11 @@ import AnywayPaymentDomain
 
 final class AnywayTransactionViewModelComposer {
     
-    private let composeMicroServices: ComposeMicroServices
+    private let microServices: MicroServices
     
-    init(
-        composeMicroServices: @escaping ComposeMicroServices
-    ) {
-        self.composeMicroServices = composeMicroServices
+    init(microServices: MicroServices) {
+        
+        self.microServices = microServices
     }
 }
 
@@ -25,13 +24,11 @@ extension AnywayTransactionViewModelComposer {
         initialState: AnywayTransactionState
     ) -> ViewModel {
         
-        let reducer = composeReducer()
-        let microServices = composeMicroServices()
         let effectHandler = EffectHandler(microServices: microServices)
         
         return .init(
             initialState: initialState,
-            reduce: reducer.reduce(_:_:),
+            reduce: Reducer.anyway().reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:)
         )
     }
@@ -39,18 +36,12 @@ extension AnywayTransactionViewModelComposer {
 
 extension AnywayTransactionViewModelComposer {
     
-    typealias ComposeMicroServices = () -> MicroServices
     typealias MicroServices = AnywayTransactionEffectHandlerMicroServices
     
     typealias ViewModel = AnywayTransactionViewModel
 }
 
 private extension AnywayTransactionViewModelComposer {
-    
-    func composeReducer() -> Reducer {
-        
-        return .anyway()
-    }
     
     typealias Reducer = TransactionReducer<Report, AnywayPaymentContext, AnywayPaymentEvent, AnywayPaymentEffect, AnywayPaymentDigest, AnywayPaymentUpdate>
     typealias EffectHandler = TransactionEffectHandler<Report, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
