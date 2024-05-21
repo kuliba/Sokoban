@@ -11,7 +11,8 @@ extension AnywayPayment {
     
     static let preview: Self = .init(
         elements: [
-            .parameter(.stringInput)
+            .parameter(.stringInput),
+            .widget(.otp(nil)),
         ],
         infoMessage: nil,
         isFinalStep: false,

@@ -19,7 +19,10 @@ struct ContentView: View {
         self._viewModel = .init(wrappedValue: .default())
         self.makeFactory = { event in
             
-            return .init(makeElementView: { .init(state: $0, event: event) })
+            return .init(
+                makeElementView: { .init(state: $0, event: event) },
+                makeFooterView: { .init() }
+            )
         }
     }
     
@@ -34,6 +37,7 @@ struct ContentView: View {
                     content: destinationView
                 )
         }
+        .onAppear(perform: viewModel.openPayment)
     }
     
     @ViewBuilder

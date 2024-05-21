@@ -10,7 +10,8 @@ extension AnywayPaymentFactory {
     static var preview: Self {
         
         return .init(
-            makeElementView: { .init(state: $0, event: { print($0) }) }
+            makeElementView: { .init(state: $0, event: { print($0) }) },
+            makeFooterView: { .init() }
         )
     }
 }

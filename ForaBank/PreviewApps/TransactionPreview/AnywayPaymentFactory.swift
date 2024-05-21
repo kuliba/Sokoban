@@ -10,10 +10,13 @@ import AnywayPaymentDomain
 struct AnywayPaymentFactory {
     
     let makeElementView: MakeElementView
+    let makeFooterView: MakeFooterView
 }
 
 extension AnywayPaymentFactory {
     
     typealias Element = AnywayPayment.Element
     typealias MakeElementView = (Element) -> AnywayPaymentElementView
+    
+    typealias MakeFooterView = () -> AnywayPaymentFooterView
 }

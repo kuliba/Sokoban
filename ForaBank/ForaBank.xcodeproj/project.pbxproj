@@ -995,6 +995,10 @@
 		2AA54AA92BFCCC0400EF872C /* AnywayPaymentFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AA82BFCCC0400EF872C /* AnywayPaymentFactory.swift */; };
 		2AA54AAB2BFCCC1D00EF872C /* AnywayPaymentElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AAA2BFCCC1D00EF872C /* AnywayPaymentElementView.swift */; };
 		2AA54AAD2BFCCC9D00EF872C /* AnywayPayment.Element.Parameter+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AAC2BFCCC9D00EF872C /* AnywayPayment.Element.Parameter+preview.swift */; };
+		2AA54AAF2BFCDB3100EF872C /* AnywayPaymentFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AAE2BFCDB3100EF872C /* AnywayPaymentFooterView.swift */; };
+		2AA54AB12BFCE21200EF872C /* AnywayPaymentFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AB02BFCE21200EF872C /* AnywayPaymentFieldView.swift */; };
+		2AA54AB32BFCE27800EF872C /* AnywayPaymentParameterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AB22BFCE27800EF872C /* AnywayPaymentParameterView.swift */; };
+		2AA54AB52BFCE2F100EF872C /* AnywayPaymentWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AB42BFCE2F100EF872C /* AnywayPaymentWidgetView.swift */; };
 		2AA555682A3E02F500B13D47 /* ServerAgentTestStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA555672A3E02F500B13D47 /* ServerAgentTestStub.swift */; };
 		2AA5556A2A3E486700B13D47 /* XCTestCase+assertThrows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA555692A3E486700B13D47 /* XCTestCase+assertThrows.swift */; };
 		2AA5556E2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA5556D2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift */; };
@@ -3878,6 +3882,10 @@
 		2AA54AA82BFCCC0400EF872C /* AnywayPaymentFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentFactory.swift; sourceTree = "<group>"; };
 		2AA54AAA2BFCCC1D00EF872C /* AnywayPaymentElementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementView.swift; sourceTree = "<group>"; };
 		2AA54AAC2BFCCC9D00EF872C /* AnywayPayment.Element.Parameter+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPayment.Element.Parameter+preview.swift"; sourceTree = "<group>"; };
+		2AA54AAE2BFCDB3100EF872C /* AnywayPaymentFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentFooterView.swift; sourceTree = "<group>"; };
+		2AA54AB02BFCE21200EF872C /* AnywayPaymentFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentFieldView.swift; sourceTree = "<group>"; };
+		2AA54AB22BFCE27800EF872C /* AnywayPaymentParameterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentParameterView.swift; sourceTree = "<group>"; };
+		2AA54AB42BFCE2F100EF872C /* AnywayPaymentWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentWidgetView.swift; sourceTree = "<group>"; };
 		2AA555672A3E02F500B13D47 /* ServerAgentTestStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentTestStub.swift; sourceTree = "<group>"; };
 		2AA555692A3E486700B13D47 /* XCTestCase+assertThrows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+assertThrows.swift"; sourceTree = "<group>"; };
 		2AA5556D2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentTestStubTests.swift; sourceTree = "<group>"; };
@@ -8842,6 +8850,17 @@
 			path = PaymentsProductViewComponent;
 			sourceTree = "<group>";
 		};
+		2AA54AB62BFCE3D100EF872C /* AnywayPaymentElementView */ = {
+			isa = PBXGroup;
+			children = (
+				2AA54AAA2BFCCC1D00EF872C /* AnywayPaymentElementView.swift */,
+				2AA54AB02BFCE21200EF872C /* AnywayPaymentFieldView.swift */,
+				2AA54AB22BFCE27800EF872C /* AnywayPaymentParameterView.swift */,
+				2AA54AB42BFCE2F100EF872C /* AnywayPaymentWidgetView.swift */,
+			);
+			path = AnywayPaymentElementView;
+			sourceTree = "<group>";
+		};
 		2AA64CC12BA8429C004DDC27 /* NavigationState */ = {
 			isa = PBXGroup;
 			children = (
@@ -9219,7 +9238,8 @@
 				2AD092AA2BFA332800777EE4 /* AnywayTransactionStateWrapperView.swift */,
 				2AD092B42BFA49DE00777EE4 /* AnywayTransactionView.swift */,
 				2AA54AA82BFCCC0400EF872C /* AnywayPaymentFactory.swift */,
-				2AA54AAA2BFCCC1D00EF872C /* AnywayPaymentElementView.swift */,
+				2AA54AB62BFCE3D100EF872C /* AnywayPaymentElementView */,
+				2AA54AAE2BFCDB3100EF872C /* AnywayPaymentFooterView.swift */,
 				2AD092AC2BFA335900777EE4 /* AnywayDomain.swift */,
 				2AD092CB2BFB2F8B00777EE4 /* Helpers */,
 				2AD092942BFA30A200777EE4 /* Assets.xcassets */,
@@ -16369,6 +16389,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2AD092BC2BFA4FCC00777EE4 /* AnywayTransactionEffectHandlerNanoServices.swift in Sources */,
+				2AA54AAF2BFCDB3100EF872C /* AnywayPaymentFooterView.swift in Sources */,
 				2AD092AF2BFA360700777EE4 /* AnywayTransactionViewModel+preview.swift in Sources */,
 				2AD092B92BFA4B5900777EE4 /* AnywayTransactionEffectHandlerMicroServicesComposer.swift in Sources */,
 				2AA54A9F2BFCBA0E00EF872C /* ObservingAnywayTransactionViewModel+preview.swift in Sources */,
@@ -16389,11 +16410,14 @@
 				2AD092B52BFA49DE00777EE4 /* AnywayTransactionView.swift in Sources */,
 				2AA54AA12BFCBD3E00EF872C /* ContentViewModel.swift in Sources */,
 				2AA54AA92BFCCC0400EF872C /* AnywayPaymentFactory.swift in Sources */,
+				2AA54AB12BFCE21200EF872C /* AnywayPaymentFieldView.swift in Sources */,
 				2AA54AAD2BFCCC9D00EF872C /* AnywayPayment.Element.Parameter+preview.swift in Sources */,
 				2AA54AA72BFCCBCE00EF872C /* AnywayPaymentFactory+preview.swift in Sources */,
 				2AD092912BFA30A100777EE4 /* TransactionPreviewApp.swift in Sources */,
+				2AA54AB52BFCE2F100EF872C /* AnywayPaymentWidgetView.swift in Sources */,
 				2AD092C02BFA543F00777EE4 /* DispatchQueue+delay.swift in Sources */,
 				2AD092CD2BFB30A300777EE4 /* AnywayPaymentUpdate+preview.swift in Sources */,
+				2AA54AB32BFCE27800EF872C /* AnywayPaymentParameterView.swift in Sources */,
 				2AA54AAB2BFCCC1D00EF872C /* AnywayPaymentElementView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

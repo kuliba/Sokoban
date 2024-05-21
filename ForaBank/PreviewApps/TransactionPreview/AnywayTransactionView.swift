@@ -5,8 +5,8 @@
 //  Created by Igor Malyarov on 19.05.2024.
 //
 
-import SwiftUI
 import AnywayPaymentDomain
+import SwiftUI
 
 struct AnywayTransactionView: View {
     
@@ -16,23 +16,28 @@ struct AnywayTransactionView: View {
     
     var body: some View {
         
-        ScrollView(showsIndicators: false) {
+        VStack(spacing: 32) {
             
-            VStack(spacing: 32) {
+            Text(state.isValid ? "valid" : "invalid")
+                .foregroundColor(state.isValid ? .green : .red)
+                .font(.headline)
+            
+            Divider()
+            
+            ScrollView(showsIndicators: false) {
                 
-                Text(state.isValid ? "valid" : "invalid")
-                    .foregroundColor(state.isValid ? .green : .red)
-                    .font(.headline)
-                
-                Divider()
-                
-                ForEach(
-                    state.payment.payment.elements,
-                    content: factory.makeElementView
-                )
-                
+                VStack(spacing: 32) {
+                    
+                    ForEach(
+                        state.payment.payment.elements,
+                        content: factory.makeElementView
+                    )
+                    
+                }
+                .padding()
             }
-            .padding()
+            
+            factory.makeFooterView()
         }
     }
 }
