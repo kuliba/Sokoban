@@ -291,7 +291,7 @@ extension ProductProfileCardView {
                         switch payload.result {
                         case .success:
                             productViewModel?.action.send(ProductViewModelAction.CardActivation.Complete())
-                            model.action.send(ModelAction.Products.Update.ForProductType(productType: .card))
+                            model.handleProductUpdateDynamicParamsList(payload.cardId, productType: .card)
                             
                         case .failure(message: let message):
                             productViewModel?.action.send(ProductViewModelAction.CardActivation.Failed())

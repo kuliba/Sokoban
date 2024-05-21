@@ -648,11 +648,18 @@ private extension ProductProfileViewModel {
                             self?.alert = nil
                         }))
                     }
-                    
+                
+                case let payload as ModelAction.Card.Unblock.Response:
+                    hideSpinner()
+                    if case .success = payload.result {
+                        self.model.handleProductUpdateDynamicParamsList(payload.cardId, productType: .card)
+                    }
+
                 case let payload as ModelAction.Card.Block.Response:
-                    switch payload {
+                    hideSpinner()
+                    switch payload.result {
                     case .success:
-                        self.model.action.send(ModelAction.Products.Update.ForProductType.init(productType: .card))
+                        self.model.handleProductUpdateDynamicParamsList(payload.cardId, productType: .card)
                         
                     case .failure(let errorMessage):
                         alert = .init(title: "Ошибка", message: errorMessage, primary: .init(type: .default, title: "Ok", action: { [weak self] in
@@ -1737,11 +1744,13 @@ private extension ProductProfileViewModel {
     
     func block(cardId: ProductData.ID, cardNumber: String) {
         
+        showSpinner()
         self.model.action.send(ModelAction.Card.Block.Request(cardId: cardId, cardNumber: cardNumber))
     }
     
     func unBlock(cardId: ProductData.ID, cardNumber: String) {
         
+        showSpinner()
         self.model.action.send(ModelAction.Card.Unblock.Request(cardId: cardId, cardNumber: cardNumber))
     }
     
@@ -2251,6 +2260,25 @@ extension ProductProfileViewModel {
                 self.action.send(DelayWrappedAction(
                     delayMS: 10,
                     action:ProductProfileViewModelAction.Spinner.Show()))
+            }
+        }
+    }
+    
+    func hideSpinner() {
+        
+        DispatchQueue.main.async { [weak self] in
+            
+            guard let self else { return }
+            
+            if case let .productInfo(productInfoViewModel) = self.link {
+                productInfoViewModel.action.send(DelayWrappedAction(
+                    delayMS: 10,
+                    action: InfoProductModelAction.Spinner.Hide()))
+            }
+            else {
+                self.action.send(DelayWrappedAction(
+                    delayMS: 10,
+                    action:ProductProfileViewModelAction.Spinner.Hide()))
             }
         }
     }
