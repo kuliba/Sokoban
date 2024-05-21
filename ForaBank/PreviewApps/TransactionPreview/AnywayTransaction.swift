@@ -15,18 +15,6 @@ typealias AnywayTransactionState = TransactionOf<OperationDetailID, OperationDet
 
 typealias AnywayTransactionEvent = TransactionEventOf<OperationDetailID, OperationDetails, DocumentStatus, AnywayPaymentEvent, AnywayPaymentUpdate>
 
-#warning("fixme")
-enum AnywayPaymentEvent {
-    
-    case anEvent
-}
-
-#warning("fixme")
-enum AnywayPaymentEffect {
-    
-    case anEffect
-}
-
 typealias AnywayTransactionEffectHandlerMicroServices = TransactionEffectHandlerMicroServices<Report, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
 
 typealias Report = TransactionReport<DocumentStatus, _OperationInfo>

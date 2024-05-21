@@ -17,8 +17,8 @@ struct AnywayTransactionView: View {
         List {
             
             Section {
-                Text("Payment UI")
-                button("payment", .payment(.anEvent))
+                Text("TBD: Payment UI")
+                    .foregroundColor(.red)
             } header: {
                 Text("payment")
             }

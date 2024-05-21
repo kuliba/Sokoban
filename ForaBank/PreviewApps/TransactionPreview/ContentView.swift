@@ -34,7 +34,6 @@ struct ContentView: View {
                         status: .completed,
                         info: .details("Operation Detail")
                     ),
-                    paymentEffectHandle: .anEvent,
                     processPayment: .success(.preview))
                 )
             }
