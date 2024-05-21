@@ -191,7 +191,7 @@ extension MyProductsSectionView {
                 .frame(width: 32)
                 .accessibilityIdentifier("DefaultMainCardProductIcon")
             
-            Image.ic16MainCardGrey
+            Image.ic16MainCardGreyFixed2
                 .renderingMode(.template)
                 .resizable()
                 .aspectRatio(1, contentMode: .fit)
