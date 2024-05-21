@@ -11,16 +11,16 @@ struct CalendarView<DateView>: View where DateView: View {
     
     let calendar: Calendar
     let interval: DateInterval
-    let content: (Date) -> DateView
- 
+    let dateView: (Date) -> DateView
+    
     init(
         calendar: Calendar,
         interval: DateInterval,
-        @ViewBuilder content: @escaping (Date) -> DateView
+        @ViewBuilder dateView: @escaping (Date) -> DateView
     ) {
         self.calendar = calendar
         self.interval = interval
-        self.content = content
+        self.dateView = dateView
     }
  
     private var months: [Date] {
@@ -34,11 +34,14 @@ struct CalendarView<DateView>: View where DateView: View {
         
         ScrollView(.vertical, showsIndicators: false) {
             
-            VStack {
+            LazyVGrid(columns: [.init()]) {
                 
-                ForEach(months, id: \.self) { month in
+                VStack {
                     
-                    MonthView(month: month, content: self.content)
+                    ForEach(calendar.month(interval), id: \.self) { month in
+                        
+                        MonthView(calendar: calendar, month: month, dateView: self.dateView)
+                    }
                 }
             }
         }
