@@ -23,16 +23,6 @@ struct WeekView<DateView>: View where DateView: View {
         self.dateView = dateView
     }
  
-    private var days: [Date] {
-        guard
-            let weekInterval = calendar.dateInterval(of: .weekOfYear, for: week)
-            else { return [] }
-        return calendar.generateDates(
-            inside: weekInterval,
-            matching: DateComponents(hour: 0, minute: 0, second: 0)
-        )
-    }
- 
     var body: some View {
         
         HStack {

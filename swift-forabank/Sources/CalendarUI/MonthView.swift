@@ -23,16 +23,6 @@ struct MonthView<DateView>: View where DateView: View {
         self.dateView = dateView
     }
  
-    private var weeks: [Date] {
-        guard let monthInterval = calendar.dateInterval(of: .month, for: month)
-        else { return [] }
-        
-        return calendar.generateDates(
-            inside: monthInterval,
-            matching: DateComponents(hour: 0, minute: 0, second: 0, weekday: 1)
-        )
-    }
- 
     var body: some View {
         
         VStack {

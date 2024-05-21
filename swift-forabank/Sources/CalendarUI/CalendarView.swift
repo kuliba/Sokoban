@@ -23,13 +23,6 @@ struct CalendarView<DateView>: View where DateView: View {
         self.dateView = dateView
     }
  
-    private var months: [Date] {
-        calendar.generateDates(
-            inside: interval,
-            matching: DateComponents(day: 1, hour: 0, minute: 0, second: 0)
-        )
-    }
- 
     var body: some View {
         
         ScrollView(.vertical, showsIndicators: false) {
