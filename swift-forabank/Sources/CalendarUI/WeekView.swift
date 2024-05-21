@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  WeekView.swift
 //  
 //
 //  Created by Дмитрий Савушкин on 17.05.2024.
