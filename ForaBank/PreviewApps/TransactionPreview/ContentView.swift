@@ -9,43 +9,33 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var isShowingEventList = false
-    
-    private let viewModel: AnywayTransactionViewModel
+    @StateObject private var viewModel: ContentViewModel
     
     init() {
-        
-        let initialState: AnywayTransactionState = .preview
-        
-        let microServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer(
-            nanoServices: .stubbed(with: .init(
-                getDetailsResult: "Operation Detail",
-                makeTransferResult: .init(
-                    status: .completed,
-                    detailID: 54321
-                )
-            ))
-        )
-        
-        let composer = AnywayTransactionViewModelComposer(
-            microServices: .stubbed(with: .init(
-                initiatePayment: .success(.preview),
-                makePayment: .init(
-                    status: .completed,
-                    info: .details("Operation Detail")
-                ),
-                processPayment: .success(.preview))
-            )
-        )
-        
-        self.viewModel = composer.compose(initialState: initialState)
+     
+        self._viewModel = .init(wrappedValue: .default())
     }
     
     var body: some View {
         
         NavigationView {
             
-            AnywayTransactionStateWrapperView(viewModel: viewModel)
+            Button("Payment", action: viewModel.openPayment)
+                .navigationDestination(
+                    destination: viewModel.flow.destination,
+                    dismissDestination: viewModel.dismissDestination,
+                    content: destinationView
+                )
+        }
+    }
+    
+    private func destinationView(
+        destination: Flow.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .payment(transactionViewModel):
+            AnywayTransactionStateWrapperView(viewModel: transactionViewModel)
                 .navigationTitle("Transaction View")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -55,33 +45,48 @@ struct ContentView: View {
                     )
                 }
                 .sheet(
-                    isPresented: $isShowingEventList,
-                    content: eventList
+                    modal: viewModel.flow.modal,
+                    dismissModal: viewModel.hideEventList,
+                    content: { sheetView(transactionViewModel, modal: $0) }
                 )
         }
     }
     
-    private func eventList() -> some View {
+    @ViewBuilder
+    private func sheetView(
+        _ transactionViewModel: ObservingAnywayTransactionViewModel,
+        modal: Flow.Modal
+    ) -> some View {
         
-        NavigationView {
+        switch modal {
+        case .fraud:
+            NavigationView {
+                
+                Text("Fraud suspected!")
+                    .foregroundColor(.red)
+            }
             
-            EventList(event: viewModel.event(_:))
-                .navigationTitle("Events")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(
-                        placement: .cancellationAction,
-                        content: {
-                            Button("Close") { isShowingEventList = false }
-                        }
-                    )
-                }
+        case .eventList:
+            NavigationView {
+                
+                EventList(event: transactionViewModel.event(_:))
+                    .navigationTitle("Events")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(
+                            placement: .cancellationAction,
+                            content: {
+                                Button("Close", action: viewModel.hideEventList)
+                            }
+                        )
+                    }
+            }
         }
     }
     
     private func showEventListButton() -> some View {
         
-        Button { isShowingEventList = true } label: {
+        Button(action: viewModel.showEventList) {
             
             Image(systemName: "arrowshape.turn.up.right.circle")
         }

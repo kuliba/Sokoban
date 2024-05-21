@@ -28,7 +28,7 @@ struct AnywayTransactionStateWrapperView: View {
 
 extension AnywayTransactionStateWrapperView {
     
-    typealias ViewModel = AnywayTransactionViewModel
+    typealias ViewModel = ObservingAnywayTransactionViewModel
 }
 
 #Preview {
