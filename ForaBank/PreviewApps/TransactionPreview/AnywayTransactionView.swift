@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import AnywayPaymentDomain
 
 struct AnywayTransactionView: View {
     
     let state: State
     let event: (Event) -> Void
+    let factory: Factory
     
     var body: some View {
         
@@ -24,8 +26,10 @@ struct AnywayTransactionView: View {
                 
                 Divider()
                 
-                Text("TBD: Payment UI")
-                    .foregroundColor(.red)
+                ForEach(
+                    state.payment.payment.elements,
+                    content: factory.makeElementView
+                )
                 
             }
             .padding()
@@ -37,8 +41,9 @@ extension AnywayTransactionView {
     
     typealias State = AnywayTransactionState
     typealias Event = AnywayTransactionEvent
+    typealias Factory = AnywayPaymentFactory
 }
 
 #Preview {
-    AnywayTransactionView(state: .preview, event: { print($0) })
+    AnywayTransactionView(state: .preview, event: { print($0) }, factory: .preview)
 }

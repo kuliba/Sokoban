@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 #warning("move to module")
 extension View {

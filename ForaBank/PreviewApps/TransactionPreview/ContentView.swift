@@ -5,15 +5,22 @@
 //  Created by Igor Malyarov on 19.05.2024.
 //
 
+import AnywayPaymentDomain
 import SwiftUI
 
 struct ContentView: View {
     
     @StateObject private var viewModel: ContentViewModel
+
+    private let makeFactory: (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory
     
     init() {
-     
+        
         self._viewModel = .init(wrappedValue: .default())
+        self.makeFactory = { event in
+            
+            return .init(makeElementView: { .init(state: $0, event: event) })
+        }
     }
     
     var body: some View {
@@ -29,26 +36,33 @@ struct ContentView: View {
         }
     }
     
+    @ViewBuilder
     private func destinationView(
         destination: Flow.Destination
     ) -> some View {
         
         switch destination {
         case let .payment(transactionViewModel):
-            AnywayTransactionStateWrapperView(viewModel: transactionViewModel)
-                .navigationTitle("Transaction View")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(
-                        placement: .cancellationAction,
-                        content: showEventListButton
-                    )
-                }
-                .sheet(
-                    modal: viewModel.flow.modal,
-                    dismissModal: viewModel.hideEventList,
-                    content: { sheetView(transactionViewModel, modal: $0) }
+            let factory = makeFactory(
+               { transactionViewModel.event(.payment($0)) }
+            )
+            AnywayTransactionStateWrapperView(
+                viewModel: transactionViewModel,
+                factory: factory
+            )
+            .navigationTitle("Transaction View")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(
+                    placement: .cancellationAction,
+                    content: showEventListButton
                 )
+            }
+            .sheet(
+                modal: viewModel.flow.modal,
+                dismissModal: viewModel.hideEventList,
+                content: { sheetView(transactionViewModel, modal: $0) }
+            )
         }
     }
     

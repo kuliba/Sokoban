@@ -10,7 +10,9 @@ import AnywayPaymentDomain
 extension AnywayPayment {
     
     static let preview: Self = .init(
-        elements: [],
+        elements: [
+            .parameter(.stringInput)
+        ],
         infoMessage: nil,
         isFinalStep: false,
         isFraudSuspected: false,
