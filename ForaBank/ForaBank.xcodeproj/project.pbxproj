@@ -986,6 +986,7 @@
 		2AA42C4C2B27990D003B5BB7 /* RootViewModelFactory+makePaymentsSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA42C4B2B27990D003B5BB7 /* RootViewModelFactory+makePaymentsSuccessViewModel.swift */; };
 		2AA4C9F02A27E9CC00EA0D57 /* PaymentsSelectBankViewModelExpandedViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA4C9EF2A27E9CC00EA0D57 /* PaymentsSelectBankViewModelExpandedViewModelTests.swift */; };
 		2AA54A9B2BFCA7E000EF872C /* EventList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54A9A2BFCA7E000EF872C /* EventList.swift */; };
+		2AA54A9D2BFCAF9000EF872C /* View+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54A9C2BFCAF9000EF872C /* View+ext.swift */; };
 		2AA555682A3E02F500B13D47 /* ServerAgentTestStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA555672A3E02F500B13D47 /* ServerAgentTestStub.swift */; };
 		2AA5556A2A3E486700B13D47 /* XCTestCase+assertThrows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA555692A3E486700B13D47 /* XCTestCase+assertThrows.swift */; };
 		2AA5556E2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA5556D2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift */; };
@@ -3860,6 +3861,7 @@
 		2AA42C4B2B27990D003B5BB7 /* RootViewModelFactory+makePaymentsSuccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentsSuccessViewModel.swift"; sourceTree = "<group>"; };
 		2AA4C9EF2A27E9CC00EA0D57 /* PaymentsSelectBankViewModelExpandedViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectBankViewModelExpandedViewModelTests.swift; sourceTree = "<group>"; };
 		2AA54A9A2BFCA7E000EF872C /* EventList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventList.swift; sourceTree = "<group>"; };
+		2AA54A9C2BFCAF9000EF872C /* View+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ext.swift"; sourceTree = "<group>"; };
 		2AA555672A3E02F500B13D47 /* ServerAgentTestStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentTestStub.swift; sourceTree = "<group>"; };
 		2AA555692A3E486700B13D47 /* XCTestCase+assertThrows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+assertThrows.swift"; sourceTree = "<group>"; };
 		2AA5556D2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentTestStubTests.swift; sourceTree = "<group>"; };
@@ -9243,6 +9245,7 @@
 			isa = PBXGroup;
 			children = (
 				2AD092BF2BFA543E00777EE4 /* DispatchQueue+delay.swift */,
+				2AA54A9C2BFCAF9000EF872C /* View+ext.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -16353,6 +16356,7 @@
 				2AD092C22BFA613500777EE4 /* AnywayTransactionEffectHandlerMicroServices+stubbed.swift in Sources */,
 				2AD092BE2BFA52EC00777EE4 /* AnywayTransactionEffectHandlerNanoServices+stubbed.swift in Sources */,
 				2AD092B12BFA366400777EE4 /* AnywayTransactionState+preview.swift in Sources */,
+				2AA54A9D2BFCAF9000EF872C /* View+ext.swift in Sources */,
 				2AD092932BFA30A100777EE4 /* ContentView.swift in Sources */,
 				2AD092C82BFB242200777EE4 /* AnywayPayment+preview.swift in Sources */,
 				2AD092B52BFA49DE00777EE4 /* AnywayTransactionView.swift in Sources */,
