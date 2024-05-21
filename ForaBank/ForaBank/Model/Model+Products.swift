@@ -374,6 +374,32 @@ private extension ProductType {
 
 extension Model {
     
+    func handleProductUpdateDynamicParamsList(
+        _ productID: ProductCardData.ID,
+        productType: ProductType
+    ) {
+        Task { try? await handleProductUpdateDynamicParamsListAsync(productID, productType: productType) }
+    }
+
+    func handleProductUpdateDynamicParamsListAsync(
+        _ productID: ProductCardData.ID,
+        productType: ProductType
+    ) async throws {
+        
+        let payload: ProductDynamicParamsListPayload = .init(productList: [.init(productId: .init(productID), type: productType.typeValueForRequest)])
+        
+        let params = try await Services.makeGetProductDynamicParamsList(
+            httpClient: self.authenticatedHTTPClient(),
+            logger: LoggerAgent.shared,
+            payload: payload
+        )
+        let updatedProducts = Self.reduce(products: self.products.value, with: params)
+        self.products.value = updatedProducts
+        
+        // cache products
+        try self.productsCacheStore(productsData: updatedProducts)
+    }
+    
     func handleProductsUpdateFastAll() {
         Task { try? await handleProductsUpdateFastAllAsync() }
     }

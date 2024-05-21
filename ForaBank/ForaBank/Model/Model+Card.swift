@@ -45,10 +45,16 @@ extension ModelAction {
                 let cardNumber: String
             }
             
-            enum Response: Action {
+            struct Response: Action {
                 
-                case success
-                case failure(message: String)
+                let cardId: Int
+                let result: Result
+                
+                enum Result {
+                    
+                    case success
+                    case failure(message: String)
+                }
             }
         }
     }
@@ -134,12 +140,12 @@ extension Model {
                         self.handleServerCommandEmptyData(command: command)
                         return
                     }
-                    self.action.send(ModelAction.Card.Block.Response.success)
+                    self.action.send(ModelAction.Card.Block.Response(cardId: payload.cardId, result: .success))
                     
                 default:
                     if let error = response.errorMessage {
                         
-                        self.action.send(ModelAction.Card.Block.Response.failure(message: error))
+                        self.action.send(ModelAction.Card.Block.Response(cardId: payload.cardId, result: .failure(message: error)))
                     }
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }

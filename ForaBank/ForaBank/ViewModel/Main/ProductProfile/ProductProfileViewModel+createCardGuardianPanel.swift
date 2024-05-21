@@ -46,7 +46,7 @@ private extension String {
     
     static func cardGuardianTitle(by status: ProductCardData.StatusCard?) -> String {
         switch status {
-        case .blockedUnlockAvailable:
+        case .blockedUnlockAvailable, .blockedUnlockNotAvailable:
             return "Разблокировать"
         case .active:
             return "Заблокировать"
@@ -78,7 +78,7 @@ private extension Image {
         switch cardGuardianStatus {
         case .active:
             return .ic24Lock
-        case .blockedUnlockAvailable:
+        case .blockedUnlockAvailable, .blockedUnlockNotAvailable:
             return .ic24Unlock
         default:
             return .none
