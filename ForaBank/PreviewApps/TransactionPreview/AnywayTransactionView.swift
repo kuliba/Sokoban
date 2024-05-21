@@ -14,92 +14,22 @@ struct AnywayTransactionView: View {
     
     var body: some View {
         
-        List {
+        ScrollView(showsIndicators: false) {
             
-            Section {
+            VStack(spacing: 32) {
+                
+                Text(state.isValid ? "valid" : "invalid")
+                    .foregroundColor(state.isValid ? .green : .red)
+                    .font(.headline)
+                
+                Divider()
+                
                 Text("TBD: Payment UI")
                     .foregroundColor(.red)
-            } header: {
-                Text("payment")
-            }
-            
-            Section {
-                button("dismissRecoverableError", .dismissRecoverableError)
-            } header: {
-                Text("dismiss Recoverable Error")
-            }
-            
-            Section {
-                button("cancel", .fraud(.cancel))
-                button("continue", .fraud(.continue))
-                button("expire", .fraud(.expired))
-            } header: {
-                Text("Fraud")
-            }
-            
-            Section {
-                button("Continue", .continue)
-            } header: {
-                Text("Continue")
-            }
-            
-            Section {} header: {
-                Text("\"Effect\" (non-UI) events")
-                    .foregroundColor(.orange)
-            }
-            
-            Section {
-                button("complete with failure", .completePayment(nil))
-                    .foregroundColor(.red)
                 
-                button(
-                    "complete",
-                    .completePayment(.init(status: .completed, info: .detailID(123)))
-                )
-                button(
-                    "inflight",
-                    .completePayment(.init(status: .inflight, info: .detailID(123)))
-                )
-                button(
-                    "reject",
-                    .completePayment(.init(status: .rejected, info: .detailID(123)))
-                )
-            } header: {
-                Text("complete Payment event")
             }
-            
-            Section {
-                button("initiatePayment", .initiatePayment)
-            } header: {
-                Text("initiate Payment")
-            }
-            
-            Section {
-                
-                button(
-                    "updatePayment Failure",
-                    .updatePayment(.failure(.connectivityError))
-                )
-                .foregroundColor(.red)
-                
-                button(
-                    "updatePayment Success",
-                    .updatePayment(.success(.preview))
-                )
-            } header: {
-                Text("update Payment")
-            }
+            .padding()
         }
-        .listStyle(.grouped)
-    }
-    
-    private func button(
-        _ title: String,
-        _ event: Event
-    ) -> some View {
-        
-        Button(title) { self.event(event) }
-            .contentShape(Rectangle())
     }
 }
 

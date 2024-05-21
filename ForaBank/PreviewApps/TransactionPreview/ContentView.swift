@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @State private var isShowingEventList = false
+    
     private let viewModel: AnywayTransactionViewModel
     
     init() {
@@ -45,6 +47,43 @@ struct ContentView: View {
             
             AnywayTransactionStateWrapperView(viewModel: viewModel)
                 .navigationTitle("Transaction View")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(
+                        placement: .cancellationAction,
+                        content: showEventListButton
+                    )
+                }
+                .sheet(
+                    isPresented: $isShowingEventList,
+                    content: eventList
+                )
+        }
+    }
+    
+    private func eventList() -> some View {
+        
+        NavigationView {
+            
+            EventList(event: viewModel.event(_:))
+                .navigationTitle("Events")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(
+                        placement: .cancellationAction,
+                        content: {
+                            Button("Close") { isShowingEventList = false }
+                        }
+                    )
+                }
+        }
+    }
+    
+    private func showEventListButton() -> some View {
+        
+        Button { isShowingEventList = true } label: {
+            
+            Image(systemName: "arrowshape.turn.up.right.circle")
         }
     }
 }
