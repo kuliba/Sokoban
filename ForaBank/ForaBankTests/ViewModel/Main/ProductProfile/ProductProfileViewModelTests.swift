@@ -733,7 +733,7 @@ private extension ProductProfileViewModel {
 private extension Array where Element == PanelButton.Details {
     
     func containsTitle(_ title: String) -> Bool {
-        return self.filter { $0.title == "Разблокировать" }.first != nil
+        return self.filter { $0.title == title }.first != nil
     }
 }
 
