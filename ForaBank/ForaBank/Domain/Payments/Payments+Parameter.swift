@@ -1128,14 +1128,12 @@ extension Payments {
             init?(source: Payments.Operation.Source?) {
                 
                 switch source {
-                case .sfp(_, let bankId):
-                    if bankId != BankID.foraBankID.rawValue {
-                        self = .sbpIcon
-                    } else {
+                    
+                    case .sfp(_, BankID.foraBankID.rawValue):
                         return nil
-                    }
-                default:
-                    self = .sbpIcon
+                    
+                    default:
+                        self = .sbpIcon
                 }
             }
             
