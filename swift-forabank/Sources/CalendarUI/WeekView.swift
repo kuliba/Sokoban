@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct WeekView<DateView>: View where DateView: View {
-    @Environment(\.calendar) var calendar
- 
+    
+    let calendar: Calendar
     let week: Date
     let content: (Date) -> DateView
  

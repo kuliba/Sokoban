@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct MonthView<DateView>: View where DateView: View {
-    @Environment(\.calendar) var calendar
- 
+    
+    let calendar: Calendar
     let month: Date
     let content: (Date) -> DateView
  
