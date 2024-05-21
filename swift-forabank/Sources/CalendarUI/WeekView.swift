@@ -11,14 +11,16 @@ struct WeekView<DateView>: View where DateView: View {
     
     let calendar: Calendar
     let week: Date
-    let content: (Date) -> DateView
+    let dateView: (Date) -> DateView
  
     init(
+        calendar: Calendar,
         week: Date,
-        @ViewBuilder content: @escaping (Date) -> DateView
+        @ViewBuilder dateView: @escaping (Date) -> DateView
     ) {
+        self.calendar = calendar
         self.week = week
-        self.content = content
+        self.dateView = dateView
     }
  
     private var days: [Date] {
@@ -32,13 +34,17 @@ struct WeekView<DateView>: View where DateView: View {
     }
  
     var body: some View {
+        
         HStack {
-            ForEach(days, id: \.self) { date in
+            
+            ForEach(calendar.days(week: week), id: \.self) { date in
+                
                 HStack {
+                    
                     if self.calendar.isDate(self.week, equalTo: date, toGranularity: .month) {
-                        self.content(date)
+                        self.dateView(date)
                     } else {
-                        self.content(date).hidden()
+                        self.dateView(date).hidden()
                     }
                 }
             }
