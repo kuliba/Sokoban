@@ -300,6 +300,18 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
     func productByID(_ productID: ProductData.ID) -> ProductData? {
         return model.product(productId: productID)
     }
+    
+    func countCards() -> Int {
+        
+        var count = items.count
+        groupingCards.keys.forEach {
+            
+            if productByID($0) == nil {
+                count += 1
+            }
+        }
+        return count
+    }
 }
 
 enum MyProductsSectionViewModelAction {

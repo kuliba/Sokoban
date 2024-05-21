@@ -801,6 +801,7 @@ public extension Image {
     static var ic32Edit2: Image { Image(#function) }
     static var ic32Emblem: Image { Image(#function) }
     static var ic32Globe: Image { Image(#function) }
+    static var ic32GreySimple: Image { Image(#function) }
     static var ic32Image: Image { Image(#function) }
     static var ic32Location: Image { Image(#function) }
     static var ic32LogoForaLine: Image { Image(#function) }
