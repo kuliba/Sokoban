@@ -1006,6 +1006,7 @@
 		2AA54AC02BFD1DD900EF872C /* AnywayPaymentWidgetViewFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54ABF2BFD1DD900EF872C /* AnywayPaymentWidgetViewFactory+preview.swift */; };
 		2AA54AC22BFD1E6800EF872C /* ObservingProductSelectViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AC12BFD1E6800EF872C /* ObservingProductSelectViewModel+preview.swift */; };
 		2AA54AC42BFD1E9000EF872C /* ProductSelectConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AC32BFD1E9000EF872C /* ProductSelectConfig+iFora.swift */; };
+		2AA54AC62BFD1F8200EF872C /* AnywayPaymentFactoryComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AC52BFD1F8200EF872C /* AnywayPaymentFactoryComposer.swift */; };
 		2AA555682A3E02F500B13D47 /* ServerAgentTestStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA555672A3E02F500B13D47 /* ServerAgentTestStub.swift */; };
 		2AA5556A2A3E486700B13D47 /* XCTestCase+assertThrows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA555692A3E486700B13D47 /* XCTestCase+assertThrows.swift */; };
 		2AA5556E2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA5556D2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift */; };
@@ -3900,6 +3901,7 @@
 		2AA54ABF2BFD1DD900EF872C /* AnywayPaymentWidgetViewFactory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentWidgetViewFactory+preview.swift"; sourceTree = "<group>"; };
 		2AA54AC12BFD1E6800EF872C /* ObservingProductSelectViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObservingProductSelectViewModel+preview.swift"; sourceTree = "<group>"; };
 		2AA54AC32BFD1E9000EF872C /* ProductSelectConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductSelectConfig+iFora.swift"; sourceTree = "<group>"; };
+		2AA54AC52BFD1F8200EF872C /* AnywayPaymentFactoryComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentFactoryComposer.swift; sourceTree = "<group>"; };
 		2AA555672A3E02F500B13D47 /* ServerAgentTestStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentTestStub.swift; sourceTree = "<group>"; };
 		2AA555692A3E486700B13D47 /* XCTestCase+assertThrows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+assertThrows.swift"; sourceTree = "<group>"; };
 		2AA5556D2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentTestStubTests.swift; sourceTree = "<group>"; };
@@ -9292,6 +9294,7 @@
 				2AD092B62BFA4B2000777EE4 /* AnywayTransactionViewModelComposer.swift */,
 				2AD092B82BFA4B5900777EE4 /* AnywayTransactionEffectHandlerMicroServicesComposer.swift */,
 				2AD092BB2BFA4FCC00777EE4 /* AnywayTransactionEffectHandlerNanoServices.swift */,
+				2AA54AC52BFD1F8200EF872C /* AnywayPaymentFactoryComposer.swift */,
 				2AD092C32BFA62A600777EE4 /* Stubs */,
 			);
 			path = CompositionRoot;
@@ -16416,6 +16419,7 @@
 				2AA54ABC2BFD1D8A00EF872C /* AnywayPaymentElementViewFactory.swift in Sources */,
 				2AD092AF2BFA360700777EE4 /* AnywayTransactionViewModel+preview.swift in Sources */,
 				2AD092B92BFA4B5900777EE4 /* AnywayTransactionEffectHandlerMicroServicesComposer.swift in Sources */,
+				2AA54AC62BFD1F8200EF872C /* AnywayPaymentFactoryComposer.swift in Sources */,
 				2AA54A9F2BFCBA0E00EF872C /* ObservingAnywayTransactionViewModel+preview.swift in Sources */,
 				2AD092AB2BFA332800777EE4 /* AnywayTransactionStateWrapperView.swift in Sources */,
 				2AD092C62BFB23ED00777EE4 /* AnywayPaymentContext+preview.swift in Sources */,
