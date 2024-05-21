@@ -1101,7 +1101,7 @@
 		2AD092A72BFA324900777EE4 /* ForaTools in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD092A62BFA324900777EE4 /* ForaTools */; };
 		2AD092A92BFA327C00777EE4 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD092A82BFA327C00777EE4 /* PaymentComponents */; };
 		2AD092AB2BFA332800777EE4 /* AnywayTransactionStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092AA2BFA332800777EE4 /* AnywayTransactionStateWrapperView.swift */; };
-		2AD092AD2BFA335900777EE4 /* AnywayTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092AC2BFA335900777EE4 /* AnywayTransaction.swift */; };
+		2AD092AD2BFA335900777EE4 /* AnywayDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092AC2BFA335900777EE4 /* AnywayDomain.swift */; };
 		2AD092AF2BFA360700777EE4 /* AnywayTransactionViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092AE2BFA360700777EE4 /* AnywayTransactionViewModel+preview.swift */; };
 		2AD092B12BFA366400777EE4 /* AnywayTransactionState+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092B02BFA366400777EE4 /* AnywayTransactionState+preview.swift */; };
 		2AD092B52BFA49DE00777EE4 /* AnywayTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092B42BFA49DE00777EE4 /* AnywayTransactionView.swift */; };
@@ -3961,7 +3961,7 @@
 		2AD092942BFA30A200777EE4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2AD092972BFA30A200777EE4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2AD092AA2BFA332800777EE4 /* AnywayTransactionStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayTransactionStateWrapperView.swift; sourceTree = "<group>"; };
-		2AD092AC2BFA335900777EE4 /* AnywayTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayTransaction.swift; sourceTree = "<group>"; };
+		2AD092AC2BFA335900777EE4 /* AnywayDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayDomain.swift; sourceTree = "<group>"; };
 		2AD092AE2BFA360700777EE4 /* AnywayTransactionViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayTransactionViewModel+preview.swift"; sourceTree = "<group>"; };
 		2AD092B02BFA366400777EE4 /* AnywayTransactionState+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayTransactionState+preview.swift"; sourceTree = "<group>"; };
 		2AD092B42BFA49DE00777EE4 /* AnywayTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayTransactionView.swift; sourceTree = "<group>"; };
@@ -9194,7 +9194,7 @@
 				2AD092BA2BFA4B5E00777EE4 /* CompositionRoot */,
 				2AD092AA2BFA332800777EE4 /* AnywayTransactionStateWrapperView.swift */,
 				2AD092B42BFA49DE00777EE4 /* AnywayTransactionView.swift */,
-				2AD092AC2BFA335900777EE4 /* AnywayTransaction.swift */,
+				2AD092AC2BFA335900777EE4 /* AnywayDomain.swift */,
 				2AD092CB2BFB2F8B00777EE4 /* Helpers */,
 				2AD092942BFA30A200777EE4 /* Assets.xcassets */,
 				2AD092962BFA30A200777EE4 /* Preview Content */,
@@ -16344,7 +16344,7 @@
 				2AD092AB2BFA332800777EE4 /* AnywayTransactionStateWrapperView.swift in Sources */,
 				2AD092C62BFB23ED00777EE4 /* AnywayPaymentContext+preview.swift in Sources */,
 				2AD092CA2BFB24D400777EE4 /* AnywayPaymentOutline+preview.swift in Sources */,
-				2AD092AD2BFA335900777EE4 /* AnywayTransaction.swift in Sources */,
+				2AD092AD2BFA335900777EE4 /* AnywayDomain.swift in Sources */,
 				2AD092B72BFA4B2000777EE4 /* AnywayTransactionViewModelComposer.swift in Sources */,
 				2AD092C22BFA613500777EE4 /* AnywayTransactionEffectHandlerMicroServices+stubbed.swift in Sources */,
 				2AD092BE2BFA52EC00777EE4 /* AnywayTransactionEffectHandlerNanoServices+stubbed.swift in Sources */,

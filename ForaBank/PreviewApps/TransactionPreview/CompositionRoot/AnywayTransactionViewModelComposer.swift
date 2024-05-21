@@ -37,7 +37,6 @@ extension AnywayTransactionViewModelComposer {
 extension AnywayTransactionViewModelComposer {
     
     typealias MicroServices = AnywayTransactionEffectHandlerMicroServices
-    
     typealias ViewModel = AnywayTransactionViewModel
 }
 
