@@ -12,9 +12,8 @@ final class AnywayTransactionEffectHandlerMicroServicesComposer {
     
     private let nanoServices: NanoServices
     
-    init(
-        nanoServices: NanoServices
-    ) {
+    init(nanoServices: NanoServices) {
+        
         self.nanoServices = nanoServices
     }
 }
@@ -24,10 +23,10 @@ extension AnywayTransactionEffectHandlerMicroServicesComposer {
     func compose() -> MicroServices {
         
         return .init(
-            initiatePayment: initiatePayment,
-            makePayment: makePayment,
-            paymentEffectHandle: paymentEffectHandle,
-            processPayment: processPayment
+            initiatePayment: initiatePayment(_:_:),
+            makePayment: makePayment(_:_:),
+            paymentEffectHandle: paymentEffectHandle(_:_:),
+            processPayment: processPayment(_:_:)
         )
     }
 }

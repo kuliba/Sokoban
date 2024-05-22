@@ -10,7 +10,15 @@ import AnywayPaymentDomain
 extension AnywayPayment {
     
     static let preview: Self = .init(
-        elements: [],
+        elements: [
+            .parameter(.stringInput),
+            .widget(.otp(nil)),
+            .widget(.core(.init(
+                amount: 1_234.56,
+                currency: "RUB",
+                productID: .accountID(234567891) // ProductSelect.Product+ext.swift:21
+            )))
+        ],
         infoMessage: nil,
         isFinalStep: false,
         isFraudSuspected: false,

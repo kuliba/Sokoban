@@ -5,50 +5,123 @@
 //  Created by Igor Malyarov on 19.05.2024.
 //
 
+import AnywayPaymentDomain
+import PaymentComponents
+import RxViewModel
 import SwiftUI
+
+#warning("Composition Root")
+typealias ProductSelectViewModel = RxViewModel<ProductSelect, ProductSelectEvent, Never>
 
 struct ContentView: View {
     
-    private let viewModel: AnywayTransactionViewModel
+    @StateObject private var viewModel: ContentViewModel
+
+    private let makeFactory: (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory
     
     init() {
         
-        let initialState: AnywayTransactionState = .preview
+        self._viewModel = .init(wrappedValue: .default())
         
-        let microServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer(
-            nanoServices: .stubbed(with: .init(
-                getDetailsResult: "Operation Detail",
-                makeTransferResult: .init(
-                    status: .completed,
-                    detailID: 54321
-                )
-            ))
+#warning("Composition Root")
+        let getProducts: () -> [ProductSelect.Product] = {
+#warning("FIXME")
+            return [.accountPreview, .cardPreview]
+        }
+        let currencyOfProduct: (ProductSelect.Product) -> String = { _ in
+#warning("FIXME")
+            return "RUB"
+        }
+        
+        let composer = AnywayPaymentFactoryComposer(
+            currencyOfProduct: currencyOfProduct,
+            getProducts: getProducts
         )
         
-        let composer = AnywayTransactionViewModelComposer(
-            composeMicroServices: {
-                
-                return .stubbed(with: .init(
-                    initiatePayment: .success(.preview),
-                    makePayment: .init(
-                        status: .completed,
-                        info: .details("Operation Detail")
-                    ),
-                    paymentEffectHandle: .anEvent,
-                    processPayment: .success(.preview))
-                )
-            }
-        )
-        
-        self.viewModel = composer.compose(initialState: initialState)
+        self.makeFactory = composer.compose(event:)
     }
     
     var body: some View {
         
         NavigationView {
             
-            AnywayTransactionStateWrapperView(viewModel: viewModel)
-                .navigationTitle("Transaction View")
+            Button("Payment", action: viewModel.openPayment)
+                .navigationDestination(
+                    destination: viewModel.flow.destination,
+                    dismissDestination: viewModel.dismissDestination,
+                    content: destinationView
+                )
+        }
+        .onAppear(perform: viewModel.openPayment)
+    }
+    
+    @ViewBuilder
+    private func destinationView(
+        destination: Flow.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .payment(transactionViewModel):
+            let factory = makeFactory(
+               { transactionViewModel.event(.payment($0)) }
+            )
+            AnywayTransactionStateWrapperView(
+                viewModel: transactionViewModel,
+                factory: factory
+            )
+            .navigationTitle("Transaction View")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(
+                    placement: .cancellationAction,
+                    content: showEventListButton
+                )
+            }
+            .sheet(
+                modal: viewModel.flow.modal,
+                dismissModal: viewModel.hideEventList,
+                content: { sheetView(transactionViewModel, modal: $0) }
+            )
+        }
+    }
+    
+    @ViewBuilder
+    private func sheetView(
+        _ transactionViewModel: ObservingAnywayTransactionViewModel,
+        modal: Flow.Modal
+    ) -> some View {
+        
+        switch modal {
+        case .fraud:
+            NavigationView {
+                
+                Text("Fraud suspected!")
+                    .foregroundColor(.red)
+            }
+            
+        case .eventList:
+            NavigationView {
+                
+                EventList(event: transactionViewModel.event(_:))
+                    .navigationTitle("Events")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(
+                            placement: .cancellationAction,
+                            content: {
+                                Button("Close", action: viewModel.hideEventList)
+                            }
+                        )
+                    }
+            }
+        }
+    }
+    
+    private func showEventListButton() -> some View {
+        
+        Button(action: viewModel.showEventList) {
+            
+            Image(systemName: "arrowshape.turn.up.right.circle")
         }
     }
 }
