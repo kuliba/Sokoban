@@ -6,7 +6,7 @@
 //
 
 import AmountComponent
-import AnywayPaymentCore
+import AnywayPaymentDomain
 import RxViewModel
 import SwiftUI
 
@@ -63,7 +63,7 @@ struct ContentView: View {
         
         VStack(alignment: .leading) {
             
-            Text(String(describing: viewModel.state.digest))
+            Text(String(describing: viewModel.state.makeDigest()))
             Text("OTP: \(viewModel.state.infoOTP)")
         }
         .padding()

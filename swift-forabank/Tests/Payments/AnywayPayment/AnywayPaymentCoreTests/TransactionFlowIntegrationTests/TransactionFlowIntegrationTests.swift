@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 31.03.2024.
 //
 
+import AnywayPaymentDomain
 import AnywayPaymentCore
 import RxViewModel
 import XCTest
@@ -328,21 +329,16 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias State = Transaction<DocumentStatus, OperationDetails, Payment>
-    private typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate>
-    private typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
+    private typealias State = _Transaction
+    private typealias Event = _TransactionEvent
+    private typealias Effect = _TransactionEffect
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>
-    private typealias Reducer = TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate>
-    private typealias EffectHandler = TransactionEffectHandler<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
+    private typealias Reducer = _TransactionReducer
+    private typealias EffectHandler = _TransactionEffectHandler
     
     private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), shouldRestartPayment: Bool, stagePayment: Payment?, updatePayment: Payment, validatePayment: Bool)
-    
-    private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
-    private typealias PaymentInitiator = PaymentProcessing
-    private typealias PaymentMaker = Spy<VerificationCode, EffectHandler.MakePaymentResult>
-    private typealias PaymentProcessing = Spy<PaymentDigest, EffectHandler.ProcessResult>
     
     private typealias Inspector = PaymentInspector<Payment, PaymentDigest>
 
@@ -377,12 +373,13 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         let paymentMaker = PaymentMaker()
         let paymentProcessing = PaymentProcessing()
         let effectHandler = EffectHandler(
-            initiatePayment: paymentInitiator.process,
-            makePayment: paymentMaker.process,
-            paymentEffectHandle: paymentEffectHandler.handleEffect,
-            processPayment: paymentProcessing.process
+            microServices: .init(
+                initiatePayment: paymentInitiator.process,
+                makePayment: paymentMaker.process,
+                paymentEffectHandle: paymentEffectHandler.handleEffect,
+                processPayment: paymentProcessing.process
+            )
         )
-        
         let sut = SUT(
             initialState: initialState,
             reduce: reducer.reduce,
