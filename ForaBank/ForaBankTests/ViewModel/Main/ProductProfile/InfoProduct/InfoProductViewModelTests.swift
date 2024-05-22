@@ -899,7 +899,8 @@ final class InfoProductViewModelTests: XCTestCase {
             listWithAction: .items,
             additionalList: .cardItems,
             shareButton: .shareButton,
-            model: model)
+            model: model, 
+            makeIconView: model.imageCache().makeIconView(for:))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -915,7 +916,8 @@ final class InfoProductViewModelTests: XCTestCase {
         
         let sut: InfoProductViewModel = .init(
             model: model,
-            product: card
+            product: card,
+            makeIconView: model.imageCache().makeIconView(for:)
         )
         //TODO: test memoryleak
         return sut
@@ -937,7 +939,9 @@ final class InfoProductViewModelTests: XCTestCase {
             listWithAction: .items,
             additionalList: .cardItems,
             shareButton: .shareButton,
-            model: model)
+            model: model,
+            makeIconView: model.imageCache().makeIconView(for:)
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -959,7 +963,8 @@ final class InfoProductViewModelTests: XCTestCase {
         
         let sut = InfoProductViewModel(
             model: model,
-            product: product
+            product: product,
+            makeIconView: model.imageCache().makeIconView(for:)
         )
         
         //TODO: trackMemoryLeak for model

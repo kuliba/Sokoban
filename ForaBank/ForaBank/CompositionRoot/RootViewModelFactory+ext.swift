@@ -373,9 +373,9 @@ extension ProductProfileViewModel {
                         product: $0.productData,
                         info: $0.info,
                         showCvv: $0.showCVV,
-                        event: $0.events
+                        event: $0.events,
+                        makeIconView: $0.model.imageCache().makeIconView(for:)
                     )
-                    
                 },
                 makeAlert: {
                     return .init(
