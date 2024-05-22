@@ -12,6 +12,7 @@ import SwiftUI
 import Tagged
 import PinCodeUI
 import CardUI
+import UIPrimitives
 
 class InfoProductViewModel: ObservableObject {
     
@@ -32,8 +33,9 @@ class InfoProductViewModel: ObservableObject {
     private var needShowNumber = false
     private var needShowCvv = false
     private let event: (Event) -> Void
-    
-    var info: (text: String, image: Image?) = ("", nil)
+    private let makeIconView: IconDomain.MakeIconView
+
+    var info: Info? = nil
 
     var needShowCheckbox = false {
         didSet {
@@ -63,7 +65,8 @@ class InfoProductViewModel: ObservableObject {
         shareButton: ButtonViewModel?,
         model: Model,
         showCvv: ShowCVV? = nil,
-        event: @escaping (Event) -> Void = { _ in }
+        event: @escaping (Event) -> Void = { _ in },
+        makeIconView: @escaping IconDomain.MakeIconView
     ) {
         
         self.product = product
@@ -75,6 +78,7 @@ class InfoProductViewModel: ObservableObject {
         self.model = model
         self.showCvv = showCvv
         self.event = event
+        self.makeIconView = makeIconView
     }
     
     internal init(
@@ -82,7 +86,8 @@ class InfoProductViewModel: ObservableObject {
         product: ProductData,
         info: Bool = true,
         showCvv: ShowCVV? = nil,
-        event: @escaping (Event) -> Void = { _ in }
+        event: @escaping (Event) -> Void = { _ in },
+        makeIconView: @escaping IconDomain.MakeIconView
     ) {
         
         self.model = model
@@ -92,6 +97,7 @@ class InfoProductViewModel: ObservableObject {
         self.listWithAction = []
         self.showCvv = showCvv
         self.event = event
+        self.makeIconView = makeIconView
         
         if let cardProductData = product as? ProductCardData {
             
@@ -105,6 +111,23 @@ class InfoProductViewModel: ObservableObject {
         createShareButtons(isCard: product is ProductCardData)
         bind()
         setBasic(product: product, info: info)
+    }
+    
+    struct Info {
+                
+        let md5hash: Md5hash
+        let title: String
+        let image: UIPrimitives.AsyncImage
+        
+        init(
+            md5hash: Md5hash,
+            title: String,
+            image: UIPrimitives.AsyncImage
+        ) {
+            self.md5hash = md5hash
+            self.title = title
+            self.image = image
+        }
     }
     
     struct ItemViewModel: Hashable {
@@ -295,7 +318,8 @@ class InfoProductViewModel: ObservableObject {
                     switch payload {
                     case .success(let data):
                         
-                        info = (data.info, model.images.value[data.infoMd5hash]?.image)
+                        info = .init(md5hash: data.infoMd5hash, title: data.info, image: makeIconView(.md5Hash(MD5Hash(rawValue: data.infoMd5hash))))
+                        
                         
                         let documentListMultiple = Self.reduceMultiple(data: data)
                         
