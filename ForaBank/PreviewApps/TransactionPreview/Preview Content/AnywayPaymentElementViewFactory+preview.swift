@@ -5,7 +5,16 @@
 //  Created by Igor Malyarov on 21.05.2024.
 //
 
-extension AnywayPaymentElementViewFactory {
+import SwiftUI
+
+extension AnywayPaymentElementViewFactory 
+where IconView == Text {
     
-    static let preview: Self = .init(widget: .preview)
+    static var preview: Self {
+        
+        return .init(
+            makeIconView: { Text(String(describing: $0)) },
+            widget: .preview
+        )
+    }
 }

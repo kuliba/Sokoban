@@ -17,7 +17,7 @@ struct ContentView: View {
     
     @StateObject private var viewModel: ContentViewModel
 
-    private let makeFactory: (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory
+    private let makeFactory: (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<Text>
     
     init() {
         
@@ -34,6 +34,7 @@ struct ContentView: View {
         }
         
         let composer = AnywayPaymentFactoryComposer(
+            config: .init(info: .preview),
             currencyOfProduct: currencyOfProduct,
             getProducts: getProducts
         )

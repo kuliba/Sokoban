@@ -11,11 +11,11 @@ struct AnywayTransactionStateWrapperView: View {
     
     @StateObject private var viewModel: ViewModel
     
-    private let factory: AnywayTransactionView.Factory
+    private let factory: Factory
     
     init(
         viewModel: ViewModel,
-        factory: AnywayTransactionView.Factory
+        factory: Factory
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
         self.factory = factory
@@ -35,6 +35,7 @@ struct AnywayTransactionStateWrapperView: View {
 extension AnywayTransactionStateWrapperView {
     
     typealias ViewModel = ObservingAnywayTransactionViewModel
+    typealias Factory = AnywayTransactionView.Factory
 }
 
 #Preview {

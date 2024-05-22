@@ -7,16 +7,20 @@
 
 import AnywayPaymentDomain
 import PaymentComponents
+import SwiftUI
 
 final class AnywayPaymentFactoryComposer {
     
+    private let config: AnywayPaymentElementConfig
     private let currencyOfProduct: CurrencyOfProduct
     private let getProducts: GetProducts
     
     init(
+        config: AnywayPaymentElementConfig,
         currencyOfProduct: @escaping CurrencyOfProduct,
         getProducts: @escaping GetProducts
     ) {
+        self.config = config
         self.currencyOfProduct = currencyOfProduct
         self.getProducts = getProducts
     }
@@ -29,11 +33,20 @@ extension AnywayPaymentFactoryComposer {
     ) -> Factory {
         
         let factory = AnywayPaymentElementViewFactory(
+            makeIconView: makeIconView,
             widget: .init(makeProductSelectView: makeProductSelectView)
         )
         
         return .init(
-            makeElementView: { .init(state: $0, event: event, factory: factory) },
+            makeElementView: { 
+                
+                return .init(
+                    state: $0, 
+                    event: event,
+                    factory: factory,
+                    config: self.config
+                )
+            },
             makeFooterView: { .init() }
         )
     }
@@ -43,10 +56,20 @@ extension AnywayPaymentFactoryComposer {
     
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
-    typealias Factory = AnywayPaymentFactory
+    typealias Factory = AnywayPaymentFactory<IconView>
+    
+    typealias IconView = Text
 }
 
 private extension AnywayPaymentFactoryComposer {
+    
+    func makeIconView(
+        component: AnywayPayment.Element.UIComponent
+    ) -> IconView {
+        
+        #warning("FIXME")
+        return .init("?")
+    }
     
     func makeProductSelectView(
         productID: ProductID,
