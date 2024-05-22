@@ -421,7 +421,8 @@ extension ProductProfileCardView.ViewModel {
         let productSize: CGSize = .init(width: 48, height: 48)
         let spacing: CGFloat = 8
         var groupingCards: Array.Products = [:]
-        
+        var itemsID: [ProductData.ID] = []
+
         @Published var thumbnails: [ThumbnailViewModel]
         @Published var selected: ThumbnailViewModel.ID
         
@@ -441,6 +442,8 @@ extension ProductProfileCardView.ViewModel {
             self.thumbnails = []
             self.selected = selected
             self.groupingCards = products.groupingCards()
+            self.itemsID = products.uniqueProductIDs()
+
             self.thumbnails = products.map { product in
                 
                 ThumbnailViewModel(
@@ -457,13 +460,13 @@ extension ProductProfileCardView.ViewModel {
             
             if let values = groupingCards[id] {
                 let additionalSpacing = values.count == 1 ? 0 : spacing
-                let width = CGFloat(values.count) * (productSize.width + spacing) - additionalSpacing
+                let width = CGFloat(values.count) * productSize.width + (CGFloat(values.count-1) * additionalSpacing)
         
                 return values.count == 1 ? (width, .clear) : (width, .black.opacity(0.2))
             }
             return (0, .clear)
         }
-        
+                
         struct ThumbnailViewModel: Identifiable {
  
             let id: ProductData.ID
@@ -597,7 +600,11 @@ extension ProductProfileCardView {
                         
                         ForEach(viewModel.thumbnails) { thumbnail in
                             
-                            ProductProfileCardView.ThumbnailView(viewModel: thumbnail, isSelected: viewModel.selected == thumbnail.id)
+                            ProductProfileCardView.ThumbnailView(
+                                viewModel: thumbnail,
+                                isSelected: viewModel.selected == thumbnail.id,
+                                selectionAvailable: viewModel.groupingCards.selectionAvailable(thumbnail.id)
+                            )
                                 .scrollId(thumbnail.id)
                         }
                         
@@ -621,17 +628,19 @@ extension ProductProfileCardView {
     struct SelectorsView: View {
         
         let viewModel: ProductProfileCardView.ViewModel.SelectorViewModel
-        
+        let spacing: CGFloat = 8
+
         var body: some View {
             
-            HStack(alignment: .center, spacing: 0) {
+            HStack(alignment: .center, spacing: spacing) {
                 
-                ForEach(viewModel.thumbnails) { thumbnail in
+                ForEach(viewModel.itemsID, id: \.self) {
                     
-                    let (width, color) = viewModel.widthWithColor(by: thumbnail.id)
+                    let (width, color) = viewModel.widthWithColor(by: $0)
                     Capsule()
                         .foregroundColor(color)
                         .frame(width: width, height: viewModel.productSize.height)
+                        .padding(.trailing, 0)
                 }
                 Spacer()
             }
@@ -643,6 +652,7 @@ extension ProductProfileCardView {
         
         let viewModel: ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel
         let isSelected: Bool
+        let selectionAvailable: Bool
         
         var body: some View {
             
@@ -654,7 +664,7 @@ extension ProductProfileCardView {
                 
                 ZStack {
                     
-                    if isSelected {
+                    if isSelected, selectionAvailable {
                         
                         Circle()
                             .foregroundColor(.black.opacity(0.2))

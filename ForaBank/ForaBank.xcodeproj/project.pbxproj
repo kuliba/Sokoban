@@ -2274,6 +2274,8 @@
 		83676AF22BFBA30F004B614C /* MyProductsSectionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83676AF12BFBA30F004B614C /* MyProductsSectionViewModelTests.swift */; };
 		836DE2EC2AC72A7C00D4C754 /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 836DE2EB2AC72A7C00D4C754 /* Tagged */; };
 		836DE2EE2ACAE86C00D4C754 /* C2BSubscribeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836DE2ED2ACAE86C00D4C754 /* C2BSubscribeFactory.swift */; };
+		836E333F2BFE1D3A006848E2 /* Dictionary+ProductData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836E333E2BFE1D3A006848E2 /* Dictionary+ProductData.swift */; };
+		836E33412BFE1E50006848E2 /* DictionaryExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836E33402BFE1E50006848E2 /* DictionaryExtensionsTests.swift */; };
 		8376CE542AA7395000DCDE63 /* LandingUIComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 8376CE532AA7395000DCDE63 /* LandingUIComponent */; };
 		837F82E52A3B271C003544BB /* PickerWithPreviewComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 837F82E42A3B271C003544BB /* PickerWithPreviewComponent */; };
 		83808C412B8CEDCB00E9F7BF /* CVVButtonEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */; };
@@ -5146,6 +5148,8 @@
 		83676AEF2BFB99B9004B614C /* View+border.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+border.swift"; sourceTree = "<group>"; };
 		83676AF12BFBA30F004B614C /* MyProductsSectionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsSectionViewModelTests.swift; sourceTree = "<group>"; };
 		836DE2ED2ACAE86C00D4C754 /* C2BSubscribeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C2BSubscribeFactory.swift; sourceTree = "<group>"; };
+		836E333E2BFE1D3A006848E2 /* Dictionary+ProductData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+ProductData.swift"; sourceTree = "<group>"; };
+		836E33402BFE1E50006848E2 /* DictionaryExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryExtensionsTests.swift; sourceTree = "<group>"; };
 		83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVButtonEvent.swift; sourceTree = "<group>"; };
 		83808C462B8DB97C00E9F7BF /* AlertModelOf+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlertModelOf+ext.swift"; sourceTree = "<group>"; };
 		83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSwapViewTests.swift; sourceTree = "<group>"; };
@@ -10766,6 +10770,7 @@
 				2A2936C42A0E5F3F00D105B8 /* Unimplemented.swift */,
 				2A3B3F622A28D43200244131 /* ArrayExtensionsTests.swift */,
 				83CDFA7E2BD26FB100191D8B /* ArrayOfProductData+ExtensionsTests.swift */,
+				836E33402BFE1E50006848E2 /* DictionaryExtensionsTests.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -12324,6 +12329,7 @@
 				77F1582A28183BD900CA5E4E /* CryptoKit+Extensions.swift */,
 				77D2D9AD275AB90A0097234D /* Array+Extensions.swift */,
 				83CDFA7C2BD2556400191D8B /* ArrayOfProductData+Extensions.swift */,
+				836E333E2BFE1D3A006848E2 /* Dictionary+ProductData.swift */,
 				77BF27B4284783C9009624BB /* Date+Extensions.swift */,
 				77B6B35E2852305B00E3001B /* TimeInterval+Extensions.swift */,
 				77E2899F2859221D0048141B /* Calendar+Extensions.swift */,
@@ -17013,6 +17019,7 @@
 				83FAD88729CD993700474B06 /* PaymentsServicesSectionViewModel.swift in Sources */,
 				774A8B212865FC4200B81140 /* MessagesHistoryViewModel.swift in Sources */,
 				7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */,
+				836E333F2BFE1D3A006848E2 /* Dictionary+ProductData.swift in Sources */,
 				686A1C9C27ED61E6002972F0 /* PersonsCreditsDecodableModel.swift in Sources */,
 				682092A227AC04DE003DCAFD /* ClientInfoData.swift in Sources */,
 				ED75CE0126E2AB3A0074F5D5 /* MeToMeReqestSwitchView.swift in Sources */,
@@ -18433,6 +18440,7 @@
 				5A5ABF9227AAF60000D548AA /* ServerCommandsPaymentOperationDetailTests.swift in Sources */,
 				2AEDAD4C29A4F1C900017F73 /* CurrencyData+Extension.swift in Sources */,
 				2A53FB832AFD62320045F3B0 /* Spy+Fetcher.swift in Sources */,
+				836E33412BFE1E50006848E2 /* DictionaryExtensionsTests.swift in Sources */,
 				2ABBF2C52A308AF6004411D1 /* Model+PaymentsServicesTests.swift in Sources */,
 				83B614862B03A1EA002EE299 /* Contacts+DSL.swift in Sources */,
 				77E289A228592A8E0048141B /* CalendarExtensionsTests.swift in Sources */,
