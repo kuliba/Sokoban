@@ -6,8 +6,9 @@
 //
 
 import AnywayPaymentDomain
+import SwiftUI
 
-struct AnywayPaymentFactory {
+struct AnywayPaymentFactory<IconView: View> {
     
     let makeElementView: MakeElementView
     let makeFooterView: MakeFooterView
@@ -16,7 +17,7 @@ struct AnywayPaymentFactory {
 extension AnywayPaymentFactory {
     
     typealias Element = AnywayPayment.Element
-    typealias MakeElementView = (Element) -> AnywayPaymentElementView
+    typealias MakeElementView = (Element) -> AnywayPaymentElementView<IconView>
     
     typealias MakeFooterView = () -> AnywayPaymentFooterView
 }

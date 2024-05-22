@@ -30,6 +30,7 @@ public extension Info {
     enum ID: Equatable {
         
         case amount, brandName, recipientBank
+        case other(String)
     }
 
     enum Style {

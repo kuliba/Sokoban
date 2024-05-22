@@ -996,17 +996,14 @@
 		2AA54AAB2BFCCC1D00EF872C /* AnywayPaymentElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AAA2BFCCC1D00EF872C /* AnywayPaymentElementView.swift */; };
 		2AA54AAD2BFCCC9D00EF872C /* AnywayPayment.Element.Parameter+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AAC2BFCCC9D00EF872C /* AnywayPayment.Element.Parameter+preview.swift */; };
 		2AA54AAF2BFCDB3100EF872C /* AnywayPaymentFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AAE2BFCDB3100EF872C /* AnywayPaymentFooterView.swift */; };
-		2AA54AB12BFCE21200EF872C /* AnywayPaymentFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AB02BFCE21200EF872C /* AnywayPaymentFieldView.swift */; };
 		2AA54AB32BFCE27800EF872C /* AnywayPaymentParameterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AB22BFCE27800EF872C /* AnywayPaymentParameterView.swift */; };
-		2AA54AB52BFCE2F100EF872C /* AnywayPaymentWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AB42BFCE2F100EF872C /* AnywayPaymentWidgetView.swift */; };
 		2AA54AB82BFCF4D100EF872C /* ProductSelectStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AB72BFCF4D100EF872C /* ProductSelectStateWrapperView.swift */; };
 		2AA54ABA2BFD1D6100EF872C /* AnywayPaymentElementViewFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AB92BFD1D6100EF872C /* AnywayPaymentElementViewFactory+preview.swift */; };
 		2AA54ABC2BFD1D8A00EF872C /* AnywayPaymentElementViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54ABB2BFD1D8A00EF872C /* AnywayPaymentElementViewFactory.swift */; };
-		2AA54ABE2BFD1DB200EF872C /* AnywayPaymentWidgetViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54ABD2BFD1DB200EF872C /* AnywayPaymentWidgetViewFactory.swift */; };
-		2AA54AC02BFD1DD900EF872C /* AnywayPaymentWidgetViewFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54ABF2BFD1DD900EF872C /* AnywayPaymentWidgetViewFactory+preview.swift */; };
 		2AA54AC22BFD1E6800EF872C /* ObservingProductSelectViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AC12BFD1E6800EF872C /* ObservingProductSelectViewModel+preview.swift */; };
 		2AA54AC42BFD1E9000EF872C /* ProductSelectConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AC32BFD1E9000EF872C /* ProductSelectConfig+iFora.swift */; };
 		2AA54AC62BFD1F8200EF872C /* AnywayPaymentFactoryComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AC52BFD1F8200EF872C /* AnywayPaymentFactoryComposer.swift */; };
+		2AA54AC82BFE1B3D00EF872C /* AnywayPaymentElementConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA54AC72BFE1B3D00EF872C /* AnywayPaymentElementConfig.swift */; };
 		2AA555682A3E02F500B13D47 /* ServerAgentTestStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA555672A3E02F500B13D47 /* ServerAgentTestStub.swift */; };
 		2AA5556A2A3E486700B13D47 /* XCTestCase+assertThrows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA555692A3E486700B13D47 /* XCTestCase+assertThrows.swift */; };
 		2AA5556E2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA5556D2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift */; };
@@ -3889,17 +3886,14 @@
 		2AA54AAA2BFCCC1D00EF872C /* AnywayPaymentElementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementView.swift; sourceTree = "<group>"; };
 		2AA54AAC2BFCCC9D00EF872C /* AnywayPayment.Element.Parameter+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPayment.Element.Parameter+preview.swift"; sourceTree = "<group>"; };
 		2AA54AAE2BFCDB3100EF872C /* AnywayPaymentFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentFooterView.swift; sourceTree = "<group>"; };
-		2AA54AB02BFCE21200EF872C /* AnywayPaymentFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentFieldView.swift; sourceTree = "<group>"; };
 		2AA54AB22BFCE27800EF872C /* AnywayPaymentParameterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentParameterView.swift; sourceTree = "<group>"; };
-		2AA54AB42BFCE2F100EF872C /* AnywayPaymentWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentWidgetView.swift; sourceTree = "<group>"; };
 		2AA54AB72BFCF4D100EF872C /* ProductSelectStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectStateWrapperView.swift; sourceTree = "<group>"; };
 		2AA54AB92BFD1D6100EF872C /* AnywayPaymentElementViewFactory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentElementViewFactory+preview.swift"; sourceTree = "<group>"; };
 		2AA54ABB2BFD1D8A00EF872C /* AnywayPaymentElementViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementViewFactory.swift; sourceTree = "<group>"; };
-		2AA54ABD2BFD1DB200EF872C /* AnywayPaymentWidgetViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentWidgetViewFactory.swift; sourceTree = "<group>"; };
-		2AA54ABF2BFD1DD900EF872C /* AnywayPaymentWidgetViewFactory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentWidgetViewFactory+preview.swift"; sourceTree = "<group>"; };
 		2AA54AC12BFD1E6800EF872C /* ObservingProductSelectViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObservingProductSelectViewModel+preview.swift"; sourceTree = "<group>"; };
 		2AA54AC32BFD1E9000EF872C /* ProductSelectConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductSelectConfig+iFora.swift"; sourceTree = "<group>"; };
 		2AA54AC52BFD1F8200EF872C /* AnywayPaymentFactoryComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentFactoryComposer.swift; sourceTree = "<group>"; };
+		2AA54AC72BFE1B3D00EF872C /* AnywayPaymentElementConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementConfig.swift; sourceTree = "<group>"; };
 		2AA555672A3E02F500B13D47 /* ServerAgentTestStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentTestStub.swift; sourceTree = "<group>"; };
 		2AA555692A3E486700B13D47 /* XCTestCase+assertThrows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+assertThrows.swift"; sourceTree = "<group>"; };
 		2AA5556D2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentTestStubTests.swift; sourceTree = "<group>"; };
@@ -8867,14 +8861,22 @@
 			children = (
 				2AA54AAA2BFCCC1D00EF872C /* AnywayPaymentElementView.swift */,
 				2AA54ABB2BFD1D8A00EF872C /* AnywayPaymentElementViewFactory.swift */,
-				2AA54AB02BFCE21200EF872C /* AnywayPaymentFieldView.swift */,
+				2AA54AC72BFE1B3D00EF872C /* AnywayPaymentElementConfig.swift */,
 				2AA54AB22BFCE27800EF872C /* AnywayPaymentParameterView.swift */,
-				2AA54AB42BFCE2F100EF872C /* AnywayPaymentWidgetView.swift */,
 				2AA54AB72BFCF4D100EF872C /* ProductSelectStateWrapperView.swift */,
 				2AA54AC32BFD1E9000EF872C /* ProductSelectConfig+iFora.swift */,
-				2AA54ABD2BFD1DB200EF872C /* AnywayPaymentWidgetViewFactory.swift */,
 			);
 			path = AnywayPaymentElementView;
+			sourceTree = "<group>";
+		};
+		2AA54AC92BFE2D3C00EF872C /* AnywayTransactionView */ = {
+			isa = PBXGroup;
+			children = (
+				2AD092AA2BFA332800777EE4 /* AnywayTransactionStateWrapperView.swift */,
+				2AD092B42BFA49DE00777EE4 /* AnywayTransactionView.swift */,
+				2AA54AA82BFCCC0400EF872C /* AnywayPaymentFactory.swift */,
+			);
+			path = AnywayTransactionView;
 			sourceTree = "<group>";
 		};
 		2AA64CC12BA8429C004DDC27 /* NavigationState */ = {
@@ -9251,9 +9253,7 @@
 				2AA54AA22BFCBD5000EF872C /* Flow.swift */,
 				2AA54A9A2BFCA7E000EF872C /* EventList.swift */,
 				2AD092BA2BFA4B5E00777EE4 /* CompositionRoot */,
-				2AD092AA2BFA332800777EE4 /* AnywayTransactionStateWrapperView.swift */,
-				2AD092B42BFA49DE00777EE4 /* AnywayTransactionView.swift */,
-				2AA54AA82BFCCC0400EF872C /* AnywayPaymentFactory.swift */,
+				2AA54AC92BFE2D3C00EF872C /* AnywayTransactionView */,
 				2AA54AB62BFCE3D100EF872C /* AnywayPaymentElementView */,
 				2AA54AAE2BFCDB3100EF872C /* AnywayPaymentFooterView.swift */,
 				2AD092AC2BFA335900777EE4 /* AnywayDomain.swift */,
@@ -9275,7 +9275,6 @@
 				2AD092AE2BFA360700777EE4 /* AnywayTransactionViewModel+preview.swift */,
 				2AA54A9E2BFCBA0E00EF872C /* ObservingAnywayTransactionViewModel+preview.swift */,
 				2AA54AA62BFCCBCE00EF872C /* AnywayPaymentFactory+preview.swift */,
-				2AA54ABF2BFD1DD900EF872C /* AnywayPaymentWidgetViewFactory+preview.swift */,
 				2AA54AC12BFD1E6800EF872C /* ObservingProductSelectViewModel+preview.swift */,
 				2AA54AAC2BFCCC9D00EF872C /* AnywayPayment.Element.Parameter+preview.swift */,
 			);
@@ -16406,7 +16405,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2AA54ABE2BFD1DB200EF872C /* AnywayPaymentWidgetViewFactory.swift in Sources */,
 				2AD092BC2BFA4FCC00777EE4 /* AnywayTransactionEffectHandlerNanoServices.swift in Sources */,
 				2AA54AAF2BFCDB3100EF872C /* AnywayPaymentFooterView.swift in Sources */,
 				2AA54AC22BFD1E6800EF872C /* ObservingProductSelectViewModel+preview.swift in Sources */,
@@ -16431,18 +16429,16 @@
 				2AD092B52BFA49DE00777EE4 /* AnywayTransactionView.swift in Sources */,
 				2AA54AA12BFCBD3E00EF872C /* ContentViewModel.swift in Sources */,
 				2AA54AA92BFCCC0400EF872C /* AnywayPaymentFactory.swift in Sources */,
-				2AA54AB12BFCE21200EF872C /* AnywayPaymentFieldView.swift in Sources */,
 				2AA54AAD2BFCCC9D00EF872C /* AnywayPayment.Element.Parameter+preview.swift in Sources */,
 				2AA54AA72BFCCBCE00EF872C /* AnywayPaymentFactory+preview.swift in Sources */,
 				2AD092912BFA30A100777EE4 /* TransactionPreviewApp.swift in Sources */,
-				2AA54AB52BFCE2F100EF872C /* AnywayPaymentWidgetView.swift in Sources */,
 				2AD092C02BFA543F00777EE4 /* DispatchQueue+delay.swift in Sources */,
 				2AA54AB82BFCF4D100EF872C /* ProductSelectStateWrapperView.swift in Sources */,
 				2AA54ABA2BFD1D6100EF872C /* AnywayPaymentElementViewFactory+preview.swift in Sources */,
 				2AD092CD2BFB30A300777EE4 /* AnywayPaymentUpdate+preview.swift in Sources */,
 				2AA54AB32BFCE27800EF872C /* AnywayPaymentParameterView.swift in Sources */,
-				2AA54AC02BFD1DD900EF872C /* AnywayPaymentWidgetViewFactory+preview.swift in Sources */,
 				2AA54AAB2BFCCC1D00EF872C /* AnywayPaymentElementView.swift in Sources */,
+				2AA54AC82BFE1B3D00EF872C /* AnywayPaymentElementConfig.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

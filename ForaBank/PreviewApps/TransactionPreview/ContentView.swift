@@ -16,8 +16,8 @@ typealias ProductSelectViewModel = RxViewModel<ProductSelect, ProductSelectEvent
 struct ContentView: View {
     
     @StateObject private var viewModel: ContentViewModel
-
-    private let makeFactory: (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory
+    
+    private let makeFactory: (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<Text>
     
     init() {
         
@@ -34,6 +34,7 @@ struct ContentView: View {
         }
         
         let composer = AnywayPaymentFactoryComposer(
+            config: .init(info: .preview),
             currencyOfProduct: currencyOfProduct,
             getProducts: getProducts
         )
@@ -62,38 +63,45 @@ struct ContentView: View {
         
         switch destination {
         case let .payment(transactionViewModel):
-            let factory = makeFactory(
-               { transactionViewModel.event(.payment($0)) }
-            )
-            AnywayTransactionStateWrapperView(
-                viewModel: transactionViewModel,
-                factory: factory
-            )
-            .navigationTitle("Transaction View")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(
-                    placement: .cancellationAction,
-                    content: showEventListButton
-                )
-                ToolbarItem(
-                    placement: .confirmationAction,
-                    content: {
-                    
-                        Button {
-                            dump(transactionViewModel.state)
-                        } label: {
-                            Image(systemName: "printer")
+            paymentView(transactionViewModel)
+                .navigationTitle("Transaction View")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(
+                        placement: .cancellationAction,
+                        content: showEventListButton
+                    )
+                    ToolbarItem(
+                        placement: .confirmationAction,
+                        content: {
+                            
+                            Button {
+                                dump(transactionViewModel.state)
+                            } label: {
+                                Image(systemName: "printer")
+                            }
+                            
                         }
-
-                    }
+                    )
+                }
+                .sheet(
+                    modal: viewModel.flow.modal,
+                    dismissModal: viewModel.hideEventList,
+                    content: { sheetView(transactionViewModel, modal: $0) }
                 )
-            }
-            .sheet(
-                modal: viewModel.flow.modal,
-                dismissModal: viewModel.hideEventList,
-                content: { sheetView(transactionViewModel, modal: $0) }
-            )
+        }
+    }
+    
+    @ViewBuilder
+    private func paymentView(
+        _ viewModel: ObservingAnywayTransactionViewModel
+    ) -> some View {
+        
+        let factory = makeFactory { viewModel.event(.payment($0)) }
+        
+        AnywayTransactionStateWrapperView(viewModel: viewModel) {
+            
+            AnywayTransactionView(state: $0, event: $1, factory: factory)
         }
     }
     

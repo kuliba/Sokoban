@@ -60,7 +60,7 @@ private extension Info {
         case .amount:
             return .init(width: 24, height: 24)
             
-        case .brandName, .recipientBank:
+        case .brandName, .recipientBank, .other:
             return .init(width: 32, height: 32)
         }
     }

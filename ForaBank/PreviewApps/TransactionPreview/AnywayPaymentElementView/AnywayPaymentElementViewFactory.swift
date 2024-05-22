@@ -5,7 +5,21 @@
 //  Created by Igor Malyarov on 21.05.2024.
 //
 
-struct AnywayPaymentElementViewFactory {
+import AnywayPaymentDomain
+
+struct AnywayPaymentElementViewFactory<IconView> {
+
+    let makeIconView: MakeIconView
+    let makeProductSelectView: MakeProductSelectView
+}
+
+extension AnywayPaymentElementViewFactory {
     
-    let widget: AnywayPaymentWidgetViewFactory
+    typealias Element = AnywayPayment.Element.UIComponent
+    typealias MakeIconView = (Element) -> IconView
+    
+    typealias MakeProductSelectView = (ProductID, @escaping Observe) -> ProductSelectStateWrapperView
+    typealias Observe = (ProductID, Currency) -> Void
+    typealias ProductID = AnywayPayment.Element.UIComponent.Widget.ProductID
+    typealias Currency = AnywayPaymentEvent.Widget.Currency
 }
