@@ -244,18 +244,21 @@ struct ProductProfileView: View {
         
         switch state {
         case let .changePin(changePIN):
-            
-            changePinCodeView(
-                cardId: changePIN.cardId,
-                actionType: .changePin(changePIN.displayNumber),
-                changePIN.model,
-                confirm: viewModel.confirmShowCVV,
-                confirmChangePin: viewModel.confirmChangePin,
-                showSpinner: {},
-                resendRequest: changePIN.request,
-                resendRequestAfterClose: viewModel.closeLinkAndResendRequest
-            ).transition(.move(edge: .leading))
-            
+            ZStack {
+                Color.white
+                    .ignoresSafeArea()
+                changePinCodeView(
+                    cardId: changePIN.cardId,
+                    actionType: .changePin(changePIN.displayNumber),
+                    changePIN.model,
+                    confirm: viewModel.confirmShowCVV,
+                    confirmChangePin: viewModel.confirmChangePin,
+                    showSpinner: {},
+                    resendRequest: changePIN.request,
+                    resendRequestAfterClose: viewModel.closeLinkAndResendRequest
+                )
+                .transition(.move(edge: .leading))
+            }
         case let .confirmOTP(confirm):
             
             confirmCodeView(
