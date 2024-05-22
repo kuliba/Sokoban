@@ -7,37 +7,34 @@
 
 import SwiftUI
 
-struct AnywayTransactionStateWrapperView: View {
+struct AnywayTransactionStateWrapperView<TransactionView>: View
+where TransactionView: View {
     
     @StateObject private var viewModel: ViewModel
     
-    private let factory: Factory
+    private let makeTransactionView: MakeTransactionView
     
     init(
         viewModel: ViewModel,
-        factory: Factory
+        makeTransactionView: @escaping MakeTransactionView
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
-        self.factory = factory
+        self.makeTransactionView = makeTransactionView
     }
     
     var body: some View {
         
-        AnywayTransactionView(
-            state: viewModel.state,
-            event: viewModel.event(_:),
-            factory: factory
-        )
-        .onChange(of: viewModel.state) { dump($0) }
+        makeTransactionView(viewModel.state, viewModel.event(_:))
+            .onChange(of: viewModel.state) { dump($0) }
     }
 }
 
 extension AnywayTransactionStateWrapperView {
     
     typealias ViewModel = ObservingAnywayTransactionViewModel
-    typealias Factory = AnywayTransactionView.Factory
+    typealias MakeTransactionView = (AnywayTransactionState, @escaping (AnywayTransactionEvent) -> Void) -> TransactionView
 }
 
 #Preview {
-    AnywayTransactionStateWrapperView(viewModel: .preview(), factory: .preview)
+    AnywayTransactionStateWrapperView(viewModel: .preview()) { _,_ in Text("WrapperView") }
 }
