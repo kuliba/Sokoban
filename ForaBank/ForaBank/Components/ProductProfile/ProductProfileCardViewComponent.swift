@@ -457,7 +457,7 @@ extension ProductProfileCardView.ViewModel {
             
             if let values = groupingCards[id] {
                 let additionalSpacing = values.count == 1 ? 0 : spacing
-                let width = CGFloat(values.count) * (productSize.width + spacing) - additionalSpacing
+                let width = CGFloat(values.count) * productSize.width + (CGFloat(values.count-1) * additionalSpacing)
         
                 return values.count == 1 ? (width, .clear) : (width, .black.opacity(0.2))
             }
@@ -621,10 +621,11 @@ extension ProductProfileCardView {
     struct SelectorsView: View {
         
         let viewModel: ProductProfileCardView.ViewModel.SelectorViewModel
-        
+        let spacing: CGFloat = 8
+
         var body: some View {
             
-            HStack(alignment: .center, spacing: 0) {
+            HStack(alignment: .center, spacing: spacing) {
                 
                 ForEach(viewModel.thumbnails) { thumbnail in
                     
@@ -632,6 +633,7 @@ extension ProductProfileCardView {
                     Capsule()
                         .foregroundColor(color)
                         .frame(width: width, height: viewModel.productSize.height)
+                        .padding(.trailing,viewModel.thumbnails.first?.id == thumbnail.id ? 0 : -spacing)
                 }
                 Spacer()
             }
