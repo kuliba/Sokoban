@@ -52,6 +52,9 @@ public extension ResponseMapper {
             }
             
         } catch {
+            #if DEBUG
+            dump(error)
+            #endif
             return .failure(.invalid(
                 statusCode: httpURLResponse.statusCode,
                 data: data
