@@ -92,7 +92,7 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
     
     init?(_ parameter: ResponseMapper._Data._Parameter) {
         
-        guard let dataType = DataType(parameter.dataType)
+        guard let dataType = DataType(parameter)
         else { return nil }
         
         self.init(
@@ -111,40 +111,58 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
             minLength: parameter.minLength,
             order: parameter.order,
             phoneBook: parameter.phoneBook ?? false,
-            rawLength: parameter.rawLength,
+            rawLength: parameter.rawLength ?? 0,
             isReadOnly: parameter.readOnly ?? false,
-            regExp: parameter.regExp,
+            regExp: parameter.regExp ?? "",
             subGroup: parameter.subGroup,
             subTitle: parameter.subTitle,
             svgImage: parameter.svgImage,
-            title: parameter.title,
-            type: .init(parameter.type),
+            title: parameter.title ?? "",
+            type: parameter.type.map { .init($0) } ?? .missing,
             viewType: .init(parameter.viewType)
         )
     }
 }
 
-extension ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType {
+private extension ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType {
     
+    init?(_ parameter: ResponseMapper._Data._Parameter) {
+        
+        switch parameter.dataType {
+        case .none:
+            guard parameter.id.prefix(2) == "##",
+                  parameter.id.suffix(2) == "##"
+            else { return nil }
+            
+            self = ._backendReserved
+            
+        case let .some(string):
+            self.init(string)
+        }
+    }
+}
+
+extension ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType {
+        
     init?(_ string: String) {
         
-        guard string != "%String"
-        else { self = .string; return }
-        
-        guard string != "%Number"
-        else { self = .number; return }
-        
-        guard string != "%Numeric"
-        else { self = .number; return }
-        
-        guard let pairs = try? string.splitDataType(),
-              let first = pairs.first
-        else { return nil }
-        
-        self = .pairs(
-            .init(key: first.key, value: first.value),
-            pairs.map { .init(key: $0.key, value: $0.value) }
-        )
+        switch string {
+        case "%Number", "%Numeric":
+            self = .number
+            
+        case "%String":
+            self = .string
+            
+        default:
+            guard let pairs = try? string.splitDataType(),
+                  let first = pairs.first
+            else { return nil }
+            
+            self = .pairs(
+                .init(key: first.key, value: first.value),
+                pairs.map { .init(key: $0.key, value: $0.value) }
+            )
+        }
     }
 }
 
@@ -242,7 +260,7 @@ private extension ResponseMapper._Data {
         let content: String?
         let dataDictionary: String?
         let dataDictionaryРarent: String?
-        let dataType: String
+        let dataType: String?
         let group: String?
         let id: String
         let inputFieldType: String?
@@ -254,14 +272,14 @@ private extension ResponseMapper._Data {
         let minLength: Int?
         let order: Int?
         let phoneBook: Bool?
-        let rawLength: Int
+        let rawLength: Int?
         let readOnly: Bool?
-        let regExp: String
+        let regExp: String?
         let subGroup: String?
         let subTitle: String?
         let svgImage: String?
-        let title: String
-        let type: FieldType
+        let title: String?
+        let type: FieldType?
         let viewType: ViewType
     }
 }
