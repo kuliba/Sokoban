@@ -5274,7 +5274,6 @@
 		C1E07D992BFE2D2F00D07180 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C1E07D9B2BFE2D3100D07180 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C1E07D9E2BFE2D3100D07180 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		C1E07DAB2BFE346C00D07180 /* CalendarUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUI.swift; sourceTree = "<group>"; };
 		C1E8A0542B84D50E000DA998 /* ViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModel+Preview.swift"; sourceTree = "<group>"; };
 		C1E8A0562B84D628000DA998 /* LastPayments+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LastPayments+Preview.swift"; sourceTree = "<group>"; };
 		C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailDataTests.swift; sourceTree = "<group>"; };
@@ -12933,14 +12932,6 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		C1E07DAA2BFE346C00D07180 /* CalendarUI */ = {
-			isa = PBXGroup;
-			children = (
-				C1E07DAB2BFE346C00D07180 /* CalendarUI.swift */,
-			);
-			path = CalendarUI;
-			sourceTree = "<group>";
-		};
 		C1F346D42AE25C6000EE1E87 /* StickerPreview */ = {
 			isa = PBXGroup;
 			children = (
@@ -13792,7 +13783,6 @@
 				EDB143A1265FDA430028EF5A /* ForaBankUITests */,
 				A515682D2821B927000D4455 /* ForaPushServiceExtension */,
 				2AE5972529F9182B0083F138 /* PreviewApps */,
-				C1E07DAA2BFE346C00D07180 /* CalendarUI */,
 				EDB1437E265FDA410028EF5A /* Products */,
 				ED147D4D26BC1237002F66C8 /* Frameworks */,
 			);
@@ -21084,7 +21074,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CalendarPreview/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CalendarPreview/Preview Content\"";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -21120,7 +21110,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CalendarPreview/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CalendarPreview/Preview Content\"";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -21155,7 +21145,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CalendarPreview/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CalendarPreview/Preview Content\"";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -21190,7 +21180,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CalendarPreview/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CalendarPreview/Preview Content\"";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
