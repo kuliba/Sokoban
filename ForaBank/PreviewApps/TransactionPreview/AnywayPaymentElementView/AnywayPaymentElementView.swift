@@ -34,11 +34,31 @@ struct AnywayPaymentElementView<IconView: View>: View {
             )
             
         case let .widget(widget):
-            AnywayPaymentWidgetView(
-                widget: widget,
-                event: { event(.widget($0)) },
-                factory: factory.widget
-            )
+            switch widget {
+            case let .otp(otp):
+    #warning("replace with real components")
+                HStack {
+                    
+                    Text("OTP: " + (otp.map { "\($0)" } ?? ""))
+                    TextField(
+                        "Введите код",
+                        text: .init(
+                            get: { otp.map { "\($0)" } ?? "" },
+                            set: { event(.widget(.otp($0))) }
+                        )
+                    )
+                }
+    #warning("can't use CodeInputView - not a part  af any product (neither PaymentComponents nor any other)")
+    #warning("need a wrapper with timer")
+                //            CodeInputView(
+                //                state: <#T##OTPInputState.Status.Input#>,
+                //                event: <#T##(OTPInputEvent) -> Void#>,
+                //                config: <#T##CodeInputConfig#>
+                //            )
+                
+            case let .productPicker(productID):
+                factory.makeProductSelectView(productID, { event(.widget(.product($0, $1))) })
+            }
         }
     }
     

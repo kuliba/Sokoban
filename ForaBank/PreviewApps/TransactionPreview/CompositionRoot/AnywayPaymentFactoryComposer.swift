@@ -34,7 +34,7 @@ extension AnywayPaymentFactoryComposer {
         
         let factory = AnywayPaymentElementViewFactory(
             makeIconView: makeIconView,
-            widget: .init(makeProductSelectView: makeProductSelectView)
+            makeProductSelectView: makeProductSelectView
         )
         
         return .init(

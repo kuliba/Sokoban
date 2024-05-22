@@ -14,7 +14,20 @@ where IconView == Text {
         
         return .init(
             makeIconView: { Text(String(describing: $0)) },
-            widget: .preview
+            makeProductSelectView: { _,_ in
+                
+                let viewModel = ProductSelectViewModel(
+                    initialState: .init(selected: nil),
+                    reduce: { state, _  in (state, nil) },
+                    handleEffect: { _,_ in }
+                )
+                let observing = ObservingProductSelectViewModel(
+                    observable: viewModel,
+                    observe: { _ in }
+                )
+                
+                return .init(viewModel: observing, config: .iFora)
+            }
         )
     }
 }
