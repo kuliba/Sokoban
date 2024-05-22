@@ -1,5 +1,5 @@
 //
-//  InfoView.swift
+//  PublishingInfoView.swift
 //
 //
 //  Created by Igor Malyarov on 08.12.2023.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct InfoView: View {
+public struct PublishingInfoView: View {
     
     let info: PublishingInfo
     let config: InfoConfig
@@ -97,9 +97,9 @@ struct InfoView_Previews: PreviewProvider {
         
         Group {
             
-            InfoView(info: info, config: .preview)
+            PublishingInfoView(info: info, config: .preview)
             
-            InfoView(info: info, config: .preview)
+            PublishingInfoView(info: info, config: .preview)
         }
         .padding(20)
     }

@@ -38,7 +38,7 @@ public extension PaymentComponents {
     
     typealias Info = InfoComponent.PublishingInfo
     typealias InfoConfig = InfoComponent.InfoConfig
-    typealias InfoView = InfoComponent.InfoView
+    typealias InfoView = InfoComponent.PublishingInfoView
     
     typealias InputView = InputComponent.InputView
     typealias InputConfig = InputComponent.InputConfig

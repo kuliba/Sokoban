@@ -51,17 +51,17 @@ struct FixedAmountSberQRConfirmPaymentView: View {
             
             Group {
                 
-                InfoView(
+                PublishingInfoView(
                     info: state.brandName,
                     config: config.info
                 )
                 
-                InfoView(
+                PublishingInfoView(
                     info: state.amount,
                     config: config.info
                 )
                 
-                InfoView(
+                PublishingInfoView(
                     info: state.recipientBank,
                     config: config.info
                 )

@@ -72,9 +72,9 @@ private extension LayoutInfo {
     
     VStack(spacing: 32) {
         
-        InfoView(info: .amount, config: .preview)
-        InfoView(info: .brandName, config: .preview)
-        InfoView(info: .recipientBank, config: .preview)
+        PublishingInfoView(info: .amount, config: .preview)
+        PublishingInfoView(info: .brandName, config: .preview)
+        PublishingInfoView(info: .recipientBank, config: .preview)
     }
     .previewLayout(.sizeThatFits)
 }
