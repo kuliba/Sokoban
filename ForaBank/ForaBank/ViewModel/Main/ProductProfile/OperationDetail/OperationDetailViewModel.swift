@@ -471,7 +471,7 @@ extension OperationDetailViewModel {
             case .reject: return "Отказ!"
             case .success: return "Успешно!"
             case .purchase_return: return "Возврат!"
-            case .processing: return "В обработке"
+            case .processing: return "В обработке!"
             }
         }
         
