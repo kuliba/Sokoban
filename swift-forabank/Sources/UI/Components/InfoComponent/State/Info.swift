@@ -1,11 +1,11 @@
 //
-//  LayoutInfo.swift
+//  Info.swift
 //  
 //
 //  Created by Igor Malyarov on 22.05.2024.
 //
 
-public struct LayoutInfo: Equatable {
+public struct Info: Equatable {
     
     public let id: ID
     public let title: String
@@ -25,7 +25,7 @@ public struct LayoutInfo: Equatable {
     }
 }
 
-public extension LayoutInfo {
+public extension Info {
     
     enum ID: Equatable {
         

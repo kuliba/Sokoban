@@ -36,7 +36,9 @@ public extension PaymentComponents {
     typealias ButtonStateConfig = SharedConfigs.ButtonStateConfig
     typealias ButtonView = ButtonComponent.ButtonView
     
+    typealias Info = InfoComponent.Info
     typealias InfoConfig = InfoComponent.InfoConfig
+    typealias InfoView = InfoComponent.InfoView
     typealias PublishingInfo = InfoComponent.PublishingInfo
     typealias PublishingInfoView = InfoComponent.PublishingInfoView
     

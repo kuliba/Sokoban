@@ -25,7 +25,7 @@ public struct PublishingInfoView: View {
     
     public var body: some View {
         
-        InfoLayoutView(
+        InfoView(
             info: info.layoutInfo,
             config: config,
             icon: icon
@@ -45,7 +45,7 @@ public struct PublishingInfoView: View {
 
 private extension PublishingInfo {
     
-    var layoutInfo: LayoutInfo {
+    var layoutInfo: Info {
         
         .init(
             id: layoutInfoID,
@@ -58,7 +58,7 @@ private extension PublishingInfo {
 
 private extension PublishingInfo {
     
-    var layoutInfoID: LayoutInfo.ID {
+    var layoutInfoID: Info.ID {
         
         switch id {
         case .amount:        return .amount
@@ -67,7 +67,7 @@ private extension PublishingInfo {
         }
     }
     
-    var layoutInfoStyle: LayoutInfo.Style {
+    var layoutInfoStyle: Info.Style {
         
         switch style {
         case .compressed: return .compressed

@@ -1,5 +1,5 @@
 //
-//  InfoLayoutView.swift
+//  InfoView.swift
 //
 //
 //  Created by Igor Malyarov on 22.05.2024.
@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-public struct InfoLayoutView<Icon: View>: View {
+public struct InfoView<Icon: View>: View {
     
-    let info: LayoutInfo
+    let info: Info
     let config: InfoConfig
     let icon: () -> Icon
     
     public init(
-        info: LayoutInfo,
+        info: Info,
         config: InfoConfig,
         icon: @escaping () -> Icon
     ) {
@@ -52,7 +52,7 @@ public struct InfoLayoutView<Icon: View>: View {
     }
 }
 
-private extension LayoutInfo {
+private extension Info {
     
     var size: CGSize {
         
