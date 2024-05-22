@@ -8877,6 +8877,16 @@
 			path = AnywayPaymentElementView;
 			sourceTree = "<group>";
 		};
+		2AA54AC92BFE2D3C00EF872C /* AnywayTransactionView */ = {
+			isa = PBXGroup;
+			children = (
+				2AD092AA2BFA332800777EE4 /* AnywayTransactionStateWrapperView.swift */,
+				2AD092B42BFA49DE00777EE4 /* AnywayTransactionView.swift */,
+				2AA54AA82BFCCC0400EF872C /* AnywayPaymentFactory.swift */,
+			);
+			path = AnywayTransactionView;
+			sourceTree = "<group>";
+		};
 		2AA64CC12BA8429C004DDC27 /* NavigationState */ = {
 			isa = PBXGroup;
 			children = (
@@ -9251,9 +9261,7 @@
 				2AA54AA22BFCBD5000EF872C /* Flow.swift */,
 				2AA54A9A2BFCA7E000EF872C /* EventList.swift */,
 				2AD092BA2BFA4B5E00777EE4 /* CompositionRoot */,
-				2AD092AA2BFA332800777EE4 /* AnywayTransactionStateWrapperView.swift */,
-				2AD092B42BFA49DE00777EE4 /* AnywayTransactionView.swift */,
-				2AA54AA82BFCCC0400EF872C /* AnywayPaymentFactory.swift */,
+				2AA54AC92BFE2D3C00EF872C /* AnywayTransactionView */,
 				2AA54AB62BFCE3D100EF872C /* AnywayPaymentElementView */,
 				2AA54AAE2BFCDB3100EF872C /* AnywayPaymentFooterView.swift */,
 				2AD092AC2BFA335900777EE4 /* AnywayDomain.swift */,
