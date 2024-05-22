@@ -466,19 +466,7 @@ extension ProductProfileCardView.ViewModel {
             }
             return (0, .clear)
         }
-        
-        func selectionAvailable(_ productID: ProductData.ID) -> Bool {
-            
-            if groupingCards.isEmpty { return true }
-            if let products = groupingCards[productID] {
-                return products.count == 1
-            } else {
                 
-                let result = groupingCards.contains { $0.value.contains { $0.id == productID } &&  $0.value.count > 1 }
-                return !result
-            }
-        }
-        
         struct ThumbnailViewModel: Identifiable {
  
             let id: ProductData.ID
@@ -615,7 +603,7 @@ extension ProductProfileCardView {
                             ProductProfileCardView.ThumbnailView(
                                 viewModel: thumbnail,
                                 isSelected: viewModel.selected == thumbnail.id,
-                                selectionAvailable: viewModel.selectionAvailable(thumbnail.id)
+                                selectionAvailable: viewModel.groupingCards.selectionAvailable(thumbnail.id)
                             )
                                 .scrollId(thumbnail.id)
                         }

@@ -6,30 +6,74 @@
 //
 
 import XCTest
+@testable import ForaBank
 
 final class DictionaryExtensionsTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    func test_selectionAvailable_notCards_shouldReturnTrue() {
+        
+        let sut = makeSUT(products: makeProducts())
+        
+        XCTAssertTrue(sut.selectionAvailable(1))
+    }
+    
+    func test_selectionAvailable_сardWithOutAdditional_shouldReturnTrue() {
+        
+        let sut = makeSUT(products: makeProducts())
+        
+        XCTAssertTrue(sut.selectionAvailable(8))
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    func test_selectionAvailable_сardOnlyOneAdditionalWithoutMain_shouldReturnTrue() {
+        
+        let sut = makeSUT(products: makeProducts())
+        
+        XCTAssertTrue(sut.selectionAvailable(9))
+    }
+    
+    func test_selectionAvailable_сardMainWithOneAdditional_shouldReturnFalse() {
+        
+        let sut = makeSUT(products: makeProducts())
+        
+        XCTAssertFalse(sut.selectionAvailable(4))
+        XCTAssertFalse(sut.selectionAvailable(6))
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func test_selectionAvailable_сardMainWithManyAdditional_shouldReturnFalse() {
+        
+        let sut = makeSUT(products: makeProducts())
+        
+        XCTAssertFalse(sut.selectionAvailable(3))
+        XCTAssertFalse(sut.selectionAvailable(5))
+        XCTAssertFalse(sut.selectionAvailable(12))
+        XCTAssertFalse(sut.selectionAvailable(7))
+        XCTAssertFalse(sut.selectionAvailable(11))
+        XCTAssertFalse(sut.selectionAvailable(45))
     }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    // MARK: - Helpers
+    
+    private func makeSUT(
+        products: [ProductData]
+    ) -> Array.Products {
+        
+        return products.groupingCards()
     }
-
+    
+    func makeProducts() -> [ProductData] {
+        return [
+            makeAccountProduct(id: 1),
+            makeAccountProduct(id: 2),
+            makeCardProduct(id: 3),
+            makeCardProduct(id: 5, parentID: 3, order: 10),
+            makeCardProduct(id: 12, parentID: 3, order: 0),
+            makeCardProduct(id: 7, parentID: 3, order: 0),
+            makeCardProduct(id: 11, parentID: 3, order: 0),
+            makeCardProduct(id: 45, parentID: 3, order: 1),
+            makeCardProduct(id: 6),
+            makeCardProduct(id: 4, parentID: 6),
+            makeCardProduct(id: 8),
+            makeCardProduct(id: 9, parentID: 34)
+        ]
+    }
 }
