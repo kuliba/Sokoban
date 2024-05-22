@@ -7,13 +7,23 @@
 
 import SwiftUI
 
-struct InfoLayoutView<Icon: View>: View {
+public struct InfoLayoutView<Icon: View>: View {
     
     let info: LayoutInfo
     let config: InfoConfig
     let icon: () -> Icon
     
-    var body: some View {
+    public init(
+        info: LayoutInfo,
+        config: InfoConfig,
+        icon: @escaping () -> Icon
+    ) {
+        self.info = info
+        self.config = config
+        self.icon = icon
+    }
+    
+    public var body: some View {
         
         HStack(spacing: 12) {
             

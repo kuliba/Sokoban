@@ -5,15 +5,27 @@
 //  Created by Igor Malyarov on 22.05.2024.
 //
 
-struct LayoutInfo: Equatable {
+public struct LayoutInfo: Equatable {
     
-    let id: ID
-    let title: String
-    let value: String
+    public let id: ID
+    public let title: String
+    public let value: String
     let style: Style
+    
+    public init(
+        id: ID,
+        title: String,
+        value: String,
+        style: Style
+    ) {
+        self.id = id
+        self.title = title
+        self.value = value
+        self.style = style
+    }
 }
 
-extension LayoutInfo {
+public extension LayoutInfo {
     
     enum ID: Equatable {
         
