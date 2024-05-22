@@ -304,9 +304,9 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
     func countCards() -> Int {
         
         var count = items.count
-        groupingCards.keys.forEach {
+        groupingCards.forEach { key, value in
             
-            if productByID($0) == nil {
+            if productByID(key) == nil, value.count > 1{
                 count += 1
             }
         }
