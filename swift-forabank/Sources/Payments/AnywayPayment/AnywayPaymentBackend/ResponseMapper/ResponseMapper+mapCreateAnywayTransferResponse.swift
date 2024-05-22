@@ -34,11 +34,11 @@ private extension ResponseMapper.CreateAnywayTransferResponse {
             debitAmount: data.debitAmount,
             documentStatus: .init(data.documentStatus),
             fee: data.fee,
-            finalStep: data.finalStep,
+            finalStep: data.finalStep ?? false,
             infoMessage: data.infoMessage,
             needMake: data.needMake ?? false,
             needOTP: data.needOTP ?? false,
-            needSum: data.needSum,
+            needSum: data.needSum ?? false,
             parametersForNextStep: data.parameterListForNextStep.compactMap { .init($0) },
             paymentOperationDetailID: data.paymentOperationDetailId,
             payeeName: data.payeeName,
@@ -212,11 +212,11 @@ private extension ResponseMapper {
         let debitAmount: Decimal?
         let documentStatus: String? // enum!
         let fee: Decimal?
-        let finalStep: Bool
+        let finalStep: Bool?
         let infoMessage: String?
         let needMake: Bool?
         let needOTP: Bool?
-        let needSum: Bool
+        let needSum: Bool?
         let parameterListForNextStep: [_Parameter]
         let paymentOperationDetailId: Int?
         let payeeName: String?
