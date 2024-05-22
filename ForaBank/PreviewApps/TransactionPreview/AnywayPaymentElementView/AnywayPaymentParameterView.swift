@@ -15,8 +15,6 @@ struct AnywayPaymentParameterView: View {
     
     var body: some View {
         
-        Text("TBD: parameter view")
-        
         switch parameter.type {
         case .hidden:
             EmptyView()

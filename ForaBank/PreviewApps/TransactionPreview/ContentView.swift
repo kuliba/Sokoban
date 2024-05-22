@@ -76,6 +76,18 @@ struct ContentView: View {
                     placement: .cancellationAction,
                     content: showEventListButton
                 )
+                ToolbarItem(
+                    placement: .confirmationAction,
+                    content: {
+                    
+                        Button {
+                            dump(transactionViewModel.state)
+                        } label: {
+                            Image(systemName: "printer")
+                        }
+
+                    }
+                )
             }
             .sheet(
                 modal: viewModel.flow.modal,
