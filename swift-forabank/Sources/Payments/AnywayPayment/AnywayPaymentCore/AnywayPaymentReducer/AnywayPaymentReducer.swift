@@ -62,7 +62,8 @@ private extension AnywayPaymentReducer {
             state.update(with: amount)
             
         case let .otp(otp):
-            state.update(otp: otp)
+            let digits = otp.filter(\.isWholeNumber)
+            state.update(otp: .init(digits.prefix(6)))
             
         case let .product(productID, currency):
             state.update(with: productID, and: currency)

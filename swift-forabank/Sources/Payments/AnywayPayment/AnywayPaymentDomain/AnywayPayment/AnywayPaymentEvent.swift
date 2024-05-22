@@ -20,7 +20,7 @@ public extension AnywayPaymentEvent {
     enum Widget: Equatable {
         
         case amount(Decimal)
-        case otp(Int?)
+        case otp(String)
         case product(ProductID, Currency)
     }
 }

@@ -201,7 +201,7 @@ extension PaymentsTransfersViewFactory {
                 
                 .init(
                     viewModel: $0,
-                    map: Info.preview(info:),
+                    map: PublishingInfo.preview(info:),
                     config: .iFora
                 )
             },

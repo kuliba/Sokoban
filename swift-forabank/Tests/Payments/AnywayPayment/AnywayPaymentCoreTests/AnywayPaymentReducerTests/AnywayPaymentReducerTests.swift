@@ -142,35 +142,55 @@ final class AnywayPaymentReducerTests: XCTestCase {
         assertMissingID(state, .otp)
     }
     
-    func test_widget_otp_shouldChangeStateOnNilOTP() {
+    func test_widget_otp_shouldSetOTPToNilOnNonDigitString() {
         
+        let nonDigitString = anyNonDigitString()
         let state = makeState(elements: [.widget(anyOTP())])
         
-        assertState(.widget(.otp(nil)), on: state) {
+        assertState(.widget(.otp(nonDigitString)), on: state) {
             
             $0.elements = [.widget(.otp(nil))]
         }
     }
     
-    func test_widget_otp_shouldNotDeliverEffectOnNil() {
+    func test_widget_otp_shouldSetOTPToDigits() {
         
         let state = makeState(elements: [.widget(anyOTP())])
         
-        assert(.widget(.otp(nil)), on: state, effect: nil)
+        assertState(.widget(.otp("abc3578")), on: state) {
+            
+            $0.elements = [.widget(.otp(3578))]
+        }
+    }
+    
+    func test_widget_otp_shouldSetOTPToFirstSixDigits() {
+        
+        let state = makeState(elements: [.widget(anyOTP())])
+        
+        assertState(.widget(.otp("abc3578_12345")), on: state) {
+            
+            $0.elements = [.widget(.otp(357812))]
+        }
+    }
+    
+    func test_widget_otp_shouldNotDeliverEffectOnNilOTP() {
+        
+        let state = makeState(elements: [.widget(anyOTP())])
+        
+        assert(.widget(.otp(anyNonDigitString())), on: state, effect: nil)
     }
     
     func test_widget_otp_shouldChangeStateOnOTP() {
         
-        let otp = generateRandom11DigitNumber()
         let state = makeState(elements: [.widget(anyOTP())])
         
-        assertState(.widget(.otp(otp)), on: state) {
+        assertState(.widget(.otp("12345")), on: state) {
             
-            $0.elements = [.widget(.otp(otp))]
+            $0.elements = [.widget(.otp(12345))]
         }
     }
     
-    func test_widget_otp_shouldNotDeliverEffectOnCore() {
+    func test_widget_otp_shouldNotDeliverEffectOnOTP() {
         
         let state = makeState(elements: [.widget(anyOTP())])
         
@@ -341,10 +361,17 @@ final class AnywayPaymentReducerTests: XCTestCase {
     }
     
     private func anyOTP(
-        value: Int? = generateRandom11DigitNumber()
+        _ value: String = anyMessage()
     ) -> AnywayPaymentEvent.Widget {
         
         return .otp(value)
+    }
+    
+    private func anyNonDigitString(
+        from string: String = anyMessage()
+    ) -> String {
+        
+        return string.filter { !$0.isNumber }
     }
     
     private func makeEmptyState(

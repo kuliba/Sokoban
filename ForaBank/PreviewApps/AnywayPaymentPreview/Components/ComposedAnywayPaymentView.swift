@@ -77,7 +77,7 @@ where FieldView: View,
                     event(.widget(.amount(decimal)))
                     
                 case .continue:
-                    event(.pay)
+                    print("Continue is a higher level event")
                 }
             },
             config: config

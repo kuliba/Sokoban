@@ -71,7 +71,7 @@ extension RootViewFactory {
 
 private extension GetSberQRDataResponse.Parameter.Info {
     
-    var infoID: InfoComponent.Info.ID {
+    var infoID: InfoComponent.PublishingInfo.ID {
         
         switch id {
         case .amount:        return .amount
