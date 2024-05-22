@@ -72,9 +72,9 @@ private extension Info {
     
     VStack(spacing: 32) {
         
-        PublishingInfoView(info: .amount, config: .preview)
-        PublishingInfoView(info: .brandName, config: .preview)
-        PublishingInfoView(info: .recipientBank, config: .preview)
+        InfoView(info: .amount, config: .preview) { Text("Icon") }
+        InfoView(info: .brandName, config: .preview) { Text("Icon") }
+        InfoView(info: .recipientBank, config: .preview) { Text("Icon") }
     }
     .previewLayout(.sizeThatFits)
 }
