@@ -1856,6 +1856,7 @@ private extension Target {
             .amountComponent,
             .buttonComponent,
             .carouselComponent,
+            .codeComponent,
             .infoComponent,
             .checkBoxComponent,
             .footerComponent,
