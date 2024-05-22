@@ -25,32 +25,11 @@ public struct InfoView: View {
     
     public var body: some View {
         
-        HStack(spacing: 12) {
-            
-            icon()
-                .frame(info.size)
-                .frame(width: 32, height: 32)
-            
-            switch info.style {
-            case .expanded:
-                VStack(alignment: .leading, spacing: 4) {
-                    
-                    info.title.text(withConfig: config.title)
-                    info.value.text(withConfig: config.value)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-            case .compressed:
-                HStack {
-                    
-                    info.title.text(withConfig: config.title)
-                    
-                    Spacer()
-                    
-                    info.value.text(withConfig: config.value)
-                }
-            }
-        }
+        InfoLayoutView(
+            info: info.layoutInfo,
+            config: config,
+            icon: icon
+        )
         .onReceive(info.image, perform: { self.image = $0 })
     }
     
@@ -66,14 +45,33 @@ public struct InfoView: View {
 
 private extension Info {
     
-    var size: CGSize {
+    var layoutInfo: LayoutInfo {
+        
+        .init(
+            id: layoutInfoID,
+            title: title,
+            value: value,
+            style: layoutInfoStyle
+        )
+    }
+}
+
+private extension Info {
+    
+    var layoutInfoID: LayoutInfo.ID {
         
         switch id {
-        case .amount:
-            return .init(width: 24, height: 24)
-            
-        case .brandName, .recipientBank:
-            return .init(width: 32, height: 32)
+        case .amount:        return .amount
+        case .brandName:     return .brandName
+        case .recipientBank: return .recipientBank
+        }
+    }
+    
+    var layoutInfoStyle: LayoutInfo.Style {
+        
+        switch style {
+        case .compressed: return .compressed
+        case .expanded:   return .expanded
         }
     }
 }
