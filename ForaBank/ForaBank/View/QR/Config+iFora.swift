@@ -111,7 +111,7 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
                 getProducts: { .allProducts },
                 pay: { _ in }
             ),
-            map: Info.preview,
+            map: PublishingInfo.preview,
             config: .iFora
         )
     }

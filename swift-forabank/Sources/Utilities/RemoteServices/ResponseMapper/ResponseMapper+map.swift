@@ -15,10 +15,12 @@ public extension ResponseMapper {
     static func map<D: Decodable, T>(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse,
+        file: StaticString = #file,
+        line: Int = #line,
         mapOrThrow: (D) throws -> T
     ) -> MappingResult<T> {
         
-        map(data, httpURLResponse) { (data: D?) in
+        map(data, httpURLResponse, file: file, line: line) { (data: D?) in
             
             guard let data else { throw InvalidResponse() }
             
@@ -30,6 +32,8 @@ public extension ResponseMapper {
     static func map<D: Decodable, T>(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse,
+        file: StaticString = #file,
+        line: Int = #line,
         mapOrThrow: (D?) throws -> T
     ) -> MappingResult<T> {
         
@@ -53,7 +57,7 @@ public extension ResponseMapper {
             
         } catch {
             #if DEBUG
-            dump(error)
+            customDump(error, file: file, line: line)
             #endif
             return .failure(.invalid(
                 statusCode: httpURLResponse.statusCode,
@@ -71,3 +75,14 @@ public extension ResponseMapper {
         let data: T?
     }
 }
+
+#if DEBUG
+private func customDump<T>(
+    _ value: T,
+    file: StaticString = #file,
+    line: Int = #line
+) {
+    print("Dump from \(file):\(line)")
+    dump(value)
+}
+#endif

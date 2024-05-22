@@ -1134,8 +1134,6 @@
 		2AD092C02BFA543F00777EE4 /* DispatchQueue+delay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092BF2BFA543E00777EE4 /* DispatchQueue+delay.swift */; };
 		2AD092C22BFA613500777EE4 /* AnywayTransactionEffectHandlerMicroServices+stubbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092C12BFA613500777EE4 /* AnywayTransactionEffectHandlerMicroServices+stubbed.swift */; };
 		2AD092C62BFB23ED00777EE4 /* AnywayPaymentContext+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092C52BFB23ED00777EE4 /* AnywayPaymentContext+preview.swift */; };
-		2AD092C82BFB242200777EE4 /* AnywayPayment+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092C72BFB242200777EE4 /* AnywayPayment+preview.swift */; };
-		2AD092CA2BFB24D400777EE4 /* AnywayPaymentOutline+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092C92BFB24D400777EE4 /* AnywayPaymentOutline+preview.swift */; };
 		2AD092CD2BFB30A300777EE4 /* AnywayPaymentUpdate+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092CC2BFB30A300777EE4 /* AnywayPaymentUpdate+preview.swift */; };
 		2AD0F68F2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F68E2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift */; };
 		2AD0F6912BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD0F6902BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift */; };
@@ -4017,8 +4015,6 @@
 		2AD092C12BFA613500777EE4 /* AnywayTransactionEffectHandlerMicroServices+stubbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayTransactionEffectHandlerMicroServices+stubbed.swift"; sourceTree = "<group>"; };
 		2AD092C42BFA78C200777EE4 /* TransactionPreview.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TransactionPreview.xctestplan; sourceTree = "<group>"; };
 		2AD092C52BFB23ED00777EE4 /* AnywayPaymentContext+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentContext+preview.swift"; sourceTree = "<group>"; };
-		2AD092C72BFB242200777EE4 /* AnywayPayment+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPayment+preview.swift"; sourceTree = "<group>"; };
-		2AD092C92BFB24D400777EE4 /* AnywayPaymentOutline+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentOutline+preview.swift"; sourceTree = "<group>"; };
 		2AD092CC2BFB30A300777EE4 /* AnywayPaymentUpdate+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayPaymentUpdate+preview.swift"; sourceTree = "<group>"; };
 		2AD0F68E2BCEA3AF007EC720 /* AnywayPaymentElementWidgetViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementWidgetViewFactory.swift; sourceTree = "<group>"; };
 		2AD0F6902BCEA3D9007EC720 /* AnywayPaymentElementViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementViewFactory.swift; sourceTree = "<group>"; };
@@ -9274,9 +9270,7 @@
 				2AD092972BFA30A200777EE4 /* Preview Assets.xcassets */,
 				2AD092B02BFA366400777EE4 /* AnywayTransactionState+preview.swift */,
 				2AD092C52BFB23ED00777EE4 /* AnywayPaymentContext+preview.swift */,
-				2AD092C72BFB242200777EE4 /* AnywayPayment+preview.swift */,
 				2AA54AB92BFD1D6100EF872C /* AnywayPaymentElementViewFactory+preview.swift */,
-				2AD092C92BFB24D400777EE4 /* AnywayPaymentOutline+preview.swift */,
 				2AD092CC2BFB30A300777EE4 /* AnywayPaymentUpdate+preview.swift */,
 				2AD092AE2BFA360700777EE4 /* AnywayTransactionViewModel+preview.swift */,
 				2AA54A9E2BFCBA0E00EF872C /* ObservingAnywayTransactionViewModel+preview.swift */,
@@ -16423,7 +16417,6 @@
 				2AA54A9F2BFCBA0E00EF872C /* ObservingAnywayTransactionViewModel+preview.swift in Sources */,
 				2AD092AB2BFA332800777EE4 /* AnywayTransactionStateWrapperView.swift in Sources */,
 				2AD092C62BFB23ED00777EE4 /* AnywayPaymentContext+preview.swift in Sources */,
-				2AD092CA2BFB24D400777EE4 /* AnywayPaymentOutline+preview.swift in Sources */,
 				2AA54AA32BFCBD5000EF872C /* Flow.swift in Sources */,
 				2AA54A9B2BFCA7E000EF872C /* EventList.swift in Sources */,
 				2AA54AC42BFD1E9000EF872C /* ProductSelectConfig+iFora.swift in Sources */,
@@ -16435,7 +16428,6 @@
 				2AD092B12BFA366400777EE4 /* AnywayTransactionState+preview.swift in Sources */,
 				2AA54A9D2BFCAF9000EF872C /* View+ext.swift in Sources */,
 				2AD092932BFA30A100777EE4 /* ContentView.swift in Sources */,
-				2AD092C82BFB242200777EE4 /* AnywayPayment+preview.swift in Sources */,
 				2AD092B52BFA49DE00777EE4 /* AnywayTransactionView.swift in Sources */,
 				2AA54AA12BFCBD3E00EF872C /* ContentViewModel.swift in Sources */,
 				2AA54AA92BFCCC0400EF872C /* AnywayPaymentFactory.swift in Sources */,

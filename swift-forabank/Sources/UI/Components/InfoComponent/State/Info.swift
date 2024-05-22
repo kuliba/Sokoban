@@ -2,33 +2,25 @@
 //  Info.swift
 //  
 //
-//  Created by Igor Malyarov on 13.12.2023.
+//  Created by Igor Malyarov on 22.05.2024.
 //
 
-import Combine
-import SwiftUI
-
-public struct Info {
+public struct Info: Equatable {
     
-    public typealias ImagePublisher = CurrentValueSubject<Image, Never>
-    
-    let id: ID
-    let value: String
-    let title: String
-    let image: ImagePublisher
+    public let id: ID
+    public let title: String
+    public let value: String
     let style: Style
     
     public init(
         id: ID,
-        value: String,
         title: String,
-        image: ImagePublisher,
+        value: String,
         style: Style
     ) {
         self.id = id
-        self.value = value
         self.title = title
-        self.image = image
+        self.value = value
         self.style = style
     }
 }

@@ -1,5 +1,5 @@
 //
-//  Info+ext.swift
+//  PublishingInfo+ext.swift
 //
 //
 //  Created by Igor Malyarov on 13.12.2023.
@@ -9,7 +9,7 @@ import Combine
 import PaymentComponents
 import SwiftUI
 
-extension Info {
+extension PublishingInfo {
     
     public static func preview(
         info: GetSberQRDataResponse.Parameter.Info
@@ -27,7 +27,7 @@ extension Info {
 
 private extension GetSberQRDataResponse.Parameter.Info {
     
-    var infoID: Info.ID {
+    var infoID: PublishingInfo.ID {
         
         switch id {
         case .amount:        return .amount
