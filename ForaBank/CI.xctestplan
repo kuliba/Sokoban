@@ -397,7 +397,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "UtilityServicePrepaymentCoreTests",
         "name" : "UtilityServicePrepaymentCoreTests"
       }
