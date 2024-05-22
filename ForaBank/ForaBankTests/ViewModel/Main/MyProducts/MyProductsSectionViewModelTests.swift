@@ -14,7 +14,7 @@ final class MyProductsSectionViewModelTests: XCTestCase {
         
         let sut = makeSUT(products: makeAnyCards())
         
-        XCTAssertNoDiff(sut.countCards(), 5)
+        XCTAssertNoDiff(sut.countCards(), 6)
     }
     
     // MARK: - Helpers
@@ -62,7 +62,8 @@ final class MyProductsSectionViewModelTests: XCTestCase {
         let product2 = makeCardProduct(id: 2)
         let product3 = makeCardProduct(id: 20, parentID: 3)
         let product4 = makeCardProduct(id: 21, parentID: 3)
+        let product5 = makeCardProduct(id: 22, parentID: 4)
 
-        return [product1, product2, product3, product4]
+        return [product1, product2, product3, product4, product5]
     }
 }
