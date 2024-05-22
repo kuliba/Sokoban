@@ -1,5 +1,5 @@
 //
-//  Info+ext.swift
+//  PublishingInfo+ext.swift
 //  
 //
 //  Created by Igor Malyarov on 13.12.2023.
@@ -8,7 +8,7 @@
 import Combine
 import SwiftUI
 
-public extension Info {
+public extension PublishingInfo {
     
     static let amount: Self = .init(
         id: .amount,

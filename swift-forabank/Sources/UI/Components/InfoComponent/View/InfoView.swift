@@ -9,13 +9,13 @@ import SwiftUI
 
 public struct InfoView: View {
     
-    let info: Info
+    let info: PublishingInfo
     let config: InfoConfig
     
     @State private var image: Image
     
     public init(
-        info: Info,
+        info: PublishingInfo,
         config: InfoConfig
     ) {
         self.info = info
@@ -43,7 +43,7 @@ public struct InfoView: View {
     }
 }
 
-private extension Info {
+private extension PublishingInfo {
     
     var layoutInfo: LayoutInfo {
         
@@ -56,7 +56,7 @@ private extension Info {
     }
 }
 
-private extension Info {
+private extension PublishingInfo {
     
     var layoutInfoID: LayoutInfo.ID {
         
@@ -92,7 +92,7 @@ struct InfoView_Previews: PreviewProvider {
     }
     
     private static func infoView(
-        info: Info
+        info: PublishingInfo
     ) -> some View {
         
         Group {

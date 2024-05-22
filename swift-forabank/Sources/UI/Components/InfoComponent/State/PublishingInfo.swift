@@ -1,5 +1,5 @@
 //
-//  Info.swift
+//  PublishingInfo.swift
 //  
 //
 //  Created by Igor Malyarov on 13.12.2023.
@@ -8,7 +8,7 @@
 import Combine
 import SwiftUI
 
-public struct Info {
+public struct PublishingInfo {
     
     public typealias ImagePublisher = CurrentValueSubject<Image, Never>
     
@@ -33,7 +33,7 @@ public struct Info {
     }
 }
 
-public extension Info {
+public extension PublishingInfo {
     
     enum ID: Equatable {
         
