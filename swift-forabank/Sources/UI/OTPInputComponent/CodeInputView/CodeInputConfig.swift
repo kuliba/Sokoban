@@ -7,7 +7,6 @@
 
 import SwiftUI
 import UIPrimitives
-import OTPInputComponent
 
 public struct CodeInputConfig {
     

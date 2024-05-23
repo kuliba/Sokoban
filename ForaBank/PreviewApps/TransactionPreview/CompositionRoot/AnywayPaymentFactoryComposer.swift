@@ -7,16 +7,21 @@
 
 import AnywayPaymentDomain
 import PaymentComponents
+import RxViewModel
+import SwiftUI
 
 final class AnywayPaymentFactoryComposer {
     
+    private let config: AnywayPaymentElementConfig
     private let currencyOfProduct: CurrencyOfProduct
     private let getProducts: GetProducts
     
     init(
+        config: AnywayPaymentElementConfig,
         currencyOfProduct: @escaping CurrencyOfProduct,
         getProducts: @escaping GetProducts
     ) {
+        self.config = config
         self.currencyOfProduct = currencyOfProduct
         self.getProducts = getProducts
     }
@@ -29,11 +34,21 @@ extension AnywayPaymentFactoryComposer {
     ) -> Factory {
         
         let factory = AnywayPaymentElementViewFactory(
-            widget: .init(makeProductSelectView: makeProductSelectView)
+            makeIconView: makeIconView,
+            makeProductSelectView: makeProductSelectView,
+            elementFactory: makeElementFactory()
         )
         
         return .init(
-            makeElementView: { .init(state: $0, event: event, factory: factory) },
+            makeElementView: { 
+                
+                return .init(
+                    state: $0, 
+                    event: event,
+                    factory: factory,
+                    config: self.config
+                )
+            },
             makeFooterView: { .init() }
         )
     }
@@ -43,10 +58,21 @@ extension AnywayPaymentFactoryComposer {
     
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
-    typealias Factory = AnywayPaymentFactory
+    typealias Factory = AnywayPaymentFactory<IconView>
+    
+    #warning("FIXME: should be some image view/some view")
+    typealias IconView = Text
 }
 
 private extension AnywayPaymentFactoryComposer {
+    
+    func makeIconView(
+        component: UIComponent
+    ) -> IconView {
+        
+        #warning("FIXME")
+        return .init("?")
+    }
     
     func makeProductSelectView(
         productID: ProductID,
@@ -81,6 +107,73 @@ private extension AnywayPaymentFactoryComposer {
         return .init(viewModel: observing, config: .iFora)
     }
     
+    func makeElementFactory(
+    ) -> AnywayPaymentParameterViewFactory {
+        
+        return .init(
+            makeSelectorView: makeSelectorView,
+            makeTextInputView: makeTextInputView
+        )
+    }
+    
+    func makeSelectorView(
+        selector: Selector<Option>,
+        observe: @escaping (Selector<Option>) -> Void
+    ) -> SelectorWrapperView {
+        
+        let reducer = SelectorReducer<Option>()
+        let viewModel = RxViewModel(
+            initialState: selector,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: { _,_ in }
+        )
+        
+        let observing = RxObservingViewModel(
+            observable: viewModel,
+            observe: observe
+        )
+        
+        return .init(
+            viewModel: observing,
+            factory: .init(
+                createOptionView: OptionView.init,
+                createSelectedOptionView: SelectedOptionView.init
+            )
+        )
+    }
+    
+    func makeTextInputView(
+        parameter: UIComponent.Parameter,
+        observe: @escaping (InputState<String>) -> Void
+    ) -> InputStateWrapperView {
+        
+        let inputState = InputState(parameter)
+        let reducer = InputReducer<String>()
+        let viewModel = RxViewModel(
+            initialState: inputState,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: { _,_ in }
+        )
+        
+        let observing = RxObservingViewModel(
+            observable: viewModel,
+            observe: observe
+        )
+        
+        return .init(
+            viewModel: observing,
+            factory: .init(makeIconView: {
+                
+                #warning("FIXME")                
+                
+                return .init()
+            })
+        )
+    }
+    
+    typealias UIComponent = AnywayPayment.Element.UIComponent
+    typealias Option = UIComponent.Parameter.ParameterType.Option
+
     typealias Observe = (ProductID, Currency) -> Void
     typealias ProductID = AnywayPayment.Element.Widget.PaymentCore.ProductID
     typealias Currency = AnywayPaymentEvent.Widget.Currency
@@ -110,5 +203,28 @@ private extension ProductSelect.Product {
         case .card:
             return .cardID(.init(id.rawValue))
         }
+    }
+}
+
+// MARK: - Adapters
+
+private extension InputState where Icon == String {
+    
+    #warning("FIXME: replace stubbed with values from parameter")
+    init(_ parameter: AnywayPayment.Element.UIComponent.Parameter) {
+        
+        self.init(
+            dynamic: .init(
+                value: parameter.value?.rawValue ?? "",
+                warning: nil
+            ),
+            settings: .init(
+                hint: nil,
+                icon: "",
+                keyboard: .default,
+                title: parameter.title,
+                subtitle: parameter.subtitle
+            )
+        )
     }
 }

@@ -200,7 +200,6 @@ let package = Package(
         .buttonComponent,
         .infoComponent,
         .checkBoxComponent,
-        .codeComponent,
         .footerComponent,
         .nameComponent,
         .selectComponent,
@@ -1556,7 +1555,6 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
-            .paymentComponents,
             .rxViewModel,
             .uiPrimitives,
         ],
@@ -1795,14 +1793,6 @@ private extension Target {
         path: "Sources/UI/Components/\(String.checkBoxComponent)"
     )
     
-    static let codeComponent = target(
-        name: .codeComponent,
-        dependencies: [
-            .sharedConfigs
-        ],
-        path: "Sources/UI/Components/\(String.codeComponent)"
-    )
-    
     static let footerComponent = target(
         name: .footerComponent,
         dependencies: [
@@ -1860,6 +1850,7 @@ private extension Target {
             .checkBoxComponent,
             .footerComponent,
             .nameComponent,
+            .otpInputComponent,
             .selectComponent,
             .inputComponent,
             .inputPhoneComponent,
@@ -2206,10 +2197,6 @@ private extension Target.Dependency {
     static let checkBoxComponent = byName(
         name: .checkBoxComponent
     )
-      
-    static let codeComponent = byName(
-        name: .codeComponent
-    )
     
     static let footerComponent = byName(
         name: .footerComponent
@@ -2473,8 +2460,6 @@ private extension String {
     static let infoComponent = "InfoComponent"
     
     static let checkBoxComponent = "CheckBoxComponent"
-    
-    static let codeComponent = "CodeComponent"
     
     static let footerComponent = "FooterComponent"
     

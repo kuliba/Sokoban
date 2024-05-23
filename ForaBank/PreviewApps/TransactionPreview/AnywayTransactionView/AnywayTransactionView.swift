@@ -46,7 +46,7 @@ extension AnywayTransactionView {
     
     typealias State = AnywayTransactionState
     typealias Event = AnywayTransactionEvent
-    typealias Factory = AnywayPaymentFactory
+    typealias Factory = AnywayPaymentFactory<Text>
 }
 
 #Preview {
