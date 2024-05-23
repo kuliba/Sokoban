@@ -49,7 +49,10 @@ extension AnywayPaymentFactoryComposer {
                     config: self.config
                 )
             },
-            makeFooterView: { .init() }
+            makeFooterView: { state, event in
+                
+                return .init(state: state.footer, event: event, config: .iFora)
+            }
         )
     }
 }
@@ -164,7 +167,7 @@ private extension AnywayPaymentFactoryComposer {
             viewModel: observing,
             factory: .init(makeIconView: {
                 
-                #warning("FIXME")                
+                #warning("FIXME")
                 
                 return .init()
             })
@@ -226,5 +229,30 @@ private extension InputState where Icon == String {
                 subtitle: parameter.subtitle
             )
         )
+    }
+}
+
+private extension AnywayTransactionState {
+    
+    var footer: AnywayPaymentFooter {
+        
+        #warning("FIXME: buttonTitle")
+        return .init(buttonTitle: "Continue", core: core, isEnabled: isValid)
+    }
+    
+    var core: AnywayPaymentFooter.Core? {
+        
+        payment.payment.elements.core
+    }
+}
+
+private extension Array where Element == AnywayPayment.Element {
+    
+    var core: AnywayPaymentFooter.Core? {
+        
+        guard case let .widget(.core(core)) = self[id: .widgetID(.core)]
+        else { return nil }
+        
+        return .init(value: core.amount, currency: core.currency.rawValue)
     }
 }

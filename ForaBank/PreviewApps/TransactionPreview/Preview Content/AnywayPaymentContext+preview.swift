@@ -31,7 +31,6 @@ private extension AnywayPayment {
     )
 }
 
-
 private extension AnywayPaymentOutline {
     
 #warning("looks like PaymentCore should be optional in AnywayPaymentOutline")

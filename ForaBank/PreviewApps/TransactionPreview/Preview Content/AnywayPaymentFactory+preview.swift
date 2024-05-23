@@ -22,7 +22,7 @@ where IconView == Text {
                     config: .init(info: .preview)
                 )
             },
-            makeFooterView: { .init() }
+            makeFooterView: { _,_ in fatalError() }
         )
     }
 }
