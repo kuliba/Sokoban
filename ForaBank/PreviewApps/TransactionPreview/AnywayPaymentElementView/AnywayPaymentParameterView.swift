@@ -34,7 +34,7 @@ struct AnywayPaymentParameterView: View {
             }
             
         case .textInput:
-            textInputView(parameter)
+            factory.makeTextInputView(parameter, { event($0.dynamic.value) })
             
         case .unknown:
             EmptyView()
@@ -48,72 +48,12 @@ extension AnywayPaymentParameterView {
     typealias Factory = AnywayPaymentParameterViewFactory
 }
 
-private extension AnywayPaymentParameterView {
-    
-    @ViewBuilder
-    func textInputView(
-    _ parameter: Parameter
-    ) -> some View {
-        
-        switch parameter.type {
-            
-        case .textInput:
-#warning("extract to factory")
-            let inputState = InputState(parameter)
-            let reducer = InputReducer<String>()
-            let viewModel = RxViewModel(
-                initialState: inputState,
-                reduce: reducer.reduce(_:_:),
-                handleEffect: { _,_ in }
-            )
-            
-            let observing = RxObservingViewModel(
-                observable: viewModel,
-                observe: { event($0.dynamic.value) }
-            )
-            
-            InputStateWrapperView(
-                viewModel: observing, 
-                factory: .init(makeIconView: {
-                    
-                    #warning("FIXME")
-                    return .init()
-                })
-            )
-            
-        default:
-            EmptyView()
-        }
-    }
-}
-
 extension InputConfig {
     
     static var iFora: Self { .preview }
 }
 
 // MARK: - Adapters
-
-private extension InputState where Icon == String {
-    
-    #warning("FIXME: replace stubbed with values from parameter")
-    init(_ parameter: AnywayPayment.Element.UIComponent.Parameter) {
-        
-        self.init(
-            dynamic: .init(
-                value: parameter.value?.rawValue ?? "",
-                warning: nil
-            ),
-            settings: .init(
-                hint: nil,
-                icon: "",
-                keyboard: .default,
-                title: parameter.title,
-                subtitle: parameter.subtitle
-            )
-        )
-    }
-}
 
 private extension Selector where T == AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option {
     
