@@ -97,6 +97,7 @@ private extension HTTPURLResponse {
 
 extension String {
     
+    // contains e1_sample_step1-3
     static let sample = """
 {
     "statusCode": 0,
