@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class SelectReducer<Icon> {
+public final class SelectReducer {
     
     public init() {}
 }
