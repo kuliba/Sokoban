@@ -41,13 +41,13 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     
     typealias MicroServices = PrepaymentPickerMicroServices<UtilityPaymentOperator>
     
-    typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
+    typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, UtilityPaymentViewModel>
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias PaymentViewModel = ObservingPaymentFlowMockViewModel
+    typealias UtilityPaymentViewModel = ObservingPaymentFlowMockViewModel
 }
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -80,7 +80,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         return .init(content: viewModel)
     }
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, UtilityPaymentViewModel>
     
     typealias UtilityPrepaymentFlowEvent = UtilityPaymentFlowEvent<PaymentsTransfersFlowReducerFactoryComposer.LastPayment, PaymentsTransfersFlowReducerFactoryComposer.Operator, UtilityService>.UtilityPrepaymentFlowEvent
     typealias UtilityPrepaymentPayload = UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
@@ -100,7 +100,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     func makeUtilityPaymentState(
         response: StartUtilityPaymentResponse,
         notify: @escaping (PaymentStateProjection) -> Void
-    ) -> UtilityServicePaymentFlowState<PaymentViewModel> {
+    ) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
         
         let initialState: PaymentFlowMockState = {
             
@@ -120,7 +120,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     private func makeUtilityPaymentViewModel(
         initialState: PaymentFlowMockState,
         notify: @escaping (PaymentStateProjection) -> Void
-    ) -> ObservingPaymentFlowMockViewModel {
+    ) -> UtilityPaymentViewModel {
         
         typealias Observable = RxViewModel<PaymentFlowMockState, PaymentFlowMockEvent, Never>
         
