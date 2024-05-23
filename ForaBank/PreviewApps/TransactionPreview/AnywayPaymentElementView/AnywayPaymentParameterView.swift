@@ -29,7 +29,7 @@ struct AnywayPaymentParameterView: View {
                 
 #warning("replace with factory")
                 let reducer = SelectorReducer<Option>()
-                let viewModel = SelectorViewModel(
+                let viewModel = RxViewModel(
                     initialState: selector,
                     reduce: reducer.reduce(_:_:),
                     handleEffect: { _,_ in }
