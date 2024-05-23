@@ -48,7 +48,7 @@ public extension InputState {
         public init(
             hint: String? = nil,
             icon: Icon,
-            keyboard: InputState<Icon>.Settings.Keyboard,
+            keyboard: Keyboard,
             title: String,
             subtitle: String?
         ) {
