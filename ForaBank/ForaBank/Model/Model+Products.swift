@@ -429,77 +429,14 @@ extension Model {
         guard productsFastUpdating.value.contains(payload.productId) == false else {
             return
         }
-        
-        guard let token = token else {
-            handledUnauthorizedCommandAttempt()
-            return
-        }
-        
-        guard let product = products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }),
-              let command = createCommand(productId: product.id, productType: product.productType) else {
+                
+        guard let product = products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }), product.productType != .loan else {
             return
         }
         
         productsFastUpdating.value.insert(product.id)
-
-        serverAgent.executeCommand(command: command) { result in
-            
-            self.productsFastUpdating.value.remove(product.id)
-            
-            switch result {
-            case .success(let response):
-                switch response.statusCode {
-                case .ok:
-                    
-                    guard let params = response.data else {
-                        self.handleServerCommandEmptyData(command: command)
-                        return
-                    }
-                    
-                    // update products
-                    let updatedProducts = Self.reduce(products: self.products.value, with: params, productId: payload.productId)
-                    self.products.value = updatedProducts
-                    
-                    // cache products
-                    do {
-                        
-                        try self.productsCacheStore(productsData: updatedProducts)
-                        
-                    } catch {
-                        
-                        self.handleServerCommandCachingError(error: error, command: command)
-                    }
-                    
-                default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
-                }
-            case .failure(let error):
-                self.handleServerCommandError(error: error, command: command)
-            }
-        }
-        
-        func createCommand(productId: ProductData.ID, productType: ProductType) -> ServerCommands.ProductController.GetProductDynamicParams? {
-            
-            switch productType {
-            case .card:
-                
-                let command = ServerCommands.ProductController.GetProductDynamicParams(token: token, payload: .init(accountId: nil, cardId: productId.description, depositId: nil))
-                return command
-                
-            case .account:
-                
-                let command = ServerCommands.ProductController.GetProductDynamicParams(token: token, payload: .init(accountId: productId.description, cardId: nil, depositId: nil))
-                return command
-                
-            case .deposit:
-                
-                let command = ServerCommands.ProductController.GetProductDynamicParams(token: token, payload: .init(accountId: nil, cardId: nil, depositId: productId.description))
-                return command
-                
-            case .loan:
-                return nil
-            }
-        }
+        handleProductUpdateDynamicParamsList(product.id, productType: product.productType)
+        productsFastUpdating.value.remove(product.id)
     }
 
     func handleProductsUpdateTotalAll() {
