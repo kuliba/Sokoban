@@ -14,6 +14,7 @@ public final class SelectReducer {
 
 extension SelectReducer {
     
+    // TODO: add tests
     func reduce(
         _ state: State,
         _ event: Event

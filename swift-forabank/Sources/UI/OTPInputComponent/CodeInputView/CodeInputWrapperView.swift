@@ -7,15 +7,23 @@
 
 import SwiftUI
 
-struct CodeInputWrapperView: View {
+public struct CodeInputWrapperView: View {
     
     @StateObject private var viewModel: TimedOTPInputViewModel
     let config: CodeInputConfig
     
-    var body: some View {
+    public init(
+        viewModel: TimedOTPInputViewModel,
+        config: CodeInputConfig
+    ) {
+        self._viewModel = .init(wrappedValue: viewModel)
+        self.config = config
+    }
+    
+    public var body: some View {
         
         switch viewModel.state.status {
-        case let .failure(otpFieldFailure):
+        case .failure(_):
             CodeInputView(
                 state: .incompleteOTP,
                 event: viewModel.event(_:),
@@ -37,6 +45,36 @@ struct CodeInputWrapperView: View {
             )
         }
     }
-    
 }
 
+struct CodeInputWrapperView_Preview: PreviewProvider {
+    
+    static var previews: some View {
+        
+        CodeInputWrapperView(
+            viewModel: .init(
+                viewModel: .default(
+                    initialState: .starting(
+                        phoneNumber: .init(""),
+                        duration: 60
+                    ),
+                    initiateOTP: { _ in },
+                    submitOTP: { _,_  in })
+            ),
+            config: .preview
+        )
+    }
+}
+
+private extension CodeInputConfig {
+    
+    static let preview: Self = .init(
+        icon: .init(systemName: "phone"),
+        button: .preview,
+        digitModel: .preview,
+        resend: .preview,
+        subtitle: .init(textFont: .body, textColor: .black),
+        timer: .init(textFont: .body, textColor: .red),
+        title: .init(textFont: .body, textColor: .black)
+    )
+}
