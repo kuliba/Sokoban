@@ -126,7 +126,7 @@ extension PaymentsTransfersViewModel {
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     
-    typealias UtilityPaymentViewModel = ObservingPaymentFlowMockViewModel
+    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
     typealias FlowManger = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
     typealias Route = _Route<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>

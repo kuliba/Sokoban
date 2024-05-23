@@ -13,15 +13,18 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
     private let model: Model
     private let observeLast: Int
     private let microServices: MicroServices
+    private let makeTransactionViewModel: MakeTransactionViewModel
     
     init(
         model: Model,
         observeLast: Int,
-        microServices: MicroServices
+        microServices: MicroServices,
+        makeTransactionViewModel: @escaping MakeTransactionViewModel
     ) {
         self.model = model
         self.observeLast = observeLast
         self.microServices = microServices
+        self.makeTransactionViewModel = makeTransactionViewModel
     }
 }
 
@@ -32,7 +35,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
         return .init(
             makeUtilityPrepaymentState: makeUtilityPrepaymentState,
             makeUtilityPaymentState: makeUtilityPaymentState,
-            makePaymentsViewModel: makePaymentsViewModel
+            makePaymentsViewModel: makePayByInstructionsViewModel
         )
     }
 }
@@ -41,13 +44,15 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     
     typealias MicroServices = PrepaymentPickerMicroServices<UtilityPaymentOperator>
     
+    typealias MakeTransactionViewModel = (AnywayTransactionState) -> AnywayTransactionViewModel
+    
     typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, UtilityPaymentViewModel>
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias UtilityPaymentViewModel = ObservingPaymentFlowMockViewModel
+    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
 }
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -55,11 +60,6 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     func makeUtilityPrepaymentState(
         payload: UtilityPrepaymentPayload
     ) -> UtilityFlowState {
-        
-        let payload = PrepaymentPayload(
-            lastPayments: payload.lastPayments,
-            operators: payload.operators
-        )
         
         let reducer = UtilityPrepaymentReducer(observeLast: observeLast)
         
@@ -85,12 +85,6 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     typealias UtilityPrepaymentFlowEvent = UtilityPaymentFlowEvent<PaymentsTransfersFlowReducerFactoryComposer.LastPayment, PaymentsTransfersFlowReducerFactoryComposer.Operator, UtilityService>.UtilityPrepaymentFlowEvent
     typealias UtilityPrepaymentPayload = UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
     
-    struct PrepaymentPayload {
-        
-        let lastPayments: [UtilityPaymentLastPayment]
-        let operators: [UtilityPaymentOperator]
-    }
-    
     typealias UtilityPrepaymentReducer = PrepaymentPickerReducer<UtilityPaymentLastPayment, UtilityPaymentOperator>
     typealias UtilityPrepaymentEffectHandler = PrepaymentPickerEffectHandler<UtilityPaymentOperator>
 }
@@ -102,56 +96,19 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         notify: @escaping (PaymentStateProjection) -> Void
     ) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
         
-        let initialState: PaymentFlowMockState = {
-            
-#warning("map StartUtilityPaymentResponse")
-            return .init()
-        }()
-        let viewModel = makeUtilityPaymentViewModel(
-            initialState: initialState,
-            notify: notify
-        )
-        
-#warning("add subscription")
-        
-        return .init(viewModel: viewModel)
-    }
-    
-    private func makeUtilityPaymentViewModel(
-        initialState: PaymentFlowMockState,
-        notify: @escaping (PaymentStateProjection) -> Void
-    ) -> UtilityPaymentViewModel {
-        
-        typealias Observable = RxViewModel<PaymentFlowMockState, PaymentFlowMockEvent, Never>
-        
-        let observable = Observable(
-            initialState: initialState,
-            reduce: { state, event in
-                
-                switch event {
-                case .completePayment:
-                    return (.init(isComplete: true), nil)
-                    
-                case .detectFraud:
-                    return (.init(fraud: .init()), nil)
-                    
-                case .produceError:
-                    return (.init(errorMessage: "Error message here."), nil)
-                }
-            },
-            handleEffect: { _,_ in }
-        )
-        
-        return .init(
+        let observable = makeTransactionViewModel(.init(response))
+        let viewModel = UtilityPaymentViewModel(
             observable: observable,
             observe: { PaymentStateProjection($0, $1).map(notify) }
         )
+        
+        return .init(viewModel: viewModel)
     }
 }
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
     
-    func makePaymentsViewModel(
+    func makePayByInstructionsViewModel(
         closeAction: @escaping () -> Void
     ) -> PaymentsViewModel {
         
@@ -159,8 +116,17 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     }
 }
 
-enum PaymentStateProjection: Equatable {
+private extension AnywayTransactionState {
     
+    init(_ response: StartUtilityPaymentResponse) {
+        
+#warning("FIXME")
+        fatalError()
+    }
+}
+
+#warning("looks like a better way would be to change: typealias PaymentStateProjection = TransactionStatus<...>")
+enum PaymentStateProjection: Equatable {
     case completed
     case errorMessage(String)
     case fraud(Fraud)
@@ -169,24 +135,22 @@ enum PaymentStateProjection: Equatable {
 extension PaymentStateProjection {
     
     init?(
-        _ previous: PaymentFlowMockState,
-        _ current: PaymentFlowMockState
+        _ previous: AnywayTransactionState,
+        _ current: AnywayTransactionState
     ) {
-        if let fraud = current.fraud, previous.fraud == nil {
-            self = .fraud(fraud)
-            return
-        }
-        
-        if current.isComplete {
+#warning("previous is ignored")
+        switch current.status {
+        case .fraudSuspected:
+            self = .fraud(.init())
+            
+        case .result:
             self = .completed
-            return
-        }
-        
-        if let errorMessage = current.errorMessage {
+            
+        case let .serverError(errorMessage):
             self = .errorMessage(errorMessage)
-            return
+            
+        default:
+            return nil
         }
-        
-        return nil
     }
 }

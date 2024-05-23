@@ -155,7 +155,7 @@ extension RootViewModelFactory {
     typealias LatestPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     
-    typealias UtilityPaymentViewModel = ObservingPaymentFlowMockViewModel
+    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
     static func makeNavigationOperationView(
@@ -287,7 +287,7 @@ extension ProductProfileViewModel {
     typealias LatestPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     
-    typealias UtilityPaymentViewModel = ObservingPaymentFlowMockViewModel
+    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?

@@ -485,28 +485,34 @@ private extension PaymentsTransfersView {
         }
     }
     
+    @ViewBuilder
     func paymentFlowView(
         state: UtilityServiceFlowState,
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
-        PaymentFlowMockView(viewModel: state.viewModel)
-            .alert(
-                item: state.alert,
-                content: paymentFlowAlert(event: event)
-            )
-            .fullScreenCover(
-                cover: state.fullScreenCover,
-                dismissFullScreenCover: { event(.dismissFullScreenCover) },
-                content: paymentFlowFullScreenCoverView
-            )
-            .sheet(
-                modal: state.modal,
-                dismissModal: { event(.dismissFraud) },
-                content: paymentFlowModalView(event: { event(.fraud($0)) })
-            )
-            .navigationTitle("Payment")
-            .navigationBarTitleDisplayMode(.inline)
+        let factory: AnywayPaymentFactory<Text> = { fatalError() }()
+        
+        AnywayTransactionStateWrapperView(viewModel: state.viewModel) {
+            
+            AnywayTransactionView(state: $0, event: $1, factory: factory)
+        }
+        .alert(
+            item: state.alert,
+            content: paymentFlowAlert(event: event)
+        )
+        .fullScreenCover(
+            cover: state.fullScreenCover,
+            dismissFullScreenCover: { event(.dismissFullScreenCover) },
+            content: paymentFlowFullScreenCoverView
+        )
+        .sheet(
+            modal: state.modal,
+            dismissModal: { event(.dismissFraud) },
+            content: paymentFlowModalView(event: { event(.fraud($0)) })
+        )
+        .navigationTitle("Payment")
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     func paymentFlowAlert(
@@ -602,7 +608,7 @@ private extension PaymentsTransfersView {
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     typealias Content = UtilityPrepaymentViewModel
-    typealias UtilityPaymentViewModel = ObservingPaymentFlowMockViewModel
+    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
     
     typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, UtilityPaymentViewModel>
     
