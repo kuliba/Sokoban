@@ -9,6 +9,11 @@ extension AnywayPaymentParameterViewFactory {
     
     static var preview: Self {
         
-        return .init()
+        return .init(
+            makeSelectorView: { selector, observe in
+            
+                fatalError()
+            // .init(viewModel: .preview(), factory: .preview)
+        })
     }
 }

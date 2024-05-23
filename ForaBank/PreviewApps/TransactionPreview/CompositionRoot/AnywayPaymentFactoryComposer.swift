@@ -7,6 +7,7 @@
 
 import AnywayPaymentDomain
 import PaymentComponents
+import RxViewModel
 import SwiftUI
 
 final class AnywayPaymentFactoryComposer {
@@ -108,9 +109,37 @@ private extension AnywayPaymentFactoryComposer {
     func makeElementFactory(
     ) -> AnywayPaymentParameterViewFactory {
         
-        .init()
+        .init(makeSelectorView: makeSelectorView)
     }
     
+    func makeSelectorView(
+        selector: Selector<Option>,
+        observe: @escaping (Selector<Option>) -> Void
+    ) -> SelectorWrapperView {
+        
+        let reducer = SelectorReducer<Option>()
+        let viewModel = RxViewModel(
+            initialState: selector,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: { _,_ in }
+        )
+        
+        let observing = RxObservingViewModel(
+            observable: viewModel,
+            observe: observe
+        )
+        
+        return SelectorWrapperView(
+            viewModel: observing,
+            factory: .init(
+                createOptionView: OptionView.init,
+                createSelectedOptionView: SelectedOptionView.init
+            )
+        )
+    }
+    
+    typealias Option = AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option
+
     typealias Observe = (ProductID, Currency) -> Void
     typealias ProductID = AnywayPayment.Element.Widget.PaymentCore.ProductID
     typealias Currency = AnywayPaymentEvent.Widget.Currency

@@ -28,7 +28,10 @@ struct AnywayPaymentParameterView: View {
             
         case let .select(option, options):
             let selector = try? Selector(option: option, options: options)
-            selector.map(selectorView)
+            selector.map {
+             
+                factory.makeSelectorView($0, { event($0.selected.key.rawValue) })
+            }
             
         case .textInput:
             textInputView(parameter)
@@ -43,37 +46,6 @@ extension AnywayPaymentParameterView {
     
     typealias Parameter = AnywayPayment.Element.UIComponent.Parameter
     typealias Factory = AnywayPaymentParameterViewFactory
-}
-
-private extension AnywayPaymentParameterView {
-    
-    private func selectorView(
-        selector: Selector<Option>
-    ) -> some View {
-        
-#warning("extract to factory")
-        let reducer = SelectorReducer<Option>()
-        let viewModel = RxViewModel(
-            initialState: selector,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: { _,_ in }
-        )
-        
-        let observing = RxObservingViewModel(
-            observable: viewModel,
-            observe: { event($0.selected.key.rawValue) }
-        )
-        
-        return SelectorWrapperView(
-            viewModel: observing,
-            factory: .init(
-                createOptionView: { OptionView(option: $0) },
-                createSelectedOptionView: { SelectedOptionView(option: $0) }
-            )
-        )
-    }
-    
-    typealias Option = AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option
 }
 
 private extension AnywayPaymentParameterView {
