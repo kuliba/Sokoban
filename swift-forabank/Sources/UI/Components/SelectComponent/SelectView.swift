@@ -146,7 +146,7 @@ public struct SelectView: View {
             "Начните ввод для поиска",
             text: .init(
                 get: { searchText },
-                set: { _ in event(.search("")) }
+                set: { _ in event(.search(searchText)) }
             )
         )
     }

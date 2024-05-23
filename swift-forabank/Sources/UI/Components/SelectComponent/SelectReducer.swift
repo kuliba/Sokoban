@@ -7,36 +7,40 @@
 
 import Foundation
 
-final class SelectReducer<Icon> {}
+public final class SelectReducer<Icon> {
+    
+    public init() {}
+}
 
 extension SelectReducer {
     
     func reduce(
         _ state: State,
         _ event: Event
-    ) -> State {
+    ) -> (State, Effect?) {
         
         switch event {
         case let .chevronTapped(options: options, selectOption: option):
-            if case .collapsed = state {
-                return .init(state: .expanded(
+            if case .collapsed = state.state {
+                return (.init(image: state.image, state: .expanded(
                     selectOption: option,
                     options: options ?? [],
-                    searchText: state.searchText
-                ))
+                    searchText: state.state.searchText
+                )), nil)
             } else {
                 
-                return .collapsed(option: option, options: options)
+                return (.init(image: state.image, state: .collapsed(option: option, options: options)), nil)
+
             }
         case let .optionTapped(option):
-            return .collapsed(option: option, options: nil)
+            return (.init(image: state.image, state: .collapsed(option: option, options: nil)), nil)
             
         case let .search(text):
-            return .expanded(
+            return (.init(image: state.image, state: .expanded(
                 selectOption: nil,
-                options: (state.filteredOption ?? state.options) ?? [],
+                options: (state.state.filteredOption ?? state.state.options) ?? [],
                 searchText: text
-            )
+            )), nil)
         }
     }
 }
@@ -74,6 +78,7 @@ extension SelectState {
 
 extension SelectReducer {
     
-    typealias State = SelectState
+    typealias State = SelectUIState
     typealias Event = SelectEvent
+    typealias Effect = Never
 }

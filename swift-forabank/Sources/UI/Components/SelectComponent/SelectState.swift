@@ -11,7 +11,7 @@ import SwiftUI
 public struct SelectUIState {
 
     let image: Image
-    var state: SelectState
+    public var state: SelectState
     
     init(image: Image, state: SelectState) {
         self.image = image
