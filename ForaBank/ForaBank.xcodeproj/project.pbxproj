@@ -6928,6 +6928,7 @@
 			isa = PBXGroup;
 			children = (
 				2A094E012BFF220300481B99 /* Input */,
+				2A094E112BFF591300481B99 /* ProductSelect */,
 				2A094DFE2BFF1F1200481B99 /* Selector */,
 			);
 			path = CompositionRoot;
@@ -6950,6 +6951,15 @@
 				2A094E052BFF368D00481B99 /* InputStateWrapperViewFactory.swift */,
 			);
 			path = Input;
+			sourceTree = "<group>";
+		};
+		2A094E112BFF591300481B99 /* ProductSelect */ = {
+			isa = PBXGroup;
+			children = (
+				2AA54AB72BFCF4D100EF872C /* ProductSelectStateWrapperView.swift */,
+				2AA54AC32BFD1E9000EF872C /* ProductSelectConfig+iFora.swift */,
+			);
+			path = ProductSelect;
 			sourceTree = "<group>";
 		};
 		2A09C2AD2B3C588C0076DC93 /* FastPayments */ = {
@@ -8946,8 +8956,6 @@
 				2AA54AB22BFCE27800EF872C /* AnywayPaymentParameterView.swift */,
 				2A094E072BFF3D5800481B99 /* AnywayPaymentParameterViewFactory.swift */,
 				2A094DDC2BFEF5FC00481B99 /* Components */,
-				2AA54AB72BFCF4D100EF872C /* ProductSelectStateWrapperView.swift */,
-				2AA54AC32BFD1E9000EF872C /* ProductSelectConfig+iFora.swift */,
 			);
 			path = AnywayPaymentElementView;
 			sourceTree = "<group>";
