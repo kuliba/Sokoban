@@ -32,8 +32,8 @@ public extension PaymentComponents {
     typealias AmountConfig = AmountComponent.AmountConfig
     typealias AmountView = AmountComponent.AmountView
     
-    typealias CodeView = OTPInputComponent.CodeInputView
-    typealias CodeConfig = OTPInputComponent.CodeInputConfig
+    typealias CodeInputView = OTPInputComponent.CodeInputView
+    typealias CodeInputConfig = OTPInputComponent.CodeInputConfig
 
     typealias Button = ButtonComponent.Button
     typealias ButtonConfig = SharedConfigs.ButtonConfig
