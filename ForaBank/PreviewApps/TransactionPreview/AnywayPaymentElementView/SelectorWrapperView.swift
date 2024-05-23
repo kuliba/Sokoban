@@ -8,8 +8,6 @@
 import RxViewModel
 import SwiftUI
 
-typealias SelectorViewModel<T> = RxViewModel<Selector<T>, SelectorEvent<T>, Never>
-
 struct SelectorWrapperView<T, ID, OptionView, SelectedOptionView>: View
 where ID: Hashable,
       OptionView: View,
@@ -43,7 +41,7 @@ where ID: Hashable,
 
 extension SelectorWrapperView {
     
-    typealias ViewModel = SelectorViewModel<T>
+    typealias ViewModel = ObservingSelectorViewModel<T>
     typealias Factory = SelectorViewFactory<T, OptionView, SelectedOptionView>
 }
 
@@ -80,6 +78,22 @@ extension SelectorWrapperView where T: Identifiable, T.ID == ID {
     ScrollView {
         
         SelectorWrapperView(viewModel: .preview(), factory: .preview)
+    }
+}
+
+extension RxObservingViewModel
+where State == Selector<String>,
+      Event == SelectorEvent<String>,
+      Effect == Never {
+    
+    static func preview(
+        initialState: Selector<String> = .preview
+    ) -> Self {
+        
+        .init(
+            observable: .preview(initialState: initialState), 
+            observe: { _,_ in }
+        )
     }
 }
 
