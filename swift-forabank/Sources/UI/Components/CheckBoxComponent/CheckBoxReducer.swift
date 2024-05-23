@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class CheckBoxReducer<Icon> {}
+final class CheckBoxReducer {}
 
 extension CheckBoxReducer {
     
@@ -19,7 +19,7 @@ extension CheckBoxReducer {
         switch event {
         case .buttonTapped:
             return (
-                .init(isChecked: !state.isChecked),
+                !state,
                 nil
             )
         }
@@ -28,7 +28,7 @@ extension CheckBoxReducer {
 
 extension CheckBoxReducer {
     
-    typealias State = CheckBoxState
+    typealias State = Bool
     typealias Event = CheckBoxEvent
     typealias Effect = Never
 }

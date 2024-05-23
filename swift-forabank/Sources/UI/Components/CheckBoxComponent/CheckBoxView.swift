@@ -10,7 +10,7 @@ import SharedConfigs
 
 public struct CheckBoxView: View {
     
-    public typealias State = CheckBoxState
+    public typealias State = Bool
     public typealias Event = CheckBoxEvent
     
     private let state: State
@@ -34,11 +34,11 @@ public struct CheckBoxView: View {
             ZStack {
                 
                 CheckView(
-                    isChecked: state.isChecked,
+                    isChecked: state,
                     config: config
                 )
             }
-            .animation(nil, value: state.isChecked)
+            .animation(nil, value: state)
             .frame(width: 24, height: 24)
             
             config.title.text(withConfig: config.titleConfig)
@@ -159,7 +159,7 @@ struct CheckBoxView_Previews: PreviewProvider {
     static var previews: some View {
         
         CheckBoxView(
-            state: .init(isChecked: true),
+            state: true,
             event: { _ in },
             config: .preview
         )
