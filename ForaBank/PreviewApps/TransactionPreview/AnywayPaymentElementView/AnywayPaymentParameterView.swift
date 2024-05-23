@@ -14,6 +14,7 @@ struct AnywayPaymentParameterView: View {
     
     let parameter: Parameter
     let event: (String) -> Void
+    let factory: Factory
     
     var body: some View {
         
@@ -41,6 +42,7 @@ struct AnywayPaymentParameterView: View {
 extension AnywayPaymentParameterView {
     
     typealias Parameter = AnywayPayment.Element.UIComponent.Parameter
+    typealias Factory = AnywayPaymentParameterViewFactory
 }
 
 private extension AnywayPaymentParameterView {
@@ -173,8 +175,8 @@ private extension AnywayPayment.Element.UIComponent.Parameter.ParameterType.Opti
         
         VStack(spacing: 32) {
             
-            AnywayPaymentParameterView(parameter: .textInput, event: { print($0) })
-            AnywayPaymentParameterView(parameter: .select, event: { print($0) })
+            AnywayPaymentParameterView(parameter: .textInput, event: { print($0) }, factory: .preview)
+            AnywayPaymentParameterView(parameter: .select, event: { print($0) }, factory: .preview)
         }
     }
 }

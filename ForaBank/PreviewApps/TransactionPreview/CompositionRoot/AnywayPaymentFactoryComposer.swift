@@ -34,7 +34,8 @@ extension AnywayPaymentFactoryComposer {
         
         let factory = AnywayPaymentElementViewFactory(
             makeIconView: makeIconView,
-            makeProductSelectView: makeProductSelectView
+            makeProductSelectView: makeProductSelectView,
+            elementFactory: makeElementFactory()
         )
         
         return .init(
@@ -102,6 +103,12 @@ private extension AnywayPaymentFactoryComposer {
         )
         
         return .init(viewModel: observing, config: .iFora)
+    }
+    
+    func makeElementFactory(
+    ) -> AnywayPaymentParameterViewFactory {
+        
+        .init()
     }
     
     typealias Observe = (ProductID, Currency) -> Void
