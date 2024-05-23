@@ -179,6 +179,6 @@ private extension String {
     
     static let qr3 = "ST00012|Name=АО Управляющая организация многоквартирными домами Ленинского района|PersonalAcc=40702810702910000312|BankName=АО  'АЛЬФА-БАНК' г. Москва|BIC=044525593|CorrespAcc=30101810200000000593|PayeeINN=7606066274|KPP=760601001|Sum=383296|Purpose=квитанция за ЖКУ|lastName=|payerAddress=Свердлова ул., д.102, кв.44|persAcc=502045019|paymPeriod=01.2024|category=1|ServiceName=5000|addAmount=0"
     
-    static let qr6 = "https://platiqr.ru/?uuid=22428" //url=https://platiqr.ru/?uuid=22428
+    static let qr6 = "https://platiqr.ru/?uuid=22428"
     static let containsST = "ST000"
 }

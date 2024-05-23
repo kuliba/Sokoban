@@ -362,7 +362,7 @@ extension Model {
     private func createOperationStep(parameters: [PaymentsParameterRepresentable], isCompleted: Bool) -> Payments.Operation.Step {
         
         let visible = parameters.map { $0.id }
-        let required = parameters.map { $0.id }//.filter { $0 != Payments.Parameter.Identifier.requisitsCompanyNameHelper.rawValue }
+        let required = parameters.map { $0.id }
         
         return .init(parameters: parameters, front: .init(visible: visible, isCompleted: isCompleted), back: .init(stage: .remote(.start), required: required, processed: nil))
     }
