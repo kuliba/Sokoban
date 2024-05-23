@@ -25,30 +25,8 @@ struct AnywayPaymentParameterView: View {
             Text("TBD: nonEditable parameter view")
             
         case let .select(option, options):
-            if let selector = try? Selector(option: option, options: options) {
-                
-#warning("replace with factory")
-                let reducer = SelectorReducer<Option>()
-                let viewModel = RxViewModel(
-                    initialState: selector,
-                    reduce: reducer.reduce(_:_:),
-                    handleEffect: { _,_ in }
-                )
-                
-                let observing = RxObservingViewModel(
-                    observable: viewModel,
-                    observe: { event($0.selected.key.rawValue) }
-                )
-                
-                SelectorWrapperView(
-                    viewModel: observing,
-                    idKeyPath: \.key,
-                    factory: .init(
-                        createOptionView: { Text($0.value.rawValue) },
-                        createSelectedOptionView: { Text($0.value.rawValue) }
-                    )
-                )
-            }
+            let selector = try? Selector(option: option, options: options)
+            selector.map(selectorView)
             
         case .textInput:
 #warning("replace with real components")
@@ -60,7 +38,34 @@ struct AnywayPaymentParameterView: View {
     }
 }
 
-extension AnywayPaymentParameterView {
+private extension AnywayPaymentParameterView {
+    
+    private func selectorView(
+        selector: Selector<Option>
+    ) -> some View {
+        
+#warning("replace with factory")
+        let reducer = SelectorReducer<Option>()
+        let viewModel = RxViewModel(
+            initialState: selector,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: { _,_ in }
+        )
+        
+        let observing = RxObservingViewModel(
+            observable: viewModel,
+            observe: { event($0.selected.key.rawValue) }
+        )
+        
+        return SelectorWrapperView(
+            viewModel: observing,
+            idKeyPath: \.key,
+            factory: .init(
+                createOptionView: { Text($0.value.rawValue) },
+                createSelectedOptionView: { Text($0.value.rawValue) }
+            )
+        )
+    }
     
     typealias Option = AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option
 }
@@ -72,7 +77,7 @@ private extension Selector where T == AnywayPayment.Element.UIComponent.Paramete
     init(option: Option, options: [Option]) throws {
         
         try self.init(
-            selected: option, 
+            selected: option,
             options: options,
             filterPredicate: { $0.contains($1) }
         )
@@ -80,7 +85,7 @@ private extension Selector where T == AnywayPayment.Element.UIComponent.Paramete
     
     typealias Option = AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option
 }
-    
+
 private extension AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option {
     
     func contains(_ string: String) -> Bool {
