@@ -108,7 +108,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         cardNameLabel.alpha = 0.5
         maskCardLabel.text = viewModel.maskedcardNumber
         maskCardLabel.textColor = viewModel.colorText
-        isCheckedImageView.image = isChecked ? UIImage(named: "ic18Check")!.withRenderingMode(.alwaysOriginal) : UIImage()
+        isCheckedImageView.image = isChecked ? UIImage(named: "ic16CheckLightGray16Fixed")!.withRenderingMode(.alwaysOriginal) : UIImage()
     }
     
     func setupUI() {

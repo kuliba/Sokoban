@@ -92,6 +92,7 @@ public extension Image {
     static var ic16Check: Image { Image(#function) }
     static var ic16CheckCircle: Image { Image(#function) }
     static var ic16CheckSquare: Image { Image(#function) }
+    static var ic16CheckLightGray16Fixed: Image { Image(#function) }
     static var ic16ChevronDown: Image { Image(#function) }
     static var ic16ChevronLeft: Image { Image(#function) }
     static var ic16ChevronRight: Image { Image(#function) }
