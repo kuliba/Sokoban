@@ -8,6 +8,8 @@
 import RxViewModel
 import SwiftUI
 
+typealias ObservingSelectorViewModel<T> = RxObservingViewModel<Selector<T>, SelectorEvent<T>, Never>
+
 struct SelectorWrapperView<T, ID, OptionView, SelectedOptionView>: View
 where ID: Hashable,
       OptionView: View,
