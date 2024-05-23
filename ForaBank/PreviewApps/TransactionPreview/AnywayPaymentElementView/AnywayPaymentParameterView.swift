@@ -73,13 +73,12 @@ private extension AnywayPaymentParameterView {
             )
             
             InputStateWrapperView(
-                viewModel: observing,
-                factory: .init(
-                    makeInputView: {
-                        
-                        InputView(state: $0, event: $1, config: .iFora, iconView: { Text("?") })
-                    }
-                )
+                viewModel: observing, 
+                factory: .init(makeIconView: {
+                    
+                    #warning("FIXME")
+                    return .init()
+                })
             )
             
         default:
@@ -88,7 +87,7 @@ private extension AnywayPaymentParameterView {
     }
 }
 
-private extension InputConfig {
+extension InputConfig {
     
     static var iFora: Self { .preview }
 }

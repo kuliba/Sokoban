@@ -5,16 +5,21 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
-import InputComponent
+import SwiftUI
 
-struct InputStateWrapperViewFactory<InputView> {
+struct InputStateWrapperViewFactory {
     
-    let makeInputView: MakeInputView
+    let makeIconView: MakeIconView
 }
 
 extension InputStateWrapperViewFactory {
     
-    typealias State = InputState<String>
-    typealias Event = InputEvent
-    typealias MakeInputView = (State, @escaping (Event) -> Void) -> InputView
+    typealias MakeIconView = () -> InputIconView
+}
+
+struct InputIconView: View {
+    
+    var body: some View {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Hello, world!@*/Text("Hello, world!")/*@END_MENU_TOKEN@*/
+    }
 }
