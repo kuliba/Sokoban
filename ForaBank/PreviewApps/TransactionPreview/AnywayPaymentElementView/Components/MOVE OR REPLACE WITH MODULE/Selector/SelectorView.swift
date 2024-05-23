@@ -1,6 +1,6 @@
 //
 //  SelectorView.swift
-//  ForaBank
+//  TransactionPreview
 //
 //  Created by Igor Malyarov on 23.05.2024.
 //
@@ -152,11 +152,11 @@ extension Selector where T == String {
 }
 
 extension SelectorViewFactory
-where T == String,
+where Option == String,
       OptionView == Text,
       SelectedOptionView == Text {
     
-    static var preview: Self {
+    static var textPreview: Self {
         
         return .init(
             createOptionView: Text.init,

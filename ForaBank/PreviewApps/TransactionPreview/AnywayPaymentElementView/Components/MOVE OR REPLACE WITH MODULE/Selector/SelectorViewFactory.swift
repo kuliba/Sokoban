@@ -1,11 +1,11 @@
 //
 //  SelectorViewFactory.swift
-//  ForaBank
+//  TransactionPreview
 //
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
-struct SelectorViewFactory<T, OptionView, SelectedOptionView> {
+struct SelectorViewFactory<Option, OptionView, SelectedOptionView> {
     
     let createOptionView: CreateOptionView
     let createSelectedOptionView: CreateSelectedOptionView
@@ -13,6 +13,6 @@ struct SelectorViewFactory<T, OptionView, SelectedOptionView> {
 
 extension SelectorViewFactory {
     
-    typealias CreateOptionView = (T) -> OptionView
-    typealias CreateSelectedOptionView = (T) -> SelectedOptionView
+    typealias CreateOptionView = (Option) -> OptionView
+    typealias CreateSelectedOptionView = (Option) -> SelectedOptionView
 }
