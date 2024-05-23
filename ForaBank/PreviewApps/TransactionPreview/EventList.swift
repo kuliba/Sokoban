@@ -1,27 +1,19 @@
 //
-//  AnywayTransactionView.swift
+//  EventList.swift
 //  TransactionPreview
 //
-//  Created by Igor Malyarov on 19.05.2024.
+//  Created by Igor Malyarov on 21.05.2024.
 //
 
 import SwiftUI
 
-struct AnywayTransactionView: View {
+struct EventList: View {
     
-    let state: State
     let event: (Event) -> Void
     
     var body: some View {
         
         List {
-            
-            Section {
-                Text("Payment UI")
-                button("payment", .payment(.anEvent))
-            } header: {
-                Text("payment")
-            }
             
             Section {
                 button("dismissRecoverableError", .dismissRecoverableError)
@@ -103,12 +95,11 @@ struct AnywayTransactionView: View {
     }
 }
 
-extension AnywayTransactionView {
+extension EventList {
     
-    typealias State = AnywayTransactionState
     typealias Event = AnywayTransactionEvent
 }
 
 #Preview {
-    AnywayTransactionView(state: .preview, event: { print($0) })
+    EventList(event: { print($0) })
 }
