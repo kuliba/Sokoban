@@ -35,6 +35,7 @@ where ID: Hashable,
                 
                 searchView()
                 optionsView()
+                    .animation(.easeInOut, value: state.isShowingOptions)
             }
         }
         .padding()
@@ -50,7 +51,7 @@ where ID: Hashable,
         Button {
             event(.toggleOptions)
         } label: {
-            Text(state.isShowingOptions ? "Hide Options" : "Show Options")
+            Text(state.isShowingOptions ? "Hide" : "Show")
         }
     }
     
