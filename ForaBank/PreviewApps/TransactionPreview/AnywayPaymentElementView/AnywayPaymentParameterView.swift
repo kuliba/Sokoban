@@ -66,10 +66,9 @@ private extension AnywayPaymentParameterView {
         
         return SelectorWrapperView(
             viewModel: observing,
-            idKeyPath: \.key,
             factory: .init(
-                createOptionView: { Text($0.value.rawValue) },
-                createSelectedOptionView: { Text($0.value.rawValue) }
+                createOptionView: { OptionView(option: $0) },
+                createSelectedOptionView: { SelectedOptionView(option: $0) }
             )
         )
     }
