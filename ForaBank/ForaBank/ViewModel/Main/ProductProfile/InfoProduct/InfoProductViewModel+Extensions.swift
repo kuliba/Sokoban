@@ -315,13 +315,12 @@ extension InfoProductViewModel {
             }
         } else {
             
-            if let numberMask = data.numberMasked,
-               let number = data.number {
+            if let number = data.asCard?.number {
                 
                 list.append(
                     .init(
                         id: .numberMasked,
-                        subtitle: numberMask,
+                        subtitle: number.masked(mask: .cardForRequisites),
                         valueForCopy: number.formatted()
                     )
                 )
