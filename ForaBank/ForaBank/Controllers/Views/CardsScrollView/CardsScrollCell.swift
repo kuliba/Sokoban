@@ -108,7 +108,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         cardNameLabel.alpha = 0.5
         maskCardLabel.text = viewModel.maskedcardNumber
         maskCardLabel.textColor = viewModel.colorText
-        isCheckedImageView.image = isChecked ? UIImage(named: "ic18Check")!.withRenderingMode(.alwaysOriginal) : UIImage()
+        isCheckedImageView.image = isChecked ? UIImage.checkImage.withBackground(color: viewModel.backgroundColor) : UIImage()
     }
     
     func setupUI() {
@@ -145,6 +145,11 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         
         cloverImageView.anchor(top: self.topAnchor, right: self.rightAnchor, paddingTop: 8, paddingRight: 8)
         
-        isCheckedImageView.anchor(top: self.topAnchor, left: self.leftAnchor, paddingTop: 9, paddingLeft: 9)
+        isCheckedImageView.anchor(top: self.topAnchor, left: self.leftAnchor, paddingTop: 10, paddingLeft: 10)
     }
+}
+
+private extension UIImage {
+    
+    static let checkImage: UIImage = UIImage(named: "ic16CheckLightGray16Fixed")!
 }

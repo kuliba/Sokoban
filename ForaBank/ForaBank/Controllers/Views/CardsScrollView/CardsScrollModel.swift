@@ -68,6 +68,13 @@ struct CardsScrollModel {
         }
     }
     
+    var backgroundColor: UIColor {
+        if let color = card.background.first?.color {
+            return .init(hexString: color)
+        }
+        return .clear
+    }
+
     init(
         card: UserAllCardsModel,
         getUIImage: @escaping (Md5hash) -> UIImage?

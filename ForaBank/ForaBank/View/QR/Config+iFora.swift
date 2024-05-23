@@ -64,7 +64,7 @@ extension ProductSelectComponent.ProductSelectConfig {
                 textFont: .textBodyXsR11140(),
                 textColor: .textWhite.opacity(0.4)
             ), 
-            selectedImage: .ic18Check
+            selectedImage: .ic16CheckLightGray16Fixed
         ),
         chevron: .init(
             color: .iconGray,
