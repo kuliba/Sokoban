@@ -5,10 +5,13 @@
 //  Created by Igor Malyarov on 09.05.2024.
 //
 
+import AnywayPaymentAdapters
+import AnywayPaymentBackend
 import AnywayPaymentDomain
 import OperatorsListComponents
 import ForaTools
 import Foundation
+import GenericRemoteService
 import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
 
@@ -150,8 +153,14 @@ private extension PaymentsTransfersFlowComposer {
         
         switch flag {
         case .live:
+            let microServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer(
+                nanoServices: .init(
+                    getDetails: { _,_ in fatalError() },
+                    makeTransfer: makeTransfer()
+                )
+            )
             composer = AnywayTransactionViewModelComposer(
-                microServices: { fatalError() }()
+                microServices: microServicesComposer.compose()
             )
             
         case .stub:
@@ -179,6 +188,50 @@ private extension PaymentsTransfersFlowComposer {
         }
         
         return composer.compose(initialState: initialState)
+    }
+    
+    #warning("extract to nano services composer")
+    private func makeTransfer(
+    ) -> AnywayTransactionEffectHandlerNanoServices.MakeTransfer {
+
+        let createRequest = ForaBank.RequestFactory.createMakeTransferRequest
+        let mapResponse = AnywayPaymentBackend.ResponseMapper.mapMakeTransferResponse
+        
+        let service = RemoteService(
+            createRequest: createRequest,
+            performRequest: httpClient.performRequest,
+            mapResponse: mapResponse
+        )
+        
+        return { payload, completion in
+        
+            return service(.init(payload.rawValue)) {
+             
+                completion(try? $0.map(\.response).get())
+            }
+        }
+    }
+}
+
+// MARK: - Adapters
+
+private extension AnywayPaymentBackend.ResponseMapper.MakeTransferResponse {
+    
+    var response: AnywayTransactionEffectHandlerNanoServices.MakeTransferResponse {
+    
+        .init(status: self.status, detailID: operationDetailID)
+    }
+}
+
+private extension AnywayPaymentBackend.ResponseMapper.MakeTransferResponse {
+    
+    var status: ForaBank.DocumentStatus {
+        
+        switch documentStatus {
+        case .complete:   return .completed
+        case .inProgress: return .inflight
+        case .rejected:   return .rejected
+        }
     }
 }
 

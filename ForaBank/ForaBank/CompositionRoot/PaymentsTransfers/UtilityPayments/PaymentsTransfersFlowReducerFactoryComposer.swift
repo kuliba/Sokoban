@@ -119,10 +119,11 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
 
 private extension PaymentsTransfersFlowReducerFactory.MakeUtilityPaymentStatePayload
 where LastPayment == UtilityPaymentLastPayment,
+      Operator == UtilityPaymentOperator,
       UtilityService == ForaBank.UtilityService {
     
     var transaction: AnywayTransactionState {
-                
+        
 #warning("hardcoded `isValid: true` and `status: nil`")
         return .init(
             payment: .init(
