@@ -123,7 +123,6 @@ where LastPayment == UtilityPaymentLastPayment,
     
     var transaction: AnywayTransactionState {
                 
-#warning("need an overload for `update` without AnywayPaymentOutline")
 #warning("hardcoded `isValid: true` and `status: nil`")
         return .init(
             payment: .init(
@@ -136,7 +135,6 @@ where LastPayment == UtilityPaymentLastPayment,
         )
     }
     
-#warning("AnywayPaymentOutline.core must be optional")
     private var outline: AnywayPaymentOutline {
         
         switch select {
@@ -144,10 +142,7 @@ where LastPayment == UtilityPaymentLastPayment,
             return lastPayment.outline
             
         case .operator, .service:
-            return .init(
-                core: .init(amount: 0, currency: "", productID: 0, productType: .account),
-                fields: [:]
-            )
+            return .empty
         }
     }
     
@@ -174,8 +169,8 @@ private extension AnywayPaymentDomain.AnywayPayment {
     ) -> Self {
         
         return .init(
-            elements: [], 
-            infoMessage: nil, 
+            elements: [],
+            infoMessage: nil,
             isFinalStep: false,
             isFraudSuspected: false,
             puref: puref
@@ -183,15 +178,17 @@ private extension AnywayPaymentDomain.AnywayPayment {
     }
 }
 
+private extension AnywayPaymentOutline {
+    
+    static let empty: Self = .init(core: nil, fields: [:])
+}
+
 private extension UtilityPaymentLastPayment {
     
     var outline: AnywayPaymentOutline {
         
 #warning("FIXME - replace hardcoded with data from LastPayment")
-        return .init(
-            core: .init(amount: 0, currency: "", productID: 0, productType: .account),
-            fields: [:]
-        )
+        return .empty
     }
 }
 
