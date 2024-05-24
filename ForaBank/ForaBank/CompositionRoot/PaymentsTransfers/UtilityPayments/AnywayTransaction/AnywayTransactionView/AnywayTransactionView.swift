@@ -7,6 +7,7 @@
 
 import AnywayPaymentDomain
 import SwiftUI
+import UIPrimitives
 
 struct AnywayTransactionView: View {
     
@@ -46,7 +47,8 @@ extension AnywayTransactionView {
     
     typealias State = AnywayTransactionState
     typealias Event = AnywayTransactionEvent
-    typealias Factory = AnywayPaymentFactory<Text>
+    typealias Factory = AnywayPaymentFactory<IconView>
+    typealias IconView = UIPrimitives.AsyncImage
 }
 
 // MARK: - Adapters
