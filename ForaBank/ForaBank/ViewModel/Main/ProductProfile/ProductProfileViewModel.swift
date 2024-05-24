@@ -651,15 +651,13 @@ private extension ProductProfileViewModel {
                 
                 case let payload as ModelAction.Card.Unblock.Response:
                     hideSpinner()
-                    if case .success = payload.result {
-                        self.model.handleProductUpdateDynamicParamsList(payload.cardId, productType: .card)
-                    }
 
                 case let payload as ModelAction.Card.Block.Response:
                     hideSpinner()
                     switch payload.result {
                     case .success:
-                        self.model.handleProductUpdateDynamicParamsList(payload.cardId, productType: .card)
+                        model.handleProductUpdateDynamicParamsList(payload.cardId, productType: .card)
+                        model.action.send(ModelAction.Products.Update.ForProductType(productType: .card))
                         
                     case .failure(let errorMessage):
                         alert = .init(title: "Ошибка", message: errorMessage, primary: .init(type: .default, title: "Ok", action: { [weak self] in
