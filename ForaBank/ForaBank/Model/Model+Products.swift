@@ -492,15 +492,15 @@ extension Model {
         
         getProducts(productType) { response in
             
+            if let index = self.productsUpdating.value.firstIndex(of: productType) {
+                
+                self.productsUpdating.value.remove(at: index)
+            }
+            
             if let response {
                 
                 let result = Services.mapProductResponse(response)
-                
-                if let index = self.productsUpdating.value.firstIndex(of: productType) {
-                    
-                    self.productsUpdating.value.remove(at: index)
-                }
-                
+                                
                 // update products
                 let updatedProducts = Self.reduce(products: self.products.value, with: result.productList, for: productType)
                 self.products.value = updatedProducts
