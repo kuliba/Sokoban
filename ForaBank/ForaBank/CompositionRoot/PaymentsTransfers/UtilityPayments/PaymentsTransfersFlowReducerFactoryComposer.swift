@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
+import AnywayPaymentDomain
 import RxViewModel
 import UtilityServicePrepaymentCore
 
@@ -92,11 +93,11 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
 private extension PaymentsTransfersFlowReducerFactoryComposer {
     
     func makeUtilityPaymentState(
-        response: StartUtilityPaymentResponse,
+        payload: Factory.MakeUtilityPaymentStatePayload,
         notify: @escaping (PaymentStateProjection) -> Void
     ) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
         
-        let observable = makeTransactionViewModel(.init(response))
+        let observable = makeTransactionViewModel(payload.transaction)
         let viewModel = UtilityPaymentViewModel(
             observable: observable,
             observe: { PaymentStateProjection($0, $1).map(notify) }
@@ -116,12 +117,81 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     }
 }
 
-private extension AnywayTransactionState {
+private extension PaymentsTransfersFlowReducerFactory.MakeUtilityPaymentStatePayload
+where LastPayment == UtilityPaymentLastPayment,
+      UtilityService == ForaBank.UtilityService {
     
-    init(_ response: StartUtilityPaymentResponse) {
+    var transaction: AnywayTransactionState {
+                
+#warning("need an overload for `update` without AnywayPaymentOutline")
+#warning("hardcoded `isValid: true` and `status: nil`")
+        return .init(
+            payment: .init(
+                payment: .empty(puref).update(with: response, and: outline),
+                staged: .init(),
+                outline: outline
+            ),
+            isValid: true,
+            status: nil
+        )
+    }
+    
+#warning("AnywayPaymentOutline.core must be optional")
+    private var outline: AnywayPaymentOutline {
         
-#warning("FIXME")
-        fatalError()
+        switch select {
+        case let .lastPayment(lastPayment):
+            return lastPayment.outline
+            
+        case .operator, .service:
+            return .init(
+                core: .init(amount: 0, currency: "", productID: 0, productType: .account),
+                fields: [:]
+            )
+        }
+    }
+    
+    private var puref: AnywayPaymentDomain.AnywayPayment.Puref {
+        
+        switch select {
+        case let .lastPayment(lastPayment):
+            return .init(lastPayment.puref)
+            
+        case let .operator(`operator`):
+            #warning("need operator puref? or wrong type is used here - puref should be extracted from select lastPayment or service? - like in StartAnywayPaymentPayload")
+            fatalError()
+            
+        case let .service(utilityService, _):
+            return .init(utilityService.puref)
+        }
+    }
+}
+
+private extension AnywayPaymentDomain.AnywayPayment {
+    
+    static func empty(
+        _ puref: Puref
+    ) -> Self {
+        
+        return .init(
+            elements: [], 
+            infoMessage: nil, 
+            isFinalStep: false,
+            isFraudSuspected: false,
+            puref: puref
+        )
+    }
+}
+
+private extension UtilityPaymentLastPayment {
+    
+    var outline: AnywayPaymentOutline {
+        
+#warning("FIXME - replace hardcoded with data from LastPayment")
+        return .init(
+            core: .init(amount: 0, currency: "", productID: 0, productType: .account),
+            fields: [:]
+        )
     }
 }
 

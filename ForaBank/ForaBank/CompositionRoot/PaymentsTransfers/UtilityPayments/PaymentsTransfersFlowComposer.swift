@@ -194,7 +194,7 @@ private extension PaymentsTransfersFlowComposer {
         case let .lastPayment(lastPayment):
             return stub(for: lastPayment)
             
-        case let .service(service):
+        case let .service(service, for: `operator`):
             return stub(for: service)
         }
     }
@@ -210,7 +210,7 @@ private extension PaymentsTransfersFlowComposer {
             return .failure(.serviceFailure(.connectivityError))
             
         default:
-            return .success(.startPayment(.init()))
+            return .success(.startPayment(.preview))
         }
     }
     
@@ -220,7 +220,7 @@ private extension PaymentsTransfersFlowComposer {
         
         switch `operator`.id {
         case "single":
-            return .success(.startPayment(.init()))
+            return .success(.startPayment(.preview))
             
         case "singleFailure":
             return .failure(.operatorFailure(`operator`))
@@ -236,7 +236,7 @@ private extension PaymentsTransfersFlowComposer {
             return .failure(.serviceFailure(.serverError("Server Failure")))
             
         default:
-            return .success(.startPayment(.init()))
+            return .success(.startPayment(.preview))
         }
     }
     
@@ -249,7 +249,7 @@ private extension PaymentsTransfersFlowComposer {
             return .failure(.serviceFailure(.serverError("Server Failure")))
             
         default:
-            return .success(.startPayment(.init()))
+            return .success(.startPayment(.preview))
         }
     }
 }
