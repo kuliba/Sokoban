@@ -184,7 +184,7 @@ private extension PaymentsTransfersFlowComposer {
             //            )
             //        ))
             //    )
-
+            
             composer = AnywayTransactionViewModelComposer(
                 microServices: .stubbed(with: .init(
                     initiatePayment: .success(.preview),
@@ -200,8 +200,8 @@ private extension PaymentsTransfersFlowComposer {
         return composer.compose(initialState: initialState)
     }
     
-    #warning("extract to nano services composer")
-    #warning("add logging")
+#warning("extract to nano services composer")
+#warning("add logging")
     private func initiatePayment(
     ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
         
@@ -209,33 +209,12 @@ private extension PaymentsTransfersFlowComposer {
         
         return { digest, completion in
             
-            process(.init(digest: digest)) {
-                
-                completion($0.result)
-                _ = process
-            }
+            process(.init(digest: digest)) { completion($0.result) }
         }
     }
     
-    #warning("extract to nano services composer")
-    #warning("add logging")
-    private func processPayment(
-    ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
-        
-        let process = NanoServices.makeCreateAnywayTransfer(httpClient, log)
-        
-        return { digest, completion in
-            
-            process(.init(digest: digest)) {
-                
-                completion($0.result)
-                _ = process
-            }
-        }
-    }
-    
-    #warning("extract to nano services composer")
-    #warning("add logging")
+#warning("extract to nano services composer")
+#warning("add logging")
     private func getDetails(
     ) -> AnywayTransactionEffectHandlerNanoServices.GetDetails {
         
@@ -249,19 +228,19 @@ private extension PaymentsTransfersFlowComposer {
         )
         
         return { payload, completion in
-        
+            
             return service(.init("\(payload)")) {
-             
+                
                 completion(try? $0.map(\.response).get())
             }
         }
     }
     
-    #warning("extract to nano services composer")
-    #warning("add logging")
+#warning("extract to nano services composer")
+#warning("add logging")
     private func makeTransfer(
     ) -> AnywayTransactionEffectHandlerNanoServices.MakeTransfer {
-
+        
         let createRequest = ForaBank.RequestFactory.createMakeTransferRequest
         let mapResponse = AnywayPaymentBackend.ResponseMapper.mapMakeTransferResponse
         
@@ -272,11 +251,23 @@ private extension PaymentsTransfersFlowComposer {
         )
         
         return { payload, completion in
-        
+            
             return service(.init(payload.rawValue)) {
-             
+                
                 completion(try? $0.map(\.response).get())
             }
+        }
+    }
+    
+#warning("extract to nano services composer")
+    private func processPayment(
+    ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
+        
+        let process = NanoServices.makeCreateAnywayTransfer(httpClient, log)
+        
+        return { digest, completion in
+            
+            process(.init(digest: digest)) { completion($0.result) }
         }
     }
 }
@@ -287,9 +278,9 @@ private extension NanoServices.CreateAnywayTransferPayload {
     
     init(digest: AnywayPaymentDigest) {
         
-        #warning("FIXME")
-        #warning("add check to digest")
-        #warning("replace all hardcoded values")
+#warning("FIXME")
+#warning("add check to digest")
+#warning("replace all hardcoded values")
         self.init(
             additional: digest.additional.map {
                 
@@ -319,7 +310,7 @@ private extension AnywayPaymentDigest {
         switch core.productID {
         case let .account(accountID):
             return .init(accountID: accountID.rawValue)
-        
+            
         case let .card(cardID):
             return .init(cardID: cardID.rawValue)
         }
@@ -327,19 +318,19 @@ private extension AnywayPaymentDigest {
 }
 
 private extension NanoServices.CreateAnywayTransferResult {
+    
+    var result: Result<AnywayPaymentUpdate, AnywayPaymentDomain.ServiceFailure> {
         
-        var result: Result<AnywayPaymentUpdate, AnywayPaymentDomain.ServiceFailure> {
-            
-            return self
-                .map(AnywayPaymentUpdate.init)
-                .mapError(ServiceFailure.init)
-        }
+        return self
+            .map(AnywayPaymentUpdate.init)
+            .mapError(ServiceFailure.init)
     }
+}
 
 private extension AnywayPaymentDomain.ServiceFailure {
     
     init(_ error: AnywayPaymentBackend.ServiceFailure) {
-     
+        
         switch error {
         case .connectivityError:
             self = .connectivityError
@@ -350,30 +341,9 @@ private extension AnywayPaymentDomain.ServiceFailure {
     }
 }
 
-private extension AnywayPaymentDomain.ServiceFailure {
-    
-    typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
-    
-    init(_ error: RemoteError) {
-        
-        switch error {
-        case .createRequest, .performRequest:
-            self = .connectivityError
-            
-        case let .mapResponse(mapResponseError):
-            switch mapResponseError {
-            case .invalid:
-                self = .connectivityError
-            case let .server(_, message):
-                self = .serverError(message)
-            }
-        }
-    }
-}
-
 private extension AnywayPaymentBackend.ResponseMapper.GetOperationDetailByPaymentIDResponse {
     
-    #warning("FIXME: replace with actual type (which is not String")
+#warning("FIXME: replace with actual type (which is not String")
     var response: String {
         
         .init(describing: self)
@@ -383,7 +353,7 @@ private extension AnywayPaymentBackend.ResponseMapper.GetOperationDetailByPaymen
 private extension AnywayPaymentBackend.ResponseMapper.MakeTransferResponse {
     
     var response: AnywayTransactionEffectHandlerNanoServices.MakeTransferResponse {
-    
+        
         .init(status: self.status, detailID: operationDetailID)
     }
 }
