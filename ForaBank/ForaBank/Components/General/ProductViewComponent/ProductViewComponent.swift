@@ -165,20 +165,6 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
                     self.cardInfo.state = .maskedNumberCVV(.init(action.cvv.rawValue))
                 }
             }.store(in: &bindings)
-        
-        $statusAction
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] statusAction in
-                
-                if statusAction != nil {
-                    self.appearance.opacity = 0.5
-                    
-                } else {
-                    self.appearance.opacity = 1
-                }
-                
-            }.store(in: &bindings)
-        
     }
     
     private func bind(_ statusAction: StatusActionViewModel?) {
