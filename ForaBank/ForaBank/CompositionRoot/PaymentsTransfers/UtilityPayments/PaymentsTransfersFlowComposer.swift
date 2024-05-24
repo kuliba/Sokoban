@@ -7,11 +7,13 @@
 
 import AnywayPaymentAdapters
 import AnywayPaymentBackend
+import AnywayPaymentCore
 import AnywayPaymentDomain
 import OperatorsListComponents
 import ForaTools
 import Foundation
 import GenericRemoteService
+import RemoteServices
 import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
 
@@ -143,7 +145,7 @@ private extension PaymentsTransfersFlowComposer {
         let load = loaderComposer.compose()
         load(
             .init(
-                operatorID: payload.operatorID, 
+                operatorID: payload.operatorID,
                 searchText: payload.searchText),
             completion
         )
@@ -161,6 +163,7 @@ private extension PaymentsTransfersFlowComposer {
         case .live:
             let microServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer(
                 nanoServices: .init(
+                    initiatePayment: initiatePayment(),
                     getDetails: getDetails(),
                     makeTransfer: makeTransfer()
                 )
@@ -195,6 +198,24 @@ private extension PaymentsTransfersFlowComposer {
         
         return composer.compose(initialState: initialState)
     }
+    
+    #warning("extract to nano services composer")
+    #warning("add logging")
+    private func initiatePayment(
+    ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
+        
+        let process = NanoServices.makeCreateAnywayTransferNew(httpClient, log)
+        
+        return { digest, completion in
+            
+            process(.init(digest: digest)) {
+                
+                completion($0.result)
+                _ = process
+            }
+        }
+    }
+    
     
     #warning("extract to nano services composer")
     #warning("add logging")
@@ -244,6 +265,79 @@ private extension PaymentsTransfersFlowComposer {
 }
 
 // MARK: - Adapters
+
+private extension NanoServices.CreateAnywayTransferPayload {
+    
+    init(digest: AnywayPaymentDigest) {
+        
+        #warning("FIXME")
+        #warning("add check to digest")
+        #warning("replace all hardcoded values")
+        self.init(
+            additional: digest.additional.map {
+                
+                .init(
+                    fieldID: $0.fieldID,
+                    fieldName: $0.fieldName,
+                    fieldValue: $0.fieldValue
+                )
+            },
+            amount: digest.core?.amount,
+            check: true,
+            comment: nil,
+            currencyAmount: digest.core?.currency.rawValue,
+            mcc: nil,
+            payer: digest.payer,
+            puref: digest.puref.rawValue
+        )
+    }
+}
+
+private extension AnywayPaymentDigest {
+    
+    var payer: NanoServices.CreateAnywayTransferPayload.Payer? {
+        
+        guard let core else { return nil }
+        
+        switch core.productID {
+        case let .account(accountID):
+            return .init(accountID: accountID.rawValue)
+        
+        case let .card(cardID):
+            return .init(cardID: cardID.rawValue)
+        }
+    }
+}
+
+private extension NanoServices.CreateAnywayTransferResult {
+    
+    var result: Result<AnywayPaymentUpdate, AnywayPaymentDomain.ServiceFailure> {
+        
+        #warning("FIXME")
+        fatalError()
+    }
+}
+
+private extension AnywayPaymentDomain.ServiceFailure {
+    
+    typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
+    
+    init(_ error: RemoteError) {
+        
+        switch error {
+        case .createRequest, .performRequest:
+            self = .connectivityError
+            
+        case let .mapResponse(mapResponseError):
+            switch mapResponseError {
+            case .invalid:
+                self = .connectivityError
+            case let .server(_, message):
+                self = .serverError(message)
+            }
+        }
+    }
+}
 
 private extension AnywayPaymentBackend.ResponseMapper.GetOperationDetailByPaymentIDResponse {
     

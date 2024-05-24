@@ -63,7 +63,6 @@ private extension ResponseMapper {
                 let md5hash: String?
                 let juridicalName: String?
                 let customerId: String
-                let serviceList: [String?]
                 let inn: String?
             }
             
