@@ -6,15 +6,18 @@
 //
 
 import UIPrimitives
+import AnywayPaymentDomain
 
 struct PaymentsTransfersViewFactory {
     
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeUserAccountView: MakeUserAccountView
     let makeIconView: MakeIconView
+    let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
 }
 
 extension PaymentsTransfersViewFactory {
     
     typealias MakeIconView = IconDomain.MakeIconView
+    typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
 }

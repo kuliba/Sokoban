@@ -17,11 +17,13 @@ struct RootViewFactory {
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeUserAccountView: MakeUserAccountView
     let makeIconView: MakeIconView
+    let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
 }
 
 extension RootViewFactory {
     
     typealias MakeIconView = IconDomain.MakeIconView
+    typealias MakeAnywayPaymentFactory = PaymentsTransfersViewFactory.MakeAnywayPaymentFactory
 }
 
 extension RootViewFactory {
@@ -42,7 +44,8 @@ extension RootViewFactory {
         return .init(
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView,
-            makeIconView: makeIconView
+            makeIconView: makeIconView,
+            makeAnywayPaymentFactory: makeAnywayPaymentFactory
         )
     }
 }

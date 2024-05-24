@@ -23,12 +23,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         logger: logger,
         qrResolverFeatureFlag: .init(.active),
         fastPaymentsSettingsFlag: .init(.active(.live)),
-        utilitiesPaymentsFlag: .init(.inactive)
+        utilitiesPaymentsFlag: .init(.inactive))
     )
-    private lazy var rootViewFactory = RootViewFactory(
-        with: model.imageCache(),
-        getUImage: { self.model.images.value[$0]?.uiImage }
-    )
+    private lazy var rootViewFactory = RootViewFactoryComposer(model: model).compose()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         

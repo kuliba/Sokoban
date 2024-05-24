@@ -38,7 +38,7 @@ extension AmountComponent.AmountConfig {
     )
 }
 
-private extension InfoComponent.InfoConfig {
+extension InfoComponent.InfoConfig {
     
     static let iFora: Self = .init(
         title: .placeholder,
