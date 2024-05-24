@@ -15,19 +15,47 @@ struct OperationDetailView: View {
     var body: some View {
         
         VStack {
+            
+            // content
+            VStack(spacing: 0) {
                 
-              if UIScreen.main.bounds.width <= 375 {
-                  
-                  ScrollView {
-                      ContentView(viewModel: viewModel)
-                  }
-                  
-              } else {
-                  
-                  VStack {
-                      ContentView(viewModel: viewModel)
-                  }
-              }
+                HeaderView(viewModel: viewModel.header)
+                OperationView(viewModel: viewModel.operation)
+                    .padding(.top, 24)
+
+                // template, document, details buttons
+                HStack(spacing: 52) {
+                    
+                    if let template = viewModel.templateButton {
+                        
+                        TemplateButtonView(viewModel: template)
+                    }
+                    
+                    ForEach(viewModel.featureButtons) { buttonViewModel in
+                        
+                        FeatureButtonView(viewModel: buttonViewModel)
+                    }
+                }
+                .padding(.top, 28)
+                
+                // change, return buttons
+                if let actionButtons = viewModel.actionButtons {
+                    
+                    HStack(spacing: 15) {
+                        
+                        ForEach(actionButtons) { buttonViewModel in
+                            
+                            Button(buttonViewModel.name) {
+                                
+                                buttonViewModel.action()
+                            }
+                            .buttonStyle(OperationDetailsActionButton(width: 160))
+                            .frame(height: 40)
+                        }
+                        
+                    }.padding(.top, 28)
+                }
+            }
             
             if viewModel.isLoading {
                 
@@ -56,59 +84,6 @@ struct OperationDetailView: View {
                     PaymentsView(viewModel: viewModel)
                         .navigationBarTitle("", displayMode: .inline)
                         .navigationBarBackButtonHidden(true)
-                }
-            }
-        }
-    }
-}
-
-extension OperationDetailView {
- 
-    struct ContentView: View {
-     
-        @ObservedObject var viewModel: OperationDetailViewModel
-        
-        var body: some View {
-         
-            // content
-            VStack(spacing: 0) {
-                
-                HeaderView(viewModel: viewModel.header)
-                    .padding(.bottom, 24)
-                
-                OperationView(viewModel: viewModel.operation)
-                    .padding(.top, 24)
-
-                // template, document, details buttons
-                HStack(spacing: viewModel.getSpacingForDocsInHStackForOldIPhones()) {
-                    if let template = viewModel.templateButton {
-                        
-                        TemplateButtonView(viewModel: template)
-                    }
-                    
-                    ForEach(viewModel.featureButtons) { buttonViewModel in
-                        
-                        FeatureButtonView(viewModel: buttonViewModel)
-                    }
-                }
-                .padding(.top, 28)
-                
-                // change, return buttons
-                if let actionButtons = viewModel.actionButtons {
-                    
-                    HStack(spacing: 15) {
-                        
-                        ForEach(actionButtons) { buttonViewModel in
-                            
-                            Button(buttonViewModel.name) {
-                                
-                                buttonViewModel.action()
-                            }
-                            .buttonStyle(OperationDetailsActionButton(width: 160))
-                            .frame(height: 40)
-                        }
-                    }
-                    .padding(.top, 28)
                 }
             }
         }
@@ -299,11 +274,12 @@ struct OperationDetailView_Previews: PreviewProvider {
 extension OperationDetailViewModel {
     
     static let sampleComplete: OperationDetailViewModel = {
-        
+                
         let productStatementData = ProductStatementData(mcc: 3245, accountId: 10004111477, accountNumber: "70601810711002740401", amount: 144.21, cardTranNumber: "4256901080508437", city: "string", comment: "Перевод денежных средств. НДС не облагается.", country: "string", currencyCodeNumeric: 810, date: Date(), deviceCode: "string", documentAmount: 144.21, documentId: 10230444722, fastPayment: .init(documentComment: "string", foreignBankBIC: "044525491", foreignBankID: "10000001153", foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"", foreignName: "Петров Петр Петрович", foreignPhoneNumber: "70115110217", opkcid: "A1355084612564010000057CAFC75755", operTypeFP: "string", tradeName: "string", guid: "string"), groupName: "Прочие операции", isCancellation: false, md5hash: "75f3ee3b2d44e5808f41777c613f23c9", merchantName: "DBO MERCHANT FORA, Zubovskiy 2", merchantNameRus: "DBO MERCHANT FORA, Zubovskiy 2", opCode: 1, operationId: "909743", operationType: .debit, paymentDetailType: .betweenTheir, svgImage: .init(description: "string"), terminalCode: "41010601", tranDate: nil, type: OperationEnvironment.inside)
-        
+
         let product = ProductData(id: 0, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: "RUB", mainField: "CARD", additionalField: nil, customName: nil, productName: "CARD", openDate: nil, ownerId: 1, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], order: 1, isVisible: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
-        
+
         return .init(productStatement: productStatementData, product: product, updateFastAll: {}, model: .emptyMock)
-    }()
+        }()
 }
+

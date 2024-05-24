@@ -890,7 +890,6 @@ final class InfoProductViewModelTests: XCTestCase {
         XCTAssertEqual(moscowTime, moscowDate)
     }
     
-    
     func testMoscowTimeForInvalidTimezoneIdentifier() {
         
         let invalidTimezoneIdentifier = "Invalid/Timezone"
