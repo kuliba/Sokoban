@@ -165,7 +165,8 @@ private extension PaymentsTransfersFlowComposer {
                 nanoServices: .init(
                     initiatePayment: initiatePayment(),
                     getDetails: getDetails(),
-                    makeTransfer: makeTransfer()
+                    makeTransfer: makeTransfer(),
+                    processPayment: processPayment()
                 )
             )
             composer = AnywayTransactionViewModelComposer(
@@ -216,6 +217,22 @@ private extension PaymentsTransfersFlowComposer {
         }
     }
     
+    #warning("extract to nano services composer")
+    #warning("add logging")
+    private func processPayment(
+    ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
+        
+        let process = NanoServices.makeCreateAnywayTransfer(httpClient, log)
+        
+        return { digest, completion in
+            
+            process(.init(digest: digest)) {
+                
+                completion($0.result)
+                _ = process
+            }
+        }
+    }
     
     #warning("extract to nano services composer")
     #warning("add logging")
@@ -310,11 +327,26 @@ private extension AnywayPaymentDigest {
 }
 
 private extension NanoServices.CreateAnywayTransferResult {
-    
-    var result: Result<AnywayPaymentUpdate, AnywayPaymentDomain.ServiceFailure> {
         
-        #warning("FIXME")
-        fatalError()
+        var result: Result<AnywayPaymentUpdate, AnywayPaymentDomain.ServiceFailure> {
+            
+            return self
+                .map(AnywayPaymentUpdate.init)
+                .mapError(ServiceFailure.init)
+        }
+    }
+
+private extension AnywayPaymentDomain.ServiceFailure {
+    
+    init(_ error: AnywayPaymentBackend.ServiceFailure) {
+     
+        switch error {
+        case .connectivityError:
+            self = .connectivityError
+            
+        case let .serverError(message):
+            self = .serverError(message)
+        }
     }
 }
 

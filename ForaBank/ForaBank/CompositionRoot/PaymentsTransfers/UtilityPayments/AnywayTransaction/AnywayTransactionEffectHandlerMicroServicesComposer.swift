@@ -90,8 +90,7 @@ private extension AnywayTransactionEffectHandlerMicroServicesComposer {
         _ digest: AnywayPaymentDigest,
         _ completion: @escaping MicroServices.ProcessCompletion
     ) {
-#warning("FIXME")
-        fatalError()
+        nanoServices.processPayment(digest, completion)
     }
 }
 

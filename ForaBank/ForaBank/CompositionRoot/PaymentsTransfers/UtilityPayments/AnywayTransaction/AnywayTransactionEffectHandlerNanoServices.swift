@@ -12,6 +12,7 @@ struct AnywayTransactionEffectHandlerNanoServices {
     let initiatePayment: InitiatePayment
     let getDetails: GetDetails
     let makeTransfer: MakeTransfer
+    let processPayment: ProcessPayment
 }
 
 extension AnywayTransactionEffectHandlerNanoServices {
