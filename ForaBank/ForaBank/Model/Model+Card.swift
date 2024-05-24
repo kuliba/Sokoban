@@ -99,6 +99,7 @@ extension Model {
                 case .ok:
                     guard response.data != nil else {
                         self.handleServerCommandEmptyData(command: command)
+                        self.action.send(ModelAction.Card.Unblock.Response(cardId: payload.cardId, result: .failure(message: self.defaultErrorMessage)))
                         return
                     }
                     self.action.send(ModelAction.Card.Unblock.Response(cardId: payload.cardId, result: .success))
