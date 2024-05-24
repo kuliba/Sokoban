@@ -140,7 +140,13 @@ private extension PaymentsTransfersFlowComposer {
         payload: LoadOperatorsPayload,
         completion: @escaping ([Operator]) -> Void
     ) {
-        loaderComposer.compose()(.init(operatorID: payload.operatorID, searchText: payload.searchText), completion)
+        let load = loaderComposer.compose()
+        load(
+            .init(
+                operatorID: payload.operatorID, 
+                searchText: payload.searchText),
+            completion
+        )
     }
     
     private typealias LoadOperatorsPayload = UtilityPrepaymentNanoServices<Operator>.LoadOperatorsPayload
@@ -155,7 +161,7 @@ private extension PaymentsTransfersFlowComposer {
         case .live:
             let microServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer(
                 nanoServices: .init(
-                    getDetails: { _,_ in fatalError() },
+                    getDetails: getDetails(),
                     makeTransfer: makeTransfer()
                 )
             )
@@ -191,6 +197,30 @@ private extension PaymentsTransfersFlowComposer {
     }
     
     #warning("extract to nano services composer")
+    #warning("add logging")
+    private func getDetails(
+    ) -> AnywayTransactionEffectHandlerNanoServices.GetDetails {
+        
+        let createRequest = ForaBank.RequestFactory.createGetOperationDetailByPaymentIDRequest
+        let mapResponse = AnywayPaymentBackend.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
+        
+        let service = RemoteService(
+            createRequest: createRequest,
+            performRequest: httpClient.performRequest,
+            mapResponse: mapResponse
+        )
+        
+        return { payload, completion in
+        
+            return service(.init("\(payload)")) {
+             
+                completion(try? $0.map(\.response).get())
+            }
+        }
+    }
+    
+    #warning("extract to nano services composer")
+    #warning("add logging")
     private func makeTransfer(
     ) -> AnywayTransactionEffectHandlerNanoServices.MakeTransfer {
 
@@ -214,6 +244,15 @@ private extension PaymentsTransfersFlowComposer {
 }
 
 // MARK: - Adapters
+
+private extension AnywayPaymentBackend.ResponseMapper.GetOperationDetailByPaymentIDResponse {
+    
+    #warning("FIXME: replace with actual type (which is not String")
+    var response: String {
+        
+        .init(describing: self)
+    }
+}
 
 private extension AnywayPaymentBackend.ResponseMapper.MakeTransferResponse {
     
