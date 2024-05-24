@@ -103,13 +103,21 @@ extension ProductData {
     
     var cloverImage: Image? {
         
+        if let cloverUIImage {
+            return .init(uiImage: cloverUIImage)
+        }
+        return nil
+    }
+    
+    var cloverUIImage: UIImage? {
+        
         if let card = self as? ProductCardData {
             let isDark = (background.first?.description == "F6F6F7")
             switch card.cardType {
             case .main:
-                return isDark ? .ic16MainCardGreyFixed2 : .ic16MainCardWhiteFixed2
+                return isDark ? .init(named: "ic16MainCardGreyFixed2") : .init(named: "ic16MainCardWhiteFixed2")
             case .additionalOther, .additionalSelf, .additionalSelfAccOwn:
-                return isDark ? .ic16AdditionalCardGrey : .ic16AdditionalCardWhite
+                return isDark ? .init(named: "ic16AdditionalCardGrey") : .init(named: "ic16AdditionalCardWhite")
             default:
                 return nil
             }
