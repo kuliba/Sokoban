@@ -157,216 +157,54 @@ private extension PaymentsTransfersFlowComposer {
         initialState: AnywayTransactionState
     ) -> AnywayTransactionViewModel {
         
-        let composer: AnywayTransactionViewModelComposer
-        
-        switch flag {
-        case .live:
-            let microServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer(
-                nanoServices: .init(
-                    initiatePayment: initiatePayment(),
-                    getDetails: getDetails(),
-                    makeTransfer: makeTransfer(),
-                    processPayment: processPayment()
-                )
-            )
-            composer = AnywayTransactionViewModelComposer(
-                microServices: microServicesComposer.compose()
-            )
+        let composer = {
             
-        case .stub:
-            
-            //    let microServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer(
-            //        nanoServices: .stubbed(with: .init(
-            //            getDetailsResult: "Operation Detail",
-            //            makeTransferResult: .init(
-            //                status: .completed,
-            //                detailID: 54321
-            //            )
-            //        ))
-            //    )
-            
-            composer = AnywayTransactionViewModelComposer(
-                microServices: .stubbed(with: .init(
-                    initiatePayment: .success(.preview),
-                    makePayment: .init(
-                        status: .completed,
-                        info: .details("Operation Detail")
-                    ),
-                    processPayment: .success(.preview))
-                )
-            )
-        }
+            switch flag {
+            case .live: return makeLiveAnywayTransactionViewModelComposer()
+            case .stub: return makeStubAnywayTransactionViewModelComposer()
+            }
+        }()
         
         return composer.compose(initialState: initialState)
     }
     
-#warning("extract to nano services composer")
-#warning("add logging")
-    private func initiatePayment(
-    ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
+    private func makeLiveAnywayTransactionViewModelComposer(
+    ) -> AnywayTransactionViewModelComposer {
         
-        let process = NanoServices.makeCreateAnywayTransferNew(httpClient, log)
-        
-        return { digest, completion in
-            
-            process(.init(digest: digest)) { completion($0.result) }
-        }
-    }
-    
-#warning("extract to nano services composer")
-#warning("add logging")
-    private func getDetails(
-    ) -> AnywayTransactionEffectHandlerNanoServices.GetDetails {
-        
-        let createRequest = ForaBank.RequestFactory.createGetOperationDetailByPaymentIDRequest
-        let mapResponse = AnywayPaymentBackend.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
-        
-        let service = RemoteService(
-            createRequest: createRequest,
-            performRequest: httpClient.performRequest,
-            mapResponse: mapResponse
+        let nanoServicesComposer = AnywayTransactionEffectHandlerNanoServicesComposer(
+            httpClient: httpClient,
+            log: log
+        )
+        let microServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer(
+            nanoServices: nanoServicesComposer.compose()
         )
         
-        return { payload, completion in
-            
-            return service(.init("\(payload)")) {
-                
-                completion(try? $0.map(\.response).get())
-            }
-        }
+        return .init(microServices: microServicesComposer.compose())
     }
     
-#warning("extract to nano services composer")
-#warning("add logging")
-    private func makeTransfer(
-    ) -> AnywayTransactionEffectHandlerNanoServices.MakeTransfer {
+    private func makeStubAnywayTransactionViewModelComposer(
+    ) -> AnywayTransactionViewModelComposer {
         
-        let createRequest = ForaBank.RequestFactory.createMakeTransferRequest
-        let mapResponse = AnywayPaymentBackend.ResponseMapper.mapMakeTransferResponse
+        //    let microServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer(
+        //        nanoServices: .stubbed(with: .init(
+        //            getDetailsResult: "Operation Detail",
+        //            makeTransferResult: .init(
+        //                status: .completed,
+        //                detailID: 54321
+        //            )
+        //        ))
+        //    )
         
-        let service = RemoteService(
-            createRequest: createRequest,
-            performRequest: httpClient.performRequest,
-            mapResponse: mapResponse
+        return .init(
+            microServices: .stubbed(with: .init(
+                initiatePayment: .success(.preview),
+                makePayment: .init(
+                    status: .completed,
+                    info: .details("Operation Detail")
+                ),
+                processPayment: .success(.preview))
+            )
         )
-        
-        return { payload, completion in
-            
-            return service(.init(payload.rawValue)) {
-                
-                completion(try? $0.map(\.response).get())
-            }
-        }
-    }
-    
-#warning("extract to nano services composer")
-    private func processPayment(
-    ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
-        
-        let process = NanoServices.makeCreateAnywayTransfer(httpClient, log)
-        
-        return { digest, completion in
-            
-            process(.init(digest: digest)) { completion($0.result) }
-        }
-    }
-}
-
-// MARK: - Adapters
-
-private extension NanoServices.CreateAnywayTransferPayload {
-    
-    init(digest: AnywayPaymentDigest) {
-        
-#warning("FIXME")
-#warning("add check to digest")
-#warning("replace all hardcoded values")
-        self.init(
-            additional: digest.additional.map {
-                
-                .init(
-                    fieldID: $0.fieldID,
-                    fieldName: $0.fieldName,
-                    fieldValue: $0.fieldValue
-                )
-            },
-            amount: digest.core?.amount,
-            check: true,
-            comment: nil,
-            currencyAmount: digest.core?.currency.rawValue,
-            mcc: nil,
-            payer: digest.payer,
-            puref: digest.puref.rawValue
-        )
-    }
-}
-
-private extension AnywayPaymentDigest {
-    
-    var payer: NanoServices.CreateAnywayTransferPayload.Payer? {
-        
-        guard let core else { return nil }
-        
-        switch core.productID {
-        case let .account(accountID):
-            return .init(accountID: accountID.rawValue)
-            
-        case let .card(cardID):
-            return .init(cardID: cardID.rawValue)
-        }
-    }
-}
-
-private extension NanoServices.CreateAnywayTransferResult {
-    
-    var result: Result<AnywayPaymentUpdate, AnywayPaymentDomain.ServiceFailure> {
-        
-        return self
-            .map(AnywayPaymentUpdate.init)
-            .mapError(ServiceFailure.init)
-    }
-}
-
-private extension AnywayPaymentDomain.ServiceFailure {
-    
-    init(_ error: AnywayPaymentBackend.ServiceFailure) {
-        
-        switch error {
-        case .connectivityError:
-            self = .connectivityError
-            
-        case let .serverError(message):
-            self = .serverError(message)
-        }
-    }
-}
-
-private extension AnywayPaymentBackend.ResponseMapper.GetOperationDetailByPaymentIDResponse {
-    
-#warning("FIXME: replace with actual type (which is not String")
-    var response: String {
-        
-        .init(describing: self)
-    }
-}
-
-private extension AnywayPaymentBackend.ResponseMapper.MakeTransferResponse {
-    
-    var response: AnywayTransactionEffectHandlerNanoServices.MakeTransferResponse {
-        
-        .init(status: self.status, detailID: operationDetailID)
-    }
-}
-
-private extension AnywayPaymentBackend.ResponseMapper.MakeTransferResponse {
-    
-    var status: ForaBank.DocumentStatus {
-        
-        switch documentStatus {
-        case .complete:   return .completed
-        case .inProgress: return .inflight
-        case .rejected:   return .rejected
-        }
     }
 }
 
