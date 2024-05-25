@@ -157,54 +157,13 @@ private extension PaymentsTransfersFlowComposer {
         initialState: AnywayTransactionState
     ) -> AnywayTransactionViewModel {
         
-        let composer = {
-            
-            switch flag {
-            case .live: return makeLiveAnywayTransactionViewModelComposer()
-            case .stub: return makeStubAnywayTransactionViewModelComposer()
-            }
-        }()
-        
-        return composer.compose(initialState: initialState)
-    }
-    
-    private func makeLiveAnywayTransactionViewModelComposer(
-    ) -> AnywayTransactionViewModelComposer {
-        
-        let nanoServicesComposer = AnywayTransactionEffectHandlerNanoServicesComposer(
+        let composer = AnywayTransactionViewModelComposer(
+            flag: flag, 
             httpClient: httpClient,
             log: log
         )
-        let microServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer(
-            nanoServices: nanoServicesComposer.compose()
-        )
         
-        return .init(microServices: microServicesComposer.compose())
-    }
-    
-    private func makeStubAnywayTransactionViewModelComposer(
-    ) -> AnywayTransactionViewModelComposer {
-        
-        //    let microServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer(
-        //        nanoServices: .stubbed(with: .init(
-        //            getDetailsResult: "Operation Detail",
-        //            makeTransferResult: .init(
-        //                status: .completed,
-        //                detailID: 54321
-        //            )
-        //        ))
-        //    )
-        
-        return .init(
-            microServices: .stubbed(with: .init(
-                initiatePayment: .success(.preview),
-                makePayment: .init(
-                    status: .completed,
-                    info: .details("Operation Detail")
-                ),
-                processPayment: .success(.preview))
-            )
-        )
+        return composer.compose(initialState: initialState)
     }
 }
 
@@ -278,119 +237,4 @@ private extension PaymentsTransfersFlowComposer {
             return .success(.startPayment(.preview))
         }
     }
-}
-
-private extension AnywayTransactionEffectHandlerMicroServices {
-    
-    static func stubbed(
-        with stub: Stub
-    ) -> Self {
-        
-        return .init(
-            initiatePayment: _initiatePayment(with: stub.initiatePayment),
-            makePayment: _makePayment(with: stub.makePayment),
-            paymentEffectHandle: { _,_ in }, // AnywayPaymentEffect is empty
-            processPayment: _processPayment(with: stub.processPayment)
-        )
-    }
-    
-    struct Stub {
-        
-        let initiatePayment: ProcessResult
-        let makePayment: Report?
-        let processPayment: ProcessResult
-    }
-    
-    private static func _initiatePayment(
-        with stub: ProcessResult
-    ) -> InitiatePayment {
-        
-        return { _, completion in
-            
-            DispatchQueue.main.delay(for: .seconds(1)) {
-                
-                completion(stub)
-            }
-        }
-    }
-    
-    private static func _makePayment(
-        with stub: Report?
-    ) -> MakePayment {
-        
-        return { _, completion in
-            
-            DispatchQueue.main.delay(for: .seconds(1)) {
-                
-                completion(stub)
-            }
-        }
-    }
-    
-    private static func _processPayment(
-        with stub: ProcessResult
-    ) -> ProcessPayment {
-        
-        return { _, completion in
-            
-            DispatchQueue.main.delay(for: .seconds(1)) {
-                
-                completion(stub)
-            }
-        }
-    }
-}
-
-private extension AnywayPaymentUpdate {
-    
-    static let preview: Self = .init(
-        details: .preview,
-        fields: [],
-        parameters: []
-    )
-}
-
-private extension AnywayPaymentUpdate.Details {
-    
-    static let preview: Self = .init(
-        amounts: .preview,
-        control: .preview,
-        info: .preview
-    )
-}
-
-private extension AnywayPaymentUpdate.Details.Amounts {
-    
-    static let preview: Self = .init(
-        amount: nil,
-        creditAmount: nil,
-        currencyAmount: nil,
-        currencyPayee: nil,
-        currencyPayer: nil,
-        currencyRate: nil,
-        debitAmount: nil,
-        fee: nil
-    )
-}
-
-private extension AnywayPaymentUpdate.Details.Control {
-    
-    static let preview: Self = .init(
-        isFinalStep: false,
-        isFraudSuspected: false,
-        needMake: false,
-        needOTP: false,
-        needSum: false
-    )
-}
-
-private extension AnywayPaymentUpdate.Details.Info {
-    
-    static let preview: Self = .init(
-        documentStatus: nil,
-        infoMessage: nil,
-        payeeName: nil,
-        paymentOperationDetailID: nil,
-        printFormType: nil
-    )
 }
