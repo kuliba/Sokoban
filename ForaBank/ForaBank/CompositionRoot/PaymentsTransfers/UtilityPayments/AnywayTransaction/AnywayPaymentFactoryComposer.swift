@@ -37,7 +37,7 @@ extension AnywayPaymentFactoryComposer {
         event: @escaping (AnywayPaymentEvent) -> Void
     ) -> Factory {
         
-        let factory = AnywayPaymentElementViewFactory(
+        let elementFactory = AnywayPaymentElementViewFactory(
             makeIconView: makeIconView,
             makeProductSelectView: makeProductSelectView,
             elementFactory: makeElementFactory()
@@ -49,7 +49,7 @@ extension AnywayPaymentFactoryComposer {
                 return .init(
                     state: $0,
                     event: event,
-                    factory: factory,
+                    factory: elementFactory,
                     config: self.config
                 )
             },

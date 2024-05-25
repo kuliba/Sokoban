@@ -127,10 +127,7 @@ private extension AnywayTransactionEffectHandlerMicroServices {
         
         return { _, completion in
             
-            DispatchQueue.main.delay(for: .seconds(1)) {
-                
-                completion(stub)
-            }
+            DispatchQueue.main.delay(for: .seconds(1)) { completion(stub) }
         }
     }
     
@@ -140,10 +137,7 @@ private extension AnywayTransactionEffectHandlerMicroServices {
         
         return { _, completion in
             
-            DispatchQueue.main.delay(for: .seconds(1)) {
-                
-                completion(stub)
-            }
+            DispatchQueue.main.delay(for: .seconds(1)) { completion(stub) }
         }
     }
     
@@ -153,10 +147,7 @@ private extension AnywayTransactionEffectHandlerMicroServices {
         
         return { _, completion in
             
-            DispatchQueue.main.delay(for: .seconds(1)) {
-                
-                completion(stub)
-            }
+            DispatchQueue.main.delay(for: .seconds(1)) { completion(stub) }
         }
     }
 }

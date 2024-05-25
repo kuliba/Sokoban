@@ -143,10 +143,7 @@ private extension UtilityPaymentNanoServicesComposer {
         _ payload: StartAnywayPaymentPayload,
         _ completion: @escaping StartAnywayPaymentCompletion
     ) {
-        DispatchQueue.main.delay(for: .seconds(1)) {
-            
-            completion(stub(payload))
-        }
+        DispatchQueue.main.delay(for: .seconds(1)) { completion(stub(payload)) }
     }
     
     /// `d`
