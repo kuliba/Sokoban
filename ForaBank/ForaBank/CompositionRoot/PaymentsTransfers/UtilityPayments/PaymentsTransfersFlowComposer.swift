@@ -82,14 +82,20 @@ private extension PaymentsTransfersFlowComposer {
         let microComposer = UtilityPrepaymentFlowMicroServicesComposer(
             nanoServices: nanoComposer.compose()
         )
-        let composer = UtilityPaymentsFlowComposer(
+        let prepaymentEffectHandler = PrepaymentFlowEffectHandler(
             microServices: microComposer.compose()
         )
-        let handler = composer.makeEffectHandler()
+        let paymentFlowEffectHandler = PaymentFlowEffectHandler(
+            utilityPrepaymentEffectHandle: prepaymentEffectHandler.handleEffect(_:_:)
+        )
         
-        return .init(utilityEffectHandle: handler.handleEffect(_:_:))
+        return .init(utilityEffectHandle: paymentFlowEffectHandler.handleEffect(_:_:))
     }
     
+    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+    
+    typealias PaymentFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+
     private var composerFlag: ComposerFlag {
         
         switch flag {
