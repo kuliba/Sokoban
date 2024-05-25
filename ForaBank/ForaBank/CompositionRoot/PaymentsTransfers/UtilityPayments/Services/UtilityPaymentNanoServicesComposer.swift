@@ -247,7 +247,12 @@ private extension StartAnywayPaymentResult {
             }
             
         case let .success(response):
+#if MOCK
+            let response = response.mock(value: "6068506106", forTitle: "Лицевой счет")
             self = .success(.startPayment(.init(response)))
+#else
+            self = .success(.startPayment(.init(response)))
+#endif
         }
     }
 }
@@ -266,6 +271,81 @@ private extension OperatorsListComponents.ResponseMapper.SberUtilityService {
         .init(name: name, puref: puref)
     }
 }
+
+// MARK: - Mocking
+
+#if MOCK
+private extension NanoServices.CreateAnywayTransferResponse {
+    
+    func mock(
+        value: String,
+        forTitle title: String
+    ) -> Self {
+        
+        return .init(
+            additional: additional,
+            amount: amount,
+            creditAmount: creditAmount,
+            currencyAmount: currencyAmount,
+            currencyPayee: currencyPayee,
+            currencyPayer: currencyPayer,
+            currencyRate: currencyRate,
+            debitAmount: debitAmount,
+            documentStatus: documentStatus,
+            fee: fee,
+            finalStep: finalStep,
+            infoMessage: infoMessage,
+            needMake: needMake,
+            needOTP: needOTP,
+            needSum: needSum,
+            parametersForNextStep: parametersForNextStep.map {
+                
+                return $0.mock(value: value, forTitle: title)
+            },
+            paymentOperationDetailID: paymentOperationDetailID,
+            payeeName: payeeName,
+            printFormType: printFormType,
+            scenario: scenario
+        )
+    }
+}
+
+private extension NanoServices.CreateAnywayTransferResponse.Parameter {
+    
+    func mock(
+        value: String,
+        forTitle title: String
+    ) -> Self {
+        
+        return .init(
+            content: self.title == title ? value : content,
+            dataDictionary: dataDictionary,
+            dataDictionaryРarent: dataDictionaryРarent,
+            dataType: dataType,
+            group: group,
+            id: id,
+            inputFieldType: inputFieldType,
+            inputMask: inputMask,
+            isPrint: isPrint,
+            isRequired: isRequired,
+            maxLength: maxLength,
+            mask: mask,
+            minLength: minLength,
+            order: order,
+            phoneBook: phoneBook,
+            rawLength: rawLength,
+            isReadOnly: isReadOnly,
+            regExp: regExp,
+            subGroup: subGroup,
+            subTitle: subTitle,
+            svgImage: svgImage,
+            title: self.title,
+            type: type,
+            viewType: viewType
+        )
+    }
+}
+#endif
 
 // MARK: - Stubs
 
