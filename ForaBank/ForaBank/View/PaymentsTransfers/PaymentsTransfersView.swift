@@ -447,6 +447,7 @@ private extension PaymentsTransfersView {
             payByInstructionsView(paymentsViewModel)
             
         case let .payment(state):
+            #warning("FIXME: navbar")
             paymentFlowView(state: state, event: { event(.payment($0)) })
             
         case let .servicePicker(state):
@@ -521,7 +522,7 @@ private extension PaymentsTransfersView {
             dismissModal: { event(.dismissFraud) },
             content: paymentFlowModalView(event: { event(.fraud($0)) })
         )
-        .navigationTitle("Payment")
+        .navigationTitle("Payment: \(state.viewModel.state.isValid ? "valid" : "invalid")")
         .navigationBarTitleDisplayMode(.inline)
     }
     
@@ -611,6 +612,7 @@ private extension PaymentsTransfersView {
         
         switch destination {
         case let .payment(state):
+            #warning("FIXME: navbar")
             paymentFlowView(state: state, event: event)
         }
     }

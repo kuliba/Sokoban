@@ -19,12 +19,6 @@ struct AnywayTransactionView: View {
         
         VStack(spacing: 32) {
             
-            Text(state.isValid ? "valid" : "invalid")
-                .foregroundColor(state.isValid ? .green : .red)
-                .font(.headline)
-            
-            Divider()
-            
             ScrollView(showsIndicators: false) {
                 
                 VStack(spacing: 32) {
