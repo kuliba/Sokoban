@@ -35,32 +35,9 @@ extension UtilityPaymentOperatorLoaderComposer {
     
     func compose() -> LoadOperators {
         
-        return { [weak self] payload, completion in
-            
-            guard let self else { return }
-            
-            switch flag {
-            case .live:
-                model.loadOperators(
-                    .init(
-                        operatorID: payload.operatorID,
-                        searchText: payload.searchText,
-                        pageSize: pageSize
-                    ),
-                    completion
-                )
-                
-            case .stub:
-                DispatchQueue.main.delay(for: .seconds(1)) {
-                    switch payload.operatorID {
-                    case .none:
-                        completion(.stub)
-                        
-                    case .some:
-                        completion([])
-                    }
-                }
-            }
+        switch flag {
+        case .live: return live
+        case .stub: return stub
         }
     }
     
@@ -82,6 +59,39 @@ extension UtilityPaymentOperatorLoaderComposer {
     typealias LoadOperators = (Payload, @escaping LoadOperatorsCompletion) -> Void
     
     typealias Operator = UtilityPaymentOperator
+}
+
+private extension UtilityPaymentOperatorLoaderComposer {
+    
+    func live(
+        payload: Payload,
+        completion: @escaping LoadOperatorsCompletion
+    ) {
+        model.loadOperators(
+            .init(
+                operatorID: payload.operatorID,
+                searchText: payload.searchText,
+                pageSize: pageSize
+            ),
+            completion
+        )
+    }
+    
+    func stub(
+        payload: Payload,
+        completion: @escaping LoadOperatorsCompletion
+    ) {
+        DispatchQueue.main.delay(for: .seconds(1)) {
+            
+            switch payload.operatorID {
+            case .none:
+                completion(.stub)
+                
+            case .some:
+                completion([])
+            }
+        }
+    }
 }
 
 // MARK: - Live
