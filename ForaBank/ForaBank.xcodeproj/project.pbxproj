@@ -533,6 +533,7 @@
 		2A35DDAF2C02405E00EFF0EB /* Model+paymentProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A35DDAE2C02405E00EFF0EB /* Model+paymentProducts.swift */; };
 		2A35DDB12C0240F100EFF0EB /* Model+formattedBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A35DDB02C0240F100EFF0EB /* Model+formattedBalance.swift */; };
 		2A35DDB42C02426F00EFF0EB /* Model+productSelectProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A35DDB32C02426F00EFF0EB /* Model+productSelectProducts.swift */; };
+		2A35DDB62C0243AB00EFF0EB /* Model+currencyOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A35DDB52C0243AB00EFF0EB /* Model+currencyOf.swift */; };
 		2A390B482B05E99900ECA2C2 /* NavigationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8ED2B05E58700E3AE79 /* NavigationModel.swift */; };
 		2A390B492B05E99900ECA2C2 /* NavigationModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8EF2B05E61B00E3AE79 /* NavigationModel+ext.swift */; };
 		2A390B4A2B05E99900ECA2C2 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A20F8EB2B05E56F00E3AE79 /* Navigation.swift */; };
@@ -3470,6 +3471,7 @@
 		2A35DDAE2C02405E00EFF0EB /* Model+paymentProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+paymentProducts.swift"; sourceTree = "<group>"; };
 		2A35DDB02C0240F100EFF0EB /* Model+formattedBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+formattedBalance.swift"; sourceTree = "<group>"; };
 		2A35DDB32C02426F00EFF0EB /* Model+productSelectProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+productSelectProducts.swift"; sourceTree = "<group>"; };
+		2A35DDB52C0243AB00EFF0EB /* Model+currencyOf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+currencyOf.swift"; sourceTree = "<group>"; };
 		2A390B4F2B05EE8100ECA2C2 /* QRReaderStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRReaderStub.swift; sourceTree = "<group>"; };
 		2A390B522B05F75600ECA2C2 /* QRParsingResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRParsingResult.swift; sourceTree = "<group>"; };
 		2A390B552B05F7B500ECA2C2 /* SberQRPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberQRPaymentView.swift; sourceTree = "<group>"; };
@@ -7631,6 +7633,7 @@
 			children = (
 				2A35DDAE2C02405E00EFF0EB /* Model+paymentProducts.swift */,
 				2A35DDB32C02426F00EFF0EB /* Model+productSelectProducts.swift */,
+				2A35DDB52C0243AB00EFF0EB /* Model+currencyOf.swift */,
 				2A35DDB02C0240F100EFF0EB /* Model+formattedBalance.swift */,
 				2A35DDAC2C023E0800EFF0EB /* ProductData+productSelectProduct.swift */,
 			);
@@ -17266,6 +17269,7 @@
 				0CA1CDE12840720200021671 /* AddressBookContact.swift in Sources */,
 				0BBC55FE2943318600B95E6C /* QRAccessViewComponent.swift in Sources */,
 				77C3829827E1FEAD00B5246E /* PaymentsProductSelectorViewComponent+Legacy.swift in Sources */,
+				2A35DDB62C0243AB00EFF0EB /* Model+currencyOf.swift in Sources */,
 				503F074B28252D3B00E84A77 /* DepositCapitalizationView.swift in Sources */,
 				0BB24A9726EFE66900DDA4F6 /* GetPaymentCountriesList.swift in Sources */,
 				77F5CE0D28056BB700611B66 /* LocationData.swift in Sources */,
