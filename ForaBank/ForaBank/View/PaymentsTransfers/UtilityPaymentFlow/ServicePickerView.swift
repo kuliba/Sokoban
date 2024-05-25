@@ -35,6 +35,7 @@ struct ServicePickerView<LastPayment, Operator>: View {
             VStack(alignment: .leading, spacing: 6) {
                 
                 Text(service.name)
+                    .font(.subheadline)
                 
                 Text(service.id)
                     .font(.caption)

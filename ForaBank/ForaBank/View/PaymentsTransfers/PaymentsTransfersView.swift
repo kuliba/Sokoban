@@ -451,7 +451,7 @@ private extension PaymentsTransfersView {
             paymentFlowView(state: state, event: { event(.payment($0)) })
             
         case let .servicePicker(state):
-            servicePicker(state: state, event: event)
+            servicePickerView(state: state, event: event)
         }
     }
     
@@ -577,7 +577,7 @@ private extension PaymentsTransfersView {
         return { PaymentFlowModalView(state: $0, event: event) }
     }
     
-    func servicePicker(
+    func servicePickerView(
         state: ServicePickerState,
         event: @escaping (UtilityFlowEvent) -> Void
     ) -> some View {
@@ -600,7 +600,7 @@ private extension PaymentsTransfersView {
                 )
             }
         )
-        .navigationTitle(String(describing: state.content))
+        .navigationTitle(state.content.operator.title)
         .navigationBarTitleDisplayMode(.inline)
     }
     

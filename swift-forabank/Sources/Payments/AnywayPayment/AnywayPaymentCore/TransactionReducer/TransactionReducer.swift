@@ -156,10 +156,12 @@ private extension TransactionReducer {
         if let verificationCode = paymentInspector.getVerificationCode(state.payment) {
             effect = .makePayment(verificationCode)
         } else {
+            let digest = paymentInspector.makeDigest(state.payment)
+            
             if paymentInspector.shouldRestartPayment(state.payment) {
-                effect = .initiatePayment(paymentInspector.makeDigest(state.payment))
+                effect = .initiatePayment(digest)
             } else {
-                effect = .continue(paymentInspector.makeDigest(state.payment))
+                effect = .continue(digest)
             }
         }
     }
