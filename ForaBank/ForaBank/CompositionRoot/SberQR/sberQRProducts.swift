@@ -59,11 +59,7 @@ extension ProductData {
                 footer: card.displayNumber ?? "",
                 amountFormatted: formatBalance(card),
                 balance: .init(card.balanceValue),
-                look: .init(
-                    background: .image(getImage(card.largeDesignMd5Hash) ?? .cardPlaceholder),
-                    color: card.backgroundColor.description,
-                    icon: .image(getImage(card.smallDesignMd5hash) ?? .cardPlaceholder)
-                )
+                look: look(getImage: getImage)
             )
         }
         
@@ -78,14 +74,21 @@ extension ProductData {
                 footer: account.displayNumber ?? "",
                 amountFormatted: formatBalance(account),
                 balance: .init(account.balanceValue),
-                look: .init(
-                    background: .image(getImage(account.largeDesignMd5Hash) ?? .cardPlaceholder),
-                    color: account.backgroundColor.description,
-                    icon: .image(getImage(account.smallDesignMd5hash) ?? .cardPlaceholder)
-                )
+                look: look(getImage: getImage)
             )
         }
         
         return nil
+    }
+    
+    func look(
+        getImage: @escaping (Md5hash) -> Image?
+    ) -> ProductSelect.Product.Look {
+        
+        return .init(
+            background: .image(getImage(largeDesignMd5Hash) ?? .cardPlaceholder),
+            color: backgroundColor.description,
+            icon: .image(getImage(smallDesignMd5hash) ?? .cardPlaceholder)
+        )
     }
 }
