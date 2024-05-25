@@ -51,10 +51,7 @@ private extension Model {
         _ response: GetSberQRDataResponse
     ) -> [ProductSelect.Product] {
         
-        allProducts
-            .filter(\.allowDebit)
-            .filter(\.isActive)
-            .filter(\.isMainProduct)
+        paymentProducts()
             .mapToSberQRProducts(
                 response: response,
                 formatBalance: { [weak self] in
@@ -91,39 +88,5 @@ extension Model {
         }
         
         return nil
-    }
-}
-
-private extension ProductData {
-    
-    var isMainProduct: Bool {
-        
-        if let card = self as? ProductCardData,
-           let isMain = card.isMain {
-            
-            return isMain
-        }
-        
-        if self is ProductAccountData {
-            
-            return true
-        }
-        
-        return false
-    }
-    
-    var isActive: Bool {
-        
-        if let card = self as? ProductCardData {
-            
-            return card.statusPc == .active
-        }
-        
-        if self is ProductAccountData {
-            
-            return true
-        }
-        
-        return false
     }
 }
