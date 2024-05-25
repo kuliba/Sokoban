@@ -248,7 +248,7 @@ private extension StartAnywayPaymentResult {
             
         case let .success(response):
 #if MOCK
-            let response = response.mock(value: "6068506106", forTitle: "Лицевой счет")
+            let response = response.mock(value: "6068506999", forTitle: "Лицевой счет")
             self = .success(.startPayment(.init(response)))
 #else
             self = .success(.startPayment(.init(response)))
