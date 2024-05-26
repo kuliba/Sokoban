@@ -29,10 +29,10 @@ extension AnywayTransactionEffectHandlerNanoServicesComposer {
     func compose() -> NanoServices {
         
         return .init(
-            initiatePayment: initiatePayment,
-            getDetails: getDetails,
-            makeTransfer: makeTransfer,
-            processPayment: processPayment
+            initiatePayment: initiatePayment(),
+            getDetails: getDetails(),
+            makeTransfer: makeTransfer(),
+            processPayment: processPayment()
         )
     }
 }
@@ -48,22 +48,23 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     
 #warning("add logging")
     private func initiatePayment(
-        digest: AnywayPaymentDigest,
-        completion: @escaping NanoServices.ProcessCompletion
-    ) {
+    ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
+        
         let process = ForaBank.NanoServices.makeCreateAnywayTransferNew(httpClient, log)
         
-        process(.init(digest: digest)) {
+        return { digest, completion in
             
-            dump($0, name: "makeCreateAnywayTransferNew result")
-            completion($0.result) }
+            process(.init(digest: digest)) {
+                
+                dump($0, name: "makeCreateAnywayTransferNew result")
+                completion($0.result) }
+        }
     }
     
 #warning("add logging")
     private func getDetails(
-        payload: OperationDetailID,
-        completion: @escaping NanoServices.GetDetailsCompletion
-    ) {
+    ) -> AnywayTransactionEffectHandlerNanoServices.GetDetails {
+        
         let createRequest = ForaBank.RequestFactory.createGetOperationDetailByPaymentIDRequest
         let mapResponse = AnywayPaymentBackend.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
         
@@ -73,17 +74,19 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             mapResponse: mapResponse
         )
         
-        service(.init("\(payload)")) {
+        return { payload, completion in
             
-            completion(try? $0.map(\.response).get())
+            return service(.init("\(payload)")) {
+                
+                completion(try? $0.map(\.response).get())
+            }
         }
     }
     
 #warning("add logging")
     private func makeTransfer(
-        payload: VerificationCode,
-        completion: @escaping NanoServices.MakeTransferCompletion
-    )  {
+    ) -> AnywayTransactionEffectHandlerNanoServices.MakeTransfer {
+        
         let createRequest = ForaBank.RequestFactory.createMakeTransferRequest
         let mapResponse = AnywayPaymentBackend.ResponseMapper.mapMakeTransferResponse
         
@@ -93,18 +96,24 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             mapResponse: mapResponse
         )
         
-        service(.init(payload.rawValue)) {
+        return { payload, completion in
             
-            completion(try? $0.map(\.response).get())
+            return service(.init(payload.rawValue)) {
+                
+                completion(try? $0.map(\.response).get())
+            }
         }
     }
     
     private func processPayment(
-        digest: AnywayPaymentDigest,
-        completion: @escaping NanoServices.ProcessCompletion
-    ) {
+    ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
+        
         let process = ForaBank.NanoServices.makeCreateAnywayTransfer(httpClient, log)
-        process(.init(digest: digest)) { completion($0.result) }
+        
+        return { digest, completion in
+            
+            process(.init(digest: digest)) { completion($0.result) }
+        }
     }
 }
 
