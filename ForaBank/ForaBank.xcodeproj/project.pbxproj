@@ -8223,6 +8223,9 @@
 		2A5D2FB72BF3323500BC3092 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				2AA3A9312BFF88F800AEBCC9 /* AnywayTransactionEffectHandlerMicroServicesComposer.swift */,
+				2AA3A9332BFF895100AEBCC9 /* AnywayTransactionEffectHandlerNanoServices.swift */,
+				2A35DDA42C02118100EFF0EB /* AnywayTransactionEffectHandlerNanoServicesComposer.swift */,
 				2A5D2FBE2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift */,
 				2A5D2FBA2BF33C5100BC3092 /* UtilityPaymentNanoServices.swift */,
 				2A5D2FB82BF3325C00BC3092 /* UtilityPaymentNanoServicesComposer.swift */,
@@ -9062,9 +9065,6 @@
 			children = (
 				2AA3A92F2BFF886300AEBCC9 /* AnywayTransaction.swift */,
 				2AA3A92D2BFF884100AEBCC9 /* AnywayTransactionViewModelComposer.swift */,
-				2AA3A9312BFF88F800AEBCC9 /* AnywayTransactionEffectHandlerMicroServicesComposer.swift */,
-				2AA3A9332BFF895100AEBCC9 /* AnywayTransactionEffectHandlerNanoServices.swift */,
-				2A35DDA42C02118100EFF0EB /* AnywayTransactionEffectHandlerNanoServicesComposer.swift */,
 				2AA3A9352BFF8A1900AEBCC9 /* AnywayPaymentFactoryComposer.swift */,
 				2AA3A9562BFF8DBB00AEBCC9 /* Configs */,
 				2AA3A93C2BFF8B6A00AEBCC9 /* AnywayTransactionView */,
