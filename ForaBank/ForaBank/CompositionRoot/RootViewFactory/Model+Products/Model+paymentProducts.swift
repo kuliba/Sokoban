@@ -9,6 +9,7 @@ extension Model {
     
     func paymentProducts() -> [ProductData] {
      
+        // TODO: fix filtering according to https://shorturl.at/hIE5B
         allProducts
             .filter(\.allowDebit)
             .filter(\.isActive)

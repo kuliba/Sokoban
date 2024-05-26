@@ -33,7 +33,6 @@ extension UtilityServicePickerFlowState {
 extension UtilityServicePickerFlowState.Destination {
     
     typealias Payment = UtilityServicePaymentFlowState<PaymentViewModel>
-    typealias StartPaymentResponse = StartUtilityPaymentResponse
 }
 
 extension UtilityServicePickerFlowState.Content: Equatable where Operator: Equatable, UtilityService: Equatable {}

@@ -258,22 +258,20 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with paymentStarted: PaymentStarted
+        with result: UtilityPrepaymentFlowEvent.StartPaymentResult
     ) {
-        switch paymentStarted.result {
+        switch result {
         case let .failure(failure):
             reduce(&state, with: failure)
             
         case let .success(success):
-            reduce(&state, with: success, and: paymentStarted.select)
+            reduce(&state, with: success)
         }
     }
-    
-    private typealias PaymentStarted = UtilityPrepaymentFlowEvent.PaymentStarted
-    
+        
     private func reduce(
         _ state: inout State,
-        with failure: PaymentStarted.StartPaymentFailure
+        with failure: UtilityPrepaymentFlowEvent.StartPaymentFailure
     ) {
         switch failure {
         case let .operatorFailure(`operator`):
@@ -306,8 +304,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with success: PaymentStarted.StartPaymentSuccess,
-        and select: UtilityPrepaymentFlowEvent.Select
+        with success: UtilityPrepaymentFlowEvent.StartPaymentSuccess
     ) {
         switch success {
         case let .services(services, `operator`):
@@ -316,16 +313,16 @@ private extension PaymentsTransfersFlowReducer {
                 destination: nil
             )))
             
-        case let .startPayment(response):
-            reduce(&state, with: .init(select: select, response: response))
+        case let .startPayment(transactionState):
+            reduce(&state, with: transactionState)
         }
     }
     
     private func reduce(
         _ state: inout State,
-        with payload: Payload
+        with transactionState: AnywayTransactionState
     ) {
-        let utilityPaymentState = factory.makeUtilityPaymentState(payload, notify)
+        let utilityPaymentState = factory.makeUtilityPaymentState(transactionState, notify)
         
         switch state.utilityPrepaymentDestination {
         case .none:
@@ -338,8 +335,6 @@ private extension PaymentsTransfersFlowReducer {
             break
         }
     }
-    
-    private typealias Payload = Factory.MakeUtilityPaymentStatePayload
     
     private func reduce(
         _ state: inout State,

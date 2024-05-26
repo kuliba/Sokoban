@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentAdapters
+import AnywayPaymentDomain
 import Fetcher
 import Foundation
 import OperatorsListComponents
@@ -14,17 +15,20 @@ import RemoteServices
 final class UtilityPaymentNanoServicesComposer {
     
     private let flag: Flag
+    private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
     private let loadOperators: LoadOperators
     
     init(
         flag: Flag,
+        model: Model,
         httpClient: HTTPClient,
         log: @escaping Log,
         loadOperators: @escaping LoadOperators
     ) {
         self.flag = flag
+        self.model = model
         self.httpClient = httpClient
         self.log = log
         self.loadOperators = loadOperators
@@ -39,7 +43,8 @@ extension UtilityPaymentNanoServicesComposer {
             getAllLatestPayments: getAllLatestPayments,
             getOperatorsListByParam: getOperatorsListByParam,
             getServicesFor: getServicesFor,
-            startAnywayPayment: startAnywayPayment
+            startAnywayPayment: startAnywayPayment, 
+            makeAnywayPaymentOutline: makeAnywayPaymentOutline
         )
     }
 }
@@ -61,7 +66,7 @@ extension UtilityPaymentNanoServicesComposer {
         typealias StartPaymentResult = NanoServices.StartAnywayPaymentResult
     }
     
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator>
+    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, UtilityService>
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
@@ -176,6 +181,28 @@ private extension UtilityPaymentNanoServicesComposer {
         
         mapped(`operator`) { [mapped] in completion($0); _ = mapped }
     }
+    
+    private func makeAnywayPaymentOutline(
+        lastPayment: LastPayment?
+    ) -> AnywayPaymentOutline {
+        
+        #warning("fix filtering according to https://shorturl.at/hIE5B")
+        guard let product = model.paymentProducts().first,
+              let coreProductType = product.productType.coreProductType
+        else {
+            // TODO: unimplemented graceful failure for missing products
+            fatalError("unimplemented graceful failure")
+        }
+        
+        let core = AnywayPaymentOutline.PaymentCore(
+            amount: 0,
+            currency: product.currency, 
+            productID: product.id,
+            productType: coreProductType
+        )
+        
+        return .init(core: core, fields: .init())
+    }
 }
 
 // MARK: - Adapters
@@ -246,9 +273,9 @@ private extension StartAnywayPaymentResult {
         case let .success(response):
 #if MOCK
             let response = response.mock(value: "6068506999", forTitle: "Лицевой счет")
-            self = .success(.startPayment(.init(response)))
+            self = .success(.startPayment(response))
 #else
-            self = .success(.startPayment(.init(response)))
+            self = .success(.startPayment(response))
 #endif
         }
     }
@@ -259,13 +286,25 @@ typealias StartAnywayPaymentPayload = _UtilityPaymentNanoServices.StartAnywayPay
 typealias StartAnywayPaymentResult = _UtilityPaymentNanoServices.StartAnywayPaymentResult
 typealias StartAnywayPaymentCompletion = _UtilityPaymentNanoServices.StartAnywayPaymentCompletion
 
-typealias _UtilityPaymentNanoServices = UtilityPaymentNanoServices<UtilityPaymentLastPayment, UtilityPaymentOperator>
+typealias _UtilityPaymentNanoServices = UtilityPaymentNanoServices<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
 
 private extension OperatorsListComponents.ResponseMapper.SberUtilityService {
     
     var service: UtilityService {
     
         .init(name: name, puref: puref)
+    }
+}
+
+private extension ProductType {
+    
+    var coreProductType: AnywayPaymentOutline.PaymentCore.ProductType? {
+        
+        switch self {
+        case .card:    return .card
+        case .account: return .account
+        default:       return nil
+        }
     }
 }
 

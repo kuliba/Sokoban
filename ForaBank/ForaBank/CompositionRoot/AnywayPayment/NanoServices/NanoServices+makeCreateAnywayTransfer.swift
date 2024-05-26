@@ -71,6 +71,7 @@ private extension ServiceFailure {
             switch mapResponseError {
             case .invalid:
                 self = .connectivityError
+                
             case let .server(_, message):
                 self = .serverError(message)
             }
