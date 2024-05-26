@@ -36,10 +36,10 @@ extension UtilityPaymentNanoServicesComposer {
     func compose() -> NanoServices {
         
         return .init(
-            getOperatorsListByParam: getOperatorsListByParam,
             getAllLatestPayments: getAllLatestPayments,
-            startAnywayPayment: startAnywayPayment,
-            getServicesFor: getServicesFor
+            getOperatorsListByParam: getOperatorsListByParam,
+            getServicesFor: getServicesFor,
+            startAnywayPayment: startAnywayPayment
         )
     }
 }
