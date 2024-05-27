@@ -11,6 +11,8 @@ import XCTest
 
 final class AnywayPaymentContextTests: XCTestCase {
     
+    // MARK: - staging
+    
     func test_staging_shouldNotChangeEmptyStagedOnEmptyElements() {
         
         let context = makeAnywayPaymentContext(elements: [])
@@ -163,6 +165,8 @@ final class AnywayPaymentContextTests: XCTestCase {
             "b": "222",
         ])
     }
+    
+    // MARK: - update
     
     func test_update_shouldUpdateExistingAndAppendMissing() {
         

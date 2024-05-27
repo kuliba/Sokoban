@@ -902,7 +902,7 @@ final class TransactionReducerTests: XCTestCase {
         
         let state = makeTransaction(status: .awaitingPaymentRestartConfirmation)
         let prevPayment = makePayment()
-        let sut = makeSUT(resetPayment: { _ in prevPayment })
+        let sut = makeSUT(restorePayment: { _ in prevPayment })
         
         assertState(sut: sut, .paymentRestartConfirmation(false), on: state) {
             
@@ -1237,7 +1237,7 @@ final class TransactionReducerTests: XCTestCase {
         getVerificationCode: @escaping Inspector.GetVerificationCode = { _ in nil },
         makeDigest: @escaping Inspector.MakeDigest = { _ in makePaymentDigest() },
         paymentReduce: @escaping SUT.PaymentReduce = { payment, _ in (payment, nil) },
-        resetPayment: @escaping Inspector.ResetPayment = { _ in makePayment() },
+        restorePayment: @escaping Inspector.RestorePayment = { _ in makePayment() },
         stagePayment: @escaping SUT.StagePayment = { $0 },
         updatePayment: @escaping SUT.UpdatePayment = { payment, _ in payment },
         validatePayment: @escaping Inspector.ValidatePayment = { _ in false },
@@ -1254,7 +1254,7 @@ final class TransactionReducerTests: XCTestCase {
                 checkFraud: checkFraud,
                 getVerificationCode: getVerificationCode,
                 makeDigest: makeDigest,
-                resetPayment: resetPayment,
+                restorePayment: restorePayment,
                 validatePayment: validatePayment,
                 wouldNeedRestart: wouldNeedRestart
             )

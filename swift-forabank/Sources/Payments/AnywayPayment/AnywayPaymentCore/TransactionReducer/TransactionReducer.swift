@@ -99,7 +99,7 @@ private extension TransactionReducer {
             state.payment.shouldRestart = true
             state.status = nil
         } else {
-            state.payment = paymentInspector.resetPayment(state.payment)
+            state.payment = paymentInspector.restorePayment(state.payment)
             state.status = nil
         }
     }
