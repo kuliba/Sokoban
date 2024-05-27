@@ -139,6 +139,7 @@ extension Model {
                 case .ok:
                     guard response.data != nil else {
                         self.handleServerCommandEmptyData(command: command)
+                        self.action.send(ModelAction.Card.Unblock.Response(cardId: payload.cardId, result: .failure(message: self.defaultErrorMessage)))
                         return
                     }
                     self.action.send(ModelAction.Card.Block.Response(cardId: payload.cardId, result: .success))
@@ -147,12 +148,14 @@ extension Model {
                     if let error = response.errorMessage {
                         
                         self.action.send(ModelAction.Card.Block.Response(cardId: payload.cardId, result: .failure(message: error)))
+                    } else {
+                        self.action.send(ModelAction.Card.Block.Response(cardId: payload.cardId, result: .failure(message: self.defaultErrorMessage)))
                     }
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
-                
+                self.action.send(ModelAction.Card.Block.Response(cardId: payload.cardId, result: .failure(message: self.defaultErrorMessage)))
             }
         }
     }
