@@ -11,24 +11,10 @@ extension Model {
         of product: ProductData
     ) -> String? {
         
-        if let card = product as? ProductCardData {
-            
-            return amountFormatted(
-                amount: card.balanceValue,
-                currencyCode: card.currency,
-                style: .clipped
-            )
-        }
-        
-        if let account = product as? ProductAccountData {
-            
-            return amountFormatted(
-                amount: account.balanceValue,
-                currencyCode: account.currency,
-                style: .clipped
-            )
-        }
-        
-        return nil
+        return amountFormatted(
+            amount: product.balanceValue,
+            currencyCode: product.currency,
+            style: .clipped
+        )
     }
 }
