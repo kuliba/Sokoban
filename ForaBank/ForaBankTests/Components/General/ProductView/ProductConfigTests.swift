@@ -12,6 +12,16 @@ import CardUI
 
 final class ProductConfigTests: XCTestCase {
     
+    // MARK: - Test appearance colors
+
+    func test_colorsConfig() {
+        
+        let sut = makeSUT(textColor: .green, checkBackground: .red)
+        
+        XCTAssertEqual(sut.appearance.colors.text, .green)
+        XCTAssertEqual(sut.appearance.colors.checkBackground, .red)
+    }
+    
     // MARK: - Test front Config
     
     func test_frontConfig_smallSize() {
@@ -121,13 +131,14 @@ final class ProductConfigTests: XCTestCase {
     private func makeSUT(
         size: CardUI.Appearance.Size = .small,
         textColor: Color = .clear,
+        checkBackground: Color = .clear,
         background: Color = .clear,
         backgroundImage: Image? = nil
     ) -> CardUI.Config {
         
         .config(appearance: .init(
-            textColor: textColor,
             background: .init(color: background, image: backgroundImage),
+            colors: .init(text: textColor, checkBackground: checkBackground),
             size: size)
         )
     }

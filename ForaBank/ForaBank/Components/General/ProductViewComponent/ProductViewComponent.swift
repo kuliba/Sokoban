@@ -118,10 +118,10 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
             statusAction: statusAction,
             isChecked: isChecked,
             appearance: .init(
-                textColor: textColor,
                 background: .init(
                     color: backgroundColor,
                     image: backgroundImage),
+                colors: .init(text: textColor, checkBackground:  productType == .deposit ? .init(hex: "F6F6F7"): backgroundColor),
                 size: size,
                 style: style
             ),
@@ -662,7 +662,7 @@ struct GenericProductView<Slider: View>: View {
             
             return StatusActionView(
                 viewModel: $0,
-                color: viewModel.config.appearance.textColor,
+                color: viewModel.config.appearance.colors.text,
                 style: viewModel.config.appearance.style)
         }
     }

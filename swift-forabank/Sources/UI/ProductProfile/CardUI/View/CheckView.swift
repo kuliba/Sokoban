@@ -16,7 +16,7 @@ struct CheckView: View {
         ZStack {
             
             Rectangle()
-                .fill(config.appearance.background.color)
+                .fill(config.appearance.colors.checkBackground)
             config.images.check
                 .resizable()
                 .renderingMode(.original)

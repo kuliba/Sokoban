@@ -49,7 +49,7 @@ public struct HeaderView: View {
                 
                 Text($0)
                     .font(config.fonts.header)
-                    .foregroundColor(config.appearance.textColor)
+                    .foregroundColor(config.appearance.colors.text)
                     .accessibilityIdentifier("productNumber")
             }
             
@@ -73,11 +73,11 @@ public struct HeaderView: View {
                 
                 Rectangle()
                     .frame(width: 1, height: 16)
-                    .foregroundColor(config.appearance.textColor)
+                    .foregroundColor(config.appearance.colors.text)
                 
                 Text(text)
                     .font(config.fonts.header)
-                    .foregroundColor(config.appearance.textColor)
+                    .foregroundColor(config.appearance.colors.text)
                     .accessibilityIdentifier("productPeriod")
             }
         }
