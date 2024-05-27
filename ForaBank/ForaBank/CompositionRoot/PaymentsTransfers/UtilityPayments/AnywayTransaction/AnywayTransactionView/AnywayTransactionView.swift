@@ -7,6 +7,7 @@
 
 import AnywayPaymentDomain
 import SwiftUI
+import UIPrimitives
 
 struct AnywayTransactionView: View {
     
@@ -17,12 +18,6 @@ struct AnywayTransactionView: View {
     var body: some View {
         
         VStack(spacing: 32) {
-            
-            Text(state.isValid ? "valid" : "invalid")
-                .foregroundColor(state.isValid ? .green : .red)
-                .font(.headline)
-            
-            Divider()
             
             ScrollView(showsIndicators: false) {
                 
@@ -46,7 +41,8 @@ extension AnywayTransactionView {
     
     typealias State = AnywayTransactionState
     typealias Event = AnywayTransactionEvent
-    typealias Factory = AnywayPaymentFactory<Text>
+    typealias Factory = AnywayPaymentFactory<IconView>
+    typealias IconView = UIPrimitives.AsyncImage
 }
 
 // MARK: - Adapters

@@ -5,19 +5,24 @@
 //  Created by Igor Malyarov on 09.05.2024.
 //
 
+import AnywayPaymentAdapters
+import AnywayPaymentBackend
+import AnywayPaymentCore
 import AnywayPaymentDomain
 import OperatorsListComponents
 import ForaTools
 import Foundation
+import GenericRemoteService
+import RemoteServices
 import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
 
 final class PaymentsTransfersFlowComposer {
     
     private let flag: StubbedFeatureFlag.Option
+    private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
-    private let model: Model
     private let loaderComposer: LoaderComposer
     private let pageSize: Int
     private let observeLast: Int
@@ -31,9 +36,9 @@ final class PaymentsTransfersFlowComposer {
         observeLast: Int
     ) {
         self.flag = flag
+        self.model = model
         self.httpClient = httpClient
         self.log = log
-        self.model = model
         self.loaderComposer = .init(flag: flag, model: model, pageSize: pageSize)
         self.pageSize = pageSize
         self.observeLast = observeLast
@@ -63,6 +68,8 @@ extension PaymentsTransfersFlowComposer {
     typealias FlowManager = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
 }
 
+extension UtilityPaymentLastPayment: Purefable {}
+
 private extension PaymentsTransfersFlowComposer {
     
     func makeEffectHandler() -> EffectHandler {
@@ -70,6 +77,7 @@ private extension PaymentsTransfersFlowComposer {
         let loadOperators = loaderComposer.compose()
         let nanoComposer = UtilityPaymentNanoServicesComposer(
             flag: composerFlag,
+            model: model,
             httpClient: httpClient,
             log: log,
             loadOperators: { loadOperators(.init(), $0) }
@@ -77,13 +85,19 @@ private extension PaymentsTransfersFlowComposer {
         let microComposer = UtilityPrepaymentFlowMicroServicesComposer(
             nanoServices: nanoComposer.compose()
         )
-        let composer = UtilityPaymentsFlowComposer(
+        let prepaymentEffectHandler = PrepaymentFlowEffectHandler(
             microServices: microComposer.compose()
         )
-        let handler = composer.makeEffectHandler()
+        let paymentFlowEffectHandler = PaymentFlowEffectHandler(
+            utilityPrepaymentEffectHandle: prepaymentEffectHandler.handleEffect(_:_:)
+        )
         
-        return .init(utilityEffectHandle: handler.handleEffect(_:_:))
+        return .init(utilityEffectHandle: paymentFlowEffectHandler.handleEffect(_:_:))
     }
+    
+    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+    
+    typealias PaymentFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
     
     private var composerFlag: ComposerFlag {
         
@@ -137,7 +151,13 @@ private extension PaymentsTransfersFlowComposer {
         payload: LoadOperatorsPayload,
         completion: @escaping ([Operator]) -> Void
     ) {
-        loaderComposer.compose()(.init(operatorID: payload.operatorID, searchText: payload.searchText), completion)
+        let load = loaderComposer.compose()
+        load(
+            .init(
+                operatorID: payload.operatorID,
+                searchText: payload.searchText),
+            completion
+        )
     }
     
     private typealias LoadOperatorsPayload = UtilityPrepaymentNanoServices<Operator>.LoadOperatorsPayload
@@ -146,37 +166,11 @@ private extension PaymentsTransfersFlowComposer {
         initialState: AnywayTransactionState
     ) -> AnywayTransactionViewModel {
         
-        let composer: AnywayTransactionViewModelComposer
-        
-        switch flag {
-        case .live:
-            composer = AnywayTransactionViewModelComposer(
-                microServices: { fatalError() }()
-            )
-            
-        case .stub:
-            
-            //    let microServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer(
-            //        nanoServices: .stubbed(with: .init(
-            //            getDetailsResult: "Operation Detail",
-            //            makeTransferResult: .init(
-            //                status: .completed,
-            //                detailID: 54321
-            //            )
-            //        ))
-            //    )
-
-            composer = AnywayTransactionViewModelComposer(
-                microServices: .stubbed(with: .init(
-                    initiatePayment: .success(.preview),
-                    makePayment: .init(
-                        status: .completed,
-                        info: .details("Operation Detail")
-                    ),
-                    processPayment: .success(.preview))
-                )
-            )
-        }
+        let composer = AnywayTransactionViewModelComposer(
+            flag: flag,
+            httpClient: httpClient,
+            log: log
+        )
         
         return composer.compose(initialState: initialState)
     }
@@ -187,184 +181,76 @@ private extension PaymentsTransfersFlowComposer {
 private extension PaymentsTransfersFlowComposer {
     
     func stub(
-        for payload: UtilityPaymentNanoServices<LastPayment, Operator>.StartAnywayPaymentPayload
-    ) -> PrepaymentMicroServices.StartPaymentResult {
+        payload: ComposerFlag.Payload
+    ) -> ComposerFlag.StartPaymentResult {
         
         switch payload {
         case let .lastPayment(lastPayment):
-            return stub(for: lastPayment)
+            switch lastPayment.id {
+            case "failure":
+                return .failure(.serviceFailure(.connectivityError))
+                
+            default:
+                return .success(.startPayment(.preview))
+            }
             
         case let .service(service, for: `operator`):
-            return stub(for: service)
-        }
-    }
-    
-    typealias PrepaymentMicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService>
-    
-    private func stub(
-        for lastPayment: LastPayment
-    ) -> PrepaymentMicroServices.StartPaymentResult {
-        
-        switch lastPayment.id {
-        case "failure":
-            return .failure(.serviceFailure(.connectivityError))
-            
-        default:
-            return .success(.startPayment(.preview))
-        }
-    }
-    
-    private func stub(
-        for `operator`: Operator
-    ) -> PrepaymentMicroServices.StartPaymentResult {
-        
-        switch `operator`.id {
-        case "single":
-            return .success(.startPayment(.preview))
-            
-        case "singleFailure":
-            return .failure(.operatorFailure(`operator`))
-            
-        case "multiple":
-            let services = MultiElementArray<UtilityService>([
-                .init(name: UUID().uuidString, puref: "failure"),
-                .init(name: UUID().uuidString, puref: UUID().uuidString),
-            ])!
-            return .success(.services(services, for: `operator`))
-            
-        case "multipleFailure":
-            return .failure(.serviceFailure(.serverError("Server Failure")))
-            
-        default:
-            return .success(.startPayment(.preview))
-        }
-    }
-    
-    private func stub(
-        for service: UtilityService
-    ) -> PrepaymentMicroServices.StartPaymentResult {
-        
-        switch service.id {
-        case "failure":
-            return .failure(.serviceFailure(.serverError("Server Failure")))
-            
-        default:
-            return .success(.startPayment(.preview))
-        }
-    }
-}
-
-private extension AnywayTransactionEffectHandlerMicroServices {
-    
-    static func stubbed(
-        with stub: Stub
-    ) -> Self {
-        
-        return .init(
-            initiatePayment: _initiatePayment(with: stub.initiatePayment),
-            makePayment: _makePayment(with: stub.makePayment),
-            paymentEffectHandle: { _,_ in }, // AnywayPaymentEffect is empty
-            processPayment: _processPayment(with: stub.processPayment)
-        )
-    }
-    
-    struct Stub {
-        
-        let initiatePayment: ProcessResult
-        let makePayment: Report?
-        let processPayment: ProcessResult
-    }
-    
-    private static func _initiatePayment(
-        with stub: ProcessResult
-    ) -> InitiatePayment {
-        
-        return { _, completion in
-            
-            DispatchQueue.main.delay(for: .seconds(1)) {
+            switch service.id {
+            case "failure":
+                return .failure(.serviceFailure(.serverError("Server Failure")))
                 
-                completion(stub)
-            }
-        }
-    }
-    
-    private static func _makePayment(
-        with stub: Report?
-    ) -> MakePayment {
-        
-        return { _, completion in
-            
-            DispatchQueue.main.delay(for: .seconds(1)) {
-                
-                completion(stub)
-            }
-        }
-    }
-    
-    private static func _processPayment(
-        with stub: ProcessResult
-    ) -> ProcessPayment {
-        
-        return { _, completion in
-            
-            DispatchQueue.main.delay(for: .seconds(1)) {
-                
-                completion(stub)
+            default:
+                return .success(.startPayment(.preview))
             }
         }
     }
 }
 
-private extension AnywayPaymentUpdate {
+private extension AnywayTransactionState {
     
-    static let preview: Self = .init(
-        details: .preview,
-        fields: [],
-        parameters: []
-    )
+    static var preview: Self {
+        
+        return .init(payment: .preview, isValid: true)
+    }
 }
 
-private extension AnywayPaymentUpdate.Details {
+private extension AnywayPaymentContext {
     
-    static let preview: Self = .init(
-        amounts: .preview,
-        control: .preview,
-        info: .preview
-    )
+    static var preview: Self {
+        
+        return .init(payment: .preview, staged: [], outline: .preview)
+    }
 }
 
-private extension AnywayPaymentUpdate.Details.Amounts {
+private extension AnywayPaymentDomain.AnywayPayment {
     
-    static let preview: Self = .init(
-        amount: nil,
-        creditAmount: nil,
-        currencyAmount: nil,
-        currencyPayee: nil,
-        currencyPayer: nil,
-        currencyRate: nil,
-        debitAmount: nil,
-        fee: nil
-    )
+    static var preview: Self {
+        
+        return .init(elements: [], infoMessage: nil, isFinalStep: false, isFraudSuspected: false, puref: "")
+    }
 }
 
-private extension AnywayPaymentUpdate.Details.Control {
+private extension AnywayPaymentOutline {
     
-    static let preview: Self = .init(
-        isFinalStep: false,
-        isFraudSuspected: false,
-        needMake: false,
-        needOTP: false,
-        needSum: false
-    )
+    static var preview: Self {
+        
+        return .init(core: .preview, fields: [:])
+    }
 }
 
-private extension AnywayPaymentUpdate.Details.Info {
+private extension AnywayPaymentOutline.PaymentCore {
     
-    static let preview: Self = .init(
-        documentStatus: nil,
-        infoMessage: nil,
-        payeeName: nil,
-        paymentOperationDetailID: nil,
-        printFormType: nil
-    )
+    static var preview: Self {
+        
+        return .init(amount: 0, currency: "RUB", productID: 1, productType: .account)
+    }
 }
+
+private extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
+    
+    static var preview: Self {
+        
+        return .init(additional: [], finalStep: false, needMake: false, needOTP: false, needSum: false, parametersForNextStep: [])
+    }
+}
+

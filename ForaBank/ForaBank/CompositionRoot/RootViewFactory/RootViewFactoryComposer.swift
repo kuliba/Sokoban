@@ -8,6 +8,7 @@
 import AnywayPaymentDomain
 import Combine
 import InfoComponent
+import PaymentComponents
 import SberQR
 import SwiftUI
 import UIPrimitives
@@ -99,12 +100,19 @@ private extension RootViewFactoryComposer {
         
         let composer = AnywayPaymentFactoryComposer(
             config: .iFora,
-            currencyOfProduct: { _ in "RUB" },
-            getProducts: { [] },
+            currencyOfProduct: currencyOfProduct,
+            getProducts: model.productSelectProducts,
             makeIconView: makeIconView
         )
         
         return composer.compose(event: event)
+    }
+    
+    private func currencyOfProduct(
+        product: ProductSelect.Product
+    ) -> String {
+        
+        model.currencyOf(product: product) ?? ""
     }
     
     typealias IconView = UIPrimitives.AsyncImage

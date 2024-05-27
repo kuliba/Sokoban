@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         logger: logger,
         qrResolverFeatureFlag: .init(.active),
         fastPaymentsSettingsFlag: .init(.active(.live)),
-        utilitiesPaymentsFlag: .init(.inactive))
+        utilitiesPaymentsFlag: .init(.inactive)
     )
     private lazy var rootViewFactory = RootViewFactoryComposer(model: model).compose()
 

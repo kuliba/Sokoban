@@ -8,9 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct ServicePickerView<LastPayment, Operator, Service>: View
-where Service: Identifiable,
-      Service.ID: StringProtocol {
+struct ServicePickerView<LastPayment, Operator>: View {
     
     let state: State
     let event: (Event) -> Void
@@ -21,21 +19,39 @@ where Service: Identifiable,
             
             ForEach(state.services.elements, content: serviceView)
         }
-    }
+        .listStyle(.plain)
+   }
     
     private func serviceView(
         service: Service
     ) -> some View {
         
-        Button(String(service.id.prefix(23))) {
+        Button {
             
             event(.service(service, for: state.`operator`))
+            
+        } label: {
+            
+            VStack(alignment: .leading, spacing: 6) {
+                
+                Text(service.name)
+                    .font(.subheadline)
+                
+                Text(service.id)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.vertical, 1)
+            .contentShape(Rectangle())
         }
         .foregroundColor(service.id.localizedCaseInsensitiveContains("failure") ? .red : .primary)
     }
 }
 
 extension ServicePickerView {
+    
+    typealias Service = UtilityService
     
     typealias PaymentViewModel = ObservingAnywayTransactionViewModel
     typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, UtilityPrepaymentViewModel, PaymentViewModel>

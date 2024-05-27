@@ -24,7 +24,7 @@ private extension ResponseMapper.CreateAnywayTransferResponse {
     init(_ data: ResponseMapper._Data) {
         
         self.init(
-            additional: data.additionalList.map { .init($0) },
+            additional: (data.additionalList ?? []).map { .init($0) },
             amount: data.amount,
             creditAmount: data.creditAmount,
             currencyAmount: data.currencyAmount,
@@ -220,7 +220,7 @@ private extension ResponseMapper {
     
     struct _Data: Decodable {
         
-        let additionalList: [_Additional]
+        let additionalList: [_Additional]?
         let amount: Decimal?
         let creditAmount: Decimal?
         let currencyAmount: String?

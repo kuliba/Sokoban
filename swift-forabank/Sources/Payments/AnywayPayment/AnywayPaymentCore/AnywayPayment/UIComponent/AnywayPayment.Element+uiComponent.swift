@@ -91,6 +91,7 @@ extension AnywayPayment.Element.UIComponent.Parameter {
         
         case hidden
         case nonEditable
+        case numberInput
         case select(Option, [Option])
         case textInput
         case unknown
@@ -158,6 +159,9 @@ private extension AnywayPayment.Element.Parameter.UIAttributes {
             
         case (_, .output, _):
             return .hidden
+            
+        case (.input, .input, .number):
+            return .numberInput
             
         case (.input, .input, .string):
             return .textInput
