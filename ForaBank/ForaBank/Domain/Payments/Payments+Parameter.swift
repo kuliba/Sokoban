@@ -47,6 +47,25 @@ extension PaymentsParameterRepresentable {
 //MARK: - Parameter Identifier
 
 extension Payments.Parameter {
+
+    static let systemIdentifiers: [Payments.Parameter.Identifier] = [
+        .category,
+        .service,
+        .`operator`,
+        .header,
+        .product,
+        .amount,
+        .code,
+        .fee,
+        .`continue`,
+        .mock,
+        .subscribe,
+        .productTemplate,
+        .productTemplateName,
+    ]
+}
+
+extension Payments.Parameter {
     
     enum Identifier: String {
         
