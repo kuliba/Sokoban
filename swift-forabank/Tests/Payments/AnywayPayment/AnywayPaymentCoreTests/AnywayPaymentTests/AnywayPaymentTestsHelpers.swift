@@ -235,6 +235,26 @@ func makeAnywayPaymentParameter(
 func makeAnywayPaymentParameter(
     id: String = anyMessage(),
     value: String? = anyMessage(),
+    isRequired: Bool
+) -> AnywayPayment.Element.Parameter {
+    
+    makeAnywayPaymentParameter(
+        field: makeAnywayPaymentElementParameterField(
+            id: id,
+            value: value
+        ),
+        validation: .init(
+            isRequired: isRequired,
+            maxLength: nil,
+            minLength: nil,
+            regExp: ""
+        )
+    )
+}
+
+func makeAnywayPaymentParameter(
+    id: String = anyMessage(),
+    value: String? = anyMessage(),
     viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType = .input
 ) -> AnywayPayment.Element.Parameter {
     
