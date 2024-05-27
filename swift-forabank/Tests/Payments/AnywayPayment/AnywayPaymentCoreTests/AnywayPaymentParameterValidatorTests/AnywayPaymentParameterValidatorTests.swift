@@ -75,33 +75,29 @@ final class AnywayPaymentParameterValidatorTests: XCTestCase {
     func test_isValid_shouldDeliverTrueOnEmptyValueOfNonRequiredParameter() {
         
         let nonRequired = makeAnywayPaymentParameter(value: nil, isRequired: false)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(nonRequired))
+        XCTAssertTrue(isValid(nonRequired))
     }
     
     func test_isValid_shouldDeliverTrueOnNonEmptyValueOfNonRequiredParameter() {
         
         let nonRequired = makeAnywayPaymentParameter(isRequired: false)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(nonRequired))
+        XCTAssertTrue(isValid(nonRequired))
     }
     
     func test_isValid_shouldDeliverFalseOnEmptyValueOfRequiredParameter() {
         
         let required = makeAnywayPaymentParameter(value: nil, isRequired: true)
-        let sut = makeSUT()
         
-        XCTAssertFalse(sut.isValid(required))
+        XCTAssertFalse(isValid(required))
     }
     
     func test_isValid_shouldDeliverTrueOnNonEmptyValueOfRequiredParameter() {
         
         let required = makeAnywayPaymentParameter(isRequired: true)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(required))
+        XCTAssertTrue(isValid(required))
     }
     
     // MARK: - min length
@@ -109,162 +105,142 @@ final class AnywayPaymentParameterValidatorTests: XCTestCase {
     func test_isValid_shouldDeliverTrueOnNilValueOnEmptyMinLength() {
         
         let none = makeAnywayPaymentParameter(value: .none, minLength: nil)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(none))
+        XCTAssertTrue(isValid(none))
     }
     
     func test_isValid_shouldDeliverTrueOnEmptyValueOnEmptyMinLength() {
         
         let empty = makeAnywayPaymentParameter(value: "", minLength: nil)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(empty))
+        XCTAssertTrue(isValid(empty))
     }
     
     func test_isValid_shouldDeliverTrueOnNonEmptyValueOnEmptyMinLength() {
         
         let nonEmpty = makeAnywayPaymentParameter(value: "abc", minLength: nil)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(nonEmpty))
+        XCTAssertTrue(isValid(nonEmpty))
     }
     
     func test_isValid_shouldDeliverTrueOnNilValueOnZeroMinLength() {
         
         let none = makeAnywayPaymentParameter(value: .none, minLength: 0)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(none))
+        XCTAssertTrue(isValid(none))
     }
     
     func test_isValid_shouldDeliverTrueOnEmptyValueOnZeroMinLength() {
         
         let empty = makeAnywayPaymentParameter(value: "", minLength: 0)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(empty))
+        XCTAssertTrue(isValid(empty))
     }
     
     func test_isValid_shouldDeliverTrueOnNonEmptyValueOnZeroMinLength() {
         
         let nonEmpty = makeAnywayPaymentParameter(value: "abc", minLength: 0)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(nonEmpty))
+        XCTAssertTrue(isValid(nonEmpty))
     }
     
     func test_isValid_shouldDeliverFalseOnNilValueOnMinLength() {
         
         let none = makeAnywayPaymentParameter(value: .none, minLength: 1)
-        let sut = makeSUT()
         
-        XCTAssertFalse(sut.isValid(none))
+        XCTAssertFalse(isValid(none))
     }
     
     func test_isValid_shouldDeliverFalseOnEmptyValueOnMinLength() {
         
         let empty = makeAnywayPaymentParameter(value: "", minLength: 1)
-        let sut = makeSUT()
         
-        XCTAssertFalse(sut.isValid(empty))
+        XCTAssertFalse(isValid(empty))
     }
     
     func test_isValid_shouldDeliverTrueOnSameLengthValueOnMinLength() {
         
         let nonEmpty = makeAnywayPaymentParameter(value: "a", minLength: 1)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(nonEmpty))
+        XCTAssertTrue(isValid(nonEmpty))
     }
     
     func test_isValid_shouldDeliverTrueOnLongerValueOnMinLength() {
         
         let nonEmpty = makeAnywayPaymentParameter(value: "abc", minLength: 1)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(nonEmpty))
+        XCTAssertTrue(isValid(nonEmpty))
     }
     // MARK: - min length
     
     func test_isValid_shouldDeliverTrueOnNilValueOnEmptyMaxLength() {
         
         let none = makeAnywayPaymentParameter(value: .none, maxLength: nil)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(none))
+        XCTAssertTrue(isValid(none))
     }
     
     func test_isValid_shouldDeliverTrueOnEmptyValueOnEmptyMaxLength() {
         
         let empty = makeAnywayPaymentParameter(value: "", maxLength: nil)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(empty))
+        XCTAssertTrue(isValid(empty))
     }
     
     func test_isValid_shouldDeliverTrueOnNonEmptyValueOnEmptyMaxLength() {
         
         let nonEmpty = makeAnywayPaymentParameter(value: "abc", maxLength: nil)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(nonEmpty))
+        XCTAssertTrue(isValid(nonEmpty))
     }
     
     func test_isValid_shouldDeliverTrueOnNilValueOnZeroMaxLength() {
         
         let none = makeAnywayPaymentParameter(value: .none, maxLength: 0)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(none))
+        XCTAssertTrue(isValid(none))
     }
     
     func test_isValid_shouldDeliverTrueOnEmptyValueOnZeroMaxLength() {
         
         let empty = makeAnywayPaymentParameter(value: "", maxLength: 0)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(empty))
+        XCTAssertTrue(isValid(empty))
     }
     
     func test_isValid_shouldDeliverFalseOnNonEmptyValueOnZeroMaxLength() {
         
         let nonEmpty = makeAnywayPaymentParameter(value: "abc", maxLength: 0)
-        let sut = makeSUT()
         
-        XCTAssertFalse(sut.isValid(nonEmpty))
+        XCTAssertFalse(isValid(nonEmpty))
     }
     
     func test_isValid_shouldDeliverTrueOnNilValueOnMaxLength() {
         
         let none = makeAnywayPaymentParameter(value: .none, maxLength: 1)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(none))
+        XCTAssertTrue(isValid(none))
     }
     
     func test_isValid_shouldDeliverTrueOnEmptyValueOnMaxLength() {
         
         let empty = makeAnywayPaymentParameter(value: "", maxLength: 1)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(empty))
+        XCTAssertTrue(isValid(empty))
     }
     
     func test_isValid_shouldDeliverTrueOnSameLengthValueOnMaxLength() {
         
         let nonEmpty = makeAnywayPaymentParameter(value: "a", maxLength: 1)
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(nonEmpty))
+        XCTAssertTrue(isValid(nonEmpty))
     }
     
     func test_isValid_shouldDeliverFalseOnLongerValueOnMaxLength() {
         
         let nonEmpty = makeAnywayPaymentParameter(value: "abc", maxLength: 1)
-        let sut = makeSUT()
         
-        XCTAssertFalse(sut.isValid(nonEmpty))
+        XCTAssertFalse(isValid(nonEmpty))
     }
     
     // MARK: - regExp
@@ -272,46 +248,42 @@ final class AnywayPaymentParameterValidatorTests: XCTestCase {
     func test_isValid_shouldDeliverTrueForNilValueOnEmptyRegex() {
         
         let parameter = makeAnywayPaymentParameter(value: nil, regExp: "")
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(parameter))
+        XCTAssertTrue(isValid(parameter))
     }
     
     func test_isValid_shouldDeliverTrueForEmptyValueOnEmptyRegex() {
         
         let parameter = makeAnywayPaymentParameter(value: "", regExp: "")
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(parameter))
+        XCTAssertTrue(isValid(parameter))
     }
     
     func test_isValid_shouldDeliverTrueForNonEmptyValueOnEmptyRegex() {
         
         let parameter = makeAnywayPaymentParameter(value: "abc", regExp: "")
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(parameter))
+        XCTAssertTrue(isValid(parameter))
     }
     
     func test_isValid_shouldDeliverTrueForMatchingRegex() {
         
         let parameter = makeAnywayPaymentParameter(value: "abc123", regExp: "^[a-zA-Z0-9]+$")
-        let sut = makeSUT()
         
-        XCTAssertTrue(sut.isValid(parameter))
+        XCTAssertTrue(isValid(parameter))
     }
     
     func test_isValid_shouldDeliverFalseForNonMatchingRegex() {
         
         let parameter = makeAnywayPaymentParameter(value: "abc-123", regExp: "^[a-zA-Z0-9]+$")
-        let sut = makeSUT()
         
-        XCTAssertFalse(sut.isValid(parameter))
+        XCTAssertFalse(isValid(parameter))
     }
     
     // MARK: - Helpers
     
     private typealias SUT = AnywayPaymentParameterValidator
+    private typealias Parameter = AnywayPayment.Element.Parameter
     
     private func makeSUT(
         file: StaticString = #file,
@@ -323,5 +295,16 @@ final class AnywayPaymentParameterValidatorTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func isValid(
+        _ parameter: Parameter,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> Bool {
+        
+        let sut = makeSUT(file: file, line: line)
+        
+        return sut.isValid(parameter)
     }
 }
