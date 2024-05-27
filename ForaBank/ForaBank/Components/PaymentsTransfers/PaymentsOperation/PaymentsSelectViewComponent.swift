@@ -248,37 +248,29 @@ extension PaymentsSelectView.ViewModel {
         convenience init(parameterSelect: Payments.ParameterSelect, selectedOptionId: OptionViewModel.ID?) {
             
             let optionsViewModels = parameterSelect.options.map { OptionViewModel(option: $0) }
+            
             if let selectedOption = parameterSelect.options.first(where: { $0.id == selectedOptionId }) {
+                let textField = Self.makeTextField(parameterSelect: parameterSelect, selectedOption: selectedOption)
                 
-                let textField = TextFieldFactory.makeTextField(
-                    text: nil,
-                    placeholderText: selectedOption.name,
-                    keyboardType: .default,
-                    limit: nil
-                )
                 self.init(
                     icon: .init(with: selectedOption, and: parameterSelect.icon),
                     title: parameterSelect.title,
                     textField: textField,
                     filtered: optionsViewModels,
                     options: optionsViewModels,
-                    selected: selectedOption.id)
-                
-            } else {
-                
-                let textField = TextFieldFactory.makeTextField(
-                    text: nil,
-                    placeholderText: parameterSelect.placeholder,
-                    keyboardType: .default,
-                    limit: nil
+                    selected: selectedOption.id
                 )
+            } else {
+                let textField = Self.makeTextField(parameterSelect: parameterSelect, selectedOption: nil)
+                
                 self.init(
                     icon: .init(with: parameterSelect.icon),
                     title: parameterSelect.title,
                     textField: textField,
                     filtered: optionsViewModels,
                     options: optionsViewModels,
-                    selected: nil)
+                    selected: nil
+                )
             }
             
             bind()
@@ -352,7 +344,7 @@ extension PaymentsSelectView.ViewModel {
                         
                         self  = .circle
                     }
-
+                    
                 case .circle:
                     self = .circle
                 }
@@ -366,6 +358,26 @@ extension PaymentsSelectView.ViewModel {
             let currency: String
         }
     }
+}
+
+extension PaymentsSelectView.ViewModel.OptionsListViewModel {
+    
+    private static func makeTextField(
+        parameterSelect: Payments.ParameterSelect,
+        selectedOption: Payments.ParameterSelect.Option?
+    ) -> RegularFieldViewModel {
+        
+           let placeholder = selectedOption?.name ?? parameterSelect.placeholder
+           let keyboardType: KeyboardType = (parameterSelect.id == Payments.Parameter.Identifier.requisitsKpp.rawValue) ? .number : .default
+           let limit: Int? = (parameterSelect.id == Payments.Parameter.Identifier.requisitsKpp.rawValue) ? 9 : nil
+           
+           return TextFieldFactory.makeTextField(
+               text: nil,
+               placeholderText: placeholder,
+               keyboardType: keyboardType,
+               limit: limit
+           )
+       }
 }
 
 //MARK: - Reducers

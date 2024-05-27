@@ -211,19 +211,40 @@ extension Model {
                     
                     //MARK: Kpp Parameter
                     let options: [Payments.ParameterSelect.Option] = createParameterOptions(suggestedCompanies)
-                    
-                    let kppParameterSelect = Payments.ParameterSelect(.init(id: kppParameterId, value: options.first?.id), icon: .name("ic24FileHash"), title: "КПП получателя", placeholder: "Начните ввод для поиска", options: options, description: "Выберите из \(options.count)")
-                    parameters.append(kppParameterSelect)
-                    
-                    //MARK: Company Name Parameter
+                   
+                    // MARK: Company Name Parameter
                     let companyNameValue = options.first?.subname
-                    let companyNameParameter = Payments.ParameterInput(.init(id: companyNameParameterId, value: companyNameValue), icon: nil, title: "Наименование получателя", validator: companyNameValidator, limitator: .init(limit: 160))
+                    let companyNameParameter = Payments.ParameterInput(
+                        .init(id: companyNameParameterId, value: companyNameValue),
+                        icon: nil,
+                        title: "Наименование получателя",
+                        validator: companyNameValidator,
+                        limitator: .init(limit: 160)
+                    )
                     parameters.append(companyNameParameter)
-                    
-                    // helper required to support update company name with kpp parameter selector change and manual user name update
-                    let companyNameParameterHelperId = Payments.Parameter.Identifier.requisitsCompanyNameHelper.rawValue
-                    let companyNameParameterHelper = Payments.ParameterHidden(id: companyNameParameterHelperId, value: companyNameValue)
-                    parameters.append(companyNameParameterHelper)
+
+                    if shouldShowKppParameter(operation.source, innValue.count) {
+                        
+                        let kppParameterSelect = Payments.ParameterSelect(
+                            .init(id: kppParameterId, value: options.first?.id),
+                            icon: .name("ic24FileHash"),
+                            title: "КПП получателя",
+                            placeholder: "Начните ввод для поиска",
+                            options: options,
+                            description: "Выберите из \(options.count)",
+                            validator: validateKppParameter(),
+                            keyboardType: .number
+                        )
+                        parameters.append(kppParameterSelect)
+                       
+                        // helper required to support update company name with kpp parameter selector change and manual user name update
+                        let companyNameParameterHelperId = Payments.Parameter.Identifier.requisitsCompanyNameHelper.rawValue
+                        let companyNameParameterHelper = Payments.ParameterHidden(
+                            id: companyNameParameterHelperId,
+                            value: companyNameValue
+                        )
+                        parameters.append(companyNameParameterHelper)
+                    }
                 }
                 
             } else {
@@ -273,7 +294,7 @@ extension Model {
             let productParameterId = Payments.Parameter.Identifier.product.rawValue
             let filter = ProductData.Filter.generalFrom
             guard let product = firstProduct(with: filter),
-                  let currencySymbol = dictionaryCurrencySymbol(for: product.currency)else {
+                  let currencySymbol = dictionaryCurrencySymbol(for: product.currency) else {
                 throw Payments.Error.unableCreateRepresentable(productParameterId)
             }
             
@@ -328,6 +349,16 @@ extension Model {
 
     func hasSuggestedCompanies(_ suggestedCompanies: [(kpp: String?, name: String)]) -> Bool {
         return !suggestedCompanies.isEmpty
+    }
+    
+    private func shouldShowKppParameter(_ source: Payments.Operation.Source?, _ innValueCount: Int) -> Bool {
+        
+        switch source {
+        case .requisites:
+            return innValueCount <= 10
+        default:
+            return true
+        }
     }
     
     func createKppParameterInput(
