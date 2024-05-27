@@ -115,7 +115,7 @@ extension Array where Element == ProductData {
     
     func firstAdditionalCardByParentIDWithNoZeroBalance(_ cardID: ProductData.ID) -> ProductData? {
                 
-        cardsWithAdditional().first(where: { ($0.balanceRub ?? 0) > 0 })
+        cardsWithAdditional().first(where: { $0.parentID == cardID && ($0.balanceRub ?? 0) > 0 })
     }
 
     
