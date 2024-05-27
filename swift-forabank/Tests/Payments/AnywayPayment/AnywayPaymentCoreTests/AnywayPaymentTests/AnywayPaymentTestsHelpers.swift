@@ -235,6 +235,86 @@ func makeAnywayPaymentParameter(
 func makeAnywayPaymentParameter(
     id: String = anyMessage(),
     value: String? = anyMessage(),
+    isRequired: Bool
+) -> AnywayPayment.Element.Parameter {
+    
+    makeAnywayPaymentParameter(
+        field: makeAnywayPaymentElementParameterField(
+            id: id,
+            value: value
+        ),
+        validation: .init(
+            isRequired: isRequired,
+            maxLength: nil,
+            minLength: nil,
+            regExp: ""
+        )
+    )
+}
+
+func makeAnywayPaymentParameter(
+    id: String = anyMessage(),
+    value: String? = anyMessage(),
+    minLength: Int?
+) -> AnywayPayment.Element.Parameter {
+    
+    makeAnywayPaymentParameter(
+        field: makeAnywayPaymentElementParameterField(
+            id: id,
+            value: value
+        ),
+        validation: .init(
+            isRequired: false,
+            maxLength: nil,
+            minLength: minLength,
+            regExp: ""
+        )
+    )
+}
+
+func makeAnywayPaymentParameter(
+    id: String = anyMessage(),
+    value: String? = anyMessage(),
+    maxLength: Int?
+) -> AnywayPayment.Element.Parameter {
+    
+    makeAnywayPaymentParameter(
+        field: makeAnywayPaymentElementParameterField(
+            id: id,
+            value: value
+        ),
+        validation: .init(
+            isRequired: false,
+            maxLength: maxLength,
+            minLength: nil,
+            regExp: ""
+        )
+    )
+}
+
+func makeAnywayPaymentParameter(
+    id: String = anyMessage(),
+    value: String? = anyMessage(),
+    regExp: String
+) -> AnywayPayment.Element.Parameter {
+    
+    makeAnywayPaymentParameter(
+        field: makeAnywayPaymentElementParameterField(
+            id: id,
+            value: value
+        ),
+        validation: .init(
+            isRequired: false,
+            maxLength: nil,
+            minLength: nil,
+            regExp: regExp
+        )
+    )
+}
+
+func makeAnywayPaymentParameter(
+    id: String = anyMessage(),
+    value: String? = anyMessage(),
     viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType = .input
 ) -> AnywayPayment.Element.Parameter {
     
@@ -870,6 +950,24 @@ func makeWidgetPaymentCore(
             }
         }()
     )
+}
+
+func parameters(
+    of payment: AnywayPayment
+) -> [AnywayPayment.Element.Parameter] {
+    
+    payment.elements.compactMap(\.parameter)
+}
+
+private extension AnywayPayment.Element {
+    
+    var parameter: Parameter? {
+        
+        guard case let .parameter(parameter) = self
+        else { return nil }
+
+        return parameter
+    }
 }
 
 extension AnywayPayment.Element.Parameter {
