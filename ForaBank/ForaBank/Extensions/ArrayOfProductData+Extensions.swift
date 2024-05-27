@@ -131,9 +131,9 @@ extension Array where Element == ProductData {
         groupingByParentIDOnlySelf().forEach { key, value in
             
             if cardsWithoutAdditionalIDs.contains(key) {
-                if cardsWithoutAdditional.first(where: { $0.id == key })?.balanceRub == 0,
-                   let product = firstAdditionalCardByParentIDWithNoZeroBalance(key) {
-                    productsForBalance.append(product)
+                if let product = cardsWithoutAdditional.first(where: { $0.id == key }), (product.balanceRub == 0 || product.balanceRub == nil),
+                   let firstAdditionalCard = firstAdditionalCardByParentIDWithNoZeroBalance(key) {
+                    productsForBalance.append(firstAdditionalCard)
                 }
             } else if let first = value.first {
                 productsForBalance.append(first)
