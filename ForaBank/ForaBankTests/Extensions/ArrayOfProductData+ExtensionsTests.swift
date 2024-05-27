@@ -84,7 +84,7 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
         
         let products = makeProductsWithBalance()
         
-        XCTAssertNoDiff(products.balanceRub(), 100)
+        XCTAssertNoDiff(products.balanceRub(), 110)
     }
 
     // MARK: - Helpers
@@ -120,8 +120,8 @@ final class ArrayOfProductData_ExtensionsTests: XCTestCase {
             makeCardProduct(id: 45, parentID: 3, balanceRub: 10),
             makeCardProduct(id: 48, parentID: 90, cardType: .additionalOther, balanceRub: 100),
             makeCardProduct(id: 49, parentID: nil, cardType: .main, balanceRub: 0),
-            makeCardProduct(id: 50, parentID: 49, cardType: .additionalSelf, balanceRub: 10),
-            makeCardProduct(id: 51, parentID: 49, cardType: .additionalOther, balanceRub: 10)
+            makeCardProduct(id: 50, parentID: 49, cardType: .additionalSelf, balanceRub: 20),
+            makeCardProduct(id: 51, parentID: 49, cardType: .additionalOther, balanceRub: 20)
         ]
     }
     
