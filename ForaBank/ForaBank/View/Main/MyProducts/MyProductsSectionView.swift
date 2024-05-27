@@ -144,7 +144,7 @@ extension MyProductsSectionView {
                 viewModel.action.send(MyProductsSectionViewModelAction
                     .Events.ItemMoved(sectionId: "\(mainProductID)", move: (first, destination)))
             }
-            .moveDisabled(editMode != .active)
+            .moveDisabled(editMode != .active || (editMode == .active && items.count == 1))
         }
         .frame(height: 72 * CGFloat(items.count + 1))
         .listStyle(.plain)
