@@ -87,9 +87,12 @@ private extension AnywayTransactionViewModelComposer {
         
         let effectHandler = EffectHandler(microServices: microServices)
         
+        let composer = AnywayPaymentTransactionReducerComposer<Report>()
+        let reducer = composer.compose()
+        
         return .init(
             initialState: initialState,
-            reduce: Reducer.anyway().reduce(_:_:),
+            reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:)
         )
     }
