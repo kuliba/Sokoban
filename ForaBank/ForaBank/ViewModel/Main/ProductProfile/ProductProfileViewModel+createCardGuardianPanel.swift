@@ -24,18 +24,11 @@ extension ProductProfileViewModel {
                     .createVisibilityButton(by: card)
                 ]
             default:
-                if card.statusCard == .blockedUnlockNotAvailable {
-                    return [                    
-                        .createCardGuardianButton(by: card),
-                        .createVisibilityButton(by: card)
-                    ]
-                } else {
-                    return [
-                        .createCardGuardianButton(by: card),
-                        .createChangePinButton(by: card),
-                        .createVisibilityButton(by: card)
-                    ]
-                }
+                return [
+                    .createCardGuardianButton(by: card),
+                    .createChangePinButton(by: card),
+                    .createVisibilityButton(by: card)
+                ]
             }
         }()
         bottomSheet = .init(type: .optionsPanelNew(buttons))
