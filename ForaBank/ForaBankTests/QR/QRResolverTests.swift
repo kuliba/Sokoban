@@ -61,47 +61,41 @@ final class QRResolverTests: XCTestCase {
     
     func  test_defaultURLString_shouldDeliverURL() {
         
-        let url = anyURL(string: "https://yandex.ru")
-        
-        XCTAssertNoDiff(resolve(url), .url(url))
+        XCTAssertNoDiff(resolve(anyURL(string: "forabank.ru")), .url(anyURL(string: "forabank.ru")))
     }
     
     func test_validQRCodeStringNotURL_shouldDeliverQRCode_whenST00011() {
-        
-        let validQRCodeString: String = .qr1
-        let resolved = resolve(validQRCodeString)
        
-        XCTAssertEqual(resolved, .qrCode(original: validQRCodeString, rawData: getRawData(validQRCodeString)))
+        XCTAssertEqual(resolve(.qr1), .qrCode(original: .qr1, rawData: getRawData(.qr1)))
     }
     
     func test_validQRCodeStringNotURL_shouldDeliverQRCode_whenST00012() {
         
-        let validQRCodeString: String = .qr2
-        let resolved = resolve(validQRCodeString)
-       
-        XCTAssertEqual(resolved, .qrCode(original: validQRCodeString, rawData: getRawData(validQRCodeString)))
+        XCTAssertEqual(resolve(.qr2), .qrCode(original: .qr2, rawData: getRawData(.qr2)))
     }
     
     func test_validQRCodeStringNotURL_shouldDeliverQRCode_whenUrlWithBadEncodedName() {
         
-        let validQRCodeString: String = .qrResolveURLOrigin
-        let resolved = resolve(validQRCodeString)
-       
-        XCTAssertEqual(resolved, .qrCode(original: validQRCodeString, rawData: getRawData(validQRCodeString)))
+        XCTAssertEqual(
+            resolve(.qrResolveURLOrigin),
+            .qrCode(original: .qrResolveURLOrigin, rawData: getRawData(.qrResolveURLOrigin))
+        )
     }
+    
     func test_validQRCodeStringNotURL_shouldDeliverQRCode_whenUrlWithoutAmount() {
         
-        let validQRCodeString: String = .qrResolveURLCustom1
-        let resolved = resolve(validQRCodeString)
-       
-        XCTAssertEqual(resolved, .qrCode(original: validQRCodeString, rawData: getRawData(validQRCodeString)))
+        XCTAssertEqual(
+            resolve(.qrResolveURLCustom1),
+            .qrCode(original: .qrResolveURLCustom1, rawData: getRawData(.qrResolveURLCustom1))
+        )
     }
+    
     func test_validQRCodeStringNotURL_shouldDeliverQRCode_whenUrlWithAmount() {
         
-        let validQRCodeString: String = .qrResolveURLCustom2
-        let resolved = resolve(validQRCodeString)
-       
-        XCTAssertEqual(resolved, .qrCode(original: validQRCodeString, rawData: getRawData(validQRCodeString)))
+        XCTAssertEqual(
+            resolve(.qrResolveURLCustom2),
+            .qrCode(original: .qrResolveURLCustom2, rawData: getRawData(.qrResolveURLCustom2))
+        )
     }
     
     // MARK: - Helpers
