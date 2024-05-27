@@ -22,7 +22,7 @@ extension SberQR.Config {
     )
 }
 
-private extension AmountComponent.AmountConfig {
+extension AmountComponent.AmountConfig {
     
     static let iFora: Self = .init(
         amount: .init(

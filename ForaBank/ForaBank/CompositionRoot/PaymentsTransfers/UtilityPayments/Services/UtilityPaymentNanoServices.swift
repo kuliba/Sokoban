@@ -45,9 +45,9 @@ extension UtilityPaymentNanoServices {
     enum StartAnywayPaymentPayload {
         
         case lastPayment(LastPayment)
-        case service(UtilityService)
+        case service(UtilityService, for: Operator)
     }
-    typealias StartAnywayPaymentResult = UtilityPrepaymentFlowEvent.StartPaymentResult
+    typealias StartAnywayPaymentResult = UtilityPrepaymentFlowEvent.PaymentStarted.StartPaymentResult
     typealias StartAnywayPaymentCompletion = (StartAnywayPaymentResult) -> Void
     /// `e`
     /// Начало выполнения перевода - 1шаг, передаем `isNewPayment=true`
@@ -68,4 +68,4 @@ extension UtilityPaymentNanoServices {
     typealias UtilityPrepaymentFlowEvent = UtilityFlowEvent.UtilityPrepaymentFlowEvent
 }
 
-extension UtilityPaymentNanoServices.StartAnywayPaymentPayload: Equatable where LastPayment: Equatable {}
+extension UtilityPaymentNanoServices.StartAnywayPaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable {}

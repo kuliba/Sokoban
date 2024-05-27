@@ -21,7 +21,10 @@ extension AnywayPayment {
         elements.appendComplementaryFields(from: update.fields)
         elements.appendParameters(from: update.parameters, with: outline)
         
-        elements.adjustWidget(.core(.init(outline.core)), on: update.details.control.needSum)
+        if let core = outline.core {
+            
+            elements.adjustWidget(.core(.init(core)), on: update.details.control.needSum)
+        }
         elements.adjustWidget(.otp(nil), on: update.details.control.needOTP)
         
         return .init(

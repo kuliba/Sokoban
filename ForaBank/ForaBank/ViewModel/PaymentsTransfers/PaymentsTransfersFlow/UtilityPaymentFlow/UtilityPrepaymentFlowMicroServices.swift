@@ -35,7 +35,7 @@ extension UtilityPrepaymentFlowMicroServices {
     /// - `d2e`
     /// - `d3`, `d4`, `d5`
     typealias StartPaymentPayload = Effect.Select
-    typealias StartPaymentResult = Event.StartPaymentResult
+    typealias StartPaymentResult = Event.PaymentStarted.StartPaymentResult
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     typealias StartPayment = (StartPaymentPayload, @escaping StartPaymentCompletion) -> Void
     
