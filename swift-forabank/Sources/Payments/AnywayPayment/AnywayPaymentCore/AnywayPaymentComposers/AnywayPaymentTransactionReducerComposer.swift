@@ -1,31 +1,38 @@
 //
-//  TransactionReducer+anyway.swift
+//  AnywayPaymentTransactionReducerComposer.swift
 //
 //
-//  Created by Igor Malyarov on 21.05.2024.
+//  Created by Igor Malyarov on 27.05.2024.
 //
 
 import AnywayPaymentDomain
 
-public extension TransactionReducer
-where Payment == AnywayPaymentContext,
-      PaymentEvent == AnywayPaymentEvent,
-      PaymentEffect == AnywayPaymentEffect,
-      PaymentDigest == AnywayPaymentDigest,
-      PaymentUpdate == AnywayPaymentUpdate {
+public final class AnywayPaymentTransactionReducerComposer<Report> {
     
-    static func anyway(
-    ) -> Self {
+    public init() {}
+}
+
+public extension AnywayPaymentTransactionReducerComposer {
+    
+    func compose() -> Reducer {
         
         return .init(
             paymentReduce: paymentReduce,
             stagePayment: stagePayment,
             updatePayment: updatePayment,
-            paymentInspector: .default
+            paymentInspector: composeInspector()
         )
     }
+}
+
+public extension AnywayPaymentTransactionReducerComposer {
     
-    private static func paymentReduce(
+    typealias Reducer = TransactionReducer<Report, AnywayPaymentContext, AnywayPaymentEvent, AnywayPaymentEffect, AnywayPaymentDigest, AnywayPaymentUpdate>
+}
+
+private extension AnywayPaymentTransactionReducerComposer {
+    
+    func paymentReduce(
         _ state: AnywayPaymentContext,
         _ event: AnywayPaymentEvent
     ) -> (AnywayPaymentContext, Effect?) {
@@ -41,40 +48,22 @@ where Payment == AnywayPaymentContext,
         return (state, effect.map(Effect.payment))
     }
     
-    private static func stagePayment(
+    func stagePayment(
         _ context: AnywayPaymentContext
     ) -> AnywayPaymentContext {
         
         context.staging()
     }
     
-    private static func updatePayment(
+    func updatePayment(
         _ context: AnywayPaymentContext,
         _ update: AnywayPaymentUpdate
     ) -> AnywayPaymentContext {
         
         return context.update(with: update, and: context.outline)
     }
-}
-
-extension AnywayPaymentContext {
     
-    func update(
-        with update: AnywayPaymentUpdate,
-        and outline: AnywayPaymentOutline
-    ) -> Self {
-        
-        let payment = payment.update(with: update, and: outline)
-        
-        return .init(payment: payment, staged: staged, outline: outline)
-    }
-}
-
-extension PaymentInspector
-where Payment == AnywayPaymentContext,
-      PaymentDigest == AnywayPaymentDigest {
-    
-    static var `default`: Self {
+    func composeInspector() -> Inspector {
         
         return .init(
             checkFraud: { $0.payment.isFraudSuspected },
@@ -92,29 +81,21 @@ where Payment == AnywayPaymentContext,
             }
         )
     }
+    
+    typealias Effect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>
+    typealias Inspector = PaymentInspector<AnywayPaymentContext, AnywayPaymentDigest>
 }
 
-extension AnywayPayment.Element: Identifiable {
+private extension AnywayPaymentContext {
     
-    public var id: ID {
+    func update(
+        with update: AnywayPaymentUpdate,
+        and outline: AnywayPaymentOutline
+    ) -> Self {
         
-        switch self {
-        case let .field(field):
-            return .fieldID(field.id)
-            
-        case let .parameter(parameter):
-            return .parameterID(parameter.field.id)
-            
-        case let .widget(widget):
-            return .widgetID(widget.id)
-        }
-    }
-    
-    public enum ID: Hashable {
+        let payment = payment.update(with: update, and: outline)
         
-        case fieldID(Field.ID)
-        case parameterID(Parameter.Field.ID)
-        case widgetID(Widget.ID)
+        return .init(payment: payment, staged: staged, outline: outline)
     }
 }
 
