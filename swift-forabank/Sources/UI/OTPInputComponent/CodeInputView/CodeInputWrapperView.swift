@@ -6,14 +6,17 @@
 //
 
 import SwiftUI
+import RxViewModel
+
+public typealias CodeInputViewModel = RxObservingViewModel<CodeInputState, OTPInputEvent, OTPInputEffect>
 
 public struct CodeInputWrapperView: View {
     
-    @StateObject private var viewModel: TimedOTPInputViewModel
-    let config: CodeInputConfig
+    @StateObject private var viewModel: CodeInputViewModel
+    private let config: CodeInputConfig
     
     public init(
-        viewModel: TimedOTPInputViewModel,
+        viewModel: CodeInputViewModel,
         config: CodeInputConfig
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
@@ -32,7 +35,7 @@ public struct CodeInputWrapperView: View {
             
         case let .input(input):
             CodeInputView(
-                state: input,
+                state: .init(input: input),
                 event: viewModel.event(_:),
                 config: config
             )
@@ -52,16 +55,50 @@ struct CodeInputWrapperView_Preview: PreviewProvider {
     static var previews: some View {
         
         CodeInputWrapperView(
-            viewModel: .init(
-                viewModel: .default(
-                    initialState: .starting(
-                        phoneNumber: .init(""),
-                        duration: 60
-                    ),
-                    initiateOTP: { _ in },
-                    submitOTP: { _,_  in })
+            viewModel: .default(
+                initialState: .init(status: .validOTP),
+                initiateOTP: { completion in }
             ),
             config: .preview
+        )
+    }
+}
+
+public extension CodeInputViewModel {
+    
+    static func `default`(
+        initialState: CodeInputState,
+        timer: TimerProtocol = RealTimer(),
+        duration: Int = 60,
+        length: Int = 6,
+        initiateOTP: @escaping CountdownEffectHandler.InitiateOTP,
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) -> CodeInputViewModel {
+        
+        let countdownReducer = CountdownReducer(duration: duration)
+        let otpFieldReducer = OTPFieldReducer(length: length)
+        let otpInputReducer = OTPInputReducer(
+            countdownReduce: countdownReducer.reduce(_:_:),
+            otpFieldReduce: otpFieldReducer.reduce(_:_:)
+        )
+        
+        let countdownEffectHandler = CountdownEffectHandler(initiate: initiateOTP)
+        let otpFieldEffectHandler = OTPFieldEffectHandler(submitOTP: {_,_ in })
+        let otpInputEffectHandler = OTPInputEffectHandler(
+            handleCountdownEffect: countdownEffectHandler.handleEffect(_:_:),
+            handleOTPFieldEffect: otpFieldEffectHandler.handleEffect(_:_:))
+        
+        return .init(
+            observable: .init(
+                initialState: initialState,
+                reduce: { _,_  in
+                    (initialState, nil)
+                },
+                handleEffect: otpInputEffectHandler.handleEffect(_:_:),
+                scheduler: scheduler
+            ),
+            observe: { _ in },
+            scheduler: scheduler
         )
     }
 }
