@@ -51,7 +51,7 @@ struct FrontView<Header: View, Footer: View, ActivationView: View, StatusView: V
                 
                 Text(name)
                     .font(config.fonts.card)
-                    .foregroundColor(config.appearance.textColor)
+                    .foregroundColor(config.appearance.colors.text)
                     .opacity(0.5)
                     .accessibilityIdentifier("productName")
                 

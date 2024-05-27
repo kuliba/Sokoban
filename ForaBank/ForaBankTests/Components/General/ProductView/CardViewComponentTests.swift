@@ -19,10 +19,10 @@ final class CardViewComponentTests: XCTestCase {
                           name: "Visa",
                           footer: .init(balance: "170 ₽"),
                           appearance: .init(
-                            textColor: .red,
                             background: .init(
                                 color: .green,
-                                image: .ic40Card)
+                                image: .ic40Card),
+                            colors: .init(text: .red, checkBackground: .gray)
                           ))
         
         XCTAssertEqual(sut.id, 1)
@@ -35,9 +35,11 @@ final class CardViewComponentTests: XCTestCase {
         XCTAssertEqual(sut.header.number, "78")
         XCTAssertEqual(sut.footer.balance, "170 ₽")
         
-        XCTAssertEqual(sut.appearance.textColor, .red)
         XCTAssertEqual(sut.appearance.background.color, .green)
         XCTAssertEqual(sut.appearance.background.image, .ic40Card)
+        
+        XCTAssertEqual(sut.appearance.colors.text, .red)
+        XCTAssertEqual(sut.appearance.colors.checkBackground, .gray)
     }
     
     func test_convenience_init_account_shouldSetInitialValues() {
@@ -612,8 +614,8 @@ final class CardViewComponentTests: XCTestCase {
             footer: .init(balance: "170 897 ₽"),
             statusAction: .init(status: .unblock),
             appearance: .init(
-                textColor: .clear,
                 background: .init(color: .clear, image: nil),
+                colors: .init(text: .clear, checkBackground: .gray),
                 size: size),
             isUpdating: false,
             productType: productType,

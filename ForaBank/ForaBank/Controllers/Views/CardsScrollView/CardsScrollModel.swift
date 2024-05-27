@@ -69,6 +69,10 @@ struct CardsScrollModel {
     }
     
     var backgroundColor: UIColor {
+        if card.productType == "DEPOSIT" {
+            return .init(hexString: "F6F6F7")
+        }
+        
         if let color = card.background.first?.color {
             return .init(hexString: color)
         }

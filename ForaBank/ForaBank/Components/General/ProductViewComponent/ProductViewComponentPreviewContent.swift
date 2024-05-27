@@ -102,8 +102,8 @@ extension ProductViewModel {
         footer: .visa,
         statusAction: .init(status: .activation(.init(state: .notActivated))),
         appearance: .init(
-            textColor: .white,
             background: .infiniteLarge,
+            colors: .init(text: .white, checkBackground: .gray),
             style: .profile
         ),
         isUpdating: false,
@@ -119,8 +119,8 @@ extension ProductViewModel {
         footer: .mastercard,
         statusAction: .init(status: .unblock),
         appearance: .init(
-            textColor: .white,
             background: .cardInfinite,
+            colors: .init(text: .white, checkBackground: .gray),
             style: .profile),
         isUpdating: false,
         productType: .card,
@@ -174,8 +174,8 @@ extension ProductViewModel {
         footer: .mastercard,
         statusAction: nil,
         appearance: .init(
-            textColor: .mainColorsBlackMedium,
-            background: .init(color: .cardRio, image: Image( "Cover Deposit"))),
+            background: .init(color: .cardRio, image: Image( "Cover Deposit")),
+            colors: .init(text: .mainColorsBlackMedium, checkBackground: .gray)),
         isUpdating: false,
         productType: .deposit,
         cardAction: { _ in },
@@ -229,6 +229,7 @@ private extension Appearance {
         .make(
             textColor: .white,
             background: .infiniteSample,
+            checkBackground: .gray,
             size: size
         )
     }
@@ -237,7 +238,8 @@ private extension Appearance {
         
         .make(
             textColor: .white,
-            background: .red,
+            background: .red, 
+            checkBackground: .gray,
             size: size
         )
     }
@@ -247,6 +249,7 @@ private extension Appearance {
         .make(
             textColor: .white,
             background: .cardRIO,
+            checkBackground: .gray,
             size: size
         )
     }
@@ -254,14 +257,15 @@ private extension Appearance {
     static func make(
         textColor: Color = .white,
         background: Background = .cardInfinite,
+        checkBackground: Color,
         opacity: Double = 0.5,
         size: Size,
         style: Style = .main
     ) -> Self {
         
         .init(
-            textColor: textColor,
             background: background,
+            colors: .init(text: textColor, checkBackground: checkBackground),
             opacity: opacity,
             size: size,
             style: style
