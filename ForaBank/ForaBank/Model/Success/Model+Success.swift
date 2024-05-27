@@ -375,7 +375,7 @@ extension Model {
             return try? paymentsTransferPaymentsServicesAdditional(
                 parameters,
                 excludingParameters: []
-            )
+            ).filter({ $0.fieldname.contained(in: Payments.Parameter.systemIdentifiers.map({ $0.rawValue })) })
             
         default:
             return nil
