@@ -7,7 +7,8 @@
 
 import AnywayPaymentDomain
 
-public final class TransactionReducer<Report, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate> {
+public final class TransactionReducer<Report, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate> 
+where Payment: RestartablePayment {
     
     private let paymentReduce: PaymentReduce
     private let stagePayment: StagePayment
@@ -38,6 +39,9 @@ public extension TransactionReducer {
         var effect: Effect?
         
         switch (state.status, event) {
+        case let (.awaitingPaymentRestartConfirmation, .paymentRestartConfirmation(shouldRestartPayment)):
+            reduce(&state, shouldRestartPayment: shouldRestartPayment)
+            
         case (.result, _):
             break
             
@@ -83,6 +87,22 @@ public extension TransactionReducer {
 }
 
 private extension TransactionReducer {
+    
+    func reduce(
+        _ state: inout State,
+        shouldRestartPayment: Bool
+    ) {
+        guard case .awaitingPaymentRestartConfirmation = state.status
+        else { return }
+        
+        if shouldRestartPayment {
+            state.payment.shouldRestart = true
+            state.status = nil
+        } else {
+            state.payment = paymentInspector.resetPayment(state.payment)
+            state.status = nil
+        }
+    }
     
     func reduceDismissRecoverableError(
         _ state: inout State
@@ -142,6 +162,11 @@ private extension TransactionReducer {
         let payment: Payment
         (payment, effect) = paymentReduce(state.payment, event)
         state.payment = payment
+        
+        if paymentInspector.wouldNeedRestart(payment) {
+            state.payment.shouldRestart = true
+        }
+        
         state.isValid = paymentInspector.validatePayment(payment)
     }
     
@@ -158,7 +183,7 @@ private extension TransactionReducer {
         } else {
             let digest = paymentInspector.makeDigest(state.payment)
             
-            if paymentInspector.shouldRestartPayment(state.payment) {
+            if state.payment.shouldRestart {
                 effect = .initiatePayment(digest)
             } else {
                 effect = .continue(digest)

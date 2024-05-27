@@ -31,9 +31,10 @@ enum PaymentEvent {
     case select
 }
 
-struct Payment: Equatable {
+struct Payment: Equatable & RestartablePayment {
     
     let value: String
+    var shouldRestart: Bool
 }
 
 struct PaymentDigest: Equatable {
@@ -242,10 +243,11 @@ func makePaymentTransactionEvent(
 }
 
 func makePayment(
-    _ value: String = UUID().uuidString
+    _ value: String = UUID().uuidString,
+    shouldRestart: Bool = false
 ) -> Payment {
     
-    .init(value: value)
+    .init(value: value, shouldRestart: shouldRestart)
 }
 
 func makeTransactionEffect(
