@@ -57,5 +57,24 @@ public extension OTPInputState.Status {
             self.countdown = countdown
             self.otpField = otpField
         }
+        
+        public init(input: CodeInputState.Status.Input) {
+            
+            switch input.countdown {
+            case .completed:
+                self.countdown = .completed
+            
+            case let .failure(failure):
+                self.countdown = .failure(failure)
+            
+            case let .running(remaining: remaining):
+                self.countdown = .running(remaining: remaining)
+            
+            case let .starting(duration: duration):
+                self.countdown = .starting(duration: duration)
+            }
+            
+            self.otpField = input.otpField
+        }
     }
 }
