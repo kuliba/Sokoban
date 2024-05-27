@@ -1,6 +1,6 @@
 //
 //  AnywayPaymentParameterValidatorTests.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 27.05.2024.
 //
@@ -15,7 +15,8 @@ extension AnywayPaymentParameterValidator {
         
         guard isRequiredValid(parameter),
               isMinLengthValid(parameter),
-              isMaxLengthValid(parameter)
+              isMaxLengthValid(parameter),
+              isRegExpValid(parameter)
         else { return false }
         
         return true
@@ -40,14 +41,28 @@ private extension AnywayPaymentParameterValidator {
         
         guard let minLength = parameter.validation.minLength else { return true }
         
-        return (parameter.field.value ?? "").count >= minLength
+        let value = parameter.field.value?.rawValue ?? ""
+        
+        return value.count >= minLength
     }
     
     func isMaxLengthValid(_ parameter: Parameter) -> Bool {
         
         guard let maxLength = parameter.validation.maxLength else { return true }
         
-        return (parameter.field.value ?? "").count <= maxLength
+        let value = parameter.field.value?.rawValue ?? ""
+        
+        return value.count <= maxLength
+    }
+    
+    func isRegExpValid(_ parameter: Parameter) -> Bool {
+        
+        guard !parameter.validation.regExp.isEmpty else { return true }
+        
+        let value = parameter.field.value?.rawValue ?? ""
+        let pattern = parameter.validation.regExp
+        
+        return NSPredicate(format: "SELF MATCHES %@", pattern).evaluate(with: value)
     }
 }
 
@@ -90,7 +105,7 @@ final class AnywayPaymentParameterValidatorTests: XCTestCase {
     }
     
     // MARK: - min length
-
+    
     func test_isValid_shouldDeliverTrueOnNilValueOnEmptyMinLength() {
         
         let none = makeAnywayPaymentParameter(value: .none, minLength: nil)
@@ -170,8 +185,8 @@ final class AnywayPaymentParameterValidatorTests: XCTestCase {
         
         XCTAssertTrue(sut.isValid(nonEmpty))
     }
-        // MARK: - min length
-
+    // MARK: - min length
+    
     func test_isValid_shouldDeliverTrueOnNilValueOnEmptyMaxLength() {
         
         let none = makeAnywayPaymentParameter(value: .none, maxLength: nil)
@@ -250,6 +265,48 @@ final class AnywayPaymentParameterValidatorTests: XCTestCase {
         let sut = makeSUT()
         
         XCTAssertFalse(sut.isValid(nonEmpty))
+    }
+    
+    // MARK: - regExp
+    
+    func test_isValid_shouldDeliverTrueForNilValueOnEmptyRegex() {
+        
+        let parameter = makeAnywayPaymentParameter(value: nil, regExp: "")
+        let sut = makeSUT()
+        
+        XCTAssertTrue(sut.isValid(parameter))
+    }
+    
+    func test_isValid_shouldDeliverTrueForEmptyValueOnEmptyRegex() {
+        
+        let parameter = makeAnywayPaymentParameter(value: "", regExp: "")
+        let sut = makeSUT()
+        
+        XCTAssertTrue(sut.isValid(parameter))
+    }
+    
+    func test_isValid_shouldDeliverTrueForNonEmptyValueOnEmptyRegex() {
+        
+        let parameter = makeAnywayPaymentParameter(value: "abc", regExp: "")
+        let sut = makeSUT()
+        
+        XCTAssertTrue(sut.isValid(parameter))
+    }
+    
+    func test_isValid_shouldDeliverTrueForMatchingRegex() {
+        
+        let parameter = makeAnywayPaymentParameter(value: "abc123", regExp: "^[a-zA-Z0-9]+$")
+        let sut = makeSUT()
+        
+        XCTAssertTrue(sut.isValid(parameter))
+    }
+    
+    func test_isValid_shouldDeliverFalseForNonMatchingRegex() {
+        
+        let parameter = makeAnywayPaymentParameter(value: "abc-123", regExp: "^[a-zA-Z0-9]+$")
+        let sut = makeSUT()
+        
+        XCTAssertFalse(sut.isValid(parameter))
     }
     
     // MARK: - Helpers
