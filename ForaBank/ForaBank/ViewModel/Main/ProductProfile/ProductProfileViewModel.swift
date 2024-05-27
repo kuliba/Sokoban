@@ -2197,7 +2197,11 @@ extension ProductProfileViewModel {
             self.action.send(ProductProfileViewModelAction.Product.Unblock(productId: productCard.id))
             
         case .changePin:
-            checkCertificate(.init(productCard.id), certificate: self.cvvPINServicesClient, productCard)
+            if productCard.statusCard != .active {
+                event(.delayAlert(.showBlockAlert))
+            } else {
+                checkCertificate(.init(productCard.id), certificate: self.cvvPINServicesClient, productCard)
+            }
             
         case .visibility:
             self.model.action.send(ModelAction.Products.UpdateVisibility(productId: productCard.id, visibility: !productCard.isVisible))
