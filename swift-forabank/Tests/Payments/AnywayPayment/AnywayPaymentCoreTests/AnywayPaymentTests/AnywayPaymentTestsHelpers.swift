@@ -872,6 +872,24 @@ func makeWidgetPaymentCore(
     )
 }
 
+func parameters(
+    of payment: AnywayPayment
+) -> [AnywayPayment.Element.Parameter] {
+    
+    payment.elements.compactMap(\.parameter)
+}
+
+private extension AnywayPayment.Element {
+    
+    var parameter: Parameter? {
+        
+        guard case let .parameter(parameter) = self
+        else { return nil }
+
+        return parameter
+    }
+}
+
 extension AnywayPayment.Element.Parameter {
     
     func updating(value: String?) -> Self {
