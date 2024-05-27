@@ -74,12 +74,20 @@ private extension AnywayPaymentTransactionReducerComposer {
 #warning("FIXME")
                 return false
             },
-            validatePayment: { _ in
-                
-#warning("FIXME")
-                return true
-            }
+            validatePayment: validatePayment
         )
+    }
+    
+    private func validatePayment(
+        context: AnywayPaymentContext
+    ) -> Bool {
+        
+        let parameterValidator = AnywayPaymentParameterValidator()
+        let validator = AnywayPaymentValidator(
+            isValidParameter: parameterValidator.isValid(_:)
+        )
+        
+        return validator.isValid(context.payment)
     }
     
     typealias Effect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>
