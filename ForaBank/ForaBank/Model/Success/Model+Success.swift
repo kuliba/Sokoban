@@ -209,7 +209,9 @@ extension TemplateButton {
             return .complete(templateId: templateId)
         }
         
-        let values = additional.map(\.fieldvalue)
+        let values = additional
+            .filter({ $0.fieldname.contained(in: Payments.Parameter.systemIdentifiers.map({ $0.rawValue })) })
+            .map(\.fieldvalue)
         
         let restrictedAdditional = [
             Payments.Parameter.Identifier.sfpAmount.rawValue,
@@ -311,7 +313,7 @@ extension TemplateButton {
             let additional = model.additionalTransferData(
                 service: operation.service,
                 operation: operation
-            )
+            )?.filter({ $0.fieldname.contained(in: Payments.Parameter.systemIdentifiers.map({ $0.rawValue })) })
             
             guard let additional else {
                 return nil
@@ -375,7 +377,7 @@ extension Model {
             return try? paymentsTransferPaymentsServicesAdditional(
                 parameters,
                 excludingParameters: []
-            ).filter({ $0.fieldname.contained(in: Payments.Parameter.systemIdentifiers.map({ $0.rawValue })) })
+            )
             
         default:
             return nil
