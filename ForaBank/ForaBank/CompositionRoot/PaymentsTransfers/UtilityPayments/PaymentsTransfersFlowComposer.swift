@@ -218,7 +218,7 @@ private extension AnywayPaymentContext {
     
     static var preview: Self {
         
-        return .init(payment: .preview, staged: [], outline: .preview)
+        return .init(payment: .preview, staged: [], outline: .preview, shouldRestart: false)
     }
 }
 

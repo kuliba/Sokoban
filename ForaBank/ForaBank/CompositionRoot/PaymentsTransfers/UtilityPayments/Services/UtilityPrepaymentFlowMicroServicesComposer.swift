@@ -195,7 +195,12 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
                     
 #warning("hardcoded `isValid: false`")
                     let state = AnywayTransactionState(
-                        payment: .init(payment: payment, staged: .init(), outline: outline),
+                        payment: .init(
+                            payment: payment, 
+                            staged: .init(),
+                            outline: outline,
+                            shouldRestart: false
+                        ),
                         isValid: false
                     )
                     
