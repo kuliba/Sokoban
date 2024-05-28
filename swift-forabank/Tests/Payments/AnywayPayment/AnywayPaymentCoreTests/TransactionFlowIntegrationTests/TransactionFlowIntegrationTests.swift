@@ -234,7 +234,10 @@ final class TransactionFlowIntegrationTests: XCTestCase {
             $0.isValid = true
         }, {
             $0.payment = editedPayment
+            $0.status = .awaitingPaymentRestartConfirmation
+        }, {
             $0.payment.shouldRestart = true
+            $0.status = nil
         }, {
             $0.payment = updatedPayment
         })

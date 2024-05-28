@@ -818,9 +818,23 @@ final class TransactionReducerTests: XCTestCase {
         }
     }
     
-    func test_payment_shouldSetPaymentToRestartOnWouldNeedToRestart() {
+    func test_payment_shouldNotChangeStatusOnShouldRestartFalseAndWouldNeedToRestartFalse() {
         
-        let newPayment = makePayment()
+        let newPayment = makePayment(shouldRestart: false)
+        let sut = makeSUT(
+            paymentReduce: { _,_ in (newPayment, nil) },
+            wouldNeedRestart: { _ in false }
+        )
+        
+        assertState(sut: sut, makePaymentTransactionEvent(), on: makeTransaction()) {
+            
+            $0.payment = newPayment
+        }
+    }
+    
+    func test_payment_shouldSetStatusToAwaitingConfirmationOnShouldRestartFalseAndWouldNeedToRestartTrue() {
+        
+        let newPayment = makePayment(shouldRestart: false)
         let sut = makeSUT(
             paymentReduce: { _,_ in (newPayment, nil) },
             wouldNeedRestart: { _ in true }
@@ -829,7 +843,35 @@ final class TransactionReducerTests: XCTestCase {
         assertState(sut: sut, makePaymentTransactionEvent(), on: makeTransaction()) {
             
             $0.payment = newPayment
-            $0.payment.shouldRestart = true
+            $0.status = .awaitingPaymentRestartConfirmation
+        }
+    }
+    
+    func test_payment_shouldNotChangeStatusOnShouldRestartTrueAndWouldNeedToRestartFalse() {
+        
+        let newPayment = makePayment(shouldRestart: true)
+        let sut = makeSUT(
+            paymentReduce: { _,_ in (newPayment, nil) },
+            wouldNeedRestart: { _ in false }
+        )
+        
+        assertState(sut: sut, makePaymentTransactionEvent(), on: makeTransaction()) {
+            
+            $0.payment = newPayment
+        }
+    }
+    
+    func test_payment_shouldNotChangeStatusOnShouldRestartTrueAndWouldNeedToRestartTrue() {
+        
+        let newPayment = makePayment(shouldRestart: true)
+        let sut = makeSUT(
+            paymentReduce: { _,_ in (newPayment, nil) },
+            wouldNeedRestart: { _ in true }
+        )
+        
+        assertState(sut: sut, makePaymentTransactionEvent(), on: makeTransaction()) {
+            
+            $0.payment = newPayment
         }
     }
     

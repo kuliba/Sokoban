@@ -163,8 +163,9 @@ private extension TransactionReducer {
         (payment, effect) = paymentReduce(state.payment, event)
         state.payment = payment
         
-        if paymentInspector.wouldNeedRestart(payment) {
-            state.payment.shouldRestart = true
+        let shouldConfirmRestart = paymentInspector.wouldNeedRestart(payment) && !state.payment.shouldRestart
+        if shouldConfirmRestart {
+            state.status = .awaitingPaymentRestartConfirmation
         }
         
         state.isValid = paymentInspector.validatePayment(payment)
