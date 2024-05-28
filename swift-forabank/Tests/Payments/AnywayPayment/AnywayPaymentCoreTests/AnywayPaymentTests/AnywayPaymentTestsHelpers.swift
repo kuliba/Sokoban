@@ -233,6 +233,19 @@ func makeAnywayPaymentParameter(
 }
 
 func makeAnywayPaymentParameter(
+    id: String,
+    value: String
+) -> AnywayPayment.Element.Parameter {
+    
+    makeAnywayPaymentParameter(
+        field: makeAnywayPaymentElementParameterField(
+            id: id,
+            value: value
+        )
+    )
+}
+
+func makeAnywayPaymentParameter(
     id: String = anyMessage(),
     value: String? = anyMessage(),
     isRequired: Bool

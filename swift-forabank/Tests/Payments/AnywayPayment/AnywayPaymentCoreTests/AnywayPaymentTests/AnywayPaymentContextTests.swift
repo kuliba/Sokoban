@@ -245,6 +245,52 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssertNoDiff(stagedContext.outline.core, core)
     }
     
+    // MARK: - wouldNeedRestart
+    
+    func test_wouldNeedRestart_shouldDeliverFalseOnEmptyStagedEmptyParameters() {
+        
+        let context = makeAnywayPaymentContext(elements: [])
+        
+        XCTAssertFalse(context.wouldNeedRestart)
+        XCTAssertTrue(parameters(of: context.payment).isEmpty)
+        XCTAssertTrue(context.staged.isEmpty)
+    }
+    
+    func test_wouldNeedRestart_shouldDeliverFalseOnEmptyStagedNonEmptyParameters() {
+        
+        let context = makeAnywayPaymentContext(elements: [makeAnywayPaymentParameterElement()])
+        
+        XCTAssertFalse(context.wouldNeedRestart)
+        XCTAssertFalse(parameters(of: context.payment).isEmpty)
+        XCTAssertTrue(context.staged.isEmpty)
+    }
+    
+    func test_wouldNeedRestart_shouldDeliverFalseOnSameOutlineValuesForStagedAndParameterValues() {
+        
+        let (id, value) = (anyMessage(), anyMessage())
+        let parameter = makeAnywayPaymentParameter(id: id, value: value)
+        let context = makeAnywayPaymentContext(
+            elements: [.parameter(parameter)],
+            staged: [.init(id)],
+            outline: makeAnywayPaymentOutline([id: value])
+        )
+        
+        XCTAssertFalse(context.wouldNeedRestart)
+    }
+    
+    func test_wouldNeedRestart_shouldDeliverTrueOnDifferentOutlineValuesForStagedAndParameterValues() {
+        
+        let (id, value, outlinedValue) = (anyMessage(), anyMessage(), anyMessage())
+        let parameter = makeAnywayPaymentParameter(id: id, value: value)
+        let context = makeAnywayPaymentContext(
+            elements: [.parameter(parameter)],
+            staged: .init([.init(id)]),
+            outline: makeAnywayPaymentOutline([id: outlinedValue])
+        )
+        
+        XCTAssertTrue(context.wouldNeedRestart)
+    }
+    
     // MARK: - Helpers
     
     private typealias Parameter = AnywayPayment.Element.Parameter
