@@ -35,6 +35,17 @@ extension Model {
             var latestPaymentBankIds: [String]?
             
             switch operation.source {
+            case let .template(templateId):
+                let template = paymentTemplates.value.first { $0.id == templateId }
+            
+                if let token,
+                   let phone = template?.phoneNumber {
+                    latestPaymentBankIds = await getLatestPhonePayments(
+                        phone: phone,
+                        token: token
+                    )
+                }
+                
             case let .latestPayment(latestPaymentId):
                 if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData,
                     let token {
@@ -459,6 +470,18 @@ extension Model {
             } else {
                 return nil
             }
+        case let .template(templateId):
+            
+            if let template = paymentTemplates.value.first(where: { $0.id == templateId }),
+            let phone = template.phoneNumber {
+        
+                let phoneFormatted = PhoneNumberWrapper().format(phone).digits
+                let banksList = await paymentsByPhoneBankList(phoneFormatted)
+                return banksList
+            } else {
+                return nil
+            }
+            
         default:
             return nil
         }
@@ -481,6 +504,27 @@ extension Model {
                     banksIds: banksIds,
                     latestPaymentBankIds: latestPaymentBankIds
                 )
+                
+            } else {
+                return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
+            }
+        case let .template(templateId):
+            
+            if let template = paymentTemplates.value.first(where: { $0.id == templateId }) {
+                
+                if let parameterList = template.parameterList as? [TransferAnywayData] {
+                    let bankID = parameterList.first?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.sfpBank.rawValue })?.fieldvalue
+                    
+                    return filterByPhone(
+                        operationPhone ?? template.phoneNumber?.digits,
+                        bankId: bankID,
+                        banksIds: banksIds,
+                        latestPaymentBankIds: latestPaymentBankIds
+                    )
+                } else {
+                    
+                    return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
+                }
                 
             } else {
                 return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
@@ -542,6 +586,28 @@ extension Model {
             return productId
         }
     }
+    
+    func sourceMessage(
+        source: Payments.Operation.Source?
+    ) -> String? {
+    
+        switch source {
+        case let .template(templateID):
+            let template = paymentTemplates.value.first { $0.id == templateID }
+            if let parameterList = template?.parameterList as? [TransferAnywayData] {
+                let message = parameterList.first?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.sfpMessage.rawValue })?.fieldvalue
+                
+                return (message == "" || message == nil) ? nil : message
+            } else {
+                
+                return nil
+            }
+            
+        default:
+            return nil
+        }
+    }
+    
     
     private func reduceBanks(
         bankList: [BankData],
