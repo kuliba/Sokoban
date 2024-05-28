@@ -72,7 +72,7 @@ private extension AnywayPaymentTransactionReducerComposer {
             checkFraud: { $0.payment.isFraudSuspected },
             getVerificationCode: { $0.payment.otp },
             makeDigest: { $0.payment.makeDigest() },
-            resetPayment: { $0 },
+            restorePayment: { $0 },
             validatePayment: validatePayment,
             wouldNeedRestart: { _ in false }
         )

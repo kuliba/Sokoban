@@ -351,7 +351,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     private typealias Reducer = _TransactionReducer
     private typealias EffectHandler = _TransactionEffectHandler
     
-    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), resetPayment: Payment, stagePayment: Payment?, updatePayment: Payment, validatePayment: Bool, wouldNeedRestart: Bool)
+    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), restorePayment: Payment, stagePayment: Payment?, updatePayment: Payment, validatePayment: Bool, wouldNeedRestart: Bool)
     
     private typealias Inspector = PaymentInspector<Payment, PaymentDigest>
 
@@ -377,7 +377,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
                 checkFraud: { _ in stub.checkFraud },
                 getVerificationCode: { _ in stub.getVerificationCode },
                 makeDigest: { _ in stub.makeDigest },
-                resetPayment: { _ in stub.resetPayment },
+                restorePayment: { _ in stub.restorePayment },
                 validatePayment: { _ in stub.validatePayment },
                 wouldNeedRestart: { _ in stub.wouldNeedRestart }
             )
@@ -419,7 +419,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         getVerificationCode: VerificationCode? = nil,
         makeDigest: PaymentDigest = makePaymentDigest(),
         paymentReduce: (Payment, Effect?) = (makePayment(), nil),
-        resetPayment: Payment = makePayment(),
+        restorePayment: Payment = makePayment(),
         stagePayment: Payment? = nil,
         updatePayment: Payment = makePayment(),
         validatePayment: Bool = true,
@@ -430,7 +430,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
             getVerificationCode: getVerificationCode,
             makeDigest: makeDigest,
             paymentReduce: paymentReduce,
-            resetPayment: resetPayment,
+            restorePayment: restorePayment,
             stagePayment: stagePayment,
             updatePayment: updatePayment,
             validatePayment: validatePayment,
