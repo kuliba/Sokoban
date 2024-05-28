@@ -536,6 +536,27 @@ extension Model {
         )
     }
     
+    func sourceMessage(
+        source: Payments.Operation.Source?
+    ) -> String? {
+    
+        switch source {
+        case let .template(templateID):
+            let template = paymentTemplates.value.first { $0.id == templateID }
+            if let parameterList = template?.parameterList as? [TransferAnywayData] {
+                let message = parameterList.first?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.sfpMessage.rawValue })?.fieldvalue
+                
+                return (message == "" || message == nil) ? nil : message
+            } else {
+                
+                return nil
+            }
+            
+        default:
+            return nil
+        }
+    }
+    
     func productWithSource(source: Payments.Operation.Source?, productId: String) -> String? {
     
         switch source {
