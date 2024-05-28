@@ -6,7 +6,6 @@
 //
 
 import AnywayPaymentDomain
-import Tagged
 
 extension AnywayPaymentContext {
     

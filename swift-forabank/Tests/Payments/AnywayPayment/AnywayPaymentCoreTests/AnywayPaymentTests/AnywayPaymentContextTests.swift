@@ -11,6 +11,40 @@ import XCTest
 
 final class AnywayPaymentContextTests: XCTestCase {
     
+    // MARK: - restorePayment
+    
+    func test_restorePayment_shouldNotChangePaymentOnEmptyStaged() {
+        
+        let context = makeAnywayPaymentContext(elements: [])
+        
+        let restored = context.restorePayment()
+        
+        XCTAssertNoDiff(restored, context)
+        XCTAssert(context.staged.isEmpty)
+    }
+    
+    func test_restorePayment_shouldChangeParameterValuesToOutlinedForStaged() {
+        
+        let parameterOne = makeAnywayPaymentParameter(id: "one", value: "ONE")
+        let parameterTwo = makeAnywayPaymentParameter(id: "two", value: "TWO")
+        let payment = makeAnywayPayment(parameters: [parameterOne, parameterTwo])
+        let context = AnywayPaymentContext(
+            payment: payment,
+            staged: [.init("one")],
+            outline: makeAnywayPaymentOutline(["one": "one"]),
+            shouldRestart: false
+        )
+        
+        let restored = context.restorePayment()
+        
+        XCTAssertNoDiff(restored, context.updating(
+            payment: payment.updating(elements: [
+                .parameter(parameterOne.updating(value: "one")),
+                .parameter(parameterTwo)
+            ])
+        ))
+    }
+    
     // MARK: - staging
     
     func test_staging_shouldNotChangeEmptyStagedOnEmptyElements() {
@@ -31,7 +65,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssert(context.staged.isEmpty)
         
         let stagedContext = context.staging()
-
+        
         XCTAssert(stagedContext.staged.isEmpty)
     }
     
@@ -44,7 +78,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssert(context.staged.isEmpty)
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(
             stagedContext.staged,
             [parameter1.field.id, parameter2.field.id]
@@ -61,7 +95,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssertFalse(context.staged.isEmpty)
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(
             stagedContext.staged,
             [parameter1.field.id, parameter2.field.id]
@@ -74,7 +108,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssert(context.outline.fields.isEmpty)
         
         let stagedContext = context.staging()
-
+        
         XCTAssert(stagedContext.outline.fields.isEmpty)
     }
     
@@ -88,7 +122,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssertFalse(context.outline.fields.isEmpty)
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline, outline)
     }
     
@@ -102,7 +136,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssertFalse(context.outline.fields.isEmpty)
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline, outline)
     }
     
@@ -117,7 +151,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         )
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.fields, [
             "a": "1",
             "x": "X",
@@ -137,7 +171,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         )
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.fields, [
             "a": "1",
             "y": "Y",
@@ -159,7 +193,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssertFalse(context.outline.fields.isEmpty)
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.fields, [
             "a": "1",
             "b": "222",
@@ -183,7 +217,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         )
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.fields, [
             "a": "1",
             "b": "222",
@@ -198,7 +232,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         let core = context.outline.core
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.core, core)
     }
     
@@ -210,9 +244,9 @@ final class AnywayPaymentContextTests: XCTestCase {
             outline: outline
         )
         let core = context.outline.core
-
+        
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.core, core)
     }
     
@@ -224,9 +258,9 @@ final class AnywayPaymentContextTests: XCTestCase {
             outline: outline
         )
         let core = context.outline.core
-
+        
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.core, core)
     }
     
@@ -241,7 +275,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         let core = context.outline.core
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.core, core)
     }
     
