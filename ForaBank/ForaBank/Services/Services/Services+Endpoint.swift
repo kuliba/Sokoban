@@ -172,11 +172,16 @@ extension Services.Endpoint {
         serviceName: .changePIN
     )
     
-    static let createAnywayTransfer: Self = .init(
-        pathPrefix: .transfer,
-        version: nil,
-        serviceName: .createAnywayTransfer
-    )
+    static func createAnywayTransfer(
+        version: Services.Endpoint.Version? = nil
+    ) -> Self {
+        
+        return .init(
+            pathPrefix: .transfer,
+            version: version,
+            serviceName: .createAnywayTransfer
+        )
+    }
     
     static let createCommissionProductTransfer: Self = .init(
         pathPrefix: .transfer,

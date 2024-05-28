@@ -1,5 +1,5 @@
 //
-//  NanoServices+makeCreateAnywayTransferTests.swift
+//  NanoServices+makeCreateAnywayTransferV2Tests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 27.03.2024.
@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class NanoServices_makeCreateAnywayTransferTests: XCTestCase {
+final class NanoServices_makeCreateAnywayTransferV2Tests: XCTestCase {
     
     func test_shouldCallHTTPClientOnce() throws {
         
@@ -142,7 +142,7 @@ final class NanoServices_makeCreateAnywayTransferTests: XCTestCase {
         httpClient: HTTPClientSpy
     ) {
         let httpClient = HTTPClientSpy()
-        let sut = NanoServices.makeCreateAnywayTransfer(httpClient, { _,_,_ in })
+        let sut = NanoServices.makeCreateAnywayTransferV2(httpClient, { _,_,_ in })
         
         trackForMemoryLeaks(httpClient, file: file, line: line)
         

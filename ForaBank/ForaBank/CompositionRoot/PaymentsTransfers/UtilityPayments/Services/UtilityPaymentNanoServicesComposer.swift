@@ -130,7 +130,7 @@ private extension UtilityPaymentNanoServicesComposer {
         _ payload: StartAnywayPaymentPayload,
         _ completion: @escaping StartAnywayPaymentCompletion
     ) {
-        let createAnywayTransferNew = ForaBank.NanoServices.makeCreateAnywayTransferNew(httpClient, log)
+        let createAnywayTransferNew = ForaBank.NanoServices.makeCreateAnywayTransferNewV2(httpClient, log)
         let adapted = FetchAdapter(
             fetch: createAnywayTransferNew,
             mapResult: StartAnywayPaymentResult.init(result:)
