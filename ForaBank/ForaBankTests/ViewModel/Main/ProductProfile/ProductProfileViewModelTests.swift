@@ -492,6 +492,69 @@ final class ProductProfileViewModelTests: XCTestCase {
         }
     }
     
+    func test_showCvvByTap_cardNotActivated_showAlert() throws {
+        
+        let (sut, _, _) = try makeSUT(statusCard: .notActivated)
+        
+        XCTAssertNil(sut.alert)
+        
+        sut.showCvvByTap(cardId: .init(111)) { _ in
+            
+        }
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertNotNil(sut.alert)
+        XCTAssertNoDiff(sut.alert?.title, "Информация")
+        XCTAssertNoDiff(sut.alert?.message, "Для просмотра CVV и смены PIN карта должна быть активна.")
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .cancel)
+        XCTAssertNoDiff(sut.alert?.primary.title, "OK")
+        XCTAssertNotNil(sut.alert?.primary.action)
+    }
+    
+    func test_showCvvByTap_cardBlockedUnlockAvailable_showAlert() throws {
+        
+        let (sut, _, _) = try makeSUT(statusCard: .blockedUnlockAvailable)
+        
+        XCTAssertNil(sut.alert)
+        
+        sut.showCvvByTap(cardId: .init(111)) { _ in
+            
+        }
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertNotNil(sut.alert)
+        XCTAssertNoDiff(sut.alert?.title, "Информация")
+        XCTAssertNoDiff(sut.alert?.message, "Для просмотра CVV и смены PIN карта должна быть активна.")
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .cancel)
+        XCTAssertNoDiff(sut.alert?.primary.title, "OK")
+        XCTAssertNotNil(sut.alert?.primary.action)
+    }
+
+    func test_showCvvByTap_cardBlockedUnlockNotAvailable_showAlert() throws {
+        
+        let (sut, _, _) = try makeSUT(statusCard: .blockedUnlockNotAvailable)
+        
+        XCTAssertNil(sut.alert)
+        
+        sut.showCvvByTap(cardId: .init(111)) { _ in
+            
+        }
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertNotNil(sut.alert)
+        XCTAssertNoDiff(sut.alert?.title, "Информация")
+        XCTAssertNoDiff(sut.alert?.message, "Для просмотра CVV и смены PIN карта должна быть активна.")
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .cancel)
+        XCTAssertNoDiff(sut.alert?.primary.title, "OK")
+        XCTAssertNotNil(sut.alert?.primary.action)
+    }
+
     func test_showCvvByTap_checkCertificateError_returNil() throws {
         
         let (sut, _, _) = try makeSUT(

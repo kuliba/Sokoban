@@ -2417,20 +2417,24 @@ extension ProductProfileViewModel {
         cardId: CardDomain.CardId,
         completion: @escaping ShowCVVCompletion
     ) {
-        cvvPINServicesClient.showCVV(
-            cardId: cardId.rawValue
-        ) { [weak self] result in
-            
-            guard let self else { return }
-            
-            switch result {
-            case let .failure(error):
-                handle(error: error, forCardId: cardId)
-                completion(nil)
+        if productData?.productStatus == .active {
+            cvvPINServicesClient.showCVV(
+                cardId: cardId.rawValue
+            ) { [weak self] result in
                 
-            case let .success(cvv):
-                completion(cvv)
+                guard let self else { return }
+                
+                switch result {
+                case let .failure(error):
+                    handle(error: error, forCardId: cardId)
+                    completion(nil)
+                    
+                case let .success(cvv):
+                    completion(cvv)
+                }
             }
+        } else {
+            event(.delayAlert(.showBlockAlert))
         }
     }
     
