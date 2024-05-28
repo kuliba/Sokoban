@@ -74,7 +74,7 @@ private extension AnywayPaymentTransactionReducerComposer {
             makeDigest: { $0.payment.makeDigest() },
             restorePayment: { $0 },
             validatePayment: validatePayment,
-            wouldNeedRestart: { _ in false }
+            wouldNeedRestart: { $0.wouldNeedRestart }
         )
     }
     
