@@ -320,7 +320,7 @@ extension InfoProductViewModel {
                 list.append(
                     .init(
                         id: .numberMasked,
-                        subtitle: number.masked(mask: .cardForRequisites),
+                        subtitle: number.cardNumberMasked(),
                         valueForCopy: number.formatted()
                     )
                 )

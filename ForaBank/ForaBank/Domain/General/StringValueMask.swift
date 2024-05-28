@@ -18,7 +18,5 @@ extension StringValueMask {
     
     static let card = StringValueMask(mask: "#### #### #### ####", symbol: "#")
     
-    static let cardForRequisites = StringValueMask(mask: "#### ##** **** ####", symbol: "#")
-
     static let account = StringValueMask(mask: "##### # ### #### #######", symbol: "#")
 }
