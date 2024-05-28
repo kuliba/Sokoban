@@ -50,7 +50,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     private func initiatePayment(
     ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
         
-        let process = ForaBank.NanoServices.makeCreateAnywayTransferNew(httpClient, log)
+        let process = ForaBank.NanoServices.makeCreateAnywayTransferNewV2(httpClient, log)
         
         return { digest, completion in
             
@@ -108,7 +108,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     private func processPayment(
     ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
         
-        let process = ForaBank.NanoServices.makeCreateAnywayTransfer(httpClient, log)
+        let process = ForaBank.NanoServices.makeCreateAnywayTransferV2(httpClient, log)
         
         return { digest, completion in
             
