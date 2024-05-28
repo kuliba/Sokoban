@@ -54,3 +54,20 @@ where PerformRequestError: Error,
         )
     }
 }
+
+extension LoggingRemoteServiceDecorator {
+    
+    func callAsFunction(
+        _ input: Input,
+        completion: @escaping Decoratee.ProcessCompletion
+    ) {
+        remoteService(input, completion: completion)
+    }
+
+    func callAsFunction(
+        _ input: Input
+    ) async throws -> Output {
+        
+        return try await remoteService.process(input)
+    }
+}
