@@ -37,7 +37,7 @@ extension NanoServices {
     ) -> CreateAnywayTransfer {
         
         adaptedLoggingFetch(
-            createRequest: RequestFactory.createCreateAnywayTransferRequest,
+            createRequest: RequestFactory.createCreateAnywayTransferV2Request,
             httpClient: httpClient,
             mapResponse: RemoteServices.ResponseMapper.mapCreateAnywayTransferResponse,
             mapError: ServiceFailure.init,
