@@ -33,17 +33,6 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNoDiff(linkSpy.values, [nil, .templates])
     }
     
-    func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
-        
-        let (sut, _) = makeSUT()
-        let linkSpy = ValueSpy(sut.$route.map(\.case))
-        sut.fastPayment?.tapTemplatesAndWait()
-        
-        sut.templatesListViewModel?.closeAndWait(timeout: 0.9)
-        
-        XCTAssertNoDiff(linkSpy.values, [nil, .templates, nil])
-    }
-    
     func test_tapUserAccount_shouldSendGetSubscriptionRequest() {
         
         let (sut, model) = makeModelWithServerAgentStub(

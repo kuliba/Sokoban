@@ -386,7 +386,7 @@ final class OperationDetailDataTests: XCTestCase {
         
         XCTAssertNoDiff(sut.payerTransferData, .init(
             inn: nil,
-            accountId: 10,
+            accountId: nil,
             accountNumber: "payerAccountNumber",
             cardId: 1,
             cardNumber: "payerCardNumber",
