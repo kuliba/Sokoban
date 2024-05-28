@@ -14,16 +14,16 @@ extension ProductSelectConfig {
         amount: .secondary,
         card: .init(
             amount: .init(
-                textFont: .body,
-                textColor: .white
+                textFont: .caption,
+                textColor: .black
             ),
             number: .init(
-                textFont: .body,
-                textColor: .white
+                textFont: .caption,
+                textColor: .black
             ),
             title: .init(
-                textFont: .body,
-                textColor: .gray
+                textFont: .caption,
+                textColor: .black
             )
         ),
         chevron: .init(
@@ -56,12 +56,12 @@ private extension InfoComponent.InfoConfig {
 extension TextConfig {
     
     static let secondary: Self = .init(
-        textFont: .body,
+        textFont: .subheadline,
         textColor: .black
     )
     
     static let placeholder: Self = .init(
-        textFont: .body,
+        textFont: .subheadline,
         textColor: .secondary
     )
 }

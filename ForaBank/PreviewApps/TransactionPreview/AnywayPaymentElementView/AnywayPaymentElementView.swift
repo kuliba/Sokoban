@@ -30,7 +30,8 @@ struct AnywayPaymentElementView<IconView: View>: View {
         case let .parameter(parameter):
             AnywayPaymentParameterView(
                 parameter: parameter,
-                event: { event(.setValue($0, for: parameter.id.parameterID)) }
+                event: { event(.setValue($0, for: parameter.id.parameterID)) },
+                factory: factory.elementFactory
             )
             
         case let .widget(widget):

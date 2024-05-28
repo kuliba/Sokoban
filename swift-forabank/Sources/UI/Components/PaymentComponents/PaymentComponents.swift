@@ -16,6 +16,7 @@
 @_exported import CheckBoxComponent
 @_exported import ProductSelectComponent
 @_exported import SharedConfigs
+@_exported import OTPInputComponent
 
 /// A namespace for Payment Components.
 ///
@@ -31,6 +32,9 @@ public extension PaymentComponents {
     typealias AmountConfig = AmountComponent.AmountConfig
     typealias AmountView = AmountComponent.AmountView
     
+    typealias CodeInputView = OTPInputComponent.CodeInputView
+    typealias CodeInputConfig = OTPInputComponent.CodeInputConfig
+
     typealias Button = ButtonComponent.Button
     typealias ButtonConfig = SharedConfigs.ButtonConfig
     typealias ButtonStateConfig = SharedConfigs.ButtonStateConfig

@@ -45,9 +45,9 @@ extension ContentViewModelFactory {
                     )
                 )
                 
-                let viewModel = composer.compose(initialState: initialState)
+                let observable = composer.compose(initialState: initialState)
                 
-                return .init(observable: viewModel, observe: observe)
+                return .init(observable: observable, observe: observe)
             }
         )
     }
