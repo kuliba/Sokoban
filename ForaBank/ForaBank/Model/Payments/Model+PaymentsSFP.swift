@@ -78,7 +78,12 @@ extension Model {
             //message
             let messageParameterId = Payments.Parameter.Identifier.sfpMessage.rawValue
             let messageParameterIcon = ImageData(named: "ic24IconMessage") ?? .parameterSample
-            let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: nil), icon: messageParameterIcon, title: "Сообщение получателю", validator: .anyValue)
+            let messageParameter = Payments.ParameterInput(
+                .init(id: messageParameterId, value: sourceMessage(source: operation.source)),
+                icon: messageParameterIcon,
+                title: "Сообщение получателю",
+                validator: .anyValue
+            )
             
             // amount
             let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
