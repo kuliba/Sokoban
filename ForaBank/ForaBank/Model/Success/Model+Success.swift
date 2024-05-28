@@ -178,7 +178,11 @@ extension TemplateButton {
         _ values: [String]
     ) -> TemplateButtonView.ViewModel.State {
         
-        for additional in payload.additional.filter({ !$0.fieldname.contained(in: sfpRestrictedAdditional) }) {
+        let payloadParameters = payload.additional
+            .filter({ !$0.fieldname.contained(in: sfpRestrictedAdditional) })
+            .filter({ $0.fieldname.contained(in: Payments.Parameter.systemIdentifiers.map({ $0.rawValue })) })
+        
+        for additional in payloadParameters {
             
             if additional.fieldvalue.contained(in: values) || additional.fieldvalue.isEmpty {
                 
