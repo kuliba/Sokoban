@@ -80,7 +80,7 @@ func makeAnywayPayment(
     if let core {
         elements.append(.widget(.core(core)))
     }
-
+    
     return makeAnywayPayment(
         elements: elements,
         isFinalStep: isFinalStep,
@@ -101,7 +101,7 @@ func makeAnywayPayment(
     if let core {
         elements.append(.widget(.core(core)))
     }
-
+    
     return makeAnywayPayment(
         elements: elements,
         isFinalStep: isFinalStep,
@@ -938,7 +938,7 @@ func makeOutlinePaymentCore(
 ) -> AnywayPaymentOutline.PaymentCore {
     
     .init(
-        amount: amount, 
+        amount: amount,
         currency: currency,
         productID: productID,
         productType: productType
@@ -953,10 +953,10 @@ func makeWidgetPaymentCore(
 ) -> AnywayPayment.Element.Widget.PaymentCore {
     
     .init(
-        amount: amount, 
+        amount: amount,
         currency: .init(currency),
         productID: {
-           
+            
             switch productType {
             case .account: return .accountID(.init(productID))
             case .card: return .cardID(.init(productID))
@@ -978,7 +978,7 @@ private extension AnywayPayment.Element {
         
         guard case let .parameter(parameter) = self
         else { return nil }
-
+        
         return parameter
     }
 }
@@ -992,6 +992,33 @@ extension AnywayPayment.Element.Parameter {
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes
+        )
+    }
+}
+
+extension AnywayPaymentContext {
+    
+    func updating(payment: AnywayPayment) -> Self {
+        
+        return .init(
+            payment: payment,
+            staged: staged,
+            outline: outline,
+            shouldRestart: shouldRestart
+        )
+    }
+}
+
+extension AnywayPayment {
+    
+    func updating(elements: [Element]) -> Self {
+        
+        return .init(
+            elements: elements,
+            infoMessage: infoMessage,
+            isFinalStep: isFinalStep,
+            isFraudSuspected: isFraudSuspected,
+            puref: puref
         )
     }
 }
