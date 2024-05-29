@@ -50,22 +50,19 @@ extension AnywayPaymentUpdate {
         public let title: String
         public let md5Hash: String?
         public let svgImage: String?
-        public let typeIdParameterList: String?
         
         public init(
             name: String,
             value: String,
             title: String,
             md5Hash: String?,
-            svgImage: String?,
-            typeIdParameterList: String?
+            svgImage: String?
         ) {
             self.name = name
             self.value = value
             self.title = title
             self.md5Hash = md5Hash
             self.svgImage = svgImage
-            self.typeIdParameterList = typeIdParameterList
         }
     }
     

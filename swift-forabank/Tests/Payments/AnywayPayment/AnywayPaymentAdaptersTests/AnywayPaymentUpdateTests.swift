@@ -543,8 +543,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         fieldValue: String,
         fieldTitle: String,
         md5Hash: String? = nil,
-        svgImage: String? = nil,
-        typeIdParameterList: String? = nil
+        svgImage: String? = nil
     ) -> AnywayPaymentUpdate.Field {
         
         return .init(
@@ -552,8 +551,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             value: fieldValue,
             title: fieldTitle,
             md5Hash: md5Hash,
-            svgImage: svgImage,
-            typeIdParameterList: typeIdParameterList
+            svgImage: svgImage
         )
     }
     

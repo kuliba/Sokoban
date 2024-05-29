@@ -100,8 +100,7 @@ private extension AnywayPaymentUpdate.Field {
             value: additional.fieldValue,
             title: additional.fieldTitle,
             md5Hash: additional.md5hash,
-            svgImage: additional.svgImage,
-            typeIdParameterList: additional.typeIdParameterList
+            svgImage: additional.svgImage
         )
     }
 }
