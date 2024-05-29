@@ -317,11 +317,17 @@ extension TemplateButton {
             let additional = model.additionalTransferData(
                 service: operation.service,
                 operation: operation
-            )?.filter({ $0.fieldname.contained(in: Payments.Parameter.systemIdentifiers.map({ $0.rawValue })) })
+            )?.filter({ !$0.fieldname.contained(in: Payments.Parameter.systemIdentifiers.map({ $0.rawValue })) })
             
             guard let additional else {
                 return nil
             }
+            
+            let mobileAdditional = [TransferAnywayData.Additional(
+                fieldid: 1,
+                fieldname: "a3_NUMBER_1_2",
+                fieldvalue: operationDetail.payeePhone ?? ""
+            )]
             
             return [
                 TransferAnywayData(
@@ -330,7 +336,7 @@ extension TemplateButton {
                     comment: operationDetail.comment,
                     currencyAmount: operationDetail.currencyAmount ?? "",
                     payer: operationDetail.payerTransferData,
-                    additional: additional,
+                    additional: operation.service != .mobileConnection ? additional : mobileAdditional,
                     puref: operationDetail.puref
                 )
             ]
