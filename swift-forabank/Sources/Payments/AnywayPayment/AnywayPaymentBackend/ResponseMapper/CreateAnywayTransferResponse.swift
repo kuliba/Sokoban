@@ -142,6 +142,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
         public let regExp: String
         public let subGroup: String?
         public let subTitle: String?
+        public let md5hash: String?
         public let svgImage: String?
         public let title: String
         public let type: FieldType
@@ -169,6 +170,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             regExp: String,
             subGroup: String? = nil,
             subTitle: String? = nil,
+            md5hash: String?,
             svgImage: String?,
             title: String,
             type: FieldType,
@@ -195,6 +197,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             self.regExp = regExp
             self.subGroup = subGroup
             self.subTitle = subTitle
+            self.md5hash = md5hash
             self.svgImage = svgImage
             self.title = title
             self.type = type

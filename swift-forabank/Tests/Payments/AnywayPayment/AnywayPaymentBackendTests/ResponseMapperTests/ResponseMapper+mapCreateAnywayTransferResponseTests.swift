@@ -143,7 +143,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
                     inputFieldType: .account,
                     isRequired: true,
                     regExp: "^.{1,250}$",
-                    svgImage: nil,
+                    md5hash: "6e17f502dae62b03d8bd4770606ee4b2",
                     title: "Лицевой счет",
                     type: .input,
                     viewType: .input
@@ -207,7 +207,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
     }
     
     func test_map_shouldDeliverResponse_multiSum() throws {
-#warning("add field `visible: Bool` & `md5hash: String?`")
+        
         try assert(string: .multiSum, .init(
             additional: [
                 makeAdditional(
@@ -287,6 +287,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
                     id: "29",
                     inputFieldType: .counter,
                     regExp: "^.{1,250}$",
+                    md5hash: "017e8b24ab276b57bd7be847905eeb4a",
                     title: "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
                     type: .input,
                     viewType: .input
@@ -308,12 +309,65 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
                     inputFieldType: .penalty,
                     rawLength: 2,
                     regExp: "^.{1,250}$",
+                    md5hash: "4e14d4a92a2286786b4daa8ec0e9d4a3",
                     title: "Сумма пени",
                     type: .input,
                     viewType: .input
                 ),
             ]
         ))
+    }
+    
+    func test_map_shouldDeliverResponseWithImages() throws {
+        
+        try assert(string: .withImages, .init(
+            additional: [],
+            finalStep: false,
+            needMake: false,
+            needOTP: false,
+            needSum: false,
+            parametersForNextStep: [
+                makeParameter(
+                    content:  "042024",
+                    dataType: .string,
+                    id: "5",
+                    regExp: "^.{1,250}$",
+                    title: "Период(ММГГГГ)",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "9",
+                    regExp: "^.{1,250}$",
+                    md5hash: "md5hash",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "13",
+                    regExp: "^.{1,250}$",
+                    svgImage: "svgImage",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "17",
+                    regExp: "^.{1,250}$",
+                    md5hash: "md5hash",
+                    svgImage: "svgImage",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504",
+                    type: .input,
+                    viewType: .input
+                ),
+            ]))
     }
     
     // MARK: - Helpers
@@ -375,6 +429,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
         regExp: String = "",
         subGroup: String? = nil,
         subTitle: String? = nil,
+        md5hash: String? = nil,
         svgImage: String? = nil,
         title: String = "",
         type: Response.Parameter.FieldType,
@@ -403,6 +458,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
             regExp: regExp,
             subGroup: subGroup,
             subTitle: subTitle,
+            md5hash: md5hash,
             svgImage: svgImage,
             title: title,
             type: type,
@@ -1688,6 +1744,76 @@ private extension String {
                 "inputFieldType": "PENALTY",
                 "visible": true,
                 "md5hash": "4e14d4a92a2286786b4daa8ec0e9d4a3"
+            }
+        ],
+        "options": [
+            "MULTI_SUM"
+        ]
+    }
+}
+"""
+    static let withImages = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "additionalList": [],
+        "parameterListForNextStep": [
+            {
+                "id": "5",
+                "title": "Период(ММГГГГ)",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": "042024",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "9",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true,
+                "md5hash": "md5hash"
+            },
+            {
+                "id": "13",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true,
+                "svgImage": "svgImage"
+            },
+            {
+                "id": "17",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true,
+                "md5hash": "md5hash",
+                "svgImage": "svgImage"
             }
         ],
         "options": [
