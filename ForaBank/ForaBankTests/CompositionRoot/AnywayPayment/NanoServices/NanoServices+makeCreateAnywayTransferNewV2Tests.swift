@@ -115,10 +115,12 @@ final class NanoServices_makeCreateAnywayTransferNewV2Tests: XCTestCase {
                         rawLength: 0,
                         isReadOnly: false,
                         regExp: "^.{1,250}$",
+                        md5hash: nil,
                         svgImage: "svgImage",
                         title: "Лицевой счет",
                         type: .input,
-                        viewType: .input
+                        viewType: .input,
+                        visible: true
                     )
                 ],
                 paymentOperationDetailID: 54321

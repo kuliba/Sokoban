@@ -374,10 +374,12 @@ private extension NanoServices.CreateAnywayTransferResponse.Parameter {
             regExp: regExp,
             subGroup: subGroup,
             subTitle: subTitle,
+            md5hash: md5hash,
             svgImage: svgImage,
             title: self.title,
             type: type,
-            viewType: viewType
+            viewType: viewType,
+            visible: true
         )
     }
 }
