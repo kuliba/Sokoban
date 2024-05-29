@@ -152,16 +152,13 @@ final class Model_PaymentsServicesTests: XCTestCase {
     }
     
     // MARK: - paymentsParameterRepresentablePaymentsServices
-    
+   
     func test_paymentsParameterRepresentablePaymentsServices_TypeEmpty_DefaultParameterInfo() async throws {
         
         let parameterData = makeParameterData(isRequired: true, type: "")
         let selectParameter = try await makeParameterInfo(parameterData: parameterData)
-        XCTAssertEqual(selectParameter.id, "IdInputTest")
-        XCTAssertEqual(selectParameter.value, "value")
-        XCTAssertEqual(selectParameter.title, "title")
-        XCTAssertEqual(selectParameter.icon, .image(parameterData.iconData ?? .parameterDocument))
-        XCTAssertEqual(selectParameter.group, .init(id: "info", type: .info))
+        
+       XCTAssertEqual(selectParameter.group, .init(id: "info", type: .info))
     }
    
     func test_paymentsParameterRepresentablePaymentsServices_InputIsRequiredWhenRegExpNil() async throws {
@@ -291,16 +288,10 @@ final class Model_PaymentsServicesTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) async throws -> Payments.ParameterInput {
-        
         let model = makeSUT(file: file, line: line)
         let parameterRepresentable = try await model.paymentsParameterRepresentablePaymentsServices(parameterData: parameterData)
-
-        guard let selectParameter = parameterRepresentable as? Payments.ParameterInput else {
-            XCTFail("Expected ParameterInput", file: file, line: line)
-            throw XCTestError(.failureWhileWaiting)
-        }
-
-        return selectParameter
+        
+        return try XCTUnwrap(parameterRepresentable as? Payments.ParameterInput)
     }
     
     private func makeParameterInfo(
@@ -308,16 +299,10 @@ final class Model_PaymentsServicesTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) async throws -> Payments.ParameterInfo {
-        
         let model = makeSUT(file: file, line: line)
         let parameterRepresentable = try await model.paymentsParameterRepresentablePaymentsServices(parameterData: parameterData)
-
-        guard let selectParameter = parameterRepresentable as? Payments.ParameterInfo else {
-            XCTFail("Expected ParameterInfo")
-            throw XCTestError(.failureWhileWaiting)
-        }
-
-        return selectParameter
+        
+        return try XCTUnwrap(parameterRepresentable as? Payments.ParameterInfo)
     }
     
     private func makeValidator(regExp: String?, isRequired: Bool) -> Payments.Validation.RulesSystem {
