@@ -15,16 +15,68 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     
     func test_uiComponent_shouldDeliverFieldForField() {
         
-        let element = makeAnywayPaymentFieldElement(.init(
+        let element = makeAnywayPaymentFieldElement(makeAnywayPaymentField(
             id: "123",
-            title: "CDE",
-            value: "abc"
+            value: "abc",
+            title: "CDE"
         ))
         
         XCTAssertNoDiff(element.uiComponent, .field(.init(
             name: "123",
             title: "CDE",
-            value: "abc"
+            value: "abc",
+            image: nil
+        )))
+    }
+    
+    func test_uiComponent_shouldDeliverFieldForFieldWithMD5Hash() {
+        
+        let element = makeAnywayPaymentFieldElement(makeAnywayPaymentField(
+            "123",
+            value: "abc",
+            title: "CDE",
+            image: .md5Hash("md5Hash")
+        ))
+        
+        XCTAssertNoDiff(element.uiComponent, .field(.init(
+            name: "123",
+            title: "CDE",
+            value: "abc",
+            image: .md5Hash("md5Hash")
+        )))
+    }
+    
+    func test_uiComponent_shouldDeliverFieldForFieldWithSVG() {
+        
+        let element = makeAnywayPaymentFieldElement(makeAnywayPaymentField(
+            "123",
+            value: "abc",
+            title: "CDE",
+            image: .svg("svg")
+        ))
+        
+        XCTAssertNoDiff(element.uiComponent, .field(.init(
+            name: "123",
+            title: "CDE",
+            value: "abc",
+            image: .svg("svg")
+        )))
+    }
+    
+    func test_uiComponent_shouldDeliverFieldForFieldWithFallback() {
+        
+        let element = makeAnywayPaymentFieldElement(makeAnywayPaymentField(
+            "123",
+            value: "abc",
+            title: "CDE",
+            image: .withFallback(md5Hash: "md5Hash", svg: "svg")
+        ))
+        
+        XCTAssertNoDiff(element.uiComponent, .field(.init(
+            name: "123",
+            title: "CDE",
+            value: "abc",
+            image: .withFallback(md5Hash: "md5Hash", svg: "svg")
         )))
     }
     
