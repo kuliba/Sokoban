@@ -15,13 +15,14 @@ extension SberQR.Config {
         background: .init(
             color: .mainColorsGrayLightest
         ),
-        button: .iFora,
+        button: .iFora, 
+        carousel: .iForaSmall,
         info: .iFora,
         productSelect: .iFora
     )
 }
 
-private extension AmountComponent.AmountConfig {
+extension AmountComponent.AmountConfig {
     
     static let iFora: Self = .init(
         amount: .init(
@@ -62,7 +63,8 @@ extension ProductSelectComponent.ProductSelectConfig {
             title: .init(
                 textFont: .textBodyXsR11140(),
                 textColor: .textWhite.opacity(0.4)
-            )
+            ), 
+            selectedImage: .ic16CheckLightGray16Fixed
         ),
         chevron: .init(
             color: .iconGray,
@@ -79,7 +81,8 @@ extension ProductSelectComponent.ProductSelectConfig {
                 textColor: .textPlaceholder
             )
         ),
-        title: .secondary
+        title: .secondary,
+        carouselConfig: .iForaSmall
     )
 }
 
@@ -111,7 +114,7 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
                 getProducts: { .allProducts },
                 pay: { _ in }
             ),
-            map: Info.preview,
+            map: PublishingInfo.preview,
             config: .iFora
         )
     }

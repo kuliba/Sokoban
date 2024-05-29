@@ -24,6 +24,7 @@ public extension Icon {
         
         if let image {
             image
+                .renderingMode(.original)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
         } else {

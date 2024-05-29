@@ -298,6 +298,7 @@ public extension AnywayPaymentUpdate.Parameter.UIAttributes {
     
     enum DataType: Equatable {
 
+        case _backendReserved
         case number
         case pairs(Pair, [Pair])
         case string
@@ -319,7 +320,7 @@ public extension AnywayPaymentUpdate.Parameter.UIAttributes {
 
     enum FieldType: Equatable {
         
-        case input, select, maskList
+        case input, select, maskList, missing
     }
     
     enum InputFieldType: Equatable {

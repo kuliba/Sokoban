@@ -709,6 +709,9 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
     init(with dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType) {
         
         switch dataType {
+        case ._backendReserved:
+            self = ._backendReserved
+            
         case .number:
             self = .number
             
@@ -735,8 +738,9 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.FieldType {
         
         switch fieldType {
         case .input:    self = .input
-        case .select:   self = .select
         case .maskList: self = .maskList
+        case .missing:  self = .missing
+        case .select:   self = .select
         }
     }
 }

@@ -9,6 +9,8 @@ import SwiftUI
 import Combine
 import PinCodeUI
 import CardUI
+import ActivateSlider
+import Foundation
 
 //MARK: - ViewModel
 
@@ -22,7 +24,7 @@ extension ProductProfileCardView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var selector: SelectorViewModel
-        @Published var products: [ProductView.ViewModel]
+        @Published var products: [ProductViewModel]
         @Published var activeProductId: ProductData.ID
         
         let productType: ProductType
@@ -30,17 +32,19 @@ extension ProductProfileCardView {
         private let model: Model
         private let cardAction: CardAction?
         private let showCvv: ShowCVV?
+        private let event: (Event) -> Void
 
         private var bindings = Set<AnyCancellable>()
         
         fileprivate init(
             selector: SelectorViewModel,
-            products: [ProductView.ViewModel],
+            products: [ProductViewModel],
             activeProductId: ProductData.ID,
             productType: ProductType,
             model: Model = .emptyMock,
             cardAction: CardAction? = nil,
-            showCvv: ShowCVV? = nil
+            showCvv: ShowCVV? = nil,
+            event: @escaping (Event) -> Void = {_ in }
         ) {
             self.selector = selector
             self.products = products
@@ -49,13 +53,15 @@ extension ProductProfileCardView {
             self.model = model
             self.cardAction = cardAction
             self.showCvv = showCvv
+            self.event = event
         }
         
         init?(
             _ model: Model,
             productData: ProductData,
             cardAction: CardAction? = nil,
-            showCvv: ShowCVV? = nil
+            showCvv: ShowCVV? = nil,
+            event: @escaping (Event) -> Void = {_ in }
         ) {
             // fetch app products of type
             guard let productsForType = model.products.value[productData.productType],
@@ -65,16 +71,28 @@ extension ProductProfileCardView {
             
             // generate products view models
             let productsWithRelated = Self.reduce(products: productsForType, with: model.products.value)
-            var productsViewModels = [ProductView.ViewModel]()
+            var productsViewModels = [ProductViewModel]()
             for product in productsWithRelated {
                 
-                let productViewModel = ProductView.ViewModel(
+                let cvvInfo: CvvInfo? = {
+                    if let card = product as? ProductCardData {
+                        return .init(
+                            showCvv: showCvv,
+                            cardType: card.cardType,
+                            cardStatus: card.statusCard
+                        )
+                    }
+                    return nil
+                }()
+                
+                let productViewModel = ProductViewModel(
                     with: product,
                     size: .large,
                     style: .profile,
                     model: model,
                     cardAction: cardAction,
-                    showCvv: showCvv
+                    cvvInfo: cvvInfo,
+                    event: event
                 )
                 productsViewModels.append(productViewModel)
             }
@@ -94,6 +112,7 @@ extension ProductProfileCardView {
             self.model = model
             self.showCvv = showCvv
             self.cardAction = cardAction
+            self.event = event
             bind()
             bind(selector)
             
@@ -163,7 +182,7 @@ extension ProductProfileCardView {
                         let productsWithRelated = Self.reduce(products: productsForType, with: productsData)
                         
                         // update products view models
-                        var updatedProducts = [ProductView.ViewModel]()
+                        var updatedProducts = [ProductViewModel]()
                         for product in productsWithRelated {
                             
                             if let productViewModel = self.products.first(where: { $0.id == product.id }) {
@@ -173,13 +192,26 @@ extension ProductProfileCardView {
                                 
                             } else {
                                 
-                                let productViewModel = ProductView.ViewModel(
+                                let cvvInfo: CvvInfo? = {
+                                    if let card = product as? ProductCardData {
+                                        return .init(
+                                            showCvv: showCvv,
+                                            cardType: card.cardType,
+                                            cardStatus: card.statusCard
+                                        )
+                                    }
+                                    return nil
+                                }()
+                                
+                                let productViewModel = ProductViewModel(
                                     with: product,
                                     size: .large,
                                     style: .profile,
                                     model: model,
                                     cardAction: cardAction,
-                                    showCvv: showCvv)
+                                    cvvInfo: cvvInfo,
+                                    event: event
+                                )
                                 bind(productViewModel)
                                 updatedProducts.append(productViewModel)
                             }
@@ -259,6 +291,7 @@ extension ProductProfileCardView {
                         switch payload.result {
                         case .success:
                             productViewModel?.action.send(ProductViewModelAction.CardActivation.Complete())
+                            model.handleProductUpdateDynamicParamsList(payload.cardId, productType: .card)
                             model.action.send(ModelAction.Products.Update.ForProductType(productType: .card))
                             
                         case .failure(message: let message):
@@ -291,7 +324,7 @@ extension ProductProfileCardView {
                 }.store(in: &bindings)
         }
         
-        private func bind(_ product: ProductView.ViewModel) {
+        private func bind(_ product: ProductViewModel) {
             
             product.action
                 .receive(on: DispatchQueue.main)
@@ -308,8 +341,8 @@ extension ProductProfileCardView {
                             
                             return
                         }
-                        model.action.send(ModelAction.Card.Unblock.Request(cardId: cardProduct.id, cardNumber: cardNumber))
-                    
+                        self.activateCard(cardProduct, cardNumber)
+                        
                     default:
                         break
                     }
@@ -343,6 +376,24 @@ extension ProductProfileCardView {
                     
                 }.store(in: &bindings)
         }
+        
+        func activateCard(
+            _ cardProduct: ProductCardData?,
+            _ cardNumber: String?
+        ) {
+            guard let cardProduct, let cardNumber else { return }
+            
+            model.action.send(ModelAction.Card.Unblock.Request(cardId: cardProduct.id, cardNumber: cardNumber))
+        }
+        
+        func needSlider(_ product: ProductViewModel) -> Bool {
+            
+            guard let productData = model.product(productId: product.id),
+                  let cardProduct = productData.asCard 
+            else { return false }
+                    
+            return cardProduct.statusCard == .notActivated
+        }
     }
 }
 
@@ -359,10 +410,20 @@ enum ProductProfileCardViewModelAction {
 
 extension ProductProfileCardView.ViewModel {
     
+    typealias Event = AlertEvent
+}
+
+extension ProductProfileCardView.ViewModel {
+    
     class SelectorViewModel: ObservableObject {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
+        let productSize: CGSize = .init(width: 48, height: 48)
+        let spacing: CGFloat = 8
+        var groupingCards: Array.Products = [:]
+        var itemsID: [ProductData.ID] = []
+
         @Published var thumbnails: [ThumbnailViewModel]
         @Published var selected: ThumbnailViewModel.ID
         
@@ -381,7 +442,9 @@ extension ProductProfileCardView.ViewModel {
             
             self.thumbnails = []
             self.selected = selected
-            
+            self.groupingCards = products.groupingCards()
+            self.itemsID = products.uniqueProductIDs()
+
             self.thumbnails = products.map { product in
                 
                 ThumbnailViewModel(
@@ -394,6 +457,17 @@ extension ProductProfileCardView.ViewModel {
             }
         }
         
+        func widthWithColor(by id: Int) -> (CGFloat, Color) {
+            
+            if let values = groupingCards[id] {
+                let additionalSpacing = values.count == 1 ? 0 : spacing
+                let width = CGFloat(values.count) * productSize.width + (CGFloat(values.count-1) * additionalSpacing)
+        
+                return values.count == 1 ? (width, .clear) : (width, .black.opacity(0.2))
+            }
+            return (0, .clear)
+        }
+                
         struct ThumbnailViewModel: Identifiable {
  
             let id: ProductData.ID
@@ -460,7 +534,10 @@ extension ProductProfileCardView.ViewModel {
 struct ProductProfileCardView: View {
     
     @ObservedObject var viewModel: ProductProfileCardView.ViewModel
-        
+    let makeSliderActivateView: MakeActivateSliderView
+    let makeSliderViewModel: ActivateSliderViewModel
+    let sliderConfig: SliderConfig = .config
+    
     var body: some View {
         
         VStack(spacing: 0) {
@@ -479,9 +556,21 @@ struct ProductProfileCardView: View {
                             .opacity(0.3)
                             .blur(radius: 10)
                             .frame(width: 268 - 20, height: 165)
-                        
-                        ProductView(viewModel: product)
+
+                        if viewModel.needSlider(product)  {
+                            GenericProductView<ActivateSliderStateWrapperView>(viewModel: product, factory: .init(
+                                makeSlider: {
+                                    makeSliderActivateView(
+                                        product.id,
+                                        makeSliderViewModel,
+                                        sliderConfig
+                                    )}))
                             .frame(width: 268, height: 160)
+
+                        } else {
+                            ProductView(viewModel: product)
+                                  .frame(width: 268, height: 160)
+                        }
                         
                     }.tag(product.id)
                 }
@@ -504,27 +593,59 @@ extension ProductProfileCardView {
 
             ScrollView(.horizontal, showsIndicators: false) { proxy in
                 
-                HStack(alignment: .center, spacing: 8) {
+                ZStack {
                     
-                    ForEach(viewModel.thumbnails) { thumbnail in
+                    SelectorsView(viewModel: viewModel)
+
+                    HStack(alignment: .center, spacing: 8) {
                         
-                        ProductProfileCardView.ThumbnailView(viewModel: thumbnail, isSelected: viewModel.selected == thumbnail.id)
-                            .scrollId(thumbnail.id)
+                        ForEach(viewModel.thumbnails) { thumbnail in
+                            
+                            ProductProfileCardView.ThumbnailView(
+                                viewModel: thumbnail,
+                                isSelected: viewModel.selected == thumbnail.id,
+                                selectionAvailable: viewModel.groupingCards.selectionAvailable(thumbnail.id)
+                            )
+                                .scrollId(thumbnail.id)
+                        }
+                        
+                        ProductProfileCardView.MoreButtonView(viewModel: viewModel.moreButton)
                     }
-                    
-                    ProductProfileCardView.MoreButtonView(viewModel: viewModel.moreButton)
-                }
-                .padding(.horizontal, UIScreen.main.bounds.size.width / 2 - 48 + 48 / 2)
-                .onReceive(viewModel.$selected) { selected in
-                    proxy.scrollTo(selected, alignment: .center, animated: true)
-                }
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10)) {
-                        proxy.scrollTo(viewModel.selected, alignment: .center, animated: false)
-                        
+                    .padding(.horizontal, UIScreen.main.bounds.size.width / 2 - viewModel.productSize.width + viewModel.productSize.width / 2)
+                    .onReceive(viewModel.$selected) { selected in
+                        proxy.scrollTo(selected, alignment: .center, animated: true)
+                    }
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10)) {
+                            proxy.scrollTo(viewModel.selected, alignment: .center, animated: false)
+                            
+                        }
                     }
                 }
             }
+        }
+    }
+    
+    struct SelectorsView: View {
+        
+        let viewModel: ProductProfileCardView.ViewModel.SelectorViewModel
+        let spacing: CGFloat = 8
+
+        var body: some View {
+            
+            HStack(alignment: .center, spacing: spacing) {
+                
+                ForEach(viewModel.itemsID, id: \.self) {
+                    
+                    let (width, color) = viewModel.widthWithColor(by: $0)
+                    Capsule()
+                        .foregroundColor(color)
+                        .frame(width: width, height: viewModel.productSize.height)
+                        .padding(.trailing, 0)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, UIScreen.main.bounds.size.width / 2 - viewModel.productSize.width + viewModel.productSize.width / 2)
         }
     }
     
@@ -532,6 +653,7 @@ extension ProductProfileCardView {
         
         let viewModel: ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel
         let isSelected: Bool
+        let selectionAvailable: Bool
         
         var body: some View {
             
@@ -543,7 +665,7 @@ extension ProductProfileCardView {
                 
                 ZStack {
                     
-                    if isSelected {
+                    if isSelected, selectionAvailable {
                         
                         Circle()
                             .foregroundColor(.black.opacity(0.2))
@@ -613,7 +735,11 @@ struct ProductProfileCardView_Previews: PreviewProvider {
         
         Group {
             
-            ProductProfileCardView(viewModel: .sample)
+            ProductProfileCardView(
+                viewModel: .sample,
+                makeSliderActivateView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
+                makeSliderViewModel: .previewActivateSuccess
+            )
                 .previewLayout(.fixed(width: 375, height: 500))
             
             ProductProfileCardView.SelectorView(viewModel: .sample)

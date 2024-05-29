@@ -8,6 +8,7 @@
 import ProductSelectComponent
 import SberQR
 import SwiftUI
+import UIPrimitives
 
 extension Array where Element == ProductData {
     
@@ -53,7 +54,7 @@ extension ProductData {
             return .init(
                 id: .init(card.id),
                 type: .card,
-                isAdditional: false, // TODO: add real value for Additional card
+                isAdditional: card.isAdditional,
                 header: "Счет списания",
                 title: card.displayName,
                 footer: card.displayNumber ?? "",
@@ -61,8 +62,8 @@ extension ProductData {
                 balance: .init(card.balanceValue),
                 look: .init(
                     background: .image(getImage(card.largeDesignMd5Hash) ?? .cardPlaceholder),
-                    color: card.backgroundColor.description,
-                    icon: .image(getImage(card.smallDesignMd5hash) ?? .cardPlaceholder)
+                    color: card.backgroundColor,
+                    icon: clover
                 )
             )
         }
@@ -80,12 +81,47 @@ extension ProductData {
                 balance: .init(account.balanceValue),
                 look: .init(
                     background: .image(getImage(account.largeDesignMd5Hash) ?? .cardPlaceholder),
-                    color: account.backgroundColor.description,
-                    icon: .image(getImage(account.smallDesignMd5hash) ?? .cardPlaceholder)
+                    color: account.backgroundColor,
+                    icon: .svg("")
                 )
             )
         }
         
+        return nil
+    }
+}
+
+extension ProductData {
+    
+    var clover: Icon {
+        
+        if let cloverImage {
+            return .image(cloverImage)
+        }
+        return .svg("")
+    }
+    
+    var cloverImage: Image? {
+        
+        if let cloverUIImage {
+            return .init(uiImage: cloverUIImage)
+        }
+        return nil
+    }
+    
+    var cloverUIImage: UIImage? {
+        
+        if let card = self as? ProductCardData {
+            let isDark = (background.first?.description == "F6F6F7")
+            switch card.cardType {
+            case .main:
+                return isDark ? .init(named: "ic16MainCardGreyFixed2") : .init(named: "ic16MainCardWhiteFixed2")
+            case .additionalOther, .additionalSelf, .additionalSelfAccOwn:
+                return isDark ? .init(named: "ic16AdditionalCardGrey") : .init(named: "ic16AdditionalCardWhite")
+            default:
+                return nil
+            }
+        }
         return nil
     }
 }

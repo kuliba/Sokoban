@@ -26,8 +26,10 @@ extension MyProductsViewModel {
             paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .preview
         ),
         refreshingIndicator: .init(isActive: true),
         openOrderSticker: {}
@@ -50,8 +52,10 @@ extension MyProductsViewModel {
             paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .preview
         ),
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false],

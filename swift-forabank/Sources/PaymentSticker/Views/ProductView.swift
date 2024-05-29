@@ -50,49 +50,69 @@ public struct ProductView: View {
             HStack(spacing: 10) {
                 
                 ForEach(productList, id: \.self) { product in
-                    
-                    VStack(spacing: 8) {
-                     
-                        HStack {
-                            
-                            Color.clear
-                                .frame(width: 20, height: 20, alignment: .center)
-                            
-                            Text(product.footer.description)
-                                .font(optionConfig.numberFont)
-                                .foregroundColor(optionConfig.numberColor)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                     
-                        VStack(spacing: 4) {
-                            
-                            Text(product.main.name)
-                                .font(optionConfig.nameFont)
-                                .foregroundColor(optionConfig.nameColor)
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                   
+                    ZStack(alignment: .topTrailing) {
+                        
+                        VStack(spacing: 8) {
                             
                             HStack {
                                 
-                                Text(product.main.balance)
-                                    .font(optionConfig.balanceFont)
-                                    .foregroundColor(optionConfig.balanceColor)
+                                Color.clear
+                                    .frame(width: 20, height: 20, alignment: .center)
                                 
-                                Spacer()
+                                Text(product.footer.description)
+                                    .font(optionConfig.numberFont)
+                                    .foregroundColor(optionConfig.numberColor)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            
+                            VStack(spacing: 4) {
+                                
+                                Text(product.main.name)
+                                    .font(optionConfig.nameFont)
+                                    .foregroundColor(optionConfig.nameColor)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                
+                                HStack {
+                                    
+                                    Text(product.main.balance)
+                                        .font(optionConfig.balanceFont)
+                                        .foregroundColor(optionConfig.balanceColor)
+                                    
+                                    Spacer()
+                                }
                             }
                         }
-                    }
-                    .padding(.init(top: 12, leading: 8, bottom: 8, trailing: 8))
-                    .background(background(product))
-                    .frame(width: 112, height: 71)
-                    .cornerRadius(8)
-                    .onTapGesture {
+                        .padding(.init(top: 12, leading: 8, bottom: 8, trailing: 8))
+                        .background(background(product))
+                        .frame(width: 112, height: 71)
+                        .cornerRadius(8)
+                        .onTapGesture {
+                            
+                            viewModel.selectOption(product)
+                        }
                         
-                        viewModel.selectOption(product)
+                        cloverView(product)
                     }
                 }
             }
         }
         .padding(10)
+    }
+    
+    @ViewBuilder
+    private func cloverView(
+        _ product: ProductViewModel
+    ) -> some View {
+        
+        if let data = product.main.clover?.data {
+            Image(data: data)
+                .resizable()
+                .frame(width: 14, height: 14, alignment: .center)
+                .aspectRatio(contentMode: .fit)
+                .padding(.top, 9)
+                .padding(.trailing, 10)
+        }
     }
     
     private func selectProductView(
@@ -348,7 +368,8 @@ struct ProductView_Previews: PreviewProvider {
                         name: "Gold",
                         balance: "625 193 Р",
                         backgroundImage: .data(.empty),
-                        backgroundColor: .red
+                        backgroundColor: .red,
+                        clover: .data(.empty)
                     ),
                     footer: .init(description: "description")
                 )),

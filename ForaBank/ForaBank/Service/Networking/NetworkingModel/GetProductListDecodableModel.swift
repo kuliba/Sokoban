@@ -124,6 +124,7 @@ struct GetProductListDatum: Codable{
     let mediumDesignMd5Hash: String?
     let largeDesignMd5Hash: String?
     let paymentSystemImageMd5Hash: String?
+    let cardType: CardType?
     
     struct LoanBaseParam: Codable, Equatable {
         
@@ -227,7 +228,8 @@ extension GetProductListDatum {
         smallDesignMd5Hash: String?,
         mediumDesignMd5Hash: String?,
         largeDesignMd5Hash: String?,
-        paymentSystemImageMd5Hash: String?
+        paymentSystemImageMd5Hash: String?,
+        cardType: CardType?
     ) -> GetProductListDatum {
         return GetProductListDatum (
             number: number ?? self.number,
@@ -293,6 +295,7 @@ extension GetProductListDatum {
             mediumDesignMd5Hash: mediumDesignMd5Hash ?? self.mediumDesignMd5Hash,
             largeDesignMd5Hash: largeDesignMd5Hash ?? self.largeDesignMd5Hash,
             paymentSystemImageMd5Hash: paymentSystemImageMd5Hash ?? self.paymentSystemImageMd5Hash,
+            cardType: cardType,
             isMain: isMain ?? self.isMain
         )
     }

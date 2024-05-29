@@ -55,6 +55,13 @@ class AccountStatementController: UIViewController {
         return button
     }()
     
+    private let makePrintFormViewModel: (PrintFormViewModelParameters, Model) ->  PrintFormView.ViewModel = {
+        return .init(
+            type: .product(productId: $0.ID, startDate: $0.startDate, endDate: $0.endDate),
+            model: $1,
+            dismissAction: $0.dismiss
+        )
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -335,7 +342,14 @@ class AccountStatementController: UIViewController {
         
         let startDate = self.startDate ?? Date()
         let endDate = self.endDate ?? Date()
-        let printFormViewModel = PrintFormView.ViewModel(type: .product(productId: card.id, startDate: startDate, endDate: endDate), model: Model.shared)
+        let printFormViewModel = makePrintFormViewModel(
+            .init(
+                ID: card.id,
+                startDate: startDate,
+                endDate: endDate,
+                dismiss: { [weak self] in self?.dismiss(animated: true) }),
+            Model.shared
+        )
         let printFormView = PrintFormView(viewModel: printFormViewModel)
         let printFormviewController = UIHostingController(rootView: printFormView)
         
@@ -366,5 +380,16 @@ class AccountStatementController: UIViewController {
                 self.stackView.layoutIfNeeded()
             }
         }
+    }
+}
+
+extension AccountStatementController {
+    
+    struct PrintFormViewModelParameters {
+        
+        let ID: ProductData.ID
+        let startDate: Date
+        let endDate: Date
+        let dismiss: () -> Void
     }
 }

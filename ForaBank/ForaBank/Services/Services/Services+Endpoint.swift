@@ -97,6 +97,7 @@ extension Services {
             case processPublicKeyAuthenticationRequest
             case showCVV
             case updateFastPaymentContract
+            case unblockCard
         }
     }
 }
@@ -234,8 +235,8 @@ extension Services.Endpoint {
     
     static let getCardStatementForPeriod: Self = .init(
         pathPrefix: .rest,
-        version: nil,
-        serviceName: .getCardStatementForPeriod_V3
+        version: .v4,
+        serviceName: .getCardStatementForPeriod
     )
     
     static let getClientConsentMe2MePull: Self = .init(
@@ -340,6 +341,12 @@ extension Services.Endpoint {
         serviceName: .showCVV
     )
     
+    static let unblockCard: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .unblockCard
+    )
+
     static let updateFastPaymentContract: Self = .init(
         pathPrefix: .rest,
         version: .none,

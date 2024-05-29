@@ -154,7 +154,8 @@ final class OperationStateViewModelTests: XCTestCase {
                 cardImage: .named("cardImage"),
                 paymentSystem: .named("paymentSystem"),
                 backgroundImage: .named("backgroundImage"),
-                backgroundColor: "color"
+                backgroundColor: "color",
+                clover: .named("clover")
             ),
             allProducts: []
         ))
@@ -306,7 +307,9 @@ final class OperationStateViewModelTests: XCTestCase {
                 cardImage: .named("cardImage"),
                 paymentSystem: .named("paymentSystem"),
                 backgroundImage: .named("backgroundImage"),
-                backgroundColor: "color"),
+                backgroundColor: "color",
+                clover: .named("clover")
+            ),
             allProducts: []
         )
     }

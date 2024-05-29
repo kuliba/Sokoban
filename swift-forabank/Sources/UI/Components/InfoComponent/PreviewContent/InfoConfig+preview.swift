@@ -11,11 +11,11 @@ public extension InfoConfig {
     
     static let preview: Self = .init(
         title: .init(
-            textFont: .subheadline,
+            textFont: .caption,
             textColor: .secondary
         ),
         value: .init(
-            textFont: .headline,
+            textFont: .subheadline,
             textColor: .primary
         )
     )
