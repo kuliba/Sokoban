@@ -203,7 +203,7 @@ func makeAnywayPaymentField(
     _ id: AnywayPayment.Element.Field.ID = .init(anyMessage()),
     value: String = anyMessage(),
     title: String = anyMessage(),
-    image: AnywayPayment.Element.Field.Image? = nil
+    image: AnywayPayment.Element.Image? = nil
 ) -> AnywayPayment.Element.Field {
     
     .init(id: id, title: title, value: .init(value), image: image)
@@ -220,6 +220,7 @@ func makeAnywayPaymentField(
 
 func makeAnywayPaymentParameter(
     field: AnywayPayment.Element.Parameter.Field = makeAnywayPaymentElementParameterField(),
+    image: AnywayPayment.Element.Image? = nil,
     masking: AnywayPayment.Element.Parameter.Masking = makeAnywayPaymentElementParameterMasking(),
     validation: AnywayPayment.Element.Parameter.Validation = makeAnywayPaymentElementParameterValidation(),
     uiAttributes: AnywayPayment.Element.Parameter.UIAttributes = makeAnywayPaymentElementParameterUIAttributes()
@@ -227,6 +228,7 @@ func makeAnywayPaymentParameter(
     
     .init(
         field: field,
+        image: image,
         masking: masking,
         validation: validation,
         uiAttributes: uiAttributes
@@ -396,7 +398,6 @@ func makeAnywayPaymentElementParameterUIAttributes(
         isReadOnly: isReadOnly,
         subGroup: subGroup,
         subTitle: subTitle,
-        svgImage: svgImage,
         title: title,
         type: type,
         viewType: viewType
@@ -895,6 +896,7 @@ func makeAnywayPaymentUpdateParameterUIAttributes(
     isReadOnly: Bool = false,
     subGroup: String? = nil,
     subTitle: String? = nil,
+    md5Hash: String? = nil,
     svgImage: String? = nil,
     title: String = anyMessage(),
     type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
@@ -911,6 +913,7 @@ func makeAnywayPaymentUpdateParameterUIAttributes(
         isReadOnly: isReadOnly,
         subGroup: subGroup,
         subTitle: subTitle,
+        md5Hash: md5Hash,
         svgImage: svgImage,
         title: title,
         type: type,
@@ -982,8 +985,9 @@ extension AnywayPayment.Element.Parameter {
     
     func updating(value: String?) -> Self {
         
-        .init(
+        return .init(
             field: .init(id: field.id, value: value.map { .init($0) }),
+            image: image,
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes

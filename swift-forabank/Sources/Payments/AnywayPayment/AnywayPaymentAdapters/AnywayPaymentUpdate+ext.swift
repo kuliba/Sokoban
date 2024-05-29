@@ -191,6 +191,7 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes {
             isReadOnly: parameter.isReadOnly,
             subGroup: parameter.subGroup,
             subTitle: parameter.subTitle,
+            md5Hash: parameter.md5hash,
             svgImage: parameter.svgImage,
             title: parameter.title,
             type: .init(parameter.type),

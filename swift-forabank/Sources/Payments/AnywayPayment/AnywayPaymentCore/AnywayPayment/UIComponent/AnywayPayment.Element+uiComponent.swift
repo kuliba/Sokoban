@@ -62,19 +62,22 @@ extension AnywayPayment.Element.UIComponent {
         public let title: String
         public let subtitle: String?
         public let value: Value?
+        public let image: Image?
         
         public init(
             id: ID,
             type: ParameterType,
             title: String,
             subtitle: String?,
-            value: Value?
+            value: Value?,
+            image: Image?
         ) {
             self.id = id
             self.type = type
             self.title = title
             self.subtitle = subtitle
             self.value = value
+            self.image = image
         }
     }
     
@@ -85,7 +88,7 @@ extension AnywayPayment.Element.UIComponent {
     }
 }
 
-extension AnywayPayment.Element.UIComponent.Field {
+extension AnywayPayment.Element.UIComponent {
     
     public enum Image: Equatable {
         
@@ -150,7 +153,8 @@ extension AnywayPayment.Element.Parameter {
             type: uiAttributes.parameterType,
             title: uiAttributes.title,
             subtitle: uiAttributes.subTitle,
-            value: field.value.map { .init($0.rawValue) }
+            value: field.value.map { .init($0.rawValue) },
+            image: image.map { .init($0) }
         )
     }
 }
@@ -223,9 +227,9 @@ private extension AnywayPayment.Element.UIComponent.Field {
     }
 }
 
-private extension AnywayPayment.Element.UIComponent.Field.Image {
+private extension AnywayPayment.Element.UIComponent.Image {
     
-    init(_ image: AnywayPayment.Element.Field.Image) {
+    init(_ image: AnywayPayment.Element.Image) {
         
         switch image {
             

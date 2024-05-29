@@ -260,6 +260,8 @@ extension AnywayPaymentUpdate.Parameter {
         public let isReadOnly: Bool
         public let subGroup: String?
         public let subTitle: String?
+        #warning("replace with Image")
+        public let md5Hash: String?
         public let svgImage: String?
         public let title: String
         public let type: FieldType
@@ -275,6 +277,7 @@ extension AnywayPaymentUpdate.Parameter {
             isReadOnly: Bool,
             subGroup: String?,
             subTitle: String?,
+            md5Hash: String?,
             svgImage: String?,
             title: String,
             type: FieldType,
@@ -289,6 +292,7 @@ extension AnywayPaymentUpdate.Parameter {
             self.isReadOnly = isReadOnly
             self.subGroup = subGroup
             self.subTitle = subTitle
+            self.md5Hash = md5Hash
             self.svgImage = svgImage
             self.title = title
             self.type = type

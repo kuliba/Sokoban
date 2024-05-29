@@ -97,8 +97,8 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             fieldTitle: String,
             md5Hash: String?,
             recycle: Bool,
-            svgImage: String? = nil,
-            typeIdParameterList: String? = nil
+            svgImage: String?,
+            typeIdParameterList: String?
         ) {
             self.fieldName = fieldName
             self.fieldValue = fieldValue

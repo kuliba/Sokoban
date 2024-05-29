@@ -141,6 +141,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         dataType: .number,
                         inputFieldType: .account,
                         isPrint: false,
+                        md5Hash: "6e17f502dae62b03d8bd4770606ee4b2",
                         title: "Лицевой счет",
                         viewType: .input
                     )
@@ -663,6 +664,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         isReadOnly: Bool = false,
         subGroup: String? = nil,
         subTitle: String? = nil,
+        md5Hash: String? = nil,
         svgImage: String? = nil,
         title: String,
         type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
@@ -679,6 +681,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             isReadOnly: isReadOnly,
             subGroup: subGroup,
             subTitle: subTitle,
+            md5Hash: md5Hash,
             svgImage: svgImage,
             title: title,
             type: type,
