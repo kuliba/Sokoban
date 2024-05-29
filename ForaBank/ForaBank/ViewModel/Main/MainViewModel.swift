@@ -65,7 +65,7 @@ class MainViewModel: ObservableObject, Resetable {
             MainSectionOpenProductView.ViewModel(model),
             MainSectionAtmView.ViewModel.initial
         ]
-        if !model.updateInfo.value.isProductsUpdated {
+        if !model.updateInfo.value.areProductsUpdated {
             sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
         }
         self.sections = sections
@@ -102,7 +102,7 @@ class MainViewModel: ObservableObject, Resetable {
             MainSectionAtmView.ViewModel.initial
         ]
         
-        if !model.updateInfo.value.isProductsUpdated {
+        if !model.updateInfo.value.areProductsUpdated {
             sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
         }
         return sections
@@ -1134,7 +1134,7 @@ private extension MainViewModel {
     
     func updateSections(_ updateInfo: UpdateInfo) {
         let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateInfo }) is UpdateInfoViewModel
-        switch (updateInfo.isProductsUpdated, containUpdateInfoSection) {
+        switch (updateInfo.areProductsUpdated, containUpdateInfoSection) {
             
         case (true, true):
             sections.removeFirst()

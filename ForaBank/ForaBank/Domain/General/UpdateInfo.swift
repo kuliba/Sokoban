@@ -9,37 +9,37 @@ import Foundation
 
 struct UpdateInfo: Equatable {
     
-    var isCardsUpdated: Bool
-    var isLoansUpdated: Bool
-    var isDepositsUpdated: Bool
-    var isAccountsUpdated: Bool
+    var areCardsUpdated: Bool
+    var areLoansUpdated: Bool
+    var areDepositsUpdated: Bool
+    var areAccountsUpdated: Bool
     
-    var isProductsUpdated: Bool {
-        return isCardsUpdated && isLoansUpdated && isDepositsUpdated && isAccountsUpdated
+    var areProductsUpdated: Bool {
+        return areCardsUpdated && areLoansUpdated && areDepositsUpdated && areAccountsUpdated
     }
     
     init(
-        isCardsUpdated: Bool = true,
-        isLoansUpdated: Bool = true,
-        isDepositsUpdated: Bool = true,
-        isAccountsUpdated: Bool = true
+        areCardsUpdated: Bool = true,
+        areLoansUpdated: Bool = true,
+        areDepositsUpdated: Bool = true,
+        areAccountsUpdated: Bool = true
     ) {
-        self.isCardsUpdated = isCardsUpdated
-        self.isLoansUpdated = isLoansUpdated
-        self.isDepositsUpdated = isDepositsUpdated
-        self.isAccountsUpdated = isAccountsUpdated
+        self.areCardsUpdated = areCardsUpdated
+        self.areLoansUpdated = areLoansUpdated
+        self.areDepositsUpdated = areDepositsUpdated
+        self.areAccountsUpdated = areAccountsUpdated
     }
     
     mutating func updateValueBy(type: ProductType, with newValue: Bool) {
         switch type {
         case .card:
-            isCardsUpdated = newValue
+            areCardsUpdated = newValue
         case .account:
-            isAccountsUpdated = newValue
+            areAccountsUpdated = newValue
         case .deposit:
-            isDepositsUpdated = newValue
+            areDepositsUpdated = newValue
         case .loan:
-            isLoansUpdated = newValue
+            areLoansUpdated = newValue
         }
     }
 }
