@@ -110,7 +110,7 @@ private extension AnywayPayment.Element.Field {
 
 private extension AnywayPayment.Element.Image {
     
-    init(_ image: AnywayPaymentUpdate.Field.Image) {
+    init(_ image: AnywayPaymentUpdate.Image) {
         
         switch image {
             
@@ -252,7 +252,7 @@ private extension AnywayPayment.Element.Parameter {
     ) {
         self.init(
             field: .init(parameter.field, fallbackValue: fallbackValue),
-            image: .init(parameter.uiAttributes),
+            image: .init(parameter),
             masking: .init(parameter.masking),
             validation: .init(parameter.validation),
             uiAttributes: .init(parameter.uiAttributes)
@@ -262,19 +262,19 @@ private extension AnywayPayment.Element.Parameter {
 
 private extension AnywayPayment.Element.Image {
     
-    init?(_ parameter: AnywayPaymentUpdate.Parameter.UIAttributes) {
+    init?(_ parameter: AnywayPaymentUpdate.Parameter) {
         
-        switch (parameter.md5Hash, parameter.svgImage) {
-        case (.none, .none):
+        switch parameter.image {
+        case .none:
             return nil
             
-        case let (.some(md5Hash), .none):
+        case let .md5Hash(md5Hash):
             self = .md5Hash(md5Hash)
             
-        case let (.none, .some(svg)):
+        case let .svg(svg):
             self = .svg(svg)
             
-        case let (.some(md5Hash), .some(svg)):
+        case let .withFallback(md5Hash, svg):
             self = .withFallback(md5Hash: md5Hash, svg: svg)
         }
     }

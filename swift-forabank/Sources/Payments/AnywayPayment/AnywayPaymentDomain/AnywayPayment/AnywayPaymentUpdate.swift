@@ -63,20 +63,30 @@ extension AnywayPaymentUpdate {
         }
     }
     
+    public enum Image: Equatable {
+        
+        case md5Hash(String)
+        case svg(String)
+        case withFallback(md5Hash: String, svg: String)
+    }
+    
     public struct Parameter: Equatable {
         
         public let field: Field
+        public let image: Image?
         public let masking: Masking
         public let validation: Validation
         public let uiAttributes: UIAttributes
         
         public init(
             field: Field,
+            image: Image?,
             masking: Masking,
             validation: Validation,
             uiAttributes: UIAttributes
         ) {
             self.field = field
+            self.image = image
             self.masking = masking
             self.validation = validation
             self.uiAttributes = uiAttributes
@@ -173,16 +183,6 @@ public extension AnywayPaymentUpdate.Details.Info {
     }
 }
 
-public extension AnywayPaymentUpdate.Field {
-    
-    enum Image: Equatable {
-        
-        case md5Hash(String)
-        case svg(String)
-        case withFallback(md5Hash: String, svg: String)
-    }
-}
-
 extension AnywayPaymentUpdate.Parameter {
     
     public struct Field: Equatable {
@@ -260,9 +260,6 @@ extension AnywayPaymentUpdate.Parameter {
         public let isReadOnly: Bool
         public let subGroup: String?
         public let subTitle: String?
-        #warning("replace with Image")
-        public let md5Hash: String?
-        public let svgImage: String?
         public let title: String
         public let type: FieldType
         public let viewType: ViewType
@@ -277,8 +274,6 @@ extension AnywayPaymentUpdate.Parameter {
             isReadOnly: Bool,
             subGroup: String?,
             subTitle: String?,
-            md5Hash: String?,
-            svgImage: String?,
             title: String,
             type: FieldType,
             viewType: ViewType
@@ -292,8 +287,6 @@ extension AnywayPaymentUpdate.Parameter {
             self.isReadOnly = isReadOnly
             self.subGroup = subGroup
             self.subTitle = subTitle
-            self.md5Hash = md5Hash
-            self.svgImage = svgImage
             self.title = title
             self.type = type
             self.viewType = viewType

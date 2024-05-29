@@ -106,13 +106,30 @@ private extension AnywayPaymentUpdate.Field {
     }
 }
 
-private extension AnywayPaymentUpdate.Field.Image {
+private extension AnywayPaymentUpdate.Image {
     
     init?(_ additional: ResponseMapper.CreateAnywayTransferResponse.Additional) {
         
         switch (additional.md5hash, additional.svgImage) {
         case (.none, .none):
             return nil
+            
+        case let (.some(md5Hash), .none):
+            self = .md5Hash(md5Hash)
+            
+        case let (.none, .some(svg)):
+            self = .svg(svg)
+            
+        case let (.some(md5Hash), .some(svg)):
+            self = .withFallback(md5Hash: md5Hash, svg: svg)
+        }
+    }
+    
+    init?(_ parameter: ResponseMapper.CreateAnywayTransferResponse.Parameter) {
+        
+        switch (parameter.md5hash, parameter.svgImage) {
+        case (.none, .none):
+             return nil
             
         case let (.some(md5Hash), .none):
             self = .md5Hash(md5Hash)
@@ -132,6 +149,7 @@ private extension AnywayPaymentUpdate.Parameter {
         
         self.init(
             field: .init(parameter),
+            image: .init(parameter),
             masking: .init(parameter),
             validation: .init(parameter),
             uiAttributes: .init(parameter)
@@ -191,8 +209,6 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes {
             isReadOnly: parameter.isReadOnly,
             subGroup: parameter.subGroup,
             subTitle: parameter.subTitle,
-            md5Hash: parameter.md5hash,
-            svgImage: parameter.svgImage,
             title: parameter.title,
             type: .init(parameter.type),
             viewType: .init(parameter.viewType)
