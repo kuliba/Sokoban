@@ -63,6 +63,7 @@ public extension Config {
         public let cardPadding: CGFloat
         public let cornerRadius: CGFloat
         public let checkPadding: CGFloat
+        public let cloverTrailing: CGFloat
         
         public init(
             headerLeadingPadding: CGFloat,
@@ -70,7 +71,8 @@ public extension Config {
             nameSpacing: CGFloat,
             cardPadding: CGFloat,
             cornerRadius: CGFloat,
-            checkPadding: CGFloat
+            checkPadding: CGFloat,
+            cloverTrailing: CGFloat
         ) {
             self.headerLeadingPadding = headerLeadingPadding
             self.headerTopPadding = headerTopPadding
@@ -78,6 +80,7 @@ public extension Config {
             self.cardPadding = cardPadding
             self.cornerRadius = cornerRadius
             self.checkPadding = checkPadding
+            self.cloverTrailing = cloverTrailing
         }
     }
     
@@ -107,16 +110,13 @@ public extension Config {
     struct Sizes {
         
         public let paymentSystemIcon: CGSize
-        public let checkView: CGSize
         public let checkViewImage: CGSize
         
         public init(
             paymentSystemIcon: CGSize,
-            checkView: CGSize,
             checkViewImage: CGSize
         ) {
             self.paymentSystemIcon = paymentSystemIcon
-            self.checkView = checkView
             self.checkViewImage = checkViewImage
         }
     }
@@ -126,20 +126,17 @@ public extension Config {
         let background: Color
         let rateFill: Color
         let rateForeground: Color
-        let checkForeground: Color
         
         public init(
             foreground: Color,
             background: Color,
             rateFill: Color,
-            rateForeground: Color,
-            checkForeground: Color
+            rateForeground: Color
         ) {
             self.foreground = foreground
             self.background = background
             self.rateFill = rateFill
             self.rateForeground = rateForeground
-            self.checkForeground = checkForeground
         }
     }
     

@@ -15,7 +15,8 @@ extension SberQR.Config {
         background: .init(
             color: .mainColorsGrayLightest
         ),
-        button: .iFora,
+        button: .iFora, 
+        carousel: .iForaSmall,
         info: .iFora,
         productSelect: .iFora
     )
@@ -62,7 +63,8 @@ extension ProductSelectComponent.ProductSelectConfig {
             title: .init(
                 textFont: .textBodyXsR11140(),
                 textColor: .textWhite.opacity(0.4)
-            )
+            ), 
+            selectedImage: .ic16CheckLightGray16Fixed
         ),
         chevron: .init(
             color: .iconGray,
@@ -79,7 +81,8 @@ extension ProductSelectComponent.ProductSelectConfig {
                 textColor: .textPlaceholder
             )
         ),
-        title: .secondary
+        title: .secondary,
+        carouselConfig: .iForaSmall
     )
 }
 

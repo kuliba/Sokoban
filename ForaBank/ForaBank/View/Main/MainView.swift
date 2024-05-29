@@ -10,6 +10,7 @@ import LandingUIComponent
 import PaymentSticker
 import SberQR
 import ScrollViewProxy
+import ActivateSlider
 import SwiftUI
 
 struct MainView<NavigationOperationView: View>: View {
@@ -19,6 +20,7 @@ struct MainView<NavigationOperationView: View>: View {
     
     let viewFactory: MainViewFactory
     let paymentsTransfersViewFactory: PaymentsTransfersViewFactory
+    let productProfileViewFactory: ProductProfileViewFactory
     let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
@@ -159,6 +161,7 @@ struct MainView<NavigationOperationView: View>: View {
             ProductProfileView(
                 viewModel: productProfileViewModel,
                 viewFactory: paymentsTransfersViewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
             
@@ -184,6 +187,7 @@ struct MainView<NavigationOperationView: View>: View {
             MyProductsView(
                 viewModel: myProductsViewModel,
                 viewFactory: paymentsTransfersViewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
             
@@ -249,6 +253,7 @@ struct MainView<NavigationOperationView: View>: View {
             ProductProfileView(
                 viewModel: productProfileViewModel,
                 viewFactory: paymentsTransfersViewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
             
@@ -410,6 +415,7 @@ struct MainView_Previews: PreviewProvider {
             navigationOperationView: EmptyView.init,
             viewFactory: .preview,
             paymentsTransfersViewFactory: .preview,
+            productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)),
             getUImage: { _ in nil }
         )
     }
@@ -444,8 +450,10 @@ extension MainViewModel {
             paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
@@ -463,8 +471,10 @@ extension MainViewModel {
             paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
@@ -482,8 +492,10 @@ extension MainViewModel {
             paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),

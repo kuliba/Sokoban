@@ -521,20 +521,24 @@ extension PaymentsNameView {
 
 struct PaymentsNameView_Previews: PreviewProvider {
     
+    private static func preview(_ viewModel: PaymentsGroupViewModel) -> some View {
+        PaymentsGroupView(viewModel: viewModel)
+    }
+
     static var previews: some View {
        
         Group {
 
-            PaymentsGroupView(viewModel: PaymentsGroupViewModel(items: [PaymentsNameView.ViewModel.normal]))
+            preview(PaymentsGroupViewModel(items: [PaymentsNameView.ViewModel.normal]))
                 .previewLayout(.fixed(width: 375, height: 100))
             
-            PaymentsGroupView(viewModel: PaymentsGroupViewModel(items: [PaymentsNameView.ViewModel.normalNotEditable]))
+            preview(PaymentsGroupViewModel(items: [PaymentsNameView.ViewModel.normalNotEditable]))
                 .previewLayout(.fixed(width: 375, height: 100))
 
-            PaymentsGroupView(viewModel: PaymentsGroupViewModel(items: [PaymentsNameView.ViewModel.edit]))
+            preview(PaymentsGroupViewModel(items: [PaymentsNameView.ViewModel.edit]))
                 .previewLayout(.fixed(width: 375, height: 320))
 
-            PaymentsGroupView(viewModel: PaymentsGroupViewModel(items: [PaymentsNameView.ViewModel.editPart]))
+            preview(PaymentsGroupViewModel(items: [PaymentsNameView.ViewModel.editPart]))
                 .previewLayout(.fixed(width: 375, height: 320))
         }
     }

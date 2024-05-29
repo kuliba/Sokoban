@@ -39,7 +39,8 @@ public extension ProductSelectConfig {
         title: .init(
             textFont: .headline,
             textColor: .green
-        )
+        ),
+        carouselConfig: .preview
     )
 }
 
@@ -57,6 +58,7 @@ extension ProductSelectConfig.Card {
         title: .init(
             textFont: .body,
             textColor: .purple
-        )
+        ), 
+        selectedImage: Image(systemName: "checkmark.circle.fill")
     )
 }

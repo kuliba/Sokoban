@@ -16,14 +16,14 @@ struct ThumbView: View {
         ZStack {
             
             Circle()
-                .foregroundColor(config.backgroundColor)
+                .foregroundColor(config.foregroundColor)
             Circle()
                 .strokeBorder(config.foregroundColor, lineWidth: 1)
             
             config.icon
                 .resizable()
                 .renderingMode(.template)
-                .foregroundColor(config.foregroundColor)
+                .foregroundColor(.gray)
                 .frame(width: 24, height: 24)
                 .modifier(AnimationModifire(isAnimated: config.isAnimated))
         }
@@ -58,7 +58,7 @@ struct ThumbView_Previews: PreviewProvider {
             ZStack {
                 Color.gray
                     .frame(width: 100, height: 100)
-                ThumbView(config: SliderConfig.default.thumbConfig(.confirmActivate))
+                ThumbView(config: SliderConfig.default.thumbConfig(.confirmActivate(1)))
             }
         }
     }

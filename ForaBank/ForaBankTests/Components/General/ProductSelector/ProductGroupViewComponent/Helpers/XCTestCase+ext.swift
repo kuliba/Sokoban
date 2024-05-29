@@ -26,7 +26,7 @@ extension XCTestCase {
     
     typealias ProductTypeCounts = [(ProductType, Int)]
 
-    func makeProductViewVMs(count: Int) -> [ProductView.ViewModel] {
+    func makeProductViewVMs(count: Int) -> [ProductViewModel] {
         
         let productsData = makeProductsData([(.card, count)])
         return makeProductViewVMs(from: productsData)
@@ -34,7 +34,7 @@ extension XCTestCase {
     
     func makeProductViewVMs(
         from productsData: ProductsData
-    ) -> [ProductView.ViewModel] {
+    ) -> [ProductViewModel] {
         
         productsData
             .values
@@ -44,7 +44,7 @@ extension XCTestCase {
     
     func makeProductViewVM(
         from productData: ProductData
-    ) -> ProductView.ViewModel {
+    ) -> ProductViewModel {
         
         .init(
             with: productData,

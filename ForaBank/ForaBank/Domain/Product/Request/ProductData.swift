@@ -263,57 +263,20 @@ extension ProductData {
     
     var productStatus: ProductStatus {
         
-        if let cardProduct = self as? ProductCardData {
+        if let cardProduct = self.asCard, let statusCard = cardProduct.statusCard {
             
-            // only card product can be active
-            if cardProduct.isActivated {
+            switch statusCard {
+            case .active:
+                return cardProduct.isVisible ? .active : .notVisible
                 
-                // only active card product can be blocked
-                if cardProduct.isBlocked {
-                    
-                    if isVisible {
-                        
-                        return [.active, .blocked, .visible]
-                        
-                    } else {
-                        
-                        return [.active, .blocked]
-                    }
-                    
-                } else {
-                    
-                    if isVisible {
-                        
-                        return [.active, .visible]
-                        
-                    } else {
-                        
-                        return .active
-                    }
-                }
-
-            } else {
+            case .blockedUnlockAvailable, .blockedUnlockNotAvailable:
+                return cardProduct.isVisible ? .blocked : .blockedNotVisible
                 
-                if isVisible {
-                    
-                    return [.active, .visible]
-                    
-                } else {
-                    
-                    return .active
-                }
+            case .notActivated:
+                return .notActive
             }
-            
         } else {
-            
-            if isVisible {
-                
-                return [.active, .visible]
-                
-            } else {
-                
-                return .active
-            }
+            return isVisible ? .active : .notVisible
         }
     }
 }
@@ -481,4 +444,10 @@ extension ProductData {
         default: return nil
         }
     }
+}
+
+extension ProductData {
+
+   var asAccount: ProductAccountData? { self as? ProductAccountData }
+   var asCard: ProductCardData? { self as? ProductCardData }
 }

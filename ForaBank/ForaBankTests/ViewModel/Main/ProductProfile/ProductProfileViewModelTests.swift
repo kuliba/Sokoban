@@ -93,7 +93,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_handlePinError_certificateError_showActivateCertificateAlert() throws {
         
-        let (sut, model) = try makeSUT()
+        let (sut, model, _) = try makeSUT()
         
         XCTAssertNil(sut.alert)
         
@@ -123,7 +123,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_handlePinError_serviceFailureError_showActivateCertificateAlert() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.alert)
         
@@ -145,7 +145,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_showActivateCertificateAlert() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.alert)
         
@@ -167,7 +167,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_activateCertificateAction_happyPathActivateCertificate_shouldShowConfirmOtpViewHideSpinner() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.alert)
         XCTAssertNil(sut.fullScreenCoverState)
@@ -195,7 +195,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_activateCertificateAction_sadPathActivateCertificate_shouldShowAlertHideSpinner() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.alert)
         XCTAssertNil(sut.fullScreenCoverState)
@@ -223,7 +223,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     // MARK: - test showSpinner
     func test_showSpinner_linkNotInfoProductModel() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.spinner)
         XCTAssertNil(sut.link)
@@ -238,7 +238,7 @@ final class ProductProfileViewModelTests: XCTestCase {
 
     func test_showSpinner_linkInfoProductModel() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.spinner)
         XCTAssertNil(sut.link)
@@ -253,16 +253,44 @@ final class ProductProfileViewModelTests: XCTestCase {
     }
   // MARK: - optionsPannelAction
 
-    func test_optionsPannelAction_requisites_showRequisites() throws {
+    func test_optionsPanelAction_requisites_card_createNewPanelShowRequisites() throws {
         
-        let model = makeModelWithProducts()
-        let product = try XCTUnwrap(model.products.value[.card]?.first)
+        let (sut, _, product) = try makeSUT(statusCard: .active)
+        
+        XCTAssertNil(sut.alert)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
+        XCTAssertNil(sut.optionsPannel)
+
+        sut.buttons.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped(buttonType: .bottomLeft))
+
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 2)
+        XCTAssertNil(sut.optionsPannel)
+
+        XCTAssertNil(sut.link)
+        
+        sut.event(.init(productID: product.id, type: .accountDetails))
+
+        //в коде now + .milliseconds(300)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+        
+        XCTAssertNotNil(sut.link)
+        XCTAssertTrue(sut.viewModelByLink is InfoProductViewModel)
+
+        sut.link = nil
+    }
+    
+    func test_optionsPanelAction_notCard_createOldPanelShowRequisite() throws {
+        
+        let model = makeModelWithProducts([(.deposit, 1)])
+        let product = try XCTUnwrap(model.products.value[.deposit]?.first)
         let sut = try XCTUnwrap(makeSUT(model: model, product: product))
         
         XCTAssertNil(sut.optionsPannel)
         XCTAssertNil(sut.link)
         
-        sut.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: sut.panelViewModelRequisites))
+        sut.buttons.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped(buttonType: .bottomLeft))
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
@@ -283,27 +311,24 @@ final class ProductProfileViewModelTests: XCTestCase {
         sut.link = nil
     }
 
-    func test_optionsPannelAction_blockCard_showAlert() throws {
+    func test_optionsPanelAction_statusCardActive_blockCard_showAlert() throws {
         
-        let (sut, _) = try makeSUT()
-        
-        XCTAssertNil(sut.optionsPannel)
-        
-        sut.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: sut.panelViewModelBlockCardChangePin))
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        
-        XCTAssertNotNil(sut.optionsPannel)
-        
+        let (sut, _, product) = try makeSUT(statusCard: .active)
+                
         XCTAssertNil(sut.alert)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
+        XCTAssertNil(sut.optionsPannel)
+
+        sut.createCardGuardianPanel(product)
         
-        let action = ProductProfileOptionsPannelViewModelAction.ButtonTapped(buttonType: .card(.block))
-        
-        sut.optionsPannel?.action.send(action)
-        
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
+        XCTAssertNil(sut.optionsPannel)
+
+        sut.event(.init(productID: product.id, type: .cardGuardian))
+         
         //в коде now + .milliseconds(300)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
-        
+
         XCTAssertNotNil(sut.alert)
         
         XCTAssertNoDiff(sut.alert?.title, "Заблокировать карту?")
@@ -324,32 +349,26 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNil(sut.alert)
     }
     
-    func test_optionsPannelAction_unBlockCard_showAlert() throws {
+    func test_optionsPanelAction_statusCardBlockedUnlockAvailable_unBlockCard_showAlert() throws {
         
-        let (sut, _) = try makeSUT(
-            status: .blockedByClient,
-            statusPC: .blockedByClient
+        let (sut, _, product) = try makeSUT(
+            statusCard: .blockedUnlockAvailable
         )
         
-        XCTAssertNil(sut.optionsPannel)
-        
-        sut.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: sut.panelViewModelUnBlockCardChangePin))
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        
-        XCTAssertNotNil(sut.optionsPannel)
-        
         XCTAssertNil(sut.alert)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
         
-        let action = ProductProfileOptionsPannelViewModelAction.ButtonTapped(buttonType: .card(.unblock))
+        sut.createCardGuardianPanel(product)
         
-        sut.optionsPannel?.action.send(action)
-        
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
+
+        sut.event(.init(productID: product.id, type: .cardGuardian))
+         
         //в коде now + .milliseconds(300)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
-        
+
         XCTAssertNotNil(sut.alert)
-        
+
         XCTAssertNoDiff(sut.alert?.title, "Разблокировать карту?")
         XCTAssertNil(sut.alert?.message)
         
@@ -368,23 +387,59 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNil(sut.alert)
     }
     
-    func test_optionsPannelAction_changePin_sadPath_showActivateCertificateAlert() throws {
+    func test_optionsPanelAction_statusCardBlockedUnlockNotAvailable_unBlockCard_showAlert() throws {
         
-        let (sut, _) = try makeSUT(cvvPINServicesClient: SadCVVPINServicesClient())
+        let (sut, _, product) = try makeSUT(
+            statusCard: .blockedUnlockNotAvailable
+        )
         
-        XCTAssertNil(sut.optionsPannel)
+        XCTAssertNil(sut.alert)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
+
+        sut.createCardGuardianPanel(product)
         
-        sut.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: sut.panelViewModelBlockCardChangePin))
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
+        XCTAssertTrue(sut.optionsPanelNew.containsTitle("Разблокировать"))
+
+        sut.event(.init(productID: product.id, type: .cardGuardian))
+         
+        //в коде now + .milliseconds(300)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+
+        XCTAssertNotNil(sut.alert)
+
+        XCTAssertNoDiff(sut.alert?.title, "Невозможно разблокировать")
+        XCTAssertNoDiff(sut.alert?.message, "Обратитесь в поддержку, чтобы разблокировать карту")
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .default)
+        XCTAssertNoDiff(sut.alert?.primary.title, "Отмена")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNoDiff(sut.alert?.secondary?.type, .default)
+        XCTAssertNoDiff(sut.alert?.secondary?.title, "Контакты")
+        XCTAssertNotNil(sut.alert?.secondary?.action)
+        
+        sut.action.send(ProductProfileViewModelAction.Close.Alert())
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        XCTAssertNotNil(sut.optionsPannel)
+        XCTAssertNil(sut.alert)
+    }
+
+    
+    func test_optionsPannelAction_changePin_sadPath_showActivateCertificateAlert() throws {
         
+        let (sut, _, product) = try makeSUT(cvvPINServicesClient: SadCVVPINServicesClient())
+        
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
+        XCTAssertNil(sut.alert)
+
+        sut.createCardGuardianPanel(product)
+        
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
         XCTAssertNil(sut.alert)
         
-        let action = ProductProfileOptionsPannelViewModelAction.ButtonTapped(buttonType: .card(.changePin))
-        
-        sut.optionsPannel?.action.send(action)
+        sut.event(.init(productID: product.id, type: .changePin))
         
         //в коде now + .milliseconds(300)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
@@ -403,21 +458,17 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_optionsPannelAction_changePin_happyPath_showPinCodeView() throws {
         
-        let (sut, _) = try makeSUT(cvvPINServicesClient: HappyCVVPINServicesClient())
+        let (sut, _, product) = try makeSUT(cvvPINServicesClient: HappyCVVPINServicesClient())
         
-        XCTAssertNil(sut.optionsPannel)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
+
+        sut.createCardGuardianPanel(product)
         
-        sut.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: sut.panelViewModelUnBlockCardChangePin))
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
-        
-        XCTAssertNotNil(sut.optionsPannel)
+        XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
         XCTAssertNil(sut.fullScreenCoverState)
         
-        let action = ProductProfileOptionsPannelViewModelAction.ButtonTapped(buttonType: .card(.changePin))
-        
-        sut.optionsPannel?.action.send(action)
-        
+        sut.event(.init(productID: product.id, type: .changePin))
+
         //в коде now + .milliseconds(300)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
         
@@ -428,12 +479,12 @@ final class ProductProfileViewModelTests: XCTestCase {
         }
         sut.fullScreenCoverState = nil
     }
-    
+
     // MARK: - test showCvvByTap
     
     func test_showCvvByTap_happyPath_returnCVV() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         sut.showCvvByTap(cardId: .init(111)) { result in
             
@@ -441,9 +492,72 @@ final class ProductProfileViewModelTests: XCTestCase {
         }
     }
     
+    func test_showCvvByTap_cardNotActivated_showAlert() throws {
+        
+        let (sut, _, _) = try makeSUT(statusCard: .notActivated)
+        
+        XCTAssertNil(sut.alert)
+        
+        sut.showCvvByTap(cardId: .init(111)) { _ in
+            
+        }
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertNotNil(sut.alert)
+        XCTAssertNoDiff(sut.alert?.title, "Информация")
+        XCTAssertNoDiff(sut.alert?.message, "Для просмотра CVV и смены PIN карта должна быть активна.")
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .cancel)
+        XCTAssertNoDiff(sut.alert?.primary.title, "OK")
+        XCTAssertNotNil(sut.alert?.primary.action)
+    }
+    
+    func test_showCvvByTap_cardBlockedUnlockAvailable_showAlert() throws {
+        
+        let (sut, _, _) = try makeSUT(statusCard: .blockedUnlockAvailable)
+        
+        XCTAssertNil(sut.alert)
+        
+        sut.showCvvByTap(cardId: .init(111)) { _ in
+            
+        }
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertNotNil(sut.alert)
+        XCTAssertNoDiff(sut.alert?.title, "Информация")
+        XCTAssertNoDiff(sut.alert?.message, "Для просмотра CVV и смены PIN карта должна быть активна.")
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .cancel)
+        XCTAssertNoDiff(sut.alert?.primary.title, "OK")
+        XCTAssertNotNil(sut.alert?.primary.action)
+    }
+
+    func test_showCvvByTap_cardBlockedUnlockNotAvailable_showAlert() throws {
+        
+        let (sut, _, _) = try makeSUT(statusCard: .blockedUnlockNotAvailable)
+        
+        XCTAssertNil(sut.alert)
+        
+        sut.showCvvByTap(cardId: .init(111)) { _ in
+            
+        }
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+
+        XCTAssertNotNil(sut.alert)
+        XCTAssertNoDiff(sut.alert?.title, "Информация")
+        XCTAssertNoDiff(sut.alert?.message, "Для просмотра CVV и смены PIN карта должна быть активна.")
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .cancel)
+        XCTAssertNoDiff(sut.alert?.primary.title, "OK")
+        XCTAssertNotNil(sut.alert?.primary.action)
+    }
+
     func test_showCvvByTap_checkCertificateError_returNil() throws {
         
-        let (sut, _) = try makeSUT(
+        let (sut, _, _) = try makeSUT(
             cvvPINServicesClient: SadShowCVVSadCheckCertificateClient()
         )
         
@@ -455,7 +569,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_showCvvByTap_checkCertificateConnectivityError_returNil() throws {
         
-        let (sut, _) = try makeSUT(
+        let (sut, _, _) = try makeSUT(
             cvvPINServicesClient: SadShowCVVCheckCertificateConnectivityClient()
         )
         
@@ -467,7 +581,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_showCvvByTap_activateCertificateError_returnNil() throws {
         
-        let (sut, _) = try makeSUT(
+        let (sut, _, _) = try makeSUT(
             cvvPINServicesClient: SadShowCVVSadActivateCertificateClient()
         )
         
@@ -478,7 +592,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_showCvvByTap_otpErrorRetryAttempts0_returNil() throws {
         
-        let (sut, _) = try makeSUT(
+        let (sut, _, _) = try makeSUT(
             cvvPINServicesClient: SadShowCVVSadOtpRetryAttempts0CertificateClient()
         )
         
@@ -489,7 +603,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     
     func test_showCvvByTap_otpErrorRetryAttempts_returNil() throws {
         
-        let (sut, _) = try makeSUT(
+        let (sut, _, _) = try makeSUT(
             cvvPINServicesClient: SadShowCVVSadOtpRetryAttemptsCertificateClient()
         )
         
@@ -502,7 +616,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     // MARK: - test show/hide spinner
     func test_showHideSpinner() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.spinner)
         
@@ -522,7 +636,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     // MARK: - test show confirm otp
     func test_showConfirmOtp() throws {
         
-        let (sut, _) = try makeSUT()
+        let (sut, _, _) = try makeSUT()
         
         XCTAssertNil(sut.fullScreenCoverState)
         
@@ -557,36 +671,35 @@ final class ProductProfileViewModelTests: XCTestCase {
             paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
-            qrViewModelFactory: .preview(), 
+            unblockCardServices: .preview(),
+            qrViewModelFactory: .preview(),
             paymentsTransfersFactory: .preview, 
             operationDetailFactory: .preview,
             cvvPINServicesClient: cvvPINServicesClient,
-            product: product,
+            product: product, 
+            productNavigationStateManager: .preview,
+            productProfileViewModelFactory: .preview,
             rootView: rootView,
             dismissAction: {}
         )
     }
     
     private func makeSUT(
-        status: ProductData.Status = .active,
-        statusPC: ProductData.StatusPC = .active,
+        statusCard: ProductCardData.StatusCard = .active,
+        cardType: ProductCardData.CardType = .main,
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> (
         sut: ProductProfileViewModel,
-        model: Model
+        model: Model,
+        card: ProductCardData
     ) {
         let model = Model.mockWithEmptyExcept()
-        model.products.value = [.card: [
-            ProductCardData(
-                status: status,
-                statusPc: statusPC
-            )
-        ]]
-        
-        let product = try XCTUnwrap(model.products.value[.card]?.first)
-        
+        let card = ProductCardData(statusCard: statusCard, cardType: cardType)
+
+        model.products.value = [.card: [ card ]]
+                
         let sut = try XCTUnwrap(
             ProductProfileViewModel(
                 model,
@@ -594,11 +707,14 @@ final class ProductProfileViewModelTests: XCTestCase {
                 paymentsTransfersFlowManager: .preview,
                 userAccountNavigationStateManager: .preview,
                 sberQRServices: .empty(),
-                qrViewModelFactory: .preview(), 
+                unblockCardServices: .preview(),
+                qrViewModelFactory: .preview(),
                 paymentsTransfersFactory: .preview,
                 operationDetailFactory: .preview,
                 cvvPINServicesClient: cvvPINServicesClient,
-                product: product,
+                product: card,
+                productNavigationStateManager: .preview,
+                productProfileViewModelFactory: .preview,
                 rootView: "",
                 dismissAction: {}
             )
@@ -607,7 +723,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(model, file: file, line: line)
         
-        return (sut, model)
+        return (sut, model, card)
     }
     
     func makeModelWithProducts(_ counts: ProductTypeCounts = [(.card, 1)]) -> Model {
@@ -634,30 +750,24 @@ private extension ProductProfileViewModel {
         }
     }
     
+    var optionsPanelNew: [PanelButton.Details] {
+        
+        switch bottomSheet?.type {
+            
+        case let .optionsPanelNew(optionsPanel):
+            
+            return optionsPanel
+            
+        default:
+            return []
+        }
+    }
+
+    
     var panelViewModelRequisites: ProductProfileOptionsPannelView.ViewModel {
         .init(
             buttonsTypes: [
                 .requisites
-            ],
-            productType: .card
-        )
-    }
-
-    var panelViewModelBlockCardChangePin: ProductProfileOptionsPannelView.ViewModel {
-        .init(
-            buttonsTypes: [
-                .card(.block),
-                .card(.changePin)
-            ],
-            productType: .card
-        )
-    }
-    
-    var panelViewModelUnBlockCardChangePin: ProductProfileOptionsPannelView.ViewModel {
-        .init(
-            buttonsTypes: [
-                .card(.unblock),
-                .card(.changePin)
             ],
             productType: .card
         )
@@ -683,6 +793,13 @@ private extension ProductProfileViewModel {
     }
 }
 
+private extension Array where Element == PanelButton.Details {
+    
+    func containsTitle(_ title: String) -> Bool {
+        return self.filter { $0.title == title }.first != nil
+    }
+}
+
 private extension ProductCardData {
     
     convenience init(
@@ -694,10 +811,10 @@ private extension ProductCardData {
         holderName: String? = "Иванов",
         allowCredit: Bool = true,
         allowDebit: Bool = true,
-        status: ProductData.Status = .active,
+        statusCard: ProductCardData.StatusCard = .active,
         loanBaseParam: ProductCardData.LoanBaseParamInfoData? = nil,
-        statusPc: ProductData.StatusPC = .active,
-        isMain: Bool = true
+        isMain: Bool = true,
+        cardType: ProductCardData.CardType = .main
     ) {
         
         self.init(
@@ -728,7 +845,7 @@ private extension ProductCardData {
             cardId: 0,
             name: "",
             validThru: Date(),
-            status: status,
+            status: .active,
             expireDate: nil,
             holderName: holderName,
             product: nil,
@@ -737,13 +854,16 @@ private extension ProductCardData {
             paymentSystemName: nil,
             paymentSystemImage: nil,
             loanBaseParam: loanBaseParam,
-            statusPc: statusPc,
+            statusPc: .active,
             isMain: isMain,
             externalId: nil,
             order: 0,
             visibility: true,
             smallDesignMd5hash: "",
-            smallBackgroundDesignHash: "")
+            smallBackgroundDesignHash: "",
+            statusCard: statusCard,
+            cardType: cardType
+        )
     }
 }
 

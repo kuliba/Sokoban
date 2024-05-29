@@ -23,7 +23,8 @@ public extension ProductSelectView where ProductView == ProductCardView {
                 
                 .init(
                     productCard: .init(product: $0),
-                    config: cardConfig
+                    config: cardConfig, 
+                    isSelected: state.selected?.id == $0.id
                 )
             }
         )
