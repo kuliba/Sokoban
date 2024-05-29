@@ -543,7 +543,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         fieldValue: String,
         fieldTitle: String,
         md5Hash: String? = nil,
-        recycle: Bool = false,
         svgImage: String? = nil,
         typeIdParameterList: String? = nil
     ) -> AnywayPaymentUpdate.Field {
@@ -553,7 +552,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             value: fieldValue,
             title: fieldTitle,
             md5Hash: md5Hash,
-            recycle: recycle,
             svgImage: svgImage,
             typeIdParameterList: typeIdParameterList
         )

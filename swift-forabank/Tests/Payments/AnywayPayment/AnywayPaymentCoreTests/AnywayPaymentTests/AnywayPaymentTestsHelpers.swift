@@ -580,7 +580,6 @@ func makeAnywayPaymentUpdateField(
         value: value,
         title: title,
         md5Hash: md5Hash,
-        recycle: false,
         svgImage: nil,
         typeIdParameterList: nil
     )
