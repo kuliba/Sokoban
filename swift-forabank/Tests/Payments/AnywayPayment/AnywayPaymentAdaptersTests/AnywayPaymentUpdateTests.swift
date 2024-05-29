@@ -29,7 +29,37 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     paymentOperationDetailID: 54321
                 )
             ),
-            fields: [],
+            fields: [
+                makeField(
+                    fieldName: "3",
+                    fieldValue: "Москва г., Донская ул., д.112 корп.211, кв.111",
+                    fieldTitle: "Адрес",
+                    image: .md5Hash("87f2fad4a6997e1d3ae634c551c50f14")
+                ),
+                makeField(
+                    fieldName: "n1",
+                    fieldValue: "v1",
+                    fieldTitle: "t1"
+                ),
+                makeField(
+                    fieldName: "n2",
+                    fieldValue: "v2",
+                    fieldTitle: "t2",
+                    image: .md5Hash("md5hash2")
+                ),
+                makeField(
+                    fieldName: "n3",
+                    fieldValue: "v3",
+                    fieldTitle: "t3",
+                    image: .svg("svgImage3")
+                ),
+                makeField(
+                    fieldName: "n4",
+                    fieldValue: "v4",
+                    fieldTitle: "t4",
+                    image: .withFallback(md5Hash: "md5hash4", svg: "svgImage4")
+                ),
+            ],
             parameters: [
                 .init(
                     field: makeParameterField(
@@ -361,7 +391,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     fieldName: "1",
                     fieldValue: "100611401082",
                     fieldTitle: "Лицевой счет",
-                    svgImage: .svgSample1
+                    image: .svg(.svgSample1)
                 ),
                 makeField(
                     fieldName: "2",
@@ -372,7 +402,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     fieldName: "4",
                     fieldValue: "МОСКВА,АМУРСКАЯ УЛ.,2А К2,108",
                     fieldTitle: "Адрес",
-                    svgImage: .svgSample2
+                    image: .svg(.svgSample2)
                 ),
                 makeField(
                     fieldName: "5",
@@ -433,13 +463,13 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     fieldName: "28",
                     fieldValue: "2.609",
                     fieldTitle: "ПРЕД. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
-                    svgImage: .svgSample3
+                    image: .svg(.svgSample3)
                 ),
                 makeField(
                     fieldName: "29",
                     fieldValue: " ",
                     fieldTitle: "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
-                    svgImage: .svgSample4
+                    image: .svg(.svgSample4)
                 ),
                 makeField(
                     fieldName: "65",
@@ -455,7 +485,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     fieldName: "143",
                     fieldValue: "0.00",
                     fieldTitle: "Сумма пени",
-                    svgImage: .svgSample5
+                    image: .svg(.svgSample5)
                 ),
                 makeField(
                     fieldName: "147",
@@ -535,18 +565,14 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         fieldName: String,
         fieldValue: String,
         fieldTitle: String,
-        recycle: Bool = false,
-        svgImage: String? = nil,
-        typeIdParameterList: String? = nil
+        image: AnywayPaymentUpdate.Field.Image? = nil
     ) -> AnywayPaymentUpdate.Field {
         
-        .init(
+        return .init(
             name: fieldName,
             value: fieldValue,
             title: fieldTitle,
-            recycle: recycle,
-            svgImage: svgImage,
-            typeIdParameterList: typeIdParameterList
+            image: image
         )
     }
     
@@ -672,7 +698,38 @@ private extension String {
         "paymentOperationDetailId": 54321,
         "documentStatus": null,
         "needSum": false,
-        "additionalList": [],
+        "additionalList": [
+            {
+                "fieldName": "3",
+                "fieldValue": "Москва г., Донская ул., д.112 корп.211, кв.111",
+                "fieldTitle": "Адрес",
+                "md5hash": "87f2fad4a6997e1d3ae634c551c50f14"
+            },
+            {
+                "fieldName": "n1",
+                "fieldValue": "v1",
+                "fieldTitle": "t1"
+            },
+            {
+                "fieldName": "n2",
+                "fieldValue": "v2",
+                "fieldTitle": "t2",
+                "md5hash": "md5hash2"
+            },
+            {
+                "fieldName": "n3",
+                "fieldValue": "v3",
+                "fieldTitle": "t3",
+                "svgImage": "svgImage3"
+            },
+            {
+                "fieldName": "n4",
+                "fieldValue": "v4",
+                "fieldTitle": "t4",
+                "md5hash": "md5hash4",
+                "svgImage": "svgImage4"
+            }     
+        ],
         "parameterListForNextStep": [
             {
                 "id": "1",

@@ -54,7 +54,7 @@ extension ProductData {
         
         return .init(
             background: .image(getImage(largeDesignMd5Hash) ?? .cardPlaceholder),
-            color: backgroundColor.description,
+            color: backgroundColor,
             icon: .image(getImage(smallDesignMd5hash) ?? .cardPlaceholder)
         )
     }

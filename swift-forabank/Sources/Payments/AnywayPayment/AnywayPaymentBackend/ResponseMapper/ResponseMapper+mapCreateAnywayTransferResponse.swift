@@ -56,6 +56,7 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Additional {
             fieldName: additional.fieldName,
             fieldValue: additional.fieldValue,
             fieldTitle: additional.fieldTitle,
+            md5Hash: additional.md5hash,
             recycle: additional.recycle ?? false,
             svgImage: additional.svgImage,
             typeIdParameterList: additional.typeIdParameterList
@@ -250,6 +251,7 @@ private extension ResponseMapper._Data {
         let fieldName: String
         let fieldValue: String
         let fieldTitle: String
+        let md5hash: String?
         let recycle: Bool?
         let svgImage: String?
         let typeIdParameterList: String?

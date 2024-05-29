@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 13.12.2023.
 //
 
+import ActivateSlider
 import AnywayPaymentDomain
 import Combine
 import InfoComponent
@@ -33,7 +34,8 @@ extension RootViewFactoryComposer {
             makePaymentsTransfersView: makePaymentsTransfersView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView,
-            makeIconView: imageCache.makeIconView(for:),
+            makeIconView: imageCache.makeIconView(for:), 
+            makeActivateSliderView: ActivateSliderStateWrapperView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory
         )
     }
@@ -60,7 +62,8 @@ private extension RootViewFactoryComposer {
                 makeUserAccountView: makeUserAccountView,
                 makeIconView: imageCache.makeIconView(for:),
                 makeAnywayPaymentFactory: makeAnywayPaymentFactory
-            ),
+            ), 
+            productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init),
             getUImage: getUImage
         )
     }

@@ -48,25 +48,18 @@ extension AnywayPaymentUpdate {
         public let name: String
         public let value: String
         public let title: String
-        @available(*, deprecated, message: "not used according to analytics")
-        public let recycle: Bool
-        public let svgImage: String?
-        public let typeIdParameterList: String?
+        public let image: Image?
         
         public init(
             name: String,
             value: String,
             title: String,
-            recycle: Bool,
-            svgImage: String?,
-            typeIdParameterList: String?
+            image: Image?
         ) {
             self.name = name
             self.value = value
             self.title = title
-            self.recycle = recycle
-            self.svgImage = svgImage
-            self.typeIdParameterList = typeIdParameterList
+            self.image = image
         }
     }
     
@@ -177,6 +170,16 @@ public extension AnywayPaymentUpdate.Details.Info {
     enum DocumentStatus: Equatable {
         
         case complete, inProgress, rejected
+    }
+}
+
+public extension AnywayPaymentUpdate.Field {
+    
+    enum Image: Equatable {
+        
+        case md5Hash(String)
+        case svg(String)
+        case withFallback(md5Hash: String, svg: String)
     }
 }
 

@@ -202,10 +202,11 @@ func makeAnywayPaymentWithOTP(
 func makeAnywayPaymentField(
     _ id: AnywayPayment.Element.Field.ID = .init(anyMessage()),
     value: String = anyMessage(),
-    title: String = anyMessage()
+    title: String = anyMessage(),
+    image: AnywayPayment.Element.Field.Image? = nil
 ) -> AnywayPayment.Element.Field {
     
-    .init(id: id, title: title, value: .init(value))
+    .init(id: id, title: title, value: .init(value), image: image)
 }
 
 func makeAnywayPaymentField(
@@ -571,17 +572,11 @@ private func makeAnywayPaymentUpdateDetailsInfo(
 func makeAnywayPaymentUpdateField(
     _ name: String = anyMessage(),
     title: String = anyMessage(),
-    value: String = anyMessage()
+    value: String = anyMessage(),
+    image: AnywayPaymentUpdate.Field.Image? = nil
 ) -> AnywayPaymentUpdate.Field {
     
-    .init(
-        name: name,
-        value: value,
-        title: title,
-        recycle: false,
-        svgImage: nil,
-        typeIdParameterList: nil
-    )
+    .init(name: name, value: value, title: title, image: image)
 }
 
 func makeAnywayPaymentAndUpdateFields(

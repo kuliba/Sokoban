@@ -86,6 +86,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
         public let fieldName: String
         public let fieldValue: String
         public let fieldTitle: String
+        public let md5hash: String?
         public let recycle: Bool
         public let svgImage: String?
         public let typeIdParameterList: String?
@@ -94,6 +95,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             fieldName: String,
             fieldValue: String,
             fieldTitle: String,
+            md5Hash: String?,
             recycle: Bool,
             svgImage: String? = nil,
             typeIdParameterList: String? = nil
@@ -101,6 +103,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             self.fieldName = fieldName
             self.fieldValue = fieldValue
             self.fieldTitle = fieldTitle
+            self.md5hash = md5Hash
             self.recycle = recycle
             self.svgImage = svgImage
             self.typeIdParameterList = typeIdParameterList

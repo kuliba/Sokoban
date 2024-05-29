@@ -102,8 +102,27 @@ private extension AnywayPayment.Element.Field {
         .init(
             id: id,
             title: fieldUpdate.title,
-            value: .init(fieldUpdate.value)
+            value: .init(fieldUpdate.value),
+            image: fieldUpdate.image.map { .init($0) }
         )
+    }
+}
+
+private extension AnywayPayment.Element.Field.Image {
+    
+    init(_ image: AnywayPaymentUpdate.Field.Image) {
+        
+        switch image {
+            
+        case let .md5Hash(md5Hash):
+            self = .md5Hash(md5Hash)
+        
+        case let .svg(svg):
+            self = .svg(svg)
+        
+        case let .withFallback(md5Hash: md5Hash, svg: svg):
+            self = .withFallback(md5Hash: md5Hash, svg: svg)
+        }
     }
 }
 
@@ -218,7 +237,8 @@ private extension AnywayPayment.Element.Field {
         self.init(
             id: .init(field.name),
             title: field.title,
-            value: .init(field.value)
+            value: .init(field.value),
+            image: field.image.map { .init($0) }
         )
     }
 }

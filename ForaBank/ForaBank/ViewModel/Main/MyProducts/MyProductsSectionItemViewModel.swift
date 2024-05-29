@@ -24,9 +24,11 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     let paymentSystemIcon: Image?
     let descriptions: [String]
     let orderModePadding: CGFloat
-    
+    let parentID: Int
   
     private let model: Model
+    private let getProduct: (ProductData.ID) -> ProductData?
+
     private var bindings = Set<AnyCancellable>()
     
     init(id: ProductData.ID, icon: IconViewModel, paymentSystemIcon: Image?, name: String, balance: String, descriptions: [String], sideButton: SideButtonViewModel?, orderModePadding: CGFloat = 0, model: Model) {
@@ -40,20 +42,21 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
         self.sideButton = sideButton
         self.orderModePadding = orderModePadding
         self.model = model
-        
+        self.getProduct = { model.product(productId: $0) }
+        self.parentID = model.product(productId: id)?.asCard?.idParent ?? -1
         bind()
     }
 
     convenience init(productData: ProductData, model: Model) {
 
         let icon = IconViewModel(with: productData, model: model)
-        let paymentSystemIcon = ProductView.ViewModel.paymentSystemIcon(from: productData, getImage: { model.images.value[.init($0)]?.image })
-        let name = ProductView.ViewModel.name(
+        let paymentSystemIcon = ProductViewModel.paymentSystemIcon(from: productData, getImage: { model.images.value[.init($0)]?.image })
+        let name = ProductViewModel.name(
             product: productData,
             style: .profile,
             creditProductName: .myProductsSectionItem
         )
-        let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
+        let balance = ProductViewModel.balanceFormatted(product: productData, style: .main, model: model)
         let descriptions = productData.description
         var orderModePadding: CGFloat = 0
         
@@ -73,8 +76,8 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     
     var isHidden: Bool {
         get {
-            guard let product = model.product(productId: self.id) else { return true }
-            return !product.productStatus.contains(.visible) //!productData.visibility
+            guard let product = getProduct(self.id) else { return true }
+            return product.productStatus == .notVisible
         }
         
         set {
@@ -85,8 +88,8 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     func update(with productData: ProductData) {
         
         icon = IconViewModel(with: productData, model: model)
-        name = ProductView.ViewModel.name(product: productData, style: .profile, creditProductName: .myProductsSectionItem)
-        balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
+        name = ProductViewModel.name(product: productData, style: .profile, creditProductName: .myProductsSectionItem)
+        balance = ProductViewModel.balanceFormatted(product: productData, style: .main, model: model)
     }
     
     private func bind() {
@@ -126,7 +129,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self ] images in
                 
-                guard let productData = model.product(productId: self.id) else { return }
+                guard let productData = self.getProduct(self.id) else { return }
                 update(with: productData)
         }
         .store(in: &bindings)
@@ -148,20 +151,20 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     
     func actionButton(for direction: SwipeDirection) -> ActionButtonViewModel? {
         
-        guard let product = model.product(productId: id)
+        guard let product = getProduct(id)
         else { return nil }
         
         switch direction {
         case .right:
             
-            guard false, !product.productStatus.contains(.active) //fix if activated button need
+            guard false, product.productStatus == .notActive //fix if activated button need
             else { return nil }
             
             return ActionButtonViewModel(type: .activate, action: { [weak self] in self?.action.send(MyProductsSectionItemAction.SideButtonTapped.Activate())})
             
         case .left:
             
-            guard product.productStatus.contains(.active),
+            guard product.productStatus != .notActive,
                   !model.productsVisibilityUpdating.value.contains(id)
                   
             else { return nil }
@@ -183,6 +186,11 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
             
             sideButton = nil
         }
+    }
+    
+    func clover() -> Image? {
+        
+        return getProduct(id)?.cloverImage
     }
 }
 
@@ -211,39 +219,14 @@ extension MyProductsSectionItemViewModel {
             let backgroundImage = model.images.value[productData.smallDesignMd5hash]?.image
             let backgroundDesignImage = model.images.value[productData.smallBackgroundDesignHash]?.image
             
-            switch productData.productStatus {
-            case [.active, .blocked, .visible]:
-                self.init(background: .init(img: backgroundDesignImage, color: productData.backgroundColor),
-                          overlay: .init(image: .ic16Lock,
-                                         imageColor: productData.overlayImageColor),
-                          isUpdating: isUpdating)
-                
-            case [.active, .blocked]:
-                // active, blocked, not visible
-                self.init(background: .init(img: backgroundDesignImage, color: productData.backgroundColor),
-                          overlay: .init(image: .ic12Lockandeyeoff,
-                                         imageColor: productData.overlayImageColor),
-                          isUpdating: isUpdating)
-                
-            case [.active, .visible]:
-                // active, not blocked, visible
-                self.init(background: .init(img: backgroundImage, color: productData.backgroundColor),
-                          overlay: nil,
-                          isUpdating: isUpdating)
-                
-            case .active:
-                // active, not blocked, not visible
-                self.init(background: .init(img: backgroundDesignImage, color: productData.backgroundColor),
-                          overlay: .init(image: .ic16EyeOff,
-                                         imageColor: productData.overlayImageColor),
-                          isUpdating: isUpdating)
-            default:
-                // not active
-                self.init(background: .init(img: backgroundDesignImage, color: productData.backgroundColor),
-                          overlay: .init(image: .ic16ArrowRightCircle,
-                                         imageColor: productData.overlayImageColor),
-                          isUpdating: isUpdating)
-            }
+            self.init(
+                background: .init(
+                    img: productData.productStatus == .active ? backgroundImage : backgroundDesignImage,
+                    color: productData.backgroundColor),
+                overlay: IconViewModel.statusIcon(
+                    status: productData.productStatus,
+                    color: productData.overlayImageColor),
+                isUpdating: isUpdating)
         }
         
         enum Background {
@@ -264,6 +247,33 @@ extension MyProductsSectionItemViewModel {
             
             let image: Image
             let imageColor: Color
+        }
+        
+        static func statusIcon(
+            status: ProductStatus,
+            color: Color
+        ) -> Overlay? {
+            
+            switch status {
+            case .active:
+                return nil
+            case .blocked:
+                return .init(
+                    image: .ic16Lock,
+                    imageColor: color)
+            case .blockedNotVisible:
+                return .init(
+                    image: .ic12Lockandeyeoff,
+                    imageColor: color)
+            case .notVisible:
+                return .init(
+                    image: .ic16EyeOff,
+                    imageColor: color)
+            case .notActive:
+                return .init(
+                    image: .ic16ArrowRightCircle,
+                    imageColor: color)
+            }
         }
     }
     
@@ -335,9 +345,9 @@ enum MyProductsSectionItemAction {
     enum SideButtonTapped {
         
         struct Add: Action {}
-
+        
         struct Remove: Action {}
-
+        
         struct Activate: Action {}
     }
     
@@ -346,8 +356,6 @@ enum MyProductsSectionItemAction {
         let direction: MyProductsSectionItemViewModel.SwipeDirection
         let editMode: EditMode
     }
-    
-    struct ItemTapped: Action {}
 }
 
 extension MyProductsSectionItemViewModel {

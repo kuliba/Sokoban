@@ -17,13 +17,13 @@ extension PaymentsProductSelectorView {
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var categories: OptionSelectorView.ViewModel?
-        @Published var productsFilterred: [ProductView.ViewModel]
+        @Published var productsFilterred: [ProductViewModel]
         
-        @Published internal var products: [ProductView.ViewModel]
+        @Published internal var products: [ProductViewModel]
         
         private var bindings = Set<AnyCancellable>()
         
-        init(categories: OptionSelectorView.ViewModel?, products: [ProductView.ViewModel]) {
+        init(categories: OptionSelectorView.ViewModel?, products: [ProductViewModel]) {
             
             self.categories = categories
             self.productsFilterred = []
@@ -58,7 +58,7 @@ extension PaymentsProductSelectorView {
                 }.store(in: &bindings)
         }
         
-        internal func bind(_ products: [ProductView.ViewModel]) {
+        internal func bind(_ products: [ProductViewModel]) {
             
             for product in products {
                 
@@ -96,7 +96,7 @@ extension PaymentsProductSelectorView {
                 }.store(in: &bindings)
         }
         
-        func filteredProducts(prpductType: ProductType, products: [ProductView.ViewModel]) -> [ProductView.ViewModel] {
+        func filteredProducts(prpductType: ProductType, products: [ProductViewModel]) -> [ProductViewModel] {
             
             products.filter{ $0.productType == prpductType }
         }

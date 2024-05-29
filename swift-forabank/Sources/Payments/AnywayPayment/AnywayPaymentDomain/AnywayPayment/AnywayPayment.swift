@@ -56,15 +56,18 @@ extension AnywayPayment.Element {
         public let id: ID
         public let title: String
         public let value: Value
+        public let image: Image?
         
         public init(
             id: ID,
             title: String,
-            value: Value
+            value: Value,
+            image: Image?
         ) {
             self.id = id
             self.title = title
             self.value = value
+            self.image = image
         }
     }
     
@@ -102,6 +105,13 @@ extension AnywayPayment.Element.Field {
     
     public typealias Value = Tagged<_Value, String>
     public enum _Value {}
+    
+    public enum Image: Equatable {
+        
+        case md5Hash(String)
+        case svg(String)
+        case withFallback(md5Hash: String, svg: String)
+    }
 }
 
 extension AnywayPayment.Element.Parameter {

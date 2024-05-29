@@ -117,9 +117,9 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         assert(payment, on: update) {
             
             $0.elements = [
-                .init(id: "a", title: "aaa", value: "aa"),
-                .init(id: "b", title: "bbb", value: "bb"),
-                .init(id: "c", title: "ccc", value: "cc"),
+                makeAnywayPaymentField("a", value: "aa", title: "aaa"),
+                makeAnywayPaymentField("b", value: "bb", title: "bbb"),
+                makeAnywayPaymentField("c", value: "cc", title: "ccc"),
             ].map(AnywayPayment.Element.field)
         }
     }
@@ -743,10 +743,10 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             
             $0.elements = [
                 .field(
-                    .init(
-                        id: .init(matchingFieldID),
-                        title: newFieldTitle,
-                        value: .init(newFieldValue)
+                    makeAnywayPaymentField(
+                        .init(matchingFieldID),
+                        value: .init(newFieldValue),
+                        title: newFieldTitle
                     )
                 ),
                 .parameter(parameter.updating(value: newParameterValue)),
