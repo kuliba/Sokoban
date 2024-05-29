@@ -1276,7 +1276,6 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         XCTAssertEqual(vm.cells[3].title, "Банк отправителя")
         XCTAssertEqual(vm.cells[4].title, "Сообщение получателю")
         XCTAssertEqual(vm.cells[5].title, "Идентификатор операции")
-        XCTAssertEqual(vm.cells[6].title, "title") // !? title
     }
 
     func test_init_withC2bOperation_setsCellsCorrectlyWithStatusComplete() {

@@ -357,13 +357,21 @@ extension OperationDetailViewModelTests {
         return (sut, spy)
     }
     
-    private func makeAmountViewModel(operationType: OperationType) -> OperationDetailViewModel.AmountViewModel {
-        let amount: Double = 100.0
-        let currencyCodeNumeric = 840
-        let payService: OperationDetailViewModel.PayServiceViewModel? = nil
-        let model = Model.mockWithEmptyExcept()
-        
-        return OperationDetailViewModel.AmountViewModel(amount: amount, currencyCodeNumeric: currencyCodeNumeric, operationType: operationType, payService: payService, model: model)
+    private func makeAmountViewModel(
+        operationType: OperationType,
+        amount: Double = 100.0,
+        currencyCodeNumeric: Int = 840,
+        payService: OperationDetailViewModel.PayServiceViewModel? = nil,
+        model: Model = .mockWithEmptyExcept()
+    ) -> OperationDetailViewModel.AmountViewModel {
+       
+        return OperationDetailViewModel.AmountViewModel(
+            amount: amount,
+            currencyCodeNumeric: currencyCodeNumeric,
+            operationType: operationType,
+            payService: payService,
+            model: model
+        )
     }
 }
 
