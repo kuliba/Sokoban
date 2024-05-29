@@ -72,7 +72,7 @@ final class MainViewModelTests: XCTestCase {
     
     func test_productCarouselStickerDidTapped()  {
         
-        let (sut, _) = makeSUTWithMainSectionProcutsViewVM()
+        let (sut, _) = makeSUTWithMainSectionProductsViewVM()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
         
         let sutActionSpy = ValueSpy(
@@ -118,6 +118,54 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNotNil(sut.route.modal?.alert)
     }
     
+    func test_updateSections_updateInfoFullPath_shouldAddUpdateSections()  {
+        
+        let (sut, model) = makeSUT()
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+         
+        assert(sections: sut.sections, count: 6, type: .products)
+
+        model.updateInfo.value.updateValueBy(type: .card, with: false)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        assert(sections: sut.sections, count: 7, type: .updateInfo)
+        
+        model.updateInfo.value.updateValueBy(type: .loan, with: false)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        assert(sections: sut.sections, count: 7, type: .updateInfo)
+
+        model.updateInfo.value.updateValueBy(type: .deposit, with: false)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        assert(sections: sut.sections, count: 7, type: .updateInfo)
+
+        model.updateInfo.value.updateValueBy(type: .account, with: false)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        assert(sections: sut.sections, count: 7, type: .updateInfo)
+
+        model.updateInfo.value.updateValueBy(type: .card, with: true)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        assert(sections: sut.sections, count: 7, type: .updateInfo)
+
+        model.updateInfo.value.updateValueBy(type: .loan, with: true)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        assert(sections: sut.sections, count: 7, type: .updateInfo)
+        
+        model.updateInfo.value.updateValueBy(type: .deposit, with: true)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        assert(sections: sut.sections, count: 7, type: .updateInfo)
+
+        model.updateInfo.value.updateValueBy(type: .account, with: true)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+
+        assert(sections: sut.sections, count: 6, type: .products)
+    }
+    
     // MARK: - Helpers
     fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
     private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
@@ -160,7 +208,7 @@ final class MainViewModelTests: XCTestCase {
     typealias MainSectionViewVM = MainSectionProductsView.ViewModel
     typealias StickerViewModel = ProductCarouselView.StickerViewModel
     
-    private func makeSUTWithMainSectionProcutsViewVM(
+    private func makeSUTWithMainSectionProductsViewVM(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -250,6 +298,29 @@ final class MainViewModelTests: XCTestCase {
             email: "email",
             inn: "inn",
             customName: "customName"
+        )
+    }
+    
+    private func assert(
+        sections: [MainSectionViewModel],
+        count: Int,
+        type: MainSectionType,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        
+        XCTAssertNoDiff(
+            sections.count,
+            count,
+            "\nExpected \(count), but got \(sections.count) instead.",
+            file: file, line: line
+        )
+        
+        XCTAssertNoDiff(
+            sections.first?.type,
+            type,
+            "\nExpected \(type), but got \(sections.first?.type) instead.",
+            file: file, line: line
         )
     }
 }

@@ -57,7 +57,7 @@ class MainViewModel: ObservableObject, Resetable {
     ) {
         self.model = model
         self.navButtonsRight = []
-        self.sections = [
+        var sections = [
             MainSectionProductsView.ViewModel(model, stickerViewModel: nil),
             MainSectionFastOperationView.ViewModel(),
             MainSectionPromoView.ViewModel(model),
@@ -65,6 +65,10 @@ class MainViewModel: ObservableObject, Resetable {
             MainSectionOpenProductView.ViewModel(model),
             MainSectionAtmView.ViewModel.initial
         ]
+        if !model.updateInfo.value.isProductsUpdated {
+            sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
+        }
+        self.sections = sections
         
         self.factory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
@@ -86,7 +90,7 @@ class MainViewModel: ObservableObject, Resetable {
         stickerViewModel: ProductCarouselView.StickerViewModel? = nil
     ) -> [MainSectionViewModel] {
         
-        return [
+        var sections = [
             MainSectionProductsView.ViewModel(
                 model,
                 stickerViewModel: stickerViewModel
@@ -97,6 +101,11 @@ class MainViewModel: ObservableObject, Resetable {
             MainSectionOpenProductView.ViewModel(model),
             MainSectionAtmView.ViewModel.initial
         ]
+        
+        if !model.updateInfo.value.isProductsUpdated {
+            sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
+        }
+        return sections
     }
     
     private func makeStickerViewModel(_ model: Model) -> ProductCarouselView.StickerViewModel? {
@@ -154,7 +163,7 @@ extension MainViewModel {
 }
 
 private extension MainViewModel {
-    
+        
     func bind() {
         
         model.images
@@ -167,6 +176,14 @@ private extension MainViewModel {
                     self.sections = Self.getSections(model, stickerViewModel: makeStickerViewModel(model))
                     bind(sections)
                 }
+            }
+            .store(in: &bindings)
+        
+        model.updateInfo
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] updateInfo in
+                
+                self?.updateSections(updateInfo)
             }
             .store(in: &bindings)
         
@@ -1112,6 +1129,19 @@ private extension MainViewModel {
         self.resetDestination()
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
             self?.rootActions?.switchTab(.chat)
+        }
+    }
+    
+    func updateSections(_ updateInfo: UpdateInfo) {
+        let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateInfo }) is UpdateInfoViewModel
+        switch (updateInfo.isProductsUpdated, containUpdateInfoSection) {
+            
+        case (true, true):
+            sections.removeFirst()
+        case (false, false):
+            sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
+        default:
+            break
         }
     }
 }

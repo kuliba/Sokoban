@@ -227,7 +227,8 @@ private extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: UserAccountView.init(viewModel:),
             makeIconView: IconDomain.preview,
-            makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)
+            makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
+            makeUpdateInfoView: UpdateInfoView.init(text:)
         )
     }
 }

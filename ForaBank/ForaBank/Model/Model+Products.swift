@@ -499,6 +499,8 @@ extension Model {
             
             if let response {
                 
+                self.updateInfo.value.updateValueBy(type: productType, with: true)
+
                 let result = Services.mapProductResponse(response)
                                 
                 // update products
@@ -541,6 +543,9 @@ extension Model {
                 default:
                     break
                 }
+            }
+            else {
+                self.updateInfo.value.updateValueBy(type: productType, with: false)
             }
         }
     }
