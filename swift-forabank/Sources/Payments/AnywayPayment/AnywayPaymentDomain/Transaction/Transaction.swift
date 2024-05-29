@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 30.03.2024.
 //
 
-public struct Transaction<DocumentStatus, OperationDetails, Payment> {
+public struct Transaction<Payment, Status> {
     
     public var payment: Payment
     public var isValid: Bool
@@ -22,38 +22,4 @@ public struct Transaction<DocumentStatus, OperationDetails, Payment> {
     }
 }
 
-public extension Transaction {
-    
-    enum Status {
-        
-        case fraudSuspected
-        case result(Result<Report, Terminated>)
-        case serverError(String)
-    }
-}
-
-public extension Transaction.Status {
-    
-    enum Terminated: Error, Equatable {
-        
-        case fraud(Fraud)
-        case transactionFailure
-        case updatePaymentFailure
-    }
-}
-
-public extension Transaction.Status.Terminated {
-    
-    enum Fraud: Equatable {
-        
-        case cancelled, expired
-    }
-}
-
-public extension Transaction.Status {
-    
-    typealias Report = TransactionReport<DocumentStatus, OperationDetails>
-}
-
-extension Transaction: Equatable where Payment: Equatable, DocumentStatus: Equatable, OperationDetails: Equatable {}
-extension Transaction.Status: Equatable where DocumentStatus: Equatable, OperationDetails: Equatable {}
+extension Transaction: Equatable where Payment: Equatable, Status: Equatable {}

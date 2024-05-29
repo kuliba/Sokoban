@@ -94,16 +94,11 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
             needOTP: false,
             needSum: false,
             parametersForNextStep: [
-                .init(
+                makeParameter(
                     dataType: .string,
                     id: "1",
                     inputFieldType: .account,
-                    isPrint: true,
-                    isRequired: true,
                     order: 1,
-                    phoneBook: false,
-                    rawLength: 0,
-                    isReadOnly: false,
                     regExp: "^.{1,250}$",
                     svgImage: "svgImage",
                     title: "Лицевой счет",
@@ -123,6 +118,57 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
         }
     }
     
+    func test_map_shouldDeliverResponse_e1_samples() throws {
+        
+        for string in [String.e1_sample_step1, .e1_sample_step2, .e1_sample_step3, .e1_sample_step4, .e1_sample_step5] {
+            
+            try XCTAssertNoThrow(map(.init(string.utf8)).get())
+        }
+    }
+    
+    func test_map_shouldDeliverResponse_e1_sample_step1() throws {
+        
+        try assert(string: .e1_sample_step1, .init(
+            additional: [],
+            finalStep: false,
+            needMake: false,
+            needOTP: false,
+            needSum: false,
+            parametersForNextStep: [
+                makeParameter(
+                    dataType: .number,
+                    id: "1",
+                    inputFieldType: .account,
+                    isPrint: false,
+                    regExp: "^.{1,250}$",
+                    svgImage: nil,
+                    title: "Лицевой счет",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: "ffc84724-8976-4d37-8af8-be84a4386126",
+                    dataType: ._backendReserved,
+                    id: "##ID##",
+                    isPrint: false,
+                    isRequired: false,
+                    type: .missing,
+                    viewType: .output
+                ),
+                makeParameter(
+                    content: "1",
+                    dataType: ._backendReserved,
+                    id: "##STEP##",
+                    isPrint: false,
+                    isRequired: false,
+                    type: .missing,
+                    viewType: .output
+                )
+            ],
+            paymentOperationDetailID: nil
+        ))
+    }
+    
     // MARK: - Helpers
     
     private typealias Response = ResponseMapper.CreateAnywayTransferResponse
@@ -137,14 +183,83 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
     }
     
     private func assert(
+        string: String,
+        _ response: Response,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        try assert(.init(string.utf8), response, file: file, line: line)
+    }
+    
+    private func assert(
         _ data: Data,
         _ response: Response,
         file: StaticString = #file,
         line: UInt = #line
     ) throws {
         
-        let receivedResponse = try map(data).get()
-        XCTAssertNoDiff(receivedResponse, response, file: file, line: line)
+        do {
+            let receivedResponse = try map(data).get()
+            XCTAssertNoDiff(receivedResponse, response, file: file, line: line)
+        } catch {
+            XCTFail("Mapping failed with error: \(error)", file: file, line: line)
+        }
+    }
+    
+    private func makeParameter(
+        content: String? = nil,
+        dataDictionary: String? = nil,
+        dataDictionaryРarent: String? = nil,
+        dataType: Response.Parameter.DataType,
+        group: String? = nil,
+        id: String,
+        inputFieldType: Response.Parameter.InputFieldType? = nil,
+        inputMask: String? = nil,
+        isPrint: Bool = true,
+        isRequired: Bool = true,
+        maxLength: Int? = nil,
+        mask: String? = nil,
+        minLength: Int? = nil,
+        order: Int? = nil,
+        phoneBook: Bool = false,
+        rawLength: Int = 0,
+        isReadOnly: Bool = false,
+        regExp: String = "",
+        subGroup: String? = nil,
+        subTitle: String? = nil,
+        svgImage: String? = nil,
+        title: String = "",
+        type: Response.Parameter.FieldType,
+        viewType: Response.Parameter.ViewType
+    ) -> Response.Parameter {
+        
+        .init(
+            content: content,
+            dataDictionary: dataDictionary,
+            dataDictionaryРarent: dataDictionaryРarent,
+            dataType: dataType,
+            group: group,
+            id: id,
+            inputFieldType: inputFieldType,
+            inputMask: inputMask,
+            isPrint: isPrint,
+            isRequired: isRequired,
+            maxLength: maxLength,
+            mask: mask,
+            minLength: minLength,
+            order: order,
+            phoneBook: phoneBook,
+            rawLength: rawLength,
+            isReadOnly: isReadOnly,
+            regExp: regExp,
+            subGroup: subGroup,
+            subTitle: subTitle,
+            svgImage: svgImage,
+            title: title,
+            type: type,
+            viewType: viewType
+        )
     }
 }
 
@@ -817,6 +932,412 @@ private extension String {
         "finalStep": true,
         "infoMessage": null,
         "printFormType": null,
+        "scenario": "OK"
+    }
+}
+"""
+    
+    static let e1_sample_step1 = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "additionalList": [],
+        "parameterListForNextStep": [
+            {
+                "id": "1",
+                "title": "Лицевой счет",
+                "viewType": "INPUT",
+                "dataType": "%Numeric",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": true,
+                "readOnly": false,
+                "inputFieldType": "ACCOUNT",
+                "visible": true,
+                "md5hash": "6e17f502dae62b03d8bd4770606ee4b2"
+            },
+            {
+                "id": "##ID##",
+                "viewType": "OUTPUT",
+                "content": "ffc84724-8976-4d37-8af8-be84a4386126",
+                "visible": false
+            },
+            {
+                "id": "##STEP##",
+                "viewType": "OUTPUT",
+                "content": "1",
+                "visible": false
+            }
+        ]
+    }
+}
+"""
+    
+    static let e1_sample_step2 = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "additionalList": [],
+        "parameterListForNextStep": [
+            {
+                "id": "2",
+                "title": "Признак платежа",
+                "viewType": "INPUT",
+                "dataType": "=;ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС=ВКЛЮЧАЯ СТРАХОВОЙ ВЗНОС;БЕЗ СТРАХОВОГО ВЗНОСА=БЕЗ СТРАХОВОГО ВЗНОСА;ПРОЧИЕ ПЛАТЕЖИ=ПРОЧИЕ ПЛАТЕЖИ",
+                "type": "Select",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": true,
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "##ID##",
+                "viewType": "OUTPUT",
+                "content": "ffc84724-8976-4d37-8af8-be84a4386126",
+                "visible": false
+            },
+            {
+                "id": "##STEP##",
+                "viewType": "OUTPUT",
+                "content": "2",
+                "visible": false
+            }
+        ]
+    }
+}
+"""
+    
+    static let e1_sample_step3 = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "additionalList": [
+            {
+                "fieldName": "advisedAmount",
+                "fieldValue": "4273.87",
+                "fieldTitle": "Рекомендованная сумма"
+            }
+        ],
+        "parameterListForNextStep": [
+            {
+                "id": "5",
+                "title": "Период(ММГГГГ)",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": "042024",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "9",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "13",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "17",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "21",
+                "title": "ТЕК. ПОКАЗАНИЯ ХВС №1012018234307",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "25",
+                "title": "ТЕК. ПОКАЗАНИЯ ХВ_ГВС №1012018015708",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "29",
+                "title": "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "inputFieldType": "COUNTER",
+                "visible": true,
+                "md5hash": "017e8b24ab276b57bd7be847905eeb4a"
+            },
+            {
+                "id": "65",
+                "title": "УСЛУГИ_ЖКУ",
+                "viewType": "INPUT",
+                "dataType": "%Numeric",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 2,
+                "isRequired": false,
+                "content": "4273.87",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "143",
+                "title": "Сумма пени",
+                "viewType": "INPUT",
+                "dataType": "%Numeric",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 2,
+                "isRequired": false,
+                "content": "0.00",
+                "readOnly": false,
+                "inputFieldType": "PENALTY",
+                "visible": true,
+                "md5hash": "4e14d4a92a2286786b4daa8ec0e9d4a3"
+            },
+            {
+                "id": "##ID##",
+                "viewType": "OUTPUT",
+                "content": "ffe1aac2-67aa-47bc-be7b-33c5fbb08b2b",
+                "visible": false
+            },
+            {
+                "id": "##STEP##",
+                "viewType": "OUTPUT",
+                "content": "3",
+                "visible": false
+            }
+        ],
+        "options": [
+            "MULTI_SUM"
+        ]
+    }
+}
+"""
+    
+    static let e1_sample_step4 = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "amount": 4374.48,
+        "needSum": true,
+        "additionalList": [
+            {
+                "fieldName": "SumSTrs",
+                "fieldValue": "4374.48",
+                "fieldTitle": "Сумма"
+            }
+        ],
+        "parameterListForNextStep": [
+            {
+                "id": "##ID##",
+                "viewType": "OUTPUT",
+                "content": "ffc84724-8976-4d37-8af8-be84a4386126",
+                "visible": false
+            },
+            {
+                "id": "##STEP##",
+                "viewType": "OUTPUT",
+                "content": "4",
+                "visible": false
+            }
+        ]
+    }
+}
+"""
+    
+    static let e1_sample_step5 = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "needMake": true,
+        "needOTP": true,
+        "amount": 4374.48,
+        "fee": 0.00,
+        "currencyAmount": "RUB",
+        "currencyPayer": "RUB",
+        "debitAmount": 4374.48,
+        "payeeName": "ЕРЦ УПРАВДОМ: ЖКУ МОСКОВСКАЯ/КАЛУЖСКАЯ ОБЛ., Г. МОСКВА",
+        "needSum": true,
+        "additionalList": [
+            {
+                "fieldName": "1",
+                "fieldValue": "100611401082",
+                "fieldTitle": "Лицевой счет",
+                "md5hash": "6e17f502dae62b03d8bd4770606ee4b2"
+            },
+            {
+                "fieldName": "2",
+                "fieldValue": "БЕЗ СТРАХОВОГО ВЗНОСА",
+                "fieldTitle": "Признак платежа"
+            },
+            {
+                "fieldName": "4",
+                "fieldValue": "МОСКВА,АМУРСКАЯ УЛ.,2А К2,108",
+                "fieldTitle": "Адрес",
+                "md5hash": "87f2fad4a6997e1d3ae634c551c50f14"
+            },
+            {
+                "fieldName": "5",
+                "fieldValue": "022024",
+                "fieldTitle": "Период(ММГГГГ)"
+            },
+            {
+                "fieldName": "8",
+                "fieldValue": "228.150",
+                "fieldTitle": "ПРЕД. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504"
+            },
+            {
+                "fieldName": "9",
+                "fieldValue": " ",
+                "fieldTitle": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504"
+            },
+            {
+                "fieldName": "12",
+                "fieldValue": "407.250",
+                "fieldTitle": "ПРЕД. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504"
+            },
+            {
+                "fieldName": "13",
+                "fieldValue": " ",
+                "fieldTitle": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504"
+            },
+            {
+                "fieldName": "16",
+                "fieldValue": "311.570",
+                "fieldTitle": "ПРЕД. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504"
+            },
+            {
+                "fieldName": "17",
+                "fieldValue": " ",
+                "fieldTitle": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504"
+            },
+            {
+                "fieldName": "20",
+                "fieldValue": "32.129",
+                "fieldTitle": "ПРЕД. ПОКАЗАНИЯ ХВС №1012018234307"
+            },
+            {
+                "fieldName": "21",
+                "fieldValue": " ",
+                "fieldTitle": "ТЕК. ПОКАЗАНИЯ ХВС №1012018234307"
+            },
+            {
+                "fieldName": "24",
+                "fieldValue": "48.052",
+                "fieldTitle": "ПРЕД. ПОКАЗАНИЯ ХВ_ГВС №1012018015708"
+            },
+            {
+                "fieldName": "25",
+                "fieldValue": " ",
+                "fieldTitle": "ТЕК. ПОКАЗАНИЯ ХВ_ГВС №1012018015708"
+            },
+            {
+                "fieldName": "28",
+                "fieldValue": "2.789",
+                "fieldTitle": "ПРЕД. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
+                "md5hash": "017e8b24ab276b57bd7be847905eeb4a"
+            },
+            {
+                "fieldName": "29",
+                "fieldValue": " ",
+                "fieldTitle": "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
+                "md5hash": "017e8b24ab276b57bd7be847905eeb4a"
+            },
+            {
+                "fieldName": "65",
+                "fieldValue": "4374.48",
+                "fieldTitle": "УСЛУГИ_ЖКУ"
+            },
+            {
+                "fieldName": "142",
+                "fieldValue": "0.00",
+                "fieldTitle": "Сумма страховки"
+            },
+            {
+                "fieldName": "143",
+                "fieldValue": "0.00",
+                "fieldTitle": "Сумма пени",
+                "md5hash": "4e14d4a92a2286786b4daa8ec0e9d4a3"
+            },
+            {
+                "fieldName": "147",
+                "fieldValue": "04",
+                "fieldTitle": "Код филиала"
+            },
+            {
+                "fieldName": "advisedAmount",
+                "fieldValue": "4374.48",
+                "fieldTitle": "Рекомендованная сумма"
+            }
+        ],
+        "parameterListForNextStep": [
+            {
+                "id": "##ID##",
+                "viewType": "OUTPUT",
+                "content": "ffc84724-8976-4d37-8af8-be84a4386126",
+                "visible": false
+            },
+            {
+                "id": "##STEP##",
+                "viewType": "OUTPUT",
+                "content": "5",
+                "visible": false
+            }
+        ],
+        "finalStep": true,
         "scenario": "OK"
     }
 }

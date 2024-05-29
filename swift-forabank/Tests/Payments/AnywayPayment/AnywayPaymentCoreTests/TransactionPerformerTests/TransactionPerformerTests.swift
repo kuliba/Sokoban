@@ -108,9 +108,9 @@ final class TransactionPerformerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = TransactionPerformer<DocumentStatus, OperationDetails>
+    private typealias SUT = TransactionPerformer<DocumentStatus, OperationDetailID, OperationDetails>
     private typealias MakeTransferSpy = Spy<VerificationCode, SUT.MakeTransferResult>
-    private typealias GetDetailsSpy = Spy<SUT.PaymentOperationDetailID, SUT.GetDetailsResult>
+    private typealias GetDetailsSpy = Spy<OperationDetailID, SUT.GetDetailsResult>
     
     private func makeSUT(
         file: StaticString = #file,

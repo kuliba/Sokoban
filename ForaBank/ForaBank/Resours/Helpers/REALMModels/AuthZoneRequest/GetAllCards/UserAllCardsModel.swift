@@ -46,6 +46,7 @@ class UserAllCardsModel: Object {
     @objc dynamic var mediumDesignMd5Hash: String?
     @objc dynamic var largeDesignMd5Hash: String?
     @objc dynamic var paymentSystemImageMd5Hash: String?
+    var cardType: CardType?
 
     var background = List<UserAllCardsbackgroundModel>()
     @objc dynamic var openDate = 0
@@ -170,7 +171,8 @@ extension UserAllCardsModel: Identifiable {
         mediumDesignMd5Hash = data.mediumDesignMd5Hash
         largeDesignMd5Hash = data.largeDesignMd5Hash
         paymentSystemImageMd5Hash = data.paymentSystemImageMd5Hash
-
+        cardType = data.cardType
+        
         data.background.forEach { color in
             
             background.append(UserAllCardsbackgroundModel(with: color))

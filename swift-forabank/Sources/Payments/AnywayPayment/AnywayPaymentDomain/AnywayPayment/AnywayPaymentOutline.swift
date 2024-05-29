@@ -10,11 +10,11 @@ import Tagged
 
 public struct AnywayPaymentOutline: Equatable {
     
-    public let core: PaymentCore
+    public let core: PaymentCore?
     public let fields: Fields
     
     public init(
-        core: PaymentCore,
+        core: PaymentCore?,
         fields: Fields
     ) {
         self.core = core

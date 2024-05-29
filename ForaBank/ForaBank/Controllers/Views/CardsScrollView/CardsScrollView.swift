@@ -16,7 +16,13 @@ final class CardsScrollView: UIView {
     let allReuseIdentifier = "AllCardCell"
 
     let model: Model = .shared
-        
+    var selectedId: Int = -1 {
+        didSet {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
+    }
     var cardList = [UserAllCardsModel]() {
         didSet {
             DispatchQueue.main.async {
@@ -177,6 +183,8 @@ extension CardsScrollView: UICollectionViewDataSource {
                 } else {
                     cell.card = cardList[indexPath.item - 1]
                 }
+                cell.isChecked = (selectedId == cell.card?.id)
+
                 return cell
             }
             
@@ -189,13 +197,16 @@ extension CardsScrollView: UICollectionViewDataSource {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardsScrollCell
                 cell.getUImage = { self.model.images.value [$0]?.uiImage }
 
+                let card: UserAllCardsModel
                 if isFiltered {
                     
-                    cell.card = filteredCardList[indexPath.item ]
+                    card = filteredCardList[indexPath.item ]
                 } else {
                     
-                    cell.card = cardList[indexPath.item]
+                    card = cardList[indexPath.item]
                 }
+                cell.isChecked = selectedId == card.id
+                cell.card = card
                 return cell
             }
         }
@@ -248,9 +259,11 @@ extension CardsScrollView: UICollectionViewDelegate {
                 if isFiltered {
                     let card = filteredCardList[indexPath.item]
                     didCardTapped?(card.id)
+                    selectedId = card.id
                 } else {
                     let card = cardList[indexPath.item - 1]
                     didCardTapped?(card.id)
+                    selectedId = card.id
                 }
             }
         } else {
@@ -261,9 +274,11 @@ extension CardsScrollView: UICollectionViewDelegate {
                 if isFiltered {
                     let card = filteredCardList[indexPath.item]
                     didCardTapped?(card.id)
+                    selectedId = card.id
                 } else {
                     let card = cardList[indexPath.item]
                     didCardTapped?(card.id)
+                    selectedId = card.id
                 }
             }
         }

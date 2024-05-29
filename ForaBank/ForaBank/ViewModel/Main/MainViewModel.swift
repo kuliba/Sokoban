@@ -184,6 +184,7 @@ private extension MainViewModel {
                     else { return }
                     
                     productProfileViewModel.rootActions = rootActions
+                    productProfileViewModel.contactsAction = { [weak self] in self?.showContacts() }
                     bind(productProfileViewModel)
                     route.destination = .productProfile(productProfileViewModel)
                     
@@ -502,6 +503,7 @@ private extension MainViewModel {
                             }
                         )
                         myProductsViewModel.rootActions = rootActions
+                        myProductsViewModel.contactsAction = { [weak self] in self?.showContacts() }
                         route.destination = .myProducts(myProductsViewModel)
                         
                         // CurrencyMetall section
@@ -1102,6 +1104,14 @@ private extension MainViewModel {
         } else {
             
             return (previousData.0, previousData.1 ?? 0)
+        }
+    }
+    
+    private func showContacts() {
+        
+        self.resetDestination()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+            self?.rootActions?.switchTab(.chat)
         }
     }
 }
