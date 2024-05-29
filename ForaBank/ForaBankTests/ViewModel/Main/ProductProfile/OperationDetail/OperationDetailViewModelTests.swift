@@ -244,8 +244,79 @@ extension OperationDetailViewModelTests {
         
         XCTAssertNil(sut.templateButton)
     }
+    
+    // MARK: - AmountViewModel TESTS
+    
+    func test_amountViewModelInit_withCreditOperationType() {
+        
+        let amountViewModel = makeAmountViewModel(operationType: .credit)
+        XCTAssertTrue(amountViewModel.amount.starts(with: "+"))
+    }
+    
+    func test_amountViewModelInit_withCreditPlanOperationType() {
+        
+        let amountViewModel = makeAmountViewModel(operationType: .creditPlan)
+        XCTAssertTrue(amountViewModel.amount.starts(with: "+"))
+    }
+    
+    func test_amountViewModelInit_withCreditFictOperationType() {
+        
+        let amountViewModel = makeAmountViewModel(operationType: .creditFict)
+        XCTAssertTrue(amountViewModel.amount.starts(with: "+"))
+    }
+    
+    func test_amountViewModelInit_withDebitOperationType() {
+        
+        let amountViewModel = makeAmountViewModel(operationType: .debit)
+        XCTAssertTrue(amountViewModel.amount.starts(with: "-"))
+    }
+    
+    func test_amountViewModelInit_withDebitPlanOperationType() {
+        
+        let amountViewModel = makeAmountViewModel(operationType: .debitPlan)
+        XCTAssertTrue(amountViewModel.amount.starts(with: "-"))
+    }
+    
+    func test_amountViewModelInit_withDebitFictOperationType() {
+        
+        let amountViewModel = makeAmountViewModel(operationType: .debitFict)
+        XCTAssertTrue(amountViewModel.amount.starts(with: "-"))
+    }
+    
+    func test_amountViewModelInit_withUnknownOperationType() {
+        
+        let amountViewModel = makeAmountViewModel(operationType: .unknown)
+        XCTAssertEqual(amountViewModel.amount, "")
+    }
+    
+    // MARK: - StatusViewModel
+    
+    func test_statusViewModel_rejectCase_shouldReturnCorrectName() {
+        
+        let statusViewModel = OperationDetailViewModel.StatusViewModel.reject
+        XCTAssertEqual(statusViewModel.name, "Отказ!")
+    }
+    
+    func test_statusViewModel_successCase_shouldReturnCorrectName() {
+        
+        let statusViewModel = OperationDetailViewModel.StatusViewModel.success
+        XCTAssertEqual(statusViewModel.name, "Успешно!")
+    }
+    
+    func test_statusViewModel_purchaseReturnCase_shouldReturnCorrectName() {
+        
+        let statusViewModel = OperationDetailViewModel.StatusViewModel.purchase_return
+        XCTAssertEqual(statusViewModel.name, "Возврат!")
+    }
+    
+    func test_statusViewModel_processingCase_shouldReturnCorrectName() {
+        
+        let statusViewModel = OperationDetailViewModel.StatusViewModel.processing
+        XCTAssertEqual(statusViewModel.name, "В обработке!")
+    }
 }
 
+// MARK: - Test Helpers
 extension OperationDetailViewModelTests {
     
     typealias Request = ModelAction.Operation.Detail.Request
@@ -268,7 +339,7 @@ extension OperationDetailViewModelTests {
         let sut = try XCTUnwrap(
             OperationDetailViewModel(
                 productStatement: statement,
-                product: .stub(), 
+                product: .stub(),
                 updateFastAll: {},
                 model: model
             ),
@@ -284,6 +355,15 @@ extension OperationDetailViewModelTests {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return (sut, spy)
+    }
+    
+    private func makeAmountViewModel(operationType: OperationType) -> OperationDetailViewModel.AmountViewModel {
+        let amount: Double = 100.0
+        let currencyCodeNumeric = 840
+        let payService: OperationDetailViewModel.PayServiceViewModel? = nil
+        let model = Model.mockWithEmptyExcept()
+        
+        return OperationDetailViewModel.AmountViewModel(amount: amount, currencyCodeNumeric: currencyCodeNumeric, operationType: operationType, payService: payService, model: model)
     }
 }
 

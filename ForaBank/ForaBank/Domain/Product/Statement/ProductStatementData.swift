@@ -240,7 +240,7 @@ extension ProductStatementData {
     
     var fastPaymentComment: String? {
         
-        isReturn ? "Возврат по операции": fastPayment?.documentComment
+        isReturn ? "Возврат по операции" : fastPayment?.documentComment
     }
     
     var dateValue: Date { tranDate ?? date }
