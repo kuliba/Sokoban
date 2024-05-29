@@ -115,6 +115,9 @@ struct MainView<NavigationOperationView: View>: View {
     ) -> some View {
         
         switch section {
+        case let updateInfoViewModel as UpdateInfoViewModel:
+            viewFactory.makeUpdateInfoView(updateInfoViewModel.content)
+            
         case let productsSectionViewModel as MainSectionProductsView.ViewModel:
             MainSectionProductsView(viewModel: productsSectionViewModel)
                 .padding(.bottom, 19)
@@ -434,7 +437,8 @@ extension MainViewFactory {
                     config: .iFora
                 )
             },
-            makeUserAccountView: UserAccountView.init(viewModel:)
+            makeUserAccountView: UserAccountView.init(viewModel:),
+            makeUpdateInfoView: UpdateInfoView.init(text:)
         )
     }
 }
@@ -459,6 +463,7 @@ extension MainViewModel {
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview, 
+        updateInfoStatusFlag: .init(.active),
         onRegister: {}
     )
     
@@ -480,6 +485,7 @@ extension MainViewModel {
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
+        updateInfoStatusFlag: .init(.active),
         onRegister: {}
     )
     
@@ -501,6 +507,7 @@ extension MainViewModel {
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
+        updateInfoStatusFlag: .init(.active),
         onRegister: {}
     )
 }

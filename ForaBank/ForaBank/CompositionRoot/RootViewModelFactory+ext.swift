@@ -24,6 +24,7 @@ extension RootViewModelFactory {
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
         
@@ -163,6 +164,7 @@ extension RootViewModelFactory {
             productNavigationStateManager: productNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
+            updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: resetCVVPINActivation
         )
     }
@@ -447,6 +449,7 @@ private extension RootViewModelFactory {
         productNavigationStateManager: ProductNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
         
@@ -473,6 +476,7 @@ private extension RootViewModelFactory {
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
+            updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: onRegister
         )
         
