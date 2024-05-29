@@ -29,7 +29,14 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     paymentOperationDetailID: 54321
                 )
             ),
-            fields: [],
+            fields: [
+                makeField(
+                    fieldName: "3",
+                    fieldValue: "Москва г., Донская ул., д.112 корп.211, кв.111", 
+                    fieldTitle: "Адрес",
+                    md5Hash: "87f2fad4a6997e1d3ae634c551c50f14"
+                ),
+            ],
             parameters: [
                 .init(
                     field: makeParameterField(
@@ -535,15 +542,17 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         fieldName: String,
         fieldValue: String,
         fieldTitle: String,
+        md5Hash: String? = nil,
         recycle: Bool = false,
         svgImage: String? = nil,
         typeIdParameterList: String? = nil
     ) -> AnywayPaymentUpdate.Field {
         
-        .init(
+        return .init(
             name: fieldName,
             value: fieldValue,
             title: fieldTitle,
+            md5Hash: md5Hash,
             recycle: recycle,
             svgImage: svgImage,
             typeIdParameterList: typeIdParameterList
@@ -672,7 +681,14 @@ private extension String {
         "paymentOperationDetailId": 54321,
         "documentStatus": null,
         "needSum": false,
-        "additionalList": [],
+        "additionalList": [
+            {
+                "fieldName": "3",
+                "fieldValue": "Москва г., Донская ул., д.112 корп.211, кв.111",
+                "fieldTitle": "Адрес",
+                "md5hash": "87f2fad4a6997e1d3ae634c551c50f14"
+            }
+        ],
         "parameterListForNextStep": [
             {
                 "id": "1",

@@ -571,13 +571,15 @@ private func makeAnywayPaymentUpdateDetailsInfo(
 func makeAnywayPaymentUpdateField(
     _ name: String = anyMessage(),
     title: String = anyMessage(),
-    value: String = anyMessage()
+    value: String = anyMessage(),
+    md5Hash: String? = nil
 ) -> AnywayPaymentUpdate.Field {
     
     .init(
         name: name,
         value: value,
         title: title,
+        md5Hash: md5Hash,
         recycle: false,
         svgImage: nil,
         typeIdParameterList: nil

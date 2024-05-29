@@ -48,6 +48,7 @@ extension AnywayPaymentUpdate {
         public let name: String
         public let value: String
         public let title: String
+        public let md5Hash: String?
         @available(*, deprecated, message: "not used according to analytics")
         public let recycle: Bool
         public let svgImage: String?
@@ -57,6 +58,7 @@ extension AnywayPaymentUpdate {
             name: String,
             value: String,
             title: String,
+            md5Hash: String?,
             recycle: Bool,
             svgImage: String?,
             typeIdParameterList: String?
@@ -64,6 +66,7 @@ extension AnywayPaymentUpdate {
             self.name = name
             self.value = value
             self.title = title
+            self.md5Hash = md5Hash
             self.recycle = recycle
             self.svgImage = svgImage
             self.typeIdParameterList = typeIdParameterList

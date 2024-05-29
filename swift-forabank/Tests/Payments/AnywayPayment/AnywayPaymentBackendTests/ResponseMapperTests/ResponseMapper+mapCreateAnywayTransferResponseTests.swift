@@ -169,6 +169,43 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
         ))
     }
     
+    func test_map_shouldDeliverResponse_withAdditional() throws {
+        
+        try assert(string: .withAdditional, .init(
+            additional: [
+                makeAdditional(
+                    fieldName: "n1",
+                    fieldValue: "v1",
+                    fieldTitle: "t1"
+                ),
+                makeAdditional(
+                    fieldName: "n2",
+                    fieldValue: "v2",
+                    fieldTitle: "t2",
+                    md5Hash: "md5hash2"
+                ),
+                makeAdditional(
+                    fieldName: "n3",
+                    fieldValue: "v3",
+                    fieldTitle: "t3",
+                    svgImage: "svgImage3"
+                ),
+                makeAdditional(
+                    fieldName: "n4",
+                    fieldValue: "v4",
+                    fieldTitle: "t4",
+                    md5Hash: "md5hash4",
+                    svgImage: "svgImage4"
+                ),
+            ],
+            finalStep: false,
+            needMake: false,
+            needOTP: true,
+            needSum: false,
+            parametersForNextStep: []
+        ))
+    }
+    
     // MARK: - Helpers
     
     private typealias Response = ResponseMapper.CreateAnywayTransferResponse
@@ -261,6 +298,27 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
             viewType: viewType
         )
     }
+    
+    private func makeAdditional(
+        fieldName: String = UUID().uuidString,
+        fieldValue: String = UUID().uuidString,
+        fieldTitle: String = UUID().uuidString,
+        md5Hash: String? = nil,
+        recycle: Bool = false,
+        svgImage: String? = nil,
+        typeIdParameterList: String? = nil
+    ) -> Response.Additional {
+        
+        .init(
+            fieldName: fieldName,
+            fieldValue: fieldValue,
+            fieldTitle: fieldTitle,
+            md5Hash: md5Hash,
+            recycle: recycle,
+            svgImage: svgImage,
+            typeIdParameterList: typeIdParameterList
+        )
+    }
 }
 
 private extension Data {
@@ -309,6 +367,42 @@ private extension String {
     "statusCode": 102,
     "errorMessage": "Возникла техническая ошибка",
     "data": null
+}
+"""
+    
+    static let withAdditional = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "needOTP": true,
+        "additionalList": [
+            {
+                "fieldName": "n1",
+                "fieldValue": "v1",
+                "fieldTitle": "t1"
+            },
+            {
+                "fieldName": "n2",
+                "fieldValue": "v2",
+                "fieldTitle": "t2",
+                "md5hash": "md5hash2"
+            },
+            {
+                "fieldName": "n3",
+                "fieldValue": "v3",
+                "fieldTitle": "t3",
+                "svgImage": "svgImage3"
+            },
+            {
+                "fieldName": "n4",
+                "fieldValue": "v4",
+                "fieldTitle": "t4",
+                "md5hash": "md5hash4",
+                "svgImage": "svgImage4"
+            }
+        ],
+        "parameterListForNextStep": []    }
 }
 """
     
