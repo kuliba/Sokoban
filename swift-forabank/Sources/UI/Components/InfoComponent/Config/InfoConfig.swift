@@ -8,7 +8,7 @@
 import SharedConfigs
 import SwiftUI
 
-public struct InfoConfig {
+public struct InfoConfig: Equatable {
     
     let title: TextConfig
     let value: TextConfig

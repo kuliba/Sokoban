@@ -12,7 +12,7 @@ where LastPayment == UtilityPaymentLastPayment,
       Operator == UtilityPaymentOperator,
       UtilityService == ForaBank.UtilityService,
       Content == UtilityPrepaymentViewModel,
-      PaymentViewModel == ObservingPaymentFlowMockViewModel {
+      PaymentViewModel == ObservingAnywayTransactionViewModel {
     
     static var preview: Self {
         

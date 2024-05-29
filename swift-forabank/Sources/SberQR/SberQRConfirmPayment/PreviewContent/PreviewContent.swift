@@ -7,7 +7,7 @@
 
 import PaymentComponents
 
-extension EditableAmount<Info> {
+extension EditableAmount<PublishingInfo> {
     
     static var preview: Self {
         
@@ -22,7 +22,7 @@ extension EditableAmount<Info> {
     }
 }
 
-extension FixedAmount<Info> {
+extension FixedAmount<PublishingInfo> {
     
     static var preview: Self {
         

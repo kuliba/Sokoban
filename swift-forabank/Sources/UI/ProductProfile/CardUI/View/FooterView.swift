@@ -45,7 +45,7 @@ public struct FooterView: View {
             Text(footer.balance)
                 .font(config.fonts.footer)
                 .fontWeight(.semibold)
-                .foregroundColor(config.appearance.textColor)
+                .foregroundColor(config.appearance.colors.text)
                 .accessibilityIdentifier("productBalance")
                 .frame(maxWidth: .infinity, alignment: .leading)
             
@@ -63,7 +63,7 @@ public struct FooterView: View {
             .renderingMode(.template)
             .resizable()
             .frame(height: config.sizes.paymentSystemIcon.height)
-            .foregroundColor(config.appearance.textColor)
+            .foregroundColor(config.appearance.colors.text)
             .accessibilityIdentifier("productPaymentSystemIcon")
             .frame(maxWidth: config.sizes.paymentSystemIcon.width, alignment: .trailing)
     }

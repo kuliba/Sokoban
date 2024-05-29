@@ -42,7 +42,11 @@ public struct CarouselState<Product: CarouselProduct & Equatable>: Equatable {
 
 public extension CarouselState {
     
-    init(products: [Product], needShowSticker: Bool) {
+    init(
+        products: [Product],
+        needShowSticker: Bool,
+        carouselDimensions: CarouselConfig.ProductDimensions = .regular
+    ) {
         
         let productsMapper = Self.map(products: products)
         
@@ -54,7 +58,8 @@ public extension CarouselState {
             selector: selector,
             productGroups: productGroups,
             needShowSticker: needShowSticker,
-            separators: separators
+            separators: separators,
+            carouselDimensions: carouselDimensions
         )
     }
     
@@ -63,18 +68,18 @@ public extension CarouselState {
     ) -> (ProductTypeSelector, ProductGroups, ProductSeparators)  {
         
         let productTypes = products
-            .map { $0.type }
+            .map(\.productType)
             .uniqueValues
             .sorted(by: { $0.order < $1.order })
         
         let groupedByType = Dictionary(
             grouping: products,
-            by: { $0.type }
+            by:(\.productType)
         )
-                
+        
         let productGroups = productTypes
             .compactMap { productType -> (ProductType, [Product])? in
-                                
+                
                 guard let productsArray = groupedByType[productType] else {
                     return nil
                 }
@@ -91,7 +96,7 @@ public extension CarouselState {
                 )
             }
         
-        let cardProducts = products.filter { $0.type == .card }
+        let cardProducts = products.filter { $0.productType == .card }
         
         let separators = zip(cardProducts, cardProducts.dropFirst())
             .enumerated()
@@ -108,7 +113,7 @@ public extension CarouselState {
                 
                 resultingArray.append(
                     element: product,
-                    toValueOfKey: product.type
+                    toValueOfKey: product.productType
                 )
             }
         
@@ -132,7 +137,7 @@ public extension CarouselState {
             
             return firstProduct
         }
-
+        
         if firstProduct.isAdditional == true
             && secondProduct.isAdditional == false {
             
@@ -174,14 +179,14 @@ extension CarouselState {
         guard offset > 0 else { return nil }
         
         var currentLength: CGFloat = 0
+        let productWidth = carouselDimensions.sizes.product.width
+        let separatorWidth = carouselDimensions.sizes.separator.width
+        let productSpacing = carouselDimensions.spacing
         
         for group in productGroups {
             
             let shouldAddSpoiler = shouldAddSpoiler(for: group)
             
-            let productWidth = carouselDimensions.sizes.product.width
-            let separatorWidth = carouselDimensions.sizes.separator.width
-            let productSpacing = carouselDimensions.spacing
             let spoilerWidth = Int(shouldAddSpoiler ? carouselDimensions.sizes.button.width : 0)
             
             let separatorsCount = separators[group.id]?.count ?? 0
@@ -224,7 +229,7 @@ extension CarouselState {
     
     func shouldAddSeparator(for product: Product) -> Bool {
         
-        separators[product.type]?.contains(product) == true
+        separators[product.productType]?.contains(product) == true
     }
     
     func shouldAddGroupSeparator(for productGroup: Group) -> Bool {
@@ -235,7 +240,7 @@ extension CarouselState {
     func productGroupIsCollapsed(_ productGroup: Group) -> Bool {
         
         productGroups
-            .contains(where: { $0 == productGroup && $0.state == .collapsed })        
+            .contains(where: { $0 == productGroup && $0.state == .collapsed })
     }
     
     func shouldAddSpoiler(for productGroup: Group) -> Bool {

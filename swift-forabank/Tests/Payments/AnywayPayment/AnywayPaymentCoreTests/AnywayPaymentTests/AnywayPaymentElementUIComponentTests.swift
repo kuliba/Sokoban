@@ -238,6 +238,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         )
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
             dataType: .string,
+            subTitle: "defg",
+            title: "abcde",
             type: .input,
             viewType: .input
         )
@@ -248,6 +250,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.uiComponent, .parameter(.init(
             id: "123",
             type: .textInput,
+            title: "abcde",
+            subtitle: "defg",
             value: "ABC"
         )))
     }
@@ -257,6 +261,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         let field = makeAnywayPaymentElementParameterField(id: "123", value: nil)
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
             dataType: makePairsDataType(),
+            subTitle: "defg",
+            title: "abcde",
             type: .select,
             viewType: .input
         )
@@ -267,6 +273,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.uiComponent, .parameter(.init(
             id: "123",
             type: .select(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
+            title: "abcde",
+            subtitle: "defg",
             value: nil
         )))
     }
@@ -276,6 +284,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         let field = makeAnywayPaymentElementParameterField(id: "123", value: "ABC")
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
             dataType: makePairsDataType(),
+            subTitle: "defg",
+            title: "abcde",
             type: .select,
             viewType: .input
         )
@@ -286,6 +296,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.uiComponent, .parameter(.init(
             id: "123",
             type: .select(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
+            title: "abcde",
+            subtitle: "defg",
             value: "ABC"
         )))
     }
@@ -295,6 +307,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         let field = makeAnywayPaymentElementParameterField(id: "123", value: "ABC")
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
             dataType: makePairsDataType(("a", "1"), ("bb", "22")),
+            subTitle: "defg",
+            title: "abcde",
             type: .select,
             viewType: .input
         )
@@ -309,6 +323,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
                     .init(key: "a", value: "1"),
                     .init(key: "bb", value: "22"),
                 ]),
+            title: "abcde",
+            subtitle: "defg",
             value: "ABC"
         )))
     }

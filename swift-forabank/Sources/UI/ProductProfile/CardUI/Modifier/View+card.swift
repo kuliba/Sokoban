@@ -12,7 +12,8 @@ extension View {
     func card(
         isChecked: Bool,
         isUpdating: Bool,
-        statusActionView: (some View)?,
+        activationView: some View = EmptyView(),
+        statusView: some View = EmptyView(),
         config: Config,
         isFrontView: Bool,
         action: @escaping () -> Void
@@ -25,8 +26,11 @@ extension View {
                     isUpdating: isUpdating,
                     isFrontView: isFrontView,
                     config: config,
-                    statusAction: {
-                        statusActionView
+                    activationView: {
+                        activationView
+                    },
+                    statusView: {
+                        statusView
                     }
                 )
             )

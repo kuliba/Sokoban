@@ -12,32 +12,22 @@ public extension Info {
     
     static let amount: Self = .init(
         id: .amount,
-        value: "220 ₽",
         title: "Сумма",
-        image: .init(.init("dollarsign.circle.fill")),
+        value: "220 ₽",
         style: .expanded
     )
     
     static let brandName: Self = .init(
         id: .brandName,
-        value: "сббол енот_QR",
         title: "Получатель",
-        image: .init(.init("house")),
+        value: "сббол енот_QR",
         style: .expanded
     )
     
     static let recipientBank: Self = .init(
         id: .recipientBank,
-        value: "Сбербанк",
         title: "Банк получателя",
-        image: .init(.init("building.columns")),
+        value: "Сбербанк",
         style: .expanded
     )
-    
-    private static func just(
-        _ systemName: String
-    ) -> AnyPublisher<Image, Never> {
-        
-        Just(.init(systemName: "building.columns")).eraseToAnyPublisher()
-    }
 }
