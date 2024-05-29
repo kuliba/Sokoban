@@ -8,6 +8,7 @@
 import ProductSelectComponent
 import SberQR
 import SwiftUI
+import UIPrimitives
 
 extension Array where Element == ProductData {
     

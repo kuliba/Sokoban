@@ -22,6 +22,7 @@ func anyProductID(
 
 func makeProduct(
     _ id: Product.ID = anyProductID(),
+    isAdditional: Bool = false,
     header: String = "Header",
     title: String = "title",
     number: String = "number",
@@ -29,13 +30,14 @@ func makeProduct(
     balance: Decimal = 12_345.67,
     look: Product.Look = .init(
         background: .svg("background"),
-        color: "green",
+        color: .green,
         icon: .svg("icon")
     )
 ) -> Product {
     
     .init(
         id: id,
+        isAdditional: isAdditional,
         header: header,
         title: title,
         number: number,

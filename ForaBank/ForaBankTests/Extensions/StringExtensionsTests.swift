@@ -164,4 +164,29 @@ class StringExtensionsTests: XCTestCase {
         // then
         XCTAssertNotEqual(result, "1234 1234 67898990")
     }
+    
+    func test_cardNumberMasked_emptyNumber() {
+        
+        XCTAssertNoDiff("".cardNumberMasked(), "")
+    }
+
+    func test_cardNumberMasked_fullNumber() {
+        
+        XCTAssertNoDiff("1234123467898990".cardNumberMasked(), "1234 12** **** 8990")
+    }
+    
+    func test_cardNumberMasked_numberLessThen4digits() {
+        
+        XCTAssertNoDiff("123".cardNumberMasked(), "123")
+    }
+
+    func test_cardNumberMasked_numberLessThen12digits() {
+        
+        XCTAssertNoDiff("12341234678".cardNumberMasked(), "1234 12** ***")
+    }
+
+    func test_cardNumberMasked_numberMoreThen16digits() {
+        
+        XCTAssertNoDiff("12341234678989901234".cardNumberMasked(), "1234 12** **** 8990 1234")
+    }
 }

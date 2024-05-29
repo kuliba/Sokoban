@@ -7,6 +7,7 @@
 
 import SberQR
 import PaymentComponents
+import SwiftUI
 import XCTest
 
 final class SberQRConfirmPaymentState_makePayloadTests: XCTestCase {
@@ -124,7 +125,7 @@ final class SberQRConfirmPaymentState_makePayloadTests: XCTestCase {
         type: ProductSelect.Product.ProductType,
         isAdditional: Bool = false,
         balance: Decimal = 99,
-        color: String = "red"
+        color: Color = .red
     ) -> ProductSelect.Product {
         
         .init(

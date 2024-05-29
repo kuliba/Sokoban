@@ -21,7 +21,7 @@ extension ProductGroupView {
         
         var id: String { productType.rawValue }
         let productType: ProductType
-        @Published var visible: [ProductView.ViewModel]
+        @Published var visible: [ProductViewModel]
         @Published var groupButton: GroupButtonViewModel?
         @Published var isCollapsed: Bool
         @Published var isSeparator: Bool
@@ -29,12 +29,12 @@ extension ProductGroupView {
         @Published var isOpeningProduct: Bool
         let dimensions: Dimensions
         
-        private var products: CurrentValueSubject<[ProductView.ViewModel], Never> = .init([])
+        private var products: CurrentValueSubject<[ProductViewModel], Never> = .init([])
         private let settings: ProductsGroupSettings
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(productType: ProductType, visible: [ProductView.ViewModel], groupButton: GroupButtonViewModel?, isCollapsed: Bool, isSeparator: Bool, isUpdating: Bool, isOpeningProduct: Bool, settings: ProductsGroupSettings = .base, dimensions: Dimensions, model: Model = .emptyMock) {
+        init(productType: ProductType, visible: [ProductViewModel], groupButton: GroupButtonViewModel?, isCollapsed: Bool, isSeparator: Bool, isUpdating: Bool, isOpeningProduct: Bool, settings: ProductsGroupSettings = .base, dimensions: Dimensions, model: Model = .emptyMock) {
             
             self.productType = productType
             self.visible = visible
@@ -51,7 +51,7 @@ extension ProductGroupView {
         
         convenience init(
             productType: ProductType,
-            products: [ProductView.ViewModel],
+            products: [ProductViewModel],
             settings: ProductsGroupSettings = .base,
             dimensions: Dimensions,
             model: Model
@@ -74,7 +74,7 @@ extension ProductGroupView {
             bind()
         }
         
-        func update(with products: [ProductView.ViewModel]) {
+        func update(with products: [ProductViewModel]) {
             
             self.products.value = products
         }
@@ -130,10 +130,10 @@ extension ProductGroupView {
                 .store(in: &bindings)
             
             let reduce: (
-                [ProductView.ViewModel],
+                [ProductViewModel],
                 Bool
             ) -> (
-                products: [ProductView.ViewModel],
+                products: [ProductViewModel],
                 groupButton: GroupButtonViewModel?
             ) = { [unowned self] products, isCollapsed in
                 
@@ -196,9 +196,9 @@ extension ProductGroupView {
     }
 }
 
-// MARK: - Array of ProductView.ViewModel Helpers
+// MARK: - Array of ProductViewModel Helpers
 
-extension Array where Element == ProductView.ViewModel {
+extension Array where Element == ProductViewModel {
     
     func reduce(
         isCollapsed: Bool,
@@ -447,7 +447,7 @@ extension ProductGroupView {
     
     fileprivate struct ShadowedProductView: View {
         
-        let productViewModel: ProductView.ViewModel
+        let productViewModel: ProductViewModel
         let dimensions: Dimensions
         
         var body: some View {
@@ -498,43 +498,47 @@ extension ProductGroupView {
 
 struct ProductGroupView_Previews: PreviewProvider {
     
+    private static func preview(_ viewModel: ProductGroupView.ViewModel) -> some View {
+        ProductGroupView(viewModel: viewModel)
+    }
+
     static func previewsGroup() -> some View {
         
         Group {
             Group {
                 
-                ProductGroupView(viewModel: .previewNewAndOpening)
+                preview(.previewNewAndOpening)
                     .previewDisplayName("previewNewAndOpening")
                 
-                ProductGroupView(viewModel: .sampleProductsOne)
+                preview(.sampleProductsOne)
                     .previewDisplayName("sampleProductsOne")
                 
-                ProductGroupView(viewModel: .sampleProductsOneSmall)
+                preview(.sampleProductsOneSmall)
                     .previewDisplayName("sampleProductsOne Small")
             }
             
             ScrollView(.horizontal) {
                 
-                ProductGroupView(viewModel: .sampleProducts)
+                preview(.sampleProducts)
             }
             .previewDisplayName("scroll with sampleProducts")
             
             ScrollView(.horizontal) {
                 
-                ProductGroupView(viewModel: .sampleProductsSmall)
+                preview(.sampleProductsSmall)
             }
             .previewDisplayName("scroll with sampleProductsSmall")
             
-            ProductGroupView(viewModel: .sampleWant)
+            preview(.sampleWant)
                 .previewDisplayName("sampleWant")
             
             ScrollView(.horizontal) {
                 
-                ProductGroupView(viewModel: .sampleGroup)
+                preview(.sampleGroup)
             }
             .previewDisplayName("sampleGroup")
             
-            ProductGroupView(viewModel: .sampleGroupCollapsed)
+            preview(.sampleGroupCollapsed)
                 .previewDisplayName("sampleGroupCollapsed")
             
             Group {
@@ -617,7 +621,7 @@ extension ProductGroupView.ViewModel {
     
     private static func makeModel(
         productType: ProductType = .card,
-        visible: [ProductView.ViewModel] = [.classic],
+        visible: [ProductViewModel] = [.classic],
         groupButton: GroupButtonViewModel? = nil,
         isCollapsed: Bool = false,
         isSeparator: Bool = false,
@@ -640,7 +644,7 @@ extension ProductGroupView.ViewModel {
     
     private static func makeWithMock(
         productType: ProductType = .card,
-        products: [ProductView.ViewModel] = [.classic],
+        products: [ProductViewModel] = [.classic],
         settings: ProductsGroupSettings = .base,
         dimensions: Dimensions
     ) -> ProductGroupView.ViewModel {
