@@ -206,6 +206,134 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
         ))
     }
     
+    func test_map_shouldDeliverResponse_multiSum() throws {
+        #warning("add field `visible: Bool`")
+        try assert(string: .multiSum, .init(
+            additional: [
+                makeAdditional(
+                    fieldName: "4",
+                    fieldValue: "МОСКВА,АМУРСКАЯ УЛ.,2А К2,108",
+                    fieldTitle: "Адрес",
+                    md5Hash: "87f2fad4a6997e1d3ae634c551c50f14"
+                ),
+                makeAdditional(
+                    fieldName: "8",
+                    fieldValue: "253.650",
+                    fieldTitle: "ПРЕД. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504"
+                ),
+            ],
+            finalStep: false,
+            needMake: false,
+            needOTP: false,
+            needSum: false,
+            parametersForNextStep: [
+                makeParameter(
+                    content:  "042024",
+                    dataType: .string,
+                    id: "5",
+                    isPrint: false,
+                    isRequired: false,
+                    regExp: "^.{1,250}$",
+                    title: "Период(ММГГГГ)",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "9",
+                    isPrint: false,
+                    isRequired: false,
+                    regExp: "^.{1,250}$",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "13",
+                    isPrint: false,
+                    isRequired: false,
+                    regExp: "^.{1,250}$",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "17",
+                    isPrint: false,
+                    isRequired: false,
+                    regExp: "^.{1,250}$",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "21",
+                    isPrint: false,
+                    isRequired: false,
+                    regExp: "^.{1,250}$",
+                    title: "ТЕК. ПОКАЗАНИЯ ХВС №1012018234307",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "25",
+                    isPrint: false,
+                    isRequired: false,
+                    regExp: "^.{1,250}$",
+                    title: "ТЕК. ПОКАЗАНИЯ ХВ_ГВС №1012018015708",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "29",
+                    inputFieldType: .counter,
+                    isPrint: false,
+                    isRequired: false,
+                    regExp: "^.{1,250}$",
+                    title: "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: "4273.87",
+                    dataType: .number,
+                    id: "65",
+                    isPrint: false,
+                    isRequired: false,
+                    rawLength: 2,
+                    regExp: "^.{1,250}$",
+                    title: "УСЛУГИ_ЖКУ",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: "0.00",
+                    dataType: .number,
+                    id: "143",
+                    inputFieldType: .penalty,
+                    isPrint: false,
+                    isRequired: false,
+                    rawLength: 2,
+                    regExp: "^.{1,250}$",
+                    title: "Сумма пени",
+                    type: .input,
+                    viewType: .input
+                ),
+            ]
+        ))
+    }
+    
     // MARK: - Helpers
     
     private typealias Response = ResponseMapper.CreateAnywayTransferResponse
@@ -1433,6 +1561,154 @@ private extension String {
         ],
         "finalStep": true,
         "scenario": "OK"
+    }
+}
+"""
+    
+    static let multiSum = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "additionalList": [
+            {
+                "fieldName": "4",
+                "fieldValue": "МОСКВА,АМУРСКАЯ УЛ.,2А К2,108",
+                "fieldTitle": "Адрес",
+                "md5hash": "87f2fad4a6997e1d3ae634c551c50f14"
+            },
+            {
+                "fieldName": "8",
+                "fieldValue": "253.650",
+                "fieldTitle": "ПРЕД. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504"
+            }
+        ],
+        "parameterListForNextStep": [
+            {
+                "id": "5",
+                "title": "Период(ММГГГГ)",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": "042024",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "9",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "13",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "17",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "21",
+                "title": "ТЕК. ПОКАЗАНИЯ ХВС №1012018234307",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "25",
+                "title": "ТЕК. ПОКАЗАНИЯ ХВ_ГВС №1012018015708",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "29",
+                "title": "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "inputFieldType": "COUNTER",
+                "visible": true,
+                "md5hash": "017e8b24ab276b57bd7be847905eeb4a"
+            },
+            {
+                "id": "65",
+                "title": "УСЛУГИ_ЖКУ",
+                "viewType": "INPUT",
+                "dataType": "%Numeric",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 2,
+                "isRequired": false,
+                "content": "4273.87",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "143",
+                "title": "Сумма пени",
+                "viewType": "INPUT",
+                "dataType": "%Numeric",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 2,
+                "isRequired": false,
+                "content": "0.00",
+                "readOnly": false,
+                "inputFieldType": "PENALTY",
+                "visible": true,
+                "md5hash": "4e14d4a92a2286786b4daa8ec0e9d4a3"
+            }
+        ],
+        "options": [
+            "MULTI_SUM"
+        ]
     }
 }
 """
