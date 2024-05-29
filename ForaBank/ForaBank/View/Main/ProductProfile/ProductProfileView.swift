@@ -443,6 +443,7 @@ extension ProductProfileViewModel {
         productNavigationStateManager: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         productProfileViewModelFactory: .preview,
+        updateInfoStatusFlag: .init(.inactive),
         rootView: ""
     )
     
@@ -463,6 +464,7 @@ extension ProductProfileViewModel {
         productNavigationStateManager: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
         productProfileViewModelFactory: .preview,
+        updateInfoStatusFlag: .init(.inactive),
         rootView: ""
     )
 }

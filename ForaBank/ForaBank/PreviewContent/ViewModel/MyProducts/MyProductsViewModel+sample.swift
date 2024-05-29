@@ -29,7 +29,8 @@ extension MyProductsViewModel {
             unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: .preview
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: .init(.active)
         ),
         refreshingIndicator: .init(isActive: true),
         openOrderSticker: {}
@@ -55,7 +56,8 @@ extension MyProductsViewModel {
             unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: .preview
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: .init(.active)
         ),
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false],

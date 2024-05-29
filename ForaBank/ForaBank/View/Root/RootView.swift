@@ -218,7 +218,8 @@ private extension RootViewFactory {
                     viewFactory: .init(
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeUserAccountView: UserAccountView.init(viewModel:),
-                        makeIconView: IconDomain.preview
+                        makeIconView: IconDomain.preview,
+                        makeUpdateInfoView: UpdateInfoView.init(text:)
                     ),
                     productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)),
                     getUImage: { _ in nil }

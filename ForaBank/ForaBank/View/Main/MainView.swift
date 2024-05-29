@@ -457,7 +457,8 @@ extension MainViewModel {
             unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: .preview
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
@@ -479,7 +480,8 @@ extension MainViewModel {
             unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: .preview
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
@@ -501,7 +503,8 @@ extension MainViewModel {
             unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: .preview
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),

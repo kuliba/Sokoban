@@ -55,7 +55,8 @@ extension PaymentsTransfersFactory {
                 alertReduce: AlertReducer(productAlertsViewModel: .default).reduce,
                 bottomSheetReduce: BottomSheetReducer().reduce,
                 handleEffect: ProductNavigationStateEffectHandler().handleEffect
-            )
+            ), 
+            updateInfoStatusFlag: .init(.inactive)
         )
         return .init(
             makeUtilitiesViewModel: { _,_ in },

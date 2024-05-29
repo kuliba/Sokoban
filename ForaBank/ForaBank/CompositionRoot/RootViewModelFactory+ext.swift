@@ -151,7 +151,8 @@ extension RootViewModelFactory {
             unblockCardServices: unblockCardServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
-            productNavigationStateManager: productNavigationStateManager
+            productNavigationStateManager: productNavigationStateManager,
+            updateInfoStatusFlag: updateInfoStatusFlag
         )
         
         return make(
@@ -319,7 +320,8 @@ extension ProductProfileViewModel {
         unblockCardServices: UnblockCardServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
-        productNavigationStateManager: ProductNavigationStateManager
+        productNavigationStateManager: ProductNavigationStateManager,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, dismissAction in
@@ -334,7 +336,8 @@ extension ProductProfileViewModel {
                 unblockCardServices: unblockCardServices,
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
-                productNavigationStateManager: productNavigationStateManager
+                productNavigationStateManager: productNavigationStateManager,
+                updateInfoStatusFlag: updateInfoStatusFlag
             )
             
             let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
@@ -403,6 +406,7 @@ extension ProductProfileViewModel {
                 product: product, 
                 productNavigationStateManager: productNavigationStateManager,
                 productProfileViewModelFactory: makeProductProfileViewModelFactory,
+                updateInfoStatusFlag: updateInfoStatusFlag,
                 rootView: rootView,
                 dismissAction: dismissAction
             )
@@ -486,7 +490,8 @@ private extension RootViewModelFactory {
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
-            paymentsTransfersFactory: paymentsTransfersFactory
+            paymentsTransfersFactory: paymentsTransfersFactory,
+            updateInfoStatusFlag: updateInfoStatusFlag
         )
         
         let chatViewModel = ChatViewModel()

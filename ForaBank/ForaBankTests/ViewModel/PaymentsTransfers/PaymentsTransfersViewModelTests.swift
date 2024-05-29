@@ -702,6 +702,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         createUnblockCardStub: UnblockCardServices.UnblockCardResult = .success(.init(statusBrief: "", statusDescription: "")),
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .init(.inactive),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -740,7 +741,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             unblockCardServices: unblockCardServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient, 
-            productNavigationStateManager: .preview
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: updateInfoStatusFlag
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -759,6 +761,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
+            updateInfoStatusFlag: updateInfoStatusFlag,
             scheduler: .immediate
         )
         

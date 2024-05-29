@@ -65,6 +65,7 @@ class ProductProfileViewModel: ObservableObject {
     private let productProfileViewModelFactory: ProductProfileViewModelFactory
     
     private let productNavigationStateManager: ProductNavigationStateManager
+    private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
 
     private var bindings = Set<AnyCancellable>()
     
@@ -95,6 +96,7 @@ class ProductProfileViewModel: ObservableObject {
          productNavigationStateManager: ProductNavigationStateManager,
          cvvPINServicesClient: CVVPINServicesClient,
          productProfileViewModelFactory: ProductProfileViewModelFactory,
+         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
          rootView: String,
          scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
@@ -119,6 +121,7 @@ class ProductProfileViewModel: ObservableObject {
         self.rootView = rootView
         self.productNavigationStateManager = productNavigationStateManager
         self.productProfileViewModelFactory = productProfileViewModelFactory
+        self.updateInfoStatusFlag = updateInfoStatusFlag
         self.cardAction = createCardAction(cvvPINServicesClient, model)
         // TODO: add removeDuplicates
         self.bottomSheetSubject
@@ -153,6 +156,7 @@ class ProductProfileViewModel: ObservableObject {
         product: ProductData,
         productNavigationStateManager: ProductNavigationStateManager,
         productProfileViewModelFactory: ProductProfileViewModelFactory,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         rootView: String,
         dismissAction: @escaping () -> Void,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -188,6 +192,7 @@ class ProductProfileViewModel: ObservableObject {
             productNavigationStateManager: productNavigationStateManager,
             cvvPINServicesClient: cvvPINServicesClient,
             productProfileViewModelFactory: productProfileViewModelFactory,
+            updateInfoStatusFlag: updateInfoStatusFlag,
             rootView: rootView,
             scheduler: scheduler
         )
@@ -439,6 +444,7 @@ private extension ProductProfileViewModel {
                     sberQRServices: sberQRServices,
                     qrViewModelFactory: qrViewModelFactory,
                     paymentsTransfersFactory: paymentsTransfersFactory,
+                    updateInfoStatusFlag: updateInfoStatusFlag,
                     isTabBarHidden: true,
                     mode: .link
                 )
@@ -1614,6 +1620,7 @@ private extension ProductProfileViewModel {
             product: product, 
             productNavigationStateManager: productNavigationStateManager,
             productProfileViewModelFactory: productProfileViewModelFactory,
+            updateInfoStatusFlag: updateInfoStatusFlag,
             rootView: rootView,
             dismissAction: dismissAction
         )

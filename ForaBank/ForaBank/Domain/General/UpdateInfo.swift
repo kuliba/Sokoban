@@ -55,6 +55,11 @@ class UpdateInfoViewModel: MainSectionViewModel {
     }
 }
 
+class UpdateInfoPTViewModel: PaymentsTransfersSectionViewModel {
+    
+    override var type: PaymentsTransfersSectionType { .updateInfo }
+}
+
 typealias MakeUpdateInfoView = (String) -> UpdateInfoView
 
 extension String {
