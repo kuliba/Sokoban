@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import Foundation
 import XCTest
 
@@ -128,8 +129,8 @@ func makeAnywayPayment(
 
 func makeAnywayPaymentOutline(
     _ fields: [String: String] = [:],
-    core: AnywayPayment.Outline.PaymentCore = makeOutlinePaymentCore(productType: .account)
-) -> AnywayPayment.Outline {
+    core: AnywayPaymentOutline.PaymentCore = makeOutlinePaymentCore(productType: .account)
+) -> AnywayPaymentOutline {
     
     .init(
         core: core,
@@ -708,6 +709,9 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
     init(with dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType) {
         
         switch dataType {
+        case ._backendReserved:
+            self = ._backendReserved
+            
         case .number:
             self = .number
             
@@ -734,8 +738,9 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.FieldType {
         
         switch fieldType {
         case .input:    self = .input
-        case .select:   self = .select
         case .maskList: self = .maskList
+        case .missing:  self = .missing
+        case .select:   self = .select
         }
     }
 }
@@ -836,8 +841,8 @@ func makeOutlinePaymentCore(
     amount: Decimal = makeAmount(),
     currency: String = anyMessage(),
     productID: Int = makeIntID(),
-    productType: AnywayPayment.Outline.PaymentCore.ProductType
-) -> AnywayPayment.Outline.PaymentCore {
+    productType: AnywayPaymentOutline.PaymentCore.ProductType
+) -> AnywayPaymentOutline.PaymentCore {
     
     .init(
         amount: amount, 
@@ -851,7 +856,7 @@ func makeWidgetPaymentCore(
     amount: Decimal = makeAmount(),
     currency: String = anyMessage(),
     productID: Int = makeIntID(),
-    productType: AnywayPayment.Outline.PaymentCore.ProductType
+    productType: AnywayPaymentOutline.PaymentCore.ProductType
 ) -> AnywayPayment.Element.Widget.PaymentCore {
     
     .init(

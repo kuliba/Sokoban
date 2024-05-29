@@ -7,6 +7,7 @@
 
 import AnywayPaymentBackend
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import RemoteServices
 
 public extension AnywayPaymentUpdate {
@@ -183,6 +184,9 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes.DataType {
     init(_ dataType: ResponseMapper.CreateAnywayTransferResponse.Parameter.DataType) {
         
         switch dataType {
+        case ._backendReserved:
+            self = ._backendReserved
+            
         case .number:
             self = .number
             
@@ -211,6 +215,7 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes.FieldType {
         case .input:    self = .input
         case .select:   self = .select
         case .maskList: self = .maskList
+        case .missing:  self = .missing
         }
     }
 }

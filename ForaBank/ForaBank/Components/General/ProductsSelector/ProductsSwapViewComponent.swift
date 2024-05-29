@@ -68,7 +68,7 @@ extension ProductsSwapView {
                             ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
                             ProductData.Filter.DemandDepositRule(),
                             ProductData.Filter.CardActiveRule(),
-                            ProductData.Filter.CardAdditionalNotOwnedRestrictedRule(),
+                            ProductData.Filter.CardAdditionalSelfRule(),
                             ProductData.Filter.AccountActiveRule()])
                 guard let productDataFrom = model.firstProduct(with: productFromFilter) else {
                     return nil
@@ -78,7 +78,7 @@ extension ProductsSwapView {
                     rules: [ProductData.Filter.CreditRule(),
                             ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
                             ProductData.Filter.CardActiveRule(),
-                            ProductData.Filter.CardAdditionalNotOwnedRestrictedRule(),
+                            ProductData.Filter.CardAdditionalSelfRule(),
                             ProductData.Filter.AccountActiveRule()])
 
                 let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, filter: productFromFilter)
@@ -202,7 +202,7 @@ extension ProductsSwapView {
                     rules: [ProductData.Filter.DebitRule(),
                             ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
                             ProductData.Filter.CardActiveRule(),
-                            ProductData.Filter.CardAdditionalNotOwnedRestrictedRule(),
+                            ProductData.Filter.CardAdditionalSelfRule(),
                             ProductData.Filter.AccountActiveRule()])
                 filterFrom.rules.append(ProductData.Filter.ProductRestrictedRule([productToData.id]))
                 
@@ -210,7 +210,7 @@ extension ProductsSwapView {
                     rules: [ProductData.Filter.CreditRule(),
                             ProductData.Filter.ProductTypeRule([.card, .account, .deposit]),
                             ProductData.Filter.CardActiveRule(),
-                            ProductData.Filter.CardAdditionalNotOwnedRestrictedRule(),
+                            ProductData.Filter.CardAdditionalSelfRule(),
                             ProductData.Filter.AccountActiveRule()])
                 let contextFrom = ProductSelectorView.ViewModel.Context(title: "Откуда", direction: .from, style: .me2me, filter: filterFrom)
                 let contextTo = ProductSelectorView.ViewModel.Context(title: "Куда", direction: .to, style: .me2me, isUserInteractionEnabled: true, filter: filterTo)

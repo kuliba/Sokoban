@@ -6,34 +6,35 @@
 //
 
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import XCTest
 
 final class AnywayPaymentStagedTests: XCTestCase {
     
-    func test_staged_shouldDeliverEmptyOnEmptyElements() {
+    func test_getStaged_shouldDeliverEmptyOnEmptyElements() {
         
         let payment = makeAnywayPayment(elements: [])
         
-        XCTAssert(payment.staged().isEmpty)
+        XCTAssert(payment.getStaged().isEmpty)
     }
     
-    func test_staged_shouldDeliverEmptyOnEmptyParameters() {
+    func test_getStaged_shouldDeliverEmptyOnEmptyParameters() {
         
         let payment = makeAnywayPayment(
             elements: [.field(makeAnywayPaymentField())]
         )
         
-        XCTAssert(payment.staged().isEmpty)
+        XCTAssert(payment.getStaged().isEmpty)
     }
     
-    func test_staged_shouldDeliverParameterIDs() {
+    func test_getStaged_shouldDeliverParameterIDs() {
         
         let (parameter1, parameter2) = makeTwoParameters()
         let payment = makeAnywayPayment(elements: [.parameter(parameter1), .parameter(parameter2), .field(makeAnywayPaymentField())]
         )
         
         XCTAssertNoDiff(
-            payment.staged(),
+            payment.getStaged(),
             [parameter1.field.id, parameter2.field.id]
         )
     }

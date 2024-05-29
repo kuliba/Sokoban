@@ -10,15 +10,11 @@ import UtilityServicePrepaymentDomain
 public final class PrepaymentPickerEffectHandler<Operator>
 where Operator: Identifiable {
     
-    private let paginate: Paginate
-    private let search: Search
+    private let microServices: MicroServices
     
-    public init(
-        paginate: @escaping Paginate,
-        search: @escaping Search
-    ) {
-        self.paginate = paginate
-        self.search = search
+    public init(microServices: MicroServices) {
+        
+        self.microServices = microServices
     }
 }
 
@@ -40,14 +36,7 @@ public extension PrepaymentPickerEffectHandler {
 
 public extension PrepaymentPickerEffectHandler {
     
-    typealias _PaginatePayload = PaginatePayload<Operator.ID>
-    typealias PaginateResult = [Operator]
-    typealias PaginateCompletion = (PaginateResult) -> Void
-    typealias Paginate = (_PaginatePayload, @escaping PaginateCompletion) -> Void
-    
-    typealias SearchResult = [Operator]
-    typealias SearchCompletion = (SearchResult) -> Void
-    typealias Search = (String, @escaping SearchCompletion) -> Void
+    typealias MicroServices = PrepaymentPickerMicroServices<Operator>
     
     typealias Dispatch = (Event) -> Void
     
@@ -58,16 +47,16 @@ public extension PrepaymentPickerEffectHandler {
 private extension PrepaymentPickerEffectHandler {
     
     func paginate(
-        _ payload: _PaginatePayload,
+        _ payload: MicroServices._PaginatePayload,
         _ dispatch: @escaping Dispatch
     ) {
-        paginate(payload) { dispatch(.page($0)) }
+        microServices.paginate(payload) { dispatch(.page($0)) }
     }
     
     func search(
         _ payload: String,
         _ dispatch: @escaping Dispatch
     ) {
-        search(payload) { dispatch(.load($0)) }
+        microServices.search(payload) { dispatch(.load($0)) }
     }
 }

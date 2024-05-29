@@ -220,8 +220,8 @@ private extension PaymentsTransfersFlowReducer {
             state.setUtilityServicePickerDestination(to: nil)
             
         case let .initiated(payload):
-            let viewModel = factory.makeUtilityPrepaymentViewModel(payload)
-            state.destination = .utilityPayment(.init(content: viewModel))
+            let utilityPrepaymentState = factory.makeUtilityPrepaymentState(payload)
+            state.destination = .utilityPayment(utilityPrepaymentState)
             
         case .payByInstructions:
             payByInstructions(&state)
@@ -229,8 +229,8 @@ private extension PaymentsTransfersFlowReducer {
         case .payByInstructionsFromError:
             state.destination = .payments(factory.makePaymentsViewModel(closeAction))
             
-        case let .paymentStarted(startPaymentResult):
-            reduce(&state, with: startPaymentResult)
+        case let .paymentStarted(paymentStarted):
+            reduce(&state, with: paymentStarted)
             
         case let .select(select):
             effect = .startPayment(with: select)
@@ -258,27 +258,29 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with result: UtilityPrepaymentFlowEvent.StartPaymentResult
+        with paymentStarted: PaymentStarted
     ) {
-        switch result {
+        switch paymentStarted.result {
         case let .failure(failure):
             reduce(&state, with: failure)
             
         case let .success(success):
-            reduce(&state, with: success)
+            reduce(&state, with: success, and: paymentStarted.select)
         }
     }
     
+    private typealias PaymentStarted = UtilityPrepaymentFlowEvent.PaymentStarted
+    
     private func reduce(
         _ state: inout State,
-        with failure: UtilityPrepaymentFlowEvent.StartPaymentFailure
+        with failure: PaymentStarted.StartPaymentFailure
     ) {
         switch failure {
         case let .operatorFailure(`operator`):
             state.setUtilityPrepaymentDestination(to: .operatorFailure(.init(content: `operator`)))
             
         case let .serviceFailure(serviceFailure):
-            #warning("extract helper")
+#warning("extract helper")
             let alert: ServiceFailureAlert = {
                 switch serviceFailure {
                 case .connectivityError:
@@ -304,7 +306,8 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with success: UtilityPrepaymentFlowEvent.StartPaymentSuccess
+        with success: PaymentStarted.StartPaymentSuccess,
+        and select: UtilityPrepaymentFlowEvent.Select
     ) {
         switch success {
         case let .services(services, `operator`):
@@ -314,29 +317,29 @@ private extension PaymentsTransfersFlowReducer {
             )))
             
         case let .startPayment(response):
-            reduce(&state, with: response)
+            reduce(&state, with: .init(select: select, response: response))
         }
     }
     
-    private typealias StartPaymentResponse = UtilityPrepaymentFlowEvent.StartPaymentSuccess.StartPaymentResponse
-    
     private func reduce(
         _ state: inout State,
-        with response: StartPaymentResponse
+        with payload: Payload
     ) {
-        let paymentViewModel = factory.makeUtilityPaymentViewModel(response, notify)
+        let utilityPaymentState = factory.makeUtilityPaymentState(payload, notify)
         
         switch state.utilityPrepaymentDestination {
         case .none:
-            state.setUtilityPrepaymentDestination(to: .payment(.init(viewModel: paymentViewModel)))
+            state.setUtilityPrepaymentDestination(to: .payment(utilityPaymentState))
             
         case .servicePicker:
-            state.setUtilityServicePickerDestination(to: .payment(.init(viewModel: paymentViewModel)))
+            state.setUtilityServicePickerDestination(to: .payment(utilityPaymentState))
             
         default:
             break
         }
     }
+    
+    private typealias Payload = Factory.MakeUtilityPaymentStatePayload
     
     private func reduce(
         _ state: inout State,
@@ -378,7 +381,7 @@ private extension PaymentsTransfersFlowEffect {
 
 private extension PaymentsTransfersViewModel._Route {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
 
     var utilityPrepayment: UtilityFlowState? {
         
@@ -411,7 +414,7 @@ private extension PaymentsTransfersViewModel._Route {
         self.destination = .utilityPayment(utilityPrepayment)
     }
     
-    typealias OperatorFailure = UtilityFlowState.Destination.OperatorFailureFlowState
+    typealias OperatorFailure = SberOperatorFailureFlowState<Operator>
     
     private var operatorFailure: OperatorFailure? {
         
@@ -430,7 +433,7 @@ private extension PaymentsTransfersViewModel._Route {
         self.setUtilityPrepaymentDestination(to: .operatorFailure(operatorFailure))
     }
     
-    typealias ServicePickerState = UtilityFlowState.Destination.ServicePickerFlowState
+    typealias ServicePickerState = UtilityServicePickerFlowState<Operator, UtilityService, PaymentViewModel>
     
     private var servicePicker: ServicePickerState? {
         

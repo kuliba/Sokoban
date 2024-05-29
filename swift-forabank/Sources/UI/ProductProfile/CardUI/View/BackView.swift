@@ -45,7 +45,8 @@ struct BackView<Header: View, CVV: View>: View {
         .card(
             isChecked: modifierConfig.isChecked,
             isUpdating: modifierConfig.isUpdating,
-            statusActionView: EmptyView(),
+            activationView: EmptyView(),
+            statusView: EmptyView(),
             config: config,
             isFrontView: false,
             action: modifierConfig.action

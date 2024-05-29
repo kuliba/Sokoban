@@ -10,7 +10,7 @@ import CarouselComponent
 struct Product: CarouselProduct, Equatable, Identifiable {
     
     let id: Int
-    let type: ProductType
+    let productType: ProductType
     let isAdditional: Bool
 }
 
@@ -82,10 +82,10 @@ extension Product {
     
     private init(
         id: Int,
-        _ type: ProductType,
+        _ productType: ProductType,
         _ isAdditional: Bool = false
     ) {
-        self.init(id: .init(id), type: type, isAdditional: isAdditional)
+        self.init(id: .init(id), productType: productType, isAdditional: isAdditional)
     }
         
     static let card: Self = .init(id: 1, .card, false)

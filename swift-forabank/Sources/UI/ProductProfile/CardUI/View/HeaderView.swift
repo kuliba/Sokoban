@@ -11,7 +11,7 @@ public struct HeaderDetails {
     
     let number: String?
     let period: String?
-    let icon: Image?
+    var icon: Image?
     
     public init(
         number: String?,
@@ -21,6 +21,10 @@ public struct HeaderDetails {
         self.number = number
         self.period = period
         self.icon = icon
+    }
+    
+    public mutating func updateIcon(_ newIcon: Image?) {
+        icon = newIcon
     }
 }
 
@@ -45,17 +49,18 @@ public struct HeaderView: View {
                 
                 Text($0)
                     .font(config.fonts.header)
-                    .foregroundColor(config.appearance.textColor)
+                    .foregroundColor(config.appearance.colors.text)
                     .accessibilityIdentifier("productNumber")
             }
             
             period()
             
-            header.icon.map{
+            header.icon.map {
                 $0
                     .renderingMode(.original)
                     .frame(height: 16, alignment: .center)
                     .frame(maxWidth: .infinity, alignment: .trailing)
+                    .padding(.trailing, config.front.cloverTrailing)
             }
         }
     }
@@ -68,11 +73,11 @@ public struct HeaderView: View {
                 
                 Rectangle()
                     .frame(width: 1, height: 16)
-                    .foregroundColor(config.appearance.textColor)
+                    .foregroundColor(config.appearance.colors.text)
                 
                 Text(text)
                     .font(config.fonts.header)
-                    .foregroundColor(config.appearance.textColor)
+                    .foregroundColor(config.appearance.colors.text)
                     .accessibilityIdentifier("productPeriod")
             }
         }

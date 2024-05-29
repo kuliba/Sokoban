@@ -15,7 +15,7 @@ where Product: CarouselProduct & Equatable & Identifiable,
     
     public typealias ViewModel = CarouselViewModel<Product>
     
-    @ObservedObject var viewModel: ViewModel
+    @ObservedObject private var viewModel: ViewModel
     
     private let productView: (Product) -> ProductView
     private let stickerView: () -> StickerView?

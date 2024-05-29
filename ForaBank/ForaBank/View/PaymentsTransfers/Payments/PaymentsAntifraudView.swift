@@ -38,6 +38,7 @@ struct PaymentsAntifraudView: View {
                     Circle()
                         .foregroundColor(.systemColorError)
                         .frame(width: 64, height: 64, alignment: .center)
+                        .accessibilityIdentifier("AntifraudSheetIconBackground")
                     
                     viewModel.icon
                         .foregroundColor(.white)
@@ -49,12 +50,14 @@ struct PaymentsAntifraudView: View {
                         .foregroundColor(.textSecondary)
                         .font(.textH4M16240())
                         .multilineTextAlignment(.center)
+                        .accessibilityIdentifier("AntifraudSheetTitle")
                     
                     Text(viewModel.description)
                         .foregroundColor(.textPlaceholder)
                         .font(.textBodySR12160())
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 20)
+                        .accessibilityIdentifier("AntifraudSheetSubTitle")
                 }
             }
         }
@@ -73,15 +76,18 @@ struct PaymentsAntifraudView: View {
                     Text(viewModel.name)
                         .font(.textH4R16240())
                         .foregroundColor(.textSecondary)
+                        .accessibilityIdentifier("AntifraudSheetName")
                     
                     Text(viewModel.phone)
                         .font(.textH4R16240())
                         .foregroundColor(.textSecondary)
+                        .accessibilityIdentifier("AntifraudSheetPhoneNumber")
                 }
                 
                 Text(viewModel.amount)
                     .font(.textH1Sb24322())
                     .foregroundColor(.textSecondary)
+                    .accessibilityIdentifier("AntifraudSheetAmount")
                 
                 TimerView(viewModel: viewModel.timer)
                     .font(.textBodySR12160())
@@ -100,10 +106,12 @@ struct PaymentsAntifraudView: View {
                 
                 Image.ic16Clock
                     .foregroundColor(.red)
+                    .accessibilityIdentifier("AntifraudSheetTimerIcon")
                 
                 Text(viewModel.value)
                     .font(.textBodySR12160())
                     .foregroundColor(.red)
+                    .accessibilityIdentifier("AntifraudSheetTimerText")
             }
         }
     }
@@ -118,9 +126,11 @@ struct PaymentsAntifraudView: View {
                 
                 ButtonSimpleView(viewModel: viewModel.cancelButton)
                     .frame(height: 56)
+                    .accessibilityIdentifier("AntifraudSheetCancelButton")
                 
                 ButtonSimpleView(viewModel: viewModel.continueButton)
                     .frame(height: 56)
+                    .accessibilityIdentifier("AntifraudSheetContinueButton")
             }
             .padding(.horizontal, 20)
         }

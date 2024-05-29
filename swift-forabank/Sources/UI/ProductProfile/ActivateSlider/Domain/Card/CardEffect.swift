@@ -9,8 +9,10 @@ import Foundation
 
 public enum CardEffect: Equatable {
     
-    case activate
-    case confirmation(DispatchTimeInterval)
+    case activate(ActivatePayload)
+    case confirmation(ActivatePayload, DispatchTimeInterval)
     case dismiss(DispatchTimeInterval)
+    
+    public typealias ActivatePayload = Int
 }
 

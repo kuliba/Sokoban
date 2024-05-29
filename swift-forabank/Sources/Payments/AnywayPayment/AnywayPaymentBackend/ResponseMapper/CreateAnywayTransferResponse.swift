@@ -202,6 +202,7 @@ extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
     
     public enum DataType: Equatable {
 
+        case _backendReserved
         case number
         case pairs(Pair, [Pair])
         case string
@@ -223,7 +224,7 @@ extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
 
     public enum FieldType: Equatable {
         
-        case input, select, maskList
+        case input, select, maskList, missing
     }
     
     public enum InputFieldType: Equatable {

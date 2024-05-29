@@ -7,27 +7,35 @@
 
 import Foundation
 
-final class InputReducer<Icon> {}
+public final class InputReducer<Icon> {
+    
+    public init() {}
+}
 
-extension InputReducer {
+public extension InputReducer {
     
     func reduce(
         _ state: State,
         _ event: Event
-    ) -> State {
+    ) -> (State, Effect?) {
+        
+        var state = state
         
         switch event {
         case let .edit(text):
-            return .init(
+            state = .init(
                 dynamic: .init(value: text),
                 settings: state.settings
             )
         }
+        
+        return (state, nil)
     }
 }
 
-extension InputReducer {
+public extension InputReducer {
     
     typealias State = InputState<Icon>
     typealias Event = InputEvent
+    typealias Effect = Never
 }

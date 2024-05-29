@@ -25,31 +25,35 @@ public extension CardEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-            
-        case .activate:
-            activate(dispatch)
+        case let .activate(cardID):
+            activate(cardID, dispatch)
             
         case let .dismiss(timeInterval):
+            asyncAfter(timeInterval) { dispatch(.dismissActivate) }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval) {
-                
-                dispatch(.dismissActivate)
-            }
-        case let .confirmation(timeInterval):
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval) {
-                
-                dispatch(.activateCard)
-            }
+        case let .confirmation(payload, timeInterval):
+            asyncAfter(timeInterval) { dispatch(.activateCard(payload)) }
         }
+    }
+    
+    private func asyncAfter(
+        _ timeInterval: DispatchTimeInterval,
+        _ action: @escaping () -> Void
+    ) {
+        
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + timeInterval,
+            execute: action
+        )
     }
 }
 
 public extension CardEffectHandler {
     
-    typealias ActivateResult = Result<Void, Error> // TODO: activateResult
+    typealias ActivatePayload = Effect.ActivatePayload
+    typealias ActivateResult = Event.ActivateCardResponse
     typealias ActivateCompletion = (ActivateResult) -> Void
-    typealias Activate = (@escaping ActivateCompletion) -> Void
+    typealias Activate = (ActivatePayload, @escaping ActivateCompletion) -> Void // request Unlock
     
     typealias Dispatch = (Event) -> Void
     
@@ -60,19 +64,9 @@ public extension CardEffectHandler {
 private extension CardEffectHandler {
     
     func activate(
+        _ payload: ActivatePayload,
         _ dispatch: @escaping Dispatch
     ) {
-        activate { result in
-            
-            switch result {
-            case .failure:
-                dispatch(.activateCardResponse(.connectivityError))
-                
-            case .success(()):
-                dispatch(.activateCardResponse(.success))
-            }
-        }
+        activate(payload) { dispatch(.activateCardResponse($0)) }
     }
 }
-
-

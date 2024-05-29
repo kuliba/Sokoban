@@ -699,6 +699,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     private func makeSUT(
         createSberQRPaymentResultStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
+        createUnblockCardStub: UnblockCardServices.UnblockCardResult = .success(.init(statusBrief: "", statusDescription: "")),
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         file: StaticString = #file,
@@ -718,6 +719,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             getSberQRDataResultStub: getSberQRDataResultStub
         )
         
+        let unblockCardServices = UnblockCardServices.preview(createUnblockCardStub: createUnblockCardStub)
+        
         let qrViewModelFactory = QRViewModelFactory.preview()
         
         let effectSpy = EffectSpy()
@@ -734,8 +737,10 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
+            unblockCardServices: unblockCardServices,
             qrViewModelFactory: qrViewModelFactory,
-            cvvPINServicesClient: cvvPINServicesClient
+            cvvPINServicesClient: cvvPINServicesClient, 
+            productNavigationStateManager: .preview
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -773,18 +778,18 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     }
     
     private func makeLatestPayment(
-        _ title: String = UUID().uuidString,
-        _ amount: String = UUID().uuidString
+        _ title: String = UUID().uuidString
     ) -> UtilityPaymentLastPayment {
         
-        .init(id: title, title: title, subtitle: amount, icon: "")
+        .init(amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: UUID().uuidString, puref: UUID().uuidString)
     }
     
     private func makeService(
-        _ id: String = UUID().uuidString
+        name: String = UUID().uuidString,
+        _ puref: String = UUID().uuidString
     ) -> UtilityService {
         
-        .init(id: id)
+        .init(name: name, puref: puref)
     }
     
     private func makePaymentDetails(

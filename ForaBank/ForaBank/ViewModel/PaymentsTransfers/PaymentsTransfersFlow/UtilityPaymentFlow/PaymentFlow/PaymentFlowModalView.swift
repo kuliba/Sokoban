@@ -23,13 +23,17 @@ struct PaymentFlowModalView: View {
 
 extension PaymentFlowModalView {
     
-    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<ObservingPaymentFlowMockViewModel>
+    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<UtilityPaymentViewModel>
 
     typealias State = UtilityServiceFlowState.Modal
     typealias Event = ModalEvent
     typealias ModalEvent = FraudEvent // while only one Modal
 }
 
-#Preview {
-    PaymentFlowModalView(state: .fraud(.init()), event: { print($0) })
+struct PaymentFlowModalView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        PaymentFlowModalView(state: .fraud(.init()), event: { print($0) })
+    }
 }

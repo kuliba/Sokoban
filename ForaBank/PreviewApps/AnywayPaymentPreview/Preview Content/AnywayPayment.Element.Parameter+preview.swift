@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 15.04.2024.
 //
 
-import AnywayPaymentCore
+import AnywayPaymentDomain
 
 extension AnywayPayment.Element.Parameter {
     
@@ -16,22 +16,17 @@ extension AnywayPayment.Element.Parameter {
         uiAttributes: .textInput
     )
     static let textInput: Self = .init(
-        field: .preview,
+        field: .init(id: "textInput", value: "abc"),
         masking: .preview,
         validation: .preview,
         uiAttributes: .textInput
     )
     static let select: Self = .init(
-        field: .preview,
+        field: .init(id: "select", value: "DFG"),
         masking: .preview,
         validation: .preview,
         uiAttributes: .select
     )
-}
-
-private extension AnywayPayment.Element.Parameter.Field {
-    
-    static let preview: Self = .init(id: "123", value: "abc")
 }
 
 private extension AnywayPayment.Element.Parameter.Masking {

@@ -28,6 +28,9 @@ extension RequestFactory {
         
         public let additional: [Additional]
         public let amount: Decimal?
+        /// Признак проверки операции
+        /// если check="true", то OTP не отправляется,
+        /// если check="false" - OTP отправляется.
         public let check: Bool
         public let comment: String?
         public let currencyAmount: String?
