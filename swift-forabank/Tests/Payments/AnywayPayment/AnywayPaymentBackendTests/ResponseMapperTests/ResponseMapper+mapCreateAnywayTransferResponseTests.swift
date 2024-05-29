@@ -153,7 +153,8 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
                     isPrint: false,
                     isRequired: false,
                     type: .missing,
-                    viewType: .output
+                    viewType: .output,
+                    visible: false
                 ),
                 makeParameter(
                     content: "1",
@@ -162,7 +163,8 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
                     isPrint: false,
                     isRequired: false,
                     type: .missing,
-                    viewType: .output
+                    viewType: .output,
+                    visible: false
                 )
             ],
             paymentOperationDetailID: nil
@@ -207,7 +209,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
     }
     
     func test_map_shouldDeliverResponse_multiSum() throws {
-        #warning("add field `visible: Bool`")
+#warning("add field `visible: Bool` & `md5hash: String?`")
         try assert(string: .multiSum, .init(
             additional: [
                 makeAdditional(
@@ -396,7 +398,8 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
         svgImage: String? = nil,
         title: String = "",
         type: Response.Parameter.FieldType,
-        viewType: Response.Parameter.ViewType
+        viewType: Response.Parameter.ViewType,
+        visible: Bool = true
     ) -> Response.Parameter {
         
         .init(
@@ -423,7 +426,8 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
             svgImage: svgImage,
             title: title,
             type: type,
-            viewType: viewType
+            viewType: viewType,
+            visible: visible
         )
     }
     

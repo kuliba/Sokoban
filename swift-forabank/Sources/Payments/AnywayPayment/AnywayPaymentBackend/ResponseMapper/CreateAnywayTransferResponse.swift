@@ -146,6 +146,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
         public let title: String
         public let type: FieldType
         public let viewType: ViewType
+        public let visible: Bool
         
         public init(
             content: String? = nil,
@@ -171,7 +172,8 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             svgImage: String?,
             title: String,
             type: FieldType,
-            viewType: ViewType
+            viewType: ViewType,
+            visible: Bool
         ) {
             self.content = content
             self.dataDictionary = dataDictionary
@@ -197,6 +199,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             self.title = title
             self.type = type
             self.viewType = viewType
+            self.visible = visible
         }
     }
 }

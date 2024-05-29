@@ -120,7 +120,8 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
             svgImage: parameter.svgImage,
             title: parameter.title ?? "",
             type: parameter.type.map { .init($0) } ?? .missing,
-            viewType: .init(parameter.viewType)
+            viewType: .init(parameter.viewType),
+            visible: parameter.visible ?? true
         )
     }
 }
@@ -283,6 +284,7 @@ private extension ResponseMapper._Data {
         let title: String?
         let type: FieldType?
         let viewType: ViewType
+        let visible: Bool?
     }
 }
 
