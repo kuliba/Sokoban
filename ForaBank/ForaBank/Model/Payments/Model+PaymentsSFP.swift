@@ -39,7 +39,8 @@ extension Model {
                 let template = paymentTemplates.value.first { $0.id == templateId }
             
                 if let token,
-                   let phone = template?.phoneNumber {
+                   let phone = template?.sfpPhone {
+                    
                     latestPaymentBankIds = await getLatestPhonePayments(
                         phone: phone,
                         token: token
@@ -516,7 +517,7 @@ extension Model {
                     let bankID = parameterList.first?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.sfpBank.rawValue })?.fieldvalue
                     
                     return filterByPhone(
-                        operationPhone ?? template.phoneNumber?.digits,
+                        operationPhone ?? template.sfpPhone?.digits,
                         bankId: bankID,
                         banksIds: banksIds,
                         latestPaymentBankIds: latestPaymentBankIds
