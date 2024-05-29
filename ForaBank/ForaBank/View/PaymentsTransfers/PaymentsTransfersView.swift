@@ -5,6 +5,7 @@
 //  Created by Dmitry Martynov on 09.05.2022.
 //
 
+import ActivateSlider
 import InfoComponent
 import SberQR
 import SwiftUI
@@ -16,6 +17,7 @@ struct PaymentsTransfersView: View {
     @ObservedObject var viewModel: PaymentsTransfersViewModel
     
     let viewFactory: PaymentsTransfersViewFactory
+    let productProfileViewFactory: ProductProfileViewFactory
     let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
@@ -220,6 +222,7 @@ struct PaymentsTransfersView: View {
             ProductProfileView(
                 viewModel: productProfileViewModel,
                 viewFactory: viewFactory,
+                productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
             
@@ -796,6 +799,7 @@ struct Payments_TransfersView_Previews: PreviewProvider {
         PaymentsTransfersView(
             viewModel: .sample,
             viewFactory: .preview,
+            productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)),
             getUImage: { _ in nil }
         )
     }

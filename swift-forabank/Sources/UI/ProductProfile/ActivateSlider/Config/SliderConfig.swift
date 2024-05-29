@@ -21,6 +21,12 @@ public struct SliderConfig {
         let backgroundColor: Color
         let foregroundColor: Color
         let thumbIconColor: Color
+        
+        public init(backgroundColor: Color, foregroundColor: Color, thumbIconColor: Color) {
+            self.backgroundColor = backgroundColor
+            self.foregroundColor = foregroundColor
+            self.thumbIconColor = thumbIconColor
+        }
     }
     
     public struct Item {

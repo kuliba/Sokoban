@@ -45,7 +45,8 @@ struct FixedAmountSberQRConfirmPaymentView: View {
             ) {
                 ProductCardView(
                     productCard: .init(product: $0),
-                    config: config.productSelect.card.productCardConfig
+                    config: config.productSelect.card.productCardConfig,
+                    isSelected: state.productSelect.selected?.id == $0.id
                 )
             }
             

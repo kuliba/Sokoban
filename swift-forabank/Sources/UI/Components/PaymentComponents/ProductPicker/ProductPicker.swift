@@ -81,7 +81,8 @@ extension ProductPicker where ProductView == ProductCardView {
                 
                 .init(
                     productCard: .init(product: $0),
-                    config: cardConfig
+                    config: cardConfig, 
+                    isSelected: selected?.id == $0.id
                 )
             }
         )

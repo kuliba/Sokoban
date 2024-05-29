@@ -19,7 +19,7 @@ extension ProductSelect.Product {
         footer: "5678",
         amountFormatted: "12.67 $",
         balance: 12.67,
-        look: .test(color: "red")
+        look: .test(color: .red)
     )
     
     static let test2: Self = .init(
@@ -31,7 +31,7 @@ extension ProductSelect.Product {
         footer: "6789",
         amountFormatted: "4.21 $",
         balance: 4.21,
-        look: .test(color: "blue")
+        look: .test(color: .blue)
     )
     
     static let missing: Self = .init(
@@ -43,6 +43,6 @@ extension ProductSelect.Product {
         footer: "1111",
         amountFormatted: "12.67 $",
         balance: 12.67,
-        look: .test(color: "red")
+        look: .test(color: .red)
     )
 }

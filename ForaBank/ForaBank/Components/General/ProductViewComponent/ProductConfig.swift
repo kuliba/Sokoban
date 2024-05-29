@@ -29,7 +29,9 @@ extension CardUI.Config {
                 nameSpacing: 6,
                 cardPadding: 12,
                 cornerRadius: 12,
-                checkPadding: 10)
+                checkPadding: 10,
+                cloverTrailing: 4
+            )
             
         case .small:
             return .init(
@@ -38,7 +40,9 @@ extension CardUI.Config {
                 nameSpacing: 4,
                 cardPadding: 8,
                 cornerRadius: 8,
-                checkPadding: 8)
+                checkPadding: 9,
+                cloverTrailing: 2
+            )
         }
     }
     
@@ -54,10 +58,9 @@ extension CardUI.Config {
                 foreground: .mainColorsWhite,
                 background: .textPlaceholder,
                 rateFill: .mainColorsGrayMedium,
-                rateForeground: .textSecondary,
-                checkForeground: .mainColorsBlack
+                rateForeground: .textSecondary
             ),
-            images: .init(copy: .ic24Copy, check: .ic16Check) 
+            images: .init(copy: .ic24Copy, check: .ic16CheckLightGray16Fixed)
         )
     }
     
@@ -92,14 +95,12 @@ extension CardUI.Config {
         case .large, .normal:
             return .init(
                 paymentSystemIcon: .init(width: 28, height: 28),
-                checkView: .init(width: 18, height: 18),
-                checkViewImage: .init(width: 12, height: 12))
+                checkViewImage: .init(width: 18, height: 18))
                         
         case .small:
             return .init(
                 paymentSystemIcon: .init(width: 20, height: 20),
-                checkView: .init(width: 16, height: 16),
-                checkViewImage: .init(width: 10, height: 10))
+                checkViewImage: .init(width: 18, height: 18))
         }
     }
 }

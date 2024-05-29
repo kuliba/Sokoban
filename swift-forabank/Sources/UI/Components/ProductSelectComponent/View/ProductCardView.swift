@@ -13,13 +13,16 @@ public struct ProductCardView: View {
     
     let productCard: ProductCard
     let config: ProductCardConfig
+    let isSelected: Bool
     
     public init(
         productCard: ProductCard,
-        config: ProductCardConfig
+        config: ProductCardConfig,
+        isSelected: Bool
     ) {
         self.productCard = productCard
         self.config = config
+        self.isSelected = isSelected
     }
     
     private let logoSize = CGSize(width: 22, height: 36)
@@ -33,16 +36,15 @@ public struct ProductCardView: View {
     
     public var body: some View {
         
-        ZStack(alignment: .top) {
-            
-            shadow
+        ZStack(alignment: .topLeading){
             
             ZStack(alignment: .topTrailing) {
                 
                 cardView()
                 
-                selectedCardMarkView()
+                mainCardMarkView()
             }
+            selectedCardMarkView()
         }
     }
     
@@ -79,12 +81,30 @@ public struct ProductCardView: View {
         productCard.data.balanceFormatted.text(withConfig: config.balance)
     }
     
-    private func selectedCardMarkView() -> some View {
+    private func mainCardMarkView() -> some View {
         
         productCard.look.mainCardMark.image(orColor: .clear)
             .frame(.size16)
-            .padding(.top, 10)
-            .padding(.trailing, 10)
+            .padding(.top, 8)
+            .padding(.trailing, 8)
+    }
+    
+    @ViewBuilder
+    private func selectedCardMarkView() -> some View {
+        
+        if isSelected {
+            
+            ZStack {
+                Rectangle()
+                    .fill(productCard.look.backgroundColor)
+                config.selectedImage
+                    .renderingMode(.original)
+                    .opacity(0.9)
+            }
+            .frame(.size18)
+            .padding(.top, 8)
+            .padding(.leading, 8)
+        }
     }
     
     @ViewBuilder
@@ -94,16 +114,6 @@ public struct ProductCardView: View {
             .image(orColor: productCard.look.backgroundColor)
             .background(Color.white)
     }
-    
-    private var shadow: some View {
-        
-        config.shadowColor
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .frame(shadowSize)
-            .padding(.top, offsetY)
-            .padding(.bottom, 4)
-            .blur(radius: 4)
-    }
 }
 
 struct ProductCardView_Previews: PreviewProvider {
@@ -112,17 +122,18 @@ struct ProductCardView_Previews: PreviewProvider {
         
         VStack(spacing: 32) {
             
-            productCardView(.preview)
-            productCardView(.preview2)
+            productCardView(.preview, true)
+            productCardView(.preview2, false)
         }
         .padding()
         .previewLayout(.sizeThatFits)
     }
     
     private static func productCardView(
-        _ productCard: ProductCard
+        _ productCard: ProductCard,
+        _ isSelected: Bool
     ) -> some View {
         
-        ProductCardView(productCard: productCard, config: .preview)
+        ProductCardView(productCard: productCard, config: .preview, isSelected: isSelected)
     }
 }

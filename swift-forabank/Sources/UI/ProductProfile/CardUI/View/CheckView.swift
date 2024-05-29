@@ -1,6 +1,6 @@
 //
 //  CheckView.swift
-//  
+//
 //
 //  Created by Andryusina Nataly on 19.03.2024.
 //
@@ -15,24 +15,14 @@ struct CheckView: View {
         
         ZStack {
             
-            Circle()
-                .frame(
-                    width: config.sizes.checkView.width,
-                    height: config.sizes.checkView.height
-                )
-                .foregroundColor(config.colors.checkForeground.opacity(0.12))
-            
+            Rectangle()
+                .fill(config.appearance.colors.checkBackground)
             config.images.check
                 .resizable()
-                .foregroundColor(config.colors.foreground)
-                .background(Color.clear)
-                .frame(width: config.sizes.checkViewImage.width, height: config.sizes.checkViewImage.height)
+                .renderingMode(.original)
+                .opacity(0.9)
         }
-        .frame(
-            maxWidth: .infinity,
-            maxHeight: .infinity,
-            alignment: .topTrailing
-        )
+        .frame(width: config.sizes.checkViewImage.width, height: config.sizes.checkViewImage.height)
         .padding(config.front.checkPadding)
     }
 }
