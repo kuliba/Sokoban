@@ -115,6 +115,40 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         ))
     }
     
+    func test_init_shouldNotMapInvisible_e1_sample_step1() throws {
+        
+        try assert(.e1_sample_step1, mapsTo: .init(
+            details: .init(
+                amounts: makeDetailsAmounts(),
+                control: makeDetailsControl(
+                    isFinalStep: false,
+                    isFraudSuspected: false,
+                    needMake: false,
+                    needOTP: false,
+                    needSum: false
+                ),
+                info: makeDetailsInfo()
+            ),
+            fields: [],
+            parameters: [
+                .init(
+                    field: makeParameterField(
+                        id: "1"
+                    ),
+                    masking: makeParameterMasking(),
+                    validation: makeParameterValidation(),
+                    uiAttributes: makeParameterUIAttributes(
+                        dataType: .number,
+                        inputFieldType: .account,
+                        isPrint: false,
+                        title: "Лицевой счет",
+                        viewType: .input
+                    )
+                )
+            ]
+        ))
+    }
+    
     func test_init_valid_sber01() throws {
         
         try assert(.valid_sber01, mapsTo: .init(
@@ -818,6 +852,44 @@ private extension String {
         "infoMessage": null,
         "printFormType": null,
         "scenario": "SCOR_SUSPECT_FRAUD"
+    }
+}
+"""
+    
+    static let e1_sample_step1 = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "additionalList": [],
+        "parameterListForNextStep": [
+            {
+                "id": "1",
+                "title": "Лицевой счет",
+                "viewType": "INPUT",
+                "dataType": "%Numeric",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": true,
+                "readOnly": false,
+                "inputFieldType": "ACCOUNT",
+                "visible": true,
+                "md5hash": "6e17f502dae62b03d8bd4770606ee4b2"
+            },
+            {
+                "id": "##ID##",
+                "viewType": "OUTPUT",
+                "content": "ffc84724-8976-4d37-8af8-be84a4386126",
+                "visible": false
+            },
+            {
+                "id": "##STEP##",
+                "viewType": "OUTPUT",
+                "content": "1",
+                "visible": false
+            }
+        ]
     }
 }
 """

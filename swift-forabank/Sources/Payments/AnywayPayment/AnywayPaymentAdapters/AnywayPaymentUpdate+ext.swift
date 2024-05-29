@@ -14,10 +14,12 @@ public extension AnywayPaymentUpdate {
     
     init(_ response: ResponseMapper.CreateAnywayTransferResponse) {
         
+        let visible = response.parametersForNextStep.filter(\.visible)
+        
         self.init(
             details: .init(response),
             fields: response.additional.map { .init($0) },
-            parameters: response.parametersForNextStep.map { .init($0) }
+            parameters: visible.map { .init($0) }
         )
     }
 }
