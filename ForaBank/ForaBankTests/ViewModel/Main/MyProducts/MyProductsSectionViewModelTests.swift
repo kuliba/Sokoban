@@ -2,81 +2,68 @@
 //  MyProductsSectionViewModelTests.swift
 //  ForaBankTests
 //
-//  Created by Дмитрий Савушкин on 19.02.2024.
+//  Created by Andryusina Nataly on 20.05.2024.
 //
 
 import XCTest
 @testable import ForaBank
 
 final class MyProductsSectionViewModelTests: XCTestCase {
-    
-    func test_myProductsSection_shouldSetAmountFormatter() {
-        
-        let myProductsSection = makeSUT()
-        
-        myProductsSection.update(with: loanProduct(amount: 123.45))
-        
-        XCTAssertNoDiff(myProductsSection.balance, "123,45 ₽")
-    }
-}
 
-extension MyProductsSectionViewModelTests {
+    func test_countCards() {
+        
+        let sut = makeSUT(products: makeAnyCards())
+        
+        XCTAssertNoDiff(sut.countCards(), 6)
+    }
     
-    func makeSUT(
-    ) -> MyProductsSectionItemViewModel {
+    // MARK: - Helpers
+
+    private func makeSUT(
+        productType: ProductType = .card,
+        products: [ProductData] = [],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> MyProductsSectionViewModel {
         
         let model = Model.emptyMock
         model.currencyList.value.append(.rub)
+        model.products.value = [productType: products]
         
-        return .init(
-            productData: loanProduct(),
-            model: model
-        )
+        var itemsVM: [MyProductsSectionViewModel.ItemViewModel] = []
+        var groupingCards: Array.Products = [:]
+        var itemsID: [ProductData.ID] = []
+        if products.count > 0 {
+            itemsVM = products.map { .item(.init(productData: $0, model: model)) }
+            if productType == .card {
+                groupingCards = products.groupingCards()
+                itemsID = products.uniqueProductIDs()
+            }
+        }
+
+        let sut = MyProductsSectionViewModel.init(
+            id: productType.rawValue,
+            title: productType.pluralName,
+            items: itemsVM,
+            groupingCards: groupingCards,
+            itemsId: itemsID,
+            isCollapsed: false,
+            model: model)
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        // TODO: restore memory leaks tracking after Model fix
+        // trackForMemoryLeaks(model, file: file, line: line)
+
+        return sut
     }
     
-    func loanProduct(
-        amount: Double = 10
-    ) -> ProductLoanData {
-        .init(
-            id: 1,
-            productType: .loan,
-            number: "number",
-            numberMasked: "numberMasked",
-            accountNumber: "accountNumber",
-            balance: 10,
-            balanceRub: 10,
-            currency: "RUB",
-            mainField: "mainField",
-            additionalField: "additionalField",
-            customName: "customName",
-            productName: "productName",
-            openDate: Date(),
-            ownerId: 1,
-            branchId: 1,
-            allowCredit: true,
-            allowDebit: true,
-            extraLargeDesign: .test,
-            largeDesign: .test,
-            mediumDesign: .test,
-            smallDesign: .test,
-            fontDesignColor: .init(description: ""),
-            background: [.init(description: "")],
-            currencyNumber: 2,
-            bankProductId: 1,
-            amount: amount,
-            currentInterestRate: 10,
-            principalDebt: 10,
-            defaultPrincipalDebt: 10,
-            totalAmountDebt: amount,
-            principalDebtAccount: "principalDebtAccount",
-            settlementAccount: "settlementAccount",
-            settlementAccountId: 1,
-            dateLong: Date(),
-            strDateLong: "strDateLong",
-            order: 1,
-            visibility: true,
-            smallDesignMd5hash: "smallDesignMd5hash",
-            smallBackgroundDesignHash: "smallBackgroundDesignHash"
-        )
+    private func makeAnyCards() -> [ProductData] {
+        let product1 = makeCardProduct(id: 10, parentID: 2)
+        let product2 = makeCardProduct(id: 2)
+        let product3 = makeCardProduct(id: 20, parentID: 3)
+        let product4 = makeCardProduct(id: 21, parentID: 3)
+        let product5 = makeCardProduct(id: 22, parentID: 4)
+
+        return [product1, product2, product3, product4, product5]
     }
 }

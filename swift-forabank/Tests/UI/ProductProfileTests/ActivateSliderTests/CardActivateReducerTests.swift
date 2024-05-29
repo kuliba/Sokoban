@@ -15,14 +15,14 @@ final class CardActivateReducerTestsTests: XCTestCase {
     
     func test_activateCard_shouldSetEffectNone() {
         
-        assert(.card(.activateCard), on: .initialState, effect: .none)
+        assert(.card(.activateCard(.payload)), on: .initialState, effect: .none)
     }
     
     func test_activateCard_shouldSetStatusOnConfirmActivate() {
                 
-        assert(.card(.activateCard), on: .initialState) {
+        assert(.card(.activateCard(.payload)), on: .initialState) {
             
-            $0.cardState = .status(.confirmActivate)
+            $0.cardState = .status(.confirmActivate(.payload))
         }
     }
 
@@ -67,12 +67,12 @@ final class CardActivateReducerTestsTests: XCTestCase {
 
     func test_confirmActivateActivate_shouldSetEffectCardActivate() {
         
-        assert(.card(.confirmActivate(.activate)), on: .initialState, effect: .card(.activate))
+        assert(.card(.confirmActivate(.activate(.payload))), on: .initialState, effect: .card(.activate(.payload)))
     }
     
     func test_confirmActivateActivate_shouldSetStatusOnInflight() {
         
-        assert(.card(.confirmActivate(.activate)), on: .initialState) {
+        assert(.card(.confirmActivate(.activate(.payload))), on: .initialState) {
             
             $0.cardState = .status(.inflight)
         }
@@ -108,12 +108,12 @@ final class CardActivateReducerTestsTests: XCTestCase {
 
     func test_drag_shouldSetEffectNone() {
         
-        assert(.slider(.drag(19)), on: .initialState, effect: .none)
+        assert(.slider(.payload, .drag(19)), on: .initialState, effect: .none)
     }
     
     func test_drag_shouldSetOffsetToNewValue() {
         
-        assert(.slider(.drag(19)), on: .initialState) {
+        assert(.slider(.payload, .drag(19)), on: .initialState) {
             
             $0.offsetX = 19
         }
@@ -123,12 +123,12 @@ final class CardActivateReducerTestsTests: XCTestCase {
         
         let sut = makeSUT(maxOffset: 60)
         
-        assert(sut: sut, .slider(.dragEnded(15)), on: .initialState, effect: .none)
+        assert(sut: sut, .slider(.payload, .dragEnded(15)), on: .initialState, effect: .none)
     }
 
     func test_dragEndedOffsetLessThanHalfMaxOffset_shouldSetOffsetToZero() {
         
-        assert(.slider(.dragEnded(15)), on: .initialState) {
+        assert(.slider(.payload, .dragEnded(15)), on: .initialState) {
             
             $0.offsetX = 0
         }
@@ -138,7 +138,7 @@ final class CardActivateReducerTestsTests: XCTestCase {
         
         let sut = makeSUT(maxOffset: 90)
         
-        assert(sut: sut, .slider(.dragEnded(75)), on: .initialState, effect: .card(.confirmation(.milliseconds(200))))
+        assert(sut: sut, .slider(.payload, .dragEnded(75)), on: .initialState, effect: .card(.confirmation(.payload, .milliseconds(200))))
     }
     
     func test_dragEndedOffsetMoreThanHalfMaxOffset_shouldSetOffsetToMaxOffset() {
@@ -146,7 +146,7 @@ final class CardActivateReducerTestsTests: XCTestCase {
         let maxOffset: CGFloat = 90
         let sut = makeSUT(maxOffset: maxOffset)
 
-        assert(sut: sut, .slider(.dragEnded(75)), on: .initialState) {
+        assert(sut: sut, .slider(.payload, .dragEnded(75)), on: .initialState) {
             
             $0.offsetX = maxOffset
         }
@@ -156,7 +156,7 @@ final class CardActivateReducerTestsTests: XCTestCase {
         
         let sut = makeSUT(maxOffset: 90)
         
-        assert(sut: sut, .slider(.dragEnded(95)), on: .initialState, effect: .card(.confirmation(.milliseconds(200))))
+        assert(sut: sut, .slider(.payload, .dragEnded(95)), on: .initialState, effect: .card(.confirmation(.payload, .milliseconds(200))))
     }
     
     func test_dragEndedOffsetMoreThanMaxOffset_shouldSetOffsetToMaxOffset() {
@@ -164,12 +164,12 @@ final class CardActivateReducerTestsTests: XCTestCase {
         let maxOffset: CGFloat = 90
         let sut = makeSUT(maxOffset: maxOffset)
 
-        assert(sut: sut, .slider(.dragEnded(95)), on: .initialState) {
+        assert(sut: sut, .slider(.payload, .dragEnded(95)), on: .initialState) {
             
             $0.offsetX = maxOffset
         }
     }
-
+    
     private typealias SUT = CardActivateReducer
     private typealias State = SUT.State
     private typealias Event = SUT.Event
@@ -247,3 +247,8 @@ final class CardActivateReducerTestsTests: XCTestCase {
 extension CardActivateReducer: Reducer { }
 extension CardReducer: Reducer { }
 extension SliderReducer: Reducer { }
+
+private extension Int {
+    
+    static let payload: Int = 1
+}

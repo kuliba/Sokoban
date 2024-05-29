@@ -19,7 +19,7 @@ extension ProductCard {
         look: .init(
             background: .svg(""),
             backgroundColor: .black.opacity(0.7),
-            mainCardMark: .svg("")
+            mainCardMark: .image(Image(systemName: "circle.grid.cross.fill"))
         )
     )
     

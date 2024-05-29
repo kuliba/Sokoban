@@ -207,7 +207,7 @@ extension CurrencyWalletSelectorView {
                 }.store(in: &bindings)
         }
         
-        private func bind(_ products: [ProductView.ViewModel]) {
+        private func bind(_ products: [ProductViewModel]) {
             
             for product in products {
                 
@@ -256,7 +256,7 @@ extension CurrencyWalletSelectorView {
                 return nil
             }
             
-            let products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productData.productType)
+            let products = Self.reduce(model, currency: currency, currencyOperation: currencyOperation, productType: productData.productType, productId: productViewModel.productId)
             bind(products)
             
             let listViewModel: CurrencyWalletListViewModel = .init(model, currencyOperation: currencyOperation, currency: currency, productType: productData.productType, products: products)
@@ -264,11 +264,13 @@ extension CurrencyWalletSelectorView {
             return listViewModel
         }
         
-        static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType) -> [ProductView.ViewModel] {
+        static func reduce(_ model: Model, currency: Currency, currencyOperation: CurrencyOperation, productType: ProductType, productId: Int) -> [ProductViewModel] {
             
             let filteredProducts = model.products(currency: currency, currencyOperation: currencyOperation, productType: productType).sorted { $0.productType.order < $1.productType.order }
             
-            let products = filteredProducts.map { ProductView.ViewModel(with: $0, size: .small, style: .main, model: model)}
+            let products = filteredProducts.map {
+                ProductViewModel(with: $0, isChecked: ($0.id == productId), size: .small, style: .main, model: model)
+            }
             
             return products
         }
@@ -368,27 +370,28 @@ extension CurrencyWalletSelectorViewModel {
             case let product as ProductCardData:
                 
                 let numberCard = product.displayNumber ?? "XXXX"
-                let name = ProductView.ViewModel.name(
+                let name = ProductViewModel.name(
                     product: productData,
                     style: .main,
                     creditProductName: .cardTitle
                 )
                 let description = product.additionalField
-                let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
+                let balance = ProductViewModel.balanceFormatted(product: productData, style: .main, model: model)
                 let cardIcon = model.images.value[product.smallDesignMd5hash]?.image
-                self.init(productId: productId, cardIcon: cardIcon, paymentSystemIcon: product.paymentSystemImage?.image, name: name, balance: balance, numberCard: numberCard, description: description)
+                let paymentSystemIcon = model.images.value[product.paymentSystemImageMd5Hash]?.image
+                self.init(productId: productId, cardIcon: cardIcon, paymentSystemIcon: paymentSystemIcon, name: name, balance: balance, numberCard: numberCard, description: description)
                 
             case let product as ProductAccountData:
                 
                 let numberCard = product.displayNumber ?? "XXXX"
-                let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
+                let balance = ProductViewModel.balanceFormatted(product: productData, style: .main, model: model)
                 let cardIcon = model.images.value[product.smallDesignMd5hash]?.image
                 self.init(productId: productId, cardIcon: cardIcon, paymentSystemIcon: nil, name: product.displayName, balance: balance, numberCard: numberCard, description: nil)
                 
             case let product as ProductDepositData:
                 
                 let numberCard = product.displayNumber ?? "XXXX"
-                let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
+                let balance = ProductViewModel.balanceFormatted(product: productData, style: .main, model: model)
                 let cardIcon = model.images.value[product.smallDesignMd5hash]?.image
 
                 self.init(productId: productId, cardIcon: cardIcon, paymentSystemIcon: nil, name: product.displayName, balance: balance, numberCard: numberCard, description: nil)
@@ -550,7 +553,9 @@ extension CurrencyWalletSelectorView {
                     
                     HStack(alignment: .center, spacing: 10) {
                         
-                        viewModel.paymentSystemIcon
+                        viewModel.paymentSystemIcon?
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
                             .frame(width: 24, height: 24)
                         
                         Text(viewModel.name)
@@ -680,18 +685,23 @@ extension CurrencyWalletSelectorViewModel {
 // MARK: - Previews
 
 struct CurrencyWalletSelectorViewComponent_Previews: PreviewProvider {
+    
+    private static func preview(_ viewModel: CurrencyWalletSelectorView.ViewModel) -> some View {
+        CurrencyWalletSelectorView(viewModel: viewModel)
+    }
+    
     static var previews: some View {
         
         Group {
             
-            CurrencyWalletSelectorView(viewModel: .sample1)
+            preview(.sample1)
                 .previewLayout(.sizeThatFits)
                 .fixedSize()
             
-            CurrencyWalletSelectorView(viewModel: .sample2)
+            preview(.sample2)
                 .previewLayout(.sizeThatFits)
             
-            CurrencyWalletSelectorView(viewModel: .sample3)
+            preview(.sample3)
                 .previewLayout(.sizeThatFits)
         }
         .padding(.vertical)
