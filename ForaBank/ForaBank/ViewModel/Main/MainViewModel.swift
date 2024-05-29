@@ -43,6 +43,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let onRegister: () -> Void
     private let factory: ModelAuthLoginViewModelFactory
+    private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     private var bindings = Set<AnyCancellable>()
     
     init(
@@ -53,22 +54,13 @@ class MainViewModel: ObservableObject, Resetable {
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping () -> Void
     ) {
         self.model = model
+        self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
-        var sections = [
-            MainSectionProductsView.ViewModel(model, stickerViewModel: nil),
-            MainSectionFastOperationView.ViewModel(),
-            MainSectionPromoView.ViewModel(model),
-            MainSectionCurrencyMetallView.ViewModel(model),
-            MainSectionOpenProductView.ViewModel(model),
-            MainSectionAtmView.ViewModel.initial
-        ]
-        if !model.updateInfo.value.areProductsUpdated {
-            sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
-        }
-        self.sections = sections
+        self.sections = Self.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: nil)
         
         self.factory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
@@ -87,6 +79,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     private static func getSections(
         _ model: Model,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         stickerViewModel: ProductCarouselView.StickerViewModel? = nil
     ) -> [MainSectionViewModel] {
         
@@ -101,20 +94,24 @@ class MainViewModel: ObservableObject, Resetable {
             MainSectionOpenProductView.ViewModel(model),
             MainSectionAtmView.ViewModel.initial
         ]
-        
-        if !model.updateInfo.value.areProductsUpdated {
-            sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
+        if updateInfoStatusFlag.isActive {
+            if !model.updateInfo.value.areProductsUpdated {
+                sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
+            }
         }
         return sections
     }
     
-    private func makeStickerViewModel(_ model: Model) -> ProductCarouselView.StickerViewModel? {
+    private func makeStickerViewModel(
+        _ model: Model,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
+    ) -> ProductCarouselView.StickerViewModel? {
         
         return ProductCarouselView.ViewModel.makeStickerViewModel(model) {
             self.handleLandingAction(.sticker)
         } hide: { [self] in
             model.settingsAgent.saveShowStickerSetting(shouldShow: false)
-            self.sections = MainViewModel.getSections(model)
+            self.sections = MainViewModel.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag)
             self.bind(sections)
         }
     }
@@ -173,19 +170,21 @@ private extension MainViewModel {
                 if let products = self.sections.first(where: { $0.type == .products }) as? MainSectionProductsView.ViewModel,
                    products.productCarouselViewModel.stickerViewModel == nil {
                     
-                    self.sections = Self.getSections(model, stickerViewModel: makeStickerViewModel(model))
+                    self.sections = Self.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: makeStickerViewModel(model, updateInfoStatusFlag: updateInfoStatusFlag))
                     bind(sections)
                 }
             }
             .store(in: &bindings)
         
-        model.updateInfo
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] updateInfo in
-                
-                self?.updateSections(updateInfo)
-            }
-            .store(in: &bindings)
+        if updateInfoStatusFlag.isActive {
+            model.updateInfo
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] updateInfo in
+                    
+                    self?.updateSections(updateInfo)
+                }
+                .store(in: &bindings)
+        }
         
         action
             .receive(on: DispatchQueue.main)

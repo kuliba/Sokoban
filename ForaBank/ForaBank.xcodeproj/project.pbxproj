@@ -2403,6 +2403,7 @@
 		83FAD88B29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88A29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift */; };
 		83FAD89229CDB4F400474B06 /* PaymentsServicesOperatorItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD89129CDB4F400474B06 /* PaymentsServicesOperatorItemView.swift */; };
 		83FAD89B29CDD2C800474B06 /* PaymentsServicesLatestPaymentsSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD89A29CDD2C800474B06 /* PaymentsServicesLatestPaymentsSectionView.swift */; };
+		83FFEDEE2C075675003F3A6D /* UpdateInfoFeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FFEDED2C075675003F3A6D /* UpdateInfoFeatureFlag.swift */; };
 		840749972AE67C5E000A7352 /* ConfigSticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840749962AE67C5E000A7352 /* ConfigSticker.swift */; };
 		841138992AE9B37300B79DC0 /* StickerBannerInProductListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841138982AE9B37300B79DC0 /* StickerBannerInProductListData.swift */; };
 		8431A2562AEBE76800E60CB8 /* UserAccountViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8431A2552AEBE76800E60CB8 /* UserAccountViewModelTests.swift */; };
@@ -5327,6 +5328,7 @@
 		83FAD88A29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesLatestPaymentsSectionViewModel.swift; sourceTree = "<group>"; };
 		83FAD89129CDB4F400474B06 /* PaymentsServicesOperatorItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesOperatorItemView.swift; sourceTree = "<group>"; };
 		83FAD89A29CDD2C800474B06 /* PaymentsServicesLatestPaymentsSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesLatestPaymentsSectionView.swift; sourceTree = "<group>"; };
+		83FFEDED2C075675003F3A6D /* UpdateInfoFeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateInfoFeatureFlag.swift; sourceTree = "<group>"; };
 		840749962AE67C5E000A7352 /* ConfigSticker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigSticker.swift; sourceTree = "<group>"; };
 		841138982AE9B37300B79DC0 /* StickerBannerInProductListData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerBannerInProductListData.swift; sourceTree = "<group>"; };
 		8431A2552AEBE76800E60CB8 /* UserAccountViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAccountViewModelTests.swift; sourceTree = "<group>"; };
@@ -9564,6 +9566,7 @@
 				2AC2ADC62B22FBCA0049EE9B /* FeatureFlag.swift */,
 				2A94991A2B728F4D00C67F05 /* StubbedFeatureFlag.swift */,
 				2AC2ADC92B22FDF70049EE9B /* QRResolverFeatureFlag.swift */,
+				83FFEDED2C075675003F3A6D /* UpdateInfoFeatureFlag.swift */,
 				2A46DCA92B3EF212001C896C /* FastPaymentsSettingsFlag.swift */,
 				2A9BD5102B85105C00B88395 /* UtilitiesPaymentsFlag.swift */,
 			);
@@ -18072,6 +18075,7 @@
 				6819084728BCAD50003E81A3 /* SbpPayViewModel.swift in Sources */,
 				833765022A38604E00F7C1AB /* ProcessingSessionCodeData.swift in Sources */,
 				0B8C1C49273B04DE00BA5CAC /* QRScanerInfoView.swift in Sources */,
+				83FFEDEE2C075675003F3A6D /* UpdateInfoFeatureFlag.swift in Sources */,
 				68E803E627D9280B00B75D41 /* ProductProfileViewModel.swift in Sources */,
 				8306C12A2B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift in Sources */,
 				2A01F93F2AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift in Sources */,
