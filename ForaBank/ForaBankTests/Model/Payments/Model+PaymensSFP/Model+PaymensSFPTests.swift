@@ -7,7 +7,6 @@
 
 @testable import ForaBank
 import XCTest
-import OTPInputComponentTests
 
 final class Model_PaymensSFPTests: XCTestCase {
     
@@ -360,16 +359,6 @@ private extension Payments.ParameterSelectBank {
         )
     }
 }
-
-// extension Payments.ParameterSuccessLogo.Icon: Equatable {
-//
-//    public static func == (lhs: Payments.ParameterSuccessLogo.Icon, rhs: Payments.ParameterSuccessLogo.Icon) -> Bool {
-//        switch (lhs, rhs) {
-//        case (.sfp, .sfp): return true
-//        default: return false
-//        }
-//    }
-//}
 
 private struct EquatableParameterSuccessLogoIcon: Equatable {
     
