@@ -48,21 +48,18 @@ extension AnywayPaymentUpdate {
         public let name: String
         public let value: String
         public let title: String
-        public let md5Hash: String?
-        public let svgImage: String?
+        public let image: Image?
         
         public init(
             name: String,
             value: String,
             title: String,
-            md5Hash: String?,
-            svgImage: String?
+            image: Image?
         ) {
             self.name = name
             self.value = value
             self.title = title
-            self.md5Hash = md5Hash
-            self.svgImage = svgImage
+            self.image = image
         }
     }
     
@@ -173,6 +170,16 @@ public extension AnywayPaymentUpdate.Details.Info {
     enum DocumentStatus: Equatable {
         
         case complete, inProgress, rejected
+    }
+}
+
+public extension AnywayPaymentUpdate.Field {
+    
+    enum Image: Equatable {
+        
+        case md5Hash(String)
+        case svg(String)
+        case withFallback(md5Hash: String, svg: String)
     }
 }
 

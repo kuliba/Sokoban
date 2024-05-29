@@ -572,16 +572,10 @@ func makeAnywayPaymentUpdateField(
     _ name: String = anyMessage(),
     title: String = anyMessage(),
     value: String = anyMessage(),
-    md5Hash: String? = nil
+    image: AnywayPaymentUpdate.Field.Image? = nil
 ) -> AnywayPaymentUpdate.Field {
     
-    .init(
-        name: name,
-        value: value,
-        title: title,
-        md5Hash: md5Hash,
-        svgImage: nil
-    )
+    .init(name: name, value: value, title: title, image: image)
 }
 
 func makeAnywayPaymentAndUpdateFields(

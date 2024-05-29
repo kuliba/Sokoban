@@ -99,9 +99,28 @@ private extension AnywayPaymentUpdate.Field {
             name: additional.fieldName,
             value: additional.fieldValue,
             title: additional.fieldTitle,
-            md5Hash: additional.md5hash,
-            svgImage: additional.svgImage
+            image: .init(additional)
         )
+    }
+}
+
+private extension AnywayPaymentUpdate.Field.Image {
+    
+    init?(_ additional: ResponseMapper.CreateAnywayTransferResponse.Additional) {
+        
+        switch (additional.md5hash, additional.svgImage) {
+        case (.none, .none):
+            return nil
+            
+        case let (.some(md5Hash), .none):
+            self = .md5Hash(md5Hash)
+            
+        case let (.none, .some(svg)):
+            self = .svg(svg)
+            
+        case let (.some(md5Hash), .some(svg)):
+            self = .withFallback(md5Hash: md5Hash, svg: svg)
+        }
     }
 }
 
