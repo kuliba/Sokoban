@@ -61,17 +61,17 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
         }
     }
     
-#warning("add logging")
     private func getDetails(
     ) -> AnywayTransactionEffectHandlerNanoServices.GetDetails {
         
         let createRequest = ForaBank.RequestFactory.createGetOperationDetailByPaymentIDRequest
         let mapResponse = AnywayPaymentBackend.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
         
-        let service = RemoteService(
+        let service = LoggingRemoteServiceDecorator(
             createRequest: createRequest,
             performRequest: httpClient.performRequest,
-            mapResponse: mapResponse
+            mapResponse: mapResponse,
+            log: log
         )
         
         return { payload, completion in
@@ -83,17 +83,17 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
         }
     }
     
-#warning("add logging")
     private func makeTransfer(
     ) -> AnywayTransactionEffectHandlerNanoServices.MakeTransfer {
         
         let createRequest = ForaBank.RequestFactory.createMakeTransferRequest
         let mapResponse = AnywayPaymentBackend.ResponseMapper.mapMakeTransferResponse
         
-        let service = RemoteService(
+        let service = LoggingRemoteServiceDecorator(
             createRequest: createRequest,
             performRequest: httpClient.performRequest,
-            mapResponse: mapResponse
+            mapResponse: mapResponse,
+            log: log
         )
         
         return { payload, completion in

@@ -19,22 +19,57 @@ struct AnywayTransactionView: View {
         
         VStack(spacing: 32) {
             
-            ScrollView(showsIndicators: false) {
+            ScrollViewReader { proxy in
                 
-                VStack(spacing: 32) {
+                ScrollView(showsIndicators: false) {
                     
-                    ForEach(
-                        state.payment.payment.elements,
-                        content: factory.makeElementView
-                    )
-                    
+                    VStack(spacing: 32) {
+                        
+                        ForEach(
+                            state.payment.payment.elements,
+                            content: factory.makeElementView
+                        )
+                        
+                    }
+                    .padding()
                 }
-                .padding()
+                .onAppear { scrollToLast(proxy) }
+                .onChange(of: state.payment.payment.elements) {
+                    
+                    scrollToLastItem(proxy, elements: $0)
+                }
             }
             
             factory.makeFooterView(state, { event($0.transactionEvent) })
         }
     }
+    
+    private func scrollToLast(
+        _ proxy: ScrollViewProxy
+    ) {
+        if let lastElement = state.payment.payment.elements.last {
+            
+            withAnimation {
+                
+                proxy.scrollTo(lastElement.id, anchor: .bottom)
+            }
+        }
+    }
+    
+    private func scrollToLastItem(
+        _ proxy: ScrollViewProxy,
+        elements: [Element]
+    ) {
+        if let lastElement = elements.last {
+            
+            withAnimation {
+                
+                proxy.scrollTo(lastElement.id, anchor: .bottom)
+            }
+        }
+    }
+    
+    typealias Element = AnywayPaymentDomain.AnywayPayment.Element
 }
 
 extension AnywayTransactionView {
