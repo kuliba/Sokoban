@@ -14,6 +14,7 @@ extension Config {
         amount: .preview,
         background: .preview,
         button: .preview,
+        carousel: .preview,
         info: .preview,
         productSelect: .preview
     )
