@@ -62,7 +62,6 @@ final class Model_makeSectionsTests: XCTestCase {
         
         assert(
             flag: .active,
-            productTypesUpdateSuccess: ProductType.allCases,
             productTypesUpdateFailure: [ProductType.card],
             countBeforeUpdate: 3,
             firstTypeBeforeUpdate: .latestPayments,
@@ -74,7 +73,6 @@ final class Model_makeSectionsTests: XCTestCase {
         
         assert(
             flag: .inactive,
-            productTypesUpdateSuccess: ProductType.allCases,
             productTypesUpdateFailure: [ProductType.card],
             countBeforeUpdate: 3,
             firstTypeBeforeUpdate: .latestPayments,
@@ -99,34 +97,33 @@ final class Model_makeSectionsTests: XCTestCase {
         
         let sectionBeforeUpdate = model.makeSections(flag: .init(flag))
         
-        XCTAssertNoDiff(
-            sectionBeforeUpdate.count,
-            countBeforeUpdate,
-            "\nBefore: \nExpected \(countBeforeUpdate), but got \(sectionBeforeUpdate.count) instead.",
-            file: file, line: line
-        )
-        
-        XCTAssertNoDiff(
-            sectionBeforeUpdate.first?.type,
-            firstTypeBeforeUpdate,
-            "\nBefore: \nExpected \(firstTypeBeforeUpdate), but got \(String(describing: sectionBeforeUpdate.first?.type)) instead.",
-            file: file, line: line
-        )
+        assert(sections: sectionBeforeUpdate, count: countBeforeUpdate, firstType: firstTypeBeforeUpdate)
         
         model.updateInfo.value.setValue(isUpdated, for: productType)
         let sectionAfterUpdate = model.makeSections(flag: .init(flag))
 
+        assert(sections: sectionAfterUpdate, count: countAfterUpdate, firstType: firstTypeAfterUpdate)
+    }
+        
+    private func assert(
+        sections: [PaymentsTransfersSectionViewModel],
+        count: Int,
+        firstType: PaymentsTransfersSectionType,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        
         XCTAssertNoDiff(
-            sectionAfterUpdate.count,
-            countAfterUpdate,
-            "\nAfter: \nExpected \(countAfterUpdate), but got \(sectionAfterUpdate.count) instead.",
+            sections.count,
+            count,
+            "\nBefore: \nExpected \(count), but got \(sections.count) instead.",
             file: file, line: line
         )
         
         XCTAssertNoDiff(
-            sectionAfterUpdate.first?.type,
-            firstTypeAfterUpdate,
-            "\nAfter: \nExpected \(firstTypeAfterUpdate), but got \(String(describing: sectionAfterUpdate.first?.type)) instead.",
+            sections.first?.type,
+            firstType,
+            "\nBefore: \nExpected \(firstType), but got \(String(describing: sections.first?.type)) instead.",
             file: file, line: line
         )
     }
@@ -134,7 +131,6 @@ final class Model_makeSectionsTests: XCTestCase {
     private func assert(
         model: Model = .mockWithEmptyExcept(),
         flag: UpdateInfoStatusFeatureFlag.RawValue = .inactive,
-        productTypesUpdateSuccess: [ProductType],
         productTypesUpdateFailure: [ProductType],
         countBeforeUpdate: Int,
         firstTypeBeforeUpdate: PaymentsTransfersSectionType,
@@ -146,42 +142,25 @@ final class Model_makeSectionsTests: XCTestCase {
         
         let sectionBeforeUpdate = model.makeSections(flag: .init(flag))
         
-        XCTAssertNoDiff(
-            sectionBeforeUpdate.count,
-            countBeforeUpdate,
-            "\nBefore: \nExpected \(countBeforeUpdate), but got \(sectionBeforeUpdate.count) instead.",
-            file: file, line: line
-        )
-        
-        XCTAssertNoDiff(
-            sectionBeforeUpdate.first?.type,
-            firstTypeBeforeUpdate,
-            "\nBefore: \nExpected \(firstTypeBeforeUpdate), but got \(String(describing: sectionBeforeUpdate.first?.type)) instead.",
-            file: file, line: line
-        )
-        
-        for productType in productTypesUpdateSuccess {
-            model.updateInfo.value.setValue(true, for: productType)
-        }
-        
-        for productType in productTypesUpdateSuccess {
-            model.updateInfo.value.setValue(false, for: productType)
-        }
+        assert(sections: sectionBeforeUpdate, count: countBeforeUpdate, firstType: firstTypeBeforeUpdate)
+
+        updatedAllTypeSuccessExcept(types: productTypesUpdateFailure, model)
 
         let sectionAfterUpdate = model.makeSections(flag: .init(flag))
 
-        XCTAssertNoDiff(
-            sectionAfterUpdate.count,
-            countAfterUpdate,
-            "\nAfter: \nExpected \(countAfterUpdate), but got \(sectionAfterUpdate.count) instead.",
-            file: file, line: line
-        )
+        assert(sections: sectionAfterUpdate, count: countAfterUpdate, firstType: firstTypeAfterUpdate)
+    }
+    
+    private func updatedAllTypeSuccessExcept(
+        types productTypesUpdateFailure: [ProductType],
+        _ model: Model
+    ) {
+        for productType in ProductType.allCases {
+            model.updateInfo.value.setValue(true, for: productType)
+        }
         
-        XCTAssertNoDiff(
-            sectionAfterUpdate.first?.type,
-            firstTypeAfterUpdate,
-            "\nAfter: \nExpected \(firstTypeAfterUpdate), but got \(String(describing: sectionAfterUpdate.first?.type)) instead.",
-            file: file, line: line
-        )
+        for productType in productTypesUpdateFailure {
+            model.updateInfo.value.setValue(false, for: productType)
+        }
     }
 }
