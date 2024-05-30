@@ -391,6 +391,18 @@ extension OperationDetailData {
         )
     }
     
+    var payerMobileTransferData: TransferData.Payer {
+    
+        return .init(
+            inn: nil,
+            accountId: payerCardId == nil ? payerAccountId : nil,
+            accountNumber: nil,
+            cardId: payerCardId,
+            cardNumber: nil,
+            phoneNumber: nil
+        )
+    }
+    
     var payeeExternal: TransferGeneralData.PayeeExternal? {
         
         guard let payeeAccountNumber,

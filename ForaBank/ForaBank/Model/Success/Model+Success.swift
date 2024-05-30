@@ -335,7 +335,7 @@ extension TemplateButton {
                     check: false,
                     comment: operationDetail.comment,
                     currencyAmount: operationDetail.currencyAmount ?? "",
-                    payer: operationDetail.payerTransferData,
+                    payer: operation.service != .mobileConnection ? operationDetail.payerTransferData : operationDetail.payerMobileTransferData,
                     additional: operation.service != .mobileConnection ? additional : mobileAdditional,
                     puref: operationDetail.puref
                 )
