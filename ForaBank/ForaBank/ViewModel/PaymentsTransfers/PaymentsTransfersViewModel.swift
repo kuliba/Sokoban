@@ -873,6 +873,29 @@ private extension PaymentsTransfersViewModel {
                 )
             }
             .store(in: &bindings)
+        
+        if updateInfoStatusFlag.isActive {
+            model.updateInfo
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] updateInfo in
+                    
+                    self?.updateSections(updateInfo)
+                }
+                .store(in: &bindings)
+        }
+    }
+    
+    func updateSections(_ updateInfo: UpdateInfo) {
+        let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateInfo }) is UpdateInfoPTViewModel
+        switch (updateInfo.areProductsUpdated, containUpdateInfoSection) {
+            
+        case (true, true):
+            sections.removeFirst()
+        case (false, false):
+            sections.insert(UpdateInfoPTViewModel.init(), at: 0)
+        default:
+            break
+        }
     }
     
     private func showProductProfile(
