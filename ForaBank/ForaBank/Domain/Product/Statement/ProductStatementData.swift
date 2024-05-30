@@ -257,19 +257,11 @@ extension ProductStatementData {
     
     func formattedAmountWithSign(_ formatAmount: String) -> String {
         
-        if isCreditType {
-            return "+ \(formatAmount)"
-        } else {
-            return formatAmount
-        }
+        isCreditType ? "+ \(formatAmount)" : formatAmount
     }
     
     func payeerTitle() -> String {
         
-        if isDebitType {
-            return "Получатель"
-        } else {
-            return "Отправитель"
-        }
+        isDebitType ? "Получатель" : "Отправитель"
     }
 }
