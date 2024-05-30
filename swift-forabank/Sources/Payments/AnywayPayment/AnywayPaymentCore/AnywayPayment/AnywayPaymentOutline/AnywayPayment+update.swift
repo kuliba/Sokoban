@@ -79,7 +79,7 @@ private extension AnywayPayment.Element {
         
         return widget.id
     }
-
+    
     func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
         
         switch self {
@@ -108,18 +108,18 @@ private extension AnywayPayment.Element.Field {
     }
 }
 
-private extension AnywayPayment.Element.Field.Image {
+private extension AnywayPayment.Element.Image {
     
-    init(_ image: AnywayPaymentUpdate.Field.Image) {
+    init(_ image: AnywayPaymentUpdate.Image) {
         
         switch image {
             
         case let .md5Hash(md5Hash):
             self = .md5Hash(md5Hash)
-        
+            
         case let .svg(svg):
             self = .svg(svg)
-        
+            
         case let .withFallback(md5Hash: md5Hash, svg: svg):
             self = .withFallback(md5Hash: md5Hash, svg: svg)
         }
@@ -130,11 +130,12 @@ private extension AnywayPayment.Element.Parameter {
     
     func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
         
-        .init(
+        return .init(
             field: .init(
                 id: field.id,
                 value: .init(fieldUpdate.value)
             ),
+            image: image,
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes
@@ -251,10 +252,31 @@ private extension AnywayPayment.Element.Parameter {
     ) {
         self.init(
             field: .init(parameter.field, fallbackValue: fallbackValue),
+            image: .init(parameter),
             masking: .init(parameter.masking),
             validation: .init(parameter.validation),
             uiAttributes: .init(parameter.uiAttributes)
         )
+    }
+}
+
+private extension AnywayPayment.Element.Image {
+    
+    init?(_ parameter: AnywayPaymentUpdate.Parameter) {
+        
+        switch parameter.image {
+        case .none:
+            return nil
+            
+        case let .md5Hash(md5Hash):
+            self = .md5Hash(md5Hash)
+            
+        case let .svg(svg):
+            self = .svg(svg)
+            
+        case let .withFallback(md5Hash, svg):
+            self = .withFallback(md5Hash: md5Hash, svg: svg)
+        }
     }
 }
 
@@ -304,7 +326,6 @@ private extension AnywayPayment.Element.Parameter.UIAttributes {
             isReadOnly: uiAttributes.isReadOnly,
             subGroup: uiAttributes.subGroup,
             subTitle: uiAttributes.subTitle,
-            svgImage: uiAttributes.svgImage,
             title: uiAttributes.title,
             type: .init(uiAttributes.type),
             viewType: .init(uiAttributes.viewType)

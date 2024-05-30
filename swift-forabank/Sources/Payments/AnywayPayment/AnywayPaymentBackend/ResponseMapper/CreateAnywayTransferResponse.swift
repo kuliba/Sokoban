@@ -97,8 +97,8 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             fieldTitle: String,
             md5Hash: String?,
             recycle: Bool,
-            svgImage: String? = nil,
-            typeIdParameterList: String? = nil
+            svgImage: String?,
+            typeIdParameterList: String?
         ) {
             self.fieldName = fieldName
             self.fieldValue = fieldValue
@@ -142,10 +142,12 @@ extension ResponseMapper.CreateAnywayTransferResponse {
         public let regExp: String
         public let subGroup: String?
         public let subTitle: String?
+        public let md5hash: String?
         public let svgImage: String?
         public let title: String
         public let type: FieldType
         public let viewType: ViewType
+        public let visible: Bool
         
         public init(
             content: String? = nil,
@@ -168,10 +170,12 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             regExp: String,
             subGroup: String? = nil,
             subTitle: String? = nil,
+            md5hash: String?,
             svgImage: String?,
             title: String,
             type: FieldType,
-            viewType: ViewType
+            viewType: ViewType,
+            visible: Bool
         ) {
             self.content = content
             self.dataDictionary = dataDictionary
@@ -193,10 +197,12 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             self.regExp = regExp
             self.subGroup = subGroup
             self.subTitle = subTitle
+            self.md5hash = md5hash
             self.svgImage = svgImage
             self.title = title
             self.type = type
             self.viewType = viewType
+            self.visible = visible
         }
     }
 }

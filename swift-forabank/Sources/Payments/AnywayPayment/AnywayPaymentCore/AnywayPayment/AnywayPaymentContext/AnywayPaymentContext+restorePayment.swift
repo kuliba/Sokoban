@@ -98,6 +98,7 @@ private extension AnywayPayment.Element.Parameter {
         
         return .init(
             field: .init(id: field.id, value: value),
+            image: image,
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes

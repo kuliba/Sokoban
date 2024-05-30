@@ -304,7 +304,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             type: .textInput,
             title: "abcde",
             subtitle: "defg",
-            value: "ABC"
+            value: "ABC",
+            image: nil
         )))
     }
     
@@ -327,7 +328,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             type: .select(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
             title: "abcde",
             subtitle: "defg",
-            value: nil
+            value: nil,
+            image: nil
         )))
     }
     
@@ -350,7 +352,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             type: .select(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
             title: "abcde",
             subtitle: "defg",
-            value: "ABC"
+            value: "ABC",
+            image: nil
         )))
     }
     
@@ -377,7 +380,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
                 ]),
             title: "abcde",
             subtitle: "defg",
-            value: "ABC"
+            value: "ABC",
+            image: nil
         )))
     }
     

@@ -117,10 +117,12 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
             regExp: parameter.regExp ?? "",
             subGroup: parameter.subGroup,
             subTitle: parameter.subTitle,
+            md5hash: parameter.md5hash,
             svgImage: parameter.svgImage,
             title: parameter.title ?? "",
             type: parameter.type.map { .init($0) } ?? .missing,
-            viewType: .init(parameter.viewType)
+            viewType: .init(parameter.viewType),
+            visible: parameter.visible ?? true
         )
     }
 }
@@ -279,10 +281,12 @@ private extension ResponseMapper._Data {
         let regExp: String?
         let subGroup: String?
         let subTitle: String?
+        let md5hash: String?
         let svgImage: String?
         let title: String?
         let type: FieldType?
         let viewType: ViewType
+        let visible: Bool?
     }
 }
 

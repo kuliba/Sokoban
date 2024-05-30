@@ -203,7 +203,7 @@ func makeAnywayPaymentField(
     _ id: AnywayPayment.Element.Field.ID = .init(anyMessage()),
     value: String = anyMessage(),
     title: String = anyMessage(),
-    image: AnywayPayment.Element.Field.Image? = nil
+    image: AnywayPayment.Element.Image? = nil
 ) -> AnywayPayment.Element.Field {
     
     .init(id: id, title: title, value: .init(value), image: image)
@@ -220,6 +220,7 @@ func makeAnywayPaymentField(
 
 func makeAnywayPaymentParameter(
     field: AnywayPayment.Element.Parameter.Field = makeAnywayPaymentElementParameterField(),
+    image: AnywayPayment.Element.Image? = nil,
     masking: AnywayPayment.Element.Parameter.Masking = makeAnywayPaymentElementParameterMasking(),
     validation: AnywayPayment.Element.Parameter.Validation = makeAnywayPaymentElementParameterValidation(),
     uiAttributes: AnywayPayment.Element.Parameter.UIAttributes = makeAnywayPaymentElementParameterUIAttributes()
@@ -227,6 +228,7 @@ func makeAnywayPaymentParameter(
     
     .init(
         field: field,
+        image: image,
         masking: masking,
         validation: validation,
         uiAttributes: uiAttributes
@@ -396,7 +398,6 @@ func makeAnywayPaymentElementParameterUIAttributes(
         isReadOnly: isReadOnly,
         subGroup: subGroup,
         subTitle: subTitle,
-        svgImage: svgImage,
         title: title,
         type: type,
         viewType: viewType
@@ -573,7 +574,7 @@ func makeAnywayPaymentUpdateField(
     _ name: String = anyMessage(),
     title: String = anyMessage(),
     value: String = anyMessage(),
-    image: AnywayPaymentUpdate.Field.Image? = nil
+    image: AnywayPaymentUpdate.Image? = nil
 ) -> AnywayPaymentUpdate.Field {
     
     .init(name: name, value: value, title: title, image: image)
@@ -602,6 +603,7 @@ func makeAnywayPaymentAndUpdateFields(
 
 func makeAnywayPaymentUpdateParameter(
     field: AnywayPaymentUpdate.Parameter.Field = makeAnywayPaymentUpdateParameterField(),
+    image: AnywayPaymentUpdate.Image? = nil,
     masking: AnywayPaymentUpdate.Parameter.Masking = makeAnywayPaymentUpdateParameterMasking(),
     validation: AnywayPaymentUpdate.Parameter.Validation = makeAnywayPaymentUpdateParameterValidation(),
     uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes = makeAnywayPaymentUpdateParameterUIAttributes()
@@ -609,6 +611,7 @@ func makeAnywayPaymentUpdateParameter(
     
     .init(
         field: field,
+        image: image,
         masking: masking,
         validation: validation,
         uiAttributes: uiAttributes
@@ -633,7 +636,6 @@ func makeAnywayPaymentAndUpdateParameters(
     isReadOnly: Bool = false,
     subGroup: String? = nil,
     subTitle: String? = nil,
-    svgImage: String? = nil,
     title: String = anyMessage(),
     type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
     viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType = .input
@@ -664,7 +666,6 @@ func makeAnywayPaymentAndUpdateParameters(
         isReadOnly: isReadOnly,
         subGroup: subGroup,
         subTitle: subTitle,
-        svgImage: svgImage,
         title: title,
         type: type,
         viewType: viewType
@@ -754,7 +755,6 @@ private func makeAnywayPaymentAndUpdateParameterUIAttributes(
     isReadOnly: Bool = false,
     subGroup: String? = nil,
     subTitle: String? = nil,
-    svgImage: String? = nil,
     title: String = anyMessage(),
     type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
     viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType = .input
@@ -770,7 +770,6 @@ private func makeAnywayPaymentAndUpdateParameterUIAttributes(
         isReadOnly: isReadOnly,
         subGroup: subGroup,
         subTitle: subTitle,
-        svgImage: svgImage,
         title: title,
         type: type,
         viewType: viewType
@@ -783,7 +782,6 @@ private func makeAnywayPaymentAndUpdateParameterUIAttributes(
         isReadOnly: isReadOnly,
         subGroup: subGroup,
         subTitle: subTitle,
-        svgImage: svgImage,
         title: title,
         type: .init(with: type),
         viewType: .init(with: viewType)
@@ -895,7 +893,6 @@ func makeAnywayPaymentUpdateParameterUIAttributes(
     isReadOnly: Bool = false,
     subGroup: String? = nil,
     subTitle: String? = nil,
-    svgImage: String? = nil,
     title: String = anyMessage(),
     type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
     viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType = .input
@@ -911,7 +908,6 @@ func makeAnywayPaymentUpdateParameterUIAttributes(
         isReadOnly: isReadOnly,
         subGroup: subGroup,
         subTitle: subTitle,
-        svgImage: svgImage,
         title: title,
         type: type,
         viewType: viewType
@@ -982,8 +978,9 @@ extension AnywayPayment.Element.Parameter {
     
     func updating(value: String?) -> Self {
         
-        .init(
+        return .init(
             field: .init(id: field.id, value: value.map { .init($0) }),
+            image: image,
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes

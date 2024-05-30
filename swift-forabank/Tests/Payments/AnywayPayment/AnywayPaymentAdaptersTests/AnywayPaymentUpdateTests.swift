@@ -62,16 +62,14 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             ],
             parameters: [
                 .init(
-                    field: makeParameterField(
-                        id: "1"
-                    ),
+                    field: makeParameterField(id: "1"),
+                    image: .svg("svgImage"),
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(),
                     uiAttributes: makeParameterUIAttributes(
                         inputFieldType: .account,
                         isPrint: true,
                         order: 1,
-                        svgImage: "svgImage",
                         title: "Лицевой счет",
                         viewType: .input
                     )
@@ -97,16 +95,47 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             fields: [],
             parameters: [
                 .init(
-                    field: makeParameterField(
-                        id: "1"
-                    ),
+                    field: makeParameterField(id: "1"),
+                    image: .svg("svgImage"),
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(),
                     uiAttributes: makeParameterUIAttributes(
                         inputFieldType: .account,
                         isPrint: true,
                         order: 1,
-                        svgImage: "svgImage",
+                        title: "Лицевой счет",
+                        viewType: .input
+                    )
+                )
+            ]
+        ))
+    }
+    
+    func test_init_shouldNotMapInvisible_e1_sample_step1() throws {
+        
+        try assert(.e1_sample_step1, mapsTo: .init(
+            details: .init(
+                amounts: makeDetailsAmounts(),
+                control: makeDetailsControl(
+                    isFinalStep: false,
+                    isFraudSuspected: false,
+                    needMake: false,
+                    needOTP: false,
+                    needSum: false
+                ),
+                info: makeDetailsInfo()
+            ),
+            fields: [],
+            parameters: [
+                .init(
+                    field: makeParameterField(id: "1"),
+                    image: .md5Hash("6e17f502dae62b03d8bd4770606ee4b2"),
+                    masking: makeParameterMasking(),
+                    validation: makeParameterValidation(),
+                    uiAttributes: makeParameterUIAttributes(
+                        dataType: .number,
+                        inputFieldType: .account,
+                        isPrint: false,
                         title: "Лицевой счет",
                         viewType: .input
                     )
@@ -132,16 +161,14 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             fields: [],
             parameters: [
                 .init(
-                    field: makeParameterField(
-                        id: "1"
-                    ),
+                    field: makeParameterField(id: "1"),
+                    image: .svg(.svgSample6),
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(),
                     uiAttributes: makeParameterUIAttributes(
                         inputFieldType: .account,
                         isPrint: true,
                         order: 1,
-                        svgImage: .svgSample6,
                         title: "Лицевой счет",
                         viewType: .input
                     )
@@ -167,9 +194,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             fields: [],
             parameters: [
                 .init(
-                    field: makeParameterField(
-                        id: "2"
-                    ),
+                    field: makeParameterField(id: "2"),
+                    image: nil,
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         rawLength: 0,
@@ -233,6 +259,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         content: "022024",
                         id: "5"
                     ),
+                    image: nil,
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         isRequired: false
@@ -249,6 +276,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         content: " ",
                         id: "9"
                     ),
+                    image: nil,
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         isRequired: false
@@ -264,6 +292,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         content: " ",
                         id: "13"
                     ),
+                    image: nil,
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         isRequired: false
@@ -279,6 +308,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         content: " ",
                         id: "17"
                     ),
+                    image: nil,
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         isRequired: false
@@ -294,6 +324,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         content: " ",
                         id: "21"
                     ),
+                    image: nil,
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         isRequired: false
@@ -309,6 +340,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         content: " ",
                         id: "25"
                     ),
+                    image: nil,
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         isRequired: false
@@ -324,6 +356,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         content: " ",
                         id: "29"
                     ),
+                    image: .svg(.svgSample7),
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         isRequired: false
@@ -331,7 +364,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     uiAttributes: makeParameterUIAttributes(
                         inputFieldType: .counter,
                         order: 29,
-                        svgImage: .svgSample7,
                         title: "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
                         viewType: .input
                     )
@@ -565,7 +597,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         fieldName: String,
         fieldValue: String,
         fieldTitle: String,
-        image: AnywayPaymentUpdate.Field.Image? = nil
+        image: AnywayPaymentUpdate.Image? = nil
     ) -> AnywayPaymentUpdate.Field {
         
         return .init(
@@ -629,7 +661,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         isReadOnly: Bool = false,
         subGroup: String? = nil,
         subTitle: String? = nil,
-        svgImage: String? = nil,
         title: String,
         type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
         viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType
@@ -645,7 +676,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             isReadOnly: isReadOnly,
             subGroup: subGroup,
             subTitle: subTitle,
-            svgImage: svgImage,
             title: title,
             type: type,
             viewType: viewType
@@ -818,6 +848,44 @@ private extension String {
         "infoMessage": null,
         "printFormType": null,
         "scenario": "SCOR_SUSPECT_FRAUD"
+    }
+}
+"""
+    
+    static let e1_sample_step1 = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "additionalList": [],
+        "parameterListForNextStep": [
+            {
+                "id": "1",
+                "title": "Лицевой счет",
+                "viewType": "INPUT",
+                "dataType": "%Numeric",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": true,
+                "readOnly": false,
+                "inputFieldType": "ACCOUNT",
+                "visible": true,
+                "md5hash": "6e17f502dae62b03d8bd4770606ee4b2"
+            },
+            {
+                "id": "##ID##",
+                "viewType": "OUTPUT",
+                "content": "ffc84724-8976-4d37-8af8-be84a4386126",
+                "visible": false
+            },
+            {
+                "id": "##STEP##",
+                "viewType": "OUTPUT",
+                "content": "1",
+                "visible": false
+            }
+        ]
     }
 }
 """
