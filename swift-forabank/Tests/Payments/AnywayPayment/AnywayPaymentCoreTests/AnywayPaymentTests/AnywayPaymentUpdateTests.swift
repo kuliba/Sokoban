@@ -13,7 +13,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     
     // MARK: - amount (core)
     
-    func test_update_shouldNotAddAmountFieldOnNeedSumFalse() {
+    func test_update_shouldNotAddAmountWidgetOnNeedSumFalse() {
         
         assert(
             makeAnywayPaymentWithoutAmount(),
@@ -21,20 +21,20 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         )
     }
     
-    func test_update_shouldAddAmountFieldOnNeedSumTrue() {
+    func test_update_shouldAddAmountWidgetOnNeedSumTrue() {
         
         let payment = makeAnywayPaymentWithoutAmount()
         let update = makeAnywayPaymentUpdate(needSum: true)
         
-        XCTAssert(hasAmountField(updatePayment(payment, with: update)))
+        XCTAssert(hasAmountWidget(updatePayment(payment, with: update)))
     }
     
-    func test_update_shouldRemoveAmountFieldOnNeedSumFalse() {
+    func test_update_shouldRemoveAmountWidgetOnNeedSumFalse() {
         
         let payment = makeAnywayPaymentWithAmount()
         let update = makeAnywayPaymentUpdate(needSum: false)
         
-        XCTAssertFalse(hasAmountField(updatePayment(payment, with: update)))
+        XCTAssertFalse(hasAmountWidget(updatePayment(payment, with: update)))
     }
     
     func test_update_shouldSetCoreWidgetWithAccountIDFromOutline() {
