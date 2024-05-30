@@ -268,17 +268,21 @@ class InfoProductViewModel: ObservableObject {
                         
                         var list: [ItemViewModel] = []
                         
-                        let dateFormatter = DateFormatter.detailFormatter
+                        let moscowTimeZone = TimeZone(identifier: "Europe/Moscow") ?? TimeZone.current
+                        let dateFormatter = DateFormatter.depositsFormatter()
                         
                         if let initialAmount = model.amountFormatted(amount: data.initialAmount, currencyCode: product.currency, style: .clipped) {
                             
                             list.append(.init(title: "Сумма первоначального размещения", subtitle: initialAmount))
                         }
-                        list.append(.init(title: "Дата открытия", subtitle: dateFormatter.string(from: data.dateOpen.moscowTime)))
+                        
+                        list.append(.init(title: "Дата открытия", subtitle: dateFormatter.string(from: data.dateOpen.converted(to: moscowTimeZone))))
+                        
                         if let dateEnd = data.dateEnd {
-                            let dateEndMoscow = dateFormatter.string(from: dateEnd)
+                            let dateEndMoscow = dateFormatter.string(from: dateEnd.converted(to: moscowTimeZone))
                             list.append(.init(title: "Дата закрытия", subtitle: dateEndMoscow))
                         }
+                        
                         if let termDay = data.termDay {
                             list.append(.init(title: "Срок вклада", subtitle: termDay))
                         }

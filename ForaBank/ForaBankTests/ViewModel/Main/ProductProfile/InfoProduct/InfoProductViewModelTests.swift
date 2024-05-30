@@ -878,40 +878,34 @@ final class InfoProductViewModelTests: XCTestCase {
         XCTAssertNoDiff(result.count, 1)
     }
     
-    ///
     // MARK: - Test Data
     
     func test_moscowTime_sameTimeZone_returnsSelf() {
         
         let moscowTimeZone = TimeZone(identifier: "Europe/Moscow")!
         let moscowDate = Calendar.current.date(bySettingHour: 12, minute: 0, second: 0, of: Date())
-        
-        let moscowTime = moscowDate?.moscowTime
-        
+
+        let moscowTime = moscowDate?.converted(to: moscowTimeZone)
+
         XCTAssertEqual(moscowTime, moscowDate)
     }
     
-    func testMoscowTimeForInvalidTimezoneIdentifier() {
+    func testConvertedToForInvalidTimezoneIdentifier() {
         
         let invalidTimezoneIdentifier = "Invalid/Timezone"
         let originalDate = Date()
-        
-        guard let invalidTimeZone = TimeZone(identifier: invalidTimezoneIdentifier) else {
-            
-            let invalidTimezoneDate = originalDate.moscowTime
-            XCTAssertEqual(invalidTimezoneDate, originalDate, "moscowTime should return the original date if the timezone identifier is invalid")
-            return
-        }
-        
-        XCTFail("Expected an invalid timezone, but a valid one was created")
+
+        let invalidTimeZone = TimeZone(identifier: invalidTimezoneIdentifier) ?? TimeZone.current
+        let invalidTimezoneDate = originalDate.converted(to: invalidTimeZone)
+        XCTAssertEqual(invalidTimezoneDate, originalDate, "converted(to:) should return the original date if the timezone identifier is invalid")
     }
     
-    func testMoscowTimeForDateInMoscowTimezone() {
-        
-        let moscowTime: Date = .testDateInMoscowTimezone.moscowTime
-        
-        XCTAssertEqual(moscowTime, .expectedMoscowTime, "moscowTime should be equal to the expected value for a date in the Moscow timezone")
+    func testConvertedToForDateInMoscowTimezone() {
+       
+        let moscowTime = Date.testDateInMoscowTimezone.converted(to: TimeZone(identifier: "Europe/Moscow")!)
+        XCTAssertEqual(moscowTime, Date.expectedMoscowTime, "converted(to:) should be equal to the expected value for a date in the Moscow timezone")
     }
+
     
     // MARK: - Helpers
     

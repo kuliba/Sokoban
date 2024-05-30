@@ -116,10 +116,21 @@ extension DateFormatter {
         formatter.dateFormat =  "d MMMM yyyy"
         formatter.locale = Locale(identifier: "ru_RU")
         
-        formatter.timeZone = TimeZone(identifier: "Europe/Moscow")
-        
         return formatter
     }()
+    
+    static func depositsFormatter(
+        timeZone: TimeZone = TimeZone(identifier: "Europe/Moscow") ?? .current,
+        locale: Locale = Locale(identifier: "ru_RU")
+    ) -> DateFormatter {
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMMM yyyy"
+        formatter.locale = locale
+        formatter.timeZone = timeZone
+        
+        return formatter
+    }
     
     static let loanProductPeriod: DateFormatter = {
         
@@ -141,17 +152,12 @@ extension DateFormatter {
 }
 
 extension Date {
-    
-    var moscowTime: Date {
+   
+    func converted(to timeZone: TimeZone) -> Date {
         
-        guard let moscowTimeZone = TimeZone(identifier: "Europe/Moscow") else {
-            return self
-        }
-
-        let localTimeZone = TimeZone.current
-        let seconds = TimeInterval(moscowTimeZone.secondsFromGMT(for: self) - localTimeZone.secondsFromGMT(for: self))
+        let delta = TimeInterval(timeZone.secondsFromGMT(for: self) - TimeZone.current.secondsFromGMT(for: self))
         
-        return addingTimeInterval(seconds)
+        return addingTimeInterval(delta)
     }
 }
 
