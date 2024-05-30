@@ -335,7 +335,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
     private func expect(
         toDeliver expectedEvent: SUT.Event,
         for effect: SUT.Effect,
-        onMakePayment makePaymentResult: _TransactionReport?,
+        onMakePayment makePaymentResult: Report?,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -366,8 +366,8 @@ final class TransactionEffectHandlerTests: XCTestCase {
 }
 
 private func transactionReportEvent(
-    _ transactionReport: _TransactionReport
+    _ report: Report
 ) -> _TransactionEvent {
     
-    .completePayment(transactionReport)
+    .completePayment(report)
 }

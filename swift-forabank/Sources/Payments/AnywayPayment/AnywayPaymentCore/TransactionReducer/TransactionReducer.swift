@@ -7,7 +7,7 @@
 
 import AnywayPaymentDomain
 
-public final class TransactionReducer<TransactionReport, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate> {
+public final class TransactionReducer<Report, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate> {
     
     private let paymentReduce: PaymentReduce
     private let stagePayment: StagePayment
@@ -77,10 +77,8 @@ public extension TransactionReducer {
     typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
     typealias Inspector = PaymentInspector<Payment, PaymentDigest>
     
-    typealias Status = TransactionStatus<TransactionReport>
-
-    typealias State = Transaction<Payment, Status>
-    typealias Event = TransactionEvent<TransactionReport, PaymentEvent, PaymentUpdate>
+    typealias State = Transaction<Payment, TransactionStatus<Report>>
+    typealias Event = TransactionEvent<Report, PaymentEvent, PaymentUpdate>
     typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
 
@@ -125,7 +123,7 @@ private extension TransactionReducer {
     
     func reduce(
         _ state: inout State,
-        with report: TransactionReport?
+        with report: Report?
     ) {
         switch report {
         case .none:

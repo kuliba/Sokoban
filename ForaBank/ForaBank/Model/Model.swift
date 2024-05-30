@@ -130,6 +130,8 @@ class Model {
     typealias GetProductListByTypeCompletion = (GetProductListByTypeResponse?) -> Void
     typealias GetProductListByType = (ProductType, @escaping GetProductListByTypeCompletion) -> Void
 
+    let updateInfo: CurrentValueSubject<UpdateInfo, Never>
+
     var getProducts: GetProductListByType
 
     // services
@@ -238,6 +240,7 @@ class Model {
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         self.productTemplates = .init([])
         self.getProducts = { _, _ in }
+        self.updateInfo = .init(.init())
         
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent

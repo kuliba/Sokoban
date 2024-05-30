@@ -352,7 +352,8 @@ final class PaymentStickerBusinessTests: XCTestCase {
                 cardImage: .named(""),
                 paymentSystem: .named(""),
                 backgroundImage: nil,
-                backgroundColor: ""
+                backgroundColor: "",
+                clover: .named("")
             ),
             allProducts: []
         )
@@ -381,7 +382,8 @@ final class PaymentStickerBusinessTests: XCTestCase {
                 cardImage: .named(""),
                 paymentSystem: .named(""),
                 backgroundImage: nil,
-                backgroundColor: ""
+                backgroundColor: "",
+                clover: .named("")
             ),
             allProducts: []
         )
@@ -402,7 +404,8 @@ final class PaymentStickerBusinessTests: XCTestCase {
                         cardImage: .named(""),
                         paymentSystem: .named(""),
                         backgroundImage: nil,
-                        backgroundColor: ""
+                        backgroundColor: "",
+                        clover: .named("")
                     ), allProducts: []
                 ))
             ])),
@@ -416,7 +419,8 @@ final class PaymentStickerBusinessTests: XCTestCase {
                 cardImage: .named(""),
                 paymentSystem: .named(""),
                 backgroundImage: nil,
-                backgroundColor: ""
+                backgroundColor: "",
+                clover: .named("")
             ), product))
         )
     }
@@ -437,7 +441,8 @@ final class PaymentStickerBusinessTests: XCTestCase {
                 cardImage: .named(""),
                 paymentSystem: .named(""),
                 backgroundImage: nil,
-                backgroundColor: ""
+                backgroundColor: "",
+                clover: .named("")
             ),
             allProducts: []
         )
@@ -458,7 +463,8 @@ final class PaymentStickerBusinessTests: XCTestCase {
                         cardImage: .named(""),
                         paymentSystem: .named(""),
                         backgroundImage: nil,
-                        backgroundColor: ""
+                        backgroundColor: "",
+                        clover: .named("")
                     ), allProducts: []
                 ))
             ])),
@@ -644,8 +650,9 @@ final class PaymentStickerBusinessTests: XCTestCase {
                 cardImage: .named(""),
                 paymentSystem: .named(""),
                 backgroundImage: .named(""),
-                backgroundColor: "color"
-            ), 
+                backgroundColor: "color",
+                clover: .named("")
+            ),
             allProducts: []
         ))
     }

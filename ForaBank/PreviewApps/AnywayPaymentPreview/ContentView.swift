@@ -7,6 +7,7 @@
 
 import AmountComponent
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import RxViewModel
 import SwiftUI
 
@@ -24,9 +25,7 @@ struct ContentView: View {
         buttonTitle: String = "Продолжить",
         isEnabled: Bool = true
     ) {
-        let reducer = AnywayPaymentReducer(
-            makeOTP: { Int($0.filter(\.isWholeNumber).prefix(6)) }
-        )
+        let reducer = AnywayPaymentReducer()
         let viewModel = ViewModel(
             initialState: .preview,
             reduce: reducer.reduce(_:_:),
@@ -63,7 +62,7 @@ struct ContentView: View {
         
         VStack(alignment: .leading) {
             
-            Text(String(describing: viewModel.state.digest))
+            Text(String(describing: viewModel.state.makeDigest()))
             Text("OTP: \(viewModel.state.infoOTP)")
         }
         .padding()

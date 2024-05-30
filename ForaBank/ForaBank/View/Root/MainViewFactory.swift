@@ -9,4 +9,5 @@ struct MainViewFactory {
     
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeUserAccountView: MakeUserAccountView
+    let makeUpdateInfoView: MakeUpdateInfoView
 }

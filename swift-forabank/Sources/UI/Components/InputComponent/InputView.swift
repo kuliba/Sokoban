@@ -73,10 +73,16 @@ public struct InputView<Icon, IconView: View>: View {
 public extension InputConfig {
     
     static let preview: Self = .init(
-        titleConfig: .init(textFont: .title3, textColor: .gray),
-        textFieldFont: .init(textFont: .title3, textColor: .gray),
+        titleConfig: .init(
+            textFont: .subheadline,
+            textColor: .gray
+        ),
+        textFieldFont: .init(
+            textFont: .subheadline,
+            textColor: .gray
+        ),
         placeholder: "Введите лицевой счет",
-        hintConfig: .init(textFont: .body, textColor: .gray),
+        hintConfig: .init(textFont: .body, textColor: .red),
         backgroundColor: .gray.opacity(0.1),
         imageSize: 16
     )

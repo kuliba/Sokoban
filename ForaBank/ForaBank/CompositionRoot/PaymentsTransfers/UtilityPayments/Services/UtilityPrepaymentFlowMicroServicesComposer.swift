@@ -78,13 +78,13 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         case let .operator(`operator`):
             getServices(for: `operator`, completion)
             
-        case let .service(utilityService, _):
-            nanoServices.startAnywayPayment(.service(utilityService), completion)
+        case let .service(utilityService, `operator`):
+            nanoServices.startAnywayPayment(.service(utilityService, for: `operator`), completion)
         }
     }
     
     typealias StartPaymentPayload = Effect.Select
-    typealias StartPaymentResult = Event.StartPaymentResult
+    typealias StartPaymentResult = Event.PaymentStarted.StartPaymentResult
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
@@ -118,7 +118,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             completion(.failure(.operatorFailure(`operator`)))
             
         case let (1, .some(utilityService)):
-            nanoServices.startAnywayPayment(.service(utilityService), completion)
+            nanoServices.startAnywayPayment(.service(utilityService, for: `operator`), completion)
             
         default:
             if let services = MultiElementArray(services) {

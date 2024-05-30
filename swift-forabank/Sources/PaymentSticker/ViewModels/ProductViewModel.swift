@@ -52,6 +52,7 @@ extension ProductViewModel {
         let balance: String
         let backgroundImage: ImageData?
         let backgroundColor: Color
+        let clover: ImageData?
     }
     
     public struct HeaderViewModel: Hashable {
@@ -77,7 +78,8 @@ extension ProductViewModel {
                 name: product.nameProduct,
                 balance: product.balanceFormatted,
                 backgroundImage: product.backgroundImage,
-                backgroundColor: Color(product.backgroundColor)
+                backgroundColor: Color(product.backgroundColor),
+                clover: product.clover
             ),
             footer: .init(description: product.description)
         )

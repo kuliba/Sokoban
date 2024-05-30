@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIPrimitives
+import CarouselComponent
 
 public struct ProductSelectView<ProductView: View>: View {
     
@@ -97,7 +98,7 @@ public struct ProductSelectView<ProductView: View>: View {
         
         HStack(spacing: 12) {
             
-            productIcon(product.look.icon)
+            productIcon(product.look.background)
             productTitle(product, config: config)
         }
         .contentShape(Rectangle())
@@ -140,15 +141,22 @@ public struct ProductSelectView<ProductView: View>: View {
         products: [ProductSelect.Product]
     ) -> some View {
         
-        ScrollView(.horizontal, showsIndicators: false) {
-            
-            HStack(spacing: 10) {
-                
-                ForEach(products, content: _productView)
-            }
-            .padding(.horizontal)
-            .padding(.bottom, 8)
-        }
+        let viewModel: CarouselViewModel<ProductSelect.Product> = .init(
+            initialState: .init(
+                products: products,
+                needShowSticker: false,
+                carouselDimensions: config.carouselConfig.carousel.productDimensions
+            ),
+            reduce: CarouselReducer().reduce,
+            handleEffect: CarouselEffectHandler().handleEffect)
+        
+        CarouselStateWrapperView(
+            viewModel: viewModel,
+            productView: _productView,
+            stickerView: { EmptyView() },
+            newProductButton: { EmptyView() },
+            config: config.carouselConfig
+        )
     }
     
     private func _productView(
@@ -213,7 +221,8 @@ struct ProductSelectView_Previews: PreviewProvider {
             ) {
                 ProductCardView(
                     productCard: .init(product: $0),
-                    config: .preview
+                    config: .preview, 
+                    isSelected: state.selected?.id == $0.id
                 )
             }
             .border(.red)
@@ -245,5 +254,15 @@ private extension ProductSelect {
     ) -> Self {
         
         .init(selected: selected, products: .allProducts)
+    }
+}
+
+extension ProductSelect.Product: CarouselProduct {
+    
+    public var productType: CarouselComponent.ProductType {
+        switch type {
+        case .account: return .account
+        case .card: return .card
+        }
     }
 }

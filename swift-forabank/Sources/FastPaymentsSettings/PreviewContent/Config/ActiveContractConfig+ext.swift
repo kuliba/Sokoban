@@ -13,6 +13,7 @@ public extension ActiveContractConfig {
         accountLinking: .preview,
         backgroundColor: .orange.opacity(0.1),
         bankDefault: .preview,
+        carousel: .preview,
         consentList: .preview,
         paymentContract: .preview,
         productSelect: .preview

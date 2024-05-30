@@ -8,6 +8,7 @@
 import AnywayPaymentDomain
 import Tagged
 
+#warning("move to AnywayPaymentUI?")
 extension AnywayPayment.Element {
     
     public var uiComponent: UIComponent {
@@ -55,15 +56,21 @@ extension AnywayPayment.Element.UIComponent {
         
         public let id: ID
         public let type: ParameterType
+        public let title: String
+        public let subtitle: String?
         public let value: Value?
         
         public init(
             id: ID,
             type: ParameterType,
+            title: String,
+            subtitle: String?,
             value: Value?
         ) {
             self.id = id
             self.type = type
+            self.title = title
+            self.subtitle = subtitle
             self.value = value
         }
     }
@@ -127,6 +134,8 @@ extension AnywayPayment.Element.Parameter {
         .init(
             id: .init(field.id.rawValue),
             type: uiAttributes.parameterType,
+            title: uiAttributes.title,
+            subtitle: uiAttributes.subTitle,
             value: field.value.map { .init($0.rawValue) }
         )
     }

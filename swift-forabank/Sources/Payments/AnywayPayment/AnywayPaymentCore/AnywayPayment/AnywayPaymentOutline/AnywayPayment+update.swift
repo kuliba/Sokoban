@@ -21,7 +21,10 @@ extension AnywayPayment {
         elements.appendComplementaryFields(from: update.fields)
         elements.appendParameters(from: update.parameters, with: outline)
         
-        elements.adjustWidget(.core(.init(outline.core)), on: update.details.control.needSum)
+        if let core = outline.core {
+            
+            elements.adjustWidget(.core(.init(core)), on: update.details.control.needSum)
+        }
         elements.adjustWidget(.otp(nil), on: update.details.control.needOTP)
         
         return .init(
@@ -297,6 +300,9 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
     init(_ dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType) {
         
         switch dataType {
+        case ._backendReserved:
+            self = ._backendReserved
+            
         case .number:
             self = .number
             
@@ -325,6 +331,7 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.FieldType {
         case .input:    self = .input
         case .select:   self = .select
         case .maskList: self = .maskList
+        case .missing:  self = .missing
         }
     }
 }

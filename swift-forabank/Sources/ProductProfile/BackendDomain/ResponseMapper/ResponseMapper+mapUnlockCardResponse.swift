@@ -13,14 +13,14 @@ public extension ResponseMapper {
     static func mapUnblockCardResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> MappingResult<BlockUnblockData?> {
+    ) -> MappingResult<BlockUnblockData> {
         
         map(data, httpURLResponse, mapOrThrow: map)
     }
     
     private static func map(
         _ data: _DTO
-    ) throws -> BlockUnblockData? {
+    ) throws -> BlockUnblockData {
         
         data.data
     }
@@ -28,7 +28,7 @@ public extension ResponseMapper {
 
 private extension ResponseMapper._DTO {
     
-    var data: BlockUnblockData? {
+    var data: BlockUnblockData {
                 
         return .init(
             statusBrief: statusBrief ?? "",

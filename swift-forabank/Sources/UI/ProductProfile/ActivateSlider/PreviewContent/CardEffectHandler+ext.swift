@@ -10,22 +10,14 @@ import Foundation
 public extension CardEffectHandler {
     
     static let activateSuccess = CardEffectHandler(
-        activate: { completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                completion(.success(()))
-            })
+        activate: { _, completion in
+            completion(.success)
         }
     )
     
     static let activateFailure = CardEffectHandler(
-        activate: { completion in
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                completion(.failure(ActivateFailure()))
-            })
+        activate: { payload, completion in
+            completion(.serverError("Error"))
         }
     )
-
-    struct ActivateFailure: Error {}
 }

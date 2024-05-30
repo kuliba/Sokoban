@@ -43,6 +43,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let onRegister: () -> Void
     private let factory: ModelAuthLoginViewModelFactory
+    private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     private var bindings = Set<AnyCancellable>()
     
     init(
@@ -53,18 +54,13 @@ class MainViewModel: ObservableObject, Resetable {
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping () -> Void
     ) {
         self.model = model
+        self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
-        self.sections = [
-            MainSectionProductsView.ViewModel(model, stickerViewModel: nil),
-            MainSectionFastOperationView.ViewModel(),
-            MainSectionPromoView.ViewModel(model),
-            MainSectionCurrencyMetallView.ViewModel(model),
-            MainSectionOpenProductView.ViewModel(model),
-            MainSectionAtmView.ViewModel.initial
-        ]
+        self.sections = Self.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: nil)
         
         self.factory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
@@ -83,10 +79,11 @@ class MainViewModel: ObservableObject, Resetable {
     
     private static func getSections(
         _ model: Model,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         stickerViewModel: ProductCarouselView.StickerViewModel? = nil
     ) -> [MainSectionViewModel] {
         
-        return [
+        var sections = [
             MainSectionProductsView.ViewModel(
                 model,
                 stickerViewModel: stickerViewModel
@@ -97,15 +94,24 @@ class MainViewModel: ObservableObject, Resetable {
             MainSectionOpenProductView.ViewModel(model),
             MainSectionAtmView.ViewModel.initial
         ]
+        if updateInfoStatusFlag.isActive {
+            if !model.updateInfo.value.areProductsUpdated {
+                sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
+            }
+        }
+        return sections
     }
     
-    private func makeStickerViewModel(_ model: Model) -> ProductCarouselView.StickerViewModel? {
+    private func makeStickerViewModel(
+        _ model: Model,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
+    ) -> ProductCarouselView.StickerViewModel? {
         
         return ProductCarouselView.ViewModel.makeStickerViewModel(model) {
             self.handleLandingAction(.sticker)
         } hide: { [self] in
             model.settingsAgent.saveShowStickerSetting(shouldShow: false)
-            self.sections = MainViewModel.getSections(model)
+            self.sections = MainViewModel.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag)
             self.bind(sections)
         }
     }
@@ -154,7 +160,7 @@ extension MainViewModel {
 }
 
 private extension MainViewModel {
-    
+        
     func bind() {
         
         model.images
@@ -164,11 +170,21 @@ private extension MainViewModel {
                 if let products = self.sections.first(where: { $0.type == .products }) as? MainSectionProductsView.ViewModel,
                    products.productCarouselViewModel.stickerViewModel == nil {
                     
-                    self.sections = Self.getSections(model, stickerViewModel: makeStickerViewModel(model))
+                    self.sections = Self.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: makeStickerViewModel(model, updateInfoStatusFlag: updateInfoStatusFlag))
                     bind(sections)
                 }
             }
             .store(in: &bindings)
+        
+        if updateInfoStatusFlag.isActive {
+            model.updateInfo
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] updateInfo in
+                    
+                    self?.updateSections(updateInfo)
+                }
+                .store(in: &bindings)
+        }
         
         action
             .receive(on: DispatchQueue.main)
@@ -184,6 +200,7 @@ private extension MainViewModel {
                     else { return }
                     
                     productProfileViewModel.rootActions = rootActions
+                    productProfileViewModel.contactsAction = { [weak self] in self?.showContacts() }
                     bind(productProfileViewModel)
                     route.destination = .productProfile(productProfileViewModel)
                     
@@ -502,6 +519,7 @@ private extension MainViewModel {
                             }
                         )
                         myProductsViewModel.rootActions = rootActions
+                        myProductsViewModel.contactsAction = { [weak self] in self?.showContacts() }
                         route.destination = .myProducts(myProductsViewModel)
                         
                         // CurrencyMetall section
@@ -1102,6 +1120,27 @@ private extension MainViewModel {
         } else {
             
             return (previousData.0, previousData.1 ?? 0)
+        }
+    }
+    
+    private func showContacts() {
+        
+        self.resetDestination()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+            self?.rootActions?.switchTab(.chat)
+        }
+    }
+    
+    func updateSections(_ updateInfo: UpdateInfo) {
+        let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateInfo }) is UpdateInfoViewModel
+        switch (updateInfo.areProductsUpdated, containUpdateInfoSection) {
+            
+        case (true, true):
+            sections.removeFirst()
+        case (false, false):
+            sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
+        default:
+            break
         }
     }
 }

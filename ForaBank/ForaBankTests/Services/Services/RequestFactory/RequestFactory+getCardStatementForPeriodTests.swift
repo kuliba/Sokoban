@@ -19,7 +19,7 @@ final class RequestFactory_getCardStatementForPeriodTests: XCTestCase {
         
         XCTAssertEqual(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/getCardStatementForPeriod_V3"
+            "https://pl.forabank.ru/dbo/api/v3/rest/v4/getCardStatementForPeriod"
         )
     }
     

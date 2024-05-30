@@ -2,25 +2,25 @@
 //  InfoView.swift
 //
 //
-//  Created by Igor Malyarov on 08.12.2023.
+//  Created by Igor Malyarov on 22.05.2024.
 //
 
 import SwiftUI
 
-public struct InfoView: View {
+public struct InfoView<Icon: View>: View {
     
     let info: Info
     let config: InfoConfig
-    
-    @State private var image: Image
+    let icon: () -> Icon
     
     public init(
         info: Info,
-        config: InfoConfig
+        config: InfoConfig,
+        icon: @escaping () -> Icon
     ) {
         self.info = info
         self.config = config
-        self.image = info.image.value
+        self.icon = icon
     }
     
     public var body: some View {
@@ -44,23 +44,11 @@ public struct InfoView: View {
                 HStack {
                     
                     info.title.text(withConfig: config.title)
-                    
-                    Spacer()
-                    
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     info.value.text(withConfig: config.value)
                 }
             }
         }
-        .onReceive(info.image, perform: { self.image = $0 })
-    }
-    
-    @ViewBuilder
-    private func icon() -> some View {
-        
-        image
-            .renderingMode(.original)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
     }
 }
 
@@ -72,7 +60,7 @@ private extension Info {
         case .amount:
             return .init(width: 24, height: 24)
             
-        case .brandName, .recipientBank:
+        case .brandName, .recipientBank, .other:
             return .init(width: 32, height: 32)
         }
     }
@@ -80,29 +68,13 @@ private extension Info {
 
 // MARK: - Previews
 
-struct InfoView_Previews: PreviewProvider {
+#Preview {
     
-    static var previews: some View {
+    VStack(spacing: 32) {
         
-        VStack(spacing: 32) {
-            
-            infoView(info: .amount)
-            infoView(info: .brandName)
-            infoView(info: .recipientBank)
-        }
-        .previewLayout(.sizeThatFits)
+        InfoView(info: .amount, config: .preview) { Text("Icon") }
+        InfoView(info: .brandName, config: .preview) { Text("Icon") }
+        InfoView(info: .recipientBank, config: .preview) { Text("Icon") }
     }
-    
-    private static func infoView(
-        info: Info
-    ) -> some View {
-        
-        Group {
-            
-            InfoView(info: info, config: .preview)
-            
-            InfoView(info: info, config: .preview)
-        }
-        .padding(20)
-    }
+    .previewLayout(.sizeThatFits)
 }
