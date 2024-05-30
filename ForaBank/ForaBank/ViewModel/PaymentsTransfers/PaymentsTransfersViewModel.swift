@@ -45,7 +45,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
-    private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     private var bindings = Set<AnyCancellable>()
     private let scheduler: AnySchedulerOfDispatchQueue
     
@@ -56,21 +55,19 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         isTabBarHidden: Bool = false,
         mode: Mode = .normal,
         route: Route = .empty,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.navButtonsRight = []
-        self.sections = Self.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag)
+        self.sections = paymentsTransfersFactory.makeSections()
         self.mode = mode
         self.model = model
         self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
-        self.updateInfoStatusFlag = updateInfoStatusFlag
         self.route = route
         self.flowManager = flowManager
         self.scheduler = scheduler
@@ -95,7 +92,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         navButtonsRight: [NavigationBarButtonViewModel],
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         mode: Mode = .normal,
         route: Route = .empty,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -109,7 +105,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
-        self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = navButtonsRight
         self.scheduler = scheduler
         
@@ -193,25 +188,6 @@ extension PaymentsTransfersViewModel {
             options: options,
             refillID: refillID
         )
-    }
-    
-    private static func getSections(
-        _ model: Model,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
-    ) -> [PaymentsTransfersSectionViewModel] {
-        
-        var sections = [
-            PTSectionLatestPaymentsView.ViewModel(model: model),
-            PTSectionTransfersView.ViewModel(),
-            PTSectionPaymentsView.ViewModel()
-
-        ]
-        if updateInfoStatusFlag.isActive {
-            if !model.updateInfo.value.areProductsUpdated {
-                sections.insert(UpdateInfoPTViewModel.init(), at: 0)
-            }
-        }
-        return sections
     }
 }
 
@@ -874,19 +850,20 @@ private extension PaymentsTransfersViewModel {
             }
             .store(in: &bindings)
         
-        if updateInfoStatusFlag.isActive {
             model.updateInfo
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] updateInfo in
                     
-                    self?.updateSections(updateInfo)
+                    guard let self else { return }
+                    
+                    self.sections = self.paymentsTransfersFactory.makeSections()
                 }
                 .store(in: &bindings)
-        }
+        
     }
     
     func updateSections(_ updateInfo: UpdateInfo) {
-        let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateInfo }) is UpdateInfoPTViewModel
+        let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateFailureInfo }) is UpdateInfoPTViewModel
         switch (updateInfo.areProductsUpdated, containUpdateInfoSection) {
             
         case (true, true):

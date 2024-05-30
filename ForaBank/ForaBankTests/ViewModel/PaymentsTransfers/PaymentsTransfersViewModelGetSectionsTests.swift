@@ -10,106 +10,41 @@ import XCTest
 
 final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
     
-    func test_updateSections_updateInfoFullPath_updateInfoStatusFlagActive_shouldAddUpdateSections()  {
+    func test_makeSections_empty_shouldMakeEmptySections() {
         
-        let (sut, model) = makeSUT(updateInfoStatusFlag: .init(.active))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        let (sut, model) = makeSUT(
+            flag: .active,
+            sections: [])
         
-        assert(sections: sut.sections, count: 3, type: .latestPayments)
-        
-        model.updateInfo.value.updateValueBy(type: .card, with: false)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 4, type: .updateInfo)
-        
-        model.updateInfo.value.updateValueBy(type: .loan, with: false)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 4, type: .updateInfo)
-        
-        model.updateInfo.value.updateValueBy(type: .deposit, with: false)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 4, type: .updateInfo)
-        
-        model.updateInfo.value.updateValueBy(type: .account, with: false)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 4, type: .updateInfo)
-        
-        model.updateInfo.value.updateValueBy(type: .card, with: true)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 4, type: .updateInfo)
-        
-        model.updateInfo.value.updateValueBy(type: .loan, with: true)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 4, type: .updateInfo)
-        
-        model.updateInfo.value.updateValueBy(type: .deposit, with: true)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 4, type: .updateInfo)
-        
-        model.updateInfo.value.updateValueBy(type: .account, with: true)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 3, type: .latestPayments)
+        XCTAssertTrue(sut.sections.isEmpty)
     }
     
-    func test_updateSections_updateInfoFullPath_updateInfoStatusFlagInActive_shouldAddUpdateSections()  {
+    func test_makeSections_oneSection_shouldMakeOneSection() {
         
-        let (sut, model) = makeSUT(updateInfoStatusFlag: .init(.inactive))
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        let (sut, model) = makeSUT(
+            flag: .active,
+            sections: [PTSectionTransfersView.ViewModel()])
         
-        assert(sections: sut.sections, count: 3, type: .latestPayments)
-        
-        model.updateInfo.value.updateValueBy(type: .card, with: false)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 3, type: .latestPayments)
-        
-        model.updateInfo.value.updateValueBy(type: .loan, with: false)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 3, type: .latestPayments)
-        
-        model.updateInfo.value.updateValueBy(type: .deposit, with: false)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 3, type: .latestPayments)
-        
-        model.updateInfo.value.updateValueBy(type: .account, with: false)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 3, type: .latestPayments)
-        
-        model.updateInfo.value.updateValueBy(type: .card, with: true)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 3, type: .latestPayments)
-        
-        model.updateInfo.value.updateValueBy(type: .loan, with: true)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 3, type: .latestPayments)
-        
-        model.updateInfo.value.updateValueBy(type: .deposit, with: true)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 3, type: .latestPayments)
-        
-        model.updateInfo.value.updateValueBy(type: .account, with: true)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        assert(sections: sut.sections, count: 3, type: .latestPayments)
+        assert(sections: sut.sections, count: 1, first: .transfers)
     }
     
+    func test_makeSections_moreSection_shouldMakeMoreSection() {
+        
+        let (sut, model) = makeSUT(
+            flag: .active,
+            sections: [
+                PTSectionPaymentsView.ViewModel(),
+                PTSectionTransfersView.ViewModel()
+            ])
+        
+        assert(sections: sut.sections, count: 2, first: .payments)
+    }
+        
     // MARK: - Helpers
     
     private func makeSUT(
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .init(.inactive),
+        flag: UpdateInfoStatusFeatureFlag.RawValue = .inactive,
+        sections: [PaymentsTransfersSectionViewModel],
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -124,8 +59,11 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
-            paymentsTransfersFactory: .preview,
-            updateInfoStatusFlag: updateInfoStatusFlag
+            paymentsTransfersFactory: makeProductProfileViewModel(
+                flag: flag,
+                sections: sections,
+                model: model
+            )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -134,10 +72,42 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
         return (sut, model)
     }
     
+    private func makeProductProfileViewModel(
+        flag: UpdateInfoStatusFeatureFlag.RawValue = .inactive,
+        sections: [PaymentsTransfersSectionViewModel],
+        model: Model
+    ) -> PaymentsTransfersFactory {
+        
+        let productProfileViewModel = ProductProfileViewModel.make(
+            with: .emptyMock,
+            fastPaymentsFactory: .legacy,
+            makeUtilitiesViewModel: { _,_ in }, 
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            paymentsTransfersFlowManager: .preview,
+            userAccountNavigationStateManager: .preview,
+            sberQRServices: .empty(),
+            unblockCardServices: .preview(),
+            qrViewModelFactory: .preview(),
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .init(
+                alertReduce: AlertReducer(productAlertsViewModel: .default).reduce,
+                bottomSheetReduce: BottomSheetReducer().reduce,
+                handleEffect: ProductNavigationStateEffectHandler().handleEffect
+            ),
+            updateInfoStatusFlag: .init(.inactive)
+        )
+        return .init(
+            makeUtilitiesViewModel: { _,_ in },
+            makeProductProfileViewModel: productProfileViewModel,
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeSections: { sections }
+        )
+    }
+    
     private func assert(
         sections: [PaymentsTransfersSectionViewModel],
         count: Int,
-        type: PaymentsTransfersSectionType,
+        first: PaymentsTransfersSectionType,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -151,8 +121,8 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
         
         XCTAssertNoDiff(
             sections.first?.type,
-            type,
-            "\nExpected \(type), but got \(String(describing: sections.first?.type)) instead.",
+            first,
+            "\nExpected \(first), but got \(String(describing: sections.first?.type)) instead.",
             file: file, line: line
         )
     }

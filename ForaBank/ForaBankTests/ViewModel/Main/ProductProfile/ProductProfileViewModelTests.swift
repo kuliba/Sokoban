@@ -679,7 +679,6 @@ final class ProductProfileViewModelTests: XCTestCase {
             product: product, 
             productNavigationStateManager: .preview,
             productProfileViewModelFactory: .preview,
-            updateInfoStatusFlag: .init(.active),
             rootView: rootView,
             dismissAction: {}
         )
@@ -716,7 +715,6 @@ final class ProductProfileViewModelTests: XCTestCase {
                 product: card,
                 productNavigationStateManager: .preview,
                 productProfileViewModelFactory: .preview,
-                updateInfoStatusFlag: .init(.active),
                 rootView: "",
                 dismissAction: {}
             )

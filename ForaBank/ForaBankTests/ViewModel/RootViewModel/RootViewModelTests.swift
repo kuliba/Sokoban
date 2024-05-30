@@ -225,8 +225,7 @@ final class RootViewModelTests: XCTestCase {
                 userAccountNavigationStateManager: .preview,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(), 
-                paymentsTransfersFactory: .preview,
-                updateInfoStatusFlag: .init(.active)
+                paymentsTransfersFactory: .preview
             ),
             chatViewModel: .init(),
             informerViewModel: .init(model),

@@ -10,6 +10,7 @@ struct PaymentsTransfersFactory {
     let makeUtilitiesViewModel: MakeUtilitiesViewModel
     let makeProductProfileViewModel: MakeProductProfileViewModel
     let makeTemplatesListViewModel: MakeTemplatesListViewModel
+    let makeSections: MakePaymentsTransfersSections
 }
 
 extension PaymentsTransfersFactory {
@@ -35,6 +36,8 @@ extension PaymentsTransfersFactory {
     
     typealias DismissAction = () -> Void
     typealias MakeTemplatesListViewModel = (@escaping DismissAction) -> TemplatesListViewModel
+    
+    typealias MakePaymentsTransfersSections = () -> [PaymentsTransfersSectionViewModel]
 }
 
 extension PaymentsTransfersFactory {
@@ -44,7 +47,8 @@ extension PaymentsTransfersFactory {
         let productProfileViewModel = ProductProfileViewModel.make(
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
-            makeUtilitiesViewModel: { _,_ in },
+            makeUtilitiesViewModel: { _,_ in }, 
+            makeTemplatesListViewModel: { _ in .sampleComplete },
             paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
@@ -61,7 +65,8 @@ extension PaymentsTransfersFactory {
         return .init(
             makeUtilitiesViewModel: { _,_ in },
             makeProductProfileViewModel: productProfileViewModel,
-            makeTemplatesListViewModel: { _ in .sampleComplete }
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeSections: { Model.emptyMock.makeSections(flag: .init(.inactive)) }
         )
     }()
 }

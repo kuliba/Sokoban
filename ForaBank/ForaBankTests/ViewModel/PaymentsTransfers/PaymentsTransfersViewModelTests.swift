@@ -734,7 +734,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let productProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: .legacy,
-            makeUtilitiesViewModel: { _,_ in },
+            makeUtilitiesViewModel: { _,_ in }, 
+            makeTemplatesListViewModel: { _ in .sampleComplete },
             paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
@@ -751,7 +752,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 completion(.utilities)
             },
             makeProductProfileViewModel: productProfileViewModel,
-            makeTemplatesListViewModel: { _ in .sampleComplete }
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeSections: { model.makeSections(flag: .init(.inactive)) }
         )
         
         let sut = PaymentsTransfersViewModel(
@@ -761,7 +763,6 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
-            updateInfoStatusFlag: updateInfoStatusFlag,
             scheduler: .immediate
         )
         
