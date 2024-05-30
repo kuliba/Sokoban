@@ -274,10 +274,9 @@ class InfoProductViewModel: ObservableObject {
                             
                             list.append(.init(title: "Сумма первоначального размещения", subtitle: initialAmount))
                         }
-                        list.append(.init(title: "Дата открытия", subtitle: dateFormatter.string(from: data.dateOpen.moscowTime)))
+                        list.append(.init(title: "Дата открытия", subtitle: dateFormatter.string(from: data.dateOpen)))
                         if let dateEnd = data.dateEnd {
-                            let dateEndMoscow = dateFormatter.string(from: dateEnd)
-                            list.append(.init(title: "Дата закрытия", subtitle: dateEndMoscow))
+                            list.append(.init(title: "Дата закрытия", subtitle: dateFormatter.string(from: dateEnd)))
                         }
                         if let termDay = data.termDay {
                             list.append(.init(title: "Срок вклада", subtitle: termDay))
