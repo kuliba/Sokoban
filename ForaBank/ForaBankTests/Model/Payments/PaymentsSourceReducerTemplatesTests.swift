@@ -210,7 +210,7 @@ final class PaymentsSourceReducerTemplateTests: XCTestCase {
             parameterId: parameterId)
         
         // then
-        XCTAssertEqual(value, "100000000217")
+        XCTAssertEqual(value, BankID.foraBankID.rawValue)
     }
     
     func test_updateParameter_withGeneral_sfpMessageParameter_shouldReturnComment() throws {

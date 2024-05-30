@@ -89,10 +89,12 @@ class MainViewController: UIViewController {
     lazy var searchBar: NavigationBarUIView = UIView.fromNib()
     
     enum Section: Int, CaseIterable {
-        case products, pay, offer, currentsExchange, openProduct, atm
+        case updateInfo, products, pay, offer, currentsExchange, openProduct, atm
         
         func description() -> String {
             switch self {
+            case .updateInfo:
+                return ""
             case .products:
                 return "Мои продукты"
                 
@@ -750,6 +752,7 @@ extension MainViewController.Section {
     init(with mainSectionType: MainSectionType) {
         
         switch mainSectionType {
+        case .updateInfo: self = .updateInfo
         case .products: self = .products
         case .fastOperations: self = .pay
         case .promo: self = .offer
@@ -763,6 +766,7 @@ extension MainViewController.Section {
     var mainSectionType: MainSectionType {
         
         switch self {
+        case .updateInfo: return .updateInfo
         case .products: return .products
         case .pay: return .fastOperations
         case .offer: return .promo
