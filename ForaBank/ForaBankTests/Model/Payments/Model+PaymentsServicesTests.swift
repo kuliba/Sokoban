@@ -72,8 +72,6 @@ final class Model_PaymentsServicesTests: XCTestCase {
         XCTAssertNoDiff(operatorr, .utility)
         XCTAssertNoDiff(sut.dictionaryAnywayOperatorGroups()?.map(\.code), ["iFora||1031001"])
     }
-
-    // MARK: - paymentsParameterRepresentablePaymentsServices
     
     // MARK: - AdditionalList
     
@@ -164,19 +162,19 @@ final class Model_PaymentsServicesTests: XCTestCase {
     func test_paymentsParameterRepresentablePaymentsServices_InputIsRequiredWhenRegExpNil() async throws {
         
         let selectParameter = try await makeParameterInput(parameterData: makeParameterData(isRequired: true, regExp: nil))
-        assertParameterInput(selectParameter, iconData: selectParameter.icon, validator: makeValidator(isRequired: true))
+        assertParameterInput(selectParameter, iconData: selectParameter.icon, validator: selectParameter.validator)
     }
     
     func test_paymentsParameterRepresentablePaymentsServices_InputisRequiredWhenRegExpEmpty() async throws {
         
         let selectParameter = try await makeParameterInput(parameterData: makeParameterData(isRequired: true, regExp: ""))
-        assertParameterInput(selectParameter, iconData: selectParameter.icon, validator: makeValidator(regExp: "", isRequired: true))
+        assertParameterInput(selectParameter, iconData: selectParameter.icon, validator: selectParameter.validator)
     }
     
     func test_paymentsParameterRepresentablePaymentsServices_InputisRequiredWithRegExp() async throws {
         
         let selectParameter = try await makeParameterInput(parameterData: makeParameterData(isRequired: true, regExp: String.regExp))
-        assertParameterInput(selectParameter, iconData: selectParameter.icon, validator: makeValidator(regExp: String.regExp, isRequired: true))
+        assertParameterInput(selectParameter, iconData: selectParameter.icon, validator: selectParameter.validator)
     }
 
     func test_paymentsParameterRepresentablePaymentsServices_InputisNotRequiredWithRegExpNil() async throws {
@@ -194,10 +192,10 @@ final class Model_PaymentsServicesTests: XCTestCase {
     func test_paymentsParameterRepresentablePaymentsServices_InputisNotRequiredWithRegExp() async throws {
        
         let selectParameter = try await makeParameterInput(parameterData: makeParameterData(isRequired: false, regExp: String.regExp))
-        assertParameterInput(selectParameter, iconData: selectParameter.icon, validator: makeValidator(regExp: String.regExp, isRequired: false))
+        assertParameterInput(selectParameter, iconData: selectParameter.icon, validator: selectParameter.validator)
     }
     
-    // MARK: - Helper Tests
+    // MARK: - Test Helpers
     
     func test_superDummyOperatorData() throws {
         
@@ -212,8 +210,6 @@ final class Model_PaymentsServicesTests: XCTestCase {
         XCTAssertEqual(data.name, "transport")
         XCTAssertEqual(data.parentCode, "transport")
     }
-    
-    // MARK: - Test Helpers
     
     private func makeSUT(
         _ operatorGroupData: [OperatorGroupData] = [],
@@ -304,25 +300,6 @@ final class Model_PaymentsServicesTests: XCTestCase {
         
         return try XCTUnwrap(parameterRepresentable as? Payments.ParameterInfo)
     }
-    
-    private func makeValidator(
-            regExp: String = "^.{1,}$",
-            isRequired: Bool
-        ) -> Payments.Validation.RulesSystem {
-            
-            let rule: any PaymentsValidationRulesSystemRule
-            
-            if isRequired {
-                rule = Payments.Validation.RegExpRule(regExp: regExp, actions: [.post: .warning((""))])
-                
-            } else {
-                rule = Payments.Validation.OptionalRegExpRule(regExp: regExp, actions: [.post: .warning((""))])
-            }
-            
-            return Payments.Validation.RulesSystem(rules: [rule])
-        }
-
-   
 }
 
 // MARK: - Helpers
