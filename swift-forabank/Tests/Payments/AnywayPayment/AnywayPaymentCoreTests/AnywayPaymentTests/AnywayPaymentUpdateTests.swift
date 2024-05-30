@@ -299,6 +299,28 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         }
     }
     
+    func test_update_withSumSTrsAndNeedSumFalse() {
+        
+        let payment = makeAnywayPayment()
+        let update = makeAnywayPaymentUpdate(
+            details: .init(
+                amounts: makeDetailsAmounts(amount: 4273.87),
+                control: makeDetailsControl(needSum: false),
+                info: makeDetailsInfo()
+            ),
+            fields: [
+                makeField(name: "SumSTrs", value: "4273.87", title: "Сумма")
+            ],
+            parameters: []
+        )
+        
+        assert(payment, on: update) {
+            
+            let field = makeAnywayPaymentField("SumSTrs", value: "4273.87", title: "Сумма")
+            $0.elements = [.field(field)]
+        }
+    }
+
     // MARK: - OTP
     
     func test_update_shouldNotAddOTPFieldOnNeedOTPFalse() {
@@ -889,6 +911,80 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             received, expected,
             "\nExpected \(expected), but got \(received) instead.",
             file: file, line: line
+        )
+    }
+    
+    private func makeDetailsAmounts(
+        amount: Decimal? = nil,
+        creditAmount: Decimal? = nil,
+        currencyAmount: String? = nil,
+        currencyPayee: String? = nil,
+        currencyPayer: String? = nil,
+        currencyRate: Decimal? = nil,
+        debitAmount: Decimal? = nil,
+        fee: Decimal? = nil
+    ) -> AnywayPaymentUpdate.Details.Amounts {
+        
+        return .init(
+            amount: amount,
+            creditAmount: creditAmount,
+            currencyAmount: currencyAmount,
+            currencyPayee: currencyPayee,
+            currencyPayer: currencyPayer,
+            currencyRate: currencyRate,
+            debitAmount: debitAmount,
+            fee: fee
+        )
+    }
+    
+    private func makeDetailsControl(
+        isFinalStep: Bool = false,
+        isFraudSuspected: Bool = false,
+        isMultiSum: Bool = false,
+        needMake: Bool = false,
+        needOTP: Bool = false,
+        needSum: Bool = false
+    ) -> AnywayPaymentUpdate.Details.Control {
+        
+        return .init(
+            isFinalStep: isFinalStep,
+            isFraudSuspected: isFraudSuspected,
+            isMultiSum: isMultiSum,
+            needMake: needMake,
+            needOTP: needOTP,
+            needSum: needSum
+        )
+    }
+    
+    private func makeDetailsInfo(
+        documentStatus: AnywayPaymentUpdate.Details.Info.DocumentStatus? = nil,
+        infoMessage: String? = nil,
+        payeeName: String? = nil,
+        paymentOperationDetailID: Int? = nil,
+        printFormType: String? = nil
+    ) -> AnywayPaymentUpdate.Details.Info {
+        
+        return .init(
+            documentStatus: documentStatus,
+            infoMessage: infoMessage,
+            payeeName: payeeName,
+            paymentOperationDetailID: paymentOperationDetailID,
+            printFormType: printFormType
+        )
+    }
+    
+    private func makeField(
+        name: String,
+        value: String,
+        title: String,
+        image: AnywayPaymentUpdate.Image? = nil
+    ) -> AnywayPaymentUpdate.Field {
+        
+        return .init(
+            name: name,
+            value: value,
+            title: title,
+            image: image
         )
     }
 }
