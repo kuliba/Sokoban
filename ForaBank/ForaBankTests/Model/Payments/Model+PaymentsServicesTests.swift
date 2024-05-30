@@ -164,7 +164,7 @@ final class Model_PaymentsServicesTests: XCTestCase {
     func test_paymentsParameterRepresentablePaymentsServices_InputIsRequiredWhenRegExpNil() async throws {
         
         let selectParameter = try await makeParameterInput(parameterData: makeParameterData(isRequired: true, regExp: nil))
-        assertParameterInput(selectParameter, iconData: selectParameter.icon, validator: makeValidator(regExp: nil, isRequired: true))
+        assertParameterInput(selectParameter, iconData: selectParameter.icon, validator: makeValidator(isRequired: true))
     }
     
     func test_paymentsParameterRepresentablePaymentsServices_InputisRequiredWhenRegExpEmpty() async throws {
@@ -305,20 +305,23 @@ final class Model_PaymentsServicesTests: XCTestCase {
         return try XCTUnwrap(parameterRepresentable as? Payments.ParameterInfo)
     }
     
-    private func makeValidator(regExp: String?, isRequired: Bool) -> Payments.Validation.RulesSystem {
-        
-        let regExpStr = regExp ?? "^.{1,}$"
-        let rule: any PaymentsValidationRulesSystemRule
-        
-        if isRequired {
-            rule = Payments.Validation.RegExpRule(regExp: regExpStr, actions: [.post: .warning((""))])
+    private func makeValidator(
+            regExp: String = "^.{1,}$",
+            isRequired: Bool
+        ) -> Payments.Validation.RulesSystem {
             
-        } else {
-            rule = Payments.Validation.OptionalRegExpRule(regExp: regExpStr, actions: [.post: .warning((""))])
+            let rule: any PaymentsValidationRulesSystemRule
+            
+            if isRequired {
+                rule = Payments.Validation.RegExpRule(regExp: regExp, actions: [.post: .warning((""))])
+                
+            } else {
+                rule = Payments.Validation.OptionalRegExpRule(regExp: regExp, actions: [.post: .warning((""))])
+            }
+            
+            return Payments.Validation.RulesSystem(rules: [rule])
         }
-        
-        return Payments.Validation.RulesSystem(rules: [rule])
-    }
+
    
 }
 
@@ -546,15 +549,15 @@ private extension QRCode {
         
         switch qrType {
         case .persacc:
-            rawData["persacc"] = .persacc
+            rawData["persacc"] = persacc
             qrTypeStr = "persacc=\(persacc)"
             
         case .phone:
-            rawData["phone"] = .phone
+            rawData["phone"] = phone
             qrTypeStr = "phone=\(phone)"
             
         case .numabo:
-            rawData["numabo"] = .numabo
+            rawData["numabo"] = numabo
             qrTypeStr = "numabo=\(numabo)"
         }
         
