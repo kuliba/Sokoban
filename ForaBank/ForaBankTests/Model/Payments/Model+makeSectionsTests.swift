@@ -14,97 +14,58 @@ final class Model_makeSectionsTests: XCTestCase {
         
         assert(
             flag: .active,
-            productType: .card,
-            isUpdated: false,
-            countBeforeUpdate: 3,
-            firstTypeBeforeUpdate: .latestPayments,
-            countAfterUpdate: 4,
-            firstTypeAfterUpdate: .updateFailureInfo)
+            productTypesUpdateFailure: [.card],
+            before: (3, .latestPayments),
+            after:  (4, .updateFailureInfo))
     }
 
-    func test_updateFailureInfoSection_shouldNotAppearOnCardsUpdateSuccess_flagActive() {
+    func test_updateFailureInfoSection_shouldNotAppearOnAllProductsUpdateSuccess_flagActive() {
         
         assert(
             flag: .active,
-            productType: .card,
-            isUpdated: true,
-            countBeforeUpdate: 3,
-            firstTypeBeforeUpdate: .latestPayments,
-            countAfterUpdate: 3,
-            firstTypeAfterUpdate: .latestPayments)
+            productTypesUpdateFailure: [],
+            before: (3, .latestPayments),
+            after:  (3, .latestPayments))
     }
     
-    func test_updateFailureInfoSection_shouldNotAppearFirstOnCardsUpdateFailure_flagInActive() {
+    func test_updateFailureInfoSection_shouldNotAppearFirstOnCardsUpdateFailure_flagInactive() {
         
         assert(
             flag: .inactive,
-            productType: .card,
-            isUpdated: false,
-            countBeforeUpdate: 3,
-            firstTypeBeforeUpdate: .latestPayments,
-            countAfterUpdate: 3,
-            firstTypeAfterUpdate: .latestPayments)
+            productTypesUpdateFailure: [.card],
+            before: (3, .latestPayments),
+            after:  (3, .latestPayments))
     }
 
-    func test_updateFailureInfoSection_shouldNotAppearOnCardsUpdateSuccess_flagInActive() {
+    func test_updateFailureInfoSection_shouldNotAppearOnAllProductsUpdateSuccess_flagInactive() {
         
         assert(
             flag: .inactive,
-            productType: .card,
-            isUpdated: true,
-            countBeforeUpdate: 3,
-            firstTypeBeforeUpdate: .latestPayments,
-            countAfterUpdate: 3,
-            firstTypeAfterUpdate: .latestPayments)
+            productTypesUpdateFailure: [],
+            before: (3, .latestPayments),
+            after:  (3, .latestPayments))
     }
     
     func test_updateFailureInfoSection_shouldBecomeFirstIfLeastOneTypeUpdateFailure_flagActive() {
         
         assert(
             flag: .active,
-            productTypesUpdateFailure: [ProductType.card],
-            countBeforeUpdate: 3,
-            firstTypeBeforeUpdate: .latestPayments,
-            countAfterUpdate: 4,
-            firstTypeAfterUpdate: .updateFailureInfo)
+            productTypesUpdateFailure: [.card],
+            before: (3, .latestPayments),
+            after:  (4, .updateFailureInfo))
     }
 
     func test_updateFailureInfoSection_shouldNotAppearFirstIfLeastOneTypeUpdateFailure_flagInactive() {
         
         assert(
             flag: .inactive,
-            productTypesUpdateFailure: [ProductType.card],
-            countBeforeUpdate: 3,
-            firstTypeBeforeUpdate: .latestPayments,
-            countAfterUpdate: 3,
-            firstTypeAfterUpdate: .latestPayments)
+            productTypesUpdateFailure: [.card],
+            before: (3, .latestPayments),
+            after:  (3, .latestPayments))
     }
 
     // MARK: - Helpers
 
-    private func assert(
-        model: Model = .mockWithEmptyExcept(),
-        flag: UpdateInfoStatusFeatureFlag.RawValue = .inactive,
-        productType: ProductType,
-        isUpdated: Bool,
-        countBeforeUpdate: Int,
-        firstTypeBeforeUpdate: PaymentsTransfersSectionType,
-        countAfterUpdate: Int,
-        firstTypeAfterUpdate: PaymentsTransfersSectionType,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        
-        let sectionBeforeUpdate = model.makeSections(flag: .init(flag))
-        
-        assert(sections: sectionBeforeUpdate, count: countBeforeUpdate, firstType: firstTypeBeforeUpdate)
-        
-        model.updateInfo.value.setValue(isUpdated, for: productType)
-        let sectionAfterUpdate = model.makeSections(flag: .init(flag))
-
-        assert(sections: sectionAfterUpdate, count: countAfterUpdate, firstType: firstTypeAfterUpdate)
-    }
-        
     private func assert(
         sections: [PaymentsTransfersSectionViewModel],
         count: Int,
@@ -112,7 +73,6 @@ final class Model_makeSectionsTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        
         XCTAssertNoDiff(
             sections.count,
             count,
@@ -132,23 +92,20 @@ final class Model_makeSectionsTests: XCTestCase {
         model: Model = .mockWithEmptyExcept(),
         flag: UpdateInfoStatusFeatureFlag.RawValue = .inactive,
         productTypesUpdateFailure: [ProductType],
-        countBeforeUpdate: Int,
-        firstTypeBeforeUpdate: PaymentsTransfersSectionType,
-        countAfterUpdate: Int,
-        firstTypeAfterUpdate: PaymentsTransfersSectionType,
+        before: (Int, PaymentsTransfersSectionType),
+        after: (Int, PaymentsTransfersSectionType),
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        
         let sectionBeforeUpdate = model.makeSections(flag: .init(flag))
         
-        assert(sections: sectionBeforeUpdate, count: countBeforeUpdate, firstType: firstTypeBeforeUpdate)
+        assert(sections: sectionBeforeUpdate, count: before.0, firstType: before.1)
 
         updatedAllTypeSuccessExcept(types: productTypesUpdateFailure, model)
 
         let sectionAfterUpdate = model.makeSections(flag: .init(flag))
 
-        assert(sections: sectionAfterUpdate, count: countAfterUpdate, firstType: firstTypeAfterUpdate)
+        assert(sections: sectionAfterUpdate, count: after.0, firstType: after.1)
     }
     
     private func updatedAllTypeSuccessExcept(
