@@ -395,7 +395,14 @@ extension ProductProfileViewModel {
                         message: $0.message,
                         primary: $0.primaryButton,
                         secondary: $0.secondaryButton)
-                })
+                },
+                makeInformerDataUpdateFailure: {
+                    if updateInfoStatusFlag.isActive {
+                        return .updateFailureInfo
+                    }
+                    return nil
+                }
+            )
             
             return .init(
                 model,

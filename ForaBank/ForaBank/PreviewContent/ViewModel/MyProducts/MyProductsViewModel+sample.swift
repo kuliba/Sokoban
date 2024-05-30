@@ -34,7 +34,8 @@ extension MyProductsViewModel {
             updateInfoStatusFlag: .init(.active)
         ),
         refreshingIndicator: .init(isActive: true),
-        openOrderSticker: {}
+        openOrderSticker: {},
+        makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { nil })
     )
     
     static let sampleOpenProduct = MyProductsViewModel(
@@ -63,6 +64,7 @@ extension MyProductsViewModel {
         ),
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false],
-        openOrderSticker: {}
+        openOrderSticker: {},
+        makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { nil })
     )
 }
