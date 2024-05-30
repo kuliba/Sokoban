@@ -192,6 +192,7 @@ private extension AnywayPaymentUpdate.Details.Control {
     static let preview: Self = .init(
         isFinalStep: false,
         isFraudSuspected: false,
+        isMultiSum: false,
         needMake: false,
         needOTP: false,
         needSum: false

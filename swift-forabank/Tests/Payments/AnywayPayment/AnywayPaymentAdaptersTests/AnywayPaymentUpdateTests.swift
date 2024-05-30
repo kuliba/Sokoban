@@ -18,45 +18,39 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         try assert(.validData, mapsTo: .init(
             details: .init(
                 amounts: makeDetailsAmounts(),
-                control: makeDetailsControl(
-                    isFinalStep: false,
-                    isFraudSuspected: false,
-                    needMake: false,
-                    needOTP: false,
-                    needSum: false
-                ),
+                control: makeDetailsControl(),
                 info: makeDetailsInfo(
                     paymentOperationDetailID: 54321
                 )
             ),
             fields: [
                 makeField(
-                    fieldName: "3",
-                    fieldValue: "Москва г., Донская ул., д.112 корп.211, кв.111",
-                    fieldTitle: "Адрес",
+                    name: "3",
+                    value: "Москва г., Донская ул., д.112 корп.211, кв.111",
+                    title: "Адрес",
                     image: .md5Hash("87f2fad4a6997e1d3ae634c551c50f14")
                 ),
                 makeField(
-                    fieldName: "n1",
-                    fieldValue: "v1",
-                    fieldTitle: "t1"
+                    name: "n1",
+                    value: "v1",
+                    title: "t1"
                 ),
                 makeField(
-                    fieldName: "n2",
-                    fieldValue: "v2",
-                    fieldTitle: "t2",
+                    name: "n2",
+                    value: "v2",
+                    title: "t2",
                     image: .md5Hash("md5hash2")
                 ),
                 makeField(
-                    fieldName: "n3",
-                    fieldValue: "v3",
-                    fieldTitle: "t3",
+                    name: "n3",
+                    value: "v3",
+                    title: "t3",
                     image: .svg("svgImage3")
                 ),
                 makeField(
-                    fieldName: "n4",
-                    fieldValue: "v4",
-                    fieldTitle: "t4",
+                    name: "n4",
+                    value: "v4",
+                    title: "t4",
                     image: .withFallback(md5Hash: "md5hash4", svg: "svgImage4")
                 ),
             ],
@@ -116,13 +110,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         try assert(.e1_sample_step1, mapsTo: .init(
             details: .init(
                 amounts: makeDetailsAmounts(),
-                control: makeDetailsControl(
-                    isFinalStep: false,
-                    isFraudSuspected: false,
-                    needMake: false,
-                    needOTP: false,
-                    needSum: false
-                ),
+                control: makeDetailsControl(),
                 info: makeDetailsInfo()
             ),
             fields: [],
@@ -149,13 +137,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         try assert(.valid_sber01, mapsTo: .init(
             details: .init(
                 amounts: makeDetailsAmounts(),
-                control: makeDetailsControl(
-                    isFinalStep: false,
-                    isFraudSuspected: false,
-                    needMake: false,
-                    needOTP: false,
-                    needSum: false
-                ),
+                control: makeDetailsControl(),
                 info: makeDetailsInfo()
             ),
             fields: [],
@@ -182,13 +164,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         try assert(.valid_sber02, mapsTo: .init(
             details: .init(
                 amounts: makeDetailsAmounts(),
-                control: makeDetailsControl(
-                    isFinalStep: false,
-                    isFraudSuspected: false,
-                    needMake: false,
-                    needOTP: false,
-                    needSum: false
-                ),
+                control: makeDetailsControl(),
                 info: makeDetailsInfo()
             ),
             fields: [],
@@ -248,9 +224,9 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             ),
             fields: [
                 makeField(
-                    fieldName: "advisedAmount",
-                    fieldValue: "5888.1",
-                    fieldTitle: "Рекомендованная сумма"
+                    name: "advisedAmount",
+                    value: "5888.1",
+                    title: "Рекомендованная сумма"
                 )
             ],
             parameters: [
@@ -390,9 +366,9 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             ),
             fields: [
                 makeField(
-                    fieldName: "SumSTrs",
-                    fieldValue: "5888.1",
-                    fieldTitle: "Сумма"
+                    name: "SumSTrs",
+                    value: "5888.1",
+                    title: "Сумма"
                 )
             ],
             parameters: []
@@ -420,115 +396,130 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             ),
             fields: [
                 makeField(
-                    fieldName: "1",
-                    fieldValue: "100611401082",
-                    fieldTitle: "Лицевой счет",
+                    name: "1",
+                    value: "100611401082",
+                    title: "Лицевой счет",
                     image: .svg(.svgSample1)
                 ),
                 makeField(
-                    fieldName: "2",
-                    fieldValue: "БЕЗ СТРАХОВОГО ВЗНОСА",
-                    fieldTitle: "Признак платежа"
+                    name: "2",
+                    value: "БЕЗ СТРАХОВОГО ВЗНОСА",
+                    title: "Признак платежа"
                 ),
                 makeField(
-                    fieldName: "4",
-                    fieldValue: "МОСКВА,АМУРСКАЯ УЛ.,2А К2,108",
-                    fieldTitle: "Адрес",
+                    name: "4",
+                    value: "МОСКВА,АМУРСКАЯ УЛ.,2А К2,108",
+                    title: "Адрес",
                     image: .svg(.svgSample2)
                 ),
                 makeField(
-                    fieldName: "5",
-                    fieldValue: "022024",
-                    fieldTitle: "Период(ММГГГГ)"
+                    name: "5",
+                    value: "022024",
+                    title: "Период(ММГГГГ)"
                 ),
                 makeField(
-                    fieldName: "8",
-                    fieldValue: "206.750",
-                    fieldTitle: "ПРЕД. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504"
+                    name: "8",
+                    value: "206.750",
+                    title: "ПРЕД. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504"
                 ),
                 makeField(
-                    fieldName: "9",
-                    fieldValue: " ",
-                    fieldTitle: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504"
+                    name: "9",
+                    value: " ",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504"
                 ),
                 makeField(
-                    fieldName: "12",
-                    fieldValue: "366.260",
-                    fieldTitle: "ПРЕД. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504"
+                    name: "12",
+                    value: "366.260",
+                    title: "ПРЕД. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504"
                 ),
                 makeField(
-                    fieldName: "13",
-                    fieldValue: " ",
-                    fieldTitle: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504"
+                    name: "13",
+                    value: " ",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504"
                 ),
                 makeField(
-                    fieldName: "16",
-                    fieldValue: "259.990",
-                    fieldTitle: "ПРЕД. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504"
+                    name: "16",
+                    value: "259.990",
+                    title: "ПРЕД. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504"
                 ),
                 makeField(
-                    fieldName: "17",
-                    fieldValue: " ",
-                    fieldTitle: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504"
+                    name: "17",
+                    value: " ",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504"
                 ),
                 makeField(
-                    fieldName: "20",
-                    fieldValue: "27.495",
-                    fieldTitle: "ПРЕД. ПОКАЗАНИЯ ХВС №1012018234307"
+                    name: "20",
+                    value: "27.495",
+                    title: "ПРЕД. ПОКАЗАНИЯ ХВС №1012018234307"
                 ),
                 makeField(
-                    fieldName: "21",
-                    fieldValue: " ",
-                    fieldTitle: "ТЕК. ПОКАЗАНИЯ ХВС №1012018234307"
+                    name: "21",
+                    value: " ",
+                    title: "ТЕК. ПОКАЗАНИЯ ХВС №1012018234307"
                 ),
                 makeField(
-                    fieldName: "24",
-                    fieldValue: "39.647",
-                    fieldTitle: "ПРЕД. ПОКАЗАНИЯ ХВ_ГВС №1012018015708"
+                    name: "24",
+                    value: "39.647",
+                    title: "ПРЕД. ПОКАЗАНИЯ ХВ_ГВС №1012018015708"
                 ),
                 makeField(
-                    fieldName: "25",
-                    fieldValue: " ",
-                    fieldTitle: "ТЕК. ПОКАЗАНИЯ ХВ_ГВС №1012018015708"
+                    name: "25",
+                    value: " ",
+                    title: "ТЕК. ПОКАЗАНИЯ ХВ_ГВС №1012018015708"
                 ),
                 makeField(
-                    fieldName: "28",
-                    fieldValue: "2.609",
-                    fieldTitle: "ПРЕД. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
+                    name: "28",
+                    value: "2.609",
+                    title: "ПРЕД. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
                     image: .svg(.svgSample3)
                 ),
                 makeField(
-                    fieldName: "29",
-                    fieldValue: " ",
-                    fieldTitle: "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
+                    name: "29",
+                    value: " ",
+                    title: "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
                     image: .svg(.svgSample4)
                 ),
                 makeField(
-                    fieldName: "65",
-                    fieldValue: "5888.10",
-                    fieldTitle: "УСЛУГИ_ЖКУ"
+                    name: "65",
+                    value: "5888.10",
+                    title: "УСЛУГИ_ЖКУ"
                 ),
                 makeField(
-                    fieldName: "142",
-                    fieldValue: "0.00",
-                    fieldTitle: "Сумма страховки"
+                    name: "142",
+                    value: "0.00",
+                    title: "Сумма страховки"
                 ),
                 makeField(
-                    fieldName: "143",
-                    fieldValue: "0.00",
-                    fieldTitle: "Сумма пени",
+                    name: "143",
+                    value: "0.00",
+                    title: "Сумма пени",
                     image: .svg(.svgSample5)
                 ),
                 makeField(
-                    fieldName: "147",
-                    fieldValue: "04",
-                    fieldTitle: "Код филиала"
+                    name: "147",
+                    value: "04",
+                    title: "Код филиала"
                 ),
                 makeField(
-                    fieldName: "advisedAmount",
-                    fieldValue: "5888.1",
-                    fieldTitle: "Рекомендованная сумма"
+                    name: "advisedAmount",
+                    value: "5888.1",
+                    title: "Рекомендованная сумма"
                 ),
+            ],
+            parameters: []
+        ))
+    }
+    
+    func test_init_withSumSTrs() throws {
+        
+        try assert(.withSumSTrs, mapsTo: .init(
+            details: .init(
+                amounts: makeDetailsAmounts(amount: 4273.87),
+                control: makeDetailsControl(needSum: true),
+                info: makeDetailsInfo()
+            ),
+            fields: [
+                makeField(name: "SumSTrs", value: "4273.87", title: "Сумма")
             ],
             parameters: []
         ))
@@ -547,7 +538,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         fee: Decimal? = nil
     ) -> AnywayPaymentUpdate.Details.Amounts {
         
-        .init(
+        return .init(
             amount: amount,
             creditAmount: creditAmount,
             currencyAmount: currencyAmount,
@@ -560,16 +551,18 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     }
     
     private func makeDetailsControl(
-        isFinalStep: Bool,
-        isFraudSuspected: Bool,
-        needMake: Bool,
-        needOTP: Bool,
-        needSum: Bool
+        isFinalStep: Bool = false,
+        isFraudSuspected: Bool = false,
+        isMultiSum: Bool = false,
+        needMake: Bool = false,
+        needOTP: Bool = false,
+        needSum: Bool = false
     ) -> AnywayPaymentUpdate.Details.Control {
         
-        .init(
+        return .init(
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,
+            isMultiSum: isMultiSum,
             needMake: needMake,
             needOTP: needOTP,
             needSum: needSum
@@ -584,7 +577,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         printFormType: String? = nil
     ) -> AnywayPaymentUpdate.Details.Info {
         
-        .init(
+        return .init(
             documentStatus: documentStatus,
             infoMessage: infoMessage,
             payeeName: payeeName,
@@ -594,16 +587,16 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     }
     
     private func makeField(
-        fieldName: String,
-        fieldValue: String,
-        fieldTitle: String,
+        name: String,
+        value: String,
+        title: String,
         image: AnywayPaymentUpdate.Image? = nil
     ) -> AnywayPaymentUpdate.Field {
         
         return .init(
-            name: fieldName,
-            value: fieldValue,
-            title: fieldTitle,
+            name: name,
+            value: value,
+            title: title,
             image: image
         )
     }
@@ -615,7 +608,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         id: String
     ) -> AnywayPaymentUpdate.Parameter.Field {
         
-        .init(
+        return .init(
             content: content,
             dataDictionary: dataDictionary,
             dataDictionaryРarent: dataDictionaryРarent,
@@ -628,10 +621,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         mask: String? = nil
     ) -> AnywayPaymentUpdate.Parameter.Masking {
         
-        .init(
-            inputMask: inputMask,
-            mask: mask
-        )
+        .init(inputMask: inputMask, mask: mask)
     }
     
     private func makeParameterValidation(
@@ -642,7 +632,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         regExp: String = "^.{1,250}$"
     ) -> AnywayPaymentUpdate.Parameter.Validation {
         
-        .init(
+        return .init(
             isRequired: isRequired,
             maxLength: maxLength,
             minLength: minLength,
@@ -666,7 +656,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType
     ) -> AnywayPaymentUpdate.Parameter.UIAttributes {
         
-        .init(
+        return .init(
             dataType: dataType,
             group: group,
             inputFieldType: inputFieldType,
@@ -1539,5 +1529,24 @@ private extension String {
 <path d="M16.2511 17.6151C17.0043 17.6151 17.6149 17.0045 17.6149 16.2513C17.6149 15.498 17.0043 14.8875 16.2511 14.8875C15.4979 14.8875 14.8873 15.498 14.8873 16.2513C14.8873 17.0045 15.4979 17.6151 16.2511 17.6151Z" stroke="#999999" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 
+"""
+
+    static let withSumSTrs = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "amount": 4273.87,
+        "needSum": true,
+        "additionalList": [
+            {
+                "fieldName": "SumSTrs",
+                "fieldValue": "4273.87",
+                "fieldTitle": "Сумма"
+            }
+        ],
+        "parameterListForNextStep": []
+    }
+}
 """
 }

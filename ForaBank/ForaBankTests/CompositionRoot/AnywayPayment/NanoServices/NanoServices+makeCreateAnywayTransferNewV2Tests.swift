@@ -97,12 +97,7 @@ final class NanoServices_makeCreateAnywayTransferNewV2Tests: XCTestCase {
     func test_shouldDeliverResponseOnValidData() {
         
         expect(
-            toDeliver: .success(.init(
-                additional: [],
-                finalStep: false,
-                needMake: false,
-                needOTP: false,
-                needSum: false,
+            toDeliver: .success(makeResponse(
                 parametersForNextStep: [
                     .init(
                         dataType: .string,
@@ -199,6 +194,55 @@ final class NanoServices_makeCreateAnywayTransferNewV2Tests: XCTestCase {
         return try XCTUnwrap(httpClient.requests.first, file: file, line: line)
     }
     
+    private func makeResponse(
+        additional: [Response.Additional] = [],
+        amount: Decimal? = nil,
+        creditAmount: Decimal? = nil,
+        currencyAmount: String? = nil,
+        currencyPayee: String? = nil,
+        currencyPayer: String? = nil,
+        currencyRate: Decimal? = nil,
+        debitAmount: Decimal? = nil,
+        documentStatus: Response.DocumentStatus? = nil,
+        fee: Decimal? = nil,
+        finalStep: Bool = false,
+        infoMessage: String? = nil,
+        needMake: Bool = false,
+        needOTP: Bool = false,
+        needSum: Bool = false,
+        parametersForNextStep: [Response.Parameter] = [],
+        paymentOperationDetailID: Int? = nil,
+        payeeName: String? = nil,
+        printFormType: String? = nil,
+        scenario: Response.AntiFraudScenario? = nil,
+        options: [Response.Option] = []
+    ) -> Response {
+        
+        return .init(
+            additional: additional,
+            amount: amount,
+            creditAmount: creditAmount,
+            currencyAmount: currencyAmount,
+            currencyPayee: currencyPayee,
+            currencyPayer: currencyPayer,
+            currencyRate: currencyRate,
+            debitAmount: debitAmount,
+            documentStatus: documentStatus,
+            fee: fee,
+            finalStep: finalStep,
+            infoMessage: infoMessage,
+            needMake: needMake,
+            needOTP: needOTP,
+            needSum: needSum,
+            parametersForNextStep: parametersForNextStep,
+            paymentOperationDetailID: paymentOperationDetailID,
+            payeeName: payeeName,
+            printFormType: printFormType,
+            scenario: scenario,
+            options: options
+        )
+    }
+
     private func expect(
         with payload: Payload = makePayload(),
         toDeliver expectedResult: Result,

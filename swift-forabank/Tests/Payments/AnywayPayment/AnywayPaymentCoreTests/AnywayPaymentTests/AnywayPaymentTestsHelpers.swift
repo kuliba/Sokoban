@@ -24,7 +24,7 @@ func assertOTPisLast(
     )
 }
 
-func hasAmountField(
+func hasAmountWidget(
     _ payment: AnywayPayment
 ) -> Bool {
     
@@ -155,7 +155,7 @@ func makeAnywayPaymentWithAmount(
         productID: productID
     ))
     XCTAssertFalse(currency.isEmpty, "Expected non-empty currency.", file: file, line: line)
-    XCTAssert(hasAmountField(payment), "Expected amount field.", file: file, line: line)
+    XCTAssert(hasAmountWidget(payment), "Expected amount field.", file: file, line: line)
     return payment
 }
 
@@ -165,7 +165,7 @@ func makeAnywayPaymentWithoutAmount(
 ) -> AnywayPayment {
     
     let payment = makeAnywayPayment()
-    XCTAssertFalse(hasAmountField(payment), "Expected no amount field.", file: file, line: line)
+    XCTAssertFalse(hasAmountWidget(payment), "Expected no amount field.", file: file, line: line)
     return payment
 }
 
@@ -468,7 +468,8 @@ func makeAnywayPaymentUpdate(
     infoMessage: String? = nil,
     isFinalStep: Bool = false,
     needOTP: Bool = false,
-    needSum: Bool = false
+    needSum: Bool = false,
+    isMultiSum: Bool = false
 ) -> AnywayPaymentUpdate {
     
     makeAnywayPaymentUpdate(
@@ -476,6 +477,7 @@ func makeAnywayPaymentUpdate(
             control: makeAnywayPaymentUpdateDetailsControl(
                 isFinalStep: isFinalStep,
                 isFraudSuspected: isFraudSuspected,
+                isMultiSum: isMultiSum,
                 needOTP: needOTP,
                 needSum: needSum
             ),
@@ -539,14 +541,16 @@ private func makeAnywayPaymentUpdateDetailsAmounts(
 private func makeAnywayPaymentUpdateDetailsControl(
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
+    isMultiSum: Bool = false,
     needMake: Bool = false,
     needOTP: Bool = false,
     needSum: Bool = false
 ) -> AnywayPaymentUpdate.Details.Control {
     
-    .init(
+    return .init(
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected,
+        isMultiSum: isMultiSum,
         needMake: needMake,
         needOTP: needOTP,
         needSum: needSum

@@ -26,7 +26,7 @@ where Item: Identifiable & Equatable,
                 }
             }
             .onAppear { scrollToLast(proxy) }
-            .onChange(of: items) { scrollToLast(proxy, items: $0) }
+            .onChange(of: items.map(\.id)) { scrollToLast(proxy, iDs: $0) }
         }
     }
     
@@ -44,13 +44,13 @@ where Item: Identifiable & Equatable,
     
     private func scrollToLast(
         _ proxy: ScrollViewProxy,
-        items: [Item]
+        iDs: [Item.ID]
     ) {
-        if let lastItem = items.last {
+        if let last = iDs.last {
             
             withAnimation {
                 
-                proxy.scrollTo(lastItem.id, anchor: .bottom)
+                proxy.scrollTo(last, anchor: .bottom)
             }
         }
     }

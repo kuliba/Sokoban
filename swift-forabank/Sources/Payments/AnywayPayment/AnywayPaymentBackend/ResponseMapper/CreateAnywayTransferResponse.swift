@@ -32,6 +32,7 @@ extension ResponseMapper {
         public let payeeName: String?
         public let printFormType: String?
         public let scenario: AntiFraudScenario?
+        public let options: [Option]
         
         public init(
             additional: [Additional],
@@ -53,7 +54,8 @@ extension ResponseMapper {
             paymentOperationDetailID: Int? = nil,
             payeeName: String? = nil,
             printFormType: String? = nil,
-            scenario: AntiFraudScenario? = nil
+            scenario: AntiFraudScenario? = nil,
+            options: [Option]
         ) {
             self.additional = additional
             self.amount = amount
@@ -75,6 +77,7 @@ extension ResponseMapper {
             self.payeeName = payeeName
             self.printFormType = printFormType
             self.scenario = scenario
+            self.options = options
         }
     }
 }
@@ -118,6 +121,11 @@ extension ResponseMapper.CreateAnywayTransferResponse {
     public enum DocumentStatus: Equatable {
         
         case complete, inProgress, rejected
+    }
+    
+    public enum Option: Equatable {
+        
+        case multiSum
     }
     
     public struct Parameter: Equatable {

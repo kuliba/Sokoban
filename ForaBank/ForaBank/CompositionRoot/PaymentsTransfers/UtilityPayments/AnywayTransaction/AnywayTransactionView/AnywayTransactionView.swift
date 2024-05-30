@@ -34,9 +34,9 @@ struct AnywayTransactionView: View {
                     .padding()
                 }
                 .onAppear { scrollToLast(proxy) }
-                .onChange(of: state.payment.payment.elements) {
+                .onChange(of: state.payment.payment.elements.map(\.id)) {
                     
-                    scrollToLastItem(proxy, elements: $0)
+                    scrollToLastItem(proxy, iDs: $0)
                 }
             }
             
@@ -58,13 +58,13 @@ struct AnywayTransactionView: View {
     
     private func scrollToLastItem(
         _ proxy: ScrollViewProxy,
-        elements: [Element]
+        iDs: [Element.ID]
     ) {
-        if let lastElement = elements.last {
+        if let last = iDs.last {
             
             withAnimation {
                 
-                proxy.scrollTo(lastElement.id, anchor: .bottom)
+                proxy.scrollTo(last, anchor: .bottom)
             }
         }
     }

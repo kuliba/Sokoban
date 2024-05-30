@@ -87,12 +87,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
     
     func test_map_shouldDeliverResponse() throws {
         
-        try assert(.validData, .init(
-            additional: [],
-            finalStep: false,
-            needMake: false,
-            needOTP: false,
-            needSum: false,
+        try assert(.validData, makeResponse(
             parametersForNextStep: [
                 makeParameter(
                     dataType: .string,
@@ -130,12 +125,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
     
     func test_map_shouldDeliverResponse_e1_sample_step1() throws {
         
-        try assert(string: .e1_sample_step1, .init(
-            additional: [],
-            finalStep: false,
-            needMake: false,
-            needOTP: false,
-            needSum: false,
+        try assert(string: .e1_sample_step1, makeResponse(
             parametersForNextStep: [
                 makeParameter(
                     dataType: .number,
@@ -171,7 +161,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
     
     func test_map_shouldDeliverResponse_withAdditional() throws {
         
-        try assert(string: .withAdditional, .init(
+        try assert(string: .withAdditional, makeResponse(
             additional: [
                 makeAdditional(
                     fieldName: "n1",
@@ -198,17 +188,13 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
                     svgImage: "svgImage4"
                 ),
             ],
-            finalStep: false,
-            needMake: false,
-            needOTP: true,
-            needSum: false,
-            parametersForNextStep: []
+            needOTP: true
         ))
     }
     
     func test_map_shouldDeliverResponse_multiSum() throws {
         
-        try assert(string: .multiSum, .init(
+        try assert(string: .multiSum, makeResponse(
             additional: [
                 makeAdditional(
                     fieldName: "4",
@@ -222,10 +208,6 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
                     fieldTitle: "ПРЕД. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504"
                 ),
             ],
-            finalStep: false,
-            needMake: false,
-            needOTP: false,
-            needSum: false,
             parametersForNextStep: [
                 makeParameter(
                     content:  "042024",
@@ -314,18 +296,14 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
                     type: .input,
                     viewType: .input
                 ),
-            ]
+            ],
+            options: [.multiSum]
         ))
     }
     
     func test_map_shouldDeliverResponseWithImages() throws {
         
-        try assert(string: .withImages, .init(
-            additional: [],
-            finalStep: false,
-            needMake: false,
-            needOTP: false,
-            needSum: false,
+        try assert(string: .withImages, makeResponse(
             parametersForNextStep: [
                 makeParameter(
                     content:  "042024",
@@ -367,9 +345,33 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
                     type: .input,
                     viewType: .input
                 ),
-            ]))
+            ],
+            options: [.multiSum]
+        ))
     }
     
+    func test_map_shouldDeliverResponseWithOptions() throws {
+        
+        try assert(string: .withOptions, makeResponse(
+            options: [.multiSum]
+        ))
+    }
+
+    func test_map_shouldDeliverResponseWithSumSTrs() throws {
+        
+        try assert(string: .withSumSTrs, makeResponse(
+            additional: [
+                makeAdditional(
+                    fieldName: "SumSTrs", 
+                    fieldValue: "4273.87", 
+                    fieldTitle: "Сумма"
+                )
+            ],
+            amount: 4273.87,
+            needSum: true
+        ))
+    }
+
     // MARK: - Helpers
     
     private typealias Response = ResponseMapper.CreateAnywayTransferResponse
@@ -437,7 +439,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
         visible: Bool = true
     ) -> Response.Parameter {
         
-        .init(
+        return .init(
             content: content,
             dataDictionary: dataDictionary,
             dataDictionaryРarent: dataDictionaryРarent,
@@ -477,7 +479,7 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
         typeIdParameterList: String? = nil
     ) -> Response.Additional {
         
-        .init(
+        return .init(
             fieldName: fieldName,
             fieldValue: fieldValue,
             fieldTitle: fieldTitle,
@@ -485,6 +487,55 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
             recycle: recycle,
             svgImage: svgImage,
             typeIdParameterList: typeIdParameterList
+        )
+    }
+    
+    private func makeResponse(
+        additional: [Response.Additional] = [],
+        amount: Decimal? = nil,
+        creditAmount: Decimal? = nil,
+        currencyAmount: String? = nil,
+        currencyPayee: String? = nil,
+        currencyPayer: String? = nil,
+        currencyRate: Decimal? = nil,
+        debitAmount: Decimal? = nil,
+        documentStatus: Response.DocumentStatus? = nil,
+        fee: Decimal? = nil,
+        finalStep: Bool = false,
+        infoMessage: String? = nil,
+        needMake: Bool = false,
+        needOTP: Bool = false,
+        needSum: Bool = false,
+        parametersForNextStep: [Response.Parameter] = [],
+        paymentOperationDetailID: Int? = nil,
+        payeeName: String? = nil,
+        printFormType: String? = nil,
+        scenario: Response.AntiFraudScenario? = nil,
+        options: [Response.Option] = []
+    ) -> Response {
+        
+        return .init(
+            additional: additional,
+            amount: amount,
+            creditAmount: creditAmount,
+            currencyAmount: currencyAmount,
+            currencyPayee: currencyPayee,
+            currencyPayer: currencyPayer,
+            currencyRate: currencyRate,
+            debitAmount: debitAmount,
+            documentStatus: documentStatus,
+            fee: fee,
+            finalStep: finalStep,
+            infoMessage: infoMessage,
+            needMake: needMake,
+            needOTP: needOTP,
+            needSum: needSum,
+            parametersForNextStep: parametersForNextStep,
+            paymentOperationDetailID: paymentOperationDetailID,
+            payeeName: payeeName,
+            printFormType: printFormType,
+            scenario: scenario,
+            options: options
         )
     }
 }
@@ -1752,6 +1803,40 @@ private extension String {
     }
 }
 """
+    
+    static let withOptions = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "additionalList": [],
+        "parameterListForNextStep": [],
+        "options": [
+            "MULTI_SUM"
+        ]
+    }
+}
+"""
+
+    static let withSumSTrs = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "amount": 4273.87,
+        "needSum": true,
+        "additionalList": [
+            {
+                "fieldName": "SumSTrs",
+                "fieldValue": "4273.87",
+                "fieldTitle": "Сумма"
+            }
+        ],
+        "parameterListForNextStep": []
+    }
+}
+"""
+    
     static let withImages = """
 {
     "statusCode": 0,

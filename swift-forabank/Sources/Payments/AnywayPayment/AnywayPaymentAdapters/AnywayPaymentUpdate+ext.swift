@@ -60,6 +60,7 @@ private extension AnywayPaymentUpdate.Details.Control {
         self.init(
             isFinalStep: response.finalStep,
             isFraudSuspected: response.scenario == .suspect,
+            isMultiSum: response.options.contains(.multiSum),
             needMake: response.needMake,
             needOTP: response.needOTP,
             needSum: response.needSum
