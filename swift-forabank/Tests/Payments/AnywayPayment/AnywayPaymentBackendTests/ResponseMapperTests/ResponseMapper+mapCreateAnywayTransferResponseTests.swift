@@ -357,6 +357,21 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
         ))
     }
 
+    func test_map_shouldDeliverResponseWithSumSTrs() throws {
+        
+        try assert(string: .withSumSTrs, makeResponse(
+            additional: [
+                makeAdditional(
+                    fieldName: "SumSTrs", 
+                    fieldValue: "4273.87", 
+                    fieldTitle: "Сумма"
+                )
+            ],
+            amount: 4273.87,
+            needSum: true
+        ))
+    }
+
     // MARK: - Helpers
     
     private typealias Response = ResponseMapper.CreateAnywayTransferResponse
@@ -1788,6 +1803,7 @@ private extension String {
     }
 }
 """
+    
     static let withOptions = """
 {
     "statusCode": 0,
@@ -1801,6 +1817,26 @@ private extension String {
     }
 }
 """
+
+    static let withSumSTrs = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "amount": 4273.87,
+        "needSum": true,
+        "additionalList": [
+            {
+                "fieldName": "SumSTrs",
+                "fieldValue": "4273.87",
+                "fieldTitle": "Сумма"
+            }
+        ],
+        "parameterListForNextStep": []
+    }
+}
+"""
+    
     static let withImages = """
 {
     "statusCode": 0,
