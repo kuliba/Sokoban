@@ -468,7 +468,8 @@ func makeAnywayPaymentUpdate(
     infoMessage: String? = nil,
     isFinalStep: Bool = false,
     needOTP: Bool = false,
-    needSum: Bool = false
+    needSum: Bool = false,
+    isMultiSum: Bool = false
 ) -> AnywayPaymentUpdate {
     
     makeAnywayPaymentUpdate(
@@ -476,6 +477,7 @@ func makeAnywayPaymentUpdate(
             control: makeAnywayPaymentUpdateDetailsControl(
                 isFinalStep: isFinalStep,
                 isFraudSuspected: isFraudSuspected,
+                isMultiSum: isMultiSum,
                 needOTP: needOTP,
                 needSum: needSum
             ),
@@ -539,14 +541,16 @@ private func makeAnywayPaymentUpdateDetailsAmounts(
 private func makeAnywayPaymentUpdateDetailsControl(
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
+    isMultiSum: Bool = false,
     needMake: Bool = false,
     needOTP: Bool = false,
     needSum: Bool = false
 ) -> AnywayPaymentUpdate.Details.Control {
     
-    .init(
+    return .init(
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected,
+        isMultiSum: isMultiSum,
         needMake: needMake,
         needOTP: needOTP,
         needSum: needSum

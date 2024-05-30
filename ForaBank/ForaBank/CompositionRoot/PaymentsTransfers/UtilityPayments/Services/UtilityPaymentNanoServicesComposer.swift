@@ -341,7 +341,8 @@ private extension NanoServices.CreateAnywayTransferResponse {
             paymentOperationDetailID: paymentOperationDetailID,
             payeeName: payeeName,
             printFormType: printFormType,
-            scenario: scenario
+            scenario: scenario,
+            options: []
         )
     }
 }

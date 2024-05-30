@@ -250,7 +250,7 @@ private extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
     
     static var preview: Self {
         
-        return .init(additional: [], finalStep: false, needMake: false, needOTP: false, needSum: false, parametersForNextStep: [])
+        return .init(additional: [], finalStep: false, needMake: false, needOTP: false, needSum: false, parametersForNextStep: [], options: [])
     }
 }
 

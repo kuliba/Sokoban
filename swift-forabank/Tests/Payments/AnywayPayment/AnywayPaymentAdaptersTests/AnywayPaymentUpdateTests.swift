@@ -18,13 +18,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         try assert(.validData, mapsTo: .init(
             details: .init(
                 amounts: makeDetailsAmounts(),
-                control: makeDetailsControl(
-                    isFinalStep: false,
-                    isFraudSuspected: false,
-                    needMake: false,
-                    needOTP: false,
-                    needSum: false
-                ),
+                control: makeDetailsControl(),
                 info: makeDetailsInfo(
                     paymentOperationDetailID: 54321
                 )
@@ -116,13 +110,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         try assert(.e1_sample_step1, mapsTo: .init(
             details: .init(
                 amounts: makeDetailsAmounts(),
-                control: makeDetailsControl(
-                    isFinalStep: false,
-                    isFraudSuspected: false,
-                    needMake: false,
-                    needOTP: false,
-                    needSum: false
-                ),
+                control: makeDetailsControl(),
                 info: makeDetailsInfo()
             ),
             fields: [],
@@ -149,13 +137,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         try assert(.valid_sber01, mapsTo: .init(
             details: .init(
                 amounts: makeDetailsAmounts(),
-                control: makeDetailsControl(
-                    isFinalStep: false,
-                    isFraudSuspected: false,
-                    needMake: false,
-                    needOTP: false,
-                    needSum: false
-                ),
+                control: makeDetailsControl(),
                 info: makeDetailsInfo()
             ),
             fields: [],
@@ -182,13 +164,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         try assert(.valid_sber02, mapsTo: .init(
             details: .init(
                 amounts: makeDetailsAmounts(),
-                control: makeDetailsControl(
-                    isFinalStep: false,
-                    isFraudSuspected: false,
-                    needMake: false,
-                    needOTP: false,
-                    needSum: false
-                ),
+                control: makeDetailsControl(),
                 info: makeDetailsInfo()
             ),
             fields: [],
@@ -560,16 +536,18 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     }
     
     private func makeDetailsControl(
-        isFinalStep: Bool,
-        isFraudSuspected: Bool,
-        needMake: Bool,
-        needOTP: Bool,
-        needSum: Bool
+        isFinalStep: Bool = false,
+        isFraudSuspected: Bool = false,
+        isMultiSum: Bool = false,
+        needMake: Bool = false,
+        needOTP: Bool = false,
+        needSum: Bool = false
     ) -> AnywayPaymentUpdate.Details.Control {
         
-        .init(
+        return .init(
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,
+            isMultiSum: isMultiSum,
             needMake: needMake,
             needOTP: needOTP,
             needSum: needSum

@@ -132,6 +132,7 @@ extension AnywayPaymentUpdate.Details {
         
         public let isFinalStep: Bool
         public let isFraudSuspected: Bool
+        public let isMultiSum: Bool
         public let needMake: Bool
         public let needOTP: Bool
         public let needSum: Bool
@@ -139,12 +140,14 @@ extension AnywayPaymentUpdate.Details {
         public init(
             isFinalStep: Bool,
             isFraudSuspected: Bool,
+            isMultiSum: Bool,
             needMake: Bool,
             needOTP: Bool,
             needSum: Bool
         ) {
             self.isFinalStep = isFinalStep
             self.isFraudSuspected = isFraudSuspected
+            self.isMultiSum = isMultiSum
             self.needMake = needMake
             self.needOTP = needOTP
             self.needSum = needSum

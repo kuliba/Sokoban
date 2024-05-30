@@ -13,26 +13,50 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     
     // MARK: - amount (core)
     
-    func test_update_shouldNotAddAmountWidgetOnNeedSumFalse() {
+    func test_update_shouldNotAddAmountWidgetOnNeedSumFalseAndIsMultiSumFalse() {
         
         assert(
             makeAnywayPaymentWithoutAmount(),
-            on: makeAnywayPaymentUpdate(needSum: false)
+            on: makeAnywayPaymentUpdate(needSum: false, isMultiSum: false)
         )
     }
     
-    func test_update_shouldAddAmountWidgetOnNeedSumTrue() {
+    func test_update_shouldNotAddAmountWidgetOnNeedSumFalseAndIsMultiSumTrue() {
+        
+        assert(
+            makeAnywayPaymentWithoutAmount(),
+            on: makeAnywayPaymentUpdate(needSum: false, isMultiSum: true)
+        )
+    }
+    
+    func test_update_shouldAddAmountWidgetOnNeedSumTrueAndIsMultiSumFalse() {
         
         let payment = makeAnywayPaymentWithoutAmount()
-        let update = makeAnywayPaymentUpdate(needSum: true)
+        let update = makeAnywayPaymentUpdate(needSum: true, isMultiSum: false)
         
         XCTAssert(hasAmountWidget(updatePayment(payment, with: update)))
     }
     
-    func test_update_shouldRemoveAmountWidgetOnNeedSumFalse() {
+    func test_update_shouldNotAddAmountWidgetOnNeedSumTrueAndIsMultiSumTrue() {
+        
+        let payment = makeAnywayPaymentWithoutAmount()
+        let update = makeAnywayPaymentUpdate(needSum: true, isMultiSum: true)
+        
+        XCTAssertFalse(hasAmountWidget(updatePayment(payment, with: update)))
+    }
+    
+    func test_update_shouldRemoveAmountWidgetOnNeedSumFalseAndIsMultiSumFalse() {
         
         let payment = makeAnywayPaymentWithAmount()
-        let update = makeAnywayPaymentUpdate(needSum: false)
+        let update = makeAnywayPaymentUpdate(needSum: false, isMultiSum: false)
+        
+        XCTAssertFalse(hasAmountWidget(updatePayment(payment, with: update)))
+    }
+    
+    func test_update_shouldRemoveAmountWidgetOnNeedSumFalseAndIsMultiSumTrue() {
+        
+        let payment = makeAnywayPaymentWithAmount()
+        let update = makeAnywayPaymentUpdate(needSum: false, isMultiSum: true)
         
         XCTAssertFalse(hasAmountWidget(updatePayment(payment, with: update)))
     }

@@ -43,8 +43,20 @@ private extension ResponseMapper.CreateAnywayTransferResponse {
             paymentOperationDetailID: data.paymentOperationDetailId,
             payeeName: data.payeeName,
             printFormType: data.printFormType,
-            scenario: .init(data.scenario)
+            scenario: .init(data.scenario),
+            options: (data.options ?? []).compactMap(Option.init)
         )
+    }
+}
+
+private extension ResponseMapper.CreateAnywayTransferResponse.Option {
+    
+    init?(string: String) {
+        
+        switch string {
+        case "MULTI_SUM": self = .multiSum
+        default:          return nil
+        }
     }
 }
 
@@ -243,6 +255,7 @@ private extension ResponseMapper {
         let payeeName: String?
         let printFormType: String?
         let scenario: String?
+        let options: [String]?
     }
 }
 
