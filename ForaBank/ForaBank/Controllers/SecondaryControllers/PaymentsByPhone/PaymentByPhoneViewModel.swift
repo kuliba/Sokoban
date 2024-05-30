@@ -33,7 +33,7 @@ class PaymentByPhoneViewModel {
     }
     
     var isSbp: Bool {
-        if bankId == "100000000217" {
+        if bankId == BankID.foraBankID.rawValue {
             return false
         } else {
             return true

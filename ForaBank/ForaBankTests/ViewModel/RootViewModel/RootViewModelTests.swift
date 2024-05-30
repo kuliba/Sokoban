@@ -216,6 +216,7 @@ final class RootViewModelTests: XCTestCase {
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(),
                 paymentsTransfersFactory: .preview,
+                updateInfoStatusFlag: .init(.inactive),
                 onRegister: {}
             ),
             paymentsViewModel: .init(

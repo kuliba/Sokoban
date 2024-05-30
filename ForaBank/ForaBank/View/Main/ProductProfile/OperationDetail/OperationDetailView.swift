@@ -282,4 +282,3 @@ extension OperationDetailViewModel {
         return .init(productStatement: productStatementData, product: product, updateFastAll: {}, model: .emptyMock)
         }()
 }
-
