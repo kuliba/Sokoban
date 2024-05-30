@@ -12,6 +12,7 @@ struct PaymentsTransfersViewFactory {
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeUserAccountView: MakeUserAccountView
     let makeIconView: MakeIconView
+    let makeUpdateInfoView: MakeUpdateInfoView
 }
 
 extension PaymentsTransfersViewFactory {

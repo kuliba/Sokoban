@@ -61,11 +61,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.navButtonsRight = []
-        self.sections = [
-            PTSectionLatestPaymentsView.ViewModel(model: model),
-            PTSectionTransfersView.ViewModel(),
-            PTSectionPaymentsView.ViewModel()
-        ]
+        self.sections = paymentsTransfersFactory.makeSections()
         self.mode = mode
         self.model = model
         self.userAccountNavigationStateManager = userAccountNavigationStateManager
@@ -853,6 +849,30 @@ private extension PaymentsTransfersViewModel {
                 )
             }
             .store(in: &bindings)
+        
+            model.updateInfo
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] updateInfo in
+                    
+                    guard let self else { return }
+                    
+                    self.sections = self.paymentsTransfersFactory.makeSections()
+                }
+                .store(in: &bindings)
+        
+    }
+    
+    func updateSections(_ updateInfo: UpdateInfo) {
+        let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateFailureInfo }) is UpdateInfoPTViewModel
+        switch (updateInfo.areProductsUpdated, containUpdateInfoSection) {
+            
+        case (true, true):
+            sections.removeFirst()
+        case (false, false):
+            sections.insert(UpdateInfoPTViewModel.init(), at: 0)
+        default:
+            break
+        }
     }
     
     private func showProductProfile(

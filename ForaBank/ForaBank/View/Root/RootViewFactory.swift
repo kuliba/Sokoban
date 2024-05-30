@@ -48,7 +48,8 @@ extension RootViewFactory {
         return .init(
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView,
-            makeIconView: makeIconView
+            makeIconView: makeIconView,
+            makeUpdateInfoView: makeUpdateInfoView
         )
     }
 }

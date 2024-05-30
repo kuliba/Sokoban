@@ -23,13 +23,15 @@ extension MyProductsViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
+            makeTemplatesListViewModel: { _ in .sampleComplete },
             paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: .preview
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: .init(.active)
         ),
         refreshingIndicator: .init(isActive: true),
         openOrderSticker: {}
@@ -49,13 +51,15 @@ extension MyProductsViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
+            makeTemplatesListViewModel: { _ in .sampleComplete },
             paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: .preview
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: .init(.active)
         ),
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false],

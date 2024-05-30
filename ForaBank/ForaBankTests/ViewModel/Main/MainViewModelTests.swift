@@ -126,42 +126,42 @@ final class MainViewModelTests: XCTestCase {
          
         assert(sections: sut.sections, count: 6, type: .products)
 
-        model.updateInfo.value.updateValueBy(type: .card, with: false)
+        model.updateInfo.value.setValue(false, for: .card)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 7, type: .updateInfo)
         
-        model.updateInfo.value.updateValueBy(type: .loan, with: false)
+        model.updateInfo.value.setValue(false, for: .loan)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 7, type: .updateInfo)
 
-        model.updateInfo.value.updateValueBy(type: .deposit, with: false)
+        model.updateInfo.value.setValue(false, for: .deposit)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 7, type: .updateInfo)
 
-        model.updateInfo.value.updateValueBy(type: .account, with: false)
+        model.updateInfo.value.setValue(false, for: .account)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 7, type: .updateInfo)
 
-        model.updateInfo.value.updateValueBy(type: .card, with: true)
+        model.updateInfo.value.setValue(true, for: .card)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 7, type: .updateInfo)
 
-        model.updateInfo.value.updateValueBy(type: .loan, with: true)
+        model.updateInfo.value.setValue(true, for: .loan)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 7, type: .updateInfo)
         
-        model.updateInfo.value.updateValueBy(type: .deposit, with: true)
+        model.updateInfo.value.setValue(true, for: .deposit)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 7, type: .updateInfo)
 
-        model.updateInfo.value.updateValueBy(type: .account, with: true)
+        model.updateInfo.value.setValue(true, for: .account)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 6, type: .products)
@@ -174,42 +174,42 @@ final class MainViewModelTests: XCTestCase {
          
         assert(sections: sut.sections, count: 6, type: .products)
 
-        model.updateInfo.value.updateValueBy(type: .card, with: false)
+        model.updateInfo.value.setValue(false, for: .card)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 6, type: .products)
 
-        model.updateInfo.value.updateValueBy(type: .loan, with: false)
+        model.updateInfo.value.setValue(false, for: .loan)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 6, type: .products)
 
-        model.updateInfo.value.updateValueBy(type: .deposit, with: false)
+        model.updateInfo.value.setValue(false, for: .deposit)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 6, type: .products)
 
-        model.updateInfo.value.updateValueBy(type: .account, with: false)
+        model.updateInfo.value.setValue(false, for: .account)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 6, type: .products)
 
-        model.updateInfo.value.updateValueBy(type: .card, with: true)
+        model.updateInfo.value.setValue(true, for: .card)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 6, type: .products)
 
-        model.updateInfo.value.updateValueBy(type: .loan, with: true)
+        model.updateInfo.value.setValue(true, for: .loan)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 6, type: .products)
 
-        model.updateInfo.value.updateValueBy(type: .deposit, with: true)
+        model.updateInfo.value.setValue(true, for: .deposit)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 6, type: .products)
 
-        model.updateInfo.value.updateValueBy(type: .account, with: true)
+        model.updateInfo.value.setValue(true, for: .account)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         assert(sections: sut.sections, count: 6, type: .products)
