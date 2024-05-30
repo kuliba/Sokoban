@@ -38,13 +38,28 @@ extension Model {
             case let .template(templateId):
                 let template = paymentTemplates.value.first { $0.id == templateId }
             
-                if let token,
-                   let phone = template?.sfpPhone {
+                switch template?.parameterList.last {
+                case let payload as TransferGeneralData:
+
+                    if let token,
+                       let phone = template?.phoneNumber {
+                        
+                        latestPaymentBankIds = await getLatestPhonePayments(
+                            phone: phone,
+                            token: token
+                        )
+                    }
                     
-                    latestPaymentBankIds = await getLatestPhonePayments(
-                        phone: phone,
-                        token: token
-                    )
+                default:
+                 
+                    if let token,
+                       let phone = template?.sfpPhone {
+                        
+                        latestPaymentBankIds = await getLatestPhonePayments(
+                            phone: phone,
+                            token: token
+                        )
+                    }
                 }
                 
             case let .latestPayment(latestPaymentId):
@@ -522,6 +537,17 @@ extension Model {
                         banksIds: banksIds,
                         latestPaymentBankIds: latestPaymentBankIds
                     )
+                } else if let parameterList = template.parameterList as? [TransferGeneralData] {
+                       
+                    let phone = parameterList.last?.payeeInternal?.phoneNumber
+                    
+                    return filterByPhone(
+                        operationPhone ?? phone,
+                        bankId: nil,
+                        banksIds: banksIds,
+                        latestPaymentBankIds: latestPaymentBankIds
+                    )
+                    
                 } else {
                     
                     return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
