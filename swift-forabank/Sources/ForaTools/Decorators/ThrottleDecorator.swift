@@ -21,18 +21,24 @@ public final class ThrottleDecorator {
 
 public extension ThrottleDecorator {
     
-    func callAsFunction(
+    func throttle(
         block: @escaping () -> Void
     ) {
-        queue.sync { [weak self] in
-            
-            let currentTime = Date().timeIntervalSince1970
-            
-            guard let self, currentTime - lastCallTime >= delay
-            else { return }
-            
-            lastCallTime = currentTime
-            block()
-        }
+        queue.sync { [weak self] in self?.execute(block) }
+    }
+}
+
+private extension ThrottleDecorator {
+    
+    func execute(
+        _ block: @escaping () -> Void
+    ) {
+        let currentTime = Date().timeIntervalSince1970
+        
+        guard currentTime - lastCallTime >= delay
+        else { return }
+        
+        lastCallTime = currentTime
+        block()
     }
 }
