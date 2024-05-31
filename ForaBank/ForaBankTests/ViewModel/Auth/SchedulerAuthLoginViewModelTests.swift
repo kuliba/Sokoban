@@ -411,12 +411,12 @@ final class SchedulerAuthLoginViewModelTests: AuthLoginViewModelTests {
         sessionStateFcmToken.send(((.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy))), nil))
         scheduler.advance()
         
-        XCTAssertNoDiff(spy.values, [nil, nil])
+        XCTAssertNoDiff(spy.values, [nil, .ic24ArrowRight])
         
         sessionStateFcmToken.send(((.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy))), "fcmToken"))
         scheduler.advance()
         
-        XCTAssertNoDiff(spy.values, [nil, nil, .ic24ArrowRight])
+        XCTAssertNoDiff(spy.values, [nil, .ic24ArrowRight, .ic24ArrowRight])
     }
     
     func test_cardState_shouldSetCardButton() {
