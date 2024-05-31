@@ -1,5 +1,5 @@
 //
-//  ThrottleDecoratorTests.swift
+//  ThrottleDecoratorCallAsFunctionTests.swift
 //
 //
 //  Created by Igor Malyarov on 20.03.2024.
@@ -8,44 +8,44 @@
 import ForaTools
 import XCTest
 
-final class ThrottleDecoratorTests: XCTestCase {
+final class ThrottleDecoratorCallAsFunctionTests: XCTestCase {
     
-    func test_throttle_shouldNotThrottleForZeroDelay() {
+    func test_callAsFunction_shouldNotThrottleForZeroDelay() {
         
         let sut = makeSUT(delay: .zero)
         let exp = expectation(description: "Should not throttle execution with zero delay.")
         exp.expectedFulfillmentCount = 2
         
-        sut.throttle { exp.fulfill() }
-        sut.throttle { exp.fulfill() }
+        sut { exp.fulfill() }
+        sut { exp.fulfill() }
         
         wait(for: [exp], timeout: 0.05)
     }
     
-    func test_throttle_shouldExecuteFirstCall() {
+    func test_callAsFunction_shouldExecuteFirstCall() {
         
         let sut = makeSUT()
         let exp = expectation(description: "Throttle executes immediately at first call.")
         
-        sut.throttle { exp.fulfill() }
+        sut { exp.fulfill() }
         
         wait(for: [exp], timeout: 0.05)
     }
     
-    func test_throttle_shouldIgnoreImmediateSubsequentCall() {
+    func test_callAsFunction_shouldIgnoreImmediateSubsequentCall() {
         
         let sut = makeSUT(delay: 0.5)
         let exp = expectation(description: "Only the first call should be executed")
         
-        sut.throttle { exp.fulfill() }
-        sut.throttle { exp.fulfill() }
+        sut { exp.fulfill() }
+        sut { exp.fulfill() }
         
         wait(for: [exp], timeout: 0.05)
     }
     
     // TODO: fix, failing on CI
-//    func test_throttle_shouldExecuteOnBackgroundThread() {
-//        
+//    func test_callAsFunction_shouldExecuteOnBackgroundThread() {
+//
 //        let sut = makeSUT()
 //        let exp = expectation(description: "Execute on background thread")
 //        
@@ -53,13 +53,13 @@ final class ThrottleDecoratorTests: XCTestCase {
 //        
 //        backgroundQueue.async {
 //            
-//            sut.throttle { exp.fulfill() }
+//            sut { exp.fulfill() }
 //        }
 //        
 //        wait(for: [exp], timeout: 0.2)
 //    }
     
-    func test_throttle_shouldNotCrashOnDifferentQueues_threadSafety() {
+    func test_callAsFunction_shouldNotCrashOnDifferentQueues_threadSafety() {
         
         let delay = 0.1
         let sut = makeSUT()
@@ -72,7 +72,7 @@ final class ThrottleDecoratorTests: XCTestCase {
             
             concurrentQueue.async {
                 
-                sut.throttle { exp.fulfill() }
+                sut { exp.fulfill() }
             }
         }
         
@@ -84,7 +84,7 @@ final class ThrottleDecoratorTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func test_throttle_shouldDelayReExecution() {
+    func test_callAsFunction_shouldDelayReExecution() {
         
         let delay = 0.1
         let sut = makeSUT(delay: delay)
@@ -93,18 +93,18 @@ final class ThrottleDecoratorTests: XCTestCase {
         
         for _ in 1...10 {
             
-            sut.throttle { exp.fulfill() }
+            sut { exp.fulfill() }
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             
-            sut.throttle { exp.fulfill() }
+            sut { exp.fulfill() }
         }
         
         wait(for: [exp], timeout: 1.0)
     }
     
-    func test_throttle_shouldExecuteLongDelay() {
+    func test_callAsFunction_shouldExecuteLongDelay() {
         
         let delay = 0.5
         let sut = makeSUT(delay: delay)
@@ -113,21 +113,21 @@ final class ThrottleDecoratorTests: XCTestCase {
         
         for _ in 1...10 {
             
-            sut.throttle { exp.fulfill() }
+            sut { exp.fulfill() }
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
             
             for _ in 1...10 {
                 
-                sut.throttle { exp.fulfill() }
+                sut { exp.fulfill() }
             }
         }
         
         wait(for: [exp], timeout: 2)
     }
     
-    func test_throttle_shouldExecuteDifferentBlocks() {
+    func test_callAsFunction_shouldExecuteDifferentBlocks() {
         
         let delay = 0.1
         let sut = makeSUT(delay: delay)
@@ -135,7 +135,7 @@ final class ThrottleDecoratorTests: XCTestCase {
         exp.expectedFulfillmentCount = 2
         var executionFlag = false
         
-        sut.throttle {
+        sut {
             
             executionFlag = true
             exp.fulfill()
@@ -143,7 +143,7 @@ final class ThrottleDecoratorTests: XCTestCase {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             
-            sut.throttle { exp.fulfill() }
+            sut { exp.fulfill() }
         }
         
         wait(for: [exp], timeout: 0.2)
@@ -151,8 +151,8 @@ final class ThrottleDecoratorTests: XCTestCase {
     }
     
     //TODO: test failed on CI
-//    func test_throttle_shouldNotHaveRaceConditionWithConcurrentAccess() {
-//        
+//    func test_callAsFunction_shouldNotHaveRaceConditionWithConcurrentAccess() {
+//
 //        let delay = 0.1
 //        let sut = makeSUT(delay: delay)
 //        let exp = expectation(description: "Complete multiple concurrent calls")
@@ -160,13 +160,13 @@ final class ThrottleDecoratorTests: XCTestCase {
 //        
 //        let concurrentQueue = DispatchQueue(label: "test.queue", attributes: .concurrent)
 //        
-//        sut.throttle { exp.fulfill() }
+//        sut { exp.fulfill() }
 //
 //        for _ in 0..<10 {
 //            
 //            concurrentQueue.asyncAfter(deadline: .now() + delay) {
 //                
-//                sut.throttle { exp.fulfill() }
+//                sut { exp.fulfill() }
 //            }
 //        }
 //        
