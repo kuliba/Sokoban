@@ -1384,3 +1384,11 @@ extension Array where Element == String {
         "ИНН: inn\nКПП: kpp"
     ]
 }
+
+private extension Date {
+    
+    static let testDateInMoscowTimezone = Date(timeIntervalSince1970: 1679272800) // 2023-03-20 00:00:00 +0300
+    static let expectedMoscowTime = Date(timeIntervalSince1970: 1679272800) // 2023-03-20 00:00:00 +0300
+    static let testDateInDifferentTimezone = Date(timeIntervalSince1970: 1679286300) // 2023-03-20 03:00:00 +0500
+    static let expectedDifferentTimezoneResult = Date(timeIntervalSince1970: 1679272800) // 2023-03-20 00:00:00 +0300
+}
