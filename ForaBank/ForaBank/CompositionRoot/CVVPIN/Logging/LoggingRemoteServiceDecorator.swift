@@ -93,7 +93,7 @@ private extension LoggingRemoteServiceDecorator {
     }
     
     static func mapDescription(
-        _ response: (data: Data, httpURLResponse: HTTPURLResponse),
+        _ response: (Data, HTTPURLResponse),
         _ result: Result<Output, MapResponseError>
     ) -> String {
         
@@ -102,7 +102,7 @@ private extension LoggingRemoteServiceDecorator {
         
         switch result {
         case let .failure(error):
-            description.append("RemoteService: mapResponse failure: \(error).")
+            description.append("RemoteService: mapResponse failure: \(error), statusCode \(httpURLResponse.statusCode), data: \(String(data: data, encoding: .utf8) ?? "n/a").")
             
         case let .success(output):
             description.append("RemoteService: mapResponse success: \(type(of: output)).")
