@@ -516,7 +516,16 @@ private extension MainViewModel {
                                     handleLandingAction(.sticker)
                                     
                                 }
-                            }
+                            }, 
+                            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { [weak self] in
+                                
+                                guard let self else { return nil }
+                                
+                                if self.updateInfoStatusFlag.isActive {
+                                    return .updateFailureInfo
+                                }
+                                return nil
+                            })
                         )
                         myProductsViewModel.rootActions = rootActions
                         myProductsViewModel.contactsAction = { [weak self] in self?.showContacts() }
@@ -987,12 +996,6 @@ private extension MainViewModel {
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as TemplatesListViewModelAction.CloseAction:
-                    self.action.send(DelayWrappedAction(
-                        delayMS: 800,
-                        action: MainViewModelAction.Close.Link())
-                    )
-                    
                 case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     
                     self.action.send(MainViewModelAction.Close.Link())

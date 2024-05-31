@@ -22,7 +22,7 @@ struct OperationDetailView: View {
                 HeaderView(viewModel: viewModel.header)
                 OperationView(viewModel: viewModel.operation)
                     .padding(.top, 24)
-
+                
                 // template, document, details buttons
                 HStack(spacing: 52) {
                     
@@ -65,7 +65,7 @@ struct OperationDetailView: View {
         .padding(.vertical, 40)
         .edgesIgnoringSafeArea(.bottom)
         .sheet(item: $viewModel.sheet) { item in
-
+            
             switch item.kind {
             case .info(let operationDetailInfoViewModel):
                 OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
@@ -100,12 +100,13 @@ extension OperationDetailView {
             
             switch viewModel {
             case .singleRow(let name):
+                
                 Text(name)
                     .font(.system(size: 16, weight: .regular))
                     .multilineTextAlignment(.center)
                 
-                
             case .doubleRow(let name, let extra):
+                
                 VStack {
                     Text(name)
                         .font(.system(size: 16, weight: .regular))
@@ -116,6 +117,7 @@ extension OperationDetailView {
                 }
                 
             case .number(let name, let title, let number, let action):
+                
                 VStack {
                     Text(name)
                         .font(.system(size: 16, weight: .regular))
@@ -129,7 +131,6 @@ extension OperationDetailView {
                             .font(.system(size: 16, weight: .regular))
                             .foregroundColor(Color.black)
                             .padding(.leading, 6)
-                        
                         
                         Button {
                             
@@ -178,16 +179,15 @@ extension OperationDetailView {
         
         var body: some View {
             
-            VStack {
+            VStack(spacing: 1) {
                 
                 Text(viewModel.title)
-                    .font(.system(size: 16, weight: .regular))
-                    .foregroundColor(Color(hex: "999999"))
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 1, trailing: 0))
-                Text(viewModel.amount)
-                    .font(.system(size: 16, weight: .regular))
+                    .foregroundColor(.textPlaceholder)
                 
+                Text(viewModel.amount)
+                    .foregroundColor(.textSecondary)
             }
+            .font(.system(size: 16, weight: .regular))
         }
     }
     
@@ -214,7 +214,7 @@ extension OperationDetailView {
         var body: some View {
             
             switch viewModel.kind {
-            case .template(let selected):
+            case .template:
                 EmptyView()
                     .frame(width: 10, height: 10, alignment: .center)
                 
@@ -251,8 +251,8 @@ struct CapsuleText: View {
         
         Text(text)
             .font(font)
-            .padding()
             .foregroundColor(color)
+            .padding(8)
             .background(bgColor)
             .clipShape(Capsule())
     }
@@ -274,11 +274,11 @@ struct OperationDetailView_Previews: PreviewProvider {
 extension OperationDetailViewModel {
     
     static let sampleComplete: OperationDetailViewModel = {
-                
+        
         let productStatementData = ProductStatementData(mcc: 3245, accountId: 10004111477, accountNumber: "70601810711002740401", amount: 144.21, cardTranNumber: "4256901080508437", city: "string", comment: "Перевод денежных средств. НДС не облагается.", country: "string", currencyCodeNumeric: 810, date: Date(), deviceCode: "string", documentAmount: 144.21, documentId: 10230444722, fastPayment: .init(documentComment: "string", foreignBankBIC: "044525491", foreignBankID: "10000001153", foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"", foreignName: "Петров Петр Петрович", foreignPhoneNumber: "70115110217", opkcid: "A1355084612564010000057CAFC75755", operTypeFP: "string", tradeName: "string", guid: "string"), groupName: "Прочие операции", isCancellation: false, md5hash: "75f3ee3b2d44e5808f41777c613f23c9", merchantName: "DBO MERCHANT FORA, Zubovskiy 2", merchantNameRus: "DBO MERCHANT FORA, Zubovskiy 2", opCode: 1, operationId: "909743", operationType: .debit, paymentDetailType: .betweenTheir, svgImage: .init(description: "string"), terminalCode: "41010601", tranDate: nil, type: OperationEnvironment.inside)
-
+        
         let product = ProductData(id: 0, productType: .card, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: "RUB", mainField: "CARD", additionalField: nil, customName: nil, productName: "CARD", openDate: nil, ownerId: 1, branchId: nil, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], order: 1, isVisible: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
-
+        
         return .init(productStatement: productStatementData, product: product, updateFastAll: {}, model: .emptyMock)
-        }()
+    }()
 }
