@@ -26,6 +26,12 @@ public extension ThrottleDecorator {
     ) {
         queue.sync { [weak self] in self?.execute(block) }
     }
+    
+    func callAsFunction(
+        block: @escaping () -> Void
+    ) {
+        queue.sync { self.execute(block) }
+    }
 }
 
 private extension ThrottleDecorator {
