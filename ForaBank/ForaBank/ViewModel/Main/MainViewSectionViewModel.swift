@@ -33,6 +33,7 @@ class MainSectionCollapsableViewModel: MainSectionViewModel {
 
 enum MainSectionType: String, CaseIterable, Codable {
     
+    case updateInfo
     case products
     case fastOperations
     case promo
@@ -44,6 +45,7 @@ enum MainSectionType: String, CaseIterable, Codable {
     var name: String {
         
         switch self {
+        case .updateInfo: return ""
         case .products: return "Мои продукты"
         case .fastOperations: return "Быстрые операции"
         case .promo: return ""
