@@ -1141,6 +1141,28 @@ extension Payments {
             
             case image(ImageData)
             case name(String)
+            
+            init?(source: Payments.Operation.Source?) {
+                
+                switch source {
+                case .sfp(_, let bankId):
+                    if bankId != BankID.foraBankID.rawValue {
+                        self = .name("ic24Sbp")
+                    } else {
+                        return nil
+                    }
+                default:
+                    self = .name("ic24Sbp")
+                }
+            }
+            
+            init?(parameters: [PaymentsParameterRepresentable]) {
+                
+                guard let bankParameterValue = try? parameters.value(forId: Payments.Parameter.Identifier.sfpBank.rawValue),
+                      bankParameterValue != BankID.foraBankID.rawValue
+                else { return nil }
+                self = .name("ic24Sbp")
+            }
         }
         
         enum Style {

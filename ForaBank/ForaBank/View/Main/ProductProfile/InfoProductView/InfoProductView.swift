@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct InfoProductView: View {
     
@@ -33,12 +34,15 @@ struct InfoProductView: View {
                         
                         if !viewModel.listWithAction.isEmpty {
                             
-                            ItemsViewNew(
-                                items: viewModel.listWithAction,
-                                title: "Реквизиты счета",
-                                showCheckbox: viewModel.needShowCheckbox,
-                                isCheck: $viewModel.accountInfoSelected
-                            )
+                            if viewModel.listWithAction.isAccountHolder {
+                                
+                                ItemsViewNew(
+                                    items: viewModel.listWithAction,
+                                    title: "Реквизиты счета",
+                                    showCheckbox: viewModel.needShowCheckbox,
+                                    isCheck: $viewModel.accountInfoSelected
+                                )
+                            } else { noAccountDetails() }
                         }
                         
                         if let items = viewModel.additionalList {
@@ -112,6 +116,34 @@ struct InfoProductView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             }
         }
+    }
+    
+    private func noAccountDetails() -> some View {
+        
+        ZStack {
+            
+            Rectangle()
+                .fill(Color.mainColorsGrayLightest)
+                .cornerRadius(90)
+            
+            HStack {
+               
+                viewModel.info?.image
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 32, height: 32)
+                
+                if let text = viewModel.info?.title {
+                    Text(text)
+                        .lineLimit(3)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            .padding(.leading, 8)
+            .padding(.trailing, 12)
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 76)
+        .padding(.horizontal, 16)
     }
     
     @ViewBuilder
@@ -206,9 +238,9 @@ struct InfoProductView_Previews: PreviewProvider {
 
 extension InfoProductViewModel {
     
-    static let sample: InfoProductViewModel = .init(product: productData, title: "Информация о вкладе", list: list, listWithAction: [],  additionalList: nil, shareButton: nil, model: .emptyMock)
+    static let sample: InfoProductViewModel = .init(product: productData, title: "Информация о вкладе", list: list, listWithAction: [],  additionalList: nil, shareButton: nil, model: .emptyMock, makeIconView: Model.emptyMock.imageCache().makeIconView(for:))
     
-    static let sampleCard: InfoProductViewModel = .init(product: productData, title: "Реквизиты счета и карты", list: [], listWithAction: .items, additionalList: .cardItems, shareButton: .init(.init(action: {})), model: .emptyMock)
+    static let sampleCard: InfoProductViewModel = .init(product: productData, title: "Реквизиты счета и карты", list: [], listWithAction: .items, additionalList: .cardItems, shareButton: .init(.init(action: {})), model: .emptyMock, makeIconView: Model.emptyMock.imageCache().makeIconView(for:))
     
     static let productData: ProductData = .init(id: 10002585800, productType: .card, number: "4444555566661122", numberMasked: "4444-XXXX-XXXX-1122", accountNumber: "40817810000000000001", balance: 1000123, balanceRub: nil, currency: "RUB", mainField: "Gold", additionalField: "Зарплатная", customName: "Моя карта", productName: "VISA REWARDS R-5", openDate: nil, ownerId: 10001639855, branchId: 2000, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: "string"), largeDesign: .init(description: "string"), mediumDesign: .init(description: "string"), smallDesign: .init(description: "string"), fontDesignColor: .init(description: "FFFFFF"), background: [.init(description: "FFBB36")], order: 0, isVisible: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
     

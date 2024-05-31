@@ -62,7 +62,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let date = Date.dateUTC(with: 1653570551608)
 
         let data = PaymentGeneralData(amount: "10000.00",
-                                      bankId: "100000000217",
+                                      bankId: BankID.foraBankID.rawValue,
                                       bankName: "ФОРА-БАНК",
                                       date: date,
                                       paymentDate: "26.05.2022 16:09:11",

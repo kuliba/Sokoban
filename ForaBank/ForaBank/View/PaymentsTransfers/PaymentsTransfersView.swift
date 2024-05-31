@@ -5,6 +5,7 @@
 //  Created by Dmitry Martynov on 09.05.2022.
 //
 
+import ActivateSlider
 import InfoComponent
 import SberQR
 import SwiftUI
@@ -16,6 +17,7 @@ struct PaymentsTransfersView: View {
     @ObservedObject var viewModel: PaymentsTransfersViewModel
     
     let viewFactory: PaymentsTransfersViewFactory
+    let productProfileViewFactory: ProductProfileViewFactory
     let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
@@ -104,6 +106,9 @@ struct PaymentsTransfersView: View {
     ) -> some View {
         
         switch section {
+        case let updateInfo as UpdateInfoPTViewModel:
+            viewFactory.makeUpdateInfoView(.updateInfoText)
+            
         case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
             PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
             
@@ -220,6 +225,7 @@ struct PaymentsTransfersView: View {
             ProductProfileView(
                 viewModel: productProfileViewModel,
                 viewFactory: viewFactory,
+                productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
             
@@ -485,28 +491,34 @@ private extension PaymentsTransfersView {
         }
     }
     
+    @ViewBuilder
     func paymentFlowView(
         state: UtilityServiceFlowState,
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
-        PaymentFlowMockView(viewModel: state.viewModel)
-            .alert(
-                item: state.alert,
-                content: paymentFlowAlert(event: event)
-            )
-            .fullScreenCover(
-                cover: state.fullScreenCover,
-                dismissFullScreenCover: { event(.dismissFullScreenCover) },
-                content: paymentFlowFullScreenCoverView
-            )
-            .sheet(
-                modal: state.modal,
-                dismissModal: { event(.dismissFraud) },
-                content: paymentFlowModalView(event: { event(.fraud($0)) })
-            )
-            .navigationTitle("Payment")
-            .navigationBarTitleDisplayMode(.inline)
+        let factory: AnywayPaymentFactory<Text> = { fatalError() }()
+        
+        AnywayTransactionStateWrapperView(viewModel: state.viewModel) {
+            
+            AnywayTransactionView(state: $0, event: $1, factory: factory)
+        }
+        .alert(
+            item: state.alert,
+            content: paymentFlowAlert(event: event)
+        )
+        .fullScreenCover(
+            cover: state.fullScreenCover,
+            dismissFullScreenCover: { event(.dismissFullScreenCover) },
+            content: paymentFlowFullScreenCoverView
+        )
+        .sheet(
+            modal: state.modal,
+            dismissModal: { event(.dismissFraud) },
+            content: paymentFlowModalView(event: { event(.fraud($0)) })
+        )
+        .navigationTitle("Payment")
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     func paymentFlowAlert(
@@ -602,17 +614,17 @@ private extension PaymentsTransfersView {
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     typealias Content = UtilityPrepaymentViewModel
-    typealias PaymentViewModel = ObservingPaymentFlowMockViewModel
+    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, UtilityPaymentViewModel>
     
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
     
     typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
     
-    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, UtilityService, PaymentViewModel>
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, UtilityService, UtilityPaymentViewModel>
     
-    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<PaymentViewModel>
+    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<UtilityPaymentViewModel>
 }
 
 extension UtilityServicePaymentFlowState.Alert: Identifiable {
@@ -790,6 +802,7 @@ struct Payments_TransfersView_Previews: PreviewProvider {
         PaymentsTransfersView(
             viewModel: .sample,
             viewFactory: .preview,
+            productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)),
             getUImage: { _ in nil }
         )
     }

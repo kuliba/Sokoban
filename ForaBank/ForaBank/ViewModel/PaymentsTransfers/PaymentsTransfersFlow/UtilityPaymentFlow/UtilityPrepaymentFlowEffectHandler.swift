@@ -23,10 +23,16 @@ extension UtilityPrepaymentFlowEffectHandler {
     ) {
         switch effect {
         case .initiate:
-            microServices.initiateUtilityPayment { dispatch(.initiated($0)) }
+            microServices.initiateUtilityPayment {
+                
+                dispatch(.initiated($0))
+            }
             
-        case let .startPayment(with: payload):
-            microServices.startPayment(payload) { dispatch(.paymentStarted($0)) }
+        case let .startPayment(with: select):
+            microServices.startPayment(select) {
+                
+                dispatch(.paymentStarted(.init(select: select, result: $0)))
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ import InfoComponent
 import PinCodeUI
 import SberQR
 import SwiftUI
+import ActivateSlider
 
 struct ProductProfileView: View {
     
@@ -16,6 +17,7 @@ struct ProductProfileView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
     let viewFactory: PaymentsTransfersViewFactory
+    let productProfileViewFactory: ProductProfileViewFactory
     let getUImage: (Md5hash) -> UIImage?
     
     var accentColor: some View {
@@ -58,7 +60,11 @@ struct ProductProfileView: View {
                     
                     VStack(spacing: 12) {
                         
-                        ProductProfileCardView(viewModel: viewModel.product)
+                        ProductProfileCardView(
+                            viewModel: viewModel.product,
+                            makeSliderActivateView: productProfileViewFactory.makeActivateSliderView,
+                            makeSliderViewModel: viewModel.makeSliderViewModel()
+                        )
                         
                         VStack(spacing: 32) {
                             
@@ -167,6 +173,7 @@ struct ProductProfileView: View {
             MyProductsView(
                 viewModel: viewModel,
                 viewFactory: viewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
             
@@ -174,6 +181,7 @@ struct ProductProfileView: View {
             PaymentsTransfersView(
                 viewModel: viewModel,
                 viewFactory: viewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
         }
@@ -194,6 +202,13 @@ struct ProductProfileView: View {
                 .padding(.top, 26)
                 .padding(.bottom, 72)
             
+        case let .optionsPanelNew(items):
+            PanelView(items: items, event: viewModel.event)
+                .padding(.horizontal, 12)
+                .padding(.top, 26)
+                .padding(.bottom, 72)
+                .fixedSize(horizontal: false, vertical: true)
+
         case let .meToMeLegacy(viewModel):
             MeToMeView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.bottom)
@@ -229,18 +244,21 @@ struct ProductProfileView: View {
         
         switch state {
         case let .changePin(changePIN):
-            
-            changePinCodeView(
-                cardId: changePIN.cardId,
-                actionType: .changePin(changePIN.displayNumber),
-                changePIN.model,
-                confirm: viewModel.confirmShowCVV,
-                confirmChangePin: viewModel.confirmChangePin,
-                showSpinner: {},
-                resendRequest: changePIN.request,
-                resendRequestAfterClose: viewModel.closeLinkAndResendRequest
-            ).transition(.move(edge: .leading))
-            
+            ZStack {
+                Color.white
+                    .ignoresSafeArea()
+                changePinCodeView(
+                    cardId: changePIN.cardId,
+                    actionType: .changePin(changePIN.displayNumber),
+                    changePIN.model,
+                    confirm: viewModel.confirmShowCVV,
+                    confirmChangePin: viewModel.confirmChangePin,
+                    showSpinner: {},
+                    resendRequest: changePIN.request,
+                    resendRequestAfterClose: viewModel.closeLinkAndResendRequest
+                )
+                .transition(.move(edge: .leading))
+            }
         case let .confirmOTP(confirm):
             
             confirmCodeView(
@@ -396,6 +414,9 @@ struct ProfileView_Previews: PreviewProvider {
         ProductProfileView(
             viewModel: viewModel,
             viewFactory: .preview,
+            productProfileViewFactory: .init(
+                makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)
+            ),
             getUImage: { _ in nil }
         )
     }
@@ -415,10 +436,13 @@ extension ProductProfileViewModel {
         paymentsTransfersFlowManager: .preview,
         userAccountNavigationStateManager: .preview,
         sberQRServices: .empty(),
+        unblockCardServices: .preview(),
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         operationDetailFactory: .preview,
+        productNavigationStateManager: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
+        productProfileViewModelFactory: .preview,
         rootView: ""
     )
     
@@ -432,10 +456,13 @@ extension ProductProfileViewModel {
         paymentsTransfersFlowManager: .preview,
         userAccountNavigationStateManager: .preview,
         sberQRServices: .empty(),
+        unblockCardServices: .preview(),
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         operationDetailFactory: .preview,
+        productNavigationStateManager: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
+        productProfileViewModelFactory: .preview,
         rootView: ""
     )
 }

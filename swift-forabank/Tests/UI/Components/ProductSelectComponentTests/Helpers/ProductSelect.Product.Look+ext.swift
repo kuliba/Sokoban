@@ -7,10 +7,11 @@
 
 import Foundation
 import ProductSelectComponent
+import SwiftUI
 
 extension ProductSelect.Product.Look {
     
-    static func test(color: String = "red") -> Self {
+    static func test(color: Color = .red) -> Self {
         
         .init(
             background: .svg(""),

@@ -13,7 +13,9 @@ public enum CardState: Equatable {
     public enum Status: Equatable {
         
         case activated
-        case confirmActivate
+        case confirmActivate(ActivatePayload)
         case inflight
     }
+    
+    public typealias ActivatePayload = Int
 }

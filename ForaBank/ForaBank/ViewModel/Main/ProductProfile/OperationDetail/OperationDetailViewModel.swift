@@ -115,6 +115,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                     model.action.send(ModelAction.Operation.Detail.Request.documentId(documentId))
                     
                 case let payload as ModelAction.Operation.Detail.Response:
+                    
                     withAnimation {
                         self.isLoading = false
                     }
@@ -124,7 +125,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                               let product = model.product(statementId: id) else {
                             return
                         }
-                        
+                
                         self.update(with: statement, product: product, operationDetail: details)
                         
                         guard statement.paymentDetailType != .insideOther,
@@ -402,20 +403,18 @@ extension OperationDetailViewModel {
         init(amount: Double, currencyCodeNumeric: Int, operationType: OperationType, payService: PayServiceViewModel?, model: Model) {
             
             switch operationType {
-            case .credit:
+            case .credit, .creditPlan, .creditFict:
                 self.amount = "+" + (model.amountFormatted(amount: amount, currencyCodeNumeric: currencyCodeNumeric, style: .normal) ?? String(amount))
-                self.colorHex = "1C1C1C"
                 
-            case .debit:
+            case .debit, .debitPlan, .debitFict:
                 self.amount = "-" + (model.amountFormatted(amount: amount, currencyCodeNumeric: currencyCodeNumeric, style: .normal) ?? String(amount))
-                self.colorHex = "1C1C1C"
                 
             default:
                 self.amount = ""
-                self.colorHex = "1C1C1C"
             }
             
             self.payService = payService
+            self.colorHex = "1C1C1C"
         }
     }
     
@@ -472,7 +471,7 @@ extension OperationDetailViewModel {
             case .reject: return "Отказ!"
             case .success: return "Успешно!"
             case .purchase_return: return "Возврат!"
-            case .processing: return "В обработке"
+            case .processing: return "В обработке!"
             }
         }
         

@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
+import AnywayPaymentAdapters
 import Fetcher
 import Foundation
 import OperatorsListComponents
@@ -225,7 +226,7 @@ private extension StartAnywayPaymentPayload {
         case let .lastPayment(lastPayment):
             return lastPayment.puref
             
-        case let .service(utilityService):
+        case let .service(utilityService, _):
             return utilityService.puref
         }
     }
@@ -246,8 +247,7 @@ private extension StartAnywayPaymentResult {
             }
             
         case let .success(response):
-#warning("use response")
-            self = .success(.startPayment(.init()))
+            self = .success(.startPayment(.init(response)))
         }
     }
 }

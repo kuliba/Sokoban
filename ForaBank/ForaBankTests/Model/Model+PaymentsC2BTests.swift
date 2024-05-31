@@ -273,10 +273,10 @@ private extension ProductData.Filter {
             case _ as ProductData.Filter.CurrencyRule:
                 return .currencyRule
             
-            case _ as ProductData.Filter.CardAdditionalOwnedRestrictedRule:
+            case _ as ProductData.Filter.CardAdditionalSelfAccOwnRule:
                 return .cardAdditionalOwnedRestrictedRule
             
-            case _ as ProductData.Filter.CardAdditionalNotOwnedRestrictedRule:
+            case _ as ProductData.Filter.CardAdditionalSelfRule:
                 return .cardAdditionalNotOwnedRestrictedRule
             
             case _ as ProductData.Filter.ProductActiveRule:
