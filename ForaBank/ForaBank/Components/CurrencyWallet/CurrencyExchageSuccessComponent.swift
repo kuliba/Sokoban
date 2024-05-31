@@ -43,9 +43,9 @@ extension CurrencyExchangeSuccessView {
             var appearance: (icon: Image, text: String) {
                 switch self {
                 case .success: return (Image("Done"), "Успешный перевод")
-                case .error: return (Image("Denied"), "Операция неуспешна!")
-                case .suspended: return (Image("waiting"), "Операция временно приостановлена в целях безопасности!")
-                case .wait: return (Image("waiting"), "Операция в обработке!")
+                case .error: return (.ic16Denied, "Операция неуспешна!")
+                case .suspended: return (.ic16Waiting, "Операция временно приостановлена в целях безопасности!")
+                case .wait: return (.ic16Waiting, "Операция в обработке!")
                 }
             }
             
@@ -242,27 +242,27 @@ struct CurrencyExchangeSuccessView_Previews: PreviewProvider {
 
 extension CurrencyExchangeSuccessView.ViewModel {
     
-    static var success = CurrencyExchangeSuccessView
-                            .ViewModel(icon: Image("Done"),
-                                       title: "Успешный перевод",
-                                       subtitle: nil,
-                                       state: .success,
-                                       amount: "100.23 $",
-                                       delay: 2.0)
+    static var success = CurrencyExchangeSuccessView.ViewModel(
+        icon: Image("Done"),
+        title: "Успешный перевод",
+        subtitle: nil,
+        state: .success,
+        amount: "100.23 $",
+        delay: 2.0)
     
-    static var error = CurrencyExchangeSuccessView
-                            .ViewModel(icon: Image("Denied"),
-                                       title: "Операция неуспешна!",
-                                       subtitle: nil,
-                                       state: .error,
-                                       amount: "80.23 $",
-                                       delay: nil )
+    static var error = CurrencyExchangeSuccessView.ViewModel(
+        icon: .ic16Denied,
+        title: "Операция неуспешна!",
+        subtitle: nil,
+        state: .error,
+        amount: "80.23 $",
+        delay: nil )
     
-    static var waiting = CurrencyExchangeSuccessView
-                            .ViewModel(icon: Image("waiting"),
-                                       title: "Операция в обработке!",
-                                       subtitle: nil,
-                                       state: .wait,
-                                       amount: "99.23 $",
-                                       delay: nil)
+    static var waiting = CurrencyExchangeSuccessView.ViewModel(
+        icon: .ic16Waiting,
+        title: "Операция в обработке!",
+        subtitle: nil,
+        state: .wait,
+        amount: "99.23 $",
+        delay: nil)
 }
