@@ -93,7 +93,7 @@ private extension LoggingRemoteServiceDecorator {
     }
     
     static func mapDescription(
-        _ response: (data: Data, httpURLResponse: HTTPURLResponse),
+        _ response: (Data, HTTPURLResponse),
         _ result: Result<Output, MapResponseError>
     ) -> String {
         

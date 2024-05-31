@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersFlowComposerTests.swift
+//  PaymentsTransfersFlowManagerComposerTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 25.05.2024.
@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class PaymentsTransfersFlowComposerTests: XCTestCase {
+final class PaymentsTransfersFlowManagerComposerTests: XCTestCase {
     
     func test_compose_live_shouldNotFail() {
         
@@ -22,7 +22,7 @@ final class PaymentsTransfersFlowComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentsTransfersFlowComposer
+    private typealias SUT = PaymentsTransfersFlowManagerComposer
     
     private func makeSUT(
         flag: StubbedFeatureFlag.Option,

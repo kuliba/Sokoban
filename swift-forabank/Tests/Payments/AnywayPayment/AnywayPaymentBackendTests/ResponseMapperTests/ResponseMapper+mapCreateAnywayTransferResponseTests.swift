@@ -350,14 +350,14 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
         ))
     }
     
-    func test_map_shouldDeliverResponseWithOptions() throws {
+    func test_map_shouldDeliverResponseOnWithOptions() throws {
         
         try assert(string: .withOptions, makeResponse(
             options: [.multiSum]
         ))
     }
 
-    func test_map_shouldDeliverResponseWithSumSTrs() throws {
+    func test_map_shouldDeliverResponseOnWithSumSTrs() throws {
         
         try assert(string: .withSumSTrs, makeResponse(
             additional: [
@@ -369,6 +369,31 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
             ],
             amount: 4273.87,
             needSum: true
+        ))
+    }
+
+
+    func test_map_shouldDeliverResponseOnWithOTP() throws {
+        
+        try assert(string: .withOTP, makeResponse(
+            additional: [
+                makeAdditional(
+                    fieldName: "advisedAmount",
+                    fieldValue: "4136.94",
+                    fieldTitle: "Рекомендованная сумма"
+                )
+            ],
+            amount: 4136.9,
+            currencyAmount: "RUB",
+            currencyPayer: "RUB",
+            debitAmount: 4136.9,
+            fee: 0,
+            finalStep: true,
+            needMake: true,
+            needOTP: true,
+            needSum: false,
+            payeeName: "ЕРЦ УПРАВДОМ: ЖКУ МОСКОВСКАЯ/КАЛУЖСКАЯ ОБЛ., Г. МОСКВА",
+            scenario: .ok
         ))
     }
 
@@ -1834,6 +1859,32 @@ private extension String {
         ],
         "parameterListForNextStep": []
     }
+}
+"""
+    
+    static let withOTP = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "needMake": true,
+    "needOTP": true,
+    "amount": 4136.9,
+    "fee": 0,
+    "currencyAmount": "RUB",
+    "currencyPayer": "RUB",
+    "debitAmount": 4136.9,
+    "payeeName": "ЕРЦ УПРАВДОМ: ЖКУ МОСКОВСКАЯ/КАЛУЖСКАЯ ОБЛ., Г. МОСКВА",
+    "additionalList": [
+      {
+        "fieldName": "advisedAmount",
+        "fieldValue": "4136.94",
+        "fieldTitle": "Рекомендованная сумма"
+      }
+    ],
+    "finalStep": true,
+    "scenario": "OK"
+  }
 }
 """
     

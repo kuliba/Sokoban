@@ -21,7 +21,9 @@ public extension ResponseMapper {
 
 private extension ResponseMapper.CreateAnywayTransferResponse {
     
-    init(_ data: ResponseMapper._Data) {
+    init(_ data: ResponseMapper._Data) throws {
+        
+        if let error = data.validationError { throw error }
         
         self.init(
             additional: (data.additionalList ?? []).map { .init($0) },
@@ -39,13 +41,31 @@ private extension ResponseMapper.CreateAnywayTransferResponse {
             needMake: data.needMake ?? false,
             needOTP: data.needOTP ?? false,
             needSum: data.needSum ?? false,
-            parametersForNextStep: data.parameterListForNextStep.compactMap { .init($0) },
+            parametersForNextStep: (data.parameterListForNextStep ?? []).compactMap { .init($0) },
             paymentOperationDetailID: data.paymentOperationDetailId,
             payeeName: data.payeeName,
             printFormType: data.printFormType,
             scenario: .init(data.scenario),
             options: (data.options ?? []).compactMap(Option.init)
         )
+    }
+}
+
+private extension ResponseMapper._Data {
+    
+    var validationError: ValidationError? {
+        
+        if additionalList == nil && parameterListForNextStep == nil {
+            
+            return .bothAdditionalAndParameterListForNextStepAreNil
+        }
+        
+        return nil
+    }
+    
+    enum ValidationError: Error, Equatable {
+        
+        case bothAdditionalAndParameterListForNextStepAreNil
     }
 }
 
@@ -250,7 +270,7 @@ private extension ResponseMapper {
         let needMake: Bool?
         let needOTP: Bool?
         let needSum: Bool?
-        let parameterListForNextStep: [_Parameter]
+        let parameterListForNextStep: [_Parameter]?
         let paymentOperationDetailId: Int?
         let payeeName: String?
         let printFormType: String?
