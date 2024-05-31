@@ -66,7 +66,7 @@ private extension Model {
         bankListFullInfo.value
             .filter {
                 $0.receiverList.contains("ME2MEPULL")
-                && $0.memberId != "100000000217"
+                && $0.memberId != BankID.foraBankID.rawValue
             }
             .compactMap(FastPaymentsSettings.Bank.init(info:))
             .sorted(by: \.name)

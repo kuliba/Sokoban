@@ -14,7 +14,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         
         let source: Payments.Operation.Source? = nil
         let productID = "abc"
-        let sut: Model = .mockWithEmptyExcept()
+        let sut = makeSUT()
         
         let result = sut.productWithSource(
             source: source,
@@ -39,7 +39,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         sources.forEach { source in
             
             let productID = "abc"
-            let sut: Model = .mockWithEmptyExcept()
+            let sut = makeSUT()
             
             let result = sut.productWithSource(
                 source: source,
@@ -55,7 +55,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         let templateID = 123
         let source: Payments.Operation.Source? = .template(templateID)
         let productID = "abc"
-        let sut: Model = .mockWithEmptyExcept()
+        let sut = makeSUT()
         
         let result = sut.productWithSource(
             source: source,
@@ -72,7 +72,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         let payerAccountID = 4567
         let source: Payments.Operation.Source? = .template(templateID)
         let productID = "abc"
-        let sut: Model = .mockWithEmptyExcept()
+        let sut = makeSUT()
         sut.paymentTemplates.value = [makeTemplate(
             templateID: templateID,
             payerAccountID: payerAccountID
@@ -89,7 +89,7 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     func test_bankParameter_sourceSFP_shouldReturnParameter() {
         
-        let sut: Model = .mockWithEmptyExcept()
+        let sut = makeSUT()
         let operation = Payments.Operation(
             service: .sfp,
             source: .sfp(phone: "phone", bankId: "1")
@@ -107,7 +107,7 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     func test_bankParameter_sourceLatestPayment_shouldReturnParameter() {
         
-        let sut: Model = .mockWithEmptyExcept()
+        let sut = makeSUT()
         sut.bankList.value = [.dummy(id: "1", bankType: .sfp, bankCountry: "RU")]
         sut.latestPayments.value = [PaymentGeneralData(
             id: 1,
@@ -135,7 +135,95 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNoDiff(bankParameter.parameter.id, Self.bankParameterTest.id)
     }
     
+    func test_getHeaderIconForOperation_sfpForaBank_returnsNil() {
+        
+        XCTAssertNil(PPIcon.init(source: makeSPFSource()))
+    }
+    
+    func test_getHeaderIconForOperation_sfpNonForaBank_returnsSbpIcon() {
+        
+        XCTAssertEqual(PPIcon.init(source: makeSPFSource(bankID: "123123123"))?.equatable, .testSBPIcon)
+    }
+    
+    func test_getHeaderIconForOperation_otherSource_returnsSbpIcon() {
+        
+        XCTAssertEqual(PPIcon.init(source: Payments.Operation.Source.avtodor)?.equatable, .testSBPIcon)
+    }
+    
+    func test_getHeaderIconForOperation_nilSource_returnsSbpIcon() {
+        
+        XCTAssertEqual(PPIcon.init(source: nil)?.equatable, .testSBPIcon)
+    }
+    
+    func test_getHeaderIconForParameters_emptyParameters_returnsNil() {
+        
+        XCTAssertNil(PPIcon.init(parameters: [])?.equatable)
+    }
+    
+    func test_getHeaderIconForParameters_sfpBankNotFora_returnsSbpIcon() {
+        
+        XCTAssertEqual(PPIcon(parameters: makeParameter())?.equatable, .testSBPIcon)
+    }
+    
+    func test_getHeaderIconForParameters_sfpBankIsFora_returnsNil() {
+        
+        XCTAssertNil(PPIcon.init(parameters: makeParameter(.foraBankID)))
+    }
+    
+    func test_getHeaderIconForParameters_sfpBankWithEmptyVal_returnsSbpIcon() {
+        
+        XCTAssertEqual(PPIcon.init(parameters: makeParameter(""))?.equatable, .testSBPIcon)
+    }
+    
+    func test_getHeaderIconForParameters_hasSfpBankAndIncorrectParameter_returnsSbpIcon() {
+        
+        XCTAssertEqual(PPIcon.init(parameters: makeParametersWithFora())?.equatable, .testSBPIcon)
+    }
+    
+    // Success View
+    
+    func test_sfpLogo_sfpOperation_foraBank_returnsNil() {
+        
+        XCTAssertNil(PPLogo.sfpLogo(with: .sfpOperation(bankId: BankID.foraBankID.rawValue)))
+    }
+    
+    func test_sfpLogo_sfpOperation_notForaBank_returnsSfpIcon() {
+        
+        XCTAssertEqual(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId"))?.icon.equatable, EquatableParameterSuccessLogoIcon(.sfp))
+    }
+    
+    func test_sfpLogo_notSfpOperation_returnsNil() {
+        
+        XCTAssertNil(PPLogo.sfpLogo(with: .nonSfpOperation()))
+    }
+    
+    func test_sfpLogo_nilSource_returnsNil() {
+        
+        let operation = Payments.Operation(service: .sfp)
+        XCTAssertNil(PPLogo.sfpLogo(with: operation))
+    }
+    
+    func test_sfpLogo_notRemoteStartStep_returnsNil() {
+        
+        let steps = [Payments.Operation.Step(parameters: [], front: .empty(), back: .empty(stage: .remote(.confirm)))]
+        XCTAssertNil(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId", steps: steps)))
+    }
+    
     // MARK: - Helpers
+    private typealias PPIcon = Payments.ParameterHeader.Icon
+    private typealias PPLogo = Payments.ParameterSuccessLogo
+    
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> Model {
+        
+        let sut: Model = .mockWithEmptyExcept()
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        return sut
+    }
     
     private func makeTemplate(
         templateID: Int,
@@ -155,6 +243,30 @@ final class Model_PaymensSFPTests: XCTestCase {
                 )
             ]
         )
+    }
+    
+    private func makeSPFSource(bankID: String = .foraBankID) -> Payments.Operation.Source {
+        
+        return .sfp(phone: "123", bankId: bankID)
+    }
+    
+    private func makeParameter(_ value: String? = nil) -> [PaymentsParameterRepresentable] {
+        
+        let value = value ?? .testParamaterValue
+        return [Payments.ParameterSelectBank.getTestParametersWithFora(value: value)]
+    }
+    
+    
+    private func makeParametersWithFora() -> [PaymentsParameterRepresentable] {
+        
+        let testParameter1 = Payments.ParameterSelectBank.getTestParametersWithFora()
+        let testParameter2 = Payments.ParameterSelectBank.getTestParametersWithFora(
+            bankID: "bankId",
+            value: "value",
+            name: "name"
+        )
+        
+        return [testParameter1, testParameter2]
     }
 }
 
@@ -178,3 +290,119 @@ extension Model {
         paymentTemplates.value.first { $0.id == templateID } != nil
     }
 }
+
+private struct EquatableIcon: Equatable {
+    
+    enum Value: Equatable {
+        
+        case image(ImageData)
+        case name(String)
+    }
+    
+    let value: Value
+    
+    init(_ icon: Payments.ParameterHeader.Icon) {
+        switch icon {
+        case .image(let imageData):
+            self.value = .image(imageData)
+        case .name(let name):
+            self.value = .name(name)
+        }
+    }
+}
+
+private extension EquatableIcon {
+    
+    static let testSBPIcon: Self = .init(.name("ic24Sbp"))
+}
+
+private extension Payments.ParameterHeader.Icon {
+    
+    var equatable: EquatableIcon {
+        
+        return EquatableIcon(self)
+    }
+}
+
+private extension String {
+    
+    static let foraBankID = BankID.foraBankID.rawValue
+    static let testParamaterValue = "1crt88888881"
+}
+
+private extension Payments.ParameterHeader.Icon {
+    
+    static let testSBPIcon: Self = .name("ic24Sbp")
+}
+
+private extension Payments.ParameterSelectBank {
+    
+    static func getTestParametersWithFora(
+        bankID: String = "BankRecipientID",
+        value: String = "1crt88888881",
+        name: String = "ФОРА-БАНК",
+        optionID: String = .foraBankID
+    ) -> PaymentsParameterRepresentable {
+        
+        Payments.ParameterSelectBank(
+            .init(
+                id: bankID,
+                value: value
+            ),
+            icon: .empty,
+            title: "Банк получателя",
+            options: [
+                .init(id: optionID, name: name, subtitle: nil, icon: .empty, isFavorite: false, searchValue: name)
+            ],
+            placeholder: "Начните ввод для поиска",
+            keyboardType: .normal
+        )
+    }
+}
+
+private struct EquatableParameterSuccessLogoIcon: Equatable {
+    
+    private let icon: Payments.ParameterSuccessLogo.Icon
+    
+    init(_ icon: Payments.ParameterSuccessLogo.Icon) {
+        self.icon = icon
+    }
+    
+    static func == (lhs: EquatableParameterSuccessLogoIcon, rhs: EquatableParameterSuccessLogoIcon) -> Bool {
+        switch (lhs.icon, rhs.icon) {
+        case (.sfp, .sfp):
+            return true
+        default:
+            return false
+        }
+    }
+}
+
+private extension Payments.ParameterSuccessLogo.Icon {
+    
+    var equatable: EquatableParameterSuccessLogoIcon {
+        return EquatableParameterSuccessLogoIcon(self)
+    }
+}
+
+private extension Payments.Operation {
+    static func sfpOperation(
+        phone: String = "123",
+        bankId: String,
+        steps: [Step] = [.init(parameters: [], front: .empty(), back: .empty(stage: .remote(.start)))],
+        visible: [String] = []
+    ) -> Payments.Operation {
+        return Payments.Operation(service: .sfp, source: .sfp(phone: phone, bankId: bankId), steps: steps, visible: visible)
+    }
+    
+    static func nonSfpOperation() -> Payments.Operation {
+        return Payments.Operation(service: .avtodor, source: .avtodor)
+    }
+}
+
+private extension Payments.ParameterSuccessLogo {
+    static func makeIcon(_ icon: Payments.ParameterSuccessLogo.Icon?) -> Payments.ParameterSuccessLogo? {
+        return icon.map { Payments.ParameterSuccessLogo(icon: $0) }
+    }
+}
+

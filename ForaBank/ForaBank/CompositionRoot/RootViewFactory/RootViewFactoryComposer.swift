@@ -35,7 +35,8 @@ extension RootViewFactoryComposer {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView,
             makeIconView: imageCache.makeIconView(for:), 
-            makeActivateSliderView: ActivateSliderStateWrapperView.init,
+            makeActivateSliderView: ActivateSliderStateWrapperView.init, 
+            makeUpdateInfoView: UpdateInfoView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory
         )
     }
@@ -60,7 +61,8 @@ private extension RootViewFactoryComposer {
             viewFactory: .init(
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeUserAccountView: makeUserAccountView,
-                makeIconView: imageCache.makeIconView(for:),
+                makeIconView: imageCache.makeIconView(for:), 
+                makeUpdateInfoView: UpdateInfoView.init(text:),
                 makeAnywayPaymentFactory: makeAnywayPaymentFactory
             ), 
             productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init),

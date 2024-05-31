@@ -524,7 +524,25 @@ extension Model {
             
             return numAbo
         }
+        
         return ""
+    }
+    
+    private func getValue(for parameterData: ParameterData, with qrCode: QRCode) -> String {
+        
+        guard let type = parameterData.parameterType else {
+            return ""
+        }
+        
+        switch type {
+        case .account, .personalAccount:
+            
+            return parameterData.inputFieldType == .account ? accountNumberForPayment(qrCode: qrCode) : ""
+            
+        case .code:
+            
+            return qrCode.rawData["category"] ?? ""
+        }
     }
     
     func additionalList(for operatorData: OperatorGroupData.OperatorData, qrCode: QRCode) -> [PaymentServiceData.AdditionalListData]? {
@@ -533,13 +551,13 @@ extension Model {
             
             if $0.viewType == .input {
                 
-                let value: String = ($0.inputFieldType == .account ? accountNumberForPayment(qrCode: qrCode) : "")
                 return PaymentServiceData.AdditionalListData(
                     fieldTitle: $0.title,
                     fieldName: $0.id,
-                    fieldValue: value,
+                    fieldValue: getValue(for: $0, with: qrCode),
                     svgImage: $0.svgImage?.description
                 )
+                
             } else {
                 
                 return nil

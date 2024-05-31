@@ -139,3 +139,23 @@ extension Model {
             .map(\.id)
     }
 }
+
+extension Model {
+    
+    func makeSections(
+        flag: UpdateInfoStatusFeatureFlag
+    ) -> [PaymentsTransfersSectionViewModel] {
+        
+        var sections = [
+            PTSectionLatestPaymentsView.ViewModel(model: self),
+            PTSectionTransfersView.ViewModel(),
+            PTSectionPaymentsView.ViewModel()
+
+        ]
+        if flag.isActive,
+            !self.updateInfo.value.areProductsUpdated {
+                sections.insert(UpdateInfoPTViewModel(), at: 0)
+        }
+        return sections
+    }
+}
