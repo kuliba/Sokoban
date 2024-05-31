@@ -516,7 +516,16 @@ private extension MainViewModel {
                                     handleLandingAction(.sticker)
                                     
                                 }
-                            }
+                            }, 
+                            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { [weak self] in
+                                
+                                guard let self else { return nil }
+                                
+                                if self.updateInfoStatusFlag.isActive {
+                                    return .updateFailureInfo
+                                }
+                                return nil
+                            })
                         )
                         myProductsViewModel.rootActions = rootActions
                         myProductsViewModel.contactsAction = { [weak self] in self?.showContacts() }

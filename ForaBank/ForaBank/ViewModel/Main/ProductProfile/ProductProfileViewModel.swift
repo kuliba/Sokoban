@@ -946,7 +946,8 @@ private extension ProductProfileViewModel {
                             model,
                             cardAction: cardAction,
                             makeProductProfileViewModel: makeProductProfileViewModel,
-                            openOrderSticker: {}
+                            openOrderSticker: {}, 
+                            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: productProfileViewModelFactory.makeInformerDataUpdateFailure)
                         )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
