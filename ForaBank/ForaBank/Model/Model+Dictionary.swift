@@ -649,7 +649,7 @@ extension Model {
                 
                 if !data.isEmpty {
                     
-                    try cache(data, serial: serial)
+                    cache(data, serial: serial)
                 }
             } catch {
                 

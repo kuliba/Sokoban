@@ -67,14 +67,16 @@ private extension UtilityPaymentOperatorLoaderComposer {
         payload: Payload,
         completion: @escaping LoadOperatorsCompletion
     ) {
-        model.loadOperators(
-            .init(
-                operatorID: payload.operatorID,
-                searchText: payload.searchText,
-                pageSize: pageSize
-            ),
-            completion
+        let payload = LoadOperatorsPayload(
+            operatorID: payload.operatorID,
+            searchText: payload.searchText,
+            pageSize: pageSize
         )
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            
+            self.model.loadOperators(payload, completion)
+        }
     }
     
     func stub(
@@ -102,13 +104,19 @@ private extension Model {
         _ payload: LoadOperatorsPayload,
         _ completion: @escaping LoadOperatorsCompletion
     ) {
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+        let log = LoggerAgent().log
+        let cacheLog = { log(.debug, .cache, $0, $1, $2) }
+        
+        if let operators = localAgent.load(type: [CachingSberOperator].self) {
+            cacheLog("Operators count \(operators.count)", #file, #line)
+
+            let page = operators.operators(for: payload)
+            cacheLog("Operators page count \(page.count)", #file, #line)
             
-            if let operators = self?.localAgent.load(type: [CachingSberOperator].self) {
-                completion(operators.operators(for: payload))
-            } else {
-                completion([])
-            }
+            completion(page)
+        } else {
+            cacheLog("No more Operators", #file, #line)
+            completion([])
         }
     }
     
@@ -127,18 +135,16 @@ struct LoadOperatorsPayload: Equatable {
 // TODO: - add tests
 extension Array where Element == CachingSberOperator {
     
-    /// - Warning: expensive with sorting and search. Sorting could be moved to cache.
+    /// - Warning: expensive with sorting and search. Sorting is expected to happen at cache phase.
     func operators(
         for payload: LoadOperatorsPayload
     ) -> [UtilityPaymentOperator] {
         
         // sorting is performed at cache phase
-        let operators = self
+        return self
             .search(searchText: payload.searchText)
             .page(startingAfter: payload.operatorID, pageSize: payload.pageSize)
             .map(UtilityPaymentOperator.init(with:))
-        
-        return operators
     }
 }
 
