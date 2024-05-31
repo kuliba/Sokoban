@@ -852,12 +852,7 @@ private extension PaymentsTransfersViewModel {
         
             model.updateInfo
                 .receive(on: DispatchQueue.main)
-                .sink { [weak self] updateInfo in
-                    
-                    guard let self else { return }
-                    
-                    self.sections = self.paymentsTransfersFactory.makeSections()
-                }
+                .sink { [weak self] in self?.updateSections($0) }
                 .store(in: &bindings)
         
     }
