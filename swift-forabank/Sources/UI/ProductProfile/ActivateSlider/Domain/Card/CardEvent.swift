@@ -10,7 +10,7 @@ import Foundation
 public enum CardEvent: Equatable {
     
     case activateCardResponse(ActivateCardResponse)
-    case activateCard // show
+    case activateCard(ActivatePayload) // show
     case confirmActivate(AlertEvent)
     case dismissActivate
     
@@ -23,8 +23,10 @@ public enum CardEvent: Equatable {
     
     public enum AlertEvent: Equatable {
         
-        case activate
+        case activate(ActivatePayload)
         case cancel
     }
+    
+    public typealias ActivatePayload = Int
 }
 

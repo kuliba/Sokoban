@@ -840,12 +840,16 @@ struct PaymentsSelectBankView: View {
 
 struct PaymentsSelectBankView_Previews: PreviewProvider {
     
+    private static func preview(_ viewModel: PaymentsGroupViewModel) -> some View {
+        PaymentsGroupView(viewModel: viewModel)
+    }
+
     static var previews: some View {
         
         Group {
             
-            PaymentsGroupView(viewModel: PaymentsSelectBankView.ViewModel.selectedGroup)
-            PaymentsGroupView(viewModel: PaymentsSelectBankView.ViewModel.selectedGroupNotEditable)
+            preview(PaymentsSelectBankView.ViewModel.selectedGroup)
+            preview(PaymentsSelectBankView.ViewModel.selectedGroupNotEditable)
         }
     }
 }

@@ -16,7 +16,8 @@ extension FastPaymentsSettingsConfig {
             title: .secondary
         ),
         backgroundColor: .mainColorsGrayLightest,
-        bankDefault: .iFora,
+        bankDefault: .iFora, 
+        carousel: .iForaSmall,
         consentList: .iFora,
         paymentContract: .iFora,
         productSelect: .iFora

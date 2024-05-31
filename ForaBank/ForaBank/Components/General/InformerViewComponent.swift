@@ -264,6 +264,7 @@ struct InformerInternalView: View {
                 .font(.textH4R16240())
                 .foregroundColor(.mainColorsWhite)
                 .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .padding([.leading, .trailing], 16)
         .padding([.top, .bottom], 12)

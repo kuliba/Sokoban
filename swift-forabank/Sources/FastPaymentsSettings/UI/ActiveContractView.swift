@@ -62,7 +62,8 @@ struct ActiveContractView: View {
         ) {
             ProductCardView(
                 productCard: .init(product: $0),
-                config: config.productSelect.card.productCardConfig
+                config: config.productSelect.card.productCardConfig,
+                isSelected: contractDetails.productSelect.selected?.id == $0.id
             )
         }
     }
@@ -77,7 +78,7 @@ private extension Product {
         .init(
             id: productSelectProductID,
             type: productSelectProductType,
-            isAdditional: false, // TODO: add real value for Additional card
+            isAdditional: isAdditional,
             header: header,
             title: title,
             footer: number,

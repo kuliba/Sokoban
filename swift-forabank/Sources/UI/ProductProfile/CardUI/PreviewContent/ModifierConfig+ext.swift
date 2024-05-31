@@ -18,6 +18,15 @@ extension ModifierConfig {
         action: { print("action") }
     )
     
+    static let previewChecked: Self = .init(
+        isChecked: true,
+        isUpdating: false,
+        opacity: 1,
+        isShowingCardBack: false,
+        cardWiggle: false,
+        action: { print("action") }
+    )
+    
     static let previewFront: Self = .init(
         isChecked: false,
         isUpdating: false,

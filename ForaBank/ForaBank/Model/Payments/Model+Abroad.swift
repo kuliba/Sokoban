@@ -364,7 +364,7 @@ extension Model {
                 ProductData.Filter.RestrictedDepositRule(),
                 ProductData.Filter.CurrencyRule(Set(filterCurrencies)),
                 ProductData.Filter.CardActiveRule(),
-                ProductData.Filter.CardAdditionalNotOwnedRestrictedRule(),
+                ProductData.Filter.CardAdditionalSelfRule(),
                 ProductData.Filter.AccountActiveRule()
             ])
             

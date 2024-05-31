@@ -54,7 +54,7 @@ private extension Model {
         allProducts
             .filter(\.allowDebit)
             .filter(\.isActive)
-            .filter(\.isMainProduct)
+            .filter(\.isPaymentProduct)
             .mapToSberQRProducts(
                 response: response,
                 formatBalance: { [weak self] in
@@ -96,12 +96,23 @@ extension Model {
 
 private extension ProductData {
     
-    var isMainProduct: Bool {
+    var isPaymentProduct: Bool {
         
-        if let card = self as? ProductCardData,
-           let isMain = card.isMain {
-            
-            return isMain
+        if let card = self as? ProductCardData {
+            switch card.cardType {
+                
+            case .none:
+                return false
+                
+            case let .some(value):
+                
+                switch value {
+                case .main, .regular, .additionalSelfAccOwn:
+                    return true
+                default:
+                    return false
+                }
+            }
         }
         
         if self is ProductAccountData {

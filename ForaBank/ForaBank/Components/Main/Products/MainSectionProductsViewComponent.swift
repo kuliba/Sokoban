@@ -223,12 +223,16 @@ extension MainSectionProductsView {
 
 struct MainSectionProductsView_Previews: PreviewProvider {
     
+    private static func preview(_ viewModel: MainSectionProductsView.ViewModel) -> some View {
+        MainSectionProductsView(viewModel: viewModel)
+    }
+
     static var previews: some View {
         
         Group {
             
-            MainSectionProductsView(viewModel: .sample)
-            MainSectionProductsView(viewModel: .empty)
+            preview(.sample)
+            preview(.empty)
         }
         .previewLayout(.sizeThatFits)
     }

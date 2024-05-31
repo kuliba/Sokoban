@@ -310,6 +310,10 @@ extension PaymentsGroupView {
 
 struct PaymentsGroupView_Previews: PreviewProvider {
     
+    private static func preview(_ viewModel: PaymentsGroupViewModel) -> some View {
+        PaymentsGroupView(viewModel: viewModel)
+    }
+
     static var previews: some View {
         
         Group {
@@ -329,61 +333,61 @@ struct PaymentsGroupView_Previews: PreviewProvider {
         
         Group {
             
-            PaymentsGroupView(viewModel: .sampleSingleMessage)
+            preview(.sampleSingleMessage)
                 .previewDisplayName("Message")
             
-            PaymentsGroupView(viewModel: .sampleSingleSelect)
+            preview(.sampleSingleSelect)
                 .previewDisplayName("Select")
             
-            PaymentsGroupView(viewModel: .sampleSingleSelectBank)
+            preview(.sampleSingleSelectBank)
                 .previewDisplayName("Select Bank")
             
-            PaymentsGroupView(viewModel: .sampleSingleSelectCountry)
+            preview(.sampleSingleSelectCountry)
                 .previewDisplayName("Select Country")
             
-            PaymentsGroupView(viewModel: .sampleSingleSelectDropDown)
+            preview(.sampleSingleSelectDropDown)
                 .previewDisplayName("Select Drop Down")
             
-            PaymentsGroupView(viewModel: .sampleSingleInput)
+            preview(.sampleSingleInput)
                 .previewDisplayName("Input")
             
-            PaymentsGroupView(viewModel: .sampleSingleInputPhone)
+            preview(.sampleSingleInputPhone)
                 .previewDisplayName("Input Phone")
             
-            PaymentsGroupView(viewModel: .sampleSingleCheck)
+            preview(.sampleSingleCheck)
                 .previewDisplayName("CheckBox")
             
-            PaymentsGroupView(viewModel: .sampleSingleInfo)
+            preview(.sampleSingleInfo)
                 .previewDisplayName("Info")
             
-            PaymentsGroupView(viewModel: .sampleSingleName)
+            preview(.sampleSingleName)
                 .previewDisplayName("Name")
             
         }.previewLayout(.fixed(width: 375, height: 120))
         
         Group {
             
-            PaymentsGroupView(viewModel: .sampleSingleProduct)
+            preview(.sampleSingleProduct)
                 .previewDisplayName("Product")
             
-            PaymentsGroupView(viewModel: .sampleSingleCode)
+            preview(.sampleSingleCode)
                 .previewDisplayName("Code")
             
-            PaymentsGroupView(viewModel: .sampleSingleContinue)
+            preview(.sampleSingleContinue)
                 .previewDisplayName("Continue Button")
             
-            PaymentsGroupView(viewModel: .sampleSingleAmount)
+            preview(.sampleSingleAmount)
                 .previewDisplayName("Amount")
             
-            PaymentsGroupView(viewModel: .sampleSuccessStatus)
+            preview(.sampleSuccessStatus)
                 .previewDisplayName("Success status")
             
-            PaymentsGroupView(viewModel: .sampleSuccessText)
+            preview(.sampleSuccessText)
                 .previewDisplayName("Success text")
             
         }.previewLayout(.fixed(width: 375, height: 120))
         
-        PaymentsGroupView(viewModel: .sampleGroup)
+        preview(.sampleGroup)
             .previewLayout(.sizeThatFits)
             .padding(.vertical, 16)
     }

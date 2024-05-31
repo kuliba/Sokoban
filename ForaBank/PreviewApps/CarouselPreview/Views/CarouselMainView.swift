@@ -69,7 +69,7 @@ struct CarouselMainView: View {
                         action: { print("Card tap") }),
                     activationView: { EmptyView() },
                     config: {
-                        switch carouselProduct.type {
+                        switch carouselProduct.productType {
                         case .card:
                                 .preview
                         case .account:
@@ -105,7 +105,7 @@ private extension CarouselProduct {
         
         self.init(
             id: .init(product.id),
-            type: product.productType.type,
+            productType: product.productType.type,
             isAdditional: product.cardType?.isAdditional ?? false
         )
     }

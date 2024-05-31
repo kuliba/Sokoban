@@ -92,6 +92,7 @@ public extension Image {
     static var ic16Check: Image { Image(#function) }
     static var ic16CheckCircle: Image { Image(#function) }
     static var ic16CheckSquare: Image { Image(#function) }
+    static var ic16CheckLightGray16Fixed: Image { Image(#function) }
     static var ic16ChevronDown: Image { Image(#function) }
     static var ic16ChevronLeft: Image { Image(#function) }
     static var ic16ChevronRight: Image { Image(#function) }
@@ -219,7 +220,9 @@ public extension Image {
     static var ic16LogoForaOneColor: Image { Image(#function) }
     static var ic16Mail: Image { Image(#function) }
     static var ic16MainCardGrey: Image { Image(#function) }
+    static var ic16MainCardGreyFixed2: Image { Image(#function) }
     static var ic16MainCardWhite: Image { Image(#function) }
+    static var ic16MainCardWhiteFixed2: Image { Image(#function) }
     static var ic16Map: Image { Image(#function) }
     static var ic16MapPin: Image { Image(#function) }
     static var ic16MathMinus: Image { Image(#function) }
@@ -392,6 +395,7 @@ public extension Image {
     static var ic24Activity: Image { Image(#function) }
     static var ic24Airplay: Image { Image(#function) }
     static var ic24AlertCircle: Image { Image(#function) }
+    static var ic24AlertCircleRed: Image { Image(#function) }
     static var ic24AlertOctagon: Image { Image(#function) }
     static var ic24AlertTriangle: Image { Image(#function) }
     static var ic24AlignCenter: Image { Image(#function) }
@@ -799,6 +803,7 @@ public extension Image {
     static var ic32Edit2: Image { Image(#function) }
     static var ic32Emblem: Image { Image(#function) }
     static var ic32Globe: Image { Image(#function) }
+    static var ic32GreySimple: Image { Image(#function) }
     static var ic32Image: Image { Image(#function) }
     static var ic32Location: Image { Image(#function) }
     static var ic32LogoForaLine: Image { Image(#function) }
@@ -878,5 +883,4 @@ public extension Image {
     static var ic64Goods: Image { Image(#function) }
     static var ic72Sbp: Image { Image(#function) }
     static var ic96Sbp: Image { Image(#function) }
-    static var cardPlaceholder: Image { Image(#function) }
 }

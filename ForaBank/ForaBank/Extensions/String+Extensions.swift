@@ -275,3 +275,25 @@ extension String {
     
     static let isNeedOnboardingShow = "isNeedOnboardingShow"
 }
+
+extension String {
+    
+    func cardNumberMasked() -> Self {
+        
+        var resultString = String()
+        
+        self.enumerated().forEach { (index, character) in
+            
+            if index % 4 == 0 && index > 0 {
+                resultString += " "
+            }
+            
+            if index > 5, index < 12 {
+                resultString += "*"
+            } else {
+                resultString.append(character)
+            }
+        }
+        return resultString
+    }
+}

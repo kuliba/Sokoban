@@ -69,6 +69,8 @@ struct ItemViewNew: View {
                     if isFirst {
                         
                         CustomDivider()
+                            .rotationEffect(.degrees(90))
+                            .frame(width: 32)
                     }
                 }
             }
