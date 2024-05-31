@@ -397,10 +397,7 @@ extension ProductProfileViewModel {
                         secondary: $0.secondaryButton)
                 },
                 makeInformerDataUpdateFailure: {
-                    if updateInfoStatusFlag.isActive {
-                        return .updateFailureInfo
-                    }
-                    return nil
+                    updateInfoStatusFlag.isActive ? .updateFailureInfo : nil
                 }
             )
             
