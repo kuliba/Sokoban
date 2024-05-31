@@ -702,6 +702,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         createUnblockCardStub: UnblockCardServices.UnblockCardResult = .success(.init(statusBrief: "", statusDescription: "")),
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .init(.inactive),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -733,14 +734,16 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let productProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: .legacy,
-            makeUtilitiesViewModel: { _,_ in },
+            makeUtilitiesViewModel: { _,_ in }, 
+            makeTemplatesListViewModel: { _ in .sampleComplete },
             paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
             unblockCardServices: unblockCardServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient, 
-            productNavigationStateManager: .preview
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: updateInfoStatusFlag
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -749,7 +752,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 completion(.utilities)
             },
             makeProductProfileViewModel: productProfileViewModel,
-            makeTemplatesListViewModel: { _ in .sampleComplete }
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeSections: { model.makeSections(flag: .init(.inactive)) }
         )
         
         let sut = PaymentsTransfersViewModel(

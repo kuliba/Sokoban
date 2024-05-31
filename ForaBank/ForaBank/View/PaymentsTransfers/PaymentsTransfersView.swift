@@ -106,6 +106,9 @@ struct PaymentsTransfersView: View {
     ) -> some View {
         
         switch section {
+        case let updateInfo as UpdateInfoPTViewModel:
+            viewFactory.makeUpdateInfoView(.updateInfoText)
+            
         case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
             PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
             
