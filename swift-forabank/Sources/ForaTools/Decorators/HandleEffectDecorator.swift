@@ -42,11 +42,7 @@ public extension HandleEffectDecorator {
     ) {
         decoratee(effect) { [weak self] event in
             
-            guard let self else { return }
-            
-            decoration.onEffectStart()
-            dispatch(event)
-            decoration.onEffectFinish()
+            self?.decorate { dispatch(event) }
         }
     }
     
@@ -63,7 +59,10 @@ public extension HandleEffectDecorator {
         _ effect: Effect,
         _ dispatch: @escaping Dispatch
     ) {
-        handleEffect(effect) { [self] in dispatch($0); _ = self }
+        decoratee(effect) { [self] event in
+            
+            self.decorate { dispatch(event) }
+        }
     }
 }
 
@@ -92,5 +91,16 @@ extension HandleEffectDecorator {
             self.onEffectStart = onEffectStart
             self.onEffectFinish = onEffectFinish
         }
+    }
+}
+
+private extension HandleEffectDecorator {
+    
+    func decorate(
+        action: () -> Void
+    ) {
+        decoration.onEffectStart()
+        action()
+        decoration.onEffectFinish()
     }
 }
