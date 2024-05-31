@@ -391,7 +391,7 @@ extension OperationDetailData {
         )
     }
     
-    var payerMobileTransferData: TransferData.Payer {
+    var payerGeneralTransferData: TransferData.Payer {
     
         return .init(
             inn: nil,
@@ -411,7 +411,7 @@ extension OperationDetailData {
         }
         
         return .init(
-            inn: payeeINN,
+            inn: payeeINN == "" ? nil : payeeINN,
             kpp: payeeKPP,
             accountId: payeeAccountId,
             accountNumber: payeeAccountNumber,

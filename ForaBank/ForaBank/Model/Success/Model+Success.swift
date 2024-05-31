@@ -302,7 +302,7 @@ extension TemplateButton {
                         check: false,
                         comment: operationDetail.comment,
                         currencyAmount: operationDetail.currencyAmount ?? "",
-                        payer: operationDetail.payerTransferData,
+                        payer: operationDetail.payerGeneralTransferData,
                         payeeExternal: payeeExternal,
                         payeeInternal: nil
                     )
@@ -335,7 +335,7 @@ extension TemplateButton {
                     check: false,
                     comment: operationDetail.comment,
                     currencyAmount: operationDetail.currencyAmount ?? "",
-                    payer: operationDetail.payerMobileTransferData,
+                    payer: operationDetail.payerGeneralTransferData,
                     additional: operation.service != .mobileConnection ? additional : mobileAdditional,
                     puref: operationDetail.puref
                 )
