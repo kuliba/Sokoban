@@ -7,6 +7,7 @@
 
 import AnywayPaymentDomain
 import SwiftUI
+import UIPrimitives
 
 struct AnywayTransactionView: View {
     
@@ -18,35 +19,65 @@ struct AnywayTransactionView: View {
         
         VStack(spacing: 32) {
             
-            Text(state.isValid ? "valid" : "invalid")
-                .foregroundColor(state.isValid ? .green : .red)
-                .font(.headline)
-            
-            Divider()
-            
-            ScrollView(showsIndicators: false) {
+            ScrollViewReader { proxy in
                 
-                VStack(spacing: 32) {
+                ScrollView(showsIndicators: false) {
                     
-                    ForEach(
-                        state.payment.payment.elements,
-                        content: factory.makeElementView
-                    )
-                    
+                    VStack(spacing: 32) {
+                        
+                        ForEach(
+                            state.payment.payment.elements,
+                            content: factory.makeElementView
+                        )
+                        
+                    }
+                    .padding()
                 }
-                .padding()
+                .onAppear { scrollToLast(proxy) }
+                .onChange(of: state.payment.payment.elements.map(\.id)) {
+                    
+                    scrollToLastItem(proxy, iDs: $0)
+                }
             }
             
             factory.makeFooterView(state, { event($0.transactionEvent) })
         }
     }
+    
+    private func scrollToLast(
+        _ proxy: ScrollViewProxy
+    ) {
+        if let lastElement = state.payment.payment.elements.last {
+            
+            withAnimation {
+                
+                proxy.scrollTo(lastElement.id, anchor: .bottom)
+            }
+        }
+    }
+    
+    private func scrollToLastItem(
+        _ proxy: ScrollViewProxy,
+        iDs: [Element.ID]
+    ) {
+        if let last = iDs.last {
+            
+            withAnimation {
+                
+                proxy.scrollTo(last, anchor: .bottom)
+            }
+        }
+    }
+    
+    typealias Element = AnywayPaymentDomain.AnywayPayment.Element
 }
 
 extension AnywayTransactionView {
     
     typealias State = AnywayTransactionState
     typealias Event = AnywayTransactionEvent
-    typealias Factory = AnywayPaymentFactory<Text>
+    typealias Factory = AnywayPaymentFactory<IconView>
+    typealias IconView = UIPrimitives.AsyncImage
 }
 
 // MARK: - Adapters

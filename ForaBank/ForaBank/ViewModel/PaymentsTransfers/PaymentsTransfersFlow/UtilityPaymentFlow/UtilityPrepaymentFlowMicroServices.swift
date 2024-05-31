@@ -25,7 +25,7 @@ struct UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService>
 extension UtilityPrepaymentFlowMicroServices {
     
     /// Combines `b` and `c`
-    typealias InitiateUtilityPayload = Event.UtilityPrepaymentPayload
+    typealias InitiateUtilityPayload = PrepaymentEvent.UtilityPrepaymentPayload
     typealias InitiateUtilityPaymentCompletion = (InitiateUtilityPayload) -> Void
     typealias InitiateUtilityPayment = (@escaping InitiateUtilityPaymentCompletion) -> Void
     
@@ -34,11 +34,14 @@ extension UtilityPrepaymentFlowMicroServices {
     /// - `d1`
     /// - `d2e`
     /// - `d3`, `d4`, `d5`
-    typealias StartPaymentPayload = Effect.Select
-    typealias StartPaymentResult = Event.PaymentStarted.StartPaymentResult
+    typealias StartPaymentPayload = PrepaymentEffect.Select
+    typealias StartPaymentResult = PrepaymentEvent.StartPaymentResult
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     typealias StartPayment = (StartPaymentPayload, @escaping StartPaymentCompletion) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEffect
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias PrepaymentEvent = Event.UtilityPrepaymentFlowEvent
+    
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
+    typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
 }

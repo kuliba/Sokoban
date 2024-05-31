@@ -453,10 +453,11 @@ private extension PaymentsTransfersView {
             payByInstructionsView(paymentsViewModel)
             
         case let .payment(state):
+            #warning("FIXME: navbar")
             paymentFlowView(state: state, event: { event(.payment($0)) })
             
         case let .servicePicker(state):
-            servicePicker(state: state, event: event)
+            servicePickerView(state: state, event: event)
         }
     }
     
@@ -497,7 +498,17 @@ private extension PaymentsTransfersView {
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
-        let factory: AnywayPaymentFactory<Text> = { fatalError() }()
+        let factory = viewFactory.makeAnywayPaymentFactory { event in
+            #warning("move event mapping to factory")
+            switch event {
+                
+            case let .setValue(value, for: id):
+                state.viewModel.event(.payment(.setValue(value, for: id)))
+                
+            case let .widget(widget):
+                state.viewModel.event(.payment(.widget(widget)))
+            }
+        }
         
         AnywayTransactionStateWrapperView(viewModel: state.viewModel) {
             
@@ -517,7 +528,7 @@ private extension PaymentsTransfersView {
             dismissModal: { event(.dismissFraud) },
             content: paymentFlowModalView(event: { event(.fraud($0)) })
         )
-        .navigationTitle("Payment")
+        .navigationTitle("Payment: \(state.viewModel.state.isValid ? "valid" : "invalid")")
         .navigationBarTitleDisplayMode(.inline)
     }
     
@@ -572,7 +583,7 @@ private extension PaymentsTransfersView {
         return { PaymentFlowModalView(state: $0, event: event) }
     }
     
-    func servicePicker(
+    func servicePickerView(
         state: ServicePickerState,
         event: @escaping (UtilityFlowEvent) -> Void
     ) -> some View {
@@ -595,7 +606,7 @@ private extension PaymentsTransfersView {
                 )
             }
         )
-        .navigationTitle(String(describing: state.content))
+        .navigationTitle(state.content.operator.title)
         .navigationBarTitleDisplayMode(.inline)
     }
     
@@ -607,6 +618,7 @@ private extension PaymentsTransfersView {
         
         switch destination {
         case let .payment(state):
+            #warning("FIXME: navbar")
             paymentFlowView(state: state, event: event)
         }
     }

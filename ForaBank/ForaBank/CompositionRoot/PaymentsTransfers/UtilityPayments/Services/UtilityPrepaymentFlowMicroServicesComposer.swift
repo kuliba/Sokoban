@@ -5,12 +5,19 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
+import AnywayPaymentDomain
 import ForaTools
 import Foundation
 import UtilityServicePrepaymentDomain
 
+protocol Purefable {
+    
+    var puref: String { get }
+}
+
 final class UtilityPrepaymentFlowMicroServicesComposer<LastPayment, Operator>
-where Operator: Identifiable {
+where LastPayment: Purefable,
+      Operator: Identifiable {
     
     private let nanoServices: NanoServices
     
@@ -35,13 +42,14 @@ extension UtilityPrepaymentFlowMicroServicesComposer {
 extension UtilityPrepaymentFlowMicroServicesComposer {
     
     typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService>
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator>
+    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, UtilityService>
 }
+
+// MARK: - initiateUtilityPayment
 
 private extension UtilityPrepaymentFlowMicroServicesComposer {
     
-    // MARK: - initiateUtilityPayment
-    
+    /// Load last payments and operators.
     func initiateUtilityPayment(
         _ completion: @escaping InitiateUtilityPaymentCompletion
     ) {
@@ -63,9 +71,12 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         }
     }
     
-    typealias InitiateUtilityPaymentCompletion = (Event.UtilityPrepaymentPayload) -> Void
-    
-    // MARK: - startPayment
+    typealias InitiateUtilityPaymentCompletion = (PrepaymentEvent.UtilityPrepaymentPayload) -> Void
+}
+
+// MARK: - startPayment
+
+private extension UtilityPrepaymentFlowMicroServicesComposer {
     
     func startPayment(
         _ payload: StartPaymentPayload,
@@ -73,22 +84,33 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
     ) {
         switch payload {
         case let .lastPayment(lastPayment):
-            nanoServices.startAnywayPayment(.lastPayment(lastPayment), completion)
+            nanoServices.startAnywayPayment(
+                .lastPayment(lastPayment)
+            ) {
+                completion(self.makeStartPaymentResult($0, lastPayment, puref: lastPayment.puref))
+            }
             
         case let .operator(`operator`):
             getServices(for: `operator`, completion)
             
         case let .service(utilityService, `operator`):
-            nanoServices.startAnywayPayment(.service(utilityService, for: `operator`), completion)
+            nanoServices.startAnywayPayment(
+                .service(utilityService, for: `operator`)
+            ) {
+                completion(self.makeStartPaymentResult($0, puref: utilityService.puref))
+            }
         }
     }
     
-    typealias StartPaymentPayload = Effect.Select
-    typealias StartPaymentResult = Event.PaymentStarted.StartPaymentResult
+    typealias StartPaymentPayload = PrepaymentEffect.Select
+    typealias StartPaymentResult = PrepaymentEvent.StartPaymentResult
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEffect
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
+    typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
+    
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias PrepaymentEvent = Event.UtilityPrepaymentFlowEvent
     
     private func getServices(
         for `operator`: Operator,
@@ -118,7 +140,11 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             completion(.failure(.operatorFailure(`operator`)))
             
         case let (1, .some(utilityService)):
-            nanoServices.startAnywayPayment(.service(utilityService, for: `operator`), completion)
+            nanoServices.startAnywayPayment(
+                .service(utilityService, for: `operator`)
+            ) {
+                completion(self.makeStartPaymentResult($0, puref: .init(utilityService.puref)))
+            }
             
         default:
             if let services = MultiElementArray(services) {
@@ -128,4 +154,105 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             }
         }
     }
+    
+    private func makeStartPaymentResult(
+        _ result: NanoServices.StartAnywayPaymentResult,
+        _ lastPayment: LastPayment,
+        puref: String
+    ) -> StartPaymentResult {
+        
+        let outline = makeAnywayPaymentOutline(lastPayment: lastPayment)
+        return makeStartPaymentResult(result, outline, puref: puref)
+    }
+    
+    private func makeStartPaymentResult(
+        _ result: NanoServices.StartAnywayPaymentResult,
+        puref: String
+    ) -> StartPaymentResult {
+        
+        let outline = makeAnywayPaymentOutline(lastPayment: nil)
+        return makeStartPaymentResult(result, outline, puref: puref)
+    }
+    
+    private func makeStartPaymentResult(
+        _ result: NanoServices.StartAnywayPaymentResult,
+        _ outline: AnywayPaymentOutline,
+        puref: String
+    ) -> StartPaymentResult {
+        
+        return result
+            .map {
+                switch $0 {
+                case let .services(services, for: `operator`):
+                    return .services(services, for: `operator`)
+                    
+                case let .startPayment(response):
+                    let payment = AnywayPaymentDomain.AnywayPayment(
+                        puref: .init(puref),
+                        update: .init(response),
+                        outline: outline
+                    )
+                    
+#warning("hardcoded `isValid: false`")
+                    let state = AnywayTransactionState(
+                        payment: .init(
+                            payment: payment, 
+                            staged: .init(),
+                            outline: outline,
+                            shouldRestart: false
+                        ),
+                        isValid: false
+                    )
+                    
+                    return .startPayment(state)
+                }
+            }
+            .mapError(PrepaymentEvent.StartPaymentFailure.init)
+    }
+    
+    typealias StartPaymentResponse = NanoServices.StartAnywayPaymentSuccess.StartPaymentResponse
+    
+    func makeAnywayPaymentOutline(
+        lastPayment: LastPayment?
+    ) -> AnywayPaymentOutline {
+        
+        nanoServices.makeAnywayPaymentOutline(lastPayment)
+    }
+}
+
+// MARK: - Adapters
+
+private extension AnywayPaymentDomain.AnywayPayment {
+    
+    init(
+        puref: Puref,
+        update: AnywayPaymentUpdate,
+        outline: AnywayPaymentOutline
+    ) {
+        let empty: Self = .init(elements: [], infoMessage: nil, isFinalStep: false, isFraudSuspected: false, puref: puref)
+        self = empty.update(with: update, and: outline)
+    }
+}
+
+private extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentFailure {
+    
+    init(
+        _ error: NanoServices.StartAnywayPaymentFailure
+    ) {
+        switch error {
+        case let .operatorFailure(`operator`):
+            self = .operatorFailure(`operator`)
+            
+        case let .serviceFailure(failure):
+            switch failure {
+            case .connectivityError:
+                self = .serviceFailure(.connectivityError)
+                
+            case let .serverError(message):
+                self = .serviceFailure(.serverError(message))
+            }
+        }
+    }
+    
+    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, UtilityService>
 }
