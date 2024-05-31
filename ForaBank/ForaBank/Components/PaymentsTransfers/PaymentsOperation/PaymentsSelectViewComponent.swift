@@ -249,29 +249,29 @@ extension PaymentsSelectView.ViewModel {
             
             let optionsViewModels = parameterSelect.options.map { OptionViewModel(option: $0) }
             
+            let icon: IconViewModel
+            let textField: RegularFieldViewModel
+            let selected: OptionViewModel.ID?
+            
             if let selectedOption = parameterSelect.options.first(where: { $0.id == selectedOptionId }) {
-                let textField = Self.makeTextField(parameterSelect: parameterSelect, selectedOption: selectedOption)
+                icon = .init(with: selectedOption, and: parameterSelect.icon)
+                textField = Self.makeTextField(parameterSelect: parameterSelect, selectedOption: selectedOption)
+                selected = selectedOption.id
                 
-                self.init(
-                    icon: .init(with: selectedOption, and: parameterSelect.icon),
-                    title: parameterSelect.title,
-                    textField: textField,
-                    filtered: optionsViewModels,
-                    options: optionsViewModels,
-                    selected: selectedOption.id
-                )
             } else {
-                let textField = Self.makeTextField(parameterSelect: parameterSelect, selectedOption: nil)
-                
-                self.init(
-                    icon: .init(with: parameterSelect.icon),
-                    title: parameterSelect.title,
-                    textField: textField,
-                    filtered: optionsViewModels,
-                    options: optionsViewModels,
-                    selected: nil
-                )
+                icon = .init(with: parameterSelect.icon)
+                textField = Self.makeTextField(parameterSelect: parameterSelect, selectedOption: nil)
+                selected = nil
             }
+            
+            self.init(
+                icon: icon,
+                title: parameterSelect.title,
+                textField: textField,
+                filtered: optionsViewModels,
+                options: optionsViewModels,
+                selected: selected
+            )
             
             bind()
         }
