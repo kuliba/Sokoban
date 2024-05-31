@@ -753,7 +753,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             },
             makeProductProfileViewModel: productProfileViewModel,
             makeTemplatesListViewModel: { _ in .sampleComplete },
-            makeSections: { model.makeSections(flag: .init(.inactive)) }
+            makeSections: { model.makeSections(flag: .init(.inactive)) },
+            makeAlertDataUpdateFailureViewModel: { _ in nil }
         )
         
         let sut = PaymentsTransfersViewModel(
