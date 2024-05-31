@@ -13,13 +13,19 @@ extension Model {
     func cache(
         _ data: [SberOperator],
         serial: String?
-    ) throws {
+    ) {
+        let log = LoggerAgent().log
+        log(.debug, .cache, "Data count: \(data.count)", #file, #line)
         
-        DispatchQueue.global(qos: .background).async { [localAgent] in
-            
-            // TODO: replace with injectable service
-            try? localAgent.store(data.makeCache(), serial: serial)
-        }
+        let cache = data.makeCache()
+        log(.debug, .cache, "Cache count: \(cache.count)", #file, #line)
+        
+        loggingCache(
+            data.makeCache(),
+            serial: serial,
+            save: localAgent.store,
+            log: { log(.error, .cache, $0, $1, $2) }
+        )
     }
 }
 

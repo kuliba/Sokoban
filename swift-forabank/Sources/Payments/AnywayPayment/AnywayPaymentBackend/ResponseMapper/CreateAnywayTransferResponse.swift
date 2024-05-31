@@ -32,6 +32,7 @@ extension ResponseMapper {
         public let payeeName: String?
         public let printFormType: String?
         public let scenario: AntiFraudScenario?
+        public let options: [Option]
         
         public init(
             additional: [Additional],
@@ -53,7 +54,8 @@ extension ResponseMapper {
             paymentOperationDetailID: Int? = nil,
             payeeName: String? = nil,
             printFormType: String? = nil,
-            scenario: AntiFraudScenario? = nil
+            scenario: AntiFraudScenario? = nil,
+            options: [Option]
         ) {
             self.additional = additional
             self.amount = amount
@@ -75,6 +77,7 @@ extension ResponseMapper {
             self.payeeName = payeeName
             self.printFormType = printFormType
             self.scenario = scenario
+            self.options = options
         }
     }
 }
@@ -86,6 +89,7 @@ extension ResponseMapper.CreateAnywayTransferResponse {
         public let fieldName: String
         public let fieldValue: String
         public let fieldTitle: String
+        public let md5hash: String?
         public let recycle: Bool
         public let svgImage: String?
         public let typeIdParameterList: String?
@@ -94,13 +98,15 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             fieldName: String,
             fieldValue: String,
             fieldTitle: String,
+            md5Hash: String?,
             recycle: Bool,
-            svgImage: String? = nil,
-            typeIdParameterList: String? = nil
+            svgImage: String?,
+            typeIdParameterList: String?
         ) {
             self.fieldName = fieldName
             self.fieldValue = fieldValue
             self.fieldTitle = fieldTitle
+            self.md5hash = md5Hash
             self.recycle = recycle
             self.svgImage = svgImage
             self.typeIdParameterList = typeIdParameterList
@@ -115,6 +121,11 @@ extension ResponseMapper.CreateAnywayTransferResponse {
     public enum DocumentStatus: Equatable {
         
         case complete, inProgress, rejected
+    }
+    
+    public enum Option: Equatable {
+        
+        case multiSum
     }
     
     public struct Parameter: Equatable {
@@ -139,10 +150,12 @@ extension ResponseMapper.CreateAnywayTransferResponse {
         public let regExp: String
         public let subGroup: String?
         public let subTitle: String?
+        public let md5hash: String?
         public let svgImage: String?
         public let title: String
         public let type: FieldType
         public let viewType: ViewType
+        public let visible: Bool
         
         public init(
             content: String? = nil,
@@ -165,10 +178,12 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             regExp: String,
             subGroup: String? = nil,
             subTitle: String? = nil,
+            md5hash: String?,
             svgImage: String?,
             title: String,
             type: FieldType,
-            viewType: ViewType
+            viewType: ViewType,
+            visible: Bool
         ) {
             self.content = content
             self.dataDictionary = dataDictionary
@@ -190,10 +205,12 @@ extension ResponseMapper.CreateAnywayTransferResponse {
             self.regExp = regExp
             self.subGroup = subGroup
             self.subTitle = subTitle
+            self.md5hash = md5hash
             self.svgImage = svgImage
             self.title = title
             self.type = type
             self.viewType = viewType
+            self.visible = visible
         }
     }
 }

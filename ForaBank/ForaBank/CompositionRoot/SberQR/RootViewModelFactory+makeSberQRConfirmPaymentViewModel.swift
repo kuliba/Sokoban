@@ -51,10 +51,7 @@ private extension Model {
         _ response: GetSberQRDataResponse
     ) -> [ProductSelect.Product] {
         
-        allProducts
-            .filter(\.allowDebit)
-            .filter(\.isActive)
-            .filter(\.isPaymentProduct)
+        paymentProducts()
             .mapToSberQRProducts(
                 response: response,
                 formatBalance: { [weak self] in
@@ -63,78 +60,5 @@ private extension Model {
                 }, 
                 getImage: { self.images.value[$0]?.image }
             )
-    }
-}
-
-extension Model {
-    
-    func formattedBalance(
-        of product: ProductData
-    ) -> String? {
-        
-        if let card = product as? ProductCardData {
-            
-            return amountFormatted(
-                amount: card.balanceValue,
-                currencyCode: card.currency,
-                style: .clipped
-            )
-        }
-        
-        if let account = product as? ProductAccountData {
-            
-            return amountFormatted(
-                amount: account.balanceValue,
-                currencyCode: account.currency,
-                style: .clipped
-            )
-        }
-        
-        return nil
-    }
-}
-
-private extension ProductData {
-    
-    var isPaymentProduct: Bool {
-        
-        if let card = self as? ProductCardData {
-            switch card.cardType {
-                
-            case .none:
-                return false
-                
-            case let .some(value):
-                
-                switch value {
-                case .main, .regular, .additionalSelfAccOwn:
-                    return true
-                default:
-                    return false
-                }
-            }
-        }
-        
-        if self is ProductAccountData {
-            
-            return true
-        }
-        
-        return false
-    }
-    
-    var isActive: Bool {
-        
-        if let card = self as? ProductCardData {
-            
-            return card.statusPc == .active
-        }
-        
-        if self is ProductAccountData {
-            
-            return true
-        }
-        
-        return false
     }
 }

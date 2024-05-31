@@ -25,7 +25,6 @@ where TransactionView: View {
     var body: some View {
         
         makeTransactionView(viewModel.state, viewModel.event(_:))
-            .onChange(of: viewModel.state) { dump($0) }
     }
 }
 
