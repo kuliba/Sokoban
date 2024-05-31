@@ -1,5 +1,5 @@
 //
-//  PaymentsTransfersFlowComposer.swift
+//  PaymentsTransfersFlowManagerComposer.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 09.05.2024.
@@ -17,7 +17,7 @@ import RemoteServices
 import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
 
-final class PaymentsTransfersFlowComposer {
+final class PaymentsTransfersFlowManagerComposer {
     
     private let flag: StubbedFeatureFlag.Option
     private let model: Model
@@ -45,7 +45,7 @@ final class PaymentsTransfersFlowComposer {
     }
 }
 
-extension PaymentsTransfersFlowComposer {
+extension PaymentsTransfersFlowManagerComposer {
     
     func compose() -> FlowManager {
         
@@ -70,7 +70,7 @@ extension PaymentsTransfersFlowComposer {
 
 extension UtilityPaymentLastPayment: Purefable {}
 
-private extension PaymentsTransfersFlowComposer {
+private extension PaymentsTransfersFlowManagerComposer {
     
     func makeEffectHandler() -> EffectHandler {
         
@@ -178,7 +178,7 @@ private extension PaymentsTransfersFlowComposer {
 
 // MARK: - Stubs
 
-private extension PaymentsTransfersFlowComposer {
+private extension PaymentsTransfersFlowManagerComposer {
     
     func stub(
         payload: ComposerFlag.Payload

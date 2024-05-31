@@ -118,7 +118,7 @@ extension RootViewModelFactory {
         let pageSize = 20
 #warning("add to settings")
         let observeLast = 5
-        let ptFlowComposer = PaymentsTransfersFlowComposer(
+        let ptfmComposer = PaymentsTransfersFlowManagerComposer(
             flag: utilitiesPaymentsFlag.optionOrStub,
             model: model,
             httpClient: httpClient,
@@ -138,7 +138,7 @@ extension RootViewModelFactory {
             handleEffect: ProductNavigationStateEffectHandler()
         )
 
-        let paymentsTransfersFlowManager = ptFlowComposer.compose()
+        let paymentsTransfersFlowManager = ptfmComposer.compose()
         
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
