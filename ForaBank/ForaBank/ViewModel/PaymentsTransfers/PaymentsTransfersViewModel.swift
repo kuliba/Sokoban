@@ -970,10 +970,7 @@ private extension PaymentsTransfersViewModel {
             
             section.action
                 .receive(on: scheduler)
-                .sink { [unowned self] action in
-                    
-                    handlePaymentButtonTapped(action)
-                }
+                .sink { [weak self] in self?.handlePaymentButtonTapped($0) }
                 .store(in: &bindings)
         }
     }
