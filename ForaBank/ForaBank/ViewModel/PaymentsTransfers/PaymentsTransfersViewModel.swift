@@ -931,6 +931,38 @@ private extension PaymentsTransfersViewModel {
             action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel)))
     }
     
+    func handlePaymentButtonTapped(_ action: any Action) {
+        
+        if let alertViewModel = paymentsTransfersFactory.makeAlertDataUpdateFailureViewModel({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }), !model.updateInfo.value.areProductsUpdated {
+            event(.setModal(to: .alert(alertViewModel)))
+        } else {
+            
+            switch action {
+                //LatestPayments Section Buttons
+            case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
+                handle(latestPayment: payload.latestPayment)
+                
+                //LatestPayment Section TemplateButton
+            case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
+                handleTemplatesButtonTapped()
+                
+            case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
+                handleCurrencyWalletButtonTapped()
+                
+                //Transfers Section
+            case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
+                handleTransferButtonTapped(for: payload.type)
+                
+                //Payments Section
+            case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
+                handlePaymentButtonTapped(for: payload.type)
+                
+            default:
+                break
+            }
+        }
+    }
+    
     private func bindSections(
         _ sections: [PaymentsTransfersSectionViewModel]
     ) {
@@ -938,32 +970,7 @@ private extension PaymentsTransfersViewModel {
             
             section.action
                 .receive(on: scheduler)
-                .sink { [unowned self] action in
-                    
-                    switch action {
-                        //LatestPayments Section Buttons
-                    case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
-                        handle(latestPayment: payload.latestPayment)
-                        
-                        //LatestPayment Section TemplateButton
-                    case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
-                        handleTemplatesButtonTapped()
-                        
-                    case _ as LatestPaymentsViewModelAction.ButtonTapped.CurrencyWallet:
-                        handleCurrencyWalletButtonTapped()
-                        
-                        //Transfers Section
-                    case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
-                        handleTransferButtonTapped(for: payload.type)
-                        
-                        //Payments Section
-                    case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
-                        handlePaymentButtonTapped(for: payload.type)
-                        
-                    default:
-                        break
-                    }
-                }
+                .sink { [weak self] in self?.handlePaymentButtonTapped($0) }
                 .store(in: &bindings)
         }
     }
