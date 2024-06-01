@@ -44,11 +44,11 @@ extension PaymentsTransfersFlowReducer {
         case .dismiss(.modal):
             state.modal = nil
             
-        case .goToMain:
-            state.outside = .main
-            
         case .outside(.addCompany):
             state.outside = .chat
+            
+        case .outside(.goToMain):
+            state.outside = .main
             
         case let .paymentButtonTapped(paymentButton):
             (state, effect) = reduce(state, paymentButton)

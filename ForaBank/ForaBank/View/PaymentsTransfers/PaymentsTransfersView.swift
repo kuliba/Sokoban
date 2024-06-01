@@ -94,7 +94,7 @@ struct PaymentsTransfersView: View {
                     
                     fullScreenCoverView(
                         fullScreenCover: fullScreenCover,
-                        goToMain: { viewModel.event(.goToMain) }
+                        goToMain: { viewModel.event(.outside(.goToMain)) }
                     )
                 }
             )
@@ -571,7 +571,7 @@ private extension PaymentsTransfersView {
                 
                 Divider()
                 
-                Button("go to Main", action: { viewModel.event(.goToMain) })
+                Button("go to Main", action: { viewModel.event(.outside(.goToMain)) })
             }
         }
     }

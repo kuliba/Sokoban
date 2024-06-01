@@ -8,7 +8,6 @@
 enum PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService> {
     
     case dismiss(Dismiss)
-    case goToMain
     case outside(Outside)
     case paymentButtonTapped(PaymentButton)
     case setModal(to: Modal)
@@ -30,6 +29,7 @@ extension PaymentsTransfersFlowEvent {
     enum Outside {
         
         case addCompany
+        case goToMain
     }
     
     enum PaymentButton {
