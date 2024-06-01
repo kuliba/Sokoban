@@ -762,7 +762,7 @@ private extension UtilityPrepaymentFlowEvent {
         
         switch self {
         case .addCompany:
-            return .addCompany
+            return .outside(.addCompany)
             
         case .payByInstructions:
             return .payByInstructions

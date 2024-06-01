@@ -231,7 +231,7 @@ private extension PaymentsTransfersFlowReducer {
         var effect: UtilityPrepaymentFlowEffect?
         
         switch event {
-        case .addCompany:
+        case .outside(.addCompany):
             state.outside = .chat
             
         case .dismissAlert:

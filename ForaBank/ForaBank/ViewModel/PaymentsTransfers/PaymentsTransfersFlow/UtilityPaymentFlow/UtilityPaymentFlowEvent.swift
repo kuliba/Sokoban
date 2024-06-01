@@ -24,16 +24,22 @@ extension UtilityPaymentFlowEvent {
     
     enum UtilityPrepaymentFlowEvent {
         
-        case addCompany
         case dismissAlert
         case dismissDestination
         case dismissOperatorFailureDestination
         case dismissServicesDestination
         case initiated(Initiated)
+        case outside(Outside)
         case payByInstructions
         case payByInstructionsFromError
         case paymentStarted(StartPaymentResult)
         case select(Select)
+        
+        #warning("extract to extension")
+        enum Outside {
+            
+            case addCompany
+        }
     }
 }
 
