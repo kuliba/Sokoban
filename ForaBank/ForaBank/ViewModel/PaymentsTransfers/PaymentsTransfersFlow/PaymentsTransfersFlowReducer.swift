@@ -234,7 +234,7 @@ private extension PaymentsTransfersFlowReducer {
         case .outside(.addCompany):
             state.outside = .chat
             
-        case .dismissAlert:
+        case .dismiss(.alert):
             state.setUtilityPrepaymentAlert(to: nil)
             
         case .dismissDestination:

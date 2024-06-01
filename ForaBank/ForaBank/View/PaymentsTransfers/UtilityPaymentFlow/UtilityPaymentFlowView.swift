@@ -42,7 +42,7 @@ where Content: View,
                 event: event,
                 map: {
                     switch $0 {
-                    case .dismissAlert: return .dismissAlert
+                    case .dismissAlert: return .dismiss(.alert)
                     }
                 }
             )
