@@ -31,29 +31,28 @@ extension UtilityPaymentFlowEvent {
         case payByInstructionsFromError
         case paymentStarted(StartPaymentResult)
         case select(Select)
-        
-        #warning("extract to extension")
-        enum Dismiss {
-            
-            case alert
-            case destination
-            case operatorFailureDestination
-            case servicesDestination
-        }
-        #warning("extract to extension")
-        enum Outside {
-            
-            case addCompany
-        }
     }
 }
 
 extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
     
+    enum Dismiss {
+        
+        case alert
+        case destination
+        case operatorFailureDestination
+        case servicesDestination
+    }
+    
     enum Initiated {
         
         case legacy(PaymentsServicesViewModel)
         case v1(UtilityPrepaymentPayload)
+    }
+    
+    enum Outside {
+        
+        case addCompany
     }
     
     enum Select {

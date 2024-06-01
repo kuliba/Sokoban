@@ -231,23 +231,14 @@ private extension PaymentsTransfersFlowReducer {
         var effect: UtilityPrepaymentFlowEffect?
         
         switch event {
-        case .outside(.addCompany):
-            state.outside = .chat
-            
-        case .dismiss(.alert):
-            state.setUtilityPrepaymentAlert(to: nil)
-            
-        case .dismiss(.destination):
-            state.setUtilityPrepaymentDestination(to: nil)
-            
-        case .dismiss(.operatorFailureDestination):
-            state.setUtilityServiceOperatorFailureDestination(to: nil)
-            
-        case .dismiss(.servicesDestination):
-            state.setUtilityServicePickerDestination(to: nil)
+        case let .dismiss(dismiss):
+            reduce(&state, with: dismiss)
             
         case let .initiated(initiated):
             reduce(&state, with: initiated)
+            
+        case .outside(.addCompany):
+            state.outside = .chat
             
         case .payByInstructions:
             payByInstructions(&state)
@@ -263,6 +254,25 @@ private extension PaymentsTransfersFlowReducer {
         }
         
         return (state, effect)
+    }
+    
+    private func reduce(
+        _ state: inout State,
+        with dismiss: UtilityPrepaymentFlowEvent.Dismiss
+    ) {
+        switch dismiss {
+        case .alert:
+            state.setUtilityPrepaymentAlert(to: nil)
+            
+        case .destination:
+            state.setUtilityPrepaymentDestination(to: nil)
+            
+        case .operatorFailureDestination:
+            state.setUtilityServiceOperatorFailureDestination(to: nil)
+            
+        case .servicesDestination:
+            state.setUtilityServicePickerDestination(to: nil)
+        }
     }
     
     private func reduce(
