@@ -520,7 +520,7 @@ private extension PaymentsTransfersView {
         )
         .fullScreenCover(
             cover: state.fullScreenCover,
-            dismissFullScreenCover: { event(.dismissFullScreenCover) },
+            dismissFullScreenCover: { event(.dismiss(.fullScreenCover)) },
             content: paymentFlowFullScreenCoverView
         )
         .sheet(

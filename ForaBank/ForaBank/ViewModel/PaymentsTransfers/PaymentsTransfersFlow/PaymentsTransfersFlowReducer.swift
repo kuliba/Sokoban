@@ -151,7 +151,7 @@ private extension PaymentsTransfersFlowReducer {
         case .dismissFraud:
             state.setPaymentModal(to: nil)
             
-        case .dismissFullScreenCover:
+        case .dismiss(.fullScreenCover):
             state.setFullScreenCover(to: nil)
             
         case .dismissPaymentError:
