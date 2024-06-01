@@ -22,6 +22,8 @@ final class PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, 
         self.closeAction = closeAction
         self.notify = notify
     }
+    
+    typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
 }
 
 extension PaymentsTransfersFlowReducer {
@@ -38,11 +40,8 @@ extension PaymentsTransfersFlowReducer {
         case let .dismiss(dismiss):
             reduce(&state, with: dismiss)
             
-        case .outside(.addCompany):
-            state.outside = .chat
-            
-        case .outside(.goToMain):
-            state.outside = .main
+        case let .outside(outside):
+            reduce(&state, with: outside)
             
         case let .paymentButtonTapped(paymentButton):
             (state, effect) = reduce(state, paymentButton)
@@ -56,11 +55,6 @@ extension PaymentsTransfersFlowReducer {
         
         return (state, effect)
     }
-}
-
-extension PaymentsTransfersFlowReducer {
-    
-    typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
     
     typealias State = PaymentsTransfersViewModel._Route<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
     typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService>
@@ -82,6 +76,19 @@ private extension PaymentsTransfersFlowReducer {
             
         case .modal:
             state.modal = nil
+        }
+    }
+    
+    func reduce(
+        _ state: inout State,
+        with outside: Event.Outside
+    ) {
+        switch outside {
+        case .addCompany:
+            state.outside = .chat
+            
+        case .goToMain:
+            state.outside = .main
         }
     }
     
@@ -291,7 +298,7 @@ private extension PaymentsTransfersFlowReducer {
             reduce(&state, with: success)
         }
     }
-        
+    
     private func reduce(
         _ state: inout State,
         with failure: UtilityPrepaymentFlowEvent.StartPaymentFailure
@@ -400,7 +407,7 @@ private extension PaymentsTransfersFlowEffect {
 private extension PaymentsTransfersViewModel._Route {
     
     typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
-
+    
     var utilityPrepayment: UtilityFlowState? {
         
         guard case let .utilityPayment(utilityPrepayment) = destination
