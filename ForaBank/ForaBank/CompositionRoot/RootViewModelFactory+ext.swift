@@ -107,7 +107,6 @@ extension RootViewModelFactory {
         : httpClient
         
         let paymentsTransfersFactoryComposer = PaymentsTransfersFactoryComposer(
-            httpClient: utilitiesHTTPClient,
             model: model
         )
         let makeUtilitiesViewModel = paymentsTransfersFactoryComposer.makeUtilitiesViewModel(

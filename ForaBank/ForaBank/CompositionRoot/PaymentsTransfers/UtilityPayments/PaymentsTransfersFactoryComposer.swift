@@ -9,14 +9,10 @@ import SwiftUI
 
 final class PaymentsTransfersFactoryComposer {
     
-    private let httpClient: HTTPClient
     private let model: Model
     
-    init(
-        httpClient: HTTPClient,
-        model: Model
-    ) {
-        self.httpClient = httpClient
+    init(model: Model) {
+        
         self.model = model
     }
 }
