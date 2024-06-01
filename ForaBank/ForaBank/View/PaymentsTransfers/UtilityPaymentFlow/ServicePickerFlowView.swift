@@ -22,7 +22,7 @@ where ContentView: View,
         content()
             .navigationDestination(
                 destination: state.destination,
-                dismissDestination: { event(.prepayment(.dismissServicesDestination)) },
+                dismissDestination: { event(.prepayment(.dismiss(.servicesDestination))) },
                 content: destinationView
             )
             .alert(

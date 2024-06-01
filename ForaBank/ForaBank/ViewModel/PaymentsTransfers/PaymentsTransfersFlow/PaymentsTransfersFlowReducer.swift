@@ -243,7 +243,7 @@ private extension PaymentsTransfersFlowReducer {
         case .dismiss(.operatorFailureDestination):
             state.setUtilityServiceOperatorFailureDestination(to: nil)
             
-        case .dismissServicesDestination:
+        case .dismiss(.servicesDestination):
             state.setUtilityServicePickerDestination(to: nil)
             
         case let .initiated(initiated):
