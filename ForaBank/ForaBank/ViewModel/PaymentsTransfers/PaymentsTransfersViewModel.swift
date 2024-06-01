@@ -172,7 +172,7 @@ extension PaymentsTransfersViewModel {
         
         let qrScannerModel = qrViewModelFactory.makeQRScannerModel { [weak self] in
             
-            self?.event(.dismissModal)
+            self?.event(.dismiss(.modal))
         }
         bind(qrScannerModel)
         self.route.modal = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
@@ -736,7 +736,7 @@ private extension PaymentsTransfersViewModel {
                     self.openScanner()
                     
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
-                    event(.dismissModal)
+                    event(.dismiss(.modal))
                     
                 case _ as PaymentsTransfersViewModelAction.Close.FullCover:
                     fullCover = nil
@@ -902,7 +902,7 @@ private extension PaymentsTransfersViewModel {
     
     private func showRequisites(qrCode: QRCode) {
         
-        self.event(.dismissModal)
+        self.event(.dismiss(.modal))
         let paymentsViewModel = PaymentsViewModel(
             source: .requisites(qrCode: qrCode),
             model: model,
@@ -1263,11 +1263,11 @@ private extension PaymentsTransfersViewModel {
                 case _ as PaymentsMeToMeAction.Response.Failed:
                     
                     makeAlert("Перевод выполнен")
-                    self.event(.dismissModal)
+                    self.event(.dismiss(.modal))
                     
                 case _ as PaymentsMeToMeAction.Close.BottomSheet:
                     
-                    self.event(.dismissModal)
+                    self.event(.dismiss(.modal))
                     
                 case let payload as PaymentsMeToMeAction.InteractionEnabled:
                     
@@ -1356,7 +1356,7 @@ private extension PaymentsTransfersViewModel {
     private func requestContactsPayment(
         source: Payments.Operation.Source
     ) {
-        self.event(.dismissModal)
+        self.event(.dismiss(.modal))
         
         switch source {
         case let .latestPayment(latestPaymentId):
@@ -1480,13 +1480,13 @@ private extension PaymentsTransfersViewModel {
             
             guard operators.count > 0 else {
                 
-                self.event(.dismissModal)
+                self.event(.dismiss(.modal))
                 self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
                 return
             }
             
             if operators.count == 1 {
-                self.event(.dismissModal)
+                self.event(.dismiss(.modal))
                 
                 if let operatorValue = operators.first, Payments.paymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
                     
@@ -1506,14 +1506,14 @@ private extension PaymentsTransfersViewModel {
                     }
                 }
             } else {
-                event(.dismissModal)
+                event(.dismiss(.modal))
                 delay(for: .milliseconds(700)) { [weak self] in
                     
                     self?.handleQRMappingWithMultipleOperators(qr, operators)
                 }
             }
         } else {
-            event(.dismissModal)
+            event(.dismiss(.modal))
             action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
         }
     }
@@ -1584,7 +1584,7 @@ private extension PaymentsTransfersViewModel {
     
     private func handleUnknownQR() {
         
-        event(.dismissModal)
+        event(.dismiss(.modal))
         delay(for: .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
@@ -1598,7 +1598,7 @@ private extension PaymentsTransfersViewModel {
     
     private func payByInstructions() {
         
-        event(.dismissModal)
+        event(.dismiss(.modal))
         
         let paymentsViewModel = makeByInstructionsPaymentsViewModel()
         
@@ -1610,7 +1610,7 @@ private extension PaymentsTransfersViewModel {
     
     private func handleFailure(qr: QRCode) {
         
-        event(.dismissModal)
+        event(.dismiss(.modal))
         delay(for: .milliseconds(700)) { [weak self] in
             
             guard let self else { return }
@@ -1620,7 +1620,7 @@ private extension PaymentsTransfersViewModel {
                 addCompanyAction: { [weak self] in self?.event(.addCompany) },
                 requisitsAction: { [weak self] in
                     
-                    self?.event(.dismissModal)
+                    self?.event(.dismiss(.modal))
                     self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
                 }
             )
@@ -1631,7 +1631,7 @@ private extension PaymentsTransfersViewModel {
     
     private func handleC2bURL(_ url: URL) {
         
-        event(.dismissModal)
+        event(.dismiss(.modal))
         let paymentsViewModel = PaymentsViewModel(
             source: .c2b(url),
             model: model,
@@ -1647,7 +1647,7 @@ private extension PaymentsTransfersViewModel {
     
     private func handleC2bSubscribeURL(_ url: URL) {
         
-        self.event(.dismissModal)
+        self.event(.dismiss(.modal))
         let paymentsViewModel = PaymentsViewModel(
             source: .c2bSubscribe(url),
             model: model,
@@ -1663,7 +1663,7 @@ private extension PaymentsTransfersViewModel {
     
     private func handleSberQRURL(_ url: URL) {
         
-        event(.dismissModal)
+        event(.dismiss(.modal))
         rootActions?.spinner.show()
         
         sberQRServices.getSberQRData(url) { [weak self] result in
@@ -1683,7 +1683,7 @@ private extension PaymentsTransfersViewModel {
         
         switch result {
         case .failure:
-            self.route.modal = .alert(.techError { [weak self] in self?.event(.dismissModal) })
+            self.route.modal = .alert(.techError { [weak self] in self?.event(.dismiss(.modal)) })
             
         case let .success(getSberQRDataResponse):
             do {
@@ -1695,7 +1695,7 @@ private extension PaymentsTransfersViewModel {
                 
             } catch {
                 
-                self.route.modal = .alert(.techError { [weak self] in self?.event(.dismissModal) })
+                self.route.modal = .alert(.techError { [weak self] in self?.event(.dismiss(.modal)) })
             }
         }
     }
@@ -1732,7 +1732,7 @@ private extension PaymentsTransfersViewModel {
             
             switch result {
             case .failure:
-                self.route.modal = .alert(.techError { [weak self] in self?.event(.dismissModal) })
+                self.route.modal = .alert(.techError { [weak self] in self?.event(.dismiss(.modal)) })
                 
             case let .success(success):
                 let successViewModel = qrViewModelFactory.makePaymentsSuccessViewModel(success)
@@ -1743,7 +1743,7 @@ private extension PaymentsTransfersViewModel {
     
     private func handleURL() {
         
-        event(.dismissModal)
+        event(.dismiss(.modal))
         delay(for: .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(

@@ -9,7 +9,6 @@ enum PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService> {
     
     case addCompany
     case dismiss(Dismiss)
-    case dismissModal
     case goToMain
     case paymentButtonTapped(PaymentButton)
     case setModal(to: Modal)
@@ -22,6 +21,7 @@ extension PaymentsTransfersFlowEvent {
         
         case destination
         case fullScreenCover
+        case modal
     }
     
     #warning("make `Modal` generic")

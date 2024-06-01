@@ -34,14 +34,14 @@ struct PaymentsTransfersView: View {
         .alert(
             item: .init(
                 get: { viewModel.route.modal?.alert },
-                set: { if $0 == nil { viewModel.event(.dismissModal) } }
+                set: { if $0 == nil { viewModel.event(.dismiss(.modal)) } }
             ),
             content: Alert.init(with:)
         )
         .bottomSheet(
             item: .init(
                 get: { viewModel.route.modal?.bottomSheet },
-                set: { if $0 == nil { viewModel.event(.dismissModal) } }
+                set: { if $0 == nil { viewModel.event(.dismiss(.modal)) } }
             ),
             content: bottomSheetView
         )
@@ -79,7 +79,7 @@ struct PaymentsTransfersView: View {
         Color.clear
             .sheet(
                 modal: viewModel.route.modal?.sheet,
-                dismissModal: { viewModel.event(.dismissModal) },
+                dismissModal: { viewModel.event(.dismiss(.modal)) },
                 content: sheetView
             )
     }
@@ -89,7 +89,7 @@ struct PaymentsTransfersView: View {
         Color.clear
             .fullScreenCover(
                 cover: viewModel.route.modal?.fullScreenSheet,
-                dismissFullScreenCover: { viewModel.event(.dismissModal) },
+                dismissFullScreenCover: { viewModel.event(.dismiss(.modal)) },
                 content: { fullScreenCover in
                     
                     fullScreenCoverView(
