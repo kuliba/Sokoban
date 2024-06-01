@@ -23,7 +23,6 @@ extension PaymentsTransfersFlowEvent {
         case modal
     }
     
-    #warning("make `Modal` generic")
     typealias Modal = PaymentsTransfersViewModel.Modal
     
     enum Outside {
