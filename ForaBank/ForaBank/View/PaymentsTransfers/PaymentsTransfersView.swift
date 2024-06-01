@@ -525,7 +525,7 @@ private extension PaymentsTransfersView {
         )
         .sheet(
             modal: state.modal,
-            dismissModal: { event(.dismissFraud) },
+            dismissModal: { event(.dismiss(.fraud)) },
             content: paymentFlowModalView(event: { event(.fraud($0)) })
         )
         .navigationTitle("Payment: \(state.viewModel.state.isValid ? "valid" : "invalid")")

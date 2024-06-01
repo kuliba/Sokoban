@@ -148,7 +148,7 @@ private extension PaymentsTransfersFlowReducer {
         var effect: Effect?
         
         switch event {
-        case .dismissFraud:
+        case .dismiss(.fraud):
             state.setPaymentModal(to: nil)
             
         case .dismiss(.fullScreenCover):
