@@ -8,7 +8,7 @@
 enum PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService> {
     
     case addCompany
-    case dismissDestination
+    case dismiss(Dismiss)
     case dismissFullScreenCover
     case dismissModal
     case goToMain
@@ -18,6 +18,11 @@ enum PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService> {
 }
 
 extension PaymentsTransfersFlowEvent {
+    
+    enum Dismiss {
+        
+        case destination
+    }
     
     #warning("make `Modal` generic")
     typealias Modal = PaymentsTransfersViewModel.Modal

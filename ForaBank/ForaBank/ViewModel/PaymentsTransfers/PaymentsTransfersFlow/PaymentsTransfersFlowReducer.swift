@@ -38,7 +38,7 @@ extension PaymentsTransfersFlowReducer {
         case .addCompany:
             state.outside = .chat
             
-        case .dismissDestination:
+        case .dismiss(.destination):
             state.destination = nil
             
         case .dismissFullScreenCover:
