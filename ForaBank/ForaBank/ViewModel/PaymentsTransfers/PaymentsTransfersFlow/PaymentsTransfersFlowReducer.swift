@@ -83,8 +83,8 @@ private extension PaymentsTransfersFlowReducer {
         var effect: Effect?
         
         switch button {
-        case .utilityService:
-            effect = .utilityFlow(.prepayment(.initiate))
+        case let .utilityService(legacyPayload):
+            effect = .utilityFlow(.prepayment(.initiate(legacyPayload)))
         }
         
         return (state, effect)
@@ -219,9 +219,8 @@ private extension PaymentsTransfersFlowReducer {
         case .dismissServicesDestination:
             state.setUtilityServicePickerDestination(to: nil)
             
-        case let .initiated(payload):
-            let utilityPrepaymentState = factory.makeUtilityPrepaymentState(payload)
-            state.destination = .utilityPayment(utilityPrepaymentState)
+        case let .initiated(initiated):
+            reduce(&state, with: initiated)
             
         case .payByInstructions:
             payByInstructions(&state)
@@ -237,6 +236,20 @@ private extension PaymentsTransfersFlowReducer {
         }
         
         return (state, effect)
+    }
+    
+    private func reduce(
+        _ state: inout State,
+        with initiated: UtilityPrepaymentFlowEvent.Initiated
+    ) {
+        switch initiated {
+        case let .legacy(paymentsServicesViewModel):
+            state.destination = .paymentsServices(paymentsServicesViewModel)
+            
+        case let .v1(payload):
+            let utilityPrepaymentState = factory.makeUtilityPrepaymentState(payload)
+            state.destination = .utilityPayment(utilityPrepaymentState)
+        }
     }
     
     private func payByInstructions(

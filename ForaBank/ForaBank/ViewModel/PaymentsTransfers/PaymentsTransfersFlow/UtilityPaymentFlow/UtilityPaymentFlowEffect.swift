@@ -14,16 +14,22 @@ extension UtilityPaymentFlowEffect {
     
     enum UtilityPrepaymentFlowEffect {
         
-        case initiate
+        case initiate(LegacyPaymentPayload)
         case startPayment(with: Select)
     }
 }
 
 extension UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect {
     
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    struct LegacyPaymentPayload {
+        
+        let type: PTSectionPaymentsView.ViewModel.PaymentsType
+        let navLeadingAction: () -> Void
+        let navTrailingAction: () -> Void
+        let addCompany: () -> Void
+        let requisites: () -> Void
+    }
+    
     typealias Select = Event.UtilityPrepaymentFlowEvent.Select
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
 }
-
-extension UtilityPaymentFlowEffect: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
-extension UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}

@@ -15,7 +15,7 @@ struct PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService
 extension PaymentsTransfersFlowReducerFactory {
     
     typealias UtilityPrepaymentFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
-    typealias Payload = UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
+    typealias Payload = UtilityPrepaymentFlowEvent.Initiated.UtilityPrepaymentPayload
     typealias MakeUtilityPrepaymentState = (Payload) -> UtilityPaymentFlowState<Operator, UtilityService, Content, UtilityPaymentViewModel>
     
     typealias Notify = (PaymentStateProjection) -> Void

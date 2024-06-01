@@ -22,12 +22,17 @@ extension PaymentsTransfersFlowEvent {
     #warning("make `Modal` generic")
     typealias Modal = PaymentsTransfersViewModel.Modal
     
-    enum PaymentButton: Equatable {
+    enum PaymentButton {
         
-        case utilityService
+        case utilityService(LegacyPaymentPayload)
     }
     
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
 }
 
-//extension PaymentsTransfersFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
+extension PaymentsTransfersFlowEvent.PaymentButton {
+    
+    typealias LegacyPaymentPayload = PrepaymentEffect.LegacyPaymentPayload
+    typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
+}

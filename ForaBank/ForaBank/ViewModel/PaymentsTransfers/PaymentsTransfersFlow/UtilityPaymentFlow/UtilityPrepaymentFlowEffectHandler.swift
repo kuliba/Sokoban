@@ -22,8 +22,8 @@ extension UtilityPrepaymentFlowEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case .initiate:
-            microServices.initiateUtilityPayment {
+        case let .initiate(payload):
+            microServices.initiateUtilityPayment(payload) {
                 
                 dispatch(.initiated($0))
             }

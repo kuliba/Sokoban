@@ -29,7 +29,7 @@ extension UtilityPaymentFlowEvent {
         case dismissDestination
         case dismissOperatorFailureDestination
         case dismissServicesDestination
-        case initiated(UtilityPrepaymentPayload)
+        case initiated(Initiated)
         case payByInstructions
         case payByInstructionsFromError
         case paymentStarted(StartPaymentResult)
@@ -38,6 +38,12 @@ extension UtilityPaymentFlowEvent {
 }
 
 extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
+    
+    enum Initiated {
+        
+        case legacy(PaymentsServicesViewModel)
+        case v1(UtilityPrepaymentPayload)
+    }
     
     enum Select {
         
@@ -66,6 +72,26 @@ extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
             case serverError(String)
         }
     }
+}
+
+extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.Initiated: Equatable where LastPayment: Equatable, Operator: Equatable {
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        
+        switch (lhs, rhs) {
+        case let (.legacy(lhs), .legacy(rhs)):
+            return lhs === rhs
+            
+        case let (.v1(lhs), .v1(rhs)):
+            return lhs == rhs
+            
+        default:
+            return false
+        }
+    }
+}
+
+extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.Initiated {
     
     struct UtilityPrepaymentPayload {
         
@@ -80,4 +106,4 @@ extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent: Equatable where La
 extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.Select: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
 extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentSuccess: Equatable where Operator: Equatable, UtilityService: Equatable {}
 extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentFailure: Equatable where Operator: Equatable {}
-extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.Initiated.UtilityPrepaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable {}

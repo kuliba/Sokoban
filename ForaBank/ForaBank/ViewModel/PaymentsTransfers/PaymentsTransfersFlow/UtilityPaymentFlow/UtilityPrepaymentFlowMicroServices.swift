@@ -9,7 +9,8 @@ import UtilityServicePrepaymentCore
 
 struct UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService> {
     
-    /// `InitiateUtilityPayment` combines
+    /// For `legacy` `InitiateUtilityPayment` wraps `PaymentsServicesViewModel` creation
+    /// For `v1` `InitiateUtilityPayment` combines
     /// - `b`: getOperatorsListByParam
     /// - `c`: getAllLatestPayments
     let initiateUtilityPayment: InitiateUtilityPayment
@@ -24,10 +25,9 @@ struct UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService>
 
 extension UtilityPrepaymentFlowMicroServices {
     
-    /// Combines `b` and `c`
-    typealias InitiateUtilityPayload = PrepaymentEvent.UtilityPrepaymentPayload
-    typealias InitiateUtilityPaymentCompletion = (InitiateUtilityPayload) -> Void
-    typealias InitiateUtilityPayment = (@escaping InitiateUtilityPaymentCompletion) -> Void
+    typealias InitiateUtilityPaymentCompletion = (PrepaymentEvent.Initiated) -> Void
+    /// Combines `b` and `c` for `v1`
+    typealias InitiateUtilityPayment = (PrepaymentEffect.LegacyPaymentPayload, @escaping InitiateUtilityPaymentCompletion) -> Void
     
     /// StartPayment is a micro-service, that combines
     /// - `e` from LastPayment

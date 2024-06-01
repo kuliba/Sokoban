@@ -645,22 +645,9 @@ private extension PaymentsTransfersViewModel {
     private func makeUtilitiesViewModel(
         for type: PTSectionPaymentsView.ViewModel.PaymentsType
     ) {
-        rootActions?.spinner.show()
-        
-        paymentsTransfersFactory.makeUtilitiesViewModel(
+        event(.paymentButtonTapped(.utilityService(
             makeUtilitiesPayload(forType: type)
-        ) { [weak self] in
-            
-            self?.rootActions?.spinner.hide()
-            
-            switch $0 {
-            case let .legacy(paymentsServicesViewModel):
-                self?.route.destination = .paymentsServices(paymentsServicesViewModel)
-                
-            case .utilities:
-                self?.event(.paymentButtonTapped(.utilityService))
-            }
-        }
+        )))
     }
     
     private func handleOutside(
@@ -1116,7 +1103,27 @@ private extension PaymentsTransfersViewModel {
         forType type: PTSectionPaymentsView.ViewModel.PaymentsType
     ) -> PaymentsTransfersFactory.MakeUtilitiesPayload {
         
-        .init(
+        return .init(
+            type: type,
+            navLeadingAction: { [weak self] in self?.event(.dismissDestination) },
+            navTrailingAction: { [weak self] in
+                self?.event(.dismissDestination)
+                self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
+            },
+            addCompany: { [weak self] in self?.event(.addCompany) },
+            requisites: { [weak self] in
+                
+                self?.event(.dismissDestination)
+                self?.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: .init(original: "", rawData: [:])))
+            }
+        )
+    }
+    
+    private func makeUtilitiesPayload(
+        forType type: PTSectionPaymentsView.ViewModel.PaymentsType
+    ) -> Event.PaymentButton.LegacyPaymentPayload {
+        
+        return .init(
             type: type,
             navLeadingAction: { [weak self] in self?.event(.dismissDestination) },
             navTrailingAction: { [weak self] in

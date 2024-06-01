@@ -13,7 +13,7 @@ where LastPayment == UtilityPaymentLastPayment,
     static var preview: Self {
         
         return .init(
-            initiateUtilityPayment: { _ in },
+            initiateUtilityPayment: { _,_  in },
             startPayment: { _,_ in }
         )
     }

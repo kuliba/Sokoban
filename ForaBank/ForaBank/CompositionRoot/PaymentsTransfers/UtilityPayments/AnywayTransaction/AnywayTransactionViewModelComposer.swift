@@ -11,12 +11,12 @@ import Foundation
 
 final class AnywayTransactionViewModelComposer {
     
-    private let flag: StubbedFeatureFlag.Option
+    private let flag: Flag
     private let httpClient: HTTPClient
     private let log: Log
     
     init(
-        flag: StubbedFeatureFlag.Option,
+        flag: Flag,
         httpClient: HTTPClient,
         log: @escaping Log
     ) {
@@ -24,6 +24,9 @@ final class AnywayTransactionViewModelComposer {
         self.httpClient = httpClient
         self.log = log
     }
+    
+    typealias Flag = StubbedFeatureFlag.Option
+    typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
 }
 
 extension AnywayTransactionViewModelComposer {
@@ -37,11 +40,7 @@ extension AnywayTransactionViewModelComposer {
         case .stub: return stub(initialState)
         }
     }
-}
-
-extension AnywayTransactionViewModelComposer {
     
-    typealias Log = (String, StaticString, UInt) -> Void
     typealias ViewModel = AnywayTransactionViewModel
 }
 

@@ -10,14 +10,19 @@ import XCTest
 
 final class PaymentsTransfersFlowManagerComposerTests: XCTestCase {
     
+    func test_compose_inactive_shouldNotFail() {
+        
+        _ = makeSUT(flag: .inactive).compose()
+    }
+    
     func test_compose_live_shouldNotFail() {
         
-        _ = makeSUT(flag: .live).compose()
+        _ = makeSUT(flag: .active(.live)).compose()
     }
     
     func test_compose_stub_shouldNotFail() {
         
-        _ = makeSUT(flag: .stub).compose()
+        _ = makeSUT(flag: .active(.stub)).compose()
     }
     
     // MARK: - Helpers
@@ -25,7 +30,7 @@ final class PaymentsTransfersFlowManagerComposerTests: XCTestCase {
     private typealias SUT = PaymentsTransfersFlowManagerComposer
     
     private func makeSUT(
-        flag: StubbedFeatureFlag.Option,
+        flag: UtilitiesPaymentsFlag.RawValue,
         model: Model? = nil,
         pageSize: Int = 30,
         observeLast: Int = 5,
@@ -36,10 +41,10 @@ final class PaymentsTransfersFlowManagerComposerTests: XCTestCase {
         let model = model ?? .mockWithEmptyExcept()
         let httpClient = HTTPClientSpy()
         let sut = SUT(
-            flag: flag,
+            flag: .init(flag),
             model: model,
             httpClient: httpClient,
-            log: { _,_,_ in },
+            log: { _,_,_,_,_  in },
             pageSize: pageSize,
             observeLast: observeLast
         )
