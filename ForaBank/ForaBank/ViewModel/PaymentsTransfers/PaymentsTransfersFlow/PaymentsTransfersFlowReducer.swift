@@ -35,9 +35,6 @@ extension PaymentsTransfersFlowReducer {
         var effect: Effect?
         
         switch event {
-        case .addCompany:
-            state.outside = .chat
-            
         case .dismiss(.destination):
             state.destination = nil
             
@@ -49,6 +46,9 @@ extension PaymentsTransfersFlowReducer {
             
         case .goToMain:
             state.outside = .main
+            
+        case .outside(.addCompany):
+            state.outside = .chat
             
         case let .paymentButtonTapped(paymentButton):
             (state, effect) = reduce(state, paymentButton)

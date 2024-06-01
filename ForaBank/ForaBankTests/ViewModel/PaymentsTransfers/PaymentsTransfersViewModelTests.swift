@@ -139,7 +139,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let (sut, _,_) = makeSUT()
         let spy = ValueSpy(sut.$route.map(\.destination?.id))
         
-        sut.event(.addCompany)
+        sut.event(.outside(.addCompany))
         
         XCTAssertNoDiff(spy.values, [nil, nil])
     }
@@ -148,7 +148,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let (sut, _, effectSpy) = makeSUT()
         
-        sut.event(.addCompany)
+        sut.event(.outside(.addCompany))
         
         XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
     }

@@ -1117,7 +1117,7 @@ private extension PaymentsTransfersViewModel {
                 self?.event(.dismiss(.destination))
                 self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
             },
-            addCompany: { [weak self] in self?.event(.addCompany) },
+            addCompany: { [weak self] in self?.event(.outside(.addCompany)) },
             requisites: { [weak self] in
                 
                 self?.event(.dismiss(.destination))
@@ -1137,7 +1137,7 @@ private extension PaymentsTransfersViewModel {
                 self?.event(.dismiss(.destination))
                 self?.action.send(PaymentsTransfersViewModelAction.ButtonTapped.Scanner())
             },
-            addCompany: { [weak self] in self?.event(.addCompany) },
+            addCompany: { [weak self] in self?.event(.outside(.addCompany)) },
             requisites: { [weak self] in
                 
                 self?.event(.dismiss(.destination))
@@ -1570,7 +1570,7 @@ private extension PaymentsTransfersViewModel {
             searchBar: .nameOrTaxCode(),
             navigationBar: navigationBarViewModel, model: self.model,
             operators: operators,
-            addCompanyAction: { [weak self] in self?.event(.addCompany) },
+            addCompanyAction: { [weak self] in self?.event(.outside(.addCompany)) },
             requisitesAction: { [weak self] in
                 
                 self?.event(.dismiss(.destination))
@@ -1589,7 +1589,7 @@ private extension PaymentsTransfersViewModel {
             
             let failedView = QRFailedViewModel(
                 model: self.model,
-                addCompanyAction: { [weak self] in self?.event(.addCompany) },
+                addCompanyAction: { [weak self] in self?.event(.outside(.addCompany)) },
                 requisitsAction: { [weak self] in self?.payByInstructions() }
             )
             self.route.destination = .failedView(failedView)
@@ -1617,7 +1617,7 @@ private extension PaymentsTransfersViewModel {
             
             let failedView = QRFailedViewModel(
                 model: self.model,
-                addCompanyAction: { [weak self] in self?.event(.addCompany) },
+                addCompanyAction: { [weak self] in self?.event(.outside(.addCompany)) },
                 requisitsAction: { [weak self] in
                     
                     self?.event(.dismiss(.modal))
@@ -1748,7 +1748,7 @@ private extension PaymentsTransfersViewModel {
             
             let failedView = QRFailedViewModel(
                 model: self.model,
-                addCompanyAction: { [weak self] in self?.event(.addCompany) },
+                addCompanyAction: { [weak self] in self?.event(.outside(.addCompany)) },
                 requisitsAction: { [weak self] in self?.payByInstructions() }
             )
             
