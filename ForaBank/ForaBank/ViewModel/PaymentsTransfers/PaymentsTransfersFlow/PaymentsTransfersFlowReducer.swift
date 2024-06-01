@@ -148,14 +148,8 @@ private extension PaymentsTransfersFlowReducer {
         var effect: Effect?
         
         switch event {
-        case .dismiss(.fraud):
-            state.setPaymentModal(to: nil)
-            
-        case .dismiss(.fullScreenCover):
-            state.setFullScreenCover(to: nil)
-            
-        case .dismiss(.paymentError):
-            state.destination = nil
+        case let .dismiss(dismiss):
+            reduce(&state, with: dismiss)
             
         case let .fraud(fraudEvent):
             (state, effect) = reduce(state, fraudEvent)
@@ -165,6 +159,22 @@ private extension PaymentsTransfersFlowReducer {
         }
         
         return (state, effect)
+    }
+    
+    private func reduce(
+        _ state: inout State,
+        with dismiss: UtilityServicePaymentFlowEvent.Dismiss
+    ) {
+        switch dismiss {
+        case .fraud:
+            state.setPaymentModal(to: nil)
+            
+        case .fullScreenCover:
+            state.setFullScreenCover(to: nil)
+            
+        case .paymentError:
+            state.destination = nil
+        }
     }
     
     private func reduce(
