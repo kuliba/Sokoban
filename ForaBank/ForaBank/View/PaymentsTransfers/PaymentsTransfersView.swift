@@ -548,7 +548,7 @@ private extension PaymentsTransfersView {
                         primaryButton: .init(
                             type: .default,
                             title: "OK",
-                            event: .dismissPaymentError
+                            event: .dismiss(.paymentError)
                         )
                     ),
                     event: event
