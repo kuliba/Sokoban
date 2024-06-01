@@ -25,7 +25,6 @@ extension UtilityPaymentFlowEvent {
     enum UtilityPrepaymentFlowEvent {
         
         case dismiss(Dismiss)
-        case dismissOperatorFailureDestination
         case dismissServicesDestination
         case initiated(Initiated)
         case outside(Outside)
@@ -39,6 +38,7 @@ extension UtilityPaymentFlowEvent {
             
             case alert
             case destination
+            case operatorFailureDestination
         }
         #warning("extract to extension")
         enum Outside {

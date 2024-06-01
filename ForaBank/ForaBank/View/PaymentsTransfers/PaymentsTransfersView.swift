@@ -444,7 +444,7 @@ private extension PaymentsTransfersView {
             operatorFailureView(
                 operatorFailure: operatorFailure,
                 payByInstructions: { event(.prepayment(.payByInstructions)) },
-                dismissDestination: { event(.prepayment(.dismissOperatorFailureDestination)) }
+                dismissDestination: { event(.prepayment(.dismiss(.operatorFailureDestination))) }
             )
             .navigationTitle(String(describing: operatorFailure.content))
             .navigationBarTitleDisplayMode(.inline)

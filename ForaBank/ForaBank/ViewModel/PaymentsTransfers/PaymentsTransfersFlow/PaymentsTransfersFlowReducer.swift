@@ -240,7 +240,7 @@ private extension PaymentsTransfersFlowReducer {
         case .dismiss(.destination):
             state.setUtilityPrepaymentDestination(to: nil)
             
-        case .dismissOperatorFailureDestination:
+        case .dismiss(.operatorFailureDestination):
             state.setUtilityServiceOperatorFailureDestination(to: nil)
             
         case .dismissServicesDestination:
