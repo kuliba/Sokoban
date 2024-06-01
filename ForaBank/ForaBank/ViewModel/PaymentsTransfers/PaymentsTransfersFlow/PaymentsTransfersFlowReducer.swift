@@ -35,14 +35,8 @@ extension PaymentsTransfersFlowReducer {
         var effect: Effect?
         
         switch event {
-        case .dismiss(.destination):
-            state.destination = nil
-            
-        case .dismiss(.fullScreenCover):
-            state.modal = nil
-            
-        case .dismiss(.modal):
-            state.modal = nil
+        case let .dismiss(dismiss):
+            reduce(&state, with: dismiss)
             
         case .outside(.addCompany):
             state.outside = .chat
@@ -74,6 +68,22 @@ extension PaymentsTransfersFlowReducer {
 }
 
 private extension PaymentsTransfersFlowReducer {
+    
+    func reduce(
+        _ state: inout State,
+        with dismiss: Event.Dismiss
+    ) {
+        switch dismiss {
+        case .destination:
+            state.destination = nil
+            
+        case .fullScreenCover:
+            state.modal = nil
+            
+        case .modal:
+            state.modal = nil
+        }
+    }
     
     private func reduce(
         _ state: State,
