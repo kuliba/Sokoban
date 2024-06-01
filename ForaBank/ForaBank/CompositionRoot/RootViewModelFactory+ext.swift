@@ -354,7 +354,10 @@ extension ProductProfileViewModel {
                 makeUtilitiesViewModel: makeUtilitiesViewModel,
                 makeProductProfileViewModel: makeProductProfileViewModel,
                 makeTemplatesListViewModel: makeTemplatesListViewModel,
-                makeSections: { model.makeSections(flag: updateInfoStatusFlag) }
+                makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+                makeAlertDataUpdateFailureViewModel: { 
+                    updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
+                }
             )
             
             let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData, model in
@@ -466,7 +469,10 @@ private extension RootViewModelFactory {
             makeUtilitiesViewModel: makeUtilitiesViewModel,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplatesListViewModel: makeTemplatesListViewModel, 
-            makeSections: { model.makeSections(flag: updateInfoStatusFlag) }
+            makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+            makeAlertDataUpdateFailureViewModel: {
+                updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
+            }
         )
         
         let mainViewModel = MainViewModel(

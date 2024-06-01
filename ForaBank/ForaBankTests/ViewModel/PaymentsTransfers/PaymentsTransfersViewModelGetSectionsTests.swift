@@ -7,12 +7,13 @@
 
 @testable import ForaBank
 import XCTest
+import SwiftUI
 
 final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
     
     func test_makeSections_empty_shouldMakeEmptySections() {
         
-        let (sut, model) = makeSUT(
+        let sut = makeSUT(
             flag: .active,
             sections: [])
         
@@ -21,7 +22,7 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
     
     func test_makeSections_oneSection_shouldMakeOneSection() {
         
-        let (sut, model) = makeSUT(
+        let sut = makeSUT(
             flag: .active,
             sections: [PTSectionTransfersView.ViewModel()])
         
@@ -30,7 +31,7 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
     
     func test_makeSections_moreSection_shouldMakeMoreSection() {
         
-        let (sut, model) = makeSUT(
+        let sut = makeSUT(
             flag: .active,
             sections: [
                 PTSectionPaymentsView.ViewModel(),
@@ -47,10 +48,8 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
         sections: [PaymentsTransfersSectionViewModel],
         file: StaticString = #file,
         line: UInt = #line
-    ) -> (
-        sut: PaymentsTransfersViewModel,
-        model: Model
-    ) {
+    ) -> PaymentsTransfersViewModel
+    {
         let model: Model = .mockWithEmptyExcept()
         
         let sut = PaymentsTransfersViewModel(
@@ -69,7 +68,7 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(model, file: file, line: line)
         
-        return (sut, model)
+        return sut
     }
     
     private func makeProductProfileViewModel(
@@ -100,7 +99,8 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             makeUtilitiesViewModel: { _,_ in },
             makeProductProfileViewModel: productProfileViewModel,
             makeTemplatesListViewModel: { _ in .sampleComplete },
-            makeSections: { sections }
+            makeSections: { sections }, 
+            makeAlertDataUpdateFailureViewModel: { _ in nil }
         )
     }
     
