@@ -41,7 +41,7 @@ extension PaymentsTransfersFlowReducer {
         case .dismiss(.destination):
             state.destination = nil
             
-        case .dismissFullScreenCover:
+        case .dismiss(.fullScreenCover):
             state.modal = nil
             
         case .dismissModal:
