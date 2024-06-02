@@ -20,7 +20,7 @@ struct ServicePickerView<LastPayment, Operator>: View {
             ForEach(state.services.elements, content: serviceView)
         }
         .listStyle(.plain)
-   }
+    }
     
     private func serviceView(
         service: Service
@@ -44,8 +44,8 @@ struct ServicePickerView<LastPayment, Operator>: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.vertical, 1)
             .contentShape(Rectangle())
+            .foregroundColor(service.id.localizedCaseInsensitiveContains("failure") ? .red : .primary)
         }
-        .foregroundColor(service.id.localizedCaseInsensitiveContains("failure") ? .red : .primary)
     }
 }
 
