@@ -453,7 +453,7 @@ private extension PaymentsTransfersView {
             payByInstructionsView(paymentsViewModel)
             
         case let .payment(state):
-            #warning("FIXME: navbar")
+#warning("FIXME: navbar")
             paymentFlowView(state: state, event: { event(.payment($0)) })
             
         case let .servicePicker(state):
@@ -471,7 +471,7 @@ private extension PaymentsTransfersView {
         SberOperatorFailureFlowView(
             state: operatorFailure,
             event: dismissDestination,
-            content: {
+            contentView: {
                 
                 OperatorFailureView(
                     state: operatorFailure.content,
@@ -500,7 +500,7 @@ private extension PaymentsTransfersView {
     ) -> some View {
         
         let factory = viewFactory.makeAnywayPaymentFactory { event in
-            #warning("move event mapping to factory")
+#warning("move event mapping to factory")
             switch event {
                 
             case let .setValue(value, for: id):
@@ -603,29 +603,17 @@ private extension PaymentsTransfersView {
         ServicePickerFlowView(
             state: state,
             event: event,
-            content: {
+            contentView: {
                 
-                ServicePickerView(
-                    state: state.content.services.elements,
-                    serviceView: { service in
-                        
-                        Button {
-                            
-                            selectService(service)
-                            
-                        } label: {
-                            
-                            UtilityServiceLabel(
-                                service: service,
-                                iconView: { operatorIconView }
-                            )
-                        }
-                    }
+                servicePickerContentView(
+                    services: state.content.services.elements,
+                    selectService: selectService,
+                    iconView: operatorIconView
                 )
             },
             destinationView: {
                 
-                servicesDestinationView(
+                servicePickerDestinationView(
                     destination: $0,
                     event: { event(.payment($0)) }
                 )
@@ -635,15 +623,37 @@ private extension PaymentsTransfersView {
         .navigationBarTitleDisplayMode(.inline)
     }
     
+    func servicePickerContentView(
+        services: [UtilityService],
+        selectService: @escaping (UtilityService) -> Void,
+        iconView: IconDomain.IconView
+    ) -> some View {
+        
+        ServicePickerView(
+            state: services,
+            serviceView: { service in
+                
+                Button {
+                    
+                    selectService(service)
+                    
+                } label: {
+                    
+                    UtilityServiceLabel(service: service, iconView: iconView)
+                }
+            }
+        )
+    }
+    
     @ViewBuilder
-    func servicesDestinationView(
+    func servicePickerDestinationView(
         destination: ServicePickerState.Destination,
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
         switch destination {
         case let .payment(state):
-            #warning("FIXME: navbar")
+#warning("FIXME: navbar")
             paymentFlowView(state: state, event: event)
         }
     }

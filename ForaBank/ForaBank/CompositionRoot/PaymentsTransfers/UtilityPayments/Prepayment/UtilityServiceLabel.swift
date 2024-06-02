@@ -10,13 +10,13 @@ import SwiftUI
 struct UtilityServiceLabel<IconView: View>: View {
     
     let service: UtilityService
-    let iconView: () -> IconView
+    let iconView: IconView
     
     var body: some View {
         
         HStack {
             
-            iconView()
+            iconView
                 .frame(width: 32, height: 32)
             
             VStack(alignment: .leading, spacing: 6) {
@@ -39,6 +39,6 @@ struct UtilityServiceLabel<IconView: View>: View {
 #Preview {
     UtilityServiceLabel(
         service: .init(name: "Utility Service", puref: "preview||123"),
-        iconView: { Text("..") }
+        iconView: Text("..")
     )
 }
