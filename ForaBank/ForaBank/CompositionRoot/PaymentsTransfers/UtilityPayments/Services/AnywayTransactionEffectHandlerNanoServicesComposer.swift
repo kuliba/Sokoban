@@ -103,7 +103,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     }
     
     private func processPayment(
-    ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
+    ) -> AnywayTransactionEffectHandlerNanoServices.ProcessPayment {
         
         let process = ForaBank.NanoServices.makeCreateAnywayTransferV2(httpClient, infoNetworkLog)
         
