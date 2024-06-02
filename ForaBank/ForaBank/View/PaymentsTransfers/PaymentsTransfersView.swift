@@ -457,6 +457,7 @@ private extension PaymentsTransfersView {
             paymentFlowView(state: state, event: { event(.payment($0)) })
             
         case let .servicePicker(state):
+#warning("FIXME: navbar")
             servicePickerView(state: state, event: event)
         }
     }
@@ -583,10 +584,21 @@ private extension PaymentsTransfersView {
         return { PaymentFlowModalView(state: $0, event: event) }
     }
     
+    @ViewBuilder
     func servicePickerView(
         state: ServicePickerState,
         event: @escaping (UtilityFlowEvent) -> Void
     ) -> some View {
+        
+        let selectService = {
+            event(.prepayment(.select(
+                .service($0, for: state.content.`operator`)
+            )))
+        }
+        
+        let operatorIconView = viewFactory.makeIconView(
+            .md5Hash(.init(state.content.operator.icon))
+        )
         
         ServicePickerFlowView(
             state: state,
@@ -594,8 +606,21 @@ private extension PaymentsTransfersView {
             content: {
                 
                 ServicePickerView(
-                    state: state.content,
-                    event: { event(.prepayment(.select($0))) }
+                    state: state.content.services.elements,
+                    serviceView: { service in
+                        
+                        Button {
+                            
+                            selectService(service)
+                            
+                        } label: {
+                            
+                            UtilityServiceLabel(
+                                service: service,
+                                iconView: { operatorIconView }
+                            )
+                        }
+                    }
                 )
             },
             destinationView: {

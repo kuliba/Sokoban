@@ -10,21 +10,27 @@ import SwiftUI
 struct UtilityServiceLabel<IconView: View>: View {
     
     let service: UtilityService
-    let iconView: IconView
+    let iconView: () -> IconView
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 6) {
+        HStack {
             
-            Text(service.name)
-                .font(.subheadline)
+            iconView()
+                .frame(width: 32, height: 32)
             
-            Text(service.id)
-                .font(.caption)
-                .foregroundColor(.secondary)
+            VStack(alignment: .leading, spacing: 6) {
+                
+                Text(service.name)
+                    .font(.subheadline)
+                
+                Text(service.id)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.vertical, 1)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.vertical, 1)
         .contentShape(Rectangle())
         .foregroundColor(service.id.localizedCaseInsensitiveContains("failure") ? .red : .primary)
     }
@@ -33,6 +39,6 @@ struct UtilityServiceLabel<IconView: View>: View {
 #Preview {
     UtilityServiceLabel(
         service: .init(name: "Utility Service", puref: "preview||123"),
-        iconView: Text("..")
+        iconView: { Text("..") }
     )
 }
