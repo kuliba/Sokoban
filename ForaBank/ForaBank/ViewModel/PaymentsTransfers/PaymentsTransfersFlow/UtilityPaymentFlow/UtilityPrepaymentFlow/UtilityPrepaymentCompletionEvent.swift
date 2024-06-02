@@ -1,14 +1,11 @@
 //
-//  UtilityPrepaymentFlowEvent.swift
+//  UtilityPrepaymentCompletionEvent.swift
 //
 //
 //  Created by Igor Malyarov on 09.05.2024.
 //
 
-
-import OperatorsListComponents
-
-enum UtilityPrepaymentFlowEvent: Equatable {
+enum UtilityPrepaymentCompletionEvent: Equatable {
     
     case addCompany
     case payByInstructions
@@ -16,7 +13,7 @@ enum UtilityPrepaymentFlowEvent: Equatable {
     case select(Select)
 }
 
-extension UtilityPrepaymentFlowEvent {
+extension UtilityPrepaymentCompletionEvent {
     
     enum Select: Equatable {
         
@@ -25,7 +22,7 @@ extension UtilityPrepaymentFlowEvent {
     }
 }
 
-extension UtilityPrepaymentFlowEvent.Select {
+extension UtilityPrepaymentCompletionEvent.Select {
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
