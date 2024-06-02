@@ -59,7 +59,7 @@ extension UtilityPaymentFlowView {
 
     typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
     typealias State = UtilityPaymentFlowState<Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
+    typealias Event = UtilityPrepaymentFlowEvent<LastPayment, Operator, UtilityService>
 }
 
 extension UtilityPaymentFlowState.Destination: Identifiable

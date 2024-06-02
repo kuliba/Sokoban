@@ -39,8 +39,7 @@ extension UtilityPrepaymentFlowMicroServices {
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     typealias StartPayment = (StartPaymentPayload, @escaping StartPaymentCompletion) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
-    typealias PrepaymentEvent = Event.UtilityPrepaymentFlowEvent
+    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, UtilityService>
     
     typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
     typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect

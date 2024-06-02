@@ -56,7 +56,7 @@ extension UtilityPaymentNanoServices {
     typealias GetServicesFor = (Operator, @escaping GetServicesForCompletion) -> Void
     
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
-    typealias PrepaymentEvent = Event.UtilityPrepaymentFlowEvent
+    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, UtilityService>
     
     enum StartAnywayPaymentPayload {
         

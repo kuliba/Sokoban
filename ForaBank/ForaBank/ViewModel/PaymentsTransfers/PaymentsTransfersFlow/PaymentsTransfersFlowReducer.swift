@@ -219,16 +219,15 @@ private extension PaymentsTransfersFlowReducer {
         }
     }
     
-    private typealias UtilityPrepaymentFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
-    private typealias UtilityPrepaymentFlowEffect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEffect
+    private typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, UtilityService>
     
     private func reduce(
         _ state: State,
-        _ event: UtilityPrepaymentFlowEvent
-    ) -> (State, UtilityPrepaymentFlowEffect?) {
+        _ event: UtilityPrepaymentEvent
+    ) -> (State, UtilityPrepaymentEffect?) {
         
         var state = state
-        var effect: UtilityPrepaymentFlowEffect?
+        var effect: UtilityPrepaymentEffect?
         
         switch event {
         case let .dismiss(dismiss):
@@ -258,7 +257,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with dismiss: UtilityPrepaymentFlowEvent.Dismiss
+        with dismiss: UtilityPrepaymentEvent.Dismiss
     ) {
         switch dismiss {
         case .alert:
@@ -277,7 +276,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with initiated: UtilityPrepaymentFlowEvent.Initiated
+        with initiated: UtilityPrepaymentEvent.Initiated
     ) {
         switch initiated {
         case let .legacy(paymentsServicesViewModel):
@@ -308,7 +307,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with result: UtilityPrepaymentFlowEvent.StartPaymentResult
+        with result: UtilityPrepaymentEvent.StartPaymentResult
     ) {
         switch result {
         case let .failure(failure):
@@ -321,7 +320,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with failure: UtilityPrepaymentFlowEvent.StartPaymentFailure
+        with failure: UtilityPrepaymentEvent.StartPaymentFailure
     ) {
         switch failure {
         case let .operatorFailure(`operator`):
@@ -354,7 +353,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with success: UtilityPrepaymentFlowEvent.StartPaymentSuccess
+        with success: UtilityPrepaymentEvent.StartPaymentSuccess
     ) {
         switch success {
         case let .services(services, `operator`):

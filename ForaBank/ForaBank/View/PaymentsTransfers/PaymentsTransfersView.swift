@@ -758,7 +758,7 @@ extension PaymentsTransfersView {
 
 private extension UtilityPrepaymentCompletionEvent {
     
-    var flowEvent: UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.UtilityPrepaymentFlowEvent {
+    var flowEvent: UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService> {
         
         switch self {
         case .addCompany:

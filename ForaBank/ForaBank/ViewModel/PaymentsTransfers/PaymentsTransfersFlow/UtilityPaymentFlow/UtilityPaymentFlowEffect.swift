@@ -30,6 +30,6 @@ extension UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect {
         let requisites: () -> Void
     }
     
-    typealias Select = Event.UtilityPrepaymentFlowEvent.Select
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias Select = Event.Select
+    typealias Event = UtilityPrepaymentFlowEvent<LastPayment, Operator, UtilityService>
 }

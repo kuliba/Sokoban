@@ -122,8 +122,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
     typealias StartPaymentResult = PrepaymentEvent.StartPaymentResult
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
-    typealias PrepaymentEvent = Event.UtilityPrepaymentFlowEvent
+    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, UtilityService>
     
     private func getServices(
         for `operator`: Operator,
@@ -247,7 +246,7 @@ private extension AnywayPaymentDomain.AnywayPayment {
     }
 }
 
-private extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentFailure {
+private extension UtilityPrepaymentFlowEvent.StartPaymentFailure {
     
     init(
         _ error: NanoServices.StartAnywayPaymentFailure
