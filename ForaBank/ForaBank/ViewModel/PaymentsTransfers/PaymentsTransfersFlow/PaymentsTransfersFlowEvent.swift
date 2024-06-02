@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
-enum PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService> {
+enum PaymentsTransfersFlowEvent<LastPayment, Operator, Service> {
     
     case dismiss(Dismiss)
     case outside(Outside)
@@ -36,12 +36,12 @@ extension PaymentsTransfersFlowEvent {
         case utilityService(LegacyPaymentPayload)
     }
     
-    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
 }
 
 extension PaymentsTransfersFlowEvent.PaymentButton {
     
     typealias LegacyPaymentPayload = PrepaymentEffect.LegacyPaymentPayload
     typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
 }

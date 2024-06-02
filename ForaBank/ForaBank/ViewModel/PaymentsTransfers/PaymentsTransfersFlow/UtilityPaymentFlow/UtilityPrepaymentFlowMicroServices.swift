@@ -7,7 +7,7 @@
 
 import UtilityServicePrepaymentCore
 
-struct UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService> {
+struct UtilityPrepaymentFlowMicroServices<LastPayment, Operator, Service> {
     
     /// For `legacy` `InitiateUtilityPayment` wraps `PaymentsServicesViewModel` creation
     /// For `v1` `InitiateUtilityPayment` combines
@@ -39,8 +39,8 @@ extension UtilityPrepaymentFlowMicroServices {
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     typealias StartPayment = (StartPaymentPayload, @escaping StartPaymentCompletion) -> Void
     
-    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
     
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
     typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
 }

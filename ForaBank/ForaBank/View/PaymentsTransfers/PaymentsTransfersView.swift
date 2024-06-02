@@ -625,16 +625,18 @@ private extension PaymentsTransfersView {
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
+    
     typealias Content = UtilityPrepaymentViewModel
     typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, UtilityPaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content, UtilityPaymentViewModel>
     
-    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
     
     typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
     
-    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, UtilityService, UtilityPaymentViewModel>
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, Service, UtilityPaymentViewModel>
     
     typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<UtilityPaymentViewModel>
 }

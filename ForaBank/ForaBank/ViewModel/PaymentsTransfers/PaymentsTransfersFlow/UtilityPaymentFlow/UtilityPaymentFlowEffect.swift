@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
-enum UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService> {
+enum UtilityPaymentFlowEffect<LastPayment, Operator, Service> {
     
     case prepayment(UtilityPrepaymentFlowEffect)
 }
@@ -31,5 +31,5 @@ extension UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect {
     }
     
     typealias Select = Event.Select
-    typealias Event = UtilityPrepaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias Event = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
 }

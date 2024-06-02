@@ -7,7 +7,7 @@
 
 import ForaTools
 
-enum UtilityPrepaymentFlowEvent<LastPayment, Operator, UtilityService> {
+enum UtilityPrepaymentFlowEvent<LastPayment, Operator, Service> {
     
     case dismiss(Dismiss)
     case initiated(Initiated)
@@ -43,14 +43,14 @@ extension UtilityPrepaymentFlowEvent {
         
         case lastPayment(LastPayment)
         case `operator`(Operator)
-        case service(UtilityService, for: Operator)
+        case service(Service, for: Operator)
     }
     
     typealias StartPaymentResult = Result<StartPaymentSuccess, StartPaymentFailure>
     
     enum StartPaymentSuccess {
         
-        case services(MultiElementArray<UtilityService>, for: Operator)
+        case services(MultiElementArray<Service>, for: Operator)
         case startPayment(AnywayTransactionState)
     }
     
@@ -95,8 +95,8 @@ extension UtilityPrepaymentFlowEvent.Initiated {
     }
 }
 
-extension UtilityPrepaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
-extension UtilityPrepaymentFlowEvent.Select: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
-extension UtilityPrepaymentFlowEvent.StartPaymentSuccess: Equatable where Operator: Equatable, UtilityService: Equatable {}
+extension UtilityPrepaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
+extension UtilityPrepaymentFlowEvent.Select: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
+extension UtilityPrepaymentFlowEvent.StartPaymentSuccess: Equatable where Operator: Equatable, Service: Equatable {}
 extension UtilityPrepaymentFlowEvent.StartPaymentFailure: Equatable where Operator: Equatable {}
 extension UtilityPrepaymentFlowEvent.Initiated.UtilityPrepaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable {}

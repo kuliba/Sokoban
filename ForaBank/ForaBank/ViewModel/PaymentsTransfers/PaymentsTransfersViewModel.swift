@@ -119,9 +119,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 
 extension PaymentsTransfersViewModel {
     
-    typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
-    
     typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
     typealias FlowManger = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
@@ -129,8 +126,12 @@ extension PaymentsTransfersViewModel {
     typealias Link = _Link<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
     typealias State = PaymentsTransfersViewModel.Route
-    typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService>
-    typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, UtilityService>
+    typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service>
+    typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, Service>
+    
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
 }
 
 extension PaymentsTransfersViewModel {

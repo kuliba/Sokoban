@@ -7,7 +7,7 @@
 
 import AnywayPaymentDomain
 
-enum UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService> {
+enum UtilityPaymentFlowEvent<LastPayment, Operator, Service> {
     
     case payment(PaymentEvent)
     case prepayment(PrepaymentEvent)
@@ -17,7 +17,7 @@ enum UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService> {
 extension UtilityPaymentFlowEvent {
     
     typealias PaymentEvent = UtilityServicePaymentFlowEvent
-    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
     
     enum ServicePickerFlowEvent: Equatable {
         
@@ -25,4 +25,4 @@ extension UtilityPaymentFlowEvent {
     }
 }
 
-extension UtilityPaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
+extension UtilityPaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}

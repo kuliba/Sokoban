@@ -27,17 +27,18 @@ final class UtilityPrepaymentFlowMicroServicesComposer {
     }
     
     typealias Flag = StubbedFeatureFlag
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, UtilityService>
-    typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService>
+    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, Service>
+    typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, Service>
     
     typealias LegacyPayload = PrepaymentEffect.LegacyPaymentPayload
     typealias MakeLegacyPaymentsServicesViewModel = (LegacyPayload) -> PaymentsServicesViewModel
     
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
     typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
 }
 
 extension UtilityPrepaymentFlowMicroServicesComposer {
@@ -122,7 +123,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
     typealias StartPaymentResult = PrepaymentEvent.StartPaymentResult
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     
-    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
     
     private func getServices(
         for `operator`: Operator,
@@ -266,5 +267,5 @@ private extension UtilityPrepaymentFlowEvent.StartPaymentFailure {
         }
     }
     
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, UtilityService>
+    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, Service>
 }
