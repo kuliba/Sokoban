@@ -323,11 +323,9 @@ extension TemplateButton {
                 return nil
             }
             
-            let mobileAdditional = [TransferAnywayData.Additional(
-                fieldid: 1,
-                fieldname: "a3_NUMBER_1_2",
-                fieldvalue: operationDetail.payeePhone ?? ""
-            )]
+            let mobileAdditional = OperationDetailData.mobileAdditional(
+                fieldvalue: operationDetail.payeePhone
+            )
             
             return [
                 TransferAnywayData(
@@ -341,6 +339,20 @@ extension TemplateButton {
                 )
             ]
         }
+    }
+}
+
+extension OperationDetailData {
+    
+    static func mobileAdditional(
+        fieldvalue: String?
+    ) -> [TransferAnywayData.Additional] {
+        
+        [TransferAnywayData.Additional(
+            fieldid: 1,
+            fieldname: "a3_NUMBER_1_2",
+            fieldvalue: fieldvalue ?? ""
+        )]
     }
 }
 
