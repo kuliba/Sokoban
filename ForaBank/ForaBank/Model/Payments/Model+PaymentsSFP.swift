@@ -640,7 +640,7 @@ extension Model {
         }
     }
 
-    fileprivate func createBankParameterForTemplate(
+    func createBankParameterForTemplate(
         _ templateId: (PaymentTemplateData.ID),
         _ operationPhone: String?,
         _ banksIds: [String]?,
