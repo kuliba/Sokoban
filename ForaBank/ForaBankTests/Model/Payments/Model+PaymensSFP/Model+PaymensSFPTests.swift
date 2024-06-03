@@ -267,3 +267,62 @@ extension Model {
         paymentTemplates.value.first { $0.id == templateID } != nil
     }
 }
+
+extension Model {
+    
+    static func anywayTransferDataStub(
+        _ additional: [TransferAnywayData.Additional] = [.init(fieldid: 1, fieldname: "RecipientID", fieldvalue: "123")]
+    ) -> TransferAnywayData {
+        
+        .init(
+            amount: Decimal?.none,
+            check: true,
+            comment: nil,
+            currencyAmount: "RUB",
+            payer: .test(),
+            additional: additional,
+            puref: nil
+        )
+    }
+    
+    func generalTransferDataStub() -> TransferGeneralData {
+        
+        Model.transferGeneralDataStub(amount: nil, phoneNumber: "phone")
+    }
+    
+    static func transferGeneralDataStub(
+        amount: Double? = nil,
+        phoneNumber: String? = nil
+    ) -> TransferGeneralData {
+        
+        .init(
+            amount: amount,
+            check: false,
+            comment: nil,
+            currencyAmount: "", payer: .init(
+                inn: nil,
+                accountId: nil,
+                accountNumber: nil,
+                cardId: nil,
+                cardNumber: nil,
+                phoneNumber: phoneNumber),
+            payeeExternal: nil,
+            payeeInternal: nil)
+    }
+    
+    func templateSFPStub(
+        _ transferData: [TransferData]
+    ) -> PaymentTemplateData {
+    
+        return .init(
+            groupName: "groupName",
+            name: "name",
+            parameterList: transferData,
+            paymentTemplateId: 1,
+            productTemplate: nil,
+            sort: 1,
+            svgImage: .test,
+            type: .sfp
+        )
+    }
+}

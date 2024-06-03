@@ -39,7 +39,7 @@ extension Model {
                 let template = paymentTemplates.value.first { $0.id == templateId }
             
                 switch template?.parameterList.last {
-                case let payload as TransferGeneralData:
+                case _ as TransferGeneralData:
 
                     if let token,
                        let phone = template?.phoneNumber {
