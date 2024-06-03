@@ -46,7 +46,7 @@ fastlane-build-beta:
 
 fastlane-deploy:
   stage: deploy
-  parallel: 1
+  parallel: 2
   when: on_success
   needs:
     - "fastlane-test"
