@@ -21,13 +21,13 @@ final class UtilityPaymentNanoServicesComposer {
     private let loadOperators: LoadOperators
     
     init(
-        flag: Flag,
+        flag: UtilitiesPaymentsFlag,
         model: Model,
         httpClient: HTTPClient,
         log: @escaping Log,
         loadOperators: @escaping LoadOperators
     ) {
-        self.flag = flag
+        self.flag = .init(flag)
         self.model = model
         self.httpClient = httpClient
         self.log = log
@@ -36,12 +36,15 @@ final class UtilityPaymentNanoServicesComposer {
     
     enum Flag {
         
-        case live
-        case stub(Stub)
+        case live, stub
         
-        typealias Stub = (Payload) -> StartPaymentResult
-        typealias Payload = NanoServices.StartAnywayPaymentPayload
-        typealias StartPaymentResult = NanoServices.StartAnywayPaymentResult
+        init(_ flag: UtilitiesPaymentsFlag) {
+            
+            switch flag.rawValue {
+            case .inactive, .active(.live): self = .live
+            case .active(.stub):            self = .stub
+            }
+        }
     }
     
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
@@ -94,15 +97,12 @@ private extension UtilityPaymentNanoServicesComposer {
         _ completion: @escaping ([LastPayment]) -> Void
     ) {
         switch flag {
-        case .live:
-            getAllLatestPaymentsLive(completion)
-            
-        case .stub:
-            DispatchQueue.main.delay(for: .seconds(1)) { completion(.stub) }
+        case .live: getAllLatestPaymentsLive(completion)
+        case .stub: getAllLatestPaymentsStub(completion)
         }
     }
     
-    private  func getAllLatestPaymentsLive(
+    private func getAllLatestPaymentsLive(
         _ completion: @escaping ([LastPayment]) -> Void
     ) {
         // TODO: add logging // NanoServices.adaptedLoggingFetch
@@ -113,6 +113,12 @@ private extension UtilityPaymentNanoServicesComposer {
             completion((try? result.get().map(LastPayment.init(with:))) ?? [])
             _ = service
         }
+    }
+    
+    private func getAllLatestPaymentsStub(
+        _ completion: @escaping ([LastPayment]) -> Void
+    ) {
+        DispatchQueue.main.delay(for: .seconds(1)) { completion(.stub) }
     }
 }
 
@@ -128,11 +134,8 @@ private extension UtilityPaymentNanoServicesComposer {
         _ completion: @escaping StartAnywayPaymentCompletion
     ) {
         switch flag {
-        case .live:
-            startAnywayPaymentLive(payload, completion)
-            
-        case let .stub(stub):
-            startAnywayPaymentStub(stub, payload, completion)
+        case .live: startAnywayPaymentLive(payload, completion)
+        case .stub: startAnywayPaymentStub(payload, completion)
         }
     }
     
@@ -154,11 +157,15 @@ private extension UtilityPaymentNanoServicesComposer {
     }
     
     private func startAnywayPaymentStub(
-        _ stub: @escaping Flag.Stub,
         _ payload: StartAnywayPaymentPayload,
         _ completion: @escaping StartAnywayPaymentCompletion
     ) {
-        DispatchQueue.main.delay(for: .seconds(1)) { completion(stub(payload)) }
+        DispatchQueue.main.delay(for: .seconds(1)) {
+            
+            let result = payload.startAnywayPaymentResultStub
+            self.networkLog(level: .default, message: "Remote Service Start AnywayPayment Stub Result: \(result)", file: #file, line: #line)
+            completion(result)
+        }
     }
 }
 
@@ -465,8 +472,8 @@ private extension UtilityPaymentOperator {
         
         switch id {
         case "empty":  return .success([])
-        case "single": return .success([.sample])
-        case "multi":  return .success([.sample, .sample1, .sample2])
+        case "single-d2": return .success([.sample])
+        case "multi-d1":  return .success([.sample, .failing, .failingWithMessage])
         default:       return .failure(.init())
         }
     }
@@ -477,6 +484,88 @@ private extension UtilityPaymentOperator {
 private extension UtilityService {
     
     static let sample: Self = .init(name: "Service", puref: "service")
-    static let sample1: Self = .init(name: "Service1", puref: "service1")
-    static let sample2: Self = .init(name: "Service2", puref: "service2")
+    static let failing: Self = .init(name: "Failing Service", puref: "failing")
+    static let failingWithMessage: Self = .init(name: "Failing with Message Service", puref: "failingWithMessage")
+}
+
+private extension UtilityPaymentNanoServices.StartAnywayPaymentPayload {
+    
+    var startAnywayPaymentResultStub: StartAnywayPaymentResult {
+        
+        switch self {
+        case let .lastPayment(lastPayment):
+            fatalError("unimplemented")
+            
+        case let .service(service, `operator`):
+            switch service.id {
+            case "service":
+                return .success(.startPayment(.step1))
+                
+            case "failingWithMessage":
+                return .failure(.serviceFailure(.serverError("Error #12345. Try later.")))
+                
+            default:
+                return .failure(.serviceFailure(.connectivityError))
+            }
+        }
+    }
+    
+    typealias StartAnywayPaymentResult = UtilityPaymentNanoServices.StartAnywayPaymentResult
+}
+
+extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
+    
+    static let step1: Self = .init(
+        nextStep: [
+        
+        ]
+    )
+    
+    private init(
+        additional: [Additional] = [],
+        amount: Decimal? = nil,
+        creditAmount: Decimal? = nil,
+        currencyAmount: String? = nil,
+        currencyPayee: String? = nil,
+        currencyPayer: String? = nil,
+        currencyRate: Decimal? = nil,
+        debitAmount: Decimal? = nil,
+        documentStatus: DocumentStatus? = nil,
+        fee: Decimal? = nil,
+        finalStep: Bool = false,
+        infoMessage: String? = nil,
+        needMake: Bool = false,
+        needOTP: Bool = false,
+        needSum: Bool = false,
+        nextStep: [Parameter],
+        paymentOperationDetailID: Int? = nil,
+        payeeName: String? = nil,
+        printFormType: String? = nil,
+        scenario: AntiFraudScenario? = nil,
+        options: [Option] = []
+    ) {
+        self.init(
+            additional: additional,
+            amount: amount,
+            creditAmount: creditAmount,
+            currencyAmount: currencyAmount,
+            currencyPayee: currencyPayee,
+            currencyPayer: currencyPayer,
+            currencyRate: currencyRate,
+            debitAmount: debitAmount,
+            documentStatus: documentStatus,
+            fee: fee,
+            finalStep: finalStep,
+            infoMessage: infoMessage,
+            needMake: needMake,
+            needOTP: needOTP,
+            needSum: needSum,
+            parametersForNextStep: nextStep,
+            paymentOperationDetailID: paymentOperationDetailID,
+            payeeName: payeeName,
+            printFormType: printFormType,
+            scenario: scenario,
+            options: options
+        )
+    }
 }
