@@ -453,4 +453,57 @@ final class OperationDetailDataTests: XCTestCase {
         
         XCTAssertTrue(sut.shouldHaveTemplateButton)
     }
+    
+    //MARK: Computed Property
+    
+    func test_payerGeneralTransferData_shouldReturnCardId() {
+        
+        let sut = Detail.stub()
+        
+        XCTAssertEqual(
+            sut.payerGeneralTransferData,
+            .init(
+                inn: nil,
+                accountId: nil,
+                accountNumber: nil,
+                cardId: 1,
+                cardNumber: nil,
+                phoneNumber: nil
+            )
+        )
+    }
+    
+    func test_payerGeneralTransferData_shouldReturnAccountId() {
+        
+        let sut = Detail.stub(cardId: nil, payerAccountId: 1)
+        
+        XCTAssertEqual(
+            sut.payerGeneralTransferData,
+            .init(
+                inn: nil,
+                accountId: 1,
+                accountNumber: nil,
+                cardId: nil,
+                cardNumber: nil,
+                phoneNumber: nil
+            )
+        )
+    }
+    
+    func test_payerGeneralTransferData_shouldReturnCardIdWithAccountId() {
+        
+        let sut = Detail.stub(cardId: 1, payerAccountId: 1)
+        
+        XCTAssertEqual(
+            sut.payerGeneralTransferData,
+            .init(
+                inn: nil,
+                accountId: nil,
+                accountNumber: nil,
+                cardId: 1,
+                cardNumber: nil,
+                phoneNumber: nil
+            )
+        )
+    }
 }
