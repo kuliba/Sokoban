@@ -195,6 +195,17 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     // MARK: - Helpers
     
+    func makeBankParameterSUT(
+        paymentTemplates: [PaymentTemplateData],
+        transferData: [TransferData]? = nil
+    ) -> Payments.ParameterSelectBank {
+        
+        let model: Model = .mockWithOperatorsList
+        model.paymentTemplates.value = [Model.templateSFPStub(transferData ?? [])]
+        
+        return model.createBankParameterForTemplate(1, nil, nil, nil)
+    }
+    
     func makeSUT(
         _ operation: Payments.Operation,
         paymentTemplates: [PaymentTemplateData]
