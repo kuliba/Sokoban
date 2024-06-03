@@ -606,6 +606,7 @@ extension ProductProfileCardView {
                                 isSelected: viewModel.selected == thumbnail.id,
                                 selectionAvailable: viewModel.groupingCards.selectionAvailable(thumbnail.id)
                             )
+                                .id(thumbnail.id)
                                 .scrollId(thumbnail.id)
                         }
                         
