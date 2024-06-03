@@ -382,7 +382,7 @@ final class OperationDetailDataTests: XCTestCase {
     
     func test_payerTransferData_withOperationDetailStub_shouldReturnPayerTransferData() {
         
-        let sut = Detail.stub()
+        let sut = Detail.stub(payerCardId: 1)
         
         XCTAssertNoDiff(sut.payerTransferData, .init(
             inn: nil,
@@ -463,7 +463,7 @@ final class OperationDetailDataTests: XCTestCase {
     
     func test_payerGeneralTransferData_shouldReturnAccountId() {
         
-        XCTAssertEqual(Detail.stub(payerCardId: nil, payerAccountId: 1).payerGeneralTransferData.accountId, 1)
+        XCTAssertEqual(Detail.stub(payerAccountId: 1).payerGeneralTransferData.accountId, 1)
     }
     
     func test_payerGeneralTransferData_shouldReturnCardIdWithAccountId() {

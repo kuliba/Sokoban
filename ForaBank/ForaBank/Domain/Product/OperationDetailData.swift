@@ -493,10 +493,10 @@ extension OperationDetailData {
 extension OperationDetailData {
     
     static func stub(
-        payerCardId: Int? = 1,
+        payerCardId: Int? = nil,
         payerAccountId: Int = 10,
         amount: Double = 100,
-        paymentTemplateId: Int? = 1,
+        paymentTemplateId: Int? = nil,
         transferEnum: OperationDetailData.TransferEnum? = .accountClose,
         payeeFullName: String? = nil,
         payeePhone: String? = nil,
