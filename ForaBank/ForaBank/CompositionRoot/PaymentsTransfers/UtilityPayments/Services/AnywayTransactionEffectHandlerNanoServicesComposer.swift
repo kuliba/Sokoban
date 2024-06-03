@@ -77,7 +77,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             
             DispatchQueue.main.delay(for: .seconds(1)) {
      
-                let result = digest.matchingInitiatePaymentResultStub
+                let result = digest.initiatePaymentResultStub
                 self.networkLog(level: .default, message: "Remote Service Initiate Payment Stub Result: \(result)", file: #file, line: #line)
                 completion(result)
             }
@@ -126,7 +126,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             
             DispatchQueue.main.delay(for: .seconds(1)) {
                 
-                let result = payload.matchingGetDetailsResultStub
+                let result = payload.getDetailsResultStub
                 self.networkLog(level: .default, message: "Remote Service Get Details Stub Result: \(String(describing: result))", file: #file, line: #line)
                 completion(result)
             }
@@ -175,7 +175,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             
             DispatchQueue.main.delay(for: .seconds(1)) {
      
-                let result = code.matchingMakeTransferStub
+                let result = code.makeTransferStub
                 self.networkLog(level: .default, message: "Remote Service Make Transfer Stub Result: \(String(describing: result))", file: #file, line: #line)
                 completion(result)
             }
@@ -213,7 +213,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             
             DispatchQueue.main.delay(for: .seconds(1)) {
      
-                let result = digest.matchingProcessResultStub
+                let result = digest.processResultStub
                 self.networkLog(level: .default, message: "Remote Service Process Payment Stub Result: \(result)", file: #file, line: #line)
                 completion(result)
             }
@@ -347,12 +347,12 @@ private extension AnywayPaymentDomain.ServiceFailure {
 
 private extension AnywayPaymentDigest {
     
-    var matchingInitiatePaymentResultStub: ProcessResult {
+    var initiatePaymentResultStub: ProcessResult {
         
         .failure(.connectivityError)
     }
         
-    var matchingProcessResultStub: ProcessResult {
+    var processResultStub: ProcessResult {
         
         .failure(.connectivityError)
     }
@@ -362,7 +362,7 @@ private extension AnywayPaymentDigest {
 
 private extension OperationDetailID {
     
-    var matchingGetDetailsResultStub: GetDetailsResult {
+    var getDetailsResultStub: GetDetailsResult {
         
         nil
     }
@@ -372,10 +372,65 @@ private extension OperationDetailID {
 
 private extension VerificationCode {
     
-    var matchingMakeTransferStub: MakeTransferResult {
+    var makeTransferStub: MakeTransferResult {
         
         nil
     }
     
     typealias MakeTransferResult = AnywayTransactionEffectHandlerNanoServices.MakeTransferResult
+}
+
+private extension AnywayPaymentUpdate {
+    
+    static let preview: Self = .init(
+        details: .preview,
+        fields: [],
+        parameters: []
+    )
+}
+
+private extension AnywayPaymentUpdate.Details {
+    
+    static let preview: Self = .init(
+        amounts: .preview,
+        control: .preview,
+        info: .preview
+    )
+}
+
+private extension AnywayPaymentUpdate.Details.Amounts {
+    
+    static let preview: Self = .init(
+        amount: nil,
+        creditAmount: nil,
+        currencyAmount: nil,
+        currencyPayee: nil,
+        currencyPayer: nil,
+        currencyRate: nil,
+        debitAmount: nil,
+        fee: nil
+    )
+}
+
+private extension AnywayPaymentUpdate.Details.Control {
+    
+    static let preview: Self = .init(
+        isFinalStep: false,
+        isFraudSuspected: false,
+        isMultiSum: false,
+        needMake: false,
+        needOTP: false,
+        needSum: false
+    )
+}
+
+private extension AnywayPaymentUpdate.Details.Info {
+    
+    static let preview: Self = .init(
+        documentStatus: nil,
+        infoMessage: nil,
+        payeeName: nil,
+        paymentOperationDetailID: nil,
+        printFormType: nil
+    )
 }
