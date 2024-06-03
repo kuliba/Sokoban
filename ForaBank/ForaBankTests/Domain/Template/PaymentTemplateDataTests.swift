@@ -74,7 +74,7 @@ final class PaymentTemplateDataTests: XCTestCase {
         XCTAssertNoDiff(stub.sfpPhone, "123")
     }
     
-    func test_sfp_recipientID_shouldReturnValueNil() {
+    func test_sfp_recipientID_shouldReturnNil() {
         
         let stub = Model.emptyMock.templateSFPStub([])
         XCTAssertNoDiff(stub.sfpPhone, nil)
