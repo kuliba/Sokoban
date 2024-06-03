@@ -51,6 +51,7 @@ private extension AnywayTransactionViewModelComposer {
     ) -> ViewModel {
         
         let nanoServicesComposer = AnywayTransactionEffectHandlerNanoServicesComposer(
+            flag: flag,
             httpClient: httpClient,
             log: log
         )
