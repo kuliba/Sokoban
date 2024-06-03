@@ -9,7 +9,7 @@ import XCTest
 @testable import ForaBank
 
 final class PaymentsSelectViewComponentTests: XCTestCase {
-
+    
     func test_init_selectedOption() throws {
         
         let sut = makeSut(selectedOptionId: "0")
@@ -173,11 +173,64 @@ final class PaymentsSelectViewComponentTests: XCTestCase {
         XCTAssertEqual(selectedOptionViewModel.title, "Тип оплаты")
         XCTAssertEqual(selectedOptionViewModel.name, "Оплата наличными")
     }
+    
+    // Convinience init
+    
+    func test_getPlaceholder_withSelectedOption() {
+        
+        let parameterSelect = makeParameterSelect(id: Payments.Parameter.Identifier.requisitsKpp.rawValue, selectedOptionId: "0")
+        let selectedOption = parameterSelect.options.first
+        let placeholder = OptionsListVM.getPlaceholder(parameterSelect: parameterSelect, selectedOption: selectedOption)
+        
+        XCTAssertEqual(placeholder, "Оплата наличными")
+    }
+    
+    func test_getPlaceholder_withoutSelectedOption() {
+        
+        let parameterSelect = makeParameterSelect(id: Payments.Parameter.Identifier.requisitsKpp.rawValue, selectedOptionId: nil)
+        let placeholder = OptionsListVM.getPlaceholder(parameterSelect: parameterSelect, selectedOption: nil)
+        
+        XCTAssertEqual(placeholder, "Выберите из")
+    }
+    
+    func test_getKeyboardType_requisitsKpp() {
+        
+        let parameterSelect = makeParameterSelect(id: Payments.Parameter.Identifier.requisitsKpp.rawValue, selectedOptionId: "0")
+        let keyboardType = OptionsListVM.getKeyboardType(parameterSelect: parameterSelect)
+        
+        XCTAssertEqual(keyboardType, .number)
+    }
+    
+    func test_getKeyboardType_default() {
+        
+        let parameterSelect = makeParameterSelect(id: "someOtherId", selectedOptionId: "0")
+        let keyboardType = OptionsListVM.getKeyboardType(parameterSelect: parameterSelect)
+        
+        XCTAssertEqual(keyboardType, .default)
+    }
+    
+    func test_getLimit_requisitsKpp() {
+        
+        let parameterSelect = makeParameterSelect(id: Payments.Parameter.Identifier.requisitsKpp.rawValue, selectedOptionId: "0")
+        let limit = OptionsListVM.getLimit(parameterSelect: parameterSelect)
+        
+        XCTAssertEqual(limit, 9)
+    }
+    
+    func test_getLimit_default() {
+        
+        let parameterSelect = makeParameterSelect(id: "someOtherId", selectedOptionId: "0")
+        let limit = OptionsListVM.getLimit(parameterSelect: parameterSelect)
+        
+        XCTAssertNil(limit)
+    }
 }
 
 //MARK: - Helpers
 
 private extension PaymentsSelectViewComponentTests {
+    
+    typealias OptionsListVM = PaymentsSelectView.ViewModel.OptionsListViewModel
     
     func makeSut(selectedOptionId: String?, options: [Payments.ParameterSelect.Option] = Payments.ParameterSelect.sampleOptions) -> PaymentsSelectView.ViewModel {
         
@@ -190,6 +243,22 @@ private extension PaymentsSelectViewComponentTests {
                 title: "Тип оплаты",
                 placeholder: "Выберете тип",
                 options: options))
+    }
+    
+    private func makeParameterSelect(id: String, selectedOptionId: String?) -> Payments.ParameterSelect {
+        
+        return Payments.ParameterSelect(
+            .init(
+                id: id,
+                value: id
+            ),
+            title: "Выберете тип",
+            placeholder: "Выберите из",
+            options: [
+                Payments.ParameterSelect.Option(id: "0", name: "Оплата наличными"),
+                Payments.ParameterSelect.Option(id: "1", name: "Оплата переводом")
+            ]
+        )
     }
     
     var listOptions: [PaymentsSelectView.ViewModel.OptionViewModel] {
@@ -206,5 +275,5 @@ private extension Payments.ParameterSelect {
     static let sampleOptions: [Payments.ParameterSelect.Option] =  [
         .init(id: "0", name: "Оплата наличными"),
         .init(id: "1", name: "Оплата переводом")
-     ]
+    ]
 }

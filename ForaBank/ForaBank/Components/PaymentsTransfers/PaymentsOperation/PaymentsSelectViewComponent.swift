@@ -100,7 +100,7 @@ extension PaymentsSelectView.ViewModel {
             .sink { [unowned self] optionId in
                 
                 guard let parameterSelect = parameterSelect,
-                let selectedOptionViewModel = SelectedOptionViewModel(value: optionId, parameter: parameterSelect) else {
+                      let selectedOptionViewModel = SelectedOptionViewModel(value: optionId, parameter: parameterSelect) else {
                     return
                 }
                 
@@ -247,30 +247,15 @@ extension PaymentsSelectView.ViewModel {
         
         convenience init(parameterSelect: Payments.ParameterSelect, selectedOptionId: OptionViewModel.ID?) {
             
-            let optionsViewModels = parameterSelect.options.map { OptionViewModel(option: $0) }
-            
-            let icon: IconViewModel
-            let textField: RegularFieldViewModel
-            let selected: OptionViewModel.ID?
-            
-            if let selectedOption = parameterSelect.options.first(where: { $0.id == selectedOptionId }) {
-                icon = .init(with: selectedOption, and: parameterSelect.icon)
-                textField = Self.makeTextField(parameterSelect: parameterSelect, selectedOption: selectedOption)
-                selected = selectedOption.id
-                
-            } else {
-                icon = .init(with: parameterSelect.icon)
-                textField = Self.makeTextField(parameterSelect: parameterSelect, selectedOption: nil)
-                selected = nil
-            }
+            let viewModel = Self.createViewModel(parameterSelect: parameterSelect, selectedOptionId: selectedOptionId)
             
             self.init(
-                icon: icon,
-                title: parameterSelect.title,
-                textField: textField,
-                filtered: optionsViewModels,
-                options: optionsViewModels,
-                selected: selected
+                icon: viewModel.icon,
+                title: viewModel.title,
+                textField: viewModel.textField,
+                filtered: viewModel.filtered,
+                options: viewModel.options,
+                selected: viewModel.selected
             )
             
             bind()
@@ -362,22 +347,72 @@ extension PaymentsSelectView.ViewModel {
 
 extension PaymentsSelectView.ViewModel.OptionsListViewModel {
     
+    private static func createViewModel(
+        parameterSelect: Payments.ParameterSelect,
+        selectedOptionId: PaymentsSelectView.ViewModel.OptionViewModel.ID?
+    ) -> PaymentsSelectView.ViewModel.OptionsListViewModel {
+        
+        let optionsViewModels = parameterSelect.options.map { PaymentsSelectView.ViewModel.OptionViewModel(option: $0) }
+        
+        if let selectedOption = parameterSelect.options.first(where: { $0.id == selectedOptionId }) {
+            
+            let textField = makeTextField(parameterSelect: parameterSelect, selectedOption: selectedOption)
+            
+            return .init(
+                icon: .init(with: selectedOption, and: parameterSelect.icon),
+                title: parameterSelect.title,
+                textField: textField,
+                filtered: optionsViewModels,
+                options: optionsViewModels,
+                selected: selectedOption.id
+            )
+            
+        } else {
+            
+            let textField = makeTextField(parameterSelect: parameterSelect, selectedOption: nil)
+            
+            return .init(
+                icon: .init(with: parameterSelect.icon),
+                title: parameterSelect.title,
+                textField: textField,
+                filtered: optionsViewModels,
+                options: optionsViewModels,
+                selected: nil
+            )
+        }
+    }
+    
     private static func makeTextField(
         parameterSelect: Payments.ParameterSelect,
         selectedOption: Payments.ParameterSelect.Option?
     ) -> RegularFieldViewModel {
         
-           let placeholder = selectedOption?.name ?? parameterSelect.placeholder
-           let keyboardType: KeyboardType = (parameterSelect.id == Payments.Parameter.Identifier.requisitsKpp.rawValue) ? .number : .default
-           let limit: Int? = (parameterSelect.id == Payments.Parameter.Identifier.requisitsKpp.rawValue) ? 9 : nil
-           
-           return TextFieldFactory.makeTextField(
-               text: nil,
-               placeholderText: placeholder,
-               keyboardType: keyboardType,
-               limit: limit
-           )
-       }
+        let placeholder = getPlaceholder(parameterSelect: parameterSelect, selectedOption: selectedOption)
+        let keyboardType = getKeyboardType(parameterSelect: parameterSelect)
+        let limit = getLimit(parameterSelect: parameterSelect)
+        
+        return TextFieldFactory.makeTextField(
+            text: nil,
+            placeholderText: placeholder,
+            keyboardType: keyboardType,
+            limit: limit
+        )
+    }
+    
+    static func getPlaceholder(parameterSelect: Payments.ParameterSelect, selectedOption: Payments.ParameterSelect.Option?) -> String {
+        
+        selectedOption?.name ?? parameterSelect.placeholder
+    }
+    
+    static func getKeyboardType(parameterSelect: Payments.ParameterSelect) -> KeyboardType {
+        
+        (parameterSelect.id == Payments.Parameter.Identifier.requisitsKpp.rawValue) ? .number : .default
+    }
+    
+    static func getLimit(parameterSelect: Payments.ParameterSelect) -> Int? {
+        
+        (parameterSelect.id == Payments.Parameter.Identifier.requisitsKpp.rawValue) ? 9 : nil
+    }
 }
 
 //MARK: - Reducers
