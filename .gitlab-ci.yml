@@ -21,7 +21,7 @@ default:
 
 fastlane-test:
   stage: test
-  parallel: 1
+  parallel: 2
   when: always
   only:
     - master
