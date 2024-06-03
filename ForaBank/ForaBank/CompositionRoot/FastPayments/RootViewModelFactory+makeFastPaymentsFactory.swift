@@ -10,6 +10,7 @@ import FastPaymentsSettings
 import Foundation
 import UserAccountNavigationComponent
 import SwiftUI
+import UIPrimitives
 
 extension RootViewModelFactory {
     
@@ -296,5 +297,42 @@ private extension ProductCardData {
             icon: .image(getImage(smallDesignMd5hash) ?? .cardPlaceholder),
             balance: formatBalance(self)
         )
+    }
+}
+
+extension ProductData {
+    
+    var clover: Icon {
+        
+        if let cloverImage {
+            return .image(cloverImage)
+        }
+        return .svg("")
+    }
+    
+    var cloverImage: Image? {
+        
+        if let cloverUIImage {
+            return .init(uiImage: cloverUIImage)
+        }
+        return nil
+    }
+    
+    var cloverUIImage: UIImage? {
+        
+        guard let card = self as? ProductCardData else { return nil }
+        
+        let isDark = (background.first?.description == "F6F6F7")
+        
+        switch card.cardType {
+        case .main:
+            return .init( named: isDark ? "ic16MainCardGreyFixed2" : "ic16MainCardWhiteFixed2")
+            
+        case .additionalOther, .additionalSelf, .additionalSelfAccOwn:
+            return .init(named: isDark ? "ic16AdditionalCardGrey" : "ic16AdditionalCardWhite")
+            
+        default:
+            return nil
+        }
     }
 }

@@ -9,11 +9,19 @@ import AnywayPaymentDomain
 
 struct AnywayTransactionEffectHandlerNanoServices {
     
+    let initiatePayment: InitiatePayment
     let getDetails: GetDetails
     let makeTransfer: MakeTransfer
+    let processPayment: ProcessPayment
 }
 
 extension AnywayTransactionEffectHandlerNanoServices {
+    
+    typealias InitiatePayment = ProcessPayment
+    
+    typealias ProcessResult = Result<AnywayPaymentUpdate, ServiceFailure>
+    typealias ProcessCompletion = (ProcessResult) -> Void
+    typealias ProcessPayment = (AnywayPaymentDigest, @escaping ProcessCompletion) -> Void
     
     typealias GetDetailsResult = OperationDetails?
     typealias GetDetailsCompletion = (GetDetailsResult) -> Void

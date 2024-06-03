@@ -13,8 +13,8 @@ public struct InputState<Icon> {
     let settings: Settings
     
     public init(
-        dynamic: InputState<Icon>.Dynamic,
-        settings: InputState<Icon>.Settings
+        dynamic: Dynamic,
+        settings: Settings
     ) {
         self.dynamic = dynamic
         self.settings = settings

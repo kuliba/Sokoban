@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentAdapters
+import AnywayPaymentDomain
 import Fetcher
 import Foundation
 import OperatorsListComponents
@@ -14,17 +15,20 @@ import RemoteServices
 final class UtilityPaymentNanoServicesComposer {
     
     private let flag: Flag
+    private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
     private let loadOperators: LoadOperators
     
     init(
         flag: Flag,
+        model: Model,
         httpClient: HTTPClient,
         log: @escaping Log,
         loadOperators: @escaping LoadOperators
     ) {
         self.flag = flag
+        self.model = model
         self.httpClient = httpClient
         self.log = log
         self.loadOperators = loadOperators
@@ -36,10 +40,11 @@ extension UtilityPaymentNanoServicesComposer {
     func compose() -> NanoServices {
         
         return .init(
-            getOperatorsListByParam: getOperatorsListByParam,
             getAllLatestPayments: getAllLatestPayments,
-            startAnywayPayment: startAnywayPayment,
-            getServicesFor: getServicesFor
+            getOperatorsListByParam: getOperatorsListByParam,
+            getServicesFor: getServicesFor,
+            startAnywayPayment: startAnywayPayment, 
+            makeAnywayPaymentOutline: makeAnywayPaymentOutline
         )
     }
 }
@@ -61,7 +66,7 @@ extension UtilityPaymentNanoServicesComposer {
         typealias StartPaymentResult = NanoServices.StartAnywayPaymentResult
     }
     
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator>
+    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, UtilityService>
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
@@ -125,7 +130,7 @@ private extension UtilityPaymentNanoServicesComposer {
         _ payload: StartAnywayPaymentPayload,
         _ completion: @escaping StartAnywayPaymentCompletion
     ) {
-        let createAnywayTransferNew = ForaBank.NanoServices.makeCreateAnywayTransferNew(httpClient, log)
+        let createAnywayTransferNew = ForaBank.NanoServices.makeCreateAnywayTransferNewV2(httpClient, log)
         let adapted = FetchAdapter(
             fetch: createAnywayTransferNew,
             mapResult: StartAnywayPaymentResult.init(result:)
@@ -143,10 +148,7 @@ private extension UtilityPaymentNanoServicesComposer {
         _ payload: StartAnywayPaymentPayload,
         _ completion: @escaping StartAnywayPaymentCompletion
     ) {
-        DispatchQueue.main.delay(for: .seconds(1)) {
-            
-            completion(stub(payload))
-        }
+        DispatchQueue.main.delay(for: .seconds(1)) { completion(stub(payload)) }
     }
     
     /// `d`
@@ -178,6 +180,28 @@ private extension UtilityPaymentNanoServicesComposer {
         )
         
         mapped(`operator`) { [mapped] in completion($0); _ = mapped }
+    }
+    
+    private func makeAnywayPaymentOutline(
+        lastPayment: LastPayment?
+    ) -> AnywayPaymentOutline {
+        
+        #warning("fix filtering according to https://shorturl.at/hIE5B")
+        guard let product = model.paymentProducts().first,
+              let coreProductType = product.productType.coreProductType
+        else {
+            // TODO: unimplemented graceful failure for missing products
+            fatalError("unimplemented graceful failure")
+        }
+        
+        let core = AnywayPaymentOutline.PaymentCore(
+            amount: 0,
+            currency: product.currency, 
+            productID: product.id,
+            productType: coreProductType
+        )
+        
+        return .init(core: core, fields: .init())
     }
 }
 
@@ -247,7 +271,12 @@ private extension StartAnywayPaymentResult {
             }
             
         case let .success(response):
-            self = .success(.startPayment(.init(response)))
+#if MOCK
+            let response = response.mock(value: "6068506999", forTitle: "Лицевой счет")
+            self = .success(.startPayment(response))
+#else
+            self = .success(.startPayment(response))
+#endif
         }
     }
 }
@@ -257,7 +286,7 @@ typealias StartAnywayPaymentPayload = _UtilityPaymentNanoServices.StartAnywayPay
 typealias StartAnywayPaymentResult = _UtilityPaymentNanoServices.StartAnywayPaymentResult
 typealias StartAnywayPaymentCompletion = _UtilityPaymentNanoServices.StartAnywayPaymentCompletion
 
-typealias _UtilityPaymentNanoServices = UtilityPaymentNanoServices<UtilityPaymentLastPayment, UtilityPaymentOperator>
+typealias _UtilityPaymentNanoServices = UtilityPaymentNanoServices<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
 
 private extension OperatorsListComponents.ResponseMapper.SberUtilityService {
     
@@ -266,6 +295,96 @@ private extension OperatorsListComponents.ResponseMapper.SberUtilityService {
         .init(name: name, puref: puref)
     }
 }
+
+private extension ProductType {
+    
+    var coreProductType: AnywayPaymentOutline.PaymentCore.ProductType? {
+        
+        switch self {
+        case .card:    return .card
+        case .account: return .account
+        default:       return nil
+        }
+    }
+}
+
+// MARK: - Mocking
+
+#if MOCK
+private extension NanoServices.CreateAnywayTransferResponse {
+    
+    func mock(
+        value: String,
+        forTitle title: String
+    ) -> Self {
+        
+        return .init(
+            additional: additional,
+            amount: amount,
+            creditAmount: creditAmount,
+            currencyAmount: currencyAmount,
+            currencyPayee: currencyPayee,
+            currencyPayer: currencyPayer,
+            currencyRate: currencyRate,
+            debitAmount: debitAmount,
+            documentStatus: documentStatus,
+            fee: fee,
+            finalStep: finalStep,
+            infoMessage: infoMessage,
+            needMake: needMake,
+            needOTP: needOTP,
+            needSum: needSum,
+            parametersForNextStep: parametersForNextStep.map {
+                
+                return $0.mock(value: value, forTitle: title)
+            },
+            paymentOperationDetailID: paymentOperationDetailID,
+            payeeName: payeeName,
+            printFormType: printFormType,
+            scenario: scenario,
+            options: []
+        )
+    }
+}
+
+private extension NanoServices.CreateAnywayTransferResponse.Parameter {
+    
+    func mock(
+        value: String,
+        forTitle title: String
+    ) -> Self {
+        
+        return .init(
+            content: self.title == title ? value : content,
+            dataDictionary: dataDictionary,
+            dataDictionaryРarent: dataDictionaryРarent,
+            dataType: dataType,
+            group: group,
+            id: id,
+            inputFieldType: inputFieldType,
+            inputMask: inputMask,
+            isPrint: isPrint,
+            isRequired: isRequired,
+            maxLength: maxLength,
+            mask: mask,
+            minLength: minLength,
+            order: order,
+            phoneBook: phoneBook,
+            rawLength: rawLength,
+            isReadOnly: isReadOnly,
+            regExp: regExp,
+            subGroup: subGroup,
+            subTitle: subTitle,
+            md5hash: md5hash,
+            svgImage: svgImage,
+            title: self.title,
+            type: type,
+            viewType: viewType,
+            visible: true
+        )
+    }
+}
+#endif
 
 // MARK: - Stubs
 

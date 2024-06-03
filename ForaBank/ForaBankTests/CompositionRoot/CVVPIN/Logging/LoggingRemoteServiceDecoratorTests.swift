@@ -28,7 +28,7 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
         remoteService.process(1) { _ in }
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.debug, .cache, "RemoteService: Created GET request \(url.absoluteString) for input \"1\".")
+            .init(.debug, .cache, "RemoteService: Created request: URL: \(url.absoluteString), Method: GET, Headers: [], Body: empty body.")
         ])
     }
     
@@ -45,8 +45,7 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
         remoteService.process(1) { _ in }
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.debug, .cache, "RemoteService: Created GET request \(url.absoluteString) for input \"1\"."),
-            .init(.debug, .cache, "RemoteService: request body: {\"data\":\"abcdef\"}")
+            .init(.debug, .cache, #"RemoteService: Created request: URL: \#(url.absoluteString), Method: GET, Headers: [], Body: {"data":"abcdef"}."#),
         ])
     }
     
@@ -67,8 +66,8 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.debug, .cache, "RemoteService: Created GET request \(url.absoluteString) for input \"1\"."),
-            .init(.debug, .cache, "RemoteService: mapResponse success: abc.")
+            .init(.debug, .cache, "RemoteService: Created request: URL: \(url.absoluteString), Method: GET, Headers: [], Body: empty body."),
+            .init(.debug, .cache, "RemoteService: received response with statusCode 200, data: n/a.\nRemoteService: mapResponse success: String.")
         ])
     }
     
@@ -90,8 +89,8 @@ final class LoggingRemoteServiceDecoratorTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertNoDiff(spy.messages, [
-            .init(.debug, .cache, "RemoteService: Created GET request \(url.absoluteString) for input \"1\"."),
-            .init(.debug, .cache, "RemoteService: mapResponse failure: any: statusCode: 200, data: nil.")
+            .init(.debug, .cache, "RemoteService: Created request: URL: \(url.absoluteString), Method: GET, Headers: [], Body: empty body."),
+            .init(.debug, .cache, "RemoteService: received response with statusCode 200, data: n/a.\nRemoteService: mapResponse failure: any.")
         ])
     }
     

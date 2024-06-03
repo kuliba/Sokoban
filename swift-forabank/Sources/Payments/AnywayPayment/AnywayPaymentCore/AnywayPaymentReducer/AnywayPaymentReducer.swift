@@ -124,6 +124,7 @@ private extension AnywayPayment.Element.Parameter {
         
         .init(
             field: .init(id: field.id, value: value.map { .init($0) }),
+            image: image,
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes

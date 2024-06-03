@@ -1,5 +1,5 @@
 //
-//  TransactionReducer_anywayTests.swift
+//  AnywayPaymentTransactionReducerTests.swift
 //
 //
 //  Created by Igor Malyarov on 21.05.2024.
@@ -9,7 +9,12 @@ import AnywayPaymentCore
 import AnywayPaymentDomain
 import XCTest
 
-final class TransactionReducer_anywayTests: XCTestCase {
+final class AnywayPaymentTransactionReducerTests: XCTestCase {
+    
+    func test_init() {
+        
+        _ = makeSUT()
+    }
     
     // TODO: add integration tests
     
@@ -23,7 +28,8 @@ final class TransactionReducer_anywayTests: XCTestCase {
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT.anyway()
+        let composer = AnywayPaymentTransactionReducerComposer<Report>()
+        let sut = composer.compose()
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
