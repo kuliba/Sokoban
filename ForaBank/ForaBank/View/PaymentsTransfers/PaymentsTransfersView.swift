@@ -34,21 +34,21 @@ struct PaymentsTransfersView: View {
         .alert(
             item: .init(
                 get: { viewModel.route.modal?.alert },
-                set: { if $0 == nil { viewModel.event(.dismissModal) } }
+                set: { if $0 == nil { viewModel.event(.dismiss(.modal)) } }
             ),
             content: Alert.init(with:)
         )
         .bottomSheet(
             item: .init(
                 get: { viewModel.route.modal?.bottomSheet },
-                set: { if $0 == nil { viewModel.event(.dismissModal) } }
+                set: { if $0 == nil { viewModel.event(.dismiss(.modal)) } }
             ),
             content: bottomSheetView
         )
         .navigationDestination(
             item: .init(
                 get: { viewModel.route.destination },
-                set: { if $0 == nil { viewModel.event(.dismissDestination) } }
+                set: { if $0 == nil { viewModel.event(.dismiss(.destination)) } }
             ),
             content: destinationView(link:)
         )
@@ -79,7 +79,7 @@ struct PaymentsTransfersView: View {
         Color.clear
             .sheet(
                 modal: viewModel.route.modal?.sheet,
-                dismissModal: { viewModel.event(.dismissModal) },
+                dismissModal: { viewModel.event(.dismiss(.modal)) },
                 content: sheetView
             )
     }
@@ -89,12 +89,12 @@ struct PaymentsTransfersView: View {
         Color.clear
             .fullScreenCover(
                 cover: viewModel.route.modal?.fullScreenSheet,
-                dismissFullScreenCover: { viewModel.event(.dismissModal) },
+                dismissFullScreenCover: { viewModel.event(.dismiss(.modal)) },
                 content: { fullScreenCover in
                     
                     fullScreenCoverView(
                         fullScreenCover: fullScreenCover,
-                        goToMain: { viewModel.event(.goToMain) }
+                        goToMain: { viewModel.event(.outside(.goToMain)) }
                     )
                 }
             )
@@ -239,7 +239,7 @@ struct PaymentsTransfersView: View {
             viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
                 .navigationBar(
                     sberQRPaymentViewModel.navTitle,
-                    dismiss: { viewModel.event(.dismissDestination) }
+                    dismiss: { viewModel.event(.dismiss(.destination)) }
                 )
             
         case let .utilityPayment(flowState):
@@ -422,7 +422,7 @@ private extension PaymentsTransfersView {
                 
                 UtilityPrepaymentWrapperView(
                     viewModel: state.content,
-                    flowEvent: { event(.prepayment($0.flowEvent)) },
+                    completionEvent: { event(.prepayment($0.flowEvent)) },
                     makeIconView: { viewFactory.makeIconView(.md5Hash(.init($0))) }
                 )
             },
@@ -444,7 +444,7 @@ private extension PaymentsTransfersView {
             operatorFailureView(
                 operatorFailure: operatorFailure,
                 payByInstructions: { event(.prepayment(.payByInstructions)) },
-                dismissDestination: { event(.prepayment(.dismissOperatorFailureDestination)) }
+                dismissDestination: { event(.prepayment(.dismiss(.operatorFailureDestination))) }
             )
             .navigationTitle(String(describing: operatorFailure.content))
             .navigationBarTitleDisplayMode(.inline)
@@ -453,10 +453,11 @@ private extension PaymentsTransfersView {
             payByInstructionsView(paymentsViewModel)
             
         case let .payment(state):
-            #warning("FIXME: navbar")
+#warning("FIXME: navbar")
             paymentFlowView(state: state, event: { event(.payment($0)) })
             
         case let .servicePicker(state):
+#warning("FIXME: navbar")
             servicePickerView(state: state, event: event)
         }
     }
@@ -470,7 +471,7 @@ private extension PaymentsTransfersView {
         SberOperatorFailureFlowView(
             state: operatorFailure,
             event: dismissDestination,
-            content: {
+            contentView: {
                 
                 OperatorFailureView(
                     state: operatorFailure.content,
@@ -499,7 +500,7 @@ private extension PaymentsTransfersView {
     ) -> some View {
         
         let factory = viewFactory.makeAnywayPaymentFactory { event in
-            #warning("move event mapping to factory")
+#warning("move event mapping to factory")
             switch event {
                 
             case let .setValue(value, for: id):
@@ -520,12 +521,12 @@ private extension PaymentsTransfersView {
         )
         .fullScreenCover(
             cover: state.fullScreenCover,
-            dismissFullScreenCover: { event(.dismissFullScreenCover) },
+            dismissFullScreenCover: { event(.dismiss(.fullScreenCover)) },
             content: paymentFlowFullScreenCoverView
         )
         .sheet(
             modal: state.modal,
-            dismissModal: { event(.dismissFraud) },
+            dismissModal: { event(.dismiss(.fraud)) },
             content: paymentFlowModalView(event: { event(.fraud($0)) })
         )
         .navigationTitle("Payment: \(state.viewModel.state.isValid ? "valid" : "invalid")")
@@ -548,7 +549,7 @@ private extension PaymentsTransfersView {
                         primaryButton: .init(
                             type: .default,
                             title: "OK",
-                            event: .dismissPaymentError
+                            event: .dismiss(.paymentError)
                         )
                     ),
                     event: event
@@ -571,7 +572,7 @@ private extension PaymentsTransfersView {
                 
                 Divider()
                 
-                Button("go to Main", action: { viewModel.event(.goToMain) })
+                Button("go to Main", action: { viewModel.event(.outside(.goToMain)) })
             }
         }
     }
@@ -583,24 +584,36 @@ private extension PaymentsTransfersView {
         return { PaymentFlowModalView(state: $0, event: event) }
     }
     
+    @ViewBuilder
     func servicePickerView(
         state: ServicePickerState,
         event: @escaping (UtilityFlowEvent) -> Void
     ) -> some View {
         
+        let selectService = {
+            event(.prepayment(.select(
+                .service($0, for: state.content.`operator`)
+            )))
+        }
+        
+        let operatorIconView = viewFactory.makeIconView(
+            .md5Hash(.init(state.content.operator.icon))
+        )
+        
         ServicePickerFlowView(
             state: state,
             event: event,
-            content: {
+            contentView: {
                 
-                ServicePickerView(
-                    state: state.content,
-                    event: { event(.prepayment(.select($0))) }
+                servicePickerContentView(
+                    services: state.content.services.elements,
+                    selectService: selectService,
+                    iconView: operatorIconView
                 )
             },
             destinationView: {
                 
-                servicesDestinationView(
+                servicePickerDestinationView(
                     destination: $0,
                     event: { event(.payment($0)) }
                 )
@@ -610,31 +623,55 @@ private extension PaymentsTransfersView {
         .navigationBarTitleDisplayMode(.inline)
     }
     
+    func servicePickerContentView(
+        services: [UtilityService],
+        selectService: @escaping (UtilityService) -> Void,
+        iconView: IconDomain.IconView
+    ) -> some View {
+        
+        ServicePickerView(
+            state: services,
+            serviceView: { service in
+                
+                Button {
+                    
+                    selectService(service)
+                    
+                } label: {
+                    
+                    UtilityServiceLabel(service: service, iconView: iconView)
+                }
+            }
+        )
+    }
+    
     @ViewBuilder
-    func servicesDestinationView(
+    func servicePickerDestinationView(
         destination: ServicePickerState.Destination,
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
         switch destination {
         case let .payment(state):
-            #warning("FIXME: navbar")
+#warning("FIXME: navbar")
             paymentFlowView(state: state, event: event)
         }
     }
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
+    
     typealias Content = UtilityPrepaymentViewModel
     typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, UtilityPaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content, UtilityPaymentViewModel>
     
-    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
     
     typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
     
-    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, UtilityService, UtilityPaymentViewModel>
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, Service, UtilityPaymentViewModel>
     
     typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<UtilityPaymentViewModel>
 }
@@ -756,13 +793,13 @@ extension PaymentsTransfersView {
     }
 }
 
-private extension UtilityPrepaymentFlowEvent {
+private extension UtilityPrepaymentCompletionEvent {
     
-    var flowEvent: UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.UtilityPrepaymentFlowEvent {
+    var flowEvent: UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService> {
         
         switch self {
         case .addCompany:
-            return .addCompany
+            return .outside(.addCompany)
             
         case .payByInstructions:
             return .payByInstructions

@@ -14,15 +14,15 @@ where ContentView: View,
     
     let state: State
     let event: (Event) -> Void
-    let content: () -> ContentView
+    let contentView: () -> ContentView
     let destinationView: (Destination) -> DestinationView
     
     var body: some View {
         
-        content()
+        contentView()
             .navigationDestination(
                 destination: state.destination,
-                dismissDestination: { event(.prepayment(.dismissServicesDestination)) },
+                dismissDestination: { event(.prepayment(.dismiss(.servicesDestination))) },
                 content: destinationView
             )
             .alert(

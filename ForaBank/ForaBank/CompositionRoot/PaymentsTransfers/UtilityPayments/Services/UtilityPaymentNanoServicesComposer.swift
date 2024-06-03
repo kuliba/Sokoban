@@ -63,10 +63,11 @@ extension UtilityPaymentNanoServicesComposer {
         )
     }
     
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, UtilityService>
+    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, Service>
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
 }
 
 private extension UtilityPaymentNanoServicesComposer {

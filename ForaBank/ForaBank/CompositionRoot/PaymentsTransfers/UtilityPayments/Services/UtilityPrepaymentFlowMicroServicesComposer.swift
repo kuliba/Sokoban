@@ -27,17 +27,18 @@ final class UtilityPrepaymentFlowMicroServicesComposer {
     }
     
     typealias Flag = StubbedFeatureFlag
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, UtilityService>
-    typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService>
+    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, Service>
+    typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, Service>
     
     typealias LegacyPayload = PrepaymentEffect.LegacyPaymentPayload
     typealias MakeLegacyPaymentsServicesViewModel = (LegacyPayload) -> PaymentsServicesViewModel
     
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
     typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
 }
 
 extension UtilityPrepaymentFlowMicroServicesComposer {
@@ -122,8 +123,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
     typealias StartPaymentResult = PrepaymentEvent.StartPaymentResult
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
-    typealias PrepaymentEvent = Event.UtilityPrepaymentFlowEvent
+    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
     
     private func getServices(
         for `operator`: Operator,
@@ -247,7 +247,7 @@ private extension AnywayPaymentDomain.AnywayPayment {
     }
 }
 
-private extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentFailure {
+private extension UtilityPrepaymentFlowEvent.StartPaymentFailure {
     
     init(
         _ error: NanoServices.StartAnywayPaymentFailure
@@ -267,5 +267,5 @@ private extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymen
         }
     }
     
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, UtilityService>
+    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, Service>
 }

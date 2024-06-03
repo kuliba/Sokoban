@@ -8,7 +8,7 @@
 extension UtilityPrepaymentFlowMicroServices
 where LastPayment == UtilityPaymentLastPayment,
       Operator == UtilityPaymentOperator,
-      UtilityService == ForaBank.UtilityService {
+      Service == UtilityService {
     
     static var preview: Self {
         

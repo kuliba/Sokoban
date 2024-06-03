@@ -57,10 +57,11 @@ extension PaymentsTransfersFlowManagerComposer {
         )
     }
     
-    typealias FlowManager = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
+    typealias FlowManager = PaymentsTransfersFlowManager<LastPayment, Operator, Service, Content, PaymentViewModel>
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
     typealias PaymentViewModel = ObservingAnywayTransactionViewModel
@@ -89,7 +90,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         )
     }
     
-    typealias PaymentFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+    typealias PaymentFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, Service>
     
     private func composePrepaymentFlowEffectHandler(
     ) -> PrepaymentFlowEffectHandler {
@@ -110,7 +111,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         return .init(microServices: microComposer.compose())
     }
     
-    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, Service>
     
     private var composerFlag: ComposerFlag {
         
@@ -162,7 +163,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         )
     }
     
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
     typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
     typealias MakePaymentPayload = PrepaymentEffect.LegacyPaymentPayload
     
@@ -170,7 +171,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         
         let factory = makeReducerFactoryComposer().compose()
         
-        typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
+        typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel>
         
         let makeReducer = {
             
