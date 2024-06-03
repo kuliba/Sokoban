@@ -49,7 +49,7 @@ extension AnywayTransactionEffectHandlerNanoServicesComposer {
 
 private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     
-    private func initiatePayment() -> InitiatePayment {
+    func initiatePayment() -> InitiatePayment {
         
         switch flag {
         case .live: return initiatePaymentLive()
@@ -76,7 +76,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
         return { digest, completion in
             
             DispatchQueue.main.delay(for: .seconds(1)) {
-     
+                
                 let result = digest.initiatePaymentResultStub
                 self.networkLog(level: .default, message: "Remote Service Initiate Payment Stub Result: \(result)", file: #file, line: #line)
                 completion(result)
@@ -90,8 +90,8 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
 // MARK: - GetDetails
 
 private extension AnywayTransactionEffectHandlerNanoServicesComposer {
-
-    private func getDetails() -> GetDetails {
+    
+    func getDetails() -> GetDetails {
         
         switch flag {
         case .live: return getDetailsLive()
@@ -140,7 +140,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
 
 private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     
-    private func makeTransfer() -> MakeTransfer {
+    func makeTransfer() -> MakeTransfer {
         
         switch flag {
         case .live: return makeTransferLive()
@@ -174,7 +174,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
         return { code, completion in
             
             DispatchQueue.main.delay(for: .seconds(1)) {
-     
+                
                 let result = code.makeTransferStub
                 self.networkLog(level: .default, message: "Remote Service Make Transfer Stub Result: \(String(describing: result))", file: #file, line: #line)
                 completion(result)
@@ -188,8 +188,8 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
 // MARK: - ProcessPayment
 
 private extension AnywayTransactionEffectHandlerNanoServicesComposer {
-
-    private func processPayment() -> ProcessPayment {
+    
+    func processPayment() -> ProcessPayment {
         
         switch flag {
         case .live: return processPaymentLive()
@@ -212,7 +212,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
         return { digest, completion in
             
             DispatchQueue.main.delay(for: .seconds(1)) {
-     
+                
                 let result = digest.processResultStub
                 self.networkLog(level: .default, message: "Remote Service Process Payment Stub Result: \(result)", file: #file, line: #line)
                 completion(result)
@@ -226,8 +226,8 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
 // MARK: - Log
 
 private extension AnywayTransactionEffectHandlerNanoServicesComposer {
-
-    private func networkLog(
+    
+    func networkLog(
         level: LoggerAgentLevel,
         message: @autoclosure () -> String,
         file: StaticString,
@@ -236,7 +236,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
         log(level, .network, message(), file, line)
     }
     
-    private func infoNetworkLog(
+    func infoNetworkLog(
         message: String,
         file: StaticString,
         line: UInt
@@ -351,7 +351,7 @@ private extension AnywayPaymentDigest {
         
         .failure(.connectivityError)
     }
-        
+    
     var processResultStub: ProcessResult {
         
         .failure(.connectivityError)
