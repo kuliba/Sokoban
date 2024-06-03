@@ -48,6 +48,10 @@ final class UtilityPaymentNanoServicesComposer {
     
     typealias LoadOperatorsCompletion = ([Operator]) -> Void
     typealias LoadOperators = (@escaping LoadOperatorsCompletion) -> Void
+    
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
 }
 
 extension UtilityPaymentNanoServicesComposer {
@@ -63,12 +67,10 @@ extension UtilityPaymentNanoServicesComposer {
         )
     }
     
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, Service>
-    
-    typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
-    typealias Service = UtilityService
+    typealias NanoServices = UtilityPaymentNanoServices
 }
+
+// MARK: - getOperatorsListByParam
 
 private extension UtilityPaymentNanoServicesComposer {
     
@@ -79,6 +81,11 @@ private extension UtilityPaymentNanoServicesComposer {
     ) {
         loadOperators(completion)
     }
+}
+
+// MARK: - getAllLatestPayments
+
+private extension UtilityPaymentNanoServicesComposer {
     
     /// `c`
     /// Получение последних платежей по ЖКХ
@@ -107,6 +114,11 @@ private extension UtilityPaymentNanoServicesComposer {
             _ = service
         }
     }
+}
+
+// MARK: - startAnywayPayment
+
+private extension UtilityPaymentNanoServicesComposer {
     
     /// `e`
     /// Начало выполнения перевода - 1шаг, передаем `isNewPayment=true`
@@ -148,11 +160,26 @@ private extension UtilityPaymentNanoServicesComposer {
     ) {
         DispatchQueue.main.delay(for: .seconds(1)) { completion(stub(payload)) }
     }
+}
+
+// MARK: - getServicesFor
+
+private extension UtilityPaymentNanoServicesComposer {
     
     /// `d`
     /// Получение услуг юр. лица по "customerId" и типу housingAndCommunalService
     /// dict/getOperatorsListByParam?customerId=8798&operatorOnly=false&type=housingAndCommunalService
     func getServicesFor(
+        _ `operator`: Operator,
+        _ completion: @escaping NanoServices.GetServicesForCompletion
+    ) {
+        switch flag {
+        case .live: getServicesForLive(`operator`, completion)
+        case .stub: getServicesForStub(`operator`, completion)
+        }
+    }
+    
+    func getServicesForLive(
         _ `operator`: Operator,
         _ completion: @escaping NanoServices.GetServicesForCompletion
     ) {
@@ -180,6 +207,18 @@ private extension UtilityPaymentNanoServicesComposer {
         mapped(`operator`) { [mapped] in completion($0); _ = mapped }
     }
     
+    func getServicesForStub(
+        _ `operator`: Operator,
+        _ completion: @escaping NanoServices.GetServicesForCompletion
+    ) {
+        DispatchQueue.main.delay(for: .seconds(1)) {
+            
+            let result = `operator`.getServicesForResultStub
+            self.networkLog(level: .default, message: "Remote Service GetServicesFor operator \(`operator`) Stub Result: \(result)", file: #file, line: #line)
+            completion(result)
+        }
+    }
+    
     private func makeAnywayPaymentOutline(
         lastPayment: LastPayment?
     ) -> AnywayPaymentOutline {
@@ -201,6 +240,11 @@ private extension UtilityPaymentNanoServicesComposer {
         
         return .init(core: core, fields: .init())
     }
+}
+
+// MARK: - Log
+
+private extension UtilityPaymentNanoServicesComposer {
     
     private func networkLog(
         level: LoggerAgentLevel,
@@ -296,12 +340,10 @@ private extension StartAnywayPaymentResult {
     }
 }
 
-typealias StartAnywayPayment = _UtilityPaymentNanoServices.StartAnywayPayment
-typealias StartAnywayPaymentPayload = _UtilityPaymentNanoServices.StartAnywayPaymentPayload
-typealias StartAnywayPaymentResult = _UtilityPaymentNanoServices.StartAnywayPaymentResult
-typealias StartAnywayPaymentCompletion = _UtilityPaymentNanoServices.StartAnywayPaymentCompletion
-
-typealias _UtilityPaymentNanoServices = UtilityPaymentNanoServices<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
+typealias StartAnywayPayment = UtilityPaymentNanoServices.StartAnywayPayment
+typealias StartAnywayPaymentPayload = UtilityPaymentNanoServices.StartAnywayPaymentPayload
+typealias StartAnywayPaymentResult = UtilityPaymentNanoServices.StartAnywayPaymentResult
+typealias StartAnywayPaymentCompletion = UtilityPaymentNanoServices.StartAnywayPaymentCompletion
 
 private extension OperatorsListComponents.ResponseMapper.SberUtilityService {
     
@@ -415,4 +457,26 @@ private extension UtilityPaymentLastPayment {
     
     static let failure: Self = .init(amount: 123.45, name: "failure", md5Hash: UUID().uuidString, puref: UUID().uuidString)
     static let preview: Self = .init(amount: 567.89, name: UUID().uuidString, md5Hash: UUID().uuidString, puref: UUID().uuidString)
+}
+
+private extension UtilityPaymentOperator {
+    
+    var getServicesForResultStub: GetServicesForResult {
+        
+        switch id {
+        case "empty":  return .success([])
+        case "single": return .success([.sample])
+        case "multi":  return .success([.sample, .sample1, .sample2])
+        default:       return .failure(.init())
+        }
+    }
+    
+    typealias GetServicesForResult = UtilityPaymentNanoServices.GetServicesForResult
+}
+
+private extension UtilityService {
+    
+    static let sample: Self = .init(name: "Service", puref: "service")
+    static let sample1: Self = .init(name: "Service1", puref: "service1")
+    static let sample2: Self = .init(name: "Service2", puref: "service2")
 }

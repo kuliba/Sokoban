@@ -23,9 +23,6 @@ final class UtilityPaymentOperatorLoaderComposer {
         self.model = model
         self.pageSize = pageSize
     }
-}
-
-extension UtilityPaymentOperatorLoaderComposer {
     
     typealias Flag = StubbedFeatureFlag.Option
     typealias PageSize = Int
@@ -109,7 +106,7 @@ private extension Model {
         
         if let operators = localAgent.load(type: [CachingSberOperator].self) {
             cacheLog("Operators count \(operators.count)", #file, #line)
-
+            
             let page = operators.operators(for: payload)
             cacheLog("Operators page count \(page.count)", #file, #line)
             
@@ -195,20 +192,15 @@ private extension UtilityPaymentOperator {
 
 private extension Array where Element == UtilityPaymentOperator {
     
-    static let stub: Self = [
-        .single,
-        .singleFailure,
-        .multiple,
-        .multipleFailure,
-    ]
+    static let stub: Self = [.empty, .failing, .single, .multi]
 }
 
 private extension UtilityPaymentOperator {
     
-    static let multiple: Self = .init("multiple", "Multiple")
-    static let multipleFailure: Self = .init("multipleFailure", "MultipleFailure")
-    static let single: Self = .init("single", "Single")
-    static let singleFailure: Self = .init("singleFailure", "SingleFailure")
+    static let empty: Self = .init("empty", "No Service Operator")
+    static let failing: Self = .init("failing", "Failing Operator")
+    static let multi: Self = .init("multi", "Multi Service Operator")
+    static let single: Self = .init("single", "Single Service Operator")
     
     private init(_ id: String, _ title: String) {
         
