@@ -890,7 +890,7 @@ final class InfoProductViewModelTests: XCTestCase {
         XCTAssertEqual(moscowTime, moscowDate)
     }
     
-    func testConvertedToForInvalidTimezoneIdentifier() {
+    func test_convertedToReturnsOriginalDate_forInvalidTimezoneIdentifier() {
         
         let invalidTimezoneIdentifier = "Invalid/Timezone"
         let originalDate = Date()
@@ -900,7 +900,7 @@ final class InfoProductViewModelTests: XCTestCase {
         XCTAssertEqual(invalidTimezoneDate, originalDate, "converted(to:) should return the original date if the timezone identifier is invalid")
     }
     
-    func testConvertedToForDateInMoscowTimezone() {
+    func test_convertedToReturnsExpectedDate_ForMoscowTimezone() {
        
         let moscowTime = Date.testDateInMoscowTimezone.converted(to: TimeZone(identifier: "Europe/Moscow")!)
         XCTAssertEqual(moscowTime, Date.expectedMoscowTime, "converted(to:) should be equal to the expected value for a date in the Moscow timezone")
@@ -1389,6 +1389,4 @@ private extension Date {
     
     static let testDateInMoscowTimezone = Date(timeIntervalSince1970: 1679272800) // 2023-03-20 00:00:00 +0300
     static let expectedMoscowTime = Date(timeIntervalSince1970: 1679272800) // 2023-03-20 00:00:00 +0300
-    static let testDateInDifferentTimezone = Date(timeIntervalSince1970: 1679286300) // 2023-03-20 03:00:00 +0500
-    static let expectedDifferentTimezoneResult = Date(timeIntervalSince1970: 1679272800) // 2023-03-20 00:00:00 +0300
 }
