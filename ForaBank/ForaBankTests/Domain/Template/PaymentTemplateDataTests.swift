@@ -63,6 +63,22 @@ final class PaymentTemplateDataTests: XCTestCase {
         ])
     }
     
+    //MARK: Computed Property
+    
+    func test_sfp_recipientID_shouldReturnValue() {
+        
+        let stub = Model.emptyMock.templateSFPStub(
+            [Model.anywayTransferDataStub()]
+        )
+        XCTAssertNoDiff(stub.sfpPhone, "123")
+    }
+    
+    func test_sfp_recipientID_shouldReturnValueNil() {
+        
+        let stub = Model.emptyMock.templateSFPStub([])
+        XCTAssertNoDiff(stub.sfpPhone, nil)
+    }
+    
     // MARK: - Helpers
     
     private func templateStub(
