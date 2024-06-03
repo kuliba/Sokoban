@@ -1,6 +1,5 @@
 ############
-
-sstages:
+stages:
   - test
   - build
   - deploy
