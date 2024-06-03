@@ -137,94 +137,81 @@ final class Model_PaymensSFPTests: XCTestCase {
     
     func test_bankParameter_sourceTemplatePayment_shouldReturnParameter() {
         
-        let sut: Model = .mockWithEmptyExcept()
-        sut.bankList.value = [.dummy(id: "1", bankType: .sfp, bankCountry: "RU")]
-        sut.paymentTemplates.value = [
-            .mobile10Digits
-        ]
-        
-        let operation = Payments.Operation(
-            service: .sfp,
-            source: .template(2513)
+        let sut = makeSUT(
+            Payments.Operation(
+                service: .sfp,
+                source: .template(2513)
+            ),
+            paymentTemplates: [
+                .mobile10Digits
+            ]
         )
         
-        let bankParameter = sut.createBankParameter(
-            latestPaymentBankIds: nil,
-            operation,
-            operationPhone: nil,
-            banksIds: []
-        )
-        
-        XCTAssertNoDiff(bankParameter.parameter.id, Self.bankParameterTest.id)
+        XCTAssertNoDiff(sut.parameter.id, Self.bankParameterTest.id)
     }
     
     func test_bankParameter_sourceTemplatePayment_shouldReturnParameterWithOutTemplate() {
         
-        let sut: Model = .mockWithEmptyExcept()
-        sut.bankList.value = [.dummy(id: "1", bankType: .sfp, bankCountry: "RU")]
-        
-        let operation = Payments.Operation(
-            service: .sfp,
-            source: .template(2513)
+        let sut = makeSUT(
+            Payments.Operation(
+                service: .sfp,
+                source: .template(2513)
+            ),
+            paymentTemplates: []
         )
         
-        let bankParameter = sut.createBankParameter(
-            latestPaymentBankIds: nil,
-            operation,
-            operationPhone: nil,
-            banksIds: []
-        )
-        
-        XCTAssertNoDiff(bankParameter.parameter.id, Self.bankParameterTest.id)
+        XCTAssertNoDiff(sut.parameter.id, Self.bankParameterTest.id)
     }
     
     func test_bankParameter_sourceTemplatePayment_transferGeneralData_shouldReturnParameter() {
         
-        let sut: Model = .mockWithEmptyExcept()
-        sut.bankList.value = [.dummy(id: "1", bankType: .sfp, bankCountry: "RU")]
-        sut.paymentTemplates.value = [
-            sut.templateSFPStub([Model.transferGeneralDataStub()])
-        ]
-        
-        let operation = Payments.Operation(
-            service: .sfp,
-            source: .template(1)
+        let sut = makeSUT(
+            Payments.Operation(
+                service: .sfp,
+                source: .template(2513)
+            ),
+            paymentTemplates: [
+                Model.templateSFPStub([Model.transferGeneralDataStub()])
+            ]
         )
         
-        let bankParameter = sut.createBankParameter(
-            latestPaymentBankIds: nil,
-            operation,
-            operationPhone: nil,
-            banksIds: []
-        )
-        
-        XCTAssertNoDiff(bankParameter.parameter.id, Self.bankParameterTest.id)
+        XCTAssertNoDiff(sut.parameter.id, Self.bankParameterTest.id)
     }
     
     func test_bankParameter_sourceTemplatePayment_transferData_shouldReturnParameter() {
         
-        let sut: Model = .mockWithEmptyExcept()
-        sut.bankList.value = [.dummy(id: "1", bankType: .sfp, bankCountry: "RU")]
-        sut.paymentTemplates.value = [
-            makeTemplate(templateID: 1, payerAccountID: nil)
-        ]
-        
-        let operation = Payments.Operation(
-            service: .sfp,
-            source: .template(1)
+        let sut = makeSUT(
+            Payments.Operation(
+                service: .sfp,
+                source: .template(2513)
+            ),
+            paymentTemplates: [
+                makeTemplate(templateID: 1, payerAccountID: nil)
+            ]
         )
         
-        let bankParameter = sut.createBankParameter(
+        XCTAssertNoDiff(sut.parameter.id, Self.bankParameterTest.id)
+    }
+    
+    // MARK: - Helpers
+    
+    func makeSUT(
+        _ operation: Payments.Operation,
+        paymentTemplates: [PaymentTemplateData]
+    ) -> Payments.ParameterSelectBank {
+        
+        let model: Model = .mockWithEmptyExcept()
+        model.bankList.value = [.dummy(id: "1", bankType: .sfp, bankCountry: "RU")]
+        
+        let bankParameter = model.createBankParameter(
             latestPaymentBankIds: nil,
             operation,
             operationPhone: nil,
             banksIds: []
         )
         
-        XCTAssertNoDiff(bankParameter.parameter.id, Self.bankParameterTest.id)
+        return bankParameter
     }
-    
-    // MARK: - Helpers
     
     private func makeTemplate(
         templateID: Int,
@@ -310,7 +297,7 @@ extension Model {
             payeeInternal: nil)
     }
     
-    func templateSFPStub(
+    static func templateSFPStub(
         _ transferData: [TransferData]
     ) -> PaymentTemplateData {
     
