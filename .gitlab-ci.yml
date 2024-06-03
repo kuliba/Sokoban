@@ -1,6 +1,6 @@
 ############
 
-stages:
+sstages:
   - test
   - build
   - deploy
@@ -22,6 +22,7 @@ default:
 
 fastlane-test:
   stage: test
+  parallel: 1
   when: always
   only:
     - master
@@ -32,6 +33,7 @@ fastlane-test:
 
 fastlane-build-beta:
   stage: build
+  parallel: 1
   when: on_success
   allow_failure: false
   only:
@@ -45,7 +47,11 @@ fastlane-build-beta:
 
 fastlane-deploy:
   stage: deploy
+  parallel: 1
   when: on_success
+  needs:
+    - "fastlane-test"
+    - "fastlane-build-beta"
   only:
     - develop
   script:
