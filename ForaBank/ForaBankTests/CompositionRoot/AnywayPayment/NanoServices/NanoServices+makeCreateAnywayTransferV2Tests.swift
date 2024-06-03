@@ -1,5 +1,5 @@
 //
-//  NanoServices+makeCreateAnywayTransferTests.swift
+//  NanoServices+makeCreateAnywayTransferV2Tests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 27.03.2024.
@@ -8,7 +8,7 @@
 @testable import ForaBank
 import XCTest
 
-final class NanoServices_makeCreateAnywayTransferTests: XCTestCase {
+final class NanoServices_makeCreateAnywayTransferV2Tests: XCTestCase {
     
     func test_shouldCallHTTPClientOnce() throws {
         
@@ -17,7 +17,7 @@ final class NanoServices_makeCreateAnywayTransferTests: XCTestCase {
     
     func test_shouldSetURL() throws {
         
-        try assertURL("https://pl.forabank.ru/dbo/api/v3/rest/transfer/createAnywayTransfer")
+        try assertURL("https://pl.forabank.ru/dbo/api/v3/rest/transfer/v2/createAnywayTransfer")
     }
     
     func test_shouldSetHTTPMethodToPOST() throws {
@@ -97,12 +97,7 @@ final class NanoServices_makeCreateAnywayTransferTests: XCTestCase {
     func test_shouldDeliverResponseOnValidData() {
         
         expect(
-            toDeliver: .success(.init(
-                additional: [],
-                finalStep: false,
-                needMake: false,
-                needOTP: false,
-                needSum: false,
+            toDeliver: .success(makeResponse(
                 parametersForNextStep: [
                     .init(
                         dataType: .string,
@@ -115,13 +110,16 @@ final class NanoServices_makeCreateAnywayTransferTests: XCTestCase {
                         rawLength: 0,
                         isReadOnly: false,
                         regExp: "^.{1,250}$",
+                        md5hash: nil,
                         svgImage: "svgImage",
                         title: "Лицевой счет",
                         type: .input,
-                        viewType: .input
+                        viewType: .input,
+                        visible: true
                     )
                 ],
-                paymentOperationDetailID: 54321
+                paymentOperationDetailID: 54321,
+                options: []
             )),
             onData: .valid
         )
@@ -142,7 +140,7 @@ final class NanoServices_makeCreateAnywayTransferTests: XCTestCase {
         httpClient: HTTPClientSpy
     ) {
         let httpClient = HTTPClientSpy()
-        let sut = NanoServices.makeCreateAnywayTransfer(httpClient, { _,_,_ in })
+        let sut = NanoServices.makeCreateAnywayTransferV2(httpClient, { _,_,_ in })
         
         trackForMemoryLeaks(httpClient, file: file, line: line)
         
@@ -195,6 +193,55 @@ final class NanoServices_makeCreateAnywayTransferTests: XCTestCase {
         XCTAssertNoDiff(count, 1, "Expected to have one request, but got \(count) insted.")
         
         return try XCTUnwrap(httpClient.requests.first, file: file, line: line)
+    }
+    
+    private func makeResponse(
+        additional: [Response.Additional] = [],
+        amount: Decimal? = nil,
+        creditAmount: Decimal? = nil,
+        currencyAmount: String? = nil,
+        currencyPayee: String? = nil,
+        currencyPayer: String? = nil,
+        currencyRate: Decimal? = nil,
+        debitAmount: Decimal? = nil,
+        documentStatus: Response.DocumentStatus? = nil,
+        fee: Decimal? = nil,
+        finalStep: Bool = false,
+        infoMessage: String? = nil,
+        needMake: Bool = false,
+        needOTP: Bool = false,
+        needSum: Bool = false,
+        parametersForNextStep: [Response.Parameter] = [],
+        paymentOperationDetailID: Int? = nil,
+        payeeName: String? = nil,
+        printFormType: String? = nil,
+        scenario: Response.AntiFraudScenario? = nil,
+        options: [Response.Option] = []
+    ) -> Response {
+        
+        return .init(
+            additional: additional,
+            amount: amount,
+            creditAmount: creditAmount,
+            currencyAmount: currencyAmount,
+            currencyPayee: currencyPayee,
+            currencyPayer: currencyPayer,
+            currencyRate: currencyRate,
+            debitAmount: debitAmount,
+            documentStatus: documentStatus,
+            fee: fee,
+            finalStep: finalStep,
+            infoMessage: infoMessage,
+            needMake: needMake,
+            needOTP: needOTP,
+            needSum: needSum,
+            parametersForNextStep: parametersForNextStep,
+            paymentOperationDetailID: paymentOperationDetailID,
+            payeeName: payeeName,
+            printFormType: printFormType,
+            scenario: scenario,
+            options: options
+        )
     }
     
     private func expect(

@@ -7,6 +7,7 @@
 
 public enum TransactionStatus<Report> {
     
+    case awaitingPaymentRestartConfirmation
     case fraudSuspected
     case result(TransactionResult)
     case serverError(String)

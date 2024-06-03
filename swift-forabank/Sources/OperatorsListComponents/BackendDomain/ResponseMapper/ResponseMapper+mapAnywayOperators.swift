@@ -19,17 +19,30 @@ public extension ResponseMapper {
     
     private static func map(
         _ data: AnywayOperatorGroupData
-    ) throws -> [SberOperator] {
+    ) -> [SberOperator] {
         
         guard let list = data.operatorList.first?.atributeList
         else { return [] }
         
-        return list.compactMap {
-            
-            guard let title = $0.juridicalName else { return nil }
-            
-            return .init(id: $0.customerId, inn: $0.inn, md5Hash: $0.md5hash, title: title)
-        }
+        let operators = list.compactMap(SberOperator.init)
+        
+        return operators
+    }
+}
+
+private extension SberOperator {
+    
+    init?(
+        _ `operator`: ResponseMapper.AnywayOperatorGroupData.Operator.OperatorData
+    ) {
+        guard let title = `operator`.juridicalName else { return nil }
+        
+        self.init(
+            id: `operator`.customerId,
+            inn: `operator`.inn,
+            md5Hash: `operator`.md5hash,
+            title: title
+        )
     }
 }
 
@@ -50,7 +63,6 @@ private extension ResponseMapper {
                 let md5hash: String?
                 let juridicalName: String?
                 let customerId: String
-                let serviceList: [String?]
                 let inn: String?
             }
             

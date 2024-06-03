@@ -165,7 +165,7 @@ extension PaymentTemplateData {
               transfer.payeeInternal?.phoneNumber != nil
         else { return nil }
         
-        return "100000000217"
+        return BankID.foraBankID.rawValue
     }
     
     var payerProductId: Int? {

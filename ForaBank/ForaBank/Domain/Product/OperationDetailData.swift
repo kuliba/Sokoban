@@ -383,7 +383,7 @@ extension OperationDetailData {
     
         return .init(
             inn: payerINN,
-            accountId: payerAccountId,
+            accountId: payerCardId == nil ? payerAccountId : nil,
             accountNumber: payerAccountNumber,
             cardId: payerCardId,
             cardNumber: payerCardNumber,

@@ -32,6 +32,12 @@ struct AnywayPaymentElementParameterView: View {
                 itemView: { Text($0.value.rawValue) }
             )
             
+        case .numberInput:
+            TextFieldMockWrapperView(
+                initial: state.value?.rawValue ?? "",
+                onChange: event
+            )
+            
         case .textInput:
             TextFieldMockWrapperView(
                 initial: state.value?.rawValue ?? "",

@@ -41,8 +41,9 @@ class MyProductsViewModel: ObservableObject {
     private let model: Model
     private let cardAction: CardAction?
     private let makeProductProfileViewModel: MakeProductProfileViewModel
+    private let makeMyProductsViewFactory: MyProductsViewFactory
+
     private var bindings = Set<AnyCancellable>()
-    
     
     init(navigationBar: NavigationBarView.ViewModel,
          totalMoney: MyProductsMoneyViewModel,
@@ -54,7 +55,8 @@ class MyProductsViewModel: ObservableObject {
          makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
          refreshingIndicator: RefreshingIndicatorView.ViewModel,
          showOnboarding: [Onboarding: Bool] = [:],
-         openOrderSticker: @escaping () -> Void
+         openOrderSticker: @escaping () -> Void,
+         makeMyProductsViewFactory: MyProductsViewFactory
     ) {
         self.model = model
         self.cardAction = cardAction
@@ -67,13 +69,15 @@ class MyProductsViewModel: ObservableObject {
         self.refreshingIndicator = refreshingIndicator
         self.showOnboarding = showOnboarding
         self.openOrderSticker = openOrderSticker
+        self.makeMyProductsViewFactory = makeMyProductsViewFactory
     }
     
     convenience init(
         _ model: Model,
         cardAction: CardAction? = nil,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
-        openOrderSticker: @escaping () -> Void
+        openOrderSticker: @escaping () -> Void,
+        makeMyProductsViewFactory: MyProductsViewFactory
     ) {
         self.init(
             navigationBar: .init(background: .mainColorsWhite),
@@ -86,7 +90,8 @@ class MyProductsViewModel: ObservableObject {
             makeProductProfileViewModel: makeProductProfileViewModel,
             refreshingIndicator: .init(isActive: false),
             showOnboarding: [:],
-            openOrderSticker: openOrderSticker
+            openOrderSticker: openOrderSticker,
+            makeMyProductsViewFactory: makeMyProductsViewFactory
         )
         
         updateNavBar(state: .normal)
@@ -167,6 +172,18 @@ class MyProductsViewModel: ObservableObject {
             }
             .store(in: &bindings)
         
+        model.updateInfo
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] updateInfo in
+                
+                guard let self else { return }
+                
+                if updateInfo.areProductsUpdated, let informerData = makeMyProductsViewFactory.makeInformerDataUpdateFailure() {
+                    self.model.action.send(ModelAction.Informer.Show(informer: informerData))
+                }
+            }
+            .store(in: &bindings)
+  
         model.productsOrdersUpdating
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] isOrdersUpdating in

@@ -16,6 +16,7 @@ extension MainViewController: UICollectionViewDelegate {
             fatalError("Unknown section kind")
         }
         switch section {
+        case .updateInfo: break // old code, not used
         case .products:
             switch productsViewModels[indexPath.item].name {
             case "Хочу карту":

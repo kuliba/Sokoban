@@ -43,6 +43,7 @@ class MainViewModel: ObservableObject, Resetable {
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let onRegister: () -> Void
     private let factory: ModelAuthLoginViewModelFactory
+    private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     private var bindings = Set<AnyCancellable>()
     
     init(
@@ -53,18 +54,13 @@ class MainViewModel: ObservableObject, Resetable {
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping () -> Void
     ) {
         self.model = model
+        self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
-        self.sections = [
-            MainSectionProductsView.ViewModel(model, stickerViewModel: nil),
-            MainSectionFastOperationView.ViewModel(),
-            MainSectionPromoView.ViewModel(model),
-            MainSectionCurrencyMetallView.ViewModel(model),
-            MainSectionOpenProductView.ViewModel(model),
-            MainSectionAtmView.ViewModel.initial
-        ]
+        self.sections = Self.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: nil)
         
         self.factory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
@@ -83,10 +79,11 @@ class MainViewModel: ObservableObject, Resetable {
     
     private static func getSections(
         _ model: Model,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         stickerViewModel: ProductCarouselView.StickerViewModel? = nil
     ) -> [MainSectionViewModel] {
         
-        return [
+        var sections = [
             MainSectionProductsView.ViewModel(
                 model,
                 stickerViewModel: stickerViewModel
@@ -97,16 +94,53 @@ class MainViewModel: ObservableObject, Resetable {
             MainSectionOpenProductView.ViewModel(model),
             MainSectionAtmView.ViewModel.initial
         ]
+        if updateInfoStatusFlag.isActive {
+            if !model.updateInfo.value.areProductsUpdated {
+                sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
+            }
+        }
+        return sections
     }
     
-    private func makeStickerViewModel(_ model: Model) -> ProductCarouselView.StickerViewModel? {
+    private func makeStickerViewModel(
+        _ model: Model,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
+    ) -> ProductCarouselView.StickerViewModel? {
         
         return ProductCarouselView.ViewModel.makeStickerViewModel(model) {
             self.handleLandingAction(.sticker)
         } hide: { [self] in
             model.settingsAgent.saveShowStickerSetting(shouldShow: false)
-            self.sections = MainViewModel.getSections(model)
-            self.bind(sections)
+            self.removeSticker(model)
+        }
+    }
+    
+    private func updateSticker(
+        _ model: Model,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
+        stickerViewModel: ProductCarouselView.StickerViewModel
+    ) {
+        
+        if let index = sections.firstIndex(where: { $0.type == .products }),
+            let section = sections[index] as? MainSectionProductsView.ViewModel,
+           section.productCarouselViewModel.stickerViewModel?.backgroundImage != stickerViewModel.backgroundImage {
+            sections[index] = MainSectionProductsView.ViewModel(
+                model,
+                stickerViewModel: stickerViewModel
+            )
+            bind(sections)
+        }
+    }
+    
+    private func removeSticker(_ model: Model) {
+        
+        if let index = sections.firstIndex(where: { $0.type == .products }) {
+            
+            sections[index] = MainSectionProductsView.ViewModel(
+                model,
+                stickerViewModel: nil
+            )
+            bind(sections)
         }
     }
 }
@@ -154,21 +188,29 @@ extension MainViewModel {
 }
 
 private extension MainViewModel {
-    
+        
     func bind() {
         
         model.images
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] images in
-                
                 if let products = self.sections.first(where: { $0.type == .products }) as? MainSectionProductsView.ViewModel,
-                   products.productCarouselViewModel.stickerViewModel == nil {
-                    
-                    self.sections = Self.getSections(model, stickerViewModel: makeStickerViewModel(model))
-                    bind(sections)
+                   products.productCarouselViewModel.stickerViewModel == nil, 
+                    let stickerViewModel = makeStickerViewModel(model, updateInfoStatusFlag: updateInfoStatusFlag) {
+                    self.updateSticker(model, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: stickerViewModel)
                 }
             }
             .store(in: &bindings)
+        
+        if updateInfoStatusFlag.isActive {
+            model.updateInfo
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] updateInfo in
+                    
+                    self?.updateSections(updateInfo)
+                }
+                .store(in: &bindings)
+        }
         
         action
             .receive(on: DispatchQueue.main)
@@ -500,7 +542,16 @@ private extension MainViewModel {
                                     handleLandingAction(.sticker)
                                     
                                 }
-                            }
+                            }, 
+                            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { [weak self] in
+                                
+                                guard let self else { return nil }
+                                
+                                if self.updateInfoStatusFlag.isActive {
+                                    return .updateFailureInfo
+                                }
+                                return nil
+                            })
                         )
                         myProductsViewModel.rootActions = rootActions
                         myProductsViewModel.contactsAction = { [weak self] in self?.showContacts() }
@@ -971,12 +1022,6 @@ private extension MainViewModel {
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as TemplatesListViewModelAction.CloseAction:
-                    self.action.send(DelayWrappedAction(
-                        delayMS: 800,
-                        action: MainViewModelAction.Close.Link())
-                    )
-                    
                 case let payload as TemplatesListViewModelAction.OpenProductProfile:
                     
                     self.action.send(MainViewModelAction.Close.Link())
@@ -1112,6 +1157,19 @@ private extension MainViewModel {
         self.resetDestination()
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
             self?.rootActions?.switchTab(.chat)
+        }
+    }
+    
+    func updateSections(_ updateInfo: UpdateInfo) {
+        let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateInfo }) is UpdateInfoViewModel
+        switch (updateInfo.areProductsUpdated, containUpdateInfoSection) {
+            
+        case (true, true):
+            sections.removeFirst()
+        case (false, false):
+            sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
+        default:
+            break
         }
     }
 }

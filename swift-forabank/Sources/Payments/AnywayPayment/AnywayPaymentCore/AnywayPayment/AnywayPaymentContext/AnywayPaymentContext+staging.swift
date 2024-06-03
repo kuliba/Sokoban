@@ -6,7 +6,6 @@
 //
 
 import AnywayPaymentDomain
-import Tagged
 
 extension AnywayPaymentContext {
     
@@ -15,7 +14,8 @@ extension AnywayPaymentContext {
         return .init(
             payment: payment,
             staged: payment.getStaged(),
-            outline: outline.updating(with: payment)
+            outline: outline.updating(with: payment),
+            shouldRestart: shouldRestart
         )
     }
 }
