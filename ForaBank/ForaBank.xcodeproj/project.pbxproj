@@ -2269,6 +2269,7 @@
 		8306C12D2B63A2E2007FDA89 /* Services+getProductDynamicParamsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8306C12C2B63A2E1007FDA89 /* Services+getProductDynamicParamsList.swift */; };
 		8306C12F2B63A4A4007FDA89 /* RequestFactory+getProductDynamicParamsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8306C12E2B63A4A4007FDA89 /* RequestFactory+getProductDynamicParamsList.swift */; };
 		8306D1402ACB27A300134FE0 /* Services+getScenarioQRDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8306D13F2ACB27A300134FE0 /* Services+getScenarioQRDataTests.swift */; };
+		8307451D2C0DF198008E5735 /* ColorExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8307451C2C0DF198008E5735 /* ColorExtensionsTests.swift */; };
 		830AF2D52AB2E0FC00C2F29C /* AbroadType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830AF2D42AB2E0FC00C2F29C /* AbroadType.swift */; };
 		830AF2D72AB3236000C2F29C /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830AF2D62AB3236000C2F29C /* Factory.swift */; };
 		830C91BB2AAF9051005EC90C /* CodableLanding in Frameworks */ = {isa = PBXBuildFile; productRef = 830C91BA2AAF9051005EC90C /* CodableLanding */; };
@@ -5224,6 +5225,7 @@
 		8306C12C2B63A2E1007FDA89 /* Services+getProductDynamicParamsList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services+getProductDynamicParamsList.swift"; sourceTree = "<group>"; };
 		8306C12E2B63A4A4007FDA89 /* RequestFactory+getProductDynamicParamsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getProductDynamicParamsList.swift"; sourceTree = "<group>"; };
 		8306D13F2ACB27A300134FE0 /* Services+getScenarioQRDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getScenarioQRDataTests.swift"; sourceTree = "<group>"; };
+		8307451C2C0DF198008E5735 /* ColorExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensionsTests.swift; sourceTree = "<group>"; };
 		830AF2D42AB2E0FC00C2F29C /* AbroadType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbroadType.swift; sourceTree = "<group>"; };
 		830AF2D62AB3236000C2F29C /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
 		830D974C2BBC4F0F00899832 /* UserAllCardsModel+clover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAllCardsModel+clover.swift"; sourceTree = "<group>"; };
@@ -11203,6 +11205,7 @@
 			isa = PBXGroup;
 			children = (
 				77067CD8275FBB70000C442B /* StringExtensionsTests.swift */,
+				8307451C2C0DF198008E5735 /* ColorExtensionsTests.swift */,
 				77E1803427AC05370006ACC9 /* DateFormatterExtensionsTests.swift */,
 				0C69D7FB2951C36E00D161B2 /* DoubleExtensionsTests.swift */,
 				77BF27B6284785B8009624BB /* DateExtensionsTests.swift */,
@@ -18880,6 +18883,7 @@
 				77F6A8742A2E43E8003BDE07 /* PaymentsTaxesFSSPTests.swift in Sources */,
 				682092AA27AC069F003DCAFD /* ServerCommandsSuggestTests.swift in Sources */,
 				83B614882B04C168002EE299 /* Model+PaymentsTransferSFPAdditionalTests.swift in Sources */,
+				8307451D2C0DF198008E5735 /* ColorExtensionsTests.swift in Sources */,
 				C154987029088C9E00D00670 /* TextFieldPhoneNumberViewComponentsTests.swift in Sources */,
 				2A30392A2A17D25F0008701D /* PhoneTransformerTests.swift in Sources */,
 				2A3599B42ADA916800820369 /* PrivateSecKeyChainStoreTests.swift in Sources */,
