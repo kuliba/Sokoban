@@ -513,15 +513,15 @@ private extension UtilityPaymentNanoServices.StartAnywayPaymentPayload {
     typealias StartAnywayPaymentResult = UtilityPaymentNanoServices.StartAnywayPaymentResult
 }
 
-extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
+private extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
     
-    static let step1: Self = .init(
-        nextStep: [
-        
+    static let step1: Self = .make(
+        nextStepParameters: [
+            .make(id: "1", title: "Лицевой счет")
         ]
     )
     
-    private init(
+    private static func make(
         additional: [Additional] = [],
         amount: Decimal? = nil,
         creditAmount: Decimal? = nil,
@@ -537,14 +537,15 @@ extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
         needMake: Bool = false,
         needOTP: Bool = false,
         needSum: Bool = false,
-        nextStep: [Parameter],
+        nextStepParameters: [Parameter],
         paymentOperationDetailID: Int? = nil,
         payeeName: String? = nil,
         printFormType: String? = nil,
         scenario: AntiFraudScenario? = nil,
         options: [Option] = []
-    ) {
-        self.init(
+    ) -> Self {
+        
+        return .init(
             additional: additional,
             amount: amount,
             creditAmount: creditAmount,
@@ -560,12 +561,74 @@ extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
             needMake: needMake,
             needOTP: needOTP,
             needSum: needSum,
-            parametersForNextStep: nextStep,
+            parametersForNextStep: nextStepParameters,
             paymentOperationDetailID: paymentOperationDetailID,
             payeeName: payeeName,
             printFormType: printFormType,
             scenario: scenario,
             options: options
+        )
+    }
+}
+
+private extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse.Parameter {
+    
+    static func make(
+        content: String? = nil,
+        dataDictionary: String? = nil,
+        dataDictionaryРarent: String? = nil,
+        dataType: DataType = .string,
+        group: String? = nil,
+        id: String,
+        inputFieldType: InputFieldType? = nil,
+        inputMask: String? = nil,
+        isPrint: Bool = false,
+        isRequired: Bool = true,
+        maxLength: Int? = nil,
+        mask: String? = nil,
+        minLength: Int? = nil,
+        order: Int? = nil,
+        phoneBook: Bool = false,
+        rawLength: Int = 0,
+        isReadOnly: Bool = false,
+        regExp: String = "^.{1,250}$",
+        subGroup: String? = nil,
+        subTitle: String? = nil,
+        md5hash: String? = nil,
+        svgImage: String? = nil,
+        title: String,
+        type: FieldType = .input,
+        viewType: ViewType = .input,
+        visible: Bool = true
+    ) -> Self {
+        
+        return .init(
+            content: content,
+            dataDictionary: dataDictionary,
+            dataDictionaryРarent: dataDictionaryРarent,
+            dataType: dataType,
+            group: group,
+            id: id,
+            inputFieldType: inputFieldType,
+            inputMask: inputMask,
+            isPrint: isPrint,
+            isRequired: isRequired,
+            maxLength: maxLength,
+            mask: mask,
+            minLength: minLength,
+            order: order,
+            phoneBook: phoneBook,
+            rawLength: rawLength,
+            isReadOnly: isReadOnly,
+            regExp: regExp,
+            subGroup: subGroup,
+            subTitle: subTitle,
+            md5hash: md5hash,
+            svgImage: svgImage,
+            title: title,
+            type: type,
+            viewType: viewType,
+            visible: visible
         )
     }
 }
