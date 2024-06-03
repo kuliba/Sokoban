@@ -22,6 +22,8 @@ final class AnywayTransactionEffectHandlerNanoServicesComposer {
         self.httpClient = httpClient
         self.log = log
     }
+    
+    typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
 }
 
 extension AnywayTransactionEffectHandlerNanoServicesComposer {
@@ -35,11 +37,6 @@ extension AnywayTransactionEffectHandlerNanoServicesComposer {
             processPayment: processPayment()
         )
     }
-}
-
-extension AnywayTransactionEffectHandlerNanoServicesComposer {
-    
-    typealias Log = (String, StaticString, UInt) -> Void
     
     typealias NanoServices = AnywayTransactionEffectHandlerNanoServices
 }
@@ -50,7 +47,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     private func initiatePayment(
     ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
         
-        let process = ForaBank.NanoServices.makeCreateAnywayTransferNewV2(httpClient, log)
+        let process = ForaBank.NanoServices.makeCreateAnywayTransferNewV2(httpClient, infoNetworkLog)
         
         return { digest, completion in
             
@@ -71,7 +68,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             createRequest: createRequest,
             performRequest: httpClient.performRequest,
             mapResponse: mapResponse,
-            log: log
+            log: infoNetworkLog
         )
         
         return { payload, completion in
@@ -93,7 +90,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             createRequest: createRequest,
             performRequest: httpClient.performRequest,
             mapResponse: mapResponse,
-            log: log
+            log: infoNetworkLog
         )
         
         return { payload, completion in
@@ -108,12 +105,29 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     private func processPayment(
     ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
         
-        let process = ForaBank.NanoServices.makeCreateAnywayTransferV2(httpClient, log)
+        let process = ForaBank.NanoServices.makeCreateAnywayTransferV2(httpClient, infoNetworkLog)
         
         return { digest, completion in
             
             process(.init(digest: digest)) { completion($0.result) }
         }
+    }
+    
+    private func networkLog(
+        level: LoggerAgentLevel,
+        message: @autoclosure () -> String,
+        file: StaticString,
+        line: UInt
+    ) {
+        log(level, .network, message(), file, line)
+    }
+    
+    private func infoNetworkLog(
+        message: String,
+        file: StaticString,
+        line: UInt
+    ) {
+        log(.info, .network, message, file, line)
     }
 }
 

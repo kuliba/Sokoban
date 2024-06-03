@@ -5,79 +5,24 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
-import ForaTools
 import AnywayPaymentDomain
 
-enum UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService> {
+enum UtilityPaymentFlowEvent<LastPayment, Operator, Service> {
     
-    case payment(UtilityServicePaymentFlowEvent)
-    case prepayment(UtilityPrepaymentFlowEvent)
+    case payment(PaymentEvent)
+    case prepayment(PrepaymentEvent)
     case servicePicker(ServicePickerFlowEvent)
 }
 
 extension UtilityPaymentFlowEvent {
     
+    typealias PaymentEvent = UtilityServicePaymentFlowEvent
+    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
+    
     enum ServicePickerFlowEvent: Equatable {
         
         case dismissAlert
     }
-    
-    enum UtilityPrepaymentFlowEvent {
-        
-        case addCompany
-        case dismissAlert
-        case dismissDestination
-        case dismissOperatorFailureDestination
-        case dismissServicesDestination
-        case initiated(UtilityPrepaymentPayload)
-        case payByInstructions
-        case payByInstructionsFromError
-        case paymentStarted(StartPaymentResult)
-        case select(Select)
-    }
 }
 
-extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent {
-    
-    enum Select {
-        
-        case lastPayment(LastPayment)
-        case `operator`(Operator)
-        case service(UtilityService, for: Operator)
-    }
-    
-    typealias StartPaymentResult = Result<StartPaymentSuccess, StartPaymentFailure>
-    
-    enum StartPaymentSuccess {
-        
-        case services(MultiElementArray<UtilityService>, for: Operator)
-        case startPayment(AnywayTransactionState)
-    }
-    
-    enum StartPaymentFailure: Error {
-        
-        case operatorFailure(Operator)
-        case serviceFailure(ServiceFailure)
-        
-#warning("extract…")
-        enum ServiceFailure: Error, Hashable {
-            
-            case connectivityError
-            case serverError(String)
-        }
-    }
-    
-    struct UtilityPrepaymentPayload {
-        
-        let lastPayments: [LastPayment]
-        let operators: [Operator]
-        let searchText: String
-    }
-}
-
-extension UtilityPaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
-extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
-extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.Select: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
-extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentSuccess: Equatable where Operator: Equatable, UtilityService: Equatable {}
-extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentFailure: Equatable where Operator: Equatable {}
-extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable {}
+extension UtilityPaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}

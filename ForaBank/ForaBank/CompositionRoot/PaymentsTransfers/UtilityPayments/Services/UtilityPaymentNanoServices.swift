@@ -10,7 +10,7 @@ import ForaTools
 import OperatorsListComponents
 import RemoteServices
 
-struct UtilityPaymentNanoServices<LastPayment, Operator, UtilityService> {
+struct UtilityPaymentNanoServices<LastPayment, Operator, Service> {
     
     /// `c`
     /// Получение последних платежей по ЖКХ
@@ -48,27 +48,27 @@ extension UtilityPaymentNanoServices {
     typealias GetOperatorsListByParam = (@escaping GetOperatorsListByParamCompletion) -> Void
     
     struct GetServicesForError: Error, Equatable {}
-    typealias GetServicesForResult = Result<[UtilityService], GetServicesForError>
+    typealias GetServicesForResult = Result<[Service], GetServicesForError>
     typealias GetServicesForCompletion = (GetServicesForResult) -> Void
     /// `d`
     /// Получение услуг юр. лица по "customerId" и типу housingAndCommunalService
     /// dict/getOperatorsListByParam?customerId=8798&operatorOnly=false&type=housingAndCommunalService
     typealias GetServicesFor = (Operator, @escaping GetServicesForCompletion) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
-    typealias PrepaymentEvent = Event.UtilityPrepaymentFlowEvent
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
+    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
     
     enum StartAnywayPaymentPayload {
         
         case lastPayment(LastPayment)
-        case service(UtilityService, for: Operator)
+        case service(Service, for: Operator)
     }
     
     typealias StartAnywayPaymentResult = Result<StartAnywayPaymentSuccess, StartAnywayPaymentFailure>
     
     enum StartAnywayPaymentSuccess {
         
-        case services(MultiElementArray<UtilityService>, for: Operator)
+        case services(MultiElementArray<Service>, for: Operator)
         case startPayment(StartPaymentResponse)
         
         typealias StartPaymentResponse = RemoteServices.ResponseMapper.CreateAnywayTransferResponse
@@ -93,9 +93,9 @@ extension UtilityPaymentNanoServices {
     /// POST
     /// /rest/transfer/createAnywayTransfer?isNewPayment=true
     typealias StartAnywayPayment = (StartAnywayPaymentPayload, @escaping StartAnywayPaymentCompletion) -> Void
-    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, Service>
     
     typealias MakeAnywayPaymentOutline = (LastPayment?) -> AnywayPaymentOutline
 }
 
-extension UtilityPaymentNanoServices.StartAnywayPaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
+extension UtilityPaymentNanoServices.StartAnywayPaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
