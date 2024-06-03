@@ -298,7 +298,7 @@ class RootViewModel: ObservableObject, Resetable {
                                 let compareVersion = appInfo.version.compareVersion(to: appVersion)
                                 
                                 switch compareVersion {
-                                case .orderedAscending:
+                                case .orderedDescending:
                                     
                                     self.alert = .init(title: "Новая версия", message: "Доступна новая версия \(appInfo.version).", primary: .init(type: .default, title: "Не сейчас", action: {}), secondary: .init(type: .default, title: "Обновить", action: {
                                         guard let url = URL(string: "\(appInfo.trackViewUrl)") else {
