@@ -56,33 +56,46 @@ extension AnywayPayment.Element {
         public let id: ID
         public let title: String
         public let value: Value
+        public let image: Image?
         
         public init(
             id: ID,
             title: String,
-            value: Value
+            value: Value,
+            image: Image?
         ) {
             self.id = id
             self.title = title
             self.value = value
+            self.image = image
         }
+    }
+    
+    public enum Image: Equatable {
+        
+        case md5Hash(String)
+        case svg(String)
+        case withFallback(md5Hash: String, svg: String)
     }
     
     public struct Parameter: Equatable {
         
         public let field: Field
+        public let image: Image?
         public let masking: Masking
         public let validation: Validation
         public let uiAttributes: UIAttributes
         
         public init(
             field: Field,
+            image: Image?,
             masking: Masking,
             validation: Validation,
             uiAttributes: UIAttributes
         ) {
             self.field = field
-            self.masking = masking
+            self.image = image
+           self.masking = masking
             self.validation = validation
             self.uiAttributes = uiAttributes
         }
@@ -102,6 +115,7 @@ extension AnywayPayment.Element.Field {
     
     public typealias Value = Tagged<_Value, String>
     public enum _Value {}
+    
 }
 
 extension AnywayPayment.Element.Parameter {
@@ -163,7 +177,6 @@ extension AnywayPayment.Element.Parameter {
         public let isReadOnly: Bool
         public let subGroup: String?
         public let subTitle: String?
-        public let svgImage: String?
         public let title: String
         public let type: FieldType
         public let viewType: ViewType
@@ -176,7 +189,6 @@ extension AnywayPayment.Element.Parameter {
             isReadOnly: Bool,
             subGroup: String?,
             subTitle: String?,
-            svgImage: String?,
             title: String,
             type: FieldType,
             viewType: ViewType
@@ -188,7 +200,6 @@ extension AnywayPayment.Element.Parameter {
             self.isReadOnly = isReadOnly
             self.subGroup = subGroup
             self.subTitle = subTitle
-            self.svgImage = svgImage
             self.title = title
             self.type = type
             self.viewType = viewType
@@ -208,7 +219,7 @@ extension AnywayPayment.Element.Parameter.Field {
 extension AnywayPayment.Element.Parameter.UIAttributes {
     
     public enum DataType: Equatable {
-
+        
         case _backendReserved
         case number
         case pairs(Pair, [Pair])

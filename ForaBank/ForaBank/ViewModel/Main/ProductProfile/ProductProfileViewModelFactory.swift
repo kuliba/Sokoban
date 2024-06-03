@@ -11,7 +11,8 @@ struct ProductProfileViewModelFactory {
     
     let makeInfoProductViewModel: (Parameters) -> InfoProductViewModel
     let makeAlert: (AlertParameters) -> Alert.ViewModel
-    
+    let makeInformerDataUpdateFailure: MakeInformerDataUpdateFailure
+
     struct Parameters {
         let model: Model
         let productData: ProductData
@@ -68,7 +69,9 @@ extension ProductProfileViewModelFactory {
             message: $0.message,
             primary: $0.primaryButton,
             secondary: $0.secondaryButton)
-        })
+        },
+        makeInformerDataUpdateFailure: { nil }
+    )
 }
 
 private extension String {

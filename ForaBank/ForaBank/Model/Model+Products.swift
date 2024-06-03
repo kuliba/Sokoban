@@ -499,7 +499,7 @@ extension Model {
             
             if let response {
                 
-                self.updateInfo.value.updateValueBy(type: productType, with: true)
+                self.updateInfo.value.setValue(true, for: productType)
 
                 let result = Services.mapProductResponse(response)
                                 
@@ -545,7 +545,7 @@ extension Model {
                 }
             }
             else {
-                self.updateInfo.value.updateValueBy(type: productType, with: false)
+                self.updateInfo.value.setValue(false, for: productType)
             }
         }
     }

@@ -7,26 +7,30 @@
 
 import AnywayPaymentDomain
 
-public struct PaymentInspector<Payment, PaymentDigest> {
+public struct PaymentInspector<Payment, PaymentDigest> 
+where Payment: RestartablePayment {
     
     public let checkFraud: CheckFraud
     public let getVerificationCode: GetVerificationCode
     public let makeDigest: MakeDigest
-    public let shouldRestartPayment: ShouldRestartPayment
+    public let restorePayment: RestorePayment
     public let validatePayment: ValidatePayment
+    public let wouldNeedRestart: WouldNeedRestart
     
     public init(
         checkFraud: @escaping CheckFraud,
         getVerificationCode: @escaping GetVerificationCode,
         makeDigest: @escaping MakeDigest,
-        shouldRestartPayment: @escaping ShouldRestartPayment,
-        validatePayment: @escaping ValidatePayment
+        restorePayment: @escaping RestorePayment,
+        validatePayment: @escaping ValidatePayment,
+        wouldNeedRestart: @escaping WouldNeedRestart
     ) {
         self.checkFraud = checkFraud
         self.getVerificationCode = getVerificationCode
         self.makeDigest = makeDigest
-        self.shouldRestartPayment = shouldRestartPayment
+        self.restorePayment = restorePayment
         self.validatePayment = validatePayment
+        self.wouldNeedRestart = wouldNeedRestart
     }
 }
 
@@ -35,6 +39,7 @@ public extension PaymentInspector {
     typealias CheckFraud = (Payment) -> Bool
     typealias GetVerificationCode = (Payment) -> VerificationCode?
     typealias MakeDigest = (Payment) -> PaymentDigest
-    typealias ShouldRestartPayment = (Payment) -> Bool
+    typealias RestorePayment = (Payment) -> Payment
     typealias ValidatePayment = (Payment) -> Bool
+    typealias WouldNeedRestart = (Payment) -> Bool
 }

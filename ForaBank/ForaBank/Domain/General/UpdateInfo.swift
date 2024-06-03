@@ -30,16 +30,16 @@ struct UpdateInfo: Equatable {
         self.areAccountsUpdated = areAccountsUpdated
     }
     
-    mutating func updateValueBy(type: ProductType, with newValue: Bool) {
+    mutating func setValue(_ value: Bool, for type: ProductType) {
         switch type {
         case .card:
-            areCardsUpdated = newValue
+            areCardsUpdated = value
         case .account:
-            areAccountsUpdated = newValue
+            areAccountsUpdated = value
         case .deposit:
-            areDepositsUpdated = newValue
+            areDepositsUpdated = value
         case .loan:
-            areLoansUpdated = newValue
+            areLoansUpdated = value
         }
     }
 }
@@ -53,6 +53,11 @@ class UpdateInfoViewModel: MainSectionViewModel {
         
         self.content = content
     }
+}
+
+class UpdateInfoPTViewModel: PaymentsTransfersSectionViewModel {
+    
+    override var type: PaymentsTransfersSectionType { .updateFailureInfo }
 }
 
 typealias MakeUpdateInfoView = (String) -> UpdateInfoView

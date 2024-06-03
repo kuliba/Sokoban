@@ -79,7 +79,12 @@ extension Model {
             //message
             let messageParameterId = Payments.Parameter.Identifier.sfpMessage.rawValue
             let messageParameterIcon = ImageData(named: "ic24IconMessage") ?? .parameterSample
-            let messageParameter = Payments.ParameterInput(.init(id: messageParameterId, value: nil), icon: messageParameterIcon, title: "Сообщение получателю", validator: .anyValue)
+            let messageParameter = Payments.ParameterInput(
+                .init(id: messageParameterId, value: sourceMessage(source: operation.source)),
+                icon: messageParameterIcon,
+                title: "Сообщение получателю",
+                validator: .anyValue
+            )
             
             // amount
             let amountParameterId = Payments.Parameter.Identifier.amount.rawValue
@@ -525,6 +530,27 @@ extension Model {
             selectAll: .init(type: .banks),
             keyboardType: .normal
         )
+    }
+    
+    func sourceMessage(
+        source: Payments.Operation.Source?
+    ) -> String? {
+    
+        switch source {
+        case let .template(templateID):
+            let template = paymentTemplates.value.first { $0.id == templateID }
+            if let parameterList = template?.parameterList as? [TransferAnywayData] {
+                let message = parameterList.first?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.sfpMessage.rawValue })?.fieldvalue
+                
+                return (message == "" || message == nil) ? nil : message
+            } else {
+                
+                return nil
+            }
+            
+        default:
+            return nil
+        }
     }
     
     func productWithSource(source: Payments.Operation.Source?, productId: String) -> String? {

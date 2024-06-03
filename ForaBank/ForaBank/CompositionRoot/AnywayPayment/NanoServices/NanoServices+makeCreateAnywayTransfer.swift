@@ -1,5 +1,5 @@
 //
-//  NanoServices+makeCreateAnywayTransfer.swift
+//  NanoServices+makeCreateAnywayTransferV2.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 27.03.2024.
@@ -11,7 +11,7 @@ import GenericRemoteService
 
 extension NanoServices {
     
-    static func makeCreateAnywayTransferNew(
+    static func makeCreateAnywayTransferNewV2(
         _ httpClient: HTTPClient,
         _ log: @escaping (String, StaticString, UInt) -> Void,
         file: StaticString = #file,
@@ -19,7 +19,7 @@ extension NanoServices {
     ) -> CreateAnywayTransfer {
         
         adaptedLoggingFetch(
-            createRequest: RequestFactory.createCreateAnywayTransferNewRequest,
+            createRequest: RequestFactory.createCreateAnywayTransferNewV2Request,
             httpClient: httpClient,
             mapResponse: RemoteServices.ResponseMapper.mapCreateAnywayTransferResponse,
             mapError: ServiceFailure.init,
@@ -29,7 +29,7 @@ extension NanoServices {
         )
     }
     
-    static func makeCreateAnywayTransfer(
+    static func makeCreateAnywayTransferV2(
         _ httpClient: HTTPClient,
         _ log: @escaping (String, StaticString, UInt) -> Void,
         file: StaticString = #file,
@@ -37,7 +37,7 @@ extension NanoServices {
     ) -> CreateAnywayTransfer {
         
         adaptedLoggingFetch(
-            createRequest: RequestFactory.createCreateAnywayTransferRequest,
+            createRequest: RequestFactory.createCreateAnywayTransferV2Request,
             httpClient: httpClient,
             mapResponse: RemoteServices.ResponseMapper.mapCreateAnywayTransferResponse,
             mapError: ServiceFailure.init,
@@ -71,6 +71,7 @@ private extension ServiceFailure {
             switch mapResponseError {
             case .invalid:
                 self = .connectivityError
+                
             case let .server(_, message):
                 self = .serverError(message)
             }
