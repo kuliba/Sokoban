@@ -32,7 +32,7 @@ fastlane-test:
 
 fastlane-build-beta:
   stage: build
-  parallel: 1
+  parallel: 2
   when: on_success
   allow_failure: false
   only:
