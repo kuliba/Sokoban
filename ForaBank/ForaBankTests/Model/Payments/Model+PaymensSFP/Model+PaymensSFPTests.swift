@@ -134,6 +134,27 @@ final class Model_PaymensSFPTests: XCTestCase {
         
         XCTAssertNoDiff(bankParameter.parameter.id, Self.bankParameterTest.id)
     }
+    
+    func test_bankParameter_sourceTemplatePayment_shouldReturnParameterWithOutTemplate() {
+        
+        let sut: Model = .mockWithEmptyExcept()
+        sut.bankList.value = [.dummy(id: "1", bankType: .sfp, bankCountry: "RU")]
+        
+        let operation = Payments.Operation(
+            service: .sfp,
+            source: .template(2513)
+        )
+        
+        let bankParameter = sut.createBankParameter(
+            latestPaymentBankIds: nil,
+            operation,
+            operationPhone: nil,
+            banksIds: []
+        )
+        
+        XCTAssertNoDiff(bankParameter.parameter.id, Self.bankParameterTest.id)
+    }
+    
     func test_bankParameter_sourceTemplatePayment_transferGeneralData_shouldReturnParameter() {
         
         let sut: Model = .mockWithEmptyExcept()
