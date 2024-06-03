@@ -33,28 +33,6 @@ final class UtilityPaymentNanoServicesComposer {
         self.log = log
         self.loadOperators = loadOperators
     }
-}
-
-extension UtilityPaymentNanoServicesComposer {
-    
-    func compose() -> NanoServices {
-        
-        return .init(
-            getAllLatestPayments: getAllLatestPayments,
-            getOperatorsListByParam: getOperatorsListByParam,
-            getServicesFor: getServicesFor,
-            startAnywayPayment: startAnywayPayment, 
-            makeAnywayPaymentOutline: makeAnywayPaymentOutline
-        )
-    }
-}
-
-extension UtilityPaymentNanoServicesComposer {
-    
-    typealias Log = (String, StaticString, UInt) -> Void
-    
-    typealias LoadOperatorsCompletion = ([Operator]) -> Void
-    typealias LoadOperators = (@escaping LoadOperatorsCompletion) -> Void
     
     enum Flag {
         
@@ -66,10 +44,30 @@ extension UtilityPaymentNanoServicesComposer {
         typealias StartPaymentResult = NanoServices.StartAnywayPaymentResult
     }
     
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, UtilityService>
+    typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
+    
+    typealias LoadOperatorsCompletion = ([Operator]) -> Void
+    typealias LoadOperators = (@escaping LoadOperatorsCompletion) -> Void
+}
+
+extension UtilityPaymentNanoServicesComposer {
+    
+    func compose() -> NanoServices {
+        
+        return .init(
+            getAllLatestPayments: getAllLatestPayments,
+            getOperatorsListByParam: getOperatorsListByParam,
+            getServicesFor: getServicesFor,
+            startAnywayPayment: startAnywayPayment,
+            makeAnywayPaymentOutline: makeAnywayPaymentOutline
+        )
+    }
+    
+    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, Service>
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
 }
 
 private extension UtilityPaymentNanoServicesComposer {
@@ -130,7 +128,7 @@ private extension UtilityPaymentNanoServicesComposer {
         _ payload: StartAnywayPaymentPayload,
         _ completion: @escaping StartAnywayPaymentCompletion
     ) {
-        let createAnywayTransferNew = ForaBank.NanoServices.makeCreateAnywayTransferNewV2(httpClient, log)
+        let createAnywayTransferNew = ForaBank.NanoServices.makeCreateAnywayTransferNewV2(httpClient, infoNetworkLog)
         let adapted = FetchAdapter(
             fetch: createAnywayTransferNew,
             mapResult: StartAnywayPaymentResult.init(result:)
@@ -164,18 +162,18 @@ private extension UtilityPaymentNanoServicesComposer {
             mapResponse: OperatorsListComponents.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyFalseResponse,
             mapOutput: { $0.map(\.service) },
             mapError: { _ in NanoServices.GetServicesForError() },
-            log: log
+            log: infoNetworkLog
         )
         
         let mapped = MapPayloadDecorator(
             decoratee: fetch,
             mapPayload: { (`operator`: Operator) in
                 
-                #if MOCK
+#if MOCK
                 return "21757"
-                #else
+#else
                 return `operator`.id
-                #endif
+#endif
             }
         )
         
@@ -186,7 +184,7 @@ private extension UtilityPaymentNanoServicesComposer {
         lastPayment: LastPayment?
     ) -> AnywayPaymentOutline {
         
-        #warning("fix filtering according to https://shorturl.at/hIE5B")
+#warning("fix filtering according to https://shorturl.at/hIE5B")
         guard let product = model.paymentProducts().first,
               let coreProductType = product.productType.coreProductType
         else {
@@ -196,12 +194,29 @@ private extension UtilityPaymentNanoServicesComposer {
         
         let core = AnywayPaymentOutline.PaymentCore(
             amount: 0,
-            currency: product.currency, 
+            currency: product.currency,
             productID: product.id,
             productType: coreProductType
         )
         
         return .init(core: core, fields: .init())
+    }
+    
+    private func networkLog(
+        level: LoggerAgentLevel,
+        message: @autoclosure () -> String,
+        file: StaticString,
+        line: UInt
+    ) {
+        log(level, .network, message(), file, line)
+    }
+    
+    private func infoNetworkLog(
+        message: String,
+        file: StaticString,
+        line: UInt
+    ) {
+        log(.info, .network, message, file, line)
     }
 }
 
@@ -224,12 +239,12 @@ private extension RemoteServices.RequestFactory.CreateAnywayTransferPayload {
     
     init(_ payload: StartAnywayPaymentPayload) {
         
-        #if MOCK
+#if MOCK
         // "puref": "iForaNKORR||126732"
         let puref = "iForaNKORR||126732"
-        #else
+#else
         let puref = payload.puref
-        #endif
+#endif
         
         /// - Note: `check` is optional
         /// Признак проверки операции:
@@ -240,7 +255,7 @@ private extension RemoteServices.RequestFactory.CreateAnywayTransferPayload {
 }
 
 private extension StartAnywayPaymentPayload {
-
+    
     // Можно тестировать на прелайф
     // "iFora||MOO2" // single amount
     // "iFora||7602" // multi amount
@@ -291,7 +306,7 @@ typealias _UtilityPaymentNanoServices = UtilityPaymentNanoServices<UtilityPaymen
 private extension OperatorsListComponents.ResponseMapper.SberUtilityService {
     
     var service: UtilityService {
-    
+        
         .init(name: name, puref: puref)
     }
 }

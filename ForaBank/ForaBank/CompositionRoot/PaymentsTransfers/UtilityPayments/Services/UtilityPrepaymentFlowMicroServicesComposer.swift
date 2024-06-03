@@ -10,22 +10,35 @@ import ForaTools
 import Foundation
 import UtilityServicePrepaymentDomain
 
-protocol Purefable {
+final class UtilityPrepaymentFlowMicroServicesComposer {
     
-    var puref: String { get }
-}
-
-final class UtilityPrepaymentFlowMicroServicesComposer<LastPayment, Operator>
-where LastPayment: Purefable,
-      Operator: Identifiable {
-    
+    private let flag: Flag
     private let nanoServices: NanoServices
+    private let makeLegacyPaymentsServicesViewModel: MakeLegacyPaymentsServicesViewModel
     
     init(
-        nanoServices: NanoServices
+        flag: Flag,
+        nanoServices: NanoServices,
+        makeLegacyPaymentsServicesViewModel: @escaping MakeLegacyPaymentsServicesViewModel
     ) {
+        self.flag = flag
         self.nanoServices = nanoServices
+        self.makeLegacyPaymentsServicesViewModel = makeLegacyPaymentsServicesViewModel
     }
+    
+    typealias Flag = StubbedFeatureFlag
+    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, Service>
+    typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, Service>
+    
+    typealias LegacyPayload = PrepaymentEffect.LegacyPaymentPayload
+    typealias MakeLegacyPaymentsServicesViewModel = (LegacyPayload) -> PaymentsServicesViewModel
+    
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
+    typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
+    
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
 }
 
 extension UtilityPrepaymentFlowMicroServicesComposer {
@@ -33,29 +46,31 @@ extension UtilityPrepaymentFlowMicroServicesComposer {
     func compose() -> MicroServices {
         
         return .init(
-            initiateUtilityPayment: initiateUtilityPayment(_:),
+            initiateUtilityPayment: initiateUtilityPayment(_:_:),
             startPayment: startPayment(_:_:)
         )
     }
-}
-
-extension UtilityPrepaymentFlowMicroServicesComposer {
-    
-    typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService>
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, UtilityService>
 }
 
 // MARK: - initiateUtilityPayment
 
 private extension UtilityPrepaymentFlowMicroServicesComposer {
     
-    /// Load last payments and operators.
+    /// `legacy`: create `PaymentsServicesViewModel`.
+    /// `v1`: Load last payments and operators.
     func initiateUtilityPayment(
+        _ payload: LegacyPayload,
         _ completion: @escaping InitiateUtilityPaymentCompletion
     ) {
-        nanoServices.getOperatorsListByParam { [weak self] in
+        switch flag {
+        case .inactive:
+            completion(.legacy(makeLegacyPaymentsServicesViewModel(payload)))
             
-            self?.getAllLatestPayments($0, completion)
+        case .active:
+            nanoServices.getOperatorsListByParam { [weak self] in
+                
+                self?.getAllLatestPayments($0, completion)
+            }
         }
     }
     
@@ -67,11 +82,13 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             
             guard self != nil else { return }
             
-            completion(.init(lastPayments: $0, operators: operators, searchText: ""))
+            completion(.v1(
+                .init(lastPayments: $0, operators: operators, searchText: "")
+            ))
         }
     }
     
-    typealias InitiateUtilityPaymentCompletion = (PrepaymentEvent.UtilityPrepaymentPayload) -> Void
+    typealias InitiateUtilityPaymentCompletion = (PrepaymentEvent.Initiated) -> Void
 }
 
 // MARK: - startPayment
@@ -106,11 +123,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
     typealias StartPaymentResult = PrepaymentEvent.StartPaymentResult
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
-    typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
-    
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
-    typealias PrepaymentEvent = Event.UtilityPrepaymentFlowEvent
+    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
     
     private func getServices(
         for `operator`: Operator,
@@ -196,7 +209,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
 #warning("hardcoded `isValid: false`")
                     let state = AnywayTransactionState(
                         payment: .init(
-                            payment: payment, 
+                            payment: payment,
                             staged: .init(),
                             outline: outline,
                             shouldRestart: false
@@ -234,7 +247,7 @@ private extension AnywayPaymentDomain.AnywayPayment {
     }
 }
 
-private extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymentFailure {
+private extension UtilityPrepaymentFlowEvent.StartPaymentFailure {
     
     init(
         _ error: NanoServices.StartAnywayPaymentFailure
@@ -254,5 +267,5 @@ private extension UtilityPaymentFlowEvent.UtilityPrepaymentFlowEvent.StartPaymen
         }
     }
     
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, UtilityService>
+    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, Service>
 }

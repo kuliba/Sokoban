@@ -19,16 +19,15 @@ import UtilityServicePrepaymentDomain
 
 final class PaymentsTransfersFlowManagerComposer {
     
-    private let flag: StubbedFeatureFlag.Option
+    private let flag: Flag
     private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
-    private let loaderComposer: LoaderComposer
     private let pageSize: Int
     private let observeLast: Int
     
     init(
-        flag: StubbedFeatureFlag.Option,
+        flag: Flag,
         model: Model,
         httpClient: HTTPClient,
         log: @escaping Log,
@@ -39,10 +38,13 @@ final class PaymentsTransfersFlowManagerComposer {
         self.model = model
         self.httpClient = httpClient
         self.log = log
-        self.loaderComposer = .init(flag: flag, model: model, pageSize: pageSize)
         self.pageSize = pageSize
         self.observeLast = observeLast
     }
+    
+    typealias Flag = UtilitiesPaymentsFlag
+    
+    typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
 }
 
 extension PaymentsTransfersFlowManagerComposer {
@@ -50,75 +52,126 @@ extension PaymentsTransfersFlowManagerComposer {
     func compose() -> FlowManager {
         
         return .init(
-            handleEffect: makeEffectHandler().handleEffect(_:_:),
+            handleEffect: makeHandleEffect(),
             makeReduce: makeReduce()
         )
     }
     
-    typealias Log = (String, StaticString, UInt) -> Void
-    
-    typealias LoaderComposer = UtilityPaymentOperatorLoaderComposer
+    typealias FlowManager = PaymentsTransfersFlowManager<LastPayment, Operator, Service, Content, PaymentViewModel>
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
     typealias PaymentViewModel = ObservingAnywayTransactionViewModel
-    
-    typealias FlowManager = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
 }
-
-extension UtilityPaymentLastPayment: Purefable {}
 
 private extension PaymentsTransfersFlowManagerComposer {
     
-    func makeEffectHandler() -> EffectHandler {
+    func makeHandleEffect() -> FlowManager.HandleEffect {
         
-        let loadOperators = loaderComposer.compose()
+        let paymentFlowEffectHandler = composePaymentFlowEffectHandler()
+        
+        let effectHandler = PaymentsTransfersFlowEffectHandler(
+            utilityEffectHandle: paymentFlowEffectHandler.handleEffect(_:_:)
+        )
+        
+        return effectHandler.handleEffect(_:_:)
+    }
+    
+    private func composePaymentFlowEffectHandler(
+    ) -> PaymentFlowEffectHandler {
+        
+        let prepaymentEffectHandler = composePrepaymentFlowEffectHandler()
+        
+        return .init(
+            utilityPrepaymentEffectHandle: prepaymentEffectHandler.handleEffect(_:_:)
+        )
+    }
+    
+    typealias PaymentFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, Service>
+    
+    private func composePrepaymentFlowEffectHandler(
+    ) -> PrepaymentFlowEffectHandler {
+        
         let nanoComposer = UtilityPaymentNanoServicesComposer(
             flag: composerFlag,
             model: model,
             httpClient: httpClient,
             log: log,
-            loadOperators: { loadOperators(.init(), $0) }
+            loadOperators: loadOperators
         )
         let microComposer = UtilityPrepaymentFlowMicroServicesComposer(
-            nanoServices: nanoComposer.compose()
-        )
-        let prepaymentEffectHandler = PrepaymentFlowEffectHandler(
-            microServices: microComposer.compose()
-        )
-        let paymentFlowEffectHandler = PaymentFlowEffectHandler(
-            utilityPrepaymentEffectHandle: prepaymentEffectHandler.handleEffect(_:_:)
+            flag: flag.rawValue,
+            nanoServices: nanoComposer.compose(),
+            makeLegacyPaymentsServicesViewModel: makeLegacyPaymentsServicesViewModel
         )
         
-        return .init(utilityEffectHandle: paymentFlowEffectHandler.handleEffect(_:_:))
+        return .init(microServices: microComposer.compose())
     }
     
-    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
-    
-    typealias PaymentFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+    typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, Service>
     
     private var composerFlag: ComposerFlag {
         
-        switch flag {
-        case .live:
+        switch flag.rawValue {
+        case .active(.live):
             return .live
             
-        case .stub:
+        case .inactive, .active(.stub):
             return .stub(stub)
         }
     }
     
     typealias ComposerFlag = UtilityPaymentNanoServicesComposer.Flag
     
-    typealias EffectHandler = PaymentsTransfersFlowEffectHandler<LastPayment, Operator, UtilityService>
+    private func loadOperators(
+        _ completion: @escaping ([Operator]) -> Void
+    ) {
+        let load = loadOperators()
+        
+        load(.init()) { completion($0); _ = load }
+    }
+    
+    private func makeLegacyPaymentsServicesViewModel(
+        payload: MakePaymentPayload
+    ) -> PaymentsServicesViewModel {
+        
+        let operators = model.operators(for: payload.type) ?? []
+        
+        let navigationBarViewModel = NavigationBarView.ViewModel.allRegions(
+            titleButtonAction: { [weak model] in
+                
+                model?.action.send(PaymentsServicesViewModelWithNavBarAction.OpenCityView())
+            },
+            navLeadingAction: payload.navLeadingAction,
+            navTrailingAction: payload.navTrailingAction
+        )
+        
+        let lastPaymentsKind: LatestPaymentData.Kind = .init(rawValue: payload.type.rawValue) ?? .unknown
+        let latestPayments = PaymentsServicesLatestPaymentsSectionViewModel(model: model, including: [lastPaymentsKind])
+        
+        return .init(
+            searchBar: .withText("Наименование или ИНН"),
+            navigationBar: navigationBarViewModel,
+            model: model,
+            latestPayments: latestPayments,
+            allOperators: operators,
+            addCompanyAction: payload.addCompany,
+            requisitesAction: payload.requisites
+        )
+    }
+    
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
+    typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
+    typealias MakePaymentPayload = PrepaymentEffect.LegacyPaymentPayload
     
     func makeReduce() -> FlowManager.MakeReduce {
         
         let factory = makeReducerFactoryComposer().compose()
         
-        typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, UtilityService, Content, PaymentViewModel>
+        typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel>
         
         let makeReducer = {
             
@@ -151,23 +204,41 @@ private extension PaymentsTransfersFlowManagerComposer {
         payload: LoadOperatorsPayload,
         completion: @escaping ([Operator]) -> Void
     ) {
-        let load = loaderComposer.compose()
-        load(
-            .init(
-                operatorID: payload.operatorID,
-                searchText: payload.searchText),
-            completion
+        let load = loadOperators()
+        
+        typealias Payload = UtilityPaymentOperatorLoaderComposer.Payload
+        
+        let payload = Payload(
+            operatorID: payload.operatorID,
+            searchText: payload.searchText
         )
+        
+        load(payload) { completion($0); _ = load }
     }
     
-    private typealias LoadOperatorsPayload = UtilityPrepaymentNanoServices<Operator>.LoadOperatorsPayload
+    typealias LoadOperatorsPayload = UtilityPrepaymentNanoServices<Operator>.LoadOperatorsPayload
+    
+    private func loadOperators(
+    ) -> (
+        UtilityPaymentOperatorLoaderComposer.Payload,
+        @escaping ([Operator]) -> Void
+    ) -> Void {
+        
+        let loaderComposer = UtilityPaymentOperatorLoaderComposer(
+            flag: flag.optionOrStub,
+            model: model,
+            pageSize: pageSize
+        )
+        
+        return loaderComposer.compose()
+    }
     
     private func makeTransactionViewModel(
         initialState: AnywayTransactionState
     ) -> AnywayTransactionViewModel {
         
         let composer = AnywayTransactionViewModelComposer(
-            flag: flag,
+            flag: flag.optionOrStub,
             httpClient: httpClient,
             log: log
         )
@@ -194,7 +265,7 @@ private extension PaymentsTransfersFlowManagerComposer {
                 return .success(.startPayment(.preview))
             }
             
-        case let .service(service, for: `operator`):
+        case let .service(service, _):
             switch service.id {
             case "failure":
                 return .failure(.serviceFailure(.serverError("Server Failure")))
@@ -253,4 +324,3 @@ private extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
         return .init(additional: [], finalStep: false, needMake: false, needOTP: false, needSum: false, parametersForNextStep: [], options: [])
     }
 }
-

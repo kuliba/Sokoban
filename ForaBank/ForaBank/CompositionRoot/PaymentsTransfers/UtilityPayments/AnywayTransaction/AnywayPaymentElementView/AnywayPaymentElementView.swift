@@ -40,7 +40,13 @@ struct AnywayPaymentElementView<IconView: View>: View {
     #warning("replace with real components")
                 HStack {
                     
-                    Text("OTP: " + (otp.map { "\($0)" } ?? ""))
+                    VStack(alignment: .leading) {
+                    
+                        Text("OTP")
+                        Text(otp.map { "\($0)" } ?? "")
+                            .font(.caption)
+                    }
+                    
                     TextField(
                         "Введите код",
                         text: .init(
