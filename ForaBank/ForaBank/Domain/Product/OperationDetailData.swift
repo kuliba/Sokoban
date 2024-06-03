@@ -494,6 +494,7 @@ extension OperationDetailData {
     
     static func stub(
         cardId: Int? = 1,
+        payerAccountId: Int = 10,
         amount: Double = 100,
         paymentTemplateId: Int? = 1,
         transferEnum: OperationDetailData.TransferEnum? = .accountClose,
@@ -538,7 +539,7 @@ extension OperationDetailData {
             payeeMiddleName: nil,
             payeePhone: payeePhone,
             payeeSurName: nil,
-            payerAccountId: 10,
+            payerAccountId: payerAccountId,
             payerAccountNumber: "payerAccountNumber",
             payerAddress: "",
             payerAmount: 11,
