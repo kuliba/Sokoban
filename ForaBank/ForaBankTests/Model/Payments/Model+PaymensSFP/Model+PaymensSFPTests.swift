@@ -192,6 +192,11 @@ final class Model_PaymensSFPTests: XCTestCase {
         
         XCTAssertNoDiff(sut.parameter.id, Self.bankParameterTest.id)
     }
+    func test_createBankParameterForTemplate_paymentTemplatesIsEmpty_shouldReturnParameter() {
+        
+        let sut = makeBankParameterSUT(paymentTemplates: [])
+        XCTAssertNoDiff(sut.value, nil)
+    }
     
     func test_createBankParameterForTemplate_paymentTemplateswithTransferAnywayData_shouldReturnParameter() {
         
