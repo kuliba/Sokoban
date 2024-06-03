@@ -9,21 +9,25 @@ import AnywayPaymentDomain
 import PaymentComponents
 import RxViewModel
 import SwiftUI
+import UIPrimitives
 
 final class AnywayPaymentFactoryComposer {
     
     private let config: AnywayPaymentElementConfig
     private let currencyOfProduct: CurrencyOfProduct
     private let getProducts: GetProducts
+    private let makeIconView: MakeIconView
     
     init(
         config: AnywayPaymentElementConfig,
         currencyOfProduct: @escaping CurrencyOfProduct,
-        getProducts: @escaping GetProducts
+        getProducts: @escaping GetProducts,
+        makeIconView: @escaping MakeIconView
     ) {
         self.config = config
         self.currencyOfProduct = currencyOfProduct
         self.getProducts = getProducts
+        self.makeIconView = makeIconView
     }
 }
 
@@ -33,7 +37,7 @@ extension AnywayPaymentFactoryComposer {
         event: @escaping (AnywayPaymentEvent) -> Void
     ) -> Factory {
         
-        let factory = AnywayPaymentElementViewFactory(
+        let elementFactory = AnywayPaymentElementViewFactory(
             makeIconView: makeIconView,
             makeProductSelectView: makeProductSelectView,
             elementFactory: makeElementFactory()
@@ -45,7 +49,7 @@ extension AnywayPaymentFactoryComposer {
                 return .init(
                     state: $0,
                     event: event,
-                    factory: factory,
+                    factory: elementFactory,
                     config: self.config
                 )
             },
@@ -61,21 +65,15 @@ extension AnywayPaymentFactoryComposer {
     
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
-    typealias Factory = AnywayPaymentFactory<IconView>
+
+    typealias UIComponent = AnywayPaymentDomain.AnywayPayment.Element.UIComponent
+    typealias IconView = UIPrimitives.AsyncImage
+    typealias MakeIconView = (UIComponent) -> IconView
     
-    #warning("FIXME: should be some image view/some view")
-    typealias IconView = Text
+    typealias Factory = AnywayPaymentFactory<IconView>
 }
 
 private extension AnywayPaymentFactoryComposer {
-    
-    func makeIconView(
-        component: UIComponent
-    ) -> IconView {
-        
-        #warning("FIXME")
-        return .init("?")
-    }
     
     func makeProductSelectView(
         productID: ProductID,
@@ -176,7 +174,6 @@ private extension AnywayPaymentFactoryComposer {
         )
     }
     
-    typealias UIComponent = AnywayPaymentDomain.AnywayPayment.Element.UIComponent
     typealias Option = UIComponent.Parameter.ParameterType.Option
 
     typealias Observe = (ProductID, Currency) -> Void

@@ -964,10 +964,10 @@ private extension Target {
     static let anywayPaymentAdapters = target(
         name: .anywayPaymentAdapters,
         dependencies: [
+            .anywayPaymentBackend,
             .anywayPaymentCore,
             .anywayPaymentDomain,
             .anywayPaymentUI,
-            .anywayPaymentBackend,
             .remoteServices,
             .tagged,
         ],
@@ -980,6 +980,9 @@ private extension Target {
             .customDump,
             // internal modules
             .anywayPaymentAdapters,
+            .anywayPaymentBackend,
+            .anywayPaymentCore,
+            .anywayPaymentDomain,
             .remoteServices,
             .tagged,
         ],

@@ -51,6 +51,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
     typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
@@ -83,8 +84,8 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     
     typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, UtilityPaymentViewModel>
     
-    typealias UtilityPrepaymentFlowEvent = UtilityPaymentFlowEvent<PaymentsTransfersFlowReducerFactoryComposer.LastPayment, PaymentsTransfersFlowReducerFactoryComposer.Operator, UtilityService>.UtilityPrepaymentFlowEvent
-    typealias UtilityPrepaymentPayload = UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
+    typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
+    typealias UtilityPrepaymentPayload = UtilityPrepaymentEvent.Initiated.UtilityPrepaymentPayload
     
     typealias UtilityPrepaymentReducer = PrepaymentPickerReducer<UtilityPaymentLastPayment, UtilityPaymentOperator>
     typealias UtilityPrepaymentEffectHandler = PrepaymentPickerEffectHandler<UtilityPaymentOperator>
@@ -93,11 +94,11 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
 private extension PaymentsTransfersFlowReducerFactoryComposer {
     
     func makeUtilityPaymentState(
-        payload: Factory.MakeUtilityPaymentStatePayload,
+        transactionState: AnywayTransactionState,
         notify: @escaping (PaymentStateProjection) -> Void
     ) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
         
-        let observable = makeTransactionViewModel(payload.transaction)
+        let observable = makeTransactionViewModel(transactionState)
         let viewModel = UtilityPaymentViewModel(
             observable: observable,
             observe: { PaymentStateProjection($0, $1).map(notify) }
@@ -117,51 +118,6 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     }
 }
 
-private extension PaymentsTransfersFlowReducerFactory.MakeUtilityPaymentStatePayload
-where LastPayment == UtilityPaymentLastPayment,
-      UtilityService == ForaBank.UtilityService {
-    
-    var transaction: AnywayTransactionState {
-                
-#warning("hardcoded `isValid: true` and `status: nil`")
-        return .init(
-            payment: .init(
-                payment: .empty(puref).update(with: response, and: outline),
-                staged: .init(),
-                outline: outline
-            ),
-            isValid: true,
-            status: nil
-        )
-    }
-    
-    private var outline: AnywayPaymentOutline {
-        
-        switch select {
-        case let .lastPayment(lastPayment):
-            return lastPayment.outline
-            
-        case .operator, .service:
-            return .empty
-        }
-    }
-    
-    private var puref: AnywayPaymentDomain.AnywayPayment.Puref {
-        
-        switch select {
-        case let .lastPayment(lastPayment):
-            return .init(lastPayment.puref)
-            
-        case let .operator(`operator`):
-            #warning("need operator puref? or wrong type is used here - puref should be extracted from select lastPayment or service? - like in StartAnywayPaymentPayload")
-            fatalError()
-            
-        case let .service(utilityService, _):
-            return .init(utilityService.puref)
-        }
-    }
-}
-
 private extension AnywayPaymentDomain.AnywayPayment {
     
     static func empty(
@@ -175,20 +131,6 @@ private extension AnywayPaymentDomain.AnywayPayment {
             isFraudSuspected: false,
             puref: puref
         )
-    }
-}
-
-private extension AnywayPaymentOutline {
-    
-    static let empty: Self = .init(core: nil, fields: [:])
-}
-
-private extension UtilityPaymentLastPayment {
-    
-    var outline: AnywayPaymentOutline {
-        
-#warning("FIXME - replace hardcoded with data from LastPayment")
-        return .empty
     }
 }
 

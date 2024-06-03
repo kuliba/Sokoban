@@ -13,6 +13,7 @@ public enum TransactionEvent<TransactionReport, PaymentEvent, PaymentUpdate> {
     case fraud(Fraud)
     case initiatePayment
     case payment(PaymentEvent)
+    case paymentRestartConfirmation(Bool)
     case updatePayment(UpdatePaymentResult)
 }
 

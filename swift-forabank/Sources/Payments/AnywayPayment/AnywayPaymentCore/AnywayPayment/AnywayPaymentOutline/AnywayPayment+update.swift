@@ -21,10 +21,7 @@ extension AnywayPayment {
         elements.appendComplementaryFields(from: update.fields)
         elements.appendParameters(from: update.parameters, with: outline)
         
-        if let core = outline.core {
-            
-            elements.adjustWidget(.core(.init(core)), on: update.details.control.needSum)
-        }
+        elements.adjustWidget(.core(.init(outline.core)), on: update.details.control.needSum && !update.details.control.isMultiSum)
         elements.adjustWidget(.otp(nil), on: update.details.control.needOTP)
         
         return .init(
@@ -82,7 +79,7 @@ private extension AnywayPayment.Element {
         
         return widget.id
     }
-
+    
     func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
         
         switch self {
@@ -105,8 +102,27 @@ private extension AnywayPayment.Element.Field {
         .init(
             id: id,
             title: fieldUpdate.title,
-            value: .init(fieldUpdate.value)
+            value: .init(fieldUpdate.value),
+            image: fieldUpdate.image.map { .init($0) }
         )
+    }
+}
+
+private extension AnywayPayment.Element.Image {
+    
+    init(_ image: AnywayPaymentUpdate.Image) {
+        
+        switch image {
+            
+        case let .md5Hash(md5Hash):
+            self = .md5Hash(md5Hash)
+            
+        case let .svg(svg):
+            self = .svg(svg)
+            
+        case let .withFallback(md5Hash: md5Hash, svg: svg):
+            self = .withFallback(md5Hash: md5Hash, svg: svg)
+        }
     }
 }
 
@@ -114,11 +130,12 @@ private extension AnywayPayment.Element.Parameter {
     
     func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
         
-        .init(
+        return .init(
             field: .init(
                 id: field.id,
                 value: .init(fieldUpdate.value)
             ),
+            image: image,
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes
@@ -221,7 +238,8 @@ private extension AnywayPayment.Element.Field {
         self.init(
             id: .init(field.name),
             title: field.title,
-            value: .init(field.value)
+            value: .init(field.value),
+            image: field.image.map { .init($0) }
         )
     }
 }
@@ -234,10 +252,31 @@ private extension AnywayPayment.Element.Parameter {
     ) {
         self.init(
             field: .init(parameter.field, fallbackValue: fallbackValue),
+            image: .init(parameter),
             masking: .init(parameter.masking),
             validation: .init(parameter.validation),
             uiAttributes: .init(parameter.uiAttributes)
         )
+    }
+}
+
+private extension AnywayPayment.Element.Image {
+    
+    init?(_ parameter: AnywayPaymentUpdate.Parameter) {
+        
+        switch parameter.image {
+        case .none:
+            return nil
+            
+        case let .md5Hash(md5Hash):
+            self = .md5Hash(md5Hash)
+            
+        case let .svg(svg):
+            self = .svg(svg)
+            
+        case let .withFallback(md5Hash, svg):
+            self = .withFallback(md5Hash: md5Hash, svg: svg)
+        }
     }
 }
 
@@ -287,7 +326,6 @@ private extension AnywayPayment.Element.Parameter.UIAttributes {
             isReadOnly: uiAttributes.isReadOnly,
             subGroup: uiAttributes.subGroup,
             subTitle: uiAttributes.subTitle,
-            svgImage: uiAttributes.svgImage,
             title: uiAttributes.title,
             type: .init(uiAttributes.type),
             viewType: .init(uiAttributes.viewType)
