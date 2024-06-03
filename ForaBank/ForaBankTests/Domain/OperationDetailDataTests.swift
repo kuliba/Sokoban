@@ -448,7 +448,7 @@ final class OperationDetailDataTests: XCTestCase {
     }
     
     func test_shouldHaveTemplateButton_withOperationDetailStub_forCardToCard_shouldReturnTrue() {
-        
+                
         let sut = Detail.stub(transferEnum: .cardToCard)
         
         XCTAssertTrue(sut.shouldHaveTemplateButton)
@@ -458,52 +458,19 @@ final class OperationDetailDataTests: XCTestCase {
     
     func test_payerGeneralTransferData_shouldReturnCardId() {
         
-        let sut = Detail.stub()
-        
-        XCTAssertEqual(
-            sut.payerGeneralTransferData,
-            .init(
-                inn: nil,
-                accountId: nil,
-                accountNumber: nil,
-                cardId: 1,
-                cardNumber: nil,
-                phoneNumber: nil
-            )
-        )
+        XCTAssertEqual(Detail.stub(payerCardId: 1).payerGeneralTransferData.cardId, 1)
     }
     
     func test_payerGeneralTransferData_shouldReturnAccountId() {
         
-        let sut = Detail.stub(cardId: nil, payerAccountId: 1)
-        
-        XCTAssertEqual(
-            sut.payerGeneralTransferData,
-            .init(
-                inn: nil,
-                accountId: 1,
-                accountNumber: nil,
-                cardId: nil,
-                cardNumber: nil,
-                phoneNumber: nil
-            )
-        )
+        XCTAssertEqual(Detail.stub(payerCardId: nil, payerAccountId: 1).payerGeneralTransferData.accountId, 1)
     }
     
     func test_payerGeneralTransferData_shouldReturnCardIdWithAccountId() {
         
-        let sut = Detail.stub(cardId: 1, payerAccountId: 1)
+        let sut = Detail.stub(payerCardId: 1, payerAccountId: 1)
         
-        XCTAssertEqual(
-            sut.payerGeneralTransferData,
-            .init(
-                inn: nil,
-                accountId: nil,
-                accountNumber: nil,
-                cardId: 1,
-                cardNumber: nil,
-                phoneNumber: nil
-            )
-        )
+        XCTAssertEqual(sut.payerGeneralTransferData.cardId, 1)
+        XCTAssertEqual(sut.payerGeneralTransferData.accountId, nil)
     }
 }

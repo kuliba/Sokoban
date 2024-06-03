@@ -493,7 +493,7 @@ extension OperationDetailData {
 extension OperationDetailData {
     
     static func stub(
-        cardId: Int? = 1,
+        payerCardId: Int? = 1,
         payerAccountId: Int = 10,
         amount: Double = 100,
         paymentTemplateId: Int? = 1,
@@ -543,7 +543,7 @@ extension OperationDetailData {
             payerAccountNumber: "payerAccountNumber",
             payerAddress: "",
             payerAmount: 11,
-            payerCardId: cardId,
+            payerCardId: payerCardId,
             payerCardNumber: "payerCardNumber",
             payerCurrency: "",
             payerDocument: nil,
