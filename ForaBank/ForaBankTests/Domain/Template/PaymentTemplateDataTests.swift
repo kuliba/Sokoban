@@ -68,8 +68,9 @@ final class PaymentTemplateDataTests: XCTestCase {
     func test_sfp_recipientID_shouldReturnValue() {
         
         let stub = Model.emptyMock.templateSFPStub(
-            [Model.anywayTransferDataStub()]
+            [Model.anywayTransferDataStub([.init(fieldid: 1, fieldname: "RecipientID", fieldvalue: "123")])]
         )
+        
         XCTAssertNoDiff(stub.sfpPhone, "123")
     }
     
