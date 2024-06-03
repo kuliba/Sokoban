@@ -175,7 +175,11 @@ extension OperationDetailViewModelTests {
         
         sut.model.action.send(
             ModelAction.Operation.Detail.Response(result:
-                    .success(.stub(transferEnum: .cardToCard))
+                    .success(.stub(
+                        payerCardId: 1,
+                        paymentTemplateId: 1,
+                        transferEnum: .cardToCard
+                    ))
             )
         )
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
