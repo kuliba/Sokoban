@@ -36,31 +36,7 @@ extension Model {
             
             switch operation.source {
             case let .template(templateId):
-                let template = paymentTemplates.value.first { $0.id == templateId }
-            
-                switch template?.parameterList.last {
-                case _ as TransferGeneralData:
-
-                    if let token,
-                       let phone = template?.phoneNumber {
-                        
-                        latestPaymentBankIds = await getLatestPhonePayments(
-                            phone: phone,
-                            token: token
-                        )
-                    }
-                    
-                default:
-                 
-                    if let token,
-                       let phone = template?.sfpPhone {
-                        
-                        latestPaymentBankIds = await getLatestPhonePayments(
-                            phone: phone,
-                            token: token
-                        )
-                    }
-                }
+                await templatePhoneData(templateId, &latestPaymentBankIds)
                 
             case let .latestPayment(latestPaymentId):
                 if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData,
@@ -414,19 +390,19 @@ extension Model {
         phone: String,
         token: String
     ) async -> [String]? {
-    
+        
         let phoneFormatted = PhoneNumberWrapper().format(phone.addCodeRuIfNeeded()).digits
         let phoneContained = paymentsByPhone.value.contains(where: { $0.key == phoneFormatted })
         
         if !phoneContained {
-         
+            
             let command = ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments(
                 token: token,
                 payload: .init(phoneNumber: phoneFormatted.digits)
             )
             
             let result = try? await serverAgent.executeCommand(command: command)
-
+            
             if let result {
                 paymentsByPhone.value.updateValue(result, forKey: phoneFormatted.digits)
                 
@@ -445,9 +421,9 @@ extension Model {
     func paymentsByPhoneBankList(
         _ phone: String
     ) async -> [String]? {
-
+        
         typealias BankListRequest = ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments
-
+        
         let banksByPhone = paymentsByPhone.value[phone.addCodeRuIfNeeded()]?
             .sorted(by: { $0.defaultBank && $1.defaultBank })
         
@@ -470,7 +446,7 @@ extension Model {
     func banksList(
         _ operation: Payments.Operation
     ) async -> [String]? {
-
+        
         switch operation.source {
         case let .sfp(phone: phone, bankId: _):
             let banksList = await paymentsByPhoneBankList(phone)
@@ -479,7 +455,7 @@ extension Model {
         case let .latestPayment(latestPaymentId):
             if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData {
                 let phoneFormatted = PhoneNumberWrapper().format(latestPayment.phoneNumber).digits
-
+                
                 let banksList = await paymentsByPhoneBankList(phoneFormatted)
                 return banksList
                 
@@ -487,16 +463,7 @@ extension Model {
                 return nil
             }
         case let .template(templateId):
-            
-            if let template = paymentTemplates.value.first(where: { $0.id == templateId }),
-            let phone = template.phoneNumber {
-        
-                let phoneFormatted = PhoneNumberWrapper().format(phone).digits
-                let banksList = await paymentsByPhoneBankList(phoneFormatted)
-                return banksList
-            } else {
-                return nil
-            }
+            return await getBankListForTemplate(templateId)
             
         default:
             return nil
@@ -509,11 +476,11 @@ extension Model {
         operationPhone: String?,
         banksIds: [String]?
     ) -> Payments.ParameterSelectBank {
-    
+        
         switch operation.source {
         case let .latestPayment(latestPaymentId):
             if let latestPayment = self.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData {
-            
+                
                 return filterByPhone(
                     operationPhone ?? latestPayment.phoneNumber.digits,
                     bankId: latestPayment.bankId,
@@ -525,37 +492,7 @@ extension Model {
                 return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
             }
         case let .template(templateId):
-            
-            if let template = paymentTemplates.value.first(where: { $0.id == templateId }) {
-                
-                if let parameterList = template.parameterList as? [TransferAnywayData] {
-                    let bankID = parameterList.first?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.sfpBank.rawValue })?.fieldvalue
-                    
-                    return filterByPhone(
-                        operationPhone ?? template.sfpPhone?.digits,
-                        bankId: bankID,
-                        banksIds: banksIds,
-                        latestPaymentBankIds: latestPaymentBankIds
-                    )
-                } else if let parameterList = template.parameterList as? [TransferGeneralData] {
-                       
-                    let phone = parameterList.last?.payeeInternal?.phoneNumber
-                    
-                    return filterByPhone(
-                        operationPhone ?? phone,
-                        bankId: nil,
-                        banksIds: banksIds,
-                        latestPaymentBankIds: latestPaymentBankIds
-                    )
-                    
-                } else {
-                    
-                    return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
-                }
-                
-            } else {
-                return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
-            }
+            return createBankParameterForTemplate(templateId, operationPhone, banksIds, latestPaymentBankIds)
             
         case let .sfp(phone: phone, bankId: bankId):
             return filterByPhone(operationPhone ?? phone, bankId: bankId, banksIds: banksIds, latestPaymentBankIds: latestPaymentBankIds)
@@ -574,7 +511,7 @@ extension Model {
         banksIds: [String]?,
         latestPaymentBankIds: [String]?
     ) -> Payments.ParameterSelectBank{
-    
+        
         let banksByPhone = paymentsByPhone.value[phone?.digits ?? ""]?
             .sorted(by: { $0.defaultBank && $1.defaultBank })
         
@@ -589,7 +526,7 @@ extension Model {
             preferred: banksIds ?? banksID ?? latestPaymentBankIds ?? [],
             defaultBankId: defaultBank?.bankId
         )
-
+        
         let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
         return Payments.ParameterSelectBank(
             .init(id: bankParameterId, value: bankId),
@@ -603,7 +540,7 @@ extension Model {
     }
     
     func productWithSource(source: Payments.Operation.Source?, productId: String) -> String? {
-    
+        
         switch source {
         case let .template(templateID):
             let template = paymentTemplates.value.first { $0.id == templateID }
@@ -623,8 +560,8 @@ extension Model {
         let preferredBanks = preferred.compactMap { bankId in bankList.first(where: { $0.id == bankId }) }
         
         if preferredBanks.isEmpty {
-        
-           return bankList
+            
+            return bankList
                 .filter { $0.bankType == .sfp }
                 .map { item in
                     Payments.ParameterSelectBank.Option(
@@ -637,7 +574,7 @@ extension Model {
                     )
                 }
         } else {
-         
+            
             return preferredBanks
                 .filter { $0.bankType == .sfp }
                 .map { item in
@@ -658,4 +595,87 @@ extension Model {
         title: "Номер телефона получателя",
         countryCode: .russian
     )
+    
+    fileprivate func getBankListForTemplate(_ templateId: (PaymentTemplateData.ID)) async -> [String]? {
+        if let template = paymentTemplates.value.first(where: { $0.id == templateId }),
+           let phone = template.phoneNumber {
+            
+            let phoneFormatted = PhoneNumberWrapper().format(phone).digits
+            let banksList = await paymentsByPhoneBankList(phoneFormatted)
+            return banksList
+        } else {
+            return nil
+        }
+    }
+    
+    fileprivate func templatePhoneData(
+        _ templateId: (PaymentTemplateData.ID),
+        _ latestPaymentBankIds: inout [String]?
+    ) async {
+        
+        let template = paymentTemplates.value.first { $0.id == templateId }
+        
+        switch template?.parameterList.last {
+        case _ as TransferGeneralData:
+            
+            if let token,
+               let phone = template?.phoneNumber {
+                
+                latestPaymentBankIds = await getLatestPhonePayments(
+                    phone: phone,
+                    token: token
+                )
+            }
+            
+        default:
+            
+            if let token,
+               let phone = template?.sfpPhone {
+                
+                latestPaymentBankIds = await getLatestPhonePayments(
+                    phone: phone,
+                    token: token
+                )
+            }
+        }
+    }
+
+    fileprivate func createBankParameterForTemplate(
+        _ templateId: (PaymentTemplateData.ID),
+        _ operationPhone: String?,
+        _ banksIds: [String]?,
+        _ latestPaymentBankIds: [String]?
+    ) -> Payments.ParameterSelectBank {
+        
+        if let template = paymentTemplates.value.first(where: { $0.id == templateId }) {
+            
+            if let parameterList = template.parameterList as? [TransferAnywayData] {
+                let bankID = parameterList.first?.additional.first(where: { $0.fieldname == Payments.Parameter.Identifier.sfpBank.rawValue })?.fieldvalue
+                
+                return filterByPhone(
+                    operationPhone ?? template.sfpPhone?.digits,
+                    bankId: bankID,
+                    banksIds: banksIds,
+                    latestPaymentBankIds: latestPaymentBankIds
+                )
+            } else if let parameterList = template.parameterList as? [TransferGeneralData] {
+                
+                let phone = parameterList.last?.payeeInternal?.phoneNumber
+                
+                return filterByPhone(
+                    operationPhone ?? phone,
+                    bankId: nil,
+                    banksIds: banksIds,
+                    latestPaymentBankIds: latestPaymentBankIds
+                )
+                
+            } else {
+                
+                return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
+            }
+            
+        } else {
+            return filterByPhone(nil, bankId: nil, banksIds: nil, latestPaymentBankIds: latestPaymentBankIds)
+        }
+    }
 }
