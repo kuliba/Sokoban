@@ -11,6 +11,34 @@ import XCTest
 
 final class MainViewModelTests: XCTestCase {
     
+    func test_init_cacheNotContainsSticker_shouldSetStickerToNil()  {
+        
+        let (sut, _) = makeSUT()
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+                
+        XCTAssertNil(sut.sections.stickerViewModel)
+    }
+    
+    func test_init_cacheContainsSticker_shouldSetSticker() throws {
+        
+        let (sut, _) = makeSUTWithLocalAgent(localAgent: try makeLocalAgentForSticker())
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+        
+        XCTAssertNotNil(sut.sections.stickerViewModel)
+    }
+    
+    func test_updateImages_imageNotSticker_shouldNotUpdateSticker() {
+        
+        let (sut, model) = makeSUT()
+        let stickerSpy = ValueSpy(sut.$sections.map(\.stickerViewModel?.backgroundImage))
+        XCTAssertNoDiff(stickerSpy.values, [nil])
+        
+        model.images.value = ["1": .tiny()]
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+                
+        XCTAssertNoDiff(stickerSpy.values, [nil])
+    }
+    
     func test_tapTemplates_shouldSetLinkToTemplates() {
         
         let (sut, _) = makeSUT()
@@ -245,6 +273,38 @@ final class MainViewModelTests: XCTestCase {
         return (sut, model)
     }
     
+    private func makeSUTWithLocalAgent(
+        localAgent: LocalAgent,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: MainViewModel,
+        model: Model
+    ) {
+        let model: Model = Model.mockWithEmptyExcept(localAgent: localAgent)
+        let sberQRServices = SberQRServices.preview(
+            createSberQRPaymentResultStub: .success(.empty()),
+            getSberQRDataResultStub: .success(.empty())
+        )
+
+        let sut = MainViewModel(
+            model,
+            makeProductProfileViewModel: { _,_,_  in nil },
+            navigationStateManager: .preview,
+            sberQRServices: sberQRServices,
+            qrViewModelFactory: .preview(),
+            paymentsTransfersFactory: .preview,
+            updateInfoStatusFlag: .init(.inactive),
+            onRegister: {}
+        )
+
+        trackForMemoryLeaks(sut, file: file, line: line)
+        // TODO: restore memory leaks tracking after Model fix
+        // trackForMemoryLeaks(model, file: file, line: line)
+        
+        return (sut, model)
+    }
+    
     typealias MainSectionViewVM = MainSectionProductsView.ViewModel
     typealias StickerViewModel = ProductCarouselView.StickerViewModel
     
@@ -340,6 +400,22 @@ final class MainViewModelTests: XCTestCase {
             inn: "inn",
             customName: "customName"
         )
+    }
+    
+    private func makeLocalAgentForSticker(
+        md5hash: String = "md5hash"
+    ) throws -> LocalAgent {
+        
+        let localAgent = LocalAgent(context: LocalAgentTests.context)
+        let stickerData: StickerBannersMyProductList = .init(
+            productName: "productName",
+            link: "link",
+            md5hash: md5hash,
+            action: nil)
+        
+        try localAgent.store([stickerData])
+        try localAgent.store([md5hash: ImageData.tiny()])
+        return localAgent
     }
     
     private func assert(
