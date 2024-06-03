@@ -111,8 +111,36 @@ class MainViewModel: ObservableObject, Resetable {
             self.handleLandingAction(.sticker)
         } hide: { [self] in
             model.settingsAgent.saveShowStickerSetting(shouldShow: false)
-            self.sections = MainViewModel.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag)
-            self.bind(sections)
+            self.removeSticker(model)
+        }
+    }
+    
+    private func updateSticker(
+        _ model: Model,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
+        stickerViewModel: ProductCarouselView.StickerViewModel
+    ) {
+        
+        if let index = sections.firstIndex(where: { $0.type == .products }),
+            let section = sections[index] as? MainSectionProductsView.ViewModel,
+           section.productCarouselViewModel.stickerViewModel?.backgroundImage != stickerViewModel.backgroundImage {
+            sections[index] = MainSectionProductsView.ViewModel(
+                model,
+                stickerViewModel: stickerViewModel
+            )
+            bind(sections)
+        }
+    }
+    
+    private func removeSticker(_ model: Model) {
+        
+        if let index = sections.firstIndex(where: { $0.type == .products }) {
+            
+            sections[index] = MainSectionProductsView.ViewModel(
+                model,
+                stickerViewModel: nil
+            )
+            bind(sections)
         }
     }
 }
@@ -166,12 +194,10 @@ private extension MainViewModel {
         model.images
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] images in
-                
                 if let products = self.sections.first(where: { $0.type == .products }) as? MainSectionProductsView.ViewModel,
-                   products.productCarouselViewModel.stickerViewModel == nil {
-                    
-                    self.sections = Self.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: makeStickerViewModel(model, updateInfoStatusFlag: updateInfoStatusFlag))
-                    bind(sections)
+                   products.productCarouselViewModel.stickerViewModel == nil, 
+                    let stickerViewModel = makeStickerViewModel(model, updateInfoStatusFlag: updateInfoStatusFlag) {
+                    self.updateSticker(model, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: stickerViewModel)
                 }
             }
             .store(in: &bindings)
