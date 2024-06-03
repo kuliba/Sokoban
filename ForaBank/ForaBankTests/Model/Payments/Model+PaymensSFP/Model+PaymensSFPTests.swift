@@ -209,7 +209,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNil(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId", steps: steps)))
     }
     
-    func test_bankParameter_sourceTemplatePayment_shouldReturnParameter() {
+    func test_bankParameter_sourceTemplatePayment_shouldReturnParameterId() {
         
         let sut = makeSUT(
             Payments.Operation(
@@ -224,7 +224,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNoDiff(sut.parameter.id, Self.bankParameterTest.id)
     }
     
-    func test_bankParameter_sourceTemplatePayment_shouldReturnParameterWithOutTemplate() {
+    func test_bankParameter_sourceTemplatePayment_shouldReturnParameterIdWithOutTemplate() {
         
         let sut = makeSUT(
             Payments.Operation(
@@ -237,7 +237,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNoDiff(sut.parameter.id, Self.bankParameterTest.id)
     }
     
-    func test_bankParameter_sourceTemplatePayment_transferGeneralData_shouldReturnParameter() {
+    func test_bankParameter_sourceTemplatePayment_transferGeneralData_shouldReturnParameterId() {
         
         let sut = makeSUT(
             Payments.Operation(
@@ -252,7 +252,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNoDiff(sut.parameter.id, Self.bankParameterTest.id)
     }
     
-    func test_bankParameter_sourceTemplatePayment_transferData_shouldReturnParameter() {
+    func test_bankParameter_sourceTemplatePayment_transferData_shouldReturnParameterId() {
         
         let sut = makeSUT(
             Payments.Operation(
@@ -276,13 +276,13 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNoDiff(sut.value, nil)
     }
     
-    func test_createBankParameterForTemplate_paymentTemplatesIsEmpty_shouldReturnParameter() {
+    func test_createBankParameterForTemplate_paymentTemplatesIsEmpty_shouldReturnParameterValue() {
         
         let sut = makeBankParameterSUT(paymentTemplates: [])
         XCTAssertNoDiff(sut.value, nil)
     }
     
-    func test_createBankParameterForTemplate_paymentTemplateswithTransferAnywayData_shouldReturnParameter() {
+    func test_createBankParameterForTemplate_paymentTemplateswithTransferAnywayData_shouldReturnParameterValue() {
         
         let sut = makeBankParameterSUT(
             paymentTemplates: [
@@ -297,7 +297,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNoDiff(sut.value, nil)
     }
     
-    func test_createBankParameterForTemplate_paymentTemplateswithTransferGeneralData_shouldReturnParameter() {
+    func test_createBankParameterForTemplate_paymentTemplateswithTransferGeneralData_shouldReturnParameterValue() {
         
         let sut = makeBankParameterSUT(
             paymentTemplates: [
@@ -309,7 +309,7 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNoDiff(sut.value, nil)
     }
     
-    func test_createBankParameterForTemplate_paymentTemplateswithTransferMeToMeData_shouldReturnParameter() {
+    func test_createBankParameterForTemplate_paymentTemplateswithTransferMeToMeData_shouldReturnParameterValue() {
         
         let sut = makeBankParameterSUT(
             paymentTemplates: [
