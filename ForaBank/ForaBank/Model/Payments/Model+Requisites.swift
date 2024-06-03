@@ -212,6 +212,21 @@ extension Model {
                     //MARK: Kpp Parameter
                     let options: [Payments.ParameterSelect.Option] = createParameterOptions(suggestedCompanies)
                     
+                    if shouldShowKppParameter(operation.source, innValue.count) {
+
+                        let kppParameterSelect = Payments.ParameterSelect(
+                            .init(id: kppParameterId, value: options.first?.id),
+                            icon: .name("ic24FileHash"),
+                            title: "КПП получателя",
+                            placeholder: "Начните ввод для поиска",
+                            options: options,
+                            description: "Выберите из \(options.count)",
+                            validator: validateKppParameter(),
+                            keyboardType: .number
+                        )
+                        parameters.append(kppParameterSelect)
+                    }
+                    
                     // MARK: Company Name Parameter
                     let companyNameValue = options.first?.subname
                     let companyNameParameter = Payments.ParameterInput(
@@ -224,19 +239,6 @@ extension Model {
                     parameters.append(companyNameParameter)
 
                     if shouldShowKppParameter(operation.source, innValue.count) {
-                        
-                        let kppParameterSelect = Payments.ParameterSelect(
-                            .init(id: kppParameterId, value: options.first?.id),
-                            icon: .name("ic24FileHash"),
-                            title: "КПП получателя",
-                            placeholder: "Начните ввод для поиска",
-                            options: options,
-                            description: "Выберите из \(options.count)",
-                            validator: validateKppParameter(),
-                            keyboardType: .number
-                        )
-                        parameters.append(kppParameterSelect)
-                       
                         // helper required to support update company name with kpp parameter selector change and manual user name update
                         let companyNameParameterHelperId = Payments.Parameter.Identifier.requisitsCompanyNameHelper.rawValue
                         let companyNameParameterHelper = Payments.ParameterHidden(
