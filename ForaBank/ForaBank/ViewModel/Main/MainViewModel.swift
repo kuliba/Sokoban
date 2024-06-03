@@ -117,8 +117,7 @@ class MainViewModel: ObservableObject, Resetable {
     func createSticker(
         _ model: Model
     ) {
-        if let products = sections.productsSection,
-           products.productCarouselViewModel.stickerViewModel == nil,
+        if sections.stickerViewModel == nil,
            let stickerViewModel = makeStickerViewModel(model) {
             updateSticker(model, stickerViewModel: stickerViewModel)
         }
