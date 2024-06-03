@@ -513,12 +513,33 @@ private extension UtilityPaymentNanoServices.StartAnywayPaymentPayload {
     typealias StartAnywayPaymentResult = UtilityPaymentNanoServices.StartAnywayPaymentResult
 }
 
-private extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
+extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
     
     static let step1: Self = .make(
-        nextStepParameters: [
-            .make(id: "1", title: "Лицевой счет")
+        parametersForNextStep: [
+            .make(id: "1", title: "Лицевой счет (\"1111\" = ok, другое = ошибка)")
         ]
+    )
+    
+    static let step2: Self = .make(
+        needSum: true
+    )
+    
+    static let step3: Self = .make(
+        parametersForNextStep: [
+            .make(id: "SumSTrs", title: "Сумма (\"11\" = ok, \"22\" = fraud, другое = ошибка)")
+        ]
+    )
+    
+    static let step4: Self = .make(
+        needMake: true,
+        needOTP: true
+    )
+    
+    static let step4Fraud: Self = .make(
+        needMake: true,
+        needOTP: true,
+        scenario: .suspect
     )
     
     private static func make(
@@ -537,7 +558,7 @@ private extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
         needMake: Bool = false,
         needOTP: Bool = false,
         needSum: Bool = false,
-        nextStepParameters: [Parameter],
+        parametersForNextStep: [Parameter] = [],
         paymentOperationDetailID: Int? = nil,
         payeeName: String? = nil,
         printFormType: String? = nil,
@@ -561,7 +582,7 @@ private extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
             needMake: needMake,
             needOTP: needOTP,
             needSum: needSum,
-            parametersForNextStep: nextStepParameters,
+            parametersForNextStep: parametersForNextStep,
             paymentOperationDetailID: paymentOperationDetailID,
             payeeName: payeeName,
             printFormType: printFormType,

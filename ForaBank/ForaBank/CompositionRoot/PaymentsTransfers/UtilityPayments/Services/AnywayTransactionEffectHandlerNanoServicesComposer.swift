@@ -175,7 +175,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             
             DispatchQueue.main.delay(for: .seconds(1)) {
                 
-                let result = code.makeTransferStub
+                let result = code.makeTransferResultStub
                 self.networkLog(level: .default, message: "Remote Service Make Transfer Stub Result: \(String(describing: result))", file: #file, line: #line)
                 completion(result)
             }
@@ -214,7 +214,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             DispatchQueue.main.delay(for: .seconds(1)) {
                 
                 let result = digest.processResultStub
-                self.networkLog(level: .default, message: "Remote Service Process Payment Stub Result: \(result)", file: #file, line: #line)
+                self.networkLog(level: .default, message: "Remote Service Process Payment Stub Result: \(result) for digest \(digest)", file: #file, line: #line)
                 completion(result)
             }
         }
@@ -354,17 +354,47 @@ private extension AnywayPaymentDigest {
     
     var processResultStub: ProcessResult {
         
-        .failure(.connectivityError)
+        if containsAdditional(named: "SumSTrs", withValue: "11") {
+            return .success(.init(.step4))
+        }
+        
+        if containsAdditional(named: "SumSTrs", withValue: "22") {
+            return .success(.init(.step4Fraud))
+        }
+        
+        if core?.amount != nil {
+            return .success(.init(.step3))
+        }
+        
+        if containsAdditional(named: "1", withValue: "1111") {
+            return .success(.init(.step2))
+        }
+        
+        return .failure(.connectivityError)
     }
     
     typealias ProcessResult = AnywayTransactionEffectHandlerNanoServices.ProcessResult
+    
+    private func containsAdditional(
+        named name: String,
+        withValue value: String
+    ) -> Bool {
+        
+        additional.contains {
+            $0.fieldName == name
+            && $0.fieldValue == value
+        }
+    }
 }
 
 private extension OperationDetailID {
     
     var getDetailsResultStub: GetDetailsResult {
         
-        nil
+        switch self {
+        case 123: return ""
+        default: return nil
+        }
     }
     
     typealias GetDetailsResult = AnywayTransactionEffectHandlerNanoServices.GetDetailsResult
@@ -372,12 +402,24 @@ private extension OperationDetailID {
 
 private extension VerificationCode {
     
-    var makeTransferStub: MakeTransferResult {
+    var makeTransferResultStub: MakeTransferResult {
         
-        nil
+        switch rawValue {
+        case "111111": return .g1Completed
+        case "222222": return .g1Inflight
+        case "333333": return .g1Rejected
+        default:       return .none
+        }
     }
     
     typealias MakeTransferResult = AnywayTransactionEffectHandlerNanoServices.MakeTransferResult
+}
+
+private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferResponse {
+    
+    static let g1Completed: Self = .init(status: .completed, detailID: 123)
+    static let g1Inflight:  Self = .init(status: .inflight, detailID: 123)
+    static let g1Rejected:  Self = .init(status: .rejected, detailID: 123)
 }
 
 private extension AnywayPaymentUpdate {
