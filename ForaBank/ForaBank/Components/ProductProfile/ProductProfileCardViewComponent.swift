@@ -424,8 +424,8 @@ extension ProductProfileCardView.ViewModel {
         var groupingCards: Array.Products = [:]
         var itemsID: [ProductData.ID] = []
         
-        var isContainAdditionalCardGroups: Bool {
-            (groupingCards.values.first(where: { $0.count > 2 } ) != nil)
+        var withOutOffset: Bool {
+            groupingCards.isEmpty || (groupingCards.values.first(where: { $0.count > 1 } ) != nil)
         }
 
         @Published var thumbnails: [ThumbnailViewModel]
@@ -622,7 +622,7 @@ extension ProductProfileCardView {
                     .onReceive(proxy.offset) {
                         self.offset = $0
                     }
-                    .modifier(OffsetModifier(offset: offset.x, isContainAdditionalCardGroups: viewModel.isContainAdditionalCardGroups))
+                    .modifier(OffsetModifier(offset: offset.x, withOutOffset: viewModel.withOutOffset))
                     .onReceive(viewModel.$selected) { selected in
                         proxy.scrollTo(selected, alignment: .center, animated: true)
                     }
@@ -640,11 +640,11 @@ extension ProductProfileCardView {
     private struct OffsetModifier: ViewModifier {
         
         let offset: CGFloat
-        let isContainAdditionalCardGroups: Bool
+        let withOutOffset: Bool
         
         func body(content: Content) -> some View {
             
-            if isContainAdditionalCardGroups {
+            if withOutOffset {
                 content
             }
             else {
