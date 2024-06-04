@@ -178,7 +178,7 @@ class MyProductsViewModel: ObservableObject {
                 
                 guard let self else { return }
                 
-                if updateInfo.areProductsUpdated, let informerData = makeMyProductsViewFactory.makeInformerDataUpdateFailure() {
+                if !updateInfo.areProductsUpdated, let informerData = makeMyProductsViewFactory.makeInformerDataUpdateFailure() {
                     self.model.action.send(ModelAction.Informer.Show(informer: informerData))
                 }
             }
