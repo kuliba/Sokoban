@@ -14,7 +14,7 @@ struct AnywayPaymentElementView<IconView: View>: View {
     let state: State
     let event: (Event) -> Void
     let factory: Factory
-    #warning("better move config to factory")
+#warning("better move config to factory")
     let config: Config
     
     var body: some View {
@@ -35,31 +35,7 @@ struct AnywayPaymentElementView<IconView: View>: View {
             )
             
         case let .widget(widget):
-            switch widget {
-            case let .otp(otp):
-    #warning("replace with real components")
-                HStack {
-                    
-                    Text("OTP: " + (otp.map { "\($0)" } ?? ""))
-                    TextField(
-                        "Введите код",
-                        text: .init(
-                            get: { otp.map { "\($0)" } ?? "" },
-                            set: { event(.widget(.otp($0))) }
-                        )
-                    )
-                }
-    #warning("can't use CodeInputView - not a part  af any product (neither PaymentComponents nor any other)")
-    #warning("need a wrapper with timer")
-                //            CodeInputView(
-                //                state: <#T##OTPInputState.Status.Input#>,
-                //                event: <#T##(OTPInputEvent) -> Void#>,
-                //                config: <#T##CodeInputConfig#>
-                //            )
-                
-            case let .productPicker(productID):
-                factory.makeProductSelectView(productID, { event(.widget(.product($0, $1))) })
-            }
+            widgetView(widget)
         }
     }
     
@@ -79,19 +55,59 @@ extension AnywayPaymentElementView {
     typealias Config = AnywayPaymentElementConfig
 }
 
+private extension AnywayPaymentElementView {
+    
+    @ViewBuilder
+    func widgetView(
+        _ widget: State.UIComponent.Widget
+    ) -> some View {
+        switch widget {
+        case let .otp(otp):
+#warning("replace with real components")
+            HStack {
+                
+                VStack(alignment: .leading) {
+                    
+                    Text("OTP")
+                    Text(otp.map { "\($0)" } ?? "")
+                        .font(.caption)
+                }
+                
+                TextField(
+                    "Введите код",
+                    text: .init(
+                        get: { otp.map { "\($0)" } ?? "" },
+                        set: { event(.widget(.otp($0))) }
+                    )
+                )
+            }
+#warning("can't use CodeInputView - not a part  af any product (neither PaymentComponents nor any other)")
+#warning("need a wrapper with timer")
+            //            CodeInputView(
+            //                state: <#T##OTPInputState.Status.Input#>,
+            //                event: <#T##(OTPInputEvent) -> Void#>,
+            //                config: <#T##CodeInputConfig#>
+            //            )
+            
+        case let .productPicker(productID):
+            factory.makeProductSelectView(productID, { event(.widget(.product($0, $1))) })
+        }
+    }
+}
+
 // MARK: - Adapters
 
 private extension AnywayPaymentDomain.AnywayPayment.Element.UIComponent.Field {
     
     var info: PaymentComponents.Info {
-
-        #warning("hardcoded style")
+        
+#warning("hardcoded style")
         return .init(id: id, title: title, value: value, style: .expanded)
     }
 }
 
 private extension  AnywayPaymentDomain.AnywayPayment.Element.UIComponent.Field {
-
+    
     var id: PaymentComponents.Info.ID {
         
         switch name {

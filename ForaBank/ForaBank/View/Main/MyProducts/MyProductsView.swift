@@ -206,7 +206,9 @@ extension PaymentsTransfersViewFactory {
                 )
             },
             makeUserAccountView: UserAccountView.init(viewModel:),
-            makeIconView: IconDomain.preview
+            makeIconView: IconDomain.preview,
+            makeUpdateInfoView: UpdateInfoView.init(text:),
+            makeAnywayPaymentFactory: { _ in fatalError() }
         )
     }
 }

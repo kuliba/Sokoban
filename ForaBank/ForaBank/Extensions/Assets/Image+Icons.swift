@@ -395,6 +395,7 @@ public extension Image {
     static var ic24Activity: Image { Image(#function) }
     static var ic24Airplay: Image { Image(#function) }
     static var ic24AlertCircle: Image { Image(#function) }
+    static var ic24AlertCircleRed: Image { Image(#function) }
     static var ic24AlertOctagon: Image { Image(#function) }
     static var ic24AlertTriangle: Image { Image(#function) }
     static var ic24AlignCenter: Image { Image(#function) }

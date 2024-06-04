@@ -24,6 +24,7 @@ extension RootViewModelFactory {
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
         
@@ -106,7 +107,6 @@ extension RootViewModelFactory {
         : httpClient
         
         let paymentsTransfersFactoryComposer = PaymentsTransfersFactoryComposer(
-            httpClient: utilitiesHTTPClient,
             model: model
         )
         let makeUtilitiesViewModel = paymentsTransfersFactoryComposer.makeUtilitiesViewModel(
@@ -114,19 +114,6 @@ extension RootViewModelFactory {
             isActive: utilitiesPaymentsFlag.isActive
         )
         
-#warning("add to settings(?)")
-        let pageSize = 20
-#warning("add to settings")
-        let observeLast = 5
-        let ptFlowComposer = PaymentsTransfersFlowComposer(
-            flag: utilitiesPaymentsFlag.optionOrStub,
-            model: model,
-            httpClient: httpClient,
-            log: infoNetworkLog,
-            pageSize: pageSize,
-            observeLast: observeLast
-        )
-
         let unblockCardServices = Services.makeUnblockCardServices(
             httpClient: httpClient,
             log: infoNetworkLog
@@ -137,32 +124,56 @@ extension RootViewModelFactory {
             bottomSheetReduce: BottomSheetReducer(),
             handleEffect: ProductNavigationStateEffectHandler()
         )
-
-        let paymentsTransfersFlowManager = ptFlowComposer.compose()
+        let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
+            
+            .init(
+                model,
+                dismissAction: $0,
+                updateFastAll: {
+                    model.action.send(ModelAction.Products.Update.Fast.All())
+                })
+        }
         
+        let (pageSize, observeLast) = (50, 10) // TODO: extract to some settings
+        
+        let ptfmComposer = PaymentsTransfersFlowManagerComposer(
+            flag: utilitiesPaymentsFlag,
+            model: model,
+            httpClient: httpClient,
+            log: logger.log,
+            pageSize: pageSize,
+            observeLast: observeLast
+        )
+        
+        let makePaymentsTransfersFlowManager = ptfmComposer.compose
+
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            paymentsTransfersFlowManager: paymentsTransfersFlowManager,
+            makeTemplatesListViewModel: makeTemplatesListViewModel,
+            paymentsTransfersFlowManager: makePaymentsTransfersFlowManager(),
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             unblockCardServices: unblockCardServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
-            productNavigationStateManager: productNavigationStateManager
+            productNavigationStateManager: productNavigationStateManager,
+            updateInfoStatusFlag: updateInfoStatusFlag
         )
         
         return make(
             model: model,
             makeProductProfileViewModel: makeProductProfileViewModel,
+            makeTemplatesListViewModel: makeTemplatesListViewModel,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            paymentsTransfersFlowManager: paymentsTransfersFlowManager,
+            paymentsTransfersFlowManager: makePaymentsTransfersFlowManager(),
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
+            updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: resetCVVPINActivation
         )
     }
@@ -311,13 +322,15 @@ extension ProductProfileViewModel {
         with model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
+        makeTemplatesListViewModel: @escaping PaymentsTransfersFactory.MakeTemplatesListViewModel,
         paymentsTransfersFlowManager: PTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         unblockCardServices: UnblockCardServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
-        productNavigationStateManager: ProductNavigationStateManager
+        productNavigationStateManager: ProductNavigationStateManager,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, dismissAction in
@@ -326,29 +339,25 @@ extension ProductProfileViewModel {
                 with: model,
                 fastPaymentsFactory: fastPaymentsFactory,
                 makeUtilitiesViewModel: makeUtilitiesViewModel,
+                makeTemplatesListViewModel: makeTemplatesListViewModel,
                 paymentsTransfersFlowManager: paymentsTransfersFlowManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
                 unblockCardServices: unblockCardServices,
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
-                productNavigationStateManager: productNavigationStateManager
+                productNavigationStateManager: productNavigationStateManager,
+                updateInfoStatusFlag: updateInfoStatusFlag
             )
-            
-            let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
-                
-                .init(
-                    model,
-                    dismissAction: $0,
-                    updateFastAll: {
-                        model.action.send(ModelAction.Products.Update.Fast.All())
-                    })
-            }
             
             let paymentsTransfersFactory = PaymentsTransfersFactory(
                 makeUtilitiesViewModel: makeUtilitiesViewModel,
                 makeProductProfileViewModel: makeProductProfileViewModel,
-                makeTemplatesListViewModel: makeTemplatesListViewModel
+                makeTemplatesListViewModel: makeTemplatesListViewModel,
+                makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+                makeAlertDataUpdateFailureViewModel: { 
+                    updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
+                }
             )
             
             let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData, model in
@@ -385,7 +394,11 @@ extension ProductProfileViewModel {
                         message: $0.message,
                         primary: $0.primaryButton,
                         secondary: $0.secondaryButton)
-                })
+                },
+                makeInformerDataUpdateFailure: {
+                    updateInfoStatusFlag.isActive ? .updateFailureInfo : nil
+                }
+            )
             
             return .init(
                 model,
@@ -440,6 +453,7 @@ private extension RootViewModelFactory {
     static func make(
         model: Model,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        makeTemplatesListViewModel: @escaping PaymentsTransfersFactory.MakeTemplatesListViewModel,
         fastPaymentsFactory: FastPaymentsFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
         paymentsTransfersFlowManager: PTFlowManger,
@@ -447,23 +461,18 @@ private extension RootViewModelFactory {
         productNavigationStateManager: ProductNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
-        
-        let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
-            
-            .init(
-                model,
-                dismissAction: $0,
-                updateFastAll: {
-                    model.action.send(ModelAction.Products.Update.Fast.All())
-                })
-        }
-        
+                
         let paymentsTransfersFactory = PaymentsTransfersFactory(
             makeUtilitiesViewModel: makeUtilitiesViewModel,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makeTemplatesListViewModel: makeTemplatesListViewModel
+            makeTemplatesListViewModel: makeTemplatesListViewModel, 
+            makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+            makeAlertDataUpdateFailureViewModel: {
+                updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
+            }
         )
         
         let mainViewModel = MainViewModel(
@@ -473,6 +482,7 @@ private extension RootViewModelFactory {
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
+            updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: onRegister
         )
         
@@ -540,10 +550,10 @@ private extension UserAccountModelEffectHandler {
     }
 }
 
-extension UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload {
-    
-    var state: UtilityPrepaymentState {
-        
-        .init(lastPayments: lastPayments, operators: operators, searchText: searchText)
-    }
-}
+//extension UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.UtilityPrepaymentFlowEvent.Initiated.UtilityPrepaymentPayload {
+//    
+//    var state: UtilityPrepaymentState {
+//        
+//        .init(lastPayments: lastPayments, operators: operators, searchText: searchText)
+//    }
+//}

@@ -10,25 +10,25 @@ import XCTest
 
 final class DebounceDecoratorTests: XCTestCase {
     
-    func test_shouldCallOnce() {
+    func test_debounce_shouldCallOnce() {
         
         let sut = makeSUT()
         let exp = expectation(description: "debounce should omit subsequent calls")
         
-        sut { exp.fulfill() }
-        sut { exp.fulfill() }
-        sut { exp.fulfill() }
+        sut.debounce { exp.fulfill() }
+        sut.debounce { exp.fulfill() }
+        sut.debounce { exp.fulfill() }
         
         wait(for: [exp], timeout: 1)
     }
     
-    func test_shouldNotCallOnInstanceDeallocation() {
+    func test_debounce_shouldNotCallOnInstanceDeallocation() {
         
         var sut: SUT? = makeSUT()
         let exp = self.expectation(description: "DebounceDeallocation")
         exp.isInverted = true
         
-        sut? { exp.fulfill() }
+        sut?.debounce { exp.fulfill() }
         sut = nil
         
         waitForExpectations(timeout: 0.2) { error in
@@ -37,15 +37,17 @@ final class DebounceDecoratorTests: XCTestCase {
         }
     }
     
-    func test_shouldNotCreateRaceCondition() {
+    func test_debounce_shouldNotCreateRaceCondition() {
         
         let sut = makeSUT(delay: 0.1)
         let expectation = expectation(description: "DebounceRace")
         
         let block = { expectation.fulfill() }
         
-        DispatchQueue.global().async { sut(block: block) }
-        DispatchQueue.global().asyncAfter(deadline: .now() + 0.05) { sut(block: block) }
+        DispatchQueue.global().async { sut.debounce(block: block) }
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.05) {
+            sut.debounce(block: block)
+        }
         
         waitForExpectations(timeout: 0.3) { error in
             

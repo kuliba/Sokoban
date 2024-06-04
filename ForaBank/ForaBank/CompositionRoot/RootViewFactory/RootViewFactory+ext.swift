@@ -23,6 +23,8 @@ extension RootViewFactory {
         let makeUserAccountView = UserAccountView.init(viewModel:)
         
         let makeActivateSliderView = ActivateSliderStateWrapperView.init(payload:viewModel:config:)
+        
+        let makeUpdateInfoView = UpdateInfoView.init(text:)
 
         self.init(
             makePaymentsTransfersView: { viewModel in
@@ -32,7 +34,8 @@ extension RootViewFactory {
                     viewFactory: .init(
                         makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                         makeUserAccountView: makeUserAccountView,
-                        makeIconView: imageCache.makeIconView(for:)
+                        makeIconView: imageCache.makeIconView(for:),
+                        makeUpdateInfoView: makeUpdateInfoView
                     ),
                     productProfileViewFactory: .init(makeActivateSliderView: makeActivateSliderView),
                     getUImage: getUImage
@@ -41,7 +44,8 @@ extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView,
             makeIconView: imageCache.makeIconView(for:),
-            makeActivateSliderView: makeActivateSliderView
+            makeActivateSliderView: makeActivateSliderView,
+            makeUpdateInfoView: makeUpdateInfoView
         )
     }
     

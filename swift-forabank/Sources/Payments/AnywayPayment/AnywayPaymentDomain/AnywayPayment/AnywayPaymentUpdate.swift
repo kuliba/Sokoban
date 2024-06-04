@@ -48,42 +48,45 @@ extension AnywayPaymentUpdate {
         public let name: String
         public let value: String
         public let title: String
-        @available(*, deprecated, message: "not used according to analytics")
-        public let recycle: Bool
-        public let svgImage: String?
-        public let typeIdParameterList: String?
+        public let image: Image?
         
         public init(
             name: String,
             value: String,
             title: String,
-            recycle: Bool,
-            svgImage: String?,
-            typeIdParameterList: String?
+            image: Image?
         ) {
             self.name = name
             self.value = value
             self.title = title
-            self.recycle = recycle
-            self.svgImage = svgImage
-            self.typeIdParameterList = typeIdParameterList
+            self.image = image
         }
+    }
+    
+    public enum Image: Equatable {
+        
+        case md5Hash(String)
+        case svg(String)
+        case withFallback(md5Hash: String, svg: String)
     }
     
     public struct Parameter: Equatable {
         
         public let field: Field
+        public let image: Image?
         public let masking: Masking
         public let validation: Validation
         public let uiAttributes: UIAttributes
         
         public init(
             field: Field,
+            image: Image?,
             masking: Masking,
             validation: Validation,
             uiAttributes: UIAttributes
         ) {
             self.field = field
+            self.image = image
             self.masking = masking
             self.validation = validation
             self.uiAttributes = uiAttributes
@@ -129,6 +132,7 @@ extension AnywayPaymentUpdate.Details {
         
         public let isFinalStep: Bool
         public let isFraudSuspected: Bool
+        public let isMultiSum: Bool
         public let needMake: Bool
         public let needOTP: Bool
         public let needSum: Bool
@@ -136,12 +140,14 @@ extension AnywayPaymentUpdate.Details {
         public init(
             isFinalStep: Bool,
             isFraudSuspected: Bool,
+            isMultiSum: Bool,
             needMake: Bool,
             needOTP: Bool,
             needSum: Bool
         ) {
             self.isFinalStep = isFinalStep
             self.isFraudSuspected = isFraudSuspected
+            self.isMultiSum = isMultiSum
             self.needMake = needMake
             self.needOTP = needOTP
             self.needSum = needSum
@@ -257,7 +263,6 @@ extension AnywayPaymentUpdate.Parameter {
         public let isReadOnly: Bool
         public let subGroup: String?
         public let subTitle: String?
-        public let svgImage: String?
         public let title: String
         public let type: FieldType
         public let viewType: ViewType
@@ -272,7 +277,6 @@ extension AnywayPaymentUpdate.Parameter {
             isReadOnly: Bool,
             subGroup: String?,
             subTitle: String?,
-            svgImage: String?,
             title: String,
             type: FieldType,
             viewType: ViewType
@@ -286,7 +290,6 @@ extension AnywayPaymentUpdate.Parameter {
             self.isReadOnly = isReadOnly
             self.subGroup = subGroup
             self.subTitle = subTitle
-            self.svgImage = svgImage
             self.title = title
             self.type = type
             self.viewType = viewType

@@ -19,6 +19,7 @@ extension MainViewController {
             }
             
             switch section {
+            case .updateInfo: return nil // old code, not used
             case .products:
                 if self.productsViewModels.count > 0 {
                     return self.createProductSection(type: 1, isExpanded: isSectionExpanded)

@@ -10,30 +10,30 @@ import XCTest
 
 final class RemoveDuplicatesDecoratorTests: XCTestCase {
     
-    func test_shouldNotCallTwiceWithSamePayload() {
+    func test_removeDuplicates_shouldNotCallTwiceWithSamePayload() {
         
         let payload = makePayload()
         let (sut, spy) = makeSUT()
         
-        sut(spy.process)(payload) { _ in }
-        sut(spy.process)(payload) { _ in }
+        sut.removeDuplicates(spy.process)(payload) { _ in }
+        sut.removeDuplicates(spy.process)(payload) { _ in }
         
         XCTAssertNoDiff(spy.payloads, [payload])
     }
     
-    func test_shouldCallWithDifferentPayload() {
+    func test_removeDuplicates_shouldCallWithDifferentPayload() {
         
         let firstPayload = makePayload()
         let lastPayload = makePayload()
         let (sut, spy) = makeSUT()
         
-        sut(spy.process)(firstPayload) { _ in }
-        sut(spy.process)(lastPayload) { _ in }
+        sut.removeDuplicates(spy.process)(firstPayload) { _ in }
+        sut.removeDuplicates(spy.process)(lastPayload) { _ in }
         
         XCTAssertNoDiff(spy.payloads, [firstPayload, lastPayload])
     }
     
-    func test_shouldDeliverResponse() {
+    func test_removeDuplicates_shouldDeliverResponse() {
         
         let payload = makePayload()
         let (sut, spy) = makeSUT()
@@ -41,7 +41,7 @@ final class RemoveDuplicatesDecoratorTests: XCTestCase {
         var receivedResponse: Response?
         let exp = expectation(description: "wait for completion")
         
-        sut(spy.process)(payload) {
+        sut.removeDuplicates(spy.process)(payload) {
             
             receivedResponse = $0
             exp.fulfill()
@@ -53,7 +53,7 @@ final class RemoveDuplicatesDecoratorTests: XCTestCase {
         XCTAssertNoDiff(receivedResponse, response)
     }
     
-    func test_shouldNotHaveRaceConditionWithConcurrentAccess() {
+    func test_removeDuplicates_shouldNotHaveRaceConditionWithConcurrentAccess() {
         
         let payload = makePayload()
         let (sut, spy) = makeSUT()
@@ -69,7 +69,7 @@ final class RemoveDuplicatesDecoratorTests: XCTestCase {
             
             concurrentQueue.async {
                 
-                sut { payload, completion in
+                sut.removeDuplicates { payload, completion in
                     
                     Thread.sleep(forTimeInterval: 0.001)
                     spy.process(payload, completion: completion)
@@ -84,7 +84,7 @@ final class RemoveDuplicatesDecoratorTests: XCTestCase {
         XCTAssertNoDiff(lastPayloadProcessed, payload)
     }
     
-    func test_shouldNotCallOnInstanceDeallocation() {
+    func test_removeDuplicates_shouldNotCallOnInstanceDeallocation() {
         
         let firstPayload = makePayload()
         let lastPayload = makePayload()
@@ -92,10 +92,10 @@ final class RemoveDuplicatesDecoratorTests: XCTestCase {
         let spy: Caller
         (sut, spy) = makeSUT()
         
-        sut?(spy.process)(firstPayload) { _ in }
+        sut?.removeDuplicates(spy.process)(firstPayload) { _ in }
         sut = nil
         spy.complete(with: .init())
-        sut?(spy.process)(lastPayload) { _ in }
+        sut?.removeDuplicates(spy.process)(lastPayload) { _ in }
         
         XCTAssertNoDiff(spy.payloads, [firstPayload])
     }

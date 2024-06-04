@@ -17,6 +17,8 @@ extension MainViewController {
             let section = Section(rawValue: indexPath.section)
             
             switch section {
+            case .updateInfo: return UICollectionViewCell() // old code, not used
+
             case .products:
                 switch item.name {
                 case "Хочу карту":

@@ -40,15 +40,18 @@ extension AnywayPayment.Element.UIComponent {
         public let name: String
         public let title: String
         public let value: String
+        public let image: Image?
         
         public init(
             name: String,
             title: String,
-            value: String
+            value: String,
+            image: Image?
         ) {
             self.name = name
             self.title = title
             self.value = value
+            self.image = image
         }
     }
     
@@ -59,19 +62,22 @@ extension AnywayPayment.Element.UIComponent {
         public let title: String
         public let subtitle: String?
         public let value: Value?
+        public let image: Image?
         
         public init(
             id: ID,
             type: ParameterType,
             title: String,
             subtitle: String?,
-            value: Value?
+            value: Value?,
+            image: Image?
         ) {
             self.id = id
             self.type = type
             self.title = title
             self.subtitle = subtitle
             self.value = value
+            self.image = image
         }
     }
     
@@ -79,6 +85,16 @@ extension AnywayPayment.Element.UIComponent {
         
         case otp(Int?)
         case productPicker(ProductID)
+    }
+}
+
+extension AnywayPayment.Element.UIComponent {
+    
+    public enum Image: Equatable {
+        
+        case md5Hash(String)
+        case svg(String)
+        case withFallback(md5Hash: String, svg: String)
     }
 }
 
@@ -91,6 +107,7 @@ extension AnywayPayment.Element.UIComponent.Parameter {
         
         case hidden
         case nonEditable
+        case numberInput
         case select(Option, [Option])
         case textInput
         case unknown
@@ -136,7 +153,8 @@ extension AnywayPayment.Element.Parameter {
             type: uiAttributes.parameterType,
             title: uiAttributes.title,
             subtitle: uiAttributes.subTitle,
-            value: field.value.map { .init($0.rawValue) }
+            value: field.value.map { .init($0.rawValue) },
+            image: image.map { .init($0) }
         )
     }
 }
@@ -158,6 +176,9 @@ private extension AnywayPayment.Element.Parameter.UIAttributes {
             
         case (_, .output, _):
             return .hidden
+            
+        case (.input, .input, .number):
+            return .numberInput
             
         case (.input, .input, .string):
             return .textInput
@@ -200,7 +221,26 @@ private extension AnywayPayment.Element.UIComponent.Field {
         self.init(
             name: field.id.rawValue,
             title: field.title,
-            value: field.value.rawValue
+            value: field.value.rawValue,
+            image: field.image.map { .init($0) }
         )
+    }
+}
+
+private extension AnywayPayment.Element.UIComponent.Image {
+    
+    init(_ image: AnywayPayment.Element.Image) {
+        
+        switch image {
+            
+        case let .md5Hash(md5Hash):
+            self = .md5Hash(md5Hash)
+        
+        case let .svg(svg):
+            self = .svg(svg)
+        
+        case let .withFallback(md5Hash: md5Hash, svg: svg):
+            self = .withFallback(md5Hash: md5Hash, svg: svg)
+        }
     }
 }

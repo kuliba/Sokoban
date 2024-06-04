@@ -7,6 +7,7 @@
 
 import AnywayPaymentDomain
 import SwiftUI
+import UIPrimitives
 
 struct AnywayTransactionView: View {
     
@@ -18,25 +19,7 @@ struct AnywayTransactionView: View {
         
         VStack(spacing: 32) {
             
-            Text(state.isValid ? "valid" : "invalid")
-                .foregroundColor(state.isValid ? .green : .red)
-                .font(.headline)
-            
-            Divider()
-            
-            ScrollView(showsIndicators: false) {
-                
-                VStack(spacing: 32) {
-                    
-                    ForEach(
-                        state.payment.payment.elements,
-                        content: factory.makeElementView
-                    )
-                    
-                }
-                .padding()
-            }
-            
+            paymentView(elements: elements)
             factory.makeFooterView(state, { event($0.transactionEvent) })
         }
     }
@@ -46,7 +29,59 @@ extension AnywayTransactionView {
     
     typealias State = AnywayTransactionState
     typealias Event = AnywayTransactionEvent
-    typealias Factory = AnywayPaymentFactory<Text>
+    typealias Factory = AnywayPaymentFactory<IconView>
+    typealias IconView = UIPrimitives.AsyncImage
+}
+
+private extension AnywayTransactionView {
+    
+    var elements: [Element] { state.payment.payment.elements }
+    
+    private func paymentView(
+        elements: [Element]
+    ) -> some View {
+        
+        ScrollViewReader { proxy in
+            
+            ScrollView(showsIndicators: false, content: scrollContent)
+                .onAppear { scrollToLast(of: elements, proxy) }
+                .onChange(of: elements.map(\.id).last) {
+                    
+                    scrollToLastItem(withID: $0, proxy)
+                }
+        }
+    }
+    
+    private func scrollContent() -> some View {
+        
+        VStack(spacing: 32) {
+            
+            ForEach(elements, content: factory.makeElementView)
+        }
+        .padding()
+    }
+    
+    private func scrollToLast(
+        of elements: [Element],
+        _ proxy: ScrollViewProxy
+    ) {
+        scrollToLastItem(withID: elements.last?.id, proxy)
+    }
+    
+    private func scrollToLastItem(
+        withID id: Element.ID?,
+        _ proxy: ScrollViewProxy
+    ) {
+        if let id {
+            
+            withAnimation {
+                
+                proxy.scrollTo(id, anchor: .bottom)
+            }
+        }
+    }
+    
+    typealias Element = AnywayPaymentDomain.AnywayPayment.Element
 }
 
 // MARK: - Adapters

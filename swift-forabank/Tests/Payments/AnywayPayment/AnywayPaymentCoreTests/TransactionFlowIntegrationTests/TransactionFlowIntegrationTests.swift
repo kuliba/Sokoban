@@ -206,24 +206,40 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     
     func test_shouldCallPaymentInitiatorTwiceOnRestartPayment() {
         
-        let initialState = makeTransaction()
+        let initialState = makeTransaction(makePayment(shouldRestart: true))
         let updatedPayment = makePayment()
+        let editedPayment = makePayment()
         let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
-            makeStub(shouldRestartPayment: true, updatePayment: updatedPayment),
+            makeStub(
+                paymentReduce: (editedPayment, nil),
+                updatePayment: updatedPayment,
+                wouldNeedRestart: true
+            ),
             initialState: initialState
         )
         
         sut.event(.initiatePayment)
         paymentInitiator.complete(with: .success(makeUpdate()))
         
+        sut.event(.payment(.select))
+        sut.event(.paymentRestartConfirmation(true))
+        
         sut.event(.continue)
         paymentInitiator.complete(with: .success(makeUpdate()), at: 1)
-
+        
         assert(stateSpy, initialState, {
             _ in
         }, {
             $0.payment = updatedPayment
             $0.isValid = true
+        }, {
+            $0.payment = editedPayment
+            $0.status = .awaitingPaymentRestartConfirmation
+        }, {
+            $0.payment.shouldRestart = true
+            $0.status = nil
+        }, {
+            $0.payment = updatedPayment
         })
         
         XCTAssertEqual(paymentInitiator.callCount, 2)
@@ -338,7 +354,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     private typealias Reducer = _TransactionReducer
     private typealias EffectHandler = _TransactionEffectHandler
     
-    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), shouldRestartPayment: Bool, stagePayment: Payment?, updatePayment: Payment, validatePayment: Bool)
+    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), restorePayment: Payment, stagePayment: Payment?, updatePayment: Payment, validatePayment: Bool, wouldNeedRestart: Bool)
     
     private typealias Inspector = PaymentInspector<Payment, PaymentDigest>
 
@@ -364,8 +380,9 @@ final class TransactionFlowIntegrationTests: XCTestCase {
                 checkFraud: { _ in stub.checkFraud },
                 getVerificationCode: { _ in stub.getVerificationCode },
                 makeDigest: { _ in stub.makeDigest },
-                shouldRestartPayment: { _ in stub.shouldRestartPayment },
-                validatePayment: { _ in stub.validatePayment }
+                restorePayment: { _ in stub.restorePayment },
+                validatePayment: { _ in stub.validatePayment },
+                wouldNeedRestart: { _ in stub.wouldNeedRestart }
             )
         )
         let paymentInitiator = PaymentInitiator()
@@ -405,20 +422,22 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         getVerificationCode: VerificationCode? = nil,
         makeDigest: PaymentDigest = makePaymentDigest(),
         paymentReduce: (Payment, Effect?) = (makePayment(), nil),
-        shouldRestartPayment: Bool = false,
+        restorePayment: Payment = makePayment(),
         stagePayment: Payment? = nil,
         updatePayment: Payment = makePayment(),
-        validatePayment: Bool = true
+        validatePayment: Bool = true,
+        wouldNeedRestart: Bool = true
     ) -> Stub {
         (
             checkFraud: checkFraud,
             getVerificationCode: getVerificationCode,
             makeDigest: makeDigest,
             paymentReduce: paymentReduce,
-            shouldRestartPayment: shouldRestartPayment,
+            restorePayment: restorePayment,
             stagePayment: stagePayment,
             updatePayment: updatePayment,
-            validatePayment: validatePayment
+            validatePayment: validatePayment,
+            wouldNeedRestart: wouldNeedRestart
         )
     }
     
