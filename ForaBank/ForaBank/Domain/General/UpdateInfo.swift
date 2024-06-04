@@ -18,6 +18,10 @@ struct UpdateInfo: Equatable {
         return areCardsUpdated && areLoansUpdated && areDepositsUpdated && areAccountsUpdated
     }
     
+    var areCardsOrAccountsUpdated: Bool {
+        return areCardsUpdated || areAccountsUpdated
+    }
+
     init(
         areCardsUpdated: Bool = true,
         areLoansUpdated: Bool = true,
