@@ -107,7 +107,6 @@ extension RootViewModelFactory {
         : httpClient
         
         let paymentsTransfersFactoryComposer = PaymentsTransfersFactoryComposer(
-            httpClient: utilitiesHTTPClient,
             model: model
         )
         let makeUtilitiesViewModel = paymentsTransfersFactoryComposer.makeUtilitiesViewModel(
@@ -115,19 +114,6 @@ extension RootViewModelFactory {
             isActive: utilitiesPaymentsFlag.isActive
         )
         
-#warning("add to settings(?)")
-        let pageSize = 20
-#warning("add to settings")
-        let observeLast = 5
-        let ptFlowComposer = PaymentsTransfersFlowComposer(
-            flag: utilitiesPaymentsFlag.optionOrStub,
-            model: model,
-            httpClient: httpClient,
-            log: infoNetworkLog,
-            pageSize: pageSize,
-            observeLast: observeLast
-        )
-
         let unblockCardServices = Services.makeUnblockCardServices(
             httpClient: httpClient,
             log: infoNetworkLog
@@ -138,9 +124,6 @@ extension RootViewModelFactory {
             bottomSheetReduce: BottomSheetReducer(),
             handleEffect: ProductNavigationStateEffectHandler()
         )
-
-        let paymentsTransfersFlowManager = ptFlowComposer.compose()
-        
         let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
             
             .init(
@@ -150,13 +133,26 @@ extension RootViewModelFactory {
                     model.action.send(ModelAction.Products.Update.Fast.All())
                 })
         }
+        
+        let (pageSize, observeLast) = (50, 10) // TODO: extract to some settings
+        
+        let ptfmComposer = PaymentsTransfersFlowManagerComposer(
+            flag: utilitiesPaymentsFlag,
+            model: model,
+            httpClient: httpClient,
+            log: logger.log,
+            pageSize: pageSize,
+            observeLast: observeLast
+        )
+        
+        let makePaymentsTransfersFlowManager = ptfmComposer.compose
 
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
             makeTemplatesListViewModel: makeTemplatesListViewModel,
-            paymentsTransfersFlowManager: paymentsTransfersFlowManager,
+            paymentsTransfersFlowManager: makePaymentsTransfersFlowManager(),
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             unblockCardServices: unblockCardServices,
@@ -172,7 +168,7 @@ extension RootViewModelFactory {
             makeTemplatesListViewModel: makeTemplatesListViewModel,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            paymentsTransfersFlowManager: paymentsTransfersFlowManager,
+            paymentsTransfersFlowManager: makePaymentsTransfersFlowManager(),
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
             sberQRServices: sberQRServices,
@@ -358,7 +354,10 @@ extension ProductProfileViewModel {
                 makeUtilitiesViewModel: makeUtilitiesViewModel,
                 makeProductProfileViewModel: makeProductProfileViewModel,
                 makeTemplatesListViewModel: makeTemplatesListViewModel,
-                makeSections: { model.makeSections(flag: updateInfoStatusFlag) }
+                makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+                makeAlertDataUpdateFailureViewModel: { 
+                    updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
+                }
             )
             
             let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData, model in
@@ -470,7 +469,10 @@ private extension RootViewModelFactory {
             makeUtilitiesViewModel: makeUtilitiesViewModel,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplatesListViewModel: makeTemplatesListViewModel, 
-            makeSections: { model.makeSections(flag: updateInfoStatusFlag) }
+            makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+            makeAlertDataUpdateFailureViewModel: {
+                updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
+            }
         )
         
         let mainViewModel = MainViewModel(
@@ -548,10 +550,10 @@ private extension UserAccountModelEffectHandler {
     }
 }
 
-extension UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload {
-    
-    var state: UtilityPrepaymentState {
-        
-        .init(lastPayments: lastPayments, operators: operators, searchText: searchText)
-    }
-}
+//extension UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>.UtilityPrepaymentFlowEvent.Initiated.UtilityPrepaymentPayload {
+//    
+//    var state: UtilityPrepaymentState {
+//        
+//        .init(lastPayments: lastPayments, operators: operators, searchText: searchText)
+//    }
+//}

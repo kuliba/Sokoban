@@ -43,7 +43,7 @@ private extension AnywayTransactionEffectHandlerMicroServicesComposer {
         _ digest: AnywayPaymentDigest,
         _ completion: @escaping MicroServices.ProcessCompletion
     ) {
-#warning("FIXME")
+        nanoServices.initiatePayment(digest, completion)
     }
     
     func makePayment(
@@ -90,8 +90,7 @@ private extension AnywayTransactionEffectHandlerMicroServicesComposer {
         _ digest: AnywayPaymentDigest,
         _ completion: @escaping MicroServices.ProcessCompletion
     ) {
-#warning("FIXME")
-        fatalError()
+        nanoServices.processPayment(digest, completion)
     }
 }
 

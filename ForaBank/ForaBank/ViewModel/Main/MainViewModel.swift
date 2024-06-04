@@ -103,16 +103,51 @@ class MainViewModel: ObservableObject, Resetable {
     }
     
     private func makeStickerViewModel(
-        _ model: Model,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
+        _ model: Model
     ) -> ProductCarouselView.StickerViewModel? {
         
-        return ProductCarouselView.ViewModel.makeStickerViewModel(model) {
-            self.handleLandingAction(.sticker)
-        } hide: { [self] in
+        return ProductCarouselView.ViewModel.makeStickerViewModel(model) { [weak self] in
+            self?.handleLandingAction(.sticker)
+        } hide: { [weak self] in
             model.settingsAgent.saveShowStickerSetting(shouldShow: false)
-            self.sections = MainViewModel.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag)
-            self.bind(sections)
+            self?.removeSticker(model)
+        }
+    }
+    
+    func createSticker(
+        _ model: Model
+    ) {
+        if sections.stickerViewModel == nil,
+           let stickerViewModel = makeStickerViewModel(model) {
+            updateSticker(model, stickerViewModel: stickerViewModel)
+        }
+    }
+    
+    private func updateSticker(
+        _ model: Model,
+        stickerViewModel: ProductCarouselView.StickerViewModel
+    ) {
+        
+        if let index = sections.indexProductsSection,
+            let section = sections[index] as? MainSectionProductsView.ViewModel,
+           section.productCarouselViewModel.stickerViewModel?.backgroundImage != stickerViewModel.backgroundImage {
+            sections[index] = MainSectionProductsView.ViewModel(
+                model,
+                stickerViewModel: stickerViewModel
+            )
+            bind(sections)
+        }
+    }
+    
+    private func removeSticker(_ model: Model) {
+        
+        if let index = sections.indexProductsSection {
+            
+            sections[index] = MainSectionProductsView.ViewModel(
+                model,
+                stickerViewModel: nil
+            )
+            bind(sections)
         }
     }
 }
@@ -165,14 +200,9 @@ private extension MainViewModel {
         
         model.images
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] images in
-                
-                if let products = self.sections.first(where: { $0.type == .products }) as? MainSectionProductsView.ViewModel,
-                   products.productCarouselViewModel.stickerViewModel == nil {
-                    
-                    self.sections = Self.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: makeStickerViewModel(model, updateInfoStatusFlag: updateInfoStatusFlag))
-                    bind(sections)
-                }
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.createSticker(self.model)
             }
             .store(in: &bindings)
         
@@ -1493,3 +1523,17 @@ enum MainViewModelAction {
     }
 }
 
+extension Array where Element == MainSectionViewModel {
+    
+    var productsSection: MainSectionProductsView.ViewModel? {
+        first(where: { $0.type == .products }) as? MainSectionProductsView.ViewModel
+    }
+    
+    var indexProductsSection: Int? {
+        firstIndex(where: { $0.type == .products })
+    }
+    
+    var stickerViewModel: ProductCarouselView.StickerViewModel? {
+        productsSection?.productCarouselViewModel.stickerViewModel
+    }
+}

@@ -292,7 +292,7 @@ final class ModelSuccessTests: XCTestCase {
     
     private func anyDetailWithCardIDAndAmount() -> OperationDetailData {
 
-        return .stub(cardId: 10000184511, amount: 100)
+        return .stub(payerCardId: 10000184511, amount: 100)
     }
 
     
@@ -301,7 +301,7 @@ final class ModelSuccessTests: XCTestCase {
         amount: Double = 10
     ) -> OperationDetailData {
     
-        return .stub(cardId: cardID, amount: amount)
+        return .stub(payerCardId: cardID, amount: amount)
     }
     
     private func detailWithAmount(
