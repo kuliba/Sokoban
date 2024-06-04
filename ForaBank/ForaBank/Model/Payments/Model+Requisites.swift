@@ -180,7 +180,7 @@ extension Model {
             
             //MARK: Kpp Parameter
             let kppParameterId = Payments.Parameter.Identifier.requisitsKpp.rawValue
-            let kppParameterValidator: Payments.Validation.RulesSystem = validateKppParameter()
+            let kppParameterValidator: Payments.Validation.RulesSystem = validateKppParameter(innValue.count)
             
             //MARK: Company Name Parameter
             let companyNameParameterId = Payments.Parameter.Identifier.requisitsCompanyName.rawValue
@@ -196,6 +196,7 @@ extension Model {
                         
                         //MARK: Kpp Parameter
                         let kppParameter = createKppParameterInput(id: kppParameterId, value: suggestedCompanies[0].kpp, validator: kppParameterValidator)
+
                         parameters.append(kppParameter)
                     }
                     
@@ -221,7 +222,7 @@ extension Model {
                             placeholder: "Начните ввод для поиска",
                             options: options,
                             description: "Выберите из \(options.count)",
-                            validator: validateKppParameter(),
+                            validator: validateKppParameter(innValue.count),
                             keyboardType: .number
                         )
                         parameters.append(kppParameterSelect)
@@ -316,14 +317,14 @@ extension Model {
                         let amountParameter = createAmountParameter(value: String(amount), currencySymbol: currencySymbol, product: product)
                         parameters.append(amountParameter)
                         
-                        return createOperationStep(parameters: parameters, isCompleted: false)
+                        return createOperationStep(parameters: parameters, isCompleted: false, innValueCount: innValue.count, kppParameterId: kppParameterId)
                         
                     } catch {
                         
                         let amountParameter = createAmountParameter(currencySymbol: currencySymbol, product: product)
                         parameters.append(amountParameter)
                         
-                        return createOperationStep(parameters: parameters, isCompleted: false)
+                       return createOperationStep(parameters: parameters, isCompleted: false, innValueCount: innValue.count, kppParameterId: kppParameterId)
                     }
                     
                 } else {
@@ -331,7 +332,7 @@ extension Model {
                     let amountParameter = createAmountParameter(currencySymbol: currencySymbol, product: product)
                     parameters.append(amountParameter)
                     
-                    return createOperationStep(parameters: parameters, isCompleted: false)
+                   return createOperationStep(parameters: parameters, isCompleted: false, innValueCount: innValue.count, kppParameterId: kppParameterId)
                 }
                 
             } else {
@@ -339,7 +340,7 @@ extension Model {
                 let amountParameter = createAmountParameter(currencySymbol: currencySymbol, product: product, withMaxAmountInfinity: true)
                 parameters.append(amountParameter)
                 
-                return createOperationStep(parameters: parameters, isCompleted: false)
+                return createOperationStep(parameters: parameters, isCompleted: false, innValueCount: innValue.count, kppParameterId: kppParameterId)
             }
             
         default:
@@ -363,24 +364,41 @@ extension Model {
         return Payments.ParameterAmount(value: value, title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: validator, info: info)
     }
 
-    private func createOperationStep(parameters: [PaymentsParameterRepresentable], isCompleted: Bool) -> Payments.Operation.Step {
+    private func createOperationStep(
+        parameters: [PaymentsParameterRepresentable],
+        isCompleted: Bool,
+        innValueCount: Int,
+        kppParameterId: String
+    ) -> Payments.Operation.Step {
+        
         
         let visible = parameters.map { $0.id }
-        let required = parameters.map { $0.id }
+        let required: [String]
         
+        if innValueCount <= 10 {
+            required = parameters.filter { $0.id != kppParameterId }.map { $0.id }
+            
+        } else {
+            required = parameters.map { $0.id }
+        }
         return .init(parameters: parameters, front: .init(visible: visible, isCompleted: isCompleted), back: .init(stage: .remote(.start), required: required, processed: nil))
     }
     
     // MARK: - Case 2
-    func validateKppParameter() -> Payments.Validation.RulesSystem {
+    func validateKppParameter(_ innCount: Int) -> Payments.Validation.RulesSystem {
         
-        var rules = [any PaymentsValidationRulesSystemRule]()
-        
-        rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
-        
-        rules.append(Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [.post: .warning("Введено некорректное значение")]))
-        
-        return .init(rules: rules)
+        if innCount <= 10 {
+            return .init(rules: [])
+            
+        } else {
+            var rules = [any PaymentsValidationRulesSystemRule]()
+            
+            rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
+            
+            rules.append(Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [.post: .warning("Введено некорректное значение")]))
+            
+            return .init(rules: rules)
+        }
     }
 
     func validateCompanyNameParameter() -> Payments.Validation.RulesSystem {
