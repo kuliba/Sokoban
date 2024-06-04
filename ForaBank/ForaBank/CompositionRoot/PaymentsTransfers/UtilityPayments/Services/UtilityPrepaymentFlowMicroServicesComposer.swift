@@ -27,7 +27,7 @@ final class UtilityPrepaymentFlowMicroServicesComposer {
     }
     
     typealias Flag = StubbedFeatureFlag
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, Service>
+    typealias NanoServices = UtilityPaymentNanoServices
     typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, Service>
     
     typealias LegacyPayload = PrepaymentEffect.LegacyPaymentPayload
@@ -247,7 +247,7 @@ private extension AnywayPaymentDomain.AnywayPayment {
     }
 }
 
-private extension UtilityPrepaymentFlowEvent.StartPaymentFailure {
+private extension UtilityPrepaymentFlowEvent.StartPaymentFailure where Operator == UtilityPaymentOperator{
     
     init(
         _ error: NanoServices.StartAnywayPaymentFailure
@@ -267,5 +267,5 @@ private extension UtilityPrepaymentFlowEvent.StartPaymentFailure {
         }
     }
     
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, Service>
+    typealias NanoServices = UtilityPaymentNanoServices
 }
