@@ -54,13 +54,14 @@ public extension PrepaymentPickerReducer {
     typealias Effect = PrepaymentPickerEffect<Operator.ID>
 }
 
-private extension PrepaymentPickerState {
+private extension PrepaymentPickerState where Operator: Identifiable {
     
     mutating func append(
         _ operators: [Operator]
     ) {
-        let operators = self.operators + operators
-        self.operators = operators
+        let existingIDs = Set(self.operators.map(\.id))
+        let operators = operators.filter { !existingIDs.contains($0.id) }
+        self.operators += operators
     }
     
     mutating func replace(

@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
-final class UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService> {
+final class UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, Service> {
     
     private let microServices: MicroServices
     
@@ -22,8 +22,8 @@ extension UtilityPrepaymentFlowEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case .initiate:
-            microServices.initiateUtilityPayment {
+        case let .initiate(payload):
+            microServices.initiateUtilityPayment(payload) {
                 
                 dispatch(.initiated($0))
             }
@@ -31,7 +31,7 @@ extension UtilityPrepaymentFlowEffectHandler {
         case let .startPayment(with: select):
             microServices.startPayment(select) {
                 
-                dispatch(.paymentStarted(.init(select: select, result: $0)))
+                dispatch(.paymentStarted($0))
             }
         }
     }
@@ -39,10 +39,10 @@ extension UtilityPrepaymentFlowEffectHandler {
 
 extension UtilityPrepaymentFlowEffectHandler {
     
-    typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService>
+    typealias MicroServices = UtilityPrepaymentFlowMicroServices<LastPayment, Operator, Service>
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEffect
+    typealias Event = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>.UtilityPrepaymentFlowEffect
 }

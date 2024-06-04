@@ -1,6 +1,6 @@
 //
 //  ServicePickerView.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 05.05.2024.
 //
@@ -8,37 +8,24 @@
 import Foundation
 import SwiftUI
 
-struct ServicePickerView<LastPayment, Operator, Service>: View
+struct ServicePickerView<Service, ServiceView>: View
 where Service: Identifiable,
-      Service.ID: StringProtocol {
+      ServiceView: View {
     
     let state: State
-    let event: (Event) -> Void
+    let serviceView: (Service) -> ServiceView
     
     var body: some View {
         
         List {
             
-            ForEach(state.services.elements, content: serviceView)
+            ForEach(state, content: serviceView)
         }
-    }
-    
-    private func serviceView(
-        service: Service
-    ) -> some View {
-        
-        Button(String(service.id.prefix(23))) {
-            
-            event(.service(service, for: state.`operator`))
-        }
-        .foregroundColor(service.id.localizedCaseInsensitiveContains("failure") ? .red : .primary)
+        .listStyle(.plain)
     }
 }
 
 extension ServicePickerView {
     
-    typealias PaymentViewModel = ObservingAnywayTransactionViewModel
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, UtilityPrepaymentViewModel, PaymentViewModel>
-    typealias State = UtilityServicePickerFlowState<Operator, Service, PaymentViewModel>.Content
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Service>.UtilityPrepaymentFlowEvent.Select
+    typealias State = [Service]
 }

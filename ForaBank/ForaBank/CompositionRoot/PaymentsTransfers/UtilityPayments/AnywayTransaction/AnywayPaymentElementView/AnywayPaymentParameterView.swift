@@ -26,6 +26,10 @@ struct AnywayPaymentParameterView: View {
 #warning("replace with real components")
             Text("TBD: nonEditable parameter view")
             
+        case .numberInput:
+#warning("replace with specific number input view")
+            factory.makeTextInputView(parameter, { event($0.dynamic.value) })
+            
         case let .select(option, options):
             let selector = try? Selector(option: option, options: options)
             selector.map {

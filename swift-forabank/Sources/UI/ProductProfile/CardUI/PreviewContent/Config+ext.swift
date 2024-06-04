@@ -93,7 +93,8 @@ extension Config.Colors {
         foreground: .white,
         background: Color(red: 0.6, green: 0.6, blue: 0.6),
         rateFill: Color(red: 0.827, green: 0.827, blue: 0.827),
-        rateForeground: Color(red: 0.11, green: 0.11, blue: 0.11)
+        rateForeground: Color(red: 0.11, green: 0.11, blue: 0.11), 
+        number: .white
     )
 }
 

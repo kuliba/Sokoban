@@ -172,4 +172,11 @@ extension PaymentTemplateData {
         
         parameterList.last?.payer?.accountId ?? parameterList.last?.payer?.cardId
     }
+    
+    var sfpPhone: String? {
+        
+        let anywayData = self.parameterList.first as? TransferAnywayData
+        return anywayData?.additional
+         .first(where: { $0.fieldname == Payments.Parameter.Identifier.sfpPhone.rawValue })?.fieldvalue
+    }
 }

@@ -87,17 +87,14 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
     
     func test_map_shouldDeliverResponse() throws {
         
-        try assert(.validData, .init(
-            additional: [],
-            finalStep: false,
-            needMake: false,
-            needOTP: false,
-            needSum: false,
+        try assert(.validData, makeResponse(
             parametersForNextStep: [
                 makeParameter(
                     dataType: .string,
                     id: "1",
                     inputFieldType: .account,
+                    isPrint: true,
+                    isRequired: true,
                     order: 1,
                     regExp: "^.{1,250}$",
                     svgImage: "svgImage",
@@ -128,20 +125,15 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
     
     func test_map_shouldDeliverResponse_e1_sample_step1() throws {
         
-        try assert(string: .e1_sample_step1, .init(
-            additional: [],
-            finalStep: false,
-            needMake: false,
-            needOTP: false,
-            needSum: false,
+        try assert(string: .e1_sample_step1, makeResponse(
             parametersForNextStep: [
                 makeParameter(
                     dataType: .number,
                     id: "1",
                     inputFieldType: .account,
-                    isPrint: false,
+                    isRequired: true,
                     regExp: "^.{1,250}$",
-                    svgImage: nil,
+                    md5hash: "6e17f502dae62b03d8bd4770606ee4b2",
                     title: "Лицевой счет",
                     type: .input,
                     viewType: .input
@@ -150,25 +142,261 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
                     content: "ffc84724-8976-4d37-8af8-be84a4386126",
                     dataType: ._backendReserved,
                     id: "##ID##",
-                    isPrint: false,
-                    isRequired: false,
                     type: .missing,
-                    viewType: .output
+                    viewType: .output,
+                    visible: false
                 ),
                 makeParameter(
                     content: "1",
                     dataType: ._backendReserved,
                     id: "##STEP##",
-                    isPrint: false,
-                    isRequired: false,
                     type: .missing,
-                    viewType: .output
+                    viewType: .output,
+                    visible: false
                 )
             ],
             paymentOperationDetailID: nil
         ))
     }
     
+    func test_map_shouldDeliverResponse_withAdditional() throws {
+        
+        try assert(string: .withAdditional, makeResponse(
+            additional: [
+                makeAdditional(
+                    fieldName: "n1",
+                    fieldValue: "v1",
+                    fieldTitle: "t1"
+                ),
+                makeAdditional(
+                    fieldName: "n2",
+                    fieldValue: "v2",
+                    fieldTitle: "t2",
+                    md5Hash: "md5hash2"
+                ),
+                makeAdditional(
+                    fieldName: "n3",
+                    fieldValue: "v3",
+                    fieldTitle: "t3",
+                    svgImage: "svgImage3"
+                ),
+                makeAdditional(
+                    fieldName: "n4",
+                    fieldValue: "v4",
+                    fieldTitle: "t4",
+                    md5Hash: "md5hash4",
+                    svgImage: "svgImage4"
+                ),
+            ],
+            needOTP: true
+        ))
+    }
+    
+    func test_map_shouldDeliverResponse_multiSum() throws {
+        
+        try assert(string: .multiSum, makeResponse(
+            additional: [
+                makeAdditional(
+                    fieldName: "4",
+                    fieldValue: "МОСКВА,АМУРСКАЯ УЛ.,2А К2,108",
+                    fieldTitle: "Адрес",
+                    md5Hash: "87f2fad4a6997e1d3ae634c551c50f14"
+                ),
+                makeAdditional(
+                    fieldName: "8",
+                    fieldValue: "253.650",
+                    fieldTitle: "ПРЕД. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504"
+                ),
+            ],
+            parametersForNextStep: [
+                makeParameter(
+                    content:  "042024",
+                    dataType: .string,
+                    id: "5",
+                    regExp: "^.{1,250}$",
+                    title: "Период(ММГГГГ)",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "9",
+                    regExp: "^.{1,250}$",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "13",
+                    regExp: "^.{1,250}$",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "17",
+                    regExp: "^.{1,250}$",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "21",
+                    regExp: "^.{1,250}$",
+                    title: "ТЕК. ПОКАЗАНИЯ ХВС №1012018234307",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "25",
+                    regExp: "^.{1,250}$",
+                    title: "ТЕК. ПОКАЗАНИЯ ХВ_ГВС №1012018015708",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "29",
+                    inputFieldType: .counter,
+                    regExp: "^.{1,250}$",
+                    md5hash: "017e8b24ab276b57bd7be847905eeb4a",
+                    title: "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: "4273.87",
+                    dataType: .number,
+                    id: "65",
+                    rawLength: 2,
+                    regExp: "^.{1,250}$",
+                    title: "УСЛУГИ_ЖКУ",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: "0.00",
+                    dataType: .number,
+                    id: "143",
+                    inputFieldType: .penalty,
+                    rawLength: 2,
+                    regExp: "^.{1,250}$",
+                    md5hash: "4e14d4a92a2286786b4daa8ec0e9d4a3",
+                    title: "Сумма пени",
+                    type: .input,
+                    viewType: .input
+                ),
+            ],
+            options: [.multiSum]
+        ))
+    }
+    
+    func test_map_shouldDeliverResponseWithImages() throws {
+        
+        try assert(string: .withImages, makeResponse(
+            parametersForNextStep: [
+                makeParameter(
+                    content:  "042024",
+                    dataType: .string,
+                    id: "5",
+                    regExp: "^.{1,250}$",
+                    title: "Период(ММГГГГ)",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "9",
+                    regExp: "^.{1,250}$",
+                    md5hash: "md5hash",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "13",
+                    regExp: "^.{1,250}$",
+                    svgImage: "svgImage",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504",
+                    type: .input,
+                    viewType: .input
+                ),
+                makeParameter(
+                    content: " ",
+                    dataType: .string,
+                    id: "17",
+                    regExp: "^.{1,250}$",
+                    md5hash: "md5hash",
+                    svgImage: "svgImage",
+                    title: "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504",
+                    type: .input,
+                    viewType: .input
+                ),
+            ],
+            options: [.multiSum]
+        ))
+    }
+    
+    func test_map_shouldDeliverResponseOnWithOptions() throws {
+        
+        try assert(string: .withOptions, makeResponse(
+            options: [.multiSum]
+        ))
+    }
+
+    func test_map_shouldDeliverResponseOnWithSumSTrs() throws {
+        
+        try assert(string: .withSumSTrs, makeResponse(
+            additional: [
+                makeAdditional(
+                    fieldName: "SumSTrs", 
+                    fieldValue: "4273.87", 
+                    fieldTitle: "Сумма"
+                )
+            ],
+            amount: 4273.87,
+            needSum: true
+        ))
+    }
+
+
+    func test_map_shouldDeliverResponseOnWithOTP() throws {
+        
+        try assert(string: .withOTP, makeResponse(
+            additional: [
+                makeAdditional(
+                    fieldName: "advisedAmount",
+                    fieldValue: "4136.94",
+                    fieldTitle: "Рекомендованная сумма"
+                )
+            ],
+            amount: 4136.9,
+            currencyAmount: "RUB",
+            currencyPayer: "RUB",
+            debitAmount: 4136.9,
+            fee: 0,
+            finalStep: true,
+            needMake: true,
+            needOTP: true,
+            needSum: false,
+            payeeName: "ЕРЦ УПРАВДОМ: ЖКУ МОСКОВСКАЯ/КАЛУЖСКАЯ ОБЛ., Г. МОСКВА",
+            scenario: .ok
+        ))
+    }
+
     // MARK: - Helpers
     
     private typealias Response = ResponseMapper.CreateAnywayTransferResponse
@@ -216,8 +444,8 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
         id: String,
         inputFieldType: Response.Parameter.InputFieldType? = nil,
         inputMask: String? = nil,
-        isPrint: Bool = true,
-        isRequired: Bool = true,
+        isPrint: Bool = false,
+        isRequired: Bool = false,
         maxLength: Int? = nil,
         mask: String? = nil,
         minLength: Int? = nil,
@@ -228,13 +456,15 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
         regExp: String = "",
         subGroup: String? = nil,
         subTitle: String? = nil,
+        md5hash: String? = nil,
         svgImage: String? = nil,
         title: String = "",
         type: Response.Parameter.FieldType,
-        viewType: Response.Parameter.ViewType
+        viewType: Response.Parameter.ViewType,
+        visible: Bool = true
     ) -> Response.Parameter {
         
-        .init(
+        return .init(
             content: content,
             dataDictionary: dataDictionary,
             dataDictionaryРarent: dataDictionaryРarent,
@@ -255,10 +485,82 @@ final class ResponseMapper_mapCreateAnywayTransferResponseTests: XCTestCase {
             regExp: regExp,
             subGroup: subGroup,
             subTitle: subTitle,
+            md5hash: md5hash,
             svgImage: svgImage,
             title: title,
             type: type,
-            viewType: viewType
+            viewType: viewType,
+            visible: visible
+        )
+    }
+    
+    private func makeAdditional(
+        fieldName: String = UUID().uuidString,
+        fieldValue: String = UUID().uuidString,
+        fieldTitle: String = UUID().uuidString,
+        md5Hash: String? = nil,
+        recycle: Bool = false,
+        svgImage: String? = nil,
+        typeIdParameterList: String? = nil
+    ) -> Response.Additional {
+        
+        return .init(
+            fieldName: fieldName,
+            fieldValue: fieldValue,
+            fieldTitle: fieldTitle,
+            md5Hash: md5Hash,
+            recycle: recycle,
+            svgImage: svgImage,
+            typeIdParameterList: typeIdParameterList
+        )
+    }
+    
+    private func makeResponse(
+        additional: [Response.Additional] = [],
+        amount: Decimal? = nil,
+        creditAmount: Decimal? = nil,
+        currencyAmount: String? = nil,
+        currencyPayee: String? = nil,
+        currencyPayer: String? = nil,
+        currencyRate: Decimal? = nil,
+        debitAmount: Decimal? = nil,
+        documentStatus: Response.DocumentStatus? = nil,
+        fee: Decimal? = nil,
+        finalStep: Bool = false,
+        infoMessage: String? = nil,
+        needMake: Bool = false,
+        needOTP: Bool = false,
+        needSum: Bool = false,
+        parametersForNextStep: [Response.Parameter] = [],
+        paymentOperationDetailID: Int? = nil,
+        payeeName: String? = nil,
+        printFormType: String? = nil,
+        scenario: Response.AntiFraudScenario? = nil,
+        options: [Response.Option] = []
+    ) -> Response {
+        
+        return .init(
+            additional: additional,
+            amount: amount,
+            creditAmount: creditAmount,
+            currencyAmount: currencyAmount,
+            currencyPayee: currencyPayee,
+            currencyPayer: currencyPayer,
+            currencyRate: currencyRate,
+            debitAmount: debitAmount,
+            documentStatus: documentStatus,
+            fee: fee,
+            finalStep: finalStep,
+            infoMessage: infoMessage,
+            needMake: needMake,
+            needOTP: needOTP,
+            needSum: needSum,
+            parametersForNextStep: parametersForNextStep,
+            paymentOperationDetailID: paymentOperationDetailID,
+            payeeName: payeeName,
+            printFormType: printFormType,
+            scenario: scenario,
+            options: options
         )
     }
 }
@@ -309,6 +611,42 @@ private extension String {
     "statusCode": 102,
     "errorMessage": "Возникла техническая ошибка",
     "data": null
+}
+"""
+    
+    static let withAdditional = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "needOTP": true,
+        "additionalList": [
+            {
+                "fieldName": "n1",
+                "fieldValue": "v1",
+                "fieldTitle": "t1"
+            },
+            {
+                "fieldName": "n2",
+                "fieldValue": "v2",
+                "fieldTitle": "t2",
+                "md5hash": "md5hash2"
+            },
+            {
+                "fieldName": "n3",
+                "fieldValue": "v3",
+                "fieldTitle": "t3",
+                "svgImage": "svgImage3"
+            },
+            {
+                "fieldName": "n4",
+                "fieldValue": "v4",
+                "fieldTitle": "t4",
+                "md5hash": "md5hash4",
+                "svgImage": "svgImage4"
+            }
+        ],
+        "parameterListForNextStep": []    }
 }
 """
     
@@ -1339,6 +1677,284 @@ private extension String {
         ],
         "finalStep": true,
         "scenario": "OK"
+    }
+}
+"""
+    
+    static let multiSum = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "additionalList": [
+            {
+                "fieldName": "4",
+                "fieldValue": "МОСКВА,АМУРСКАЯ УЛ.,2А К2,108",
+                "fieldTitle": "Адрес",
+                "md5hash": "87f2fad4a6997e1d3ae634c551c50f14"
+            },
+            {
+                "fieldName": "8",
+                "fieldValue": "253.650",
+                "fieldTitle": "ПРЕД. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504"
+            }
+        ],
+        "parameterListForNextStep": [
+            {
+                "id": "5",
+                "title": "Период(ММГГГГ)",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": "042024",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "9",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "13",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "17",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "21",
+                "title": "ТЕК. ПОКАЗАНИЯ ХВС №1012018234307",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "25",
+                "title": "ТЕК. ПОКАЗАНИЯ ХВ_ГВС №1012018015708",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "29",
+                "title": "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "inputFieldType": "COUNTER",
+                "visible": true,
+                "md5hash": "017e8b24ab276b57bd7be847905eeb4a"
+            },
+            {
+                "id": "65",
+                "title": "УСЛУГИ_ЖКУ",
+                "viewType": "INPUT",
+                "dataType": "%Numeric",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 2,
+                "isRequired": false,
+                "content": "4273.87",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "143",
+                "title": "Сумма пени",
+                "viewType": "INPUT",
+                "dataType": "%Numeric",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 2,
+                "isRequired": false,
+                "content": "0.00",
+                "readOnly": false,
+                "inputFieldType": "PENALTY",
+                "visible": true,
+                "md5hash": "4e14d4a92a2286786b4daa8ec0e9d4a3"
+            }
+        ],
+        "options": [
+            "MULTI_SUM"
+        ]
+    }
+}
+"""
+    
+    static let withOptions = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "additionalList": [],
+        "parameterListForNextStep": [],
+        "options": [
+            "MULTI_SUM"
+        ]
+    }
+}
+"""
+
+    static let withSumSTrs = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "amount": 4273.87,
+        "needSum": true,
+        "additionalList": [
+            {
+                "fieldName": "SumSTrs",
+                "fieldValue": "4273.87",
+                "fieldTitle": "Сумма"
+            }
+        ],
+        "parameterListForNextStep": []
+    }
+}
+"""
+    
+    static let withOTP = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "needMake": true,
+    "needOTP": true,
+    "amount": 4136.9,
+    "fee": 0,
+    "currencyAmount": "RUB",
+    "currencyPayer": "RUB",
+    "debitAmount": 4136.9,
+    "payeeName": "ЕРЦ УПРАВДОМ: ЖКУ МОСКОВСКАЯ/КАЛУЖСКАЯ ОБЛ., Г. МОСКВА",
+    "additionalList": [
+      {
+        "fieldName": "advisedAmount",
+        "fieldValue": "4136.94",
+        "fieldTitle": "Рекомендованная сумма"
+      }
+    ],
+    "finalStep": true,
+    "scenario": "OK"
+  }
+}
+"""
+    
+    static let withImages = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "additionalList": [],
+        "parameterListForNextStep": [
+            {
+                "id": "5",
+                "title": "Период(ММГГГГ)",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": "042024",
+                "readOnly": false,
+                "visible": true
+            },
+            {
+                "id": "9",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-НОЧЬ №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true,
+                "md5hash": "md5hash"
+            },
+            {
+                "id": "13",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПИК №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true,
+                "svgImage": "svgImage"
+            },
+            {
+                "id": "17",
+                "title": "ТЕК. ПОКАЗАНИЯ ЭЛЕКТРОЭНЕРГИЯ-ПОЛУПИК №11696183741504",
+                "viewType": "INPUT",
+                "dataType": "%String",
+                "type": "Input",
+                "regExp": "^.{1,250}$",
+                "rawLength": 0,
+                "isRequired": false,
+                "content": " ",
+                "readOnly": false,
+                "visible": true,
+                "md5hash": "md5hash",
+                "svgImage": "svgImage"
+            }
+        ],
+        "options": [
+            "MULTI_SUM"
+        ]
     }
 }
 """

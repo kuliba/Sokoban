@@ -7,6 +7,7 @@
 
 import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
+import ForaTools
 
 final class UtilityPrepaymentMicroServicesComposer<Operator>
 where Operator: Identifiable {
@@ -39,19 +40,42 @@ extension UtilityPrepaymentMicroServicesComposer {
 
 private extension UtilityPrepaymentMicroServicesComposer {
     
-#warning("TODO: throttle & remove duplicates")
     func paginate(
         payload: PaginatePayload<Operator.ID>,
         completion: @escaping ([Operator]) -> Void
     ) {
-        nanoServices.loadOperators(.init(afterOperatorID: payload.operatorID, searchText: payload.searchText, pageSize: pageSize), completion)
+        let duplicatesRemover = DuplicatesRemover()
+        let decorated = duplicatesRemover(nanoServices.loadOperators)
+        
+        let throttler = ThrottleDecorator(delay: 0.3)
+        
+        let payload = Payload(
+            afterOperatorID: payload.operatorID,
+            searchText: payload.searchText,
+            pageSize: pageSize
+        )
+        
+        throttler { decorated(payload, completion) }
     }
     
-#warning("TODO: debounce & remove duplicates")
     func search(
         searchText: String,
         completion: @escaping ([Operator]) -> Void
     ) {
-        nanoServices.loadOperators(.init(afterOperatorID: nil, searchText: searchText, pageSize: pageSize), completion)
+        let duplicatesRemover = DuplicatesRemover()
+        let decorated = duplicatesRemover(nanoServices.loadOperators)
+
+        let debouncer = DebounceDecorator(delay: 0.3)
+
+        let payload = Payload(
+            afterOperatorID: nil,
+            searchText: searchText,
+            pageSize: pageSize
+        )
+        
+        debouncer { decorated(payload, completion) }
     }
+    
+    typealias Payload = NanoServices.LoadOperatorsPayload
+    typealias DuplicatesRemover = RemoveDuplicatesDecorator<Payload, [Operator]>
 }

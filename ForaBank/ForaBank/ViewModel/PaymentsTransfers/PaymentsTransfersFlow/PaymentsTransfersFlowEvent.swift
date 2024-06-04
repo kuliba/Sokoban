@@ -5,13 +5,10 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
-enum PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService> {
+enum PaymentsTransfersFlowEvent<LastPayment, Operator, Service> {
     
-    case addCompany
-    case dismissDestination
-    case dismissFullScreenCover
-    case dismissModal
-    case goToMain
+    case dismiss(Dismiss)
+    case outside(Outside)
     case paymentButtonTapped(PaymentButton)
     case setModal(to: Modal)
     case utilityFlow(UtilityFlowEvent)
@@ -19,15 +16,32 @@ enum PaymentsTransfersFlowEvent<LastPayment, Operator, UtilityService> {
 
 extension PaymentsTransfersFlowEvent {
     
-    #warning("make `Modal` generic")
-    typealias Modal = PaymentsTransfersViewModel.Modal
-    
-    enum PaymentButton: Equatable {
+    enum Dismiss {
         
-        case utilityService
+        case destination
+        case fullScreenCover
+        case modal
     }
     
-    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
+    typealias Modal = PaymentsTransfersViewModel.Modal
+    
+    enum Outside {
+        
+        case addCompany
+        case goToMain
+    }
+    
+    enum PaymentButton {
+        
+        case utilityService(LegacyPaymentPayload)
+    }
+    
+    typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
 }
 
-//extension PaymentsTransfersFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
+extension PaymentsTransfersFlowEvent.PaymentButton {
+    
+    typealias LegacyPaymentPayload = PrepaymentEffect.LegacyPaymentPayload
+    typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
+}

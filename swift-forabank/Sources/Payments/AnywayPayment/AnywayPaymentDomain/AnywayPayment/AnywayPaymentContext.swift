@@ -12,14 +12,17 @@ public struct AnywayPaymentContext: Equatable {
     public let payment: AnywayPayment
     public let staged: AnywayPaymentStaged
     public let outline: AnywayPaymentOutline
+    public var shouldRestart: Bool
     
     public init(
         payment: AnywayPayment,
         staged: AnywayPaymentStaged,
-        outline: AnywayPaymentOutline
+        outline: AnywayPaymentOutline,
+        shouldRestart: Bool
     ) {
         self.payment = payment
         self.staged = staged
         self.outline = outline
+        self.shouldRestart = shouldRestart
     }
 }

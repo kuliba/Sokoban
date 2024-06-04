@@ -62,15 +62,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         assertState(.setValue(value, for: parameterID), on: state) {
             
-            let parameter = AnywayPayment.Element.Parameter(
-                field: .init(
-                    id: .init(parameterID.rawValue),
-                    value: .init(value)
-                ),
-                masking: parameter.masking,
-                validation: parameter.validation,
-                uiAttributes: parameter.uiAttributes
-            )
+            let parameter = parameter.updating(value: value)
             $0.elements = [.parameter(parameter)]
         }
     }

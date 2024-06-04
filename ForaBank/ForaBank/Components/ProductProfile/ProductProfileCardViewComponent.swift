@@ -587,6 +587,8 @@ extension ProductProfileCardView {
     
     struct SelectorView: View {
         
+        @State var offset: CGPoint = .zero
+
         @ObservedObject var viewModel: ProductProfileCardView.ViewModel.SelectorViewModel
         
         var body: some View {
@@ -606,12 +608,17 @@ extension ProductProfileCardView {
                                 isSelected: viewModel.selected == thumbnail.id,
                                 selectionAvailable: viewModel.groupingCards.selectionAvailable(thumbnail.id)
                             )
+                                .id(thumbnail.id)
                                 .scrollId(thumbnail.id)
                         }
                         
                         ProductProfileCardView.MoreButtonView(viewModel: viewModel.moreButton)
                     }
                     .padding(.horizontal, UIScreen.main.bounds.size.width / 2 - viewModel.productSize.width + viewModel.productSize.width / 2)
+                    .onReceive(proxy.offset) {
+                        self.offset = $0
+                    }
+                    .offset(x: offset.x)
                     .onReceive(viewModel.$selected) { selected in
                         proxy.scrollTo(selected, alignment: .center, animated: true)
                     }
