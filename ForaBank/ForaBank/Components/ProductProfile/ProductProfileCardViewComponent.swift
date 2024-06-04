@@ -423,6 +423,10 @@ extension ProductProfileCardView.ViewModel {
         let spacing: CGFloat = 8
         var groupingCards: Array.Products = [:]
         var itemsID: [ProductData.ID] = []
+        
+        var withOutOffset: Bool {
+            groupingCards.isEmpty || (groupingCards.values.first(where: { $0.count > 1 } ) != nil)
+        }
 
         @Published var thumbnails: [ThumbnailViewModel]
         @Published var selected: ThumbnailViewModel.ID
@@ -618,7 +622,7 @@ extension ProductProfileCardView {
                     .onReceive(proxy.offset) {
                         self.offset = $0
                     }
-                    .offset(x: offset.x)
+                    .modifier(OffsetModifier(offset: offset.x, withOutOffset: viewModel.withOutOffset))
                     .onReceive(viewModel.$selected) { selected in
                         proxy.scrollTo(selected, alignment: .center, animated: true)
                     }
@@ -629,6 +633,23 @@ extension ProductProfileCardView {
                         }
                     }
                 }
+            }
+        }
+    }
+    
+    private struct OffsetModifier: ViewModifier {
+        
+        let offset: CGFloat
+        let withOutOffset: Bool
+        
+        func body(content: Content) -> some View {
+            
+            if withOutOffset {
+                content
+            }
+            else {
+                content
+                .offset(x: offset)
             }
         }
     }

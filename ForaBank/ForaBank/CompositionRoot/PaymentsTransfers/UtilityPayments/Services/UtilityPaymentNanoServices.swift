@@ -10,7 +10,7 @@ import ForaTools
 import OperatorsListComponents
 import RemoteServices
 
-struct UtilityPaymentNanoServices<LastPayment, Operator, Service> {
+struct UtilityPaymentNanoServices {
     
     /// `c`
     /// Получение последних платежей по ЖКХ
@@ -58,7 +58,7 @@ extension UtilityPaymentNanoServices {
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
     typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
     
-    enum StartAnywayPaymentPayload {
+    enum StartAnywayPaymentPayload: Equatable {
         
         case lastPayment(LastPayment)
         case service(Service, for: Operator)
@@ -96,6 +96,8 @@ extension UtilityPaymentNanoServices {
     typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, Service>
     
     typealias MakeAnywayPaymentOutline = (LastPayment?) -> AnywayPaymentOutline
+    
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
 }
-
-extension UtilityPaymentNanoServices.StartAnywayPaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}

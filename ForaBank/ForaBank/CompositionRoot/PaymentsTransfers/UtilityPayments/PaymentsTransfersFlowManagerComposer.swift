@@ -96,7 +96,7 @@ private extension PaymentsTransfersFlowManagerComposer {
     ) -> PrepaymentFlowEffectHandler {
         
         let nanoComposer = UtilityPaymentNanoServicesComposer(
-            flag: composerFlag,
+            flag: flag,
             model: model,
             httpClient: httpClient,
             log: log,
@@ -112,19 +112,6 @@ private extension PaymentsTransfersFlowManagerComposer {
     }
     
     typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, Service>
-    
-    private var composerFlag: ComposerFlag {
-        
-        switch flag.rawValue {
-        case .active(.live):
-            return .live
-            
-        case .inactive, .active(.stub):
-            return .stub(stub)
-        }
-    }
-    
-    typealias ComposerFlag = UtilityPaymentNanoServicesComposer.Flag
     
     private func loadOperators(
         _ completion: @escaping ([Operator]) -> Void
@@ -244,83 +231,5 @@ private extension PaymentsTransfersFlowManagerComposer {
         )
         
         return composer.compose(initialState: initialState)
-    }
-}
-
-// MARK: - Stubs
-
-private extension PaymentsTransfersFlowManagerComposer {
-    
-    func stub(
-        payload: ComposerFlag.Payload
-    ) -> ComposerFlag.StartPaymentResult {
-        
-        switch payload {
-        case let .lastPayment(lastPayment):
-            switch lastPayment.id {
-            case "failure":
-                return .failure(.serviceFailure(.connectivityError))
-                
-            default:
-                return .success(.startPayment(.preview))
-            }
-            
-        case let .service(service, _):
-            switch service.id {
-            case "failure":
-                return .failure(.serviceFailure(.serverError("Server Failure")))
-                
-            default:
-                return .success(.startPayment(.preview))
-            }
-        }
-    }
-}
-
-private extension AnywayTransactionState {
-    
-    static var preview: Self {
-        
-        return .init(payment: .preview, isValid: true)
-    }
-}
-
-private extension AnywayPaymentContext {
-    
-    static var preview: Self {
-        
-        return .init(payment: .preview, staged: [], outline: .preview, shouldRestart: false)
-    }
-}
-
-private extension AnywayPaymentDomain.AnywayPayment {
-    
-    static var preview: Self {
-        
-        return .init(elements: [], infoMessage: nil, isFinalStep: false, isFraudSuspected: false, puref: "")
-    }
-}
-
-private extension AnywayPaymentOutline {
-    
-    static var preview: Self {
-        
-        return .init(core: .preview, fields: [:])
-    }
-}
-
-private extension AnywayPaymentOutline.PaymentCore {
-    
-    static var preview: Self {
-        
-        return .init(amount: 0, currency: "RUB", productID: 1, productType: .account)
-    }
-}
-
-private extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
-    
-    static var preview: Self {
-        
-        return .init(additional: [], finalStep: false, needMake: false, needOTP: false, needSum: false, parametersForNextStep: [], options: [])
     }
 }
