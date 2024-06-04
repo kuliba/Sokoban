@@ -13,12 +13,14 @@ import Foundation
 public final class RxMappingViewModel<ItemModel, Item, Event, Effect>: ObservableObject
 where Item: Identifiable {
     
-    @Published var state: [Item]
+    /// The current state of mapped item models.
+    @Published public private(set) var state: [ItemModel]
     
     private let map: Map
-    private var _models: [Item.ID: ItemModel]
+    private var modelsCache: [Item.ID: ItemModel]
     
     private let observable: ObservableViewModel
+    private var cancellables = Set<AnyCancellable>()
     
     /// Initializes a new instance of `RxMappingViewModel`.
     ///
@@ -31,34 +33,21 @@ where Item: Identifiable {
         map: @escaping Map,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
-        self.state = observable.state
+        let pairs = observable.state.map { ($0.id, map($0)) }
+        self.state = pairs.map(\.1)
         self.observable = observable
         self.map = map
-        self._models = .init(uniqueKeysWithValues: observable.state.map { ($0.id, map($0)) })
+        self.modelsCache = .init(uniqueKeysWithValues: pairs)
         
         observable.$state
             .dropFirst()
             .receive(on: scheduler)
-            .assign(to: &$state)
+            .sink { [weak self] in self?.update(with: $0) }
+            .store(in: &cancellables)
     }
 }
 
 public extension RxMappingViewModel {
-    
-    /// The computed models derived from the current state using the mapping function.
-    var models: [ItemModel] {
-        
-        state.map {
-            
-            if let tModel = _models[$0.id] {
-                return tModel
-            } else {
-                let tModel = map($0)
-                _models[$0.id] = tModel
-                return tModel
-            }
-        }
-    }
     
     /// Sends an event to the underlying observable view model.
     ///
@@ -75,4 +64,26 @@ public extension RxMappingViewModel {
     typealias ObservableViewModel = RxViewModel<[Item], Event, Effect>
     /// A typealias representing a mapping function that converts items of type `Item` to models of type `ItemModel`.
     typealias Map = (Item) -> ItemModel
+}
+
+private extension RxMappingViewModel {
+    
+    /// Updates the state with new items.
+    ///
+    /// - Parameter items: The new items to update the state with.
+    func update(with items: [Item]) {
+        
+        // TODO: remove unused models from `_models`
+        
+        state = items.map {
+            
+            if let model = modelsCache[$0.id] {
+                return model
+            } else {
+                let model = map($0)
+                modelsCache[$0.id] = model
+                return model
+            }
+        }
+    }
 }

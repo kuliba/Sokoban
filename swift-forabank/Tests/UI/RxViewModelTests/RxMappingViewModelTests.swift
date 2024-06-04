@@ -5,51 +5,79 @@
 //  Created by Igor Malyarov on 14.01.2024.
 //
 
-@testable import RxViewModel
+import RxViewModel
 import XCTest
 
 final class RxMappingViewModelTests: XCTestCase {
     
     func test_init_shouldSetInitialState() {
         
-        let (sut, stateSpy) = makeSUT(
-            initialState: [.init(value: 1)],
-            stub: ([.init(value: 2)], nil)
+        let (_, spy) = makeSUT(
+            initialState: [.init(id: "a", value: 1)],
+            stub: ([], nil)
         )
         
-        XCTAssertNoDiff(stateSpy.values, [[1]])
-        XCTAssertNoDiff(sut.models.map(\.value), ["1"])
+        XCTAssertNoDiff(spy.values, [[.init(id: "a", value: 1)]])
     }
     
-    func test_event_shouldDeliverStateChange() {
+    func test_event_shouldAppendNew() {
         
-        let (sut, stateSpy) = makeSUT(
-            initialState: [.init(value: 1)],
-            stub: ([.init(value: 2), .init(value: 3)], nil)
+        let (sut, spy) = makeSUT(
+            initialState: [.init(id: "a", value: 1)],
+            stub: ([.init(id: "a", value: 1), .init(id: "b", value: 3)], nil)
         )
         
         sut.event(.changeValueTo("abc"))
         
-        XCTAssertNoDiff(stateSpy.values, [[1], [2, 3]])
-        XCTAssertNoDiff(sut.models.map(\.value), ["2", "3"])
+        XCTAssertNoDiff(spy.values, [
+            [.init(id: "a", value: 1)],
+            [.init(id: "a", value: 1), .init(id: "b", value: 3)]
+        ])
+    }
+    
+    func test_event_shouldNotChangeStateForExistingID() {
+        
+        let (sut, spy) = makeSUT(
+            initialState: [.init(id: "a", value: 1)],
+            stub: ([.init(id: "a", value: 2)], nil)
+        )
+        
+        sut.event(.changeValueTo("abc"))
+        
+        XCTAssertNoDiff(spy.values, [
+            [.init(id: "a", value: 1)],
+            [.init(id: "a", value: 1)]
+        ])
+    }
+    
+    func test_event_shouldPreserveIdentityOfExisting() throws {
+        
+        let (sut, _) = makeSUT(
+            initialState: [.init(id: "a", value: 1)],
+            stub: ([.init(id: "a", value: 2), .init(id: "b", value: 3)], nil)
+        )
+        let first = try XCTUnwrap(sut.state.first)
+        
+        sut.event(.changeValueTo("abc"))
+        
+        XCTAssertTrue(sut.state.first?.model === first.model)
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = RxMappingViewModel<Model, Item, Event, Effect>
-    private typealias StateSpy = ValueSpy<[Int]> // ValueSpy<[State]>
+    private typealias SUT = RxMappingViewModel<ItemModel, Item, Event, Effect>
+    private typealias Spy = ValueSpy<[Item]>
     private typealias ReduceSpy = ReducerSpy<[Item], Event, Effect>
     private typealias EffectHandleSpy = EffectHandlerSpy<Event, Effect>
     
     private func makeSUT(
         initialState: [Item] = [],
         stub: ([Item], Effect?)...,
-        observe: @escaping (Item, Item) -> Void = { _,_ in },
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        stateSpy: StateSpy
+        spy: Spy
     ) {
         let reducer = ReduceSpy(stub: stub)
         let effectHandler = EffectHandleSpy()
@@ -61,29 +89,35 @@ final class RxMappingViewModelTests: XCTestCase {
         )
         let sut = SUT(
             observable: observable,
-            map: { .init(value: "\($0.value)") },
+            map: { .init(model: .init(item: $0)) },
             scheduler: .immediate
         )
-        let stateSpy = ValueSpy(sut.$state.map { $0.map(\.value) })
+        let spy = ValueSpy(sut.$state.map { $0.map(\.model.item) })
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(stateSpy, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
         
-        return (sut, stateSpy)
+        return (sut, spy)
     }
     
     private struct Item: Equatable, Identifiable {
         
+        let id: String
         let value: Int
-        
-        var id: Int { value }
     }
     
-    private struct Model: Equatable, Identifiable {
+    private final class Model: ObservableObject {
         
-        let value: String
+        var item: Item
         
-        var id: String { value }
+        init(item: Item) { self.item = item }
+    }
+    
+    private struct ItemModel {
+        
+        let model: Model
+        
+        var id: Item.ID { model.item.id }
     }
     
     private enum Event: Equatable {
