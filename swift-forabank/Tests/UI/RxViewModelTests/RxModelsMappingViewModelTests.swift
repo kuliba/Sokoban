@@ -1,5 +1,5 @@
 //
-//  RxMappingViewModelTests.swift
+//  RxModelsMappingViewModelTests.swift
 //
 //
 //  Created by Igor Malyarov on 14.01.2024.
@@ -8,7 +8,7 @@
 import RxViewModel
 import XCTest
 
-final class RxMappingViewModelTests: XCTestCase {
+final class RxModelsMappingViewModelTests: XCTestCase {
     
     func test_init_shouldSetInitialState() {
         
@@ -65,7 +65,7 @@ final class RxMappingViewModelTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = RxMappingViewModel<ItemModel, Item, Event, Effect>
+    private typealias SUT = RxModelsMappingViewModel<ItemModel, Item, Event, Effect>
     private typealias Spy = ValueSpy<[Item]>
     private typealias ReduceSpy = ReducerSpy<[Item], Event, Effect>
     private typealias EffectHandleSpy = EffectHandlerSpy<Event, Effect>
