@@ -391,6 +391,18 @@ extension OperationDetailData {
         )
     }
     
+    var payerGeneralTransferData: TransferData.Payer {
+    
+        return .init(
+            inn: nil,
+            accountId: payerCardId == nil ? payerAccountId : nil,
+            accountNumber: nil,
+            cardId: payerCardId,
+            cardNumber: nil,
+            phoneNumber: nil
+        )
+    }
+    
     var payeeExternal: TransferGeneralData.PayeeExternal? {
         
         guard let payeeAccountNumber,
@@ -399,7 +411,7 @@ extension OperationDetailData {
         }
         
         return .init(
-            inn: payeeINN,
+            inn: payeeINN == "" ? nil : payeeINN,
             kpp: payeeKPP,
             accountId: payeeAccountId,
             accountNumber: payeeAccountNumber,
@@ -481,9 +493,10 @@ extension OperationDetailData {
 extension OperationDetailData {
     
     static func stub(
-        cardId: Int? = 1,
+        payerCardId: Int? = nil,
+        payerAccountId: Int = 10,
         amount: Double = 100,
-        paymentTemplateId: Int? = 1,
+        paymentTemplateId: Int? = nil,
         transferEnum: OperationDetailData.TransferEnum? = .accountClose,
         payeeFullName: String? = nil,
         payeePhone: String? = nil,
@@ -526,11 +539,11 @@ extension OperationDetailData {
             payeeMiddleName: nil,
             payeePhone: payeePhone,
             payeeSurName: nil,
-            payerAccountId: 10,
+            payerAccountId: payerAccountId,
             payerAccountNumber: "payerAccountNumber",
             payerAddress: "",
             payerAmount: 11,
-            payerCardId: cardId,
+            payerCardId: payerCardId,
             payerCardNumber: "payerCardNumber",
             payerCurrency: "",
             payerDocument: nil,

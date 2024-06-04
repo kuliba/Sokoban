@@ -24,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         qrResolverFeatureFlag: .init(.active),
         fastPaymentsSettingsFlag: .init(.active(.live)),
         utilitiesPaymentsFlag: .init(.inactive),
-        updateInfoStatusFlag: .init(.inactive)
+        updateInfoStatusFlag: .init(.active)
     )
     private lazy var rootViewFactory = RootViewFactoryComposer(model: model).compose()
 

@@ -126,17 +126,20 @@ public extension Config {
         let background: Color
         let rateFill: Color
         let rateForeground: Color
+        let number: Color
         
         public init(
             foreground: Color,
             background: Color,
             rateFill: Color,
-            rateForeground: Color
+            rateForeground: Color,
+            number: Color
         ) {
             self.foreground = foreground
             self.background = background
             self.rateFill = rateFill
             self.rateForeground = rateForeground
+            self.number = number
         }
     }
     
