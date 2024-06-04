@@ -27,6 +27,10 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
         self.microServices = microServices
         self.makeTransactionViewModel = makeTransactionViewModel
     }
+    
+    typealias MicroServices = PrepaymentPickerMicroServices<Operator>
+    
+    typealias MakeTransactionViewModel = (AnywayTransactionState) -> AnywayTransactionViewModel
 }
 
 extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -39,15 +43,11 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
             makePaymentsViewModel: makePayByInstructionsViewModel
         )
     }
+    
+    typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, UtilityPaymentViewModel>
 }
 
 extension PaymentsTransfersFlowReducerFactoryComposer {
-    
-    typealias MicroServices = PrepaymentPickerMicroServices<UtilityPaymentOperator>
-    
-    typealias MakeTransactionViewModel = (AnywayTransactionState) -> AnywayTransactionViewModel
-    
-    typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, UtilityPaymentViewModel>
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
