@@ -12,17 +12,21 @@ import Foundation
 
 final class AnywayTransactionEffectHandlerNanoServicesComposer {
     
+    private let flag: Flag
     private let httpClient: HTTPClient
     private let log: Log
     
     init(
+        flag: Flag,
         httpClient: HTTPClient,
         log: @escaping Log
     ) {
+        self.flag = flag
         self.httpClient = httpClient
         self.log = log
     }
     
+    typealias Flag = StubbedFeatureFlag.Option
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
 }
 
@@ -41,11 +45,20 @@ extension AnywayTransactionEffectHandlerNanoServicesComposer {
     typealias NanoServices = AnywayTransactionEffectHandlerNanoServices
 }
 
+// MARK: - InitiatePayment
+
 private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     
+    func initiatePayment() -> InitiatePayment {
+        
+        switch flag {
+        case .live: return initiatePaymentLive()
+        case .stub: return initiatePaymentStub()
+        }
+    }
+    
 #warning("add logging")
-    private func initiatePayment(
-    ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
+    private func initiatePaymentLive() -> InitiatePayment {
         
         let process = ForaBank.NanoServices.makeCreateAnywayTransferNewV2(httpClient, infoNetworkLog)
         
@@ -58,8 +71,35 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
         }
     }
     
-    private func getDetails(
-    ) -> AnywayTransactionEffectHandlerNanoServices.GetDetails {
+    private func initiatePaymentStub() -> InitiatePayment {
+        
+        return { digest, completion in
+            
+            DispatchQueue.main.delay(for: .seconds(1)) {
+                
+                let result = digest.initiatePaymentResultStub
+                self.networkLog(level: .default, message: "Remote Service Initiate Payment Stub Result: \(result)", file: #file, line: #line)
+                completion(result)
+            }
+        }
+    }
+    
+    typealias InitiatePayment = AnywayTransactionEffectHandlerNanoServices.InitiatePayment
+}
+
+// MARK: - GetDetails
+
+private extension AnywayTransactionEffectHandlerNanoServicesComposer {
+    
+    func getDetails() -> GetDetails {
+        
+        switch flag {
+        case .live: return getDetailsLive()
+        case .stub: return getDetailsStub()
+        }
+    }
+    
+    private func getDetailsLive() -> GetDetails {
         
         let createRequest = ForaBank.RequestFactory.createGetOperationDetailByPaymentIDRequest
         let mapResponse = AnywayPaymentBackend.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
@@ -80,8 +120,35 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
         }
     }
     
-    private func makeTransfer(
-    ) -> AnywayTransactionEffectHandlerNanoServices.MakeTransfer {
+    private func getDetailsStub() -> GetDetails {
+        
+        return { payload, completion in
+            
+            DispatchQueue.main.delay(for: .seconds(1)) {
+                
+                let result = payload.getDetailsResultStub
+                self.networkLog(level: .default, message: "Remote Service Get Details Stub Result: \(String(describing: result))", file: #file, line: #line)
+                completion(result)
+            }
+        }
+    }
+    
+    typealias GetDetails = AnywayTransactionEffectHandlerNanoServices.GetDetails
+}
+
+// MARK: - MakeTransfer
+
+private extension AnywayTransactionEffectHandlerNanoServicesComposer {
+    
+    func makeTransfer() -> MakeTransfer {
+        
+        switch flag {
+        case .live: return makeTransferLive()
+        case .stub: return makeTransferStub()
+        }
+    }
+    
+    private func makeTransferLive() -> MakeTransfer {
         
         let createRequest = ForaBank.RequestFactory.createMakeTransferRequest
         let mapResponse = AnywayPaymentBackend.ResponseMapper.mapMakeTransferResponse
@@ -102,8 +169,35 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
         }
     }
     
-    private func processPayment(
-    ) -> AnywayTransactionEffectHandlerNanoServices.InitiatePayment {
+    private func makeTransferStub() -> MakeTransfer {
+        
+        return { code, completion in
+            
+            DispatchQueue.main.delay(for: .seconds(1)) {
+                
+                let result = code.makeTransferResultStub
+                self.networkLog(level: .default, message: "Remote Service Make Transfer Stub Result: \(String(describing: result))", file: #file, line: #line)
+                completion(result)
+            }
+        }
+    }
+    
+    typealias MakeTransfer = AnywayTransactionEffectHandlerNanoServices.MakeTransfer
+}
+
+// MARK: - ProcessPayment
+
+private extension AnywayTransactionEffectHandlerNanoServicesComposer {
+    
+    func processPayment() -> ProcessPayment {
+        
+        switch flag {
+        case .live: return processPaymentLive()
+        case .stub: return processPaymentStub()
+        }
+    }
+    
+    private func processPaymentLive() -> ProcessPayment {
         
         let process = ForaBank.NanoServices.makeCreateAnywayTransferV2(httpClient, infoNetworkLog)
         
@@ -113,7 +207,27 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
         }
     }
     
-    private func networkLog(
+    private func processPaymentStub() -> ProcessPayment {
+        
+        return { digest, completion in
+            
+            DispatchQueue.main.delay(for: .seconds(1)) {
+                
+                let result = digest.processResultStub
+                self.networkLog(level: .default, message: "Remote Service Process Payment Stub Result: \(result) for digest \(digest)", file: #file, line: #line)
+                completion(result)
+            }
+        }
+    }
+    
+    typealias ProcessPayment = AnywayTransactionEffectHandlerNanoServices.ProcessPayment
+}
+
+// MARK: - Log
+
+private extension AnywayTransactionEffectHandlerNanoServicesComposer {
+    
+    func networkLog(
         level: LoggerAgentLevel,
         message: @autoclosure () -> String,
         file: StaticString,
@@ -122,7 +236,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
         log(level, .network, message(), file, line)
     }
     
-    private func infoNetworkLog(
+    func infoNetworkLog(
         message: String,
         file: StaticString,
         line: UInt
@@ -227,4 +341,138 @@ private extension AnywayPaymentDomain.ServiceFailure {
             self = .serverError(message)
         }
     }
+}
+
+// MARK: - Stubs
+
+private extension AnywayPaymentDigest {
+    
+    var initiatePaymentResultStub: ProcessResult {
+        
+        .failure(.connectivityError)
+    }
+    
+    var processResultStub: ProcessResult {
+        
+        if containsAdditional(named: "SumSTrs", withValue: "11") {
+            return .success(.init(.step4))
+        }
+        
+        if containsAdditional(named: "SumSTrs", withValue: "22") {
+            return .success(.init(.step4Fraud))
+        }
+        
+        if core?.amount != nil {
+            return .success(.init(.step3))
+        }
+        
+        if containsAdditional(named: "1", withValue: "1111") {
+            return .success(.init(.step2))
+        }
+        
+        return .failure(.connectivityError)
+    }
+    
+    typealias ProcessResult = AnywayTransactionEffectHandlerNanoServices.ProcessResult
+    
+    private func containsAdditional(
+        named name: String,
+        withValue value: String
+    ) -> Bool {
+        
+        additional.contains {
+            $0.fieldName == name
+            && $0.fieldValue == value
+        }
+    }
+}
+
+private extension OperationDetailID {
+    
+    var getDetailsResultStub: GetDetailsResult {
+        
+        switch self {
+        case 123: return ""
+        default: return nil
+        }
+    }
+    
+    typealias GetDetailsResult = AnywayTransactionEffectHandlerNanoServices.GetDetailsResult
+}
+
+private extension VerificationCode {
+    
+    var makeTransferResultStub: MakeTransferResult {
+        
+        switch rawValue {
+        case "111111": return .g1Completed
+        case "222222": return .g1Inflight
+        case "333333": return .g1Rejected
+        default:       return .none
+        }
+    }
+    
+    typealias MakeTransferResult = AnywayTransactionEffectHandlerNanoServices.MakeTransferResult
+}
+
+private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferResponse {
+    
+    static let g1Completed: Self = .init(status: .completed, detailID: 123)
+    static let g1Inflight:  Self = .init(status: .inflight, detailID: 123)
+    static let g1Rejected:  Self = .init(status: .rejected, detailID: 123)
+}
+
+private extension AnywayPaymentUpdate {
+    
+    static let preview: Self = .init(
+        details: .preview,
+        fields: [],
+        parameters: []
+    )
+}
+
+private extension AnywayPaymentUpdate.Details {
+    
+    static let preview: Self = .init(
+        amounts: .preview,
+        control: .preview,
+        info: .preview
+    )
+}
+
+private extension AnywayPaymentUpdate.Details.Amounts {
+    
+    static let preview: Self = .init(
+        amount: nil,
+        creditAmount: nil,
+        currencyAmount: nil,
+        currencyPayee: nil,
+        currencyPayer: nil,
+        currencyRate: nil,
+        debitAmount: nil,
+        fee: nil
+    )
+}
+
+private extension AnywayPaymentUpdate.Details.Control {
+    
+    static let preview: Self = .init(
+        isFinalStep: false,
+        isFraudSuspected: false,
+        isMultiSum: false,
+        needMake: false,
+        needOTP: false,
+        needSum: false
+    )
+}
+
+private extension AnywayPaymentUpdate.Details.Info {
+    
+    static let preview: Self = .init(
+        documentStatus: nil,
+        infoMessage: nil,
+        payeeName: nil,
+        paymentOperationDetailID: nil,
+        printFormType: nil
+    )
 }
