@@ -42,7 +42,7 @@ struct PaymentWrapperView: View {
                     }
                 )
             },
-            observe: { _, last in print("payment:", last) }
+            observe: { print("payment:\n", $0) }
         )
         
         self._viewModel = .init(wrappedValue: viewModel)
