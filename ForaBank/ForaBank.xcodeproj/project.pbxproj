@@ -1397,6 +1397,7 @@
 		2AFED9862C0FA9C3008F2F95 /* PaymentWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFED9852C0FA9C3008F2F95 /* PaymentWrapperView.swift */; };
 		2AFED9882C1026AB008F2F95 /* CachedPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFED9872C1026AB008F2F95 /* CachedPayment.swift */; };
 		2AFED98A2C1029DE008F2F95 /* RxCachedModelsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFED9892C1029DE008F2F95 /* RxCachedModelsViewModel.swift */; };
+		2AFED98E2C1050C1008F2F95 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFED98D2C1050C1008F2F95 /* CombineSchedulers */; };
 		2AFF5D292A9885210097F429 /* CryptoSwaddler in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFF5D282A9885210097F429 /* CryptoSwaddler */; };
 		50037F7A2934D107009D1F0C /* TransfersInfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50037F792934D107009D1F0C /* TransfersInfoViewComponent.swift */; };
 		50037F7C2934DE56009D1F0C /* TransfersPromoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50037F7B2934DE56009D1F0C /* TransfersPromoViewComponent.swift */; };
@@ -6031,6 +6032,7 @@
 			files = (
 				2AFED9782C0F92FC008F2F95 /* ForaTools in Frameworks */,
 				2AFED9762C0F92F1008F2F95 /* RxViewModel in Frameworks */,
+				2AFED98E2C1050C1008F2F95 /* CombineSchedulers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -15670,6 +15672,7 @@
 			packageProductDependencies = (
 				2AFED9752C0F92F1008F2F95 /* RxViewModel */,
 				2AFED9772C0F92FC008F2F95 /* ForaTools */,
+				2AFED98D2C1050C1008F2F95 /* CombineSchedulers */,
 			);
 			productName = CachedModelsStatePreview;
 			productReference = 2AFED9652C0F929A008F2F95 /* CachedModelsStatePreview.app */;
@@ -23802,6 +23805,11 @@
 		2AFED9772C0F92FC008F2F95 /* ForaTools */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ForaTools;
+		};
+		2AFED98D2C1050C1008F2F95 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
 		};
 		2AFF5D282A9885210097F429 /* CryptoSwaddler */ = {
 			isa = XCSwiftPackageProductDependency;
