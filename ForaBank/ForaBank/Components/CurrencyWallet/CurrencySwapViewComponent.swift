@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Combine
-import Shimmer
+import UIPrimitives
 
 typealias CurrencyOperation = CurrencySwapView.ViewModel.CurrencyOperation
 

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct TemplatesListView: View {
     
@@ -59,7 +60,7 @@ struct TemplatesListView: View {
                                 
                                 PlaceholderItemView(style: .constant(.list))
                                     .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
-                                    .shimmering(duration: 1.5, bounce: true)
+                                    .shimmering(bounce: true)
 
                             } //swich kind
                         }//ForEach
@@ -112,7 +113,7 @@ struct TemplatesListView: View {
                                 case .placeholder:
                                     
                                     PlaceholderItemView(style: .constant(.tiles))
-                                        .shimmering(duration: 1.5, bounce: true)
+                                        .shimmering(bounce: true)
                                     
                                 } //kind swith
                             }
@@ -357,7 +358,7 @@ extension TemplatesListView {
                            
                         RoundedRectangle(cornerRadius: 90)
                             .frame(width: 100, height: 32)
-                            .shimmering(duration: 1.5, bounce: true)
+                            .shimmering(bounce: true)
                     }
                 }
                 .padding(.bottom, 20)
@@ -370,7 +371,7 @@ extension TemplatesListView {
                         RoundedRectangle(cornerRadius: 12)
                             .frame(height: 72)
                             .padding(.bottom, 12)
-                            .shimmering(duration: 1.5, bounce: true)
+                            .shimmering(bounce: true)
                     }
                     
                 case .tiles:
@@ -381,7 +382,7 @@ extension TemplatesListView {
                             
                             RoundedRectangle(cornerRadius: 12)
                                 .frame(height: 188)
-                                .shimmering(duration: 1.5, bounce: true)
+                                .shimmering(bounce: true)
                         }
                     }
                 }

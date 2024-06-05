@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import Shimmer
+import UIPrimitives
 
 struct MyProductsSectionItemView: View {
     
@@ -152,7 +152,7 @@ extension MyProductsSectionItemView {
                         .accessibilityIdentifier("MyProductsProductIconStateImage")
                 }
             }
-//            .shimmering(active: viewModel.isUpdating, bounce: true)
+            .shimmering(active: viewModel.isUpdating, bounce: true)
         }
     }
     
@@ -184,7 +184,7 @@ extension MyProductsSectionItemView {
                             .padding(.trailing, 130)
                     }
                 }
-                .shimmering(duration: 1.5, bounce: true)
+                .shimmering(bounce: true)
             }
             .frame(height: 72)
             .padding(.leading, editMode == .active ? 0 : 12)

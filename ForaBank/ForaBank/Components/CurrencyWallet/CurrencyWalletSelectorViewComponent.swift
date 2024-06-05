@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Combine
-import Shimmer
+import UIPrimitives
 
 typealias CurrencyWalletSelectorViewModel = CurrencyWalletSelectorView.ViewModel
 typealias CurrencyWalletContentViewModel = CurrencyWalletSelectorViewModel.ProductContentViewModel

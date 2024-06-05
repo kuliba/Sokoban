@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
-import Shimmer
+import UIPrimitives
 
 //MARK: - ViewModel
 

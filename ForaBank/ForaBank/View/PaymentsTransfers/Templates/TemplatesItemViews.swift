@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 extension TemplatesListView {
     
@@ -27,7 +28,7 @@ extension TemplatesListView {
                           subTitle: viewModel.subTitle,
                           amount: viewModel.amount,
                           style: style, editMode: $editMode)
-                    .shimmering(active: viewModel.state.isProcessing)
+                    .shimmering(active: viewModel.state.isProcessing, bounce: true)
                     .onTapGesture {
                         if !viewModel.state.isProcessing {
                             viewModel.tapAction(viewModel.id)
@@ -305,7 +306,7 @@ extension TemplatesListView {
                 }
                 .padding(16)
                 .frame(height: 84)
-                .shimmering(active: viewModel.isDisableCancelButton)
+                .shimmering(active: viewModel.isDisableCancelButton, bounce: true)
                 
             case .tiles:
                 
@@ -386,7 +387,7 @@ extension TemplatesListView {
                     Circle()
                         .fill(Color.mainColorsGrayMedium.opacity(0.4))
                         .frame(width: side.main, height: side.main)
-                        .shimmering()
+                        .shimmering(bounce: true)
                 }
                 
                 if let topImage = topImage {

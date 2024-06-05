@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import UIPrimitives
 
 extension LatestPaymentsView {
     
@@ -515,7 +516,7 @@ struct LatestPaymentsView: View {
                         
                     case let .placeholder(placeholderVM):
                         PlaceholderView(viewModel: placeholderVM)
-                            .shimmering(duration: 1.5, bounce: true)
+                            .shimmering(bounce: true)
                     }
                 }
                 
