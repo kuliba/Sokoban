@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import UIPrimitives
 
 //MARK: - Model
 /*
@@ -213,7 +214,7 @@ extension ListHorizontalRoundImageView {
                             Circle()
                                 .foregroundColor(.gray)//.mainColorsGrayMedium.opacity(0.4))
                                 .frame(width: 56, height: 56)
-                                //.shimmering(active: true, bounce: false)
+                                .shimmering()
                         }
                         
                         Text(viewModel.title)

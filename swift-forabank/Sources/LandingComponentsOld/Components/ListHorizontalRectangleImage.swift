@@ -9,6 +9,7 @@
 
 import SwiftUI
 import Combine
+import UIPrimitives
 
 //MARK: - Model
 /*
@@ -165,7 +166,7 @@ extension ListHorizontalRectangleImageView {
                     Color.gray //mainColorsGrayLightest
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .frame(width: 288, height: 124)
-                        //.shimmering(active: true, bounce: false)
+                        .shimmering()
                         
                     
                 case .image(let image):

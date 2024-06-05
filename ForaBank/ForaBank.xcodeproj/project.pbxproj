@@ -2105,7 +2105,6 @@
 		77A76A9627FC475600A271B3 /* PlacesDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A76A9527FC475600A271B3 /* PlacesDetailViewModel.swift */; };
 		77A76A9827FC4BA400A271B3 /* PlacesDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A76A9727FC4BA400A271B3 /* PlacesDetailView.swift */; };
 		77A900F629EFBB060089379F /* PaymentsSelectBankViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A900F529EFBB060089379F /* PaymentsSelectBankViewComponentTests.swift */; };
-		77AC9159277A518B00E49D5D /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 77AC9158277A518B00E49D5D /* Shimmer */; };
 		77AEE67F28FDCD7F001E892B /* ModelStatementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77AEE67E28FDCD7F001E892B /* ModelStatementTests.swift */; };
 		77AEE68128FDCF31001E892B /* HelpersExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77AEE68028FDCF31001E892B /* HelpersExtensions.swift */; };
 		77B243DC2A2F658500CDCEC6 /* UserModel in Frameworks */ = {isa = PBXBuildFile; productRef = 77B243DB2A2F658500CDCEC6 /* UserModel */; };
@@ -6105,7 +6104,6 @@
 			files = (
 				C199807A2B7EB8F500D85C09 /* OperatorsListComponents in Frameworks */,
 				2A06DC2E2AFACAE30049709E /* URLRequestFactory in Frameworks */,
-				77AC9159277A518B00E49D5D /* Shimmer in Frameworks */,
 				68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */,
 				779511A92A6AA15A00A570F8 /* SymmetricEncryption in Frameworks */,
 				2ABD782E2AF90AF4001B5860 /* Fetcher in Frameworks */,
@@ -15861,7 +15859,6 @@
 				0BA2524826C5DB5600AD087A /* RealmSwift */,
 				6833E0AF27322878004C070F /* SkeletonView */,
 				68A40A122771E154007333EA /* FirebaseAnalytics */,
-				77AC9158277A518B00E49D5D /* Shimmer */,
 				0B677289277CCD7500DCCECD /* PhoneNumberKit */,
 				0B67728D277CCD7500DCCECD /* PhoneNumberKit-Static */,
 				7769F5CA27D8CAD100F80607 /* ScrollViewProxy */,
@@ -16078,7 +16075,6 @@
 				684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 				0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */,
 				6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */,
-				77AC9157277A518A00E49D5D /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 				0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
 				7769F5C927D8CAD100F80607 /* XCRemoteSwiftPackageReference "ScrollViewProxy" */,
 				ED374CEA2863C5CC00A97219 /* XCRemoteSwiftPackageReference "Presentation" */,
@@ -21492,7 +21488,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 87;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -21998,7 +21994,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 87;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -22837,7 +22833,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 87;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -22873,7 +22869,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 87;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -23371,14 +23367,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		77AC9157277A518A00E49D5D /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/markiv/SwiftUI-Shimmer";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		836DE2EA2AC72A7B00D4C754 /* XCRemoteSwiftPackageReference "swift-tagged" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-tagged";
@@ -23841,11 +23829,6 @@
 		779511A82A6AA15A00A570F8 /* SymmetricEncryption */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SymmetricEncryption;
-		};
-		77AC9158277A518B00E49D5D /* Shimmer */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 77AC9157277A518A00E49D5D /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */;
-			productName = Shimmer;
 		};
 		77B243DB2A2F658500CDCEC6 /* UserModel */ = {
 			isa = XCSwiftPackageProductDependency;

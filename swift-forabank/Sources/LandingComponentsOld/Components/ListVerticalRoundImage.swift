@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import UIPrimitives
 
 /*
 {
@@ -306,7 +307,7 @@ extension ListVerticalRoundImageView {
                         Circle()
                             .foregroundColor(.gray) //.mainColorsGrayMedium.opacity(0.4))
                             .frame(width: 40, height: 40)
-                            //.shimmering(active: true, bounce: false)
+                            .shimmering()
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
