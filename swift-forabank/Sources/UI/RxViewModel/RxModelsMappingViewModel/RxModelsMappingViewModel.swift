@@ -10,7 +10,7 @@ import Foundation
 
 /// A view model that maps a list of identifiable items to a list of models using a provided mapping function.
 /// It observes changes from an observable view model and updates its state accordingly.
-public final class RxMappingViewModel<ItemModel, Item, Event, Effect>: ObservableObject
+public final class RxModelsMappingViewModel<ItemModel, Item, Event, Effect>: ObservableObject
 where Item: Identifiable {
     
     /// The current state of mapped item models.
@@ -22,7 +22,7 @@ where Item: Identifiable {
     private let observable: ObservableViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    /// Initializes a new instance of `RxMappingViewModel`.
+    /// Initializes a new instance of `RxModelsMappingViewModel`.
     ///
     /// - Parameters:
     ///   - observable: The observable view model that provides the initial state and state updates.
@@ -47,7 +47,7 @@ where Item: Identifiable {
     }
 }
 
-public extension RxMappingViewModel {
+public extension RxModelsMappingViewModel {
     
     /// Sends an event to the underlying observable view model.
     ///
@@ -58,7 +58,7 @@ public extension RxMappingViewModel {
     }
 }
 
-public extension RxMappingViewModel {
+public extension RxModelsMappingViewModel {
     
     /// A typealias representing an observable view model that provides a state, events, and effects.
     typealias ObservableViewModel = RxViewModel<[Item], Event, Effect>
@@ -66,7 +66,7 @@ public extension RxMappingViewModel {
     typealias Map = (Item) -> ItemModel
 }
 
-private extension RxMappingViewModel {
+private extension RxModelsMappingViewModel {
     
     /// Updates the state with new items.
     ///
