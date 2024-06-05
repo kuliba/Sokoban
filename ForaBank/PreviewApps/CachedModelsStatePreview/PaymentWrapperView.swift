@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 04.06.2024.
 //
 
+import RxViewModel
 import SwiftUI
 
 struct PaymentWrapperView: View {
@@ -12,7 +13,7 @@ struct PaymentWrapperView: View {
     @StateObject private var viewModel: ViewModel
     
     init() {
-#warning("add observing to viewModel - i.e. wrap again!!")
+        
         let initialState = Payment(fields: [])
         let reducer = PaymentReducer()
         let source = PaymentViewModel(
@@ -22,7 +23,8 @@ struct PaymentWrapperView: View {
         )
         let viewModel = ViewModel(
             source: source,
-            map: { $0 }
+            map: { $0 },
+            observe: { _, last in print("payment:", last) }
         )
         self._viewModel = .init(wrappedValue: viewModel)
     }
@@ -31,13 +33,10 @@ struct PaymentWrapperView: View {
         
         VStack {
             
-            List {
-                
-                ForEach(viewModel.state.fields, content: fieldView)
-            }
-            
-            footer()
+            list(fields: viewModel.state.fields, update: update(value:of:))
+            footer(description: viewModel.state.description)
         }
+        .toolbar(content: toolbar)
     }
 }
 
@@ -49,8 +48,21 @@ extension PaymentWrapperView {
 
 private extension PaymentWrapperView {
     
+    func list(
+        fields: [Field],
+        update: @escaping (Field.Value, Field) -> Void
+    ) -> some View {
+        
+        List {
+            
+            ForEach(fields) { fieldView(field: $0, update: update) }
+        }
+        .listStyle(.plain)
+    }
+    
     func fieldView(
-        field: Field
+        field: Field,
+        update: @escaping (Field.Value, Field) -> Void
     ) -> some View {
         
         VStack(alignment: .leading) {
@@ -63,39 +75,71 @@ private extension PaymentWrapperView {
                 field.title,
                 text: .init(
                     get: { field.value },
-                    set: { viewModel.event(.set(value: $0, forID: field.id)) }
+                    set: { update($0, field) }
                 )
             )
         }
     }
     
+    func update(
+        value: Field.Value,
+        of field: Field
+    ) {
+        viewModel.event(.set(value: value, forID: field.id))
+    }
+    
     typealias Field = Payment.Field
     
-    func footer() -> some View {
+    @ViewBuilder
+    func footer(
+        description: String
+    ) -> some View {
         
-        VStack {
+        if #available(iOS 15.0, *) {
+            footer(description)
+                .background(.ultraThinMaterial)
+        } else {
+            footer(description)
+                .background(Color.gray.opacity(0.1))
+        }
+    }
+    
+    @ViewBuilder
+    private func footer(
+        _ description: String
+    ) -> some View {
+        
+        if !description.isEmpty {
             
-            Text(viewModel.state.description)
+            Text(description)
                 .foregroundColor(.secondary)
                 .font(.footnote)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-            
-            HStack {
-                
-                Group {
-                    
-                    Text("fields count: \(viewModel.state.fields.count)")
-                        .foregroundColor(.secondary)
-                        .font(.footnote.bold())
-                    
-                    Button("Add field") {
-                        
-                        viewModel.event(.add(.init(id: UUID().uuidString, title: "New field", value: "")))
-                    }
-                }
-                .frame(maxWidth: .infinity)
-            }
+                .padding()
+        }
+    }
+    
+    @ToolbarContentBuilder
+    func toolbar() -> some ToolbarContent {
+        
+        ToolbarItem(placement: .topBarLeading, content: fieldsCountView)
+        ToolbarItem(placement: .topBarTrailing, content: addFieldButton)
+    }
+    
+    func fieldsCountView() -> some View {
+        
+        Text("fields count: \(viewModel.state.fields.count)")
+            .foregroundColor(.secondary)
+            .font(.footnote.bold())
+    }
+    
+    func addFieldButton() -> some View {
+        
+        Button {
+            let newField = Field(id: UUID().uuidString, title: "New field", value: "")
+            viewModel.event(.add(newField))
+        } label: {
+            Label(("Add field"), systemImage: "plus")
         }
     }
 }

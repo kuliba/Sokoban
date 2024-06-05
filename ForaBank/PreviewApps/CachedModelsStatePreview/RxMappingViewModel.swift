@@ -16,19 +16,26 @@ final class RxMappingViewModel<Input, Output, Event, Effect>: ObservableObject {
     
     init(
         source: Source,
-        map: @escaping (Input) -> Output
+        map: @escaping Map,
+        observe: @escaping Observe
     ) {
-        self.state = map(source.state)
+        let initialState = map(source.state)
+        self.state = initialState
         self.source = source
         
         source.$state
             .dropFirst()
             .map(map)
+            .scan((initialState, initialState)) { ($0.1, $1) }
+            .handleEvents(receiveOutput: observe)
+            .map(\.1)
             .assign(to: &$state)
     }
     
     typealias State = Output
     typealias Source = RxViewModel<Input, Event, Effect>
+    typealias Map = (Input) -> Output
+    typealias Observe = (State, State) -> Void
 }
 
 extension RxMappingViewModel {

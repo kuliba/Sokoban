@@ -11,7 +11,11 @@ struct ContentView: View {
     
     var body: some View {
         
-        PaymentWrapperView()
+        NavigationView {
+            
+            PaymentWrapperView()
+                .navigationBarTitleDisplayMode(.inline)
+        }
     }
 }
 
