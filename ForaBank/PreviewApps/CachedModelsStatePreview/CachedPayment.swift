@@ -9,13 +9,33 @@ import ForaTools
 
 struct CachedPayment {
     
-    let state: State
+    let cachedModels: CachedModels
     
-    typealias State = CachedModelsState<Payment.Field.ID, FieldModel>
+    private init(cachedModels: CachedModels) {
+     
+        self.cachedModels = cachedModels
+    }
+    
+    init(pairs: [(Field.ID, FieldModel)]) {
+        
+        self.cachedModels = .init(pairs: pairs)
+    }
+    
+    typealias CachedModels = CachedModelsState<Field.ID, FieldModel>
+    typealias Field = Payment.Field
     typealias FieldModel = InputViewModel
 }
 
 extension CachedPayment {
     
-    var fields: [FieldModel] { state.models }
+    var fields: [FieldModel] { cachedModels.models }
+    
+    func updating(
+        with fields: [Field],
+        using map: @escaping (Field) -> (FieldModel)
+    ) -> Self {
+        
+        let updatedCachedModels = cachedModels.updating(with: fields, using: map)
+        return .init(cachedModels: updatedCachedModels)
+    }
 }
