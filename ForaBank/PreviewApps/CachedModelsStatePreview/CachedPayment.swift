@@ -9,7 +9,7 @@ import ForaTools
 
 struct CachedPayment {
     
-    let cachedModels: CachedModels
+    private let cachedModels: CachedModels
     
     private init(cachedModels: CachedModels) {
      

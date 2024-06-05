@@ -1,5 +1,5 @@
 //
-//  RxCachedModelsViewModel.swift
+//  ObservingCachedPaymentViewModel.swift
 //  CachedModelsStatePreview
 //
 //  Created by Igor Malyarov on 05.06.2024.
@@ -18,7 +18,7 @@ extension AnySchedulerOfDispatchQueue {
     static func makeMain() -> AnySchedulerOfDispatchQueue { .main }
 }
 
-final class CachedPaymentViewModel: ObservableObject {
+final class ObservingCachedPaymentViewModel: ObservableObject {
     
     @Published private(set) var state: State
     
@@ -27,6 +27,7 @@ final class CachedPaymentViewModel: ObservableObject {
     init(
         source: Source,
         map: @escaping Map,
+        observe: @escaping Observe,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         let pairs = source.state.fields.map { ($0.id, map($0)) }
@@ -34,17 +35,21 @@ final class CachedPaymentViewModel: ObservableObject {
         self.state = initialState
         
         source.$state
-            .receive(on: scheduler)
-            .sink { [weak self] payment in
+            .compactMap { [weak self] payment in
                 
-                guard let self else { return }
+                guard let self else { return nil }
                 
-                self.state = self.state.updating(with: payment.fields, using: map)
+                return self.state.updating(with: payment.fields, using: map)
             }
-            .store(in: &cancellables)
+            .scan((initialState, initialState)) { ($0.1, $1) }
+            .handleEvents(receiveOutput: observe)
+            .map(\.1)
+            .receive(on: scheduler)
+            .assign(to: &$state)
     }
     
     typealias State = CachedPayment
     typealias Source = RxViewModel<Payment, PaymentEvent, PaymentEffect>
     typealias Map = (CachedPayment.Field) -> CachedPayment.FieldModel
+    typealias Observe = (State, State) -> Void
 }
