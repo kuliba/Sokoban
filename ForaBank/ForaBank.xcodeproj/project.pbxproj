@@ -15837,6 +15837,7 @@
 				0B5F3DB7277CD16F003CC723 /* Embed Frameworks */,
 				A51568342821B927000D4455 /* Embed App Extensions */,
 				68FE3989286B36EF0026CBD7 /* ShellScript */,
+				2AFED9902C1070E3008F2F95 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -16706,6 +16707,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		2AFED9902C1070E3008F2F95 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# add Settings.bundle for Debug configuration\nif [ \"${CONFIGURATION}\" == \"Debug\" ]; then\n    cp -r \"${PROJECT_DIR}/Settings.bundle\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\"\nfi\n";
+		};
 		68FE3989286B36EF0026CBD7 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
