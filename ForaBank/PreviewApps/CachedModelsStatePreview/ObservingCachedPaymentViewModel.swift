@@ -22,6 +22,7 @@ final class ObservingCachedPaymentViewModel: ObservableObject {
     
     @Published private(set) var state: State
     
+    private let source: Source
     private var cancellables = Set<AnyCancellable>()
     
     init(
@@ -33,6 +34,7 @@ final class ObservingCachedPaymentViewModel: ObservableObject {
         let pairs = source.state.fields.map { ($0.id, map($0)) }
         let initialState = State(pairs: pairs)
         self.state = initialState
+        self.source = source
         
         source.$state
             .compactMap { [weak self] payment in
@@ -49,7 +51,16 @@ final class ObservingCachedPaymentViewModel: ObservableObject {
     }
     
     typealias State = CachedPayment
+    typealias Event = PaymentEvent
     typealias Source = RxViewModel<Payment, PaymentEvent, PaymentEffect>
     typealias Map = (CachedPayment.Field) -> CachedPayment.FieldModel
     typealias Observe = (State, State) -> Void
+}
+
+extension ObservingCachedPaymentViewModel {
+    
+    func event(_ event: Event) {
+        
+        source.event(event)
+    }
 }

@@ -21,11 +21,30 @@ struct PaymentWrapperView: View {
             reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in }
         )
+
         let viewModel = ViewModel(
             source: source,
-            map: { $0 },
+            map: { field in
+                
+                let reducer = InputReducer()
+                let effectHandler = InputEffectHandler()
+                
+                return .init(
+                    initialState: .init(
+                        title: field.title,
+                        text: field.value
+                    ),
+                    reduce: reducer.reduce(_:_:),
+                    handleEffect: effectHandler.handleEffect(_:_:),
+                    observe: {
+                    
+                        source.event(.set(value: $0.text, forID: field.id))
+                    }
+                )
+            },
             observe: { _, last in print("payment:", last) }
         )
+        
         self._viewModel = .init(wrappedValue: viewModel)
     }
     
@@ -42,15 +61,14 @@ struct PaymentWrapperView: View {
 
 extension PaymentWrapperView {
     
-#warning("change second Payment to a type with CachedModelsState as property")
-    typealias ViewModel = RxMappingViewModel<Payment, Payment, PaymentEvent, PaymentEffect>
+    typealias ViewModel = ObservingCachedPaymentViewModel
 }
 
 private extension PaymentWrapperView {
     
     func list(
         fields: [Field],
-        update: @escaping (Field.Value, Field) -> Void
+        update: @escaping (String, Field) -> Void
     ) -> some View {
         
         List {
@@ -62,33 +80,21 @@ private extension PaymentWrapperView {
     
     func fieldView(
         field: Field,
-        update: @escaping (Field.Value, Field) -> Void
+        update: @escaping (String, Field) -> Void
     ) -> some View {
         
-        VStack(alignment: .leading) {
-            
-            Text(field.title)
-                .foregroundColor(.secondary)
-                .font(.caption.bold())
-            
-            TextField(
-                field.title,
-                text: .init(
-                    get: { field.value },
-                    set: { update($0, field) }
-                )
-            )
-        }
+        InputWrapperView(viewModel: field.model)
     }
     
     func update(
-        value: Field.Value,
+        value: String,
         of field: Field
     ) {
         viewModel.event(.set(value: value, forID: field.id))
     }
     
-    typealias Field = Payment.Field
+    typealias ID = CachedPayment.Field.ID
+    typealias Field = CachedPayment.IdentifiedField
     
     @ViewBuilder
     func footer(
@@ -136,11 +142,15 @@ private extension PaymentWrapperView {
     func addFieldButton() -> some View {
         
         Button {
-            let newField = Field(id: UUID().uuidString, title: "New field", value: "")
-            viewModel.event(.add(newField))
+            viewModel.event(.add(makeNewField()))
         } label: {
-            Label(("Add field"), systemImage: "plus")
+            Label("Add field", systemImage: "plus")
         }
+    }
+    
+    private func makeNewField() -> Payment.Field {
+     
+        return .init(id: UUID().uuidString, title: "New field", value: "")
     }
 }
 
@@ -150,6 +160,16 @@ extension Payment: CustomStringConvertible {
         
         return fields
             .map { "\($0.id.suffix(6)): \"\($0.value)\"" }
+            .joined(separator: "\n")
+    }
+}
+
+extension CachedPayment: CustomStringConvertible {
+    
+    var description: String {
+        
+        return fields
+            .map { "\($0.id.suffix(6)): \"\($0.model.state.text)\"" }
             .joined(separator: "\n")
     }
 }

@@ -28,7 +28,16 @@ struct CachedPayment {
 
 extension CachedPayment {
     
-    var fields: [FieldModel] { cachedModels.models }
+    var fields: [IdentifiedField] {
+        
+        cachedModels.keyModelPairs.map(IdentifiedField.init)
+    }
+    
+    struct IdentifiedField: Identifiable {
+        
+        let id: Field.ID
+        let model: FieldModel
+    }
     
     func updating(
         with fields: [Field],
@@ -38,4 +47,51 @@ extension CachedPayment {
         let updatedCachedModels = cachedModels.updating(with: fields, using: map)
         return .init(cachedModels: updatedCachedModels)
     }
+}
+
+enum CachedPaymentEvent: Equatable {
+    
+    case update([Field])
+    
+    typealias Field = Payment.Field
+}
+
+enum CachedPaymentEffect: Equatable {}
+
+final class CachedPaymentReducer {
+    
+    private let map: Map
+    
+    init(map: @escaping Map) {
+        self.map = map
+    }
+    
+    typealias Map = (Field) -> FieldModel
+    typealias Field = Payment.Field
+    typealias FieldModel = InputViewModel
+}
+
+extension CachedPaymentReducer {
+    
+    func reduce(
+        _ state: State,
+        _ event: Event
+    ) -> (State, Effect?) {
+        
+        var state = state
+        
+        switch event {
+        case let .update(fields):
+            state = state.updating(with: fields, using: map)
+        }
+        
+        return (state, nil)
+    }
+}
+
+extension CachedPaymentReducer {
+    
+    typealias State = CachedPayment
+    typealias Event = CachedPaymentEvent
+    typealias Effect = CachedPaymentEffect
 }

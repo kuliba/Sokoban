@@ -8,10 +8,13 @@
 import Foundation
 import RxViewModel
 
-typealias InputViewModel = RxViewModel<InputState, InputEvent, InputEffect>
+typealias InputViewModel = RxObservingViewModel<InputState, InputEvent, InputEffect>
+
+// MARK: - Input Domain
 
 struct InputState: Equatable {
     
+    let title: String
     var text: String
 }
 
@@ -25,6 +28,8 @@ enum InputEffect: Equatable {
     
     case debounce(String)
 }
+
+// MARK: - InputReducer
 
 final class InputReducer {}
 
@@ -57,6 +62,8 @@ extension InputReducer {
     typealias Effect = InputEffect
 }
 
+// MARK: - InputEffectHandler
+
 final class InputEffectHandler {}
 
 extension InputEffectHandler {
@@ -83,4 +90,47 @@ extension InputEffectHandler {
     
     typealias Event = InputEvent
     typealias Effect = InputEffect
+}
+
+// MARK: - InputWrapperView
+
+import SwiftUI
+
+struct InputWrapperView: View {
+    
+    @StateObject private var viewModel: InputViewModel
+    
+    init(viewModel: InputViewModel) {
+        
+        self._viewModel = .init(wrappedValue: viewModel)
+    }
+    
+    var body: some View {
+       
+        InputView(state: viewModel.state, event: viewModel.event(_:))
+    }
+}
+
+struct InputView: View {
+    
+    let state: InputState
+    let event: (InputEvent) -> Void
+    
+    var body: some View {
+        
+        VStack(alignment: .leading) {
+            
+            Text(state.title)
+                .foregroundColor(.secondary)
+                .font(.caption.bold())
+            
+            TextField(
+                state.title,
+                text: .init(
+                    get: { state.text },
+                    set: { event(.typed($0)) }
+                )
+            )
+        }
+    }
 }
