@@ -17,6 +17,8 @@ extension ProductGroupView {
     
     final class ViewModel: Identifiable, ObservableObject {
         
+        typealias GetProduct = (ProductData.ID) -> ProductCardData?
+
         let action: PassthroughSubject<Action, Never> = .init()
         
         var id: String { productType.rawValue }
@@ -32,9 +34,10 @@ extension ProductGroupView {
         private var products: CurrentValueSubject<[ProductViewModel], Never> = .init([])
         private let settings: ProductsGroupSettings
         private let model: Model
+        private let getProduct: GetProduct
         private var bindings = Set<AnyCancellable>()
         
-        init(productType: ProductType, visible: [ProductViewModel], groupButton: GroupButtonViewModel?, isCollapsed: Bool, isSeparator: Bool, isUpdating: Bool, isOpeningProduct: Bool, settings: ProductsGroupSettings = .base, dimensions: Dimensions, model: Model = .emptyMock) {
+        init(productType: ProductType, visible: [ProductViewModel], groupButton: GroupButtonViewModel?, isCollapsed: Bool, isSeparator: Bool, isUpdating: Bool, isOpeningProduct: Bool, settings: ProductsGroupSettings = .base, dimensions: Dimensions, model: Model = .emptyMock, getProduct: @escaping GetProduct) {
             
             self.productType = productType
             self.visible = visible
@@ -47,6 +50,7 @@ extension ProductGroupView {
             self.settings = settings
             self.dimensions = dimensions
             self.model = model
+            self.getProduct = getProduct
         }
         
         convenience init(
@@ -66,7 +70,8 @@ extension ProductGroupView {
                 isOpeningProduct: false,
                 settings: settings,
                 dimensions: dimensions,
-                model: model
+                model: model,
+                getProduct: { model.product(productId: $0)?.asCard }
             )
             
             self.products.value = products
@@ -192,6 +197,34 @@ extension ProductGroupView {
                     }
                 }
                 .store(in: &bindings)
+        }
+        
+        func needSeparator(for index: Int) -> Bool {
+            
+            if productType == .card, index + 1 < visible.count {
+                let current = visible[index]
+                let next = visible[index+1]
+                if let currentCard = getProduct(current.id),
+                   let nextCard = getProduct(next.id) {
+                    
+                    switch (currentCard.isAdditional, nextCard.isAdditional) {
+                    case (true, false):
+                        return true
+                      
+                    case (false, true):
+                        return currentCard.id != nextCard.parentID
+
+                    case (true, true):
+                        if currentCard.parentID != nextCard.parentID {
+                            return true
+                        }
+                        
+                    default:
+                        return false
+                    }
+                }
+            }
+            return false
         }
     }
 }
@@ -368,12 +401,16 @@ struct ProductGroupView: View {
                 OpeningProductView(dimensions: viewModel.dimensions)
             }
             
-            ForEach(viewModel.visible) { productViewModel in
+            ForEach(0..<viewModel.visible.count, id: \.self) { index in
                 
-                ShadowedProductView(
-                    productViewModel: productViewModel,
-                    dimensions: viewModel.dimensions
-                )
+                HStack {
+                    ShadowedProductView(
+                        productViewModel: viewModel.visible[index],
+                        dimensions: viewModel.dimensions
+                    )
+                    
+                    if viewModel.needSeparator(for: index) { separator() }
+                }
             }
             
             viewModel.groupButton.map {
@@ -382,19 +419,21 @@ struct ProductGroupView: View {
                     .frame(viewModel.dimensions, for: \.button)
             }
             
-            if viewModel.isSeparator {
-                
-                Capsule(style: .continuous)
-                    .foregroundColor(.bordersDivider)
-                    .frame(viewModel.dimensions, for: \.separator)
-                    // wrap in another frame to centre align
-                    .frame(height: viewModel.dimensions.sizes.product.height)
-            }
+            if viewModel.isSeparator { separator() }
         }
         .frame(
             height: viewModel.dimensions.frameHeight,
             alignment: .top
         )
+    }
+    
+    private func separator() -> some View {
+        
+        Capsule(style: .continuous)
+            .foregroundColor(.bordersDivider)
+            .frame(viewModel.dimensions, for: \.separator)
+            // wrap in another frame to centre align
+            .frame(height: viewModel.dimensions.sizes.product.height)
     }
 }
 
@@ -627,7 +666,8 @@ extension ProductGroupView.ViewModel {
         isSeparator: Bool = false,
         isUpdating: Bool = false,
         isOpeningProduct: Bool = false,
-        dimensions: Dimensions
+        dimensions: Dimensions,
+        getProduct: @escaping GetProduct = { _ in nil }
     ) -> ProductGroupView.ViewModel {
         
         ProductGroupView.ViewModel(
@@ -638,7 +678,8 @@ extension ProductGroupView.ViewModel {
             isSeparator: isSeparator,
             isUpdating: isUpdating,
             isOpeningProduct: isOpeningProduct,
-            dimensions: dimensions
+            dimensions: dimensions,
+            getProduct: getProduct
         )
     }
     
