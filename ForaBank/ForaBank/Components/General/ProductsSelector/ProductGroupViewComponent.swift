@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 import ScrollViewProxy
-import Shimmer
+import UIPrimitives
 
 //MARK: - ViewModel
 

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Shimmer
+import UIPrimitives
 
 //MARK: - ViewModel
 
