@@ -212,9 +212,7 @@ extension ProductGroupView {
                         return true
                       
                     case (false, true):
-                        if currentCard.id != nextCard.parentID {
-                            return true
-                        }
+                        return currentCard.id != nextCard.parentID
 
                     case (true, true):
                         if currentCard.parentID != nextCard.parentID {
