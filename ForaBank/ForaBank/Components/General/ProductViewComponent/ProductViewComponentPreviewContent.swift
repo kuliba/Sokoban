@@ -22,7 +22,8 @@ extension ProductViewModel {
         isUpdating: false,
         productType: .card,
         cardAction: { _ in },
-        cvvInfo: nil
+        cvvInfo: nil,
+        getProduct: { _ in nil }
     )
     
     static let blocked = blockedCard(id: 1, .whiteSample())
@@ -43,7 +44,8 @@ extension ProductViewModel {
             isUpdating: false,
             productType: .card,
             cardAction: { _ in },
-            cvvInfo: nil
+            cvvInfo: nil, 
+            getProduct: { _ in nil }
         )
     }
     
@@ -65,7 +67,8 @@ extension ProductViewModel {
             isUpdating: false,
             productType: .card,
             cardAction: { _ in },
-            cvvInfo: nil
+            cvvInfo: nil, 
+            getProduct: { _ in nil }
         )
     }
     
@@ -79,7 +82,8 @@ extension ProductViewModel {
         isUpdating: false,
         productType: .card,
         cardAction: { _ in },
-        cvvInfo: nil
+        cvvInfo: nil, 
+        getProduct: { _ in nil }
     )
     
     static let accountSmall = ProductViewModel(
@@ -93,7 +97,8 @@ extension ProductViewModel {
         isUpdating: false,
         productType: .account,
         cardAction: { _ in },
-        cvvInfo: nil
+        cvvInfo: nil, 
+        getProduct: { _ in nil }
     )
     
     static let notActivateProfile = ProductViewModel(
@@ -109,7 +114,8 @@ extension ProductViewModel {
         isUpdating: false,
         productType: .deposit,
         cardAction: { _ in },
-        cvvInfo: nil
+        cvvInfo: nil, 
+        getProduct: { _ in nil }
     )
     
     static let blockedProfile = ProductViewModel(
@@ -125,7 +131,8 @@ extension ProductViewModel {
         isUpdating: false,
         productType: .card,
         cardAction: { _ in },
-        cvvInfo: nil
+        cvvInfo: nil, 
+        getProduct: { _ in nil }
     )
     static let classicProfile = ProductViewModel(
         id: 6,
@@ -144,7 +151,8 @@ extension ProductViewModel {
         isUpdating: false,
         productType: .card,
         cardAction: { _ in },
-        cvvInfo: nil
+        cvvInfo: nil, 
+        getProduct: { _ in nil }
     )
     
     static let accountProfile = ProductViewModel(
@@ -157,7 +165,8 @@ extension ProductViewModel {
         isUpdating: false,
         productType: .account,
         cardAction: { _ in },
-        cvvInfo: nil
+        cvvInfo: nil, 
+        getProduct: { _ in nil }
     )
     
     static let depositProfile = ProductViewModel(
@@ -179,7 +188,8 @@ extension ProductViewModel {
         isUpdating: false,
         productType: .deposit,
         cardAction: { _ in },
-        cvvInfo: nil
+        cvvInfo: nil, 
+        getProduct: { _ in nil }
     )
     
     static let updating = ProductViewModel(
@@ -199,7 +209,8 @@ extension ProductViewModel {
         isUpdating: true,
         productType: .card,
         cardAction: { _ in },
-        cvvInfo: nil
+        cvvInfo: nil, 
+        getProduct: { _ in nil }
     )
 }
 

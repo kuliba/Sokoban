@@ -20,6 +20,8 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
     
     @AppStorage(.isNeedOnboardingShow) var isNeedOnboardingShow: Bool = true
     typealias CardAction = (CardDomain.CardEvent) -> Void
+    typealias GetProduct = (ProductData.ID) -> ProductCardData?
+    
     let action: PassthroughSubject<Action, Never> = .init()
     
     let id: ProductData.ID
@@ -29,6 +31,7 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
     
     let cardAction: CardAction?
     let cvvInfo: CvvInfo?
+    let getProduct: GetProduct
     
     @Published var cardInfo: CardInfo
     @Published var footer: FooterDetails
@@ -55,6 +58,7 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
         productType: ProductType,
         cardAction: CardAction? = nil,
         cvvInfo: CvvInfo? = nil,
+        getProduct: @escaping GetProduct,
         event: @escaping (Event) -> Void = { _ in }
     ) {
         self.id = id
@@ -69,6 +73,7 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
         self.cardAction = cardAction
         self.cvvInfo = cvvInfo
         self.config = .config(appearance: appearance)
+        self.getProduct = getProduct
         self.event = event
     }
     
@@ -128,7 +133,8 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
             isUpdating: false,
             productType: productType,
             cardAction: cardAction,
-            cvvInfo: cvvInfo,
+            cvvInfo: cvvInfo, 
+            getProduct: { model.product(productId: $0)?.asCard },
             event: event
         )
         
