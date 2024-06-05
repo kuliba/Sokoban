@@ -1395,6 +1395,7 @@
 		2AFED97E2C0F9888008F2F95 /* Input.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFED97D2C0F9888008F2F95 /* Input.swift */; };
 		2AFED9842C0FA774008F2F95 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFED9832C0FA774008F2F95 /* Payment.swift */; };
 		2AFED9862C0FA9C3008F2F95 /* PaymentWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFED9852C0FA9C3008F2F95 /* PaymentWrapperView.swift */; };
+		2AFED9882C1026AB008F2F95 /* CachedPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFED9872C1026AB008F2F95 /* CachedPayment.swift */; };
 		2AFF5D292A9885210097F429 /* CryptoSwaddler in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFF5D282A9885210097F429 /* CryptoSwaddler */; };
 		50037F7A2934D107009D1F0C /* TransfersInfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50037F792934D107009D1F0C /* TransfersInfoViewComponent.swift */; };
 		50037F7C2934DE56009D1F0C /* TransfersPromoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50037F7B2934DE56009D1F0C /* TransfersPromoViewComponent.swift */; };
@@ -4366,6 +4367,7 @@
 		2AFED97D2C0F9888008F2F95 /* Input.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Input.swift; sourceTree = "<group>"; };
 		2AFED9832C0FA774008F2F95 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
 		2AFED9852C0FA9C3008F2F95 /* PaymentWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentWrapperView.swift; sourceTree = "<group>"; };
+		2AFED9872C1026AB008F2F95 /* CachedPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedPayment.swift; sourceTree = "<group>"; };
 		50037F792934D107009D1F0C /* TransfersInfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransfersInfoViewComponent.swift; sourceTree = "<group>"; };
 		50037F7B2934DE56009D1F0C /* TransfersPromoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransfersPromoViewComponent.swift; sourceTree = "<group>"; };
 		50043664287B3747000545BD /* PagerScrollViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerScrollViewComponent.swift; sourceTree = "<group>"; };
@@ -10259,6 +10261,7 @@
 				2AFED9692C0F929A008F2F95 /* ContentView.swift */,
 				2AFED9792C0F93E5008F2F95 /* RxMappingViewModel.swift */,
 				2AFED9832C0FA774008F2F95 /* Payment.swift */,
+				2AFED9872C1026AB008F2F95 /* CachedPayment.swift */,
 				2AFED9852C0FA9C3008F2F95 /* PaymentWrapperView.swift */,
 				2AFED97D2C0F9888008F2F95 /* Input.swift */,
 				2AFED96B2C0F929C008F2F95 /* Assets.xcassets */,
@@ -17191,6 +17194,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2AFED97E2C0F9888008F2F95 /* Input.swift in Sources */,
+				2AFED9882C1026AB008F2F95 /* CachedPayment.swift in Sources */,
 				2AFED96A2C0F929A008F2F95 /* ContentView.swift in Sources */,
 				2AFED9862C0FA9C3008F2F95 /* PaymentWrapperView.swift in Sources */,
 				2AFED97A2C0F93E5008F2F95 /* RxMappingViewModel.swift in Sources */,
