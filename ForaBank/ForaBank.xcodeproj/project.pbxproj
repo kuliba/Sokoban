@@ -23350,8 +23350,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/markiv/SwiftUI-Shimmer";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				kind = exactVersion;
+				version = 1.5.0;
 			};
 		};
 		836DE2EA2AC72A7B00D4C754 /* XCRemoteSwiftPackageReference "swift-tagged" */ = {

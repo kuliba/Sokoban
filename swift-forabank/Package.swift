@@ -2633,7 +2633,7 @@ private extension Package.Dependency {
     )
     static let shimmer = Package.Dependency.package(
         url: .swift_shimmer_path,
-        exact: .init(1, 0, 1)
+        exact: .init(1, 5, 0)
     )
     static let phoneNumberKit = Package.Dependency.package(
         url: .phoneNumberKit_path,
