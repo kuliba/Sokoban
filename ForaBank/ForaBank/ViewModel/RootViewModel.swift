@@ -300,13 +300,7 @@ class RootViewModel: ObservableObject, Resetable {
                                 switch compareVersion {
                                 case .orderedDescending:
                                     
-                                    self.alert = .init(title: "Новая версия", message: "Доступна новая версия \(appInfo.version).", primary: .init(type: .default, title: "Не сейчас", action: {}), secondary: .init(type: .default, title: "Обновить", action: {
-                                        guard let url = URL(string: "\(appInfo.trackViewUrl)") else {
-                                            return
-                                        }
-                                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                                        
-                                    }))
+                                    self.alert = self.createAlertAppVersion(appInfo)
                                     
                                 default:
                                     break
@@ -398,6 +392,27 @@ class RootViewModel: ObservableObject, Resetable {
         
         return .init(dismissCover: dismissCover, spinner: .init(show: spinnerShow, hide: spinnerHide), switchTab: switchTab, dismissAll: dismissAll)
     }()
+    
+    func createAlertAppVersion(
+        _ appInfo: AppInfo
+    ) -> Alert.ViewModel {
+        
+        .init(
+            title: "Новая версия",
+            message: "Доступна новая версия \(appInfo.version).",
+            primary: .init(type: .default, title: "Не сейчас", action: {}),
+            secondary: .init(
+                type: .default,
+                title: "Обновить",
+                action: {
+                    guard let url = URL(string: "\(appInfo.trackViewUrl)") else {
+                        return
+                    }
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    
+                })
+        )
+    }
 }
 
 private extension Model {
