@@ -184,7 +184,7 @@ extension MyProductsSectionItemView {
                             .padding(.trailing, 130)
                     }
                 }
-                .shimmering()
+                .shimmering(duration: 1.5, bounce: true)
             }
             .frame(height: 72)
             .padding(.leading, editMode == .active ? 0 : 12)

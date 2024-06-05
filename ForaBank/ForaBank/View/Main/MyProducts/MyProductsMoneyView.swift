@@ -34,7 +34,7 @@ struct MyProductsMoneyView: View {
                            RoundedRectangle(cornerRadius: 90)
                                .foregroundColor(.mainColorsGrayMedium.opacity(0.4))
                                .frame(width: 2.3 * geo.size.width / 3)
-                               .shimmering()
+                               .shimmering(duration: 1.5, bounce: true)
                            
                         }.frame(width: geo.size.width, alignment: .trailing)
                     }.frame(height: 24)
