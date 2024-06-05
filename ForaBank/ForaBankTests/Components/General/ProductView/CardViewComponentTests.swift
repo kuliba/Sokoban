@@ -588,8 +588,7 @@ final class CardViewComponentTests: XCTestCase {
             isUpdating: false,
             productType: productType,
             cardAction: cardAction,
-            cvvInfo: .init(showCvv: showCVV, cardType: nil, cardStatus: nil), 
-            getProduct: { _ in nil }
+            cvvInfo: .init(showCvv: showCVV, cardType: nil, cardStatus: nil)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -625,8 +624,7 @@ final class CardViewComponentTests: XCTestCase {
                 showCvv: showCVV,
                 cardType: cardType,
                 cardStatus: cardStatus
-            ),
-            getProduct: { _ in nil }
+            )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

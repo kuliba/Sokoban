@@ -402,6 +402,72 @@ final class ProductGroupViewModelTests: XCTestCase {
         XCTAssert(sut.isOpeningProduct)
     }
     
+    // MARK: - needSeparator https://shorturl.at/hATDx
+    
+    func test_needSeparator_p2_returnTrue() {
+        
+        let products: [ProductViewModel] = [
+            .createViewModel(id: 2, productType: .card),
+            .createViewModel(id: 21, productType: .card),
+            .createViewModel(id: 22, productType: .card),
+            .createViewModel(id: 1, productType: .card),
+        ]
+        let sut = makeSUT(visibleProducts: products, getProduct: getProduct(_:))
+        
+        XCTAssertTrue(sut.needSeparator(for: 2))
+    }
+    
+    func test_needSeparator_p3_returnFalse() {
+        
+        let products: [ProductViewModel] = [
+            .createViewModel(id: 2, productType: .card),
+            .createViewModel(id: 21, productType: .card),
+            .createViewModel(id: 22, productType: .card)
+        ]
+        let sut = makeSUT(visibleProducts: products, getProduct: getProduct(_:))
+        
+        XCTAssertFalse(sut.needSeparator(for: 2))
+    }
+    
+    func test_needSeparator_p4_returnFalse() {
+        
+        let products: [ProductViewModel] = [
+            .createViewModel(id: 1, productType: .card),
+            .createViewModel(id: 2, productType: .card),
+        ]
+        let sut = makeSUT(visibleProducts: products, getProduct: getProduct(_:))
+        
+        XCTAssertFalse(sut.needSeparator(for: 0))
+    }
+
+    func test_needSeparator_p5_returnTrue() {
+        
+        let products: [ProductViewModel] = [
+            .createViewModel(id: 1, productType: .card),
+            .createViewModel(id: 41, productType: .card),
+            .createViewModel(id: 42, productType: .card),
+            .createViewModel(id: 2, productType: .card),
+        ]
+        let sut = makeSUT(visibleProducts: products, getProduct: getProduct(_:))
+        
+        XCTAssertTrue(sut.needSeparator(for: 2))
+    }
+    
+    func test_needSeparator_p6_returnTrue() {
+        
+        let products: [ProductViewModel] = [
+            .createViewModel(id: 1, productType: .card),
+            .createViewModel(id: 41, productType: .card),
+            .createViewModel(id: 51, productType: .card),
+            .createViewModel(id: 2, productType: .card),
+        ]
+        let sut = makeSUT(visibleProducts: products, getProduct: getProduct(_:))
+        
+        XCTAssertTrue(sut.needSeparator(for: 0))
+        XCTAssertTrue(sut.needSeparator(for: 1))
+        XCTAssertTrue(sut.needSeparator(for: 2))
+    }
+    
     // MARK: - products update
     
     func test_update_shouldChangeVisibleProductsToAvailable() {
@@ -552,6 +618,40 @@ final class ProductGroupViewModelTests: XCTestCase {
         
         return sut
     }
+    
+    private func makeSUT(
+        productType: ProductType = .card,
+        visibleProducts: [ProductViewModel],
+        dimensions: ProductGroupView.ViewModel.Dimensions = .regular,
+        model: Model = .productsMock,
+        getProduct: @escaping ProductGroupView.ViewModel.GetProduct,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> ProductGroupView.ViewModel {
+        
+        let sut = ProductGroupView.ViewModel(
+            productType: productType,
+            visible: visibleProducts,
+            groupButton: nil,
+            isCollapsed: false,
+            isSeparator: false,
+            isUpdating: false,
+            isOpeningProduct: false,
+            dimensions: .regular,
+            getProduct: getProduct
+        )
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        return sut
+    }
+    
+    private func getProduct(_ id: ProductData.ID) -> ProductCardData? {
+        
+        let cards: [ProductData] = .cards
+        
+        return cards.first(where: { $0.id == id })?.asCard
+    }
 }
 
 // MARK: - DSL
@@ -561,5 +661,99 @@ private extension ProductGroupView.ViewModel {
     func expand() {
         
         groupButton?.action()
+    }
+}
+
+private extension ProductData {
+    
+    static func makeCardProduct(
+        id: Int,
+        parentID: Int? = nil,
+        cardType: ProductCardData.CardType
+    ) -> ProductCardData {
+        
+        .init(
+            id: id,
+            productType: .card,
+            number: "1111",
+            numberMasked: "****",
+            accountNumber: nil,
+            balance: nil,
+            balanceRub: nil,
+            currency: "RUB",
+            mainField: "Card",
+            additionalField: nil,
+            customName: nil,
+            productName: "Card",
+            openDate: nil,
+            ownerId: 0,
+            branchId: 0,
+            allowCredit: true,
+            allowDebit: true,
+            extraLargeDesign: .test,
+            largeDesign: .test,
+            mediumDesign: .test,
+            smallDesign: .test,
+            fontDesignColor: .init(description: ""),
+            background: [],
+            accountId: nil,
+            cardId: 0,
+            name: "CARD",
+            validThru: Date(),
+            status: .active,
+            expireDate: "01/01/01",
+            holderName: "Иванов",
+            product: nil,
+            branch: "",
+            miniStatement: nil,
+            paymentSystemName: nil,
+            paymentSystemImage: nil,
+            loanBaseParam: nil,
+            statusPc: nil,
+            isMain: nil,
+            externalId: nil,
+            order: 0,
+            visibility: true,
+            smallDesignMd5hash: "",
+            smallBackgroundDesignHash: "",
+            cardType: cardType, 
+            idParent: parentID
+        )
+    }
+
+}
+
+private extension Array where Element == ProductData {
+    
+    static let cards: Self = [
+        .makeCardProduct(id: 1, cardType: .regular),
+        .makeCardProduct(id: 2, cardType: .main),
+        .makeCardProduct(id: 21, parentID: 2, cardType: .additionalSelf),
+        .makeCardProduct(id: 22, parentID: 2, cardType: .additionalOther),
+        .makeCardProduct(id: 3, cardType: .main),
+        .makeCardProduct(id: 31, parentID: 3, cardType: .additionalSelf),
+        .makeCardProduct(id: 41, parentID: 4, cardType: .additionalSelfAccOwn),
+        .makeCardProduct(id: 42, parentID: 4, cardType: .additionalSelf),
+        .makeCardProduct(id: 51, parentID: 5, cardType: .additionalOther)
+    ]
+}
+
+private extension ProductViewModel {
+    
+    static func createViewModel(
+        id: ProductData.ID,
+        productType: ProductType = .card
+    ) -> ProductViewModel {
+        
+        .init(
+            id: id,
+            header: .init(number: nil),
+            cardInfo: .classicCard,
+            footer: .init(balance: "1"),
+            statusAction: nil,
+            appearance: .init(background: .init(color: .black, image: nil), colors: .init(text: .accentColor, checkBackground: .black)),
+            isUpdating: false,
+            productType: productType
+        )
     }
 }
