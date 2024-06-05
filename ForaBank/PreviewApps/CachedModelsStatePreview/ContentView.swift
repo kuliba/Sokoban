@@ -11,14 +11,11 @@ struct ContentView: View {
     
     var body: some View {
         
-        VStack {
+        NavigationView {
             
-            Image(systemName: "globe")
-                .imageScale(.large)
-
-            Text("Hello, world!")
+            PaymentWrapperView()
+                .navigationBarTitleDisplayMode(.inline)
         }
-        .padding()
     }
 }
 

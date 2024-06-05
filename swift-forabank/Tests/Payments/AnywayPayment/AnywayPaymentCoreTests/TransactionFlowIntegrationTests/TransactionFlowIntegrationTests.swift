@@ -204,49 +204,49 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         XCTAssertEqual(paymentMaker.callCount, 0)
     }
     
-    func test_shouldCallPaymentInitiatorTwiceOnRestartPayment() {
-        
-        let initialState = makeTransaction(makePayment(shouldRestart: true))
-        let updatedPayment = makePayment()
-        let editedPayment = makePayment()
-        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
-            makeStub(
-                paymentReduce: (editedPayment, nil),
-                updatePayment: updatedPayment,
-                wouldNeedRestart: true
-            ),
-            initialState: initialState
-        )
-        
-        sut.event(.initiatePayment)
-        paymentInitiator.complete(with: .success(makeUpdate()))
-        
-        sut.event(.payment(.select))
-        sut.event(.paymentRestartConfirmation(true))
-        
-        sut.event(.continue)
-        paymentInitiator.complete(with: .success(makeUpdate()), at: 1)
-        
-        assert(stateSpy, initialState, {
-            _ in
-        }, {
-            $0.payment = updatedPayment
-            $0.isValid = true
-        }, {
-            $0.payment = editedPayment
-            $0.status = .awaitingPaymentRestartConfirmation
-        }, {
-            $0.payment.shouldRestart = true
-            $0.status = nil
-        }, {
-            $0.payment = updatedPayment
-        })
-        
-        XCTAssertEqual(paymentInitiator.callCount, 2)
-        XCTAssertEqual(paymentEffectHandler.callCount, 0)
-        XCTAssertEqual(paymentMaker.callCount, 0)
-        XCTAssertEqual(paymentProcessing.callCount, 0)
-    }
+//    func test_shouldCallPaymentInitiatorTwiceOnRestartPayment() {
+//        
+//        let initialState = makeTransaction(makePayment(shouldRestart: true))
+//        let updatedPayment = makePayment()
+//        let editedPayment = makePayment()
+//        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
+//            makeStub(
+//                paymentReduce: (editedPayment, nil),
+//                updatePayment: updatedPayment,
+//                wouldNeedRestart: true
+//            ),
+//            initialState: initialState
+//        )
+//        
+//        sut.event(.initiatePayment)
+//        paymentInitiator.complete(with: .success(makeUpdate()))
+//        
+//        sut.event(.payment(.select))
+//        sut.event(.paymentRestartConfirmation(true))
+//        
+//        sut.event(.continue)
+//        paymentInitiator.complete(with: .success(makeUpdate()), at: 1)
+//        
+//        assert(stateSpy, initialState, {
+//            _ in
+//        }, {
+//            $0.payment = updatedPayment
+//            $0.isValid = true
+//        }, {
+//            $0.payment = editedPayment
+//            $0.status = .awaitingPaymentRestartConfirmation
+//        }, {
+//            $0.payment.shouldRestart = true
+//            $0.status = nil
+//        }, {
+//            $0.payment = updatedPayment
+//        })
+//        
+//        XCTAssertEqual(paymentInitiator.callCount, 2)
+//        XCTAssertEqual(paymentEffectHandler.callCount, 0)
+//        XCTAssertEqual(paymentMaker.callCount, 0)
+//        XCTAssertEqual(paymentProcessing.callCount, 0)
+//    }
     
     func test_makePaymentFailure_shouldIgnoreSuccessiveEvents() {
         

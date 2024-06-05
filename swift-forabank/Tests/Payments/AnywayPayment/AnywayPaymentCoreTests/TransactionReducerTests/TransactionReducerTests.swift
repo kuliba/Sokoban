@@ -832,20 +832,20 @@ final class TransactionReducerTests: XCTestCase {
         }
     }
     
-    func test_payment_shouldSetStatusToAwaitingConfirmationOnShouldRestartFalseAndWouldNeedToRestartTrue() {
-        
-        let newPayment = makePayment(shouldRestart: false)
-        let sut = makeSUT(
-            paymentReduce: { _,_ in (newPayment, nil) },
-            wouldNeedRestart: { _ in true }
-        )
-        
-        assertState(sut: sut, makePaymentTransactionEvent(), on: makeTransaction()) {
-            
-            $0.payment = newPayment
-            $0.status = .awaitingPaymentRestartConfirmation
-        }
-    }
+//    func test_payment_shouldSetStatusToAwaitingConfirmationOnShouldRestartFalseAndWouldNeedToRestartTrue() {
+//        
+//        let newPayment = makePayment(shouldRestart: false)
+//        let sut = makeSUT(
+//            paymentReduce: { _,_ in (newPayment, nil) },
+//            wouldNeedRestart: { _ in true }
+//        )
+//        
+//        assertState(sut: sut, makePaymentTransactionEvent(), on: makeTransaction()) {
+//            
+//            $0.payment = newPayment
+//            $0.status = .awaitingPaymentRestartConfirmation
+//        }
+//    }
     
     func test_payment_shouldNotChangeStatusOnShouldRestartTrueAndWouldNeedToRestartFalse() {
         

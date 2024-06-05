@@ -1391,6 +1391,13 @@
 		2AFED96F2C0F929C008F2F95 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AFED96E2C0F929C008F2F95 /* Preview Assets.xcassets */; };
 		2AFED9762C0F92F1008F2F95 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFED9752C0F92F1008F2F95 /* RxViewModel */; };
 		2AFED9782C0F92FC008F2F95 /* ForaTools in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFED9772C0F92FC008F2F95 /* ForaTools */; };
+		2AFED97A2C0F93E5008F2F95 /* RxMappingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFED9792C0F93E5008F2F95 /* RxMappingViewModel.swift */; };
+		2AFED97E2C0F9888008F2F95 /* Input.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFED97D2C0F9888008F2F95 /* Input.swift */; };
+		2AFED9842C0FA774008F2F95 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFED9832C0FA774008F2F95 /* Payment.swift */; };
+		2AFED9862C0FA9C3008F2F95 /* PaymentWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFED9852C0FA9C3008F2F95 /* PaymentWrapperView.swift */; };
+		2AFED9882C1026AB008F2F95 /* CachedPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFED9872C1026AB008F2F95 /* CachedPayment.swift */; };
+		2AFED98A2C1029DE008F2F95 /* ObservingCachedPaymentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFED9892C1029DE008F2F95 /* ObservingCachedPaymentViewModel.swift */; };
+		2AFED98E2C1050C1008F2F95 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFED98D2C1050C1008F2F95 /* CombineSchedulers */; };
 		2AFF5D292A9885210097F429 /* CryptoSwaddler in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFF5D282A9885210097F429 /* CryptoSwaddler */; };
 		50037F7A2934D107009D1F0C /* TransfersInfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50037F792934D107009D1F0C /* TransfersInfoViewComponent.swift */; };
 		50037F7C2934DE56009D1F0C /* TransfersPromoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50037F7B2934DE56009D1F0C /* TransfersPromoViewComponent.swift */; };
@@ -4357,6 +4364,12 @@
 		2AFED9692C0F929A008F2F95 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2AFED96B2C0F929C008F2F95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2AFED96E2C0F929C008F2F95 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2AFED9792C0F93E5008F2F95 /* RxMappingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxMappingViewModel.swift; sourceTree = "<group>"; };
+		2AFED97D2C0F9888008F2F95 /* Input.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Input.swift; sourceTree = "<group>"; };
+		2AFED9832C0FA774008F2F95 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
+		2AFED9852C0FA9C3008F2F95 /* PaymentWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentWrapperView.swift; sourceTree = "<group>"; };
+		2AFED9872C1026AB008F2F95 /* CachedPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedPayment.swift; sourceTree = "<group>"; };
+		2AFED9892C1029DE008F2F95 /* ObservingCachedPaymentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservingCachedPaymentViewModel.swift; sourceTree = "<group>"; };
 		2AFED98B2C104166008F2F95 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		50037F792934D107009D1F0C /* TransfersInfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransfersInfoViewComponent.swift; sourceTree = "<group>"; };
 		50037F7B2934DE56009D1F0C /* TransfersPromoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransfersPromoViewComponent.swift; sourceTree = "<group>"; };
@@ -6019,6 +6032,7 @@
 			files = (
 				2AFED9782C0F92FC008F2F95 /* ForaTools in Frameworks */,
 				2AFED9762C0F92F1008F2F95 /* RxViewModel in Frameworks */,
+				2AFED98E2C1050C1008F2F95 /* CombineSchedulers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10248,6 +10262,12 @@
 			children = (
 				2AFED9672C0F929A008F2F95 /* CachedModelsStatePreviewApp.swift */,
 				2AFED9692C0F929A008F2F95 /* ContentView.swift */,
+				2AFED9792C0F93E5008F2F95 /* RxMappingViewModel.swift */,
+				2AFED9892C1029DE008F2F95 /* ObservingCachedPaymentViewModel.swift */,
+				2AFED9832C0FA774008F2F95 /* Payment.swift */,
+				2AFED9872C1026AB008F2F95 /* CachedPayment.swift */,
+				2AFED9852C0FA9C3008F2F95 /* PaymentWrapperView.swift */,
+				2AFED97D2C0F9888008F2F95 /* Input.swift */,
 				2AFED96B2C0F929C008F2F95 /* Assets.xcassets */,
 				2AFED96D2C0F929C008F2F95 /* Preview Content */,
 			);
@@ -15652,6 +15672,7 @@
 			packageProductDependencies = (
 				2AFED9752C0F92F1008F2F95 /* RxViewModel */,
 				2AFED9772C0F92FC008F2F95 /* ForaTools */,
+				2AFED98D2C1050C1008F2F95 /* CombineSchedulers */,
 			);
 			productName = CachedModelsStatePreview;
 			productReference = 2AFED9652C0F929A008F2F95 /* CachedModelsStatePreview.app */;
@@ -17195,7 +17216,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AFED97E2C0F9888008F2F95 /* Input.swift in Sources */,
+				2AFED9882C1026AB008F2F95 /* CachedPayment.swift in Sources */,
+				2AFED98A2C1029DE008F2F95 /* ObservingCachedPaymentViewModel.swift in Sources */,
 				2AFED96A2C0F929A008F2F95 /* ContentView.swift in Sources */,
+				2AFED9862C0FA9C3008F2F95 /* PaymentWrapperView.swift in Sources */,
+				2AFED97A2C0F93E5008F2F95 /* RxMappingViewModel.swift in Sources */,
+				2AFED9842C0FA774008F2F95 /* Payment.swift in Sources */,
 				2AFED9682C0F929A008F2F95 /* CachedModelsStatePreviewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -23791,6 +23818,11 @@
 		2AFED9772C0F92FC008F2F95 /* ForaTools */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ForaTools;
+		};
+		2AFED98D2C1050C1008F2F95 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
 		};
 		2AFF5D282A9885210097F429 /* CryptoSwaddler */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -49,6 +49,12 @@ public extension CachedModelsState {
     /// An array of models corresponding to the keys.
     var models: [Model] { keys.compactMap { cache[$0] }}
     
+    /// An array of key-model pairs.
+    var keyModelPairs: [(Key, Model)] {
+    
+        keys.compactMap { key in cache[key].map { (key, $0) }}
+    }
+    
     /// Updates the state with an array of identifiable items, using a given function to create models.
     ///
     /// - Parameters:
