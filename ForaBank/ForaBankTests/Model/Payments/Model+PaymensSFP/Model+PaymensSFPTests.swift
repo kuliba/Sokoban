@@ -188,35 +188,58 @@ final class Model_PaymensSFPTests: XCTestCase {
     // Success View
     
     func test_sfpLogo_sfpOperation_foraBank_returnsNil() {
-        
         XCTAssertNil(PPLogo.sfpLogo(with: .sfpOperation(bankId: BankID.foraBankID.rawValue)))
     }
-    
-    func test_sfpLogo_sfpOperation_foraBankIdInSource_nonForaBankIdInParameters_returnsSuccessLogo() {
-       
-        let bankParameterValue = Payments.ParameterInput(.init(id: Payments.Parameter.Identifier.sfpBank.rawValue, value: "otherBankId"), title: "title", validator: .init(rules: []))
-        let successLogo = PPLogo.sfpLogo(with: .sfpOperation(bankId: BankID.foraBankID.rawValue, parameters: [bankParameterValue]))
-        
-        XCTAssertNotNil(successLogo)
-        XCTAssertEqual(successLogo?.icon.equatable, EquatableParameterSuccessLogoIcon(.sfp))
+
+    func test_sfpLogo_sfpOperation_foraBankIdInSource_nonForaBankIdInParameters_returnsNil() {
+        let operation = Payments.Operation.sfpOperation(
+            bankId: BankID.foraBankID.rawValue,
+            parameters: [
+                Payments.ParameterInput.makePPInput(id: "id1", value: "otherBankId")
+            ]
+        )
+        XCTAssertNil(PPLogo.sfpLogo(with: operation))
     }
     
+    func test_sfpLogo_sfpOperation_nonForaBankIdInSource_foraBankIdInParameters_returnsNil() {
+        
+        XCTAssertNil(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId", parameters: [Payments.ParameterInput.makePPInput(value: BankID.foraBankID.rawValue)])))
+    }
+
     func test_sfpLogo_sfpOperation_notForaBank_returnsSfpIcon() {
         
         XCTAssertEqual(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId"))?.icon.equatable, EquatableParameterSuccessLogoIcon(.sfp))
     }
+
+    func test_sfpLogo_sfpOperation_nonForaBankIdInSource_nonForaBankIdInParameters_returnsSfpIcon() {
+        
+        let operation = Payments.Operation.sfpOperation(
+            bankId: "otherBankId",
+            parameters: [Payments.ParameterInput.makePPInput()]
+        )
+        XCTAssertEqual(PPLogo.sfpLogo(with: operation)?.icon.equatable, EquatableParameterSuccessLogoIcon(.sfp))
+    }
     
+    func test_sfpLogo_sfpOperation_notForaBankIdInParameters_returnsSfpIcon() {
+        
+        let operation = Payments.Operation.sfpOperation(
+            bankId: "otherBankId",
+            parameters: [Payments.ParameterInput.makePPInput(id: "id1", value: "otherBankId")]
+        )
+        XCTAssertEqual(PPLogo.sfpLogo(with: operation)?.icon.equatable, EquatableParameterSuccessLogoIcon(.sfp))
+    }
+
     func test_sfpLogo_notSfpOperation_returnsNil() {
         
         XCTAssertNil(PPLogo.sfpLogo(with: .nonSfpOperation()))
     }
-    
+
     func test_sfpLogo_nilSource_returnsNil() {
         
         let operation = Payments.Operation(service: .sfp)
         XCTAssertNil(PPLogo.sfpLogo(with: operation))
     }
-    
+
     func test_sfpLogo_notRemoteStartStep_returnsNil() {
         
         let steps = [Payments.Operation.Step(parameters: [], front: .empty(), back: .empty(stage: .remote(.confirm)))]
@@ -634,5 +657,16 @@ extension Model {
             svgImage: .test,
             type: .sfp
         )
+    }
+}
+
+private extension Payments.ParameterInput {
+    
+    static func makePPInput(
+        id: String = Payments.Parameter.Identifier.sfpBank.rawValue,
+        value: String = "otherBankId"
+    ) -> Self {
+        
+        .init(.init(id: id, value: value), title: "title", validator: .init(rules: []))
     }
 }
