@@ -192,6 +192,15 @@ final class Model_PaymensSFPTests: XCTestCase {
         XCTAssertNil(PPLogo.sfpLogo(with: .sfpOperation(bankId: BankID.foraBankID.rawValue)))
     }
     
+    func test_sfpLogo_sfpOperation_foraBankIdInSource_nonForaBankIdInParameters_returnsSuccessLogo() {
+       
+        let bankParameterValue = Payments.ParameterInput(.init(id: Payments.Parameter.Identifier.sfpBank.rawValue, value: "otherBankId"), title: "title", validator: .init(rules: []))
+        let successLogo = PPLogo.sfpLogo(with: .sfpOperation(bankId: BankID.foraBankID.rawValue, parameters: [bankParameterValue]))
+        
+        XCTAssertNotNil(successLogo)
+        XCTAssertEqual(successLogo?.icon.equatable, EquatableParameterSuccessLogoIcon(.sfp))
+    }
+    
     func test_sfpLogo_sfpOperation_notForaBank_returnsSfpIcon() {
         
         XCTAssertEqual(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId"))?.icon.equatable, EquatableParameterSuccessLogoIcon(.sfp))
@@ -213,6 +222,8 @@ final class Model_PaymensSFPTests: XCTestCase {
         let steps = [Payments.Operation.Step(parameters: [], front: .empty(), back: .empty(stage: .remote(.confirm)))]
         XCTAssertNil(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId", steps: steps)))
     }
+    
+    // MARK: - Test Bank Parameter
     
     func test_bankParameter_sourceTemplatePayment_shouldReturnParameterId() {
         
@@ -536,9 +547,22 @@ private extension Payments.Operation {
         phone: String = "123",
         bankId: String,
         steps: [Step] = [.init(parameters: [], front: .empty(), back: .empty(stage: .remote(.start)))],
-        visible: [String] = []
+        visible: [String] = [],
+        parameters: [PaymentsParameterRepresentable] = []
     ) -> Payments.Operation {
-        return Payments.Operation(service: .sfp, source: .sfp(phone: phone, bankId: bankId), steps: steps, visible: visible)
+        
+        let step = Step(
+            parameters: parameters,
+            front: steps.first?.front ?? .empty(),
+            back: steps.first?.back ?? .empty(stage: .remote(.start))
+        )
+        
+        return Payments.Operation(
+            service: .sfp,
+            source: .sfp(phone: phone, bankId: bankId),
+            steps: [step],
+            visible: visible
+        )
     }
     
     static func nonSfpOperation() -> Payments.Operation {
@@ -547,6 +571,7 @@ private extension Payments.Operation {
 }
 
 private extension Payments.ParameterSuccessLogo {
+    
     static func makeIcon(_ icon: Payments.ParameterSuccessLogo.Icon?) -> Payments.ParameterSuccessLogo? {
         return icon.map { Payments.ParameterSuccessLogo(icon: $0) }
     }

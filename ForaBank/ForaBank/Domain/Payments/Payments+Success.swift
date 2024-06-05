@@ -883,21 +883,23 @@ extension Payments.ParameterSuccessLogo {
     
     static func sfpLogo(with operation: Payments.Operation) -> Payments.ParameterSuccessLogo? {
         
-        guard case .sfp(_, _) = operation.source else { return nil }
+        guard
+            case .sfp(_, let bankId) = operation.source,
+            operation.steps.first?.back.stage == .remote(.start)
+        else { return nil }
         
         // this is super ugly workaround. Durring sfp payment user may execute internal bank transfer (if he choose Fora Bank as a distination, and his own phone number). Ideally our backend have to give us this info in response, but now it's don't.
         // so this solution based on the fact: for intenal payment first step on back must be .remote(.confirm), in other case this is sfp operation
-        guard operation.steps.first?.back.stage == .remote(.start) else { return nil }
         
         if let bankParameterValue = try? operation.parameters.value(forId: Payments.Parameter.Identifier.sfpBank.rawValue),
-           bankParameterValue == BankID.foraBankID.rawValue {
+           bankParameterValue != BankID.foraBankID.rawValue {
+            return .init(icon: .sfp)
             
-            return nil
-            
-        } else {
-            
+        } else if bankId != BankID.foraBankID.rawValue {
             return .init(icon: .sfp)
         }
+        
+        return nil
     }
 }
 
