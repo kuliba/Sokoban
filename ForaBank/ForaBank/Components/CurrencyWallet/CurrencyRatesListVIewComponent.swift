@@ -287,7 +287,7 @@ extension CurrencyRatesListView {
                                 Circle()
                                     .fill(Color.mainColorsGrayMedium)
                                     .frame(width: 26, height: 26)
-                                    .shimmering(active: true, bounce: false)
+                                    .shimmering()
                             }
                         
                             VStack(alignment: .leading, spacing: 2) {
@@ -331,7 +331,7 @@ extension CurrencyRatesListView {
                         .cornerRadius(12)
                         .frame(height: 72)
                         .padding(.vertical, 3)
-                        .shimmering(active: true, bounce: false)
+                        .shimmering()
                 }
                 
                 Spacer()

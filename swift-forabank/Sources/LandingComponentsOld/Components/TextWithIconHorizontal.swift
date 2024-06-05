@@ -112,7 +112,7 @@ public struct TextWithIconHorizontalView: View {
                         Circle()
                             .foregroundColor(.gray)//.mainColorsGrayLightest)
                             .frame(width: 28, height: 28)
-                            //.shimmering(active: true, bounce: false)
+                            .shimmering()
                     
                     case let .image(image):
                         

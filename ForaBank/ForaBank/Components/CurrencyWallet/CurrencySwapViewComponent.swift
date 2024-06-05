@@ -702,7 +702,7 @@ extension CurrencySwapView {
                     Circle()
                         .fill(Color.mainColorsGrayMedium)
                         .frame(width: 32, height: 32)
-                        .shimmering(active: true, bounce: false)
+                        .shimmering()
                 }
 
                 VStack(alignment: .leading, spacing: 4) {

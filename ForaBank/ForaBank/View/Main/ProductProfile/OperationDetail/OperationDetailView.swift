@@ -202,7 +202,7 @@ extension OperationDetailView {
                     .frame(height: 20)
                     .padding()
                     .padding(.horizontal, 10)
-                    .shimmering(active: true, bounce: true)
+                    .shimmering()
             }
         }
     }

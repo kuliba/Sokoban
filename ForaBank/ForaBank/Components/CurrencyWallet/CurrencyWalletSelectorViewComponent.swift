@@ -510,19 +510,19 @@ extension CurrencyWalletSelectorView {
                         RoundedRectangle(cornerRadius: 4)
                             .fill(Color.mainColorsGrayMedium)
                             .frame(width: 32, height: 22)
-                            .shimmering(active: true, bounce: false)
+                            .shimmering()
                         
                         VStack(alignment: .leading) {
                             
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(Color.mainColorsGrayMedium)
                                 .frame(height: 12)
-                                .shimmering(active: true, bounce: false)
+                                .shimmering()
                             
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(Color.mainColorsGrayMedium)
                                 .frame(width: 130, height: 8)
-                                .shimmering(active: true, bounce: false)
+                                .shimmering()
                         }
                     }
                 }

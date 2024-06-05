@@ -752,7 +752,7 @@ extension ProductProfileHistoryView {
                         Circle()
                             .foregroundColor(.mainColorsGrayMedium)
                             .frame(width: 40, height: 40)
-                            .shimmering(active: true, bounce: false)
+                            .shimmering()
                     }
                    
                     if let image = viewModel.amountStatusImage {
@@ -852,7 +852,7 @@ extension ProductProfileHistoryView {
                 .padding(.vertical, 8)
                 .frame(height: 56)
             }
-            .shimmering(active: true, bounce: false)
+            .shimmering()
         }
     }
     

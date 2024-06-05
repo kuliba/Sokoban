@@ -8,13 +8,27 @@
 import SwiftUI
 import Shimmer
 
-public struct shimmering: ViewModifier {
+//TODO: move to UIPrimitives and replace Landing shimmering
+
+public extension View {
     
-    let bounce: Bool = false
+    func shimmering(
+        duration: Double = 1.5,
+        bounce: Bool = false
+    ) -> some View {
     
-    public func body(content: Content) -> some View {
+        self.modifier(Shimmering(bounce: bounce, duration: duration))
+    }
+}
+
+struct Shimmering: ViewModifier {
+    
+    let bounce: Bool
+    let duration: Double
+    
+    func body(content: Content) -> some View {
         
         content
-            .shimmering(bounce: bounce)
+            .shimmering(duration: duration, bounce: bounce)
     }
 }

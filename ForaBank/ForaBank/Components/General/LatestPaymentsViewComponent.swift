@@ -515,7 +515,7 @@ struct LatestPaymentsView: View {
                         
                     case let .placeholder(placeholderVM):
                         PlaceholderView(viewModel: placeholderVM)
-                            .shimmering(active: true, bounce: true)
+                            .shimmering()
                     }
                 }
                 

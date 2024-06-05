@@ -253,7 +253,7 @@ extension CurrencyListView {
                                 Circle()
                                     .fill(Color.mainColorsGrayMedium)
                                     .frame(width: 20, height: 20)
-                                    .shimmering(active: true, bounce: false)
+                                    .shimmering()
                             }
                             
                         }.frame(width: 25, height: 25)

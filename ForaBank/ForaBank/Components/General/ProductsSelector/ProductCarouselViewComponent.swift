@@ -938,7 +938,7 @@ extension ProductCarouselView {
                     RoundedRectangle(cornerRadius: 12)
                         .frame(style.productGroupDimensions.sizes.product)
                         .foregroundColor(.mainColorsGrayLightest)
-                        .shimmering(active: true, bounce: false)
+                        .shimmering()
                 }
             }
         }

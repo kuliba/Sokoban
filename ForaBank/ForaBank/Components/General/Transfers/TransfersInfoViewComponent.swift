@@ -93,7 +93,7 @@ struct TransfersInfoView: View {
                         Circle()
                             .foregroundColor(.mainColorsGrayLightest)
                             .frame(width: 32, height: 32)
-                            .shimmering(active: true, bounce: false)
+                            .shimmering()
                     
                     case let .image(image):
                         
