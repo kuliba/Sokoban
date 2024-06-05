@@ -19,6 +19,13 @@ struct AnywayTransactionView: View {
         
         VStack(spacing: 32) {
             
+            state.status.map {
+                
+                Text("transaction status: \(String(describing: $0))")
+                    .font(.caption.bold())
+                    .foregroundColor(.red)
+            }
+            
             paymentView(elements: elements)
             factory.makeFooterView(state, { event($0.transactionEvent) })
         }
