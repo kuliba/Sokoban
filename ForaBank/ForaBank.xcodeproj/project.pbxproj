@@ -15837,7 +15837,7 @@
 				0B5F3DB7277CD16F003CC723 /* Embed Frameworks */,
 				A51568342821B927000D4455 /* Embed App Extensions */,
 				68FE3989286B36EF0026CBD7 /* ShellScript */,
-				2AFED9902C1070E3008F2F95 /* ShellScript */,
+				2AFED9902C1070E3008F2F95 /* Run Script: Add App Settings */,
 			);
 			buildRules = (
 			);
@@ -16707,7 +16707,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2AFED9902C1070E3008F2F95 /* ShellScript */ = {
+		2AFED9902C1070E3008F2F95 /* Run Script: Add App Settings */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -16716,6 +16716,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Run Script: Add App Settings";
 			outputFileListPaths = (
 			);
 			outputPaths = (
