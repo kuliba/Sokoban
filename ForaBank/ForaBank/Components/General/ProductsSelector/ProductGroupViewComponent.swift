@@ -208,9 +208,12 @@ extension ProductGroupView {
                    let nextCard = getProduct(next.id) {
                     
                     switch (currentCard.isAdditional, nextCard.isAdditional) {
-                    case (false, true), (true, false):
+                    case (true, false):
                         return true
-                        
+                      
+                    case (false, true):
+                        return currentCard.id != nextCard.parentID
+
                     case (true, true):
                         if currentCard.parentID != nextCard.parentID {
                             return true

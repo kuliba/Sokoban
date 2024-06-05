@@ -468,6 +468,18 @@ final class ProductGroupViewModelTests: XCTestCase {
         XCTAssertTrue(sut.needSeparator(for: 2))
     }
     
+    func test_needSeparator_mainWithAdditionals_returnFalse() {
+        
+        let products: [ProductViewModel] = [
+            .createViewModel(id: 2, productType: .card),
+            .createViewModel(id: 21, productType: .card),
+            .createViewModel(id: 22, productType: .card),
+        ]
+        let sut = makeSUT(visibleProducts: products, getProduct: getProduct(_:))
+        
+        XCTAssertFalse(sut.needSeparator(for: 0))
+    }
+    
     // MARK: - products update
     
     func test_update_shouldChangeVisibleProductsToAvailable() {
