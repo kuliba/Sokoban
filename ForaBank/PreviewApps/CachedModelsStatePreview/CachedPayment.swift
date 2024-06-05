@@ -12,48 +12,51 @@ struct CachedPayment {
     private let cachedModels: CachedModels
     
     private init(cachedModels: CachedModels) {
-     
+        
         self.cachedModels = cachedModels
     }
     
-    init(pairs: [(Field.ID, FieldModel)]) {
+    init(pairs: [(Element.ID, ElementModel)]) {
         
         self.cachedModels = .init(pairs: pairs)
     }
     
-    typealias CachedModels = CachedModelsState<Field.ID, FieldModel>
-    typealias Field = Payment.Field
-    typealias FieldModel = InputViewModel
+    typealias CachedModels = CachedModelsState<Element.ID, ElementModel>
+    typealias Element = Payment.Element
+    
+    enum ElementModel {
+        
+        case field(InputViewModel)
+        case param(InputViewModel)
+    }
 }
 
 extension CachedPayment {
     
-    var fields: [IdentifiedField] {
+    var models: [IdentifiedModels] {
         
-        cachedModels.keyModelPairs.map(IdentifiedField.init)
+        cachedModels.keyModelPairs.map(IdentifiedModels.init)
     }
     
-    struct IdentifiedField: Identifiable {
+    struct IdentifiedModels: Identifiable {
         
-        let id: Field.ID
-        let model: FieldModel
+        let id: Element.ID
+        let model: ElementModel
     }
     
     func updating(
-        with fields: [Field],
-        using map: @escaping (Field) -> (FieldModel)
+        with elements: [Element],
+        using map: @escaping (Element) -> (ElementModel)
     ) -> Self {
         
-        let updatedCachedModels = cachedModels.updating(with: fields, using: map)
+        let updatedCachedModels = cachedModels.updating(with: elements, using: map)
         return .init(cachedModels: updatedCachedModels)
     }
 }
 
 enum CachedPaymentEvent: Equatable {
     
-    case update([Field])
-    
-    typealias Field = Payment.Field
+    case update([Payment.Element])
 }
 
 enum CachedPaymentEffect: Equatable {}
@@ -62,13 +65,15 @@ final class CachedPaymentReducer {
     
     private let map: Map
     
-    init(map: @escaping Map) {
+    init(
+        map: @escaping Map
+    ) {
         self.map = map
     }
     
-    typealias Map = (Field) -> FieldModel
-    typealias Field = Payment.Field
-    typealias FieldModel = InputViewModel
+    typealias Map = (Element) -> ElementModel
+    typealias Element = State.Element
+    typealias ElementModel = State.ElementModel
 }
 
 extension CachedPaymentReducer {

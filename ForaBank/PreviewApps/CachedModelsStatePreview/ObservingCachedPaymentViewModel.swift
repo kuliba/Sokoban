@@ -31,7 +31,7 @@ final class ObservingCachedPaymentViewModel: ObservableObject {
         observe: @escaping Observe,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
-        let pairs = source.state.fields.map { ($0.id, map($0)) }
+        let pairs = source.state.elements.map { ($0.id, map($0)) }
         let initialState = State(pairs: pairs)
         self.state = initialState
         self.source = source
@@ -43,7 +43,7 @@ final class ObservingCachedPaymentViewModel: ObservableObject {
                 
                 guard let self else { return nil }
                 
-                return self.state.updating(with: payment.fields, using: map)
+                return self.state.updating(with: payment.elements, using: map)
             }
             .receive(on: scheduler)
             .assign(to: &$state)
@@ -64,7 +64,7 @@ final class ObservingCachedPaymentViewModel: ObservableObject {
     typealias State = CachedPayment
     typealias Event = PaymentEvent
     typealias Source = RxViewModel<Payment, PaymentEvent, PaymentEffect>
-    typealias Map = (CachedPayment.Field) -> CachedPayment.FieldModel
+    typealias Map = (CachedPayment.Element) -> CachedPayment.ElementModel
     typealias Observe = (State) -> Void
 }
 

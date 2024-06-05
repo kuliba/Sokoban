@@ -111,6 +111,22 @@ struct InputWrapperView: View {
     }
 }
 
+struct OtherInputWrapperView: View {
+    
+    @StateObject private var viewModel: InputViewModel
+    
+    init(viewModel: InputViewModel) {
+        
+        self._viewModel = .init(wrappedValue: viewModel)
+    }
+    
+    var body: some View {
+       
+        InputView(state: viewModel.state, event: viewModel.event(_:))
+            .border(Color.green)
+    }
+}
+
 struct InputView: View {
     
     let state: InputState
@@ -120,7 +136,7 @@ struct InputView: View {
         
         VStack(alignment: .leading) {
             
-            Text(state.title)
+            Text(state.title.uppercased())
                 .foregroundColor(.secondary)
                 .font(.caption.bold())
             

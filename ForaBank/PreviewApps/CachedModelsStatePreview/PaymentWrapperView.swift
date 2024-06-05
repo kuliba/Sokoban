@@ -14,33 +14,58 @@ struct PaymentWrapperView: View {
     
     init() {
         
-        let initialState = Payment(fields: [])
+        let initialState = Payment(elements: [])
         let reducer = PaymentReducer()
         let source = PaymentViewModel(
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in }
         )
-
+        
         let viewModel = ViewModel(
             source: source,
-            map: { field in
-                
-                let reducer = InputReducer()
-                let effectHandler = InputEffectHandler()
-                
-                return .init(
-                    initialState: .init(
-                        title: field.title,
-                        text: field.value
-                    ),
-                    reduce: reducer.reduce(_:_:),
-                    handleEffect: effectHandler.handleEffect(_:_:),
-                    observe: {
+            map: { element in
+#warning("extract helper")
+                switch element {
+                case let .field(field):
+                    let reducer = InputReducer()
+                    let effectHandler = InputEffectHandler()
                     
-                        source.event(.set(value: $0.text, forID: field.id))
-                    }
-                )
+                    let inputViewModel = InputViewModel(
+                        initialState: .init(
+                            title: field.title,
+                            text: field.value
+                        ),
+                        reduce: reducer.reduce(_:_:),
+                        handleEffect: effectHandler.handleEffect(_:_:),
+                        observe: {
+                            
+                            source.event(.set(value: $0.text, forID: element.id))
+                        }
+                    )
+                    
+                    return .field(inputViewModel)
+                    
+                case let .param(param):
+#warning("replace with different")
+                    let reducer = InputReducer()
+                    let effectHandler = InputEffectHandler()
+                    
+                    let inputViewModel = InputViewModel(
+                        initialState: .init(
+                            title: param.title,
+                            text: param.value
+                        ),
+                        reduce: reducer.reduce(_:_:),
+                        handleEffect: effectHandler.handleEffect(_:_:),
+                        observe: {
+                            
+                            source.event(.set(value: $0.text, forID: element.id))
+                        }
+                    )
+                    
+                    return .field(inputViewModel)
+                }
             },
             observe: { print("payment:\n", $0) }
         )
@@ -52,7 +77,7 @@ struct PaymentWrapperView: View {
         
         VStack {
             
-            list(fields: viewModel.state.fields, update: update(value:of:))
+            list(models: viewModel.state.models)
             footer(description: viewModel.state.description)
         }
         .toolbar(content: toolbar)
@@ -67,34 +92,29 @@ extension PaymentWrapperView {
 private extension PaymentWrapperView {
     
     func list(
-        fields: [Field],
-        update: @escaping (String, Field) -> Void
+        models: [CachedPayment.IdentifiedModels]
     ) -> some View {
         
         List {
             
-            ForEach(fields) { fieldView(field: $0, update: update) }
+            ForEach(models) { modelView(model: $0.model) }
         }
         .listStyle(.plain)
     }
     
-    func fieldView(
-        field: Field,
-        update: @escaping (String, Field) -> Void
+    @ViewBuilder
+    func modelView(
+        model: CachedPayment.ElementModel
     ) -> some View {
         
-        InputWrapperView(viewModel: field.model)
+        switch model {
+        case let .field(field):
+            InputWrapperView(viewModel: field)
+            
+        case let .param(param):
+            OtherInputWrapperView(viewModel: param)
+        }
     }
-    
-    func update(
-        value: String,
-        of field: Field
-    ) {
-        viewModel.event(.set(value: value, forID: field.id))
-    }
-    
-    typealias ID = CachedPayment.Field.ID
-    typealias Field = CachedPayment.IdentifiedField
     
     @ViewBuilder
     func footer(
@@ -130,11 +150,12 @@ private extension PaymentWrapperView {
         
         ToolbarItem(placement: .topBarLeading, content: fieldsCountView)
         ToolbarItem(placement: .topBarTrailing, content: addFieldButton)
+        ToolbarItem(placement: .topBarTrailing, content: addParamButton)
     }
     
     func fieldsCountView() -> some View {
         
-        Text("fields count: \(viewModel.state.fields.count)")
+        Text("fields count: \(viewModel.state.models.count)")
             .foregroundColor(.secondary)
             .font(.footnote.bold())
     }
@@ -142,15 +163,29 @@ private extension PaymentWrapperView {
     func addFieldButton() -> some View {
         
         Button {
-            viewModel.event(.add(makeNewField()))
+            viewModel.event(.addField(makeNewField()))
         } label: {
-            Label("Add field", systemImage: "plus")
+            Label("Add field", systemImage: "plus.circle")
         }
     }
     
-    private func makeNewField() -> Payment.Field {
-     
-        return .init(id: UUID().uuidString, title: "New field", value: "")
+    private func makeNewField() -> Payment.Element.Field {
+        
+        return .init(id: UUID().uuidString, title: "Field", value: "")
+    }
+    
+    func addParamButton() -> some View {
+        
+        Button {
+            viewModel.event(.addParam(makeNewParam()))
+        } label: {
+            Label("Add param", systemImage: "plus.square")
+        }
+    }
+    
+    private func makeNewParam() -> Payment.Element.Param {
+        
+        return .init(id: UUID().uuidString, title: "Param", subtitle: "subtitle", value: "")
     }
 }
 
@@ -158,9 +193,21 @@ extension Payment: CustomStringConvertible {
     
     var description: String {
         
-        return fields
-            .map { "\($0.id.suffix(6)): \"\($0.value)\"" }
-            .joined(separator: "\n")
+        return elements.map(\.description).joined(separator: "\n")
+    }
+}
+
+extension Payment.Element: CustomStringConvertible {
+    
+    var description: String {
+        
+        switch self {
+        case let .field(field):
+            return "field: \(field.id.suffix(4)): \"\(field.value)\""
+            
+        case let .param(param):
+            return "param: \(param.id.suffix(4)): \"\(param.value)\""
+        }
     }
 }
 
@@ -168,12 +215,39 @@ extension CachedPayment: CustomStringConvertible {
     
     var description: String {
         
-        return fields
-            .map { "\($0.id.suffix(6)): \"\($0.model.state.text)\"" }
-            .joined(separator: "\n")
+        return models.map(\.description).joined(separator: "\n")
     }
 }
 
+extension CachedPayment.IdentifiedModels: CustomStringConvertible {
+    
+    var description: String {
+        
+        "\(id.description): \"\(model.description)\""
+    }
+}
+
+extension CachedPayment.Element.ID: CustomStringConvertible {
+    
+    var description: String {
+        
+        switch self {
+        case let .field(id): return "field: \(id.suffix(4))"
+        case let .param(id): return "param: \(id.suffix(4))"
+        }
+    }
+}
+
+extension CachedPayment.ElementModel: CustomStringConvertible {
+    
+    var description: String {
+        
+        switch self {
+        case let .field(field): return "\(field.state.text)"
+        case let .param(param): return "\(param.state.text)"
+        }
+    }
+}
 //#Preview {
 //    PaymentWrapperView(viewModel: <#PaymentWrapperView.ViewModel#>)
 //}
