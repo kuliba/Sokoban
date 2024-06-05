@@ -1391,7 +1391,6 @@
 		2AFED96F2C0F929C008F2F95 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AFED96E2C0F929C008F2F95 /* Preview Assets.xcassets */; };
 		2AFED9762C0F92F1008F2F95 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFED9752C0F92F1008F2F95 /* RxViewModel */; };
 		2AFED9782C0F92FC008F2F95 /* ForaTools in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFED9772C0F92FC008F2F95 /* ForaTools */; };
-		2AFED98C2C104327008F2F95 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2AFED98B2C104166008F2F95 /* Settings.bundle */; };
 		2AFF5D292A9885210097F429 /* CryptoSwaddler in Frameworks */ = {isa = PBXBuildFile; productRef = 2AFF5D282A9885210097F429 /* CryptoSwaddler */; };
 		50037F7A2934D107009D1F0C /* TransfersInfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50037F792934D107009D1F0C /* TransfersInfoViewComponent.swift */; };
 		50037F7C2934DE56009D1F0C /* TransfersPromoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50037F7B2934DE56009D1F0C /* TransfersPromoViewComponent.swift */; };
@@ -16453,7 +16452,6 @@
 				0B66E8E626CC658A00FD735D /* GKHStoryboard.storyboard in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
 				503F075A28252E1B00E84A77 /* Inter-SemiBold.ttf in Resources */,
-				2AFED98C2C104327008F2F95 /* Settings.bundle in Resources */,
 				2A3E03BC2B74C6B000A4494D /* getBankDefaultC4.json in Resources */,
 				0C276593290691C10007D31D /* MyProductsOrdered3x.mov in Resources */,
 				2A3E03AE2B74C6B000A4494D /* getC2BSubJ1.json in Resources */,
