@@ -915,6 +915,7 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             .shimmer,
+            .uiPrimitives,
         ],
         path: "Sources/Landing/\(String.landingUIComponent)"
     )
@@ -1726,6 +1727,7 @@ private extension Target {
         dependencies: [
             .foraTools,
             .sharedConfigs,
+            .shimmer,
         ],
         path: "Sources/UI/\(String.uiPrimitives)"
     )

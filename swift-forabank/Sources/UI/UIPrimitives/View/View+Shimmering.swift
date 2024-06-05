@@ -1,8 +1,8 @@
 //
 //  View+Shimmering.swift
-//  
 //
-//  Created by Andryusina Nataly on 19.09.2023.
+//
+//  Created by Дмитрий Савушкин on 05.06.2024.
 //
 
 import SwiftUI
