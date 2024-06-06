@@ -2485,6 +2485,7 @@
 		C1F8315129DF0D6900D2C40E /* PaymentsTemplateListGenericResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = C1F8315029DF0D6900D2C40E /* PaymentsTemplateListGenericResponse.json */; };
 		C1F8F5FE294A50B800FE5703 /* HintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F8F5FD294A50B800FE5703 /* HintView.swift */; };
 		C1F8F601294A53B600FE5703 /* HintViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F8F600294A53B600FE5703 /* HintViewModel.swift */; };
+		C1FB087E2C0FC1B400137907 /* CalendarUI in Frameworks */ = {isa = PBXBuildFile; productRef = C1FB087D2C0FC1B400137907 /* CalendarUI */; };
 		D41D73FA2BA25C47002C0688 /* GetProductListByTypeService in Frameworks */ = {isa = PBXBuildFile; productRef = D41D73F92BA25C47002C0688 /* GetProductListByTypeService */; };
 		D45C68A92BAC6685008F8B35 /* GetProductListByType_Account_Response.json in Resources */ = {isa = PBXBuildFile; fileRef = D45C68A52BAC6684008F8B35 /* GetProductListByType_Account_Response.json */; };
 		D45C68AA2BAC6685008F8B35 /* GetProductListByType_Card_Response.json in Resources */ = {isa = PBXBuildFile; fileRef = D45C68A62BAC6685008F8B35 /* GetProductListByType_Card_Response.json */; };
@@ -5785,6 +5786,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1FB087E2C0FC1B400137907 /* CalendarUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -15033,6 +15035,9 @@
 			dependencies = (
 			);
 			name = CalendarPreview;
+			packageProductDependencies = (
+				C1FB087D2C0FC1B400137907 /* CalendarUI */,
+			);
 			productName = CalendarPreview;
 			productReference = C1E07D952BFE2D2F00D07180 /* CalendarPreview.app */;
 			productType = "com.apple.product-type.application";
@@ -22687,6 +22692,10 @@
 		C1BC73E42AE277CE0022D849 /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TextFieldComponent;
+		};
+		C1FB087D2C0FC1B400137907 /* CalendarUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CalendarUI;
 		};
 		D41D73F92BA25C47002C0688 /* GetProductListByTypeService */ = {
 			isa = XCSwiftPackageProductDependency;

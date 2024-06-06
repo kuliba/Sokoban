@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2A69C1A92BE4E3AF00FE91B0"
-               BuildableName = "UtilityServicePaymentFlowPreview.app"
-               BlueprintName = "UtilityServicePaymentFlowPreview"
+               BlueprintIdentifier = "C1C6F1C52B83642300237C07"
+               BuildableName = "OperatorsListPreview.app"
+               BlueprintName = "OperatorsListPreview"
                ReferencedContainer = "container:ForaBank.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2A69C1A92BE4E3AF00FE91B0"
-            BuildableName = "UtilityServicePaymentFlowPreview.app"
-            BlueprintName = "UtilityServicePaymentFlowPreview"
+            BlueprintIdentifier = "C1C6F1C52B83642300237C07"
+            BuildableName = "OperatorsListPreview.app"
+            BlueprintName = "OperatorsListPreview"
             ReferencedContainer = "container:ForaBank.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -61,9 +61,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2A69C1A92BE4E3AF00FE91B0"
-            BuildableName = "UtilityServicePaymentFlowPreview.app"
-            BlueprintName = "UtilityServicePaymentFlowPreview"
+            BlueprintIdentifier = "C1C6F1C52B83642300237C07"
+            BuildableName = "OperatorsListPreview.app"
+            BlueprintName = "OperatorsListPreview"
             ReferencedContainer = "container:ForaBank.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

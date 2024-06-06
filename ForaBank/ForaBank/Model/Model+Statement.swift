@@ -9,7 +9,20 @@ import Foundation
 import ServerAgent
 
 typealias StatementsData = [ProductData.ID: ProductStatementsStorage]
-
+//
+//private struct _Period: Hashable {
+//
+//    let start: Date
+//    let end: Date
+//}
+//
+//extension _Period {
+//    
+//    func contains(_ other: Self) -> Bool {
+//        
+////        other.start <= other.end
+//    }
+//}
 //MARK: - Action
 
 extension ModelAction {

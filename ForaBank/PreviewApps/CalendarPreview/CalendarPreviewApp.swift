@@ -6,12 +6,18 @@
 //
 
 import SwiftUI
+import CalendarUI
 
 @main
 struct CalendarPreviewApp: App {
+    
     var body: some Scene {
+        
         WindowGroup {
-            ContentView()
+            
+            NavigationView {
+                ContentView()
+            }
         }
     }
 }

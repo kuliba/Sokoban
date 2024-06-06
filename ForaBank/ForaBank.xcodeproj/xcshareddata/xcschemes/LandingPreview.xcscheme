@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2A69C1A92BE4E3AF00FE91B0"
-               BuildableName = "UtilityServicePaymentFlowPreview.app"
-               BlueprintName = "UtilityServicePaymentFlowPreview"
+               BlueprintIdentifier = "83378AB42AA0DFE10087F8B1"
+               BuildableName = "LandingPreview.app"
+               BlueprintName = "LandingPreview"
                ReferencedContainer = "container:ForaBank.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2A69C1A92BE4E3AF00FE91B0"
-            BuildableName = "UtilityServicePaymentFlowPreview.app"
-            BlueprintName = "UtilityServicePaymentFlowPreview"
+            BlueprintIdentifier = "83378AB42AA0DFE10087F8B1"
+            BuildableName = "LandingPreview.app"
+            BlueprintName = "LandingPreview"
             ReferencedContainer = "container:ForaBank.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -61,9 +61,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2A69C1A92BE4E3AF00FE91B0"
-            BuildableName = "UtilityServicePaymentFlowPreview.app"
-            BlueprintName = "UtilityServicePaymentFlowPreview"
+            BlueprintIdentifier = "83378AB42AA0DFE10087F8B1"
+            BuildableName = "LandingPreview.app"
+            BlueprintName = "LandingPreview"
             ReferencedContainer = "container:ForaBank.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
