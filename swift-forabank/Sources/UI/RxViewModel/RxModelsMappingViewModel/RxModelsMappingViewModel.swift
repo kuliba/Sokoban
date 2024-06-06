@@ -44,13 +44,6 @@ where Item: Identifiable {
             .receive(on: scheduler)
             .sink { [weak self] in self?.update(with: $0) }
             .store(in: &cancellables)
-        
-        print(">>>>>> \(self) init")
-    }
-    
-    deinit {
-        
-        print(">>>>>> \(self) deinit")
     }
 }
 

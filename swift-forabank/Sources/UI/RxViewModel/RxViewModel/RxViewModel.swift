@@ -32,13 +32,6 @@ public final class RxViewModel<State, Event, Effect>: ObservableObject {
             .removeDuplicates(by: predicate)
             .receive(on: scheduler)
             .assign(to: &$state)
-        
-        print(">>>>>> \(self) init")
-    }
-    
-    deinit {
-        
-        print(">>>>>> \(self) deinit")
     }
 }
 
