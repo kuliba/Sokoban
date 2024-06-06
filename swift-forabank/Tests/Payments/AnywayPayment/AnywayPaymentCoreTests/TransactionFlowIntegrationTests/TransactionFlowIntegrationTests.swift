@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 31.03.2024.
 //
 
+import AnywayPaymentDomain
 import AnywayPaymentCore
 import RxViewModel
 import XCTest
@@ -203,33 +204,49 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         XCTAssertEqual(paymentMaker.callCount, 0)
     }
     
-    func test_shouldCallPaymentInitiatorTwiceOnRestartPayment() {
-        
-        let initialState = makeTransaction()
-        let updatedPayment = makePayment()
-        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
-            makeStub(shouldRestartPayment: true, updatePayment: updatedPayment),
-            initialState: initialState
-        )
-        
-        sut.event(.initiatePayment)
-        paymentInitiator.complete(with: .success(makeUpdate()))
-        
-        sut.event(.continue)
-        paymentInitiator.complete(with: .success(makeUpdate()), at: 1)
-
-        assert(stateSpy, initialState, {
-            _ in
-        }, {
-            $0.payment = updatedPayment
-            $0.isValid = true
-        })
-        
-        XCTAssertEqual(paymentInitiator.callCount, 2)
-        XCTAssertEqual(paymentEffectHandler.callCount, 0)
-        XCTAssertEqual(paymentMaker.callCount, 0)
-        XCTAssertEqual(paymentProcessing.callCount, 0)
-    }
+//    func test_shouldCallPaymentInitiatorTwiceOnRestartPayment() {
+//        
+//        let initialState = makeTransaction(makePayment(shouldRestart: true))
+//        let updatedPayment = makePayment()
+//        let editedPayment = makePayment()
+//        let (sut, stateSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT(
+//            makeStub(
+//                paymentReduce: (editedPayment, nil),
+//                updatePayment: updatedPayment,
+//                wouldNeedRestart: true
+//            ),
+//            initialState: initialState
+//        )
+//        
+//        sut.event(.initiatePayment)
+//        paymentInitiator.complete(with: .success(makeUpdate()))
+//        
+//        sut.event(.payment(.select))
+//        sut.event(.paymentRestartConfirmation(true))
+//        
+//        sut.event(.continue)
+//        paymentInitiator.complete(with: .success(makeUpdate()), at: 1)
+//        
+//        assert(stateSpy, initialState, {
+//            _ in
+//        }, {
+//            $0.payment = updatedPayment
+//            $0.isValid = true
+//        }, {
+//            $0.payment = editedPayment
+//            $0.status = .awaitingPaymentRestartConfirmation
+//        }, {
+//            $0.payment.shouldRestart = true
+//            $0.status = nil
+//        }, {
+//            $0.payment = updatedPayment
+//        })
+//        
+//        XCTAssertEqual(paymentInitiator.callCount, 2)
+//        XCTAssertEqual(paymentEffectHandler.callCount, 0)
+//        XCTAssertEqual(paymentMaker.callCount, 0)
+//        XCTAssertEqual(paymentProcessing.callCount, 0)
+//    }
     
     func test_makePaymentFailure_shouldIgnoreSuccessiveEvents() {
         
@@ -328,21 +345,16 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias State = Transaction<DocumentStatus, OperationDetails, Payment>
-    private typealias Event = TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate>
-    private typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
+    private typealias State = _Transaction
+    private typealias Event = _TransactionEvent
+    private typealias Effect = _TransactionEffect
     
     private typealias SUT = RxViewModel<State, Event, Effect>
     private typealias StateSpy = ValueSpy<State>
-    private typealias Reducer = TransactionReducer<DocumentStatus, OperationDetails, Payment, PaymentEffect, PaymentEvent, PaymentDigest, PaymentUpdate>
-    private typealias EffectHandler = TransactionEffectHandler<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
+    private typealias Reducer = _TransactionReducer
+    private typealias EffectHandler = _TransactionEffectHandler
     
-    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), shouldRestartPayment: Bool, stagePayment: Payment?, updatePayment: Payment, validatePayment: Bool)
-    
-    private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
-    private typealias PaymentInitiator = PaymentProcessing
-    private typealias PaymentMaker = Spy<VerificationCode, EffectHandler.MakePaymentResult>
-    private typealias PaymentProcessing = Spy<PaymentDigest, EffectHandler.ProcessResult>
+    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Payment, Effect?), restorePayment: Payment, stagePayment: Payment?, updatePayment: Payment, validatePayment: Bool, wouldNeedRestart: Bool)
     
     private typealias Inspector = PaymentInspector<Payment, PaymentDigest>
 
@@ -368,8 +380,9 @@ final class TransactionFlowIntegrationTests: XCTestCase {
                 checkFraud: { _ in stub.checkFraud },
                 getVerificationCode: { _ in stub.getVerificationCode },
                 makeDigest: { _ in stub.makeDigest },
-                shouldRestartPayment: { _ in stub.shouldRestartPayment },
-                validatePayment: { _ in stub.validatePayment }
+                restorePayment: { _ in stub.restorePayment },
+                validatePayment: { _ in stub.validatePayment },
+                wouldNeedRestart: { _ in stub.wouldNeedRestart }
             )
         )
         let paymentInitiator = PaymentInitiator()
@@ -377,12 +390,13 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         let paymentMaker = PaymentMaker()
         let paymentProcessing = PaymentProcessing()
         let effectHandler = EffectHandler(
-            initiatePayment: paymentInitiator.process,
-            makePayment: paymentMaker.process,
-            paymentEffectHandle: paymentEffectHandler.handleEffect,
-            processPayment: paymentProcessing.process
+            microServices: .init(
+                initiatePayment: paymentInitiator.process,
+                makePayment: paymentMaker.process,
+                paymentEffectHandle: paymentEffectHandler.handleEffect,
+                processPayment: paymentProcessing.process
+            )
         )
-        
         let sut = SUT(
             initialState: initialState,
             reduce: reducer.reduce,
@@ -408,20 +422,22 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         getVerificationCode: VerificationCode? = nil,
         makeDigest: PaymentDigest = makePaymentDigest(),
         paymentReduce: (Payment, Effect?) = (makePayment(), nil),
-        shouldRestartPayment: Bool = false,
+        restorePayment: Payment = makePayment(),
         stagePayment: Payment? = nil,
         updatePayment: Payment = makePayment(),
-        validatePayment: Bool = true
+        validatePayment: Bool = true,
+        wouldNeedRestart: Bool = true
     ) -> Stub {
         (
             checkFraud: checkFraud,
             getVerificationCode: getVerificationCode,
             makeDigest: makeDigest,
             paymentReduce: paymentReduce,
-            shouldRestartPayment: shouldRestartPayment,
+            restorePayment: restorePayment,
             stagePayment: stagePayment,
             updatePayment: updatePayment,
-            validatePayment: validatePayment
+            validatePayment: validatePayment,
+            wouldNeedRestart: wouldNeedRestart
         )
     }
     

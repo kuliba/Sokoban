@@ -12,19 +12,18 @@ import OperatorsListComponents
 extension PaymentsTransfersFlowEffectHandler
 where LastPayment == UtilityPaymentLastPayment,
       Operator == UtilityPaymentOperator,
-      UtilityService == ForaBank.UtilityService {
+      Service == UtilityService {
     
     static func preview(
     ) -> Self {
         
-        typealias UtilityPrepaymentEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+        typealias UtilityPrepaymentEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, Service>
         
         let utilityPrepaymentEffectHandler = UtilityPrepaymentEffectHandler(
-            initiateUtilityPayment: { _ in },
-            startPayment: { _,_ in }
+            microServices: .preview
         )
         
-        typealias EffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService>
+        typealias EffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, Service>
         
         let effectHandler = EffectHandler(
             utilityPrepaymentEffectHandle: utilityPrepaymentEffectHandler.handleEffect(_:_:)

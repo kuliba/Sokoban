@@ -165,11 +165,18 @@ extension PaymentTemplateData {
               transfer.payeeInternal?.phoneNumber != nil
         else { return nil }
         
-        return "100000000217"
+        return BankID.foraBankID.rawValue
     }
     
     var payerProductId: Int? {
         
         parameterList.last?.payer?.accountId ?? parameterList.last?.payer?.cardId
+    }
+    
+    var sfpPhone: String? {
+        
+        let anywayData = self.parameterList.first as? TransferAnywayData
+        return anywayData?.additional
+         .first(where: { $0.fieldname == Payments.Parameter.Identifier.sfpPhone.rawValue })?.fieldvalue
     }
 }

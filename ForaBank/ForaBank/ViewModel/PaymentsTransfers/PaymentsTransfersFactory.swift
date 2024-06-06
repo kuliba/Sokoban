@@ -5,11 +5,15 @@
 //  Created by Igor Malyarov on 03.05.2024.
 //
 
+import SwiftUI
+
 struct PaymentsTransfersFactory {
     
     let makeUtilitiesViewModel: MakeUtilitiesViewModel
     let makeProductProfileViewModel: MakeProductProfileViewModel
     let makeTemplatesListViewModel: MakeTemplatesListViewModel
+    let makeSections: MakePaymentsTransfersSections
+    let makeAlertDataUpdateFailureViewModel: MakeAlertDataUpdateFailureViewModel
 }
 
 extension PaymentsTransfersFactory {
@@ -35,6 +39,9 @@ extension PaymentsTransfersFactory {
     
     typealias DismissAction = () -> Void
     typealias MakeTemplatesListViewModel = (@escaping DismissAction) -> TemplatesListViewModel
+    
+    typealias MakePaymentsTransfersSections = () -> [PaymentsTransfersSectionViewModel]
+    typealias MakeAlertDataUpdateFailureViewModel = (@escaping DismissAction) -> Alert.ViewModel?
 }
 
 extension PaymentsTransfersFactory {
@@ -44,17 +51,27 @@ extension PaymentsTransfersFactory {
         let productProfileViewModel = ProductProfileViewModel.make(
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
-            makeUtilitiesViewModel: { _,_ in },
+            makeUtilitiesViewModel: { _,_ in }, 
+            makeTemplatesListViewModel: { _ in .sampleComplete },
             paymentsTransfersFlowManager: .preview,
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .init(
+                alertReduce: AlertReducer(productAlertsViewModel: .default).reduce,
+                bottomSheetReduce: BottomSheetReducer().reduce,
+                handleEffect: ProductNavigationStateEffectHandler().handleEffect
+            ), 
+            updateInfoStatusFlag: .init(.inactive)
         )
         return .init(
             makeUtilitiesViewModel: { _,_ in },
             makeProductProfileViewModel: productProfileViewModel,
-            makeTemplatesListViewModel: { _ in .sampleComplete }
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeSections: { Model.emptyMock.makeSections(flag: .init(.inactive)) },
+            makeAlertDataUpdateFailureViewModel: { _ in nil }
         )
     }()
 }

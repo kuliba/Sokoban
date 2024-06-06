@@ -15,46 +15,42 @@ extension ResponseMapper {
     static func mapGetAllLatestPaymentsResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> [LatestPayment] {
+    ) -> [LatestServicePayment] {
         
-        do {
-            switch httpURLResponse.statusCode {
-            case 200:
-                let operators = try JSONDecoder().decode([LatestPaymentCodable].self, from: data)
-                return map(operators)
-                
-            default:
-                return []
-            }
-        } catch {
+        switch httpURLResponse.statusCode {
+        case 200:
+            let operators = try? JSONDecoder().decode([LatestPaymentCodable].self, from: data)
+            return (operators ?? []).map(LatestServicePayment.init)
+            
+        default:
             return []
         }
     }
+}
+
+private extension ResponseMapper.LatestServicePayment {
     
-    private static func map(
-        _ data: [LatestPaymentCodable]
-    ) -> [LatestPayment] {
+    init(_ last: ResponseMapper.LatestPaymentCodable) {
         
-        data.map {
-            
-            return .init(
-                title: $0.name,
-                amount: .init($0.amount),
-                md5Hash: $0.md5hash
-            )
-        }
+        self.init(
+            title: last.name,
+            amount: .init(last.amount),
+            md5Hash: last.md5hash,
+            puref: last.puref
+        )
     }
 }
 
 //TODO: move to module
 extension ResponseMapper {
     
-    struct LatestPayment: Identifiable {
+    struct LatestServicePayment: Identifiable {
         
         var id: String { title }
         let title: String
         let amount: Decimal
         let md5Hash: String?
+        let puref: String
     }
 }
 
@@ -91,7 +87,6 @@ extension LatestPaymentKind {
         }
     }
 }
-
 
 private extension ResponseMapper {
     

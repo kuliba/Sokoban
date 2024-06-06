@@ -6,6 +6,7 @@
 //  Full refactored by Dmitry Martynov on 18.09.2022
 //
 
+import ActivateSlider
 import Foundation
 import InfoComponent
 import SberQR
@@ -18,6 +19,8 @@ struct MyProductsView: View {
     @ObservedObject var viewModel: MyProductsViewModel
     
     let viewFactory: PaymentsTransfersViewFactory
+    let productProfileViewFactory: ProductProfileViewFactory
+
     let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
@@ -117,6 +120,7 @@ struct MyProductsView: View {
                         ProductProfileView(
                             viewModel: productProfileViewModel,
                             viewFactory: viewFactory,
+                            productProfileViewFactory: productProfileViewFactory,
                             getUImage: getUImage
                         )
                     }
@@ -182,6 +186,7 @@ struct MyProductsView_Previews: PreviewProvider {
         MyProductsView(
             viewModel: viewModel,
             viewFactory: .preview,
+            productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)),
             getUImage: { _ in nil }
         )
     }
@@ -196,12 +201,14 @@ extension PaymentsTransfersViewFactory {
                 
                 .init(
                     viewModel: $0,
-                    map: Info.preview(info:),
+                    map: PublishingInfo.preview(info:),
                     config: .iFora
                 )
             },
             makeUserAccountView: UserAccountView.init(viewModel:),
-            makeIconView: IconDomain.preview
+            makeIconView: IconDomain.preview,
+            makeUpdateInfoView: UpdateInfoView.init(text:),
+            makeAnywayPaymentFactory: { _ in fatalError() }
         )
     }
 }

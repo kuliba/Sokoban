@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct TextConfig {
+public struct TextConfig: Equatable {
     
     public let textFont: Font
     public let textColor: Color

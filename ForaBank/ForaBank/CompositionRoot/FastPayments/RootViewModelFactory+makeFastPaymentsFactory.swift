@@ -10,6 +10,7 @@ import FastPaymentsSettings
 import Foundation
 import UserAccountNavigationComponent
 import SwiftUI
+import UIPrimitives
 
 extension RootViewModelFactory {
     
@@ -65,7 +66,7 @@ private extension Model {
         bankListFullInfo.value
             .filter {
                 $0.receiverList.contains("ME2MEPULL")
-                && $0.memberId != "100000000217"
+                && $0.memberId != BankID.foraBankID.rawValue
             }
             .compactMap(FastPaymentsSettings.Bank.init(info:))
             .sorted(by: \.name)
@@ -115,8 +116,14 @@ private extension Model {
        
         .init(
             background: .image(self.images.value[productData.largeDesignMd5Hash]?.image ?? .cardPlaceholder),
-            color: productData.backgroundColor.description,
-            icon: .image(self.images.value[productData.smallDesignMd5hash]?.image ?? .cardPlaceholder)
+            color: productData.backgroundColor, 
+            icon: {
+                if let image = productData.clover.image {
+                    return .image(image)
+                } else {
+                    return .svg("")
+                }
+            }()
         )
     }
     
@@ -138,7 +145,7 @@ private extension FastPaymentsSettings.Product.Look {
     
     static let `default`: Self = .init(
         background: .image(.cardPlaceholder),
-        color: Color.clear.description,
+        color: .clear,
         icon: .image(.cardPlaceholder))
 }
 
@@ -230,6 +237,7 @@ private extension ProductAccountData {
         
         .init(
             id: .account(.init(id)),
+            isAdditional: false,
             header: "Счет списания",
             title: displayName,
             number: displayNumber ?? "",
@@ -265,6 +273,7 @@ private extension ProductCardData {
         
         .init(
             id: .card(.init(id), accountID: .init(accountID)),
+            isAdditional: isAdditional,
             header: "Счет списания",
             title: displayName,
             number: displayNumber ?? "",
@@ -288,5 +297,42 @@ private extension ProductCardData {
             icon: .image(getImage(smallDesignMd5hash) ?? .cardPlaceholder),
             balance: formatBalance(self)
         )
+    }
+}
+
+extension ProductData {
+    
+    var clover: Icon {
+        
+        if let cloverImage {
+            return .image(cloverImage)
+        }
+        return .svg("")
+    }
+    
+    var cloverImage: Image? {
+        
+        if let cloverUIImage {
+            return .init(uiImage: cloverUIImage)
+        }
+        return nil
+    }
+    
+    var cloverUIImage: UIImage? {
+        
+        guard let card = self as? ProductCardData else { return nil }
+        
+        let isDark = (background.first?.description == "F6F6F7")
+        
+        switch card.cardType {
+        case .main:
+            return .init( named: isDark ? "ic16MainCardGreyFixed2" : "ic16MainCardWhiteFixed2")
+            
+        case .additionalOther, .additionalSelf, .additionalSelfAccOwn:
+            return .init(named: isDark ? "ic16AdditionalCardGrey" : "ic16AdditionalCardWhite")
+            
+        default:
+            return nil
+        }
     }
 }

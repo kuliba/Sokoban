@@ -718,17 +718,21 @@ extension PaymentsSelectView {
 
 struct PaymentsSelectView_Previews: PreviewProvider {
     
+    private static func preview(_ viewModel: PaymentsGroupViewModel) -> some View {
+        PaymentsGroupView(viewModel: viewModel)
+    }
+
     static var previews: some View {
         
         Group {
             
-            PaymentsGroupView(viewModel: PaymentsSelectView.ViewModel.emptySelectionGroup)
+            preview(PaymentsSelectView.ViewModel.emptySelectionGroup)
                 .previewDisplayName("Empty Selection")
             
-            PaymentsGroupView(viewModel: PaymentsSelectView.ViewModel.selectedGroup)
+            preview(PaymentsSelectView.ViewModel.selectedGroup)
                 .previewDisplayName("Selected")
             
-            PaymentsGroupView(viewModel: PaymentsSelectView.ViewModel.disabledGroup)
+            preview(PaymentsSelectView.ViewModel.disabledGroup)
                 .previewDisplayName("Disabled")
         }
     }

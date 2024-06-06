@@ -1,0 +1,108 @@
+//
+//  AnywayTransactionView.swift
+//  ForaBank
+//
+//  Created by Igor Malyarov on 23.05.2024.
+//
+
+import AnywayPaymentDomain
+import SwiftUI
+import UIPrimitives
+
+struct AnywayTransactionView: View {
+    
+    let state: State
+    let event: (Event) -> Void
+    let factory: Factory
+    
+    var body: some View {
+        
+        VStack(spacing: 32) {
+            
+            state.status.map {
+                
+                Text("transaction status: \(String(describing: $0))")
+                    .font(.caption.bold())
+                    .foregroundColor(.red)
+            }
+            
+            paymentView(elements: elements)
+            factory.makeFooterView(state, { event($0.transactionEvent) })
+        }
+    }
+}
+
+extension AnywayTransactionView {
+    
+    typealias State = AnywayTransactionState
+    typealias Event = AnywayTransactionEvent
+    typealias Factory = AnywayPaymentFactory<IconView>
+    typealias IconView = UIPrimitives.AsyncImage
+}
+
+private extension AnywayTransactionView {
+    
+    var elements: [Element] { state.payment.payment.elements }
+    
+    private func paymentView(
+        elements: [Element]
+    ) -> some View {
+        
+        ScrollViewReader { proxy in
+            
+            ScrollView(showsIndicators: false, content: scrollContent)
+                .onAppear { scrollToLast(of: elements, proxy) }
+                .onChange(of: elements.map(\.id).last) {
+                    
+                    scrollToLastItem(withID: $0, proxy)
+                }
+        }
+    }
+    
+    private func scrollContent() -> some View {
+        
+        VStack(spacing: 32) {
+            
+            ForEach(elements, content: factory.makeElementView)
+        }
+        .padding()
+    }
+    
+    private func scrollToLast(
+        of elements: [Element],
+        _ proxy: ScrollViewProxy
+    ) {
+        scrollToLastItem(withID: elements.last?.id, proxy)
+    }
+    
+    private func scrollToLastItem(
+        withID id: Element.ID?,
+        _ proxy: ScrollViewProxy
+    ) {
+        if let id {
+            
+            withAnimation {
+                
+                proxy.scrollTo(id, anchor: .bottom)
+            }
+        }
+    }
+    
+    typealias Element = AnywayPaymentDomain.AnywayPayment.Element
+}
+
+// MARK: - Adapters
+
+private extension AnywayPaymentFooterEvent {
+    
+    var transactionEvent: AnywayTransactionEvent {
+        
+        switch self {
+        case .continue:
+            return .continue
+            
+        case let .edit(decimal):
+            return .payment(.widget(.amount(decimal)))
+        }
+    }
+}

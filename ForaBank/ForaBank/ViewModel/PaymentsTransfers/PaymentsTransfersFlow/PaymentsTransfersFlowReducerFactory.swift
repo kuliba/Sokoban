@@ -5,23 +5,21 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
-struct PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, UtilityPaymentViewModel> {
+struct PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Content, UtilityPaymentViewModel> {
     
-    let makeUtilityPrepaymentViewModel: MakeUtilityPrepaymentViewModel
-    let makeUtilityPaymentViewModel: MakeUtilityPaymentViewModel
+    let makeUtilityPrepaymentState: MakeUtilityPrepaymentState
+    let makeUtilityPaymentState: MakeUtilityPaymentState
     let makePaymentsViewModel: MakePaymentsViewModel
 }
 
 extension PaymentsTransfersFlowReducerFactory {
     
-    typealias UtilityPrepaymentFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
-    typealias Payload = UtilityPrepaymentFlowEvent.UtilityPrepaymentPayload
-    typealias MakeUtilityPrepaymentViewModel = (Payload) -> Content
+    typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
+    typealias Payload = UtilityPrepaymentEvent.Initiated.UtilityPrepaymentPayload
+    typealias MakeUtilityPrepaymentState = (Payload) -> UtilityPaymentFlowState<Operator, Service, Content, UtilityPaymentViewModel>
     
-    typealias MakeUtilityPaymentViewModelPayload = UtilityPrepaymentFlowEvent
-        .StartPaymentSuccess.StartPaymentResponse
     typealias Notify = (PaymentStateProjection) -> Void
-    typealias MakeUtilityPaymentViewModel = (MakeUtilityPaymentViewModelPayload, @escaping Notify) -> UtilityPaymentViewModel
+    typealias MakeUtilityPaymentState = (AnywayTransactionState, @escaping Notify) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel>
     
     typealias CloseAction = () -> Void
     typealias MakePaymentsViewModel = (@escaping CloseAction) -> PaymentsViewModel

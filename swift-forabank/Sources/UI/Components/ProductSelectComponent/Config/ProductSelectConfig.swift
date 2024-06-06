@@ -7,6 +7,7 @@
 
 import SharedConfigs
 import SwiftUI
+import CarouselComponent
 
 public struct ProductSelectConfig {
     
@@ -17,6 +18,7 @@ public struct ProductSelectConfig {
     let header: TextConfig
     let missingSelected: MissingSelected
     let title: TextConfig
+    let carouselConfig: CarouselComponentConfig
     
     public init(
         amount: TextConfig,
@@ -25,7 +27,8 @@ public struct ProductSelectConfig {
         footer: TextConfig,
         header: TextConfig,
         missingSelected: MissingSelected,
-        title: TextConfig
+        title: TextConfig,
+        carouselConfig: CarouselComponentConfig
     ) {
         self.amount = amount
         self.card = card
@@ -34,6 +37,7 @@ public struct ProductSelectConfig {
         self.header = header
         self.missingSelected = missingSelected
         self.title = title
+        self.carouselConfig = carouselConfig
     }
 }
 
@@ -45,17 +49,20 @@ public extension ProductSelectConfig {
         let cardSize: CGSize
         let number: TextConfig
         let title: TextConfig
+        let selectedImage: Image
         
         public init(
             amount: TextConfig,
             cardSize: CGSize = .init(width: 112, height: 71),
             number: TextConfig,
-            title: TextConfig
+            title: TextConfig,
+            selectedImage: Image
         ) {
             self.amount = amount
             self.cardSize = cardSize
             self.number = number
             self.title = title
+            self.selectedImage = selectedImage
         }
     }
     

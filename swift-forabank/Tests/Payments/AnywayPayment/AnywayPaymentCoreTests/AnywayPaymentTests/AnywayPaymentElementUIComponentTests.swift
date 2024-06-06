@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentCore
+import AnywayPaymentDomain
 import XCTest
 
 final class AnywayPaymentElementUIComponentTests: XCTestCase {
@@ -14,16 +15,68 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     
     func test_uiComponent_shouldDeliverFieldForField() {
         
-        let element = makeAnywayPaymentFieldElement(.init(
+        let element = makeAnywayPaymentFieldElement(makeAnywayPaymentField(
             id: "123",
-            title: "CDE",
-            value: "abc"
+            value: "abc",
+            title: "CDE"
         ))
         
         XCTAssertNoDiff(element.uiComponent, .field(.init(
             name: "123",
             title: "CDE",
-            value: "abc"
+            value: "abc",
+            image: nil
+        )))
+    }
+    
+    func test_uiComponent_shouldDeliverFieldForFieldWithMD5Hash() {
+        
+        let element = makeAnywayPaymentFieldElement(makeAnywayPaymentField(
+            "123",
+            value: "abc",
+            title: "CDE",
+            image: .md5Hash("md5Hash")
+        ))
+        
+        XCTAssertNoDiff(element.uiComponent, .field(.init(
+            name: "123",
+            title: "CDE",
+            value: "abc",
+            image: .md5Hash("md5Hash")
+        )))
+    }
+    
+    func test_uiComponent_shouldDeliverFieldForFieldWithSVG() {
+        
+        let element = makeAnywayPaymentFieldElement(makeAnywayPaymentField(
+            "123",
+            value: "abc",
+            title: "CDE",
+            image: .svg("svg")
+        ))
+        
+        XCTAssertNoDiff(element.uiComponent, .field(.init(
+            name: "123",
+            title: "CDE",
+            value: "abc",
+            image: .svg("svg")
+        )))
+    }
+    
+    func test_uiComponent_shouldDeliverFieldForFieldWithFallback() {
+        
+        let element = makeAnywayPaymentFieldElement(makeAnywayPaymentField(
+            "123",
+            value: "abc",
+            title: "CDE",
+            image: .withFallback(md5Hash: "md5Hash", svg: "svg")
+        ))
+        
+        XCTAssertNoDiff(element.uiComponent, .field(.init(
+            name: "123",
+            title: "CDE",
+            value: "abc",
+            image: .withFallback(md5Hash: "md5Hash", svg: "svg")
         )))
     }
     
@@ -237,6 +290,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         )
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
             dataType: .string,
+            subTitle: "defg",
+            title: "abcde",
             type: .input,
             viewType: .input
         )
@@ -247,7 +302,10 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.uiComponent, .parameter(.init(
             id: "123",
             type: .textInput,
-            value: "ABC"
+            title: "abcde",
+            subtitle: "defg",
+            value: "ABC",
+            image: nil
         )))
     }
     
@@ -256,6 +314,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         let field = makeAnywayPaymentElementParameterField(id: "123", value: nil)
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
             dataType: makePairsDataType(),
+            subTitle: "defg",
+            title: "abcde",
             type: .select,
             viewType: .input
         )
@@ -266,7 +326,10 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.uiComponent, .parameter(.init(
             id: "123",
             type: .select(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
-            value: nil
+            title: "abcde",
+            subtitle: "defg",
+            value: nil,
+            image: nil
         )))
     }
     
@@ -275,6 +338,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         let field = makeAnywayPaymentElementParameterField(id: "123", value: "ABC")
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
             dataType: makePairsDataType(),
+            subTitle: "defg",
+            title: "abcde",
             type: .select,
             viewType: .input
         )
@@ -285,7 +350,10 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         XCTAssertNoDiff(element.uiComponent, .parameter(.init(
             id: "123",
             type: .select(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
-            value: "ABC"
+            title: "abcde",
+            subtitle: "defg",
+            value: "ABC",
+            image: nil
         )))
     }
     
@@ -294,6 +362,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         let field = makeAnywayPaymentElementParameterField(id: "123", value: "ABC")
         let uiAttributes = makeAnywayPaymentElementParameterUIAttributes(
             dataType: makePairsDataType(("a", "1"), ("bb", "22")),
+            subTitle: "defg",
+            title: "abcde",
             type: .select,
             viewType: .input
         )
@@ -308,7 +378,10 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
                     .init(key: "a", value: "1"),
                     .init(key: "bb", value: "22"),
                 ]),
-            value: "ABC"
+            title: "abcde",
+            subtitle: "defg",
+            value: "ABC",
+            image: nil
         )))
     }
     

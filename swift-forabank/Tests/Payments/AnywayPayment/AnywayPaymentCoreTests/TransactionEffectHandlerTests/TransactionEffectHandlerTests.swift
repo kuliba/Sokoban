@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 28.03.2024.
 //
 
+import AnywayPaymentDomain
 import AnywayPaymentCore
 import XCTest
 
@@ -271,13 +272,8 @@ final class TransactionEffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = TransactionEffectHandler<DocumentStatus, OperationDetails, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
-    
-    private typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
-    private typealias PaymentInitiator = PaymentProcessing
-    private typealias PaymentMaker = Spy<VerificationCode, SUT.MakePaymentResult>
-    private typealias PaymentProcessing = Spy<PaymentDigest, SUT.ProcessResult>
-    
+    private typealias SUT = _TransactionEffectHandler
+        
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
@@ -294,10 +290,12 @@ final class TransactionEffectHandlerTests: XCTestCase {
         let paymentProcessing = PaymentProcessing()
         
         let sut = SUT(
-            initiatePayment: paymentInitiator.process,
-            makePayment: paymentMaker.process,
-            paymentEffectHandle: paymentEffectHandler.handleEffect,
-            processPayment: paymentProcessing.process
+            microServices: .init(
+                initiatePayment: paymentInitiator.process,
+                makePayment: paymentMaker.process,
+                paymentEffectHandle: paymentEffectHandler.handleEffect,
+                processPayment: paymentProcessing.process
+            )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -326,7 +324,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
     private func expect(
         toDeliver expectedEvent: SUT.Event,
         for effect: SUT.Effect,
-        onProcessing paymentProcessingResult: SUT.ProcessResult,
+        onProcessing paymentProcessingResult: SUT.MicroServices.ProcessResult,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -337,7 +335,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
     private func expect(
         toDeliver expectedEvent: SUT.Event,
         for effect: SUT.Effect,
-        onMakePayment makePaymentResult: SUT.MakePaymentResult,
+        onMakePayment makePaymentResult: Report?,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -368,8 +366,8 @@ final class TransactionEffectHandlerTests: XCTestCase {
 }
 
 private func transactionReportEvent(
-    _ transactionReport: TransactionReport<DocumentStatus, OperationDetails>
-) -> TransactionEvent<DocumentStatus, OperationDetails, PaymentEvent, PaymentUpdate> {
+    _ report: Report
+) -> _TransactionEvent {
     
-    .completePayment(transactionReport)
+    .completePayment(report)
 }

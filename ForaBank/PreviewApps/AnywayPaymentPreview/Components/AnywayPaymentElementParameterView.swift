@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 14.04.2024.
 //
 
-import AnywayPaymentCore
+import AnywayPaymentDomain
 import SwiftUI
 import Tagged
 
@@ -30,6 +30,12 @@ struct AnywayPaymentElementParameterView: View {
                     onSelect: { event($0.key.rawValue) }
                 ),
                 itemView: { Text($0.value.rawValue) }
+            )
+            
+        case .numberInput:
+            TextFieldMockWrapperView(
+                initial: state.value?.rawValue ?? "",
+                onChange: event
             )
             
         case .textInput:

@@ -106,7 +106,7 @@ private extension CodableLanding.VerticalSpacing {
 private extension CodableLanding.ListDropDownTexts {
     
     init(
-        data: Landing.ListDropDownTexts
+        data: Landing.DataView.List.DropDownTexts
     ) {
         self.init(
             title: data.title.map { .init($0.rawValue) },
@@ -118,7 +118,7 @@ private extension CodableLanding.ListDropDownTexts {
 private extension CodableLanding.ListDropDownTexts.Item {
     
     init(
-        data: Landing.ListDropDownTexts.Item
+        data: Landing.DataView.List.DropDownTexts.Item
     ) {
         self.init(
             title: data.title,
@@ -155,7 +155,7 @@ private extension CodableLanding.ImageBlock {
 private extension CodableLanding.MultiTypeButtons {
     
     init(
-        data: Landing.MultiTypeButtons
+        data: Landing.DataView.Multi.TypeButtons
     ) {
         self.init(
             md5hash: data.md5hash,
@@ -173,7 +173,7 @@ private extension CodableLanding.MultiTypeButtons {
 private extension CodableLanding.MultiTypeButtons.Action {
     
     init(
-        data: Landing.MultiTypeButtons.Action
+        data: Landing.DataView.Multi.TypeButtons.Action
     ) {
         self.init(
             type: data.type,
@@ -185,7 +185,7 @@ private extension CodableLanding.MultiTypeButtons.Action {
 private extension CodableLanding.MultiTypeButtons.Action.OutputData {
     
     init(
-        data: Landing.MultiTypeButtons.Action.OutputData
+        data: Landing.DataView.Multi.TypeButtons.Action.OutputData
     ) {
         self.init(
             tarif: .init(rawValue: data.tarif.rawValue),
@@ -198,7 +198,7 @@ private extension CodableLanding.MultiTypeButtons.Action.OutputData {
 private extension CodableLanding.MultiTypeButtons.Detail {
     
     init(
-        data: Landing.MultiTypeButtons.Detail
+        data: Landing.DataView.Multi.TypeButtons.Detail
     ) {
         self.init(
             groupId: .init(rawValue: data.groupId.rawValue),
@@ -209,7 +209,7 @@ private extension CodableLanding.MultiTypeButtons.Detail {
 private extension CodableLanding.MultiButtons {
     
     init(
-        data: Landing.MultiButtons
+        data: Landing.DataView.Multi.Buttons
     ) {
         self.init(
             list: data.list.map(CodableLanding.MultiButtons.Item.init(data:))
@@ -220,7 +220,7 @@ private extension CodableLanding.MultiButtons {
 private extension CodableLanding.MultiButtons.Item {
     
     init(
-        data: Landing.MultiButtons.Item
+        data: Landing.DataView.Multi.Buttons.Item
     ) {
         
         let detail = data.detail.map(CodableLanding.MultiButtons.Item.Detail.init(data:))
@@ -240,7 +240,7 @@ private extension CodableLanding.MultiButtons.Item {
 private extension CodableLanding.MultiButtons.Item.Detail {
     
     init(
-        data: Landing.MultiButtons.Item.Detail
+        data: Landing.DataView.Multi.Buttons.Item.Detail
     ) {
         self.init(
             groupId: .init(rawValue: data.groupId.rawValue),
@@ -252,7 +252,7 @@ private extension CodableLanding.MultiButtons.Item.Detail {
 private extension CodableLanding.MultiButtons.Item.Action {
     
     init(
-        data: Landing.MultiButtons.Item.Action
+        data: Landing.DataView.Multi.Buttons.Item.Action
     ) {
         self.init(type: .init(rawValue: data.type.rawValue))
     }
@@ -261,7 +261,7 @@ private extension CodableLanding.MultiButtons.Item.Action {
 private extension CodableLanding.MultiMarkersText {
     
     init(
-        data: Landing.MultiMarkersText
+        data: Landing.DataView.Multi.MarkersText
     ) {
         self.init(
             backgroundColor: data.backgroundColor,
@@ -274,7 +274,7 @@ private extension CodableLanding.MultiMarkersText {
 private extension CodableLanding.ListVerticalRoundImage {
     
     init(
-        data: Landing.ListVerticalRoundImage
+        data: Landing.DataView.List.VerticalRoundImage
     ) {
         self.init(
             title: data.title,
@@ -295,7 +295,7 @@ private extension CodableLanding.ListVerticalRoundImage {
 private extension CodableLanding.ListVerticalRoundImage.ListItem {
     
     init(
-        data: Landing.ListVerticalRoundImage.ListItem
+        data: Landing.DataView.List.VerticalRoundImage.ListItem
     ) {
         
         self.init(
@@ -313,7 +313,7 @@ private extension CodableLanding.ListVerticalRoundImage.ListItem {
 private extension CodableLanding.ListVerticalRoundImage.ListItem.Detail {
     
     init(
-        data: Landing.ListVerticalRoundImage.ListItem.Detail
+        data: Landing.DataView.List.VerticalRoundImage.ListItem.Detail
     ) {
         self.init(
             groupId: .init(data.groupId.rawValue),
@@ -325,7 +325,7 @@ private extension CodableLanding.ListVerticalRoundImage.ListItem.Detail {
 private extension CodableLanding.MultiText {
     
     init(
-        data: Landing.MultiText
+        data: Landing.DataView.Multi.Text
     ) {
         self.init(
             text: data.text.compactMap { .init($0.rawValue) }
@@ -336,7 +336,7 @@ private extension CodableLanding.MultiText {
 private extension CodableLanding.ListHorizontalRectangleImage {
     
     init(
-        data: Landing.ListHorizontalRectangleImage
+        data: Landing.DataView.List.HorizontalRectangleImage
     ) {
         self.init(
             list: data.list.map { .init(data:$0) }
@@ -347,7 +347,7 @@ private extension CodableLanding.ListHorizontalRectangleImage {
 private extension CodableLanding.ListHorizontalRectangleImage.Item {
     
     init(
-        data: Landing.ListHorizontalRectangleImage.Item
+        data: Landing.DataView.List.HorizontalRectangleImage.Item
     ) {
         self.init(
             imageLink: data.imageLink,
@@ -366,7 +366,7 @@ private extension CodableLanding.ListHorizontalRectangleImage.Item {
 private extension CodableLanding.ListHorizontalRectangleImage.Item.Detail {
     
     init(
-        data: Landing.ListHorizontalRectangleImage.Item.Detail
+        data: Landing.DataView.List.HorizontalRectangleImage.Item.Detail
     ) {
         self.init(
             groupId: data.groupId,
@@ -378,7 +378,7 @@ private extension CodableLanding.ListHorizontalRectangleImage.Item.Detail {
 private extension CodableLanding.ListHorizontalRoundImage {
     
     init(
-        data: Landing.ListHorizontalRoundImage
+        data: Landing.DataView.List.HorizontalRoundImage
     ) {
         self.init(
             title: data.title,
@@ -393,7 +393,7 @@ private extension CodableLanding.ListHorizontalRoundImage {
 private extension CodableLanding.ListHorizontalRoundImage.ListItem {
     
     init(
-        data: Landing.ListHorizontalRoundImage.ListItem
+        data: Landing.DataView.List.HorizontalRoundImage.ListItem
     ) {
         self.init(
             md5hash: data.md5hash,
@@ -407,7 +407,7 @@ private extension CodableLanding.ListHorizontalRoundImage.ListItem {
 private extension CodableLanding.ListHorizontalRoundImage.ListItem.Detail {
     
     init(
-        data: Landing.ListHorizontalRoundImage.ListItem.Detail
+        data: Landing.DataView.List.HorizontalRoundImage.ListItem.Detail
     ) {
         self.init(
             groupId: .init(rawValue: data.groupId.rawValue),
@@ -419,7 +419,7 @@ private extension CodableLanding.ListHorizontalRoundImage.ListItem.Detail {
 private extension CodableLanding.MuiltiTextsWithIconsHorizontal {
     
     init(
-        data: Landing.MuiltiTextsWithIconsHorizontal
+        data: Landing.DataView.Multi.TextsWithIconsHorizontal
     ) {
         self.init(
             list: data.list.map {
@@ -433,7 +433,7 @@ private extension CodableLanding.MuiltiTextsWithIconsHorizontal {
 private extension CodableLanding.MultiLineHeader {
     
     init(
-        data: Landing.MultiLineHeader
+        data: Landing.DataView.Multi.LineHeader
     ) {
         self.init(
             backgroundColor: data.backgroundColor,

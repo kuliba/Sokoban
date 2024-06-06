@@ -119,6 +119,7 @@ let package = Package(
         .anywayPaymentBackendTests,
         .anywayPaymentCore,
         .anywayPaymentCoreTests,
+        .anywayPaymentDomain,
         .anywayPaymentUI,
         .anywayPaymentUITests,
         .utilityPayment,
@@ -201,7 +202,6 @@ let package = Package(
         .buttonComponent,
         .infoComponent,
         .checkBoxComponent,
-        .codeComponent,
         .footerComponent,
         .nameComponent,
         .selectComponent,
@@ -560,6 +560,7 @@ private extension Product {
             .anywayPaymentAdapters,
             .anywayPaymentBackend,
             .anywayPaymentCore,
+            .anywayPaymentDomain,
             .anywayPaymentUI,
         ]
     )
@@ -924,6 +925,7 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             .shimmer,
+            .uiPrimitives,
         ],
         path: "Sources/Landing/\(String.landingUIComponent)"
     )
@@ -973,9 +975,10 @@ private extension Target {
     static let anywayPaymentAdapters = target(
         name: .anywayPaymentAdapters,
         dependencies: [
-            .anywayPaymentCore,
-            .anywayPaymentUI,
             .anywayPaymentBackend,
+            .anywayPaymentCore,
+            .anywayPaymentDomain,
+            .anywayPaymentUI,
             .remoteServices,
             .tagged,
         ],
@@ -988,6 +991,9 @@ private extension Target {
             .customDump,
             // internal modules
             .anywayPaymentAdapters,
+            .anywayPaymentBackend,
+            .anywayPaymentCore,
+            .anywayPaymentDomain,
             .remoteServices,
             .tagged,
         ],
@@ -1018,6 +1024,8 @@ private extension Target {
     static let anywayPaymentCore = target(
         name: .anywayPaymentCore,
         dependencies: [
+            .anywayPaymentDomain,
+            .foraTools,
             .remoteServices,
             .tagged,
         ],
@@ -1031,16 +1039,28 @@ private extension Target {
             .tagged,
             // internal modules
             .anywayPaymentCore,
+            .anywayPaymentDomain,
+            .foraTools,
             .remoteServices,
             .rxViewModel,
         ],
         path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentCoreTests)"
+    )
+
+    static let anywayPaymentDomain = target(
+        name: .anywayPaymentDomain,
+        dependencies: [
+            .remoteServices,
+            .tagged,
+        ],
+        path: "Sources/Payments/AnywayPayment/\(String.anywayPaymentDomain)"
     )
     
     static let anywayPaymentUI = target(
         name: .anywayPaymentUI,
         dependencies: [
             .anywayPaymentCore,
+            .anywayPaymentDomain,
             .paymentComponents,
             .rxViewModel,
         ],
@@ -1573,7 +1593,6 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
-            .paymentComponents,
             .rxViewModel,
             .uiPrimitives,
         ],
@@ -1742,6 +1761,7 @@ private extension Target {
         dependencies: [
             .foraTools,
             .sharedConfigs,
+            .shimmer,
         ],
         path: "Sources/UI/\(String.uiPrimitives)"
     )
@@ -1812,14 +1832,6 @@ private extension Target {
         path: "Sources/UI/Components/\(String.checkBoxComponent)"
     )
     
-    static let codeComponent = target(
-        name: .codeComponent,
-        dependencies: [
-            .sharedConfigs
-        ],
-        path: "Sources/UI/Components/\(String.codeComponent)"
-    )
-    
     static let footerComponent = target(
         name: .footerComponent,
         dependencies: [
@@ -1877,6 +1889,7 @@ private extension Target {
             .checkBoxComponent,
             .footerComponent,
             .nameComponent,
+            .otpInputComponent,
             .selectComponent,
             .inputComponent,
             .inputPhoneComponent,
@@ -1954,6 +1967,7 @@ private extension Target {
             .sharedConfigs,
             .tagged,
             .uiPrimitives,
+            .carouselComponent,
         ],
         path: "Sources/UI/Components/\(String.productSelectComponent)"
     )
@@ -2025,6 +2039,7 @@ private extension Target {
             .textFieldModel,
             .anywayPaymentBackend,
             .anywayPaymentCore,
+            .anywayPaymentDomain,
             .utilityPayment,
         ]
     )
@@ -2225,10 +2240,6 @@ private extension Target.Dependency {
     static let checkBoxComponent = byName(
         name: .checkBoxComponent
     )
-      
-    static let codeComponent = byName(
-        name: .codeComponent
-    )
     
     static let footerComponent = byName(
         name: .footerComponent
@@ -2298,6 +2309,10 @@ private extension Target.Dependency {
 
     static let anywayPaymentCore = byName(
         name: .anywayPaymentCore
+    )
+
+    static let anywayPaymentDomain = byName(
+        name: .anywayPaymentDomain
     )
 
     static let anywayPaymentUI = byName(
@@ -2492,8 +2507,6 @@ private extension String {
     
     static let checkBoxComponent = "CheckBoxComponent"
     
-    static let codeComponent = "CodeComponent"
-    
     static let footerComponent = "FooterComponent"
     
     static let nameComponent = "NameComponent"
@@ -2541,6 +2554,7 @@ private extension String {
     static let anywayPaymentBackendTests = "AnywayPaymentBackendTests"
     static let anywayPaymentCore = "AnywayPaymentCore"
     static let anywayPaymentCoreTests = "AnywayPaymentCoreTests"
+    static let anywayPaymentDomain = "AnywayPaymentDomain"
     static let anywayPaymentUI = "AnywayPaymentUI"
     static let anywayPaymentUITests = "AnywayPaymentUITests"
 
@@ -2662,7 +2676,7 @@ private extension Package.Dependency {
     )
     static let shimmer = Package.Dependency.package(
         url: .swift_shimmer_path,
-        exact: .init(1, 0, 1)
+        exact: .init(1, 5, 0)
     )
     static let phoneNumberKit = Package.Dependency.package(
         url: .phoneNumberKit_path,

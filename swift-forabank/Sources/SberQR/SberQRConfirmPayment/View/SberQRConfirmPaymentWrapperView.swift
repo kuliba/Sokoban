@@ -10,7 +10,7 @@ import SwiftUI
 
 public struct SberQRConfirmPaymentWrapperView: View {
 
-    public typealias Map = (GetSberQRDataResponse.Parameter.Info) -> Info
+    public typealias Map = (GetSberQRDataResponse.Parameter.Info) -> PublishingInfo
     
     @ObservedObject private var viewModel: SberQRConfirmPaymentViewModel
     
@@ -89,14 +89,14 @@ struct SberQRConfirmPaymentWrapperView_Previews: PreviewProvider {
                     }
                 }
             ),
-            map: Info.preview,
+            map: PublishingInfo.preview,
             config: .preview
         )
     }
 }
 
 
-private extension SberQRConfirmPaymentStateOf<Info> {
+private extension SberQRConfirmPaymentStateOf<PublishingInfo> {
     
     init(
         _ state: SberQRConfirmPaymentStateOf<GetSberQRDataResponse.Parameter.Info>,
@@ -112,7 +112,7 @@ private extension SberQRConfirmPaymentStateOf<Info> {
     }
 }
 
-private extension EditableAmount<Info> {
+private extension EditableAmount<PublishingInfo> {
     
     init(
         _ editableAmount: EditableAmount<GetSberQRDataResponse.Parameter.Info>,
@@ -129,7 +129,7 @@ private extension EditableAmount<Info> {
     }
 }
 
-private extension FixedAmount<Info> {
+private extension FixedAmount<PublishingInfo> {
     
     init(
         _ fixedAmount: FixedAmount<GetSberQRDataResponse.Parameter.Info>,
