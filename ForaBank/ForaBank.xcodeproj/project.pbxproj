@@ -1231,6 +1231,9 @@
 		2AD87DAD2BD77E4B004D06C0 /* UtilityServicePaymentFlowEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD87DAC2BD77E4B004D06C0 /* UtilityServicePaymentFlowEffectHandler.swift */; };
 		2AD87DAF2BD782E1004D06C0 /* UtilityServicePaymentFlowConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD87DAE2BD782E1004D06C0 /* UtilityServicePaymentFlowConfig.swift */; };
 		2AD8BB142BF715CF00B5672D /* UtilityPrepaymentFlowMicroServices+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8BB132BF715CF00B5672D /* UtilityPrepaymentFlowMicroServices+preview.swift */; };
+		2AD8E5452C116D2800C31E48 /* FeatureFlagsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8E5442C116D2800C31E48 /* FeatureFlagsLoader.swift */; };
+		2AD8E5482C116F0700C31E48 /* FeatureFlagsLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8E5472C116F0700C31E48 /* FeatureFlagsLoaderTests.swift */; };
+		2AD8E54A2C11783E00C31E48 /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8E5492C11783E00C31E48 /* FeatureFlags.swift */; };
 		2ADBDB912BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB902BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift */; };
 		2ADBDB942BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB932BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift */; };
 		2ADBDB972BD79A0F00114E87 /* UtilityServicePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB962BD79A0F00114E87 /* UtilityServicePicker.swift */; };
@@ -4218,6 +4221,9 @@
 		2AD87DAC2BD77E4B004D06C0 /* UtilityServicePaymentFlowEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowEffectHandler.swift; sourceTree = "<group>"; };
 		2AD87DAE2BD782E1004D06C0 /* UtilityServicePaymentFlowConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowConfig.swift; sourceTree = "<group>"; };
 		2AD8BB132BF715CF00B5672D /* UtilityPrepaymentFlowMicroServices+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UtilityPrepaymentFlowMicroServices+preview.swift"; sourceTree = "<group>"; };
+		2AD8E5442C116D2800C31E48 /* FeatureFlagsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagsLoader.swift; sourceTree = "<group>"; };
+		2AD8E5472C116F0700C31E48 /* FeatureFlagsLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagsLoaderTests.swift; sourceTree = "<group>"; };
+		2AD8E5492C11783E00C31E48 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
 		2ADBDB902BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowFactory.swift; sourceTree = "<group>"; };
 		2ADBDB932BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerLayoutView.swift; sourceTree = "<group>"; };
 		2ADBDB962BD79A0F00114E87 /* UtilityServicePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePicker.swift; sourceTree = "<group>"; };
@@ -8879,6 +8885,7 @@
 			isa = PBXGroup;
 			children = (
 				2A0439C42BB405F40063B7AB /* AnywayPayment */,
+				2AD8E5462C116EE100C31E48 /* FeatureFlags */,
 				2A65FB442B4E862000A84F9E /* FastPayments */,
 				D4A5A79D2BAA58BD006EE7A5 /* GetProductListByType */,
 				2A7688D52AF3A73600045293 /* CVVPIN */,
@@ -9691,6 +9698,8 @@
 			children = (
 				2AC2ADC62B22FBCA0049EE9B /* FeatureFlag.swift */,
 				2A94991A2B728F4D00C67F05 /* StubbedFeatureFlag.swift */,
+				2AD8E5492C11783E00C31E48 /* FeatureFlags.swift */,
+				2AD8E5442C116D2800C31E48 /* FeatureFlagsLoader.swift */,
 				2AC2ADC92B22FDF70049EE9B /* QRResolverFeatureFlag.swift */,
 				83FFEDED2C075675003F3A6D /* UpdateInfoFeatureFlag.swift */,
 				2A46DCA92B3EF212001C896C /* FastPaymentsSettingsFlag.swift */,
@@ -9920,6 +9929,14 @@
 				2AD87DA12BD77C50004D06C0 /* UtilityServicePaymentFlowStateWrapperView.swift */,
 			);
 			path = UtilityServicePaymentFlow;
+			sourceTree = "<group>";
+		};
+		2AD8E5462C116EE100C31E48 /* FeatureFlags */ = {
+			isa = PBXGroup;
+			children = (
+				2AD8E5472C116F0700C31E48 /* FeatureFlagsLoaderTests.swift */,
+			);
+			path = FeatureFlags;
 			sourceTree = "<group>";
 		};
 		2ADBDB922BD799D100114E87 /* OperatorPicker */ = {
@@ -18132,6 +18149,7 @@
 				2A7AA4A029C8DC0100126C30 /* ProductsGroupSettings.swift in Sources */,
 				ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */,
 				2AA3A96E2BFF91EA00AEBCC9 /* AnywayPaymentFooterConfig.swift in Sources */,
+				2AD8E5452C116D2800C31E48 /* FeatureFlagsLoader.swift in Sources */,
 				77F5CE1728060BCC00611B66 /* AtmRegionData.swift in Sources */,
 				689ECA852848DDAA0098664F /* Model+Transfers.swift in Sources */,
 				6833E0D1273920CE004C070F /* MainTabBarCoordinator.swift in Sources */,
@@ -18849,6 +18867,7 @@
 				774A8B2C2865FC6F00B81140 /* MyProductsViewModel.swift in Sources */,
 				ED374CE92863AEC000A97219 /* CardScannerView.swift in Sources */,
 				ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */,
+				2AD8E54A2C11783E00C31E48 /* FeatureFlags.swift in Sources */,
 				68CB588C28ABCA7A003064B0 /* LoggerAgentProtocol.swift in Sources */,
 				0B7A18B82683A9940007CC75 /* FileManagerHelper.swift in Sources */,
 				68F9A06B27ECC348006C552C /* ProductViewControllerHistoryTableView.swift in Sources */,
@@ -19348,6 +19367,7 @@
 				2A1F08662A794C0300C5B11B /* Services+EndpointFormSessionKeyTests.swift in Sources */,
 				2A4593D72A7CFAB9008593A3 /* Services+EndpointBindPublicKeyWithEventIDTests.swift in Sources */,
 				C16DDBF42B314E26001BF988 /* GetSberQRDataResult+emptySuccess.swift in Sources */,
+				2AD8E5482C116F0700C31E48 /* FeatureFlagsLoaderTests.swift in Sources */,
 				2A0439CB2BB421570063B7AB /* NanoServices+makeGetOperationDetailByPaymentIDTests.swift in Sources */,
 				2AF375912A1B7BC300B5B29E /* TextState+DSL.swift in Sources */,
 				C155ABD92A28F33300BE66AE /* TranferData+Stubs.swift in Sources */,

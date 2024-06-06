@@ -30,6 +30,14 @@
 				<string>Мок</string>
 			</array>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+			<key>Title</key>
+			<string>Feature Toggles</string>
+			<key>File</key>
+			<string>FeatureToggles</string>
+		</dict>
 	</array>
 </dict>
 </plist>
