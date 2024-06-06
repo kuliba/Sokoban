@@ -1,5 +1,5 @@
 //
-//  LandingMultiButtons.swift
+//  Buttons.swift
 //  
 //
 //  Created by Andryusina Nataly on 06.09.2023.
@@ -7,9 +7,9 @@
 
 import Tagged
 
-public extension Landing {
+public extension Landing.DataView.Multi {
     
-    struct MultiButtons: Equatable {
+    struct Buttons: Equatable {
         
         public let list: [Item]
         

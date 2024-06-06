@@ -1,5 +1,5 @@
 //
-//  LandingListHorizontalRoundImage.swift
+//  HorizontalRoundImage.swift
 //  
 //
 //  Created by Andryusina Nataly on 31.08.2023.
@@ -7,9 +7,9 @@
 
 import Tagged
 
-public extension Landing {
+public extension Landing.DataView.List {
     
-    struct ListHorizontalRoundImage: Equatable {
+    struct HorizontalRoundImage: Equatable {
         
         public let title: String
         public let list: [ListItem]?

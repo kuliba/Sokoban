@@ -1,5 +1,5 @@
 //
-//  LandingListHorizontalRectangleImage.swift
+//  HorizontalRectangleImage.swift
 //  
 //
 //  Created by Andryusina Nataly on 05.09.2023.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-extension Landing {
+extension Landing.DataView.List {
     
-    public struct ListHorizontalRectangleImage: Decodable, Equatable {
+    public struct HorizontalRectangleImage: Decodable, Equatable {
         
         public let list: [Item]
         

@@ -1,5 +1,5 @@
 //
-//  LandingMultiMarkersText.swift
+//  MarkersText.swift
 //  
 //
 //  Created by Andryusina Nataly on 05.09.2023.
@@ -7,9 +7,9 @@
 
 import Tagged
 
-extension Landing {
+extension Landing.DataView.Multi {
     
-    public struct MultiMarkersText: Decodable, Equatable {
+    public struct MarkersText: Decodable, Equatable {
         
         public let backgroundColor, style: String
         public let list: [Text]

@@ -1,5 +1,5 @@
 //
-//  LandingListDropDownTexts.swift
+//  DropDownTexts.swift
 //  
 //
 //  Created by Andryusina Nataly on 07.09.2023.
@@ -7,9 +7,9 @@
 
 import Tagged
 
-public extension Landing {
+public extension Landing.DataView.List {
     
-    struct ListDropDownTexts: Equatable {
+    struct DropDownTexts: Equatable {
         
         public let title: Title?
         public let list: [Item]

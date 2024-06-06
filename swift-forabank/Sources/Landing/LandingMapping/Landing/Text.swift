@@ -1,5 +1,5 @@
 //
-//  LandingMultiText.swift
+//  Text.swift
 //  
 //
 //  Created by Andryusina Nataly on 05.09.2023.
@@ -7,9 +7,9 @@
 
 import Tagged
 
-extension Landing {
+extension Landing.DataView.Multi {
     
-    public struct MultiText: Decodable, Equatable {
+    public struct Text: Decodable, Equatable {
         
         public let text: [Text]
         
