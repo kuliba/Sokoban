@@ -26,8 +26,23 @@ public struct CachedPaymentContext<ElementModel> {
         self.shouldRestart = shouldRestart
     }
     
+    public init(
+        _ context: AnywayPaymentContext,
+        using map: @escaping Map
+    ) {
+        self.init(
+            payment: .init(context.payment, using: map),
+            staged: context.staged,
+            outline: context.outline,
+            shouldRestart: context.shouldRestart
+        )
+    }
+    
     public typealias CachedPayment = CachedAnywayPayment<ElementModel>
+    public typealias Map = (AnywayPayment.Element) -> (ElementModel)
 }
+
+extension CachedPaymentContext: Equatable where ElementModel: Equatable {}
 
 public extension CachedPaymentContext {
     
@@ -44,5 +59,4 @@ public extension CachedPaymentContext {
         )
     }
     
-    typealias Map = (AnywayPayment.Element) -> (ElementModel)
 }

@@ -67,8 +67,18 @@ extension CachedAnywayPayment {
         
         public let id: Element.ID
         public let model: ElementModel
+        
+        public init(
+            id: Element.ID,
+            model: ElementModel
+        ) {
+            self.id = id
+            self.model = model
+        }
     }
 }
+
+extension CachedAnywayPayment.IdentifiedModel: Equatable where ElementModel: Equatable {}
 
 extension CachedAnywayPayment {
     
