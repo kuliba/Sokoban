@@ -499,16 +499,9 @@ private extension PaymentsTransfersView {
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
-        let factory = viewFactory.makeAnywayPaymentFactory { event in
-#warning("move event mapping to factory")
-            switch event {
-                
-            case let .setValue(value, for: id):
-                state.viewModel.event(.payment(.setValue(value, for: id)))
-                
-            case let .widget(widget):
-                state.viewModel.event(.payment(.widget(widget)))
-            }
+        let factory = viewFactory.makeAnywayPaymentFactory {
+            
+            state.viewModel.event(.payment($0))
         }
         
         AnywayTransactionStateWrapperView(viewModel: state.viewModel) {
