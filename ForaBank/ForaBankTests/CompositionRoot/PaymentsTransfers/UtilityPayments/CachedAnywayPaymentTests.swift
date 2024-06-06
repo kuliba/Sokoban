@@ -90,6 +90,18 @@ final class CachedAnywayPaymentTests: XCTestCase {
         XCTAssertNoDiff(payment.models.map(\.model), [.field(field), .parameter(parameter), .widget(.core(core))])
     }
     
+    func test_init_shouldMapElements() {
+        
+        struct Model: Equatable {}
+
+        let field = makeAnywayPaymentField()
+        let anywayPayment = makeAnywayPayment(elements: [.field(field)])
+        
+        let payment = CachedAnywayPayment<Model>(anywayPayment, using: { _ in .init() })
+        
+        XCTAssertNoDiff(payment.models.map(\.model), [.init()])
+    }
+    
     // MARK: - updating
     
     func test_updating_shouldUpdateWithNilInfoMessageFromAnywayPaymentWithNilInfoMessage() {
@@ -189,6 +201,20 @@ final class CachedAnywayPaymentTests: XCTestCase {
         
         XCTAssertNoDiff(updated.models.map(\.id), [.parameterID(parameter.field.id), .fieldID(field.id)])
         XCTAssertNoDiff(updated.models.map(\.model), [.parameter(parameter), .field(field)])
+    }
+    
+    func test_updating_shouldMapElements() {
+        
+        struct Model: Equatable {}
+
+        let anywayPayment = makeAnywayPayment()
+        let map: (AnywayPayment.Element) -> Model = { _ in .init() }
+        let payment = CachedAnywayPayment<Model>(anywayPayment, using: map)
+        XCTAssertTrue(payment.models.isEmpty)
+
+        let updated = payment.updating(with: makeAnywayPayment(elements: [.field(makeAnywayPaymentField())]), using: map)
+        
+        XCTAssertNoDiff(updated.models.map(\.model), [.init()])
     }
     
     // MARK: - Helpers
