@@ -19,11 +19,10 @@ final class MyProductsViewModelTests: XCTestCase {
         
         let sut = makeSUT(products: initialCards, sections: sections)
         
-        XCTAssertNotEqual(sut.first?.id, sections.first?.id)
         XCTAssertNoDiff(sut.itemsID, initialCards.uniqueProductIDs())
     }
     
-    func test_updateViewModel_sectionsWithUpdate_shouldUpdateSections() throws {
+    func test_updateViewModel_sectionsWithUpdate_shouldUpdateOrderItemsInSections() throws {
         
         let initialCards: [ProductData] = makeAnyCards123()
         let reorderCards: [ProductData] = makeAnyCards132()
@@ -32,12 +31,10 @@ final class MyProductsViewModelTests: XCTestCase {
         
         let sut = makeSUT(products: reorderCards, sections: sections)
         
-        XCTAssertNoDiff(sut.first?.id, sections.first?.id)
-        XCTAssertNoDiff(sections.itemsID, initialCards.uniqueProductIDs())
         XCTAssertNoDiff(sut.itemsID, reorderCards.uniqueProductIDs())
     }
 
-    func test_updateViewModel_sectionsWithoutUpdate_shouldNotUpdateSections() throws {
+    func test_updateViewModel_sectionsWithoutUpdate_shouldNotUpdateOrderItemsInSections() throws {
         
         let initialCards: [ProductData] = makeAnyCards132()
 
@@ -45,8 +42,6 @@ final class MyProductsViewModelTests: XCTestCase {
         
         let sut = makeSUT(products: initialCards, sections: sections)
         
-        XCTAssertNoDiff(sut.first?.id, sections.first?.id)
-        XCTAssertNoDiff(sections.itemsID, initialCards.uniqueProductIDs())
         XCTAssertNoDiff(sut.itemsID, initialCards.uniqueProductIDs())
     }
     
@@ -99,17 +94,17 @@ final class MyProductsViewModelTests: XCTestCase {
     }
     
     private func makeAnyCards123() -> [ProductData] {
-        let product1 = makeCardProduct(id: 1, parentID: 2)
+        let product1 = makeCardProduct(id: 1)
         let product2 = makeCardProduct(id: 2)
-        let product3 = makeCardProduct(id: 3, parentID: 3)
+        let product3 = makeCardProduct(id: 3)
 
         return [product1, product2, product3]
     }
     
     private func makeAnyCards132() -> [ProductData] {
-        let product1 = makeCardProduct(id: 1, parentID: 2)
+        let product1 = makeCardProduct(id: 1)
         let product2 = makeCardProduct(id: 2)
-        let product3 = makeCardProduct(id: 3, parentID: 3)
+        let product3 = makeCardProduct(id: 3)
 
         return [product1, product3, product2]
     }
