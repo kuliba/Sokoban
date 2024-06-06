@@ -161,7 +161,7 @@ private extension Landing.VerticalSpacing {
     }
 }
 
-private extension Landing.ListDropDownTexts {
+private extension Landing.DataView.List.DropDownTexts {
     
     init(
         data: DecodableLanding.Data.ListDropDownTexts
@@ -176,7 +176,7 @@ private extension Landing.ListDropDownTexts {
     }
 }
 
-private extension Landing.ListDropDownTexts.Item {
+private extension Landing.DataView.List.DropDownTexts.Item {
     
     init(
         data: DecodableLanding.Data.ListDropDownTexts.Item
@@ -213,7 +213,7 @@ private extension Landing.ImageBlock {
     }
 }
 
-private extension Landing.MultiTypeButtons {
+private extension Landing.DataView.Multi.TypeButtons {
     
     init(
         data: DecodableLanding.Data.MultiTypeButtons
@@ -230,7 +230,7 @@ private extension Landing.MultiTypeButtons {
     }
 }
 
-private extension Landing.MultiTypeButtons.Action {
+private extension Landing.DataView.Multi.TypeButtons.Action {
     
     init(
         data: DecodableLanding.Data.MultiTypeButtons.Action
@@ -243,7 +243,7 @@ private extension Landing.MultiTypeButtons.Action {
     }
 }
 
-private extension Landing.MultiTypeButtons.Action.OutputData {
+private extension Landing.DataView.Multi.TypeButtons.Action.OutputData {
     
     init(
         data: DecodableLanding.Data.MultiTypeButtons.Action.OutputData
@@ -254,7 +254,7 @@ private extension Landing.MultiTypeButtons.Action.OutputData {
     }
 }
 
-private extension Landing.MultiTypeButtons.Detail {
+private extension Landing.DataView.Multi.TypeButtons.Detail {
     
     init(
         data: DecodableLanding.Data.MultiTypeButtons.Detail
@@ -262,25 +262,25 @@ private extension Landing.MultiTypeButtons.Detail {
         self.init(groupId: .init(rawValue: data.groupId), viewId: .init(rawValue: data.viewId))
     }
 }
-private extension Landing.MultiButtons {
+private extension Landing.DataView.Multi.Buttons {
     
     init(
         data: DecodableLanding.Data.MultiButtons
     ) {
         self.init(
-            list: data.list.map(Landing.MultiButtons.Item.init(data:)))
+            list: data.list.map(Landing.DataView.Multi.Buttons.Item.init(data:)))
     }
 }
 
-private extension Landing.MultiButtons.Item {
+private extension Landing.DataView.Multi.Buttons.Item {
     
     init(
         data: DecodableLanding.Data.MultiButtons.Item
     ) {
         
-        let detail: Landing.MultiButtons.Item.Detail? = data.detail.map(Landing.MultiButtons.Item.Detail.init(data:))
+        let detail: Landing.DataView.Multi.Buttons.Item.Detail? = data.detail.map(Landing.DataView.Multi.Buttons.Item.Detail.init(data:))
         
-        let action: Landing.MultiButtons.Item.Action? = data.action.map(Landing.MultiButtons.Item.Action.init(data:))
+        let action: Landing.DataView.Multi.Buttons.Item.Action? = data.action.map(Landing.DataView.Multi.Buttons.Item.Action.init(data:))
         
         self.init(
             text: data.text,
@@ -292,19 +292,19 @@ private extension Landing.MultiButtons.Item {
     }
 }
 
-private extension Landing.MultiButtons.Item.Detail {
+private extension Landing.DataView.Multi.Buttons.Item.Detail {
     
     init(
         data: DecodableLanding.Data.MultiButtons.Item.Detail
     ) {
-        let groupId: Landing.MultiButtons.Item.Detail.GroupId = .init(rawValue: data.groupId)
-        let viewId: Landing.MultiButtons.Item.Detail.ViewId = .init(rawValue: data.viewId)
+        let groupId: Landing.DataView.Multi.Buttons.Item.Detail.GroupId = .init(rawValue: data.groupId)
+        let viewId: Landing.DataView.Multi.Buttons.Item.Detail.ViewId = .init(rawValue: data.viewId)
         
         self.init(groupId: groupId, viewId: viewId)
     }
 }
 
-private extension Landing.MultiButtons.Item.Action {
+private extension Landing.DataView.Multi.Buttons.Item.Action {
     
     init(
         data: DecodableLanding.Data.MultiButtons.Item.Action
@@ -313,13 +313,13 @@ private extension Landing.MultiButtons.Item.Action {
     }
 }
 
-private extension Landing.MultiMarkersText {
+private extension Landing.DataView.Multi.MarkersText {
     
     init(
         data: DecodableLanding.Data.MultiMarkersText
     ) {
-        let list: [Landing.MultiMarkersText.Text] = data.list?.compactMap {
-                return Landing.MultiMarkersText.Text.init($0)
+        let list: [Landing.DataView.Multi.MarkersText.Text] = data.list?.compactMap {
+            return Landing.DataView.Multi.MarkersText.Text.init($0)
         } ?? []
         
         self.init(
@@ -329,7 +329,7 @@ private extension Landing.MultiMarkersText {
     }
 }
 
-private extension Landing.ListVerticalRoundImage {
+private extension Landing.DataView.List.VerticalRoundImage {
     
     init(
         data: DecodableLanding.Data.ListVerticalRoundImage
@@ -350,7 +350,7 @@ private extension Landing.ListVerticalRoundImage {
     }
 }
 
-private extension Landing.ListVerticalRoundImage.ListItem {
+private extension Landing.DataView.List.VerticalRoundImage.ListItem {
     
     init(
         data: DecodableLanding.Data.ListVerticalRoundImage.ListItem
@@ -362,12 +362,12 @@ private extension Landing.ListVerticalRoundImage.ListItem {
             link: data.link,
             appStore: data.appStore,
             googlePlay: data.googlePlay,
-            detail: data.detail.map(Landing.ListVerticalRoundImage.ListItem.Detail.init(data:))
+            detail: data.detail.map(Landing.DataView.List.VerticalRoundImage.ListItem.Detail.init(data:))
         )
     }
 }
 
-private extension Landing.ListVerticalRoundImage.ListItem.Detail {
+private extension Landing.DataView.List.VerticalRoundImage.ListItem.Detail {
     
     init(
         data: DecodableLanding.Data.ListVerticalRoundImage.ListItem.Detail
@@ -379,15 +379,15 @@ private extension Landing.ListVerticalRoundImage.ListItem.Detail {
     }
 }
 
-private extension Landing.MultiText {
+private extension Landing.DataView.Multi.Text {
     
     init(
         data: DecodableLanding.Data.MultiText
     ) {
-        let text: [Landing.MultiText.Text] = data.list.compactMap {
+        let text: [Landing.DataView.Multi.Text.Text] = data.list.compactMap {
             
             if let text = $0 {
-                return Landing.MultiText.Text.init(text)
+                return Landing.DataView.Multi.Text.Text.init(text)
             }
             return nil
         }
@@ -395,24 +395,24 @@ private extension Landing.MultiText {
     }
 }
 
-private extension Landing.ListHorizontalRectangleImage {
+private extension Landing.DataView.List.HorizontalRectangleImage {
     
     init(
         data: DecodableLanding.Data.ListHorizontalRectangleImage
     ) {
         
-        self.list = data.list.map { Landing.ListHorizontalRectangleImage.Item.init(data:$0)
+        self.list = data.list.map { Landing.DataView.List.HorizontalRectangleImage.Item.init(data:$0)
         }
     }
 }
 
-private extension Landing.ListHorizontalRectangleImage.Item {
+private extension Landing.DataView.List.HorizontalRectangleImage.Item {
     
     init(
         data: DecodableLanding.Data.ListHorizontalRectangleImage.Item
     ) {
         
-        let detail: Landing.ListHorizontalRectangleImage.Item.Detail? = {
+        let detail: Landing.DataView.List.HorizontalRectangleImage.Item.Detail? = {
             
             if let details = data.detail {
                 return .init(
@@ -426,7 +426,7 @@ private extension Landing.ListHorizontalRectangleImage.Item {
     }
 }
 
-private extension Landing.ListHorizontalRectangleImage.Item.Detail {
+private extension Landing.DataView.List.HorizontalRectangleImage.Item.Detail {
     
     init(
         data: DecodableLanding.Data.ListHorizontalRectangleImage.Item.Detail
@@ -438,14 +438,14 @@ private extension Landing.ListHorizontalRectangleImage.Item.Detail {
     }
 }
 
-private extension Landing.ListHorizontalRoundImage {
+private extension Landing.DataView.List.HorizontalRoundImage {
     
     init(
         data: DecodableLanding.Data.ListHorizontalRoundImage
     ) {
         
         self.list =  {
-            data.list?.map { Landing.ListHorizontalRoundImage.ListItem.init(data:$0)
+            data.list?.map { Landing.DataView.List.HorizontalRoundImage.ListItem.init(data:$0)
                 
             }
         }()
@@ -454,7 +454,7 @@ private extension Landing.ListHorizontalRoundImage {
     }
 }
 
-private extension Landing.ListHorizontalRoundImage.ListItem {
+private extension Landing.DataView.List.HorizontalRoundImage.ListItem {
     
     init(
         data: DecodableLanding.Data.ListHorizontalRoundImage.ListItem
@@ -462,11 +462,11 @@ private extension Landing.ListHorizontalRoundImage.ListItem {
         self.md5hash = data.md5hash
         self.title = data.title
         self.subInfo = data.subInfo
-        self.detail = data.detail.map(Landing.ListHorizontalRoundImage.ListItem.Detail.init(data:))
+        self.detail = data.detail.map(Landing.DataView.List.HorizontalRoundImage.ListItem.Detail.init(data:))
     }
 }
 
-private extension Landing.ListHorizontalRoundImage.ListItem.Detail {
+private extension Landing.DataView.List.HorizontalRoundImage.ListItem.Detail {
     
     init(
         data: DecodableLanding.Data.ListHorizontalRoundImage.ListItem.Detail
@@ -476,13 +476,13 @@ private extension Landing.ListHorizontalRoundImage.ListItem.Detail {
     }
 }
 
-private extension Landing.MuiltiTextsWithIconsHorizontal {
+private extension Landing.DataView.Multi.TextsWithIconsHorizontal {
     
     init(
         data: [DecodableLanding.Data.MultiTextsWithIconsHorizontal]
     ) {
         
-        let listItem: [Landing.MuiltiTextsWithIconsHorizontal.Item] = data.map {
+        let listItem: [Landing.DataView.Multi.TextsWithIconsHorizontal.Item] = data.map {
             
             .init(md5hash: $0.md5hash, title: $0.title)
         }
@@ -490,7 +490,7 @@ private extension Landing.MuiltiTextsWithIconsHorizontal {
     }
 }
 
-private extension Landing.MultiLineHeader {
+private extension Landing.DataView.Multi.LineHeader {
     
     init(
         data: DecodableLanding.Data.MultiLineHeader
