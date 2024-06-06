@@ -9,17 +9,10 @@ import SwiftUI
 
 struct MonthView: View {
     
-    @Binding var selectedDate: Date? {
-        didSet {
-            print(selectedRange)
-        }
-    }
-    @Binding var selectedRange: MDateRange? {
-        didSet {
-            print(selectedRange)
-        }
-    }
-    let data: Data.MonthView
+    @Binding var selectedDate: Date?
+    @Binding var selectedRange: MDateRange?
+    
+    let data: Month
     let config: CalendarConfig
 
     var body: some View {

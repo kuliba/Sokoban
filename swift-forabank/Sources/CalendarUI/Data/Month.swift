@@ -1,25 +1,20 @@
 //
-//  Data.swift
+//  Month.swift
 //
 //
 //  Created by Дмитрий Савушкин on 21.05.2024.
 //
 
 import Foundation
-
-enum Data {}
-
-extension Data {
  
-    struct MonthView {
-        
-        let month: Date
-        let items: [[Date]]
-    }
+struct Month {
+    
+    let month: Date
+    let items: [[Date]]
 }
 
 // MARK: - Generating Array
-extension [Data.MonthView] {
+extension [Month] {
     
     static func generate() -> Self {
         
@@ -28,7 +23,7 @@ extension [Data.MonthView] {
             .map(createMonthViewData)
     }
 }
-private extension [Data.MonthView] {
+private extension [Month] {
     
     static func createDatesRange() -> ClosedRange<Int> { 
         let startDate = MCalendar.startDate, endDate = MCalendar.endDate
@@ -39,11 +34,11 @@ private extension [Data.MonthView] {
     }
     
     static func createMonthDate(_ index: Int) -> Date { MCalendar.startDate.adding(index, .month) }
-    static func createMonthViewData(_ monthStart: Date) -> Data.MonthView { .generate(monthStart) }
+    static func createMonthViewData(_ monthStart: Date) -> Month { .generate(monthStart) }
 }
 
 // MARK: - Generating Single Month
-private extension Data.MonthView {
+private extension Month {
     
     static func generate(_ month: Date) -> Self {
         let rawDates = createRawDates(month)
@@ -52,7 +47,7 @@ private extension Data.MonthView {
         return .init(month: month, items: groupedDates)
     }
 }
-private extension Data.MonthView {
+private extension Month {
     
     static func createRawDates(_ month: Date) -> [Date] {
         let items = createRawDateItems(month, month.getWeekday())
@@ -65,7 +60,7 @@ private extension Data.MonthView {
             .reduce(into: [], reduceRawDates)
     }
 }
-private extension Data.MonthView {
+private extension Month {
     
     static func createRawDateItems(
         _ monthStartDate: Date,
@@ -94,7 +89,7 @@ private extension Data.MonthView {
         }
     }
 }
-private extension Data.MonthView {
+private extension Month {
     
     static func createRawDate(_ index: Int, _ monthStartDate: Date, _ monthStartWeekday: WeekDay) -> Date {
         let shiftIndex = {
@@ -109,7 +104,7 @@ private extension Data.MonthView {
         return date.isLater(.month, than: monthStartDate)
     }
 }
-private extension Data.MonthView {
+private extension Month {
     
     static var weekdaysNumber: Int { WeekDay.allCases.count }
 }

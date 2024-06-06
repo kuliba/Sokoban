@@ -11,20 +11,8 @@ import Combine
 
 class CalendarViewModel: ObservableObject {
     
-    @Published var date: Date? {
-        didSet {
-            updateDateBinding()
-        }
-    }
-    
-    @Published var range: MDateRange? {
-        willSet {
-            updateDateRangeBinding()
-        }
-    }
-    
-    private var p_date: Binding<Date?>?
-    private var p_range: Binding<MDateRange?>?
+    @Published var date: Date?
+    @Published var range: MDateRange?
     
     init(
         _ selectedDate: Binding<Date?>?,
@@ -32,11 +20,13 @@ class CalendarViewModel: ObservableObject {
     ) {
         self._date = .init(wrappedValue: selectedDate?.wrappedValue)
         self._range = .init(wrappedValue: selectedRange?.wrappedValue)
-        
-        self.p_date = selectedDate
-        self.p_range = selectedRange
     }
     
-    func updateDateBinding() { p_date?.wrappedValue = date }
-    func updateDateRangeBinding() { p_range?.wrappedValue = range }
+    func updateDateBinding() {
+        
+    }
+    
+    func updateDateRangeBinding() {
+        
+    }
 }

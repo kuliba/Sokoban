@@ -47,7 +47,7 @@ struct OptionsViewModel: Identifiable {
 public struct CalendarView: View {
     
     @StateObject var selectedData: CalendarViewModel
-    let monthsData: [Data.MonthView]
+    let monthsData: [Month]
     let configData: CalendarConfig
 
     init(
@@ -117,7 +117,7 @@ private extension CalendarView {
 
 private extension CalendarView {
     
-    func createMonthItem(_ data: Data.MonthView) -> some View {
+    func createMonthItem(_ data: Month) -> some View {
         
         VStack(spacing: configData.monthLabelDaysSpacing) {
             
@@ -135,7 +135,7 @@ private extension CalendarView {
             .onAppear { onMonthChange(month) }
     }
     
-    func createMonthView(_ data: Data.MonthView) -> some View {
+    func createMonthView(_ data: Month) -> some View {
         
         MonthView(
             selectedDate: $selectedData.date,
