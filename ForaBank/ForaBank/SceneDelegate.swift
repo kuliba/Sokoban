@@ -15,11 +15,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private lazy var model: Model = AppDelegate.shared.model
     private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
-    private lazy var httpClient: HTTPClient = { model.authenticatedHTTPClient()
-    }()
     private lazy var featureFlags = loadFeatureFlags()
     private lazy var rootViewModel = RootViewModelFactory.make(
-        httpClient: httpClient,
         model: model,
         logger: logger,
         qrResolverFeatureFlag: .init(.active),
