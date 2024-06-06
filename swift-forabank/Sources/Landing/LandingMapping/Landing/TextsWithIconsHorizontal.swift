@@ -1,5 +1,5 @@
 //
-//  LandingMuiltiTextsWithIconsHorizontal.swift
+//  TextsWithIconsHorizontal.swift
 //  
 //
 //  Created by Andryusina Nataly on 31.08.2023.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-extension Landing {
+extension Landing.DataView.Multi {
     
-    public struct MuiltiTextsWithIconsHorizontal: Equatable {
+    public struct TextsWithIconsHorizontal: Equatable {
         
         public let list: [Item]
         

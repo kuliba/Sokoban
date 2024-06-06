@@ -1,5 +1,5 @@
 //
-//  LandingListVerticalRoundImage.swift
+//  VerticalRoundImage.swift
 //  
 //
 //  Created by Andryusina Nataly on 05.09.2023.
@@ -7,9 +7,9 @@
 
 import Tagged
 
-extension Landing {
+extension Landing.DataView.List {
     
-    public struct ListVerticalRoundImage: Decodable, Equatable {
+    public struct VerticalRoundImage: Decodable, Equatable {
         
         public let title: String?
         public let displayedCount: Double?

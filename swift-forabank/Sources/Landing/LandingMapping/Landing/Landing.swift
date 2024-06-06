@@ -31,31 +31,35 @@ public struct Landing: Equatable {
 extension Landing {
     
     public enum DataView: Equatable {
-        
-        case list(List)
-        case multi(Multi)
-        
-        public enum List: Equatable {
-            case horizontalRectangleImage(ListHorizontalRectangleImage)
-            case horizontalRoundImage(ListHorizontalRoundImage)
-            case verticalRoundImage(ListVerticalRoundImage)
-            case dropDownTexts(ListDropDownTexts)
-        }
-        
-        public enum Multi: Equatable {
-            case lineHeader(MultiLineHeader)
-            case markersText(MultiMarkersText)
-            case text(MultiText)
-            case textsWithIconsHorizontalArray(MuiltiTextsWithIconsHorizontal)
-            case buttons(MultiButtons)
-            case typeButtons(MultiTypeButtons)
-        }
 
         case iconWithTwoTextLines(IconWithTwoTextLines)
-        case pageTitle(PageTitle)
-        case textsWithIconHorizontal(TextsWithIconHorizontal)
         case image(ImageBlock)
         case imageSvg(ImageSvg)
+        case list(List)
+        case multi(Multi)
+        case pageTitle(PageTitle)
+        case textsWithIconHorizontal(TextsWithIconHorizontal)
         case verticalSpacing(VerticalSpacing)
+    }
+}
+
+public extension Landing.DataView {
+    
+    enum List: Equatable {
+        
+        case dropDownTexts(DropDownTexts)
+        case horizontalRectangleImage(HorizontalRectangleImage)
+        case horizontalRoundImage(HorizontalRoundImage)
+        case verticalRoundImage(VerticalRoundImage)
+    }
+    
+    enum Multi: Equatable {
+        
+        case buttons(Buttons)
+        case lineHeader(LineHeader)
+        case markersText(MarkersText)
+        case text(Text)
+        case textsWithIconsHorizontalArray(TextsWithIconsHorizontal)
+        case typeButtons(TypeButtons)
     }
 }

@@ -2628,7 +2628,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var multiLineHeaders: [Landing.MultiLineHeader] {
+    var multiLineHeaders: [Landing.DataView.Multi.LineHeader] {
         
         compactMap {
             if case let .multi(.lineHeader(multiLineHeader)) = $0 {
@@ -2639,7 +2639,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var multiTexts: [Landing.MultiText] {
+    var multiTexts: [Landing.DataView.Multi.Text] {
         
         compactMap {
             if case let .multi(.text(multiText)) = $0 {
@@ -2650,7 +2650,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var multiMarkersTexts: [Landing.MultiMarkersText] {
+    var multiMarkersTexts: [Landing.DataView.Multi.MarkersText] {
         
         compactMap {
             if case let .multi(.markersText(multiMarkersText)) = $0 {
@@ -2661,7 +2661,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var muiltiTextsWithIconsHorizontals: [Landing.MuiltiTextsWithIconsHorizontal] {
+    var muiltiTextsWithIconsHorizontals: [Landing.DataView.Multi.TextsWithIconsHorizontal] {
         
         compactMap {
             if case let .multi(.textsWithIconsHorizontalArray(muiltiTextsWithIconsHorizontal)) = $0 {
@@ -2672,7 +2672,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var listVerticalRoundImages: [Landing.ListVerticalRoundImage] {
+    var listVerticalRoundImages: [Landing.DataView.List.VerticalRoundImage] {
         
         compactMap {
             if case let .list(.verticalRoundImage(listVerticalRoundImage)) = $0 {
@@ -2683,7 +2683,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var listHorizontalRoundImages: [Landing.ListHorizontalRoundImage] {
+    var listHorizontalRoundImages: [Landing.DataView.List.HorizontalRoundImage] {
         
         compactMap {
             if case let .list(.horizontalRoundImage(listHorizontalRoundImage)) = $0 {
@@ -2694,7 +2694,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var listHorizontalRectangleImages: [Landing.ListHorizontalRectangleImage] {
+    var listHorizontalRectangleImages: [Landing.DataView.List.HorizontalRectangleImage] {
         
         compactMap {
             if case let .list(.horizontalRectangleImage(listHorizontalRectangleImage)) = $0 {
@@ -2705,7 +2705,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var multiButtons: [Landing.MultiButtons] {
+    var multiButtons: [Landing.DataView.Multi.Buttons] {
         
         compactMap {
             if case let .multi(.buttons(multiButtons)) = $0 {
@@ -2716,7 +2716,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var multiTypeButtons: [Landing.MultiTypeButtons] {
+    var multiTypeButtons: [Landing.DataView.Multi.TypeButtons] {
         
         compactMap {
             if case let .multi(.typeButtons(typeButtons)) = $0 {
@@ -2749,7 +2749,7 @@ extension Array where Element == Landing.DataView {
         }
     }
     
-    var listDropDownTexts: [Landing.ListDropDownTexts] {
+    var listDropDownTexts: [Landing.DataView.List.DropDownTexts] {
         
         compactMap {
             if case let .list(.dropDownTexts(texts)) = $0 {
