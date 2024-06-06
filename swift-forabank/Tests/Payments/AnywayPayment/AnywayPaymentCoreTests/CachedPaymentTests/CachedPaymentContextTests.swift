@@ -142,18 +142,3 @@ private func makeCachedPayment(
     
     return .init(payment, using: { $0 })
 }
-
-private func makeAnywayPaymentContext(
-    payment: AnywayPayment = makeAnywayPayment(),
-    staged: AnywayPaymentStaged = [],
-    outline: AnywayPaymentOutline = makeAnywayPaymentOutline(),
-    shouldRestart: Bool = false
-) -> AnywayPaymentContext {
-    
-    return .init(
-        payment: payment,
-        staged: staged,
-        outline: outline,
-        shouldRestart: shouldRestart
-    )
-}

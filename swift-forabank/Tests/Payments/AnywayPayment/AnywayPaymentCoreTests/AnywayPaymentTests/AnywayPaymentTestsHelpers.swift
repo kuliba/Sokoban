@@ -68,6 +68,21 @@ func makeAmount(
     return amount
 }
 
+func makeAnywayPaymentContext(
+    payment: AnywayPayment = makeAnywayPayment(),
+    staged: AnywayPaymentStaged = [],
+    outline: AnywayPaymentOutline = makeAnywayPaymentOutline(),
+    shouldRestart: Bool = false
+) -> AnywayPaymentContext {
+    
+    return .init(
+        payment: payment,
+        staged: staged,
+        outline: outline,
+        shouldRestart: shouldRestart
+    )
+}
+
 func makeAnywayPayment(
     fields: [AnywayPayment.Element.Field],
     isFinalStep: Bool = false,
