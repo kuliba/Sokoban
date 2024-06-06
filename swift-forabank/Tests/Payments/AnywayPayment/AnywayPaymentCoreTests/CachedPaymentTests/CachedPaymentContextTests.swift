@@ -5,36 +5,8 @@
 //  Created by Igor Malyarov on 06.06.2024.
 //
 
-struct CachedPaymentContext<ElementModel> {
-    
-    let payment: CachedPayment
-    let staged: AnywayPaymentStaged
-    let outline: AnywayPaymentOutline
-    var shouldRestart: Bool
-    
-    typealias CachedPayment = CachedAnywayPayment<ElementModel>
-}
-
-extension CachedPaymentContext {
-    
-    func updating(
-        with context: AnywayPaymentContext,
-        using map: @escaping Map
-    ) -> Self {
-        
-        return .init(
-            payment: payment.updating(with: context.payment, using: map),
-            staged: context.staged,
-            outline: context.outline,
-            shouldRestart: context.shouldRestart
-        )
-    }
-    
-    typealias Map = (AnywayPayment.Element) -> (ElementModel)
-}
-
-@testable import AnywayPaymentCore
-@testable import AnywayPaymentDomain
+import AnywayPaymentCore
+import AnywayPaymentDomain
 import XCTest
 
 final class CachedPaymentContextTests: XCTestCase {
