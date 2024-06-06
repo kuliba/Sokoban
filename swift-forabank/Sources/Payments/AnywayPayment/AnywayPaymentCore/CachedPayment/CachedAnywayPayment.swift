@@ -54,6 +54,8 @@ public extension CachedAnywayPayment {
     typealias Map = (Element) -> ElementModel
 }
 
+extension CachedAnywayPayment: Equatable where ElementModel: Equatable {}
+
 extension CachedAnywayPayment {
     
     public var models: [IdentifiedModel] {
