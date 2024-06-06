@@ -55,12 +55,12 @@ struct CachedAnywayPayment<ElementModel> {
 
 extension CachedAnywayPayment {
     
-    var models: [IdentifiedModels] {
+    var models: [IdentifiedModel] {
         
-        cachedModels.keyModelPairs.map(IdentifiedModels.init)
+        cachedModels.keyModelPairs.map(IdentifiedModel.init)
     }
     
-    struct IdentifiedModels: Identifiable {
+    struct IdentifiedModel: Identifiable {
         
         let id: Element.ID
         let model: ElementModel
