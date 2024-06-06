@@ -1234,6 +1234,8 @@
 		2AD8E5452C116D2800C31E48 /* FeatureFlagsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8E5442C116D2800C31E48 /* FeatureFlagsLoader.swift */; };
 		2AD8E5482C116F0700C31E48 /* FeatureFlagsLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8E5472C116F0700C31E48 /* FeatureFlagsLoaderTests.swift */; };
 		2AD8E54A2C11783E00C31E48 /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8E5492C11783E00C31E48 /* FeatureFlags.swift */; };
+		2AD8E54E2C119F4300C31E48 /* CachedAnywayPaymentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8E54D2C119F4300C31E48 /* CachedAnywayPaymentTests.swift */; };
+		2AD8E5502C11B42700C31E48 /* CachedAnywayPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD8E54F2C11B42700C31E48 /* CachedAnywayPayment.swift */; };
 		2ADBDB912BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB902BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift */; };
 		2ADBDB942BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB932BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift */; };
 		2ADBDB972BD79A0F00114E87 /* UtilityServicePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDB962BD79A0F00114E87 /* UtilityServicePicker.swift */; };
@@ -4224,6 +4226,8 @@
 		2AD8E5442C116D2800C31E48 /* FeatureFlagsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagsLoader.swift; sourceTree = "<group>"; };
 		2AD8E5472C116F0700C31E48 /* FeatureFlagsLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagsLoaderTests.swift; sourceTree = "<group>"; };
 		2AD8E5492C11783E00C31E48 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
+		2AD8E54D2C119F4300C31E48 /* CachedAnywayPaymentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedAnywayPaymentTests.swift; sourceTree = "<group>"; };
+		2AD8E54F2C11B42700C31E48 /* CachedAnywayPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedAnywayPayment.swift; sourceTree = "<group>"; };
 		2ADBDB902BD7901800114E87 /* UtilityServicePaymentFlowFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentFlowFactory.swift; sourceTree = "<group>"; };
 		2ADBDB932BD799E500114E87 /* UtilityPaymentOperatorPickerLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentOperatorPickerLayoutView.swift; sourceTree = "<group>"; };
 		2ADBDB962BD79A0F00114E87 /* UtilityServicePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePicker.swift; sourceTree = "<group>"; };
@@ -7788,6 +7792,7 @@
 			isa = PBXGroup;
 			children = (
 				2A35DDA82C021AA400EFF0EB /* PaymentsTransfersFlowManagerComposerTests.swift */,
+				2AB4FA5D2B9067BF0061CBD7 /* UtilityPayments */,
 			);
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
@@ -8892,7 +8897,6 @@
 				2A35DDA62C021A5C00EFF0EB /* PaymentsTransfers */,
 				2AF50A112B3159E4009CB9E5 /* RootViewFactory */,
 				2AC2ADC32B2252940049EE9B /* SberQR */,
-				2AB4FA5D2B9067BF0061CBD7 /* UtilityPayments */,
 			);
 			path = CompositionRoot;
 			sourceTree = "<group>";
@@ -9191,7 +9195,6 @@
 			children = (
 				2AA3A92C2BFF87E700AEBCC9 /* AnywayTransaction */,
 				2AE2B9AA2B8DBF6900B86D56 /* Utilities */,
-				2AC067DF2BECEBF1004CBC0B /* PaymentsTransfersFlowManagerComposer.swift */,
 				2A5D2FB72BF3323500BC3092 /* Services */,
 				2AA3A0F42BF3E7C100B1D104 /* PaymentsTransfersFlowReducerFactoryComposer.swift */,
 				2AC067E52BED206D004CBC0B /* PaymentsTransfersFactoryComposer.swift */,
@@ -9233,6 +9236,7 @@
 			isa = PBXGroup;
 			children = (
 				2AA3A92F2BFF886300AEBCC9 /* AnywayTransaction.swift */,
+				2AD8E54F2C11B42700C31E48 /* CachedAnywayPayment.swift */,
 				2AA3A92D2BFF884100AEBCC9 /* AnywayTransactionViewModelComposer.swift */,
 				2AA3A9352BFF8A1900AEBCC9 /* AnywayPaymentFactoryComposer.swift */,
 				2AA3A9562BFF8DBB00AEBCC9 /* Configs */,
@@ -9516,6 +9520,7 @@
 			isa = PBXGroup;
 			children = (
 				2AA309602B9086D900C2FE42 /* Model+loadOperatorsTests.swift */,
+				2AD8E54D2C119F4300C31E48 /* CachedAnywayPaymentTests.swift */,
 			);
 			path = UtilityPayments;
 			sourceTree = "<group>";
@@ -10215,6 +10220,7 @@
 		2AF511E92BF3312300F97610 /* PaymentsTransfers */ = {
 			isa = PBXGroup;
 			children = (
+				2AC067DF2BECEBF1004CBC0B /* PaymentsTransfersFlowManagerComposer.swift */,
 				2A9BD5142B85F04100B88395 /* UtilityPayments */,
 			);
 			path = PaymentsTransfers;
@@ -16774,7 +16780,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n#   Increment Build Number Bool (Increment ON with true, increment OFF with false)\nshouldIncrement=false\n\n#   App vesion / Build version constants\nsourceFilePath=\"$PROJECT_DIR/$PROJECT_NAME/LaunchScreen.storyboard\"\nversionNumber=\"$MARKETING_VERSION\"\nbuildNumber=\"$CURRENT_PROJECT_VERSION\"\n\n\n#   Increment build number\nif [ \"$shouldIncrement\" = true ]; then\n    buildNumber=$(($buildNumber + 1))\n    /usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"\nfi\n\n#   Output version & build numbers into a label on LaunchScreen.storyboard\nsed -i .bak -e \"/userLabel=\\\"APP_VERSION\\\"/s/text=\\\"[^\\\"]*\\\"/text=\\\"version $versionNumber\\\"/\" \"$sourceFilePath\"\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n#   Increment Build Number Bool (Increment ON with true, increment OFF with false)\nshouldIncrement=false\n\n#   App vesion / Build version constants\nsourceFilePath=\"$PROJECT_DIR/$PROJECT_NAME/LaunchScreen.storyboard\"\nversionNumber=\"$MARKETING_VERSION\"\nbuildNumber=\"$CURRENT_PROJECT_VERSION\"\n\n\n#   Increment build number\nif [ \"$shouldIncrement\" = true ]; then\n    buildNumber=$(($buildNumber + 1))\n    /usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"\nfi\n\n#   Output version & build numbers into a label on LaunchScreen.storyboard\nsed -i .bak -e \"/userLabel=\\\"APP_VERSION\\\"/s/text=\\\"[^\\\"]*\\\"/text=\\\"version $versionNumber\\\"/\" \"$sourceFilePath\"\n\n# add Settings.bundle for Debug configuration\nif [ \"${CONFIGURATION}\" == \"Debug\" ]; then\n    cp -r \"${PROJECT_DIR}/Settings.bundle\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -18769,6 +18775,7 @@
 				5A5ABF9027AAF59F00D548AA /* ServerCommands+PaymentOperationDetail.swift in Sources */,
 				A5ECD4CA27ECC2BE008FBEEC /* C2BDetailsFormViewController.swift in Sources */,
 				0C03FB54286A89A900C2A100 /* BanksCollectionViewCell.swift in Sources */,
+				2AD8E5502C11B42700C31E48 /* CachedAnywayPayment.swift in Sources */,
 				2A65FB412B4E85BD00A84F9E /* Reducer.swift in Sources */,
 				5ADDC85227984CEF00488139 /* ServerCommands+Account.swift in Sources */,
 				2A44CBD62B68F01700158D42 /* UserAccountRoute.swift in Sources */,
@@ -19379,6 +19386,7 @@
 				2A3B3F652A28DF2400244131 /* PaymentsSelectCountryViewModelTests.swift in Sources */,
 				77FF670327B446D7009FEA09 /* AsyncAwaitTests.swift in Sources */,
 				2A89FB9A2A836179008F6B87 /* Crypto+AESTests.swift in Sources */,
+				2AD8E54E2C119F4300C31E48 /* CachedAnywayPaymentTests.swift in Sources */,
 				2A4B54222AB1D9C10042A0FF /* ModelAuthLoginViewModelTests.swift in Sources */,
 				2A4D25DD2A4DA19800965024 /* RelaxRegExpRuleTests.swift in Sources */,
 				2AD54D362B03868100481463 /* CVVPINSessionCacheTests.swift in Sources */,

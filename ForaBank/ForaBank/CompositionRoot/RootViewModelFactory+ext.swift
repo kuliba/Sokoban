@@ -18,7 +18,6 @@ extension RootViewModelFactory {
     typealias MakeOperationStateViewModel = (@escaping PaymentSticker.BusinessLogic.SelectOffice) -> OperationStateViewModel
     
     static func make(
-        httpClient: HTTPClient,
         model: Model,
         logger: LoggerAgentProtocol,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
@@ -27,6 +26,8 @@ extension RootViewModelFactory {
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
+        
+        let httpClient: HTTPClient = model.authenticatedHTTPClient()
         
         model.getProducts = Services.getProductListByType(httpClient, logger: logger)
         
