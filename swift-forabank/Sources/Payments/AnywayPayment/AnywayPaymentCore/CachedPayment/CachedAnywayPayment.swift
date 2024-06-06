@@ -5,17 +5,16 @@
 //  Created by Igor Malyarov on 06.06.2024.
 //
 
-import AnywayPaymentCore
 import AnywayPaymentDomain
 import ForaTools
 
-struct CachedAnywayPayment<ElementModel> {
+public struct CachedAnywayPayment<ElementModel> {
     
     private let cachedModels: CachedModels
-    let infoMessage: String?
-    let isFinalStep: Bool
-    let isFraudSuspected: Bool
-    let puref: Puref
+    public let infoMessage: String?
+    public let isFinalStep: Bool
+    public let isFraudSuspected: Bool
+    public let puref: Puref
     
     private init(
         cachedModels: CachedModels,
@@ -31,7 +30,7 @@ struct CachedAnywayPayment<ElementModel> {
         self.puref = puref
     }
     
-    init(
+    public init(
         _ payment: AnywayPayment,
         using map: @escaping Map
     ) {
@@ -43,33 +42,35 @@ struct CachedAnywayPayment<ElementModel> {
             puref: payment.puref
         )
     }
+}
+
+public extension CachedAnywayPayment {
     
     typealias CachedModels = CachedModelsState<Element.ID, ElementModel>
     typealias Element = AnywayPayment.Element
     
     typealias Puref = AnywayPayment.Puref
-    typealias AnywayPayment = AnywayPaymentDomain.AnywayPayment
     
-    typealias Map = (Element) -> (ElementModel)
+    typealias Map = (Element) -> ElementModel
 }
 
 extension CachedAnywayPayment {
     
-    var models: [IdentifiedModel] {
+    public var models: [IdentifiedModel] {
         
         cachedModels.keyModelPairs.map(IdentifiedModel.init)
     }
     
-    struct IdentifiedModel: Identifiable {
+    public struct IdentifiedModel: Identifiable {
         
-        let id: Element.ID
-        let model: ElementModel
+        public let id: Element.ID
+        public let model: ElementModel
     }
 }
 
 extension CachedAnywayPayment {
     
-    func updating(
+    public func updating(
         with payment: AnywayPayment,
         using map: @escaping Map
     ) -> Self {
