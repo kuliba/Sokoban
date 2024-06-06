@@ -29,13 +29,6 @@ public final class RxObservingViewModel<State, Event, Effect>: ObservableObject 
             .map(\.1)
             .receive(on: scheduler)
             .assign(to: &$state)
-        
-        print(">>>>>> \(self) init")
-    }
-    
-    deinit {
-        
-        print(">>>>>> \(self) deinit")
     }
 }
 

@@ -52,13 +52,6 @@ final class ObservingCachedPaymentViewModel: ObservableObject {
             .dropFirst()
             .sink(receiveValue: observe)
             .store(in: &cancellables)
-        
-        print(">>>>>> \(self) init")
-    }
-    
-    deinit {
-        
-        print(">>>>>> \(self) deinit")
     }
     
     typealias State = CachedPayment
