@@ -11,7 +11,8 @@ class LocalAgent: LocalAgentProtocol {
     
     internal let context: Context
     internal var serials: [String: String]
-    
+    private let lock = NSLock()
+
     init(context: Context) {
         
         self.context = context
@@ -24,6 +25,8 @@ class LocalAgent: LocalAgentProtocol {
     
     func store<T>(_ data: T, serial: String? = nil) throws where T : Encodable {
         
+        lock.lock()
+        
         let dataFileName = fileName(for: T.self)
         let data = try context.encoder.encode(data)
         try data.write(to: fileURL(with: dataFileName))
@@ -31,6 +34,8 @@ class LocalAgent: LocalAgentProtocol {
         serials[dataFileName] = serial
         let serialsData = try JSONEncoder().encode(serials)
         try serialsData.write(to: fileURL(with: context.serialsFileName))
+        
+        lock.unlock()
     }
 
     //MARK: - Load
