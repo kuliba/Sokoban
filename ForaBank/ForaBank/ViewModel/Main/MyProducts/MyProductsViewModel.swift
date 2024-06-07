@@ -312,7 +312,8 @@ class MyProductsViewModel: ObservableObject {
             if let section = sections.first(where: { $0.id == productType.rawValue }) {
                 
                 section.update(with: productsForType, productsOpening: productsOpening)
-                
+                section.itemsId = productsForType?.uniqueProductIDs() ?? []
+                section.groupingCards = productsForType?.groupingCards() ?? [:]
                 guard !section.items.isEmpty else { continue }
                 
                 updatedSections.append(section)
