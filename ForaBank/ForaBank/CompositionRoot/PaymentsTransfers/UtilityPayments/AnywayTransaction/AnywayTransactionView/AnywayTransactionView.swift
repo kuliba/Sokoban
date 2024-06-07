@@ -89,7 +89,7 @@ private extension AnywayTransactionView {
         }
     }
     
-    typealias Element = CachedAnywayPayment<ElementModel>.IdentifiedModel
+    typealias Element = CachedAnywayPayment<AnywayElementModel>.IdentifiedModel
 }
 
 // MARK: - Adapters

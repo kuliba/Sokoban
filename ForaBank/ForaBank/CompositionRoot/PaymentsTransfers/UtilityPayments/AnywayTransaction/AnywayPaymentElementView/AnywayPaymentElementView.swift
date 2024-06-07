@@ -50,7 +50,7 @@ struct AnywayPaymentElementView<IconView: View>: View {
 
 extension AnywayPaymentElementView {
     
-    typealias State = CachedAnywayPayment<ElementModel>.IdentifiedModel
+    typealias State = CachedAnywayPayment<AnywayElementModel>.IdentifiedModel
     typealias Event = AnywayPaymentEvent
     typealias Factory = AnywayPaymentElementViewFactory<IconView>
     typealias Config = AnywayPaymentElementConfig

@@ -10,16 +10,9 @@ import AnywayPaymentDomain
 import RxViewModel
 
 typealias ObservingCachedAnywayTransactionViewModel = RxObservingViewModel<CachedTransactionState, CachedTransactionEvent, CachedTransactionEffect>
-typealias CachedTransactionState = TransactionOf<OperationDetailID, OperationDetails, DocumentStatus, CachedPaymentContext<ElementModel>>
+typealias CachedTransactionState = TransactionOf<OperationDetailID, OperationDetails, DocumentStatus, CachedPaymentContext<AnywayElementModel>>
 typealias CachedTransactionEvent = CachedAnywayTransactionEvent<AnywayTransactionState, AnywayTransactionEvent>
 typealias CachedTransactionEffect = CachedAnywayTransactionEffect<AnywayTransactionEvent>
-
-enum ElementModel {
-    
-    case field(AnywayElement.UIComponent.Field)
-    case parameter(AnywayElement.UIComponent.Parameter)
-    case widget(AnywayElement.Widget)
-}
 
 typealias ObservingAnywayTransactionViewModel = RxViewModel<AnywayTransactionState, AnywayTransactionEvent, TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>>
 

@@ -246,7 +246,7 @@ private extension CachedTransactionState {
     }
 }
 
-private extension Array where Element == CachedAnywayPayment<ElementModel>.IdentifiedModel {
+private extension Array where Element == CachedAnywayPayment<AnywayElementModel>.IdentifiedModel {
     
     var core: AnywayPaymentFooter.Core? {
         

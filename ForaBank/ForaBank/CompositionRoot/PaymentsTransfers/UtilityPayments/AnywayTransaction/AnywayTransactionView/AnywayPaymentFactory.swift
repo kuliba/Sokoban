@@ -17,7 +17,7 @@ struct AnywayPaymentFactory<IconView: View> {
 
 extension AnywayPaymentFactory {
     
-    typealias Element = CachedAnywayPayment<ElementModel>.IdentifiedModel
+    typealias Element = CachedAnywayPayment<AnywayElementModel>.IdentifiedModel
     typealias MakeElementView = (Element) -> AnywayPaymentElementView<IconView>
     
     typealias MakeFooterView = (CachedTransactionState, @escaping (AnywayPaymentFooterEvent) -> Void) -> AnywayPaymentFooterView

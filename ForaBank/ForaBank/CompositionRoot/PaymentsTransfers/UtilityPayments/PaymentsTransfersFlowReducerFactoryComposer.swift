@@ -101,25 +101,12 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         
         let transactionViewModel = makeTransactionViewModel(transactionState)
         
-        let mapAnywayElement: (AnywayElement) -> ElementModel = {
-            
-            #warning("extract")
-            switch ($0, $0.uiComponent) {
-            case let (_, .field(field)):
-                return .field(field)
-            
-            case let (_, .parameter(parameter)):
-                return .parameter(parameter)
-            
-            case let (.widget(widget), _):
-                return .widget(widget)
-                
-            default:
-                fatalError("impossible case; would be removed on change to models")
-            }
-        }
+        let mapper = AnywayElementModelMapper(
+            event: transactionViewModel.event(_:)
+        )
+        let mapAnywayElement = mapper.map(_:)
         
-        typealias Updater = CachedAnywayTransactionUpdater<DocumentStatus, ElementModel, OperationDetailID, OperationDetails>
+        typealias Updater = CachedAnywayTransactionUpdater<DocumentStatus, AnywayElementModel, OperationDetailID, OperationDetails>
         let updater = Updater(map: mapAnywayElement)
         
         typealias Reducer = CachedAnywayTransactionReducer<AnywayTransactionState, CachedTransactionState, AnywayTransactionEvent>
