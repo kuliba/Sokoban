@@ -41,6 +41,9 @@ class LocalAgent: LocalAgentProtocol {
     
     func load<T>(type: T.Type) -> T? where T : Decodable {
 
+        lock.lock()
+        defer { lock.unlock() }
+        
         let fileName = fileName(for: type)
         
         do {
@@ -70,6 +73,9 @@ class LocalAgent: LocalAgentProtocol {
     //MARK: - Clear
     
     func clear<T>(type: T.Type) throws  {
+        
+        lock.lock()
+        defer { lock.unlock() }
         
         let fileName = fileName(for: type)
         let dataFileURL = try fileURL(with: fileName)
@@ -109,6 +115,9 @@ internal extension LocalAgent {
     }
     
     func loadSerials() {
+        
+        lock.lock()
+        defer { lock.unlock() }
         
         do {
             
