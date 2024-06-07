@@ -64,7 +64,7 @@ extension PaymentsTransfersFlowManagerComposer {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias PaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias PaymentViewModel = ObservingCachedAnywayTransactionViewModel
 }
 
 private extension PaymentsTransfersFlowManagerComposer {

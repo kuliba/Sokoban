@@ -93,7 +93,7 @@ struct ContentView: View {
     
     @ViewBuilder
     private func paymentView(
-        _ viewModel: ObservingAnywayTransactionViewModel
+        _ viewModel: ObservingCachedAnywayTransactionViewModel
     ) -> some View {
         
         let factory = makeFactory { viewModel.event(.payment($0)) }
@@ -106,7 +106,7 @@ struct ContentView: View {
     
     @ViewBuilder
     private func sheetView(
-        _ transactionViewModel: ObservingAnywayTransactionViewModel,
+        _ transactionViewModel: ObservingCachedAnywayTransactionViewModel,
         modal: Flow.Modal
     ) -> some View {
         

@@ -501,12 +501,12 @@ private extension PaymentsTransfersView {
         
         let factory = viewFactory.makeAnywayPaymentFactory {
             
-            state.viewModel.event(.payment($0))
+            state.viewModel.event(.transaction(.payment($0)))
         }
         
-        AnywayTransactionStateWrapperView(viewModel: state.viewModel) {
+        AnywayTransactionStateWrapperView(viewModel: state.viewModel) { state, event in
             
-            AnywayTransactionView(state: $0, event: $1, factory: factory)
+            AnywayTransactionView(state: state, event: { event(.transaction($0)) }, factory: factory)
         }
         .alert(
             item: state.alert,
@@ -656,7 +656,7 @@ private extension PaymentsTransfersView {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = ObservingCachedAnywayTransactionViewModel
     
     typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content, UtilityPaymentViewModel>
     

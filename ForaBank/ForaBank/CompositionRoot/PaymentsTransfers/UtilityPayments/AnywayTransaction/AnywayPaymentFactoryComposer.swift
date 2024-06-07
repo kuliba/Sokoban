@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
 import PaymentComponents
 import RxViewModel
@@ -231,7 +232,7 @@ private extension InputState where Icon == String {
     }
 }
 
-private extension AnywayTransactionState {
+private extension CachedTransactionState {
     
     var footer: AnywayPaymentFooter {
         
@@ -241,15 +242,15 @@ private extension AnywayTransactionState {
     
     var core: AnywayPaymentFooter.Core? {
         
-        payment.payment.elements.core
+        context.payment.models.core
     }
 }
 
-private extension Array where Element == AnywayPaymentDomain.AnywayElement {
+private extension Array where Element == CachedAnywayPayment<AnywayElement>.IdentifiedModel {
     
     var core: AnywayPaymentFooter.Core? {
         
-        guard case let .widget(.core(core)) = self[id: .widgetID(.core)]
+        guard case let .widget(.core(core)) = self[id: .widgetID(.core)]?.model
         else { return nil }
         
         return .init(value: core.amount, currency: core.currency.rawValue)

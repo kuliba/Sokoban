@@ -28,14 +28,14 @@ public extension CachedAnywayTransactionUpdater {
     ) -> CachedTransaction {
         
         return .init(
-            payment: .init(
-                payment: cachedTransaction.payment.payment.updating(
-                    with: transaction.payment.payment,
+            context: .init(
+                payment: cachedTransaction.context.payment.updating(
+                    with: transaction.context.payment,
                     using: map
                 ),
-                staged: transaction.payment.staged,
-                outline: transaction.payment.outline,
-                shouldRestart: transaction.payment.shouldRestart
+                staged: transaction.context.staged,
+                outline: transaction.context.outline,
+                shouldRestart: transaction.context.shouldRestart
             ),
             isValid: transaction.isValid,
             status: transaction.status

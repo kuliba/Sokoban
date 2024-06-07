@@ -60,7 +60,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
-            $0.payment = updatedPayment
+            $0.context = updatedPayment
             $0.isValid = true
             $0.status = .fraudSuspected
         }, {
@@ -94,7 +94,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
-            $0.payment = updatedPayment
+            $0.context = updatedPayment
             $0.isValid = true
             $0.status = .fraudSuspected
         }, {
@@ -124,7 +124,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
-            $0.payment = updatedPayment
+            $0.context = updatedPayment
             $0.isValid = true
             $0.status = .fraudSuspected
         }, {
@@ -165,7 +165,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
-            $0.payment = updatedPayment
+            $0.context = updatedPayment
             $0.isValid = true
         }, {
             $0.status = .serverError(message)
@@ -192,7 +192,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
-            $0.payment = updatedPayment
+            $0.context = updatedPayment
             $0.isValid = true
         }, {
             $0.status = .result(.failure(.updatePaymentFailure))
@@ -267,7 +267,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
-            $0.payment = updatedPayment
+            $0.context = updatedPayment
             $0.isValid = true
         }, {
             $0.status = .result(.failure(.transactionFailure))
@@ -299,7 +299,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
-            $0.payment = updatedPayment
+            $0.context = updatedPayment
             $0.isValid = true
         }, {
             $0.status = .result(.success(report))
@@ -331,7 +331,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
-            $0.payment = updatedPayment
+            $0.context = updatedPayment
             $0.isValid = true
         }, {
             $0.status = .result(.success(report))

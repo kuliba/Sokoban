@@ -450,7 +450,7 @@ final class TransactionReducerTests: XCTestCase {
         
         assertState(sut: sut, .continue, on: makeValidTransaction(makePayment())) {
             
-            $0.payment = staged
+            $0.context = staged
         }
     }
     
@@ -814,7 +814,7 @@ final class TransactionReducerTests: XCTestCase {
         
         assertState(sut: sut, makePaymentTransactionEvent(), on: makeTransaction()) {
             
-            $0.payment = newPayment
+            $0.context = newPayment
         }
     }
     
@@ -828,7 +828,7 @@ final class TransactionReducerTests: XCTestCase {
         
         assertState(sut: sut, makePaymentTransactionEvent(), on: makeTransaction()) {
             
-            $0.payment = newPayment
+            $0.context = newPayment
         }
     }
     
@@ -857,7 +857,7 @@ final class TransactionReducerTests: XCTestCase {
         
         assertState(sut: sut, makePaymentTransactionEvent(), on: makeTransaction()) {
             
-            $0.payment = newPayment
+            $0.context = newPayment
         }
     }
     
@@ -871,7 +871,7 @@ final class TransactionReducerTests: XCTestCase {
         
         assertState(sut: sut, makePaymentTransactionEvent(), on: makeTransaction()) {
             
-            $0.payment = newPayment
+            $0.context = newPayment
         }
     }
     
@@ -948,7 +948,7 @@ final class TransactionReducerTests: XCTestCase {
         
         assertState(sut: sut, .paymentRestartConfirmation(false), on: state) {
             
-            $0.payment = prevPayment
+            $0.context = prevPayment
             $0.status = nil
         }
     }
@@ -966,7 +966,7 @@ final class TransactionReducerTests: XCTestCase {
         
         assertState(.paymentRestartConfirmation(true), on: state) {
             
-            $0.payment.shouldRestart = true
+            $0.context.shouldRestart = true
             $0.status = nil
         }
     }
@@ -1123,7 +1123,7 @@ final class TransactionReducerTests: XCTestCase {
         
         let (updated, _) = sut.reduce(makeTransaction(), makeUpdateTransactionEvent(update))
         
-        XCTAssertNoDiff(checkFraudSpy.payloads, [updated.payment])
+        XCTAssertNoDiff(checkFraudSpy.payloads, [updated.context])
     }
     
     func test_update_shouldNotChangeStateOnFraudSuspectedStatus() {
@@ -1160,7 +1160,7 @@ final class TransactionReducerTests: XCTestCase {
         
         assertState(sut: sut, makeUpdateTransactionEvent(), on: makeTransaction(payment)) {
             
-            $0.payment = updated
+            $0.context = updated
         }
         XCTAssertNotEqual(payment, updated)
     }

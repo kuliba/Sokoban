@@ -258,12 +258,12 @@ func makeTransactionEffect(
 }
 
 func makeTransaction(
-    _ payment: Payment = makePayment(),
+    _ context: Payment = makePayment(),
     isValid: Bool = false,
     status: _TransactionStatus? = nil
 ) -> _Transaction {
     
-    .init(payment: payment, isValid: isValid, status: status)
+    .init(context: context, isValid: isValid, status: status)
 }
 
 func makeResponse(

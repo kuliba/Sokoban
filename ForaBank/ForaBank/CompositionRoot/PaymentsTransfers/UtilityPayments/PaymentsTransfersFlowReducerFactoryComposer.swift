@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
 import RxViewModel
 import UtilityServicePrepaymentCore
@@ -54,7 +55,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = ObservingCachedAnywayTransactionViewModel
 }
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -98,9 +99,37 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         notify: @escaping (PaymentStateProjection) -> Void
     ) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
         
-        let observable = makeTransactionViewModel(transactionState)
+        let transactionViewModel = makeTransactionViewModel(transactionState)
+        
+        let mapAnywayElement: (AnywayElement) -> AnywayElement = { $0 }
+        
+        typealias Updater = CachedAnywayTransactionUpdater<DocumentStatus, AnywayElement, OperationDetailID, OperationDetails>
+        let updater = Updater(map: mapAnywayElement)
+        
+        typealias Reducer = CachedAnywayTransactionReducer<AnywayTransactionState, CachedTransactionState, AnywayTransactionEvent>
+        let reducer = Reducer(update: updater.update(_:with:))
+        
+        let effectHandler = CachedAnywayTransactionEffectHandler(
+            statePublisher: transactionViewModel.$state.eraseToAnyPublisher(),
+            event: transactionViewModel.event(_:)
+        )
+        
+        let initialState = CachedTransactionState(
+            context: .init(
+                transactionState.context, 
+                using: mapAnywayElement
+            ),
+            isValid: transactionState.isValid,
+            status: transactionState.status
+        )
+        let cachedTransactionViewModel = RxViewModel(
+            initialState: initialState,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:)
+        )
+        
         let viewModel = UtilityPaymentViewModel(
-            observable: observable,
+            observable: cachedTransactionViewModel,
             observe: { PaymentStateProjection($0, $1).map(notify) }
         )
         
@@ -144,8 +173,8 @@ enum PaymentStateProjection: Equatable {
 extension PaymentStateProjection {
     
     init?(
-        _ previous: AnywayTransactionState,
-        _ current: AnywayTransactionState
+        _ previous: CachedTransactionState,
+        _ current: CachedTransactionState
     ) {
 #warning("previous is ignored")
         switch current.status {
