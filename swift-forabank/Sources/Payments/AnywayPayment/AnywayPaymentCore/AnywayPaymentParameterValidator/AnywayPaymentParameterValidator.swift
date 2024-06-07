@@ -29,7 +29,7 @@ public extension AnywayPaymentParameterValidator {
 
 public extension AnywayPaymentParameterValidator {
     
-    typealias Parameter = AnywayPayment.Element.Parameter
+    typealias Parameter = AnywayElement.Parameter
 }
 
 private extension AnywayPaymentParameterValidator {

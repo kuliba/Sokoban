@@ -62,7 +62,7 @@ final class AnywayPaymentValidatorTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = AnywayPaymentValidator
-    private typealias Parameter = AnywayPayment.Element.Parameter
+    private typealias Parameter = AnywayElement.Parameter
     
     private func makeSUT(
         isValidParameter: @escaping (Parameter) -> Bool,

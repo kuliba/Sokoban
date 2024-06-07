@@ -47,7 +47,7 @@ public struct CachedAnywayPayment<ElementModel> {
 public extension CachedAnywayPayment {
     
     typealias CachedModels = CachedModelsState<Element.ID, ElementModel>
-    typealias Element = AnywayPayment.Element
+    typealias Element = AnywayElement
     
     typealias Puref = AnywayPayment.Puref
     

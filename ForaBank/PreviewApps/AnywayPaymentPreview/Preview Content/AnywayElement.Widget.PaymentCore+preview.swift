@@ -1,5 +1,5 @@
 //
-//  AnywayPayment.Element.Widget.PaymentCore+preview.swift
+//  AnywayElement.Widget.PaymentCore+preview.swift
 //  AnywayPaymentPreview
 //
 //  Created by Igor Malyarov on 14.04.2024.
@@ -7,7 +7,7 @@
 
 import AnywayPaymentDomain
 
-extension AnywayPayment.Element.Widget.PaymentCore {
+extension AnywayElement.Widget.PaymentCore {
     
     static let preview: Self = .init(
         amount: 12_345.67,

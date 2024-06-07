@@ -18,11 +18,11 @@ extension AnywayPaymentElementViewFactory {
     
     typealias AnywayPayment = AnywayPaymentDomain.AnywayPayment
     
-    typealias Element = AnywayPayment.Element.UIComponent
+    typealias Element = AnywayElement.UIComponent
     typealias MakeIconView = (Element) -> IconView
     
     typealias MakeProductSelectView = (ProductID, @escaping Observe) -> ProductSelectStateWrapperView
     typealias Observe = (ProductID, Currency) -> Void
-    typealias ProductID = AnywayPayment.Element.UIComponent.Widget.ProductID
+    typealias ProductID = AnywayElement.UIComponent.Widget.ProductID
     typealias Currency = AnywayPaymentEvent.Widget.Currency
 }
