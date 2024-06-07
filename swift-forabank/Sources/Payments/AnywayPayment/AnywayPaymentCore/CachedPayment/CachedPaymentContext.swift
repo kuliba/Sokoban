@@ -39,7 +39,7 @@ public struct CachedPaymentContext<ElementModel> {
     }
     
     public typealias CachedPayment = CachedAnywayPayment<ElementModel>
-    public typealias Map = (AnywayPayment.Element) -> (ElementModel)
+    public typealias Map = (AnywayPayment.AnywayElement) -> (ElementModel)
 }
 
 extension CachedPaymentContext: Equatable where ElementModel: Equatable {}

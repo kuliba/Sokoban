@@ -51,9 +51,9 @@ private extension AnywayPaymentContext {
     typealias Pairs = [AnywayPaymentOutline.ID : AnywayPaymentOutline.Value?]
 }
 
-private extension Array where Element == AnywayPayment.Element {
+private extension Array where Element == AnywayPayment.AnywayElement {
     
-    var parameterFields: [AnywayPayment.Element.Parameter.Field] {
+    var parameterFields: [AnywayPayment.AnywayElement.Parameter.Field] {
         
         compactMap {
             

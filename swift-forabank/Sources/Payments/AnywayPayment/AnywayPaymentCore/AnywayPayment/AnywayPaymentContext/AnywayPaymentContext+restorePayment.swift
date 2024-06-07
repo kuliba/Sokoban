@@ -44,10 +44,10 @@ private extension AnywayPaymentContext {
         }
     }
     
-    typealias Pair = (AnywayPayment.Element.Parameter.Field.ID, AnywayPayment.Element.Parameter.Field.Value)
+    typealias Pair = (AnywayPayment.AnywayElement.Parameter.Field.ID, AnywayPayment.AnywayElement.Parameter.Field.Value)
 }
 
-private typealias Snapshot = [AnywayPayment.Element.Parameter.Field.ID: AnywayPayment.Element.Parameter.Field.Value]
+private typealias Snapshot = [AnywayPayment.AnywayElement.Parameter.Field.ID: AnywayPayment.AnywayElement.Parameter.Field.Value]
 
 private extension AnywayPayment {
     
@@ -57,7 +57,7 @@ private extension AnywayPayment {
         return updating(elements: elements)
     }
     
-    func updating(elements: [Element]) -> Self {
+    func updating(elements: [AnywayElement]) -> Self {
         
         return .init(
             elements: elements,
@@ -69,7 +69,7 @@ private extension AnywayPayment {
     }
 }
 
-private extension AnywayPayment.Element {
+private extension AnywayPayment.AnywayElement {
     
     func restoring(with snapshot: Snapshot) -> Self {
         
@@ -83,7 +83,7 @@ private extension AnywayPayment.Element {
     }
 }
 
-private extension AnywayPayment.Element.Parameter {
+private extension AnywayPayment.AnywayElement.Parameter {
     
     func restoring(with snapshot: Snapshot) -> Self {
         
@@ -93,7 +93,7 @@ private extension AnywayPayment.Element.Parameter {
     }
     
     func updating(
-        value: AnywayPayment.Element.Parameter.Field.Value
+        value: AnywayPayment.AnywayElement.Parameter.Field.Value
     ) -> Self {
         
         return .init(

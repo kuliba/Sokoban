@@ -97,9 +97,9 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     
     private func widgetCore(
         _ payment: AnywayPayment
-    ) -> AnywayPayment.Element.Widget.PaymentCore? {
+    ) -> AnywayPayment.AnywayElement.Widget.PaymentCore? {
         
-        let cores: [AnywayPayment.Element.Widget.PaymentCore] = payment.elements.compactMap {
+        let cores: [AnywayPayment.AnywayElement.Widget.PaymentCore] = payment.elements.compactMap {
             
             guard case let .widget(.core(core)) = $0
             else { return nil }
@@ -122,7 +122,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         XCTAssertNoDiff(payment.elements, [])
         assert(payment, on: update) {
             
-            $0.elements = [AnywayPayment.Element.field(updated)]
+            $0.elements = [AnywayPayment.AnywayElement.field(updated)]
         }
     }
     
@@ -144,7 +144,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 makeAnywayPaymentField("a", value: "aa", title: "aaa"),
                 makeAnywayPaymentField("b", value: "bb", title: "bbb"),
                 makeAnywayPaymentField("c", value: "cc", title: "ccc"),
-            ].map(AnywayPayment.Element.field)
+            ].map(AnywayPayment.AnywayElement.field)
         }
     }
     
@@ -158,7 +158,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         assert(payment, on: update) {
             
             let fields = [field].appending(updatedField)
-            $0.elements = fields.map(AnywayPayment.Element.field)
+            $0.elements = fields.map(AnywayPayment.AnywayElement.field)
         }
     }
     
@@ -175,7 +175,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         assert(payment, on: update) {
             
             let fields = [field, updatedField1, updatedField2]
-            $0.elements = fields.map(AnywayPayment.Element.field)
+            $0.elements = fields.map(AnywayPayment.AnywayElement.field)
         }
     }
     
@@ -510,7 +510,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            $0.elements = [parameter1, parameter2, updatedParameter].map(AnywayPayment.Element.parameter)
+            $0.elements = [parameter1, parameter2, updatedParameter].map(AnywayPayment.AnywayElement.parameter)
         }
     }
     
@@ -525,7 +525,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            $0.elements = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
+            $0.elements = [updatedParameter1, updatedParameter2].map(AnywayPayment.AnywayElement.parameter)
         }
     }
     
@@ -541,7 +541,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
+            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.AnywayElement.parameter)
             $0.elements = [.field(field)] + appending
         }
     }
@@ -559,7 +559,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
+            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.AnywayElement.parameter)
             $0.elements = [.field(field1), .field(field2)] + appending
         }
     }
@@ -579,7 +579,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
+            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.AnywayElement.parameter)
             $0.elements = [.field(field), .parameter(parameter)] + appending
         }
     }
@@ -599,7 +599,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
+            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.AnywayElement.parameter)
             $0.elements = [.parameter(parameter), .field(field)] + appending
         }
     }
@@ -617,7 +617,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         assert(payment, on: update) {
             
             $0.elements = [parameter, updatedParameter1, updatedParameter2]
-                .map(AnywayPayment.Element.parameter)
+                .map(AnywayPayment.AnywayElement.parameter)
         }
     }
     
@@ -635,7 +635,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         assert(payment, on: update) {
             
             $0.elements = [parameter1, parameter2, updatedParameter1, updatedParameter2]
-                .map(AnywayPayment.Element.parameter)
+                .map(AnywayPayment.AnywayElement.parameter)
         }
     }
     
@@ -671,8 +671,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             
             let complimentaryFields = [updatedField1, updatedField2]
             let parameters = [updatedParameter1, updatedParameter2]
-            $0.elements = complimentaryFields.map(AnywayPayment.Element.field)
-            + parameters.map(AnywayPayment.Element.parameter)
+            $0.elements = complimentaryFields.map(AnywayPayment.AnywayElement.field)
+            + parameters.map(AnywayPayment.AnywayElement.parameter)
         }
     }
     
@@ -714,8 +714,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             let complimentaryFields = [updatedField1, updatedField2]
             let parameters = [updatedParameter1, updatedParameter2]
             $0.elements = [.field(field), .parameter(parameter)]
-            + complimentaryFields.map(AnywayPayment.Element.field)
-            + parameters.map(AnywayPayment.Element.parameter)
+            + complimentaryFields.map(AnywayPayment.AnywayElement.field)
+            + parameters.map(AnywayPayment.AnywayElement.parameter)
         }
     }
     
@@ -991,7 +991,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
 
 private extension AnywayPayment {
     
-    subscript(parameterID id: String) -> Element.Parameter? {
+    subscript(parameterID id: String) -> AnywayElement.Parameter? {
         
         elements.compactMap {
             

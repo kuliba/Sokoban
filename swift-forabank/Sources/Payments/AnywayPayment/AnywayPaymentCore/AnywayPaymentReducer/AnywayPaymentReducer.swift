@@ -84,7 +84,7 @@ private extension AnywayPayment {
         elements[index] = .parameter(parameter.updating(value: value))
     }
     
-    typealias ParameterID = AnywayPayment.Element.Parameter.Field.ID
+    typealias ParameterID = AnywayPayment.AnywayElement.Parameter.Field.ID
     
     mutating func update(
         with amount: Decimal
@@ -97,8 +97,8 @@ private extension AnywayPayment {
     }
     
     mutating func update(
-        with productID: Element.Widget.PaymentCore.ProductID,
-        and currency: Element.Widget.PaymentCore.Currency
+        with productID: AnywayElement.Widget.PaymentCore.ProductID,
+        and currency: AnywayElement.Widget.PaymentCore.Currency
     ) {
         guard let index = elements.firstIndex(matching: .core),
               case let .widget(.core(core)) = elements[index]
@@ -118,7 +118,7 @@ private extension AnywayPayment {
     }
 }
 
-private extension AnywayPayment.Element.Parameter {
+private extension AnywayPayment.AnywayElement.Parameter {
     
     func updating(value: String?) -> Self {
         
@@ -132,7 +132,7 @@ private extension AnywayPayment.Element.Parameter {
     }
 }
 
-private extension AnywayPayment.Element.Widget.PaymentCore {
+private extension AnywayPayment.AnywayElement.Widget.PaymentCore {
     
     func updating(
         amount: Decimal
@@ -149,7 +149,7 @@ private extension AnywayPayment.Element.Widget.PaymentCore {
     }
 }
 
-private extension Array where Element == AnywayPayment.Element {
+private extension Array where Element == AnywayPayment.AnywayElement {
     
     func firstIndex(matching id: ParameterID) -> Index? {
         
@@ -165,7 +165,7 @@ private extension Array where Element == AnywayPayment.Element {
         }
     }
     
-    typealias ParameterID = AnywayPayment.Element.Parameter.Field.ID
+    typealias ParameterID = AnywayPayment.AnywayElement.Parameter.Field.ID
     
     func firstIndex(matching id: Element.Widget.ID) -> Index? {
         

@@ -44,7 +44,7 @@ struct AnywayPaymentParameterView: View {
 
 extension AnywayPaymentParameterView {
     
-    typealias Parameter = AnywayPayment.Element.UIComponent.Parameter
+    typealias Parameter = AnywayPayment.AnywayElement.UIComponent.Parameter
     typealias Factory = AnywayPaymentParameterViewFactory
 }
 
@@ -55,7 +55,7 @@ extension InputConfig {
 
 // MARK: - Adapters
 
-private extension Selector where T == AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option {
+private extension Selector where T == AnywayPayment.AnywayElement.UIComponent.Parameter.ParameterType.Option {
     
     init(option: Option, options: [Option]) throws {
         
@@ -66,10 +66,10 @@ private extension Selector where T == AnywayPayment.Element.UIComponent.Paramete
         )
     }
     
-    typealias Option = AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option
+    typealias Option = AnywayPayment.AnywayElement.UIComponent.Parameter.ParameterType.Option
 }
 
-private extension AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option {
+private extension AnywayPayment.AnywayElement.UIComponent.Parameter.ParameterType.Option {
     
     func contains(_ string: String) -> Bool {
         
@@ -91,7 +91,7 @@ private extension AnywayPayment.Element.UIComponent.Parameter.ParameterType.Opti
     }
 }
 
-private extension AnywayPayment.Element.UIComponent.Parameter {
+private extension AnywayPayment.AnywayElement.UIComponent.Parameter {
     
     static let textInput: Self = .init(
         id: .init(UUID().uuidString),

@@ -166,7 +166,7 @@ private extension AnywayPayment {
     var elementsView: [TestView] { elements.map(\.testView) }
 }
 
-private extension AnywayPayment.Element {
+private extension AnywayPayment.AnywayElement {
     
     var testView: TestView {
         
@@ -183,7 +183,7 @@ private extension AnywayPayment.Element {
     }
 }
 
-private extension AnywayPayment.Element.Field {
+private extension AnywayPayment.AnywayElement.Field {
     
     var testView: TestView {
         
@@ -191,7 +191,7 @@ private extension AnywayPayment.Element.Field {
     }
 }
 
-private extension AnywayPayment.Element.Parameter {
+private extension AnywayPayment.AnywayElement.Parameter {
     
     var testView: TestView {
         
@@ -199,7 +199,7 @@ private extension AnywayPayment.Element.Parameter {
     }
 }
 
-private extension AnywayPayment.Element.Widget {
+private extension AnywayPayment.AnywayElement.Widget {
     
     var testView: TestView {
         

@@ -7,7 +7,7 @@
 
 import AnywayPaymentDomain
 
-extension AnywayPayment.Element.UIComponent.Field {
+extension AnywayPayment.AnywayElement.UIComponent.Field {
     
     static let preview: Self = .init(name: "a", title: "b", value: "c")
 }

@@ -7,7 +7,7 @@
 
 import AnywayPaymentDomain
 
-extension AnywayPayment.Element.UIComponent.Widget {
+extension AnywayPayment.AnywayElement.UIComponent.Widget {
     
     static let preview: Self = .otp(nil)
 }

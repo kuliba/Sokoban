@@ -10,14 +10,14 @@ import Tagged
 
 public struct AnywayPayment: Equatable {
     
-    public var elements: [Element]
+    public var elements: [AnywayElement]
     public var infoMessage: String?
     public let isFinalStep: Bool
     public let isFraudSuspected: Bool
     public let puref: Puref
     
     public init(
-        elements: [Element],
+        elements: [AnywayElement],
         infoMessage: String?,
         isFinalStep: Bool,
         isFraudSuspected: Bool,
@@ -33,7 +33,7 @@ public struct AnywayPayment: Equatable {
 
 extension AnywayPayment {
     
-    public enum Element: Equatable {
+    public enum AnywayElement: Equatable {
         
         case field(Field)
         case parameter(Parameter)
@@ -49,7 +49,7 @@ extension AnywayPayment {
     }
 }
 
-extension AnywayPayment.Element {
+extension AnywayPayment.AnywayElement {
     
     public struct Field: Identifiable, Equatable {
         
@@ -108,7 +108,7 @@ extension AnywayPayment.Element {
     }
 }
 
-extension AnywayPayment.Element.Field {
+extension AnywayPayment.AnywayElement.Field {
     
     public typealias ID = Tagged<_ID, String>
     public enum _ID {}
@@ -118,7 +118,7 @@ extension AnywayPayment.Element.Field {
     
 }
 
-extension AnywayPayment.Element.Parameter {
+extension AnywayPayment.AnywayElement.Parameter {
     
     public struct Field: Identifiable, Equatable {
         
@@ -207,7 +207,7 @@ extension AnywayPayment.Element.Parameter {
     }
 }
 
-extension AnywayPayment.Element.Parameter.Field {
+extension AnywayPayment.AnywayElement.Parameter.Field {
     
     public typealias ID = Tagged<_ID, String>
     public enum _ID {}
@@ -216,7 +216,7 @@ extension AnywayPayment.Element.Parameter.Field {
     public enum _Value {}
 }
 
-extension AnywayPayment.Element.Parameter.UIAttributes {
+extension AnywayPayment.AnywayElement.Parameter.UIAttributes {
     
     public enum DataType: Equatable {
         
@@ -271,7 +271,7 @@ extension AnywayPayment.Element.Parameter.UIAttributes {
     }
 }
 
-extension AnywayPayment.Element.Widget {
+extension AnywayPayment.AnywayElement.Widget {
     
     public var id: ID {
         
@@ -304,7 +304,7 @@ extension AnywayPayment.Element.Widget {
     }
 }
 
-extension AnywayPayment.Element.Widget.PaymentCore {
+extension AnywayPayment.AnywayElement.Widget.PaymentCore {
     
     public typealias Currency = Tagged<_Currency, String>
     public enum _Currency {}
@@ -316,7 +316,7 @@ extension AnywayPayment.Element.Widget.PaymentCore {
     }
 }
 
-extension AnywayPayment.Element.Widget.PaymentCore.ProductID {
+extension AnywayPayment.AnywayElement.Widget.PaymentCore.ProductID {
     
     public typealias AccountID = Tagged<_AccountID, Int>
     public enum _AccountID {}

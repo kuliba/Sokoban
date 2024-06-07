@@ -66,7 +66,7 @@ extension AnywayPaymentFactoryComposer {
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
 
-    typealias UIComponent = AnywayPaymentDomain.AnywayPayment.Element.UIComponent
+    typealias UIComponent = AnywayPaymentDomain.AnywayPayment.AnywayElement.UIComponent
     typealias IconView = UIPrimitives.AsyncImage
     typealias MakeIconView = (UIComponent) -> IconView
     
@@ -177,14 +177,14 @@ private extension AnywayPaymentFactoryComposer {
     typealias Option = UIComponent.Parameter.ParameterType.Option
 
     typealias Observe = (ProductID, Currency) -> Void
-    typealias ProductID = AnywayPaymentDomain.AnywayPayment.Element.Widget.PaymentCore.ProductID
+    typealias ProductID = AnywayPaymentDomain.AnywayPayment.AnywayElement.Widget.PaymentCore.ProductID
     typealias Currency = AnywayPaymentEvent.Widget.Currency
 }
 
 private extension ProductSelect.Product {
     
     func isMatching(
-        _ productID: AnywayPaymentDomain.AnywayPayment.Element.Widget.PaymentCore.ProductID
+        _ productID: AnywayPaymentDomain.AnywayPayment.AnywayElement.Widget.PaymentCore.ProductID
     ) -> Bool {
         
         switch productID {
@@ -196,7 +196,7 @@ private extension ProductSelect.Product {
         }
     }
     
-    var coreProductID: AnywayPaymentDomain.AnywayPayment.Element.Widget.PaymentCore.ProductID {
+    var coreProductID: AnywayPaymentDomain.AnywayPayment.AnywayElement.Widget.PaymentCore.ProductID {
         
         switch type {
         case .account:
@@ -213,7 +213,7 @@ private extension ProductSelect.Product {
 private extension InputState where Icon == String {
     
     #warning("FIXME: replace stubbed with values from parameter")
-    init(_ parameter: AnywayPaymentDomain.AnywayPayment.Element.UIComponent.Parameter) {
+    init(_ parameter: AnywayPaymentDomain.AnywayPayment.AnywayElement.UIComponent.Parameter) {
         
         self.init(
             dynamic: .init(
@@ -245,7 +245,7 @@ private extension AnywayTransactionState {
     }
 }
 
-private extension Array where Element == AnywayPaymentDomain.AnywayPayment.Element {
+private extension Array where Element == AnywayPaymentDomain.AnywayPayment.AnywayElement {
     
     var core: AnywayPaymentFooter.Core? {
         

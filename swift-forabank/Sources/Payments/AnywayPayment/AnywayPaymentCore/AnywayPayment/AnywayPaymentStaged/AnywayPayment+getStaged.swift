@@ -16,9 +16,9 @@ extension AnywayPayment {
     }
 }
 
-private extension AnywayPayment.Element {
+private extension AnywayPayment.AnywayElement {
     
-    var parameterID: AnywayPayment.Element.Parameter.Field.ID? {
+    var parameterID: AnywayPayment.AnywayElement.Parameter.Field.ID? {
         
         guard case let .parameter(parameter) = self
         else { return nil }

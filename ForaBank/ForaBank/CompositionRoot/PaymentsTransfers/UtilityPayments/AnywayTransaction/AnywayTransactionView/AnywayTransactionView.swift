@@ -88,7 +88,7 @@ private extension AnywayTransactionView {
         }
     }
     
-    typealias Element = AnywayPaymentDomain.AnywayPayment.Element
+    typealias Element = AnywayPaymentDomain.AnywayPayment.AnywayElement
 }
 
 // MARK: - Adapters

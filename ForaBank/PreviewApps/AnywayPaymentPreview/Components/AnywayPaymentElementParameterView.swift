@@ -11,7 +11,7 @@ import Tagged
 
 struct AnywayPaymentElementParameterView: View {
     
-    let state: AnywayPayment.Element.UIComponent.Parameter
+    let state: AnywayPayment.AnywayElement.UIComponent.Parameter
     let event: (String) -> Void
     
     var body: some View {
@@ -50,7 +50,7 @@ struct AnywayPaymentElementParameterView: View {
     }
 }
 
-extension AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option: Identifiable {
+extension AnywayPayment.AnywayElement.UIComponent.Parameter.ParameterType.Option: Identifiable {
     
     public var id: Key { key }
 }
@@ -74,7 +74,7 @@ struct AnywayPaymentElementParameterView_Previews: PreviewProvider {
     }
     
     static func anywayPaymentElementParameterView(
-        _ parameter: AnywayPayment.Element.Parameter
+        _ parameter: AnywayPayment.AnywayElement.Parameter
     ) -> some View {
         
         AnywayPaymentElementParameterView(state: parameter.uiComponent, event: { _ in })

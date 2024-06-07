@@ -206,7 +206,7 @@ final class CachedAnywayPaymentTests: XCTestCase {
         struct Model: Equatable {}
 
         let anywayPayment = makeAnywayPayment()
-        let map: (AnywayPayment.Element) -> Model = { _ in .init() }
+        let map: (AnywayPayment.AnywayElement) -> Model = { _ in .init() }
         let payment = CachedAnywayPayment<Model>(anywayPayment, using: map)
         XCTAssertTrue(payment.models.isEmpty)
 
@@ -218,10 +218,10 @@ final class CachedAnywayPaymentTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias Payment = CachedAnywayPayment<ElementModel>
-    private typealias ElementModel = AnywayPayment.Element
+    private typealias ElementModel = AnywayPayment.AnywayElement
     
     private func makeAnywayPayment(
-        elements: [AnywayPayment.Element] = [],
+        elements: [AnywayPayment.AnywayElement] = [],
         infoMessage: String? = nil,
         isFinalStep: Bool = true,
         isFraudSuspected: Bool = true,
@@ -246,7 +246,7 @@ final class CachedAnywayPaymentTests: XCTestCase {
     }
 }
 
-private extension CachedAnywayPayment where ElementModel == AnywayPayment.Element {
+private extension CachedAnywayPayment where ElementModel == AnywayPayment.AnywayElement {
     
     init(_ payment: AnywayPayment) {
         
@@ -257,8 +257,8 @@ private extension CachedAnywayPayment where ElementModel == AnywayPayment.Elemen
 private func makeAnywayPaymentCoreWidget(
     amount: Decimal = .init(Double.random(in: 1...1_000)),
     currency: String = "RUB",
-    productID: AnywayPayment.Element.Widget.PaymentCore.ProductID = .accountID(.init(.random(in: 1...1_000)))
-) -> AnywayPayment.Element.Widget.PaymentCore {
+    productID: AnywayPayment.AnywayElement.Widget.PaymentCore.ProductID = .accountID(.init(.random(in: 1...1_000)))
+) -> AnywayPayment.AnywayElement.Widget.PaymentCore {
     
     return .init(amount: amount, currency: .init(currency), productID: productID)
 }

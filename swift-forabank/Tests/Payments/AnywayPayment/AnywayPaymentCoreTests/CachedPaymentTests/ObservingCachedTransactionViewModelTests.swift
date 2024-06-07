@@ -45,11 +45,11 @@ typealias AnywayTransactionEvent = TransactionEventOf<OperationDetailID, Operati
 
 typealias CachedAnywayPaymentContext = CachedPaymentContext<AnywayPaymentElementModel>
 
-typealias AnywayPaymentElementModel = AnywayPayment.Element
+typealias AnywayPaymentElementModel = AnywayPayment.AnywayElement
 //typealias AnywayPaymentElementModel = ElementModel<
-//    AnywayPayment.Element.Field,
-//    AnywayPayment.Element.Parameter,
-//    AnywayPayment.Element.Widget
+//    AnywayPayment.AnywayElement.Field,
+//    AnywayPayment.AnywayElement.Parameter,
+//    AnywayPayment.AnywayElement.Widget
 //>
 
 enum ElementModel<Field, Parameter, Widget> {
@@ -84,7 +84,7 @@ final class ObservingCachedPaymentViewModel<ElementModel>: ObservableObject {
     typealias SourceState = AnywayTransactionState
     typealias Event = AnywayTransactionEvent
     
-    typealias Map = (AnywayPayment.Element) -> ElementModel
+    typealias Map = (AnywayPayment.AnywayElement) -> ElementModel
     typealias Observe = (State) -> Void
 }
 
@@ -127,7 +127,7 @@ private extension ObservingCachedPaymentViewModel {
 extension AnywayTransactionState {
     
     func makeCachedAnywayTransactionState<T>(
-        using map: @escaping (AnywayPayment.Element) -> T
+        using map: @escaping (AnywayPayment.AnywayElement) -> T
     ) -> CachedAnywayTransactionState<T> {
         
         return .init(
@@ -139,7 +139,7 @@ extension AnywayTransactionState {
     
     func updating<T>(
         _ state: CachedAnywayTransactionState<T>,
-        using map: @escaping (AnywayPayment.Element) -> T
+        using map: @escaping (AnywayPayment.AnywayElement) -> T
     ) -> CachedAnywayTransactionState<T> {
         
         let updated = state.payment.updating(with: payment, using: map)
@@ -278,7 +278,7 @@ final class ObservingCachedTransactionViewModelTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = ObservingCachedPaymentViewModel<AnywayPayment.Element>
+    private typealias SUT = ObservingCachedPaymentViewModel<AnywayPayment.AnywayElement>
     private typealias Spy = ValueSpy<SUT.State>
     
     enum Event {

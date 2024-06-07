@@ -20,7 +20,7 @@ extension AnywayPaymentOutline {
     }
 }
 
-private extension AnywayPayment.Element {
+private extension AnywayPayment.AnywayElement {
     
     var idValuePair: (AnywayPaymentOutline.ID, AnywayPaymentOutline.Value)? {
         
@@ -35,7 +35,7 @@ private extension AnywayPayment.Element {
     }
 }
 
-private extension AnywayPayment.Element.Parameter {
+private extension AnywayPayment.AnywayElement.Parameter {
 
     var isOutlinable: Bool {
         

@@ -12,7 +12,7 @@ struct AnywayPaymentElementWidgetView<OTPView, ProductPicker>: View
 where OTPView: View,
       ProductPicker: View {
     
-    let state: AnywayPayment.Element.UIComponent.Widget
+    let state: AnywayPayment.AnywayElement.UIComponent.Widget
     let event: (AnywayPaymentEvent.Widget) -> Void
     let factory: AnywayPaymentElementWidgetViewFactory<OTPView, ProductPicker>
     

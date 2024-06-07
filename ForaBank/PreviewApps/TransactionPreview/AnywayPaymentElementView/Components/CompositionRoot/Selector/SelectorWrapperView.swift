@@ -41,5 +41,5 @@ extension SelectorWrapperView {
     
     typealias ViewModel = ObservingSelectorViewModel<Option>
     typealias Factory = SelectorViewFactory<Option, OptionView, SelectedOptionView>
-    typealias Option = AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option
+    typealias Option = AnywayPayment.AnywayElement.UIComponent.Parameter.ParameterType.Option
 }

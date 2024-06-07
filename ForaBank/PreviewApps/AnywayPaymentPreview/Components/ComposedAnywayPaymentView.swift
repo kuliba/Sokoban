@@ -16,7 +16,7 @@ where FieldView: View,
       ProductPicker: View {
     
     let buttonTitle: String
-    let elements: [AnywayPayment.Element]
+    let elements: [AnywayPayment.AnywayElement]
     let isEnabled: Bool
     let event: (AnywayPaymentEvent) -> Void
     let config: AnywayPaymentFooterConfig
@@ -33,7 +33,7 @@ where FieldView: View,
     }
     
     private func elementView(
-        state: AnywayPayment.Element
+        state: AnywayPayment.AnywayElement
     ) -> some View {
         
         AnywayPaymentElementView(
@@ -48,7 +48,7 @@ where FieldView: View,
     }
     
     private func widgetView(
-        state: AnywayPayment.Element.UIComponent.Widget,
+        state: AnywayPayment.AnywayElement.UIComponent.Widget,
         event: @escaping (AnywayPaymentEvent.Widget) -> Void
     ) -> some View {
         
@@ -85,7 +85,7 @@ where FieldView: View,
     }
 }
 
-private extension Array where Element == AnywayPayment.Element {
+private extension Array where Element == AnywayPayment.AnywayElement {
     
     var core: AnywayPaymentFooter.Core? {
         
