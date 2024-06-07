@@ -359,6 +359,27 @@ final class Model_PaymensSFPTests: XCTestCase {
         
         XCTAssertNoDiff(sut.value, nil)
     }
+        
+    // MARK: payments Process Dependency Reducer SFP
+    
+    func test_paymentsProcessDependencyReducerSFP_headerCase_returnsExpectedParameterHeader() {
+        
+        let operation = Payments.Operation(service: .sfp, source: .sfp(phone: "123123123", bankId: "someBankID"))
+        let sut = makeSUT()
+        
+        do {
+            let result = try XCTUnwrap(sut.paymentsProcessDependencyReducerSFP(
+                operation: operation,
+                parameterId: Payments.Parameter.Identifier.header.rawValue,
+                parameters: []
+            ) as? Payments.ParameterHeader, "Результат должен быть типа Payments.ParameterHeader")
+            
+            XCTAssertEqual(result.title, operation.service.name)
+            
+        } catch {
+            XCTFail("Результат не может быть извлечен: \(error)")
+        }
+    }
     
     // MARK: - Helpers
     private typealias PPIcon = Payments.ParameterHeader.Icon
@@ -566,6 +587,7 @@ private extension Payments.ParameterSuccessLogo.Icon {
 }
 
 private extension Payments.Operation {
+    
     static func sfpOperation(
         phone: String = "123",
         bankId: String,
