@@ -1123,6 +1123,8 @@
 		2AB87C512C133FCB0013EFFE /* SimpleOTPWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB87C502C133FCB0013EFFE /* SimpleOTPWrapperView.swift */; };
 		2AB87C532C1346B40013EFFE /* ProductSelectWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB87C522C1346B40013EFFE /* ProductSelectWrapperView.swift */; };
 		2AB87C552C1346BF0013EFFE /* ObservingProductSelectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB87C542C1346BF0013EFFE /* ObservingProductSelectViewModel.swift */; };
+		2AB87C572C135FF90013EFFE /* ObservingInputViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB87C562C135FF90013EFFE /* ObservingInputViewModel.swift */; };
+		2AB87C592C1360280013EFFE /* InputWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB87C582C1360280013EFFE /* InputWrapperView.swift */; };
 		2AB93D092A3F665F0062EEA1 /* Model+PaymentsTransferAnywayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB93D082A3F665F0062EEA1 /* Model+PaymentsTransferAnywayTests.swift */; };
 		2AB95DA02A0C097000044969 /* ContactsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB95D9F2A0C097000044969 /* ContactsViewModelTests.swift */; };
 		2AB95DA22A0C0D5800044969 /* ContactsViewModelModeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB95DA12A0C0D5800044969 /* ContactsViewModelModeTests.swift */; };
@@ -4132,6 +4134,8 @@
 		2AB87C502C133FCB0013EFFE /* SimpleOTPWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleOTPWrapperView.swift; sourceTree = "<group>"; };
 		2AB87C522C1346B40013EFFE /* ProductSelectWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectWrapperView.swift; sourceTree = "<group>"; };
 		2AB87C542C1346BF0013EFFE /* ObservingProductSelectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservingProductSelectViewModel.swift; sourceTree = "<group>"; };
+		2AB87C562C135FF90013EFFE /* ObservingInputViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservingInputViewModel.swift; sourceTree = "<group>"; };
+		2AB87C582C1360280013EFFE /* InputWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputWrapperView.swift; sourceTree = "<group>"; };
 		2AB93D082A3F665F0062EEA1 /* Model+PaymentsTransferAnywayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransferAnywayTests.swift"; sourceTree = "<group>"; };
 		2AB95D9F2A0C097000044969 /* ContactsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewModelTests.swift; sourceTree = "<group>"; };
 		2AB95DA12A0C0D5800044969 /* ContactsViewModelModeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewModelModeTests.swift; sourceTree = "<group>"; };
@@ -9334,7 +9338,9 @@
 		2AA3A94F2BFF8CF500AEBCC9 /* Input */ = {
 			isa = PBXGroup;
 			children = (
+				2AB87C562C135FF90013EFFE /* ObservingInputViewModel.swift */,
 				2AA3A9502BFF8D2000AEBCC9 /* InputStateWrapperView.swift */,
+				2AB87C582C1360280013EFFE /* InputWrapperView.swift */,
 				2AA3A9522BFF8D3C00AEBCC9 /* InputStateWrapperViewFactory.swift */,
 			);
 			path = Input;
@@ -17911,6 +17917,7 @@
 				776C846F27DF215F00F8F7E1 /* PaymentsView.swift in Sources */,
 				2A0D9B882B0E3BD800F1DFD1 /* RootViewModelFactory+makeButtonLabel.swift in Sources */,
 				ED75CDFB26E27F150074F5D5 /* UIApplication.swift in Sources */,
+				2AB87C572C135FF90013EFFE /* ObservingInputViewModel.swift in Sources */,
 				C10423992A735A3700D0AC63 /* Model+C2B.swift in Sources */,
 				0BCFBE012812DD17003F2F36 /* Model+Notifications.swift in Sources */,
 				A50869E027690E53004C5E17 /* InternetTVConfirmViewModel.swift in Sources */,
@@ -17938,6 +17945,7 @@
 				68E765262796B38B005860FE /* ServerCommands+Registration.swift in Sources */,
 				EDB02AE42816EB07005F64B5 /* AccountCellFullButtonViewComponent.swift in Sources */,
 				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,
+				2AB87C592C1360280013EFFE /* InputWrapperView.swift in Sources */,
 				0B2B29272808E84A001C6380 /* DocumentInfoView.swift in Sources */,
 				2AA1BB7B2AEB7F1F0027347C /* MyProductsViewModel+sample.swift in Sources */,
 				50698929284660A700C3DEEE /* OpenAccountViewModel.swift in Sources */,

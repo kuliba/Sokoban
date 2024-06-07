@@ -1,26 +1,18 @@
 //
-//  InputStateWrapperView.swift
+//  InputWrapperView.swift
 //  ForaBank
 //
-//  Created by Igor Malyarov on 23.05.2024.
+//  Created by Igor Malyarov on 07.06.2024.
 //
 
 import PaymentComponents
 import SwiftUI
 
-struct InputStateWrapperView: View {
+struct InputWrapperView: View {
     
-    @StateObject private var viewModel: ViewModel
+    @ObservedObject private var viewModel: ViewModel
     
-    private let factory: Factory
-    
-    init(
-        viewModel: ViewModel,
-        factory: Factory
-    ) {
-        self._viewModel = .init(wrappedValue: viewModel)
-        self.factory = factory
-    }
+    let factory: Factory
     
     var body: some View {
         
@@ -33,7 +25,7 @@ struct InputStateWrapperView: View {
     }
 }
 
-extension InputStateWrapperView {
+extension InputWrapperView {
     
     typealias ViewModel = ObservingInputViewModel
     typealias Factory = InputStateWrapperViewFactory
