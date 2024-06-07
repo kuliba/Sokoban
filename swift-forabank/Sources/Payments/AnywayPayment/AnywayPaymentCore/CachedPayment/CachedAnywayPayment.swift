@@ -42,16 +42,10 @@ public struct CachedAnywayPayment<ElementModel> {
             puref: payment.puref
         )
     }
-}
-
-public extension CachedAnywayPayment {
     
-    typealias CachedModels = CachedModelsState<Element.ID, ElementModel>
-    typealias Element = AnywayElement
-    
-    typealias Puref = AnywayPayment.Puref
-    
-    typealias Map = (Element) -> ElementModel
+    public typealias CachedModels = CachedModelsState<AnywayElement.ID, ElementModel>
+    public typealias Puref = AnywayPayment.Puref
+    public typealias Map = (AnywayElement) -> ElementModel
 }
 
 extension CachedAnywayPayment: Equatable where ElementModel: Equatable {}
@@ -65,11 +59,11 @@ extension CachedAnywayPayment {
     
     public struct IdentifiedModel: Identifiable {
         
-        public let id: Element.ID
+        public let id: AnywayElement.ID
         public let model: ElementModel
         
         public init(
-            id: Element.ID,
+            id: AnywayElement.ID,
             model: ElementModel
         ) {
             self.id = id
