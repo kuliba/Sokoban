@@ -44,7 +44,7 @@ private extension AnywayTransactionView {
     
     var elements: [Element] {
     
-        state.payment.payment.models.map(\.model)
+        state.context.payment.models.map(\.model)
     }
     
     private func paymentView(

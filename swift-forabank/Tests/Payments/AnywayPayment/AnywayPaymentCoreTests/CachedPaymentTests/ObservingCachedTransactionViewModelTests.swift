@@ -131,7 +131,7 @@ extension AnywayTransactionState {
     ) -> CachedAnywayTransactionState<T> {
         
         return .init(
-            payment: .init(payment, using: map),
+            context: .init(context, using: map),
             isValid: isValid,
             status: status
         )
@@ -142,10 +142,10 @@ extension AnywayTransactionState {
         using map: @escaping (AnywayElement) -> T
     ) -> CachedAnywayTransactionState<T> {
         
-        let updated = state.payment.updating(with: payment, using: map)
+        let updated = state.context.updating(with: context, using: map)
         
         return .init(
-            payment: updated,
+            context: updated,
             isValid: state.isValid,
             status: state.status
         )
@@ -171,7 +171,7 @@ final class ObservingCachedTransactionViewModelTests: XCTestCase {
         
         let field0 = makeAnywayPaymentField(id: "000")
         let initialState = makeSourceState(
-            payment: makeAnywayPaymentContext(
+            context: makeAnywayPaymentContext(
                 payment: makeAnywayPayment(fields: [field0])
             )
         )
@@ -180,7 +180,7 @@ final class ObservingCachedTransactionViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [
             initialState.makeCachedAnywayTransactionState(using: { $0 })
         ])
-        XCTAssertNoDiff(spy.values.map(\.payment.payment.models), [
+        XCTAssertNoDiff(spy.values.map(\.context.payment.models), [
             [.init(id: .fieldID("000"), model: .field(field0))]
         ])
         XCTAssertNotNil(sut)
@@ -213,12 +213,12 @@ final class ObservingCachedTransactionViewModelTests: XCTestCase {
         let context = makeAnywayPaymentContext(
             payment: makeAnywayPayment(fields: [field])
         )
-        source.send(.init(payment: context, isValid: false))
+        source.send(.init(context: context, isValid: false))
         
-        XCTAssertNoDiff(spy.values.map(\.payment.payment.models), [[]])
+        XCTAssertNoDiff(spy.values.map(\.context.payment.models), [[]])
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 1) // why wait?
-        XCTAssertNoDiff(spy.values.map(\.payment.payment.models), [
+        XCTAssertNoDiff(spy.values.map(\.context.payment.models), [
             [],
             [.init(id: .fieldID("123"), model: .field(field))]
         ])
@@ -234,14 +234,14 @@ final class ObservingCachedTransactionViewModelTests: XCTestCase {
         let context = makeAnywayPaymentContext(
             payment: makeAnywayPayment(fields: [field])
         )
-        source.send(.init(payment: context, isValid: false))
+        source.send(.init(context: context, isValid: false))
         
         XCTAssertEqual(observedStates.count, 0) // why 0?
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05) // why wait?
         XCTAssertEqual(observedStates.count, 1) // why 2?
         XCTAssertNotNil(sut)
         
-        XCTAssertNoDiff(observedStates.map(\.payment.payment.models), [
+        XCTAssertNoDiff(observedStates.map(\.context.payment.models), [
             // [],
             [.init(id: .fieldID("123"), model: .field(field))]
         ])
@@ -252,7 +252,7 @@ final class ObservingCachedTransactionViewModelTests: XCTestCase {
         var observedStates = [SUT.State]()
         let field0 = makeAnywayPaymentField(id: "000")
         let initialState = makeSourceState(
-            payment: makeAnywayPaymentContext(
+            context: makeAnywayPaymentContext(
                 payment: makeAnywayPayment(fields: [field0])
             )
         )
@@ -265,13 +265,13 @@ final class ObservingCachedTransactionViewModelTests: XCTestCase {
         let context = makeAnywayPaymentContext(
             payment: makeAnywayPayment(fields: [field])
         )
-        source.send(.init(payment: context, isValid: false))
+        source.send(.init(context: context, isValid: false))
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05) // why wait?
         XCTAssertEqual(observedStates.count, 1) // why 2?
         XCTAssertNotNil(sut)
         
-        XCTAssertNoDiff(observedStates.map(\.payment.payment.models), [
+        XCTAssertNoDiff(observedStates.map(\.context.payment.models), [
             [.init(id: .fieldID("123"), model: .field(field))]
         ])
     }
@@ -315,12 +315,12 @@ final class ObservingCachedTransactionViewModelTests: XCTestCase {
     }
     
     private func makeSourceState(
-        payment: AnywayPaymentContext = makeAnywayPaymentContext(),
+        context: AnywayPaymentContext = makeAnywayPaymentContext(),
         isValid: Bool = true,
         status: TransactionStatus<TransactionReport<DocumentStatus, OperationInfo<OperationDetailID, OperationDetails>>>? = nil
     ) -> SUT.SourceState {
         
-        return .init(payment: payment, isValid: isValid, status: status)
+        return .init(context: context, isValid: isValid, status: status)
     }
     
     private final class RxObservableObjectSpy: RxObservableObject {

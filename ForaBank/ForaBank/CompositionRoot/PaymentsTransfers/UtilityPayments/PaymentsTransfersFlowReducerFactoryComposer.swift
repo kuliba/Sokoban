@@ -115,7 +115,10 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         )
         
         let initialState = CachedTransactionState(
-            payment: .init(transactionState.payment, using: mapAnywayElement),
+            context: .init(
+                transactionState.context, 
+                using: mapAnywayElement
+            ),
             isValid: transactionState.isValid,
             status: transactionState.status
         )

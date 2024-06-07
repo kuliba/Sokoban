@@ -242,7 +242,7 @@ private extension CachedTransactionState {
     
     var core: AnywayPaymentFooter.Core? {
         
-        payment.payment.models.core
+        context.payment.models.core
     }
 }
 
