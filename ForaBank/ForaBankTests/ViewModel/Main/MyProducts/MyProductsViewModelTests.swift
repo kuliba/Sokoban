@@ -14,7 +14,7 @@ final class MyProductsViewModelTests: XCTestCase {
     
     func test_updateViewModel_sectionsEmpty_shouldCreateSections() {
         
-        let initialCards: [ProductData] = makeAnyCards123()
+        let initialCards: [ProductData] = makeCards(ids: 1, 2, 3)
         let sections: [MyProductsSectionViewModel] = []
         
         let sut = makeSUT(products: initialCards, sections: sections)
@@ -24,8 +24,8 @@ final class MyProductsViewModelTests: XCTestCase {
     
     func test_updateViewModel_sectionsWithUpdate_shouldUpdateOrderItemsInSections() throws {
         
-        let initialCards: [ProductData] = makeAnyCards123()
-        let reorderCards: [ProductData] = makeAnyCards132()
+        let initialCards: [ProductData] = makeCards(ids: 1, 2, 3)
+        let reorderCards: [ProductData] = makeCards(ids: 1, 3, 2)
 
         let sections = try makeSections(products: initialCards)
         
@@ -36,7 +36,7 @@ final class MyProductsViewModelTests: XCTestCase {
 
     func test_updateViewModel_sectionsWithoutUpdate_shouldNotUpdateOrderItemsInSections() throws {
         
-        let initialCards: [ProductData] = makeAnyCards132()
+        let initialCards: [ProductData] = makeCards(ids: 1, 3, 2)
 
         let sections = try makeSections(products: initialCards)
         
@@ -92,21 +92,10 @@ final class MyProductsViewModelTests: XCTestCase {
         
         return sut
     }
-    
-    private func makeAnyCards123() -> [ProductData] {
-        let product1 = makeCardProduct(id: 1)
-        let product2 = makeCardProduct(id: 2)
-        let product3 = makeCardProduct(id: 3)
+        
+    private func makeCards(ids: Int...) -> [ProductData] {
 
-        return [product1, product2, product3]
-    }
-    
-    private func makeAnyCards132() -> [ProductData] {
-        let product1 = makeCardProduct(id: 1)
-        let product2 = makeCardProduct(id: 2)
-        let product3 = makeCardProduct(id: 3)
-
-        return [product1, product3, product2]
+      ids.map { makeCardProduct(id: $0) }
     }
 }
 
