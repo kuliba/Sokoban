@@ -40,7 +40,7 @@ extension AnywayPaymentFactoryComposer {
         
         let elementFactory = AnywayPaymentElementViewFactory(
             makeIconView: makeIconView,
-            elementFactory: makeElementFactory()
+            parameterFactory: makeElementFactory()
         )
         
         return .init(

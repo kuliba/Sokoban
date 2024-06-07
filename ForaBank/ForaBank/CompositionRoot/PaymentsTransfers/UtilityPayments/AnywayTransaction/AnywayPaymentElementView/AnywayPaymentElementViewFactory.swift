@@ -10,7 +10,7 @@ import AnywayPaymentDomain
 struct AnywayPaymentElementViewFactory<IconView> {
 
     let makeIconView: MakeIconView
-    let elementFactory: AnywayPaymentParameterViewFactory
+    let parameterFactory: AnywayPaymentParameterViewFactory
 }
 
 extension AnywayPaymentElementViewFactory {
