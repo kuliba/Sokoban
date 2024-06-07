@@ -58,7 +58,7 @@ extension UtilityPaymentFlowView {
     typealias Operator = UtilityPaymentOperator
     typealias Service = UtilityService
 
-    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = ObservingCachedAnywayTransactionViewModel
     typealias State = UtilityPaymentFlowState<Operator, Service, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     typealias Event = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
 }

@@ -9,6 +9,8 @@ import AnywayPaymentCore
 import AnywayPaymentDomain
 import RxViewModel
 
+typealias ObservingCachedAnywayTransactionViewModel = ObservingAnywayTransactionViewModel
+
 typealias ObservingAnywayTransactionViewModel = RxObservingViewModel<AnywayTransactionState, AnywayTransactionEvent, TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>>
 
 typealias AnywayTransactionViewModel = RxViewModel<AnywayTransactionState, AnywayTransactionEvent, TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>>
