@@ -53,7 +53,7 @@ final class MyProductsViewModelTests: XCTestCase {
         let model: Model = .mockWithEmptyExcept()
         model.currencyList.value.append(.rub)
         model.products.value = [productType: reorderProducts]
-        let sections: [MyProductsSectionViewModel] = makeSections(productType: productType, products: initialProducts).compactMap { $0 }
+        let sections: [MyProductsSectionViewModel] = makeSections(productType: productType, model: model, products: initialProducts).compactMap { $0 }
         
         let sut = MyProductsViewModel.updateViewModel(
             with: [productType: reorderProducts],
@@ -62,7 +62,7 @@ final class MyProductsViewModelTests: XCTestCase {
             settingsProductsSections: .init(collapsed: [:]),
             model: model)
         
-        // TODO: restore memory leaks tracking after Model fix
+        // TODO: restore memory leaks tracking after MyProductsSectionViewModel fix
         //trackForMemoryLeaks(model, file: file, line: line)
         
         return sut
@@ -70,22 +70,21 @@ final class MyProductsViewModelTests: XCTestCase {
     
     private func makeSections(
         productType: ProductType = .card,
+        model: Model,
         products: [ProductData] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> [MyProductsSectionViewModel?] {
         
-        let model: Model = .mockWithEmptyExcept()
-        model.currencyList.value.append(.rub)
         model.products.value = [productType: products]
         
         let sut: [MyProductsSectionViewModel?] = [
                 .init(productType: productType, products: products, settings: .init(collapsed: [:]), model: model)
         ]
         
-        // TODO: restore memory leaks tracking after Model fix
+        // TODO: restore memory leaks tracking after MyProductsSectionViewModel fix
         //trackForMemoryLeaks(model, file: file, line: line)
-        
+
         return sut
     }
         
