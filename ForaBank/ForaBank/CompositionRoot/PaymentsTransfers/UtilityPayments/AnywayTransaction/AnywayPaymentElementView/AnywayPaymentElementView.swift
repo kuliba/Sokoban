@@ -65,8 +65,6 @@ private extension AnywayPaymentElementView {
         switch widget {
         case let .otp(otpViewModel):
             #warning("replace with real components")
-            SimpleOTPWrapperView(viewModel: otpViewModel)
-
 #warning("can't use CodeInputView - not a part  af any product (neither PaymentComponents nor any other)")
 #warning("need a wrapper with timer")
             //            CodeInputView(
@@ -74,9 +72,14 @@ private extension AnywayPaymentElementView {
             //                event: <#T##(OTPInputEvent) -> Void#>,
             //                config: <#T##CodeInputConfig#>
             //            )
+            SimpleOTPWrapperView(viewModel: otpViewModel)
+
             
-        case let .core(core):
-            factory.makeProductSelectView(core.productID, { event(.widget(.product($0, $1))) })
+        case let .core(productSelectViewModel, _,_):
+            ProductSelectWrapperView(
+                viewModel: productSelectViewModel, 
+                config: .iFora
+            )
         }
     }
 }

@@ -7,6 +7,7 @@
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import PaymentComponents
 import RxViewModel
 import UtilityServicePrepaymentCore
 
@@ -102,7 +103,9 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         let transactionViewModel = makeTransactionViewModel(transactionState)
         
         let mapper = AnywayElementModelMapper(
-            event: { transactionViewModel.event(.payment($0)) }
+            event: { transactionViewModel.event(.payment($0)) },
+            currencyOfProduct: currencyOfProduct,
+            getProducts: model.productSelectProducts
         )
         let mapAnywayElement = mapper.map(_:)
         
@@ -137,6 +140,13 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         )
         
         return .init(viewModel: viewModel)
+    }
+    
+    private func currencyOfProduct(
+        product: ProductSelect.Product
+    ) -> String {
+        
+        model.currencyOf(product: product) ?? ""
     }
 }
 

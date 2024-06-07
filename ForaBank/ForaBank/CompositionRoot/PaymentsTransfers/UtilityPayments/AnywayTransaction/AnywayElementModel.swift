@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentDomain
+import Foundation
 import RxViewModel
 
 enum AnywayElementModel {
@@ -19,7 +20,7 @@ extension AnywayElementModel {
     
     enum Widget {
         
-        case core(AnywayElement.Widget.PaymentCore)
+        case core(ObservingProductSelectViewModel, Decimal, String)
         case otp(OTPViewModel)
     }
 }

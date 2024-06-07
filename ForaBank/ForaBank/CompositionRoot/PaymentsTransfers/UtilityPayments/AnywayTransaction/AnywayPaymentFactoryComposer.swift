@@ -40,7 +40,6 @@ extension AnywayPaymentFactoryComposer {
         
         let elementFactory = AnywayPaymentElementViewFactory(
             makeIconView: makeIconView,
-            makeProductSelectView: makeProductSelectView,
             elementFactory: makeElementFactory()
         )
         
@@ -75,41 +74,6 @@ extension AnywayPaymentFactoryComposer {
 }
 
 private extension AnywayPaymentFactoryComposer {
-    
-    func makeProductSelectView(
-        productID: ProductID,
-        observe: @escaping Observe
-    ) -> ProductSelectStateWrapperView {
-        
-        let products = getProducts()
-        let selected = products.first { $0.isMatching(productID) }
-        let initialState = ProductSelect(selected: selected)
-        
-        let reducer = ProductSelectReducer(getProducts: getProducts)
-        
-        typealias ProductSelectViewModel = RxViewModel<ProductSelect, ProductSelectEvent, Never>
-
-        let observable = ProductSelectViewModel(
-            initialState: initialState,
-            reduce: { (reducer.reduce($0, $1), nil) },
-            handleEffect: { _,_ in }
-        )
-        let observing = ObservingProductSelectViewModel(
-            observable: observable,
-            observe: { [weak self] in
-                
-                guard let self else { return }
-                
-                guard let productID = $0.selected?.coreProductID,
-                      let currency = $0.selected.map({ self.currencyOfProduct($0) })
-                else { return }
-                
-                observe(productID, .init(currency))
-            }
-        )
-        
-        return .init(viewModel: observing, config: .iFora)
-    }
     
     func makeElementFactory(
     ) -> AnywayPaymentParameterViewFactory {
@@ -182,32 +146,6 @@ private extension AnywayPaymentFactoryComposer {
     typealias Currency = AnywayPaymentEvent.Widget.Currency
 }
 
-private extension ProductSelect.Product {
-    
-    func isMatching(
-        _ productID: AnywayPaymentDomain.AnywayElement.Widget.PaymentCore.ProductID
-    ) -> Bool {
-        
-        switch productID {
-        case let .accountID(accountID):
-            return type == .account && id.rawValue == accountID.rawValue
-            
-        case let .cardID(cardID):
-            return type == .card && id.rawValue == cardID.rawValue
-        }
-    }
-    
-    var coreProductID: AnywayPaymentDomain.AnywayElement.Widget.PaymentCore.ProductID {
-        
-        switch type {
-        case .account:
-            return .accountID(.init(id.rawValue))
-            
-        case .card:
-            return .cardID(.init(id.rawValue))
-        }
-    }
-}
 
 // MARK: - Adapters
 
@@ -250,9 +188,9 @@ private extension Array where Element == CachedAnywayPayment<AnywayElementModel>
     
     var core: AnywayPaymentFooter.Core? {
         
-        guard case let .widget(.core(core)) = self[id: .widgetID(.core)]?.model
+        guard case let .widget(.core(core, amount, currency)) = self[id: .widgetID(.core)]?.model
         else { return nil }
         
-        return .init(value: core.amount, currency: core.currency.rawValue)
+        return .init(value: amount, currency: currency)
     }
 }
