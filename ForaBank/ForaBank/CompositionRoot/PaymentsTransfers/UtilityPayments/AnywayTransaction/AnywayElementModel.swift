@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentDomain
+import RxViewModel
 
 enum AnywayElementModel {
     
@@ -21,4 +22,21 @@ extension AnywayElementModel {
         case core(AnywayElement.Widget.PaymentCore)
         case otp(Int?)
     }
+}
+
+extension AnywayElementModel.Widget {
+    
+    typealias OTPViewModel = RxObservingViewModel<OTPState, OTPEvent, OTPEffect>
+    
+    struct OTPState: Equatable {
+        
+        let value: Int?
+    }
+    
+    enum OTPEvent: Equatable {
+        
+        case input(String)
+    }
+    
+    enum OTPEffect: Equatable {}
 }
