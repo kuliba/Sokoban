@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
 import SwiftUI
 import UIPrimitives
@@ -42,10 +43,7 @@ extension AnywayTransactionView {
 
 private extension AnywayTransactionView {
     
-    var elements: [Element] {
-    
-        state.context.payment.models.map(\.model)
-    }
+    var elements: [Element] { state.context.payment.models }
     
     private func paymentView(
         elements: [Element]
@@ -66,7 +64,7 @@ private extension AnywayTransactionView {
         
         VStack(spacing: 32) {
             
-            ForEach(elements, content: factory.makeElementView)
+            ForEach(elements) { factory.makeElementView($0) }
         }
         .padding()
     }
@@ -91,7 +89,7 @@ private extension AnywayTransactionView {
         }
     }
     
-    typealias Element = AnywayPaymentDomain.AnywayElement
+    typealias Element = CachedAnywayPayment<ElementModel>.IdentifiedModel
 }
 
 // MARK: - Adapters

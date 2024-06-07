@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
 import PaymentComponents
 import SwiftUI
@@ -19,7 +20,7 @@ struct AnywayPaymentElementView<IconView: View>: View {
     
     var body: some View {
         
-        switch state.uiComponent {
+        switch state.model {
         case let .field(field):
             PaymentComponents.InfoView(
                 info: field.info,
@@ -49,7 +50,7 @@ struct AnywayPaymentElementView<IconView: View>: View {
 
 extension AnywayPaymentElementView {
     
-    typealias State = AnywayPaymentDomain.AnywayElement
+    typealias State = CachedAnywayPayment<ElementModel>.IdentifiedModel
     typealias Event = AnywayPaymentEvent
     typealias Factory = AnywayPaymentElementViewFactory<IconView>
     typealias Config = AnywayPaymentElementConfig
@@ -59,7 +60,7 @@ private extension AnywayPaymentElementView {
     
     @ViewBuilder
     func widgetView(
-        _ widget: State.UIComponent.Widget
+        _ widget: AnywayElement.Widget
     ) -> some View {
         switch widget {
         case let .otp(otp):
@@ -89,15 +90,15 @@ private extension AnywayPaymentElementView {
             //                config: <#T##CodeInputConfig#>
             //            )
             
-        case let .productPicker(productID):
-            factory.makeProductSelectView(productID, { event(.widget(.product($0, $1))) })
+        case let .core(core):
+            factory.makeProductSelectView(core.productID, { event(.widget(.product($0, $1))) })
         }
     }
 }
 
 // MARK: - Adapters
 
-private extension AnywayPaymentDomain.AnywayElement.UIComponent.Field {
+private extension AnywayElement.UIComponent.Field {
     
     var info: PaymentComponents.Info {
         
@@ -106,7 +107,7 @@ private extension AnywayPaymentDomain.AnywayElement.UIComponent.Field {
     }
 }
 
-private extension  AnywayPaymentDomain.AnywayElement.UIComponent.Field {
+private extension AnywayElement.UIComponent.Field {
     
     var id: PaymentComponents.Info.ID {
         

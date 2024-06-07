@@ -178,7 +178,7 @@ private extension AnywayPaymentFactoryComposer {
     typealias Option = UIComponent.Parameter.ParameterType.Option
 
     typealias Observe = (ProductID, Currency) -> Void
-    typealias ProductID = AnywayPaymentDomain.AnywayElement.Widget.PaymentCore.ProductID
+    typealias ProductID = AnywayElement.Widget.PaymentCore.ProductID
     typealias Currency = AnywayPaymentEvent.Widget.Currency
 }
 
@@ -246,7 +246,7 @@ private extension CachedTransactionState {
     }
 }
 
-private extension Array where Element == CachedAnywayPayment<AnywayElement>.IdentifiedModel {
+private extension Array where Element == CachedAnywayPayment<ElementModel>.IdentifiedModel {
     
     var core: AnywayPaymentFooter.Core? {
         
