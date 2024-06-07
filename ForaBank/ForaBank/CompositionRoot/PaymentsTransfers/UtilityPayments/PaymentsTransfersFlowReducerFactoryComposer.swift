@@ -101,9 +101,12 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         
         let transactionViewModel = makeTransactionViewModel(transactionState)
         
-        let mapAnywayElement: (AnywayElement) -> AnywayElement = { $0 }
+        let mapper = AnywayElementModelMapper(
+            event: { transactionViewModel.event(.payment($0)) }
+        )
+        let mapAnywayElement = mapper.map(_:)
         
-        typealias Updater = CachedAnywayTransactionUpdater<DocumentStatus, AnywayElement, OperationDetailID, OperationDetails>
+        typealias Updater = CachedAnywayTransactionUpdater<DocumentStatus, AnywayElementModel, OperationDetailID, OperationDetails>
         let updater = Updater(map: mapAnywayElement)
         
         typealias Reducer = CachedAnywayTransactionReducer<AnywayTransactionState, CachedTransactionState, AnywayTransactionEvent>

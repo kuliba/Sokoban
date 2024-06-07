@@ -10,7 +10,7 @@ import AnywayPaymentDomain
 import RxViewModel
 
 typealias ObservingCachedAnywayTransactionViewModel = RxObservingViewModel<CachedTransactionState, CachedTransactionEvent, CachedTransactionEffect>
-typealias CachedTransactionState = TransactionOf<OperationDetailID, OperationDetails, DocumentStatus, CachedPaymentContext<AnywayElement>>
+typealias CachedTransactionState = TransactionOf<OperationDetailID, OperationDetails, DocumentStatus, CachedPaymentContext<AnywayElementModel>>
 typealias CachedTransactionEvent = CachedAnywayTransactionEvent<AnywayTransactionState, AnywayTransactionEvent>
 typealias CachedTransactionEffect = CachedAnywayTransactionEffect<AnywayTransactionEvent>
 
