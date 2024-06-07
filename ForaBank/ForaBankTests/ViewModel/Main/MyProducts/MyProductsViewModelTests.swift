@@ -11,63 +11,59 @@ import XCTest
 final class MyProductsViewModelTests: XCTestCase {
     
     // MARK: - test updateViewModel
-    
+
     func test_updateViewModel_sectionsEmpty_shouldCreateSections() {
         
-        let initialCards: [ProductData] = makeCards(ids: 1, 2, 3)
-        let sections: [MyProductsSectionViewModel] = []
+        let reorderCards: [ProductData] = makeCards(ids: 1, 2, 3)
         
-        let sut = makeSUT(products: initialCards, sections: sections)
+        let sut = makeSUT(initialProducts: [], reorderProducts: reorderCards)
         
-        XCTAssertNoDiff(sut.itemsID, initialCards.uniqueProductIDs())
+        XCTAssertNoDiff(sut.itemsID, [1, 2, 3])
     }
-    
-    func test_updateViewModel_sectionsWithUpdate_shouldUpdateOrderItemsInSections() throws {
+        
+    func test_updateViewModel_sectionsWithUpdate_shouldUpdateOrderItemsInSections() {
         
         let initialCards: [ProductData] = makeCards(ids: 1, 2, 3)
         let reorderCards: [ProductData] = makeCards(ids: 1, 3, 2)
-
-        let sections = try makeSections(products: initialCards)
         
-        let sut = makeSUT(products: reorderCards, sections: sections)
+        let sut = makeSUT(initialProducts: initialCards, reorderProducts: reorderCards)
         
-        XCTAssertNoDiff(sut.itemsID, reorderCards.uniqueProductIDs())
+        XCTAssertNoDiff(sut.itemsID, [1, 3, 2])
     }
 
-    func test_updateViewModel_sectionsWithoutUpdate_shouldNotUpdateOrderItemsInSections() throws {
+    func test_updateViewModel_sectionsWithoutUpdate_shouldNotUpdateOrderItemsInSections() {
         
         let initialCards: [ProductData] = makeCards(ids: 1, 3, 2)
-
-        let sections = try makeSections(products: initialCards)
         
-        let sut = makeSUT(products: initialCards, sections: sections)
+        let sut = makeSUT(initialProducts: initialCards, reorderProducts: initialCards)
         
-        XCTAssertNoDiff(sut.itemsID, initialCards.uniqueProductIDs())
+        XCTAssertNoDiff(sut.itemsID, [1, 3, 2])
     }
     
     // MARK: - Helpers
     
     private func makeSUT(
         productType: ProductType = .card,
-        products: [ProductData] = [],
-        sections: [MyProductsSectionViewModel],
+        initialProducts: [ProductData] = [],
+        reorderProducts: [ProductData] = [],
         file: StaticString = #file,
         line: UInt = #line
     ) -> [MyProductsSectionViewModel] {
         
-        let model = Model.emptyMock
+        let model: Model = .mockWithEmptyExcept()
         model.currencyList.value.append(.rub)
-        model.products.value = [productType: products]
+        model.products.value = [productType: reorderProducts]
+        let sections: [MyProductsSectionViewModel] = makeSections(productType: productType, products: initialProducts).compactMap { $0 }
         
         let sut = MyProductsViewModel.updateViewModel(
-            with: [productType: products],
+            with: [productType: reorderProducts],
             sections: sections,
             productsOpening: .init(),
             settingsProductsSections: .init(collapsed: [:]),
             model: model)
         
         // TODO: restore memory leaks tracking after Model fix
-        // trackForMemoryLeaks(model, file: file, line: line)
+        //trackForMemoryLeaks(model, file: file, line: line)
         
         return sut
     }
@@ -77,18 +73,18 @@ final class MyProductsViewModelTests: XCTestCase {
         products: [ProductData] = [],
         file: StaticString = #file,
         line: UInt = #line
-    ) throws -> [MyProductsSectionViewModel] {
+    ) -> [MyProductsSectionViewModel?] {
         
-        let model = Model.emptyMock
+        let model: Model = .mockWithEmptyExcept()
         model.currencyList.value.append(.rub)
         model.products.value = [productType: products]
         
-        let sut: [MyProductsSectionViewModel] = try [
-            XCTUnwrap(.init(productType: .card, products: products, settings: .init(collapsed: [:]), model: model))
+        let sut: [MyProductsSectionViewModel?] = [
+                .init(productType: productType, products: products, settings: .init(collapsed: [:]), model: model)
         ]
         
         // TODO: restore memory leaks tracking after Model fix
-        // trackForMemoryLeaks(model, file: file, line: line)
+        //trackForMemoryLeaks(model, file: file, line: line)
         
         return sut
     }
