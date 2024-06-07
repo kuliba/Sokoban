@@ -209,7 +209,7 @@ final class Model_SberQRProductTests: SberQRProductTests {
         
         let loan = anyProduct(id: 1234, productType: .loan)
         
-        XCTAssertNil(loan.sberQRProduct { _ in "" } getImage: { _ in .none })
+        XCTAssertNil(loan.productSelectProduct { _ in "" } getImage: { _ in .none })
     }
     
     func test_sberQRProduct_shouldReturnCardFromCard() throws {
@@ -217,7 +217,7 @@ final class Model_SberQRProductTests: SberQRProductTests {
         let id = 1234
         let card = makeCardProduct(id: id)
         
-        let product = try XCTUnwrap(card.sberQRProduct { _ in "" } getImage: { _ in .none })
+        let product = try XCTUnwrap(card.productSelectProduct { _ in "" } getImage: { _ in .none })
         
         XCTAssertNoDiff(product.id, .init(id))
         XCTAssertNoDiff(product.type, .card)
@@ -233,7 +233,7 @@ final class Model_SberQRProductTests: SberQRProductTests {
         let id = 1234
         let card = makeAccountProduct(id: id)
         
-            let product = try XCTUnwrap(card.sberQRProduct { _ in "" } getImage: { _ in .none })
+            let product = try XCTUnwrap(card.productSelectProduct { _ in "" } getImage: { _ in .none })
         
         XCTAssertNoDiff(product.id, .init(id))
         XCTAssertNoDiff(product.type, .account)

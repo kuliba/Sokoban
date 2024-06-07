@@ -23,7 +23,7 @@ where Content: View,
         content()
             .navigationDestination(
                 destination: state.destination,
-                dismissDestination: { event(.dismissDestination) },
+                dismissDestination: { event(.dismiss(.destination)) },
                 content: destinationView
             )
             .alert(
@@ -42,7 +42,7 @@ where Content: View,
                 event: event,
                 map: {
                     switch $0 {
-                    case .dismissAlert: return .dismissAlert
+                    case .dismissAlert: return .dismiss(.alert)
                     }
                 }
             )
@@ -56,14 +56,12 @@ extension UtilityPaymentFlowView {
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
 
-    typealias State = UtilityPaymentFlowState<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, ObservingPaymentFlowMockViewModel>
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
+    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias State = UtilityPaymentFlowState<Operator, Service, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
+    typealias Event = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
 }
-
-//#Preview {
-//    UtilityPaymentFlowView()
-//}
 
 extension UtilityPaymentFlowState.Destination: Identifiable
 where Operator: Identifiable {

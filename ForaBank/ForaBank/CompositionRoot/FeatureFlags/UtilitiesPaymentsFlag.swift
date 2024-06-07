@@ -8,4 +8,4 @@
 import Tagged
 
 typealias UtilitiesPaymentsFlag = Tagged<_UtilitiesPaymentsFlag, StubbedFeatureFlag>
-enum _UtilitiesPaymentsFlag {}
+enum _UtilitiesPaymentsFlag: Equatable {}

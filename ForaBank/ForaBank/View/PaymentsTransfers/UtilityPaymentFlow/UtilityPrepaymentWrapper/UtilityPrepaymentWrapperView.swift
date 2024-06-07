@@ -15,7 +15,7 @@ struct UtilityPrepaymentWrapperView: View {
     
     @ObservedObject var viewModel: ViewModel
     
-    let flowEvent: (FlowEvent) -> Void
+    let completionEvent: (CompletionEvent) -> Void
     let makeIconView: MakeIconView
     
     var body: some View {
@@ -40,7 +40,7 @@ extension UtilityPrepaymentWrapperView {
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     
-    typealias FlowEvent = UtilityPrepaymentFlowEvent
+    typealias CompletionEvent = UtilityPrepaymentCompletionEvent
     typealias ViewModel = UtilityPrepaymentViewModel
 }
 
@@ -52,7 +52,7 @@ private extension UtilityPrepaymentWrapperView {
         
         FooterView(
             state: isFailure ? .failure(.iFora) : .footer(.iFora),
-            event: { flowEvent($0.event) },
+            event: { completionEvent($0.event) },
             config: .iFora
         )
     }
@@ -62,14 +62,14 @@ private extension UtilityPrepaymentWrapperView {
     ) -> some View {
         
         Button(
-            action: { flowEvent(.select(.lastPayment(latestPayment))) },
+            action: { completionEvent(.select(.lastPayment(latestPayment))) },
             label: {
-                
+                #warning("md5Hash is unwrapped to empty - iconView should be able to deal with it at composition level")
                 LastPaymentLabel(
-                    amount: latestPayment.amount,
-                    title: latestPayment.title,
+                    amount: "\(latestPayment.amount)",
+                    title: latestPayment.name,
                     config: .iFora,
-                    iconView: makeIconView(latestPayment.icon)
+                    iconView: makeIconView(latestPayment.md5Hash ?? "")
                 )
                 .contentShape(Rectangle())
             }
@@ -81,7 +81,7 @@ private extension UtilityPrepaymentWrapperView {
     ) -> some View {
         
         Button(
-            action: { flowEvent(.select(.operator(`operator`))) },
+            action: { completionEvent(.select(.operator(`operator`))) },
             label: {
                 
                 OperatorLabel(
@@ -111,7 +111,7 @@ private extension UtilityPrepaymentWrapperView {
 
 private extension FooterEvent {
     
-    var event: UtilityPrepaymentFlowEvent {
+    var event: UtilityPrepaymentCompletionEvent {
         
         switch self {
         case .addCompany:

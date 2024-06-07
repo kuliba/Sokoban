@@ -9,14 +9,10 @@ import SwiftUI
 
 final class PaymentsTransfersFactoryComposer {
     
-    private let httpClient: HTTPClient
     private let model: Model
     
-    init(
-        httpClient: HTTPClient,
-        model: Model
-    ) {
-        self.httpClient = httpClient
+    init(model: Model) {
+        
         self.model = model
     }
 }
@@ -91,7 +87,7 @@ private extension PaymentsTransfersFactoryComposer {
     }
 }
 
-private extension Model {
+extension Model {
     
     func operators(
         for type: PTSectionPaymentsView.ViewModel.PaymentsType
@@ -100,6 +96,7 @@ private extension Model {
         guard let dictionaryAnywayOperators = dictionaryAnywayOperators(),
               let operatorValue = Payments.operatorByPaymentsType(type)
         else { return nil }
+        
         #warning("suboptimal sort + missing sort condition")
         // TODO: fix sorting: remove excessive iterations
         // TODO: fix sorting according to https://shorturl.at/ehxIQ
@@ -110,7 +107,7 @@ private extension Model {
     }
 }
 
-private extension NavigationBarView.ViewModel {
+extension NavigationBarView.ViewModel {
     
     static func allRegions(
         titleButtonAction: @escaping () -> Void,

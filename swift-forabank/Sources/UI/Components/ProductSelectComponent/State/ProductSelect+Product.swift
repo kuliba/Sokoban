@@ -8,6 +8,7 @@
 import Foundation
 import Tagged
 import UIPrimitives
+import SwiftUI
 
 public extension ProductSelect {
     
@@ -55,12 +56,12 @@ public extension ProductSelect.Product {
     struct Look: Equatable {
         
         let background: Icon
-        let color: String
+        let color: Color
         let icon: Icon
         
         public init(
             background: Icon,
-            color: String,
+            color: Color,
             icon: Icon
         ) {
             self.background = background

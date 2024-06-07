@@ -32,7 +32,7 @@ where LastPayment: Identifiable,
     
     public var body: some View {
         
-        if state.operators.isEmpty {
+        if state.isError {
             factory.makeFooterView(false)
         } else {
             list()
@@ -46,6 +46,14 @@ public extension PrepaymentPicker {
     typealias Event = PrepaymentPickerEvent<Operator>
     
     typealias Factory = PrepaymentPickerFactory<LastPayment, Operator, SearchView, LastPaymentView, OperatorView, FooterView>
+}
+
+private extension PrepaymentPickerState {
+    
+    var isError: Bool {
+        
+        operators.isEmpty && searchText.isEmpty
+    }
 }
 
 private extension PrepaymentPicker {

@@ -286,12 +286,12 @@ extension ProductSelectorView.ViewModel {
         
         convenience init(_ model: Model, productData: ProductData, context: Context) {
             
-            let name = ProductView.ViewModel.name(
+            let name = ForaBank.ProductViewModel.name(
                 product: productData,
                 style: .main,
                 creditProductName: .cardTitle
             )
-            let balance = ProductView.ViewModel.balanceFormatted(product: productData, style: .main, model: model)
+            let balance = ForaBank.ProductViewModel.balanceFormatted(product: productData, style: .main, model: model)
             
             var paymentSystemImage: Image?
             
@@ -577,19 +577,19 @@ extension ProductSelectorView {
 
 struct ProductSelectorView_Previews: PreviewProvider {
     
+    private static func preview(_ viewModel: ProductSelectorView.ViewModel) -> some View {
+        ProductSelectorView(viewModel: viewModel)
+    }
+
     static func previewsGroup() -> some View {
         
         Group {
             
-            ProductSelectorView(viewModel: .sampleRegularCollapsed)
-            ProductSelectorView(
-                viewModel: .sampleRegularCollapsed(
-                    .sampleRegularLong
-                )
-            )
-            ProductSelectorView(viewModel: .sampleMe2MeCollapsed)
-            ProductSelectorView(viewModel: .sample2)
-            ProductSelectorView(viewModel: .sample3)
+            preview(.sampleRegularCollapsed)
+            preview(.sampleRegularCollapsed(.sampleRegularLong))
+            preview(.sampleMe2MeCollapsed)
+            preview(.sample2)
+            preview(.sample3)
         }
     }
     

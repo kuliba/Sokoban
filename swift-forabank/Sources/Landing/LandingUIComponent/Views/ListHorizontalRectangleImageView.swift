@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import UIPrimitives
 
 struct ListHorizontalRectangleImageView: View {
     
@@ -59,7 +60,7 @@ extension ListHorizontalRectangleImageView {
                             .cornerRadius(config.cornerRadius)
                             .frame(width: config.size.width)
                             .frame(maxHeight: config.size.height)
-                            .shimmering(active: true, bounce: false)
+                            .shimmering()
                             .accessibilityIdentifier("HorizontalRectangleImageNone")
                         
                     case let .some(image):

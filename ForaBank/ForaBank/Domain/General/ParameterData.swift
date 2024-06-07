@@ -89,6 +89,18 @@ extension ParameterData {
         case currency
     }
     
+    enum ParameterType: String {
+        
+        case personalAccount = "a3_PERSONAL_ACCOUNT_1_1"
+        case account = "account"
+        case code = "a3_CODE_3_1"
+    }
+    
+    var parameterType: ParameterType? {
+        
+        return ParameterType(rawValue: id)
+    }
+    
     func options(style: OptionsStyle) -> [Option]? {
 
         guard let data = dataType else {

@@ -7,12 +7,12 @@
 
 import Tagged
 
-enum StubbedFeatureFlag {
+enum StubbedFeatureFlag: Equatable {
     
     case active(Option)
     case inactive
     
-    enum Option {
+    enum Option: Equatable {
         
         case live, stub
     }
