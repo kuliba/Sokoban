@@ -1,5 +1,5 @@
 //
-//  LandingMultiTypeButtons.swift
+//  TypeButtons.swift
 //  
 //
 //  Created by Andryusina Nataly on 07.09.2023.
@@ -7,9 +7,9 @@
 
 import Tagged
 
-public extension Landing {
+public extension Landing.DataView.Multi {
     
-    struct MultiTypeButtons:  Equatable {
+    struct TypeButtons:  Equatable {
         
         public let md5hash, backgroundColor, text: String
         public let buttonText, buttonStyle: String

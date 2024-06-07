@@ -1,5 +1,5 @@
 //
-//  LandingMultiLineHeader.swift
+//  LineHeader.swift
 //  
 //
 //  Created by Andryusina Nataly on 31.08.2023.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-extension Landing {
+extension Landing.DataView.Multi {
     
-    public struct MultiLineHeader: Equatable {
+    public struct LineHeader: Equatable {
         
         public let backgroundColor: String
         public let regularTextList, boldTextList: [String]?

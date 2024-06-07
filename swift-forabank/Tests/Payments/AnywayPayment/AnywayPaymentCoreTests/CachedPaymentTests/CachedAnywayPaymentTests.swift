@@ -5,11 +5,9 @@
 //  Created by Igor Malyarov on 06.06.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
-@testable import ForaBank
 import XCTest
-
-private typealias AnywayPayment = AnywayPaymentDomain.AnywayPayment
 
 final class CachedAnywayPaymentTests: XCTestCase {
     
@@ -88,6 +86,18 @@ final class CachedAnywayPaymentTests: XCTestCase {
         
         XCTAssertNoDiff(payment.models.map(\.id), [.fieldID(field.id), .parameterID(parameter.field.id), .widgetID(.core)])
         XCTAssertNoDiff(payment.models.map(\.model), [.field(field), .parameter(parameter), .widget(.core(core))])
+    }
+    
+    func test_init_shouldMapElements() {
+        
+        struct Model: Equatable {}
+
+        let field = makeAnywayPaymentField()
+        let anywayPayment = makeAnywayPayment(elements: [.field(field)])
+        
+        let payment = CachedAnywayPayment<Model>(anywayPayment, using: { _ in .init() })
+        
+        XCTAssertNoDiff(payment.models.map(\.model), [.init()])
     }
     
     // MARK: - updating
@@ -191,6 +201,20 @@ final class CachedAnywayPaymentTests: XCTestCase {
         XCTAssertNoDiff(updated.models.map(\.model), [.parameter(parameter), .field(field)])
     }
     
+    func test_updating_shouldMapElements() {
+        
+        struct Model: Equatable {}
+
+        let anywayPayment = makeAnywayPayment()
+        let map: (AnywayPayment.Element) -> Model = { _ in .init() }
+        let payment = CachedAnywayPayment<Model>(anywayPayment, using: map)
+        XCTAssertTrue(payment.models.isEmpty)
+
+        let updated = payment.updating(with: makeAnywayPayment(elements: [.field(makeAnywayPaymentField())]), using: map)
+        
+        XCTAssertNoDiff(updated.models.map(\.model), [.init()])
+    }
+    
     // MARK: - Helpers
     
     private typealias Payment = CachedAnywayPayment<ElementModel>
@@ -230,96 +254,6 @@ private extension CachedAnywayPayment where ElementModel == AnywayPayment.Elemen
     }
 }
 
-private func makeAnywayPaymentField(
-    id: String = anyMessage(),
-    title: String = anyMessage(),
-    value: String = anyMessage(),
-    image: AnywayPayment.Element.Image? = nil
-) -> AnywayPayment.Element.Field {
-    
-    return .init(
-        id: .init(id),
-        title: title,
-        value: .init(value),
-        image: image
-    )
-}
-
-private func makeAnywayPaymentParameter(
-    field: AnywayPayment.Element.Parameter.Field = makeAnywayPaymentParameterField(),
-    image: AnywayPayment.Element.Image? = nil,
-    masking: AnywayPayment.Element.Parameter.Masking = makeAnywayPaymentParameterMasking(),
-    validation: AnywayPayment.Element.Parameter.Validation = makeAnywayPaymentParameterValidation(),
-    uiAttributes: AnywayPayment.Element.Parameter.UIAttributes = makeAnywayPaymentParameterUIAttributes()
-) -> AnywayPayment.Element.Parameter {
-    
-    return .init(
-        field: field,
-        image: image,
-        masking: masking,
-        validation: validation,
-        uiAttributes: uiAttributes
-    )
-}
-
-private func makeAnywayPaymentParameterField(
-    id: String = anyMessage(),
-    value: String? = nil
-) -> AnywayPayment.Element.Parameter.Field {
-    
-    return .init(id: .init(id), value: value.map { .init($0) })
-}
-
-private func makeAnywayPaymentParameterMasking(
-    inputMask: String? = nil,
-    mask: String? = nil
-) -> AnywayPayment.Element.Parameter.Masking {
-    
-    return .init(inputMask: inputMask, mask: mask)
-}
-
-private func makeAnywayPaymentParameterValidation(
-    isRequired: Bool = true,
-    maxLength: Int? = nil,
-    minLength: Int? = nil,
-    regExp: String = anyMessage()
-) -> AnywayPayment.Element.Parameter.Validation {
-    
-    return .init(
-        isRequired: isRequired,
-        maxLength: maxLength,
-        minLength: minLength,
-        regExp: regExp
-    )
-}
-
-private func makeAnywayPaymentParameterUIAttributes(
-    dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType = .number,
-    group: String? = nil,
-    isPrint: Bool = false,
-    phoneBook: Bool = false,
-    isReadOnly: Bool = false,
-    subGroup: String? = nil,
-    subTitle: String? = nil,
-    title: String = anyMessage(),
-    type: AnywayPayment.Element.Parameter.UIAttributes.FieldType = .input,
-    viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType = .input
-) -> AnywayPayment.Element.Parameter.UIAttributes {
-    
-    return .init(
-        dataType: dataType,
-        group: group,
-        isPrint: isPrint,
-        phoneBook: phoneBook,
-        isReadOnly: isReadOnly,
-        subGroup: subGroup,
-        subTitle: subTitle,
-        title: title,
-        type: type,
-        viewType: viewType
-    )
-}
-
 private func makeAnywayPaymentCoreWidget(
     amount: Decimal = .init(Double.random(in: 1...1_000)),
     currency: String = "RUB",
@@ -327,9 +261,4 @@ private func makeAnywayPaymentCoreWidget(
 ) -> AnywayPayment.Element.Widget.PaymentCore {
     
     return .init(amount: amount, currency: .init(currency), productID: productID)
-}
-
-func anyMessage() -> String {
-    
-    UUID().uuidString
 }
