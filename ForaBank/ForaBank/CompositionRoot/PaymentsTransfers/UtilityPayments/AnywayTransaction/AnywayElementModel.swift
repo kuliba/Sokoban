@@ -17,10 +17,10 @@ enum AnywayElementModel {
 
 extension AnywayElementModel {
     
-    enum Widget: Equatable {
+    enum Widget {
         
         case core(AnywayElement.Widget.PaymentCore)
-        case otp(Int?)
+        case otp(OTPViewModel)
     }
 }
 

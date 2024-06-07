@@ -63,25 +63,10 @@ private extension AnywayPaymentElementView {
         _ widget: AnywayElementModel.Widget
     ) -> some View {
         switch widget {
-        case let .otp(otp):
-#warning("replace with real components")
-            HStack {
-                
-                VStack(alignment: .leading) {
-                    
-                    Text("OTP")
-                    Text(otp.map { "\($0)" } ?? "")
-                        .font(.caption)
-                }
-                
-                TextField(
-                    "Введите код",
-                    text: .init(
-                        get: { otp.map { "\($0)" } ?? "" },
-                        set: { event(.widget(.otp($0))) }
-                    )
-                )
-            }
+        case let .otp(otpViewModel):
+            #warning("replace with real components")
+            SimpleOTPWrapperView(viewModel: otpViewModel)
+
 #warning("can't use CodeInputView - not a part  af any product (neither PaymentComponents nor any other)")
 #warning("need a wrapper with timer")
             //            CodeInputView(

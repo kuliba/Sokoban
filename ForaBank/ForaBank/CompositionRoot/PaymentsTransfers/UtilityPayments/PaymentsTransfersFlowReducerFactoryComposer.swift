@@ -102,7 +102,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         let transactionViewModel = makeTransactionViewModel(transactionState)
         
         let mapper = AnywayElementModelMapper(
-            event: transactionViewModel.event(_:)
+            event: { transactionViewModel.event(.payment($0)) }
         )
         let mapAnywayElement = mapper.map(_:)
         

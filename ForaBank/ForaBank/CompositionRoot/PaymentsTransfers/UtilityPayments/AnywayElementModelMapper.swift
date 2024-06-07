@@ -17,7 +17,7 @@ final class AnywayElementModelMapper {
         self.event = event
     }
     
-    typealias Event = AnywayTransactionEvent
+    typealias Event = AnywayPaymentEvent
 }
 
 extension AnywayElementModelMapper {
@@ -39,11 +39,37 @@ extension AnywayElementModelMapper {
                 return .widget(.core(core))
                 
             case let .otp(otp):
-                return .widget(.otp(otp))
+                return .widget(.otp(makeModelForOTP(with:otp)))
             }
             
         default:
             fatalError("impossible case; would be removed on change to models")
         }
+    }
+}
+
+private extension AnywayElementModelMapper {
+    
+#warning("extract?")
+    func makeModelForOTP(
+        with otp: Int?
+    ) -> AnywayElementModel.Widget.OTPViewModel {
+        
+        return .init(
+            initialState: .init(value: otp),
+            reduce: { _, event in
+                
+                switch event {
+                case let .input(input):
+                    let digits = input.filter(\.isWholeNumber).prefix(6)
+                    return (.init(value: Int(digits)), nil)
+                }
+            },
+            handleEffect: { _,_ in },
+            observe: { [weak self] in
+                
+                self?.event(.widget(.otp($0.value.map { "\($0)" } ?? "")))
+            }
+        )
     }
 }
