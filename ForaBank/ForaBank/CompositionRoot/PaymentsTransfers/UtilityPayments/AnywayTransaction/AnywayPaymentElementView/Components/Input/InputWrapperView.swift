@@ -10,7 +10,7 @@ import SwiftUI
 
 struct InputWrapperView: View {
     
-    @ObservedObject private var viewModel: ViewModel
+    @ObservedObject var viewModel: ViewModel
     
     let factory: Factory
     

@@ -31,7 +31,6 @@ struct AnywayPaymentElementView<IconView: View>: View {
         case let .parameter(parameter):
             AnywayPaymentParameterView(
                 parameter: parameter,
-                event: { event(.setValue($0, for: parameter.id.parameterID)) },
                 factory: factory.parameterFactory
             )
             
@@ -44,7 +43,8 @@ struct AnywayPaymentElementView<IconView: View>: View {
         _ field: AnywayPaymentDomain.AnywayElement.UIComponent.Field
     ) -> some View {
         
-        factory.makeIconView(.field(field))
+        #warning("FIX hardcoded value")
+        return factory.makeIconView("")
     }
 }
 
@@ -52,7 +52,7 @@ extension AnywayPaymentElementView {
     
     typealias State = CachedAnywayPayment<AnywayElementModel>.IdentifiedModel
     typealias Event = AnywayPaymentEvent
-    typealias Factory = AnywayPaymentElementViewFactory<IconView>
+    typealias Factory = AnywayPaymentElementViewFactory
     typealias Config = AnywayPaymentElementConfig
 }
 
@@ -105,13 +105,5 @@ private extension AnywayElement.UIComponent.Field {
         case "recipientBank": return .recipientBank
         default:              return .other(name)
         }
-    }
-}
-
-private extension AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ID {
-    
-    var parameterID: AnywayPaymentEvent.ParameterID {
-        
-        return .init(rawValue)
     }
 }

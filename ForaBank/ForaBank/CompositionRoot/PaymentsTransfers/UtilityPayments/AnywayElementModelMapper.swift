@@ -40,16 +40,10 @@ extension AnywayElementModelMapper {
             return .field(field)
             
         case let (_, .parameter(parameter)):
-            return .parameter(parameter)
+            return makeParameterViewModel(with: parameter)
             
         case let (.widget(widget), _):
-            switch widget {
-            case let .core(core):
-                return .widget(.core(makeProductSelectViewModel(with: core), core.amount, core.currency.rawValue))
-                
-            case let .otp(otp):
-                return .widget(.otp(makeModelForOTP(with: otp)))
-            }
+            return makeWidgetViewModel(with: widget)
             
         default:
             fatalError("impossible case; would be removed on change to models")
@@ -59,8 +53,96 @@ extension AnywayElementModelMapper {
 
 private extension AnywayElementModelMapper {
     
+    func makeParameterViewModel(
+        with parameter: AnywayElement.UIComponent.Parameter
+    ) -> AnywayElementModel {
+        
+        switch parameter.type {
+        case .hidden:
+            return .parameter(.hidden(parameter))
+            
+        case .nonEditable:
+            return .parameter(.nonEditable(parameter))
+            
+        case .numberInput:
+            #warning("how to add differentiation for numeric input")
+            return .parameter(.numberInput(makeInputViewModel(with: parameter)))
+      
+        case let .select(option, options):
+            if let selector = try? Selector(option: option, options: options) {
+                return .parameter(.select(makeSelectorViewModel(with: selector, and: parameter)))
+            } else {
+                return .parameter(.unknown(parameter))
+            }
+        
+        case .textInput:
+            return .parameter(.textInput(makeInputViewModel(with: parameter)))
+        
+        case .unknown:
+            return .parameter(.unknown(parameter))
+        }
+    }
+}
+
+private extension AnywayElementModelMapper {
+    
 #warning("extract?")
-    func makeProductSelectViewModel(
+    func makeInputViewModel(
+        with parameter: AnywayElement.UIComponent.Parameter
+    ) -> ObservingInputViewModel {
+        
+        let inputState = InputState(parameter)
+        let reducer = InputReducer<String>()
+        
+        return .init(
+            initialState: inputState,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: { _,_ in },
+            observe: { [weak self] in
+                
+                self?.event(.setValue($0.dynamic.value, for: parameter.id.parameterID))
+            }
+        )
+    }
+    
+    func makeSelectorViewModel(
+        with selector: Selector<Option>,
+        and parameter: AnywayElement.UIComponent.Parameter
+    ) -> ObservingSelectorViewModel<Option> {
+        
+        let reducer = SelectorReducer<Option>()
+
+        return .init(
+            initialState: selector,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: { _,_ in },
+            observe: { [weak self] in
+                
+                self?.event(.setValue($0.selected.key.rawValue, for: parameter.id.parameterID))
+            }
+        )
+    }
+    
+    typealias Option = AnywayElement.UIComponent.Parameter.ParameterType.Option
+}
+
+private extension AnywayElementModelMapper {
+    
+    func makeWidgetViewModel(
+        with widget: AnywayElement.Widget
+    ) -> AnywayElementModel {
+        
+        switch widget {
+        case let .core(core):
+            return .widget(.core(makeProductSelectViewModel(with: core), core.amount, core.currency.rawValue))
+            
+        case let .otp(otp):
+            return .widget(.otp(makeModelForOTP(with: otp)))
+        }
+    }
+
+#warning("extract?")
+    private func makeProductSelectViewModel(
         with core: AnywayElement.Widget.PaymentCore
     ) -> ObservingProductSelectViewModel {
         
@@ -86,12 +168,9 @@ private extension AnywayElementModelMapper {
             }
         )
     }
-}
 
-private extension AnywayElementModelMapper {
-    
 #warning("extract?")
-    func makeModelForOTP(
+    private func makeModelForOTP(
         with otp: Int?
     ) -> AnywayElementModel.Widget.OTPViewModel {
         
@@ -114,7 +193,60 @@ private extension AnywayElementModelMapper {
     }
 }
 
+// MARK: - Adapters
+
+private extension InputState where Icon == String {
+    
+#warning("FIXME: replace stubbed with values from parameter")
+    init(_ parameter: AnywayPaymentDomain.AnywayElement.UIComponent.Parameter) {
+        
+        self.init(
+            dynamic: .init(
+                value: parameter.value?.rawValue ?? "",
+                warning: nil
+            ),
+            settings: .init(
+                hint: nil,
+                icon: "",
+                keyboard: .default,
+                title: parameter.title,
+                subtitle: parameter.subtitle
+            )
+        )
+    }
+}
+
+private extension Selector where T == AnywayElement.UIComponent.Parameter.ParameterType.Option {
+    
+    init(option: Option, options: [Option]) throws {
+        
+        try self.init(
+            selected: option,
+            options: options,
+            filterPredicate: { $0.contains($1) }
+        )
+    }
+    
+    typealias Option = AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ParameterType.Option
+}
+
+private extension AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ParameterType.Option {
+    
+    func contains(_ string: String) -> Bool {
+        
+        key.rawValue.contains(string) || value.rawValue.contains(string)
+    }
+}
+
 // MARK: - Helpers
+
+private extension AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ID {
+    
+    var parameterID: AnywayPaymentEvent.ParameterID {
+        
+        return .init(rawValue)
+    }
+}
 
 private extension ProductSelect.Product {
     

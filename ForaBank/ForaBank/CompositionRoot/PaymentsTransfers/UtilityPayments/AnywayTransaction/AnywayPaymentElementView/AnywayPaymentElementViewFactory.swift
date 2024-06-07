@@ -5,18 +5,15 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
-import AnywayPaymentDomain
+import UIPrimitives
 
-struct AnywayPaymentElementViewFactory<IconView> {
+struct AnywayPaymentElementViewFactory {
 
     let makeIconView: MakeIconView
     let parameterFactory: AnywayPaymentParameterViewFactory
 }
 
 extension AnywayPaymentElementViewFactory {
-    
-    typealias AnywayPayment = AnywayPaymentDomain.AnywayPayment
-    
-    typealias Element = AnywayElement.UIComponent
-    typealias MakeIconView = (Element) -> IconView
+        
+    typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
 }

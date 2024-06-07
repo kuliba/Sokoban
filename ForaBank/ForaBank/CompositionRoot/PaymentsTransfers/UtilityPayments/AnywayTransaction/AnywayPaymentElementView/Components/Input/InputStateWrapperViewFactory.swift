@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
-import SwiftUI
+import UIPrimitives
 
 struct InputStateWrapperViewFactory {
     
@@ -14,13 +14,5 @@ struct InputStateWrapperViewFactory {
 
 extension InputStateWrapperViewFactory {
     
-    typealias MakeIconView = () -> InputIconView
-}
-
-struct InputIconView: View {
-    
-    var body: some View {
-        
-        Text("?")
-    }
+    typealias MakeIconView = () -> UIPrimitives.AsyncImage
 }
