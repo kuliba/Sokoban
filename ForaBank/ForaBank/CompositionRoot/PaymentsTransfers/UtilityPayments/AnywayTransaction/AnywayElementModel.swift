@@ -11,5 +11,14 @@ enum AnywayElementModel {
     
     case field(AnywayElement.UIComponent.Field)
     case parameter(AnywayElement.UIComponent.Parameter)
-    case widget(AnywayElement.Widget)
+    case widget(Widget)
+}
+
+extension AnywayElementModel {
+    
+    enum Widget: Equatable {
+        
+        case core(AnywayElement.Widget.PaymentCore)
+        case otp(Int?)
+    }
 }

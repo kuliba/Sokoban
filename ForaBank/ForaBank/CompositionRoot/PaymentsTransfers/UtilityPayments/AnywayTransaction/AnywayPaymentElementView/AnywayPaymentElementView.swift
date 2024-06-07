@@ -60,7 +60,7 @@ private extension AnywayPaymentElementView {
     
     @ViewBuilder
     func widgetView(
-        _ widget: AnywayElement.Widget
+        _ widget: AnywayElementModel.Widget
     ) -> some View {
         switch widget {
         case let .otp(otp):

@@ -34,7 +34,13 @@ extension AnywayElementModelMapper {
             return .parameter(parameter)
             
         case let (.widget(widget), _):
-            return .widget(widget)
+            switch widget {
+            case let .core(core):
+                return .widget(.core(core))
+                
+            case let .otp(otp):
+                return .widget(.otp(otp))
+            }
             
         default:
             fatalError("impossible case; would be removed on change to models")
