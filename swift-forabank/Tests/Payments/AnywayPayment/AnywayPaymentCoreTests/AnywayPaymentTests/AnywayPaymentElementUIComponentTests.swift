@@ -435,7 +435,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias DataType = AnywayPayment.Element.Parameter.UIAttributes.DataType
+    private typealias DataType = AnywayElement.Parameter.UIAttributes.DataType
     private typealias Pair = (key: String, value: String)
     
     private func makePairsDataType(
@@ -450,10 +450,10 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     }
     
     private func makeElement(
-        type: AnywayPayment.Element.Parameter.UIAttributes.FieldType,
-        dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType,
-        viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType
-    ) -> AnywayPayment.Element {
+        type: AnywayElement.Parameter.UIAttributes.FieldType,
+        dataType: AnywayElement.Parameter.UIAttributes.DataType,
+        viewType: AnywayElement.Parameter.UIAttributes.ViewType
+    ) -> AnywayElement {
         
         makeAnywayPaymentParameterElement(
             makeAnywayPaymentParameter(
@@ -467,10 +467,10 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     }
     
     private func makeUIAttributes(
-        type: AnywayPayment.Element.Parameter.UIAttributes.FieldType,
-        dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType,
-        viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType
-    ) -> AnywayPayment.Element.Parameter.UIAttributes {
+        type: AnywayElement.Parameter.UIAttributes.FieldType,
+        dataType: AnywayElement.Parameter.UIAttributes.DataType,
+        viewType: AnywayElement.Parameter.UIAttributes.ViewType
+    ) -> AnywayElement.Parameter.UIAttributes {
         
         makeAnywayPaymentElementParameterUIAttributes(
             dataType: dataType,
@@ -482,9 +482,9 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
 
 // MARK: - DSL
 
-private extension AnywayPayment.Element {
+private extension AnywayElement {
     
-    var parameterType: AnywayPayment.Element.UIComponent.Parameter.ParameterType? {
+    var parameterType: AnywayElement.UIComponent.Parameter.ParameterType? {
         
         guard case let .parameter(parameter) = self
         else { return nil }

@@ -48,13 +48,13 @@ private extension AnywayPayment {
         )
     }
     
-    var fields: [Element.Parameter.Field] {
+    var fields: [AnywayElement.Parameter.Field] {
         
         elements.compactMap(\.parameter?.field)
     }
 }
 
-private extension AnywayPayment.Element {
+private extension AnywayElement {
     
     var parameter: Parameter? {
         
@@ -71,7 +71,7 @@ private extension AnywayPayment.Element {
     }
 }
 
-private extension AnywayPayment.Element.Widget.PaymentCore {
+private extension AnywayElement.Widget.PaymentCore {
     
     var _productID: AnywayPaymentDigest.PaymentCore.ProductID {
         

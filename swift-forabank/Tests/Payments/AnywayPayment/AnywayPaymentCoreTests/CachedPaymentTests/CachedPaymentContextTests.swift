@@ -118,8 +118,8 @@ final class CachedPaymentContextTests: XCTestCase {
     }
 }
 
-private typealias CachedContext = CachedPaymentContext<AnywayPayment.Element>
-private typealias CachedPayment = CachedAnywayPayment<AnywayPayment.Element>
+private typealias CachedContext = CachedPaymentContext<AnywayElement>
+private typealias CachedPayment = CachedAnywayPayment<AnywayElement>
 
 private func makeContext(
     payment: CachedPayment = makeCachedPayment(),
@@ -141,19 +141,4 @@ private func makeCachedPayment(
 ) -> CachedPayment {
     
     return .init(payment, using: { $0 })
-}
-
-private func makeAnywayPaymentContext(
-    payment: AnywayPayment = makeAnywayPayment(),
-    staged: AnywayPaymentStaged = [],
-    outline: AnywayPaymentOutline = makeAnywayPaymentOutline(),
-    shouldRestart: Bool = false
-) -> AnywayPaymentContext {
-    
-    return .init(
-        payment: payment,
-        staged: staged,
-        outline: outline,
-        shouldRestart: shouldRestart
-    )
 }
