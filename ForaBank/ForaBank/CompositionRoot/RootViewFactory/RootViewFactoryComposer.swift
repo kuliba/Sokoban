@@ -129,10 +129,10 @@ private extension RootViewFactoryComposer {
         return model.imageCache().makeIconView(for: component.md5Hash)
     }
     
-    private typealias UIComponent = AnywayPaymentDomain.AnywayPayment.AnywayElement.UIComponent
+    private typealias UIComponent = AnywayPaymentDomain.AnywayElement.UIComponent
 }
 
-private extension AnywayPaymentDomain.AnywayPayment.AnywayElement.UIComponent {
+private extension AnywayPaymentDomain.AnywayElement.UIComponent {
     
     var md5Hash: MD5Hash {
         #warning("FIXME")

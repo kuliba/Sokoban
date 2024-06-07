@@ -327,10 +327,10 @@ final class AnywayPaymentContextTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Parameter = AnywayPayment.AnywayElement.Parameter
+    private typealias Parameter = AnywayElement.Parameter
     
     private func makeAnywayPaymentContext(
-        elements: [AnywayPayment.AnywayElement],
+        elements: [AnywayElement],
         staged: AnywayPaymentStaged = [],
         outline: AnywayPaymentOutline = makeAnywayPaymentOutline(),
         shouldRestart: Bool = false

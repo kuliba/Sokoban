@@ -16,11 +16,11 @@ struct AnywayPaymentElementViewFactory<IconView> {
 
 extension AnywayPaymentElementViewFactory {
     
-    typealias Element = AnywayPayment.AnywayElement.UIComponent
+    typealias Element = AnywayElement.UIComponent
     typealias MakeIconView = (Element) -> IconView
     
     typealias MakeProductSelectView = (ProductID, @escaping Observe) -> ProductSelectStateWrapperView
     typealias Observe = (ProductID, Currency) -> Void
-    typealias ProductID = AnywayPayment.AnywayElement.UIComponent.Widget.ProductID
+    typealias ProductID = AnywayElement.UIComponent.Widget.ProductID
     typealias Currency = AnywayPaymentEvent.Widget.Currency
 }

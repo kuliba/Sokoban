@@ -1,5 +1,5 @@
 //
-//  AnywayPayment.AnywayElement+Identifiable.swift
+//  AnywayElement+Identifiable.swift
 //
 //
 //  Created by Igor Malyarov on 27.05.2024.
@@ -7,7 +7,7 @@
 
 import AnywayPaymentDomain
 
-extension AnywayPayment.AnywayElement: Identifiable {
+extension AnywayElement: Identifiable {
     
     public var id: ID {
         

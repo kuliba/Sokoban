@@ -174,18 +174,18 @@ private extension AnywayPaymentFactoryComposer {
         )
     }
     
-    typealias UIComponent = AnywayPayment.AnywayElement.UIComponent
+    typealias UIComponent = AnywayElement.UIComponent
     typealias Option = UIComponent.Parameter.ParameterType.Option
 
     typealias Observe = (ProductID, Currency) -> Void
-    typealias ProductID = AnywayPayment.AnywayElement.Widget.PaymentCore.ProductID
+    typealias ProductID = AnywayElement.Widget.PaymentCore.ProductID
     typealias Currency = AnywayPaymentEvent.Widget.Currency
 }
 
 private extension ProductSelect.Product {
     
     func isMatching(
-        _ productID: AnywayPayment.AnywayElement.Widget.PaymentCore.ProductID
+        _ productID: AnywayElement.Widget.PaymentCore.ProductID
     ) -> Bool {
         
         switch productID {
@@ -197,7 +197,7 @@ private extension ProductSelect.Product {
         }
     }
     
-    var coreProductID: AnywayPayment.AnywayElement.Widget.PaymentCore.ProductID {
+    var coreProductID: AnywayElement.Widget.PaymentCore.ProductID {
         
         switch type {
         case .account:
@@ -214,7 +214,7 @@ private extension ProductSelect.Product {
 private extension InputState where Icon == String {
     
     #warning("FIXME: replace stubbed with values from parameter")
-    init(_ parameter: AnywayPayment.AnywayElement.UIComponent.Parameter) {
+    init(_ parameter: AnywayElement.UIComponent.Parameter) {
         
         self.init(
             dynamic: .init(
@@ -246,7 +246,7 @@ private extension AnywayTransactionState {
     }
 }
 
-private extension Array where Element == AnywayPayment.AnywayElement {
+private extension Array where Element == AnywayElement {
     
     var core: AnywayPaymentFooter.Core? {
         

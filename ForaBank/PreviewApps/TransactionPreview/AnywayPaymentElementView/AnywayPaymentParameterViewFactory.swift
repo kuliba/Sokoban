@@ -16,11 +16,11 @@ struct AnywayPaymentParameterViewFactory {
 
 extension AnywayPaymentParameterViewFactory {
     
-    typealias Option = AnywayPayment.AnywayElement.UIComponent.Parameter.ParameterType.Option
+    typealias Option = AnywayElement.UIComponent.Parameter.ParameterType.Option
     typealias ObserveSelector = (Selector<Option>) -> Void
     typealias MakeSelectorView = (Selector<Option>, @escaping  ObserveSelector) -> SelectorWrapperView
     
-    typealias Parameter = AnywayPayment.AnywayElement.UIComponent.Parameter
+    typealias Parameter = AnywayElement.UIComponent.Parameter
     typealias ObserveInput = (InputState<String>) -> Void
     typealias MakeTextInputView = (Parameter, @escaping ObserveInput) -> InputStateWrapperView
 }

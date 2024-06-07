@@ -1,5 +1,5 @@
 //
-//  AnywayPayment.AnywayElement.Parameter+entry.swift
+//  AnywayElement.Parameter+entry.swift
 //
 //
 //  Created by Igor Malyarov on 06.04.2024.
@@ -7,7 +7,7 @@
 
 import AnywayPaymentDomain
 
-public extension AnywayPayment.AnywayElement.Parameter {
+public extension AnywayElement.Parameter {
     
     var entry: Entry? {
         
@@ -85,7 +85,7 @@ public extension AnywayPayment.AnywayElement.Parameter {
     }
 }
 
-public extension AnywayPayment.AnywayElement.Parameter.Entry {
+public extension AnywayElement.Parameter.Entry {
     
     enum Field: Equatable {
         
@@ -93,9 +93,9 @@ public extension AnywayPayment.AnywayElement.Parameter.Entry {
         case pair(key: String, value: String)
     }
     
-    typealias ID = AnywayPayment.AnywayElement.Parameter.Field.ID
-    typealias Value = AnywayPayment.AnywayElement.Parameter.Field.Value
+    typealias ID = AnywayElement.Parameter.Field.ID
+    typealias Value = AnywayElement.Parameter.Field.Value
     
-    typealias Pair = AnywayPayment.AnywayElement.Parameter.UIAttributes.DataType.Pair
+    typealias Pair = AnywayElement.Parameter.UIAttributes.DataType.Pair
 }
 

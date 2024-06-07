@@ -21,5 +21,5 @@ struct SelectedOptionView: View {
 
 extension SelectedOptionView {
     
-    typealias Option = AnywayPaymentDomain.AnywayPayment.AnywayElement.UIComponent.Parameter.ParameterType.Option
+    typealias Option = AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ParameterType.Option
 }

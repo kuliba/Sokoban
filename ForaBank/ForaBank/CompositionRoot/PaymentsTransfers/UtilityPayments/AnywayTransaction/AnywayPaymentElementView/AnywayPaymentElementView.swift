@@ -40,7 +40,7 @@ struct AnywayPaymentElementView<IconView: View>: View {
     }
     
     private func makeIconView(
-        _ field: AnywayPaymentDomain.AnywayPayment.AnywayElement.UIComponent.Field
+        _ field: AnywayPaymentDomain.AnywayElement.UIComponent.Field
     ) -> some View {
         
         factory.makeIconView(.field(field))
@@ -49,7 +49,7 @@ struct AnywayPaymentElementView<IconView: View>: View {
 
 extension AnywayPaymentElementView {
     
-    typealias State = AnywayPaymentDomain.AnywayPayment.AnywayElement
+    typealias State = AnywayPaymentDomain.AnywayElement
     typealias Event = AnywayPaymentEvent
     typealias Factory = AnywayPaymentElementViewFactory<IconView>
     typealias Config = AnywayPaymentElementConfig
@@ -97,7 +97,7 @@ private extension AnywayPaymentElementView {
 
 // MARK: - Adapters
 
-private extension AnywayPaymentDomain.AnywayPayment.AnywayElement.UIComponent.Field {
+private extension AnywayPaymentDomain.AnywayElement.UIComponent.Field {
     
     var info: PaymentComponents.Info {
         
@@ -106,7 +106,7 @@ private extension AnywayPaymentDomain.AnywayPayment.AnywayElement.UIComponent.Fi
     }
 }
 
-private extension  AnywayPaymentDomain.AnywayPayment.AnywayElement.UIComponent.Field {
+private extension  AnywayPaymentDomain.AnywayElement.UIComponent.Field {
     
     var id: PaymentComponents.Info.ID {
         
@@ -119,7 +119,7 @@ private extension  AnywayPaymentDomain.AnywayPayment.AnywayElement.UIComponent.F
     }
 }
 
-private extension AnywayPaymentDomain.AnywayPayment.AnywayElement.UIComponent.Parameter.ID {
+private extension AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ID {
     
     var parameterID: AnywayPaymentEvent.ParameterID {
         

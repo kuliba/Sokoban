@@ -21,7 +21,7 @@ extension AnywayPaymentElementViewFactory {
     typealias MakeParameterView = (Parameter, @escaping (String) -> Void) -> ParameterView
     typealias MakeWidgetView = (Widget, @escaping (AnywayPaymentEvent.Widget) -> Void) -> WidgetView
     
-    typealias Field = AnywayPayment.AnywayElement.UIComponent.Field
-    typealias Parameter = AnywayPayment.AnywayElement.UIComponent.Parameter
-    typealias Widget = AnywayPayment.AnywayElement.UIComponent.Widget
+    typealias Field = AnywayElement.UIComponent.Field
+    typealias Parameter = AnywayElement.UIComponent.Parameter
+    typealias Widget = AnywayElement.UIComponent.Widget
 }

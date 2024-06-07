@@ -33,7 +33,7 @@ public extension AnywayPaymentValidator {
     typealias IsValidParameter = (Parameter) -> Bool
     
     typealias Payment = AnywayPayment
-    typealias Parameter = AnywayPayment.AnywayElement.Parameter
+    typealias Parameter = AnywayElement.Parameter
 }
 
 private extension AnywayPayment {
@@ -41,7 +41,7 @@ private extension AnywayPayment {
     var parameters: [AnywayElement.Parameter] { elements.compactMap(\.parameter) }
 }
 
-private extension AnywayPayment.AnywayElement {
+private extension AnywayElement {
     
     var parameter: Parameter? {
         

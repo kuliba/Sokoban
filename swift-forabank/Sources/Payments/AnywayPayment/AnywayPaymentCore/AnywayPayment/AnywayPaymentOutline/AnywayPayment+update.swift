@@ -34,7 +34,7 @@ extension AnywayPayment {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Widget.PaymentCore {
+private extension AnywayElement.Widget.PaymentCore {
     
     init(_ core: AnywayPaymentOutline.PaymentCore) {
         
@@ -46,7 +46,7 @@ private extension AnywayPayment.AnywayElement.Widget.PaymentCore {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Widget.PaymentCore.ProductID {
+private extension AnywayElement.Widget.PaymentCore.ProductID {
     
     init(_ core: AnywayPaymentOutline.PaymentCore) {
         
@@ -57,7 +57,7 @@ private extension AnywayPayment.AnywayElement.Widget.PaymentCore.ProductID {
     }
 }
 
-private extension AnywayPayment.AnywayElement {
+private extension AnywayElement {
     
     var stringID: String? {
         
@@ -95,7 +95,7 @@ private extension AnywayPayment.AnywayElement {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Field {
+private extension AnywayElement.Field {
     
     func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
         
@@ -108,7 +108,7 @@ private extension AnywayPayment.AnywayElement.Field {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Image {
+private extension AnywayElement.Image {
     
     init(_ image: AnywayPaymentUpdate.Image) {
         
@@ -126,7 +126,7 @@ private extension AnywayPayment.AnywayElement.Image {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Parameter {
+private extension AnywayElement.Parameter {
     
     func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
         
@@ -143,7 +143,7 @@ private extension AnywayPayment.AnywayElement.Parameter {
     }
 }
 
-private extension Array where Element == AnywayPayment.AnywayElement {
+private extension Array where Element == AnywayElement {
     
     mutating func adjustWidget(
         _ widget: Element.Widget,
@@ -220,7 +220,7 @@ private extension Array where Element == AnywayPayment.AnywayElement {
     ) {
         let parameters = updateParameters.map {
             
-            AnywayPayment.AnywayElement.Parameter(
+            AnywayElement.Parameter(
                 parameter: $0,
                 fallbackValue: outline.fields[.init($0.field.id)]
             )
@@ -231,7 +231,7 @@ private extension Array where Element == AnywayPayment.AnywayElement {
 
 // MARK: - Adapters
 
-private extension AnywayPayment.AnywayElement.Field {
+private extension AnywayElement.Field {
     
     init(_ field: AnywayPaymentUpdate.Field) {
         
@@ -244,7 +244,7 @@ private extension AnywayPayment.AnywayElement.Field {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Parameter {
+private extension AnywayElement.Parameter {
     
     init(
         parameter: AnywayPaymentUpdate.Parameter,
@@ -260,7 +260,7 @@ private extension AnywayPayment.AnywayElement.Parameter {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Image {
+private extension AnywayElement.Image {
     
     init?(_ parameter: AnywayPaymentUpdate.Parameter) {
         
@@ -280,7 +280,7 @@ private extension AnywayPayment.AnywayElement.Image {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Parameter.Field {
+private extension AnywayElement.Parameter.Field {
     
     init(
         _ field: AnywayPaymentUpdate.Parameter.Field,
@@ -293,7 +293,7 @@ private extension AnywayPayment.AnywayElement.Parameter.Field {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Parameter.Masking {
+private extension AnywayElement.Parameter.Masking {
     
     init(_ masking: AnywayPaymentUpdate.Parameter.Masking) {
         
@@ -301,7 +301,7 @@ private extension AnywayPayment.AnywayElement.Parameter.Masking {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Parameter.Validation {
+private extension AnywayElement.Parameter.Validation {
     
     init(_ validation: AnywayPaymentUpdate.Parameter.Validation) {
         
@@ -314,7 +314,7 @@ private extension AnywayPayment.AnywayElement.Parameter.Validation {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Parameter.UIAttributes {
+private extension AnywayElement.Parameter.UIAttributes {
     
     init(_ uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes) {
         
@@ -333,7 +333,7 @@ private extension AnywayPayment.AnywayElement.Parameter.UIAttributes {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Parameter.UIAttributes.DataType {
+private extension AnywayElement.Parameter.UIAttributes.DataType {
     
     init(_ dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType) {
         
@@ -355,13 +355,13 @@ private extension AnywayPayment.AnywayElement.Parameter.UIAttributes.DataType {
 
 private extension AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair {
     
-    var pair: AnywayPayment.AnywayElement.Parameter.UIAttributes.DataType.Pair {
+    var pair: AnywayElement.Parameter.UIAttributes.DataType.Pair {
         
         .init(key: key, value: value)
     }
 }
 
-private extension AnywayPayment.AnywayElement.Parameter.UIAttributes.FieldType {
+private extension AnywayElement.Parameter.UIAttributes.FieldType {
     
     init(_ fieldType: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType) {
         
@@ -374,7 +374,7 @@ private extension AnywayPayment.AnywayElement.Parameter.UIAttributes.FieldType {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Parameter.UIAttributes.ViewType {
+private extension AnywayElement.Parameter.UIAttributes.ViewType {
     
     init(_ viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType) {
         

@@ -54,7 +54,7 @@ private extension AnywayPayment {
     }
 }
 
-private extension AnywayPayment.AnywayElement {
+private extension AnywayElement {
     
     var parameter: Parameter? {
         
@@ -71,7 +71,7 @@ private extension AnywayPayment.AnywayElement {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Widget.PaymentCore {
+private extension AnywayElement.Widget.PaymentCore {
     
     var _productID: AnywayPaymentDigest.PaymentCore.ProductID {
         

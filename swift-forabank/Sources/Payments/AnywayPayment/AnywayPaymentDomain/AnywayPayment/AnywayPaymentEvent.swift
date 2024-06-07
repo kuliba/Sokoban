@@ -15,7 +15,7 @@ public enum AnywayPaymentEvent: Equatable {
 
 public extension AnywayPaymentEvent {
     
-    typealias ParameterID = AnywayPayment.AnywayElement.Parameter.Field.ID
+    typealias ParameterID = AnywayElement.Parameter.Field.ID
     
     enum Widget: Equatable {
         
@@ -27,6 +27,6 @@ public extension AnywayPaymentEvent {
 
 public extension AnywayPaymentEvent.Widget {
     
-    typealias Currency = AnywayPayment.AnywayElement.Widget.PaymentCore.Currency
-    typealias ProductID = AnywayPayment.AnywayElement.Widget.PaymentCore.ProductID
+    typealias Currency = AnywayElement.Widget.PaymentCore.Currency
+    typealias ProductID = AnywayElement.Widget.PaymentCore.ProductID
 }

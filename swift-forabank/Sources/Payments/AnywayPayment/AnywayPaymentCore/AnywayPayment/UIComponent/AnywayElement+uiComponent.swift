@@ -1,5 +1,5 @@
 //
-//  AnywayPayment.AnywayElement+uiComponent.swift
+//  AnywayElement+uiComponent.swift
 //
 //
 //  Created by Igor Malyarov on 06.04.2024.
@@ -9,7 +9,7 @@ import AnywayPaymentDomain
 import Tagged
 
 #warning("move to AnywayPaymentUI?")
-extension AnywayPayment.AnywayElement {
+extension AnywayElement {
     
     public var uiComponent: UIComponent {
         
@@ -33,7 +33,7 @@ extension AnywayPayment.AnywayElement {
     }
 }
 
-extension AnywayPayment.AnywayElement.UIComponent {
+extension AnywayElement.UIComponent {
     
     public struct Field: Equatable {
         
@@ -88,7 +88,7 @@ extension AnywayPayment.AnywayElement.UIComponent {
     }
 }
 
-extension AnywayPayment.AnywayElement.UIComponent {
+extension AnywayElement.UIComponent {
     
     public enum Image: Equatable {
         
@@ -98,7 +98,7 @@ extension AnywayPayment.AnywayElement.UIComponent {
     }
 }
 
-extension AnywayPayment.AnywayElement.UIComponent.Parameter {
+extension AnywayElement.UIComponent.Parameter {
     
     public typealias ID = Tagged<_ID, String>
     public enum _ID {}
@@ -117,7 +117,7 @@ extension AnywayPayment.AnywayElement.UIComponent.Parameter {
     public enum _Value {}
 }
 
-extension AnywayPayment.AnywayElement.UIComponent.Parameter.ParameterType {
+extension AnywayElement.UIComponent.Parameter.ParameterType {
     
     public struct Option: Equatable {
         
@@ -134,7 +134,7 @@ extension AnywayPayment.AnywayElement.UIComponent.Parameter.ParameterType {
     }
 }
 
-extension AnywayPayment.AnywayElement.UIComponent.Parameter.ParameterType.Option {
+extension AnywayElement.UIComponent.Parameter.ParameterType.Option {
     
     public typealias Key = Tagged<_Key, String>
     public enum _Key {}
@@ -143,10 +143,10 @@ extension AnywayPayment.AnywayElement.UIComponent.Parameter.ParameterType.Option
     public enum _Value {}
 }
 
-extension AnywayPayment.AnywayElement.Parameter {
+extension AnywayElement.Parameter {
     
 #warning("used in preview - fix, make private")
-    public var uiComponent: AnywayPayment.AnywayElement.UIComponent.Parameter {
+    public var uiComponent: AnywayElement.UIComponent.Parameter {
         
         .init(
             id: .init(field.id.rawValue),
@@ -159,16 +159,16 @@ extension AnywayPayment.AnywayElement.Parameter {
     }
 }
 
-extension AnywayPayment.AnywayElement.UIComponent.Widget {
+extension AnywayElement.UIComponent.Widget {
     
-    public typealias ProductID = AnywayPayment.AnywayElement.Widget.PaymentCore.ProductID
+    public typealias ProductID = AnywayElement.Widget.PaymentCore.ProductID
 }
 
 // MARK: - Adapters
 
-private extension AnywayPayment.AnywayElement.Parameter.UIAttributes {
+private extension AnywayElement.Parameter.UIAttributes {
     
-    var parameterType: AnywayPayment.AnywayElement.UIComponent.Parameter.ParameterType {
+    var parameterType: AnywayElement.UIComponent.Parameter.ParameterType {
         
         switch (type, viewType, dataType) {
         case (_, .constant, _):
@@ -192,17 +192,17 @@ private extension AnywayPayment.AnywayElement.Parameter.UIAttributes {
     }
 }
 
-private extension AnywayPayment.AnywayElement.Parameter.UIAttributes.DataType.Pair {
+private extension AnywayElement.Parameter.UIAttributes.DataType.Pair {
     
-    var option: AnywayPayment.AnywayElement.UIComponent.Parameter.ParameterType.Option {
+    var option: AnywayElement.UIComponent.Parameter.ParameterType.Option {
         
         .init(key: .init(key), value: .init(value))
     }
 }
 
-private extension AnywayPayment.AnywayElement.Widget {
+private extension AnywayElement.Widget {
     
-    var uiComponent: AnywayPayment.AnywayElement.UIComponent {
+    var uiComponent: AnywayElement.UIComponent {
         
         switch self {
         case let .core(core):
@@ -214,9 +214,9 @@ private extension AnywayPayment.AnywayElement.Widget {
     }
 }
 
-private extension AnywayPayment.AnywayElement.UIComponent.Field {
+private extension AnywayElement.UIComponent.Field {
     
-    init(_ field: AnywayPayment.AnywayElement.Field) {
+    init(_ field: AnywayElement.Field) {
         
         self.init(
             name: field.id.rawValue,
@@ -227,9 +227,9 @@ private extension AnywayPayment.AnywayElement.UIComponent.Field {
     }
 }
 
-private extension AnywayPayment.AnywayElement.UIComponent.Image {
+private extension AnywayElement.UIComponent.Image {
     
-    init(_ image: AnywayPayment.AnywayElement.Image) {
+    init(_ image: AnywayElement.Image) {
         
         switch image {
             

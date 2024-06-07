@@ -41,7 +41,7 @@ final class AnywayPaymentStagedTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Parameter = AnywayPayment.AnywayElement.Parameter
+    private typealias Parameter = AnywayElement.Parameter
     
     private func makeTwoParameters(
     ) -> (parameter1: Parameter, parameter2: Parameter) {

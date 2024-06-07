@@ -1,5 +1,5 @@
 //
-//  AnywayPayment.AnywayElement.Parameter+preview.swift
+//  AnywayElement.Parameter+preview.swift
 //  AnywayPaymentPreview
 //
 //  Created by Igor Malyarov on 15.04.2024.
@@ -7,7 +7,7 @@
 
 import AnywayPaymentDomain
 
-extension AnywayPayment.AnywayElement.Parameter {
+extension AnywayElement.Parameter {
     
     static let emptyTextInput: Self = .init(
         field: .init(id: "emptyTextInput", value: nil),
@@ -29,19 +29,19 @@ extension AnywayPayment.AnywayElement.Parameter {
     )
 }
 
-private extension AnywayPayment.AnywayElement.Parameter.Masking {
+private extension AnywayElement.Parameter.Masking {
     
     static let preview: Self = .empty
     static let empty: Self = .init(inputMask: nil, mask: nil)
 }
 
-private extension AnywayPayment.AnywayElement.Parameter.Validation {
+private extension AnywayElement.Parameter.Validation {
     
     static let preview: Self = .required
     static let required: Self = .init(isRequired: true, maxLength: nil, minLength: nil, regExp: "")
 }
 
-private extension AnywayPayment.AnywayElement.Parameter.UIAttributes {
+private extension AnywayElement.Parameter.UIAttributes {
     
     static let select: Self = preview(
         dataType: .pairs(
@@ -60,9 +60,9 @@ private extension AnywayPayment.AnywayElement.Parameter.UIAttributes {
     )
     
     private static func preview(
-        dataType: AnywayPayment.AnywayElement.Parameter.UIAttributes.DataType,
-        type: AnywayPayment.AnywayElement.Parameter.UIAttributes.FieldType,
-        viewType: AnywayPayment.AnywayElement.Parameter.UIAttributes.ViewType
+        dataType: AnywayElement.Parameter.UIAttributes.DataType,
+        type: AnywayElement.Parameter.UIAttributes.FieldType,
+        viewType: AnywayElement.Parameter.UIAttributes.ViewType
     ) -> Self {
         
         .init(

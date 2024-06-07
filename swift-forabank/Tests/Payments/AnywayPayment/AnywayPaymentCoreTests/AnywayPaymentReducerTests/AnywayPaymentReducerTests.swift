@@ -295,7 +295,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
     
     private func assertMissingID(
         _ state: State,
-        _ missingID: AnywayPayment.AnywayElement.Parameter.Field.ID,
+        _ missingID: AnywayElement.Parameter.Field.ID,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -306,7 +306,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
     
     private func assertMissingID(
         _ state: State,
-        _ missingID: AnywayPayment.AnywayElement.Widget.ID,
+        _ missingID: AnywayElement.Widget.ID,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -317,16 +317,16 @@ final class AnywayPaymentReducerTests: XCTestCase {
     
     private func makeParameterID(
         id: String = UUID().uuidString
-    ) -> AnywayPayment.AnywayElement.Parameter.Field.ID {
+    ) -> AnywayElement.Parameter.Field.ID {
         
         .init(id)
     }
     
     private func makeCore(
         amount: Decimal = anyAmount(),
-        currency: AnywayPayment.AnywayElement.Widget.PaymentCore.Currency = "RUB",
-        productID: AnywayPayment.AnywayElement.Widget.PaymentCore.ProductID = .accountID(.init(generateRandom11DigitNumber()))
-    ) -> AnywayPayment.AnywayElement.Widget.PaymentCore {
+        currency: AnywayElement.Widget.PaymentCore.Currency = "RUB",
+        productID: AnywayElement.Widget.PaymentCore.ProductID = .accountID(.init(generateRandom11DigitNumber()))
+    ) -> AnywayElement.Widget.PaymentCore {
         
         .init(amount: amount, currency: currency, productID: productID)
     }
@@ -347,7 +347,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
     
     private func anyOTP(
         value: Int? = generateRandom11DigitNumber()
-    ) -> AnywayPayment.AnywayElement.Widget {
+    ) -> AnywayElement.Widget {
         
         return .otp(value)
     }
@@ -375,7 +375,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
     }
     
     private func makeState(
-        elements: [AnywayPayment.AnywayElement],
+        elements: [AnywayElement],
         infoMessage: String? = nil,
         isFinalStep: Bool = false,
         isFraudSuspected: Bool = false,
@@ -399,9 +399,9 @@ private func anyAmount(
     return amount
 }
 
-private extension Array where Element == AnywayPayment.AnywayElement {
+private extension Array where Element == AnywayElement {
     
-    var parameters: [AnywayPayment.AnywayElement.Parameter] {
+    var parameters: [AnywayElement.Parameter] {
         
         compactMap {
             
@@ -411,7 +411,7 @@ private extension Array where Element == AnywayPayment.AnywayElement {
         }
     }
     
-    var widgets: [AnywayPayment.AnywayElement.Widget] {
+    var widgets: [AnywayElement.Widget] {
         
         compactMap {
             
