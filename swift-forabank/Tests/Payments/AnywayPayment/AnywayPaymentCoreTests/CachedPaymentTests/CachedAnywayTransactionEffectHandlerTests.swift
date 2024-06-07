@@ -6,48 +6,7 @@
 //
 
 import AnywayPaymentCore
-import AnywayPaymentDomain
 import Combine
-
-final class CachedAnywayTransactionEffectHandler<State, TransactionEvent> {
-    
-    private let statePublisher: AnyPublisher<State, Never>
-    private let eventHandler: (TransactionEvent) -> Void
-    
-    private var cancellable: AnyCancellable?
-    
-    init(
-        statePublisher: AnyPublisher<State, Never>,
-        event: @escaping (TransactionEvent) -> Void
-    ) {
-        self.statePublisher = statePublisher
-        self.eventHandler = event
-    }
-}
-
-extension CachedAnywayTransactionEffectHandler {
-    
-    func handleEffect(
-        _ effect: Effect,
-        _ dispatch: @escaping Dispatch
-    ) {
-        switch effect {
-        case let .event(transactionEvent):
-            self.eventHandler(transactionEvent)
-            self.cancellable = statePublisher
-                .sink { dispatch(.stateUpdate($0)) }
-        }
-    }
-}
-
-extension CachedAnywayTransactionEffectHandler {
-    
-    typealias Dispatch = (Event) -> Void
-    
-    typealias Event = CachedAnywayTransactionEvent<State, TransactionEvent>
-    typealias Effect = CachedAnywayTransactionEffect<TransactionEvent>
-}
-
 import XCTest
 
 final class CachedAnywayTransactionEffectHandlerTests: XCTestCase {
