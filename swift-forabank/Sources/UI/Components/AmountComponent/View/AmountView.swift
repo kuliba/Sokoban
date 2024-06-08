@@ -10,12 +10,14 @@ import SharedConfigs
 import TextFieldComponent
 import SwiftUI
 
-public struct AmountView: View {
+public struct AmountView<InfoView>: View
+where InfoView: View {
     
     @StateObject private var textFieldModel: DecimalTextFieldViewModel
     
     let amount: Amount
     let event: (AmountEvent) -> Void
+    let infoView: () -> InfoView
     
     let config: AmountConfig
     
@@ -25,7 +27,8 @@ public struct AmountView: View {
         amount: Amount,
         event: @escaping (AmountEvent) -> Void,
         currencySymbol: String,
-        config: AmountConfig
+        config: AmountConfig,
+        infoView: @escaping () -> InfoView
     ) {
         let formatter = DecimalFormatter(
             currencySymbol: currencySymbol
@@ -39,6 +42,7 @@ public struct AmountView: View {
         self.amount = amount
         self.event = event
         self.config = config
+        self.infoView = infoView
     }
     
     private let buttonSize = CGSize(width: 114, height: 40)
@@ -63,6 +67,7 @@ public struct AmountView: View {
             textField()
             Divider().background(config.dividerColor)
                 .padding(.top, 4)
+            infoView()
         }
     }
     
@@ -125,6 +130,19 @@ struct AmountView_Previews: PreviewProvider {
             
             amountView(amount: .preview)
             amountView(amount: .disabled)
+            
+            AmountView(
+                amount: .preview,
+                event: { print($0) },
+                currencySymbol: "₽",
+                config: .preview,
+                infoView: {
+                    
+                    Text("Info View here")
+                        .font(.caption)
+                        .foregroundColor(.pink)
+                }
+            )
         }
     }
     

@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import SwiftUI
 
-public extension AmountView {
+public extension AmountView where InfoView == EmptyView {
     
     @available(*, deprecated, message: "use `init with `AmountEvent``")
     init(
@@ -29,7 +30,8 @@ public extension AmountView {
                 }
             },
             currencySymbol: currencySymbol,
-            config: config
+            config: config,
+            infoView: { .init() }
         )
     }
 }
