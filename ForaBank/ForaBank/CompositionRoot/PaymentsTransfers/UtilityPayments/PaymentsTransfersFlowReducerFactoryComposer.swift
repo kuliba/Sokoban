@@ -116,7 +116,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         let reducer = Reducer(update: updater.update(_:with:))
         
         let effectHandler = CachedAnywayTransactionEffectHandler(
-            statePublisher: transactionViewModel.$state.eraseToAnyPublisher(),
+            statePublisher: transactionViewModel.$state.removeDuplicates().eraseToAnyPublisher(),
             event: transactionViewModel.event(_:)
         )
         
