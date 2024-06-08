@@ -21,8 +21,8 @@ private extension AnywayPaymentDigest {
     
     var _dto: _DTO {
         
-        .init(
-            amount: core?.amount,
+        return .init(
+            amount: amount,
             currencyAmount: core?.currency,
             payer: core.map(\._payer),
             puref: puref,

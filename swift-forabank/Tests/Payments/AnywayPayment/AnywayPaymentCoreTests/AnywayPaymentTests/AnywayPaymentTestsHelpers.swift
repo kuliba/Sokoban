@@ -24,11 +24,29 @@ func assertOTPisLast(
     )
 }
 
-func hasAmountWidget(
+func hasAmountFooter(
     _ payment: AnywayPayment
 ) -> Bool {
     
-    payment.elements.compactMap(\.widget).map(\.id).contains(.core)
+    guard case .amount = payment.footer else { return false }
+    
+    return true
+}
+
+func hasContinueFooter(
+    _ payment: AnywayPayment
+) -> Bool {
+    
+    guard case .continue = payment.footer else { return false }
+    
+    return true
+}
+
+func hasProductWidget(
+    _ payment: AnywayPayment
+) -> Bool {
+    
+    payment.elements.compactMap(\.widget).map(\.id).contains(.product)
 }
 
 func hasOTPField(
@@ -87,13 +105,13 @@ func makeAnywayPayment(
     fields: [AnywayElement.Field],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    core: AnywayElement.Widget.PaymentCore? = nil,
+    core: AnywayElement.Widget.Product? = nil,
     puref: AnywayPayment.Puref? = nil
 ) -> AnywayPayment {
     
     var elements = fields.map(AnywayElement.field)
     if let core {
-        elements.append(.widget(.core(core)))
+        elements.append(.widget(.product(core)))
     }
     
     return makeAnywayPayment(
@@ -108,13 +126,13 @@ func makeAnywayPayment(
     parameters: [AnywayElement.Parameter] = [],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    core: AnywayElement.Widget.PaymentCore? = nil,
+    product: AnywayElement.Widget.Product? = nil,
     puref: AnywayPayment.Puref? = nil
 ) -> AnywayPayment {
     
     var elements = parameters.map(AnywayElement.parameter)
-    if let core {
-        elements.append(.widget(.core(core)))
+    if let product {
+        elements.append(.widget(.product(product)))
     }
     
     return makeAnywayPayment(
@@ -127,6 +145,7 @@ func makeAnywayPayment(
 
 func makeAnywayPayment(
     elements: [AnywayElement],
+    footer: AnywayPayment.Footer = .continue,
     infoMessage: String? = nil,
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
@@ -135,6 +154,7 @@ func makeAnywayPayment(
     
     return .init(
         elements: elements,
+        footer: footer,
         infoMessage: infoMessage,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected,
@@ -154,22 +174,35 @@ func makeAnywayPaymentOutline(
 }
 
 func makeAnywayPaymentWithAmount(
-    _ amount: Decimal = 99_999.99,
-    _ currency: String = anyMessage(),
-    _ productID: AnywayElement.Widget.PaymentCore.ProductID = generateRandom11DigitNumber(),
-    _ productType: AnywayElement.Widget.PaymentCore.ProductType = .account,
+    elements: [AnywayElement] = [],
+    _ amount: Decimal = .init(Double.random(in: 1...1_000)),
     file: StaticString = #file,
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(core: .init(
-        amount: amount,
+    let payment = makeAnywayPayment(
+        elements: elements,
+        footer: .amount(amount)
+    )
+    XCTAssert(hasAmountFooter(payment), "Expected amount field.", file: file, line: line)
+    return payment
+}
+
+func makeAnywayPaymentWithProduct(
+    _ currency: String = anyMessage(),
+    _ productID: AnywayElement.Widget.Product.ProductID = generateRandom11DigitNumber(),
+    _ productType: AnywayElement.Widget.Product.ProductType = .account,
+    file: StaticString = #file,
+    line: UInt = #line
+) -> AnywayPayment {
+    
+    let payment = makeAnywayPayment(product: .init(
         currency: currency,
         productID: productID,
         productType: productType
     ))
     XCTAssertFalse(currency.isEmpty, "Expected non-empty currency.", file: file, line: line)
-    XCTAssert(hasAmountWidget(payment), "Expected amount field.", file: file, line: line)
+    XCTAssert(hasProductWidget(payment), "Expected amount field.", file: file, line: line)
     return payment
 }
 
@@ -179,7 +212,7 @@ func makeAnywayPaymentWithoutAmount(
 ) -> AnywayPayment {
     
     let payment = makeAnywayPayment()
-    XCTAssertFalse(hasAmountWidget(payment), "Expected no amount field.", file: file, line: line)
+    XCTAssertFalse(hasAmountFooter(payment), "Expected no amount field.", file: file, line: line)
     return payment
 }
 
@@ -939,16 +972,14 @@ func makeOutlinePaymentCore(
     )
 }
 
-func makeWidgetPaymentCore(
-    amount: Decimal = makeAmount(),
+func makeProductWidget(
     currency: String = anyMessage(),
     productID: Int = makeIntID(),
-    productType: AnywayElement.Widget.PaymentCore.ProductType
-) -> AnywayElement.Widget.PaymentCore {
+    productType: AnywayElement.Widget.Product.ProductType = .account
+) -> AnywayElement.Widget.Product {
     
     return .init(
-        amount: amount,
-        currency: .init(currency),
+        currency: currency,
         productID: productID,
         productType: productType
     )
@@ -1005,6 +1036,7 @@ extension AnywayPayment {
         
         return .init(
             elements: elements,
+            footer: footer,
             infoMessage: infoMessage,
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,

@@ -273,7 +273,7 @@ private extension NanoServices.CreateAnywayTransferPayload {
                     fieldValue: $0.fieldValue
                 )
             },
-            amount: digest.core?.amount,
+            amount: digest.amount,
             check: true,
             comment: nil,
             currencyAmount: digest.core?.currency,
@@ -359,7 +359,7 @@ private extension AnywayPaymentDigest {
             return .success(.init(.step4Fraud))
         }
         
-        if core?.amount != nil {
+        if amount != nil {
             return .success(.init(.step3))
         }
         

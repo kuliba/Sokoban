@@ -100,30 +100,22 @@ private extension AnywayPaymentFactoryComposer {
     typealias Option = UIComponent.Parameter.ParameterType.Option
 
     typealias Observe = (ProductID, Currency) -> Void
-    typealias ProductID = AnywayElement.Widget.PaymentCore.ProductID
+    typealias ProductID = AnywayElement.Widget.Product.ProductID
     typealias Currency = AnywayPaymentEvent.Widget.Currency
 }
-
 
 private extension CachedTransactionState {
     
     var footer: AnywayPaymentFooter {
         
-        #warning("FIXME: buttonTitle")
+        #warning("FIXME: hardcoded buttonTitle")
         return .init(buttonTitle: "Continue", core: core, isEnabled: isValid)
     }
     
     var core: AnywayPaymentFooter.Core? {
         
-        context.payment.models.core
-    }
-}
-
-private extension Array where Element == CachedAnywayPayment<AnywayElementModel>.IdentifiedModel {
-    
-    var core: AnywayPaymentFooter.Core? {
-        
-        guard case let .widget(.core(core, amount, currency)) = self[id: .widgetID(.core)]?.model
+        guard case let .amount(amount, currency) = context.payment.footer,
+              let currency
         else { return nil }
         
         return .init(value: amount, currency: currency)

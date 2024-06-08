@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentDomain
+import Foundation
 
 public extension AnywayPayment {
     
@@ -13,6 +14,7 @@ public extension AnywayPayment {
         
         return .init(
             additional: additional(),
+            amount: amount(),
             core: core(),
             puref: .init(puref.rawValue)
         )
@@ -32,14 +34,21 @@ private extension AnywayPayment {
         }
     }
     
+    func amount() -> Decimal? {
+        
+#warning("add tests")
+        guard case let .amount(amount) = footer else { return nil }
+        
+        return amount
+    }
+    
     func core() -> AnywayPaymentDigest.PaymentCore? {
         
-        guard case let .widget(.core(core)) = elements.first(where: { $0.widget?.id == .core })
+        guard case let .widget(.product(core)) = elements.first(where: { $0.widget?.id == .product })
         else { return nil}
         
         return .init(
-            amount: core.amount,
-            currency: .init(core.currency),
+            currency: core.currency,
             productID: core.productID,
             productType: core._productType
         )
@@ -68,7 +77,7 @@ private extension AnywayElement {
     }
 }
 
-private extension AnywayElement.Widget.PaymentCore {
+private extension AnywayElement.Widget.Product {
     
     var _productType: AnywayPaymentDigest.PaymentCore.ProductType {
         

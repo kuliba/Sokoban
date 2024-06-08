@@ -84,9 +84,9 @@ extension AnywayElement.UIComponent {
         
         case otp(Int?)
         case productPicker(ProductID, ProductType)
-  
-        public typealias ProductID = AnywayElement.Widget.PaymentCore.ProductID
-        public typealias ProductType = AnywayElement.Widget.PaymentCore.ProductType
+        
+        public typealias ProductID = AnywayElement.Widget.Product.ProductID
+        public typealias ProductType = AnywayElement.Widget.Product.ProductType
     }
 }
 
@@ -197,7 +197,7 @@ private extension AnywayElement.Widget {
     var uiComponent: AnywayElement.UIComponent {
         
         switch self {
-        case let .core(core):
+        case let .product(core):
             return .widget(.productPicker(core.productID, core.productType))
             
         case let .otp(otp):
@@ -227,10 +227,10 @@ private extension AnywayElement.UIComponent.Image {
             
         case let .md5Hash(md5Hash):
             self = .md5Hash(md5Hash)
-        
+            
         case let .svg(svg):
             self = .svg(svg)
-        
+            
         case let .withFallback(md5Hash: md5Hash, svg: svg):
             self = .withFallback(md5Hash: md5Hash, svg: svg)
         }

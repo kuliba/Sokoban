@@ -32,7 +32,7 @@ extension AnywayElementModel {
     
     enum Widget {
         
-        case core(ObservingProductSelectViewModel, Decimal, String)
+        case product(ObservingProductSelectViewModel)
         case otp(OTPViewModel)
     }
 }
