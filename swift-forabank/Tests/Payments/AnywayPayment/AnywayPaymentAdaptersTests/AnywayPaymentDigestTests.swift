@@ -106,7 +106,8 @@ final class AnywayPaymentDigestTests: XCTestCase {
             core: .init(
                 amount: 1_234.56,
                 currency: "RUB",
-                productID: .card(.init(cardIDRawValue))
+                productID: cardIDRawValue,
+                productType: .card
             ),
             purefRawValue: purefRawValue
         )
@@ -134,7 +135,8 @@ final class AnywayPaymentDigestTests: XCTestCase {
             core: .init(
                 amount: 1_234.56,
                 currency: "RUB",
-                productID: .account(.init(accountIDRawValue))
+                productID: accountIDRawValue,
+                productType: .account
             ),
             purefRawValue: purefRawValue
         )

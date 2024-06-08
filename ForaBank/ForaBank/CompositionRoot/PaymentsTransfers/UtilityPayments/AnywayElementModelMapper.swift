@@ -100,7 +100,7 @@ private extension AnywayElementModelMapper {
             handleEffect: { _,_ in },
             observe: { [weak self] in
                 
-                self?.event(.setValue($0.dynamic.value, for: parameter.id.parameterID))
+                self?.event(.setValue($0.dynamic.value, for: parameter.id))
             }
         )
     }
@@ -118,7 +118,7 @@ private extension AnywayElementModelMapper {
             handleEffect: { _,_ in },
             observe: { [weak self] in
                 
-                self?.event(.setValue($0.selected.key.rawValue, for: parameter.id.parameterID))
+                self?.event(.setValue($0.selected.key, for: parameter.id))
             }
         )
     }
@@ -134,7 +134,7 @@ private extension AnywayElementModelMapper {
         
         switch widget {
         case let .core(core):
-            return .widget(.core(makeProductSelectViewModel(with: core), core.amount, core.currency.rawValue))
+            return .widget(.core(makeProductSelectViewModel(with: core), core.amount, core.currency))
             
         case let .otp(otp):
             return .widget(.otp(makeModelForOTP(with: otp)))
@@ -147,7 +147,7 @@ private extension AnywayElementModelMapper {
     ) -> ObservingProductSelectViewModel {
         
         let products = getProducts()
-        let selected = products.first { $0.isMatching(core.productID) }
+        let selected = products.first { $0.isMatching(core) }
         let initialState = ProductSelect(selected: selected)
         
         let reducer = ProductSelectReducer(getProducts: getProducts)
@@ -160,11 +160,12 @@ private extension AnywayElementModelMapper {
                 
                 guard let self else { return }
                 
-                guard let productID = $0.selected?.coreProductID,
-                      let currency = $0.selected.map({ self.currencyOfProduct($0) })
+                guard let productID = $0.selected?.id.rawValue,
+                      let currency = $0.selected.map({ self.currencyOfProduct($0) }),
+                      let productType = $0._productType
                 else { return }
                 
-                event(.widget(.product(productID, .init(currency))))
+                event(.widget(.product(productID, productType, currency)))
             }
         )
     }
@@ -202,7 +203,7 @@ private extension InputState where Icon == String {
         
         self.init(
             dynamic: .init(
-                value: parameter.value?.rawValue ?? "",
+                value: parameter.value ?? "",
                 warning: nil
             ),
             settings: .init(
@@ -234,43 +235,36 @@ private extension AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.Parame
     
     func contains(_ string: String) -> Bool {
         
-        key.rawValue.contains(string) || value.rawValue.contains(string)
+        key.contains(string) || value.contains(string)
     }
 }
 
 // MARK: - Helpers
 
-private extension AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ID {
+private extension ProductSelect {
     
-    var parameterID: AnywayPaymentEvent.ParameterID {
+    var _productType: AnywayPaymentEvent.Widget.ProductType? {
         
-        return .init(rawValue)
+        switch selected?.productType {
+        case .card:    return .card
+        case .account: return .account
+        default:       return nil
+        }
     }
 }
 
 private extension ProductSelect.Product {
     
     func isMatching(
-        _ productID: AnywayPaymentDomain.AnywayElement.Widget.PaymentCore.ProductID
+        _ core: AnywayPaymentDomain.AnywayElement.Widget.PaymentCore
     ) -> Bool {
         
-        switch productID {
-        case let .accountID(accountID):
-            return type == .account && id.rawValue == accountID.rawValue
-            
-        case let .cardID(cardID):
-            return type == .card && id.rawValue == cardID.rawValue
-        }
-    }
-    
-    var coreProductID: AnywayPaymentDomain.AnywayElement.Widget.PaymentCore.ProductID {
-        
-        switch type {
+        switch core.productType {
         case .account:
-            return .accountID(.init(id.rawValue))
+            return type == .account && id.rawValue == core.productID
             
         case .card:
-            return .cardID(.init(id.rawValue))
+            return type == .card && id.rawValue == core.productID
         }
     }
 }

@@ -74,7 +74,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         XCTAssertNoDiff(widgetCore, .init(
             amount: amount,
             currency: .init(currency),
-            productID: .accountID(.init(id))
+            productID: id,
+            productType: .account
         ))
     }
     
@@ -91,7 +92,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         XCTAssertNoDiff(widgetCore, .init(
             amount: amount,
             currency: .init(currency),
-            productID: .cardID(.init(id))
+            productID: id,
+            productType: .card
         ))
     }
     

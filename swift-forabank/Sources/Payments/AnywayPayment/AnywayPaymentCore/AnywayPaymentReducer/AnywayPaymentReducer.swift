@@ -65,8 +65,19 @@ private extension AnywayPaymentReducer {
             let digits = otp.filter(\.isWholeNumber)
             state.update(otp: .init(digits.prefix(6)))
             
-        case let .product(productID, currency):
-            state.update(with: productID, and: currency)
+        case let .product(productID, productType, currency):
+            state.update(with: productID, productType._productType, and: currency)
+        }
+    }
+}
+
+private extension AnywayPaymentEvent.Widget.ProductType {
+    
+    var _productType: AnywayElement.Widget.PaymentCore.ProductType {
+        
+        switch self {
+        case .account: return .account
+        case .card:    return .card
         }
     }
 }
@@ -98,13 +109,14 @@ private extension AnywayPayment {
     
     mutating func update(
         with productID: AnywayElement.Widget.PaymentCore.ProductID,
+        _ productType: AnywayElement.Widget.PaymentCore.ProductType,
         and currency: AnywayElement.Widget.PaymentCore.Currency
     ) {
         guard let index = elements.firstIndex(matching: .core),
               case let .widget(.core(core)) = elements[index]
         else { return }
         
-        elements[index] = .widget(.core(core.updating(with: productID, and: currency)))
+        elements[index] = .widget(.core(core.updating(with: productID, productType, and: currency)))
     }
     
     mutating func update(
@@ -137,15 +149,16 @@ private extension AnywayElement.Widget.PaymentCore {
     func updating(
         amount: Decimal
     ) -> Self {
-        return .init(amount: amount, currency: currency, productID: productID)
+        return .init(amount: amount, currency: currency, productID: productID, productType: productType)
     }
     
     func updating(
         with productID: ProductID,
+        _ productType: ProductType,
         and currency: Currency
     ) -> Self {
         
-        return .init(amount: amount, currency: currency, productID: productID)
+        return .init(amount: amount, currency: currency, productID: productID, productType: productType)
     }
 }
 

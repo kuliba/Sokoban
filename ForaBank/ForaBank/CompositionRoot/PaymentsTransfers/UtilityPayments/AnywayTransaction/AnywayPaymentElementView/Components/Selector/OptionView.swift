@@ -14,7 +14,7 @@ struct OptionView: View {
     
     var body: some View {
         
-        Text(option.value.rawValue)
+        Text(option.value)
     }
 }
 

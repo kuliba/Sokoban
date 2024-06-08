@@ -6,7 +6,6 @@
 //
 
 import AnywayPaymentDomain
-import Tagged
 
 #warning("move to AnywayPaymentUI?")
 extension AnywayElement {
@@ -84,7 +83,10 @@ extension AnywayElement.UIComponent {
     public enum Widget: Equatable {
         
         case otp(Int?)
-        case productPicker(ProductID)
+        case productPicker(ProductID, ProductType)
+  
+        public typealias ProductID = AnywayElement.Widget.PaymentCore.ProductID
+        public typealias ProductType = AnywayElement.Widget.PaymentCore.ProductType
     }
 }
 
@@ -100,8 +102,7 @@ extension AnywayElement.UIComponent {
 
 extension AnywayElement.UIComponent.Parameter {
     
-    public typealias ID = Tagged<_ID, String>
-    public enum _ID {}
+    public typealias ID = String
     
     public enum ParameterType: Equatable {
         
@@ -113,8 +114,7 @@ extension AnywayElement.UIComponent.Parameter {
         case unknown
     }
     
-    public typealias Value = Tagged<_Value, String>
-    public enum _Value {}
+    public typealias Value = String
 }
 
 extension AnywayElement.UIComponent.Parameter.ParameterType {
@@ -136,11 +136,8 @@ extension AnywayElement.UIComponent.Parameter.ParameterType {
 
 extension AnywayElement.UIComponent.Parameter.ParameterType.Option {
     
-    public typealias Key = Tagged<_Key, String>
-    public enum _Key {}
-    
-    public typealias Value = Tagged<_Value, String>
-    public enum _Value {}
+    public typealias Key = String
+    public typealias Value = String
 }
 
 extension AnywayElement.Parameter {
@@ -149,19 +146,14 @@ extension AnywayElement.Parameter {
     public var uiComponent: AnywayElement.UIComponent.Parameter {
         
         .init(
-            id: .init(field.id.rawValue),
+            id: field.id,
             type: uiAttributes.parameterType,
             title: uiAttributes.title,
             subtitle: uiAttributes.subTitle,
-            value: field.value.map { .init($0.rawValue) },
+            value: field.value.map { .init($0) },
             image: image.map { .init($0) }
         )
     }
-}
-
-extension AnywayElement.UIComponent.Widget {
-    
-    public typealias ProductID = AnywayElement.Widget.PaymentCore.ProductID
 }
 
 // MARK: - Adapters
@@ -206,7 +198,7 @@ private extension AnywayElement.Widget {
         
         switch self {
         case let .core(core):
-            return .widget(.productPicker(core.productID))
+            return .widget(.productPicker(core.productID, core.productType))
             
         case let .otp(otp):
             return .widget(.otp(otp))
@@ -219,9 +211,9 @@ private extension AnywayElement.UIComponent.Field {
     init(_ field: AnywayElement.Field) {
         
         self.init(
-            name: field.id.rawValue,
+            name: field.id,
             title: field.title,
-            value: field.value.rawValue,
+            value: field.value,
             image: field.image.map { .init($0) }
         )
     }

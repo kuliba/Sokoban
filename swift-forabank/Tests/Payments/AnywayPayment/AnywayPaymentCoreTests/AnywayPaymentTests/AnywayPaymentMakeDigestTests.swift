@@ -82,24 +82,26 @@ final class AnywayPaymentMakeDigestTests: XCTestCase {
     func test_shouldSetCoreWithAccountIDOnPaymentWithAmount() {
         
         let (amount, currency, id) = makeCore()
-        let payment = makeAnywayPaymentWithAmount(amount, currency, .accountID(.init(id)))
+        let payment = makeAnywayPaymentWithAmount(amount, currency, id, .account)
         
         XCTAssertNoDiff(payment.makeDigest().core, .init(
             amount: amount,
-            currency: .init(currency),
-            productID: .account(.init(id))
+            currency: currency,
+            productID: id,
+            productType: .account
         ))
     }
     
     func test_shouldSetCoreWithCardIDOnPaymentWithAmount() {
         
         let (amount, currency, id) = makeCore()
-        let payment = makeAnywayPaymentWithAmount(amount, currency, .cardID(.init(id)))
+        let payment = makeAnywayPaymentWithAmount(amount, currency, id, .card)
         
         XCTAssertNoDiff(payment.makeDigest().core, .init(
             amount: amount,
             currency: .init(currency),
-            productID: .card(.init(id))
+            productID: id,
+            productType: .card
         ))
     }
     
