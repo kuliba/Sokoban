@@ -15,8 +15,7 @@ public struct AmountView: View {
     @StateObject private var textFieldModel: DecimalTextFieldViewModel
     
     let amount: Amount
-    let event: (Decimal) -> Void
-    let pay: () -> Void
+    let event: (AmountEvent) -> Void
     
     let config: AmountConfig
     
@@ -24,8 +23,7 @@ public struct AmountView: View {
     
     public init(
         amount: Amount,
-        event: @escaping (Decimal) -> Void,
-        pay: @escaping () -> Void,
+        event: @escaping (AmountEvent) -> Void,
         currencySymbol: String,
         config: AmountConfig
     ) {
@@ -40,7 +38,6 @@ public struct AmountView: View {
         self.getDecimal = formatter.getDecimal
         self.amount = amount
         self.event = event
-        self.pay = pay
         self.config = config
     }
     
@@ -81,7 +78,7 @@ public struct AmountView: View {
                 placeholderColor: .clear
             )
         )
-        .onReceive(textFieldModel.$state.map(getDecimal), perform: event)
+        .onReceive(textFieldModel.$state.map(getDecimal)) { event(.edit($0)) }
     }
     
     @ViewBuilder
@@ -92,7 +89,7 @@ public struct AmountView: View {
             Button {
                 
                 textFieldModel.finishEditing()
-                pay()
+                event(.pay)
             } label: {
                 buttonLabel(config: config.button.active)
             }
