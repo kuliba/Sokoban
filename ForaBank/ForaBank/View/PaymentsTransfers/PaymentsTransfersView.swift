@@ -656,7 +656,7 @@ private extension PaymentsTransfersView {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias UtilityPaymentViewModel = ObservingCachedAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
     
     typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content, UtilityPaymentViewModel>
     

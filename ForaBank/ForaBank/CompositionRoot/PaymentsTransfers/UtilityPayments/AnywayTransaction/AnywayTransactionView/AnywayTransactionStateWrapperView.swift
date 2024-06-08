@@ -30,6 +30,6 @@ where TransactionView: View {
 
 extension AnywayTransactionStateWrapperView {
     
-    typealias ViewModel = ObservingCachedAnywayTransactionViewModel
+    typealias ViewModel = CachedAnywayTransactionViewModel
     typealias MakeTransactionView = (CachedTransactionState, @escaping (CachedTransactionEvent) -> Void) -> TransactionView
 }
