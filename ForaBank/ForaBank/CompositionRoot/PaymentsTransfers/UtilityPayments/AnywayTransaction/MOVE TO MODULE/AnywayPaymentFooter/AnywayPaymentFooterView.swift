@@ -71,7 +71,7 @@ private extension AnywayPaymentFooterView {
             config: config
         )
         .padding(.horizontal)
-        .disabled(!state.isEnabled)
+//        .disabled(!state.isEnabled)
     }
 }
 
