@@ -9,5 +9,5 @@ import AnywayPaymentDomain
 
 extension AnywayElement.UIComponent.Field {
     
-    static let preview: Self = .init(name: "a", title: "b", value: "c")
+    static let preview: Self = .init(name: "a", title: "b", value: "c", image: nil)
 }

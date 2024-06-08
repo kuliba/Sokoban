@@ -27,20 +27,20 @@ struct AnywayPaymentElementParameterView: View {
             ExpandablePickerStateWrapperView(
                 viewModel: .decorated(
                     initialState: .init(items: options),
-                    onSelect: { event($0.key.rawValue) }
+                    onSelect: { event($0.key) }
                 ),
-                itemView: { Text($0.value.rawValue) }
+                itemView: { Text($0.value) }
             )
             
         case .numberInput:
             TextFieldMockWrapperView(
-                initial: state.value?.rawValue ?? "",
+                initial: state.value ?? "",
                 onChange: event
             )
             
         case .textInput:
             TextFieldMockWrapperView(
-                initial: state.value?.rawValue ?? "",
+                initial: state.value ?? "",
                 onChange: event
             )
             

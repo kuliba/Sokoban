@@ -92,7 +92,7 @@ private extension Array where Element == AnywayElement {
         guard case let .widget(.core(core)) = self[id: .widgetID(.core)]
         else { return nil }
         
-        return .init(value: core.amount, currency: core.currency.rawValue)
+        return .init(value: core.amount, currency: core.currency)
     }
 }
 

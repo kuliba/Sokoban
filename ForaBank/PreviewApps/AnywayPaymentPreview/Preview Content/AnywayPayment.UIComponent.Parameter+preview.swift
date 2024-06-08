@@ -14,6 +14,7 @@ extension AnywayElement.UIComponent.Parameter {
         type: .numberInput,
         title: "Enter some number",
         subtitle: nil,
-        value: nil
+        value: nil,
+        image: nil
     )
 }
