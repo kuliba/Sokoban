@@ -7,6 +7,7 @@
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import ForaTools
 import Foundation
 
 final class AnywayTransactionViewModelComposer {
@@ -14,19 +15,25 @@ final class AnywayTransactionViewModelComposer {
     private let flag: Flag
     private let httpClient: HTTPClient
     private let log: Log
+    private let decoration: Decoration
     
     init(
         flag: Flag,
         httpClient: HTTPClient,
-        log: @escaping Log
+        log: @escaping Log,
+        decoration: Decoration
     ) {
         self.flag = flag
         self.httpClient = httpClient
         self.log = log
+        self.decoration = decoration
     }
     
     typealias Flag = StubbedFeatureFlag.Option
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
+    
+    typealias Decorator = HandleEffectDecorator<AnywayTransactionEvent, AnywayTransactionEffect>
+    typealias Decoration = Decorator.Decoration
 }
 
 extension AnywayTransactionViewModelComposer {
@@ -55,10 +62,15 @@ private extension AnywayTransactionViewModelComposer {
         let composer = ReducerComposer()
         let reducer = composer.compose()
         
+        let decorator = HandleEffectDecorator(
+            decoratee: effectHandler.handleEffect(_:_:),
+            decoration: decoration
+        )
+        
         return .init(
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:),
+            handleEffect: decorator.callAsFunction(_:_:),
             observe: observe
         )
     }
