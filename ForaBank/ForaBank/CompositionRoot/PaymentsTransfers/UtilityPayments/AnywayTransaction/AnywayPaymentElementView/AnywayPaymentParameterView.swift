@@ -29,12 +29,11 @@ struct AnywayPaymentParameterView: View {
 #warning("replace with specific number input view")
             InputWrapperView(
                 viewModel: viewModel,
-                factory: .init(
-                    makeIconView: {
-                        
-                        factory.makeIconView(viewModel.state.settings.icon)
-                    }
-                )
+                makeIconView: {
+                    
+                    factory.makeIconView(viewModel.state.settings.icon)
+                        .frame(width: 32, height: 32)
+                }
             )
             
         case let .select(selectorViewModel):
@@ -43,14 +42,13 @@ struct AnywayPaymentParameterView: View {
         case let .textInput(viewModel):
             InputWrapperView(
                 viewModel: viewModel,
-                factory: .init(
-                    makeIconView: {
-                        
-                        factory.makeIconView(viewModel.state.settings.icon)
-                    }
-                )
+                makeIconView: {
+                    
+                    factory.makeIconView(viewModel.state.settings.icon)
+                        .frame(width: 32, height: 32)
+                }
             )
-
+            
         case .unknown:
             EmptyView()
         }

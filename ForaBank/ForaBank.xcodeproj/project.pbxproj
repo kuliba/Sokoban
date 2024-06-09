@@ -1032,7 +1032,6 @@
 		2AA3A9462BFF8C6300AEBCC9 /* AnywayPaymentParameterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A9452BFF8C6300AEBCC9 /* AnywayPaymentParameterView.swift */; };
 		2AA3A9482BFF8C7C00AEBCC9 /* AnywayPaymentParameterViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A9472BFF8C7C00AEBCC9 /* AnywayPaymentParameterViewFactory.swift */; };
 		2AA3A9512BFF8D2000AEBCC9 /* InputStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A9502BFF8D2000AEBCC9 /* InputStateWrapperView.swift */; };
-		2AA3A9532BFF8D3C00AEBCC9 /* InputStateWrapperViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A9522BFF8D3C00AEBCC9 /* InputStateWrapperViewFactory.swift */; };
 		2AA3A9552BFF8D5D00AEBCC9 /* ProductSelectStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A9542BFF8D5D00AEBCC9 /* ProductSelectStateWrapperView.swift */; };
 		2AA3A95A2BFF8E0100AEBCC9 /* SelectorWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A9592BFF8E0100AEBCC9 /* SelectorWrapperView.swift */; };
 		2AA3A95C2BFF8E1500AEBCC9 /* OptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A95B2BFF8E1500AEBCC9 /* OptionView.swift */; };
@@ -4045,7 +4044,6 @@
 		2AA3A9452BFF8C6300AEBCC9 /* AnywayPaymentParameterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentParameterView.swift; sourceTree = "<group>"; };
 		2AA3A9472BFF8C7C00AEBCC9 /* AnywayPaymentParameterViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentParameterViewFactory.swift; sourceTree = "<group>"; };
 		2AA3A9502BFF8D2000AEBCC9 /* InputStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputStateWrapperView.swift; sourceTree = "<group>"; };
-		2AA3A9522BFF8D3C00AEBCC9 /* InputStateWrapperViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputStateWrapperViewFactory.swift; sourceTree = "<group>"; };
 		2AA3A9542BFF8D5D00AEBCC9 /* ProductSelectStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectStateWrapperView.swift; sourceTree = "<group>"; };
 		2AA3A9592BFF8E0100AEBCC9 /* SelectorWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorWrapperView.swift; sourceTree = "<group>"; };
 		2AA3A95B2BFF8E1500AEBCC9 /* OptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionView.swift; sourceTree = "<group>"; };
@@ -9320,7 +9318,6 @@
 				2AB87C562C135FF90013EFFE /* ObservingInputViewModel.swift */,
 				2AA3A9502BFF8D2000AEBCC9 /* InputStateWrapperView.swift */,
 				2AB87C582C1360280013EFFE /* InputWrapperView.swift */,
-				2AA3A9522BFF8D3C00AEBCC9 /* InputStateWrapperViewFactory.swift */,
 			);
 			path = Input;
 			sourceTree = "<group>";
@@ -17943,7 +17940,6 @@
 				2AA3A9392BFF8ADF00AEBCC9 /* AnywayPaymentElementConfig.swift in Sources */,
 				0B8C1C58273C599A00BA5CAC /* GKHNavigationController.swift in Sources */,
 				774A8B802865FF3600B81140 /* RefreshingIndicatorViewComponent.swift in Sources */,
-				2AA3A9532BFF8D3C00AEBCC9 /* InputStateWrapperViewFactory.swift in Sources */,
 				509EE0E4285F8599002281BF /* Publishers+Extension.swift in Sources */,
 				77499C432773A96500F6C079 /* Color+Extensions.swift in Sources */,
 				774A8B5D2865FDAF00B81140 /* PaymentsSwitchViewComponent.swift in Sources */,
