@@ -22,6 +22,8 @@ public extension AnywayPaymentValidator {
     
     func isValid(_ payment: Payment) -> Bool {
         
+        guard isValid(payment.footer) else { return false }
+        
         guard !payment.parameters.isEmpty else { return true }
         
         return payment.parameters.allSatisfy(isValidParameter)
@@ -35,6 +37,24 @@ public extension AnywayPaymentValidator {
     typealias Payment = AnywayPayment
     typealias Parameter = AnywayElement.Parameter
 }
+
+private extension AnywayPaymentValidator {
+    
+    func isValid(
+        _ footer: Payment.Footer
+    ) -> Bool {
+        
+        switch footer {
+        case let .amount(amount):
+            return amount > 0
+            
+        case .continue:
+            return true
+        }
+    }
+}
+
+// MARK: - Helpers
 
 private extension AnywayPayment {
     
