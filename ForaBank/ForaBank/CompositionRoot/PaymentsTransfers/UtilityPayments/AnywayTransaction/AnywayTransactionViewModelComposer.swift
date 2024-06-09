@@ -36,17 +36,7 @@ extension AnywayTransactionViewModelComposer {
         observe: @escaping Observe
     ) -> ViewModel {
         
-        let nanoServicesComposer = AnywayTransactionEffectHandlerNanoServicesComposer(
-            flag: flag,
-            httpClient: httpClient,
-            log: log
-        )
-        let microServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer(
-            nanoServices: nanoServicesComposer.compose()
-        )
-        let microServices = microServicesComposer.compose()
-        
-        return makeViewModel(initialState, microServices, observe)
+        return makeViewModel(initialState, observe)
     }
     
     typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
@@ -57,13 +47,12 @@ private extension AnywayTransactionViewModelComposer {
     
     func makeViewModel(
         _ initialState: AnywayTransactionState,
-        _ microServices: MicroServices,
         _ observe: @escaping Observe
     ) -> ViewModel {
         
-        let effectHandler = EffectHandler(microServices: microServices)
+        let effectHandler = EffectHandler(microServices: makeMicroServices())
         
-        let composer = AnywayPaymentTransactionReducerComposer<AnywayTransactionReport>()
+        let composer = ReducerComposer()
         let reducer = composer.compose()
         
         return .init(
@@ -74,7 +63,25 @@ private extension AnywayTransactionViewModelComposer {
         )
     }
     
-    typealias MicroServices = AnywayTransactionEffectHandlerMicroServices
-    
     typealias EffectHandler = TransactionEffectHandler<AnywayTransactionReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
+    typealias ReducerComposer = AnywayPaymentTransactionReducerComposer<AnywayTransactionReport>
+    
+    func makeMicroServices(
+    ) -> MicroServices {
+        
+        let nanoServicesComposer = NanoServicesComposer(
+            flag: flag,
+            httpClient: httpClient,
+            log: log
+        )
+        let microServicesComposer = MicroServicesComposer(
+            nanoServices: nanoServicesComposer.compose()
+        )
+        
+        return microServicesComposer.compose()
+    }
+    
+    typealias MicroServices = AnywayTransactionEffectHandlerMicroServices
+    typealias NanoServicesComposer = AnywayTransactionEffectHandlerNanoServicesComposer
+    typealias MicroServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer
 }
