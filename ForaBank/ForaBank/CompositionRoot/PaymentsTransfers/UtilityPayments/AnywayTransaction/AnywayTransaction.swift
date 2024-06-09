@@ -14,8 +14,6 @@ typealias CachedTransactionState = TransactionOf<OperationDetailID, OperationDet
 typealias CachedTransactionEvent = CachedAnywayTransactionEvent<AnywayTransactionState, AnywayTransactionEvent>
 typealias CachedTransactionEffect = CachedAnywayTransactionEffect<AnywayTransactionEvent>
 
-typealias ObservingAnywayTransactionViewModel = RxViewModel<AnywayTransactionState, AnywayTransactionEvent, TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>>
-
 typealias AnywayTransactionViewModel = RxObservingViewModel<AnywayTransactionState, AnywayTransactionEvent, TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>>
 
 typealias AnywayTransactionState = TransactionOf<OperationDetailID, OperationDetails, DocumentStatus, AnywayPaymentContext>

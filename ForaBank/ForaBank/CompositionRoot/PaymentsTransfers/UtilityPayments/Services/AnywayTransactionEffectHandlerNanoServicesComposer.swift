@@ -66,7 +66,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             
             process(.init(digest: digest)) {
                 
-                dump($0, name: "makeCreateAnywayTransferNew result")
+                // dump($0, name: "makeCreateAnywayTransferNew result")
                 completion($0.result) }
         }
     }
@@ -250,7 +250,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
 private extension NanoServices.CreateAnywayTransferResult {
     
     var result: Result<AnywayPaymentUpdate, AnywayPaymentDomain.ServiceFailure> {
-        dump(self, name: "NanoServices.CreateAnywayTransferResult")
+        // dump(self, name: "NanoServices.CreateAnywayTransferResult")
         return self
             .map(AnywayPaymentUpdate.init)
             .mapError(ServiceFailure.init)
