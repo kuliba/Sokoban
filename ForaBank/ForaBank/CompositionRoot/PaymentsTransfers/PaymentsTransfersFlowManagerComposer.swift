@@ -49,7 +49,9 @@ final class PaymentsTransfersFlowManagerComposer {
 
 extension PaymentsTransfersFlowManagerComposer {
     
-    func compose() -> FlowManager {
+    func compose(
+        _ spinnerActions: RootViewModel.RootActions.Spinner?
+    ) -> FlowManager {
         
         return .init(
             handleEffect: makeHandleEffect(),

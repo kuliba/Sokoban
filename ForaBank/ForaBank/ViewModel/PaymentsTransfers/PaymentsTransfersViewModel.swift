@@ -15,7 +15,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
-    typealias MakeFlowManger = () -> FlowManger
+    typealias MakeFlowManger = (RootViewModel.RootActions.Spinner?) -> FlowManger
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -148,7 +148,7 @@ extension PaymentsTransfersViewModel {
             self?.event(.utilityFlow(.payment(.notified($0))))
         }
         
-        let flowManager = makeFlowManager()
+        let flowManager = makeFlowManager(rootActions?.spinner)
         let reduce = flowManager.makeReduce(closeAction, notify)
         let (route, effect) = reduce(route, event)
         
@@ -669,7 +669,7 @@ private extension PaymentsTransfersViewModel {
     ) {
         rootActions?.spinner.show()
         
-        let flowManager = makeFlowManager()
+        let flowManager = makeFlowManager(rootActions?.spinner)
         flowManager.handleEffect(effect) { [weak self] in
             
             self?.rootActions?.spinner.hide()

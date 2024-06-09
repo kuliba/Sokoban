@@ -221,7 +221,7 @@ final class RootViewModelTests: XCTestCase {
             ),
             paymentsViewModel: .init(
                 model: model,
-                makeFlowManager: { .preview },
+                makeFlowManager: { _ in .preview },
                 userAccountNavigationStateManager: .preview,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(), 

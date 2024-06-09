@@ -53,7 +53,7 @@ extension PaymentsTransfersFactory {
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in }, 
             makeTemplatesListViewModel: { _ in .sampleComplete },
-            makePaymentsTransfersFlowManager: { .preview },
+            makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             unblockCardServices: .preview(),
