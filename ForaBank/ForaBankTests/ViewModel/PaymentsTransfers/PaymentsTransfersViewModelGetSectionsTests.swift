@@ -54,7 +54,7 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
         
         let sut = PaymentsTransfersViewModel(
             model: model,
-            flowManager: .preview,
+            makeFlowManager: { .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             qrViewModelFactory: .preview(),
@@ -82,7 +82,7 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in }, 
             makeTemplatesListViewModel: { _ in .sampleComplete },
-            paymentsTransfersFlowManager: .preview,
+            makePaymentsTransfersFlowManager: { .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             unblockCardServices: .preview(),

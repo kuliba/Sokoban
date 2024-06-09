@@ -15,6 +15,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
+    typealias MakeFlowManger = () -> FlowManger
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -40,7 +41,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
-    private let flowManager: FlowManger
+    private let makeFlowManager: MakeFlowManger
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
@@ -50,7 +51,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     init(
         model: Model,
-        flowManager: FlowManger,
+        makeFlowManager: @escaping MakeFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -69,7 +70,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
-        self.flowManager = flowManager
+        self.makeFlowManager = makeFlowManager
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
         
@@ -86,7 +87,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     init(
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
-        flowManager: FlowManger,
+        makeFlowManager: @escaping MakeFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -100,7 +101,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.route = route
-        self.flowManager = flowManager
+        self.makeFlowManager = makeFlowManager
         self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
@@ -147,6 +148,7 @@ extension PaymentsTransfersViewModel {
             self?.event(.utilityFlow(.payment(.notified($0))))
         }
         
+        let flowManager = makeFlowManager()
         let reduce = flowManager.makeReduce(closeAction, notify)
         let (route, effect) = reduce(route, event)
         
@@ -667,10 +669,12 @@ private extension PaymentsTransfersViewModel {
     ) {
         rootActions?.spinner.show()
         
+        let flowManager = makeFlowManager()
         flowManager.handleEffect(effect) { [weak self] in
             
             self?.rootActions?.spinner.hide()
             self?.event($0)
+            _ = flowManager
         }
     }
     
