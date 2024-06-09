@@ -7573,14 +7573,6 @@
 			path = AnywayPayment;
 			sourceTree = "<group>";
 		};
-		2A2E3FCA2BB2D1D100730D37 /* AnywayPayment */ = {
-			isa = PBXGroup;
-			children = (
-				2A2E3FD32BB3FB8800730D37 /* NanoServices */,
-			);
-			path = AnywayPayment;
-			sourceTree = "<group>";
-		};
 		2A2E3FD32BB3FB8800730D37 /* NanoServices */ = {
 			isa = PBXGroup;
 			children = (
@@ -8407,6 +8399,7 @@
 		2A5D2FB72BF3323500BC3092 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				2A2E3FD32BB3FB8800730D37 /* NanoServices */,
 				2AA3A9312BFF88F800AEBCC9 /* AnywayTransactionEffectHandlerMicroServicesComposer.swift */,
 				2AA3A9332BFF895100AEBCC9 /* AnywayTransactionEffectHandlerNanoServices.swift */,
 				2A35DDA42C02118100EFF0EB /* AnywayTransactionEffectHandlerNanoServicesComposer.swift */,
@@ -8437,16 +8430,6 @@
 				2A60973A2B9D7C1800AA6C75 /* FlowSettingsView.swift */,
 			);
 			path = Flow;
-			sourceTree = "<group>";
-		};
-		2A61D06E2BECBA8D00802C95 /* UtilityPrepayment */ = {
-			isa = PBXGroup;
-			children = (
-				2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */,
-				2A9CB0872BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift */,
-				2A61D0662BECB65A00802C95 /* UtilityPrepaymentViewModel.swift */,
-			);
-			path = UtilityPrepayment;
 			sourceTree = "<group>";
 		};
 		2A61D0772BECBCB800802C95 /* UtilityPrepaymentFlow */ = {
@@ -9206,13 +9189,8 @@
 			isa = PBXGroup;
 			children = (
 				2AA3A92C2BFF87E700AEBCC9 /* AnywayTransaction */,
-				2AE2B9AA2B8DBF6900B86D56 /* Utilities */,
+				2AE2B9AA2B8DBF6900B86D56 /* Domain */,
 				2A5D2FB72BF3323500BC3092 /* Services */,
-				2AA3A0F42BF3E7C100B1D104 /* PaymentsTransfersFlowReducerFactoryComposer.swift */,
-				2AB87C4C2C13346F0013EFFE /* AnywayElementModelMapper.swift */,
-				2AC067E52BED206D004CBC0B /* PaymentsTransfersFactoryComposer.swift */,
-				2A61D06E2BECBA8D00802C95 /* UtilityPrepayment */,
-				2A61D05F2BECB59D00802C95 /* UtilityPaymentTypes.swift */,
 				2AE2215F2C0C398100618E7C /* Prepayment */,
 			);
 			path = UtilityPayments;
@@ -9250,6 +9228,7 @@
 			children = (
 				2AA3A92F2BFF886300AEBCC9 /* AnywayTransaction.swift */,
 				2AB87C4E2C1336570013EFFE /* AnywayElementModel.swift */,
+				2AB87C4C2C13346F0013EFFE /* AnywayElementModelMapper.swift */,
 				2AA3A92D2BFF884100AEBCC9 /* AnywayTransactionViewModelComposer.swift */,
 				2AA3A9352BFF8A1900AEBCC9 /* AnywayPaymentFactoryComposer.swift */,
 				2AA3A9562BFF8DBB00AEBCC9 /* Configs */,
@@ -10009,12 +9988,16 @@
 			path = Prepayment;
 			sourceTree = "<group>";
 		};
-		2AE2B9AA2B8DBF6900B86D56 /* Utilities */ = {
+		2AE2B9AA2B8DBF6900B86D56 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				2A9CB0852BEFC84200DA5EF3 /* UtilityPaymentLastPayment.swift */,
+				2A9CB0872BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift */,
+				2A61D0662BECB65A00802C95 /* UtilityPrepaymentViewModel.swift */,
+				2A61D05F2BECB59D00802C95 /* UtilityPaymentTypes.swift */,
 				2AE2B9B32B8E05AC00B86D56 /* UtilityService.swift */,
 			);
-			path = Utilities;
+			path = Domain;
 			sourceTree = "<group>";
 		};
 		2AE5972529F9182B0083F138 /* PreviewApps */ = {
@@ -10191,7 +10174,6 @@
 				2A8CC2442B29D44D00191B8E /* ImageCache.swift */,
 				2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */,
 				2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */,
-				2A2E3FCA2BB2D1D100730D37 /* AnywayPayment */,
 				2AFD59EA2B6F98FE00C86FBF /* Infra */,
 				2AC2ADC82B22FDE30049EE9B /* FeatureFlags */,
 				2A118E1D2AFEABAE007EF30E /* AuthLogin */,
@@ -10199,8 +10181,8 @@
 				2A77B64D2ADFCCB80022600F /* CVVPIN */,
 				2A09C2AD2B3C588C0076DC93 /* FastPayments */,
 				C18FDF0C2B0A2D17003F5FC0 /* PaymentSticker */,
-				2AC2ADBC2B2243780049EE9B /* SberQR */,
 				2AF511E92BF3312300F97610 /* PaymentsTransfers */,
+				2AC2ADBC2B2243780049EE9B /* SberQR */,
 			);
 			path = CompositionRoot;
 			sourceTree = "<group>";
@@ -10238,6 +10220,8 @@
 			isa = PBXGroup;
 			children = (
 				2AC067DF2BECEBF1004CBC0B /* PaymentsTransfersFlowManagerComposer.swift */,
+				2AC067E52BED206D004CBC0B /* PaymentsTransfersFactoryComposer.swift */,
+				2AA3A0F42BF3E7C100B1D104 /* PaymentsTransfersFlowReducerFactoryComposer.swift */,
 				2A9BD5142B85F04100B88395 /* UtilityPayments */,
 			);
 			path = PaymentsTransfers;
