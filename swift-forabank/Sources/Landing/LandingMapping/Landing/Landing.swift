@@ -49,6 +49,7 @@ public extension Landing.DataView {
         
         case dropDownTexts(DropDownTexts)
         case horizontalRectangleImage(HorizontalRectangleImage)
+        case horizontalRectangleLimits(HorizontalRectangleLimits)
         case horizontalRoundImage(HorizontalRoundImage)
         case verticalRoundImage(VerticalRoundImage)
     }

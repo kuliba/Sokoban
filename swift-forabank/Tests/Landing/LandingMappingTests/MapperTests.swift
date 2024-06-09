@@ -327,6 +327,72 @@ final class MapperTests: XCTestCase {
         ])
     }
     
+    func test_map_limits_deliversHeader() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limits.utf8)))
+        
+        XCTAssertNoDiff(landing.header, [
+            .pageTitle(.init(
+                text: "Управление",
+                subtitle: nil,
+                transparency: false))
+        ])
+    }
+    
+    func test_map_limits_deliversLimitsInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limits.utf8)))
+        
+        XCTAssertNoDiff(landing.main.listHorizontalRectangleLimits, [
+            .init(list: [
+                .init(
+                    action: .init(type: "changeLimit"),
+                    limitType: "DEBIT_OPERATIONS",
+                    md5hash: "7cc9921ddb97efc14a7de912106ea0d4",
+                    title: "Платежи и переводы",
+                    limits: [
+                        .init(id: "LMTTZ01", title: "Осталось сегодня", colorHEX: "#1C1C1C"),
+                        .init(id: "LMTTZ02", title: "Осталось в этом месяце", colorHEX: "#FF3636")
+                    ]),
+                .init(
+                    action: .init(type: "changeLimit"),
+                    limitType: "WITHDRAWAL",
+                    md5hash: "bec5d6f65faaea15f56cd46b86a78897",
+                    title: "Снятие наличных",
+                    limits: [
+                        .init(id: "LMTTZ03", title: "Осталось сегодня", colorHEX: "#1C1C1C"),
+                        .init(id: "LMTTZ04", title: "Осталось в этом месяце", colorHEX: "#FF3636")
+                    ])
+            ])
+        ])
+    }
+
+    func test_map_limits_deliversListHorizontalRectangleImagesInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limits.utf8)))
+
+        XCTAssertNoDiff(landing.main.listHorizontalRectangleImages, [
+            .init(list: [
+                .init(
+                    imageLink: "dict/getProductCatalogImage?image=/products/banners/ordering_additional_card.png",
+                    link: "https://www.forabank.ru/private/cards/",
+                    detail: nil
+                ),
+                .init(
+                    imageLink: "dict/getBannerCatalogImage?image=/products/banners/Georgia_12_12_2023.png",
+                    link: "",
+                    detail: .init(groupId: "CONTACT_TRANSFER", viewId: "GE")
+                ),
+                .init(
+                    imageLink: "dict/getProductCatalogImage?image=/products/banners/payWithSticker.png",
+                    link: "",
+                    detail: .init(groupId: "LANDING", viewId: "abroadSticker")
+                )
+
+            ])
+        ])
+    }
+
     // MARK: - Helpers
     
     typealias Result = Swift.Result<Landing, LandingMapper.MapperError>
@@ -2610,6 +2676,120 @@ private extension String {
 
 """
     
+    static let limits: Self = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "header": [
+          {
+            "type": "PAGE_TITLE",
+            "data": {
+              "title": "Управление",
+              "transparency": false
+            }
+          }
+        ],
+        "main": [
+          {
+            "type": "NAILED_CARD_ACTIONS",
+            "data": {}
+          },
+          {
+            "type": "LIST_HORIZONTAL_RECTANGLE_LIMITS",
+            "data": {
+              "list": [
+                {
+                  "md5hash": "7cc9921ddb97efc14a7de912106ea0d4",
+                  "title": "Платежи и переводы",
+                  "limitType": "DEBIT_OPERATIONS",
+                  "limit": [
+                    {
+                      "id": "LMTTZ01",
+                      "colorHEX": "#1C1C1C",
+                      "title": "Осталось сегодня"
+                    },
+                    {
+                      "id": "LMTTZ02",
+                      "colorHEX": "#FF3636",
+                      "title": "Осталось в этом месяце"
+                    }
+                  ],
+                  "action": {
+                    "actionType": "changeLimit"
+                  }
+                },
+                {
+                  "md5hash": "bec5d6f65faaea15f56cd46b86a78897",
+                  "title": "Снятие наличных",
+                  "limitType": "WITHDRAWAL",
+                  "limit": [
+                    {
+                      "id": "LMTTZ03",
+                      "colorHEX": "#1C1C1C",
+                      "title": "Осталось сегодня"
+                    },
+                    {
+                      "id": "LMTTZ04",
+                      "colorHEX": "#FF3636",
+                      "title": "Осталось в этом месяце"
+                    }
+                  ],
+                  "action": {
+                    "actionType": "changeLimit"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "LIST_HORIZONTAL_RECTANGLE_IMAGE",
+            "data": {
+              "list": [
+                {
+                  "imageLink": "dict/getProductCatalogImage?image=/products/banners/ordering_additional_card.png",
+                  "link": "https://www.forabank.ru/private/cards/"
+                },
+                {
+                  "imageLink": "dict/getBannerCatalogImage?image=/products/banners/Georgia_12_12_2023.png",
+                  "link": "",
+                  "details": {
+                    "detailsGroupId": "CONTACT_TRANSFER",
+                    "detailViewId": "GE"
+                  }
+                },
+                {
+                  "imageLink": "dict/getProductCatalogImage?image=/products/banners/payWithSticker.png",
+                  "link": "",
+                  "details": {
+                    "detailsGroupId": "LANDING",
+                    "detailViewId": "abroadSticker"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "LIST_VERTICAL_ROUND_IMAGE",
+            "data": {
+              "title": "Прочее",
+              "list": [
+                {
+                  "md5hash": "fdcc2b1f146ed76ce73629f4a35d9b7d",
+                  "title": "Управление подписками",
+                  "action": {
+                    "actionType": "subscriptionControl"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+      "serial": "d706714ec041828eadf4b46af8cdb662"
+      },
+    }
+    """
+    
     static let error: Self = """
 {"statusCode":404,"errorMessage":"404: Не найден запрос к серверу","data":null}
 """
@@ -2699,6 +2879,17 @@ extension Array where Element == Landing.DataView {
         compactMap {
             if case let .list(.horizontalRectangleImage(listHorizontalRectangleImage)) = $0 {
                 return listHorizontalRectangleImage
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var listHorizontalRectangleLimits: [Landing.DataView.List.HorizontalRectangleLimits] {
+        
+        compactMap {
+            if case let .list(.horizontalRectangleLimits(listHorizontalRectangleLimits)) = $0 {
+                return listHorizontalRectangleLimits
             } else {
                 return nil
             }

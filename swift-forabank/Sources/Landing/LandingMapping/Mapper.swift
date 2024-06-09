@@ -145,6 +145,9 @@ private extension Landing.DataView {
             
         case let .verticalSpacing(x):
             self = .verticalSpacing(.init(data: x))
+            
+        case let .list(.horizontalRectangleLimits(x)):
+            self = .list(.horizontalRectangleLimits(.init(data: x)))
         }
     }
 }
@@ -437,6 +440,36 @@ private extension Landing.DataView.List.HorizontalRectangleImage.Item.Detail {
             viewId: data.viewId)
     }
 }
+
+private extension Landing.DataView.List.HorizontalRectangleLimits {
+    
+    init(
+        data: DecodableLanding.Data.ListHorizontalRectangleLimits
+    ) {
+        
+        self.list = data.list.map { Landing.DataView.List.HorizontalRectangleLimits.Item.init(data:$0)
+        }
+    }
+}
+
+private extension Landing.DataView.List.HorizontalRectangleLimits.Item {
+    
+    init(
+        data: DecodableLanding.Data.ListHorizontalRectangleLimits.Item
+    ) {
+        self.init(action: .init(type: data.action.type), limitType: data.limitType, md5hash: data.md5hash, title: data.title, limits: data.limits.map { .init(data:$0) })
+    }
+}
+
+private extension Landing.DataView.List.HorizontalRectangleLimits.Item.Limit {
+    
+    init(
+        data: DecodableLanding.Data.ListHorizontalRectangleLimits.Item.Limit
+    ) {
+        self.init(id: data.id, title: data.title, colorHEX: data.colorHEX)
+    }
+}
+
 
 private extension Landing.DataView.List.HorizontalRoundImage {
     
