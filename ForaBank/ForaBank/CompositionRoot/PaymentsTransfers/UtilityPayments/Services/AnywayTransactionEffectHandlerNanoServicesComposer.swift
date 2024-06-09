@@ -367,7 +367,7 @@ private extension AnywayPaymentDigest {
         if isStep4Fraud { return .success(.init(.step4Fraud)) }
         if isStep3Alert { return .failure(.connectivityError) }
         if isStep3 { return .success(.init(.step3)) }
-        if isStep2Alert { return .failure(.serverError("Неверный лицевой счетю")) }
+        if isStep2Alert { return .failure(.serverError("Неверный лицевой счет.")) }
         if isStep2 { return .success(.init(.step2)) }
         
         return .failure(.connectivityError)

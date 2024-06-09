@@ -205,17 +205,23 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with projection: AnywayTransactionStatus
+        with status: AnywayTransactionStatus
     ) {
-        switch projection {
-        case .completed:
-            state.setFullScreenCover(to: .completed)
+        switch status {
+        case .awaitingPaymentRestartConfirmation:
+            state.setPaymentAlert(to: .paymentRestartConfirmation)
             
-        case let .errorMessage(errorMessage):
-            state.setPaymentAlert(to: .terminalError(errorMessage))
+        case let .serverError(errorMessage):
+            state.setPaymentAlert(to: .serverError(errorMessage))
             
-        case let .fraud(fraud):
-            state.setPaymentModal(to: .fraud(fraud))
+        default:
+            fatalError("unimplemented yet")
+            //case .completed:
+            //    state.setFullScreenCover(to: .completed)
+            //
+            //
+            //case let .fraud(fraud):
+            //    state.setPaymentModal(to: .fraud(fraud))
         }
     }
     

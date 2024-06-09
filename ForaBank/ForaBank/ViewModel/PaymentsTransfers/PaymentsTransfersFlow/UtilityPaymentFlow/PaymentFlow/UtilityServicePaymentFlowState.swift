@@ -29,6 +29,8 @@ extension UtilityServicePaymentFlowState {
     
     enum Alert {
         
+        case paymentRestartConfirmation
+        case serverError(String)
         case terminalError(String)
     }
     

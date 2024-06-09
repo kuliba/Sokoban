@@ -7,10 +7,11 @@
 
 import ActivateSlider
 import InfoComponent
+import OperatorsListComponents
 import SberQR
 import SwiftUI
-import OperatorsListComponents
 import TextFieldModel
+import UIPrimitives
 
 struct PaymentsTransfersView: View {
     
@@ -499,18 +500,20 @@ private extension PaymentsTransfersView {
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
+        let transactionEvent = { state.viewModel.event(.transaction($0)) }
+        
         let factory = viewFactory.makeAnywayPaymentFactory {
             
-            state.viewModel.event(.transaction(.payment($0)))
+            transactionEvent(.payment($0))
         }
         
         AnywayTransactionStateWrapperView(viewModel: state.viewModel) { state, event in
             
-            AnywayTransactionView(state: state, event: { event(.transaction($0)) }, factory: factory)
+            AnywayTransactionView(state: state, event: transactionEvent, factory: factory)
         }
         .alert(
             item: state.alert,
-            content: paymentFlowAlert(event: event)
+            content: paymentFlowAlert(event: { transactionEvent($0) })
         )
         .fullScreenCover(
             cover: state.fullScreenCover,
@@ -527,24 +530,27 @@ private extension PaymentsTransfersView {
     }
     
     func paymentFlowAlert(
-        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
+        event: @escaping (AnywayTransactionEvent) -> Void
     ) -> (UtilityServiceFlowState.Alert) -> Alert {
         
         return { alert in
             
             switch alert {
-            case let .terminalError(errorMessage):
-                
+            case .paymentRestartConfirmation:
                 return .init(
-                    with: .init(
-                        title: "Error!",
-                        message: errorMessage,
-                        primaryButton: .init(
-                            type: .default,
-                            title: "OK",
-                            event: .dismiss(.paymentError)
-                        )
-                    ),
+                    with: .paymentRestartConfirmation,
+                    event: event
+                )
+                
+            case let .serverError(errorMessage):
+                return .init(
+                    with: .serverError(message: errorMessage),
+                    event: event
+                )
+                
+            case let .terminalError(errorMessage):
+                return .init(
+                    with: .terminalError(message: errorMessage),
                     event: event
                 )
             }
@@ -674,12 +680,21 @@ extension UtilityServicePaymentFlowState.Alert: Identifiable {
     var id: ID {
         
         switch self {
-        case .terminalError: return  .terminalError
+        case .paymentRestartConfirmation:
+            return .paymentRestartConfirmation
+            
+        case .serverError:
+            return .serverError
+            
+        case .terminalError:
+            return .terminalError
         }
     }
     
     enum ID: Hashable {
         
+        case paymentRestartConfirmation
+        case serverError
         case terminalError
     }
 }
@@ -711,6 +726,61 @@ extension UtilityServicePaymentFlowState.Modal: Identifiable {
     enum ID: Hashable {
         
         case fraud
+    }
+}
+
+// MARK: - Alerts
+
+private extension AlertModel
+where PrimaryEvent == AnywayTransactionEvent,
+      SecondaryEvent == AnywayTransactionEvent {
+    
+    static var paymentRestartConfirmation: Self {
+        
+        return .init(
+            title: "Внимание",
+            message: "Изменение параметров перевода потребует повторного заполнение всех полей формы",
+            primaryButton: .init(
+                type: .default,
+                title: "Продолжить",
+                event: .paymentRestartConfirmation(true)
+            ),
+            secondaryButton: .init(
+                type: .cancel,
+                title: "Отмена",
+                event: .paymentRestartConfirmation(false)
+            )
+        )
+    }
+    
+    static func serverError(
+        message: String
+    ) -> Self {
+        
+        return .init(
+            title: "Ошибка",
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: .dismissRecoverableError
+            )
+        )
+    }
+    
+    static func terminalError(
+        message: String
+    ) -> Self {
+        
+        return .init(
+            title: "Ошибка",
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: .completePayment(.none)
+            )
+        )
     }
 }
 
