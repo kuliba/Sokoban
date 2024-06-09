@@ -1,48 +1,11 @@
 //
-//  AnywayElement.swift
+//  AnywayElement.Parameter.swift
 //
 //
-//  Created by Igor Malyarov on 07.06.2024.
+//  Created by Igor Malyarov on 08.06.2024.
 //
-
-import Foundation
-import Tagged
-
-public enum AnywayElement: Equatable {
-    
-    case field(Field)
-    case parameter(Parameter)
-    case widget(Widget)
-}
 
 extension AnywayElement {
-    
-    public struct Field: Identifiable, Equatable {
-        
-        public let id: ID
-        public let title: String
-        public let value: Value
-        public let image: Image?
-        
-        public init(
-            id: ID,
-            title: String,
-            value: Value,
-            image: Image?
-        ) {
-            self.id = id
-            self.title = title
-            self.value = value
-            self.image = image
-        }
-    }
-    
-    public enum Image: Equatable {
-        
-        case md5Hash(String)
-        case svg(String)
-        case withFallback(md5Hash: String, svg: String)
-    }
     
     public struct Parameter: Equatable {
         
@@ -61,27 +24,11 @@ extension AnywayElement {
         ) {
             self.field = field
             self.image = image
-           self.masking = masking
+            self.masking = masking
             self.validation = validation
             self.uiAttributes = uiAttributes
         }
     }
-    
-    public enum Widget: Equatable {
-        
-        case core(PaymentCore)
-        case otp(Int?)
-    }
-}
-
-extension AnywayElement.Field {
-    
-    public typealias ID = Tagged<_ID, String>
-    public enum _ID {}
-    
-    public typealias Value = Tagged<_Value, String>
-    public enum _Value {}
-    
 }
 
 extension AnywayElement.Parameter {
@@ -98,6 +45,9 @@ extension AnywayElement.Parameter {
             self.id = id
             self.value = value
         }
+        
+        public typealias ID = String
+        public typealias Value = String
     }
     
     public struct Masking: Equatable {
@@ -173,15 +123,6 @@ extension AnywayElement.Parameter {
     }
 }
 
-extension AnywayElement.Parameter.Field {
-    
-    public typealias ID = Tagged<_ID, String>
-    public enum _ID {}
-    
-    public typealias Value = Tagged<_Value, String>
-    public enum _Value {}
-}
-
 extension AnywayElement.Parameter.UIAttributes {
     
     public enum DataType: Equatable {
@@ -235,58 +176,4 @@ extension AnywayElement.Parameter.UIAttributes {
         
         case constant, input, output
     }
-}
-
-extension AnywayElement.Widget {
-    
-    public var id: ID {
-        
-        switch self {
-        case .core: return .core
-        case .otp:    return .otp
-        }
-    }
-    
-    public enum ID {
-        
-        case core, otp
-    }
-    
-    public struct PaymentCore: Equatable {
-        
-        public let amount: Decimal
-        public let currency: Currency
-        public let productID: ProductID
-        
-        public init(
-            amount: Decimal,
-            currency: Currency,
-            productID: ProductID
-        ) {
-            self.amount = amount
-            self.currency = currency
-            self.productID = productID
-        }
-    }
-}
-
-extension AnywayElement.Widget.PaymentCore {
-    
-    public typealias Currency = Tagged<_Currency, String>
-    public enum _Currency {}
-    
-    public enum ProductID: Equatable {
-        
-        case accountID(AccountID)
-        case cardID(CardID)
-    }
-}
-
-extension AnywayElement.Widget.PaymentCore.ProductID {
-    
-    public typealias AccountID = Tagged<_AccountID, Int>
-    public enum _AccountID {}
-    
-    public typealias CardID = Tagged<_CardID, Int>
-    public enum _CardID {}
 }

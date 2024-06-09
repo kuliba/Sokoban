@@ -21,12 +21,17 @@ public extension AnywayPaymentEvent {
         
         case amount(Decimal)
         case otp(String)
-        case product(ProductID, Currency)
+        case product(ProductID, ProductType, Currency)
     }
 }
 
 public extension AnywayPaymentEvent.Widget {
     
-    typealias Currency = AnywayElement.Widget.PaymentCore.Currency
-    typealias ProductID = AnywayElement.Widget.PaymentCore.ProductID
+    typealias Currency = String
+    typealias ProductID = Int
+    
+    enum ProductType: Equatable {
+        
+        case account, card
+    }
 }

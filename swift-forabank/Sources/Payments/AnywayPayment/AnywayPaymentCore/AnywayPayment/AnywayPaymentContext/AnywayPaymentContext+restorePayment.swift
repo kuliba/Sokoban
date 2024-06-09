@@ -38,9 +38,7 @@ private extension AnywayPaymentContext {
         
         outline.fields.compactMap { field -> Pair? in
             
-            guard staged.contains(.init(field.key.rawValue)) else { return nil }
-            
-            return (.init(field.key.rawValue), .init(field.value.rawValue))
+            staged.contains(field.key) ? (field.key, field.value): nil
         }
     }
     

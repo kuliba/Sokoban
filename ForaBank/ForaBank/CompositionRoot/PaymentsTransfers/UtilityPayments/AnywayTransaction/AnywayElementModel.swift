@@ -6,20 +6,33 @@
 //
 
 import AnywayPaymentDomain
+import Foundation
 import RxViewModel
 
 enum AnywayElementModel {
     
     case field(AnywayElement.UIComponent.Field)
-    case parameter(AnywayElement.UIComponent.Parameter)
+    case parameter(Parameter)
     case widget(Widget)
 }
 
 extension AnywayElementModel {
     
+    enum Parameter {
+        
+        case hidden(AnywayElement.UIComponent.Parameter)
+        case nonEditable(AnywayElement.UIComponent.Parameter)
+        case numberInput(ObservingInputViewModel)
+        case select(ObservingSelectorViewModel<Option>)
+        case textInput(ObservingInputViewModel)
+        case unknown(AnywayElement.UIComponent.Parameter)
+        
+        typealias Option = AnywayElement.UIComponent.Parameter.ParameterType.Option
+    }
+    
     enum Widget {
         
-        case core(AnywayElement.Widget.PaymentCore)
+        case core(ObservingProductSelectViewModel, Decimal, String)
         case otp(OTPViewModel)
     }
 }

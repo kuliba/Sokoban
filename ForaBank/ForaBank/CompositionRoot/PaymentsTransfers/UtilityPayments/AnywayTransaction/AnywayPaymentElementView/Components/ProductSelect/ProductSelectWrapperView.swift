@@ -1,24 +1,16 @@
 //
-//  ProductSelectStateWrapperView.swift
+//  ProductSelectWrapperView.swift
 //  ForaBank
 //
-//  Created by Igor Malyarov on 23.05.2024.
+//  Created by Igor Malyarov on 07.06.2024.
 //
 
 import PaymentComponents
 import SwiftUI
 
-struct ProductSelectStateWrapperView: View {
+struct ProductSelectWrapperView: View {
     
-    @StateObject private var viewModel: ViewModel
-    
-    init(
-        viewModel: ViewModel,
-        config: Config
-    ) {
-        self._viewModel = .init(wrappedValue: viewModel)
-        self.config = config
-    }
+    @ObservedObject var viewModel: ViewModel
     
     let config: Config
     
@@ -33,7 +25,7 @@ struct ProductSelectStateWrapperView: View {
     }
 }
 
-extension ProductSelectStateWrapperView {
+extension ProductSelectWrapperView {
     
     typealias ViewModel = ObservingProductSelectViewModel
     typealias Config = ProductSelectConfig

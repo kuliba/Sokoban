@@ -86,7 +86,7 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 65", "УСЛУГИ_ЖКУ"),
             .init("p: 143", "Сумма пени"),
             .init("f: SumSTrs", "Сумма"),
-            .init("w: core", "123.45, RUB, accountID(1234567890)")
+            .init("w: core", "123.45, RUB, 1234567890, account")
         ])
                 
         let payment5 = try update(payment4, with: .step5Response)
@@ -113,7 +113,7 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 65", "УСЛУГИ_ЖКУ"),
             .init("p: 143", "Сумма пени"),
             .init("f: SumSTrs", "Сумма"),
-            .init("w: core", "123.45, RUB, accountID(1234567890)")
+            .init("w: core", "123.45, RUB, 1234567890, account")
         ])
     }
     
@@ -187,7 +187,7 @@ private extension AnywayElement.Field {
     
     var testView: TestView {
         
-        .init("f: \(id.rawValue)", title)
+        .init("f: \(id)", title)
     }
 }
 
@@ -195,7 +195,7 @@ private extension AnywayElement.Parameter {
     
     var testView: TestView {
         
-        .init("p: \(field.id.rawValue)", uiAttributes.title)
+        .init("p: \(field.id)", uiAttributes.title)
     }
 }
 
@@ -205,7 +205,7 @@ private extension AnywayElement.Widget {
         
         switch self {
         case let .core(core):
-            return .init("w: core", "\(core.amount), \(core.currency), \(core.productID)")
+            return .init("w: core", "\(core.amount), \(core.currency), \(core.productID), \(core.productType)")
         case .otp:
             return .init("w: otp", "otp")
         }

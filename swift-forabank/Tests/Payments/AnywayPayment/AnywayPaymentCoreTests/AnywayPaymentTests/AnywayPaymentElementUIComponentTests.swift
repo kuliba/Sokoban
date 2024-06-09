@@ -413,7 +413,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         XCTAssertNoDiff(
             element.uiComponent,
-            .widget(.productPicker(.accountID(.init(id))))
+            .widget(.productPicker(id, .account))
         )
     }
     
@@ -429,7 +429,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         XCTAssertNoDiff(
             element.uiComponent,
-            .widget(.productPicker(.cardID(.init(id))))
+            .widget(.productPicker(id, .card))
         )
     }
     

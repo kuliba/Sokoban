@@ -31,8 +31,7 @@ struct AnywayPaymentElementView<IconView: View>: View {
         case let .parameter(parameter):
             AnywayPaymentParameterView(
                 parameter: parameter,
-                event: { event(.setValue($0, for: parameter.id.parameterID)) },
-                factory: factory.elementFactory
+                factory: factory.parameterFactory
             )
             
         case let .widget(widget):
@@ -44,7 +43,8 @@ struct AnywayPaymentElementView<IconView: View>: View {
         _ field: AnywayPaymentDomain.AnywayElement.UIComponent.Field
     ) -> some View {
         
-        factory.makeIconView(.field(field))
+        #warning("FIX hardcoded value")
+        return factory.makeIconView("")
     }
 }
 
@@ -52,7 +52,7 @@ extension AnywayPaymentElementView {
     
     typealias State = CachedAnywayPayment<AnywayElementModel>.IdentifiedModel
     typealias Event = AnywayPaymentEvent
-    typealias Factory = AnywayPaymentElementViewFactory<IconView>
+    typealias Factory = AnywayPaymentElementViewFactory
     typealias Config = AnywayPaymentElementConfig
 }
 
@@ -65,8 +65,6 @@ private extension AnywayPaymentElementView {
         switch widget {
         case let .otp(otpViewModel):
             #warning("replace with real components")
-            SimpleOTPWrapperView(viewModel: otpViewModel)
-
 #warning("can't use CodeInputView - not a part  af any product (neither PaymentComponents nor any other)")
 #warning("need a wrapper with timer")
             //            CodeInputView(
@@ -74,9 +72,14 @@ private extension AnywayPaymentElementView {
             //                event: <#T##(OTPInputEvent) -> Void#>,
             //                config: <#T##CodeInputConfig#>
             //            )
+            SimpleOTPWrapperView(viewModel: otpViewModel)
+
             
-        case let .core(core):
-            factory.makeProductSelectView(core.productID, { event(.widget(.product($0, $1))) })
+        case let .core(productSelectViewModel, _,_):
+            ProductSelectWrapperView(
+                viewModel: productSelectViewModel, 
+                config: .iFora
+            )
         }
     }
 }
@@ -102,13 +105,5 @@ private extension AnywayElement.UIComponent.Field {
         case "recipientBank": return .recipientBank
         default:              return .other(name)
         }
-    }
-}
-
-private extension AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ID {
-    
-    var parameterID: AnywayPaymentEvent.ParameterID {
-        
-        return .init(rawValue)
     }
 }

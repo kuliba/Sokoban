@@ -18,7 +18,7 @@ public extension AnywayElement.Parameter {
                 return nil
                 
             case .number, .string:
-                return field.value.map { .nonEditable(.string($0.rawValue)) }
+                return field.value.map { .nonEditable(.string($0)) }
                 
             case let .pairs(pair, _):
                 return .nonEditable(.pair(key: pair.key, value: pair.value))
@@ -66,7 +66,7 @@ public extension AnywayElement.Parameter {
                 return .hidden("OUTPUT")
                 
             case .number, .string:
-                return field.value.map { .hidden($0.rawValue) }
+                return field.value.map { .hidden($0) }
                 
             case let .pairs(pair, _):
                 return .hidden(pair.key)

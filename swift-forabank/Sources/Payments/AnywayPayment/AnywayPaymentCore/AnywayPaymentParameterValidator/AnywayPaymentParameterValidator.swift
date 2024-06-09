@@ -45,7 +45,7 @@ private extension AnywayPaymentParameterValidator {
         
         guard let minLength = parameter.validation.minLength else { return true }
         
-        let value = parameter.field.value?.rawValue ?? ""
+        let value = parameter.field.value ?? ""
         
         return value.count >= minLength
     }
@@ -54,7 +54,7 @@ private extension AnywayPaymentParameterValidator {
         
         guard let maxLength = parameter.validation.maxLength else { return true }
         
-        let value = parameter.field.value?.rawValue ?? ""
+        let value = parameter.field.value ?? ""
         
         return value.count <= maxLength
     }
@@ -63,7 +63,7 @@ private extension AnywayPaymentParameterValidator {
         
         guard !parameter.validation.regExp.isEmpty else { return true }
         
-        let value = parameter.field.value?.rawValue ?? ""
+        let value = parameter.field.value ?? ""
         let pattern = parameter.validation.regExp
         
         return NSPredicate(format: "SELF MATCHES %@", pattern).evaluate(with: value)

@@ -30,7 +30,7 @@ private extension AnywayElement {
         
         return parameter.field.value.map {
             
-            (.init(parameter.field.id.rawValue), .init($0.rawValue))
+            (parameter.field.id, $0)
         }
     }
 }

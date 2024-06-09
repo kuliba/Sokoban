@@ -40,8 +40,7 @@ extension AnywayPaymentFactoryComposer {
         
         let elementFactory = AnywayPaymentElementViewFactory(
             makeIconView: makeIconView,
-            makeProductSelectView: makeProductSelectView,
-            elementFactory: makeElementFactory()
+            parameterFactory: makeElementFactory()
         )
         
         return .init(
@@ -69,112 +68,35 @@ extension AnywayPaymentFactoryComposer {
 
     typealias UIComponent = AnywayPaymentDomain.AnywayElement.UIComponent
     typealias IconView = UIPrimitives.AsyncImage
-    typealias MakeIconView = (UIComponent) -> IconView
+    typealias MakeIconView = (String) -> IconView
     
     typealias Factory = AnywayPaymentFactory<IconView>
 }
 
 private extension AnywayPaymentFactoryComposer {
     
-    func makeProductSelectView(
-        productID: ProductID,
-        observe: @escaping Observe
-    ) -> ProductSelectStateWrapperView {
-        
-        let products = getProducts()
-        let selected = products.first { $0.isMatching(productID) }
-        let initialState = ProductSelect(selected: selected)
-        
-        let reducer = ProductSelectReducer(getProducts: getProducts)
-        
-        typealias ProductSelectViewModel = RxViewModel<ProductSelect, ProductSelectEvent, Never>
-
-        let observable = ProductSelectViewModel(
-            initialState: initialState,
-            reduce: { (reducer.reduce($0, $1), nil) },
-            handleEffect: { _,_ in }
-        )
-        let observing = ObservingProductSelectViewModel(
-            observable: observable,
-            observe: { [weak self] in
-                
-                guard let self else { return }
-                
-                guard let productID = $0.selected?.coreProductID,
-                      let currency = $0.selected.map({ self.currencyOfProduct($0) })
-                else { return }
-                
-                observe(productID, .init(currency))
-            }
-        )
-        
-        return .init(viewModel: observing, config: .iFora)
-    }
-    
     func makeElementFactory(
     ) -> AnywayPaymentParameterViewFactory {
         
         return .init(
             makeSelectorView: makeSelectorView,
-            makeTextInputView: makeTextInputView
+            makeIconView: makeIconView
         )
     }
     
     func makeSelectorView(
-        selector: Selector<Option>,
-        observe: @escaping (Selector<Option>) -> Void
+        viewModel: ObservingSelectorViewModel<Option>
     ) -> SelectorWrapperView {
         
-        let reducer = SelectorReducer<Option>()
-        let viewModel = RxViewModel(
-            initialState: selector,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: { _,_ in }
-        )
-        
-        let observing = RxObservingViewModel(
-            observable: viewModel,
-            observe: observe
-        )
-        
         return .init(
-            viewModel: observing,
+            viewModel: viewModel,
             factory: .init(
                 createOptionView: OptionView.init,
                 createSelectedOptionView: SelectedOptionView.init
             )
         )
     }
-    
-    func makeTextInputView(
-        parameter: UIComponent.Parameter,
-        observe: @escaping (InputState<String>) -> Void
-    ) -> InputStateWrapperView {
         
-        let inputState = InputState(parameter)
-        let reducer = InputReducer<String>()
-        let viewModel = RxViewModel(
-            initialState: inputState,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: { _,_ in }
-        )
-        
-        let observing = RxObservingViewModel(
-            observable: viewModel,
-            observe: observe
-        )
-        
-        return .init(
-            viewModel: observing,
-            factory: .init(makeIconView: {
-                
-                #warning("FIXME")
-                
-                return .init()
-            })
-        )
-    }
-    
     typealias Option = UIComponent.Parameter.ParameterType.Option
 
     typealias Observe = (ProductID, Currency) -> Void
@@ -182,55 +104,6 @@ private extension AnywayPaymentFactoryComposer {
     typealias Currency = AnywayPaymentEvent.Widget.Currency
 }
 
-private extension ProductSelect.Product {
-    
-    func isMatching(
-        _ productID: AnywayPaymentDomain.AnywayElement.Widget.PaymentCore.ProductID
-    ) -> Bool {
-        
-        switch productID {
-        case let .accountID(accountID):
-            return type == .account && id.rawValue == accountID.rawValue
-            
-        case let .cardID(cardID):
-            return type == .card && id.rawValue == cardID.rawValue
-        }
-    }
-    
-    var coreProductID: AnywayPaymentDomain.AnywayElement.Widget.PaymentCore.ProductID {
-        
-        switch type {
-        case .account:
-            return .accountID(.init(id.rawValue))
-            
-        case .card:
-            return .cardID(.init(id.rawValue))
-        }
-    }
-}
-
-// MARK: - Adapters
-
-private extension InputState where Icon == String {
-    
-    #warning("FIXME: replace stubbed with values from parameter")
-    init(_ parameter: AnywayPaymentDomain.AnywayElement.UIComponent.Parameter) {
-        
-        self.init(
-            dynamic: .init(
-                value: parameter.value?.rawValue ?? "",
-                warning: nil
-            ),
-            settings: .init(
-                hint: nil,
-                icon: "",
-                keyboard: .default,
-                title: parameter.title,
-                subtitle: parameter.subtitle
-            )
-        )
-    }
-}
 
 private extension CachedTransactionState {
     
@@ -250,9 +123,9 @@ private extension Array where Element == CachedAnywayPayment<AnywayElementModel>
     
     var core: AnywayPaymentFooter.Core? {
         
-        guard case let .widget(.core(core)) = self[id: .widgetID(.core)]?.model
+        guard case let .widget(.core(core, amount, currency)) = self[id: .widgetID(.core)]?.model
         else { return nil }
         
-        return .init(value: core.amount, currency: core.currency.rawValue)
+        return .init(value: amount, currency: currency)
     }
 }

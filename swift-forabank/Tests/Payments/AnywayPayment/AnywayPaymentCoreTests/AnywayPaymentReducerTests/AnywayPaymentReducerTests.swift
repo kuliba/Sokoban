@@ -57,7 +57,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         let value = anyMessage()
         let parameterID = makeParameterID()
-        let parameter = makeAnywayPaymentParameter(id: parameterID.rawValue)
+        let parameter = makeAnywayPaymentParameter(id: parameterID)
         let state = makeState(elements: [.parameter(parameter)])
         
         assertState(.setValue(value, for: parameterID), on: state) {
@@ -71,7 +71,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         let value = anyMessage()
         let parameterID = makeParameterID()
-        let parameter = makeAnywayPaymentParameter(id: parameterID.rawValue)
+        let parameter = makeAnywayPaymentParameter(id: parameterID)
         let state = makeState(elements: [.parameter(parameter)])
         
         assert(.setValue(value, for: parameterID), on: state, effect: nil)
@@ -106,7 +106,8 @@ final class AnywayPaymentReducerTests: XCTestCase {
             $0.elements = [.widget(.core(.init(
                 amount: amount,
                 currency: core.currency,
-                productID: core.productID
+                productID: core.productID,
+                productType: .account
             )))]
         }
     }
@@ -193,7 +194,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         let state = makeEmptyState()
         
-        assertState(.widget(.product(anyProductID(), anyCurrency())), on: state)
+        assertState(.widget(.product(anyProductID(), .card, anyCurrency())), on: state)
         assertMissingID(state, .core)
     }
     
@@ -201,7 +202,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         let state = makeEmptyState()
         
-        assertState(.widget(.product(anyProductID(), anyCurrency())), on: state)
+        assertState(.widget(.product(anyProductID(), .account, anyCurrency())), on: state)
         assertMissingID(state, .core)
     }
     
@@ -212,12 +213,13 @@ final class AnywayPaymentReducerTests: XCTestCase {
         let core = makeCore()
         let state = makeState(elements: [.widget(.core(core))])
         
-        assertState(.widget(.product(productID, currency)), on: state) {
+        assertState(.widget(.product(productID, .account, currency)), on: state) {
             
             $0.elements = [.widget(.core(.init(
                 amount: core.amount,
                 currency: currency,
-                productID: productID
+                productID: productID,
+                productType: .account
             )))]
         }
     }
@@ -226,7 +228,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         let state = makeState(elements: [.widget(.core(makeCore()))])
         
-        assert(.widget(.product(anyProductID(), anyCurrency())), on: state, effect: nil)
+        assert(.widget(.product(anyProductID(), .account, anyCurrency())), on: state, effect: nil)
     }
     
     // MARK: - Helpers
@@ -325,24 +327,30 @@ final class AnywayPaymentReducerTests: XCTestCase {
     private func makeCore(
         amount: Decimal = anyAmount(),
         currency: AnywayElement.Widget.PaymentCore.Currency = "RUB",
-        productID: AnywayElement.Widget.PaymentCore.ProductID = .accountID(.init(generateRandom11DigitNumber()))
+        productID: AnywayElement.Widget.PaymentCore.ProductID = generateRandom11DigitNumber(),
+        productType: AnywayElement.Widget.PaymentCore.ProductType = .account
     ) -> AnywayElement.Widget.PaymentCore {
         
-        .init(amount: amount, currency: currency, productID: productID)
+        return .init(
+            amount: amount, 
+            currency: currency,
+            productID: productID,
+            productType: productType
+        )
     }
     
     private func anyProductID(
         id: Int = generateRandom11DigitNumber()
     ) -> AnywayPaymentEvent.Widget.ProductID {
         
-        return .accountID(.init(id))
+        return id
     }
     
     private func anyCurrency(
-        _ rawValue: String = anyMessage()
+        _ currency: String = anyMessage()
     ) -> AnywayPaymentEvent.Widget.Currency {
         
-        .init(rawValue)
+        return currency
     }
     
     private func anyOTP(

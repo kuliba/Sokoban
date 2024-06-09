@@ -10,7 +10,7 @@ import SwiftUI
 struct AnywayTransactionStateWrapperView<TransactionView>: View
 where TransactionView: View {
     
-    @StateObject private var viewModel: ViewModel
+    @ObservedObject private var viewModel: ViewModel
     
     private let makeTransactionView: MakeTransactionView
     

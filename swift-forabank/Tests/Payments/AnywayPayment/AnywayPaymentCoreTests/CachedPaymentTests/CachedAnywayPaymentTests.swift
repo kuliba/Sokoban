@@ -91,7 +91,7 @@ final class CachedAnywayPaymentTests: XCTestCase {
     func test_init_shouldMapElements() {
         
         struct Model: Equatable {}
-
+        
         let field = makeAnywayPaymentField()
         let anywayPayment = makeAnywayPayment(elements: [.field(field)])
         
@@ -204,12 +204,12 @@ final class CachedAnywayPaymentTests: XCTestCase {
     func test_updating_shouldMapElements() {
         
         struct Model: Equatable {}
-
+        
         let anywayPayment = makeAnywayPayment()
         let map: (AnywayElement) -> Model = { _ in .init() }
         let payment = CachedAnywayPayment<Model>(anywayPayment, using: map)
         XCTAssertTrue(payment.models.isEmpty)
-
+        
         let updated = payment.updating(with: makeAnywayPayment(elements: [.field(makeAnywayPaymentField())]), using: map)
         
         XCTAssertNoDiff(updated.models.map(\.model), [.init()])
@@ -257,8 +257,14 @@ private extension CachedAnywayPayment where ElementModel == AnywayElement {
 private func makeAnywayPaymentCoreWidget(
     amount: Decimal = .init(Double.random(in: 1...1_000)),
     currency: String = "RUB",
-    productID: AnywayElement.Widget.PaymentCore.ProductID = .accountID(.init(.random(in: 1...1_000)))
+    productID: AnywayElement.Widget.PaymentCore.ProductID = .random(in: 1...1_000),
+    productType: AnywayElement.Widget.PaymentCore.ProductType = .account
 ) -> AnywayElement.Widget.PaymentCore {
     
-    return .init(amount: amount, currency: .init(currency), productID: productID)
+    return .init(
+        amount: amount,
+        currency: currency,
+        productID: productID,
+        productType: productType
+    )
 }

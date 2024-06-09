@@ -49,39 +49,28 @@ extension AnywayPaymentDigest {
         public let amount: Decimal
         public let currency: Currency
         public let productID: ProductID
+        public let productType: ProductType
         
         public init(
             amount: Decimal,
             currency: Currency,
-            productID: ProductID
+            productID: Int,
+            productType: ProductType
         ) {
             self.amount = amount
             self.currency = currency
             self.productID = productID
+            self.productType = productType
+        }
+        
+        public typealias Currency = String
+        public typealias ProductID = Int
+        
+        public enum ProductType: Equatable {
+            
+            case account, card
         }
     }
     
-    public typealias Puref = Tagged<_Puref, String>
-    public enum _Puref {}
-}
-
-public extension AnywayPaymentDigest.PaymentCore {
-    
-    typealias Currency = Tagged<_Currency, String>
-    enum _Currency {}
-    
-    enum ProductID: Equatable {
-        
-        case account(AccountID)
-        case card(CardID)
-    }
-}
-
-public extension AnywayPaymentDigest.PaymentCore.ProductID {
-    
-    typealias AccountID = Tagged<_AccountID, Int>
-    enum _AccountID {}
-    
-    typealias CardID = Tagged<_CardID, Int>
-    enum _CardID {}
+    public typealias Puref = String
 }

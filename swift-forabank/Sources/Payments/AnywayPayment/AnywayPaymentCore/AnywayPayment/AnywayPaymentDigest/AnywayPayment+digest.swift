@@ -27,11 +27,7 @@ private extension AnywayPayment {
             
             field.value.map {
                 
-                .init(
-                    fieldID: index,
-                    fieldName: field.id.rawValue,
-                    fieldValue: $0.rawValue
-                )
+                .init(fieldID: index, fieldName: field.id, fieldValue: $0)
             }
         }
     }
@@ -43,8 +39,9 @@ private extension AnywayPayment {
         
         return .init(
             amount: core.amount,
-            currency: .init(core.currency.rawValue),
-            productID: core._productID
+            currency: .init(core.currency),
+            productID: core.productID,
+            productType: core._productType
         )
     }
     
@@ -73,14 +70,11 @@ private extension AnywayElement {
 
 private extension AnywayElement.Widget.PaymentCore {
     
-    var _productID: AnywayPaymentDigest.PaymentCore.ProductID {
+    var _productType: AnywayPaymentDigest.PaymentCore.ProductType {
         
-        switch productID {
-        case let .accountID(accountID):
-            return .account(.init(accountID.rawValue))
-            
-        case let .cardID(cardID):
-            return .card(.init(cardID.rawValue))
+        switch productType {
+        case .account: return .account
+        case .card:    return .card
         }
     }
 }
