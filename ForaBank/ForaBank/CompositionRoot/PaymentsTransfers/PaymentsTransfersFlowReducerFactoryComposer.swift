@@ -98,12 +98,12 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     
     func makeUtilityPaymentState(
         transactionState: AnywayTransactionState,
-        notify: @escaping (AnywayTransactionStatus) -> Void
+        notify: @escaping (AnywayTransactionStatus?) -> Void
     ) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
         
         let transactionViewModel = makeTransactionViewModel(
             transactionState,
-            { _, state in state.status.map(notify) }
+            { _, state in notify(state.status) }
         )
         
         let mapper = AnywayElementModelMapper(

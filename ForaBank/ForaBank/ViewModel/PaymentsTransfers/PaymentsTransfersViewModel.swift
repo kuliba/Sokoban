@@ -142,7 +142,7 @@ extension PaymentsTransfersViewModel {
             
             self?.event(.dismiss(.destination))
         }
-        let notify: (AnywayTransactionStatus) -> Void = { [weak self] in
+        let notify: (AnywayTransactionStatus?) -> Void = { [weak self] in
             
             self?.event(.utilityFlow(.payment(.notified($0))))
         }

@@ -5,6 +5,7 @@
 //  Created by Dmitry Martynov on 09.05.2022.
 //
 
+import AnywayPaymentDomain
 import ActivateSlider
 import InfoComponent
 import OperatorsListComponents
@@ -523,7 +524,9 @@ private extension PaymentsTransfersView {
         .sheet(
             modal: state.modal,
             dismissModal: { event(.dismiss(.fraud)) },
-            content: paymentFlowModalView(event: { event(.fraud($0)) })
+            content: paymentFlowModalView(
+                event: { transactionEvent(.fraud($0)) }
+            )
         )
         .navigationTitle("Payment: \(state.viewModel.state.isValid ? "valid" : "invalid")")
         .navigationBarTitleDisplayMode(.inline)
@@ -563,21 +566,30 @@ private extension PaymentsTransfersView {
     ) -> some View {
         
         switch fullScreenCover {
-        case .completed:
+        case let .completed(result):
             VStack(spacing: 32) {
                 
                 Text("TBD: Payment Complete View")
+                    .font(.headline)
+                
+                Text(String(describing: result))
+                    .foregroundColor(.secondary)
+                    .font(.footnote)
                     .frame(maxHeight: .infinity)
                 
                 Divider()
                 
-                Button("go to Main", action: { viewModel.event(.outside(.goToMain)) })
+                Button(
+                    "go to Main",
+                    action: { viewModel.event(.outside(.goToMain)) }
+                )
             }
+            .padding()
         }
     }
     
     func paymentFlowModalView(
-        event: @escaping (PaymentFraudMockView.Event) -> Void
+        event: @escaping (FraudEvent) -> Void
     ) -> (UtilityServiceFlowState.Modal) -> PaymentFlowModalView {
         
         return { PaymentFlowModalView(state: $0, event: event) }

@@ -36,7 +36,9 @@ extension UtilityServicePaymentFlowState {
     
     enum FullScreenCover {
         
-        case completed
+        case completed(TransactionResult)
+        
+        typealias TransactionResult = AnywayTransactionStatus.TransactionResult
     }
     
     enum Modal {

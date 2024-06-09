@@ -125,7 +125,7 @@ private extension TransactionReducer {
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        with event: Event.Fraud
+        with event: FraudEvent
     ) {
         guard case .fraudSuspected = state.status else { return }
         

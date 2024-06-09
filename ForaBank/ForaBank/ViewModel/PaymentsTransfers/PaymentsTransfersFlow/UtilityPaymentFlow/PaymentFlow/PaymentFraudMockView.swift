@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
+import AnywayPaymentDomain
 import SwiftUI
 
 struct PaymentFraudMockView: View {
@@ -30,7 +31,7 @@ struct PaymentFraudMockView: View {
             
             Button("Continue", action: { event(.continue) })
             
-            Button("Expire", action: { event(.expire) })
+            Button("Expire", action: { event(.expired) })
                 .foregroundColor(.red)
         }
         .padding()
