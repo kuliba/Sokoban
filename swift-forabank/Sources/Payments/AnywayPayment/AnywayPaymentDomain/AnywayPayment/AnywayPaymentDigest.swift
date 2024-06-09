@@ -11,15 +11,18 @@ import Tagged
 public struct AnywayPaymentDigest: Equatable {
     
     public let additional: [Additional]
+    public let amount: Decimal?
     public let core: PaymentCore?
     public let puref: Puref
     
     public init(
         additional: [Additional],
+        amount: Decimal?,
         core: PaymentCore?,
         puref: Puref
     ) {
         self.additional = additional
+        self.amount = amount
         self.core = core
         self.puref = puref
     }
@@ -46,18 +49,15 @@ extension AnywayPaymentDigest {
     
     public struct PaymentCore: Equatable {
         
-        public let amount: Decimal
         public let currency: Currency
         public let productID: ProductID
         public let productType: ProductType
         
         public init(
-            amount: Decimal,
             currency: Currency,
             productID: Int,
             productType: ProductType
         ) {
-            self.amount = amount
             self.currency = currency
             self.productID = productID
             self.productType = productType

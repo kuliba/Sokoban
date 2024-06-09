@@ -25,11 +25,22 @@ where OTPView: View,
                 { event(.otp($0)) }
             )
             
-        case let .productPicker(productID):
+        case let .productPicker(productID, productType):
             factory.productPicker(
                 productID,
-                { event(.product($0, $1)) }
+                { event(.product($0, productType._productType, $1)) }
             )
+        }
+    }
+}
+
+private extension AnywayElement.UIComponent.Widget.ProductType {
+    
+    var _productType: AnywayPaymentEvent.Widget.ProductType {
+        
+        switch self {
+        case .account: return .account
+        case .card:    return .card
         }
     }
 }

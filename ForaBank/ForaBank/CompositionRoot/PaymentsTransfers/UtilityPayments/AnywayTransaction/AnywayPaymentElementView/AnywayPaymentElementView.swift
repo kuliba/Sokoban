@@ -75,11 +75,8 @@ private extension AnywayPaymentElementView {
             SimpleOTPWrapperView(viewModel: otpViewModel)
 
             
-        case let .core(productSelectViewModel, _,_):
-            ProductSelectWrapperView(
-                viewModel: productSelectViewModel, 
-                config: .iFora
-            )
+        case let .product(viewModel):
+            ProductSelectWrapperView(viewModel: viewModel, config: .iFora)
         }
     }
 }

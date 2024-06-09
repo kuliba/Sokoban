@@ -32,7 +32,8 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
     
     typealias MicroServices = PrepaymentPickerMicroServices<Operator>
     
-    typealias MakeTransactionViewModel = (AnywayTransactionState) -> AnywayTransactionViewModel
+    typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
+    typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
 }
 
 extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -56,7 +57,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias UtilityPaymentViewModel = ObservingCachedAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
 }
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -100,7 +101,10 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         notify: @escaping (PaymentStateProjection) -> Void
     ) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
         
-        let transactionViewModel = makeTransactionViewModel(transactionState)
+        let transactionViewModel = makeTransactionViewModel(transactionState) {
+            
+            PaymentStateProjection($0, $1).map(notify)
+        }
         
         let mapper = AnywayElementModelMapper(
             event: { transactionViewModel.event(.payment($0)) },
@@ -116,7 +120,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         let reducer = Reducer(update: updater.update(_:with:))
         
         let effectHandler = CachedAnywayTransactionEffectHandler(
-            statePublisher: transactionViewModel.$state.eraseToAnyPublisher(),
+            statePublisher: transactionViewModel.$state.removeDuplicates().eraseToAnyPublisher(),
             event: transactionViewModel.event(_:)
         )
         
@@ -128,15 +132,10 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
             isValid: transactionState.isValid,
             status: transactionState.status
         )
-        let cachedTransactionViewModel = RxViewModel(
+        let viewModel = RxViewModel(
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:)
-        )
-        
-        let viewModel = UtilityPaymentViewModel(
-            observable: cachedTransactionViewModel,
-            observe: { PaymentStateProjection($0, $1).map(notify) }
         )
         
         return .init(viewModel: viewModel)
@@ -168,6 +167,7 @@ private extension AnywayPaymentDomain.AnywayPayment {
         
         return .init(
             elements: [],
+            footer: .continue,
             infoMessage: nil,
             isFinalStep: false,
             isFraudSuspected: false,
@@ -186,8 +186,8 @@ enum PaymentStateProjection: Equatable {
 extension PaymentStateProjection {
     
     init?(
-        _ previous: CachedTransactionState,
-        _ current: CachedTransactionState
+        _ previous: AnywayTransactionState,
+        _ current: AnywayTransactionState
     ) {
 #warning("previous is ignored")
         switch current.status {

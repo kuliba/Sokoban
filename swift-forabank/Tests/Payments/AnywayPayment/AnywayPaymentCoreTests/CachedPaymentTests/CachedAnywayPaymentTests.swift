@@ -13,6 +13,35 @@ final class CachedAnywayPaymentTests: XCTestCase {
     
     // MARK: - init
     
+    func test_init_shouldSetFooterToContinueOnContinue() {
+        
+        let anywayPayment = makeAnywayPayment(footer: .continue)
+        
+        XCTAssertNoDiff(Payment(anywayPayment).footer, .continue)
+    }
+    
+    func test_init_shouldSetFooterToAmountWithoutCurrencyOnAmountWithoutProduct() {
+        
+        let amount = anyAmount()
+        let anywayPayment = makeAnywayPayment(
+            footer: .amount(amount)
+        )
+        
+        XCTAssertNoDiff(Payment(anywayPayment).footer, .amount(amount, nil))
+    }
+    
+    func test_init_shouldSetFooterToAmountWithCurrencyOnAmountWithProduct() {
+        
+        let (amount, currency) = (anyAmount(), anyMessage())
+        let product = makeProductWidget(currency: currency)
+        let anywayPayment = makeAnywayPayment(
+            elements: [.widget(.product(product))],
+            footer: .amount(amount)
+        )
+        
+        XCTAssertNoDiff(Payment(anywayPayment).footer, .amount(amount, currency))
+    }
+    
     func test_init_shouldCreateInstanceWithNilInfoMessageFromAnywayPaymentWithNilInfoMessage() {
         
         let anywayPayment = makeAnywayPayment(infoMessage: nil)
@@ -77,15 +106,15 @@ final class CachedAnywayPaymentTests: XCTestCase {
         
         let field = makeAnywayPaymentField()
         let parameter = makeAnywayPaymentParameter()
-        let core = makeAnywayPaymentCoreWidget()
+        let core = makeProductWidget()
         let anywayPayment = makeAnywayPayment(
-            elements: [.field(field), .parameter(parameter), .widget(.core(core))]
+            elements: [.field(field), .parameter(parameter), .widget(.product(core))]
         )
         
         let payment = Payment(anywayPayment)
         
-        XCTAssertNoDiff(payment.models.map(\.id), [.fieldID(field.id), .parameterID(parameter.field.id), .widgetID(.core)])
-        XCTAssertNoDiff(payment.models.map(\.model), [.field(field), .parameter(parameter), .widget(.core(core))])
+        XCTAssertNoDiff(payment.models.map(\.id), [.fieldID(field.id), .parameterID(parameter.field.id), .widgetID(.product)])
+        XCTAssertNoDiff(payment.models.map(\.model), [.field(field), .parameter(parameter), .widget(.product(core))])
     }
     
     func test_init_shouldMapElements() {
@@ -101,6 +130,81 @@ final class CachedAnywayPaymentTests: XCTestCase {
     }
     
     // MARK: - updating
+    
+    func test_updating_shouldNotChangeAmountFooterWithoutCurrencyOnSameAmount() {
+        
+        let amount = anyAmount()
+        let payment = Payment(makeAnywayPayment(footer: .amount(amount)))
+        XCTAssertNoDiff(payment.footer, .amount(amount, nil))
+        
+        let updated = updating(payment, with: makeAnywayPayment(footer: .amount(amount)))
+        
+        XCTAssertNoDiff(updated.footer, .amount(amount, nil))
+    }
+    
+    func test_updating_shouldSetAmountFooterWithCurrencyOnSameAmountWithProduct() {
+        
+        let (amount, currency) = (anyAmount(), anyMessage())
+        let product = makeProductWidget(currency: currency)
+        let payment = Payment(makeAnywayPayment(
+            footer: .amount(amount))
+        )
+        XCTAssertNoDiff(payment.footer, .amount(amount, nil))
+        
+        let updated = updating(payment, with: makeAnywayPayment(
+            elements: [.widget(.product(product))],
+            footer: .amount(amount))
+        )
+        
+        XCTAssertNoDiff(updated.footer, .amount(amount, currency))
+    }
+    
+    func test_updating_shouldNotChangeFooterOnSameContinue() {
+        
+        let payment = Payment(makeAnywayPayment(footer: .continue))
+        XCTAssertNoDiff(payment.footer, .continue)
+        
+        let updated = updating(payment, with: makeAnywayPayment(footer: .continue))
+        
+        XCTAssertNoDiff(updated.footer, .continue)
+    }
+    
+    func test_updating_shouldSetFooterToContinueOnContinue() {
+        
+        let amount = anyAmount()
+        let payment = Payment(makeAnywayPayment(footer: .amount(amount)))
+        XCTAssertNoDiff(payment.footer, .amount(amount, nil))
+        
+        let updated = updating(payment, with: makeAnywayPayment(footer: .continue))
+        
+        XCTAssertNoDiff(updated.footer, .continue)
+    }
+    
+    func test_updating_shouldSetFooterToAmountWithoutCurrencyOnAmountWithoutProduct() {
+        
+        let amount = anyAmount()
+        let payment = Payment(makeAnywayPayment(footer: .continue))
+        XCTAssertNoDiff(payment.footer, .continue)
+        
+        let updated = updating(payment, with: makeAnywayPayment(footer: .amount(amount)))
+        
+        XCTAssertNoDiff(updated.footer, .amount(amount, nil))
+    }
+    
+    func test_updating_shouldSetFooterToAmountWithCurrencyOnAmountWithProduct() {
+        
+        let (amount, currency) = (anyAmount(), anyMessage())
+        let product = makeProductWidget(currency: currency)
+        let payment = Payment(makeAnywayPayment(footer: .continue))
+        XCTAssertNoDiff(payment.footer, .continue)
+        
+        let updated = updating(payment, with: makeAnywayPayment(
+            elements: [.widget(.product(product))],
+            footer: .amount(amount))
+        )
+        
+        XCTAssertNoDiff(updated.footer, .amount(amount, currency))
+    }
     
     func test_updating_shouldUpdateWithNilInfoMessageFromAnywayPaymentWithNilInfoMessage() {
         
@@ -189,9 +293,9 @@ final class CachedAnywayPaymentTests: XCTestCase {
         
         let field = makeAnywayPaymentField()
         let parameter = makeAnywayPaymentParameter()
-        let core = makeAnywayPaymentCoreWidget()
+        let core = makeProductWidget()
         let anywayPayment = makeAnywayPayment(
-            elements: [.field(field), .parameter(parameter), .widget(.core(core))]
+            elements: [.field(field), .parameter(parameter), .widget(.product(core))]
         )
         let payment = Payment(anywayPayment)
         
@@ -222,6 +326,7 @@ final class CachedAnywayPaymentTests: XCTestCase {
     
     private func makeAnywayPayment(
         elements: [AnywayElement] = [],
+        footer: AnywayPayment.Footer = .continue,
         infoMessage: String? = nil,
         isFinalStep: Bool = true,
         isFraudSuspected: Bool = true,
@@ -230,6 +335,7 @@ final class CachedAnywayPaymentTests: XCTestCase {
         
         return .init(
             elements: elements,
+            footer: footer,
             infoMessage: infoMessage,
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,
@@ -244,6 +350,13 @@ final class CachedAnywayPaymentTests: XCTestCase {
         
         return payment.updating(with: anywayPayment, using: { $0 })
     }
+    
+    private func anyAmount(
+        _ value: Decimal = .init(Double.random(in: 1...999))
+    ) -> Decimal {
+        
+        return value
+    }
 }
 
 private extension CachedAnywayPayment where ElementModel == AnywayElement {
@@ -252,19 +365,4 @@ private extension CachedAnywayPayment where ElementModel == AnywayElement {
         
         self.init(payment, using: { $0 })
     }
-}
-
-private func makeAnywayPaymentCoreWidget(
-    amount: Decimal = .init(Double.random(in: 1...1_000)),
-    currency: String = "RUB",
-    productID: AnywayElement.Widget.PaymentCore.ProductID = .random(in: 1...1_000),
-    productType: AnywayElement.Widget.PaymentCore.ProductType = .account
-) -> AnywayElement.Widget.PaymentCore {
-    
-    return .init(
-        amount: amount,
-        currency: currency,
-        productID: productID,
-        productType: productType
-    )
 }

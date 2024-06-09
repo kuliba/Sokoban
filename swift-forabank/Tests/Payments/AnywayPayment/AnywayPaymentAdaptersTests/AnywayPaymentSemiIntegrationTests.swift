@@ -20,7 +20,8 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
         
         let payment1 = try update(payment0, with: .step1Response)
         XCTAssertNoDiff(payment1.elementsView, [
-            .init("p: 1", "Лицевой счет")
+            .init("p: 1", "Лицевой счет"),
+            .init("footer", "continue")
         ])
         //        XCTAssertNoDiff(payment1.makeDigest(), .init(
         //            additional: [],
@@ -34,7 +35,8 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
         let payment2 = try update(payment1, with: .step2Response)
         XCTAssertNoDiff(payment2.elementsView, [
             .init("p: 1", "Лицевой счет"),
-            .init("p: 2", "Признак платежа")
+            .init("p: 2", "Признак платежа"),
+            .init("footer", "continue")
         ])
         
         let payment3 = try update(payment2, with: .step3Response)
@@ -59,7 +61,8 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 25", "ТЕК. ПОКАЗАНИЯ ХВ_ГВС №1012018015708"),
             .init("p: 29", "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213"),
             .init("p: 65", "УСЛУГИ_ЖКУ"),
-            .init("p: 143", "Сумма пени")
+            .init("p: 143", "Сумма пени"),
+            .init("footer", "continue")
         ])
         
         let payment4 = try update(payment3, with: .step4Response)
@@ -86,9 +89,10 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 65", "УСЛУГИ_ЖКУ"),
             .init("p: 143", "Сумма пени"),
             .init("f: SumSTrs", "Сумма"),
-            .init("w: core", "123.45, RUB, 1234567890, account")
+            .init("w: core", "RUB, 1234567890, account"),
+            .init("footer", "amount 123.45")
         ])
-                
+        
         let payment5 = try update(payment4, with: .step5Response)
         XCTAssertNoDiff(payment4.elementsView, [
             .init("p: 1", "Лицевой счет"),
@@ -113,7 +117,8 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 65", "УСЛУГИ_ЖКУ"),
             .init("p: 143", "Сумма пени"),
             .init("f: SumSTrs", "Сумма"),
-            .init("w: core", "123.45, RUB, 1234567890, account")
+            .init("w: core", "RUB, 1234567890, account"),
+            .init("footer", "amount 123.45")
         ])
     }
     
@@ -163,7 +168,27 @@ private struct TestView: Equatable {
 
 private extension AnywayPayment {
     
-    var elementsView: [TestView] { elements.map(\.testView) }
+    var elementsView: [TestView] {
+        
+        var elements = elements.map(\.testView)
+        elements.append(footer.testView)
+        
+        return elements
+    }
+}
+
+private extension AnywayPayment.Footer {
+    
+    var testView: TestView {
+        
+        switch self {
+        case let .amount(amount):
+            return .init("footer", "amount \(amount)")
+            
+        case .continue:
+            return .init("footer", "continue")
+        }
+    }
 }
 
 private extension AnywayElement {
@@ -187,7 +212,7 @@ private extension AnywayElement.Field {
     
     var testView: TestView {
         
-        .init("f: \(id)", title)
+        return .init("f: \(id)", title)
     }
 }
 
@@ -195,7 +220,7 @@ private extension AnywayElement.Parameter {
     
     var testView: TestView {
         
-        .init("p: \(field.id)", uiAttributes.title)
+        return .init("p: \(field.id)", uiAttributes.title)
     }
 }
 
@@ -204,8 +229,8 @@ private extension AnywayElement.Widget {
     var testView: TestView {
         
         switch self {
-        case let .core(core):
-            return .init("w: core", "\(core.amount), \(core.currency), \(core.productID), \(core.productType)")
+        case let .product(product):
+            return .init("w: core", "\(product.currency), \(product.productID), \(product.productType)")
         case .otp:
             return .init("w: otp", "otp")
         }
@@ -240,6 +265,7 @@ private func makeEmptyPayment(
     
     return .init(
         elements: [],
+        footer: .continue,
         infoMessage: nil,
         isFinalStep: false,
         isFraudSuspected: false,

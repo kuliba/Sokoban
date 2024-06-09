@@ -404,8 +404,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     func test_uiComponent_shouldDeliverProductPickerWithAccountForCoreWidget() {
         
         let id = generateRandom11DigitNumber()
-        let element = makeAnywayPaymentWidgetElement(.core(
-            makeWidgetPaymentCore(
+        let element = makeAnywayPaymentWidgetElement(.product(
+            makeProductWidget(
                 productID: id,
                 productType: .account
             )
@@ -420,8 +420,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     func test_uiComponent_shouldDeliverProductPickerWithCardForCoreWidget() {
         
         let id = generateRandom11DigitNumber()
-        let element = makeAnywayPaymentWidgetElement(.core(
-            makeWidgetPaymentCore(
+        let element = makeAnywayPaymentWidgetElement(.product(
+            makeProductWidget(
                 productID: id,
                 productType: .card
             )

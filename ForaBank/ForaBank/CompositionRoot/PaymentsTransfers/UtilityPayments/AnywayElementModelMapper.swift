@@ -65,19 +65,19 @@ private extension AnywayElementModelMapper {
             return .parameter(.nonEditable(parameter))
             
         case .numberInput:
-            #warning("how to add differentiation for numeric input")
+#warning("how to add differentiation for numeric input")
             return .parameter(.numberInput(makeInputViewModel(with: parameter)))
-      
+            
         case let .select(option, options):
             if let selector = try? Selector(option: option, options: options) {
                 return .parameter(.select(makeSelectorViewModel(with: selector, and: parameter)))
             } else {
                 return .parameter(.unknown(parameter))
             }
-        
+            
         case .textInput:
             return .parameter(.textInput(makeInputViewModel(with: parameter)))
-        
+            
         case .unknown:
             return .parameter(.unknown(parameter))
         }
@@ -111,7 +111,7 @@ private extension AnywayElementModelMapper {
     ) -> ObservingSelectorViewModel<Option> {
         
         let reducer = SelectorReducer<Option>()
-
+        
         return .init(
             initialState: selector,
             reduce: reducer.reduce(_:_:),
@@ -133,17 +133,17 @@ private extension AnywayElementModelMapper {
     ) -> AnywayElementModel {
         
         switch widget {
-        case let .core(core):
-            return .widget(.core(makeProductSelectViewModel(with: core), core.amount, core.currency))
+        case let .product(product):
+            return .widget(.product(makeProductSelectViewModel(with: product)))
             
         case let .otp(otp):
             return .widget(.otp(makeModelForOTP(with: otp)))
         }
     }
-
+    
 #warning("extract?")
     private func makeProductSelectViewModel(
-        with core: AnywayElement.Widget.PaymentCore
+        with core: AnywayElement.Widget.Product
     ) -> ObservingProductSelectViewModel {
         
         let products = getProducts()
@@ -169,7 +169,7 @@ private extension AnywayElementModelMapper {
             }
         )
     }
-
+    
 #warning("extract?")
     private func makeModelForOTP(
         with otp: Int?
@@ -256,15 +256,15 @@ private extension ProductSelect {
 private extension ProductSelect.Product {
     
     func isMatching(
-        _ core: AnywayPaymentDomain.AnywayElement.Widget.PaymentCore
+        _ product: AnywayPaymentDomain.AnywayElement.Widget.Product
     ) -> Bool {
         
-        switch core.productType {
+        switch product.productType {
         case .account:
-            return type == .account && id.rawValue == core.productID
+            return type == .account && id.rawValue == product.productID
             
         case .card:
-            return type == .card && id.rawValue == core.productID
+            return type == .card && id.rawValue == product.productID
         }
     }
 }

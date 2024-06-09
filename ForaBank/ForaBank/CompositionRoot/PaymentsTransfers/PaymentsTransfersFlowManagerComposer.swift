@@ -64,7 +64,7 @@ extension PaymentsTransfersFlowManagerComposer {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias PaymentViewModel = ObservingCachedAnywayTransactionViewModel
+    typealias PaymentViewModel = CachedAnywayTransactionViewModel
 }
 
 private extension PaymentsTransfersFlowManagerComposer {
@@ -221,7 +221,8 @@ private extension PaymentsTransfersFlowManagerComposer {
     }
     
     private func makeTransactionViewModel(
-        initialState: AnywayTransactionState
+        initialState: AnywayTransactionState,
+        observe: @escaping Observe
     ) -> AnywayTransactionViewModel {
         
         let composer = AnywayTransactionViewModelComposer(
@@ -230,6 +231,8 @@ private extension PaymentsTransfersFlowManagerComposer {
             log: log
         )
         
-        return composer.compose(initialState: initialState)
+        return composer.compose(initialState: initialState, observe: observe)
     }
+    
+    typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
 }

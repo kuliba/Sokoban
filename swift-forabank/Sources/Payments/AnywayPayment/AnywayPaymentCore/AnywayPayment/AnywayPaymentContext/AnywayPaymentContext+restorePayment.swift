@@ -52,13 +52,19 @@ private extension AnywayPayment {
     func restoring(with snapshot: Snapshot) -> Self {
         
         let elements = elements.map { $0.restoring(with: snapshot) }
-        return updating(elements: elements)
+#warning("add tests")
+        let footer = footer.restoring(with: snapshot)
+        return updating(with: elements, and: footer)
     }
     
-    func updating(elements: [AnywayElement]) -> Self {
+    func updating(
+        with elements: [AnywayElement],
+        and footer: Footer
+    ) -> Self {
         
         return .init(
             elements: elements,
+            footer: footer,
             infoMessage: infoMessage,
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,
@@ -78,6 +84,15 @@ private extension AnywayElement {
         default:
             return self
         }
+    }
+}
+
+private extension Payment.Footer {
+    
+#warning("FIXME add tests")
+    func restoring(with snapshot: Snapshot) -> Self {
+        
+        self
     }
 }
 

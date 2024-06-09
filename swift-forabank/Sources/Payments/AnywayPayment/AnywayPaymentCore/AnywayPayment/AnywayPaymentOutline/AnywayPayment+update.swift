@@ -21,11 +21,14 @@ extension AnywayPayment {
         elements.appendComplementaryFields(from: update.fields)
         elements.appendParameters(from: update.parameters, with: outline)
         
-        elements.adjustWidget(.core(.init(outline.core)), on: update.details.control.needSum && !update.details.control.isMultiSum)
+        elements.adjustWidget(.product(.init(outline.core)), on: update.details.control.needSum && !update.details.control.isMultiSum)
         elements.adjustWidget(.otp(nil), on: update.details.control.needOTP)
+        
+        let footer = footer.update(with: update, and: outline)
         
         return .init(
             elements: elements,
+            footer: footer,
             infoMessage: update.details.info.infoMessage,
             isFinalStep: update.details.control.isFinalStep,
             isFraudSuspected: update.details.control.isFraudSuspected,
@@ -34,12 +37,27 @@ extension AnywayPayment {
     }
 }
 
-private extension AnywayElement.Widget.PaymentCore {
+private extension AnywayPayment.Footer {
+    
+    func update(
+        with update: AnywayPaymentUpdate,
+        and outline: AnywayPaymentOutline
+    ) -> Self {
+        
+        if update.details.control.needSum
+            && !update.details.control.isMultiSum {
+            return .amount(outline.core.amount)
+        } else {
+            return .continue
+        }
+    }
+}
+
+private extension AnywayElement.Widget.Product {
     
     init(_ core: AnywayPaymentOutline.PaymentCore) {
         
         self.init(
-            amount: core.amount,
             currency: core.currency,
             productID: core.productID,
             productType: core._productType
@@ -49,7 +67,7 @@ private extension AnywayElement.Widget.PaymentCore {
 
 private extension AnywayPaymentOutline.PaymentCore {
     
-    var _productType: AnywayElement.Widget.PaymentCore.ProductType {
+    var _productType: AnywayElement.Widget.Product.ProductType {
         
         switch productType {
         case .account: return .account

@@ -242,7 +242,14 @@ private extension AnywayPaymentDomain.AnywayPayment {
         update: AnywayPaymentUpdate,
         outline: AnywayPaymentOutline
     ) {
-        let empty: Self = .init(elements: [], infoMessage: nil, isFinalStep: false, isFraudSuspected: false, puref: puref)
+        let empty: Self = .init(
+            elements: [],
+            footer: .continue,
+            infoMessage: nil,
+            isFinalStep: false,
+            isFraudSuspected: false,
+            puref: puref
+        )
         self = empty.update(with: update, and: outline)
     }
 }
