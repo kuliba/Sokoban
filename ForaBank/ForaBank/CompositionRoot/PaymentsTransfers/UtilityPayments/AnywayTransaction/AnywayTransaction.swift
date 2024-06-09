@@ -10,19 +10,21 @@ import AnywayPaymentDomain
 import RxViewModel
 
 typealias CachedAnywayTransactionViewModel = RxViewModel<CachedTransactionState, CachedTransactionEvent, CachedTransactionEffect>
-typealias CachedTransactionState = TransactionOf<OperationDetailID, OperationDetails, DocumentStatus, CachedPaymentContext<AnywayElementModel>>
+
+typealias CachedTransactionState = Transaction<CachedPaymentContext<AnywayElementModel>, AnywayTransactionStatus>
 typealias CachedTransactionEvent = CachedAnywayTransactionEvent<AnywayTransactionState, AnywayTransactionEvent>
 typealias CachedTransactionEffect = CachedAnywayTransactionEffect<AnywayTransactionEvent>
 
-typealias AnywayTransactionViewModel = RxObservingViewModel<AnywayTransactionState, AnywayTransactionEvent, TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>>
+typealias AnywayTransactionViewModel = RxObservingViewModel<AnywayTransactionState, AnywayTransactionEvent, AnywayTransactionEffect>
 
-typealias AnywayTransactionState = TransactionOf<OperationDetailID, OperationDetails, DocumentStatus, AnywayPaymentContext>
+typealias AnywayTransactionState = Transaction<AnywayPaymentContext, AnywayTransactionStatus>
+typealias AnywayTransactionEvent = TransactionEvent<AnywayTransactionReport, AnywayPaymentEvent, AnywayPaymentUpdate>
+typealias AnywayTransactionEffect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>
 
-typealias AnywayTransactionEvent = TransactionEventOf<OperationDetailID, OperationDetails, DocumentStatus, AnywayPaymentEvent, AnywayPaymentUpdate>
+typealias AnywayTransactionEffectHandlerMicroServices = TransactionEffectHandlerMicroServices<AnywayTransactionReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
 
-typealias AnywayTransactionEffectHandlerMicroServices = TransactionEffectHandlerMicroServices<AnywayReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
-
-typealias AnywayReport = TransactionReport<DocumentStatus, _OperationInfo>
+typealias AnywayTransactionStatus = TransactionStatus<AnywayTransactionReport>
+typealias AnywayTransactionReport = TransactionReport<DocumentStatus, _OperationInfo>
 typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails>
 
 enum DocumentStatus {
