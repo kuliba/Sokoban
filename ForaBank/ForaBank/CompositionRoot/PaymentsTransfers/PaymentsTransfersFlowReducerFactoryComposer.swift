@@ -98,13 +98,13 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     
     func makeUtilityPaymentState(
         transactionState: AnywayTransactionState,
-        notify: @escaping (PaymentStateProjection) -> Void
+        notify: @escaping (AnywayTransactionStatus) -> Void
     ) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
         
-        let transactionViewModel = makeTransactionViewModel(transactionState) {
-            
-            PaymentStateProjection($0, $1).map(notify)
-        }
+        let transactionViewModel = makeTransactionViewModel(
+            transactionState,
+            { _, state in state.status.map(notify) }
+        )
         
         let mapper = AnywayElementModelMapper(
             event: { transactionViewModel.event(.payment($0)) },
@@ -173,35 +173,5 @@ private extension AnywayPaymentDomain.AnywayPayment {
             isFraudSuspected: false,
             puref: puref
         )
-    }
-}
-
-#warning("looks like a better way would be to change: typealias PaymentStateProjection = TransactionStatus<...>")
-enum PaymentStateProjection: Equatable {
-    case completed
-    case errorMessage(String)
-    case fraud(Fraud)
-}
-
-extension PaymentStateProjection {
-    
-    init?(
-        _ previous: AnywayTransactionState,
-        _ current: AnywayTransactionState
-    ) {
-#warning("previous is ignored")
-        switch current.status {
-        case .fraudSuspected:
-            self = .fraud(.init())
-            
-        case .result:
-            self = .completed
-            
-        case let .serverError(errorMessage):
-            self = .errorMessage(errorMessage)
-            
-        default:
-            return nil
-        }
     }
 }

@@ -205,7 +205,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with projection: PaymentStateProjection
+        with projection: AnywayTransactionStatus
     ) {
         switch projection {
         case .completed:

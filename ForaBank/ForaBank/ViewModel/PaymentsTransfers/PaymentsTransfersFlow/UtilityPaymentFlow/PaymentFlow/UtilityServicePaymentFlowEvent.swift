@@ -9,7 +9,7 @@ enum UtilityServicePaymentFlowEvent: Equatable {
     
     case dismiss(Dismiss)
     case fraud(FraudEvent)
-    case notified(PaymentStateProjection)
+    case notified(AnywayTransactionStatus)
 }
 
 extension UtilityServicePaymentFlowEvent {
