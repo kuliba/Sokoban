@@ -63,7 +63,7 @@ private extension AnywayTransactionViewModelComposer {
         
         let effectHandler = EffectHandler(microServices: microServices)
         
-        let composer = AnywayPaymentTransactionReducerComposer<Report>()
+        let composer = AnywayPaymentTransactionReducerComposer<AnywayReport>()
         let reducer = composer.compose()
         
         return .init(
@@ -76,5 +76,5 @@ private extension AnywayTransactionViewModelComposer {
     
     typealias MicroServices = AnywayTransactionEffectHandlerMicroServices
     
-    typealias EffectHandler = TransactionEffectHandler<Report, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
+    typealias EffectHandler = TransactionEffectHandler<AnywayReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
 }

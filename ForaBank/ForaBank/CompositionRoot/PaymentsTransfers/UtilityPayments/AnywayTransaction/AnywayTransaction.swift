@@ -22,9 +22,9 @@ typealias AnywayTransactionState = TransactionOf<OperationDetailID, OperationDet
 
 typealias AnywayTransactionEvent = TransactionEventOf<OperationDetailID, OperationDetails, DocumentStatus, AnywayPaymentEvent, AnywayPaymentUpdate>
 
-typealias AnywayTransactionEffectHandlerMicroServices = TransactionEffectHandlerMicroServices<Report, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
+typealias AnywayTransactionEffectHandlerMicroServices = TransactionEffectHandlerMicroServices<AnywayReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
 
-typealias Report = TransactionReport<DocumentStatus, _OperationInfo>
+typealias AnywayReport = TransactionReport<DocumentStatus, _OperationInfo>
 typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails>
 
 enum DocumentStatus {
