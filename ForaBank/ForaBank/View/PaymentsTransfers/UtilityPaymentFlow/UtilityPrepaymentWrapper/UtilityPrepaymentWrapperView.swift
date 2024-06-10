@@ -86,7 +86,7 @@ private extension UtilityPrepaymentWrapperView {
                 
                 OperatorLabel(
                     title: `operator`.title,
-                    subtitle: `operator`.subtitle,
+                    subtitle: `operator`.inn,
                     config: .iFora,
                     iconView: makeIconView(`operator`.icon)
                 )
@@ -98,12 +98,31 @@ private extension UtilityPrepaymentWrapperView {
     func makeSearchView() -> some View {
         
         TextField(
-            "Type to search",
+            "Наименование или ИНН",
             text: .init(
                 get: { viewModel.state.searchText },
                 set: { viewModel.event(.search($0)) }
             )
         )
+        .frame(height: 44)
+        .padding(.leading, 14)
+        .padding(.trailing, 15)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(Color.bordersDivider, lineWidth: 1)
+        )
+    }
+}
+
+// MARK: - Helpers
+
+private extension UtilityPaymentOperator {
+    
+    var inn: String? {
+        
+        guard let subtitle, !subtitle.isEmpty else { return nil }
+        
+        return "ИНН \(subtitle)"
     }
 }
 

@@ -19,20 +19,18 @@ struct UtilityServiceLabel<IconView: View>: View {
             iconView
                 .frame(width: 32, height: 32)
             
-            VStack(alignment: .leading, spacing: 6) {
-                
-                Text(service.name)
-                    .font(.subheadline)
-                
-                Text(service.id)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.vertical, 1)
+            Text(service.name)
+                .multilineTextAlignment(.leading)
+                .font(.body)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 1)
         }
         .contentShape(Rectangle())
-        .foregroundColor(service.id.localizedCaseInsensitiveContains("failure") ? .red : .primary)
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .foregroundColor(.gray.opacity(0.1))
+        )
     }
 }
 
