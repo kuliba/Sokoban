@@ -47,7 +47,7 @@ extension ListDropdownTextsUIView {
             VStack(spacing: 0) {
                 headerView
                 
-                ForEach(model.list, content: itemView)
+                ForEach(model.list, id: \.id, content: itemView)
             }
             .frame(maxWidth: .infinity)
             .background(config.backgroundColor)

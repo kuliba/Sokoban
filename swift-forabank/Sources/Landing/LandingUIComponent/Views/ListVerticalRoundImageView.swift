@@ -24,7 +24,7 @@ struct ListVerticalRoundImageView: View {
             
             LazyVStack(alignment: .leading, spacing: config.spacings.lazyVstack) {
                 
-                ForEach(model.list(showAll: showAll), content: itemView(item:))
+                ForEach(model.list(showAll: showAll), id: \.id, content: itemView(item:))
                 
                 if let _ = model.data.displayedCount {
                     buttonShowAll

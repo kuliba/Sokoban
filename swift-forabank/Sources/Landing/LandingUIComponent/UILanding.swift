@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct UILanding: Equatable {
+public struct UILanding: Equatable { 
     
     public let header: [Component]
     public let main: [Component]

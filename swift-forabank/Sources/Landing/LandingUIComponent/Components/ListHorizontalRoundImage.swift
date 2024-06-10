@@ -11,20 +11,19 @@ import CombineSchedulers
 
 public extension UILanding.List {
     
-    struct HorizontalRoundImage: Hashable, Identifiable {
-        
-        public var id: Self { self }
+    struct HorizontalRoundImage: Equatable {
+       
+        public let id: UUID
         public let title: String?
         public let list: [ListItem]
         
-        public struct ListItem: Hashable, Identifiable {
+        public struct ListItem: Equatable {
             
-            public var id: Self { self }
             public let imageMd5Hash: String
             public let title, subInfo: String?
             public let detail: Detail?
             
-            public struct Detail: Hashable {
+            public struct Detail: Equatable {
                 
                 public let groupId, viewId: String
                 
@@ -51,9 +50,11 @@ public extension UILanding.List {
         }
         
         public init(
+            id: UUID = UUID(),
             title: String?,
             list: [ListItem]
         ) {
+            self.id = id
             self.title = title
             self.list = list
         }

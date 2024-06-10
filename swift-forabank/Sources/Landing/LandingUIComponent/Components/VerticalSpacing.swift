@@ -11,9 +11,9 @@ import SwiftUI
 
 public extension UILanding {
     
-    struct VerticalSpacing: Hashable, Identifiable  {
+    struct VerticalSpacing: Equatable  {
         
-        public let id = UUID()
+        public let id: UUID
         public let backgroundColor: BackgroundColorType
         public let spacingType: SpacingType
 
@@ -24,7 +24,8 @@ public extension UILanding {
             case negativeOffset = "negativeOffset"
         }
         
-        public init(backgroundColor: BackgroundColorType, spacingType: SpacingType) {
+        public init(id: UUID = UUID(), backgroundColor: BackgroundColorType, spacingType: SpacingType) {
+            self.id = id
             self.backgroundColor = backgroundColor
             self.spacingType = spacingType
         }

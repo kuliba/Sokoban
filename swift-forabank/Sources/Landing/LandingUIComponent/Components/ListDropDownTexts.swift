@@ -5,23 +5,25 @@
 //  Created by Andryusina Nataly on 13.09.2023.
 //
 
+import Foundation
 import Tagged
 
 public extension UILanding.List {
     
-    struct DropDownTexts: Hashable {
+    struct DropDownTexts: Equatable {
         
+        public let id: UUID
         public let title: Title?
         public let list: [Item]
         
-        public struct Item: Hashable, Identifiable {
+        public struct Item: Equatable {
             
-            public var id: Self { self }
-            
+            public let id: UUID
             public let title: String
             public let description: String
             
-            public init(title: String, description: String) {
+            public init(id: UUID = UUID(), title: String, description: String) {
+                self.id = id
                 self.title = title
                 self.description = description
             }
@@ -33,7 +35,8 @@ public extension UILanding.List {
             public enum _Description {}
         }
         
-        public init(title: Title?, list: [Item]) {
+        public init(id: UUID = UUID(), title: Title?, list: [Item]) {
+            self.id = id
             self.title = title
             self.list = list
         }

@@ -105,7 +105,7 @@ public struct LandingView: View {
         _ components: [UILanding.Component]
     ) -> some View {
         
-        ForEach(components, content: itemView)
+        ForEach(components, id: \.id, content: itemView)
     }
     
     private func orderCard(

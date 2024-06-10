@@ -11,15 +11,18 @@ import UIPrimitives
 
 extension UILanding.List {
     
-    public struct HorizontalRectangleLimits: Hashable {
+    public struct HorizontalRectangleLimits: Equatable {
         
+        public let id: UUID
+
         public let list: [Item]
         
-        public init(list: [Item]) {
+        public init(id: UUID = UUID(), list: [Item]) {
+            self.id = id
             self.list = list
         }
 
-        public struct Item: Hashable, Identifiable {
+        public struct Item: Equatable {
             
             public var id: String { action.type }
             public let action: Action
@@ -36,7 +39,7 @@ extension UILanding.List {
                 self.limits = limits
             }
             
-            public struct Limit: Hashable, Identifiable {
+            public struct Limit: Equatable {
                 
                 public let id: String
                 public let title: String
@@ -49,9 +52,8 @@ extension UILanding.List {
                 }
             }
             
-            public struct Action: Hashable, Identifiable {
+            public struct Action: Hashable {
                 
-                public var id: Self { self }
                 public let type: String
                 
                 public init(type: String) {

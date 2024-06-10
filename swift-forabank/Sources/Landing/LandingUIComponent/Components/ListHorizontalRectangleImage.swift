@@ -10,13 +10,13 @@ import Combine
 
 extension UILanding.List {
     
-    public struct HorizontalRectangleImage: Hashable {
+    public struct HorizontalRectangleImage: Equatable {
         
+        public let id: UUID
         public let list: [Item]
         
-        public struct Item: Hashable, Identifiable {
+        public struct Item: Equatable {
             
-            public var id: Self { self }
             public let imageLink: String
             public let link: String
             public let detail: Detail?
@@ -38,7 +38,8 @@ extension UILanding.List {
             }
         }
         
-        public init(list: [Item]) {
+        public init(id: UUID = UUID(), list: [Item]) {
+            self.id = id
             self.list = list
         }
     }

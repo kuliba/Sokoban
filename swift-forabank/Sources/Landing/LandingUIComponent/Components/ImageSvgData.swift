@@ -11,7 +11,7 @@ import SwiftUI
 
 public extension UILanding {
     
-    struct ImageSvg: Hashable {
+    struct ImageSvg: Equatable {
         
         public let backgroundColor: BackgroundColor
         public let md5hash: Md5hash

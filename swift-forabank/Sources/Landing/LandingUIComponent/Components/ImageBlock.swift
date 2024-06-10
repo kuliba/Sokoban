@@ -5,6 +5,7 @@
 //  Created by Andryusina Nataly on 13.09.2023.
 //
 
+import Foundation
 import Tagged
 import Combine
 import CombineSchedulers
@@ -12,13 +13,15 @@ import SwiftUI
 
 public extension UILanding {
     
-    struct ImageBlock: Hashable {
+    struct ImageBlock: Equatable {
         
+        public let id: UUID
         public let placeholder: Placeholder
         public let backgroundColor: BackgroundColor
         public let link: Link
         
-        public init(placeholder: Placeholder, backgroundColor: BackgroundColor, link: Link) {
+        public init(id: UUID = UUID(), placeholder: Placeholder, backgroundColor: BackgroundColor, link: Link) {
+            self.id = id
             self.placeholder = placeholder
             self.backgroundColor = backgroundColor
             self.link = link

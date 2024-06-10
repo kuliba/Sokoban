@@ -9,27 +9,30 @@ import SwiftUI
 
 public extension UILanding.Multi {
     
-    struct TextsWithIconsHorizontal: Hashable {
+    struct TextsWithIconsHorizontal: Equatable {
         
+        public let id: UUID
         public let lists: [Item]
         
-        public struct Item: Hashable, Identifiable {
+        public struct Item: Equatable {
             
-            public var id: Self { self }
+            public let id: UUID
             public let md5hash: String
             public let title: String?
             
             public init(
+                id: UUID = UUID(),
                 md5hash: String,
                 title: String?
             ) {
+                self.id = id
                 self.md5hash = md5hash
                 self.title = title
             }
         }
         
-        public init(lists: [Item]) {
-            
+        public init(id: UUID = UUID(), lists: [Item]) {
+            self.id = id
             self.lists = lists
         }
     }

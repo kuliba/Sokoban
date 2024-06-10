@@ -10,18 +10,20 @@ import SwiftUI
 
 public extension UILanding.Multi {
     
-    struct LineHeader: Hashable, Identifiable {
+    struct LineHeader: Equatable {
         
-        public var id: Self { self }
+        public let id: UUID
         public let backgroundColor: String
         public let regularTextList: [String]?
         public let boldTextList: [String]?
                 
         public init(
+            id: UUID = UUID(),
             backgroundColor: String,
             regularTextList: [String]?,
             boldTextList: [String]?
         ) {
+            self.id = id
             self.backgroundColor = backgroundColor
             self.regularTextList = regularTextList
             self.boldTextList = boldTextList

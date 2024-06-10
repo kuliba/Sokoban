@@ -11,25 +11,25 @@ import SwiftUI
 
 extension UILanding.List {
     
-    public struct VerticalRoundImage: Hashable {
+    public struct VerticalRoundImage: Equatable {
         
+        public let id: UUID
         public let title: String?
         public let displayedCount: Double?
         public let dropButtonOpenTitle, dropButtonCloseTitle: String?
         public let list: [ListItem]
         
-        public struct ListItem: Hashable, Identifiable {
+        public struct ListItem: Equatable {
             
-            public var id: Self { self }
+            public let id: UUID
             public let md5hash: String
             public let title, subInfo: String?
             public let link, appStore, googlePlay: String?
             
             public let detail: Detail?
             
-            public struct Detail: Hashable, Identifiable {
+            public struct Detail: Equatable {
                 
-                public var id: Self { self }
                 public let groupId: GroupId
                 public let viewId: ViewId
                 
@@ -40,6 +40,7 @@ extension UILanding.List {
             }
             
             public init(
+                id: UUID = UUID(),
                 md5hash: String,
                 title: String?,
                 subInfo: String?,
@@ -48,6 +49,7 @@ extension UILanding.List {
                 googlePlay: String?,
                 detail: Detail?
             ) {
+                self.id = id
                 self.md5hash = md5hash
                 self.title = title
                 self.subInfo = subInfo
@@ -59,12 +61,14 @@ extension UILanding.List {
         }
         
         public init(
+            id: UUID = UUID(),
             title: String?,
             displayedCount: Double?,
             dropButtonOpenTitle: String?,
             dropButtonCloseTitle: String?,
             list: [ListItem]
         ) {
+            self.id = id
             self.title = title
             self.displayedCount = displayedCount
             self.dropButtonOpenTitle = dropButtonOpenTitle

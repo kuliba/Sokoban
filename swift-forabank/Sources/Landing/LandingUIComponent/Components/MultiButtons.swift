@@ -11,13 +11,14 @@ import UIKit
 
 public extension UILanding.Multi {
     
-    struct Buttons: Hashable {
+    struct Buttons: Equatable {
         
+        public let id: UUID
         public let list: [Item]
         
-        public struct Item: Hashable, Identifiable {
+        public struct Item: Equatable {
             
-            public var id: Self { self }
+            public let id: UUID
             public let text: String
             public let style: String
             public let detail: Detail?
@@ -58,12 +59,14 @@ public extension UILanding.Multi {
             }
             
             public init(
+                id: UUID = UUID(),
                 text: String,
                 style: String,
                 detail: Detail?,
                 link: String?,
                 action: Action?
             ) {
+                self.id = id
                 self.text = text
                 self.style = style
                 self.detail = detail
@@ -78,7 +81,8 @@ public extension UILanding.Multi {
             }
         }
         
-        public init(list: [Item]) {
+        public init(id: UUID = UUID(), list: [Item]) {
+            self.id = id
             self.list = list
         }
     }

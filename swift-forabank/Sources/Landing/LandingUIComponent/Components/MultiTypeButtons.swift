@@ -5,21 +5,23 @@
 //  Created by Andryusina Nataly on 13.09.2023.
 //
 
+import Foundation
 import Tagged
 import SwiftUI
 import Combine
 
 public extension UILanding.Multi {
     
-    struct TypeButtons: Hashable {
+    struct TypeButtons: Equatable {
         
+        public let id: UUID
         public let md5hash, backgroundColor, text: String
         public let buttonText, buttonStyle: String
         public let textLink: String?
         public let action: Action?
         public let detail: Detail?
         
-        public struct Detail: Hashable {
+        public struct Detail: Equatable {
             public let groupId: GroupId
             public let viewId: ViewId
             
@@ -29,7 +31,7 @@ public extension UILanding.Multi {
             }
         }
         
-        public struct Action: Hashable {
+        public struct Action: Equatable {
             
             public let type: String
             public let outputData: OutputData?
@@ -63,6 +65,7 @@ public extension UILanding.Multi {
         }
         
         public init(
+            id: UUID = UUID(),
             md5hash: String,
             backgroundColor: String,
             text: String,
@@ -72,6 +75,7 @@ public extension UILanding.Multi {
             action: Action?,
             detail: Detail?
         ) {
+            self.id = id
             self.md5hash = md5hash
             self.backgroundColor = backgroundColor
             self.text = text
