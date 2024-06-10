@@ -1,5 +1,5 @@
 //
-//  View+navigationBar.swift
+//  View+navigationBarWithBack.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 13.12.2023.
@@ -11,7 +11,7 @@ extension View {
     
     private typealias BackButton = NavigationBarView.ViewModel.BackButtonItemViewModel
     
-    func navigationBar(
+    func navigationBarWithBack(
         title: String,
         dismiss: @escaping () -> Void
     ) -> some View {
@@ -24,7 +24,7 @@ extension View {
         ))
     }
     
-    func navigationBar(
+    func navigationBarWithBack(
         title: String,
         dismiss: @escaping () -> Void,
         rightItem: NavigationBarView.ViewModel.ButtonItemViewModel

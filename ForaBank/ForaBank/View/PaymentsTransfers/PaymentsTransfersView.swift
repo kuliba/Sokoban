@@ -239,7 +239,7 @@ struct PaymentsTransfersView: View {
             
         case let .sberQRPayment(sberQRPaymentViewModel):
             viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
-                .navigationBar(
+                .navigationBarWithBack(
                     title: sberQRPaymentViewModel.navTitle,
                     dismiss: { viewModel.event(.dismiss(.destination)) }
                 )
@@ -250,7 +250,7 @@ struct PaymentsTransfersView: View {
             
             utilityPaymentFlowView(state: flowState, event: event)
                 .edgesIgnoringSafeArea(.all)
-                .navigationBar(
+                .navigationBarWithBack(
                     title: flowState.navTitle,
                     dismiss: dismissDestination,
                     rightItem: .barcodeScanner(action: viewModel.openScanner)
