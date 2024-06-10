@@ -9,6 +9,7 @@ import AnywayPaymentDomain
 import ActivateSlider
 import InfoComponent
 import OperatorsListComponents
+import PaymentComponents
 import SberQR
 import SwiftUI
 import TextFieldModel
@@ -498,10 +499,20 @@ private extension PaymentsTransfersView {
             event: dismissDestination,
             contentView: {
                 
-                OperatorFailureView(
-                    state: operatorFailure.content,
-                    event: payByInstructions
-                )
+                 FooterView(
+                     state: .failure(.iFora),
+                     event: { event in
+                     
+                         switch event {
+                         case .payByInstruction:
+                             payByInstructions()
+                             
+                         case .addCompany:
+                             break
+                         }
+                     },
+                     config: .iFora
+                 )
             },
             destinationView: operatorFailureDestinationView
         )
