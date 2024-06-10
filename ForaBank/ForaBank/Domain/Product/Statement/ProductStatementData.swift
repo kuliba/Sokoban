@@ -255,6 +255,16 @@ extension ProductStatementData {
         [.debit, .debitFict, .debitPlan].contains(operationType)
     }
     
+    var shouldShowTemplateButton: Bool {
+        
+        ![.creditPlan, .debitFict, .creditFict].contains(operationType)
+    }
+    
+    var shouldShowDocumentButton: Bool {
+        
+        ![.debitPlan, .creditPlan, .debitFict, .creditFict].contains(operationType)
+    }
+    
     func formattedAmountWithSign(_ formatAmount: String) -> String {
         
         isCreditType ? "+ \(formatAmount)" : formatAmount
