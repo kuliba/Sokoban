@@ -517,7 +517,7 @@ extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
     
     static let step1: Self = .make(
         parametersForNextStep: [
-            .make(id: "1", title: "Лицевой счет (\"1111\" = ok, другое = ошибка)")
+            .make(id: "1", title: "Лицевой счет (\"1111\" = ok, \"2222\" = ошибка, другое = финальная ошибка)")
         ]
     )
     

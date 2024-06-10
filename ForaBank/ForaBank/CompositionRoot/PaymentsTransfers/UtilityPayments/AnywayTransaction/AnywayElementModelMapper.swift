@@ -137,7 +137,7 @@ private extension AnywayElementModelMapper {
             return .widget(.product(makeProductSelectViewModel(with: product)))
             
         case let .otp(otp):
-            return .widget(.otp(makeModelForOTP(with: otp)))
+            return .widget(.otp(makeOTPViewModel(with: otp)))
         }
     }
     
@@ -171,7 +171,7 @@ private extension AnywayElementModelMapper {
     }
     
 #warning("extract?")
-    private func makeModelForOTP(
+    private func makeOTPViewModel(
         with otp: Int?
     ) -> AnywayElementModel.Widget.OTPViewModel {
         

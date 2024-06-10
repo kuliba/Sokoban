@@ -124,6 +124,7 @@ func makeAnywayPayment(
 
 func makeAnywayPayment(
     parameters: [AnywayElement.Parameter] = [],
+    footer: AnywayPayment.Footer = .continue,
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
     product: AnywayElement.Widget.Product? = nil,
@@ -137,6 +138,7 @@ func makeAnywayPayment(
     
     return makeAnywayPayment(
         elements: elements,
+        footer: footer,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected,
         puref: puref

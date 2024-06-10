@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
+import AnywayPaymentDomain
 import Foundation
 
 final class PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel> {
@@ -154,8 +155,11 @@ private extension PaymentsTransfersFlowReducer {
         case let .fraud(fraudEvent):
             (state, effect) = reduce(state, fraudEvent)
             
-        case let .notified(projection):
-            reduce(&state, with: projection)
+        case let .notified(status):
+            reduce(&state, &effect, with: status)
+            
+        case let .showResult(transactionResult):
+            state.setFullScreenCover(to: .completed(transactionResult))
         }
         
         return (state, effect)
@@ -195,7 +199,7 @@ private extension PaymentsTransfersFlowReducer {
         case .continue:
             break
             
-        case .expire:
+        case .expired:
             state.destination = nil
             effect = .delayModalSet(to: .paymentCancelled(expired: true))
         }
@@ -205,17 +209,28 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with projection: PaymentStateProjection
+        _ effect: inout Effect?,
+        with status: AnywayTransactionStatus?
     ) {
-        switch projection {
-        case .completed:
-            state.setFullScreenCover(to: .completed)
+        switch status {
+        case .none:
+            state.setPaymentModal(to: nil)
+
+        case .awaitingPaymentRestartConfirmation:
+            state.setPaymentAlert(to: .paymentRestartConfirmation)
             
-        case let .errorMessage(errorMessage):
-            state.setPaymentAlert(to: .terminalError(errorMessage))
+        case .fraudSuspected:
+            state.setPaymentModal(to: .fraud(.init()))
             
-        case let .fraud(fraud):
-            state.setPaymentModal(to: .fraud(fraud))
+        case let .serverError(errorMessage):
+            state.setPaymentAlert(to: .serverError(errorMessage))
+            
+        case let .result(transactionResult):
+            state.setPaymentModal(to: nil)
+            effect = .delay(
+                .utilityFlow(.payment(.showResult(transactionResult))),
+                for: .microseconds(300)
+            )
         }
     }
     

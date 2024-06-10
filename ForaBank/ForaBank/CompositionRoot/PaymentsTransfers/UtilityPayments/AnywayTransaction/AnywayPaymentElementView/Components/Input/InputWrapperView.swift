@@ -8,11 +8,11 @@
 import PaymentComponents
 import SwiftUI
 
-struct InputWrapperView: View {
+struct InputWrapperView<IconView: View>: View {
     
     @ObservedObject var viewModel: ViewModel
     
-    let factory: Factory
+    let makeIconView: () -> IconView
     
     var body: some View {
         
@@ -20,7 +20,7 @@ struct InputWrapperView: View {
             state: viewModel.state,
             event: viewModel.event(_:),
             config: .iFora,
-            iconView: factory.makeIconView
+            iconView: makeIconView
         )
     }
 }
@@ -28,5 +28,4 @@ struct InputWrapperView: View {
 extension InputWrapperView {
     
     typealias ViewModel = ObservingInputViewModel
-    typealias Factory = InputStateWrapperViewFactory
 }
