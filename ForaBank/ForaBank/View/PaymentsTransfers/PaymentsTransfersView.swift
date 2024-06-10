@@ -247,10 +247,12 @@ struct PaymentsTransfersView: View {
         case let .utilityPayment(flowState):
             let event = { viewModel.event(.utilityFlow($0)) }
             
-#warning("add nav bar")
             utilityPaymentFlowView(state: flowState, event: event)
-                .navigationTitle("Utility Prepayment View")
-                .navigationBarTitleDisplayMode(.inline)
+                .edgesIgnoringSafeArea(.all)
+                .navigationBar(
+                    flowState.navTitle,
+                    dismiss: { viewModel.event(.dismiss(.destination)) }
+                )
         }
     }
     
