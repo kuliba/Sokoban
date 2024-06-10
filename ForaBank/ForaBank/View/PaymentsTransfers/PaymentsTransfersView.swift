@@ -448,14 +448,23 @@ private extension PaymentsTransfersView {
         
         switch state {
         case let .operatorFailure(operatorFailure):
+            let operatorIconView = viewFactory.makeIconView(
+                .md5Hash(.init(operatorFailure.content.icon))
+            )
             operatorFailureView(
                 operatorFailure: operatorFailure,
                 payByInstructions: { event(.prepayment(.payByInstructions)) },
                 dismissDestination: { event(.prepayment(.dismiss(.operatorFailureDestination))) }
             )
-            .navigationTitle(String(describing: operatorFailure.content))
-            .navigationBarTitleDisplayMode(.inline)
-            
+            .frame(maxHeight: .infinity)
+            .navigationBarWithAsyncIcon(
+                title: operatorFailure.content.title,
+                subtitle: operatorFailure.content.subtitle,
+                dismiss: { viewModel.event(.dismiss(.destination)) },
+                icon: operatorIconView,
+                style: .large
+            )
+
         case let .payByInstructions(paymentsViewModel):
             payByInstructionsView(paymentsViewModel)
             
