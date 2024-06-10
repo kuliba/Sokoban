@@ -26,6 +26,9 @@ final class PaymentsTransfersFlowManagerComposer {
     private let pageSize: Int
     private let observeLast: Int
     
+    // TODO: move to settings(?)
+    private let utilityNavTitle = "Услуги ЖКХ"
+    
     init(
         flag: Flag,
         model: Model,
@@ -192,6 +195,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         return .init(
             model: model,
             observeLast: observeLast,
+            navTitle: utilityNavTitle,
             microServices: microComposer.compose(),
             makeTransactionViewModel: makeTransactionViewModel
         )

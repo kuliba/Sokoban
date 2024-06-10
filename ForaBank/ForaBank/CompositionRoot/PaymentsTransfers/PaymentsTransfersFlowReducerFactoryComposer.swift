@@ -15,17 +15,20 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
     
     private let model: Model
     private let observeLast: Int
+    private let navTitle: String
     private let microServices: MicroServices
     private let makeTransactionViewModel: MakeTransactionViewModel
     
     init(
         model: Model,
         observeLast: Int,
+        navTitle: String,
         microServices: MicroServices,
         makeTransactionViewModel: @escaping MakeTransactionViewModel
     ) {
         self.model = model
         self.observeLast = observeLast
+        self.navTitle = navTitle
         self.microServices = microServices
         self.makeTransactionViewModel = makeTransactionViewModel
     }
@@ -82,7 +85,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
             handleEffect: effectHandler.handleEffect(_:_:)
         )
         
-        return .init(content: viewModel)
+        return .init(content: viewModel, navTitle: navTitle)
     }
     
     typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, UtilityPaymentViewModel>
