@@ -416,6 +416,7 @@ struct PaymentsTransfersView: View {
 
 private extension PaymentsTransfersView {
     
+    // TODO: move to viewFactory
     func utilityPaymentFlowView(
         state: UtilityFlowState,
         event: @escaping (UtilityFlowEvent) -> Void
@@ -463,8 +464,14 @@ private extension PaymentsTransfersView {
             paymentFlowView(state: state, event: { event(.payment($0)) })
             
         case let .servicePicker(state):
-#warning("FIXME: navbar")
             servicePickerView(state: state, event: event)
+                .navigationBarWithAsyncIcon(
+                    title: state.content.operator.title,
+                    subtitle: state.content.operator.subtitle,
+                    dismiss: { viewModel.event(.dismiss(.destination)) },
+                    icon: viewFactory.makeIconView(.md5Hash(.init(state.content.operator.icon))),
+                    style: .large
+                )
         }
     }
     
