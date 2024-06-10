@@ -10,7 +10,7 @@ import XCTest
 
 final class ArrayOfProductViewModelHelpersTests: XCTestCase {
     
-    // MARK: - Reduce Array of ProductView.ViewModel
+    // MARK: - Reduce Array of ProductViewModel
     
     func test_reduceIsUpdating_shouldSetPropertyIsUpdating() {
         
@@ -259,8 +259,8 @@ final class ArrayOfProductViewModelHelpersTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
-        products: [ProductView.ViewModel],
-        reduced: [ProductView.ViewModel],
+        products: [ProductViewModel],
+        reduced: [ProductViewModel],
         groupButton: ProductGroupView.ViewModel.GroupButtonViewModel?
     ) {
         

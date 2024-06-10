@@ -1,6 +1,6 @@
 //
 //  InputStateWrapperView.swift
-//  ForaBank
+//  TransactionPreview
 //
 //  Created by Igor Malyarov on 23.05.2024.
 //
@@ -11,8 +11,7 @@ import SwiftUI
 
 typealias ObservingInputViewModel = RxObservingViewModel<InputState<String>, InputEvent, Never>
 
-struct InputStateWrapperView<InputView>: View
-where InputView: View {
+struct InputStateWrapperView: View {
     
     @StateObject private var viewModel: ViewModel
     
@@ -28,14 +27,19 @@ where InputView: View {
     
     var body: some View {
         
-        factory.makeInputView(viewModel.state, viewModel.event(_:))
+        InputView(
+            state: viewModel.state,
+            event: viewModel.event(_:),
+            config: .iFora,
+            iconView: factory.makeIconView
+        )
     }
 }
 
 extension InputStateWrapperView {
     
     typealias ViewModel = ObservingInputViewModel
-    typealias Factory = InputStateWrapperViewFactory<InputView>
+    typealias Factory = InputStateWrapperViewFactory
 }
 //
 //#Preview {

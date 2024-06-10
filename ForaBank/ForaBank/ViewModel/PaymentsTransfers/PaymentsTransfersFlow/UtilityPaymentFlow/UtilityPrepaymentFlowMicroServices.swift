@@ -7,9 +7,10 @@
 
 import UtilityServicePrepaymentCore
 
-struct UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService> {
+struct UtilityPrepaymentFlowMicroServices<LastPayment, Operator, Service> {
     
-    /// `InitiateUtilityPayment` combines
+    /// For `legacy` `InitiateUtilityPayment` wraps `PaymentsServicesViewModel` creation
+    /// For `v1` `InitiateUtilityPayment` combines
     /// - `b`: getOperatorsListByParam
     /// - `c`: getAllLatestPayments
     let initiateUtilityPayment: InitiateUtilityPayment
@@ -24,21 +25,22 @@ struct UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService>
 
 extension UtilityPrepaymentFlowMicroServices {
     
-    /// Combines `b` and `c`
-    typealias InitiateUtilityPayload = Event.UtilityPrepaymentPayload
-    typealias InitiateUtilityPaymentCompletion = (InitiateUtilityPayload) -> Void
-    typealias InitiateUtilityPayment = (@escaping InitiateUtilityPaymentCompletion) -> Void
+    typealias InitiateUtilityPaymentCompletion = (PrepaymentEvent.Initiated) -> Void
+    /// Combines `b` and `c` for `v1`
+    typealias InitiateUtilityPayment = (PrepaymentEffect.LegacyPaymentPayload, @escaping InitiateUtilityPaymentCompletion) -> Void
     
     /// StartPayment is a micro-service, that combines
     /// - `e` from LastPayment
     /// - `d1`
     /// - `d2e`
     /// - `d3`, `d4`, `d5`
-    typealias StartPaymentPayload = Effect.Select
-    typealias StartPaymentResult = Event.StartPaymentResult
+    typealias StartPaymentPayload = PrepaymentEffect.Select
+    typealias StartPaymentResult = PrepaymentEvent.StartPaymentResult
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     typealias StartPayment = (StartPaymentPayload, @escaping StartPaymentCompletion) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEffect
+    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
+    
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
+    typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
 }

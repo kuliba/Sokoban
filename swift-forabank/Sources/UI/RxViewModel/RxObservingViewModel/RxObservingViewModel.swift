@@ -17,6 +17,7 @@ public final class RxObservingViewModel<State, Event, Effect>: ObservableObject 
     public init(
         observable: ObservableViewModel,
         observe: @escaping Observe,
+        predicate: @escaping (State, State) -> Bool = { _,_ in false },
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.state = observable.state
@@ -24,6 +25,7 @@ public final class RxObservingViewModel<State, Event, Effect>: ObservableObject 
         
         observable.$state
             .dropFirst()
+            .removeDuplicates(by: predicate)
             .scan((observable.state, observable.state)) { ($0.1, $1) }
             .handleEvents(receiveOutput: observe)
             .map(\.1)

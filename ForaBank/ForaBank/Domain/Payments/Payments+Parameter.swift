@@ -47,6 +47,25 @@ extension PaymentsParameterRepresentable {
 //MARK: - Parameter Identifier
 
 extension Payments.Parameter {
+
+    static let systemIdentifiers: [Payments.Parameter.Identifier] = [
+        .category,
+        .service,
+        .`operator`,
+        .header,
+        .product,
+        .amount,
+        .code,
+        .fee,
+        .`continue`,
+        .mock,
+        .subscribe,
+        .productTemplate,
+        .productTemplateName,
+    ]
+}
+
+extension Payments.Parameter {
     
     enum Identifier: String {
         
@@ -1124,6 +1143,26 @@ extension Payments {
             
             case image(ImageData)
             case name(String)
+            
+            init?(source: Payments.Operation.Source?) {
+                
+                switch source {
+                    
+                    case .sfp(_, BankID.foraBankID.rawValue):
+                        return nil
+                    
+                    default:
+                        self = .sbpIcon
+                }
+            }
+            
+            init?(parameters: [PaymentsParameterRepresentable]) {
+                
+                guard let bankParameterValue = try? parameters.value(forId: Payments.Parameter.Identifier.sfpBank.rawValue),
+                      bankParameterValue != BankID.foraBankID.rawValue
+                else { return nil }
+                self = .sbpIcon
+            }
         }
         
         enum Style {
@@ -1817,13 +1856,17 @@ extension PaymentParameterSubscriber {
 extension Payments.ParameterSelectBank.Option {
     
     var text: String {
-          
-          switch subtitle {
-          case let .some(subtitle):
-              return subtitle
-          case .none:
-              return name
-          }
-      }
+        
+        switch subtitle {
+        case let .some(subtitle):
+            return subtitle
+        case .none:
+            return name
+        }
+    }
+}
 
+extension Payments.ParameterHeader.Icon {
+    
+    static let sbpIcon: Self = .name("ic24Sbp")
 }

@@ -178,7 +178,12 @@ extension TemplateButton {
         _ values: [String]
     ) -> TemplateButtonView.ViewModel.State {
         
-        for additional in payload.additional.filter({ !$0.fieldname.contained(in: sfpRestrictedAdditional) }) {
+        let payloadParameters = payload.additional
+            .filter({ !$0.fieldname.contained(in: sfpRestrictedAdditional) })
+            .filter({ !$0.fieldname.contained(in: Model.restrictedParametersAbroad) })
+            .filter({ !$0.fieldname.contained(in: Payments.Parameter.systemIdentifiers.map({ $0.rawValue })) })
+        
+        for additional in payloadParameters {
             
             if additional.fieldvalue.contained(in: values) || additional.fieldvalue.isEmpty {
                 
@@ -209,7 +214,9 @@ extension TemplateButton {
             return .complete(templateId: templateId)
         }
         
-        let values = additional.map(\.fieldvalue)
+        let values = additional
+            .filter({ !$0.fieldname.contained(in: Payments.Parameter.systemIdentifiers.map({ $0.rawValue })) })
+            .map(\.fieldvalue)
         
         let restrictedAdditional = [
             Payments.Parameter.Identifier.sfpAmount.rawValue,
@@ -296,7 +303,7 @@ extension TemplateButton {
                         check: false,
                         comment: operationDetail.comment,
                         currencyAmount: operationDetail.currencyAmount ?? "",
-                        payer: operationDetail.payerTransferData,
+                        payer: operationDetail.payerGeneralTransferData,
                         payeeExternal: payeeExternal,
                         payeeInternal: nil
                     )
@@ -311,11 +318,15 @@ extension TemplateButton {
             let additional = model.additionalTransferData(
                 service: operation.service,
                 operation: operation
-            )
+            )?.filter({ !$0.fieldname.contained(in: Payments.Parameter.systemIdentifiers.map({ $0.rawValue })) })
             
             guard let additional else {
                 return nil
             }
+            
+            let mobileAdditional = OperationDetailData.mobileAdditional(
+                fieldvalue: operationDetail.payeePhone
+            )
             
             return [
                 TransferAnywayData(
@@ -323,12 +334,26 @@ extension TemplateButton {
                     check: false,
                     comment: operationDetail.comment,
                     currencyAmount: operationDetail.currencyAmount ?? "",
-                    payer: operationDetail.payerTransferData,
-                    additional: additional,
+                    payer: operationDetail.payerGeneralTransferData,
+                    additional: operation.service != .mobileConnection ? additional : mobileAdditional,
                     puref: operationDetail.puref
                 )
             ]
         }
+    }
+}
+
+extension OperationDetailData {
+    
+    static func mobileAdditional(
+        fieldvalue: String?
+    ) -> [TransferAnywayData.Additional] {
+        
+        [TransferAnywayData.Additional(
+            fieldid: 1,
+            fieldname: "a3_NUMBER_1_2",
+            fieldvalue: fieldvalue ?? ""
+        )]
     }
 }
 
@@ -348,7 +373,7 @@ extension Model {
         case .abroad:
             return try? paymentsTransferAnywayAbroadAdditional(
                 parameters,
-                restrictedParameters: restrictedParametersAbroad
+                restrictedParameters: Self.restrictedParametersAbroad
             )
             
         case .sfp:

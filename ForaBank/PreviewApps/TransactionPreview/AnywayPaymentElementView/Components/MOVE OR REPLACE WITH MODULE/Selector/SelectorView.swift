@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct SelectorView<T, ID, OptionView, SelectedOptionView>: View
 where ID: Hashable,
       OptionView: View,
@@ -40,13 +38,23 @@ where ID: Hashable,
         }
         .padding()
     }
+}
+
+extension SelectorView {
     
-    private func selectedOptionView() -> some View {
+    typealias State = Selector<T>
+    typealias Event = SelectorEvent<T>
+    typealias Factory = SelectorViewFactory<T, OptionView, SelectedOptionView>
+}
+
+private extension SelectorView {
+    
+    func selectedOptionView() -> some View {
         
         factory.createSelectedOptionView(state.selected)
     }
     
-    private func toggleView() -> some View {
+    func toggleView() -> some View {
         
         Button {
             event(.toggleOptions)
@@ -55,7 +63,7 @@ where ID: Hashable,
         }
     }
     
-    private func searchView() -> some View {
+    func searchView() -> some View {
         
         TextField(
             "Search",
@@ -66,7 +74,7 @@ where ID: Hashable,
         )
     }
     
-    private func optionsView() -> some View {
+    func optionsView() -> some View {
         
         ScrollView(showsIndicators: false) {
             
@@ -77,7 +85,7 @@ where ID: Hashable,
         }
     }
     
-    private func optionView(
+    func optionView(
         option: T
     ) -> some View {
         
@@ -86,13 +94,6 @@ where ID: Hashable,
             .contentShape(Rectangle())
             .onTapGesture { event(.selectOption(option)) }
     }
-}
-
-extension SelectorView {
-    
-    typealias State = Selector<T>
-    typealias Event = SelectorEvent<T>
-    typealias Factory = SelectorViewFactory<T, OptionView, SelectedOptionView>
 }
 
 extension SelectorView where T: Hashable, T == ID {
@@ -152,11 +153,11 @@ extension Selector where T == String {
 }
 
 extension SelectorViewFactory
-where T == String,
+where Option == String,
       OptionView == Text,
       SelectedOptionView == Text {
     
-    static var preview: Self {
+    static var textPreview: Self {
         
         return .init(
             createOptionView: Text.init,

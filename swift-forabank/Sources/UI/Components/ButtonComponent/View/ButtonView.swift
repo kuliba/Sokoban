@@ -15,7 +15,7 @@ public struct ButtonView: View {
     let config: ButtonConfig
     
     public init(
-        state: Button, 
+        state: Button,
         event: @escaping () -> Void,
         config: ButtonConfig
     ) {
@@ -26,17 +26,18 @@ public struct ButtonView: View {
     
     public var body: some View {
         
-        ZStack {
+        SwiftUI.Button(action: event) {
             
-            config.active.backgroundColor
-            
-            SwiftUI.Button(action: event) {
+            ZStack {
+                
+                config.active.backgroundColor
                 
                 state.value.text(withConfig: config.active.text)
             }
         }
         .frame(height: config.buttonHeight)
         .clipShape(RoundedRectangle(cornerRadius: 12))
+        .contentShape(Rectangle())
     }
 }
 
@@ -45,7 +46,7 @@ public struct ButtonView: View {
 struct ButtonView_Previews: PreviewProvider {
     
     static var previews: some View {
-    
+        
         buttonView(.preview)
     }
     

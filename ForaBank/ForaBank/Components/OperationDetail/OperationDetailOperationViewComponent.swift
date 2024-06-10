@@ -30,23 +30,11 @@ extension OperationDetailViewModel {
             self.date = date
         }
         
-//        internal init(bankLogo: Image?, payee: OperationDetailViewModel.PayeeViewModel?, amount: OperationDetailViewModel.AmountViewModel, fee: OperationDetailViewModel.FeeViewModel?, description: String?, date: Date) {
-//            
-//            self.bankLogo = bankLogo
-//            self.payee = payee
-//            self.amount = amount
-//            self.fee = fee
-//            self.description = description
-//            self.date = DateFormatter.operation.string(from: date)
-//        }
-        
         init(productStatement: ProductStatementData, model: Model) {
-
-            let image = productStatement.svgImage?.image
-            let dateFormatted = DateFormatter.operation.string(from: productStatement.tranDate ?? productStatement.date)
-
-            let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
             
+            let image = Self.bankLogo(with: productStatement, model: model)
+            let dateFormatted = DateFormatter.operation.string(from: productStatement.tranDate ?? productStatement.date)
+            let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currencyCodeNumeric: productStatement.currencyCodeNumeric, operationType: productStatement.operationType, payService: nil, model: model)
             
             switch productStatement.paymentDetailType {
@@ -60,7 +48,7 @@ extension OperationDetailViewModel {
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             case .contactAddressless, .direct:
-                self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
+                self.init(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
             case .externalIndivudual, .externalEntity:
                 if let documentComment = productStatement.fastPayment?.documentComment, documentComment != "" {
@@ -74,7 +62,7 @@ extension OperationDetailViewModel {
                 
             case .housingAndCommunalService, .insideOther, .internet, .mobile:
                 self.init(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
-                 
+                
             case .outsideCash:
                 self.init(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateFormatted)
                 
@@ -278,14 +266,14 @@ extension OperationDetailView {
                     logo.resizable().frame(width: 32, height: 32)
                 }
                 
-                OperationDetailView.AmountView(viewModel: viewModel.amount)
-                    .padding(.top, 32)
-                
                 if let payee = viewModel.payee {
                     
                     OperationDetailView.PayeeView(viewModel: payee)
                         .padding(.top, 8)
                 }
+                
+                OperationDetailView.AmountView(viewModel: viewModel.amount)
+                    .padding(.top, 32)
                 
                 if let fee = viewModel.fee {
                     
@@ -293,16 +281,15 @@ extension OperationDetailView {
                         .padding(.top, 32)
                 }
                 
-                if let description = viewModel.description {
+                if let description = viewModel.description, !description.isEmpty {
                     
-                    CapsuleText(text: description, color: .black, bgColor: Color(hex: "F6F6F7"), font: .system(size: 18, weight: .regular))
-                        .padding(.top, 16)
-                        .padding(.horizontal, 24)
+                    CapsuleText(text: description, color: .textSecondary, bgColor: .mainColorsGrayLightest, font: .system(size: 18, weight: .regular))
+                        .padding(24)
                 }
                 
                 Text(viewModel.date)
                     .font(.system(size: 12, weight: .regular))
-                    .foregroundColor(Color(hex: "999999"))
+                    .foregroundColor(.textPlaceholder)
                     .padding(.top, 16)
             }
         }
@@ -312,7 +299,7 @@ extension OperationDetailView {
 //MARK: - Preview
 
 struct OperationDetailOperationViewComponent_Previews: PreviewProvider {
-   
+    
     static var previews: some View {
         
         OperationDetailView.OperationView(viewModel: .sample)

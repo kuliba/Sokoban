@@ -11,6 +11,6 @@ import CarouselComponent
 struct CarouselProduct: CarouselComponent.CarouselProduct, Equatable, Identifiable {
     
     let id: Int
-    let type: ProductType
+    let productType: ProductType
     let isAdditional: Bool
 }

@@ -6,6 +6,7 @@
 //
 
 import ProductSelectComponent
+import CarouselComponent
 import SwiftUI
 
 public struct FastPaymentsSettingsConfig {
@@ -13,6 +14,7 @@ public struct FastPaymentsSettingsConfig {
     let accountLinking: AccountLinkingConfig
     let backgroundColor: Color
     let bankDefault: BankDefaultConfig
+    let carousel: CarouselComponentConfig
     let consentList: ConsentListConfig
     let paymentContract: PaymentContractConfig
     public let productSelect: ProductSelectConfig
@@ -21,6 +23,7 @@ public struct FastPaymentsSettingsConfig {
         accountLinking: AccountLinkingConfig,
         backgroundColor: Color,
         bankDefault: BankDefaultConfig,
+        carousel: CarouselComponentConfig,
         consentList: ConsentListConfig,
         paymentContract: PaymentContractConfig,
         productSelect: ProductSelectConfig
@@ -28,6 +31,7 @@ public struct FastPaymentsSettingsConfig {
         self.accountLinking = accountLinking
         self.backgroundColor = backgroundColor
         self.bankDefault = bankDefault
+        self.carousel = carousel
         self.consentList = consentList
         self.paymentContract = paymentContract
         self.productSelect = productSelect
@@ -42,6 +46,7 @@ public extension FastPaymentsSettingsConfig {
             accountLinking: accountLinking,
             backgroundColor: backgroundColor,
             bankDefault: bankDefault,
+            carousel: carousel,
             consentList: consentList,
             paymentContract: paymentContract,
             productSelect: productSelect

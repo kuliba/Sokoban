@@ -48,11 +48,11 @@ public final class CardActivateReducer {
             if let cardEffect {
                 effect = .card(cardEffect)
             }
-        case let .slider(sliderEvent):
+        case let .slider(payload, sliderEvent):
             let (sliderState, _) = sliderReduce(state.offsetX, sliderEvent)
             state.offsetX = sliderState
             if sliderState >= maxOffset {
-                effect = .card(.confirmation(alertLifespan))
+                effect = .card(.confirmation(payload, alertLifespan))
             }
         }
         
@@ -69,5 +69,14 @@ public final class CardActivateReducer {
     public typealias SliderReduce = (SliderState, SliderEvent) -> (SliderState, Never?)
 }
 
-public typealias GlobalViewModel = RxViewModel<CardActivateState, CardActivateEvent, CardActivateEffect>
+public typealias ActivateSliderViewModel = RxViewModel<CardActivateState, CardActivateEvent, CardActivateEffect>
 
+public extension CardActivateReducer {
+    
+    static let `default` = CardActivateReducer.reduce(
+        .init(
+            cardReduce: CardReducer().reduce(_:_:),
+            sliderReduce: SliderReducer(maxOffsetX: .maxOffsetX).reduce(_:_:),
+            maxOffset: .maxOffsetX)
+    )
+}

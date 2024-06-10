@@ -23,7 +23,7 @@ extension Model {
         let currency = try paymentsTransferCurrencyAbroad(parameters)
         let comment = try paymentsTransferAnywayComment(parameters)
         
-        let additional = try paymentsTransferAnywayAbroadAdditional(parameters, restrictedParameters: restrictedParametersAbroad)
+        let additional = try paymentsTransferAnywayAbroadAdditional(parameters, restrictedParameters: Self.restrictedParametersAbroad)
         
         let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: isNewPayment, payload: .init(amount: amount, check: false, comment: comment, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
         
@@ -188,7 +188,7 @@ extension Model {
                             ProductData.Filter.ProductTypeRule([.card, .account]),
                             ProductData.Filter.CurrencyRule(Set(currencyArr)),
                             ProductData.Filter.CardActiveRule(),
-                            ProductData.Filter.CardAdditionalNotOwnedRestrictedRule(),
+                            ProductData.Filter.CardAdditionalSelfRule(),
                             ProductData.Filter.AccountActiveRule()])
                 
                 if let product = firstProduct(with: filter),
@@ -299,7 +299,7 @@ extension Model {
 
 extension Model {
     
-    var restrictedParametersAbroad: [String] {
+    static var restrictedParametersAbroad: [String] {
         [Payments.Parameter.Identifier.code,
          Payments.Parameter.Identifier.product,
          Payments.Parameter.Identifier.`continue`,
@@ -310,6 +310,7 @@ extension Model {
          Payments.Parameter.Identifier.countryDropDownList,
          Payments.Parameter.Identifier.countryCurrencyFilter,
          Payments.Parameter.Identifier.paymentSystem,
+         Payments.Parameter.Identifier.countryPayeeAmount,
         ].map(\.rawValue)
     }
 }

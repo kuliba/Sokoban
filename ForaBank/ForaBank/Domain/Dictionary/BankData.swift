@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Tagged
 
 struct BankData: Codable, Equatable, Hashable, Identifiable {
     
@@ -57,3 +58,12 @@ enum BankType: String, CaseIterable {
     }
 }
 
+
+
+extension BankID {
+    
+  static let foraBankID: Self = .init("100000000217")
+}
+
+typealias BankID = Tagged<_BankID, String>
+enum _BankID {}

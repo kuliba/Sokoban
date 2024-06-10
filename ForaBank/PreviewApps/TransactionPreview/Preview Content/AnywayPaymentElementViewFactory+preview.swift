@@ -27,7 +27,8 @@ where IconView == Text {
                 )
                 
                 return .init(viewModel: observing, config: .iFora)
-            }
+            }, 
+            elementFactory: .preview
         )
     }
 }

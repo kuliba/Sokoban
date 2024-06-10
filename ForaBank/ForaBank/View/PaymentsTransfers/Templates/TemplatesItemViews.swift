@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 extension TemplatesListView {
     
@@ -386,7 +387,7 @@ extension TemplatesListView {
                     Circle()
                         .fill(Color.mainColorsGrayMedium.opacity(0.4))
                         .frame(width: side.main, height: side.main)
-                        .shimmering(active: true, bounce: true)
+                        .shimmering(bounce: true)
                 }
                 
                 if let topImage = topImage {

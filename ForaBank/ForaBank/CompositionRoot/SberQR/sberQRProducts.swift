@@ -8,6 +8,7 @@
 import ProductSelectComponent
 import SberQR
 import SwiftUI
+import UIPrimitives
 
 extension Array where Element == ProductData {
     
@@ -37,55 +38,6 @@ extension Array where Element == ProductData {
             productTypes.contains($0.productType)
             && currencies.contains($0.currency)
         }
-        .compactMap { $0.sberQRProduct(formatBalance: formatBalance, getImage: getImage) }
-    }
-}
-
-extension ProductData {
-    
-    func sberQRProduct(
-        formatBalance: @escaping (ProductData) -> String,
-        getImage: @escaping (Md5hash) -> Image?
-    ) -> ProductSelect.Product? {
-        
-        if let card = self as? ProductCardData {
-            
-            return .init(
-                id: .init(card.id),
-                type: .card,
-                isAdditional: false, // TODO: add real value for Additional card
-                header: "Счет списания",
-                title: card.displayName,
-                footer: card.displayNumber ?? "",
-                amountFormatted: formatBalance(card),
-                balance: .init(card.balanceValue),
-                look: .init(
-                    background: .image(getImage(card.largeDesignMd5Hash) ?? .cardPlaceholder),
-                    color: card.backgroundColor.description,
-                    icon: .image(getImage(card.smallDesignMd5hash) ?? .cardPlaceholder)
-                )
-            )
-        }
-        
-        if let account = self as? ProductAccountData {
-            
-            return .init(
-                id: .init(account.id),
-                type: .account,
-                isAdditional: false,
-                header: "Счет списания",
-                title: account.displayName,
-                footer: account.displayNumber ?? "",
-                amountFormatted: formatBalance(account),
-                balance: .init(account.balanceValue),
-                look: .init(
-                    background: .image(getImage(account.largeDesignMd5Hash) ?? .cardPlaceholder),
-                    color: account.backgroundColor.description,
-                    icon: .image(getImage(account.smallDesignMd5hash) ?? .cardPlaceholder)
-                )
-            )
-        }
-        
-        return nil
+        .compactMap { $0.productSelectProduct(formatBalance: formatBalance, getImage: getImage) }
     }
 }

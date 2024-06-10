@@ -14,10 +14,12 @@ public extension AnywayPaymentUpdate {
     
     init(_ response: ResponseMapper.CreateAnywayTransferResponse) {
         
+        let visible = response.parametersForNextStep.filter(\.visible)
+        
         self.init(
             details: .init(response),
             fields: response.additional.map { .init($0) },
-            parameters: response.parametersForNextStep.map { .init($0) }
+            parameters: visible.map { .init($0) }
         )
     }
 }
@@ -58,6 +60,7 @@ private extension AnywayPaymentUpdate.Details.Control {
         self.init(
             isFinalStep: response.finalStep,
             isFraudSuspected: response.scenario == .suspect,
+            isMultiSum: response.options.contains(.multiSum),
             needMake: response.needMake,
             needOTP: response.needOTP,
             needSum: response.needSum
@@ -99,10 +102,45 @@ private extension AnywayPaymentUpdate.Field {
             name: additional.fieldName,
             value: additional.fieldValue,
             title: additional.fieldTitle,
-            recycle: additional.recycle,
-            svgImage: additional.svgImage,
-            typeIdParameterList: additional.typeIdParameterList
+            image: .init(additional)
         )
+    }
+}
+
+private extension AnywayPaymentUpdate.Image {
+    
+    init?(_ additional: ResponseMapper.CreateAnywayTransferResponse.Additional) {
+        
+        switch (additional.md5hash, additional.svgImage) {
+        case (.none, .none):
+            return nil
+            
+        case let (.some(md5Hash), .none):
+            self = .md5Hash(md5Hash)
+            
+        case let (.none, .some(svg)):
+            self = .svg(svg)
+            
+        case let (.some(md5Hash), .some(svg)):
+            self = .withFallback(md5Hash: md5Hash, svg: svg)
+        }
+    }
+    
+    init?(_ parameter: ResponseMapper.CreateAnywayTransferResponse.Parameter) {
+        
+        switch (parameter.md5hash, parameter.svgImage) {
+        case (.none, .none):
+             return nil
+            
+        case let (.some(md5Hash), .none):
+            self = .md5Hash(md5Hash)
+            
+        case let (.none, .some(svg)):
+            self = .svg(svg)
+            
+        case let (.some(md5Hash), .some(svg)):
+            self = .withFallback(md5Hash: md5Hash, svg: svg)
+        }
     }
 }
 
@@ -112,6 +150,7 @@ private extension AnywayPaymentUpdate.Parameter {
         
         self.init(
             field: .init(parameter),
+            image: .init(parameter),
             masking: .init(parameter),
             validation: .init(parameter),
             uiAttributes: .init(parameter)
@@ -171,7 +210,6 @@ private extension AnywayPaymentUpdate.Parameter.UIAttributes {
             isReadOnly: parameter.isReadOnly,
             subGroup: parameter.subGroup,
             subTitle: parameter.subTitle,
-            svgImage: parameter.svgImage,
             title: parameter.title,
             type: .init(parameter.type),
             viewType: .init(parameter.viewType)

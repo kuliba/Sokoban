@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Combine
-import Shimmer
 
 //MARK: Section ViewModel
 

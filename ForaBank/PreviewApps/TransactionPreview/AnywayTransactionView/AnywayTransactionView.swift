@@ -37,7 +37,7 @@ struct AnywayTransactionView: View {
                 .padding()
             }
             
-            factory.makeFooterView()
+            factory.makeFooterView(state, { event($0.transactionEvent) })
         }
     }
 }
@@ -48,6 +48,24 @@ extension AnywayTransactionView {
     typealias Event = AnywayTransactionEvent
     typealias Factory = AnywayPaymentFactory<Text>
 }
+
+// MARK: - Adapters
+
+private extension AnywayPaymentFooterEvent {
+    
+    var transactionEvent: AnywayTransactionEvent {
+        
+        switch self {
+        case .continue:
+            return .continue
+            
+        case let .edit(decimal):
+            return .payment(.widget(.amount(decimal)))
+        }
+    }
+}
+
+// MARK: - Previews
 
 #Preview {
     AnywayTransactionView(state: .preview, event: { print($0) }, factory: .preview)

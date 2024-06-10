@@ -33,7 +33,7 @@ public struct HeaderBackView: View {
                     
                     Text(cardInfo.numberToDisplay)
                         .font(config.fonts.number)
-                        .foregroundColor(config.colors.foreground)
+                        .foregroundColor(config.colors.number)
                         .accessibilityIdentifier("numberToDisplay")
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Button(action: action) {
@@ -48,7 +48,7 @@ public struct HeaderBackView: View {
             
             Text(cardInfo.owner)
                 .font(config.fonts.card)
-                .foregroundColor(config.colors.foreground)
+                .foregroundColor(config.colors.number)
                 .accessibilityIdentifier("ownerName")
                 .padding(.top, 12 / UIScreen.main.scale)
         }

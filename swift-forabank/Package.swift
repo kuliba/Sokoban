@@ -160,6 +160,8 @@ let package = Package(
         .activateSliderTests,
         .accountInfoPanel,
         .accountInfoPanelTests,
+        .calendarUI,
+        .calendarUITests,
         .cardUI,
         .cardUITests,
         .productDetailsUI,
@@ -335,6 +337,14 @@ private extension Product {
             .accountInfoPanel
         ]
     )
+    
+    static let calendarUI = library(
+        name: .calendarUI,
+        targets: [
+            .calendarUI
+        ]
+    )
+    
     
     static let cardUI = library(
         name: .cardUI,
@@ -915,6 +925,7 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             .shimmer,
+            .uiPrimitives,
         ],
         path: "Sources/Landing/\(String.landingUIComponent)"
     )
@@ -964,10 +975,10 @@ private extension Target {
     static let anywayPaymentAdapters = target(
         name: .anywayPaymentAdapters,
         dependencies: [
+            .anywayPaymentBackend,
             .anywayPaymentCore,
             .anywayPaymentDomain,
             .anywayPaymentUI,
-            .anywayPaymentBackend,
             .remoteServices,
             .tagged,
         ],
@@ -980,6 +991,9 @@ private extension Target {
             .customDump,
             // internal modules
             .anywayPaymentAdapters,
+            .anywayPaymentBackend,
+            .anywayPaymentCore,
+            .anywayPaymentDomain,
             .remoteServices,
             .tagged,
         ],
@@ -1435,6 +1449,30 @@ private extension Target {
         path: "Tests/UI/ProductProfileTests/\(String.accountInfoPanelTests)"
     )
     
+    static let calendarUI = target(
+        name: .calendarUI,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/\(String.calendarUI)"
+    )
+    
+    static let calendarUITests = target(
+        name: .calendarUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .calendarUI,
+        ],
+        path: "Tests/\(String.calendarUITests)"
+    )
+    
     static let cardUI = target(
         name: .cardUI,
         dependencies: [
@@ -1723,6 +1761,7 @@ private extension Target {
         dependencies: [
             .foraTools,
             .sharedConfigs,
+            .shimmer,
         ],
         path: "Sources/UI/\(String.uiPrimitives)"
     )
@@ -1928,6 +1967,7 @@ private extension Target {
             .sharedConfigs,
             .tagged,
             .uiPrimitives,
+            .carouselComponent,
         ],
         path: "Sources/UI/Components/\(String.productSelectComponent)"
     )
@@ -2109,6 +2149,10 @@ private extension Target.Dependency {
     
     static let accountInfoPanel = byName(
         name: .accountInfoPanel
+    )
+    
+    static let calendarUI = byName(
+        name: .calendarUI
     )
     
     static let cardUI = byName(
@@ -2400,6 +2444,9 @@ private extension String {
     static let accountInfoPanel = "AccountInfoPanel"
     static let accountInfoPanelTests = "AccountInfoPanelTests"
     
+    static let calendarUI = "CalendarUI"
+    static let calendarUITests = "CalendarUITests"
+    
     static let cardUI = "CardUI"
     static let cardUITests = "CardUITests"
 
@@ -2629,7 +2676,7 @@ private extension Package.Dependency {
     )
     static let shimmer = Package.Dependency.package(
         url: .swift_shimmer_path,
-        exact: .init(1, 0, 1)
+        exact: .init(1, 5, 0)
     )
     static let phoneNumberKit = Package.Dependency.package(
         url: .phoneNumberKit_path,
