@@ -1770,11 +1770,22 @@ private extension PaymentsTransfersViewModel {
         route.modal = .alert(alertViewModel)
     }
     
-    private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
+    private func createNavButtonsRight(
+    ) -> [NavigationBarButtonViewModel] {
         
-        [.init(
+        [.barcodeScanner(action: { [weak self] in self?.openScanner() })]
+    }
+}
+
+private extension NavigationBarButtonViewModel {
+    
+    static func barcodeScanner(
+        action: @escaping () -> Void
+    ) -> Self {
+        
+        return .init(
             icon: .ic24BarcodeScanner2,
-            action: { [weak self] in self?.openScanner() }
-        )]
+            action: action
+        )
     }
 }

@@ -26,6 +26,9 @@ final class PaymentsTransfersFlowManagerComposer {
     private let pageSize: Int
     private let observeLast: Int
     
+    // TODO: move to settings(?)
+    private let utilityNavTitle = "Услуги ЖКХ"
+    
     init(
         flag: Flag,
         model: Model,
@@ -192,12 +195,14 @@ private extension PaymentsTransfersFlowManagerComposer {
         return .init(
             model: model,
             observeLast: observeLast,
+            navTitle: utilityNavTitle,
             microServices: microComposer.compose(),
             makeTransactionViewModel: makeTransactionViewModel
         )
     }
     
     typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
+    typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
     
     private func loadOperators(
         payload: LoadOperatorsPayload,
@@ -251,6 +256,4 @@ private extension PaymentsTransfersFlowManagerComposer {
             composer.compose(initialState: initialState, observe: observe)
         }
     }
-    
-    typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
 }

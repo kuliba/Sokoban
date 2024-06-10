@@ -239,18 +239,22 @@ struct PaymentsTransfersView: View {
             
         case let .sberQRPayment(sberQRPaymentViewModel):
             viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
-                .navigationBar(
-                    sberQRPaymentViewModel.navTitle,
+                .navigationBarWithBack(
+                    title: sberQRPaymentViewModel.navTitle,
                     dismiss: { viewModel.event(.dismiss(.destination)) }
                 )
             
         case let .utilityPayment(flowState):
             let event = { viewModel.event(.utilityFlow($0)) }
+            let dismissDestination = { viewModel.event(.dismiss(.destination)) }
             
-#warning("add nav bar")
             utilityPaymentFlowView(state: flowState, event: event)
-                .navigationTitle("Utility Prepayment View")
-                .navigationBarTitleDisplayMode(.inline)
+                .edgesIgnoringSafeArea(.all)
+                .navigationBarWithBack(
+                    title: flowState.navTitle,
+                    dismiss: dismissDestination,
+                    rightItem: .barcodeScanner(action: viewModel.openScanner)
+                )
         }
     }
     
@@ -412,6 +416,7 @@ struct PaymentsTransfersView: View {
 
 private extension PaymentsTransfersView {
     
+    // TODO: move to viewFactory
     func utilityPaymentFlowView(
         state: UtilityFlowState,
         event: @escaping (UtilityFlowEvent) -> Void
@@ -459,8 +464,14 @@ private extension PaymentsTransfersView {
             paymentFlowView(state: state, event: { event(.payment($0)) })
             
         case let .servicePicker(state):
-#warning("FIXME: navbar")
             servicePickerView(state: state, event: event)
+                .navigationBarWithAsyncIcon(
+                    title: state.content.operator.title,
+                    subtitle: state.content.operator.subtitle,
+                    dismiss: { viewModel.event(.dismiss(.destination)) },
+                    icon: viewFactory.makeIconView(.md5Hash(.init(state.content.operator.icon))),
+                    style: .large
+                )
         }
     }
     
