@@ -61,7 +61,7 @@ extension UILanding.Component {
             case let .horizontalRectangleImage(data):
                 return data.imageRequests()
             case let .horizontalRectangleLimits(data):
-                return data.imageRequests()
+                return []
             case let .verticalRoundImage(data):
                 return data.imageRequests()
             case let .dropDownTexts(data):

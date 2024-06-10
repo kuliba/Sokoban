@@ -71,5 +71,8 @@ struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
                                 title: "limit title",
                                 colorHEX: "#11111")])])
         ,
-        images: ["md5Hash": .flag])
+        makeIconView: { _ in .init(
+            image: .flag,
+            publisher: Just(.percent).eraseToAnyPublisher()
+        )})
 }

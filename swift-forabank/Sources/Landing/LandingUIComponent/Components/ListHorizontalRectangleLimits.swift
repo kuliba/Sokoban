@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import UIPrimitives
 
 extension UILanding.List {
     
@@ -20,7 +21,7 @@ extension UILanding.List {
 
         public struct Item: Hashable, Identifiable {
             
-            public var id: Self { self }
+            public var id: String { action.type }
             public let action: Action
             public let limitType: String
             public let md5hash: String
@@ -68,28 +69,15 @@ extension ListHorizontalRectangleLimitsView {
         typealias HorizontalList = UILanding.List.HorizontalRectangleLimits
         
         @Published private(set) var data: HorizontalList
-        
-        @Published private(set) var images: [String: Image] = [:]
+                
+        let makeIconView: LandingView.MakeIconView
         
         init(
             data: HorizontalList,
-            images: [String: Image]
+            makeIconView: @escaping LandingView.MakeIconView
         ) {
             self.data = data
-            self.images = images
+            self.makeIconView = makeIconView
         }
-        
-        func image(byImageLink: String) -> Image? {
-            
-            return images[byImageLink]
-        }
-    }
-}
-
-extension UILanding.List.HorizontalRectangleLimits {
-    
-    func imageRequests() -> [ImageRequest] {
-        
-        return self.list.map(\.md5hash).map(ImageRequest.md5Hash)
     }
 }
