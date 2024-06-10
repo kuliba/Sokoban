@@ -406,7 +406,7 @@ extension NavigationBarView {
         
         let viewModel: ViewModel.ButtonItemViewModel
         let foregroundColor: Color
- 
+        
         var body: some View {
             
             Button(action: viewModel.action) {
@@ -431,21 +431,21 @@ extension NavigationBarView {
         var body: some View {
             
             Button(action: viewModel.action) {
-            
-                ZStack(alignment: .leading) {
                 
+                ZStack(alignment: .leading) {
+                    
                     viewModel.icon
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 24, height: 24)
                         .foregroundColor(viewModel.isDisabled ? .mainColorsGrayMedium
-                                                              : foreground)
+                                         : foreground)
                         .accessibilityIdentifier("NavigationBarIcon2")
-                
-                    if let markedDot = viewModel.markedDot {
                     
-                        if markedDot.isBlinking {
+                    if let markedDot = viewModel.markedDot {
                         
+                        if markedDot.isBlinking {
+                            
                             Circle()
                                 .fill(blinking ? background : Color.red)
                                 .background(Circle().stroke(background, lineWidth: 3))
@@ -457,10 +457,10 @@ extension NavigationBarView {
                                     DispatchQueue.main.asyncAfter(
                                         deadline: .now() + .milliseconds(50)) {
                                             blinking = true
-                                    }
+                                        }
                                 }
                         } else {
-                        
+                            
                             Circle()
                                 .fill(Color.red)
                                 .background(Circle().stroke(background, lineWidth: 3))
@@ -478,25 +478,22 @@ extension NavigationBarView {
     struct IconItemView: View {
         
         let viewModel: ViewModel.IconItemViewModel
- 
+        
         var body: some View {
             
+            viewModel.icon
+                .renderingMode(.original)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(frameSize)
+                .accessibilityIdentifier("NavigationBarIconLarge")
+        }
+        
+        private var frameSize: CGSize {
+            
             switch viewModel.style {
-            case .normal:
-                viewModel.icon
-                    .renderingMode(.original)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 24, height: 24)
-                    .accessibilityIdentifier("NavigationBarIconNormal")
-                
-            case .large:
-                viewModel.icon
-                    .renderingMode(.original)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 32, height: 32)
-                    .accessibilityIdentifier("NavigationBarIconLarge")
+            case .large: return .init(width: 32, height: 32)
+            case .normal: return .init(width: 24, height: 24)
             }
         }
     }
