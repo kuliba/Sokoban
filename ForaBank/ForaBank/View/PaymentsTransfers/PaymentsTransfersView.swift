@@ -464,12 +464,15 @@ private extension PaymentsTransfersView {
             paymentFlowView(state: state, event: { event(.payment($0)) })
             
         case let .servicePicker(state):
+            let operatorIconView = viewFactory.makeIconView(
+                .md5Hash(.init(state.content.operator.icon))
+            )
             servicePickerView(state: state, event: event)
                 .navigationBarWithAsyncIcon(
                     title: state.content.operator.title,
                     subtitle: state.content.operator.subtitle,
                     dismiss: { viewModel.event(.dismiss(.destination)) },
-                    icon: viewFactory.makeIconView(.md5Hash(.init(state.content.operator.icon))),
+                    icon: operatorIconView,
                     style: .large
                 )
         }
@@ -637,7 +640,12 @@ private extension PaymentsTransfersView {
                 
                 servicePickerDestinationView(
                     destination: $0,
-                    event: { event(.payment($0)) }
+                    event: { event(.payment($0)) },
+                    navBar: .init(
+                        title: state.content.operator.title,
+                        subtitle: state.content.operator.subtitle,
+                        icon: operatorIconView
+                    )
                 )
             }
         )
@@ -670,14 +678,28 @@ private extension PaymentsTransfersView {
     @ViewBuilder
     func servicePickerDestinationView(
         destination: ServicePickerState.Destination,
-        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
+        event: @escaping (UtilityServicePaymentFlowEvent) -> Void,
+        navBar: NavBar
     ) -> some View {
         
         switch destination {
         case let .payment(state):
-#warning("FIXME: navbar")
             paymentFlowView(state: state, event: event)
+                .navigationBarWithAsyncIcon(
+                    title: navBar.title,
+                    subtitle: navBar.subtitle,
+                    dismiss: { viewModel.event(.dismiss(.destination)) },
+                    icon: navBar.icon,
+                    style: .large
+                )
         }
+    }
+    
+    struct NavBar {
+        
+        let title: String
+        let subtitle: String?
+        let icon: UIPrimitives.AsyncImage
     }
     
     typealias LastPayment = UtilityPaymentLastPayment
