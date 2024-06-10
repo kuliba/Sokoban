@@ -5,21 +5,21 @@
 //  Created by Igor Malyarov on 30.03.2024.
 //
 
-public struct Transaction<Payment, Status> {
+public struct Transaction<Context, Status> {
     
-    public var payment: Payment
+    public var context: Context
     public var isValid: Bool
     public var status: Status?
     
     public init(
-        payment: Payment,
+        context: Context,
         isValid: Bool,
         status: Status? = nil
     ) {
-        self.payment = payment
+        self.context = context
         self.isValid = isValid
         self.status = status
     }
 }
 
-extension Transaction: Equatable where Payment: Equatable, Status: Equatable {}
+extension Transaction: Equatable where Context: Equatable, Status: Equatable {}

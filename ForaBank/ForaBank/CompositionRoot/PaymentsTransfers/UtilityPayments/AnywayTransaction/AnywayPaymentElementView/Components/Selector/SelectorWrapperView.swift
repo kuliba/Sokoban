@@ -14,7 +14,7 @@ typealias ObservingSelectorViewModel<T> = RxObservingViewModel<Selector<T>, Sele
 
 struct SelectorWrapperView: View {
     
-    @StateObject private var viewModel: ViewModel
+    @ObservedObject private var viewModel: ViewModel
     
     private let factory: Factory
     

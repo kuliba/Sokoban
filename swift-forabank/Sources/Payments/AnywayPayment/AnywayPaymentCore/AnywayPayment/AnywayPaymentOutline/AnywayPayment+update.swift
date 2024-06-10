@@ -21,11 +21,14 @@ extension AnywayPayment {
         elements.appendComplementaryFields(from: update.fields)
         elements.appendParameters(from: update.parameters, with: outline)
         
-        elements.adjustWidget(.core(.init(outline.core)), on: update.details.control.needSum && !update.details.control.isMultiSum)
+        elements.adjustWidget(.product(.init(outline.core)), on: update.details.control.needSum && !update.details.control.isMultiSum)
         elements.adjustWidget(.otp(nil), on: update.details.control.needOTP)
+        
+        let footer = footer.update(with: update, and: outline)
         
         return .init(
             elements: elements,
+            footer: footer,
             infoMessage: update.details.info.infoMessage,
             isFinalStep: update.details.control.isFinalStep,
             isFraudSuspected: update.details.control.isFraudSuspected,
@@ -34,25 +37,41 @@ extension AnywayPayment {
     }
 }
 
-private extension AnywayElement.Widget.PaymentCore {
+private extension AnywayPayment.Footer {
+    
+    func update(
+        with update: AnywayPaymentUpdate,
+        and outline: AnywayPaymentOutline
+    ) -> Self {
+        
+        if update.details.control.needSum
+            && !update.details.control.isMultiSum {
+            return .amount(outline.core.amount)
+        } else {
+            return .continue
+        }
+    }
+}
+
+private extension AnywayElement.Widget.Product {
     
     init(_ core: AnywayPaymentOutline.PaymentCore) {
         
         self.init(
-            amount: core.amount,
-            currency: .init(core.currency),
-            productID: .init(core)
+            currency: core.currency,
+            productID: core.productID,
+            productType: core._productType
         )
     }
 }
 
-private extension AnywayElement.Widget.PaymentCore.ProductID {
+private extension AnywayPaymentOutline.PaymentCore {
     
-    init(_ core: AnywayPaymentOutline.PaymentCore) {
+    var _productType: AnywayElement.Widget.Product.ProductType {
         
-        switch core.productType {
-        case .account: self = .accountID(.init(core.productID))
-        case .card:    self = .cardID(.init(core.productID))
+        switch productType {
+        case .account: return .account
+        case .card:    return .card
         }
     }
 }
@@ -63,10 +82,10 @@ private extension AnywayElement {
         
         switch self {
         case let .field(field):
-            return field.id.rawValue
+            return field.id
             
         case let .parameter(parameter):
-            return parameter.field.id.rawValue
+            return parameter.field.id
             
         case .widget:
             return nil
@@ -102,7 +121,7 @@ private extension AnywayElement.Field {
         .init(
             id: id,
             title: fieldUpdate.title,
-            value: .init(fieldUpdate.value),
+            value: fieldUpdate.value,
             image: fieldUpdate.image.map { .init($0) }
         )
     }
@@ -133,7 +152,7 @@ private extension AnywayElement.Parameter {
         return .init(
             field: .init(
                 id: field.id,
-                value: .init(fieldUpdate.value)
+                value: fieldUpdate.value
             ),
             image: image,
             masking: masking,
@@ -222,7 +241,7 @@ private extension Array where Element == AnywayElement {
             
             AnywayElement.Parameter(
                 parameter: $0,
-                fallbackValue: outline.fields[.init($0.field.id)]
+                fallbackValue: outline.fields[$0.field.id]
             )
         }
         append(contentsOf: parameters.map(Element.parameter))
@@ -236,9 +255,9 @@ private extension AnywayElement.Field {
     init(_ field: AnywayPaymentUpdate.Field) {
         
         self.init(
-            id: .init(field.name),
+            id: field.name,
             title: field.title,
-            value: .init(field.value),
+            value: field.value,
             image: field.image.map { .init($0) }
         )
     }
@@ -288,7 +307,7 @@ private extension AnywayElement.Parameter.Field {
     ) {
         self.init(
             id: .init(field.id),
-            value: field.content.map { .init($0) } ?? fallbackValue.map { .init($0.rawValue) }
+            value: field.content.map { $0 } ?? fallbackValue.map { $0 }
         )
     }
 }

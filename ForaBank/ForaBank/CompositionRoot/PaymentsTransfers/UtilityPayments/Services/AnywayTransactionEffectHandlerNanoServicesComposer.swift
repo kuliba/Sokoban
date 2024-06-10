@@ -273,13 +273,13 @@ private extension NanoServices.CreateAnywayTransferPayload {
                     fieldValue: $0.fieldValue
                 )
             },
-            amount: digest.core?.amount,
+            amount: digest.amount,
             check: true,
             comment: nil,
-            currencyAmount: digest.core?.currency.rawValue,
+            currencyAmount: digest.core?.currency,
             mcc: nil,
             payer: digest.payer,
-            puref: digest.puref.rawValue
+            puref: digest.puref
         )
     }
 }
@@ -290,12 +290,9 @@ private extension AnywayPaymentDigest {
         
         guard let core else { return nil }
         
-        switch core.productID {
-        case let .account(accountID):
-            return .init(accountID: accountID.rawValue)
-            
-        case let .card(cardID):
-            return .init(cardID: cardID.rawValue)
+        switch core.productType {
+        case .account: return .init(accountID: core.productID)
+        case .card:    return .init(cardID: core.productID)
         }
     }
 }
@@ -362,7 +359,7 @@ private extension AnywayPaymentDigest {
             return .success(.init(.step4Fraud))
         }
         
-        if core?.amount != nil {
+        if amount != nil {
             return .success(.init(.step3))
         }
         

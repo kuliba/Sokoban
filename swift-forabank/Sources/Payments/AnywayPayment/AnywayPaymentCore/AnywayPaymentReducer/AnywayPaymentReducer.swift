@@ -65,8 +65,19 @@ private extension AnywayPaymentReducer {
             let digits = otp.filter(\.isWholeNumber)
             state.update(otp: .init(digits.prefix(6)))
             
-        case let .product(productID, currency):
-            state.update(with: productID, and: currency)
+        case let .product(productID, productType, currency):
+            state.update(with: productID, productType._productType, and: currency)
+        }
+    }
+}
+
+private extension AnywayPaymentEvent.Widget.ProductType {
+    
+    var _productType: AnywayElement.Widget.Product.ProductType {
+        
+        switch self {
+        case .account: return .account
+        case .card:    return .card
         }
     }
 }
@@ -89,22 +100,22 @@ private extension AnywayPayment {
     mutating func update(
         with amount: Decimal
     ) {
-        guard let index = elements.firstIndex(matching: .core),
-              case let .widget(.core(core)) = elements[index]
-        else { return }
+#warning("add tests")
+        guard case .amount = footer else { return }
         
-        elements[index] = .widget(.core(core.updating(amount: amount)))
+        footer = .amount(amount)
     }
     
     mutating func update(
-        with productID: AnywayElement.Widget.PaymentCore.ProductID,
-        and currency: AnywayElement.Widget.PaymentCore.Currency
+        with productID: AnywayElement.Widget.Product.ProductID,
+        _ productType: AnywayElement.Widget.Product.ProductType,
+        and currency: AnywayElement.Widget.Product.Currency
     ) {
-        guard let index = elements.firstIndex(matching: .core),
-              case let .widget(.core(core)) = elements[index]
+        guard let index = elements.firstIndex(matching: .product),
+              case let .widget(.product(core)) = elements[index]
         else { return }
         
-        elements[index] = .widget(.core(core.updating(with: productID, and: currency)))
+        elements[index] = .widget(.product(core.updating(with: productID, productType, and: currency)))
     }
     
     mutating func update(
@@ -122,8 +133,8 @@ private extension AnywayElement.Parameter {
     
     func updating(value: String?) -> Self {
         
-        .init(
-            field: .init(id: field.id, value: value.map { .init($0) }),
+        return .init(
+            field: .init(id: field.id, value: value),
             image: image,
             masking: masking,
             validation: validation,
@@ -132,20 +143,15 @@ private extension AnywayElement.Parameter {
     }
 }
 
-private extension AnywayElement.Widget.PaymentCore {
-    
-    func updating(
-        amount: Decimal
-    ) -> Self {
-        return .init(amount: amount, currency: currency, productID: productID)
-    }
+private extension AnywayElement.Widget.Product {
     
     func updating(
         with productID: ProductID,
+        _ productType: ProductType,
         and currency: Currency
     ) -> Self {
         
-        return .init(amount: amount, currency: currency, productID: productID)
+        return .init(currency: currency, productID: productID, productType: productType)
     }
 }
 

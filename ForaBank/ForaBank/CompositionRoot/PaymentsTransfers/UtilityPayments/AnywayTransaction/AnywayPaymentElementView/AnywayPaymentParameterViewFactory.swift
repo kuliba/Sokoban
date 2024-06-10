@@ -7,11 +7,12 @@
 
 import AnywayPaymentDomain
 import PaymentComponents
+import UIPrimitives
 
 struct AnywayPaymentParameterViewFactory {
     
     let makeSelectorView: MakeSelectorView
-    let makeTextInputView: MakeTextInputView
+    let makeIconView: MakeIconView
 }
 
 extension AnywayPaymentParameterViewFactory {
@@ -19,10 +20,7 @@ extension AnywayPaymentParameterViewFactory {
     typealias AnywayPayment = AnywayPaymentDomain.AnywayPayment
     
     typealias Option = AnywayElement.UIComponent.Parameter.ParameterType.Option
-    typealias ObserveSelector = (Selector<Option>) -> Void
-    typealias MakeSelectorView = (Selector<Option>, @escaping  ObserveSelector) -> SelectorWrapperView
+    typealias MakeSelectorView = (ObservingSelectorViewModel<Option>) -> SelectorWrapperView
     
-    typealias Parameter = AnywayElement.UIComponent.Parameter
-    typealias ObserveInput = (InputState<String>) -> Void
-    typealias MakeTextInputView = (Parameter, @escaping ObserveInput) -> InputStateWrapperView
+    typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
 }

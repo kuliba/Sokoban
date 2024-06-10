@@ -14,7 +14,7 @@ struct SelectedOptionView: View {
     
     var body: some View {
         
-        Text(option.value.rawValue)
+        Text(option.value)
             .bold()
     }
 }

@@ -10,7 +10,7 @@ import AnywayPaymentDomain
 extension Array where Element == AnywayElement {
     
     static let preview: Self = [
-        .field(.init(id: "1", title: "a", value: "bb")),
+        .field(.init(id: "1", title: "a", value: "bb", image: nil)),
         .parameter(.select),
         .parameter(.emptyTextInput),
         .parameter(.textInput),

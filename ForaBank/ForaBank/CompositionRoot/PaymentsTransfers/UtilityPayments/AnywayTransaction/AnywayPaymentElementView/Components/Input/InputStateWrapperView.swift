@@ -6,10 +6,7 @@
 //
 
 import PaymentComponents
-import RxViewModel
 import SwiftUI
-
-typealias ObservingInputViewModel = RxObservingViewModel<InputState<String>, InputEvent, Never>
 
 struct InputStateWrapperView: View {
     

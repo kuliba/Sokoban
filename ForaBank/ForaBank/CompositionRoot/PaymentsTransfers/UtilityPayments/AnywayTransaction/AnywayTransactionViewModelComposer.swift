@@ -32,7 +32,8 @@ final class AnywayTransactionViewModelComposer {
 extension AnywayTransactionViewModelComposer {
     
     func compose(
-        initialState: AnywayTransactionState
+        initialState: AnywayTransactionState,
+        observe: @escaping Observe
     ) -> ViewModel {
         
         let nanoServicesComposer = AnywayTransactionEffectHandlerNanoServicesComposer(
@@ -45,9 +46,10 @@ extension AnywayTransactionViewModelComposer {
         )
         let microServices = microServicesComposer.compose()
         
-        return makeViewModel(initialState, microServices)
+        return makeViewModel(initialState, microServices, observe)
     }
     
+    typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
     typealias ViewModel = AnywayTransactionViewModel
 }
 
@@ -55,7 +57,8 @@ private extension AnywayTransactionViewModelComposer {
     
     func makeViewModel(
         _ initialState: AnywayTransactionState,
-        _ microServices: MicroServices
+        _ microServices: MicroServices,
+        _ observe: @escaping Observe
     ) -> ViewModel {
         
         let effectHandler = EffectHandler(microServices: microServices)
@@ -66,7 +69,8 @@ private extension AnywayTransactionViewModelComposer {
         return .init(
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
+            handleEffect: effectHandler.handleEffect(_:_:),
+            observe: observe
         )
     }
     

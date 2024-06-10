@@ -47,10 +47,10 @@ private extension AnywayPaymentFooterView {
                 value: core.value,
                 isEnabled: isEnabled
             ),
-            event: { event(.edit($0)) },
-            pay: { event(.continue) },
+            event: { event($0.event) },
             currencySymbol: core.currency,
-            config: config
+            config: config,
+            infoView: EmptyView.init
         )
     }
     
@@ -71,7 +71,21 @@ private extension AnywayPaymentFooterView {
             config: config
         )
         .padding(.horizontal)
-        .disabled(!state.isEnabled)
+//        .disabled(!state.isEnabled)
+    }
+}
+
+private extension AmountEvent {
+    
+    var event: AnywayPaymentFooterEvent {
+        
+        switch self {
+        case let .edit(decimal):
+            return .edit(decimal)
+
+        case .pay:
+            return .continue
+        }
     }
 }
 

@@ -10,19 +10,19 @@ import AnywayPaymentDomain
 extension AnywayElement.Parameter {
     
     static let emptyTextInput: Self = .init(
-        field: .init(id: "emptyTextInput", value: nil),
+        field: .init(id: "emptyTextInput", value: nil), image: nil,
         masking: .preview,
         validation: .preview,
         uiAttributes: .textInput
     )
     static let textInput: Self = .init(
-        field: .init(id: "textInput", value: "abc"),
+        field: .init(id: "textInput", value: "abc"), image: nil,
         masking: .preview,
         validation: .preview,
         uiAttributes: .textInput
     )
     static let select: Self = .init(
-        field: .init(id: "select", value: "DFG"),
+        field: .init(id: "select", value: "DFG"), image: nil,
         masking: .preview,
         validation: .preview,
         uiAttributes: .select
@@ -65,7 +65,7 @@ private extension AnywayElement.Parameter.UIAttributes {
         viewType: AnywayElement.Parameter.UIAttributes.ViewType
     ) -> Self {
         
-        .init(
+        return .init(
             dataType: dataType,
             group: nil,
             isPrint: true,
@@ -73,7 +73,6 @@ private extension AnywayElement.Parameter.UIAttributes {
             isReadOnly: false,
             subGroup: nil,
             subTitle: nil,
-            svgImage: nil,
             title: "title",
             type: type,
             viewType: viewType

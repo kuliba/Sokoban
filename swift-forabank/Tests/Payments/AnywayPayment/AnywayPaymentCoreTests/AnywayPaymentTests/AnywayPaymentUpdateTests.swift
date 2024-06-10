@@ -29,39 +29,41 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         )
     }
     
-    func test_update_shouldAddAmountWidgetOnNeedSumTrueAndIsMultiSumFalse() {
+    func test_update_shouldSetFooterToAmountOnNeedSumTrueAndIsMultiSumFalse() {
         
         let payment = makeAnywayPaymentWithoutAmount()
         let update = makeAnywayPaymentUpdate(needSum: true, isMultiSum: false)
         
-        XCTAssert(hasAmountWidget(updatePayment(payment, with: update)))
+        XCTAssert(hasAmountFooter(updatePayment(payment, with: update)))
     }
     
-    func test_update_shouldNotAddAmountWidgetOnNeedSumTrueAndIsMultiSumTrue() {
+    func test_update_shouldNotSetFooterToAmountOnNeedSumTrueAndIsMultiSumTrue() {
         
         let payment = makeAnywayPaymentWithoutAmount()
         let update = makeAnywayPaymentUpdate(needSum: true, isMultiSum: true)
         
-        XCTAssertFalse(hasAmountWidget(updatePayment(payment, with: update)))
+        XCTAssertFalse(hasAmountFooter(updatePayment(payment, with: update)))
     }
     
-    func test_update_shouldRemoveAmountWidgetOnNeedSumFalseAndIsMultiSumFalse() {
+    func test_update_shouldSetFooterToContinueOnNeedSumFalseAndIsMultiSumFalse() {
         
         let payment = makeAnywayPaymentWithAmount()
         let update = makeAnywayPaymentUpdate(needSum: false, isMultiSum: false)
         
-        XCTAssertFalse(hasAmountWidget(updatePayment(payment, with: update)))
+        XCTAssertFalse(hasAmountFooter(updatePayment(payment, with: update)))
+        XCTAssertTrue(hasContinueFooter(updatePayment(payment, with: update)))
     }
     
-    func test_update_shouldRemoveAmountWidgetOnNeedSumFalseAndIsMultiSumTrue() {
+    func test_update_shouldSetFooterToContinueOnNeedSumFalseAndIsMultiSumTrue() {
         
         let payment = makeAnywayPaymentWithAmount()
         let update = makeAnywayPaymentUpdate(needSum: false, isMultiSum: true)
         
-        XCTAssertFalse(hasAmountWidget(updatePayment(payment, with: update)))
+        XCTAssertFalse(hasAmountFooter(updatePayment(payment, with: update)))
+        XCTAssertTrue(hasContinueFooter(updatePayment(payment, with: update)))
     }
     
-    func test_update_shouldSetCoreWidgetWithAccountIDFromOutline() {
+    func test_update_shouldSetProductWidgetWithAccountIDFromOutline() {
         
         let payment = makeAnywayPaymentWithoutAmount()
         let update = makeAnywayPaymentUpdate(needSum: true)
@@ -69,16 +71,16 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         let core = makeOutlinePaymentCore(amount: amount, currency: currency, productID: id, productType: .account)
         let outline = makeAnywayPaymentOutline(core: core)
         
-        let widgetCore = widgetCore(updatePayment(payment, with: update, and: outline))
+        let widgetProduct = makeProductWidget(updatePayment(payment, with: update, and: outline))
         
-        XCTAssertNoDiff(widgetCore, .init(
-            amount: amount,
+        XCTAssertNoDiff(widgetProduct, .init(
             currency: .init(currency),
-            productID: .accountID(.init(id))
+            productID: id,
+            productType: .account
         ))
     }
     
-    func test_update_shouldSetCoreWidgetWithCardIDFromOutline() {
+    func test_update_shouldSetProductWidgetWithCardIDFromOutline() {
         
         let payment = makeAnywayPaymentWithoutAmount()
         let update = makeAnywayPaymentUpdate(needSum: true)
@@ -86,22 +88,22 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         let core = makeOutlinePaymentCore(amount: amount, currency: currency, productID: id, productType: .card)
         let outline = makeAnywayPaymentOutline(core: core)
         
-        let widgetCore = widgetCore(updatePayment(payment, with: update, and: outline))
+        let widgetCore = makeProductWidget(updatePayment(payment, with: update, and: outline))
         
         XCTAssertNoDiff(widgetCore, .init(
-            amount: amount,
             currency: .init(currency),
-            productID: .cardID(.init(id))
+            productID: id,
+            productType: .card
         ))
     }
     
-    private func widgetCore(
+    private func makeProductWidget(
         _ payment: AnywayPayment
-    ) -> AnywayElement.Widget.PaymentCore? {
+    ) -> AnywayElement.Widget.Product? {
         
-        let cores: [AnywayElement.Widget.PaymentCore] = payment.elements.compactMap {
+        let cores: [AnywayElement.Widget.Product] = payment.elements.compactMap {
             
-            guard case let .widget(.core(core)) = $0
+            guard case let .widget(.product(core)) = $0
             else { return nil }
             
             return core
@@ -320,7 +322,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             $0.elements = [.field(field)]
         }
     }
-
+    
     // MARK: - OTP
     
     func test_update_shouldNotAddOTPFieldOnNeedOTPFalse() {

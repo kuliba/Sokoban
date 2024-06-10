@@ -123,20 +123,10 @@ private extension RootViewFactoryComposer {
     typealias IconView = UIPrimitives.AsyncImage
     
     private func makeIconView(
-        component: UIComponent
+        _ icon: String
     ) -> IconView {
         
-        return model.imageCache().makeIconView(for: component.md5Hash)
-    }
-    
-    private typealias UIComponent = AnywayPaymentDomain.AnywayElement.UIComponent
-}
-
-private extension AnywayPaymentDomain.AnywayElement.UIComponent {
-    
-    var md5Hash: MD5Hash {
-        #warning("FIXME")
-        return .init("")
+        return model.imageCache().makeIconView(for: .md5Hash(.init(icon)))
     }
 }
 

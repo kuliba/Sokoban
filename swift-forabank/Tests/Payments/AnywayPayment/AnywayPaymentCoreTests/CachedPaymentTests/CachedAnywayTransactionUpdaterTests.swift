@@ -17,20 +17,20 @@ final class CachedAnywayTransactionUpdaterTests: XCTestCase {
         let parameter = makeAnywayPaymentParameter(id: "abc123", value: "ABC")
         let payment = makeAnywayPayment(parameters: [parameter])
         let cachedTransaction = makeCachedTransaction(
-            payment: makeCachedPaymentContext(
+            context: makeCachedPaymentContext(
                 payment: makeCachedPayment(
                     with: payment,
                     using: mapToModel(_:)
                 )
             )
         )
-        XCTAssertNoDiff(cachedTransaction.payment.payment.models.map(\.id), [
+        XCTAssertNoDiff(cachedTransaction.context.payment.models.map(\.id), [
             .parameterID(.init("abc123"))
         ])
 
         let newParameter = makeAnywayPaymentParameter(id: "a1", value: "edf")
         let transaction = makeTransaction(
-            payment: makeAnywayPaymentContext(
+            context: makeAnywayPaymentContext(
                 payment: makeAnywayPayment(
                     parameters: [parameter, newParameter]
                 )
@@ -38,29 +38,29 @@ final class CachedAnywayTransactionUpdaterTests: XCTestCase {
         )
         let updated = sut.update(cachedTransaction, with: transaction)
         
-        XCTAssertNoDiff(updated.payment.payment.models.map(\.id), [
+        XCTAssertNoDiff(updated.context.payment.models.map(\.id), [
             .parameterID(.init("abc123")),
             .parameterID(.init("a1")),
         ])
 
-        let firstModel = try XCTUnwrap(cachedTransaction.payment.payment.models.first?.model)
-        XCTAssertTrue(updated.payment.payment.models.first?.model === firstModel)
+        let firstModel = try XCTUnwrap(cachedTransaction.context.payment.models.first?.model)
+        XCTAssertTrue(updated.context.payment.models.first?.model === firstModel)
     }
     
     func test_update_shouldUpdateStaged() {
         
         let sut = makeSUT()
         let cachedTransaction = makeCachedTransaction(
-            payment: makeCachedPaymentContext(staged: ["a"])
+            context: makeCachedPaymentContext(staged: ["a"])
         )
-        XCTAssertNoDiff(cachedTransaction.payment.staged, ["a"])
+        XCTAssertNoDiff(cachedTransaction.context.staged, ["a"])
 
         let transaction = makeTransaction(
-            payment: makeAnywayPaymentContext(staged: ["c", "d"])
+            context: makeAnywayPaymentContext(staged: ["c", "d"])
         )
         let updated = sut.update(cachedTransaction, with: transaction)
         
-        XCTAssertNoDiff(updated.payment.staged, ["c", "d"])
+        XCTAssertNoDiff(updated.context.staged, ["c", "d"])
     }
     
     func test_update_shouldUpdateOutline() {
@@ -68,50 +68,50 @@ final class CachedAnywayTransactionUpdaterTests: XCTestCase {
         let sut = makeSUT()
         let cachedOutline = makeAnywayPaymentOutline(["a": "A"])
         let cachedTransaction = makeCachedTransaction(
-            payment: makeCachedPaymentContext(outline: cachedOutline)
+            context: makeCachedPaymentContext(outline: cachedOutline)
         )
-        XCTAssertNoDiff(cachedTransaction.payment.outline, cachedOutline)
+        XCTAssertNoDiff(cachedTransaction.context.outline, cachedOutline)
 
         let outline = makeAnywayPaymentOutline(["b": "B"])
         let transaction = makeTransaction(
-            payment: makeAnywayPaymentContext(outline: outline)
+            context: makeAnywayPaymentContext(outline: outline)
         )
         
         let updated = sut.update(cachedTransaction, with: transaction)
         
-        XCTAssertNoDiff(updated.payment.outline, outline)
+        XCTAssertNoDiff(updated.context.outline, outline)
     }
     
     func test_update_shouldSetShouldRestartToFalseOnFalse() {
         
         let sut = makeSUT()
         let cachedTransaction = makeCachedTransaction(
-            payment: makeCachedPaymentContext(shouldRestart: true)
+            context: makeCachedPaymentContext(shouldRestart: true)
         )
-        XCTAssertTrue(cachedTransaction.payment.shouldRestart)
+        XCTAssertTrue(cachedTransaction.context.shouldRestart)
 
         let transaction = makeTransaction(
-            payment: makeAnywayPaymentContext(shouldRestart: false)
+            context: makeAnywayPaymentContext(shouldRestart: false)
         )
         let updated = sut.update(cachedTransaction, with: transaction)
         
-        XCTAssertFalse(updated.payment.shouldRestart)
+        XCTAssertFalse(updated.context.shouldRestart)
     }
     
     func test_update_shouldSetShouldRestartToTrueOnTrue() {
         
         let sut = makeSUT()
         let cachedTransaction = makeCachedTransaction(
-            payment: makeCachedPaymentContext(shouldRestart: false)
+            context: makeCachedPaymentContext(shouldRestart: false)
         )
-        XCTAssertFalse(cachedTransaction.payment.shouldRestart)
+        XCTAssertFalse(cachedTransaction.context.shouldRestart)
 
         let transaction = makeTransaction(
-            payment: makeAnywayPaymentContext(shouldRestart: true)
+            context: makeAnywayPaymentContext(shouldRestart: true)
         )
         let updated = sut.update(cachedTransaction, with: transaction)
         
-        XCTAssertTrue(updated.payment.shouldRestart)
+        XCTAssertTrue(updated.context.shouldRestart)
     }
     
     func test_update_shouldSetIsValidToFalseOnFalse() {
@@ -193,13 +193,13 @@ final class CachedAnywayTransactionUpdaterTests: XCTestCase {
     }
     
     private func makeCachedTransaction(
-        payment: CachedPaymentContext<Model>? = nil,
+        context: CachedPaymentContext<Model>? = nil,
         isValid: Bool = true,
         status: TransactionStatus<TransactionReport<DocumentStatus, OperationInfo<OperationDetailID, OperationDetails>>>? = nil
     ) -> CachedTransaction {
         
         return .init(
-            payment: payment ?? makeCachedPaymentContext(),
+            context: context ?? makeCachedPaymentContext(),
             isValid: isValid,
             status: status
         )
@@ -236,12 +236,12 @@ final class CachedAnywayTransactionUpdaterTests: XCTestCase {
     }
     
     private func makeTransaction(
-        payment: AnywayPaymentContext = makeAnywayPaymentContext(),
+        context: AnywayPaymentContext = makeAnywayPaymentContext(),
         isValid: Bool = true,
         status: TransactionStatus<TransactionReport<DocumentStatus, OperationInfo<OperationDetailID, OperationDetails>>>? = nil
     ) -> Transaction {
         
-        return .init(payment: payment, isValid: isValid, status: status)
+        return .init(context: context, isValid: isValid, status: status)
     }
     
     private final class Model {}

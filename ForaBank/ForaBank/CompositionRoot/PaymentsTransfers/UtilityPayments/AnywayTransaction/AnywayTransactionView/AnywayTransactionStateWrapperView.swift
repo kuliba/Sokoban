@@ -10,7 +10,7 @@ import SwiftUI
 struct AnywayTransactionStateWrapperView<TransactionView>: View
 where TransactionView: View {
     
-    @StateObject private var viewModel: ViewModel
+    @ObservedObject private var viewModel: ViewModel
     
     private let makeTransactionView: MakeTransactionView
     
@@ -30,6 +30,6 @@ where TransactionView: View {
 
 extension AnywayTransactionStateWrapperView {
     
-    typealias ViewModel = ObservingAnywayTransactionViewModel
-    typealias MakeTransactionView = (AnywayTransactionState, @escaping (AnywayTransactionEvent) -> Void) -> TransactionView
+    typealias ViewModel = CachedAnywayTransactionViewModel
+    typealias MakeTransactionView = (CachedTransactionState, @escaping (CachedTransactionEvent) -> Void) -> TransactionView
 }

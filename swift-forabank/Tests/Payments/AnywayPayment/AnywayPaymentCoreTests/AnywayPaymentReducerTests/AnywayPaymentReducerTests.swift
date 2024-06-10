@@ -57,7 +57,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         let value = anyMessage()
         let parameterID = makeParameterID()
-        let parameter = makeAnywayPaymentParameter(id: parameterID.rawValue)
+        let parameter = makeAnywayPaymentParameter(id: parameterID)
         let state = makeState(elements: [.parameter(parameter)])
         
         assertState(.setValue(value, for: parameterID), on: state) {
@@ -71,7 +71,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         let value = anyMessage()
         let parameterID = makeParameterID()
-        let parameter = makeAnywayPaymentParameter(id: parameterID.rawValue)
+        let parameter = makeAnywayPaymentParameter(id: parameterID)
         let state = makeState(elements: [.parameter(parameter)])
         
         assert(.setValue(value, for: parameterID), on: state, effect: nil)
@@ -84,7 +84,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         let state = makeEmptyState()
         
         assertState(.widget(.amount(anyAmount())), on: state)
-        assertMissingID(state, .core)
+        assertMissingID(state, .product)
     }
     
     func test_widget_amount_shouldNotDeliverEffectOnMissingAmount() {
@@ -92,28 +92,23 @@ final class AnywayPaymentReducerTests: XCTestCase {
         let state = makeEmptyState()
         
         assert(.widget(.amount(anyAmount())), on: state, effect: nil)
-        assertMissingID(state, .core)
+        assertMissingID(state, .product)
     }
     
     func test_widget_amount_shouldChangeStateOnAmount() {
         
         let amount = anyAmount()
-        let core = makeCore()
-        let state = makeState(elements: [.widget(.core(core))])
+        let state = makeState(elements: [], footer: .amount(123.45))
         
         assertState(.widget(.amount(amount)), on: state) {
             
-            $0.elements = [.widget(.core(.init(
-                amount: amount,
-                currency: core.currency,
-                productID: core.productID
-            )))]
+            $0.footer = .amount(amount)
         }
     }
     
-    func test_widget_amount_shouldNotDeliverEffectOnCore() {
+    func test_widget_amount_shouldNotDeliverEffect() {
         
-        let state = makeState(elements: [.widget(.core(makeCore()))])
+        let state = makeState(elements: [], footer: .amount(123.45))
         
         assert(.widget(.amount(anyAmount())), on: state, effect: nil)
     }
@@ -193,16 +188,16 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         let state = makeEmptyState()
         
-        assertState(.widget(.product(anyProductID(), anyCurrency())), on: state)
-        assertMissingID(state, .core)
+        assertState(.widget(.product(anyProductID(), .card, anyCurrency())), on: state)
+        assertMissingID(state, .product)
     }
     
     func test_widget_product_shouldNotDeliverEffectOnMissingProduct() {
         
         let state = makeEmptyState()
         
-        assertState(.widget(.product(anyProductID(), anyCurrency())), on: state)
-        assertMissingID(state, .core)
+        assertState(.widget(.product(anyProductID(), .account, anyCurrency())), on: state)
+        assertMissingID(state, .product)
     }
     
     func test_widget_product_shouldChangeStateOnProduct() {
@@ -210,23 +205,23 @@ final class AnywayPaymentReducerTests: XCTestCase {
         let productID = anyProductID()
         let currency = anyCurrency()
         let core = makeCore()
-        let state = makeState(elements: [.widget(.core(core))])
+        let state = makeState(elements: [.widget(.product(core))])
         
-        assertState(.widget(.product(productID, currency)), on: state) {
+        assertState(.widget(.product(productID, .account, currency)), on: state) {
             
-            $0.elements = [.widget(.core(.init(
-                amount: core.amount,
+            $0.elements = [.widget(.product(.init(
                 currency: currency,
-                productID: productID
+                productID: productID,
+                productType: .account
             )))]
         }
     }
     
     func test_widget_product_shouldNotDeliverEffectOnCore() {
         
-        let state = makeState(elements: [.widget(.core(makeCore()))])
+        let state = makeState(elements: [.widget(.product(makeCore()))])
         
-        assert(.widget(.product(anyProductID(), anyCurrency())), on: state, effect: nil)
+        assert(.widget(.product(anyProductID(), .account, anyCurrency())), on: state, effect: nil)
     }
     
     // MARK: - Helpers
@@ -323,26 +318,30 @@ final class AnywayPaymentReducerTests: XCTestCase {
     }
     
     private func makeCore(
-        amount: Decimal = anyAmount(),
-        currency: AnywayElement.Widget.PaymentCore.Currency = "RUB",
-        productID: AnywayElement.Widget.PaymentCore.ProductID = .accountID(.init(generateRandom11DigitNumber()))
-    ) -> AnywayElement.Widget.PaymentCore {
+        currency: AnywayElement.Widget.Product.Currency = "RUB",
+        productID: AnywayElement.Widget.Product.ProductID = generateRandom11DigitNumber(),
+        productType: AnywayElement.Widget.Product.ProductType = .account
+    ) -> AnywayElement.Widget.Product {
         
-        .init(amount: amount, currency: currency, productID: productID)
+        return .init(
+            currency: currency,
+            productID: productID,
+            productType: productType
+        )
     }
     
     private func anyProductID(
         id: Int = generateRandom11DigitNumber()
     ) -> AnywayPaymentEvent.Widget.ProductID {
         
-        return .accountID(.init(id))
+        return id
     }
     
     private func anyCurrency(
-        _ rawValue: String = anyMessage()
+        _ currency: String = anyMessage()
     ) -> AnywayPaymentEvent.Widget.Currency {
         
-        .init(rawValue)
+        return currency
     }
     
     private func anyOTP(
@@ -371,11 +370,13 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         let state = makeState(elements: [])
         precondition(state.elements.isEmpty)
+        precondition(hasContinueFooter(state))
         return state
     }
     
     private func makeState(
         elements: [AnywayElement],
+        footer: AnywayPayment.Footer = .continue,
         infoMessage: String? = nil,
         isFinalStep: Bool = false,
         isFraudSuspected: Bool = false,
@@ -384,6 +385,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         return .init(
             elements: elements,
+            footer: footer,
             infoMessage: infoMessage,
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,

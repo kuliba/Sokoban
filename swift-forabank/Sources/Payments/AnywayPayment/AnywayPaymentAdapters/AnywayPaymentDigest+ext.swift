@@ -21,11 +21,11 @@ private extension AnywayPaymentDigest {
     
     var _dto: _DTO {
         
-        .init(
-            amount: core?.amount,
-            currencyAmount: core?.currency.rawValue,
+        return .init(
+            amount: amount,
+            currencyAmount: core?.currency,
             payer: core.map(\._payer),
-            puref: puref.rawValue,
+            puref: puref,
             additional: additional.map(\._additional)
         )
     }
@@ -69,12 +69,12 @@ private extension AnywayPaymentDigest.PaymentCore {
     
     var _payer: AnywayPaymentDigest._DTO.Payer {
         
-        switch productID {
-        case let .account(accountID):
-            return .init(cardId: nil, accountId: accountID.rawValue)
+        switch productType {
+        case .account:
+            return .init(cardId: nil, accountId: productID)
             
-        case let .card(cardID):
-            return .init(cardId: cardID.rawValue, accountId: nil)
+        case .card:
+            return .init(cardId: productID, accountId: nil)
         }
     }
 }

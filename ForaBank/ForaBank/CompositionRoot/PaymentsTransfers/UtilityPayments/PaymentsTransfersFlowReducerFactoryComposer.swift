@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
+import PaymentComponents
 import RxViewModel
 import UtilityServicePrepaymentCore
 
@@ -30,7 +32,8 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
     
     typealias MicroServices = PrepaymentPickerMicroServices<Operator>
     
-    typealias MakeTransactionViewModel = (AnywayTransactionState) -> AnywayTransactionViewModel
+    typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
+    typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
 }
 
 extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -54,7 +57,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
 }
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -98,13 +101,51 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         notify: @escaping (PaymentStateProjection) -> Void
     ) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
         
-        let observable = makeTransactionViewModel(transactionState)
-        let viewModel = UtilityPaymentViewModel(
-            observable: observable,
-            observe: { PaymentStateProjection($0, $1).map(notify) }
+        let transactionViewModel = makeTransactionViewModel(transactionState) {
+            
+            PaymentStateProjection($0, $1).map(notify)
+        }
+        
+        let mapper = AnywayElementModelMapper(
+            event: { transactionViewModel.event(.payment($0)) },
+            currencyOfProduct: currencyOfProduct,
+            getProducts: model.productSelectProducts
+        )
+        let mapAnywayElement = mapper.map(_:)
+        
+        typealias Updater = CachedAnywayTransactionUpdater<DocumentStatus, AnywayElementModel, OperationDetailID, OperationDetails>
+        let updater = Updater(map: mapAnywayElement)
+        
+        typealias Reducer = CachedAnywayTransactionReducer<AnywayTransactionState, CachedTransactionState, AnywayTransactionEvent>
+        let reducer = Reducer(update: updater.update(_:with:))
+        
+        let effectHandler = CachedAnywayTransactionEffectHandler(
+            statePublisher: transactionViewModel.$state.removeDuplicates().eraseToAnyPublisher(),
+            event: transactionViewModel.event(_:)
+        )
+        
+        let initialState = CachedTransactionState(
+            context: .init(
+                transactionState.context, 
+                using: mapAnywayElement
+            ),
+            isValid: transactionState.isValid,
+            status: transactionState.status
+        )
+        let viewModel = RxViewModel(
+            initialState: initialState,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:)
         )
         
         return .init(viewModel: viewModel)
+    }
+    
+    private func currencyOfProduct(
+        product: ProductSelect.Product
+    ) -> String {
+        
+        model.currencyOf(product: product) ?? ""
     }
 }
 
@@ -126,6 +167,7 @@ private extension AnywayPaymentDomain.AnywayPayment {
         
         return .init(
             elements: [],
+            footer: .continue,
             infoMessage: nil,
             isFinalStep: false,
             isFraudSuspected: false,
