@@ -461,7 +461,7 @@ private extension PaymentsTransfersView {
             .navigationBarWithAsyncIcon(
                 title: operatorFailure.content.title,
                 subtitle: operatorFailure.content.subtitle,
-                dismiss: { viewModel.event(.dismiss(.destination)) },
+                dismiss: { event(.prepayment(.dismiss(.operatorFailureDestination))) },
                 icon: operatorIconView,
                 style: .large
             )
@@ -481,7 +481,7 @@ private extension PaymentsTransfersView {
                 .navigationBarWithAsyncIcon(
                     title: state.content.operator.title,
                     subtitle: state.content.operator.subtitle,
-                    dismiss: { viewModel.event(.dismiss(.destination)) },
+                    dismiss: { event(.prepayment(.dismiss(.servicesDestination))) },
                     icon: operatorIconView,
                     style: .large
                 )
@@ -708,7 +708,7 @@ private extension PaymentsTransfersView {
                 .navigationBarWithAsyncIcon(
                     title: navBar.title,
                     subtitle: navBar.subtitle,
-                    dismiss: { viewModel.event(.dismiss(.destination)) },
+                    dismiss: { viewModel.event(.utilityFlow(.prepayment(.dismiss(.servicesDestination)))) },
                     icon: navBar.icon,
                     style: .large
                 )
