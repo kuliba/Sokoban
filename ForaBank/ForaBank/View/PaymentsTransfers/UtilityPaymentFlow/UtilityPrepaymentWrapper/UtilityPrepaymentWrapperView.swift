@@ -86,7 +86,7 @@ private extension UtilityPrepaymentWrapperView {
                 
                 OperatorLabel(
                     title: `operator`.title,
-                    subtitle: `operator`.subtitle,
+                    subtitle: `operator`.inn,
                     config: .iFora,
                     iconView: makeIconView(`operator`.icon)
                 )
@@ -111,6 +111,18 @@ private extension UtilityPrepaymentWrapperView {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(Color.bordersDivider, lineWidth: 1)
         )
+    }
+}
+
+// MARK: - Helpers
+
+private extension UtilityPaymentOperator {
+    
+    var inn: String? {
+        
+        guard let subtitle, !subtitle.isEmpty else { return nil }
+        
+        return "ИНН \(subtitle)"
     }
 }
 
