@@ -11,6 +11,46 @@ import XCTest
 
 final class AnywayPaymentValidatorTests: XCTestCase {
     
+    func test_validate_shouldDeliverFalseOnInvalidFooterAndEmptyParameters() {
+        
+        let payment = makeAnywayPayment(footer: .amount(-1))
+        let sut = makeSUT(isValidParameter: { _ in true })
+        
+        XCTAssertFalse(sut.isValid(payment))
+        XCTAssertTrue(parameters(of: payment).isEmpty)
+    }
+    
+    func test_validate_shouldDeliverFalseOnInvalidFooterAndValidParameters() {
+        
+        let payment = makeAnywayPayment(
+            parameters: [makeAnywayPaymentParameter(), makeAnywayPaymentParameter()],
+            footer: .amount(-1)
+        )
+        let sut = makeSUT(isValidParameter: { _ in true })
+        
+        XCTAssertFalse(sut.isValid(payment))
+    }
+    
+    func test_validate_shouldDeliverTrueOnValidFooterAndEmptyParameters() {
+        
+        let payment = makeAnywayPayment(footer: .amount(1))
+        let sut = makeSUT(isValidParameter: { _ in true })
+        
+        XCTAssertTrue(sut.isValid(payment))
+        XCTAssertTrue(parameters(of: payment).isEmpty)
+    }
+    
+    func test_validate_shouldDeliverTrueOnValidFooterAndValidParameters() {
+        
+        let payment = makeAnywayPayment(
+            parameters: [makeAnywayPaymentParameter(), makeAnywayPaymentParameter()],
+            footer: .amount(1)
+        )
+        let sut = makeSUT(isValidParameter: { _ in true })
+        
+        XCTAssertTrue(sut.isValid(payment))
+    }
+    
     func test_validate_shouldDeliverTrueOnEmptyParameters() {
         
         let payment = makeAnywayPayment()

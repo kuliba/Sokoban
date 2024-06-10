@@ -12,17 +12,17 @@ final class PaymentsTransfersFlowManagerComposerTests: XCTestCase {
     
     func test_compose_inactive_shouldNotFail() {
         
-        _ = makeSUT(flag: .inactive).compose()
+        _ = makeSUT(flag: .inactive).compose(nil)
     }
     
     func test_compose_live_shouldNotFail() {
         
-        _ = makeSUT(flag: .active(.live)).compose()
+        _ = makeSUT(flag: .active(.live)).compose(nil)
     }
     
     func test_compose_stub_shouldNotFail() {
         
-        _ = makeSUT(flag: .active(.stub)).compose()
+        _ = makeSUT(flag: .active(.stub)).compose(nil)
     }
     
     // MARK: - Helpers

@@ -18,7 +18,7 @@ struct AnywayTransactionView: View {
     
     var body: some View {
         
-        VStack(spacing: 32) {
+        VStack(spacing: 16) {
             
             state.status.map {
                 
@@ -62,7 +62,7 @@ private extension AnywayTransactionView {
     
     private func scrollContent() -> some View {
         
-        VStack(spacing: 32) {
+        VStack(spacing: 16) {
             
             ForEach(elements) { factory.makeElementView($0) }
         }

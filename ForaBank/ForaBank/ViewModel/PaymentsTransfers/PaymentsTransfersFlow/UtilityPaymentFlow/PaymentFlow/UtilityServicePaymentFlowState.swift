@@ -29,12 +29,16 @@ extension UtilityServicePaymentFlowState {
     
     enum Alert {
         
+        case paymentRestartConfirmation
+        case serverError(String)
         case terminalError(String)
     }
     
     enum FullScreenCover {
         
-        case completed
+        case completed(TransactionResult)
+        
+        typealias TransactionResult = AnywayTransactionStatus.TransactionResult
     }
     
     enum Modal {
