@@ -8,7 +8,8 @@
 import SwiftUI
 import RxViewModel
 
-public typealias CodeInputViewModel = RxObservingViewModel<CodeInputState, OTPInputEvent, OTPInputEffect>
+public typealias State = CodeInputState.Status
+public typealias CodeInputViewModel = RxObservingViewModel<State, OTPInputEvent, OTPInputEffect>
 
 public struct CodeInputWrapperView: View {
     
@@ -25,7 +26,7 @@ public struct CodeInputWrapperView: View {
     
     public var body: some View {
         
-        switch viewModel.state.status {
+        switch viewModel.state {
         case .failure(_):
             CodeInputView(
                 state: .incompleteOTP,
@@ -56,7 +57,8 @@ struct CodeInputWrapperView_Preview: PreviewProvider {
         
         CodeInputWrapperView(
             viewModel: .default(
-                initialState: .init(status: .validOTP),
+                initialState: State.validOTP,
+                observe: { _,_ in},
                 initiateOTP: { completion in }
             ),
             config: .preview
@@ -67,10 +69,11 @@ struct CodeInputWrapperView_Preview: PreviewProvider {
 public extension CodeInputViewModel {
     
     static func `default`(
-        initialState: CodeInputState,
+        initialState: State,
         timer: TimerProtocol = RealTimer(),
         duration: Int = 60,
         length: Int = 6,
+        observe: @escaping (CodeInputState, CodeInputState) -> Void,
         initiateOTP: @escaping CountdownEffectHandler.InitiateOTP,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> CodeInputViewModel {
@@ -91,13 +94,11 @@ public extension CodeInputViewModel {
         return .init(
             observable: .init(
                 initialState: initialState,
-                reduce: { _,_  in
-                    (initialState, nil)
-                },
+                reduce: otpInputReducer.reduce(:, :),
                 handleEffect: otpInputEffectHandler.handleEffect(_:_:),
                 scheduler: scheduler
             ),
-            observe: { _ in },
+            observe: observe,
             scheduler: scheduler
         )
     }
