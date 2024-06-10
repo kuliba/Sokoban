@@ -198,6 +198,7 @@ private extension PaymentsTransfersFlowManagerComposer {
     }
     
     typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
+    typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
     
     private func loadOperators(
         payload: LoadOperatorsPayload,
@@ -251,6 +252,4 @@ private extension PaymentsTransfersFlowManagerComposer {
             composer.compose(initialState: initialState, observe: observe)
         }
     }
-    
-    typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
 }

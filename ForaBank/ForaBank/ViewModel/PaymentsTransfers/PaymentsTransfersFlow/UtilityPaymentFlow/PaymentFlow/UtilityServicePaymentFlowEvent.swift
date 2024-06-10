@@ -24,5 +24,10 @@ extension UtilityServicePaymentFlowEvent {
         case paymentError
     }
     
-    typealias TransactionResult = AnywayTransactionStatus.TransactionResult
+    typealias TransactionResult = Result<AnywayTransactionReport, Fraud>
+
+    enum Fraud: Equatable, Error {
+        
+        case cancelled, expired
+    }
 }

@@ -101,41 +101,15 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         notify: @escaping (AnywayTransactionStatus?) -> Void
     ) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
         
-        let transactionViewModel = makeTransactionViewModel(
-            transactionState,
-            { _, state in notify(state.status) }
-        )
-        
-        let mapper = AnywayElementModelMapper(
-            event: { transactionViewModel.event(.payment($0)) },
+        let composer = CachedAnywayTransactionViewModelComposer(
             currencyOfProduct: currencyOfProduct,
-            getProducts: model.productSelectProducts
+            getProducts: model.productSelectProducts,
+            makeTransactionViewModel: makeTransactionViewModel
         )
-        let mapAnywayElement = mapper.map(_:)
-        
-        typealias Updater = CachedAnywayTransactionUpdater<DocumentStatus, AnywayElementModel, OperationDetailID, OperationDetails>
-        let updater = Updater(map: mapAnywayElement)
-        
-        typealias Reducer = CachedAnywayTransactionReducer<AnywayTransactionState, CachedTransactionState, AnywayTransactionEvent>
-        let reducer = Reducer(update: updater.update(_:with:))
-        
-        let effectHandler = CachedAnywayTransactionEffectHandler(
-            statePublisher: transactionViewModel.$state.removeDuplicates().eraseToAnyPublisher(),
-            event: transactionViewModel.event(_:)
-        )
-        
-        let initialState = CachedTransactionState(
-            context: .init(
-                transactionState.context, 
-                using: mapAnywayElement
-            ),
-            isValid: transactionState.isValid,
-            status: transactionState.status
-        )
-        let viewModel = RxViewModel(
-            initialState: initialState,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
+
+        let viewModel = composer.makeCachedAnywayTransactionViewModel(
+            transactionState: transactionState,
+            notify: notify
         )
         
         return .init(viewModel: viewModel)
