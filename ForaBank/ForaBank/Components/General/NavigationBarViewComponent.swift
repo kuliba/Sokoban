@@ -348,23 +348,28 @@ struct NavigationBarView: View {
 
 extension NavigationBarView {
     
-    func view(for item: ViewModel.ItemViewModel, foregroundColor: Color, backgroundColor: Color) -> AnyView {
+    @ViewBuilder
+    func view(
+        for item: ViewModel.ItemViewModel,
+        foregroundColor: Color,
+        backgroundColor: Color
+    ) -> some View {
         
         switch item {
         case let backButtonItem as NavigationBarView.ViewModel.BackButtonItemViewModel:
-            return AnyView(BackButtonItemView(viewModel: backButtonItem, foregroundColor: foregroundColor))
+            BackButtonItemView(viewModel: backButtonItem, foregroundColor: foregroundColor)
         
         case let buttonItem as NavigationBarView.ViewModel.ButtonItemViewModel:
-            return AnyView(ButtonItemView(viewModel: buttonItem, foregroundColor: foregroundColor))
+            ButtonItemView(viewModel: buttonItem, foregroundColor: foregroundColor)
             
         case let buttonMarkedItem as NavigationBarView.ViewModel.ButtonMarkedItemViewModel:
-            return AnyView(ButtonMarkedItemView(viewModel: buttonMarkedItem, foreground: foregroundColor, background: backgroundColor))
+            ButtonMarkedItemView(viewModel: buttonMarkedItem, foreground: foregroundColor, background: backgroundColor)
             
         case let iconItem as NavigationBarView.ViewModel.IconItemViewModel:
-            return AnyView(IconItemView(viewModel: iconItem))
+            IconItemView(viewModel: iconItem)
             
         default:
-            return AnyView(EmptyView())
+            EmptyView()
         }
     }
 }
