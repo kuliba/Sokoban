@@ -16768,7 +16768,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# add Settings.bundle for Debug configuration\nif [ \"${CONFIGURATION}\" == \"Debug\" ]; then\n    cp -r \"${PROJECT_DIR}/Settings.bundle\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\"\nfi\n";
+			shellScript = "# add Settings.bundle for Debug, Mock, or Preprod configuration\nif [ \"${CONFIGURATION}\" == \"Debug\" ] || [ \"${CONFIGURATION}\" == \"Mock\" ] || [ \"${CONFIGURATION}\" == \"Preprod\" ]; then\n    cp -r \"${PROJECT_DIR}/Settings.bundle\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\"\nfi\n";
 		};
 		68FE3989286B36EF0026CBD7 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
