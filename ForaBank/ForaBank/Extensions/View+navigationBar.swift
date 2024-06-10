@@ -19,11 +19,30 @@ extension View {
         navigationBar(with: .init(
             title: title,
             leftItems: [
-                BackButton(
-                    icon: .ic24ChevronLeft,
-                    action: dismiss
-                )
+                backButton(action: dismiss)
             ]
         ))
+    }
+    
+    func navigationBar(
+        title: String,
+        dismiss: @escaping () -> Void,
+        rightItem: NavigationBarView.ViewModel.ButtonItemViewModel
+    ) -> some View {
+        
+        navigationBar(with: .init(
+            title: title,
+            leftItems: [
+                backButton(action: dismiss)
+            ],
+            rightItems: [rightItem]
+        ))
+    }
+    
+    private func backButton(
+        action: @escaping () -> Void
+    ) -> BackButton {
+        
+        return .init(icon: .ic24ChevronLeft, action: action)
     }
 }

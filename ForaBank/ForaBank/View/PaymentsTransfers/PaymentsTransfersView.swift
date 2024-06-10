@@ -246,12 +246,14 @@ struct PaymentsTransfersView: View {
             
         case let .utilityPayment(flowState):
             let event = { viewModel.event(.utilityFlow($0)) }
+            let dismissDestination = { viewModel.event(.dismiss(.destination)) }
             
             utilityPaymentFlowView(state: flowState, event: event)
                 .edgesIgnoringSafeArea(.all)
                 .navigationBar(
                     title: flowState.navTitle,
-                    dismiss: { viewModel.event(.dismiss(.destination)) }
+                    dismiss: dismissDestination,
+                    rightItem: .barcodeScanner(action: viewModel.openScanner)
                 )
         }
     }
