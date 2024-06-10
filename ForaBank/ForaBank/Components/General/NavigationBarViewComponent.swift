@@ -5,8 +5,9 @@
 //  Created by Mikhail on 03.06.2022.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
+import UIPrimitives
 
 extension NavigationBarView {
     
@@ -237,6 +238,28 @@ extension NavigationBarView.ViewModel {
         }
     }
     
+    class AsyncImageItemViewModel: ItemViewModel {
+        
+        let icon: UIPrimitives.AsyncImage
+        let style: Style
+        
+        init(
+            icon: UIPrimitives.AsyncImage,
+            style: Style
+        ) {
+            self.icon = icon
+            self.style = style
+            
+            super.init()
+        }
+        
+        enum Style {
+            
+            case normal //24pt
+            case large //32pt
+        }
+    }
+    
     struct BackgroundColorDimm {
         
         let color: Color
@@ -368,6 +391,9 @@ extension NavigationBarView {
         case let iconItem as NavigationBarView.ViewModel.IconItemViewModel:
             IconItemView(viewModel: iconItem)
             
+        case let asyncImage as NavigationBarView.ViewModel.AsyncImageItemViewModel:
+            AsyncImageItemView(viewModel: asyncImage)
+            
         default:
             EmptyView()
         }
@@ -485,6 +511,26 @@ extension NavigationBarView {
                 .renderingMode(.original)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
+                .frame(frameSize)
+                .accessibilityIdentifier("NavigationBarIconLarge")
+        }
+        
+        private var frameSize: CGSize {
+            
+            switch viewModel.style {
+            case .large: return .init(width: 32, height: 32)
+            case .normal: return .init(width: 24, height: 24)
+            }
+        }
+    }
+    
+    struct AsyncImageItemView: View {
+        
+        let viewModel: ViewModel.AsyncImageItemViewModel
+        
+        var body: some View {
+            
+            viewModel.icon
                 .frame(frameSize)
                 .accessibilityIdentifier("NavigationBarIconLarge")
         }
