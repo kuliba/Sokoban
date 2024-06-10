@@ -49,5 +49,3 @@ fastlane-deploy:
     - develop
   script:
     - bundle exec fastlane deploy
-
-    ### parallel: 1
