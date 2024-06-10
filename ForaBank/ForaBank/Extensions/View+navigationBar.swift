@@ -12,7 +12,7 @@ extension View {
     private typealias BackButton = NavigationBarView.ViewModel.BackButtonItemViewModel
     
     func navigationBar(
-        _ title: String,
+        title: String,
         dismiss: @escaping () -> Void
     ) -> some View {
         

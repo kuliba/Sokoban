@@ -229,7 +229,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .sberQRPayment(sberQRPaymentViewModel):
             viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
                 .navigationBar(
-                    sberQRPaymentViewModel.navTitle,
+                    title: sberQRPaymentViewModel.navTitle,
                     dismiss: viewModel.resetDestination
                 )
         case let .landing(viewModel):
