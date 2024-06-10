@@ -271,6 +271,7 @@ extension UILanding.Component.Config {
     static let defaultValue: Self = .init(
         listHorizontalRoundImage: .defaultValue,
         listHorizontalRectangleImage: .default,
+        listHorizontalRectangleLimits: .default,
         listVerticalRoundImage: .default,
         listDropDownTexts: .defaultDropDownTextsConfig,
         multiLineHeader: .defaultValue,
@@ -466,6 +467,15 @@ extension UILanding.ImageSvg.Config {
 }
 
 extension UILanding.List.HorizontalRectangleImage.Config {
+    
+    static let `default`: Self = .init(
+        cornerRadius: 12,
+        size: .init(height: 124, width: 272),
+        paddings: .init(horizontal: 16, vertical: 8),
+        spacing: 8)
+}
+
+extension UILanding.List.HorizontalRectangleLimits.Config {
     
     static let `default`: Self = .init(
         cornerRadius: 12,

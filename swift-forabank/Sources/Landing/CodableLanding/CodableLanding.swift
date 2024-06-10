@@ -28,30 +28,35 @@ extension CodableLanding {
     
     public enum DataView: Equatable, Codable {
         
-        case list(ListCodable)
-        case multi(MultiCodable)
-        
-        public enum ListCodable: Equatable, Codable {
-            case horizontalRectangleImage(ListHorizontalRectangleImage)
-            case horizontalRoundImage(ListHorizontalRoundImage)
-            case verticalRoundImage(ListVerticalRoundImage)
-            case dropDownTexts(ListDropDownTexts)
-        }
-        
-        public enum MultiCodable: Equatable, Codable {
-            case lineHeader(MultiLineHeader)
-            case markersText(MultiMarkersText)
-            case text(MultiText)
-            case textsWithIconsHorizontalArray(MuiltiTextsWithIconsHorizontal)
-            case buttons(MultiButtons)
-            case typeButtons(MultiTypeButtons)
-        }
-        
         case iconWithTwoTextLines(IconWithTwoTextLines)
-        case pageTitle(PageTitle)
-        case textsWithIconHorizontal(TextsWithIconHorizontal)
         case image(ImageBlock)
         case imageSvg(ImageSvg)
+        case list(List)
+        case multi(Multi)
+        case pageTitle(PageTitle)
+        case textsWithIconHorizontal(TextsWithIconHorizontal)
         case verticalSpacing(VerticalSpacing)
+    }
+}
+
+public extension CodableLanding {
+    
+    enum List: Equatable, Codable {
+        
+        case dropDownTexts(DropDownTexts)
+        case horizontalRectangleImage(HorizontalRectangleImage)
+        case horizontalRectangleLimits(HorizontalRectangleLimits)
+        case horizontalRoundImage(HorizontalRoundImage)
+        case verticalRoundImage(VerticalRoundImage)
+    }
+    
+    enum Multi: Equatable, Codable {
+
+        case buttons(Buttons)
+        case lineHeader(LineHeader)
+        case markersText(MarkersText)
+        case text(Text)
+        case textsWithIconsHorizontalArray(TextsWithIconsHorizontal)
+        case typeButtons(TypeButtons)
     }
 }

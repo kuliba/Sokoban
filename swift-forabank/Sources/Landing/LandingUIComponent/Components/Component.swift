@@ -13,33 +13,37 @@ extension UILanding {
         
         case list(List)
         case multi(Multi)
-        
-        public enum List: Hashable, Identifiable {
-            case horizontalRoundImage(UILanding.List.HorizontalRoundImage)
-            case horizontalRectangleImage(UILanding.List.HorizontalRectangleImage)
-            case verticalRoundImage(UILanding.List.VerticalRoundImage)
-            case dropDownTexts(UILanding.List.DropDownTexts)
-            
-            public var id: Self { self }
-        }
-        
-        public enum Multi: Hashable, Identifiable {
-            case lineHeader(UILanding.Multi.LineHeader)
-            case textsWithIconsHorizontal(UILanding.Multi.TextsWithIconsHorizontal)
-            case texts(UILanding.Multi.Texts)
-            case markersText(UILanding.Multi.MarkersText)
-            case buttons(UILanding.Multi.Buttons)
-            case typeButtons(UILanding.Multi.TypeButtons)
-            
-            public var id: Self { self }
-        }
-        
         case pageTitle(UILanding.PageTitle)
         case textWithIconHorizontal(UILanding.TextsWithIconHorizontal)
         case iconWithTwoTextLines(UILanding.IconWithTwoTextLines)
         case image(UILanding.ImageBlock)
         case imageSvg(UILanding.ImageSvg)
         case verticalSpacing(UILanding.VerticalSpacing)
+        
+        public var id: Self { self }
+    }
+}
+
+extension UILanding.Component {
+    
+    public enum List: Hashable, Identifiable {
+
+        case dropDownTexts(UILanding.List.DropDownTexts)
+        case horizontalRectangleImage(UILanding.List.HorizontalRectangleImage)
+        case horizontalRectangleLimits(UILanding.List.HorizontalRectangleLimits)
+        case horizontalRoundImage(UILanding.List.HorizontalRoundImage)
+        case verticalRoundImage(UILanding.List.VerticalRoundImage)
+
+        public var id: Self { self }
+    }
+    
+    public enum Multi: Hashable, Identifiable {
+        case buttons(UILanding.Multi.Buttons)
+        case lineHeader(UILanding.Multi.LineHeader)
+        case markersText(UILanding.Multi.MarkersText)
+        case texts(UILanding.Multi.Texts)
+        case textsWithIconsHorizontal(UILanding.Multi.TextsWithIconsHorizontal)
+        case typeButtons(UILanding.Multi.TypeButtons)
         
         public var id: Self { self }
     }
@@ -55,6 +59,8 @@ extension UILanding.Component {
             case let .horizontalRoundImage(data):
                 return data.imageRequests()
             case let .horizontalRectangleImage(data):
+                return data.imageRequests()
+            case let .horizontalRectangleLimits(data):
                 return data.imageRequests()
             case let .verticalRoundImage(data):
                 return data.imageRequests()

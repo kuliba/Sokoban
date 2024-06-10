@@ -1,5 +1,5 @@
 //
-//  MuiltiTextsWithIconsHorizontal.swift
+//  MultiTextsWithIconsHorizontal.swift
 //  
 //
 //  Created by Andryusina Nataly on 31.08.2023.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-extension CodableLanding {
+extension CodableLanding.Multi {
     
-    public struct MuiltiTextsWithIconsHorizontal: Equatable, Codable {
+    public struct TextsWithIconsHorizontal: Equatable, Codable {
         
         public let list: [Item]
         

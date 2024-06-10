@@ -7,9 +7,9 @@
 
 import Tagged
 
-public extension CodableLanding {
+public extension CodableLanding.List {
     
-    struct ListHorizontalRoundImage: Equatable, Codable {
+    struct HorizontalRoundImage: Equatable, Codable {
         
         public let title: String
         public let list: [ListItem]?

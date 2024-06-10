@@ -7,9 +7,9 @@
 
 import Tagged
 
-extension CodableLanding {
+extension CodableLanding.List {
     
-    public struct ListVerticalRoundImage: Codable, Equatable {
+    public struct VerticalRoundImage: Codable, Equatable {
         
         public let title: String?
         public let displayedCount: Double?

@@ -13,6 +13,7 @@ extension UILanding.Component {
         
         public let listHorizontalRoundImage: UILanding.List.HorizontalRoundImage.Config
         public let listHorizontalRectangleImage: UILanding.List.HorizontalRectangleImage.Config
+        public let listHorizontalRectangleLimits: UILanding.List.HorizontalRectangleLimits.Config
         public let listVerticalRoundImage: UILanding.List.VerticalRoundImage.Config
         public let listDropDownTexts: UILanding.List.DropDownTexts.Config
         public let multiLineHeader: UILanding.Multi.LineHeader.Config
@@ -32,6 +33,7 @@ extension UILanding.Component {
         public init(
             listHorizontalRoundImage: UILanding.List.HorizontalRoundImage.Config,
             listHorizontalRectangleImage: UILanding.List.HorizontalRectangleImage.Config,
+            listHorizontalRectangleLimits: UILanding.List.HorizontalRectangleLimits.Config,
             listVerticalRoundImage: UILanding.List.VerticalRoundImage.Config,
             listDropDownTexts: UILanding.List.DropDownTexts.Config,
             multiLineHeader: UILanding.Multi.LineHeader.Config,
@@ -50,6 +52,7 @@ extension UILanding.Component {
         ) {
             self.listHorizontalRoundImage = listHorizontalRoundImage
             self.listHorizontalRectangleImage = listHorizontalRectangleImage
+            self.listHorizontalRectangleLimits = listHorizontalRectangleLimits
             self.listVerticalRoundImage = listVerticalRoundImage
             self.listDropDownTexts = listDropDownTexts
             self.multiLineHeader = multiLineHeader

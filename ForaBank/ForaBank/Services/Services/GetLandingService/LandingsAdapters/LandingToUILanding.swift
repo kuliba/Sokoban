@@ -49,6 +49,9 @@ private extension UILanding.Component {
         case let .list(.horizontalRectangleImage(x)):
             self = .list(.horizontalRectangleImage(.init(data: x)))
             
+        case let .list(.horizontalRectangleLimits(x)):
+            self = .list(.horizontalRectangleLimits(.init(data: x)))
+            
         case let .list(.horizontalRoundImage(x)):
             self = .list(.horizontalRoundImage(.init(data: x)))
             
@@ -401,6 +404,38 @@ private extension UILanding.List.HorizontalRectangleImage.Item.Detail {
         self.init(
             groupId: data.groupId,
             viewId: data.viewId)
+    }
+}
+
+private extension UILanding.List.HorizontalRectangleLimits {
+    
+    init(
+        data: Landing.DataView.List.HorizontalRectangleLimits
+    ) {
+        self.init(list: data.list.map { .init(data: $0) })
+    }
+}
+
+private extension UILanding.List.HorizontalRectangleLimits.Item {
+    
+    init(
+        data: Landing.DataView.List.HorizontalRectangleLimits.Item
+    ) {
+        self.init(
+            action: .init(type: data.action.type),
+            limitType: data.limitType,
+            md5hash: data.md5hash,
+            title: data.title,
+            limits: data.limits.map { .init(data:$0) })
+    }
+}
+
+private extension UILanding.List.HorizontalRectangleLimits.Item.Limit {
+    
+    init(
+        data: Landing.DataView.List.HorizontalRectangleLimits.Item.Limit
+    ) {
+        self.init(id: data.id, title: data.title, colorHEX: data.colorHEX)
     }
 }
 
