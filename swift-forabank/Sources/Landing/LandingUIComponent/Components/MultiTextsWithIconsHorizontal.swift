@@ -11,14 +11,14 @@ public extension UILanding.Multi {
     
     struct TextsWithIconsHorizontal: Equatable {
         
-        public let id: UUID
-        public let lists: [Item]
+        let id: UUID
+        let lists: [Item]
         
-        public struct Item: Equatable {
+        public struct Item: Identifiable, Equatable {
             
             public let id: UUID
-            public let md5hash: String
-            public let title: String?
+            let md5hash: String
+            let title: String?
             
             public init(
                 id: UUID = UUID(),

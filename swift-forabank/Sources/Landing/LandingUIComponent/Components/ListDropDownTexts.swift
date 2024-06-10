@@ -12,15 +12,15 @@ public extension UILanding.List {
     
     struct DropDownTexts: Equatable {
         
-        public let id: UUID
-        public let title: Title?
-        public let list: [Item]
+        let id: UUID
+        let title: Title?
+        let list: [Item]
         
-        public struct Item: Equatable {
+        public struct Item: Identifiable, Equatable {
             
             public let id: UUID
-            public let title: String
-            public let description: String
+            let title: String
+            let description: String
             
             public init(id: UUID = UUID(), title: String, description: String) {
                 self.id = id

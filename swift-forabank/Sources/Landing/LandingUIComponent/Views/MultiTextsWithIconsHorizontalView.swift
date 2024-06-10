@@ -19,7 +19,7 @@ struct MultiTextsWithIconsHorizontalView: View {
         
         HStack {
             
-            ForEach(model.data.lists, id: \.id) {
+            ForEach(model.data.lists) {
                 
                 ItemView(
                     item: $0,

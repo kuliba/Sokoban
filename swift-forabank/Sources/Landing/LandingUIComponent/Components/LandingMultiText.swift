@@ -12,8 +12,8 @@ public extension UILanding.Multi {
     
     struct Texts: Equatable  {
         
-        public let id: UUID
-        public let texts: [Text]
+        let id: UUID
+        let texts: [Text]
         
         public init(id: UUID = UUID(), texts: [Text]) {
             self.id = id

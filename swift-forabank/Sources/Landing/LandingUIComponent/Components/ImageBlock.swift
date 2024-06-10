@@ -15,10 +15,10 @@ public extension UILanding {
     
     struct ImageBlock: Equatable {
         
-        public let id: UUID
-        public let placeholder: Placeholder
-        public let backgroundColor: BackgroundColor
-        public let link: Link
+        let id: UUID
+        let placeholder: Placeholder
+        let backgroundColor: BackgroundColor
+        let link: Link
         
         public init(id: UUID = UUID(), placeholder: Placeholder, backgroundColor: BackgroundColor, link: Link) {
             self.id = id

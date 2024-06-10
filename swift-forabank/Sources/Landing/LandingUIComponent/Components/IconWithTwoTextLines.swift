@@ -11,8 +11,8 @@ public extension UILanding {
     
     struct IconWithTwoTextLines: Equatable {
         
-        public let md5hash: String
-        public let title, subTitle: String?
+        let md5hash: String
+        let title, subTitle: String?
         
         public init(
             md5hash: String,

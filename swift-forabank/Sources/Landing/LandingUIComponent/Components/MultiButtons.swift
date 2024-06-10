@@ -13,22 +13,22 @@ public extension UILanding.Multi {
     
     struct Buttons: Equatable {
         
-        public let id: UUID
-        public let list: [Item]
+        let id: UUID
+        let list: [Item]
         
-        public struct Item: Equatable {
+        public struct Item: Identifiable, Equatable {
             
             public let id: UUID
-            public let text: String
-            public let style: String
-            public let detail: Detail?
-            public let link: String?
-            public let action: Action?
+            let text: String
+            let style: String
+            let detail: Detail?
+            let link: String?
+            let action: Action?
             
             public struct Detail: Hashable {
                 
-                public let groupId: GroupId
-                public let viewId: ViewId
+                let groupId: GroupId
+                let viewId: ViewId
                 
                 public init(
                     groupId: GroupId,
@@ -47,7 +47,7 @@ public extension UILanding.Multi {
             
             public struct Action: Hashable {
                 
-                public let type: ActionType
+                let type: ActionType
                 
                 public init(type: ActionType) {
                     self.type = type

@@ -13,19 +13,19 @@ public extension UILanding.List {
     
     struct HorizontalRoundImage: Equatable {
        
-        public let id: UUID
-        public let title: String?
-        public let list: [ListItem]
+        let id: UUID
+        let title: String?
+        let list: [ListItem]
         
         public struct ListItem: Equatable {
             
-            public let imageMd5Hash: String
-            public let title, subInfo: String?
-            public let detail: Detail?
+            let imageMd5Hash: String
+            let title, subInfo: String?
+            let detail: Detail?
             
             public struct Detail: Equatable {
                 
-                public let groupId, viewId: String
+                let groupId, viewId: String
                 
                 public init(
                     groupId: String,

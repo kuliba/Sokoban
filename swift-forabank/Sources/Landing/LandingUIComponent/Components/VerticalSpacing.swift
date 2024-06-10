@@ -13,9 +13,9 @@ public extension UILanding {
     
     struct VerticalSpacing: Equatable  {
         
-        public let id: UUID
-        public let backgroundColor: BackgroundColorType
-        public let spacingType: SpacingType
+        let id: UUID
+        let backgroundColor: BackgroundColorType
+        let spacingType: SpacingType
 
         public enum SpacingType: String, Hashable {
             

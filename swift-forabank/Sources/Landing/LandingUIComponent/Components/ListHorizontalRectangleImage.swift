@@ -12,18 +12,18 @@ extension UILanding.List {
     
     public struct HorizontalRectangleImage: Equatable {
         
-        public let id: UUID
-        public let list: [Item]
+        let id: UUID
+        let list: [Item]
         
         public struct Item: Equatable {
             
-            public let imageLink: String
-            public let link: String
-            public let detail: Detail?
+            let imageLink: String
+            let link: String
+            let detail: Detail?
             
             public struct Detail: Hashable {
-                public let groupId: String
-                public let viewId: String
+                let groupId: String
+                let viewId: String
                 
                 public init(groupId: String, viewId: String) {
                     self.groupId = groupId

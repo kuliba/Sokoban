@@ -12,10 +12,10 @@ public extension UILanding.Multi {
     
     struct LineHeader: Equatable {
         
-        public let id: UUID
-        public let backgroundColor: String
-        public let regularTextList: [String]?
-        public let boldTextList: [String]?
+        let id: UUID
+        let backgroundColor: String
+        let regularTextList: [String]?
+        let boldTextList: [String]?
                 
         public init(
             id: UUID = UUID(),

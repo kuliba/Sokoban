@@ -13,25 +13,25 @@ extension UILanding.List {
     
     public struct VerticalRoundImage: Equatable {
         
-        public let id: UUID
-        public let title: String?
-        public let displayedCount: Double?
-        public let dropButtonOpenTitle, dropButtonCloseTitle: String?
-        public let list: [ListItem]
+        let id: UUID
+        let title: String?
+        let displayedCount: Double?
+        let dropButtonOpenTitle, dropButtonCloseTitle: String?
+        let list: [ListItem]
         
-        public struct ListItem: Equatable {
+        public struct ListItem: Identifiable, Equatable {
             
             public let id: UUID
-            public let md5hash: String
-            public let title, subInfo: String?
-            public let link, appStore, googlePlay: String?
+            let md5hash: String
+            let title, subInfo: String?
+            let link, appStore, googlePlay: String?
             
-            public let detail: Detail?
+            let detail: Detail?
             
             public struct Detail: Equatable {
                 
-                public let groupId: GroupId
-                public let viewId: ViewId
+                let groupId: GroupId
+                let viewId: ViewId
                 
                 public init(groupId: GroupId, viewId: ViewId) {
                     self.groupId = groupId

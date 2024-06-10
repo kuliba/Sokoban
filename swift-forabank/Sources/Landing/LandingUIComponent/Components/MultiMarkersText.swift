@@ -10,11 +10,11 @@ import Tagged
 
 extension UILanding.Multi {
     
-    public struct MarkersText: Equatable {
+    public struct MarkersText: Identifiable, Equatable {
         
         public let id: UUID
-        public let backgroundColor, style: String
-        public let list: [Text]
+        let backgroundColor, style: String
+        let list: [Text]
         
         public init(
             id: UUID = UUID(),

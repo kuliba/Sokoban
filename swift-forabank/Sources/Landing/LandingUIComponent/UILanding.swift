@@ -9,10 +9,10 @@ import Foundation
 
 public struct UILanding: Equatable { 
     
-    public let header: [Component]
-    public let main: [Component]
-    public let footer: [Component]
-    public let details: [Detail]
+    let header: [Component]
+    let main: [Component]
+    let footer: [Component]
+    let details: [Detail]
     
     public init(
         header: [Component],

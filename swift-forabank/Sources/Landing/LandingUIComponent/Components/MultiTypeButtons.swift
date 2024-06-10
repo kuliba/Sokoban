@@ -14,16 +14,16 @@ public extension UILanding.Multi {
     
     struct TypeButtons: Equatable {
         
-        public let id: UUID
-        public let md5hash, backgroundColor, text: String
-        public let buttonText, buttonStyle: String
-        public let textLink: String?
-        public let action: Action?
-        public let detail: Detail?
+        let id: UUID
+        let md5hash, backgroundColor, text: String
+        let buttonText, buttonStyle: String
+        let textLink: String?
+        let action: Action?
+        let detail: Detail?
         
         public struct Detail: Equatable {
-            public let groupId: GroupId
-            public let viewId: ViewId
+            let groupId: GroupId
+            let viewId: ViewId
             
             public init(groupId: GroupId, viewId: ViewId) {
                 self.groupId = groupId
@@ -33,12 +33,12 @@ public extension UILanding.Multi {
         
         public struct Action: Equatable {
             
-            public let type: String
-            public let outputData: OutputData?
+            let type: String
+            let outputData: OutputData?
             
             public struct OutputData: Hashable {
-                public let tarif: Tarif
-                public let type: TypeData
+                let tarif: Tarif
+                let type: TypeData
                 
                 public init(tarif: Tarif, type: TypeData) {
                     self.tarif = tarif

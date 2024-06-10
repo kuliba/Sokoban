@@ -11,10 +11,10 @@ public extension UILanding {
     
     struct PageTitle: Equatable {
         
-        public let id: UUID
-        public let text: String
-        public let subTitle: String?
-        public let transparency: Bool
+        let id: UUID
+        let text: String
+        let subTitle: String?
+        let transparency: Bool
         
         public init(
             id: UUID = UUID(),

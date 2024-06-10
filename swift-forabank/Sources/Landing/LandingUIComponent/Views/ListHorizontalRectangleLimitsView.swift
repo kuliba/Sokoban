@@ -19,7 +19,7 @@ struct ListHorizontalRectangleLimitsView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                
                 HStack(spacing: config.spacing) {
-                    ForEach(model.data.list, id: \.id, content: itemView)
+                    ForEach(model.data.list, content: itemView)
                 }
             }
             .padding(.horizontal, config.paddings.horizontal)
