@@ -8,16 +8,7 @@
 import Foundation
 import Tagged
 
-public struct CodeInputState: Equatable {
-    
-    public var status: Status
-    
-    public init(
-        status: Status
-    ) {
-        self.status = status
-    }
-}
+public struct CodeInputState: Equatable {}
 
 public extension CodeInputState {
     
