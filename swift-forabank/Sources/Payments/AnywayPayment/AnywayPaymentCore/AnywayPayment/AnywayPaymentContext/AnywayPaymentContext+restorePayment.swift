@@ -38,29 +38,33 @@ private extension AnywayPaymentContext {
         
         outline.fields.compactMap { field -> Pair? in
             
-            guard staged.contains(.init(field.key.rawValue)) else { return nil }
-            
-            return (.init(field.key.rawValue), .init(field.value.rawValue))
+            staged.contains(field.key) ? (field.key, field.value): nil
         }
     }
     
-    typealias Pair = (AnywayPayment.Element.Parameter.Field.ID, AnywayPayment.Element.Parameter.Field.Value)
+    typealias Pair = (AnywayElement.Parameter.Field.ID, AnywayElement.Parameter.Field.Value)
 }
 
-private typealias Snapshot = [AnywayPayment.Element.Parameter.Field.ID: AnywayPayment.Element.Parameter.Field.Value]
+private typealias Snapshot = [AnywayElement.Parameter.Field.ID: AnywayElement.Parameter.Field.Value]
 
 private extension AnywayPayment {
     
     func restoring(with snapshot: Snapshot) -> Self {
         
         let elements = elements.map { $0.restoring(with: snapshot) }
-        return updating(elements: elements)
+#warning("add tests")
+        let footer = footer.restoring(with: snapshot)
+        return updating(with: elements, and: footer)
     }
     
-    func updating(elements: [Element]) -> Self {
+    func updating(
+        with elements: [AnywayElement],
+        and footer: Footer
+    ) -> Self {
         
         return .init(
             elements: elements,
+            footer: footer,
             infoMessage: infoMessage,
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,
@@ -69,7 +73,7 @@ private extension AnywayPayment {
     }
 }
 
-private extension AnywayPayment.Element {
+private extension AnywayElement {
     
     func restoring(with snapshot: Snapshot) -> Self {
         
@@ -83,7 +87,16 @@ private extension AnywayPayment.Element {
     }
 }
 
-private extension AnywayPayment.Element.Parameter {
+private extension Payment.Footer {
+    
+#warning("FIXME add tests")
+    func restoring(with snapshot: Snapshot) -> Self {
+        
+        self
+    }
+}
+
+private extension AnywayElement.Parameter {
     
     func restoring(with snapshot: Snapshot) -> Self {
         
@@ -93,7 +106,7 @@ private extension AnywayPayment.Element.Parameter {
     }
     
     func updating(
-        value: AnywayPayment.Element.Parameter.Field.Value
+        value: AnywayElement.Parameter.Field.Value
     ) -> Self {
         
         return .init(

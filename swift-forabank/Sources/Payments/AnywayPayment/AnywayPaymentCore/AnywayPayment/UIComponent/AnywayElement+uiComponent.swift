@@ -1,15 +1,14 @@
 //
-//  AnywayPayment.Element+uiComponent.swift
+//  AnywayElement+uiComponent.swift
 //
 //
 //  Created by Igor Malyarov on 06.04.2024.
 //
 
 import AnywayPaymentDomain
-import Tagged
 
 #warning("move to AnywayPaymentUI?")
-extension AnywayPayment.Element {
+extension AnywayElement {
     
     public var uiComponent: UIComponent {
         
@@ -33,7 +32,7 @@ extension AnywayPayment.Element {
     }
 }
 
-extension AnywayPayment.Element.UIComponent {
+extension AnywayElement.UIComponent {
     
     public struct Field: Equatable {
         
@@ -84,11 +83,14 @@ extension AnywayPayment.Element.UIComponent {
     public enum Widget: Equatable {
         
         case otp(Int?)
-        case productPicker(ProductID)
+        case productPicker(ProductID, ProductType)
+        
+        public typealias ProductID = AnywayElement.Widget.Product.ProductID
+        public typealias ProductType = AnywayElement.Widget.Product.ProductType
     }
 }
 
-extension AnywayPayment.Element.UIComponent {
+extension AnywayElement.UIComponent {
     
     public enum Image: Equatable {
         
@@ -98,10 +100,9 @@ extension AnywayPayment.Element.UIComponent {
     }
 }
 
-extension AnywayPayment.Element.UIComponent.Parameter {
+extension AnywayElement.UIComponent.Parameter {
     
-    public typealias ID = Tagged<_ID, String>
-    public enum _ID {}
+    public typealias ID = String
     
     public enum ParameterType: Equatable {
         
@@ -113,11 +114,10 @@ extension AnywayPayment.Element.UIComponent.Parameter {
         case unknown
     }
     
-    public typealias Value = Tagged<_Value, String>
-    public enum _Value {}
+    public typealias Value = String
 }
 
-extension AnywayPayment.Element.UIComponent.Parameter.ParameterType {
+extension AnywayElement.UIComponent.Parameter.ParameterType {
     
     public struct Option: Equatable {
         
@@ -134,41 +134,33 @@ extension AnywayPayment.Element.UIComponent.Parameter.ParameterType {
     }
 }
 
-extension AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option {
+extension AnywayElement.UIComponent.Parameter.ParameterType.Option {
     
-    public typealias Key = Tagged<_Key, String>
-    public enum _Key {}
-    
-    public typealias Value = Tagged<_Value, String>
-    public enum _Value {}
+    public typealias Key = String
+    public typealias Value = String
 }
 
-extension AnywayPayment.Element.Parameter {
+extension AnywayElement.Parameter {
     
 #warning("used in preview - fix, make private")
-    public var uiComponent: AnywayPayment.Element.UIComponent.Parameter {
+    public var uiComponent: AnywayElement.UIComponent.Parameter {
         
         .init(
-            id: .init(field.id.rawValue),
+            id: field.id,
             type: uiAttributes.parameterType,
             title: uiAttributes.title,
             subtitle: uiAttributes.subTitle,
-            value: field.value.map { .init($0.rawValue) },
+            value: field.value.map { .init($0) },
             image: image.map { .init($0) }
         )
     }
 }
 
-extension AnywayPayment.Element.UIComponent.Widget {
-    
-    public typealias ProductID = AnywayPayment.Element.Widget.PaymentCore.ProductID
-}
-
 // MARK: - Adapters
 
-private extension AnywayPayment.Element.Parameter.UIAttributes {
+private extension AnywayElement.Parameter.UIAttributes {
     
-    var parameterType: AnywayPayment.Element.UIComponent.Parameter.ParameterType {
+    var parameterType: AnywayElement.UIComponent.Parameter.ParameterType {
         
         switch (type, viewType, dataType) {
         case (_, .constant, _):
@@ -192,21 +184,21 @@ private extension AnywayPayment.Element.Parameter.UIAttributes {
     }
 }
 
-private extension AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
+private extension AnywayElement.Parameter.UIAttributes.DataType.Pair {
     
-    var option: AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option {
+    var option: AnywayElement.UIComponent.Parameter.ParameterType.Option {
         
         .init(key: .init(key), value: .init(value))
     }
 }
 
-private extension AnywayPayment.Element.Widget {
+private extension AnywayElement.Widget {
     
-    var uiComponent: AnywayPayment.Element.UIComponent {
+    var uiComponent: AnywayElement.UIComponent {
         
         switch self {
-        case let .core(core):
-            return .widget(.productPicker(core.productID))
+        case let .product(core):
+            return .widget(.productPicker(core.productID, core.productType))
             
         case let .otp(otp):
             return .widget(.otp(otp))
@@ -214,31 +206,31 @@ private extension AnywayPayment.Element.Widget {
     }
 }
 
-private extension AnywayPayment.Element.UIComponent.Field {
+private extension AnywayElement.UIComponent.Field {
     
-    init(_ field: AnywayPayment.Element.Field) {
+    init(_ field: AnywayElement.Field) {
         
         self.init(
-            name: field.id.rawValue,
+            name: field.id,
             title: field.title,
-            value: field.value.rawValue,
+            value: field.value,
             image: field.image.map { .init($0) }
         )
     }
 }
 
-private extension AnywayPayment.Element.UIComponent.Image {
+private extension AnywayElement.UIComponent.Image {
     
-    init(_ image: AnywayPayment.Element.Image) {
+    init(_ image: AnywayElement.Image) {
         
         switch image {
             
         case let .md5Hash(md5Hash):
             self = .md5Hash(md5Hash)
-        
+            
         case let .svg(svg):
             self = .svg(svg)
-        
+            
         case let .withFallback(md5Hash: md5Hash, svg: svg):
             self = .withFallback(md5Hash: md5Hash, svg: svg)
         }

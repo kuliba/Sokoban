@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
+import AnywayPaymentDomain
 import SwiftUI
 
 struct PaymentFlowModalView: View {
@@ -23,7 +24,7 @@ struct PaymentFlowModalView: View {
 
 extension PaymentFlowModalView {
     
-    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
     typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<UtilityPaymentViewModel>
 
     typealias State = UtilityServiceFlowState.Modal

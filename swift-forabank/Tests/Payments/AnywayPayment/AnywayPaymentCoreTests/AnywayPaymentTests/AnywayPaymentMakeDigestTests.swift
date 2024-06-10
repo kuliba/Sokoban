@@ -79,27 +79,34 @@ final class AnywayPaymentMakeDigestTests: XCTestCase {
         XCTAssertNil(payment.makeDigest().core)
     }
     
-    func test_shouldSetCoreWithAccountIDOnPaymentWithAmount() {
+    func test_shouldSetCoreAmountOnPaymentWithAmount() {
         
-        let (amount, currency, id) = makeCore()
-        let payment = makeAnywayPaymentWithAmount(amount, currency, .accountID(.init(id)))
+        let payment = makeAnywayPaymentWithAmount(12_345.67)
+        
+        XCTAssertNoDiff(payment.makeDigest().amount, 12_345.67)
+    }
+    
+    func test_shouldSetCoreWithAccountIDOnPaymentWithProduct() {
+        
+        let (_, currency, id) = makeCore()
+        let payment = makeAnywayPaymentWithProduct(currency, id, .account)
         
         XCTAssertNoDiff(payment.makeDigest().core, .init(
-            amount: amount,
-            currency: .init(currency),
-            productID: .account(.init(id))
+            currency: currency,
+            productID: id,
+            productType: .account
         ))
     }
     
-    func test_shouldSetCoreWithCardIDOnPaymentWithAmount() {
+    func test_shouldSetCoreWithCardIDOnPaymentWithProduct() {
         
-        let (amount, currency, id) = makeCore()
-        let payment = makeAnywayPaymentWithAmount(amount, currency, .cardID(.init(id)))
+        let (_, currency, id) = makeCore()
+        let payment = makeAnywayPaymentWithProduct(currency, id, .card)
         
         XCTAssertNoDiff(payment.makeDigest().core, .init(
-            amount: amount,
             currency: .init(currency),
-            productID: .card(.init(id))
+            productID: id,
+            productType: .card
         ))
     }
     

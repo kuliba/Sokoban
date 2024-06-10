@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
+import PaymentComponents
 import RxViewModel
 import UtilityServicePrepaymentCore
 
@@ -30,7 +32,8 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
     
     typealias MicroServices = PrepaymentPickerMicroServices<Operator>
     
-    typealias MakeTransactionViewModel = (AnywayTransactionState) -> AnywayTransactionViewModel
+    typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
+    typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
 }
 
 extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -54,7 +57,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
 }
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -95,16 +98,28 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     
     func makeUtilityPaymentState(
         transactionState: AnywayTransactionState,
-        notify: @escaping (PaymentStateProjection) -> Void
+        notify: @escaping (AnywayTransactionStatus?) -> Void
     ) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
         
-        let observable = makeTransactionViewModel(transactionState)
-        let viewModel = UtilityPaymentViewModel(
-            observable: observable,
-            observe: { PaymentStateProjection($0, $1).map(notify) }
+        let composer = CachedAnywayTransactionViewModelComposer(
+            currencyOfProduct: currencyOfProduct,
+            getProducts: model.productSelectProducts,
+            makeTransactionViewModel: makeTransactionViewModel
+        )
+
+        let viewModel = composer.makeCachedAnywayTransactionViewModel(
+            transactionState: transactionState,
+            notify: notify
         )
         
         return .init(viewModel: viewModel)
+    }
+    
+    private func currencyOfProduct(
+        product: ProductSelect.Product
+    ) -> String {
+        
+        model.currencyOf(product: product) ?? ""
     }
 }
 
@@ -126,40 +141,11 @@ private extension AnywayPaymentDomain.AnywayPayment {
         
         return .init(
             elements: [],
+            footer: .continue,
             infoMessage: nil,
             isFinalStep: false,
             isFraudSuspected: false,
             puref: puref
         )
-    }
-}
-
-#warning("looks like a better way would be to change: typealias PaymentStateProjection = TransactionStatus<...>")
-enum PaymentStateProjection: Equatable {
-    case completed
-    case errorMessage(String)
-    case fraud(Fraud)
-}
-
-extension PaymentStateProjection {
-    
-    init?(
-        _ previous: AnywayTransactionState,
-        _ current: AnywayTransactionState
-    ) {
-#warning("previous is ignored")
-        switch current.status {
-        case .fraudSuspected:
-            self = .fraud(.init())
-            
-        case .result:
-            self = .completed
-            
-        case let .serverError(errorMessage):
-            self = .errorMessage(errorMessage)
-            
-        default:
-            return nil
-        }
     }
 }

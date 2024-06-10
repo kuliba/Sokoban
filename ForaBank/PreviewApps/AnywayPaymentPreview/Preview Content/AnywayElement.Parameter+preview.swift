@@ -1,5 +1,5 @@
 //
-//  AnywayPayment.Element.Parameter+preview.swift
+//  AnywayElement.Parameter+preview.swift
 //  AnywayPaymentPreview
 //
 //  Created by Igor Malyarov on 15.04.2024.
@@ -7,41 +7,41 @@
 
 import AnywayPaymentDomain
 
-extension AnywayPayment.Element.Parameter {
+extension AnywayElement.Parameter {
     
     static let emptyTextInput: Self = .init(
-        field: .init(id: "emptyTextInput", value: nil),
+        field: .init(id: "emptyTextInput", value: nil), image: nil,
         masking: .preview,
         validation: .preview,
         uiAttributes: .textInput
     )
     static let textInput: Self = .init(
-        field: .init(id: "textInput", value: "abc"),
+        field: .init(id: "textInput", value: "abc"), image: nil,
         masking: .preview,
         validation: .preview,
         uiAttributes: .textInput
     )
     static let select: Self = .init(
-        field: .init(id: "select", value: "DFG"),
+        field: .init(id: "select", value: "DFG"), image: nil,
         masking: .preview,
         validation: .preview,
         uiAttributes: .select
     )
 }
 
-private extension AnywayPayment.Element.Parameter.Masking {
+private extension AnywayElement.Parameter.Masking {
     
     static let preview: Self = .empty
     static let empty: Self = .init(inputMask: nil, mask: nil)
 }
 
-private extension AnywayPayment.Element.Parameter.Validation {
+private extension AnywayElement.Parameter.Validation {
     
     static let preview: Self = .required
     static let required: Self = .init(isRequired: true, maxLength: nil, minLength: nil, regExp: "")
 }
 
-private extension AnywayPayment.Element.Parameter.UIAttributes {
+private extension AnywayElement.Parameter.UIAttributes {
     
     static let select: Self = preview(
         dataType: .pairs(
@@ -60,12 +60,12 @@ private extension AnywayPayment.Element.Parameter.UIAttributes {
     )
     
     private static func preview(
-        dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType,
-        type: AnywayPayment.Element.Parameter.UIAttributes.FieldType,
-        viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType
+        dataType: AnywayElement.Parameter.UIAttributes.DataType,
+        type: AnywayElement.Parameter.UIAttributes.FieldType,
+        viewType: AnywayElement.Parameter.UIAttributes.ViewType
     ) -> Self {
         
-        .init(
+        return .init(
             dataType: dataType,
             group: nil,
             isPrint: true,
@@ -73,7 +73,6 @@ private extension AnywayPayment.Element.Parameter.UIAttributes {
             isReadOnly: false,
             subGroup: nil,
             subTitle: nil,
-            svgImage: nil,
             title: "title",
             type: type,
             viewType: viewType

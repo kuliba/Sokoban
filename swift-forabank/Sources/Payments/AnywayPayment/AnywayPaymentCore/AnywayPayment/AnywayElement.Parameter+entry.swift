@@ -1,5 +1,5 @@
 //
-//  AnywayPayment.Element.Parameter+entry.swift
+//  AnywayElement.Parameter+entry.swift
 //
 //
 //  Created by Igor Malyarov on 06.04.2024.
@@ -7,7 +7,7 @@
 
 import AnywayPaymentDomain
 
-public extension AnywayPayment.Element.Parameter {
+public extension AnywayElement.Parameter {
     
     var entry: Entry? {
         
@@ -18,7 +18,7 @@ public extension AnywayPayment.Element.Parameter {
                 return nil
                 
             case .number, .string:
-                return field.value.map { .nonEditable(.string($0.rawValue)) }
+                return field.value.map { .nonEditable(.string($0)) }
                 
             case let .pairs(pair, _):
                 return .nonEditable(.pair(key: pair.key, value: pair.value))
@@ -66,7 +66,7 @@ public extension AnywayPayment.Element.Parameter {
                 return .hidden("OUTPUT")
                 
             case .number, .string:
-                return field.value.map { .hidden($0.rawValue) }
+                return field.value.map { .hidden($0) }
                 
             case let .pairs(pair, _):
                 return .hidden(pair.key)
@@ -85,7 +85,7 @@ public extension AnywayPayment.Element.Parameter {
     }
 }
 
-public extension AnywayPayment.Element.Parameter.Entry {
+public extension AnywayElement.Parameter.Entry {
     
     enum Field: Equatable {
         
@@ -93,9 +93,9 @@ public extension AnywayPayment.Element.Parameter.Entry {
         case pair(key: String, value: String)
     }
     
-    typealias ID = AnywayPayment.Element.Parameter.Field.ID
-    typealias Value = AnywayPayment.Element.Parameter.Field.Value
+    typealias ID = AnywayElement.Parameter.Field.ID
+    typealias Value = AnywayElement.Parameter.Field.Value
     
-    typealias Pair = AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair
+    typealias Pair = AnywayElement.Parameter.UIAttributes.DataType.Pair
 }
 

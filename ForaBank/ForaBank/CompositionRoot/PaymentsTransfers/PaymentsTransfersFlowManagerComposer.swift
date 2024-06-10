@@ -49,11 +49,19 @@ final class PaymentsTransfersFlowManagerComposer {
 
 extension PaymentsTransfersFlowManagerComposer {
     
-    func compose() -> FlowManager {
+    func compose(
+        _ spinnerActions: RootViewModel.RootActions.Spinner?
+    ) -> FlowManager {
+        
+        let makeModel = makeTransactionViewModel(with: spinnerActions)
+        let composer = makeReducerFactoryComposer(
+            makeTransactionViewModel: makeModel
+        )
+        let factory = composer.compose()
         
         return .init(
             handleEffect: makeHandleEffect(),
-            makeReduce: makeReduce()
+            makeReduce: makeReduce(with: factory)
         )
     }
     
@@ -64,7 +72,7 @@ extension PaymentsTransfersFlowManagerComposer {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias PaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias PaymentViewModel = CachedAnywayTransactionViewModel
 }
 
 private extension PaymentsTransfersFlowManagerComposer {
@@ -154,21 +162,23 @@ private extension PaymentsTransfersFlowManagerComposer {
     typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
     typealias MakePaymentPayload = PrepaymentEffect.LegacyPaymentPayload
     
-    func makeReduce() -> FlowManager.MakeReduce {
-        
-        let factory = makeReducerFactoryComposer().compose()
-        
-        typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel>
+    func makeReduce(
+        with factory: ReducerFactory
+    ) -> FlowManager.MakeReduce {
         
         let makeReducer = {
             
-            Reducer(factory: factory, closeAction: $0, notify: $1)
+            FlowReducer(factory: factory, closeAction: $0, notify: $1)
         }
         
         return { makeReducer($0, $1).reduce(_:_:) }
     }
     
+    typealias ReducerFactory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Content, PaymentViewModel>
+    typealias FlowReducer = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel>
+    
     private func makeReducerFactoryComposer(
+        makeTransactionViewModel: @escaping MakeTransactionViewModel
     ) -> PaymentsTransfersFlowReducerFactoryComposer {
         
         let nanoServices = UtilityPrepaymentNanoServices(
@@ -186,6 +196,9 @@ private extension PaymentsTransfersFlowManagerComposer {
             makeTransactionViewModel: makeTransactionViewModel
         )
     }
+    
+    typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
+    typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
     
     private func loadOperators(
         payload: LoadOperatorsPayload,
@@ -221,15 +234,22 @@ private extension PaymentsTransfersFlowManagerComposer {
     }
     
     private func makeTransactionViewModel(
-        initialState: AnywayTransactionState
-    ) -> AnywayTransactionViewModel {
+        with spinnerActions: RootViewModel.RootActions.Spinner?
+    ) -> MakeTransactionViewModel {
         
         let composer = AnywayTransactionViewModelComposer(
             flag: flag.optionOrStub,
             httpClient: httpClient,
-            log: log
+            log: log,
+            decoration: .init(
+                onEffectStart: spinnerActions?.show ?? {},
+                onEffectFinish: spinnerActions?.hide ?? {}
+            )
         )
         
-        return composer.compose(initialState: initialState)
+        return { initialState, observe in
+            
+            composer.compose(initialState: initialState, observe: observe)
+        }
     }
 }

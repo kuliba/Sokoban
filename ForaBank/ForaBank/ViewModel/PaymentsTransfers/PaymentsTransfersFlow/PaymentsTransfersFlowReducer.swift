@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
+import AnywayPaymentDomain
 import Foundation
 
 final class PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel> {
@@ -154,8 +155,23 @@ private extension PaymentsTransfersFlowReducer {
         case let .fraud(fraudEvent):
             (state, effect) = reduce(state, fraudEvent)
             
-        case let .notified(projection):
-            reduce(&state, with: projection)
+        case let .notified(status):
+            reduce(&state, &effect, with: status)
+            
+        case let .showResult(transactionResult):
+            switch transactionResult {
+            case let .failure(fraud):
+                switch fraud {
+                case .cancelled:
+                    state.setFullScreenCover(to: .completed(.failure(.fraud(.cancelled))))
+                    
+                case .expired:
+                    state.setFullScreenCover(to: .completed(.failure(.fraud(.expired))))
+                }
+                
+            case let .success(report):
+                state.setFullScreenCover(to: .completed(.success(report)))
+            }
         }
         
         return (state, effect)
@@ -195,7 +211,7 @@ private extension PaymentsTransfersFlowReducer {
         case .continue:
             break
             
-        case .expire:
+        case .expired:
             state.destination = nil
             effect = .delayModalSet(to: .paymentCancelled(expired: true))
         }
@@ -205,20 +221,79 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with projection: PaymentStateProjection
+        _ effect: inout Effect?,
+        with status: AnywayTransactionStatus?
     ) {
-        switch projection {
-        case .completed:
-            state.setFullScreenCover(to: .completed)
+        switch status {
+        case .none:
+            state.setPaymentModal(to: nil)
+
+        case .awaitingPaymentRestartConfirmation:
+            state.setPaymentAlert(to: .paymentRestartConfirmation)
             
-        case let .errorMessage(errorMessage):
-            state.setPaymentAlert(to: .terminalError(errorMessage))
+        case .fraudSuspected:
+            state.setPaymentModal(to: .fraud(.init()))
             
-        case let .fraud(fraud):
-            state.setPaymentModal(to: .fraud(fraud))
+        case let .serverError(errorMessage):
+            state.setPaymentAlert(to: .serverError(errorMessage))
+            
+        case let .result(transactionResult):
+            reduce(&state, &effect, with: transactionResult)
         }
     }
     
+    private func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with result: AnywayTransactionStatus.TransactionResult
+    ) {
+        // TODO: improve repeated code
+        switch result {
+        case let .failure(terminated):
+            switch terminated {
+            case let .fraud(fraud):
+                #warning("FIXME using commented scaffolding")
+                /*
+                state.setPaymentModal(to: nil)
+                let result = OperationResult(fraud)
+                effect = .delay(
+                    .utilityFlow(.payment(.showResult(result))),
+                    for: .microseconds(300)
+                )
+                */
+                switch fraud {
+                case .cancelled:
+                    state.setPaymentModal(to: nil)
+                    effect = .delay(
+                        .utilityFlow(.payment(.showResult(.failure(.cancelled)))),
+                        for: .microseconds(300)
+                    )
+                    
+                case .expired:
+                    state.setPaymentModal(to: nil)
+                    effect = .delay(
+                        .utilityFlow(.payment(.showResult(.failure(.expired)))),
+                        for: .microseconds(300)
+                    )
+                }
+                
+#warning("the case should have associated string")
+            case .transactionFailure:
+                state.setPaymentAlert(to: .terminalError("Error"))
+                
+#warning("the case should have associated string")
+            case .updatePaymentFailure:
+                state.setPaymentAlert(to: .serverError("Error"))
+            }
+            
+        case let .success(report):
+            state.setPaymentModal(to: nil)
+            effect = .delay(
+                .utilityFlow(.payment(.showResult(.success(report)))),
+                for: .microseconds(300)
+            )
+        }
+    }
     private typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
     
     private func reduce(

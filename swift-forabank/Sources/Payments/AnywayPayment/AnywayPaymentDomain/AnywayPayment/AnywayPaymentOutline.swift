@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Tagged
 
 public struct AnywayPaymentOutline: Equatable {
     
@@ -26,11 +25,8 @@ extension AnywayPaymentOutline {
     
     public typealias Fields = [ID: Value]
     
-    public typealias ID = Tagged<_ID, String>
-    public enum _ID {}
-    
-    public typealias Value = Tagged<_Value, String>
-    public enum _Value {}
+    public typealias ID = String
+    public typealias Value = String
 
     public struct PaymentCore: Equatable {
         

@@ -15,7 +15,7 @@ extension Flow {
     
     enum Destination: Identifiable {
         
-        case payment(ObservingAnywayTransactionViewModel)
+        case payment(ObservingCachedAnywayTransactionViewModel)
         
         var id: ID {
             
