@@ -485,7 +485,6 @@ private extension Landing.BlockHorizontalRectangular {
     init(
         data: DecodableLanding.Data.BlockHorizontalRectangular
     ) {
-        
         self.list = data.list.map { Landing.BlockHorizontalRectangular.Item.init(data:$0)
         }
     }
@@ -496,7 +495,11 @@ private extension Landing.BlockHorizontalRectangular.Item {
     init(
         data: DecodableLanding.Data.BlockHorizontalRectangular.Item
     ) {
-        self.init(limitType: data.limitType, description: data.description ?? "", title: data.title ?? "", limits: data.limits.map { .init(data: $0) })
+        self.init(
+            limitType: data.limitType,
+            description: data.description ?? "",
+            title: data.title ?? "",
+            limits: data.limits.map { .init(data: $0) })
     }
 }
 
@@ -505,7 +508,12 @@ private extension Landing.BlockHorizontalRectangular.Item.Limit {
     init(
         data: DecodableLanding.Data.BlockHorizontalRectangular.Item.Limit
     ) {
-        self.init(id: data.id, title: data.title ?? "", md5hash: data.md5hash ?? "", text: data.text ?? "", maxSum: data.maxSum ?? 0)
+        self.init(
+            id: data.id,
+            title: data.title ?? "",
+            md5hash: data.md5hash ?? "",
+            text: data.text ?? "",
+            maxSum: data.maxSum ?? 0)
     }
 }
 

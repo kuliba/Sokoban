@@ -597,7 +597,19 @@ extension UILanding.Multi.MarkersText.Config {
 extension BlockHorizontalRectangularView.ViewModel {
     
     static let defaultValue: BlockHorizontalRectangularView.ViewModel = .init(
-        data: .init(list: [.init(limitType: "linitType", description: "", title: "title", limits: [.init(id: "1", title: "title", md5hash: "md5hash", text: "text", maxSum: 10)])]),
+        data: .init(
+            list: [.init(
+                limitType: "linitType",
+                description: "",
+                title: "title",
+                limits: [
+                    .init(
+                        id: "1",
+                        title: "title",
+                        md5hash: "md5hash",
+                        text: "text",
+                        maxSum: 10)])
+            ]),
         makeIconView: { _ in .init(
             image: .flag,
             publisher: Just(.percent).eraseToAnyPublisher()
