@@ -38,7 +38,7 @@ extension RootViewFactoryComposer {
             makeActivateSliderView: ActivateSliderStateWrapperView.init, 
             makeUpdateInfoView: UpdateInfoView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
-            makePaymentCompleteView: makePaymentCompleteView()
+            makePaymentCompleteView: makePaymentCompleteView
         )
     }
 }
@@ -65,7 +65,7 @@ private extension RootViewFactoryComposer {
                 makeIconView: imageCache.makeIconView(for:), 
                 makeUpdateInfoView: UpdateInfoView.init(text:),
                 makeAnywayPaymentFactory: makeAnywayPaymentFactory,
-                makePaymentCompleteView: makePaymentCompleteView()
+                makePaymentCompleteView: makePaymentCompleteView
             ),
             productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init),
             getUImage: getUImage
@@ -131,11 +131,29 @@ private extension RootViewFactoryComposer {
         return model.imageCache().makeIconView(for: .md5Hash(.init(icon)))
     }
     
-    
     func makePaymentCompleteView(
-    ) -> Factory.MakePaymentCompleteView {
+        result: TransactionResult,
+        goToMain: @escaping () -> Void
+    ) -> PaymentCompleteView {
         
-        PaymentCompleteView.init
+        PaymentCompleteView(state: .init(result), goToMain: goToMain)
+    }
+    
+    typealias TransactionResult = UtilityServicePaymentFlowState<CachedAnywayTransactionViewModel>.FullScreenCover.TransactionResult
+}
+
+private extension PaymentCompleteView.State {
+    
+    init(
+        _ result: UtilityServicePaymentFlowState<CachedAnywayTransactionViewModel>.FullScreenCover.TransactionResult
+    ) {
+        self = result.mapError {
+            
+            return .init(
+                formattedAmount: $0.formattedAmount,
+                hasExpired: $0.hasExpired
+            )
+        }
     }
 }
 

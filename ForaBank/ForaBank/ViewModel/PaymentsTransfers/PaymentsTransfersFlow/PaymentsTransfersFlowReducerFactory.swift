@@ -9,6 +9,7 @@ import AnywayPaymentDomain
 
 struct PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Content, PaymentViewModel> {
     
+    let getFormattedAmount: GetFormattedAmount
     let makeFraud: MakeFraud
     let makeUtilityPrepaymentState: MakeUtilityPrepaymentState
     let makeUtilityPaymentState: MakeUtilityPaymentState
@@ -16,6 +17,8 @@ struct PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Conte
 }
 
 extension PaymentsTransfersFlowReducerFactory {
+    
+    typealias GetFormattedAmount = (ReducerState) -> String?
     
     typealias ReducerState = PaymentsTransfersViewModel._Route<LastPayment, Operator, Service, Content, PaymentViewModel>
     typealias MakeFraud = (ReducerState) -> Fraud?

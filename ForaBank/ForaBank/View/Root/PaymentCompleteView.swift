@@ -9,13 +9,21 @@ import SwiftUI
 
 struct PaymentCompleteView: View {
     
-    let result: AnywayTransactionStatus.TransactionResult
+    let state: State
     let goToMain: () -> Void
     
     var body: some View {
-        switch result {
-        case let .failure(terminated):
-            terminatedView(terminated)
+        
+        switch state {
+        case let .failure(fraud):
+            FraudPaymentCompleteView(
+                state: .init(
+                    formattedAmount: fraud.formattedAmount,
+                    hasExpired: fraud.hasExpired
+                ),
+                action: goToMain,
+                config: .iFora
+            )
             
         case let .success(report):
             content(.init(describing: report))
@@ -23,26 +31,18 @@ struct PaymentCompleteView: View {
     }
 }
 
-private extension PaymentCompleteView {
+extension PaymentCompleteView {
     
-    @ViewBuilder
-    func terminatedView(
-        _ terminated: AnywayTransactionStatus.Terminated
-    ) -> some View {
+    typealias State = Result<AnywayTransactionReport, Fraud>
+    
+    struct Fraud: Equatable, Error {
         
-        switch terminated {
-        case let .fraud(fraud):
-            content(.init(describing: fraud))
-            
-        case .transactionFailure:
-            // is handled by alert = bad model
-            EmptyView()
-            
-        case .updatePaymentFailure:
-            // is handled by alert = bad model
-            EmptyView()
-        }
+        let formattedAmount: String
+        let hasExpired: Bool
     }
+}
+
+private extension PaymentCompleteView {
     
     func content(
         _ content: String

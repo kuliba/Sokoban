@@ -47,6 +47,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     func compose() -> Factory {
         
         return .init(
+            getFormattedAmount: getFormattedAmount,
             makeFraud: makeFraud,
             makeUtilityPrepaymentState: makeUtilityPrepaymentState,
             makeUtilityPaymentState: makeUtilityPaymentState,
@@ -68,6 +69,17 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
 }
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
+    
+    func getFormattedAmount(
+        state: Factory.ReducerState
+    ) -> String? {
+        
+        guard let context = state.paymentFlowState?.viewModel.state.context,
+              case let .amount(amount, currency) = context.payment.footer
+        else { return "n/a" }
+        
+        return "\(amount) \(currency ?? "")"
+    }
     
     func makeFraud(
         state: Factory.ReducerState

@@ -161,13 +161,10 @@ private extension PaymentsTransfersFlowReducer {
         case let .showResult(transactionResult):
             switch transactionResult {
             case let .failure(fraud):
-                switch fraud {
-                case .cancelled:
-                    state.setFullScreenCover(to: .completed(.failure(.fraud(.cancelled))))
-                    
-                case .expired:
-                    state.setFullScreenCover(to: .completed(.failure(.fraud(.expired))))
-                }
+                state.setFullScreenCover(to: .completed(.failure(.init(
+                    formattedAmount: fraud.formattedAmount,
+                    hasExpired: fraud.hasExpired
+                ))))
                 
             case let .success(report):
                 state.setFullScreenCover(to: .completed(.success(report)))
@@ -249,35 +246,21 @@ private extension PaymentsTransfersFlowReducer {
         _ effect: inout Effect?,
         with result: AnywayTransactionStatus.TransactionResult
     ) {
-        // TODO: improve repeated code
+        guard let formattedAmount = factory.getFormattedAmount(state)
+        else { return }
+        
         switch result {
         case let .failure(terminated):
             switch terminated {
             case let .fraud(fraud):
-                #warning("FIXME using commented scaffolding")
-                /*
                 state.setPaymentModal(to: nil)
-                let result = OperationResult(fraud)
                 effect = .delay(
-                    .utilityFlow(.payment(.showResult(result))),
+                    .utilityFlow(.payment(.showResult(.failure(.init(
+                        formattedAmount: formattedAmount,
+                        hasExpired: fraud == .expired
+                    ))))),
                     for: .microseconds(300)
                 )
-                */
-                switch fraud {
-                case .cancelled:
-                    state.setPaymentModal(to: nil)
-                    effect = .delay(
-                        .utilityFlow(.payment(.showResult(.failure(.cancelled)))),
-                        for: .microseconds(300)
-                    )
-                    
-                case .expired:
-                    state.setPaymentModal(to: nil)
-                    effect = .delay(
-                        .utilityFlow(.payment(.showResult(.failure(.expired)))),
-                        for: .microseconds(300)
-                    )
-                }
                 
 #warning("the case should have associated string")
             case .transactionFailure:
@@ -296,6 +279,7 @@ private extension PaymentsTransfersFlowReducer {
             )
         }
     }
+    
     private typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
     
     private func reduce(

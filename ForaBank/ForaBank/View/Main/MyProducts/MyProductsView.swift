@@ -209,7 +209,7 @@ extension PaymentsTransfersViewFactory {
             makeIconView: IconDomain.preview,
             makeUpdateInfoView: UpdateInfoView.init(text:),
             makeAnywayPaymentFactory: { _ in fatalError() },
-            makePaymentCompleteView: PaymentCompleteView.init
+            makePaymentCompleteView: { _,_ in fatalError() }
         )
     }
 }
