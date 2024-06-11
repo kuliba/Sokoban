@@ -342,7 +342,14 @@ private extension UILanding.List.VerticalRoundImage.ListItem {
     init(
         data: Landing.DataView.List.VerticalRoundImage.ListItem
     ) {
-        
+       
+        let action: UILanding.List.VerticalRoundImage.ListItem.Action?  = {
+            
+            if let type = data.action?.type {
+                return .init(type: type)
+            } else { return nil }
+        }()
+
         self.init(
             md5hash: data.md5hash,
             title: data.title,
@@ -350,7 +357,8 @@ private extension UILanding.List.VerticalRoundImage.ListItem {
             link: data.link,
             appStore: data.appStore,
             googlePlay: data.googlePlay,
-            detail: data.detail.map(UILanding.List.VerticalRoundImage.ListItem.Detail.init(data:))
+            detail: data.detail.map(UILanding.List.VerticalRoundImage.ListItem.Detail.init(data:)),
+            action: action
         )
     }
 }

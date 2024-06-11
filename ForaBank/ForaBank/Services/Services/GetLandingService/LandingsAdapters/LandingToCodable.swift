@@ -301,6 +301,13 @@ private extension CodableLanding.List.VerticalRoundImage.ListItem {
         data: Landing.DataView.List.VerticalRoundImage.ListItem
     ) {
         
+        let action: CodableLanding.List.VerticalRoundImage.ListItem.Action?  = {
+            
+            if let type = data.action?.type {
+                return .init(type: type)
+            } else { return nil }
+        }()
+        
         self.init(
             md5hash: data.md5hash,
             title: data.title,
@@ -308,7 +315,8 @@ private extension CodableLanding.List.VerticalRoundImage.ListItem {
             link: data.link,
             appStore: data.appStore,
             googlePlay: data.googlePlay,
-            detail: data.detail.map(CodableLanding.List.VerticalRoundImage.ListItem.Detail.init(data:))
+            detail: data.detail.map(CodableLanding.List.VerticalRoundImage.ListItem.Detail.init(data:)),
+            action: action
         )
     }
 }

@@ -27,7 +27,8 @@ extension UILanding.List {
             let link, appStore, googlePlay: String?
             
             let detail: Detail?
-            
+            let action: Action?
+
             public struct Detail: Equatable {
                 
                 let groupId: GroupId
@@ -39,6 +40,14 @@ extension UILanding.List {
                 }
             }
             
+            public struct Action: Equatable {
+                let type: String
+                
+                public init(type: String) {
+                    self.type = type
+                }
+            }
+            
             public init(
                 id: UUID = UUID(),
                 md5hash: String,
@@ -47,7 +56,8 @@ extension UILanding.List {
                 link: String?,
                 appStore: String?,
                 googlePlay: String?,
-                detail: Detail?
+                detail: Detail?,
+                action: Action?
             ) {
                 self.id = id
                 self.md5hash = md5hash
@@ -57,6 +67,7 @@ extension UILanding.List {
                 self.appStore = appStore
                 self.googlePlay = googlePlay
                 self.detail = detail
+                self.action = action
             }
         }
         

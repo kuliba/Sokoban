@@ -358,6 +358,13 @@ private extension Landing.DataView.List.VerticalRoundImage.ListItem {
     init(
         data: DecodableLanding.Data.ListVerticalRoundImage.ListItem
     ) {
+        let action: Landing.DataView.List.VerticalRoundImage.ListItem.Action?  = {
+            
+            if let type = data.action?.type {
+                return .init(type: type)
+            } else { return nil }
+        }()
+        
         self.init(
             md5hash: data.md5hash,
             title: data.title,
@@ -365,7 +372,8 @@ private extension Landing.DataView.List.VerticalRoundImage.ListItem {
             link: data.link,
             appStore: data.appStore,
             googlePlay: data.googlePlay,
-            detail: data.detail.map(Landing.DataView.List.VerticalRoundImage.ListItem.Detail.init(data:))
+            detail: data.detail.map(Landing.DataView.List.VerticalRoundImage.ListItem.Detail.init(data:)), 
+            action: action
         )
     }
 }

@@ -369,7 +369,8 @@ extension UILanding.List.VerticalRoundImage {
                 link: "4",
                 appStore: "5",
                 googlePlay: "6",
-                detail: .init(groupId: "1", viewId: "2")),
+                detail: .init(groupId: "1", viewId: "2"), 
+                action: nil),
             .init(
                 md5hash: "1",
                 title: "3",
@@ -377,7 +378,8 @@ extension UILanding.List.VerticalRoundImage {
                 link: "4",
                 appStore: "5",
                 googlePlay: "6",
-                detail: .init(groupId: "1", viewId: "2")),
+                detail: .init(groupId: "1", viewId: "2"), 
+                action: nil),
             .init(
                 md5hash: "1",
                 title: "4",
@@ -385,7 +387,8 @@ extension UILanding.List.VerticalRoundImage {
                 link: "4",
                 appStore: "5",
                 googlePlay: "6",
-                detail: .init(groupId: "1", viewId: "2"))
+                detail: .init(groupId: "1", viewId: "2"), 
+                action: nil)
         ]
     )
 }

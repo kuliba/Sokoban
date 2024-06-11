@@ -163,7 +163,8 @@ final class MapperTests: XCTestCase {
                         link: nil,
                         appStore: nil,
                         googlePlay: nil,
-                        detail: .init(groupId: "b", viewId: "c")
+                        detail: .init(groupId: "b", viewId: "c"), 
+                        action: nil
                     )
                 ]
             )
@@ -390,6 +391,32 @@ final class MapperTests: XCTestCase {
                 )
 
             ])
+        ])
+    }
+
+    func test_map_limits_deliversListVerticalRoundImagesInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limits.utf8)))
+        
+        XCTAssertNoDiff(landing.main.listVerticalRoundImages, [
+            .init(
+                title: "Прочее",
+                displayedCount: nil,
+                dropButtonOpenTitle: nil,
+                dropButtonCloseTitle: nil,
+                list: [
+                    .init(
+                        md5hash: "fdcc2b1f146ed76ce73629f4a35d9b7d",
+                        title: "Управление подписками",
+                        subInfo: nil,
+                        link: nil,
+                        appStore: nil,
+                        googlePlay: nil,
+                        detail: nil,
+                        action: .init(type: "subscriptionControl")
+                    )
+                ]
+            )
         ])
     }
 
