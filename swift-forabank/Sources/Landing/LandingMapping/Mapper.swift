@@ -98,6 +98,9 @@ private extension Landing.DataView {
         case .noValid:
             return nil
             
+        case let .blockHorizontalRectangular(x):
+            self = .blockHorizontalRectangular(.init(data: x))
+            
         case let .iconWithTwoTextLines(x):
             self = .iconWithTwoTextLines(.init(data: x))
             
@@ -358,6 +361,12 @@ private extension Landing.DataView.List.VerticalRoundImage.ListItem {
     init(
         data: DecodableLanding.Data.ListVerticalRoundImage.ListItem
     ) {
+        let action: Landing.DataView.List.VerticalRoundImage.ListItem.Action?  = {
+            
+            guard let type = data.action?.type else { return nil }
+            return .init(type: type)
+        }()
+        
         self.init(
             md5hash: data.md5hash,
             title: data.title,
@@ -365,7 +374,8 @@ private extension Landing.DataView.List.VerticalRoundImage.ListItem {
             link: data.link,
             appStore: data.appStore,
             googlePlay: data.googlePlay,
-            detail: data.detail.map(Landing.DataView.List.VerticalRoundImage.ListItem.Detail.init(data:))
+            detail: data.detail.map(Landing.DataView.List.VerticalRoundImage.ListItem.Detail.init(data:)), 
+            action: action
         )
     }
 }
@@ -470,6 +480,42 @@ private extension Landing.DataView.List.HorizontalRectangleLimits.Item.Limit {
     }
 }
 
+private extension Landing.BlockHorizontalRectangular {
+    
+    init(
+        data: DecodableLanding.Data.BlockHorizontalRectangular
+    ) {
+        self.list = data.list.map { Landing.BlockHorizontalRectangular.Item.init(data:$0)
+        }
+    }
+}
+
+private extension Landing.BlockHorizontalRectangular.Item {
+    
+    init(
+        data: DecodableLanding.Data.BlockHorizontalRectangular.Item
+    ) {
+        self.init(
+            limitType: data.limitType,
+            description: data.description ?? "",
+            title: data.title ?? "",
+            limits: data.limits.map { .init(data: $0) })
+    }
+}
+
+private extension Landing.BlockHorizontalRectangular.Item.Limit {
+    
+    init(
+        data: DecodableLanding.Data.BlockHorizontalRectangular.Item.Limit
+    ) {
+        self.init(
+            id: data.id,
+            title: data.title ?? "",
+            md5hash: data.md5hash ?? "",
+            text: data.text ?? "",
+            maxSum: data.maxSum ?? 0)
+    }
+}
 
 private extension Landing.DataView.List.HorizontalRoundImage {
     

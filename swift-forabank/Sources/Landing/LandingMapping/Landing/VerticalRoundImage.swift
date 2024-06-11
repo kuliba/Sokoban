@@ -24,7 +24,8 @@ extension Landing.DataView.List {
             public let link, appStore, googlePlay: String?
 
             public let detail: Detail?
-            
+            public let action: Action?
+
             public struct Detail: Decodable, Equatable {
                 
                 public let groupId: GroupId
@@ -34,6 +35,35 @@ extension Landing.DataView.List {
                     self.groupId = groupId
                     self.viewId = viewId
                 }
+            }
+            
+            public struct Action: Decodable, Equatable {
+                
+                public let type: String
+                
+                public init(type: String) {
+                    self.type = type
+                }
+            }
+            
+            public init(
+                md5hash: String,
+                title: String?,
+                subInfo: String?,
+                link: String?,
+                appStore: String?,
+                googlePlay: String?,
+                detail: Detail?,
+                action: Action?
+            ) {
+                self.md5hash = md5hash
+                self.title = title
+                self.subInfo = subInfo
+                self.link = link
+                self.appStore = appStore
+                self.googlePlay = googlePlay
+                self.detail = detail
+                self.action = action
             }
         }
         

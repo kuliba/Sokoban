@@ -24,6 +24,7 @@ extension CodableLanding.List {
             public let link, appStore, googlePlay: String?
 
             public let detail: Detail?
+            public let action: Action?
             
             public struct Detail: Codable, Equatable {
                 
@@ -36,7 +37,15 @@ extension CodableLanding.List {
                 }
             }
             
-            public init(md5hash: String, title: String?, subInfo: String?, link: String?, appStore: String?, googlePlay: String?, detail: Detail?) {
+            public struct Action: Codable, Equatable {
+                public let type: String
+                
+                public init(type: String) {
+                    self.type = type
+                }
+            }
+
+            public init(md5hash: String, title: String?, subInfo: String?, link: String?, appStore: String?, googlePlay: String?, detail: Detail?, action: Action?) {
                 self.md5hash = md5hash
                 self.title = title
                 self.subInfo = subInfo
@@ -44,6 +53,7 @@ extension CodableLanding.List {
                 self.appStore = appStore
                 self.googlePlay = googlePlay
                 self.detail = detail
+                self.action = action
             }
         }
         

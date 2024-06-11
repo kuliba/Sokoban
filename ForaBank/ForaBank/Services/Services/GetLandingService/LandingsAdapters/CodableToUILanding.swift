@@ -88,6 +88,9 @@ private extension UILanding.Component {
             
         case let .verticalSpacing(x):
             self = .verticalSpacing(.init(data: x))
+            
+        case let .blockHorizontalRectangular(x):
+            self = .blockHorizontalRectangular(.init(data: x))
         }
     }
 }
@@ -334,6 +337,12 @@ private extension UILanding.List.VerticalRoundImage.ListItem {
         data: LocalAgentDomain.Landing.List.VerticalRoundImage.ListItem
     ) {
         
+        let action: UILanding.List.VerticalRoundImage.ListItem.Action?  = {
+            
+            guard let type = data.action?.type else { return nil }
+            return .init(type: type)
+        }()
+
         self.init(
             md5hash: data.md5hash,
             title: data.title,
@@ -341,7 +350,8 @@ private extension UILanding.List.VerticalRoundImage.ListItem {
             link: data.link,
             appStore: data.appStore,
             googlePlay: data.googlePlay,
-            detail: data.detail.map(UILanding.List.VerticalRoundImage.ListItem.Detail.init(data:))
+            detail: data.detail.map(UILanding.List.VerticalRoundImage.ListItem.Detail.init(data:)),
+            action: action
         )
     }
 }
@@ -523,5 +533,37 @@ private extension UILanding.Detail.DataGroup {
             viewID: .init(rawValue: data.viewId),
             dataView: dataView
         )
+    }
+}
+
+private extension UILanding.BlockHorizontalRectangular {
+    
+    init(
+        data: LocalAgentDomain.Landing.BlockHorizontalRectangular
+    ) {
+        
+        self.init(list: data.list.map { .init(data:$0) })
+    }
+}
+
+private extension UILanding.BlockHorizontalRectangular.Item {
+    
+    init(
+        data: LocalAgentDomain.Landing.BlockHorizontalRectangular.Item
+    ) {
+        self.init(
+            limitType: data.limitType,
+            description: data.description,
+            title: data.title,
+            limits: data.limits.map { .init(data: $0) })
+    }
+}
+
+private extension UILanding.BlockHorizontalRectangular.Item.Limit {
+    
+    init(
+        data: LocalAgentDomain.Landing.BlockHorizontalRectangular.Item.Limit
+    ) {
+        self.init(id: data.id, title: data.title, md5hash: data.md5hash, text: data.text, maxSum: data.maxSum)
     }
 }

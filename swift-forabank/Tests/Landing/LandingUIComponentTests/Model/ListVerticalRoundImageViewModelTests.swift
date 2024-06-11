@@ -27,7 +27,8 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
                 link: "7",
                 appStore: "8",
                 googlePlay: "9",
-                detail: .init(groupId: "10", viewId: "11"))],
+                detail: .init(groupId: "10", viewId: "11"), 
+                action: .init(type: "actionType"))],
             images: ["1":.bolt],
             selectDetail:  { _ in }
         )
@@ -46,7 +47,8 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
         XCTAssertEqual(sut.data.list.first?.googlePlay, "9")
         XCTAssertEqual(sut.data.list.first?.detail?.groupId, "10")
         XCTAssertEqual(sut.data.list.first?.detail?.viewId, "11")
-        
+        XCTAssertEqual(sut.data.list.first?.action?.type, "actionType")
+
         XCTAssertEqual(sut.images.count, 1)
         XCTAssertEqual(sut.images.first?.key, "1")
         XCTAssertEqual(sut.images.first?.value, .bolt)
@@ -255,7 +257,8 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
         link: String? = nil,
         appStore: String? = nil,
         googlePlay: String? = nil,
-        detail: Item.Detail? = nil
+        detail: Item.Detail? = nil,
+        action: Item.Action? = nil
     ) -> Item {
         
         .init(
@@ -265,7 +268,9 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
             link: link,
             appStore: appStore,
             googlePlay: googlePlay,
-            detail: detail)
+            detail: detail,
+            action: action
+        )
     }
         
     private func makeSUT(
@@ -308,5 +313,6 @@ private extension UILanding.List.VerticalRoundImage.ListItem{
         link: "link",
         appStore: "appStore",
         googlePlay: "googlePlay",
-        detail: .init(groupId: "1", viewId: "2"))
+        detail: .init(groupId: "1", viewId: "2"), 
+        action: nil)
 }

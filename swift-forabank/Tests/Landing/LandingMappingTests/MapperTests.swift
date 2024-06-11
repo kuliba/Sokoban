@@ -163,7 +163,8 @@ final class MapperTests: XCTestCase {
                         link: nil,
                         appStore: nil,
                         googlePlay: nil,
-                        detail: .init(groupId: "b", viewId: "c")
+                        detail: .init(groupId: "b", viewId: "c"), 
+                        action: nil
                     )
                 ]
             )
@@ -388,6 +389,63 @@ final class MapperTests: XCTestCase {
                     link: "",
                     detail: .init(groupId: "LANDING", viewId: "abroadSticker")
                 )
+
+            ])
+        ])
+    }
+
+    func test_map_limits_deliversListVerticalRoundImagesInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limits.utf8)))
+        
+        XCTAssertNoDiff(landing.main.listVerticalRoundImages, [
+            .init(
+                title: "Прочее",
+                displayedCount: nil,
+                dropButtonOpenTitle: nil,
+                dropButtonCloseTitle: nil,
+                list: [
+                    .init(
+                        md5hash: "fdcc2b1f146ed76ce73629f4a35d9b7d",
+                        title: "Управление подписками",
+                        subInfo: nil,
+                        link: nil,
+                        appStore: nil,
+                        googlePlay: nil,
+                        detail: nil,
+                        action: .init(type: "subscriptionControl")
+                    )
+                ]
+            )
+        ])
+    }
+
+    func test_map_limitSettings_deliversHeader() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limitSettings.utf8)))
+        
+        XCTAssertNoDiff(landing.header, [
+            .pageTitle(.init(
+                text: "Настройка лимитов",
+                subtitle: nil,
+                transparency: false))
+        ])
+    }
+
+    func test_map_limitSettings_deliversBlocksHorizontalRectangularInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limitSettings.utf8)))
+        
+        XCTAssertNoDiff(landing.main.blocksHorizontalRectangular, [
+            .init(list: [
+                .init(limitType: "DEBIT_OPERATIONS", description: "Переводы себе, другим людям и организациям, оплата услуг в приложении", title: "Лимит платежей и переводов", limits: [
+                    .init(id: "LMTTZ01", title: "В день", md5hash: "16f4b68434e5d9bb15f03dedc525e77b", text: "Сумма", maxSum: 999999999),
+                    .init(id: "LMTTZ02", title: "В месяц", md5hash: "16f4b68434e5d9bb15f03dedc525e77b", text: "Сумма", maxSum: 999999999)
+                ]),
+                .init(limitType: "WITHDRAWAL", description: "Снятие наличных в банкоматах или операции приравненные к снятию наличных", title: "Лимит снятия наличных", limits: [
+                    .init(id: "LMTTZ03", title: "В день", md5hash: "16f4b68434e5d9bb15f03dedc525e77b", text: "Сумма", maxSum: 150000),
+                    .init(id: "LMTTZ04", title: "В месяц", md5hash: "16f4b68434e5d9bb15f03dedc525e77b", text: "Сумма", maxSum: 500000)
+                ])
 
             ])
         ])
@@ -2790,6 +2848,104 @@ private extension String {
     }
     """
     
+    static let limitSettings: Self = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "header": [
+          {
+            "type": "PAGE_TITLE",
+            "data": {
+              "title": "Настройка лимитов",
+              "transparency": false
+            }
+          }
+        ],
+        "main": [
+          {
+            "type": "BLOCK_HORIZONTAL_RECTANGULAR",
+            "data": {
+              "list": [
+                {
+                  "title": "Лимит платежей и переводов",
+                  "description": "Переводы себе, другим людям и организациям, оплата услуг в приложении",
+                  "limitType": "DEBIT_OPERATIONS",
+                  "limit": [
+                    {
+                      "md5hash": "16f4b68434e5d9bb15f03dedc525e77b",
+                      "id": "LMTTZ01",
+                      "title": "В день",
+                      "text": "Сумма",
+                      "maxSum": 999999999
+                    },
+                    {
+                      "md5hash": "16f4b68434e5d9bb15f03dedc525e77b",
+                      "id": "LMTTZ02",
+                      "title": "В месяц",
+                      "text": "Сумма",
+                      "maxSum": 999999999
+                    }
+                  ]
+                },
+                {
+                  "title": "Лимит снятия наличных",
+                  "description": "Снятие наличных в банкоматах или операции приравненные к снятию наличных",
+                  "limitType": "WITHDRAWAL",
+                  "limit": [
+                    {
+                      "md5hash": "16f4b68434e5d9bb15f03dedc525e77b",
+                      "id": "LMTTZ03",
+                      "title": "В день",
+                      "text": "Сумма",
+                      "maxSum": 150000
+                    },
+                    {
+                      "md5hash": "16f4b68434e5d9bb15f03dedc525e77b",
+                      "id": "LMTTZ04",
+                      "title": "В месяц",
+                      "text": "Сумма",
+                      "maxSum": 500000
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "type": "LIST_DROP_DOWN_TEXTS",
+            "data": {
+              "title": "Часто задаваемые вопросы",
+              "list": [
+                {
+                  "title": "Безопасность",
+                  "description": "Лимиты это очень безопасно. Благодаря им Вы можете контролировать свои траты."
+                },
+                {
+                  "title": "Двойная конвертация",
+                  "description": "Это двукратный обмен валют. Такое может случиться, если Вы рассчитываетесь своей рублевой картой в стране, чья валюта не является ни рублем, ни долларом или евро."
+                },
+                {
+                  "title": "В какой валюте можно оплатить картой?",
+                  "description": "Валюта зависит от страны оплаты."
+                },
+                {
+                  "title": "Какую сумму можно оплатить по моей карте в онлайн-магазинах?",
+                  "description": "Ту которая у вас указана в лимите для платежей и переводов."
+                },
+                {
+                  "title": "В каких банкоматах можно снимать деньги с моей карты?",
+                  "description": "Вы можете ознакомиться со списком банкоматов на главном экране мобильного приложения в блоке - Отделения и банкоматы."
+                }
+              ]
+            }
+          }
+        ],
+        "serial": "33c455e8b1f3d298dbb1d846885c176e"
+      }
+    }
+    """
+    
     static let error: Self = """
 {"statusCode":404,"errorMessage":"404: Не найден запрос к серверу","data":null}
 """
@@ -2956,6 +3112,17 @@ extension Array where Element == Landing.DataView {
         compactMap {
             if case let .verticalSpacing(indents) = $0 {
                 return indents
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    var blocksHorizontalRectangular: [Landing.BlockHorizontalRectangular] {
+        
+        compactMap {
+            if case let .blockHorizontalRectangular(blockHorizontalRectangular) = $0 {
+                return blockHorizontalRectangular
             } else {
                 return nil
             }

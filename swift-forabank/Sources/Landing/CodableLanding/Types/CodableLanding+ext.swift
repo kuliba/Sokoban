@@ -11,6 +11,7 @@ extension CodableLanding {
     
     public enum DataView: Equatable, Codable {
         
+        case blockHorizontalRectangular(BlockHorizontalRectangular)
         case iconWithTwoTextLines(IconWithTwoTextLines)
         case image(ImageBlock)
         case imageSvg(ImageSvg)

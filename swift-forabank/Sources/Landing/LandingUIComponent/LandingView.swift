@@ -291,6 +291,13 @@ extension LandingView {
                 
             case let .multi(.markersText(model)):
                 MultiMarkersTextView(model: model, config: config.multiMarkersText)
+                
+            case let .blockHorizontalRectangular(model):
+                BlockHorizontalRectangularView(
+                    model: .init(
+                        data: model,
+                        makeIconView: makeIconView),
+                    config: config.blockHorizontalRectangular)
             }
         }
     }
