@@ -431,7 +431,7 @@ private extension PaymentsTransfersView {
                 UtilityPrepaymentWrapperView(
                     viewModel: state.content,
                     completionEvent: { event(.prepayment($0.flowEvent)) },
-                    makeIconView: { viewFactory.makeIconView(.md5Hash(.init($0))) }
+                    makeIconView: { viewFactory.makeIconView($0.map { .md5Hash(.init($0)) }) }
                 )
             },
             destinationView: {
@@ -450,7 +450,7 @@ private extension PaymentsTransfersView {
         switch state {
         case let .operatorFailure(operatorFailure):
             let operatorIconView = viewFactory.makeIconView(
-                .md5Hash(.init(operatorFailure.content.icon))
+                operatorFailure.content.icon.map { .md5Hash(.init($0)) }
             )
             operatorFailureView(
                 operatorFailure: operatorFailure,
@@ -475,7 +475,7 @@ private extension PaymentsTransfersView {
             
         case let .servicePicker(state):
             let operatorIconView = viewFactory.makeIconView(
-                .md5Hash(.init(state.content.operator.icon))
+                state.content.operator.icon.map { .md5Hash(.init($0)) }
             )
             servicePickerView(state: state, event: event)
                 .navigationBarWithAsyncIcon(
@@ -642,7 +642,7 @@ private extension PaymentsTransfersView {
         }
         
         let operatorIconView = viewFactory.makeIconView(
-            .md5Hash(.init(state.content.operator.icon))
+            state.content.operator.icon.map { .md5Hash(.init($0)) }
         )
         
         ServicePickerFlowView(

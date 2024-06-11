@@ -15,6 +15,7 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
     
     private let model: Model
     private let observeLast: Int
+    private let fraudDelay: Double
     private let navTitle: String
     private let microServices: MicroServices
     private let makeTransactionViewModel: MakeTransactionViewModel
@@ -22,12 +23,14 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
     init(
         model: Model,
         observeLast: Int,
+        fraudDelay: Double,
         navTitle: String,
         microServices: MicroServices,
         makeTransactionViewModel: @escaping MakeTransactionViewModel
     ) {
         self.model = model
         self.observeLast = observeLast
+        self.fraudDelay = fraudDelay
         self.navTitle = navTitle
         self.microServices = microServices
         self.makeTransactionViewModel = makeTransactionViewModel
@@ -44,6 +47,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     func compose() -> Factory {
         
         return .init(
+            makeFraud: makeFraud,
             makeUtilityPrepaymentState: makeUtilityPrepaymentState,
             makeUtilityPaymentState: makeUtilityPaymentState,
             makePaymentsViewModel: makePayByInstructionsViewModel
@@ -61,6 +65,50 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     
     typealias Content = UtilityPrepaymentViewModel
     typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
+}
+
+private extension PaymentsTransfersFlowReducerFactoryComposer {
+    
+    func makeFraud(
+        state: Factory.ReducerState
+    ) -> Fraud? {
+        
+        guard case let .utilityPayment(utilityPrepayment) = state.destination,
+              case let .payment(paymentFlowState) = utilityPrepayment.destination
+        else { return nil }
+        
+        let context = paymentFlowState.viewModel.state.context
+        let payload = context.payment.payload
+        
+        return .init(
+            title: payload.title,
+            subtitle: payload.subtitle,
+            formattedAmount: context.payment.formattedAmount ?? "",
+            delay: fraudDelay
+        )
+    }
+}
+
+private extension PaymentsTransfersViewModel._Route {
+    
+    var paymentFlowState: UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>.Destination.Payment? {
+        
+        guard case let .utilityPayment(utilityPrepayment) = destination,
+              case let .payment(paymentFlowState) = utilityPrepayment.destination
+        else { return nil }
+
+        return paymentFlowState
+    }
+}
+
+private extension CachedAnywayPayment<AnywayElementModel> {
+    
+    var formattedAmount: String? {
+        
+        guard case let .amount(amount, currency) = footer else { return nil }
+                
+        return "\(amount) \(currency ?? "")"
+    }
 }
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -133,22 +181,5 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     ) -> PaymentsViewModel {
         
         return .init(model, service: .requisites, closeAction: closeAction)
-    }
-}
-
-private extension AnywayPaymentDomain.AnywayPayment {
-    
-    static func empty(
-        _ puref: String
-    ) -> Self {
-        
-        return .init(
-            elements: [],
-            footer: .continue,
-            infoMessage: nil,
-            isFinalStep: false,
-            isFraudSuspected: false,
-            payload: .init(puref: puref)
-        )
     }
 }

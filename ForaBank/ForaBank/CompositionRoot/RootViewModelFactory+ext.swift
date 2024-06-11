@@ -135,7 +135,7 @@ extension RootViewModelFactory {
                 })
         }
         
-        let (pageSize, observeLast) = (50, 10) // TODO: extract to some settings
+        let (pageSize, observeLast, fraudDelay) = (50, 10, Double(120)) // TODO: extract to some settings
         
         let ptfmComposer = PaymentsTransfersFlowManagerComposer(
             flag: utilitiesPaymentsFlag,
@@ -143,7 +143,8 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             log: logger.log,
             pageSize: pageSize,
-            observeLast: observeLast
+            observeLast: observeLast,
+            fraudDelay: fraudDelay
         )
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose

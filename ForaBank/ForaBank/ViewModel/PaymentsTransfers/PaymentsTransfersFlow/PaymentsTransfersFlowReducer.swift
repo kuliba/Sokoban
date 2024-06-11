@@ -232,7 +232,9 @@ private extension PaymentsTransfersFlowReducer {
             state.setPaymentAlert(to: .paymentRestartConfirmation)
             
         case .fraudSuspected:
-            state.setPaymentModal(to: .fraud(.init()))
+            if let fraud = factory.makeFraud(state) {
+                state.setPaymentModal(to: .fraud(fraud))
+            }
             
         case let .serverError(errorMessage):
             state.setPaymentAlert(to: .serverError(errorMessage))
@@ -584,7 +586,7 @@ private extension PaymentsTransfersViewModel._Route {
     
     private var paymentFlowState: UtilityServiceFlowState? {
         
-        guard case let .payment(paymentFlowState) = utilityPrepayment?.destination
+        guard case let .payment(paymentFlowState) = utilityPrepaymentDestination
         else { return nil }
         
         return paymentFlowState

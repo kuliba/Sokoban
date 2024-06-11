@@ -42,14 +42,14 @@ public struct Payment<Element> {
         
         public let puref: Puref
         public let title: String
-        public let subtitle: String
-        public let icon: String
+        public let subtitle: String?
+        public let icon: String?
         
         public init(
             puref: Puref, 
             title: String, 
-            subtitle: String,
-            icon: String
+            subtitle: String?,
+            icon: String?
         ) {
             self.puref = puref
             self.title = title

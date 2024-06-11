@@ -14,6 +14,6 @@ enum IconDomain {
         case md5Hash(MD5Hash)
     }
     
-    typealias MakeIconView = (Icon) -> IconView
+    typealias MakeIconView = (Icon?) -> IconView
     typealias IconView = UIPrimitives.AsyncImage
 }

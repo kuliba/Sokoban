@@ -47,4 +47,10 @@ extension UtilityServicePaymentFlowState {
     }
 }
 
-struct Fraud: Equatable {}
+struct Fraud: Equatable {
+    
+    let title: String
+    let subtitle: String?
+    let formattedAmount: String
+    let delay: Double
+}
