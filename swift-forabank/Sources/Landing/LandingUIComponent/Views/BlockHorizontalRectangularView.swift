@@ -11,7 +11,7 @@ import UIPrimitives
 
 struct BlockHorizontalRectangularView: View {
     
-    @ObservedObject var model: ViewModel
+    let model: ViewModel
     let config: UILanding.BlockHorizontalRectangular.Config
         
     var body: some View {
