@@ -31,7 +31,8 @@ public struct Landing: Equatable {
 extension Landing {
     
     public enum DataView: Equatable {
-
+        
+        case blockHorizontalRectangular(BlockHorizontalRectangular)
         case iconWithTwoTextLines(IconWithTwoTextLines)
         case image(ImageBlock)
         case imageSvg(ImageSvg)
