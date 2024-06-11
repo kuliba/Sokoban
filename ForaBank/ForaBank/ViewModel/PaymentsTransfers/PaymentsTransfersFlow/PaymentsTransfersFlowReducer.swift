@@ -161,13 +161,13 @@ private extension PaymentsTransfersFlowReducer {
         case let .showResult(transactionResult):
             switch transactionResult {
             case let .failure(fraud):
-                state.setFullScreenCover(to: .completed(.failure(.init(
+                state.setPaymentFullScreenCover(to: .completed(.failure(.init(
                     formattedAmount: fraud.formattedAmount,
                     hasExpired: fraud.hasExpired
                 ))))
                 
             case let .success(report):
-                state.setFullScreenCover(to: .completed(.success(report)))
+                state.setPaymentFullScreenCover(to: .completed(.success(report)))
             }
         }
         
@@ -183,7 +183,7 @@ private extension PaymentsTransfersFlowReducer {
             state.setPaymentModal(to: nil)
             
         case .fullScreenCover:
-            state.setFullScreenCover(to: nil)
+            state.setPaymentFullScreenCover(to: nil)
             
         case .paymentError:
             state.destination = nil
@@ -223,6 +223,8 @@ private extension PaymentsTransfersFlowReducer {
     ) {
         switch status {
         case .none:
+            state.setPaymentAlert(to: nil)
+            state.setPaymentFullScreenCover(to: nil)
             state.setPaymentModal(to: nil)
 
         case .awaitingPaymentRestartConfirmation:
@@ -586,7 +588,7 @@ private extension PaymentsTransfersViewModel._Route {
         setServicePickerPaymentAlert(to: alert)
     }
     
-    mutating func setFullScreenCover(
+    mutating func setPaymentFullScreenCover(
         to fullScreenCover: UtilityServiceFlowState.FullScreenCover?
     ) {
         // try to change payment node in the tree if found
