@@ -129,7 +129,8 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                         self.update(with: statement, product: product, operationDetail: details)
                         
                         guard statement.paymentDetailType != .insideOther,
-                              details.shouldHaveTemplateButton
+                              details.shouldHaveTemplateButton,
+                              statement.shouldShowTemplateButton
                         else { return }
                         
                         self.templateButton = .init(
@@ -237,7 +238,8 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         switch productStatement.paymentDetailType {
             
         case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .insideDeposit, .insideOther, .taxes, .sberQRPayment:
-            if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
+            
+            if productStatement.shouldShowDocumentButton, let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
                 featureButtonsUpdated.append(documentButtonViewModel)
             }
             if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
@@ -249,14 +251,16 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             // if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
             //     featureButtonsUpdated.append(templateButtonViewModel)
             // }
-            if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
+            if productStatement.shouldShowDocumentButton, let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
                 featureButtonsUpdated.append(documentButtonViewModel)
             }
             if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
                 featureButtonsUpdated.append(infoButtonViewModel)
             }
             if operationDetail.transferReference != nil {
-                actionButtonsUpdated = self.actionButtons(with: operationDetail, statement: productStatement, product: product, dismissAction: {[weak self] in self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())})
+                actionButtonsUpdated = self.actionButtons(with: operationDetail, statement: productStatement, product: product, dismissAction: { [weak self] in
+                    self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())
+                })
             }
             
         default:

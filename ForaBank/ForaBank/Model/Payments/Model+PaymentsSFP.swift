@@ -166,7 +166,7 @@ extension Model {
             
         case Payments.Parameter.Identifier.header.rawValue:
             
-            return Payments.ParameterHeader(title: "Подтвердите реквизиты", icon: .init(parameters: parameters))
+            return Payments.ParameterHeader(title: "\(operation.service.name)", icon: .init(parameters: parameters))
             
         case Payments.Parameter.Identifier.sfpMessage.rawValue:
             
