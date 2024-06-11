@@ -37,7 +37,8 @@ extension RootViewFactoryComposer {
             makeIconView: imageCache.makeIconView(for:), 
             makeActivateSliderView: ActivateSliderStateWrapperView.init, 
             makeUpdateInfoView: UpdateInfoView.init,
-            makeAnywayPaymentFactory: makeAnywayPaymentFactory
+            makeAnywayPaymentFactory: makeAnywayPaymentFactory,
+            makePaymentCompleteView: makePaymentCompleteView()
         )
     }
 }
@@ -63,8 +64,9 @@ private extension RootViewFactoryComposer {
                 makeUserAccountView: makeUserAccountView,
                 makeIconView: imageCache.makeIconView(for:), 
                 makeUpdateInfoView: UpdateInfoView.init(text:),
-                makeAnywayPaymentFactory: makeAnywayPaymentFactory
-            ), 
+                makeAnywayPaymentFactory: makeAnywayPaymentFactory,
+                makePaymentCompleteView: makePaymentCompleteView()
+            ),
             productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init),
             getUImage: getUImage
         )
@@ -127,6 +129,13 @@ private extension RootViewFactoryComposer {
     ) -> IconView {
         
         return model.imageCache().makeIconView(for: .md5Hash(.init(icon)))
+    }
+    
+    
+    func makePaymentCompleteView(
+    ) -> Factory.MakePaymentCompleteView {
+        
+        PaymentCompleteView.init
     }
 }
 

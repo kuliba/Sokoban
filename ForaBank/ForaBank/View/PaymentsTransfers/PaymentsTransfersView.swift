@@ -611,24 +611,7 @@ private extension PaymentsTransfersView {
         
         switch fullScreenCover {
         case let .completed(result):
-            VStack(spacing: 32) {
-                
-                Text("TBD: Payment Complete View")
-                    .font(.headline)
-                
-                Text(String(describing: result))
-                    .foregroundColor(.secondary)
-                    .font(.footnote)
-                    .frame(maxHeight: .infinity)
-                
-                Divider()
-                
-                Button(
-                    "go to Main",
-                    action: { viewModel.event(.outside(.goToMain)) }
-                )
-            }
-            .padding()
+            viewFactory.makePaymentCompleteView(result, { viewModel.event(.outside(.goToMain)) })
         }
     }
     
