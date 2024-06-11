@@ -1287,6 +1287,8 @@
 		2AE2215E2C0C2DD100618E7C /* UtilityPrepaymentFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2215D2C0C2DD100618E7C /* UtilityPrepaymentFlowEvent.swift */; };
 		2AE221632C0C3A0000618E7C /* UtilityServiceLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE221622C0C3A0000618E7C /* UtilityServiceLabel.swift */; };
 		2AE266282C1869CA0054C274 /* PaymentCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE266272C1869CA0054C274 /* PaymentCompleteView.swift */; };
+		2AE2662B2C18994E0054C274 /* FraudPaymentCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2662A2C18994E0054C274 /* FraudPaymentCompleteView.swift */; };
+		2AE2662D2C18999B0054C274 /* FraudPaymentCompleteViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2662C2C18999B0054C274 /* FraudPaymentCompleteViewConfig.swift */; };
 		2AE2B9AE2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2B9AD2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift */; };
 		2AE2B9B02B8DFF7B00B86D56 /* PaymentsTransfersEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2B9AF2B8DFF7B00B86D56 /* PaymentsTransfersEffectHandler.swift */; };
 		2AE2B9B42B8E05AC00B86D56 /* UtilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2B9B32B8E05AC00B86D56 /* UtilityService.swift */; };
@@ -4284,6 +4286,8 @@
 		2AE2215D2C0C2DD100618E7C /* UtilityPrepaymentFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowEvent.swift; sourceTree = "<group>"; };
 		2AE221622C0C3A0000618E7C /* UtilityServiceLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServiceLabel.swift; sourceTree = "<group>"; };
 		2AE266272C1869CA0054C274 /* PaymentCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCompleteView.swift; sourceTree = "<group>"; };
+		2AE2662A2C18994E0054C274 /* FraudPaymentCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FraudPaymentCompleteView.swift; sourceTree = "<group>"; };
+		2AE2662C2C18999B0054C274 /* FraudPaymentCompleteViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FraudPaymentCompleteViewConfig.swift; sourceTree = "<group>"; };
 		2AE2B9AD2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersNavigationStateManager.swift; sourceTree = "<group>"; };
 		2AE2B9AF2B8DFF7B00B86D56 /* PaymentsTransfersEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersEffectHandler.swift; sourceTree = "<group>"; };
 		2AE2B9B32B8E05AC00B86D56 /* UtilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityService.swift; sourceTree = "<group>"; };
@@ -6981,6 +6985,7 @@
 				C113225428CFA79200F90072 /* FastPayments */,
 				C1F8F5FC294A508600FE5703 /* Requisites */,
 				2A3F1B202A4988E300D8FE55 /* Transport */,
+				2AE266292C1899330054C274 /* FraudCancelledPaymentCompleteView */,
 			);
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
@@ -9986,6 +9991,15 @@
 				2AE221622C0C3A0000618E7C /* UtilityServiceLabel.swift */,
 			);
 			path = Prepayment;
+			sourceTree = "<group>";
+		};
+		2AE266292C1899330054C274 /* FraudCancelledPaymentCompleteView */ = {
+			isa = PBXGroup;
+			children = (
+				2AE2662A2C18994E0054C274 /* FraudPaymentCompleteView.swift */,
+				2AE2662C2C18999B0054C274 /* FraudPaymentCompleteViewConfig.swift */,
+			);
+			path = FraudCancelledPaymentCompleteView;
 			sourceTree = "<group>";
 		};
 		2AE2B9AA2B8DBF6900B86D56 /* Domain */ = {
@@ -17978,6 +17992,7 @@
 				77EC58AC27711EFA0054D75C /* TransferAnywayData.swift in Sources */,
 				0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */,
 				68D06F2D26C405FB00F9BE4C /* ProductCell.swift in Sources */,
+				2AE2662B2C18994E0054C274 /* FraudPaymentCompleteView.swift in Sources */,
 				832F2D4F2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift in Sources */,
 				0CC8FCA928315F3500F0E9BD /* Model+LatestPayments.swift in Sources */,
 				0B931B1826DCD62200CA8017 /* AddOperatorsList.swift in Sources */,
@@ -18806,6 +18821,7 @@
 				EDF68212266F9EC800FD5C07 /* RequestMethod.swift in Sources */,
 				EDF68214266F9EC800FD5C07 /* URLSchemeType.swift in Sources */,
 				C18D25F62A25A91400DF5643 /* CircleAnimatableAnge.swift in Sources */,
+				2AE2662D2C18999B0054C274 /* FraudPaymentCompleteViewConfig.swift in Sources */,
 				EDB16549266766FD007E6030 /* CodeVerificationViewController.swift in Sources */,
 				2A6B8E5E2AFE04A100E533F4 /* RemoteService+Fetcher.swift in Sources */,
 				77138CEF29C9802E005EDE8F /* PaymentsSuccessLinkViewComponent.swift in Sources */,
