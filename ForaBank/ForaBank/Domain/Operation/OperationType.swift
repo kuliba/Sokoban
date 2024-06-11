@@ -21,8 +21,7 @@ enum OperationType: String, Codable, Hashable, Unknownable {
     
     case open = "OPEN"
     
-    // not finance operation transfer account into demand deposit
-    case demandDepositFromAccount = "DV"
+    case demandDepositFromAccount = "DV" // not finance operation transfer account into demand deposit
     
     case unknown
 }
