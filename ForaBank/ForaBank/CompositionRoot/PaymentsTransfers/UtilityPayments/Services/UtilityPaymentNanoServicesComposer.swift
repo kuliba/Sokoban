@@ -462,8 +462,8 @@ private extension Array where Element == UtilityPaymentLastPayment {
 
 private extension UtilityPaymentLastPayment {
     
-    static let failure: Self = .init(amount: 123.45, name: "failure", md5Hash: UUID().uuidString, puref: UUID().uuidString)
-    static let preview: Self = .init(amount: 567.89, name: UUID().uuidString, md5Hash: UUID().uuidString, puref: UUID().uuidString)
+    static let failure: Self = .init(amount: 123.45, name: "failure", md5Hash: nil, puref: UUID().uuidString)
+    static let preview: Self = .init(amount: 567.89, name: UUID().uuidString, md5Hash: nil, puref: UUID().uuidString)
 }
 
 private extension UtilityPaymentOperator {

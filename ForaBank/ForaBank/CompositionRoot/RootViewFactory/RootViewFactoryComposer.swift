@@ -161,13 +161,11 @@ extension ImageCache {
         for icon: IconDomain.Icon?
     ) -> UIPrimitives.AsyncImage {
         
-        switch icon {
-        case .none:
-            return makeIconView(for: "placeholder")
-            
-        case let .md5Hash(md5Hash):
-            return makeIconView(for: md5Hash.rawValue)
-        }
+        guard case let .md5Hash(md5Hash) = icon,
+              !md5Hash.rawValue.isEmpty
+        else { return makeIconView(for: "placeholder") }
+                    
+        return makeIconView(for: md5Hash.rawValue)
     }
     
     func makeIconView(
