@@ -380,7 +380,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         infoMessage: String? = nil,
         isFinalStep: Bool = false,
         isFraudSuspected: Bool = false,
-        puref: AnywayPayment.Puref = .init(anyMessage())
+        payload: AnywayPayment.Payload = makeAnywayPaymentPayload()
     ) -> State {
         
         return .init(
@@ -389,7 +389,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
             infoMessage: infoMessage,
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,
-            puref: puref
+            payload: payload
         )
     }
 }

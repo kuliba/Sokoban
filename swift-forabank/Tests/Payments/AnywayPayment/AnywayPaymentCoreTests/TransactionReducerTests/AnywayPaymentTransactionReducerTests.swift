@@ -105,7 +105,7 @@ final class AnywayPaymentTransactionReducerTests: XCTestCase {
         infoMessage: String? = nil,
         isFinalStep: Bool = false,
         isFraudSuspected: Bool = false,
-        puref: String = UUID().uuidString
+        payload: AnywayPayment.Payload = makeAnywayPaymentPayload()
     ) -> AnywayPayment {
         
         return .init(
@@ -114,7 +114,7 @@ final class AnywayPaymentTransactionReducerTests: XCTestCase {
             infoMessage: infoMessage,
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,
-            puref: .init(puref)
+            payload: payload
         )
     }
         

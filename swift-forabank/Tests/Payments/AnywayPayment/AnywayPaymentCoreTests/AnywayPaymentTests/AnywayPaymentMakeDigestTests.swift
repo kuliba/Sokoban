@@ -113,9 +113,11 @@ final class AnywayPaymentMakeDigestTests: XCTestCase {
     func test_shouldSetPuref() {
         
         let puref = anyMessage()
-        let payment = makeAnywayPayment(puref: .init(puref))
+        let payment = makeAnywayPayment(
+            payload: makeAnywayPaymentPayload(puref: puref)
+        )
         
-        XCTAssertNoDiff(payment.makeDigest().puref, .init(puref))
+        XCTAssertNoDiff(payment.makeDigest().puref, puref)
     }
     
     // MARK: - Helpers

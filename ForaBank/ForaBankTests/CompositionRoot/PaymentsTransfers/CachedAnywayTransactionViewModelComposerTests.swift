@@ -159,7 +159,7 @@ final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
             infoMessage: infoMessage,
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,
-            puref: .init(puref)
+            payload: .init(puref: puref)
         )
     }
         

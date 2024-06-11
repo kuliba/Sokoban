@@ -269,7 +269,7 @@ private func makeEmptyPayment(
         infoMessage: nil,
         isFinalStep: false,
         isFraudSuspected: false,
-        puref: "iFora||abc123"
+        payload: .init(puref: "")
     )
 }
 

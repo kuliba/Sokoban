@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Tagged
 
 public struct Payment<Element> {
     
@@ -15,7 +14,7 @@ public struct Payment<Element> {
     public var infoMessage: String?
     public let isFinalStep: Bool
     public let isFraudSuspected: Bool
-    public let puref: Puref
+    public let payload: Payload
     
     public init(
         elements: [Element],
@@ -23,14 +22,14 @@ public struct Payment<Element> {
         infoMessage: String?,
         isFinalStep: Bool,
         isFraudSuspected: Bool,
-        puref: Puref
+        payload: Payload
     ) {
         self.elements = elements
         self.footer = footer
         self.infoMessage = infoMessage
         self.isFinalStep = isFinalStep
         self.isFraudSuspected = isFraudSuspected
-        self.puref = puref
+        self.payload = payload
     }
     
     public enum Footer: Equatable {
@@ -38,8 +37,19 @@ public struct Payment<Element> {
         case amount(Decimal)
         case `continue`
     }
-    public typealias Puref = Tagged<_Puref, String>
-    public enum _Puref {}
+
+    public struct Payload: Equatable {
+        
+        public let puref: Puref
+        
+        public init(
+            puref: Puref
+        ) {
+            self.puref = puref
+        }
+
+        public typealias Puref = String
+    }
 }
 
 extension Payment: Equatable where Element: Equatable {}

@@ -200,7 +200,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
                     
                 case let .startPayment(response):
                     let payment = AnywayPaymentDomain.AnywayPayment(
-                        puref: .init(puref),
+                        payload: .init(puref: puref),
                         update: .init(response),
                         outline: outline
                     )
@@ -235,7 +235,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
 private extension AnywayPaymentDomain.AnywayPayment {
     
     init(
-        puref: Puref,
+        payload: AnywayPaymentDomain.AnywayPayment.Payload,
         update: AnywayPaymentUpdate,
         outline: AnywayPaymentOutline
     ) {
@@ -245,7 +245,7 @@ private extension AnywayPaymentDomain.AnywayPayment {
             infoMessage: nil,
             isFinalStep: false,
             isFraudSuspected: false,
-            puref: puref
+            payload: payload
         )
         self = empty.update(with: update, and: outline)
     }
