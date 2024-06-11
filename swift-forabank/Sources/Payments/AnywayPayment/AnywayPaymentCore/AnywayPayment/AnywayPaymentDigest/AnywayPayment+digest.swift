@@ -16,7 +16,7 @@ public extension AnywayPayment {
             additional: additional(),
             amount: amount(),
             core: core(),
-            puref: .init(puref.rawValue)
+            puref: payload.puref
         )
     }
 }

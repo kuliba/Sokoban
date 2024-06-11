@@ -16,7 +16,7 @@ public struct CachedAnywayPayment<ElementModel> {
     public let infoMessage: String?
     public let isFinalStep: Bool
     public let isFraudSuspected: Bool
-    public let puref: Puref
+    public let payload: Payload
     
     private init(
         cachedModels: CachedModels,
@@ -24,14 +24,14 @@ public struct CachedAnywayPayment<ElementModel> {
         infoMessage: String?,
         isFinalStep: Bool,
         isFraudSuspected: Bool,
-        puref: Puref
+        payload: Payload
     ) {
         self.cachedModels = cachedModels
         self.footer = footer
         self.infoMessage = infoMessage
         self.isFinalStep = isFinalStep
         self.isFraudSuspected = isFraudSuspected
-        self.puref = puref
+        self.payload = payload
     }
     
     public init(
@@ -44,12 +44,12 @@ public struct CachedAnywayPayment<ElementModel> {
             infoMessage: payment.infoMessage,
             isFinalStep: payment.isFinalStep,
             isFraudSuspected: payment.isFraudSuspected,
-            puref: payment.puref
+            payload: payment.payload
         )
     }
     
     public typealias CachedModels = CachedModelsState<AnywayElement.ID, ElementModel>
-    public typealias Puref = AnywayPayment.Puref
+    public typealias Payload = AnywayPayment.Payload
     public typealias Map = (AnywayElement) -> ElementModel
     
     public enum Footer: Equatable {
@@ -104,7 +104,7 @@ extension CachedAnywayPayment {
             infoMessage: payment.infoMessage,
             isFinalStep: payment.isFinalStep,
             isFraudSuspected: payment.isFraudSuspected,
-            puref: payment.puref
+            payload: payment.payload
         )
     }
 }

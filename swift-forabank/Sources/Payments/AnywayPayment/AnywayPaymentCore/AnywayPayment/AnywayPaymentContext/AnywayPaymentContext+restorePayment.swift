@@ -68,7 +68,7 @@ private extension AnywayPayment {
             infoMessage: infoMessage,
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,
-            puref: puref
+            payload: payload
         )
     }
 }

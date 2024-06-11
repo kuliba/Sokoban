@@ -32,7 +32,7 @@ extension AnywayPayment {
             infoMessage: update.details.info.infoMessage,
             isFinalStep: update.details.control.isFinalStep,
             isFraudSuspected: update.details.control.isFraudSuspected,
-            puref: puref
+            payload: payload
         )
     }
 }

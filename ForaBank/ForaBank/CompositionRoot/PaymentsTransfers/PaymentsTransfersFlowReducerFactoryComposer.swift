@@ -139,7 +139,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
 private extension AnywayPaymentDomain.AnywayPayment {
     
     static func empty(
-        _ puref: Puref
+        _ puref: String
     ) -> Self {
         
         return .init(
@@ -148,7 +148,7 @@ private extension AnywayPaymentDomain.AnywayPayment {
             infoMessage: nil,
             isFinalStep: false,
             isFraudSuspected: false,
-            puref: puref
+            payload: .init(puref: puref)
         )
     }
 }
