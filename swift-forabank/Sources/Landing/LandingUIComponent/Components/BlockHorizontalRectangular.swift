@@ -1,17 +1,17 @@
 //
-//  ListHorizontalRectangleLimits.swift
+//  BlockHorizontalRectangular.swift
+//  
 //
-//
-//  Created by Andryusina Nataly on 10.06.2024.
+//  Created by Andryusina Nataly on 11.06.2024.
 //
 
 import SwiftUI
 import Combine
 import UIPrimitives
 
-extension UILanding.List {
+extension UILanding {
     
-    public struct HorizontalRectangleLimits: Identifiable, Equatable {
+    public struct BlockHorizontalRectangular: Identifiable, Equatable {
         
         public let id: UUID
 
@@ -24,18 +24,15 @@ extension UILanding.List {
 
         public struct Item: Identifiable, Equatable {
             
-            public let id: UUID
-            let action: Action
+            public var id: String { limitType }
             let limitType: String
-            let md5hash: String
+            let description: String
             let title: String
             let limits: [Limit]
             
-            public init(id: UUID = UUID(), action: Action, limitType: String, md5hash: String, title: String, limits: [Limit]) {
-                self.id = id
-                self.action = action
+            public init(limitType: String, description: String, title: String, limits: [Limit]) {
                 self.limitType = limitType
-                self.md5hash = md5hash
+                self.description = description
                 self.title = title
                 self.limits = limits
             }
@@ -44,32 +41,27 @@ extension UILanding.List {
                 
                 let id: String
                 let title: String
-                let colorHEX: String
-                
-                public init(id: String, title: String, colorHEX: String) {
+                let md5hash: String
+                let text: String
+                let maxSum: Decimal
+
+                public init(id: String, title: String, md5hash: String, text: String, maxSum: Decimal) {
                     self.id = id
                     self.title = title
-                    self.colorHEX = colorHEX
-                }
-            }
-            
-            public struct Action: Hashable {
-                
-                let type: String
-                
-                public init(type: String) {
-                    self.type = type
+                    self.md5hash = md5hash
+                    self.text = text
+                    self.maxSum = maxSum
                 }
             }
         }
     }
 }
 
-extension ListHorizontalRectangleLimitsView {
+extension BlockHorizontalRectangularView {
     
     final class ViewModel: ObservableObject {
         
-        typealias HorizontalList = UILanding.List.HorizontalRectangleLimits
+        typealias HorizontalList = UILanding.BlockHorizontalRectangular
         
         @Published private(set) var data: HorizontalList
                 

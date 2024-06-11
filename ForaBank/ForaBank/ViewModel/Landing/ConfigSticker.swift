@@ -28,6 +28,7 @@ extension UILanding.Component.Config {
         image: .stickerDefault,
         imageSvg: .stickerDefault,
         verticalSpacing: .stickerDefault,
+        blockHorizontalRectangular: .stickerDefault,
         offsetForDisplayHeader: 100
     )
 }
@@ -375,6 +376,22 @@ extension UILanding.List.HorizontalRectangleImage.Config {
 }
 
 extension UILanding.List.HorizontalRectangleLimits.Config {
+    
+    static let stickerDefault: Self = .init(
+        cornerRadius: 12,
+        size: .init(
+            height: 124,
+            width: 272
+        ),
+        paddings: .init(
+            horizontal: 16,
+            vertical: 8
+        ),
+        spacing: 8
+    )
+}
+
+extension UILanding.BlockHorizontalRectangular.Config {
     
     static let stickerDefault: Self = .init(
         cornerRadius: 12,

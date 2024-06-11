@@ -28,6 +28,8 @@ extension UILanding.Component {
         public let image: UILanding.ImageBlock.Config
         public let imageSvg: UILanding.ImageSvg.Config
         public let verticalSpacing: UILanding.VerticalSpacing.Config
+        public let blockHorizontalRectangular: UILanding.BlockHorizontalRectangular.Config
+
         let offsetForDisplayHeader: CGFloat
         
         public init(
@@ -48,6 +50,7 @@ extension UILanding.Component {
             image: UILanding.ImageBlock.Config,
             imageSvg: UILanding.ImageSvg.Config,
             verticalSpacing: UILanding.VerticalSpacing.Config,
+            blockHorizontalRectangular: UILanding.BlockHorizontalRectangular.Config,
             offsetForDisplayHeader: CGFloat
         ) {
             self.listHorizontalRoundImage = listHorizontalRoundImage
@@ -67,6 +70,7 @@ extension UILanding.Component {
             self.image = image
             self.imageSvg = imageSvg
             self.verticalSpacing = verticalSpacing
+            self.blockHorizontalRectangular = blockHorizontalRectangular
             self.offsetForDisplayHeader = offsetForDisplayHeader
         }
     }

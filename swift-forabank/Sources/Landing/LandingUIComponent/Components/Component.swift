@@ -11,13 +11,15 @@ extension UILanding {
     
     public enum Component: Equatable {
         
+        case blockHorizontalRectangular(UILanding.BlockHorizontalRectangular)
+
+        case iconWithTwoTextLines(UILanding.IconWithTwoTextLines)
+        case image(UILanding.ImageBlock)
+        case imageSvg(UILanding.ImageSvg)
         case list(List)
         case multi(Multi)
         case pageTitle(UILanding.PageTitle)
         case textWithIconHorizontal(UILanding.TextsWithIconHorizontal)
-        case iconWithTwoTextLines(UILanding.IconWithTwoTextLines)
-        case image(UILanding.ImageBlock)
-        case imageSvg(UILanding.ImageSvg)
         case verticalSpacing(UILanding.VerticalSpacing)
         
         var id: String {
@@ -38,6 +40,8 @@ extension UILanding {
                 return imageSvg.md5hash.rawValue
             case let .verticalSpacing(verticalSpacing):
                 return verticalSpacing.id.uuidString
+            case let .blockHorizontalRectangular(value):
+                return value.id.uuidString
             }
         }
     }
@@ -141,6 +145,8 @@ extension UILanding.Component {
             return data.imageRequests()
         case let .verticalSpacing(data):
             return data.imageRequests()
+        case .blockHorizontalRectangular:
+            return []
         }
     }
 }

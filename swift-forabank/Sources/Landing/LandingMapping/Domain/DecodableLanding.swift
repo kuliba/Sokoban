@@ -27,6 +27,7 @@ extension DecodableLanding.Data {
     
     enum LandingComponentsType: String, Decodable, Equatable {
         
+        case blockHorizontalRectangular = "BLOCK_HORIZONTAL_RECTANGULAR"
         case iconWithTwoTextLines = "ICON_WITH_TWO_TEXT_LINES"
         case image = "IMAGE"
         case imageSvg = "IMAGE_SVG"
@@ -70,12 +71,13 @@ extension DecodableLanding.Data {
             case typeButtons(MultiTypeButtons)
         }
         
-        case noValid(String)
+        case blockHorizontalRectangular(BlockHorizontalRectangular)
         case iconWithTwoTextLines(IconWithTwoTextLines)
-        case pageTitle(PageTitle)
-        case textsWithIconHorizontal(TextsWithIconHorizontal)
         case image(ImageBlock)
         case imageSvg(ImageSvg)
+        case noValid(String)
+        case pageTitle(PageTitle)
+        case textsWithIconHorizontal(TextsWithIconHorizontal)
         case verticalSpacing(VerticalSpacing)
         
         init(from decoder: Decoder) throws {
@@ -159,6 +161,9 @@ extension DecodableLanding.Data {
                 let data = try container.decode(ListHorizontalRectangleLimits.self, forKey: .data)
                 self = .list(.horizontalRectangleLimits(data))
 
+            case .blockHorizontalRectangular:
+                let data = try container.decode(BlockHorizontalRectangular.self, forKey: .data)
+                self = .blockHorizontalRectangular(data)
 
             default:
                 // не смогли распарсить - нет такого type

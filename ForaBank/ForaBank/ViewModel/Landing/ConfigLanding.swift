@@ -28,6 +28,7 @@ extension UILanding.Component.Config {
         image: .default,
         imageSvg: .default,
         verticalSpacing: .default,
+        blockHorizontalRectangular: .default,
         offsetForDisplayHeader: 100
     )
 }
@@ -396,6 +397,23 @@ extension UILanding.List.HorizontalRectangleLimits.Config {
         spacing: 8
     )
 }
+
+extension UILanding.BlockHorizontalRectangular.Config {
+        
+    static let `default`: Self = .init(
+        cornerRadius: 12,
+        size: .init(
+            height: 124,
+            width: 272
+        ),
+        paddings: .init(
+            horizontal: 16,
+            vertical: 8
+        ),
+        spacing: 8
+    )
+}
+
 
 extension UILanding.Multi.TypeButtons.Config {
     

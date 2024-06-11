@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 extension UILanding.Multi.LineHeader {
     
@@ -286,6 +287,7 @@ extension UILanding.Component.Config {
         image: .default,
         imageSvg: .default,
         verticalSpacing: .defaultValue,
+        blockHorizontalRectangular: .default,
         offsetForDisplayHeader: 100)
 }
 
@@ -588,4 +590,39 @@ extension UILanding.Multi.MarkersText.Config {
             cornerRadius: 12,
             lineTextLeadingPadding: 8,
             textFont: .system(size: 14)))
+}
+
+// MARK: - BlockHorizontalRectangular ViewModel
+
+extension BlockHorizontalRectangularView.ViewModel {
+    
+    static let defaultValue: BlockHorizontalRectangularView.ViewModel = .init(
+        data: .init(
+            list: [.init(
+                limitType: "linitType",
+                description: "",
+                title: "title",
+                limits: [
+                    .init(
+                        id: "1",
+                        title: "title",
+                        md5hash: "md5hash",
+                        text: "text",
+                        maxSum: 10)])
+            ]),
+        makeIconView: { _ in .init(
+            image: .flag,
+            publisher: Just(.percent).eraseToAnyPublisher()
+        )})
+}
+
+// MARK: - BlockHorizontalRectangular Config
+
+extension UILanding.BlockHorizontalRectangular.Config {
+    
+    static let `default`: Self = .init(
+        cornerRadius: 12,
+        size: .init(height: 124, width: 272),
+        paddings: .init(horizontal: 16, vertical: 8),
+        spacing: 8)
 }
