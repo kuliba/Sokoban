@@ -381,6 +381,51 @@ final class Model_PaymensSFPTests: XCTestCase {
         }
     }
     
+    func test_paymentsProcessDependencyReducerSFP_headerCase_withCodeParameter_returnsExpectedParameterHeader() {
+        
+        let operation = Payments.Operation(service: .sfp, source: .sfp(phone: "123123123", bankId: "someBankID"))
+        let sut = makeSUT()
+
+        let parameters: [PaymentsParameterRepresentable] = [
+            Payments.ParameterSelectBank.getTestParametersWithFora(),
+            Payments.ParameterMock(id: Payments.Parameter.Identifier.code.rawValue, value: Payments.Parameter.Identifier.mock.rawValue, placement: .feed)
+        ]
+        
+        do {
+            let result = try XCTUnwrap(sut.paymentsProcessDependencyReducerSFP(
+                operation: operation,
+                parameterId: Payments.Parameter.Identifier.header.rawValue,
+                parameters: parameters
+            ) as? Payments.ParameterHeader, "Результат должен быть типа Payments.ParameterHeader")
+
+            XCTAssertEqual(result.title, "Подтвердите реквизиты")
+            XCTAssertEqual(result.icon?.equatable, .testSBPIcon)
+            
+        } catch {
+            XCTFail("Результат не может быть извлечен: \(error)")
+        }
+    }
+
+    func test_paymentsProcessDependencyReducerSFP_headerCase_withoutCodeParameter_returnsExpectedParameterHeader() {
+       
+        let operation = Payments.Operation(service: .sfp, source: .sfp(phone: "123123123", bankId: .foraBankID))
+        let sut = makeSUT()
+        
+        do {
+            let result = try XCTUnwrap(sut.paymentsProcessDependencyReducerSFP(
+                operation: operation,
+                parameterId: Payments.Parameter.Identifier.header.rawValue,
+                parameters: [Payments.ParameterSelectBank.getTestParametersWithFora()]
+            ) as? Payments.ParameterHeader, "Результат должен быть типа Payments.ParameterHeader")
+
+            XCTAssertEqual(result.title, operation.service.name)
+            XCTAssertEqual(result.icon?.equatable, .testSBPIcon)
+            
+        } catch {
+            XCTFail("Результат не может быть извлечен: \(error)")
+        }
+    }
+    
     // MARK: - Helpers
     private typealias PPIcon = Payments.ParameterHeader.Icon
     private typealias PPLogo = Payments.ParameterSuccessLogo
@@ -504,9 +549,9 @@ private struct EquatableIcon: Equatable {
     
     init(_ icon: Payments.ParameterHeader.Icon) {
         switch icon {
-        case .image(let imageData):
+        case let .image(imageData):
             self.value = .image(imageData)
-        case .name(let name):
+        case let .name(name):
             self.value = .name(name)
         }
     }
