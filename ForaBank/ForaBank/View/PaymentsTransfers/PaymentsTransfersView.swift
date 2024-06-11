@@ -470,8 +470,18 @@ private extension PaymentsTransfersView {
             payByInstructionsView(paymentsViewModel)
             
         case let .payment(state):
-#warning("FIXME: navbar")
+            let payload = state.viewModel.state.context.payment.payload
+            let operatorIconView = viewFactory.makeIconView(
+                payload.icon.map { .md5Hash(.init($0)) }
+            )
             paymentFlowView(state: state, event: { event(.payment($0)) })
+                .navigationBarWithAsyncIcon(
+                    title: payload.title,
+                    subtitle: payload.subtitle,
+                    dismiss: { event(.prepayment(.dismiss(.destination))) },
+                    icon: operatorIconView,
+                    style: .large
+                )
             
         case let .servicePicker(state):
             let operatorIconView = viewFactory.makeIconView(
