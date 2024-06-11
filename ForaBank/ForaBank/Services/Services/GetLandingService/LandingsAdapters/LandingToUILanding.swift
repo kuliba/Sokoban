@@ -345,9 +345,8 @@ private extension UILanding.List.VerticalRoundImage.ListItem {
        
         let action: UILanding.List.VerticalRoundImage.ListItem.Action?  = {
             
-            if let type = data.action?.type {
-                return .init(type: type)
-            } else { return nil }
+            guard let type = data.action?.type else { return nil }
+            return .init(type: type)
         }()
 
         self.init(
