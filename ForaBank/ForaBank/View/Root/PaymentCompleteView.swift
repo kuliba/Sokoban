@@ -22,7 +22,7 @@ struct PaymentCompleteView: View {
         }
     }
 }
- 
+
 private extension PaymentCompleteView {
     
     @ViewBuilder
@@ -67,4 +67,26 @@ private extension PaymentCompleteView {
         }
         .padding()
     }
+}
+
+extension FraudPaymentCompleteViewConfig {
+    
+    static let iFora: Self = .init(
+        amountConfig: .init(
+            textFont: .textH1Sb24322(),
+            textColor: .textSecondary
+        ),
+        icon: .init("waiting"),
+        iconColor: .systemColorWarning,
+        message: "Перевод отменен!",
+        messageConfig: .init(
+            textFont: .textH4M16240(),
+            textColor: .systemColorError
+        ),
+        reason: "Время на подтверждение\nперевода вышло",
+        reasonConfig: .init(
+            textFont: .textH3Sb18240(),
+            textColor: .textSecondary
+        )
+    )
 }
