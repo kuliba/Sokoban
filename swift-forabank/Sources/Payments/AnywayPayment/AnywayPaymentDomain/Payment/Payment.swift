@@ -41,13 +41,22 @@ public struct Payment<Element> {
     public struct Payload: Equatable {
         
         public let puref: Puref
+        public let title: String
+        public let subtitle: String
+        public let icon: String
         
         public init(
-            puref: Puref
+            puref: Puref, 
+            title: String, 
+            subtitle: String,
+            icon: String
         ) {
             self.puref = puref
+            self.title = title
+            self.subtitle = subtitle
+            self.icon = icon
         }
-
+        
         public typealias Puref = String
     }
 }

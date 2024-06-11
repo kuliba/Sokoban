@@ -269,7 +269,7 @@ private func makeEmptyPayment(
         infoMessage: nil,
         isFinalStep: false,
         isFraudSuspected: false,
-        payload: .init(puref: "")
+        payload: .init(puref: "", title: "", subtitle: "", icon: "")
     )
 }
 
