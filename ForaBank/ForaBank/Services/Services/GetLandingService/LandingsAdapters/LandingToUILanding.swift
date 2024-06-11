@@ -545,7 +545,6 @@ private extension UILanding.BlockHorizontalRectangular {
     init(
         data: Landing.BlockHorizontalRectangular
     ) {
-        
         self.init(list: data.list.map { .init(data:$0) })
     }
 }
@@ -555,7 +554,11 @@ private extension UILanding.BlockHorizontalRectangular.Item {
     init(
         data: Landing.BlockHorizontalRectangular.Item
     ) {
-        self.init(limitType: data.limitType, description: data.description, title: data.title, limits: data.limits.map { .init(data: $0) })
+        self.init(
+            limitType: data.limitType,
+            description: data.description,
+            title: data.title,
+            limits: data.limits.map { .init(data: $0) })
     }
 }
 

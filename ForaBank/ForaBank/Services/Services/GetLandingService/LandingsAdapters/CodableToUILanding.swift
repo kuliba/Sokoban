@@ -551,7 +551,11 @@ private extension UILanding.BlockHorizontalRectangular.Item {
     init(
         data: LocalAgentDomain.Landing.BlockHorizontalRectangular.Item
     ) {
-        self.init(limitType: data.limitType, description: data.description, title: data.title, limits: data.limits.map { .init(data: $0) })
+        self.init(
+            limitType: data.limitType,
+            description: data.description,
+            title: data.title,
+            limits: data.limits.map { .init(data: $0) })
     }
 }
 

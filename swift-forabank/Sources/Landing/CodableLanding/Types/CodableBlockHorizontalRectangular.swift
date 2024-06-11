@@ -22,7 +22,6 @@ public extension CodableLanding {
             public let limitType: String
             public let description: String
             public let title: String
-            
             public let limits: [Limit]
             
             public init(limitType: String, description: String, title: String, limits: [Limit]) {
