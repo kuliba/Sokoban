@@ -104,7 +104,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             nanoServices.startAnywayPayment(
                 .lastPayment(lastPayment)
             ) {
-                completion(self.makeStartPaymentResult($0, lastPayment, puref: lastPayment.puref))
+                completion(self.makeStartPaymentResult($0, lastPayment))
             }
             
         case let .operator(`operator`):
@@ -119,7 +119,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         }
     }
     
-    typealias StartPaymentPayload = PrepaymentEffect.Select
+    typealias StartPaymentPayload = PrepaymentEvent.Select
     typealias StartPaymentResult = PrepaymentEvent.StartPaymentResult
     typealias StartPaymentCompletion = (StartPaymentResult) -> Void
     
@@ -170,12 +170,11 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
     
     private func makeStartPaymentResult(
         _ result: NanoServices.StartAnywayPaymentResult,
-        _ lastPayment: LastPayment,
-        puref: String
+        _ lastPayment: LastPayment
     ) -> StartPaymentResult {
         
         let outline = makeAnywayPaymentOutline(lastPayment: lastPayment)
-        return makeStartPaymentResult(result, outline, puref: puref)
+        return makeStartPaymentResult(result, outline, puref: lastPayment.puref)
     }
     
     private func makeStartPaymentResult(
@@ -222,8 +221,6 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             }
             .mapError(PrepaymentEvent.StartPaymentFailure.init)
     }
-    
-    typealias StartPaymentResponse = NanoServices.StartAnywayPaymentSuccess.StartPaymentResponse
     
     func makeAnywayPaymentOutline(
         lastPayment: LastPayment?
