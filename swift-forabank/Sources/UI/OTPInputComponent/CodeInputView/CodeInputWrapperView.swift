@@ -8,8 +8,11 @@
 import SwiftUI
 import RxViewModel
 
-public typealias State = CodeInputState.Status
-public typealias CodeInputViewModel = RxObservingViewModel<State, OTPInputEvent, OTPInputEffect>
+public extension CodeInputWrapperView {
+    
+    typealias State = CodeInputState
+    typealias CodeInputViewModel = RxObservingViewModel<State, OTPInputEvent, OTPInputEffect>
+}
 
 public struct CodeInputWrapperView: View {
     
@@ -26,7 +29,7 @@ public struct CodeInputWrapperView: View {
     
     public var body: some View {
         
-        switch viewModel.state {
+        switch viewModel.state.status {
         case .failure(_):
             CodeInputView(
                 state: .incompleteOTP,
@@ -57,7 +60,7 @@ struct CodeInputWrapperView_Preview: PreviewProvider {
         
         CodeInputWrapperView(
             viewModel: .default(
-                initialState: State.validOTP,
+                initialState: .init(status: .validOTP),
                 observe: { _,_ in},
                 initiateOTP: { completion in }
             ),
@@ -66,21 +69,21 @@ struct CodeInputWrapperView_Preview: PreviewProvider {
     }
 }
 
-public extension CodeInputViewModel {
+public extension CodeInputWrapperView.CodeInputViewModel {
     
     static func `default`(
-        initialState: State,
+        initialState: CodeInputState,
         timer: TimerProtocol = RealTimer(),
         duration: Int = 60,
         length: Int = 6,
         observe: @escaping (CodeInputState, CodeInputState) -> Void,
         initiateOTP: @escaping CountdownEffectHandler.InitiateOTP,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
-    ) -> CodeInputViewModel {
+    ) -> CodeInputWrapperView.CodeInputViewModel {
         
         let countdownReducer = CountdownReducer(duration: duration)
         let otpFieldReducer = OTPFieldReducer(length: length)
-        let otpInputReducer = OTPInputReducer(
+        let codeInputReducer = CodeInputReducer(
             countdownReduce: countdownReducer.reduce(_:_:),
             otpFieldReduce: otpFieldReducer.reduce(_:_:)
         )
@@ -94,7 +97,7 @@ public extension CodeInputViewModel {
         return .init(
             observable: .init(
                 initialState: initialState,
-                reduce: otpInputReducer.reduce(:, :),
+                reduce: codeInputReducer.reduce(_:_:),
                 handleEffect: otpInputEffectHandler.handleEffect(_:_:),
                 scheduler: scheduler
             ),
