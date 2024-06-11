@@ -555,9 +555,9 @@ private extension PaymentsTransfersView {
             dismissFullScreenCover: { event(.dismiss(.fullScreenCover)) },
             content: paymentFlowFullScreenCoverView
         )
-        .sheet(
-            modal: state.modal,
-            dismissModal: { event(.dismiss(.fraud)) },
+        .bottomSheet(
+            sheet: state.modal,
+            dismiss: { event(.dismiss(.fraud)) },
             content: paymentFlowModalView(
                 event: { transactionEvent(.fraud($0)) }
             )
@@ -739,6 +739,8 @@ private extension PaymentsTransfersView {
     
     typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<UtilityPaymentViewModel>
 }
+
+extension UtilityServicePaymentFlowState.Modal: BottomSheetCustomizable {}
 
 extension UtilityServicePaymentFlowState.Alert: Identifiable {
     
