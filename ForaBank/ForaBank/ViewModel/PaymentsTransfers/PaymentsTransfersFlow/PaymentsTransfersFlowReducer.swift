@@ -152,9 +152,6 @@ private extension PaymentsTransfersFlowReducer {
         case let .dismiss(dismiss):
             reduce(&state, with: dismiss)
             
-        case let .fraud(fraudEvent):
-            (state, effect) = reduce(state, fraudEvent)
-            
         case let .notified(status):
             reduce(&state, &effect, with: status)
             
@@ -188,32 +185,6 @@ private extension PaymentsTransfersFlowReducer {
         case .paymentError:
             state.destination = nil
         }
-    }
-    
-    private func reduce(
-        _ state: State,
-        _ event: FraudEvent
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        state.setPaymentModal(to: nil)
-        
-        switch event {
-        case .cancel:
-            state.destination = nil
-            effect = .delayModalSet(to: .paymentCancelled(expired: false))
-            
-        case .continue:
-            break
-            
-        case .expired:
-            state.destination = nil
-            effect = .delayModalSet(to: .paymentCancelled(expired: true))
-        }
-        
-        return (state, effect)
     }
     
     private func reduce(
