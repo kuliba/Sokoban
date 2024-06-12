@@ -66,17 +66,7 @@ private extension TransactionDetailButton {
     
     func buttonLabel() -> some View {
         
-        buttonLabel(for: .details)
-    }
-    
-    func buttonLabel(
-        for option: Payments.ParameterSuccessOptionButtons.Option
-    ) -> some View {
-        
-        PaymentsSuccessOptionButtonsView.ButtonView.ButtonLabel(
-            title: option.title,
-            icon: option.icon
-        )
+        PaymentsSuccessOptionButtonsView.ButtonView.ButtonLabel(with: .details)
     }
     
     func makeDetailView(
