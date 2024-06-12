@@ -9,6 +9,7 @@ import AnywayPaymentBackend
 import AnywayPaymentDomain
 import GenericRemoteService
 import Foundation
+import RemoteServices
 
 final class AnywayTransactionEffectHandlerNanoServicesComposer {
     
@@ -118,7 +119,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             
             return service(.init("\(payload)")) {
                 
-                completion(try? $0.map(\.response).get())
+                completion(try? $0.get())
             }
         }
     }
@@ -329,15 +330,6 @@ private extension AnywayPaymentBackend.ResponseMapper.MakeTransferResponse {
     }
 }
 
-private extension AnywayPaymentBackend.ResponseMapper.GetOperationDetailByPaymentIDResponse {
-    
-#warning("FIXME: replace with actual type (which is not String")
-    var response: String {
-        
-        .init(describing: self)
-    }
-}
-
 private extension AnywayPaymentDomain.ServiceFailure {
     
     init(_ error: AnywayPaymentBackend.ServiceFailure) {
@@ -399,12 +391,56 @@ private extension OperationDetailID {
     var getDetailsResultStub: GetDetailsResult {
         
         switch self {
-        case 123: return ""
+        case 123: return .stub()
         default: return nil
         }
     }
     
     typealias GetDetailsResult = AnywayTransactionEffectHandlerNanoServices.GetDetailsResult
+}
+
+private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
+    
+    static func stub(
+        amount: Decimal = .init(Double.random(in: 1...1_000)),
+        claimID: String = "claimID",
+        dateForDetail: String = "dateForDetail",
+        isTrafficPoliceService: Bool = false,
+        payerAccountID: Int = 123456789,
+        payerAccountNumber: String = "payerAccountNumber",
+        payerAddress: String = "payerAddress",
+        payerAmount: Decimal = .init(Double.random(in: 1...1_000)),
+        payerCurrency: String = "payerCurrency",
+        payerFee: Decimal = .init(Double.random(in: 1...1_000)),
+        payerFirstName: String = "payerFirstName",
+        payerFullName: String = "payerFullName",
+        paymentOperationDetailID: Int = .random(in: 1...1_000),
+        printFormType: PrintFormType = .housingAndCommunalService,
+        requestDate: String = "requestDate",
+        responseDate: String = "responseDate",
+        transferDate: String = "transferDate"
+    ) -> Self {
+        
+        return .init(
+            amount: amount,
+            claimID: claimID,
+            dateForDetail: dateForDetail,
+            isTrafficPoliceService: isTrafficPoliceService,
+            payerAccountID: payerAccountID,
+            payerAccountNumber: payerAccountNumber,
+            payerAddress: payerAddress,
+            payerAmount: payerAmount,
+            payerCurrency: payerCurrency,
+            payerFee: payerFee,
+            payerFirstName: payerFirstName,
+            payerFullName: payerFullName,
+            paymentOperationDetailID: paymentOperationDetailID,
+            printFormType: printFormType,
+            requestDate: requestDate,
+            responseDate: responseDate,
+            transferDate: transferDate
+        )
+    }
 }
 
 private extension VerificationCode {
