@@ -131,7 +131,7 @@ extension _OperationInfo {
         guard case let .details(details) = self
         else { return nil }
         
-        return details
+        return details.response
     }
     
     typealias Detail = RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
