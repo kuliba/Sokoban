@@ -367,8 +367,8 @@ private extension AnywayPaymentDigest {
     
     typealias ProcessResult = AnywayTransactionEffectHandlerNanoServices.ProcessResult
     
-    private var isStep2Alert: Bool { containsAdditional(named: "1", withValue: "2222") }
-    private var isStep2: Bool { containsAdditional(named: "1", withValue: "1111") }
+    private var isStep2Alert: Bool { containsAdditional(named: "1", withValue: "1111") }
+    private var isStep2: Bool { !containsAdditional(named: "1", withValue: "2222") }
     private var isStep3Alert: Bool { amount == 123 }
     private var isStep3: Bool { amount != nil }
     private var isStep4Fraud: Bool { containsAdditional(named: "SumSTrs", withValue: "22") }
