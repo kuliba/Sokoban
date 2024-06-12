@@ -16,15 +16,22 @@ struct PaymentCompleteView: View {
         
         switch state {
         case let .failure(fraud):
-            FraudPaymentCompleteView(
+            TransactionCompleteView(
                 state: .init(
-                    formattedAmount: fraud.formattedAmount,
-                    hasExpired: fraud.hasExpired,
-                    icon: .init("waiting")
+                    details: nil,
+                    status: .fraud
                 ),
-                action: goToMain,
+                goToMain: goToMain,
                 config: .iFora
-            )
+            ) {
+                fraudContent(
+                    state: .init(
+                        formattedAmount: fraud.formattedAmount,
+                        hasExpired: fraud.hasExpired
+                    ),
+                    config: .iFora
+                )
+            }
             
         case let .success(report):
             TransactionCompleteView(
@@ -34,7 +41,9 @@ struct PaymentCompleteView: View {
                 ),
                 goToMain: goToMain,
                 config: .iFora
-            )
+            ) {
+                Text("Content")
+            }
         }
     }
 }
@@ -49,10 +58,41 @@ extension PaymentCompleteView {
         let detailID: Int
         let details: Details?
         
-        typealias Details = TransactionCompleteView.State.Details
+        typealias Details = TransactionCompleteState.Details
     }
     
     struct Fraud: Equatable, Error {
+        
+        let formattedAmount: String
+        let hasExpired: Bool
+    }
+}
+
+private extension PaymentCompleteView {
+    
+    func fraudContent(
+        state: FraudState,
+        config: FraudPaymentCompleteViewConfig
+    ) -> some View {
+        
+        VStack(spacing: 24) {
+            
+            VStack(spacing: 12) {
+                
+                config.message.text(withConfig: config.messageConfig)
+                
+                if state.hasExpired {
+                    
+                    config.reason.text(withConfig: config.reasonConfig)
+                        .multilineTextAlignment(.center)
+                }
+            }
+            
+            state.formattedAmount.text(withConfig: config.amountConfig)
+        }
+    }
+    
+    struct FraudState: Equatable {
         
         let formattedAmount: String
         let hasExpired: Bool

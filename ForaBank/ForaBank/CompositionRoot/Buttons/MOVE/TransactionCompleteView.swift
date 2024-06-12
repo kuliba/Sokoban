@@ -8,11 +8,12 @@
 import PaymentComponents
 import SwiftUI
 
-struct TransactionCompleteView: View {
+struct TransactionCompleteView<Content: View>: View {
     
     let state: State
     let goToMain: () -> Void
     let config: Config
+    let content: () -> Content
     
     var body: some View {
         
@@ -21,6 +22,7 @@ struct TransactionCompleteView: View {
             VStack(spacing: 24) {
                 
                 iconFor(status: state.status)
+                content()
             }
             
             Spacer()
@@ -42,18 +44,19 @@ struct TransactionCompleteView: View {
 extension TransactionCompleteView {
     
     typealias Config = TransactionCompleteViewConfig
+    typealias State = TransactionCompleteState
+}
+
+struct TransactionCompleteState {
     
-    struct State {
+    let details: Details?
+    let status: Status
+    
+    typealias Details = TransactionDetailButton.Details
+    
+    enum Status {
         
-        let details: Details?
-        let status: Status
-        
-        typealias Details = TransactionDetailButton.Details
-        
-        enum Status {
-            
-            case completed, inflight, rejected, fraud
-        }
+        case completed, inflight, rejected, fraud
     }
 }
 
@@ -138,11 +141,14 @@ struct TransactionCompleteView_Previews: PreviewProvider {
         _ status: TransactionCompleteView.State.Status = .completed
     ) -> some View {
         
-        let state = TransactionCompleteView.State(
+        let state = TransactionCompleteState(
             details: details,
             status: status
         )
         
-        return TransactionCompleteView(state: state, goToMain: {}, config: .iFora)
+        return TransactionCompleteView(state: state, goToMain: {}, config: .iFora) {
+            
+            Text("Content")
+        }
     }
 }
