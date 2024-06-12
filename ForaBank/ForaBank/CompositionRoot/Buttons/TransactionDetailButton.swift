@@ -10,13 +10,13 @@ import SwiftUI
 
 struct TransactionDetailButton: View {
     
-    let getDetail: GetDetail
+    let details: Details
     
     var body: some View {
         
         MagicButtonWithSheet(
             buttonLabel: buttonLabel,
-            getValue: getDetail,
+            getValue: { $0(details) },
             makeValueView: makeDetailView
         )
     }
@@ -24,9 +24,7 @@ struct TransactionDetailButton: View {
 
 extension TransactionDetailButton {
     
-    typealias GetDetail = (@escaping (Detail?) -> Void) -> Void
-    
-    struct Detail {
+    struct Details {
         
         let title = "Детали операции"
         let logo: Image?
@@ -43,29 +41,20 @@ struct TransactionDetailButton_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            button(detail: nil)
-            button(detail: .empty)
-            button(detail: .preview)
+            button(details: .empty)
+            button(details: .preview)
         }
     }
     
     static func button(
-        detail: TransactionDetailButton.Detail?
+        details: TransactionDetailButton.Details
     ) -> some View {
         
-        TransactionDetailButton(
-            getDetail: { completion in
-                
-                DispatchQueue.main.delay(for: .seconds(1)) {
-                    
-                    completion(detail)
-                }
-            }
-        )
+        TransactionDetailButton(details: details)
     }
 }
 
-private extension TransactionDetailButton.Detail {
+private extension TransactionDetailButton.Details {
     
     static let empty: Self = .init(logo: nil, cells: [])
     static let preview: Self = .init(logo: nil, cells: []) // TODO:
@@ -91,14 +80,14 @@ private extension TransactionDetailButton {
     }
     
     func makeDetailView(
-        detail: Detail,
+        details: Details,
         dismiss: @escaping () -> Void
     ) -> some View {
         
         OperationDetailInfoInternalView(
-            title: detail.title,
-            logo: detail.logo,
-            cells: detail.cells,
+            title: details.title,
+            logo: details.logo,
+            cells: details.cells,
             dismissAction: dismiss
         )
     }

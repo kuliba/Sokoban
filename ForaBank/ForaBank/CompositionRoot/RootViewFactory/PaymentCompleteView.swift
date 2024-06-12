@@ -19,53 +19,43 @@ struct PaymentCompleteView: View {
             FraudPaymentCompleteView(
                 state: .init(
                     formattedAmount: fraud.formattedAmount,
-                    hasExpired: fraud.hasExpired
+                    hasExpired: fraud.hasExpired,
+                    icon: .init("waiting")
                 ),
                 action: goToMain,
                 config: .iFora
             )
             
         case let .success(report):
-            content(.init(describing: report))
+            TransactionCompleteView(
+                state: .init(
+                    details: report.details,
+                    status: .completed
+                ),
+                goToMain: goToMain,
+                config: .iFora
+            )
         }
     }
 }
 
 extension PaymentCompleteView {
     
-    typealias State = Result<AnywayTransactionReport, Fraud>
+    typealias State = Result<Report, Fraud>
+
+    struct Report {
+        
+        let status: DocumentStatus
+        let detailID: Int
+        let details: Details?
+        
+        typealias Details = TransactionCompleteView.State.Details
+    }
     
     struct Fraud: Equatable, Error {
         
         let formattedAmount: String
         let hasExpired: Bool
-    }
-}
-
-private extension PaymentCompleteView {
-    
-    func content(
-        _ content: String
-    ) -> some View {
-        
-        VStack(spacing: 32) {
-            
-            Text("TBD: Payment Complete View")
-                .font(.headline)
-            
-            Text(String(describing: content))
-                .foregroundColor(.secondary)
-                .font(.footnote)
-                .frame(maxHeight: .infinity)
-            
-            Divider()
-            
-            Button(
-                "go to Main",
-                action: goToMain
-            )
-        }
-        .padding()
     }
 }
 
@@ -76,7 +66,6 @@ extension FraudPaymentCompleteViewConfig {
             textFont: .textH1Sb24322(),
             textColor: .textSecondary
         ),
-        icon: .init("waiting"),
         iconColor: .systemColorWarning,
         message: "Перевод отменен!",
         messageConfig: .init(
@@ -87,6 +76,30 @@ extension FraudPaymentCompleteViewConfig {
         reasonConfig: .init(
             textFont: .textH3Sb18240(),
             textColor: .textSecondary
+        )
+    )
+}
+
+extension TransactionCompleteViewConfig {
+    
+    static let iFora: Self = .init(
+        icons: .init(
+            completed: .init(
+                image: .init("OkOperators"),
+                color: .systemColorActive
+            ),
+            inflight: .init(
+                image: .init("waiting"),
+                color: .systemColorWarning
+            ),
+            rejected: .init(
+                image: .ic48Close,
+                color: .init(hex: "E3011B")
+            ),
+            fraud: .init(
+                image: .init("waiting"),
+                color: .systemColorWarning
+            )
         )
     )
 }
