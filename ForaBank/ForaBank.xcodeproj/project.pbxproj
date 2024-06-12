@@ -1290,6 +1290,7 @@
 		2AE2662B2C18994E0054C274 /* FraudPaymentCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2662A2C18994E0054C274 /* FraudPaymentCompleteView.swift */; };
 		2AE2662D2C18999B0054C274 /* FraudPaymentCompleteViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2662C2C18999B0054C274 /* FraudPaymentCompleteViewConfig.swift */; };
 		2AE2662F2C195A850054C274 /* TransactionDetailButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2662E2C195A850054C274 /* TransactionDetailButton.swift */; };
+		2AE266322C1975760054C274 /* TransactionCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE266312C1975760054C274 /* TransactionCompleteView.swift */; };
 		2AE2B9AE2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2B9AD2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift */; };
 		2AE2B9B02B8DFF7B00B86D56 /* PaymentsTransfersEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2B9AF2B8DFF7B00B86D56 /* PaymentsTransfersEffectHandler.swift */; };
 		2AE2B9B42B8E05AC00B86D56 /* UtilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2B9B32B8E05AC00B86D56 /* UtilityService.swift */; };
@@ -4290,6 +4291,7 @@
 		2AE2662A2C18994E0054C274 /* FraudPaymentCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FraudPaymentCompleteView.swift; sourceTree = "<group>"; };
 		2AE2662C2C18999B0054C274 /* FraudPaymentCompleteViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FraudPaymentCompleteViewConfig.swift; sourceTree = "<group>"; };
 		2AE2662E2C195A850054C274 /* TransactionDetailButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailButton.swift; sourceTree = "<group>"; };
+		2AE266312C1975760054C274 /* TransactionCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCompleteView.swift; sourceTree = "<group>"; };
 		2AE2B9AD2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersNavigationStateManager.swift; sourceTree = "<group>"; };
 		2AE2B9AF2B8DFF7B00B86D56 /* PaymentsTransfersEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersEffectHandler.swift; sourceTree = "<group>"; };
 		2AE2B9B32B8E05AC00B86D56 /* UtilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityService.swift; sourceTree = "<group>"; };
@@ -9884,6 +9886,7 @@
 				2A0D9B852B0E2C6100F1DFD1 /* RootViewModelFactory+makeDocumentButton.swift */,
 				2A0D9B872B0E3BD800F1DFD1 /* RootViewModelFactory+makeButtonLabel.swift */,
 				2AE2662E2C195A850054C274 /* TransactionDetailButton.swift */,
+				2AE266302C1975680054C274 /* MOVE */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -10003,6 +10006,14 @@
 				2AE2662C2C18999B0054C274 /* FraudPaymentCompleteViewConfig.swift */,
 			);
 			path = FraudCancelledPaymentCompleteView;
+			sourceTree = "<group>";
+		};
+		2AE266302C1975680054C274 /* MOVE */ = {
+			isa = PBXGroup;
+			children = (
+				2AE266312C1975760054C274 /* TransactionCompleteView.swift */,
+			);
+			path = MOVE;
 			sourceTree = "<group>";
 		};
 		2AE2B9AA2B8DBF6900B86D56 /* Domain */ = {
@@ -18681,6 +18692,7 @@
 				77FF66CD27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift in Sources */,
 				688B9BA526DD0DC600407A75 /* ProductTableViewCell.swift in Sources */,
 				774EECD829A6389000CCE94A /* PaymentsContactGroupView.swift in Sources */,
+				2AE266322C1975760054C274 /* TransactionCompleteView.swift in Sources */,
 				503F073D28252CBA00E84A77 /* DepositCalculateAmountViewModel.swift in Sources */,
 				0BD8ED212846C9F10052214F /* PushHistoryModel.swift in Sources */,
 				0B2B29212808BD79001C6380 /* DocumentCollectionViewController.swift in Sources */,
