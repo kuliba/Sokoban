@@ -21,10 +21,10 @@ struct FraudPaymentCompleteView: View {
             content()
                 .frame(maxHeight: .infinity, alignment: .top)
             
-            goToMainButton()
-                .padding(.bottom)
+            PaymentComponents.ButtonView.goToMain(goToMain: action)
         }
         .padding(.top, 88)
+        .padding(.bottom)
         .padding(.horizontal)
     }
 }
@@ -68,21 +68,6 @@ private extension FraudPaymentCompleteView {
             
             state.formattedAmount.text(withConfig: config.amountConfig)
         }
-    }
-    
-    func goToMainButton() -> some View {
-        
-        PaymentComponents.ButtonView(
-            state: .init(
-                id: .buttonPay,
-                value: "На главный",
-                color: .red,
-                action: .pay,
-                placement: .bottom
-            ),
-            event: action,
-            config: .iFora
-        )
     }
 }
 

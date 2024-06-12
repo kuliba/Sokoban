@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 12.06.2024.
 //
 
+import PaymentComponents
 import SwiftUI
 
 #warning("move")
@@ -20,11 +21,13 @@ struct TransactionCompleteView: View {
         VStack {
             
             buttons()
-                .frame(maxHeight: .infinity, alignment: .top)
-                .padding(.top, 88)
+                .frame(maxHeight: .infinity, alignment: .bottom)
             
-            Button("Go to Main", action: goToMain)
+            PaymentComponents.ButtonView.goToMain(goToMain: goToMain)
         }
+        .padding(.top, 88)
+        .padding(.bottom)
+        .padding(.horizontal)
     }
 }
 
@@ -48,6 +51,28 @@ private extension TransactionCompleteView {
             
             state.details.map(TransactionDetailButton.init)
         }
+    }
+}
+
+extension PaymentComponents.ButtonView {
+    
+    static func goToMain(
+        title: String = "На главный",
+        color: PaymentComponents.Button.Color = .red,
+        goToMain: @escaping () -> Void
+    ) -> Self {
+        
+        self.init(
+            state: .init(
+                id: .buttonPay,
+                value: title,
+                color: color,
+                action: .pay,
+                placement: .bottom
+            ),
+            event: goToMain,
+            config: .iFora
+        )
     }
 }
 
