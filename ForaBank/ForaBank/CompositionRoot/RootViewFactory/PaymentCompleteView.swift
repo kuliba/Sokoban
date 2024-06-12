@@ -12,7 +12,8 @@ struct PaymentCompleteView: View {
     let state: State
     let goToMain: () -> Void
     let makeDocumentButton: MakeDocumentButton
-    
+    let makeTemplateButtonView: MakeTemplateButtonView
+
     var body: some View {
         
         switch state {
@@ -45,6 +46,7 @@ extension PaymentCompleteView {
     }
     
     typealias MakeDocumentButton = (DocumentID) -> TransactionDocumentButton
+    typealias MakeTemplateButtonView = () -> TemplateButtonStateWrapperView?
 }
 
 private extension PaymentCompleteView {
@@ -90,7 +92,8 @@ private extension PaymentCompleteView {
             goToMain: goToMain,
             config: .iFora,
             content: content,
-            makeDocumentButton: makeDocumentButton
+            makeDocumentButton: makeDocumentButton,
+            makeTemplateButtonView: makeTemplateButtonView
         )
     }
     

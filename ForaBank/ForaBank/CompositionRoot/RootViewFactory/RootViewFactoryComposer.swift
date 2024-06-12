@@ -145,7 +145,8 @@ private extension RootViewFactoryComposer {
         return PaymentCompleteView(
             state: map(result),
             goToMain: goToMain,
-            makeDocumentButton: makeDocumentButton
+            makeDocumentButton: makeDocumentButton,
+            makeTemplateButtonView: makeTemplateButtonView(with: result)
         )
     }
     
@@ -197,6 +198,26 @@ private extension RootViewFactoryComposer {
                 completion(try? result.map(PDFDocument.init(data:)).get())
                 _ = getDetailService
             }
+        }
+    }
+    
+    private func makeTemplateButtonView(
+        with result: TransactionResult
+    ) -> () -> TemplateButtonStateWrapperView? {
+    
+        return {
+            
+            guard let report = try? result.get(),
+                  let operationDetail = report.info.operationDetail
+            else { return nil }
+            
+            let viewModel = TemplateButtonStateWrapperView.ViewModel(
+                model: self.model,
+                operation: nil,
+                operationDetail: operationDetail
+            )
+            
+            return .init(viewModel: viewModel)
         }
     }
 }

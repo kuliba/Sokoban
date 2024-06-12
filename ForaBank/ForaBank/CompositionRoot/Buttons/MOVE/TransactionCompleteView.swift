@@ -16,6 +16,7 @@ struct TransactionCompleteView<Content: View>: View {
     let content: () -> Content
     #warning("factory?")
     let makeDocumentButton: MakeDocumentButton
+    let makeTemplateButtonView: MakeTemplateButtonView
     
     var body: some View {
         
@@ -48,6 +49,20 @@ extension TransactionCompleteView {
     typealias State = TransactionCompleteState
     typealias Config = TransactionCompleteViewConfig
     typealias MakeDocumentButton = (DocumentID) -> TransactionDocumentButton
+    typealias MakeTemplateButtonView = () -> TemplateButtonStateWrapperView?
+}
+
+#warning("extract")
+struct TemplateButtonStateWrapperView: View {
+    
+    @StateObject var viewModel: ViewModel
+    
+    var body: some View {
+        
+        TemplateButtonView(viewModel: viewModel)
+    }
+    
+    typealias ViewModel = TemplateButtonView.ViewModel
 }
 
 struct TransactionCompleteState {
@@ -86,6 +101,7 @@ private extension TransactionCompleteView {
         
         HStack {
             
+            makeTemplateButtonView()
             state.documentID.map(makeDocumentButton)
             state.details.map(TransactionDetailButton.init)
         }
@@ -157,7 +173,8 @@ struct TransactionCompleteView_Previews: PreviewProvider {
             goToMain: {},
             config: .iFora,
             content: { Text("Content") },
-            makeDocumentButton: { _ in .init(getDocument: { $0(nil) }) }
+            makeDocumentButton: { _ in .init(getDocument: { $0(nil) }) },
+            makeTemplateButtonView: { nil }
         )
     }
 }
