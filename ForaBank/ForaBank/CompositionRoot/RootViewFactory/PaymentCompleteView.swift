@@ -11,8 +11,7 @@ struct PaymentCompleteView: View {
     
     let state: State
     let goToMain: () -> Void
-    let makeDocumentButton: MakeDocumentButton
-    let makeTemplateButtonView: MakeTemplateButtonView
+    let factory: Factory
 
     var body: some View {
         
@@ -45,8 +44,7 @@ extension PaymentCompleteView {
         let hasExpired: Bool
     }
     
-    typealias MakeDocumentButton = (DocumentID) -> TransactionDocumentButton
-    typealias MakeTemplateButtonView = () -> TemplateButtonStateWrapperView?
+    typealias Factory = PaymentCompleteViewFactory
 }
 
 private extension PaymentCompleteView {
@@ -92,8 +90,7 @@ private extension PaymentCompleteView {
             goToMain: goToMain,
             config: .iFora,
             content: content,
-            makeDocumentButton: makeDocumentButton,
-            makeTemplateButtonView: makeTemplateButtonView
+            factory: factory
         )
     }
     
