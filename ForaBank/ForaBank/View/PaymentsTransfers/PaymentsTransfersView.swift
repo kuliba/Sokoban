@@ -250,12 +250,12 @@ struct PaymentsTransfersView: View {
             let dismissDestination = { viewModel.event(.dismiss(.destination)) }
             
             utilityPaymentFlowView(state: flowState, event: event)
-                .edgesIgnoringSafeArea(.all)
                 .navigationBarWithBack(
                     title: flowState.navTitle,
                     dismiss: dismissDestination,
                     rightItem: .barcodeScanner(action: viewModel.openScanner)
                 )
+                .ignoresSafeArea()
         }
     }
     
