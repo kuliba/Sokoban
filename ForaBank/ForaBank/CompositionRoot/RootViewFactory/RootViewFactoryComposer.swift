@@ -56,13 +56,13 @@ private extension RootViewFactoryComposer {
         
         let imageCache = model.imageCache()
         let getUImage = { self.model.images.value[$0]?.uiImage }
-
+        
         return .init(
             viewModel: viewModel,
             viewFactory: .init(
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeUserAccountView: makeUserAccountView,
-                makeIconView: imageCache.makeIconView(for:), 
+                makeIconView: imageCache.makeIconView(for:),
                 makeUpdateInfoView: UpdateInfoView.init(text:),
                 makeAnywayPaymentFactory: makeAnywayPaymentFactory,
                 makePaymentCompleteView: makePaymentCompleteView
@@ -136,23 +136,41 @@ private extension RootViewFactoryComposer {
         goToMain: @escaping () -> Void
     ) -> PaymentCompleteView {
         
-        PaymentCompleteView(state: .init(result), goToMain: goToMain)
+        return PaymentCompleteView(state: map(result), goToMain: goToMain)
     }
     
     typealias TransactionResult = UtilityServicePaymentFlowState<CachedAnywayTransactionViewModel>.FullScreenCover.TransactionResult
+    
+    private func map(
+        _ result: TransactionResult
+    ) -> PaymentCompleteView.State {
+        
+        return result
+            .map {
+                
+                return .init(
+                    status: $0.status,
+                    detailID: $0.detailID,
+                    details: model.makeTransactionDetailButtonDetail(with: $0.info)
+                )
+            }
+            .mapError {
+                
+                return .init(
+                    formattedAmount: $0.formattedAmount,
+                    hasExpired: $0.hasExpired
+                )
+            }
+    }
 }
 
-private extension PaymentCompleteView.State {
+private extension AnywayTransactionReport {
     
-    init(
-        _ result: UtilityServicePaymentFlowState<CachedAnywayTransactionViewModel>.FullScreenCover.TransactionResult
-    ) {
-        self = result.mapError {
-            
-            return .init(
-                formattedAmount: $0.formattedAmount,
-                hasExpired: $0.hasExpired
-            )
+    var detailID: Int {
+        
+        switch self.info {
+        case let .detailID(detailID): return detailID
+        case let .details(details):   return details.id
         }
     }
 }

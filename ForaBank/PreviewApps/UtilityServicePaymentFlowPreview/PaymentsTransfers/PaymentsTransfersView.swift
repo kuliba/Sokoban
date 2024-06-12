@@ -230,7 +230,7 @@ private extension PaymentsTransfersView {
         case .completed:
             VStack(spacing: 32) {
                 
-                Text("TBD: Payment Complete View")
+                Text("TBD: Payment Complete FullScreenCover View")
                     .frame(maxHeight: .infinity)
                 
                 Divider()
