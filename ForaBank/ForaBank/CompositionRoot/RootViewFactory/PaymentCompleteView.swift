@@ -55,10 +55,7 @@ private extension PaymentCompleteView {
         
         completeView(
             status: .fraud,
-            content: {
-                
-                fraudContent(state: fraud, config: .iFora)
-            }
+            content: { fraudContent(fraud, config: .iFora) }
         )
     }
     
@@ -70,7 +67,7 @@ private extension PaymentCompleteView {
             details: report.details,
             documentID: .init(report.detailID),
             status: .completed,
-            content: { reportContent(report) }
+            content: { reportContent(report, config: .iFora) }
         )
     }
     
@@ -95,7 +92,7 @@ private extension PaymentCompleteView {
     }
     
     func fraudContent(
-        state: Fraud,
+        _ state: Fraud,
         config: FraudPaymentCompleteViewConfig
     ) -> some View {
         
@@ -117,10 +114,16 @@ private extension PaymentCompleteView {
     }
     
     func reportContent(
-        _ report: Report
+        _ report: Report,
+        config: TransactionCompleteViewConfig
     ) -> some View {
         
-        Text("Content")
+        VStack(spacing: 24) {
+            
+            config.message.text(withConfig: config.messageConfig)
+//            report.formattedAmount.text(withConfig: config.amountConfig)
+            report.details?.logo
+        }
     }
 }
 
@@ -148,6 +151,10 @@ extension FraudPaymentCompleteViewConfig {
 extension TransactionCompleteViewConfig {
     
     static let iFora: Self = .init(
+        amountConfig: .init(
+            textFont: .textH1Sb24322(),
+            textColor: .textSecondary
+        ),
         icons: .init(
             completed: .init(
                 image: .init("OkOperators"),
@@ -165,6 +172,11 @@ extension TransactionCompleteViewConfig {
                 image: .init("waiting"),
                 color: .systemColorWarning
             )
+        ),
+        message: "Оплата прошла успешно",
+        messageConfig: .init(
+            textFont: .textH3Sb18240(),
+            textColor: .textSecondary
         )
     )
 }
