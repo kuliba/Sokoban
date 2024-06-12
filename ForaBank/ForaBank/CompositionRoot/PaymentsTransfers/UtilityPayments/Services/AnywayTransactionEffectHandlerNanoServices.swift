@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentDomain
+import RemoteServices
 
 struct AnywayTransactionEffectHandlerNanoServices {
     
@@ -23,7 +24,8 @@ extension AnywayTransactionEffectHandlerNanoServices {
     typealias ProcessCompletion = (ProcessResult) -> Void
     typealias ProcessPayment = (AnywayPaymentDigest, @escaping ProcessCompletion) -> Void
     
-    typealias GetDetailsResult = OperationDetails?
+    typealias GetDetailsResponse = RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
+    typealias GetDetailsResult = GetDetailsResponse?
     typealias GetDetailsCompletion = (GetDetailsResult) -> Void
     typealias GetDetails = (OperationDetailID, @escaping GetDetailsCompletion) -> Void
     
@@ -35,17 +37,9 @@ extension AnywayTransactionEffectHandlerNanoServices {
 extension AnywayTransactionEffectHandlerNanoServices {
     
 #warning("reuse generic TransactionReport")
-    public struct MakeTransferResponse {
+    struct MakeTransferResponse {
         
-        public let status: DocumentStatus
-        public let detailID: OperationDetailID
-        
-        public init(
-            status: DocumentStatus,
-            detailID: OperationDetailID
-        ) {
-            self.status = status
-            self.detailID = detailID
-        }
+        let status: DocumentStatus
+        let detailID: OperationDetailID
     }
 }

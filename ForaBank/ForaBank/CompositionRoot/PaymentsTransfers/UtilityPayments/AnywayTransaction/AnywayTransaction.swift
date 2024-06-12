@@ -36,4 +36,10 @@ enum DocumentStatus {
 }
 
 typealias OperationDetailID = Int
-typealias OperationDetails = RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
+struct OperationDetails: Equatable {
+    
+    let id: OperationDetailID
+    let response: Response
+    
+    typealias Response = RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
+}
