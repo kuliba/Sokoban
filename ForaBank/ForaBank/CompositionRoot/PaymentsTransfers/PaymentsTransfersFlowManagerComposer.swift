@@ -23,29 +23,17 @@ final class PaymentsTransfersFlowManagerComposer {
     private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
-    private let pageSize: Int
-    private let observeLast: Int
-    private let fraudDelay: Double
-    
-    // TODO: move to settings(?)
-    private let utilityNavTitle = "Услуги ЖКХ"
-    
+        
     init(
         flag: Flag,
         model: Model,
         httpClient: HTTPClient,
-        log: @escaping Log,
-        pageSize: Int,
-        observeLast: Int,
-        fraudDelay: Double
+        log: @escaping Log
     ) {
         self.flag = flag
         self.model = model
         self.httpClient = httpClient
         self.log = log
-        self.pageSize = pageSize
-        self.observeLast = observeLast
-        self.fraudDelay = fraudDelay
     }
     
     typealias Flag = UtilitiesPaymentsFlag
@@ -79,6 +67,25 @@ extension PaymentsTransfersFlowManagerComposer {
     
     typealias Content = UtilityPrepaymentViewModel
     typealias PaymentViewModel = CachedAnywayTransactionViewModel
+}
+
+private extension PaymentsTransfersFlowManagerComposer {
+    
+    struct Settings: Equatable {
+        
+        let pageSize: Int = 50
+        let observeLast: Int = 10
+        let fraudDelay: Double
+        let utilityNavTitle = "Услуги ЖКХ"
+        
+        static let live: Self = .init(fraudDelay: 120)
+        static let stub: Self = .init(fraudDelay: 12)
+    }
+    
+    var settings: Settings {
+        
+        flag.isStub ? .stub : .live
+    }
 }
 
 private extension PaymentsTransfersFlowManagerComposer {
@@ -191,15 +198,15 @@ private extension PaymentsTransfersFlowManagerComposer {
             loadOperators: loadOperators
         )
         let microComposer = UtilityPrepaymentMicroServicesComposer(
-            pageSize: pageSize,
+            pageSize: settings.pageSize,
             nanoServices: nanoServices
         )
         
         return .init(
             model: model,
-            observeLast: observeLast,
-            fraudDelay: fraudDelay,
-            navTitle: utilityNavTitle,
+            observeLast: settings.observeLast,
+            fraudDelay: settings.fraudDelay,
+            navTitle: settings.utilityNavTitle,
             microServices: microComposer.compose(),
             makeTransactionViewModel: makeTransactionViewModel
         )
@@ -235,7 +242,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         let loaderComposer = UtilityPaymentOperatorLoaderComposer(
             flag: flag.optionOrStub,
             model: model,
-            pageSize: pageSize
+            pageSize: settings.pageSize
         )
         
         return loaderComposer.compose()
