@@ -19,8 +19,7 @@ enum _DocumentID {}
 extension RootViewModelFactory {
     
     static func makeDocumentButton(
-        httpClient: HTTPClient,
-        model: Model
+        httpClient: HTTPClient
     ) -> (DocumentID) -> some View {
         
         return makeButton
