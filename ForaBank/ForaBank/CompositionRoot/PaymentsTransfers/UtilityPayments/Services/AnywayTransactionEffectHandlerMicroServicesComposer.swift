@@ -98,7 +98,7 @@ private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferRespons
     
     func makeTransactionReport(
         with operationDetails: OperationDetails?
-    ) -> TransactionReport<DocumentStatus, OperationInfo<OperationDetailID, OperationDetails>> {
+    ) -> AnywayTransactionReport {
         
         switch operationDetails {
         case .none:
