@@ -11,7 +11,6 @@ import SwiftUI
 struct FraudPaymentCompleteViewConfig: Equatable {
     
     let amountConfig: TextConfig
-    let icon: Image
     let iconColor: Color
     let message: String
     let messageConfig: TextConfig

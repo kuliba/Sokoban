@@ -37,6 +37,7 @@ extension FraudPaymentCompleteView {
         
         let formattedAmount: String
         let hasExpired: Bool
+        let icon: Image
     }
 }
 
@@ -46,7 +47,7 @@ private extension FraudPaymentCompleteView {
         
         VStack(spacing: 24) {
             
-            config.icon
+            state.icon
                 .foregroundColor(.iconWhite)
                 .frame(width: 88, height: 88)
                 .background(
@@ -87,7 +88,8 @@ struct FraudPaymentCompleteView_Previews: PreviewProvider {
         FraudPaymentCompleteView(
             state: .init(
                 formattedAmount: "1 000 ₽",
-                hasExpired: hasExpired
+                hasExpired: hasExpired,
+                icon: .init("waiting")
             ),
             action: {},
             config: .iFora
