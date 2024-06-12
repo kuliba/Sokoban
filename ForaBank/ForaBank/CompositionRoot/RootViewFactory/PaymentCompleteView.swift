@@ -11,39 +11,16 @@ struct PaymentCompleteView: View {
     
     let state: State
     let goToMain: () -> Void
+    let makeDocumentButton: MakeDocumentButton
     
     var body: some View {
         
         switch state {
         case let .failure(fraud):
-            TransactionCompleteView(
-                state: .init(
-                    details: nil,
-                    status: .fraud
-                ),
-                goToMain: goToMain,
-                config: .iFora
-            ) {
-                fraudContent(
-                    state: .init(
-                        formattedAmount: fraud.formattedAmount,
-                        hasExpired: fraud.hasExpired
-                    ),
-                    config: .iFora
-                )
-            }
+            completeView(fraud)
             
         case let .success(report):
-            TransactionCompleteView(
-                state: .init(
-                    details: report.details,
-                    status: .completed
-                ),
-                goToMain: goToMain,
-                config: .iFora
-            ) {
-                Text("Content")
-            }
+            completeView(report)
         }
     }
 }
@@ -66,12 +43,59 @@ extension PaymentCompleteView {
         let formattedAmount: String
         let hasExpired: Bool
     }
+    
+    typealias MakeDocumentButton = (DocumentID) -> TransactionDocumentButton
 }
 
 private extension PaymentCompleteView {
     
+    func completeView(
+        _ fraud: Fraud
+    ) -> some View {
+        
+        completeView(
+            status: .fraud,
+            content: {
+                
+                fraudContent(state: fraud, config: .iFora)
+            }
+        )
+    }
+    
+    func completeView(
+        _ report: Report
+    ) -> some View {
+        
+        completeView(
+            details: report.details,
+            documentID: .init(report.detailID),
+            status: .completed,
+            content: { reportContent(report) }
+        )
+    }
+    
+    func completeView(
+        details: TransactionCompleteState.Details? = nil,
+        documentID: DocumentID? = nil,
+        status: TransactionCompleteState.Status,
+        content: @escaping () -> some View
+    ) -> some View {
+        
+        TransactionCompleteView(
+            state: .init(
+                details: details,
+                documentID: documentID,
+                status: status
+            ),
+            goToMain: goToMain,
+            config: .iFora,
+            content: content,
+            makeDocumentButton: makeDocumentButton
+        )
+    }
+    
     func fraudContent(
-        state: FraudState,
+        state: Fraud,
         config: FraudPaymentCompleteViewConfig
     ) -> some View {
         
@@ -92,10 +116,11 @@ private extension PaymentCompleteView {
         }
     }
     
-    struct FraudState: Equatable {
+    func reportContent(
+        _ report: Report
+    ) -> some View {
         
-        let formattedAmount: String
-        let hasExpired: Bool
+        Text("Content")
     }
 }
 

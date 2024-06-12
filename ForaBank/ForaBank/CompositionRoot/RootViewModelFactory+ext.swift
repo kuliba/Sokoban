@@ -19,6 +19,7 @@ extension RootViewModelFactory {
     
     static func make(
         model: Model,
+        httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
@@ -26,8 +27,6 @@ extension RootViewModelFactory {
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
-        
-        let httpClient: HTTPClient = model.authenticatedHTTPClient()
         
         model.getProducts = Services.getProductListByType(httpClient, logger: logger)
         

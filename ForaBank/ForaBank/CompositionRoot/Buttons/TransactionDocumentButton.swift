@@ -11,13 +11,13 @@ import SwiftUI
 
 struct TransactionDocumentButton: View {
     
-    let getValue: GetValue
+    let getDocument: GetDocument
     
     var body: some View {
         
         MagicButtonWithSheet(
             buttonLabel: buttonLabel,
-            getValue: getValue,
+            getValue: getDocument,
             makeValueView: makePDFDocumentView
         )
     }
@@ -25,8 +25,8 @@ struct TransactionDocumentButton: View {
 
 extension TransactionDocumentButton {
     
-    typealias GetValueCompletion = (PDFDocument?) -> Void
-    typealias GetValue = (@escaping GetValueCompletion) -> Void
+    typealias GetDocumentCompletion = (PDFDocument?) -> Void
+    typealias GetDocument = (@escaping GetDocumentCompletion) -> Void
 }
 
 // MARK: - Helpers
