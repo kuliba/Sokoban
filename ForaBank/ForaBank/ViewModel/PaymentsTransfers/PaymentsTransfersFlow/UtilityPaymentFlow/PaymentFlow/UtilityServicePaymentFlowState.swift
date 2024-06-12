@@ -49,14 +49,6 @@ extension UtilityServicePaymentFlowState {
     
     enum Modal {
         
-        case fraud(Fraud)
+        case fraud(FraudNoticePayload)
     }
-}
-
-struct Fraud: Equatable {
-    
-    let title: String
-    let subtitle: String?
-    let formattedAmount: String
-    let delay: Double
 }
