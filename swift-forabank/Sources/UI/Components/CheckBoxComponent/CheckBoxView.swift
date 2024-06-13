@@ -31,13 +31,10 @@ public struct CheckBoxView: View {
         
         HStack(spacing: 16) {
             
-            ZStack {
-                
-                CheckView(
-                    isChecked: state,
-                    config: config
-                )
-            }
+            CheckView(
+                isChecked: state,
+                config: config
+            )
             .animation(nil, value: state)
             .frame(width: 24, height: 24)
             
