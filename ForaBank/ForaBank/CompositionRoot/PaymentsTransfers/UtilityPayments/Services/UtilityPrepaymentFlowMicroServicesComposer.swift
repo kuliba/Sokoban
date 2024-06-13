@@ -8,6 +8,7 @@
 import AnywayPaymentDomain
 import ForaTools
 import Foundation
+import RemoteServices
 import UtilityServicePrepaymentDomain
 
 final class UtilityPrepaymentFlowMicroServicesComposer {
@@ -181,13 +182,18 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
     
     private func makeStartPaymentResult(
         from result: NanoServices.StartAnywayPaymentResult,
-        _ utilityService: UtilityService,
+        _ service: UtilityService,
         _ `operator`: Operator
     ) -> StartPaymentResult {
         
+        let result = result.map { 
+            // https://shorturl.at/cQ3zr
+            $0.injectSelectedService(service, of: `operator`)
+        }
+        
         let outline = makeAnywayPaymentOutline(lastPayment: nil)
         let payload = AnywayPaymentDomain.AnywayPayment.Payload(
-            puref: utilityService.puref,
+            puref: service.puref,
             operator: `operator`
         )
         return makeStartPaymentResult(result, outline, payload: payload)
@@ -322,3 +328,74 @@ private extension UtilityPrepaymentFlowEvent.StartPaymentFailure where Operator 
     
     typealias NanoServices = UtilityPaymentNanoServices
 }
+
+// MARK: - Helpers
+
+private extension UtilityPaymentNanoServices.StartAnywayPaymentSuccess {
+    
+    func injectSelectedService(
+        _ service: UtilityService,
+        of `operator`: UtilityPaymentOperator
+    ) -> Self {
+        
+        switch self {
+        case .services:
+            return self
+            
+        case let .startPayment(startPayment):
+            let startPayment = startPayment.injectSelectedService(service, of: `operator`)
+            return .startPayment(startPayment)
+        }
+    }
+}
+
+private extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
+    
+    func injectSelectedService(
+        _ service: UtilityService,
+        of `operator`: UtilityPaymentOperator
+    ) -> Self {
+        
+        let field = Additional(
+            fieldName: service.name,
+            fieldValue: service.name,
+            fieldTitle: "Услуга",
+            md5Hash: `operator`.icon,
+            recycle: false,
+            svgImage: nil,
+            typeIdParameterList: nil
+        )
+        
+        return updating(additional: [field] + additional)
+    }
+    
+    private func updating(
+        additional: [Additional]
+    ) -> Self {
+        
+        return .init(
+            additional: additional,
+            amount: amount,
+            creditAmount: creditAmount,
+            currencyAmount: currencyAmount,
+            currencyPayee: currencyPayee,
+            currencyPayer: currencyPayer,
+            currencyRate: currencyRate,
+            debitAmount: debitAmount,
+            documentStatus: documentStatus,
+            fee: fee,
+            finalStep: finalStep,
+            infoMessage: infoMessage,
+            needMake: needMake,
+            needOTP: needOTP,
+            needSum: needSum,
+            parametersForNextStep: parametersForNextStep,
+            paymentOperationDetailID: paymentOperationDetailID,
+            payeeName: payeeName,
+            printFormType: printFormType,
+            scenario: scenario,
+            options: options
+        )
+    }
+}
+
