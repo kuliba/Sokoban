@@ -74,11 +74,20 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         state: Factory.ReducerState
     ) -> String? {
         
-        guard let context = state.paymentFlowState?.viewModel.state.context,
-              case let .amount(amount, currency) = context.payment.footer
-        else { return "n/a" }
+        guard let context = state.paymentFlowState?.viewModel.state.context
+        else { return nil }
+              
+        guard case let .amount(amount, currency) = context.payment.footer
+        else { return "" }
         
-        return "\(amount) \(currency ?? "")"
+        var formattedAmount = "\(amount)"
+        
+        #warning("look into model to extract currency symbol")
+        if let currency {
+            formattedAmount += " \(currency)"
+        }
+        
+        return formattedAmount
     }
     
     func makeFraudNoticePayload(
@@ -95,7 +104,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         return .init(
             title: payload.title,
             subtitle: payload.subtitle,
-            formattedAmount: context.payment.formattedAmount ?? "",
+            formattedAmount: getFormattedAmount(state: state) ?? "",
             delay: fraudDelay
         )
     }
@@ -113,11 +122,12 @@ private extension PaymentsTransfersViewModel._Route {
     }
 }
 
-private extension CachedAnywayPayment<AnywayElementModel> {
+private extension CachedAnywayPayment<AnywayElementModel>.Footer {
     
     var formattedAmount: String? {
         
-        guard case let .amount(amount, currency) = footer else { return nil }
+        guard case let .amount(amount, currency) = self
+        else { return nil }
                 
         return "\(amount) \(currency ?? "")"
     }
