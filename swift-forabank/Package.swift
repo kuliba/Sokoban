@@ -32,6 +32,7 @@ let package = Package(
         .utilityServicePrepayment,
         // Services
         .cardStatementAPI,
+        .changeSVCardLimitAPI,
         .cryptoSwaddler,
         .cvvPin,
         .cvvPIN_Services,
@@ -131,6 +132,8 @@ let package = Package(
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
+        .changeSVCardLimitAPI,
+        .changeSVCardLimitAPITests,
         .cryptoSwaddler,
         .cryptoSwaddlerTests,
         .cvvPin,
@@ -587,6 +590,13 @@ private extension Product {
         name: .cardStatementAPI,
         targets: [
             .cardStatementAPI,
+        ]
+    )
+    
+    static let changeSVCardLimitAPI = library(
+        name: .changeSVCardLimitAPI,
+        targets: [
+            .changeSVCardLimitAPI,
         ]
     )
 
@@ -1176,6 +1186,26 @@ private extension Target {
             .copy("Resources/GetProductDynamicParamsList.json"),
             .copy("Resources/StatementSample.json"),
         ]
+    )
+    
+    static let changeSVCardLimitAPI = target(
+        name: .changeSVCardLimitAPI,
+        dependencies: [
+            .remoteServices,
+        ],
+        path: "Sources/\(String.changeSVCardLimitAPI)"
+    )
+    static let changeSVCardLimitAPITests = testTarget(
+        name: .changeSVCardLimitAPITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .combineSchedulers,
+            // internal modules
+            .changeSVCardLimitAPI,
+        ],
+        path: "Tests/\(String.changeSVCardLimitAPITests)"
+        //TODO: add resources
     )
 
     static let cryptoSwaddler = target(
@@ -2336,6 +2366,10 @@ private extension Target.Dependency {
     static let cardStatementAPI = byName(
         name: .cardStatementAPI
     )
+    
+    static let changeSVCardLimitAPI = byName(
+        name: .changeSVCardLimitAPI
+    )
 
     static let cryptoSwaddler = byName(
         name: .cryptoSwaddler
@@ -2571,6 +2605,9 @@ private extension String {
     
     static let cardStatementAPI = "CardStatementAPI"
     static let cardStatementAPITests = "CardStatementAPITests"
+
+    static let changeSVCardLimitAPI = "ChangeSVCardLimitAPI"
+    static let changeSVCardLimitAPITests = "ChangeSVCardLimitAPITests"
 
     static let cryptoSwaddler = "CryptoSwaddler"
     static let cryptoSwaddlerTests = "CryptoSwaddlerTests"
