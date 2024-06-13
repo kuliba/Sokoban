@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Tagged
 
 public struct AnywayPaymentDigest: Equatable {
     

@@ -212,7 +212,63 @@ class ProductStatementDataTests: XCTestCase {
         let data = makeProductStatementData(operationType: .credit)
         XCTAssertEqual(data.payeerTitle(), "Отправитель")
     }
-
+    
+    // MARK: - Should Show Template/Document Buttons
+    
+    func test_shouldShowTemplateButton_whenOperationTypeIsCreditPlan_shouldReturnFalse() {
+        
+        let data = makeProductStatementData(operationType: .creditPlan)
+        XCTAssertFalse(data.shouldShowTemplateButton)
+    }
+    
+    func test_shouldShowTemplateButton_whenOperationTypeIsDebitFict_shouldReturnFalse() {
+        
+        let data = makeProductStatementData(operationType: .debitFict)
+        XCTAssertFalse(data.shouldShowTemplateButton)
+    }
+    
+    func test_shouldShowTemplateButton_whenOperationTypeIsCreditFict_shouldReturnFalse() {
+        
+        let data = makeProductStatementData(operationType: .creditFict)
+        XCTAssertFalse(data.shouldShowTemplateButton)
+    }
+    
+    func test_shouldShowTemplateButton_whenOperationTypeIsNotCreditPlanDebitFictOrCreditFict_shouldReturnTrue() {
+        
+        let data = makeProductStatementData(operationType: .debit)
+        XCTAssertTrue(data.shouldShowTemplateButton)
+    }
+    
+    func test_shouldShowDocumentButton_whenOperationTypeIsDebitPlan_shouldReturnFalse() {
+        
+        let data = makeProductStatementData(operationType: .debitPlan)
+        XCTAssertFalse(data.shouldShowDocumentButton)
+    }
+    
+    func test_shouldShowDocumentButton_whenOperationTypeIsCreditPlan_shouldReturnFalse() {
+        
+        let data = makeProductStatementData(operationType: .creditPlan)
+        XCTAssertFalse(data.shouldShowDocumentButton)
+    }
+    
+    func test_shouldShowDocumentButton_whenOperationTypeIsDebitFict_shouldReturnFalse() {
+        
+        let data = makeProductStatementData(operationType: .debitFict)
+        XCTAssertFalse(data.shouldShowDocumentButton)
+    }
+    
+    func test_shouldShowDocumentButton_whenOperationTypeIsCreditFict_shouldReturnFalse() {
+        
+        let data = makeProductStatementData(operationType: .creditFict)
+        XCTAssertFalse(data.shouldShowDocumentButton)
+    }
+    
+    func test_shouldShowDocumentButton_whenOperationTypeIsNotDebitPlanCreditPlanDebitFictOrCreditFict_shouldReturnTrue() {
+        
+        let data = makeProductStatementData(operationType: .debit)
+        XCTAssertTrue(data.shouldShowDocumentButton)
+    }
+    
     // MARK: - HELPERS
     
     private func makeProductStatementData( //
@@ -307,5 +363,5 @@ class ProductStatementDataTests: XCTestCase {
 private extension ProductStatementData.FastPayment {
     
     static let test: Self = .init(documentComment: "string", foreignBankBIC: "044525491", foreignBankID: "10000001153", foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"", foreignName: "Петров Петр Петрович", foreignPhoneNumber: "70115110217", opkcid: "A1355084612564010000057CAFC75755", operTypeFP: "string", tradeName: "string", guid: "string")
-
+    
 }

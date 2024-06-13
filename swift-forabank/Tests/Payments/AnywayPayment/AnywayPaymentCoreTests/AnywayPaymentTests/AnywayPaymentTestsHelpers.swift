@@ -106,7 +106,7 @@ func makeAnywayPayment(
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
     core: AnywayElement.Widget.Product? = nil,
-    puref: AnywayPayment.Puref? = nil
+    payload: AnywayPayment.Payload = makeAnywayPaymentPayload()
 ) -> AnywayPayment {
     
     var elements = fields.map(AnywayElement.field)
@@ -118,17 +118,24 @@ func makeAnywayPayment(
         elements: elements,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected,
-        puref: puref
+        payload: payload
     )
 }
 
+func makeAnywayPaymentPayload(
+    puref: AnywayPayment.Payload.Puref = anyMessage()
+) -> AnywayPayment.Payload {
+    
+    return .init(puref: puref)
+}
+
 func makeAnywayPayment(
-    parameters: [AnywayElement.Parameter] = [],
+    parameters: [AnywayElement.Parameter],
     footer: AnywayPayment.Footer = .continue,
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
     product: AnywayElement.Widget.Product? = nil,
-    puref: AnywayPayment.Puref? = nil
+    payload: AnywayPayment.Payload = makeAnywayPaymentPayload()
 ) -> AnywayPayment {
     
     var elements = parameters.map(AnywayElement.parameter)
@@ -141,17 +148,17 @@ func makeAnywayPayment(
         footer: footer,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected,
-        puref: puref
+        payload: payload
     )
 }
 
 func makeAnywayPayment(
-    elements: [AnywayElement],
+    elements: [AnywayElement] = [],
     footer: AnywayPayment.Footer = .continue,
     infoMessage: String? = nil,
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    puref: AnywayPayment.Puref? = nil
+    payload: AnywayPayment.Payload = makeAnywayPaymentPayload()
 ) -> AnywayPayment {
     
     return .init(
@@ -160,7 +167,7 @@ func makeAnywayPayment(
         infoMessage: infoMessage,
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected,
-        puref: puref ?? .init(anyMessage())
+        payload: payload
     )
 }
 
@@ -191,6 +198,7 @@ func makeAnywayPaymentWithAmount(
 }
 
 func makeAnywayPaymentWithProduct(
+    parameters: [AnywayElement.Parameter] = [],
     _ currency: String = anyMessage(),
     _ productID: AnywayElement.Widget.Product.ProductID = generateRandom11DigitNumber(),
     _ productType: AnywayElement.Widget.Product.ProductType = .account,
@@ -198,11 +206,14 @@ func makeAnywayPaymentWithProduct(
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(product: .init(
-        currency: currency,
-        productID: productID,
-        productType: productType
-    ))
+    let payment = makeAnywayPayment(
+        parameters: parameters,
+        product: .init(
+            currency: currency,
+            productID: productID,
+            productType: productType
+        )
+    )
     XCTAssertFalse(currency.isEmpty, "Expected non-empty currency.", file: file, line: line)
     XCTAssert(hasProductWidget(payment), "Expected amount field.", file: file, line: line)
     return payment
@@ -1042,7 +1053,7 @@ extension AnywayPayment {
             infoMessage: infoMessage,
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,
-            puref: puref
+            payload: payload
         )
     }
 }
