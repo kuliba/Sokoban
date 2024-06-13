@@ -10,7 +10,6 @@ import AnywayPaymentDomain
 enum UtilityServicePaymentFlowEvent: Equatable {
     
     case dismiss(Dismiss)
-    case fraud(FraudEvent)
     case notified(AnywayTransactionStatus?)
     case showResult(TransactionResult)
 }

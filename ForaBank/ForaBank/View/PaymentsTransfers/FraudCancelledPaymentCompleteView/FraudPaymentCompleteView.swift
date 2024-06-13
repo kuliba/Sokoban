@@ -21,10 +21,10 @@ struct FraudPaymentCompleteView: View {
             content()
                 .frame(maxHeight: .infinity, alignment: .top)
             
-            goToMainButton()
-                .padding(.bottom)
+            PaymentComponents.ButtonView.goToMain(goToMain: action)
         }
         .padding(.top, 88)
+        .padding(.bottom)
         .padding(.horizontal)
     }
 }
@@ -37,6 +37,7 @@ extension FraudPaymentCompleteView {
         
         let formattedAmount: String
         let hasExpired: Bool
+        let icon: Image
     }
 }
 
@@ -46,7 +47,7 @@ private extension FraudPaymentCompleteView {
         
         VStack(spacing: 24) {
             
-            config.icon
+            state.icon
                 .foregroundColor(.iconWhite)
                 .frame(width: 88, height: 88)
                 .background(
@@ -69,21 +70,6 @@ private extension FraudPaymentCompleteView {
             state.formattedAmount.text(withConfig: config.amountConfig)
         }
     }
-    
-    func goToMainButton() -> some View {
-        
-        PaymentComponents.ButtonView(
-            state: .init(
-                id: .buttonPay,
-                value: "На главный",
-                color: .red,
-                action: .pay,
-                placement: .bottom
-            ),
-            event: action,
-            config: .iFora
-        )
-    }
 }
 
 struct FraudPaymentCompleteView_Previews: PreviewProvider {
@@ -102,7 +88,8 @@ struct FraudPaymentCompleteView_Previews: PreviewProvider {
         FraudPaymentCompleteView(
             state: .init(
                 formattedAmount: "1 000 ₽",
-                hasExpired: hasExpired
+                hasExpired: hasExpired,
+                icon: .init("waiting")
             ),
             action: {},
             config: .iFora

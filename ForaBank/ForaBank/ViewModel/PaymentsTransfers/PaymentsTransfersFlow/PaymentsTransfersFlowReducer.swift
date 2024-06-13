@@ -152,22 +152,19 @@ private extension PaymentsTransfersFlowReducer {
         case let .dismiss(dismiss):
             reduce(&state, with: dismiss)
             
-        case let .fraud(fraudEvent):
-            (state, effect) = reduce(state, fraudEvent)
-            
         case let .notified(status):
             reduce(&state, &effect, with: status)
             
         case let .showResult(transactionResult):
             switch transactionResult {
             case let .failure(fraud):
-                state.setFullScreenCover(to: .completed(.failure(.init(
+                state.setPaymentFullScreenCover(to: .completed(.failure(.init(
                     formattedAmount: fraud.formattedAmount,
                     hasExpired: fraud.hasExpired
                 ))))
                 
             case let .success(report):
-                state.setFullScreenCover(to: .completed(.success(report)))
+                state.setPaymentFullScreenCover(to: .completed(.success(report)))
             }
         }
         
@@ -183,37 +180,11 @@ private extension PaymentsTransfersFlowReducer {
             state.setPaymentModal(to: nil)
             
         case .fullScreenCover:
-            state.setFullScreenCover(to: nil)
+            state.setPaymentFullScreenCover(to: nil)
             
         case .paymentError:
             state.destination = nil
         }
-    }
-    
-    private func reduce(
-        _ state: State,
-        _ event: FraudEvent
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        state.setPaymentModal(to: nil)
-        
-        switch event {
-        case .cancel:
-            state.destination = nil
-            effect = .delayModalSet(to: .paymentCancelled(expired: false))
-            
-        case .continue:
-            break
-            
-        case .expired:
-            state.destination = nil
-            effect = .delayModalSet(to: .paymentCancelled(expired: true))
-        }
-        
-        return (state, effect)
     }
     
     private func reduce(
@@ -223,6 +194,8 @@ private extension PaymentsTransfersFlowReducer {
     ) {
         switch status {
         case .none:
+            state.setPaymentAlert(to: nil)
+            state.setPaymentFullScreenCover(to: nil)
             state.setPaymentModal(to: nil)
 
         case .awaitingPaymentRestartConfirmation:
@@ -586,7 +559,7 @@ private extension PaymentsTransfersViewModel._Route {
         setServicePickerPaymentAlert(to: alert)
     }
     
-    mutating func setFullScreenCover(
+    mutating func setPaymentFullScreenCover(
         to fullScreenCover: UtilityServiceFlowState.FullScreenCover?
     ) {
         // try to change payment node in the tree if found

@@ -135,16 +135,11 @@ extension RootViewModelFactory {
                 })
         }
         
-        let (pageSize, observeLast, fraudDelay) = (50, 10, Double(120)) // TODO: extract to some settings
-        
         let ptfmComposer = PaymentsTransfersFlowManagerComposer(
             flag: utilitiesPaymentsFlag,
             model: model,
             httpClient: httpClient,
-            log: logger.log,
-            pageSize: pageSize,
-            observeLast: observeLast,
-            fraudDelay: fraudDelay
+            log: logger.log
         )
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
@@ -289,8 +284,7 @@ extension RootViewModelFactory {
         )
         
         let makeDocumentButton = makeDocumentButton(
-            httpClient: httpClient,
-            model: model
+            httpClient: httpClient
         )
         
         return make
