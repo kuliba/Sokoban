@@ -205,6 +205,7 @@ let package = Package(
         .footerComponent,
         .nameComponent,
         .selectComponent,
+        .selectComponentTests,
         .inputPhoneComponent,
         .inputComponent,
         .paymentComponents,
@@ -1857,6 +1858,16 @@ private extension Target {
         path: "Sources/UI/Components/\(String.selectComponent)"
     )
     
+    static let selectComponentTests = testTarget(
+        name: .selectComponentTests,
+        dependencies: [
+            // external packages
+            // internal modules
+            .selectComponent,
+        ],
+        path: "Tests/UI/Components/\(String.selectComponentTests)"
+    )
+    
     static let inputPhoneComponent = target(
         name: .inputPhoneComponent,
         dependencies: [
@@ -2512,6 +2523,7 @@ private extension String {
     static let nameComponent = "NameComponent"
     
     static let selectComponent = "SelectComponent"
+    static let selectComponentTests = "SelectComponentTests"
     
     static let inputComponent = "InputComponent"
     

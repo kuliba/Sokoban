@@ -13,7 +13,7 @@ public struct SelectUIState {
     let image: Image
     public var state: SelectState
     
-    init(image: Image, state: SelectState) {
+    public init(image: Image, state: SelectState) {
         self.image = image
         self.state = state
     }
@@ -28,7 +28,7 @@ public enum SelectState {
         self = state
     }
     
-    public struct Option: Identifiable {
+    public struct Option: Equatable, Identifiable {
         
         public let id: String
         let title: String

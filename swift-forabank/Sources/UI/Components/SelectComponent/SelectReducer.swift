@@ -12,9 +12,8 @@ public final class SelectReducer {
     public init() {}
 }
 
-extension SelectReducer {
+public extension SelectReducer {
     
-    // TODO: add tests
     func reduce(
         _ state: State,
         _ event: Event
@@ -46,13 +45,15 @@ extension SelectReducer {
     }
 }
 
-extension SelectState {
+public extension SelectState {
 
     var filteredOption: [SelectState.Option]? {
-    
+        
         if let searchText {
             return self.options?
-                .filter({$0.title.localizedCaseInsensitiveContains(searchText)})
+                .filter({
+                    $0.title.localizedCaseInsensitiveContains(searchText)
+                })
         } else {
             return self.options
         }
@@ -77,7 +78,7 @@ extension SelectState {
     }
 }
 
-extension SelectReducer {
+public extension SelectReducer {
     
     typealias State = SelectUIState
     typealias Event = SelectEvent
