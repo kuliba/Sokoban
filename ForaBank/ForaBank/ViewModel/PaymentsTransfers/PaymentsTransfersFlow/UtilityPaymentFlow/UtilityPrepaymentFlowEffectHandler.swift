@@ -29,7 +29,7 @@ extension UtilityPrepaymentFlowEffectHandler {
             }
             
         case let .startPayment(with: select):
-            microServices.startPayment(select) {
+            microServices.processSelection(select) {
                 
                 dispatch(.paymentStarted($0))
             }

@@ -48,7 +48,7 @@ extension UtilityPrepaymentFlowMicroServicesComposer {
         
         return .init(
             initiateUtilityPayment: initiateUtilityPayment(_:_:),
-            startPayment: startPayment(_:_:)
+            processSelection: processSelection(_:_:)
         )
     }
 }
@@ -89,16 +89,16 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         }
     }
     
-    typealias InitiateUtilityPaymentCompletion = (PrepaymentEvent.Initiated) -> Void
+    typealias InitiateUtilityPaymentCompletion = MicroServices.InitiateUtilityPaymentCompletion
 }
 
 // MARK: - startPayment
 
 private extension UtilityPrepaymentFlowMicroServicesComposer {
     
-    func startPayment(
-        _ payload: StartPaymentPayload,
-        _ completion: @escaping StartPaymentCompletion
+    func processSelection(
+        _ payload: ProcessSelectionPayload,
+        _ completion: @escaping ProcessSelectionCompletion
     ) {
         switch payload {
         case let .lastPayment(lastPayment):
@@ -121,15 +121,15 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         }
     }
     
-    typealias StartPaymentPayload = PrepaymentEvent.Select
-    typealias StartPaymentResult = PrepaymentEvent.StartPaymentResult
-    typealias StartPaymentCompletion = (StartPaymentResult) -> Void
+    typealias ProcessSelectionPayload = MicroServices.ProcessSelectionPayload
+    typealias ProcessSelectionResult = MicroServices.ProcessSelectionResult
+    typealias ProcessSelectionCompletion = MicroServices.ProcessSelectionCompletion
     
     typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
     
     private func getServices(
         for `operator`: Operator,
-        _ completion: @escaping StartPaymentCompletion
+        _ completion: @escaping ProcessSelectionCompletion
     ) {
         nanoServices.getServicesFor(`operator`) { [weak self] result in
             
@@ -148,7 +148,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
     private func handle(
         _ services: [UtilityService],
         for `operator`: Operator,
-        with completion: @escaping StartPaymentCompletion
+        with completion: @escaping ProcessSelectionCompletion
     ) {
         switch (services.count, services.first) {
         case (0, _):
@@ -174,7 +174,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
     private func makeStartPaymentResult(
         _ result: NanoServices.StartAnywayPaymentResult,
         _ lastPayment: LastPayment
-    ) -> StartPaymentResult {
+    ) -> ProcessSelectionResult {
         
         let outline = makeAnywayPaymentOutline(lastPayment: lastPayment)
         return makeStartPaymentResult(result, outline, payload: .init(with: lastPayment))
@@ -184,7 +184,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         from result: NanoServices.StartAnywayPaymentResult,
         _ service: UtilityService,
         _ `operator`: Operator
-    ) -> StartPaymentResult {
+    ) -> ProcessSelectionResult {
         
         let result = result.map { 
             // https://shorturl.at/cQ3zr
@@ -210,7 +210,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         _ result: NanoServices.StartAnywayPaymentResult,
         _ outline: AnywayPaymentOutline,
         payload: AnywayPaymentDomain.AnywayPayment.Payload
-    ) -> StartPaymentResult {
+    ) -> ProcessSelectionResult {
         
         return result
             .map {
