@@ -15,10 +15,14 @@ struct PaymentsTransfersViewFactory {
     let makeIconView: MakeIconView
     let makeUpdateInfoView: MakeUpdateInfoView
     let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
+    let makePaymentCompleteView: MakePaymentCompleteView
 }
 
 extension PaymentsTransfersViewFactory {
     
     typealias MakeIconView = IconDomain.MakeIconView
     typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
+    
+    typealias TransactionResult = UtilityServicePaymentFlowState<CachedAnywayTransactionViewModel>.FullScreenCover.TransactionResult
+    typealias MakePaymentCompleteView = (TransactionResult, @escaping () -> Void) -> PaymentCompleteView
 }

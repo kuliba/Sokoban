@@ -123,10 +123,13 @@ func makeAnywayPayment(
 }
 
 func makeAnywayPaymentPayload(
-    puref: AnywayPayment.Payload.Puref = anyMessage()
+    puref: AnywayPayment.Payload.Puref = anyMessage(),
+    title: String = anyMessage(),
+    subtitle: String = anyMessage(),
+    icon: String = anyMessage()
 ) -> AnywayPayment.Payload {
     
-    return .init(puref: puref)
+    return .init(puref: puref, title: title, subtitle: subtitle, icon: icon)
 }
 
 func makeAnywayPayment(

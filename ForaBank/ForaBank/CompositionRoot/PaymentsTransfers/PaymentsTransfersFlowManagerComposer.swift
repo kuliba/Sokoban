@@ -25,6 +25,7 @@ final class PaymentsTransfersFlowManagerComposer {
     private let log: Log
     private let pageSize: Int
     private let observeLast: Int
+    private let fraudDelay: Double
     
     // TODO: move to settings(?)
     private let utilityNavTitle = "Услуги ЖКХ"
@@ -35,7 +36,8 @@ final class PaymentsTransfersFlowManagerComposer {
         httpClient: HTTPClient,
         log: @escaping Log,
         pageSize: Int,
-        observeLast: Int
+        observeLast: Int,
+        fraudDelay: Double
     ) {
         self.flag = flag
         self.model = model
@@ -43,6 +45,7 @@ final class PaymentsTransfersFlowManagerComposer {
         self.log = log
         self.pageSize = pageSize
         self.observeLast = observeLast
+        self.fraudDelay = fraudDelay
     }
     
     typealias Flag = UtilitiesPaymentsFlag
@@ -195,6 +198,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         return .init(
             model: model,
             observeLast: observeLast,
+            fraudDelay: fraudDelay,
             navTitle: utilityNavTitle,
             microServices: microComposer.compose(),
             makeTransactionViewModel: makeTransactionViewModel

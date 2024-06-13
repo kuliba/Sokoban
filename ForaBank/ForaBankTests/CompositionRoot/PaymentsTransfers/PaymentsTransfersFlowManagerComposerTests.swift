@@ -46,7 +46,8 @@ final class PaymentsTransfersFlowManagerComposerTests: XCTestCase {
             httpClient: httpClient,
             log: { _,_,_,_,_  in },
             pageSize: pageSize,
-            observeLast: observeLast
+            observeLast: observeLast,
+            fraudDelay: 10
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

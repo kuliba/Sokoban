@@ -431,7 +431,7 @@ private extension PaymentsTransfersView {
                 UtilityPrepaymentWrapperView(
                     viewModel: state.content,
                     completionEvent: { event(.prepayment($0.flowEvent)) },
-                    makeIconView: { viewFactory.makeIconView(.md5Hash(.init($0))) }
+                    makeIconView: { viewFactory.makeIconView($0.map { .md5Hash(.init($0)) }) }
                 )
             },
             destinationView: {
@@ -450,7 +450,7 @@ private extension PaymentsTransfersView {
         switch state {
         case let .operatorFailure(operatorFailure):
             let operatorIconView = viewFactory.makeIconView(
-                .md5Hash(.init(operatorFailure.content.icon))
+                operatorFailure.content.icon.map { .md5Hash(.init($0)) }
             )
             operatorFailureView(
                 operatorFailure: operatorFailure,
@@ -470,12 +470,22 @@ private extension PaymentsTransfersView {
             payByInstructionsView(paymentsViewModel)
             
         case let .payment(state):
-#warning("FIXME: navbar")
+            let payload = state.viewModel.state.context.payment.payload
+            let operatorIconView = viewFactory.makeIconView(
+                payload.icon.map { .md5Hash(.init($0)) }
+            )
             paymentFlowView(state: state, event: { event(.payment($0)) })
+                .navigationBarWithAsyncIcon(
+                    title: payload.title,
+                    subtitle: payload.subtitle,
+                    dismiss: { event(.prepayment(.dismiss(.destination))) },
+                    icon: operatorIconView,
+                    style: .large
+                )
             
         case let .servicePicker(state):
             let operatorIconView = viewFactory.makeIconView(
-                .md5Hash(.init(state.content.operator.icon))
+                state.content.operator.icon.map { .md5Hash(.init($0)) }
             )
             servicePickerView(state: state, event: event)
                 .navigationBarWithAsyncIcon(
@@ -555,9 +565,9 @@ private extension PaymentsTransfersView {
             dismissFullScreenCover: { event(.dismiss(.fullScreenCover)) },
             content: paymentFlowFullScreenCoverView
         )
-        .sheet(
-            modal: state.modal,
-            dismissModal: { event(.dismiss(.fraud)) },
+        .bottomSheet(
+            sheet: state.modal,
+            dismiss: { event(.dismiss(.fraud)) },
             content: paymentFlowModalView(
                 event: { transactionEvent(.fraud($0)) }
             )
@@ -601,24 +611,7 @@ private extension PaymentsTransfersView {
         
         switch fullScreenCover {
         case let .completed(result):
-            VStack(spacing: 32) {
-                
-                Text("TBD: Payment Complete View")
-                    .font(.headline)
-                
-                Text(String(describing: result))
-                    .foregroundColor(.secondary)
-                    .font(.footnote)
-                    .frame(maxHeight: .infinity)
-                
-                Divider()
-                
-                Button(
-                    "go to Main",
-                    action: { viewModel.event(.outside(.goToMain)) }
-                )
-            }
-            .padding()
+            viewFactory.makePaymentCompleteView(result, { viewModel.event(.outside(.goToMain)) })
         }
     }
     
@@ -642,7 +635,7 @@ private extension PaymentsTransfersView {
         }
         
         let operatorIconView = viewFactory.makeIconView(
-            .md5Hash(.init(state.content.operator.icon))
+            state.content.operator.icon.map { .md5Hash(.init($0)) }
         )
         
         ServicePickerFlowView(
@@ -739,6 +732,8 @@ private extension PaymentsTransfersView {
     
     typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<UtilityPaymentViewModel>
 }
+
+extension UtilityServicePaymentFlowState.Modal: BottomSheetCustomizable {}
 
 extension UtilityServicePaymentFlowState.Alert: Identifiable {
     

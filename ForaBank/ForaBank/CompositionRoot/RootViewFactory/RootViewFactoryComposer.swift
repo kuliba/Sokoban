@@ -37,7 +37,8 @@ extension RootViewFactoryComposer {
             makeIconView: imageCache.makeIconView(for:), 
             makeActivateSliderView: ActivateSliderStateWrapperView.init, 
             makeUpdateInfoView: UpdateInfoView.init,
-            makeAnywayPaymentFactory: makeAnywayPaymentFactory
+            makeAnywayPaymentFactory: makeAnywayPaymentFactory,
+            makePaymentCompleteView: makePaymentCompleteView
         )
     }
 }
@@ -63,8 +64,9 @@ private extension RootViewFactoryComposer {
                 makeUserAccountView: makeUserAccountView,
                 makeIconView: imageCache.makeIconView(for:), 
                 makeUpdateInfoView: UpdateInfoView.init(text:),
-                makeAnywayPaymentFactory: makeAnywayPaymentFactory
-            ), 
+                makeAnywayPaymentFactory: makeAnywayPaymentFactory,
+                makePaymentCompleteView: makePaymentCompleteView
+            ),
             productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init),
             getUImage: getUImage
         )
@@ -128,6 +130,31 @@ private extension RootViewFactoryComposer {
         
         return model.imageCache().makeIconView(for: .md5Hash(.init(icon)))
     }
+    
+    func makePaymentCompleteView(
+        result: TransactionResult,
+        goToMain: @escaping () -> Void
+    ) -> PaymentCompleteView {
+        
+        PaymentCompleteView(state: .init(result), goToMain: goToMain)
+    }
+    
+    typealias TransactionResult = UtilityServicePaymentFlowState<CachedAnywayTransactionViewModel>.FullScreenCover.TransactionResult
+}
+
+private extension PaymentCompleteView.State {
+    
+    init(
+        _ result: UtilityServicePaymentFlowState<CachedAnywayTransactionViewModel>.FullScreenCover.TransactionResult
+    ) {
+        self = result.mapError {
+            
+            return .init(
+                formattedAmount: $0.formattedAmount,
+                hasExpired: $0.hasExpired
+            )
+        }
+    }
 }
 
 private extension GetSberQRDataResponse.Parameter.Info {
@@ -158,20 +185,21 @@ extension ImageCache {
     }
     
     func makeIconView(
-        for icon: IconDomain.Icon
+        for icon: IconDomain.Icon?
     ) -> UIPrimitives.AsyncImage {
         
-        switch icon {
-        case let .md5Hash(md5Hash):
-            return makeIconView(for: md5Hash)
-        }
+        guard case let .md5Hash(md5Hash) = icon,
+              !md5Hash.rawValue.isEmpty
+        else { return makeIconView(for: "placeholder") }
+                    
+        return makeIconView(for: md5Hash.rawValue)
     }
     
     func makeIconView(
-        for md5Hash: MD5Hash
+        for rawValue: String
     ) -> UIPrimitives.AsyncImage {
         
-        let imageSubject = image(forKey: .init(md5Hash.rawValue))
+        let imageSubject = image(forKey: .init(rawValue))
         
         return .init(
             image: imageSubject.value,

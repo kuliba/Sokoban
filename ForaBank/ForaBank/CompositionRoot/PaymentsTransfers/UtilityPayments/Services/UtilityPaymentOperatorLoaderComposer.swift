@@ -204,6 +204,6 @@ private extension UtilityPaymentOperator {
     
     private init(_ id: String, _ title: String, _ subtitle: String? = nil) {
         
-        self.init(id: id, title: title, subtitle: subtitle, icon: "abc")
+        self.init(id: id, title: title, subtitle: subtitle, icon: nil)
     }
 }

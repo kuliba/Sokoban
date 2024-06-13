@@ -38,7 +38,13 @@ extension UtilityServicePaymentFlowState {
         
         case completed(TransactionResult)
         
-        typealias TransactionResult = AnywayTransactionStatus.TransactionResult
+        typealias TransactionResult = Result<AnywayTransactionReport, Fraud>
+        
+        struct Fraud: Equatable, Error {
+            
+            let formattedAmount: String
+            let hasExpired: Bool
+        }
     }
     
     enum Modal {
@@ -47,4 +53,10 @@ extension UtilityServicePaymentFlowState {
     }
 }
 
-struct Fraud: Equatable {}
+struct Fraud: Equatable {
+    
+    let title: String
+    let subtitle: String?
+    let formattedAmount: String
+    let delay: Double
+}
