@@ -11,6 +11,10 @@ import Tagged
 public struct CodeInputState: Equatable {
     
     public var status: Status
+    
+    public init(status: CodeInputState.Status) {
+        self.status = status
+    }
 }
 
 public extension CodeInputState {
