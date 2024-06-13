@@ -7,9 +7,9 @@
 
 import Foundation
 
-extension CodableLanding {
+extension CodableLanding.Multi {
     
-    public struct MultiLineHeader: Equatable, Codable {
+    public struct LineHeader: Equatable, Codable {
         
         public let backgroundColor: String
         public let regularTextList, boldTextList: [String]?

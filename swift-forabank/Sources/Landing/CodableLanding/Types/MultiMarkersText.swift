@@ -7,9 +7,9 @@
 
 import Tagged
 
-extension CodableLanding {
+extension CodableLanding.Multi {
     
-    public struct MultiMarkersText: Codable, Equatable {
+    public struct MarkersText: Codable, Equatable {
         
         public let backgroundColor, style: String
         public let list: [Text?]

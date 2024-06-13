@@ -21,7 +21,7 @@ struct ListHorizontalRectangleImageView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                
                 HStack(spacing: config.spacing) {
-                    ForEach(model.data.list, content: itemView)
+                    ForEach(model.data.list, id: \.imageLink, content: itemView)
                 }
             }
             .padding(.horizontal, config.paddings.horizontal)

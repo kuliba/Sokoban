@@ -7,9 +7,9 @@
 
 import Tagged
 
-public extension CodableLanding {
+public extension CodableLanding.Multi {
     
-    struct MultiButtons: Equatable, Codable {
+    struct Buttons: Equatable, Codable {
         
         public let list: [Item]
         
