@@ -10,7 +10,6 @@ import AnywayPaymentDomain
 enum UtilityServicePaymentFlowEvent: Equatable {
     
     case dismiss(Dismiss)
-    case fraud(FraudEvent)
     case notified(AnywayTransactionStatus?)
     case showResult(TransactionResult)
 }
@@ -26,8 +25,9 @@ extension UtilityServicePaymentFlowEvent {
     
     typealias TransactionResult = Result<AnywayTransactionReport, Fraud>
 
-    enum Fraud: Equatable, Error {
+    struct Fraud: Equatable, Error {
         
-        case cancelled, expired
+        let formattedAmount: String
+        let hasExpired: Bool
     }
 }

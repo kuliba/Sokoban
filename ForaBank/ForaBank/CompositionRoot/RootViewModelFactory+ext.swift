@@ -19,6 +19,7 @@ extension RootViewModelFactory {
     
     static func make(
         model: Model,
+        httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
@@ -26,8 +27,6 @@ extension RootViewModelFactory {
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
-        
-        let httpClient: HTTPClient = model.authenticatedHTTPClient()
         
         model.getProducts = Services.getProductListByType(httpClient, logger: logger)
         
@@ -135,15 +134,11 @@ extension RootViewModelFactory {
                 })
         }
         
-        let (pageSize, observeLast) = (50, 10) // TODO: extract to some settings
-        
         let ptfmComposer = PaymentsTransfersFlowManagerComposer(
             flag: utilitiesPaymentsFlag,
             model: model,
             httpClient: httpClient,
-            log: logger.log,
-            pageSize: pageSize,
-            observeLast: observeLast
+            log: logger.log
         )
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
@@ -288,8 +283,7 @@ extension RootViewModelFactory {
         )
         
         let makeDocumentButton = makeDocumentButton(
-            httpClient: httpClient,
-            model: model
+            httpClient: httpClient
         )
         
         return make

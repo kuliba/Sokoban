@@ -362,34 +362,6 @@ extension PaymentsTransfersViewModel {
         case bottomSheet(BottomSheet)
         case fullScreenSheet(FullScreenSheet)
         case sheet(Sheet)
-        
-        var alert: Alert.ViewModel? {
-            guard case let .alert(alert) = self
-            else { return nil }
-            
-            return alert
-        }
-        
-        var bottomSheet: BottomSheet? {
-            guard case let .bottomSheet(bottomSheet) = self
-            else { return nil }
-            
-            return bottomSheet
-        }
-        
-        var fullScreenSheet: FullScreenSheet? {
-            guard case let .fullScreenSheet(fullScreenSheet) = self
-            else { return nil }
-            
-            return fullScreenSheet
-        }
-        
-        var sheet: Sheet? {
-            guard case let .sheet(sheet) = self
-            else { return nil }
-            
-            return sheet
-        }
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -476,89 +448,7 @@ extension PaymentsTransfersViewModel {
         case openDepositsList(OpenDepositListViewModel)
         case utilityPayment(UtilityFlowState)
         
-        var id: Case {
-            
-            switch self {
-            case .exampleDetail:
-                return .exampleDetail
-            case .userAccount:
-                return .userAccount
-            case .mobile:
-                return .mobile
-            case .phone:
-                return .phone
-            case .payments:
-                return .payments
-            case .serviceOperators:
-                return .serviceOperators
-            case .internetOperators:
-                return .internetOperators
-            case .transportOperators:
-                return .transportOperators
-            case .service:
-                return .service
-            case .internet:
-                return .internet
-            case .transport:
-                return .transport
-            case .template:
-                return .template
-            case .country:
-                return .country
-            case .currencyWallet:
-                return .currencyWallet
-            case .failedView:
-                return .failedView
-            case .c2b:
-                return .c2b
-            case .searchOperators:
-                return .searchOperators
-            case .operatorView:
-                return .operatorView
-            case .paymentsServices:
-                return .paymentsServices
-            case .transportPayments:
-                return .transportPayments
-            case .productProfile:
-                return .productProfile
-            case .openDeposit:
-                return .openDeposit
-            case .openDepositsList:
-                return .openDepositsList
-            case .sberQRPayment:
-                return .sberQRPayment
-            case .utilityPayment:
-                return .utilityPayment
-            }
-        }
-        
-        enum Case {
-            case exampleDetail
-            case userAccount
-            case mobile
-            case phone
-            case payments
-            case serviceOperators
-            case internetOperators
-            case transportOperators
-            case service
-            case internet
-            case transport
-            case template
-            case country
-            case currencyWallet
-            case failedView
-            case c2b
-            case searchOperators
-            case operatorView
-            case paymentsServices
-            case transportPayments
-            case productProfile
-            case openDeposit
-            case openDepositsList
-            case sberQRPayment
-            case utilityPayment
-        }
+        typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
     }
     
     struct FullScreenSheet: Identifiable, Equatable {
@@ -579,9 +469,124 @@ extension PaymentsTransfersViewModel {
     }
 }
 
+// MARK: - Properties
+
+extension PaymentsTransfersViewModel.Modal {
+    
+    var alert: Alert.ViewModel? {
+        guard case let .alert(alert) = self
+        else { return nil }
+        
+        return alert
+    }
+    
+    var bottomSheet: PaymentsTransfersViewModel.BottomSheet? {
+        guard case let .bottomSheet(bottomSheet) = self
+        else { return nil }
+        
+        return bottomSheet
+    }
+    
+    var fullScreenSheet: PaymentsTransfersViewModel.FullScreenSheet? {
+        guard case let .fullScreenSheet(fullScreenSheet) = self
+        else { return nil }
+        
+        return fullScreenSheet
+    }
+    
+    var sheet: PaymentsTransfersViewModel.Sheet? {
+        guard case let .sheet(sheet) = self
+        else { return nil }
+        
+        return sheet
+    }
+}
+
 extension PaymentsTransfersViewModel._Link {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
+    var id: Case {
+        
+        switch self {
+        case .exampleDetail:
+            return .exampleDetail
+        case .userAccount:
+            return .userAccount
+        case .mobile:
+            return .mobile
+        case .phone:
+            return .phone
+        case .payments:
+            return .payments
+        case .serviceOperators:
+            return .serviceOperators
+        case .internetOperators:
+            return .internetOperators
+        case .transportOperators:
+            return .transportOperators
+        case .service:
+            return .service
+        case .internet:
+            return .internet
+        case .transport:
+            return .transport
+        case .template:
+            return .template
+        case .country:
+            return .country
+        case .currencyWallet:
+            return .currencyWallet
+        case .failedView:
+            return .failedView
+        case .c2b:
+            return .c2b
+        case .searchOperators:
+            return .searchOperators
+        case .operatorView:
+            return .operatorView
+        case .paymentsServices:
+            return .paymentsServices
+        case .transportPayments:
+            return .transportPayments
+        case .productProfile:
+            return .productProfile
+        case .openDeposit:
+            return .openDeposit
+        case .openDepositsList:
+            return .openDepositsList
+        case .sberQRPayment:
+            return .sberQRPayment
+        case .utilityPayment:
+            return .utilityPayment
+        }
+    }
+    
+    enum Case {
+        case exampleDetail
+        case userAccount
+        case mobile
+        case phone
+        case payments
+        case serviceOperators
+        case internetOperators
+        case transportOperators
+        case service
+        case internet
+        case transport
+        case template
+        case country
+        case currencyWallet
+        case failedView
+        case c2b
+        case searchOperators
+        case operatorView
+        case paymentsServices
+        case transportPayments
+        case productProfile
+        case openDeposit
+        case openDepositsList
+        case sberQRPayment
+        case utilityPayment
+    }
 }
 
 // MARK: - Action

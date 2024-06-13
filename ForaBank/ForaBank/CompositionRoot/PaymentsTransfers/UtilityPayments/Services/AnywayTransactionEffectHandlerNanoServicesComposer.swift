@@ -9,6 +9,7 @@ import AnywayPaymentBackend
 import AnywayPaymentDomain
 import GenericRemoteService
 import Foundation
+import RemoteServices
 
 final class AnywayTransactionEffectHandlerNanoServicesComposer {
     
@@ -118,7 +119,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             
             return service(.init("\(payload)")) {
                 
-                completion(try? $0.map(\.response).get())
+                completion(try? $0.get())
             }
         }
     }
@@ -329,15 +330,6 @@ private extension AnywayPaymentBackend.ResponseMapper.MakeTransferResponse {
     }
 }
 
-private extension AnywayPaymentBackend.ResponseMapper.GetOperationDetailByPaymentIDResponse {
-    
-#warning("FIXME: replace with actual type (which is not String")
-    var response: String {
-        
-        .init(describing: self)
-    }
-}
-
 private extension AnywayPaymentDomain.ServiceFailure {
     
     init(_ error: AnywayPaymentBackend.ServiceFailure) {
@@ -375,8 +367,8 @@ private extension AnywayPaymentDigest {
     
     typealias ProcessResult = AnywayTransactionEffectHandlerNanoServices.ProcessResult
     
-    private var isStep2Alert: Bool { containsAdditional(named: "1", withValue: "2222") }
-    private var isStep2: Bool { containsAdditional(named: "1", withValue: "1111") }
+    private var isStep2Alert: Bool { containsAdditional(named: "1", withValue: "1111") }
+    private var isStep2: Bool { !containsAdditional(named: "1", withValue: "2222") }
     private var isStep3Alert: Bool { amount == 123 }
     private var isStep3: Bool { amount != nil }
     private var isStep4Fraud: Bool { containsAdditional(named: "SumSTrs", withValue: "22") }
@@ -399,12 +391,182 @@ private extension OperationDetailID {
     var getDetailsResultStub: GetDetailsResult {
         
         switch self {
-        case 123: return ""
+        case 123: return .stub(operationStatus: .complete)
         default: return nil
         }
     }
     
     typealias GetDetailsResult = AnywayTransactionEffectHandlerNanoServices.GetDetailsResult
+}
+
+private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
+    
+    static func stub(
+        account: String? = "account",
+        accountTitle: String? = "accountTitle",
+        amount: Decimal = .init(Double.random(in: 1...1_000)),
+        billDate: String? = "billDate",
+        billNumber: String? = "billNumber",
+        cityName: String? = "cityName",
+        claimID: String = "claimID",
+        comment: String? = "comment",
+        countryName: String? = "countryName",
+        currencyAmount: String? = "currencyAmount",
+        currencyRate: Decimal? = .init(Double.random(in: 1...1_000)),
+        cursiveAmount: String? = "cursiveAmount",
+        cursivePayerAmount: String? = "cursivePayerAmount",
+        cursivePayeeAmount: String? = "cursivePayeeAmount",
+        dateForDetail: String = "dateForDetail",
+        depositDateOpen: String? = "depositDateOpen",
+        depositNumber: String? = "depositNumber",
+        division: String? = "division",
+        driverLicense: String? = "driverLicense",
+        externalTransferType: ExternalTransferType? = .individual,
+        isForaBank: Bool? = false,
+        isTrafficPoliceService: Bool = false,
+        mcc: String? = "mcc",
+        memberID: String? = "memberID",
+        merchantIcon: String? = "merchantIcon",
+        merchantSubName: String? = "merchantSubName",
+        operation: String? = "operation",
+        operationStatus: OperationStatus?,
+        oktmo: String? = "oktmo",
+        payeeAccountID: Int? = 987654321,
+        payeeAccountNumber: String? = "payeeAccountNumber",
+        payeeAmount: Decimal? = .init(Double.random(in: 1...1_000)),
+        payeeBankBIC: String? = "payeeBankBIC",
+        payeeBankCorrAccount: String? = "payeeBankCorrAccount",
+        payeeBankName: String? = "payeeBankName",
+        payeeCardID: Int? = 234567890,
+        payeeCardNumber: String? = "payeeCardNumber",
+        payeeCheckAccount: String? = "payeeCheckAccount",
+        payeeCurrency: String? = "payeeCurrency",
+        payeeFirstName: String? = "payeeFirstName",
+        payeeFullName: String? = "payeeFullName",
+        payeeINN: String? = "payeeINN",
+        payeeKPP: String? = "payeeKPP",
+        payeeMiddleName: String? = "payeeMiddleName",
+        payeePhone: String? = "payeePhone",
+        payeeSurName: String? = "payeeSurName",
+        payerAccountID: Int = 567890987,
+        payerAccountNumber: String = "payerAccountNumber",
+        payerAddress: String = "payerAddress",
+        payerAmount: Decimal = .init(Double.random(in: 1...1_000)),
+        payerCardID: Int? = 123456789,
+        payerCardNumber: String? = "payerCardNumber",
+        payerCurrency: String = "payerCurrency",
+        payerDocument: String? = "payerDocument",
+        payerFee: Decimal = .init(Double.random(in: 1...1_000)),
+        payerFirstName: String = "payerFirstName",
+        payerFullName: String = "payerFullName",
+        payerINN: String? = "payerINN",
+        payerMiddleName: String? = "payerMiddleName",
+        payerPhone: String? = "payerPhone",
+        payerSurName: String? = "payerSurName",
+        paymentMethod: PaymentMethod? = .cashless,
+        paymentOperationDetailID: Int = 12345,
+        paymentTemplateID: Int? = 98765,
+        period: String? = "period",
+        printFormType: PrintFormType = .housingAndCommunalService,
+        provider: String? = "provider",
+        puref: String? = "puref",
+        regCert: String? = "regCert",
+        requestDate: String = "requestDate",
+        responseDate: String = "responseDate",
+        returned: Bool? = false,
+        serviceSelect: String? = "serviceSelect",
+        serviceName: String? = "serviceName",
+        shopLink: String? = "shopLink",
+        transfer: Transfer? = .housingAndCommunalService,
+        transferDate: String = "transferDate",
+        transferNumber: String? = "transferNumber",
+        transferReference: String? = "transferReference",
+        trnPickupPointName: String? = "trnPickupPointName"
+    ) -> Self {
+        
+        return .init(
+            account: account,
+            accountTitle: accountTitle,
+            amount: amount,
+            billDate: billDate,
+            billNumber: billNumber,
+            cityName: cityName,
+            claimID: claimID,
+            comment: comment,
+            countryName: countryName,
+            currencyAmount: currencyAmount,
+            currencyRate: currencyRate,
+            cursiveAmount: cursiveAmount,
+            cursivePayerAmount: cursivePayerAmount,
+            cursivePayeeAmount: cursivePayeeAmount,
+            dateForDetail: dateForDetail,
+            depositDateOpen: depositDateOpen,
+            depositNumber: depositNumber,
+            division: division,
+            driverLicense: driverLicense,
+            externalTransferType: externalTransferType,
+            isForaBank: isForaBank,
+            isTrafficPoliceService: isTrafficPoliceService,
+            mcc: mcc,
+            memberID: memberID,
+            merchantIcon: merchantIcon,
+            merchantSubName: merchantSubName,
+            operation: operation,
+            operationStatus: operationStatus,
+            oktmo: oktmo,
+            payeeAccountID: payeeAccountID,
+            payeeAccountNumber: payeeAccountNumber,
+            payeeAmount: payeeAmount,
+            payeeBankBIC: payeeBankBIC,
+            payeeBankCorrAccount: payeeBankCorrAccount,
+            payeeBankName: payeeBankName,
+            payeeCardID: payeeCardID,
+            payeeCardNumber: payeeCardNumber,
+            payeeCheckAccount: payeeCheckAccount,
+            payeeCurrency: payeeCurrency,
+            payeeFirstName: payeeFirstName,
+            payeeFullName: payeeFullName,
+            payeeINN: payeeINN,
+            payeeKPP: payeeKPP,
+            payeeMiddleName: payeeMiddleName,
+            payeePhone: payeePhone,
+            payeeSurName: payeeSurName,
+            payerAccountID: payerAccountID,
+            payerAccountNumber: payerAccountNumber,
+            payerAddress: payerAddress,
+            payerAmount: payerAmount,
+            payerCardID: payerCardID,
+            payerCardNumber: payerCardNumber,
+            payerCurrency: payerCurrency,
+            payerDocument: payerDocument,
+            payerFee: payerFee,
+            payerFirstName: payerFirstName,
+            payerFullName: payerFullName,
+            payerINN: payerINN,
+            payerMiddleName: payerMiddleName,
+            payerPhone: payerPhone,
+            payerSurName: payerSurName,
+            paymentMethod: paymentMethod,
+            paymentOperationDetailID: paymentOperationDetailID,
+            paymentTemplateID: paymentTemplateID,
+            period: period,
+            printFormType: printFormType,
+            provider: provider,
+            puref: puref,
+            regCert: regCert,
+            requestDate: requestDate,
+            responseDate: responseDate,
+            returned: returned,
+            serviceSelect: serviceSelect,
+            serviceName: serviceName,
+            shopLink: shopLink,
+            transfer: transfer,
+            transferDate: transferDate,
+            transferNumber: transferNumber,
+            transferReference: transferReference,
+            trnPickupPointName: trnPickupPointName
+        )
+    }
 }
 
 private extension VerificationCode {

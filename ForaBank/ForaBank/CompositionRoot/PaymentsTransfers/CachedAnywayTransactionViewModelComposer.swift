@@ -40,7 +40,12 @@ extension CachedAnywayTransactionViewModelComposer {
         
         let transactionViewModel = makeTransactionViewModel(
             transactionState,
-            { _, state in notify(state.status); print(state.status ?? "nil transaction status") } // TODO: remove debug print
+            { _, state in
+                
+                // TODO: remove debug print
+                print("notify: Transaction Status", state.status ?? "nil")
+                notify(state.status)
+            }
         )
         
         let mapper = AnywayElementModelMapper(

@@ -105,8 +105,7 @@ func makeAnywayPayment(
     fields: [AnywayElement.Field],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    core: AnywayElement.Widget.Product? = nil,
-    payload: AnywayPayment.Payload = makeAnywayPaymentPayload()
+    core: AnywayElement.Widget.Product? = nil
 ) -> AnywayPayment {
     
     var elements = fields.map(AnywayElement.field)
@@ -117,16 +116,18 @@ func makeAnywayPayment(
     return makeAnywayPayment(
         elements: elements,
         isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected,
-        payload: payload
+        isFraudSuspected: isFraudSuspected
     )
 }
 
 func makeAnywayPaymentPayload(
-    puref: AnywayPayment.Payload.Puref = anyMessage()
-) -> AnywayPayment.Payload {
+    puref: AnywayPaymentOutline.Payload.Puref = anyMessage(),
+    title: String = anyMessage(),
+    subtitle: String = anyMessage(),
+    icon: String = anyMessage()
+) -> AnywayPaymentOutline.Payload {
     
-    return .init(puref: puref)
+    return .init(puref: puref, title: title, subtitle: subtitle, icon: icon)
 }
 
 func makeAnywayPayment(
@@ -134,8 +135,7 @@ func makeAnywayPayment(
     footer: AnywayPayment.Footer = .continue,
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    product: AnywayElement.Widget.Product? = nil,
-    payload: AnywayPayment.Payload = makeAnywayPaymentPayload()
+    product: AnywayElement.Widget.Product? = nil
 ) -> AnywayPayment {
     
     var elements = parameters.map(AnywayElement.parameter)
@@ -147,8 +147,7 @@ func makeAnywayPayment(
         elements: elements,
         footer: footer,
         isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected,
-        payload: payload
+        isFraudSuspected: isFraudSuspected
     )
 }
 
@@ -157,8 +156,7 @@ func makeAnywayPayment(
     footer: AnywayPayment.Footer = .continue,
     infoMessage: String? = nil,
     isFinalStep: Bool = false,
-    isFraudSuspected: Bool = false,
-    payload: AnywayPayment.Payload = makeAnywayPaymentPayload()
+    isFraudSuspected: Bool = false
 ) -> AnywayPayment {
     
     return .init(
@@ -166,19 +164,20 @@ func makeAnywayPayment(
         footer: footer,
         infoMessage: infoMessage,
         isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected,
-        payload: payload
+        isFraudSuspected: isFraudSuspected
     )
 }
 
 func makeAnywayPaymentOutline(
     _ fields: [String: String] = [:],
-    core: AnywayPaymentOutline.PaymentCore = makeOutlinePaymentCore(productType: .account)
+    core: AnywayPaymentOutline.PaymentCore = makeOutlinePaymentCore(productType: .account),
+    payload: AnywayPaymentOutline.Payload = makeAnywayPaymentPayload()
 ) -> AnywayPaymentOutline {
     
     return .init(
         core: core,
-        fields: fields.reduce(into: [:]) { $0[$1.key] = $1.value }
+        fields: fields.reduce(into: [:]) { $0[$1.key] = $1.value },
+        payload: payload
     )
 }
 
@@ -1052,8 +1051,7 @@ extension AnywayPayment {
             footer: footer,
             infoMessage: infoMessage,
             isFinalStep: isFinalStep,
-            isFraudSuspected: isFraudSuspected,
-            payload: payload
+            isFraudSuspected: isFraudSuspected
         )
     }
 }

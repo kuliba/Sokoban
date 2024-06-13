@@ -379,8 +379,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         footer: AnywayPayment.Footer = .continue,
         infoMessage: String? = nil,
         isFinalStep: Bool = false,
-        isFraudSuspected: Bool = false,
-        payload: AnywayPayment.Payload = makeAnywayPaymentPayload()
+        isFraudSuspected: Bool = false
     ) -> State {
         
         return .init(
@@ -388,8 +387,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
             footer: footer,
             infoMessage: infoMessage,
             isFinalStep: isFinalStep,
-            isFraudSuspected: isFraudSuspected,
-            payload: payload
+            isFraudSuspected: isFraudSuspected
         )
     }
 }

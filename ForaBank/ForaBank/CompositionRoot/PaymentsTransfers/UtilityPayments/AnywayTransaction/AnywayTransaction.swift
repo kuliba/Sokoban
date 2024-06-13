@@ -5,8 +5,10 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
+import AnywayPaymentBackend
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import RemoteServices
 import RxViewModel
 
 typealias CachedAnywayTransactionViewModel = RxViewModel<CachedTransactionState, CachedTransactionEvent, CachedTransactionEffect>
@@ -25,6 +27,7 @@ typealias AnywayTransactionEffectHandlerMicroServices = TransactionEffectHandler
 
 typealias AnywayTransactionStatus = TransactionStatus<AnywayTransactionReport>
 typealias AnywayTransactionReport = TransactionReport<DocumentStatus, _OperationInfo>
+#warning("rename _OperationInfo")
 typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails>
 
 enum DocumentStatus {
@@ -33,4 +36,10 @@ enum DocumentStatus {
 }
 
 typealias OperationDetailID = Int
-typealias OperationDetails = String
+struct OperationDetails: Equatable {
+    
+    let id: OperationDetailID
+    let response: Response
+    
+    typealias Response = RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
+}

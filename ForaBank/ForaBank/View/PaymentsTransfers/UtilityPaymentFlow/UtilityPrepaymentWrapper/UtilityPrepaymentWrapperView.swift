@@ -35,7 +35,7 @@ struct UtilityPrepaymentWrapperView: View {
 
 extension UtilityPrepaymentWrapperView {
     
-    typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
+    typealias MakeIconView = (String?) -> UIPrimitives.AsyncImage
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator

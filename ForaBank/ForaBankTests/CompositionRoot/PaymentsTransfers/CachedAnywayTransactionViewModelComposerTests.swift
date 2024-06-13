@@ -158,17 +158,21 @@ final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
             footer: footer,
             infoMessage: infoMessage,
             isFinalStep: isFinalStep,
-            isFraudSuspected: isFraudSuspected,
-            payload: .init(puref: puref)
+            isFraudSuspected: isFraudSuspected
         )
     }
-        
+    
     private func makeAnywayPaymentOutline(
         core: AnywayPaymentOutline.PaymentCore? = nil,
-        fields: AnywayPaymentOutline.Fields = [:]
+        fields: AnywayPaymentOutline.Fields = [:],
+        payload: AnywayPaymentOutline.Payload? = nil
     ) -> AnywayPaymentOutline {
         
-        return .init(core: core ?? makePaymentCore(), fields: fields)
+        return .init(
+            core: core ?? makePaymentCore(), 
+            fields: fields,
+            payload: payload ?? makeAnywayPaymentPayload()
+        )
     }
     
     private func makePaymentCore(
@@ -184,5 +188,15 @@ final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
             productID: productID,
             productType: productType
         )
+    }
+    
+    func makeAnywayPaymentPayload(
+        puref: AnywayPaymentOutline.Payload.Puref = anyMessage(),
+        title: String = anyMessage(),
+        subtitle: String = anyMessage(),
+        icon: String = anyMessage()
+    ) -> AnywayPaymentOutline.Payload {
+        
+        return .init(puref: puref, title: title, subtitle: subtitle, icon: icon)
     }
 }

@@ -109,8 +109,7 @@ private extension PaymentsTransfersFlowReducer {
     }
     
     private typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
-    private typealias UtilityPaymentEffect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
-    private typealias UtilityPrepaymentEffect = UtilityPaymentEffect.UtilityPrepaymentFlowEffect
+    private typealias UtilityPrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
     
     private func reduce(
         _ state: State,
@@ -152,25 +151,19 @@ private extension PaymentsTransfersFlowReducer {
         case let .dismiss(dismiss):
             reduce(&state, with: dismiss)
             
-        case let .fraud(fraudEvent):
-            (state, effect) = reduce(state, fraudEvent)
-            
         case let .notified(status):
             reduce(&state, &effect, with: status)
             
         case let .showResult(transactionResult):
             switch transactionResult {
             case let .failure(fraud):
-                switch fraud {
-                case .cancelled:
-                    state.setFullScreenCover(to: .completed(.failure(.fraud(.cancelled))))
-                    
-                case .expired:
-                    state.setFullScreenCover(to: .completed(.failure(.fraud(.expired))))
-                }
+                state.setPaymentFullScreenCover(to: .completed(.failure(.init(
+                    formattedAmount: fraud.formattedAmount,
+                    hasExpired: fraud.hasExpired
+                ))))
                 
             case let .success(report):
-                state.setFullScreenCover(to: .completed(.success(report)))
+                state.setPaymentFullScreenCover(to: .completed(.success(report)))
             }
         }
         
@@ -186,37 +179,11 @@ private extension PaymentsTransfersFlowReducer {
             state.setPaymentModal(to: nil)
             
         case .fullScreenCover:
-            state.setFullScreenCover(to: nil)
+            state.setPaymentFullScreenCover(to: nil)
             
         case .paymentError:
             state.destination = nil
         }
-    }
-    
-    private func reduce(
-        _ state: State,
-        _ event: FraudEvent
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        state.setPaymentModal(to: nil)
-        
-        switch event {
-        case .cancel:
-            state.destination = nil
-            effect = .delayModalSet(to: .paymentCancelled(expired: false))
-            
-        case .continue:
-            break
-            
-        case .expired:
-            state.destination = nil
-            effect = .delayModalSet(to: .paymentCancelled(expired: true))
-        }
-        
-        return (state, effect)
     }
     
     private func reduce(
@@ -226,13 +193,17 @@ private extension PaymentsTransfersFlowReducer {
     ) {
         switch status {
         case .none:
+            state.setPaymentAlert(to: nil)
+            state.setPaymentFullScreenCover(to: nil)
             state.setPaymentModal(to: nil)
 
         case .awaitingPaymentRestartConfirmation:
             state.setPaymentAlert(to: .paymentRestartConfirmation)
             
         case .fraudSuspected:
-            state.setPaymentModal(to: .fraud(.init()))
+            if let fraud = factory.makeFraud(state) {
+                state.setPaymentModal(to: .fraud(fraud))
+            }
             
         case let .serverError(errorMessage):
             state.setPaymentAlert(to: .serverError(errorMessage))
@@ -247,35 +218,21 @@ private extension PaymentsTransfersFlowReducer {
         _ effect: inout Effect?,
         with result: AnywayTransactionStatus.TransactionResult
     ) {
-        // TODO: improve repeated code
+        guard let formattedAmount = factory.getFormattedAmount(state)
+        else { return }
+        
         switch result {
         case let .failure(terminated):
             switch terminated {
             case let .fraud(fraud):
-                #warning("FIXME using commented scaffolding")
-                /*
                 state.setPaymentModal(to: nil)
-                let result = OperationResult(fraud)
                 effect = .delay(
-                    .utilityFlow(.payment(.showResult(result))),
+                    .utilityFlow(.payment(.showResult(.failure(.init(
+                        formattedAmount: formattedAmount,
+                        hasExpired: fraud == .expired
+                    ))))),
                     for: .microseconds(300)
                 )
-                */
-                switch fraud {
-                case .cancelled:
-                    state.setPaymentModal(to: nil)
-                    effect = .delay(
-                        .utilityFlow(.payment(.showResult(.failure(.cancelled)))),
-                        for: .microseconds(300)
-                    )
-                    
-                case .expired:
-                    state.setPaymentModal(to: nil)
-                    effect = .delay(
-                        .utilityFlow(.payment(.showResult(.failure(.expired)))),
-                        for: .microseconds(300)
-                    )
-                }
                 
 #warning("the case should have associated string")
             case .transactionFailure:
@@ -294,6 +251,7 @@ private extension PaymentsTransfersFlowReducer {
             )
         }
     }
+    
     private typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
     
     private func reduce(
@@ -320,11 +278,11 @@ private extension PaymentsTransfersFlowReducer {
         case .payByInstructionsFromError:
             state.destination = .payments(factory.makePaymentsViewModel(closeAction))
             
-        case let .paymentStarted(paymentStarted):
-            reduce(&state, with: paymentStarted)
-            
         case let .select(select):
-            effect = .startPayment(with: select)
+            effect = .select(select)
+            
+        case let .selectionProcessed(paymentStarted):
+            reduce(&state, with: paymentStarted)
         }
         
         return (state, effect)
@@ -382,7 +340,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with result: UtilityPrepaymentEvent.StartPaymentResult
+        with result: UtilityPrepaymentEvent.ProcessSelectionResult
     ) {
         switch result {
         case let .failure(failure):
@@ -395,7 +353,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with failure: UtilityPrepaymentEvent.StartPaymentFailure
+        with failure: UtilityPrepaymentEvent.ProcessSelectionFailure
     ) {
         switch failure {
         case let .operatorFailure(`operator`):
@@ -428,7 +386,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with success: UtilityPrepaymentEvent.StartPaymentSuccess
+        with success: UtilityPrepaymentEvent.ProcessSelectionSuccess
     ) {
         switch success {
         case let .services(services, `operator`):
@@ -584,7 +542,7 @@ private extension PaymentsTransfersViewModel._Route {
     
     private var paymentFlowState: UtilityServiceFlowState? {
         
-        guard case let .payment(paymentFlowState) = utilityPrepayment?.destination
+        guard case let .payment(paymentFlowState) = utilityPrepaymentDestination
         else { return nil }
         
         return paymentFlowState
@@ -600,7 +558,7 @@ private extension PaymentsTransfersViewModel._Route {
         setServicePickerPaymentAlert(to: alert)
     }
     
-    mutating func setFullScreenCover(
+    mutating func setPaymentFullScreenCover(
         to fullScreenCover: UtilityServiceFlowState.FullScreenCover?
     ) {
         // try to change payment node in the tree if found

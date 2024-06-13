@@ -13,16 +13,20 @@ final class AnywayPaymentMakeDigestTests: XCTestCase {
     
     func test_shouldSetAdditionalToEmptyOnEmptyElements() {
         
-        let payment = makeAnywayPayment(elements: [])
+        let context = makeAnywayPaymentContext(
+            payment: makeAnywayPayment(elements: [])
+        )
         
-        XCTAssert(payment.makeDigest().additional.isEmpty)
+        XCTAssert(context.makeDigest().additional.isEmpty)
     }
     
     func test_shouldSetAdditionalToEmptyOnEmptyParameters() {
         
-        let payment = makeAnywayPayment(fields: [makeAnywayPaymentField()])
+        let context = makeAnywayPaymentContext(
+            payment: makeAnywayPayment(fields: [makeAnywayPaymentField()])
+        )
         
-        XCTAssert(payment.makeDigest().additional.isEmpty)
+        XCTAssert(context.makeDigest().additional.isEmpty)
     }
     
     func test_shouldNotSetAdditionalOnParameterWithNilValue() {
@@ -30,9 +34,11 @@ final class AnywayPaymentMakeDigestTests: XCTestCase {
         let parameter = makeAnywayPaymentParameter(
             field: makeAnywayPaymentElementParameterField(value: nil)
         )
-        let payment = makeAnywayPayment(parameters: [parameter])
+        let context = makeAnywayPaymentContext(
+            payment: makeAnywayPayment(parameters: [parameter])
+        )
         
-        XCTAssert(payment.makeDigest().additional.isEmpty)
+        XCTAssert(context.makeDigest().additional.isEmpty)
     }
     
     func test_shouldSetAdditionalOnParameter() {
@@ -43,9 +49,11 @@ final class AnywayPaymentMakeDigestTests: XCTestCase {
                 id: id, value: value
             )
         )
-        let payment = makeAnywayPayment(parameters: [parameter])
+        let context = makeAnywayPaymentContext(
+            payment: makeAnywayPayment(parameters: [parameter])
+        )
         
-        XCTAssertNoDiff(payment.makeDigest().additional, [
+        XCTAssertNoDiff(context.makeDigest().additional, [
             .init(fieldID: 0, fieldName: id, fieldValue: value),
         ])
     }
@@ -64,9 +72,11 @@ final class AnywayPaymentMakeDigestTests: XCTestCase {
                 id: id1, value: value1
             )
         )
-        let payment = makeAnywayPayment(parameters: [parameter1, parameter2])
+        let context = makeAnywayPaymentContext(
+            payment: makeAnywayPayment(parameters: [parameter1, parameter2])
+        )
         
-        XCTAssertNoDiff(payment.makeDigest().additional, [
+        XCTAssertNoDiff(context.makeDigest().additional, [
             .init(fieldID: 0, fieldName: id0, fieldValue: value0),
             .init(fieldID: 1, fieldName: id1, fieldValue: value1),
         ])
@@ -74,24 +84,30 @@ final class AnywayPaymentMakeDigestTests: XCTestCase {
     
     func test_shouldSetCoreToNilOnPaymentWithoutAmount() {
         
-        let payment = makeAnywayPaymentWithoutAmount()
+        let context = makeAnywayPaymentContext(
+            payment: makeAnywayPaymentWithoutAmount()
+        )
         
-        XCTAssertNil(payment.makeDigest().core)
+        XCTAssertNil(context.makeDigest().core)
     }
     
     func test_shouldSetCoreAmountOnPaymentWithAmount() {
         
-        let payment = makeAnywayPaymentWithAmount(12_345.67)
+        let context = makeAnywayPaymentContext(
+            payment: makeAnywayPaymentWithAmount(12_345.67)
+        )
         
-        XCTAssertNoDiff(payment.makeDigest().amount, 12_345.67)
+        XCTAssertNoDiff(context.makeDigest().amount, 12_345.67)
     }
     
     func test_shouldSetCoreWithAccountIDOnPaymentWithProduct() {
         
         let (_, currency, id) = makeCore()
-        let payment = makeAnywayPaymentWithProduct(currency, id, .account)
+        let context = makeAnywayPaymentContext(
+            payment: makeAnywayPaymentWithProduct(currency, id, .account)
+        )
         
-        XCTAssertNoDiff(payment.makeDigest().core, .init(
+        XCTAssertNoDiff(context.makeDigest().core, .init(
             currency: currency,
             productID: id,
             productType: .account
@@ -101,9 +117,11 @@ final class AnywayPaymentMakeDigestTests: XCTestCase {
     func test_shouldSetCoreWithCardIDOnPaymentWithProduct() {
         
         let (_, currency, id) = makeCore()
-        let payment = makeAnywayPaymentWithProduct(currency, id, .card)
+        let context = makeAnywayPaymentContext(
+            payment: makeAnywayPaymentWithProduct(currency, id, .card)
+        )
         
-        XCTAssertNoDiff(payment.makeDigest().core, .init(
+        XCTAssertNoDiff(context.makeDigest().core, .init(
             currency: .init(currency),
             productID: id,
             productType: .card
@@ -113,11 +131,14 @@ final class AnywayPaymentMakeDigestTests: XCTestCase {
     func test_shouldSetPuref() {
         
         let puref = anyMessage()
-        let payment = makeAnywayPayment(
-            payload: makeAnywayPaymentPayload(puref: puref)
+        let context = makeAnywayPaymentContext(
+            payment: makeAnywayPayment(),
+            outline: makeAnywayPaymentOutline(
+                payload: makeAnywayPaymentPayload(puref: puref)
+            )
         )
         
-        XCTAssertNoDiff(payment.makeDigest().puref, puref)
+        XCTAssertNoDiff(context.makeDigest().puref, puref)
     }
     
     // MARK: - Helpers

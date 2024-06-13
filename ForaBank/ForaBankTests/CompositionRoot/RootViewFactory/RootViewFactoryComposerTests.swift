@@ -25,7 +25,10 @@ final class RootViewFactoryComposerTests: XCTestCase {
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(model: model ?? .mockWithEmptyExcept())
+        let sut = SUT(
+            model: model ?? .mockWithEmptyExcept(),
+            httpClient: HTTPClientSpy()
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         

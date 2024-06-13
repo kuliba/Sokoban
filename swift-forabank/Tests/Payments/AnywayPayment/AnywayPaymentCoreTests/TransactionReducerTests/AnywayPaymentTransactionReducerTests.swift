@@ -21,7 +21,7 @@ final class AnywayPaymentTransactionReducerTests: XCTestCase {
         let state = makeState(
             status: .result(.failure(.updatePaymentFailure))
         )
-
+        
         assertState(.dismissRecoverableError, on: state)
     }
     
@@ -30,7 +30,7 @@ final class AnywayPaymentTransactionReducerTests: XCTestCase {
         let state = makeState(
             status: .serverError(anyMessage())
         )
-
+        
         assertState(.dismissRecoverableError, on: state) {
             
             $0.status = nil
@@ -42,7 +42,7 @@ final class AnywayPaymentTransactionReducerTests: XCTestCase {
         let state = makeState(
             status: .result(.failure(.updatePaymentFailure))
         )
-
+        
         assert(.dismissRecoverableError, on: state, effect: nil)
     }
     
@@ -51,11 +51,11 @@ final class AnywayPaymentTransactionReducerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = TransactionReducer<Report, AnywayPaymentContext, AnywayPaymentEvent, AnywayPaymentEffect, AnywayPaymentDigest, AnywayPaymentUpdate>
-
+    
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
-
+    
     private typealias Report = String
     
     private func makeSUT(
@@ -84,62 +84,6 @@ final class AnywayPaymentTransactionReducerTests: XCTestCase {
         )
     }
     
-    private func makeAnywayPaymentContext(
-        payment: AnywayPayment? = nil,
-        staged: AnywayPaymentStaged = [],
-        outline: AnywayPaymentOutline? = nil,
-        shouldRestart: Bool = false
-    ) -> AnywayPaymentContext {
-        
-        return .init(
-            payment: payment ?? makeAnywayPayment(),
-            staged: staged,
-            outline: outline ?? makeAnywayPaymentOutline(),
-            shouldRestart: shouldRestart
-        )
-    }
-    
-    private func makeAnywayPayment(
-        elements: [AnywayElement] = [],
-        footer: Payment<AnywayElement>.Footer = .continue,
-        infoMessage: String? = nil,
-        isFinalStep: Bool = false,
-        isFraudSuspected: Bool = false,
-        payload: AnywayPayment.Payload = makeAnywayPaymentPayload()
-    ) -> AnywayPayment {
-        
-        return .init(
-            elements: elements,
-            footer: footer,
-            infoMessage: infoMessage,
-            isFinalStep: isFinalStep,
-            isFraudSuspected: isFraudSuspected,
-            payload: payload
-        )
-    }
-        
-    private func makeAnywayPaymentOutline(
-        core: AnywayPaymentOutline.PaymentCore? = nil,
-        fields: AnywayPaymentOutline.Fields = [:]
-    ) -> AnywayPaymentOutline {
-        
-        return .init(core: core ?? makePaymentCore(), fields: fields)
-    }
-    
-    private func makePaymentCore(
-        amount: Decimal = .init(Double.random(in: 1...1_000)),
-        currency: String = "₽",
-        productID: Int = generateRandom11DigitNumber(),
-        productType: AnywayPaymentOutline.PaymentCore.ProductType = .account
-    ) -> AnywayPaymentOutline.PaymentCore {
-        
-        return .init(
-            amount: amount,
-            currency: currency,
-            productID: productID,
-            productType: productType
-        )
-    }
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void
     
     private func assertState(

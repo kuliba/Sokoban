@@ -36,6 +36,7 @@ struct SimpleOTPView: View {
                 Text("OTP")
                 Text(state.value.map { "\($0)" } ?? "")
                     .font(.caption)
+                    .foregroundColor(.secondary)
             }
             
             TextField(
@@ -46,6 +47,11 @@ struct SimpleOTPView: View {
                 )
             )
         }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .foregroundColor(.gray.opacity(0.1))
+        )
     }
 }
 
