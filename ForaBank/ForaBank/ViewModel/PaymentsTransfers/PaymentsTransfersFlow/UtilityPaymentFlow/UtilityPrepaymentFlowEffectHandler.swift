@@ -31,7 +31,7 @@ extension UtilityPrepaymentFlowEffectHandler {
         case let .startPayment(with: select):
             microServices.processSelection(select) {
                 
-                dispatch(.paymentStarted($0))
+                dispatch(.selectionProcessed($0))
             }
         }
     }

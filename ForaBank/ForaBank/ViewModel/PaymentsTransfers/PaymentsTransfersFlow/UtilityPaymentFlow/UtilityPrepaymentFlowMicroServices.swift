@@ -35,7 +35,7 @@ extension UtilityPrepaymentFlowMicroServices {
     /// - `d2e`
     /// - `d3`, `d4`, `d5`
     typealias ProcessSelectionPayload = PrepaymentEffect.Select
-    typealias ProcessSelectionResult = PrepaymentEvent.StartPaymentResult
+    typealias ProcessSelectionResult = PrepaymentEvent.ProcessSelectionResult
     typealias ProcessSelectionCompletion = (ProcessSelectionResult) -> Void
     typealias ProcessSelection = (ProcessSelectionPayload, @escaping ProcessSelectionCompletion) -> Void
     

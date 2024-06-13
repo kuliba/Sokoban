@@ -279,11 +279,11 @@ private extension PaymentsTransfersFlowReducer {
         case .payByInstructionsFromError:
             state.destination = .payments(factory.makePaymentsViewModel(closeAction))
             
-        case let .paymentStarted(paymentStarted):
-            reduce(&state, with: paymentStarted)
-            
         case let .select(select):
             effect = .startPayment(with: select)
+            
+        case let .selectionProcessed(paymentStarted):
+            reduce(&state, with: paymentStarted)
         }
         
         return (state, effect)
@@ -341,7 +341,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with result: UtilityPrepaymentEvent.StartPaymentResult
+        with result: UtilityPrepaymentEvent.ProcessSelectionResult
     ) {
         switch result {
         case let .failure(failure):
@@ -354,7 +354,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with failure: UtilityPrepaymentEvent.StartPaymentFailure
+        with failure: UtilityPrepaymentEvent.ProcessSelectionFailure
     ) {
         switch failure {
         case let .operatorFailure(`operator`):
@@ -387,7 +387,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with success: UtilityPrepaymentEvent.StartPaymentSuccess
+        with success: UtilityPrepaymentEvent.ProcessSelectionSuccess
     ) {
         switch success {
         case let .services(services, `operator`):

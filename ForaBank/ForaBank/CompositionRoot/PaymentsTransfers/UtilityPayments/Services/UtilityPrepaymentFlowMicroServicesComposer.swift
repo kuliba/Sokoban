@@ -224,7 +224,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
                     return .startPayment(state)
                 }
             }
-            .mapError(PrepaymentEvent.StartPaymentFailure.init)
+            .mapError(PrepaymentEvent.ProcessSelectionFailure.init)
     }
     
     private func makeState(
@@ -256,7 +256,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
     }
     
     typealias StartPaymentResponse = NanoServices.StartAnywayPaymentSuccess.StartPaymentResponse
-    typealias StartPaymentSuccess = PrepaymentEvent.StartPaymentSuccess
+    typealias StartPaymentSuccess = PrepaymentEvent.ProcessSelectionSuccess
 }
 
 // MARK: - Adapters
@@ -306,7 +306,7 @@ private extension AnywayPaymentDomain.AnywayPayment {
     }
 }
 
-private extension UtilityPrepaymentFlowEvent.StartPaymentFailure where Operator == UtilityPaymentOperator{
+private extension UtilityPrepaymentFlowEvent.ProcessSelectionFailure where Operator == UtilityPaymentOperator{
     
     init(
         _ error: NanoServices.StartAnywayPaymentFailure
