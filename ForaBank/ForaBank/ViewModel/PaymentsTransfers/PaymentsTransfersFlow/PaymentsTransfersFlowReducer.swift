@@ -109,8 +109,7 @@ private extension PaymentsTransfersFlowReducer {
     }
     
     private typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
-    private typealias UtilityPaymentEffect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
-    private typealias UtilityPrepaymentEffect = UtilityPaymentEffect.UtilityPrepaymentFlowEffect
+    private typealias UtilityPrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
     
     private func reduce(
         _ state: State,
@@ -279,11 +278,11 @@ private extension PaymentsTransfersFlowReducer {
         case .payByInstructionsFromError:
             state.destination = .payments(factory.makePaymentsViewModel(closeAction))
             
-        case let .paymentStarted(paymentStarted):
-            reduce(&state, with: paymentStarted)
-            
         case let .select(select):
-            effect = .startPayment(with: select)
+            effect = .select(select)
+            
+        case let .selectionProcessed(paymentStarted):
+            reduce(&state, with: paymentStarted)
         }
         
         return (state, effect)
@@ -341,7 +340,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with result: UtilityPrepaymentEvent.StartPaymentResult
+        with result: UtilityPrepaymentEvent.ProcessSelectionResult
     ) {
         switch result {
         case let .failure(failure):
@@ -354,7 +353,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with failure: UtilityPrepaymentEvent.StartPaymentFailure
+        with failure: UtilityPrepaymentEvent.ProcessSelectionFailure
     ) {
         switch failure {
         case let .operatorFailure(`operator`):
@@ -387,7 +386,7 @@ private extension PaymentsTransfersFlowReducer {
     
     private func reduce(
         _ state: inout State,
-        with success: UtilityPrepaymentEvent.StartPaymentSuccess
+        with success: UtilityPrepaymentEvent.ProcessSelectionSuccess
     ) {
         switch success {
         case let .services(services, `operator`):

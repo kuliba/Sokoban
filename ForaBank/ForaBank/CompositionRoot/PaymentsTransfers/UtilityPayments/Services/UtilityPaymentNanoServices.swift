@@ -95,7 +95,7 @@ extension UtilityPaymentNanoServices {
     typealias StartAnywayPayment = (StartAnywayPaymentPayload, @escaping StartAnywayPaymentCompletion) -> Void
     typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, Service>
     
-    typealias MakeAnywayPaymentOutline = (LastPayment?) -> AnywayPaymentOutline
+    typealias MakeAnywayPaymentOutline = (LastPayment?, AnywayPaymentOutline.Payload) -> AnywayPaymentOutline
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator

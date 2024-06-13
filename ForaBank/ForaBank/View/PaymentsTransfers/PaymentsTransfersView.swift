@@ -250,7 +250,7 @@ struct PaymentsTransfersView: View {
             let dismissDestination = { viewModel.event(.dismiss(.destination)) }
             
             utilityPaymentFlowView(state: flowState, event: event)
-                .edgesIgnoringSafeArea(.all)
+                .ignoresSafeArea()
                 .navigationBarWithBack(
                     title: flowState.navTitle,
                     dismiss: dismissDestination,
@@ -465,12 +465,12 @@ private extension PaymentsTransfersView {
                 icon: operatorIconView,
                 style: .large
             )
-
+            
         case let .payByInstructions(paymentsViewModel):
             payByInstructionsView(paymentsViewModel)
             
         case let .payment(state):
-            let payload = state.viewModel.state.context.payment.payload
+            let payload = state.viewModel.state.context.outline.payload
             let operatorIconView = viewFactory.makeIconView(
                 payload.icon.map { .md5Hash(.init($0)) }
             )
@@ -509,20 +509,20 @@ private extension PaymentsTransfersView {
             event: dismissDestination,
             contentView: {
                 
-                 FooterView(
-                     state: .failure(.iFora),
-                     event: { event in
-                     
-                         switch event {
-                         case .payByInstruction:
-                             payByInstructions()
-                             
-                         case .addCompany:
-                             break
-                         }
-                     },
-                     config: .iFora
-                 )
+                FooterView(
+                    state: .failure(.iFora),
+                    event: { event in
+                        
+                        switch event {
+                        case .payByInstruction:
+                            payByInstructions()
+                            
+                        case .addCompany:
+                            break
+                        }
+                    },
+                    config: .iFora
+                )
             },
             destinationView: operatorFailureDestinationView
         )

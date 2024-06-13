@@ -8,15 +8,15 @@
 import AnywayPaymentDomain
 import Foundation
 
-public extension AnywayPayment {
+public extension AnywayPaymentContext {
     
     func makeDigest() -> AnywayPaymentDigest {
         
         return .init(
-            additional: additional(),
-            amount: amount(),
-            core: core(),
-            puref: payload.puref
+            additional: payment.additional(),
+            amount: payment.amount(),
+            core: payment.core(),
+            puref: outline.payload.puref
         )
     }
 }

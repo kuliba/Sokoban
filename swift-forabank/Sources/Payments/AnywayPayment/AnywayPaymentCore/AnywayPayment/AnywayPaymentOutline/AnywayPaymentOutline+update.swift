@@ -16,7 +16,7 @@ extension AnywayPaymentOutline {
             uniquingKeysWith: { _, new in new }
         )
         
-        return .init(core: core, fields: fields)
+        return .init(core: core, fields: fields, payload: payload)
     }
 }
 
@@ -36,7 +36,7 @@ private extension AnywayElement {
 }
 
 private extension AnywayElement.Parameter {
-
+    
     var isOutlinable: Bool {
         
         uiAttributes.viewType == .input

@@ -201,14 +201,7 @@ private extension UtilityPaymentNanoServicesComposer {
         
         let mapped = MapPayloadDecorator(
             decoratee: fetch,
-            mapPayload: { (`operator`: Operator) in
-                
-#if MOCK
-                return "21757"
-#else
-                return `operator`.id
-#endif
-            }
+            mapPayload: { (`operator`: Operator) in return `operator`.id }
         )
         
         mapped(`operator`) { [mapped] in completion($0); _ = mapped }
@@ -227,7 +220,8 @@ private extension UtilityPaymentNanoServicesComposer {
     }
     
     private func makeAnywayPaymentOutline(
-        lastPayment: LastPayment?
+        lastPayment: LastPayment?,
+        and payload: AnywayPaymentOutline.Payload
     ) -> AnywayPaymentOutline {
         
 #warning("fix filtering according to https://shorturl.at/hIE5B")
@@ -245,7 +239,7 @@ private extension UtilityPaymentNanoServicesComposer {
             productType: coreProductType
         )
         
-        return .init(core: core, fields: .init())
+        return .init(core: core, fields: .init(), payload: payload)
     }
 }
 
@@ -290,12 +284,7 @@ private extension RemoteServices.RequestFactory.CreateAnywayTransferPayload {
     
     init(_ payload: StartAnywayPaymentPayload) {
         
-#if MOCK
-        // "puref": "iForaNKORR||126732"
-        let puref = "iForaNKORR||126732"
-#else
         let puref = payload.puref
-#endif
         
         /// - Note: `check` is optional
         /// Признак проверки операции:
@@ -337,12 +326,7 @@ private extension StartAnywayPaymentResult {
             }
             
         case let .success(response):
-#if MOCK
-            let response = response.mock(value: "6068506999", forTitle: "Лицевой счет")
             self = .success(.startPayment(response))
-#else
-            self = .success(.startPayment(response))
-#endif
         }
     }
 }
@@ -371,84 +355,6 @@ private extension ProductType {
         }
     }
 }
-
-// MARK: - Mocking
-
-#if MOCK
-private extension NanoServices.CreateAnywayTransferResponse {
-    
-    func mock(
-        value: String,
-        forTitle title: String
-    ) -> Self {
-        
-        return .init(
-            additional: additional,
-            amount: amount,
-            creditAmount: creditAmount,
-            currencyAmount: currencyAmount,
-            currencyPayee: currencyPayee,
-            currencyPayer: currencyPayer,
-            currencyRate: currencyRate,
-            debitAmount: debitAmount,
-            documentStatus: documentStatus,
-            fee: fee,
-            finalStep: finalStep,
-            infoMessage: infoMessage,
-            needMake: needMake,
-            needOTP: needOTP,
-            needSum: needSum,
-            parametersForNextStep: parametersForNextStep.map {
-                
-                return $0.mock(value: value, forTitle: title)
-            },
-            paymentOperationDetailID: paymentOperationDetailID,
-            payeeName: payeeName,
-            printFormType: printFormType,
-            scenario: scenario,
-            options: []
-        )
-    }
-}
-
-private extension NanoServices.CreateAnywayTransferResponse.Parameter {
-    
-    func mock(
-        value: String,
-        forTitle title: String
-    ) -> Self {
-        
-        return .init(
-            content: self.title == title ? value : content,
-            dataDictionary: dataDictionary,
-            dataDictionaryРarent: dataDictionaryРarent,
-            dataType: dataType,
-            group: group,
-            id: id,
-            inputFieldType: inputFieldType,
-            inputMask: inputMask,
-            isPrint: isPrint,
-            isRequired: isRequired,
-            maxLength: maxLength,
-            mask: mask,
-            minLength: minLength,
-            order: order,
-            phoneBook: phoneBook,
-            rawLength: rawLength,
-            isReadOnly: isReadOnly,
-            regExp: regExp,
-            subGroup: subGroup,
-            subTitle: subTitle,
-            md5hash: md5hash,
-            svgImage: svgImage,
-            title: self.title,
-            type: type,
-            viewType: viewType,
-            visible: true
-        )
-    }
-}
-#endif
 
 // MARK: - Stubs
 

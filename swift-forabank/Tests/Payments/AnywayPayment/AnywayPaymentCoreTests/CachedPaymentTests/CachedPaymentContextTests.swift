@@ -11,6 +11,20 @@ import XCTest
 
 final class CachedPaymentContextTests: XCTestCase {
     
+    func test_init_shouldCreateInstanceWithPurefFromAnywayPaymentWithPuref() {
+        
+        let puref = anyMessage()
+        let context = makeAnywayPaymentContext(
+            outline: makeAnywayPaymentOutline(
+                payload: makeAnywayPaymentPayload(puref: puref)
+            )
+        )
+        
+        let cached = CachedPaymentContext(context, using: { $0 })
+        
+        XCTAssertNoDiff(cached.outline.payload.puref, puref)
+    }
+    
     // MARK: - updating
     
     func test_updating_shouldUpdatePayment() {
@@ -97,6 +111,29 @@ final class CachedPaymentContextTests: XCTestCase {
         )
         
         XCTAssertTrue(updated.shouldRestart)
+    }
+    
+    func test_updating_shouldUpdateWithPurefFromAnywayPaymentContextWithPuref() {
+        
+        let puref1 = anyMessage()
+        let context = makeContext(
+            outline: makeAnywayPaymentOutline(
+                payload: makeAnywayPaymentPayload(puref: puref1)
+            )
+        )
+        XCTAssertNoDiff(context.outline.payload.puref, puref1)
+        
+        let puref2 = anyMessage()
+        let updated = updating(
+            context,
+            with: makeAnywayPaymentContext(
+                outline: makeAnywayPaymentOutline(
+                    payload: makeAnywayPaymentPayload(puref: puref2)
+                )
+            )
+        )
+        
+        XCTAssertNoDiff(updated.outline.payload.puref, puref2)
     }
     
     // MARK: - Helpers

@@ -10,8 +10,11 @@ import SwiftUI
 
 struct TransactionCompleteViewConfig: Equatable {
     
+    let amountConfig: TextConfig
     let icons: Icons
-    
+    let message: String
+    let messageConfig: TextConfig
+
     struct Icons: Equatable {
         
         let completed: Icon

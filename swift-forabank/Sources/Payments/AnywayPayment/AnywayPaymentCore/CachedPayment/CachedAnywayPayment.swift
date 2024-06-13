@@ -16,22 +16,19 @@ public struct CachedAnywayPayment<ElementModel> {
     public let infoMessage: String?
     public let isFinalStep: Bool
     public let isFraudSuspected: Bool
-    public let payload: Payload
     
     private init(
         cachedModels: CachedModels,
         footer: Footer,
         infoMessage: String?,
         isFinalStep: Bool,
-        isFraudSuspected: Bool,
-        payload: Payload
+        isFraudSuspected: Bool
     ) {
         self.cachedModels = cachedModels
         self.footer = footer
         self.infoMessage = infoMessage
         self.isFinalStep = isFinalStep
         self.isFraudSuspected = isFraudSuspected
-        self.payload = payload
     }
     
     public init(
@@ -43,13 +40,11 @@ public struct CachedAnywayPayment<ElementModel> {
             footer: .init(payment),
             infoMessage: payment.infoMessage,
             isFinalStep: payment.isFinalStep,
-            isFraudSuspected: payment.isFraudSuspected,
-            payload: payment.payload
+            isFraudSuspected: payment.isFraudSuspected
         )
     }
     
     public typealias CachedModels = CachedModelsState<AnywayElement.ID, ElementModel>
-    public typealias Payload = AnywayPayment.Payload
     public typealias Map = (AnywayElement) -> ElementModel
     
     public enum Footer: Equatable {
@@ -103,8 +98,7 @@ extension CachedAnywayPayment {
             footer: .init(payment),
             infoMessage: payment.infoMessage,
             isFinalStep: payment.isFinalStep,
-            isFraudSuspected: payment.isFraudSuspected,
-            payload: payment.payload
+            isFraudSuspected: payment.isFraudSuspected
         )
     }
 }
@@ -128,7 +122,7 @@ private extension AnywayPayment {
     var currency: String? {
         
         guard case let .widget(.product(product)) = elements[id: .widgetID(.product)]
-        // guard case let .widget(.core(productSelect, amount)) = self[id: .widgetID(.core)]?.model
+                // guard case let .widget(.core(productSelect, amount)) = self[id: .widgetID(.core)]?.model
         else { return nil }
         
         return product.currency

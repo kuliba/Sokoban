@@ -11,23 +11,21 @@ public struct AnywayPaymentOutline: Equatable {
     
     public let core: PaymentCore
     public let fields: Fields
+    public let payload: Payload
     
     public init(
         core: PaymentCore,
-        fields: Fields
+        fields: Fields,
+        payload: Payload
     ) {
         self.core = core
         self.fields = fields
+        self.payload = payload
     }
 }
 
 extension AnywayPaymentOutline {
     
-    public typealias Fields = [ID: Value]
-    
-    public typealias ID = String
-    public typealias Value = String
-
     public struct PaymentCore: Equatable {
         
         public let amount: Decimal
@@ -46,6 +44,33 @@ extension AnywayPaymentOutline {
             self.productID = productID
             self.productType = productType
         }
+    }
+    
+    public typealias Fields = [ID: Value]
+    
+    public typealias ID = String
+    public typealias Value = String
+    
+    public struct Payload: Equatable {
+        
+        public let puref: Puref
+        public let title: String
+        public let subtitle: String?
+        public let icon: String?
+        
+        public init(
+            puref: Puref,
+            title: String,
+            subtitle: String?,
+            icon: String?
+        ) {
+            self.puref = puref
+            self.title = title
+            self.subtitle = subtitle
+            self.icon = icon
+        }
+        
+        public typealias Puref = String
     }
 }
 

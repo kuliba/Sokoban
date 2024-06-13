@@ -37,7 +37,7 @@ extension PaymentFlowModalView {
 private extension PaymentsAntifraudViewModel {
     
     static func iFora(
-        from fraud: Fraud,
+        from fraud: FraudNoticePayload,
         event: @escaping (FraudEvent) -> Void
     ) -> PaymentsAntifraudViewModel {
         
@@ -76,7 +76,7 @@ struct PaymentFlowModalView_Previews: PreviewProvider {
     }
 }
 
-private extension Fraud {
+private extension FraudNoticePayload {
     
     static let preview: Self = .init(
         title: "Юрий Андреевич К.",
