@@ -10,7 +10,7 @@ import Tagged
 
 public struct CodeInputState: Equatable {
     
-    var status: Status
+    public var status: Status
 }
 
 public extension CodeInputState {
