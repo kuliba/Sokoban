@@ -109,8 +109,7 @@ private extension PaymentsTransfersFlowReducer {
     }
     
     private typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
-    private typealias UtilityPaymentEffect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
-    private typealias UtilityPrepaymentEffect = UtilityPaymentEffect.UtilityPrepaymentFlowEffect
+    private typealias UtilityPrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
     
     private func reduce(
         _ state: State,
@@ -280,7 +279,7 @@ private extension PaymentsTransfersFlowReducer {
             state.destination = .payments(factory.makePaymentsViewModel(closeAction))
             
         case let .select(select):
-            effect = .startPayment(with: select)
+            effect = .select(select)
             
         case let .selectionProcessed(paymentStarted):
             reduce(&state, with: paymentStarted)

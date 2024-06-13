@@ -28,7 +28,7 @@ extension UtilityPrepaymentFlowEffectHandler {
                 dispatch(.initiated($0))
             }
             
-        case let .startPayment(with: select):
+        case let .select(select):
             microServices.processSelection(select) {
                 
                 dispatch(.selectionProcessed($0))
@@ -44,5 +44,5 @@ extension UtilityPrepaymentFlowEffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>.UtilityPrepaymentFlowEffect
+    typealias Effect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
 }

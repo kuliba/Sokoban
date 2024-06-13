@@ -25,22 +25,20 @@ struct UtilityPrepaymentFlowMicroServices<LastPayment, Operator, Service> {
 
 extension UtilityPrepaymentFlowMicroServices {
     
-    typealias InitiateUtilityPaymentCompletion = (PrepaymentEvent.Initiated) -> Void
+    typealias InitiateUtilityPaymentCompletion = (Event.Initiated) -> Void
     /// Combines `b` and `c` for `v1`
-    typealias InitiateUtilityPayment = (PrepaymentEffect.LegacyPaymentPayload, @escaping InitiateUtilityPaymentCompletion) -> Void
+    typealias InitiateUtilityPayment = (Effect.LegacyPaymentPayload, @escaping InitiateUtilityPaymentCompletion) -> Void
     
     /// `ProcessSelection` is a micro-service, that combines
     /// - `e` from LastPayment
     /// - `d1`
     /// - `d2e`
     /// - `d3`, `d4`, `d5`
-    typealias ProcessSelectionPayload = PrepaymentEffect.Select
-    typealias ProcessSelectionResult = PrepaymentEvent.ProcessSelectionResult
+    typealias ProcessSelectionPayload = Effect.Select
+    typealias ProcessSelectionResult = Event.ProcessSelectionResult
     typealias ProcessSelectionCompletion = (ProcessSelectionResult) -> Void
     typealias ProcessSelection = (ProcessSelectionPayload, @escaping ProcessSelectionCompletion) -> Void
     
-    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
-    
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
-    typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
+    typealias Event = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
+    typealias Effect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
 }

@@ -34,8 +34,7 @@ final class UtilityPrepaymentFlowMicroServicesComposer {
     typealias LegacyPayload = PrepaymentEffect.LegacyPaymentPayload
     typealias MakeLegacyPaymentsServicesViewModel = (LegacyPayload) -> PaymentsServicesViewModel
     
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
-    typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
+    typealias PrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator

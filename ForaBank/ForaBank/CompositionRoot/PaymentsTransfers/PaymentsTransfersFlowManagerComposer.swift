@@ -171,8 +171,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         )
     }
     
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
-    typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
+    typealias PrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
     typealias MakePaymentPayload = PrepaymentEffect.LegacyPaymentPayload
     
     func makeReduce(
