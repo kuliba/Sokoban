@@ -7,9 +7,9 @@
 
 import Tagged
 
-public extension CodableLanding {
+public extension CodableLanding.List {
     
-    struct ListDropDownTexts: Equatable, Codable {
+    struct DropDownTexts: Equatable, Codable {
         
         public let title: Title?
         public let list: [Item]

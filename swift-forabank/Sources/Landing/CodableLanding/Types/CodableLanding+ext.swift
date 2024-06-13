@@ -1,36 +1,15 @@
 //
-//  Landing.swift
-//  
+//  CodableLanding+ext.swift
 //
-//  Created by Andryusina Nataly on 31.08.2023.
+//
+//  Created by Andryusina Nataly on 10.06.2024.
 //
 
 import Foundation
 
-public struct Landing: Equatable {
+extension CodableLanding {
     
-    public let header: [DataView]
-    public let main: [DataView]
-    public let footer: [DataView]
-    public let details: [Detail]
-    public let serial: String?
-    public let statusCode: Int
-    public let errorMessage: String?
-
-    public init(header: [DataView], main: [DataView], footer: [DataView], details: [Detail], serial: String?, statusCode: Int, errorMessage: String?) {
-        self.header = header
-        self.main = main
-        self.footer = footer
-        self.details = details
-        self.serial = serial
-        self.statusCode = statusCode
-        self.errorMessage = errorMessage
-    }
-}
-
-extension Landing {
-    
-    public enum DataView: Equatable {
+    public enum DataView: Equatable, Codable {
         
         case blockHorizontalRectangular(BlockHorizontalRectangular)
         case iconWithTwoTextLines(IconWithTwoTextLines)
@@ -44,9 +23,9 @@ extension Landing {
     }
 }
 
-public extension Landing.DataView {
+public extension CodableLanding {
     
-    enum List: Equatable {
+    enum List: Equatable, Codable {
         
         case dropDownTexts(DropDownTexts)
         case horizontalRectangleImage(HorizontalRectangleImage)
@@ -55,8 +34,8 @@ public extension Landing.DataView {
         case verticalRoundImage(VerticalRoundImage)
     }
     
-    enum Multi: Equatable {
-        
+    enum Multi: Equatable, Codable {
+
         case buttons(Buttons)
         case lineHeader(LineHeader)
         case markersText(MarkersText)

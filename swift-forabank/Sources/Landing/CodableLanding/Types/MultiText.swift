@@ -7,9 +7,9 @@
 
 import Tagged
 
-extension CodableLanding {
+extension CodableLanding.Multi {
     
-    public struct MultiText: Codable, Equatable {
+    public struct Text: Codable, Equatable {
         
         public let text: [Text]
         

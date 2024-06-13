@@ -7,9 +7,9 @@
 
 import Foundation
 
-extension CodableLanding {
+extension CodableLanding.List {
     
-    public struct ListHorizontalRectangleImage: Codable, Equatable {
+    public struct HorizontalRectangleImage: Codable, Equatable {
         
         public let list: [Item]
         

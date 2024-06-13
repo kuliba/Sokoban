@@ -11,23 +11,24 @@ import UIKit
 
 public extension UILanding.Multi {
     
-    struct Buttons: Hashable {
+    struct Buttons: Equatable {
         
-        public let list: [Item]
+        let id: UUID
+        let list: [Item]
         
-        public struct Item: Hashable, Identifiable {
+        public struct Item: Identifiable, Equatable {
             
-            public var id: Self { self }
-            public let text: String
-            public let style: String
-            public let detail: Detail?
-            public let link: String?
-            public let action: Action?
+            public let id: UUID
+            let text: String
+            let style: String
+            let detail: Detail?
+            let link: String?
+            let action: Action?
             
             public struct Detail: Hashable {
                 
-                public let groupId: GroupId
-                public let viewId: ViewId
+                let groupId: GroupId
+                let viewId: ViewId
                 
                 public init(
                     groupId: GroupId,
@@ -46,7 +47,7 @@ public extension UILanding.Multi {
             
             public struct Action: Hashable {
                 
-                public let type: ActionType
+                let type: ActionType
                 
                 public init(type: ActionType) {
                     self.type = type
@@ -58,12 +59,14 @@ public extension UILanding.Multi {
             }
             
             public init(
+                id: UUID = UUID(),
                 text: String,
                 style: String,
                 detail: Detail?,
                 link: String?,
                 action: Action?
             ) {
+                self.id = id
                 self.text = text
                 self.style = style
                 self.detail = detail
@@ -78,7 +81,8 @@ public extension UILanding.Multi {
             }
         }
         
-        public init(list: [Item]) {
+        public init(id: UUID = UUID(), list: [Item]) {
+            self.id = id
             self.list = list
         }
     }

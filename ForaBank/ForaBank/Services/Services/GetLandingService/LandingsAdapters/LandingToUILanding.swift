@@ -49,6 +49,9 @@ private extension UILanding.Component {
         case let .list(.horizontalRectangleImage(x)):
             self = .list(.horizontalRectangleImage(.init(data: x)))
             
+        case let .list(.horizontalRectangleLimits(x)):
+            self = .list(.horizontalRectangleLimits(.init(data: x)))
+            
         case let .list(.horizontalRoundImage(x)):
             self = .list(.horizontalRoundImage(.init(data: x)))
             
@@ -90,6 +93,9 @@ private extension UILanding.Component {
             
         case let .verticalSpacing(x):
             self = .verticalSpacing(.init(data: x))
+            
+        case let .blockHorizontalRectangular(x):
+            self = .blockHorizontalRectangular(.init(data: x))
         }
     }
 }
@@ -339,7 +345,13 @@ private extension UILanding.List.VerticalRoundImage.ListItem {
     init(
         data: Landing.DataView.List.VerticalRoundImage.ListItem
     ) {
-        
+       
+        let action: UILanding.List.VerticalRoundImage.ListItem.Action?  = {
+            
+            guard let type = data.action?.type else { return nil }
+            return .init(type: type)
+        }()
+
         self.init(
             md5hash: data.md5hash,
             title: data.title,
@@ -347,7 +359,8 @@ private extension UILanding.List.VerticalRoundImage.ListItem {
             link: data.link,
             appStore: data.appStore,
             googlePlay: data.googlePlay,
-            detail: data.detail.map(UILanding.List.VerticalRoundImage.ListItem.Detail.init(data:))
+            detail: data.detail.map(UILanding.List.VerticalRoundImage.ListItem.Detail.init(data:)),
+            action: action
         )
     }
 }
@@ -401,6 +414,38 @@ private extension UILanding.List.HorizontalRectangleImage.Item.Detail {
         self.init(
             groupId: data.groupId,
             viewId: data.viewId)
+    }
+}
+
+private extension UILanding.List.HorizontalRectangleLimits {
+    
+    init(
+        data: Landing.DataView.List.HorizontalRectangleLimits
+    ) {
+        self.init(list: data.list.map { .init(data: $0) })
+    }
+}
+
+private extension UILanding.List.HorizontalRectangleLimits.Item {
+    
+    init(
+        data: Landing.DataView.List.HorizontalRectangleLimits.Item
+    ) {
+        self.init(
+            action: .init(type: data.action.type),
+            limitType: data.limitType,
+            md5hash: data.md5hash,
+            title: data.title,
+            limits: data.limits.map { .init(data:$0) })
+    }
+}
+
+private extension UILanding.List.HorizontalRectangleLimits.Item.Limit {
+    
+    init(
+        data: Landing.DataView.List.HorizontalRectangleLimits.Item.Limit
+    ) {
+        self.init(id: data.id, title: data.title, colorHEX: data.colorHEX)
     }
 }
 
@@ -492,5 +537,36 @@ private extension UILanding.Detail.DataGroup {
             viewID: .init(rawValue: data.viewId),
             dataView: data.dataView.compactMap( UILanding.Component.init(data:))
         )
+    }
+}
+
+private extension UILanding.BlockHorizontalRectangular {
+    
+    init(
+        data: Landing.BlockHorizontalRectangular
+    ) {
+        self.init(list: data.list.map { .init(data:$0) })
+    }
+}
+
+private extension UILanding.BlockHorizontalRectangular.Item {
+    
+    init(
+        data: Landing.BlockHorizontalRectangular.Item
+    ) {
+        self.init(
+            limitType: data.limitType,
+            description: data.description,
+            title: data.title,
+            limits: data.limits.map { .init(data: $0) })
+    }
+}
+
+private extension UILanding.BlockHorizontalRectangular.Item.Limit {
+    
+    init(
+        data: Landing.BlockHorizontalRectangular.Item.Limit
+    ) {
+        self.init(id: data.id, title: data.title, md5hash: data.md5hash, text: data.text, maxSum: data.maxSum)
     }
 }

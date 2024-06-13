@@ -5,20 +5,24 @@
 //  Created by Andryusina Nataly on 13.09.2023.
 //
 
+import Foundation
 import Tagged
 
 extension UILanding.Multi {
     
-    public struct MarkersText: Hashable {
+    public struct MarkersText: Identifiable, Equatable {
         
-        public let backgroundColor, style: String
-        public let list: [Text]
+        public let id: UUID
+        let backgroundColor, style: String
+        let list: [Text]
         
         public init(
+            id: UUID = UUID(),
             backgroundColor: String,
             style: String,
             list: [Text]
         ) {
+            self.id = id
             self.backgroundColor = backgroundColor
             self.style = style
             self.list = list

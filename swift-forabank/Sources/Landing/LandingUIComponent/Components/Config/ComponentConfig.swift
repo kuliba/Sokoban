@@ -13,6 +13,7 @@ extension UILanding.Component {
         
         public let listHorizontalRoundImage: UILanding.List.HorizontalRoundImage.Config
         public let listHorizontalRectangleImage: UILanding.List.HorizontalRectangleImage.Config
+        public let listHorizontalRectangleLimits: UILanding.List.HorizontalRectangleLimits.Config
         public let listVerticalRoundImage: UILanding.List.VerticalRoundImage.Config
         public let listDropDownTexts: UILanding.List.DropDownTexts.Config
         public let multiLineHeader: UILanding.Multi.LineHeader.Config
@@ -27,11 +28,14 @@ extension UILanding.Component {
         public let image: UILanding.ImageBlock.Config
         public let imageSvg: UILanding.ImageSvg.Config
         public let verticalSpacing: UILanding.VerticalSpacing.Config
+        public let blockHorizontalRectangular: UILanding.BlockHorizontalRectangular.Config
+
         let offsetForDisplayHeader: CGFloat
         
         public init(
             listHorizontalRoundImage: UILanding.List.HorizontalRoundImage.Config,
             listHorizontalRectangleImage: UILanding.List.HorizontalRectangleImage.Config,
+            listHorizontalRectangleLimits: UILanding.List.HorizontalRectangleLimits.Config,
             listVerticalRoundImage: UILanding.List.VerticalRoundImage.Config,
             listDropDownTexts: UILanding.List.DropDownTexts.Config,
             multiLineHeader: UILanding.Multi.LineHeader.Config,
@@ -46,10 +50,12 @@ extension UILanding.Component {
             image: UILanding.ImageBlock.Config,
             imageSvg: UILanding.ImageSvg.Config,
             verticalSpacing: UILanding.VerticalSpacing.Config,
+            blockHorizontalRectangular: UILanding.BlockHorizontalRectangular.Config,
             offsetForDisplayHeader: CGFloat
         ) {
             self.listHorizontalRoundImage = listHorizontalRoundImage
             self.listHorizontalRectangleImage = listHorizontalRectangleImage
+            self.listHorizontalRectangleLimits = listHorizontalRectangleLimits
             self.listVerticalRoundImage = listVerticalRoundImage
             self.listDropDownTexts = listDropDownTexts
             self.multiLineHeader = multiLineHeader
@@ -64,6 +70,7 @@ extension UILanding.Component {
             self.image = image
             self.imageSvg = imageSvg
             self.verticalSpacing = verticalSpacing
+            self.blockHorizontalRectangular = blockHorizontalRectangular
             self.offsetForDisplayHeader = offsetForDisplayHeader
         }
     }

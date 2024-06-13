@@ -12,7 +12,7 @@ struct IconWithTwoTextLinesView: View {
     @ObservedObject var model: ViewModel
     private let config: UILanding.IconWithTwoTextLines.Config
     
-    public init(
+    init(
         model: ViewModel,
         config: UILanding.IconWithTwoTextLines.Config
     ) {

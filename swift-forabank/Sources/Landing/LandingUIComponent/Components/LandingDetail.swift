@@ -9,14 +9,11 @@ import Tagged
 
 extension UILanding {
     
-    public struct Detail: Hashable {
+    public struct Detail: Equatable {
         
-        public func hash(into hasher: inout Hasher) {
-            hasher.combine(groupID)
-        }
-        
-        public let groupID: GroupID
-        public let dataGroup: [DataGroup]
+        var id: String { groupID.rawValue }
+        let groupID: GroupID
+        let dataGroup: [DataGroup]
         
         public init(
             groupID: GroupID,
@@ -35,8 +32,8 @@ extension UILanding {
         
         public struct DataGroup: Equatable {
             
-            public let viewID: ViewID
-            public let dataView: [UILanding.Component]
+            let viewID: ViewID
+            let dataView: [UILanding.Component]
             
             public init(
                 viewID: ViewID,
