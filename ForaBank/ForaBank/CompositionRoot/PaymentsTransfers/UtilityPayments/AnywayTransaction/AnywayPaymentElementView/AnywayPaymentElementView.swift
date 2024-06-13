@@ -27,7 +27,10 @@ struct AnywayPaymentElementView<IconView: View>: View {
                 config: config.info,
                 icon: { makeIconView(field) }
             )
-            
+            .padding()
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(12)
+
         case let .parameter(parameter):
             AnywayPaymentParameterView(
                 parameter: parameter,
