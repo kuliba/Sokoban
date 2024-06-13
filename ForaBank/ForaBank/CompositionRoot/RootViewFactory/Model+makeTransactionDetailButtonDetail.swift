@@ -32,14 +32,14 @@ extension Model {
     }
 }
 
-private extension _OperationInfo {
+extension _OperationInfo {
     
     var operationDetail: OperationDetailData? {
         
-        detail?.operationDetail
+        response?.operationDetail
     }
     
-    var detail: Detail? {
+    private var response: Response? {
         
         guard case let .details(details) = self
         else { return nil }
@@ -47,7 +47,7 @@ private extension _OperationInfo {
         return details.response
     }
     
-    typealias Detail = RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
+    typealias Response = RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
 }
 
 // MARK: - Adapters

@@ -8,11 +8,15 @@
 import PaymentComponents
 import SwiftUI
 
-struct TransactionCompleteView: View {
+struct TransactionCompleteView<Content: View>: View {
     
     let state: State
     let goToMain: () -> Void
     let config: Config
+    let content: () -> Content
+    #warning("factory?")
+    let makeDocumentButton: MakeDocumentButton
+    let makeTemplateButtonView: MakeTemplateButtonView
     
     var body: some View {
         
@@ -21,6 +25,7 @@ struct TransactionCompleteView: View {
             VStack(spacing: 24) {
                 
                 iconFor(status: state.status)
+                content()
             }
             
             Spacer()
@@ -41,19 +46,36 @@ struct TransactionCompleteView: View {
 
 extension TransactionCompleteView {
     
+    typealias State = TransactionCompleteState
     typealias Config = TransactionCompleteViewConfig
+    typealias MakeDocumentButton = (DocumentID) -> TransactionDocumentButton
+    typealias MakeTemplateButtonView = () -> TemplateButtonStateWrapperView?
+}
+
+#warning("extract")
+struct TemplateButtonStateWrapperView: View {
     
-    struct State {
+    @StateObject var viewModel: ViewModel
+    
+    var body: some View {
         
-        let details: Details?
-        let status: Status
+        TemplateButtonView(viewModel: viewModel)
+    }
+    
+    typealias ViewModel = TemplateButtonView.ViewModel
+}
+
+struct TransactionCompleteState {
+    
+    let details: Details?
+    let documentID: DocumentID?
+    let status: Status
+    
+    typealias Details = TransactionDetailButton.Details
+    
+    enum Status {
         
-        typealias Details = TransactionDetailButton.Details
-        
-        enum Status {
-            
-            case completed, inflight, rejected, fraud
-        }
+        case completed, inflight, rejected, fraud
     }
 }
 
@@ -79,6 +101,8 @@ private extension TransactionCompleteView {
         
         HStack {
             
+            makeTemplateButtonView()
+            state.documentID.map(makeDocumentButton)
             state.details.map(TransactionDetailButton.init)
         }
     }
@@ -138,11 +162,19 @@ struct TransactionCompleteView_Previews: PreviewProvider {
         _ status: TransactionCompleteView.State.Status = .completed
     ) -> some View {
         
-        let state = TransactionCompleteView.State(
-            details: details,
+        let state = TransactionCompleteState(
+            details: details, 
+            documentID: .init(12345),
             status: status
         )
         
-        return TransactionCompleteView(state: state, goToMain: {}, config: .iFora)
+        return TransactionCompleteView(
+            state: state,
+            goToMain: {},
+            config: .iFora,
+            content: { Text("Content") },
+            makeDocumentButton: { _ in .init(getDocument: { $0(nil) }) },
+            makeTemplateButtonView: { nil }
+        )
     }
 }

@@ -8,8 +8,10 @@
 import ActivateSlider
 import AnywayPaymentDomain
 import Combine
+import GenericRemoteService
 import InfoComponent
 import PaymentComponents
+import PDFKit
 import SberQR
 import SwiftUI
 import UIPrimitives
@@ -17,10 +19,14 @@ import UIPrimitives
 final class RootViewFactoryComposer {
     
     private let model: Model
+    private let httpClient: HTTPClient
     
-    init(model: Model) {
-     
+    init(
+        model: Model,
+        httpClient: HTTPClient
+    ) {
         self.model = model
+        self.httpClient = httpClient
     }
 }
 
@@ -136,7 +142,12 @@ private extension RootViewFactoryComposer {
         goToMain: @escaping () -> Void
     ) -> PaymentCompleteView {
         
-        return PaymentCompleteView(state: map(result), goToMain: goToMain)
+        return PaymentCompleteView(
+            state: map(result),
+            goToMain: goToMain,
+            makeDocumentButton: makeDocumentButton,
+            makeTemplateButtonView: makeTemplateButtonView(with: result)
+        )
     }
     
     typealias TransactionResult = UtilityServicePaymentFlowState<CachedAnywayTransactionViewModel>.FullScreenCover.TransactionResult
@@ -161,6 +172,53 @@ private extension RootViewFactoryComposer {
                     hasExpired: $0.hasExpired
                 )
             }
+    }
+    
+    private func makeDocumentButton(
+        documentID: DocumentID
+    ) -> TransactionDocumentButton {
+        
+        return .init(getDocument: getDocument(forID: documentID))
+    }
+    
+    private func getDocument(
+        forID documentID: DocumentID
+    ) -> TransactionDocumentButton.GetDocument {
+        
+        let getDetailService = RemoteService(
+            createRequest: RequestFactory.createGetPrintFormRequest,
+            performRequest: httpClient.performRequest(_:completion:),
+            mapResponse: ResponseMapper.mapGetPrintFormResponse
+        )
+        
+        return { completion in
+ 
+            getDetailService.fetch(documentID) { result in
+                
+                completion(try? result.map(PDFDocument.init(data:)).get())
+                _ = getDetailService
+            }
+        }
+    }
+    
+    private func makeTemplateButtonView(
+        with result: TransactionResult
+    ) -> () -> TemplateButtonStateWrapperView? {
+    
+        return {
+            
+            guard let report = try? result.get(),
+                  let operationDetail = report.info.operationDetail
+            else { return nil }
+            
+            let viewModel = TemplateButtonStateWrapperView.ViewModel(
+                model: self.model,
+                operation: nil,
+                operationDetail: operationDetail
+            )
+            
+            return .init(viewModel: viewModel)
+        }
     }
 }
 
