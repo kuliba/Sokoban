@@ -85,16 +85,6 @@ final class CachedAnywayPaymentTests: XCTestCase {
         XCTAssertTrue(Payment(anywayPayment).isFraudSuspected)
     }
     
-    func test_init_shouldCreateInstanceWithPurefFromAnywayPaymentWithPuref() {
-        
-        let puref = anyMessage()
-        let anywayPayment = makeAnywayPayment(
-            payload: makeAnywayPaymentPayload(puref: puref)
-        )
-        
-        XCTAssertNoDiff(Payment(anywayPayment).payload.puref, puref)
-    }
-    
     func test_init_shouldCreateInstanceWithEmptyModelsFromAnywayPaymentWithEmptyElements() {
         
         let anywayPayment = makeAnywayPayment(elements: [])
@@ -267,25 +257,6 @@ final class CachedAnywayPaymentTests: XCTestCase {
         let updated = updating(payment, with: makeAnywayPayment(isFraudSuspected: true))
         
         XCTAssertTrue(updated.isFraudSuspected)
-    }
-    
-    func test_updating_shouldUpdateWithPurefFromAnywayPaymentWithPuref() {
-        
-        let puref1 = anyMessage()
-        let payment = Payment(makeAnywayPayment(
-            payload: makeAnywayPaymentPayload(puref: puref1)
-        ))
-        XCTAssertNoDiff(payment.payload.puref, puref1)
-        
-        let puref2 = anyMessage()
-        let updated = updating(
-            payment,
-            with: makeAnywayPayment(
-                payload: makeAnywayPaymentPayload(puref: puref2)
-            )
-        )
-        
-        XCTAssertNoDiff(updated.payload.puref, puref2)
     }
     
     func test_updating_shouldUpdateWithEmptyModelsFromAnywayPaymentWithEmptyElements() {

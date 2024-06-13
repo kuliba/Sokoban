@@ -175,8 +175,12 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         _ lastPayment: LastPayment
     ) -> ProcessSelectionResult {
         
-        let outline = makeAnywayPaymentOutline(lastPayment: lastPayment)
-        return makeStartPaymentResult(result, outline, payload: .init(with: lastPayment))
+        let outline = makeOutline(
+            lastPayment: lastPayment,
+            payload: .init(with: lastPayment)
+        )
+        
+        return makeStartPaymentResult(result, outline)
     }
     
     private func makeStartPaymentResult(
@@ -185,30 +189,34 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         _ `operator`: Operator
     ) -> ProcessSelectionResult {
         
-        let result = result.map { 
+        let result = result.map {
             // https://shorturl.at/cQ3zr
             $0.injectSelectedService(service, of: `operator`)
         }
         
-        let outline = makeAnywayPaymentOutline(lastPayment: nil)
-        let payload = AnywayPaymentDomain.AnywayPayment.Payload(
+        let payload = AnywayPaymentOutline.Payload(
             puref: service.puref,
             operator: `operator`
         )
-        return makeStartPaymentResult(result, outline, payload: payload)
+        let outline = makeOutline(
+            lastPayment: nil,
+            payload: payload
+        )
+        
+        return makeStartPaymentResult(result, outline)
     }
     
-    private func makeAnywayPaymentOutline(
-        lastPayment: LastPayment?
+    private func makeOutline(
+        lastPayment: LastPayment?,
+        payload: AnywayPaymentOutline.Payload
     ) -> AnywayPaymentOutline {
         
-        nanoServices.makeAnywayPaymentOutline(lastPayment)
+        nanoServices.makeAnywayPaymentOutline(lastPayment, payload)
     }
     
     private func makeStartPaymentResult(
         _ result: NanoServices.StartAnywayPaymentResult,
-        _ outline: AnywayPaymentOutline,
-        payload: AnywayPaymentDomain.AnywayPayment.Payload
+        _ outline: AnywayPaymentOutline
     ) -> ProcessSelectionResult {
         
         return result
@@ -218,7 +226,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
                     return .services(services, for: `operator`)
                     
                 case let .startPayment(response):
-                    let state = makeState(from: response, with: outline, and: payload)
+                    let state = makeState(from: response, with: outline)
                     
                     return .startPayment(state)
                 }
@@ -228,14 +236,12 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
     
     private func makeState(
         from response: StartPaymentResponse,
-        with outline: AnywayPaymentOutline,
-        and payload: AnywayPaymentDomain.AnywayPayment.Payload
+        with outline: AnywayPaymentOutline
     ) -> AnywayTransactionState {
         
         let update = AnywayPaymentUpdate(response)
         
         let payment = AnywayPaymentDomain.AnywayPayment(
-            payload: payload,
             update: update,
             outline: outline
         )
@@ -260,13 +266,13 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
 
 // MARK: - Adapters
 
-private extension AnywayPaymentDomain.AnywayPayment.Payload {
+private extension AnywayPaymentOutline.Payload {
     
     init(
         with lastPayment: UtilityPaymentLastPayment
     ) {
         self.init(
-            puref: lastPayment.puref, 
+            puref: lastPayment.puref,
             title: lastPayment.name,
             subtitle: "",
             icon: lastPayment.md5Hash
@@ -278,7 +284,7 @@ private extension AnywayPaymentDomain.AnywayPayment.Payload {
         `operator`: UtilityPaymentOperator
     ) {
         self.init(
-            puref: puref, 
+            puref: puref,
             title: `operator`.title,
             subtitle: `operator`.subtitle,
             icon: `operator`.icon
@@ -289,7 +295,6 @@ private extension AnywayPaymentDomain.AnywayPayment.Payload {
 private extension AnywayPaymentDomain.AnywayPayment {
     
     init(
-        payload: AnywayPaymentDomain.AnywayPayment.Payload,
         update: AnywayPaymentUpdate,
         outline: AnywayPaymentOutline
     ) {
@@ -298,8 +303,7 @@ private extension AnywayPaymentDomain.AnywayPayment {
             footer: .continue,
             infoMessage: nil,
             isFinalStep: false,
-            isFraudSuspected: false,
-            payload: payload
+            isFraudSuspected: false
         )
         self = empty.update(with: update, and: outline)
     }
@@ -397,4 +401,3 @@ private extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
         )
     }
 }
-

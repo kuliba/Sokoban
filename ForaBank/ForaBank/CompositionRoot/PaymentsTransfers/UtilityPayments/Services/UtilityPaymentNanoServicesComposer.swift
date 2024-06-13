@@ -220,7 +220,8 @@ private extension UtilityPaymentNanoServicesComposer {
     }
     
     private func makeAnywayPaymentOutline(
-        lastPayment: LastPayment?
+        lastPayment: LastPayment?,
+        and payload: AnywayPaymentOutline.Payload
     ) -> AnywayPaymentOutline {
         
 #warning("fix filtering according to https://shorturl.at/hIE5B")
@@ -238,7 +239,7 @@ private extension UtilityPaymentNanoServicesComposer {
             productType: coreProductType
         )
         
-        return .init(core: core, fields: .init())
+        return .init(core: core, fields: .init(), payload: payload)
     }
 }
 

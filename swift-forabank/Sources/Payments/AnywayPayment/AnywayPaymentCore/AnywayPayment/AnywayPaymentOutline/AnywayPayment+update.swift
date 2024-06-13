@@ -31,8 +31,7 @@ extension AnywayPayment {
             footer: footer,
             infoMessage: update.details.info.infoMessage,
             isFinalStep: update.details.control.isFinalStep,
-            isFraudSuspected: update.details.control.isFraudSuspected,
-            payload: payload
+            isFraudSuspected: update.details.control.isFraudSuspected
         )
     }
 }

@@ -76,13 +76,13 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         
         guard let context = state.paymentFlowState?.viewModel.state.context
         else { return nil }
-              
+        
         guard case let .amount(amount, currency) = context.payment.footer
         else { return "" }
         
         var formattedAmount = "\(amount)"
         
-        #warning("look into model to extract currency symbol")
+#warning("look into model to extract currency symbol")
         if let currency {
             formattedAmount += " \(currency)"
         }
@@ -99,7 +99,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         else { return nil }
         
         let context = paymentFlowState.viewModel.state.context
-        let payload = context.payment.payload
+        let payload = context.outline.payload
         
         return .init(
             title: payload.title,
@@ -117,7 +117,7 @@ private extension PaymentsTransfersViewModel._Route {
         guard case let .utilityPayment(utilityPrepayment) = destination,
               case let .payment(paymentFlowState) = utilityPrepayment.destination
         else { return nil }
-
+        
         return paymentFlowState
     }
 }
@@ -128,7 +128,7 @@ private extension CachedAnywayPayment<AnywayElementModel>.Footer {
         
         guard case let .amount(amount, currency) = self
         else { return nil }
-                
+        
         return "\(amount) \(currency ?? "")"
     }
 }
@@ -179,7 +179,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
             getProducts: model.productSelectProducts,
             makeTransactionViewModel: makeTransactionViewModel
         )
-
+        
         let viewModel = composer.makeCachedAnywayTransactionViewModel(
             transactionState: transactionState,
             notify: notify

@@ -239,10 +239,11 @@ private extension AnywayElement.Widget {
 
 private func makeEmptyOutline(
     core: AnywayPaymentOutline.PaymentCore = makePaymentCore(),
-    fields: [AnywayPaymentOutline.ID: AnywayPaymentOutline.Value] = [:]
+    fields: [AnywayPaymentOutline.ID: AnywayPaymentOutline.Value] = [:],
+    payload: AnywayPaymentOutline.Payload = makeAnywayPaymentPayload()
 ) -> AnywayPaymentOutline {
     
-    return .init(core: core, fields: fields)
+    return .init(core: core, fields: fields, payload: payload)
 }
 
 private func makePaymentCore(
@@ -260,6 +261,16 @@ private func makePaymentCore(
     )
 }
 
+private func makeAnywayPaymentPayload(
+    puref: AnywayPaymentOutline.Payload.Puref = anyMessage(),
+    title: String = anyMessage(),
+    subtitle: String = anyMessage(),
+    icon: String = anyMessage()
+) -> AnywayPaymentOutline.Payload {
+    
+    return .init(puref: puref, title: title, subtitle: subtitle, icon: icon)
+}
+
 private func makeEmptyPayment(
 ) -> AnywayPayment {
     
@@ -268,8 +279,7 @@ private func makeEmptyPayment(
         footer: .continue,
         infoMessage: nil,
         isFinalStep: false,
-        isFraudSuspected: false,
-        payload: .init(puref: "", title: "", subtitle: "", icon: "")
+        isFraudSuspected: false
     )
 }
 
