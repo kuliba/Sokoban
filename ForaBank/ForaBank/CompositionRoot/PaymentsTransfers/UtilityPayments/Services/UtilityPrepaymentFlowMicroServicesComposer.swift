@@ -193,6 +193,13 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         return makeStartPaymentResult(result, outline, payload: payload)
     }
     
+    private func makeAnywayPaymentOutline(
+        lastPayment: LastPayment?
+    ) -> AnywayPaymentOutline {
+        
+        nanoServices.makeAnywayPaymentOutline(lastPayment)
+    }
+    
     private func makeStartPaymentResult(
         _ result: NanoServices.StartAnywayPaymentResult,
         _ outline: AnywayPaymentOutline,
@@ -206,22 +213,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
                     return .services(services, for: `operator`)
                     
                 case let .startPayment(response):
-                    let payment = AnywayPaymentDomain.AnywayPayment(
-                        payload: payload,
-                        update: .init(response),
-                        outline: outline
-                    )
-                    
-#warning("hardcoded `isValid: false`")
-                    let state = AnywayTransactionState(
-                        context: .init(
-                            payment: payment,
-                            staged: .init(),
-                            outline: outline,
-                            shouldRestart: false
-                        ),
-                        isValid: false
-                    )
+                    let state = makeState(from: response, with: outline, and: payload)
                     
                     return .startPayment(state)
                 }
@@ -229,12 +221,36 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             .mapError(PrepaymentEvent.StartPaymentFailure.init)
     }
     
-    private func makeAnywayPaymentOutline(
-        lastPayment: LastPayment?
-    ) -> AnywayPaymentOutline {
+    private func makeState(
+        from response: StartPaymentResponse,
+        with outline: AnywayPaymentOutline,
+        and payload: AnywayPaymentDomain.AnywayPayment.Payload
+    ) -> AnywayTransactionState {
         
-        nanoServices.makeAnywayPaymentOutline(lastPayment)
+        let update = AnywayPaymentUpdate(response)
+        
+        let payment = AnywayPaymentDomain.AnywayPayment(
+            payload: payload,
+            update: update,
+            outline: outline
+        )
+        
+#warning("hardcoded `isValid: false`")
+        let state = AnywayTransactionState(
+            context: .init(
+                payment: payment,
+                staged: .init(),
+                outline: outline,
+                shouldRestart: false
+            ),
+            isValid: false
+        )
+        
+        return state
     }
+    
+    typealias StartPaymentResponse = NanoServices.StartAnywayPaymentSuccess.StartPaymentResponse
+    typealias StartPaymentSuccess = PrepaymentEvent.StartPaymentSuccess
 }
 
 // MARK: - Adapters
