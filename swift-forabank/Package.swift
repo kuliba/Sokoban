@@ -1935,11 +1935,11 @@ private extension Target {
             .footerComponent,
             .nameComponent,
             .otpInputComponent,
-            .selectComponent,
             .inputComponent,
             .inputPhoneComponent,
             .productSelectComponent,
             .rxViewModel,
+            .selectComponent,
             .sharedConfigs,
         ],
         path: "Sources/UI/Components/\(String.paymentComponents)"

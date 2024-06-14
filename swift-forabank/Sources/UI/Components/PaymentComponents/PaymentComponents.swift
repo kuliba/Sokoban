@@ -8,15 +8,16 @@
 @_exported import AmountComponent
 @_exported import ButtonComponent
 @_exported import CarouselComponent
+@_exported import CheckBoxComponent
 @_exported import FooterComponent
 @_exported import InputComponent
 @_exported import InputPhoneComponent
 @_exported import InfoComponent
 @_exported import NameComponent
-@_exported import CheckBoxComponent
-@_exported import ProductSelectComponent
-@_exported import SharedConfigs
 @_exported import OTPInputComponent
+@_exported import ProductSelectComponent
+@_exported import SelectComponent
+@_exported import SharedConfigs
 
 /// A namespace for Payment Components.
 ///
@@ -32,14 +33,20 @@ public extension PaymentComponents {
     typealias AmountConfig = AmountComponent.AmountConfig
     typealias AmountView = AmountComponent.AmountView
     
-    typealias CodeInputView = OTPInputComponent.CodeInputView
-    typealias CodeInputConfig = OTPInputComponent.CodeInputConfig
-
     typealias Button = ButtonComponent.Button
     typealias ButtonConfig = SharedConfigs.ButtonConfig
     typealias ButtonStateConfig = SharedConfigs.ButtonStateConfig
     typealias ButtonView = ButtonComponent.ButtonView
     
+    typealias CheckBox = CheckBoxComponent.CheckBoxView
+    typealias CheckBoxConfig = CheckBoxComponent.CheckBoxView.Config
+    
+    typealias CodeInputView = OTPInputComponent.CodeInputView
+    typealias CodeInputConfig = OTPInputComponent.CodeInputConfig
+    
+    typealias FooterView = FooterComponent.FooterView
+    typealias FooterConfig = FooterComponent.FooterView.Config
+
     typealias Info = InfoComponent.Info
     typealias InfoConfig = InfoComponent.InfoConfig
     typealias InfoView = InfoComponent.InfoView
@@ -52,6 +59,9 @@ public extension PaymentComponents {
     typealias InputPhoneView = InputPhoneComponent.InputPhoneView
     typealias InputPhoneConfig = InputPhoneComponent.InputPhoneConfig
     
+    typealias NameView = NameComponent.NameView
+    typealias NameConfig = InputComponent.InputConfig
+    
     typealias ProductSelect = ProductSelectComponent.ProductSelect
     typealias ProductSelectConfig = ProductSelectComponent.ProductSelectConfig
     typealias ProductSelectView = ProductSelectComponent.ProductSelectView
@@ -60,12 +70,10 @@ public extension PaymentComponents {
     typealias ProductCardConfig = ProductSelectComponent.ProductCardConfig
     typealias ProductCardView = ProductSelectComponent.ProductCardView
     
-    typealias CheckBox = CheckBoxComponent.CheckBoxView
-    typealias CheckBoxConfig = CheckBoxComponent.CheckBoxView.Config
-    
-    typealias NameView = NameComponent.NameView
-    typealias NameConfig = InputComponent.InputConfig
-    
-    typealias FooterView = FooterComponent.FooterView
-    typealias FooterConfig = FooterComponent.FooterView.Config
+    typealias SelectView = SelectComponent.SelectView
+    typealias SelectConfig = SelectComponent.SelectConfig
+    typealias SelectUIState = SelectComponent.SelectUIState
+    typealias SelectState = SelectComponent.SelectState
+    typealias SelectEvent = SelectComponent.SelectEvent
+    typealias SelectReducer = SelectComponent.SelectReducer
 }
