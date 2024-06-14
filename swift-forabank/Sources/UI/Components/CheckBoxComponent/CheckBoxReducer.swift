@@ -7,23 +7,28 @@
 
 import Foundation
 
-final class CheckBoxReducer<Icon> {}
+final class CheckBoxReducer {}
 
 extension CheckBoxReducer {
     
     func reduce(
-        _ isChecked: Bool,
+        _ state: State,
         _ event: Event
-    ) -> Bool {
+    ) -> (State, Effect?) {
         
         switch event {
         case .buttonTapped:
-            return !isChecked
+            return (
+                !state,
+                nil
+            )
         }
     }
 }
 
 extension CheckBoxReducer {
     
+    typealias State = Bool
     typealias Event = CheckBoxEvent
+    typealias Effect = Never
 }

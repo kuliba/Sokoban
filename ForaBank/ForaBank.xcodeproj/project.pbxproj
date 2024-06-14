@@ -2638,6 +2638,7 @@
 		C1E8A0552B84D50E000DA998 /* ViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E8A0542B84D50E000DA998 /* ViewModel+Preview.swift */; };
 		C1E8A0572B84D628000DA998 /* LastPayments+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E8A0562B84D628000DA998 /* LastPayments+Preview.swift */; };
 		C1EA35CB2A316D7A00403E51 /* OperationDetailDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */; };
+		C1EC6F942BFFB0C8007E5AD9 /* ComponentsConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EC6F932BFFB0C8007E5AD9 /* ComponentsConfigurations.swift */; };
 		C1ECBA9D28FD1F4100C0FCAC /* LatestPaymentsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ECBA9C28FD1F4100C0FCAC /* LatestPaymentsViewComponent.swift */; };
 		C1F1BECF2BF244820022C59B /* RequestFactory+getAllLatestPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F1BECE2BF244820022C59B /* RequestFactory+getAllLatestPayments.swift */; };
 		C1F1BED12BF246060022C59B /* Service+getAllLatestPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F1BED02BF246060022C59B /* Service+getAllLatestPayments.swift */; };
@@ -5604,6 +5605,7 @@
 		C1E8A0542B84D50E000DA998 /* ViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModel+Preview.swift"; sourceTree = "<group>"; };
 		C1E8A0562B84D628000DA998 /* LastPayments+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LastPayments+Preview.swift"; sourceTree = "<group>"; };
 		C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailDataTests.swift; sourceTree = "<group>"; };
+		C1EC6F932BFFB0C8007E5AD9 /* ComponentsConfigurations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentsConfigurations.swift; sourceTree = "<group>"; };
 		C1ECBA9C28FD1F4100C0FCAC /* LatestPaymentsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPaymentsViewComponent.swift; sourceTree = "<group>"; };
 		C1F1BECE2BF244820022C59B /* RequestFactory+getAllLatestPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getAllLatestPayments.swift"; sourceTree = "<group>"; };
 		C1F1BED02BF246060022C59B /* Service+getAllLatestPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Service+getAllLatestPayments.swift"; sourceTree = "<group>"; };
@@ -10233,6 +10235,7 @@
 				2A09C2AD2B3C588C0076DC93 /* FastPayments */,
 				C18FDF0C2B0A2D17003F5FC0 /* PaymentSticker */,
 				2AF511E92BF3312300F97610 /* PaymentsTransfers */,
+				C1EC6F932BFFB0C8007E5AD9 /* ComponentsConfigurations.swift */,
 				2AC2ADBC2B2243780049EE9B /* SberQR */,
 			);
 			path = CompositionRoot;
@@ -18845,6 +18848,7 @@
 				A55E653827F6D7D7005CED37 /* C2BDetailsInputView.swift in Sources */,
 				0B8C1C60273DCB6200BA5CAC /* PushHistoryViewController.swift in Sources */,
 				2A80C6CB2B6E24AB00293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequest.swift in Sources */,
+				C1EC6F942BFFB0C8007E5AD9 /* ComponentsConfigurations.swift in Sources */,
 				0C4B0BB828620C35004B7F69 /* FastPaymentContractFullInfoType+Legacy.swift in Sources */,
 				5A5ABF9027AAF59F00D548AA /* ServerCommands+PaymentOperationDetail.swift in Sources */,
 				A5ECD4CA27ECC2BE008FBEEC /* C2BDetailsFormViewController.swift in Sources */,

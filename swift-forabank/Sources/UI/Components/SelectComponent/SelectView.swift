@@ -11,17 +11,21 @@ import SharedConfigs
 
 public struct SelectView: View {
     
-    var state: SelectUIState
-    let event: (SelectEvent) -> Void
-    let config: SelectConfig
+    public typealias State = SelectUIState
+    public typealias Event = SelectEvent
+    public typealias Config = SelectConfig
+    
+    var state: State
+    let event: (Event) -> Void
+    let config: Config
     
     var searchText: String
     
     public init(
-        state: SelectUIState,
-        event: @escaping (SelectEvent) -> Void,
+        state: State,
+        event: @escaping (Event) -> Void,
         searchText: String,
-        config: SelectConfig
+        config: Config
     ) {
         self.state = state
         self.event = event
@@ -146,7 +150,7 @@ public struct SelectView: View {
             "Начните ввод для поиска",
             text: .init(
                 get: { searchText },
-                set: { _ in event(.search("")) }
+                set: { _ in event(.search(searchText)) }
             )
         )
     }

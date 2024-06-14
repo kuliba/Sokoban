@@ -401,6 +401,13 @@
         "identifier" : "UtilityServicePrepaymentCoreTests",
         "name" : "UtilityServicePrepaymentCoreTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "SelectComponentTests",
+        "name" : "SelectComponentTests"
+      }
     }
   ],
   "version" : 1
