@@ -7,47 +7,50 @@
 
 import Foundation
 
-final class SelectReducer<Icon> {}
+public final class SelectReducer {
+    
+    public init() {}
+}
 
-extension SelectReducer {
+public extension SelectReducer {
     
     func reduce(
         _ state: State,
         _ event: Event
-    ) -> State {
+    ) -> (State, Effect?) {
         
         switch event {
         case let .chevronTapped(options: options, selectOption: option):
-            if case .collapsed = state {
-                return .init(state: .expanded(
-                    selectOption: option,
-                    options: options ?? [],
-                    searchText: state.searchText
-                ))
-            } else {
-                
-                return .collapsed(option: option, options: options)
+            let selectState: SelectState
+            switch state.state {
+            case .collapsed: selectState = .expanded(
+                selectOption: option,
+                options: options ?? [],
+                searchText: state.state.searchText
+            )
+            case .expanded: selectState = .collapsed(option: option, options: options)
             }
+            return (.init(image: state.image, state: selectState), nil)
+            
         case let .optionTapped(option):
-            return .collapsed(option: option, options: nil)
+            return (.init(image: state.image, state: .collapsed(option: option, options: nil)), nil)
             
         case let .search(text):
-            return .expanded(
-                selectOption: nil,
-                options: (state.filteredOption ?? state.options) ?? [],
-                searchText: text
-            )
+            let options = state.state.filteredOption ?? state.state.options ?? []
+            return (.init(image: state.image, state: .expanded(selectOption: nil, options: options, searchText: text)), nil)
         }
     }
 }
 
-extension SelectState {
+public extension SelectState {
 
     var filteredOption: [SelectState.Option]? {
-    
+        
         if let searchText {
             return self.options?
-                .filter({$0.title.localizedCaseInsensitiveContains(searchText)})
+                .filter({
+                    $0.title.localizedCaseInsensitiveContains(searchText)
+                })
         } else {
             return self.options
         }
@@ -72,8 +75,9 @@ extension SelectState {
     }
 }
 
-extension SelectReducer {
+public extension SelectReducer {
     
-    typealias State = SelectState
+    typealias State = SelectUIState
     typealias Event = SelectEvent
+    typealias Effect = Never
 }

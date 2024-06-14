@@ -60,8 +60,3 @@ extension AnywayPaymentParameterView {
     typealias Parameter = AnywayElementModel.Parameter
     typealias Factory = AnywayPaymentParameterViewFactory
 }
-
-extension InputConfig {
-    
-    static var iFora: Self { .preview }
-}
