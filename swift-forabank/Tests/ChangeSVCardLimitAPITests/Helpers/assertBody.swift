@@ -6,8 +6,6 @@
 
 import XCTest
 
-import XCTest
-
 func assertBody(
     of request: URLRequest,
     hasJSON json: String,
