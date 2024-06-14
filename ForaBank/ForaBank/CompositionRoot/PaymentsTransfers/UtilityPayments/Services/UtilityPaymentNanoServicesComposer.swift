@@ -431,9 +431,12 @@ extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
                         .init(key: "b", value: "B"),
                         .init(key: "c", value: "C"),
                         .init(key: "d", value: "D"),
-                    ])
-                ,
-                id: "select", title: "select", type: .select)
+                    ]
+                ),
+                id: "select", 
+                title: "select",
+                type: .select
+            )
         ]
     )
     
