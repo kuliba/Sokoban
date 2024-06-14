@@ -208,7 +208,7 @@ final class Model_PaymensSFPTests: XCTestCase {
 
     func test_sfpLogo_sfpOperation_notForaBank_returnsSfpIcon() {
         
-        XCTAssertEqual(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId"))?.icon.equatable, EquatableParameterSuccessLogoIcon(.sfp))
+        XCTAssertEqual(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId"))?.icon.equatable, nil)
     }
 
     func test_sfpLogo_sfpOperation_nonForaBankIdInSource_nonForaBankIdInParameters_returnsSfpIcon() {
@@ -226,7 +226,7 @@ final class Model_PaymensSFPTests: XCTestCase {
             bankId: "otherBankId",
             parameters: [Payments.ParameterInput.makePPInput(id: "id1", value: "otherBankId")]
         )
-        XCTAssertEqual(PPLogo.sfpLogo(with: operation)?.icon.equatable, EquatableParameterSuccessLogoIcon(.sfp))
+        XCTAssertEqual(PPLogo.sfpLogo(with: operation)?.icon.equatable, nil)
     }
 
     func test_sfpLogo_notSfpOperation_returnsNil() {

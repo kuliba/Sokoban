@@ -883,7 +883,11 @@ extension Payments.ParameterSuccessLogo {
     
     static func sfpLogo(with operation: Payments.Operation) -> Payments.ParameterSuccessLogo? {
         
-        let bankId = try? operation.parameters.value(forId: Payments.Parameter.Identifier.sfpBank.rawValue)
+        guard case .sfp = operation.source,
+              let bankId = try? operation.parameters.value(forId: Payments.Parameter.Identifier.sfpBank.rawValue),
+              !bankId.isEmpty else {
+            return nil
+        }
         
         return bankId == BankID.foraBankID.rawValue ? nil : .init(icon: .sfp)
     }
