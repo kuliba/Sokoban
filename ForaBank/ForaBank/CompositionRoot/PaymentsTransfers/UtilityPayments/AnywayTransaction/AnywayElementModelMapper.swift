@@ -120,11 +120,13 @@ private extension AnywayElementModelMapper {
             return .ic24MoreHorizontal
         }()
         
+        let initialState = SelectUIState(
+            image: image,
+            state: .init(selector)
+        )
+        
         return .init(
-            initialState: .init(
-                image: image,
-                state: .init(selector)
-            ),
+            initialState: initialState,
             reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in },
             observe: { [weak self] in
