@@ -126,7 +126,7 @@ extension MyProductsSectionView {
     ) -> some View {
         
         List {
-            mainCardView(mainProductID)
+            mainCardView(mainProductID, !(items.isEmpty || items.count == 1))
             
             ForEach(items, id: \.id) { item in
                 itemView(item)
@@ -140,11 +140,11 @@ extension MyProductsSectionView {
             }
             .moveDisabled(editMode != .active || (editMode == .active && items.count == 1))
         }
-        .frame(height: 72 * CGFloat(items.isEmpty ? 1 : items.count + 1))
+        .frame(height: 72 * CGFloat(items.countRows(mainProductID: mainProductID, getProduct: viewModel.productByID(_:))))
         .listStyle(.plain)
         .environment(\.editMode, $editMode)
         .listRowBackground(Color.barsBars)
-        .modifier(BorderForAdditionalGroupsModifier(count: items.count))
+        .modifier(BorderForAdditionalGroupsModifier(needBorder: items.needBorder(mainProductID: mainProductID, getProduct: viewModel.productByID(_:))))
         .id(mainProductID)
     }
     
@@ -164,14 +164,15 @@ extension MyProductsSectionView {
     }
     
     private func mainCardView(
-        _ productID: ProductData.ID
+        _ productID: ProductData.ID,
+        _ needDefaultCard: Bool
     ) -> some View {
         
         if let product = viewModel.productByID(productID) {
             AnyView(itemView(viewModel.createSectionItemViewModel(product)))
-        } else {
+        } else if needDefaultCard {
             AnyView(defaultMainCard())
-        }
+        } else { AnyView(EmptyView()) }
     }
     
     private func defaultMainCard() -> some View {
@@ -299,11 +300,11 @@ private extension MyProductsSectionView {
     
     struct BorderForAdditionalGroupsModifier : ViewModifier {
         
-        let count: Int
+        let needBorder: Bool
         
         func body(content: Content) -> some View {
             
-            if count > 0  {
+            if needBorder  {
                 content
                     .border(width: 2, edges: [.top, .bottom], color: .blurMediumGray30)
             } else {
@@ -318,5 +319,22 @@ struct MyProductsSectionView_Previews: PreviewProvider {
     static var previews: some View {
         MyProductsSectionView(viewModel: .sample2, editMode: .constant(.inactive))
             .previewLayout(.sizeThatFits)
+    }
+}
+
+private extension Array where Element == MyProductsSectionItemViewModel {
+    
+    func countRows(
+        mainProductID: ProductData.ID,
+        getProduct: @escaping (ProductData.ID) -> ProductData?
+    ) -> Int {
+        return isEmpty || (count == 1 && getProduct(mainProductID) == nil) ? 1 : count + 1
+    }
+    
+    func needBorder(
+        mainProductID: ProductData.ID,
+        getProduct: @escaping (ProductData.ID) -> ProductData?
+    ) -> Bool {
+        return isEmpty || (count == 1 && getProduct(mainProductID) == nil) ? false : true
     }
 }
