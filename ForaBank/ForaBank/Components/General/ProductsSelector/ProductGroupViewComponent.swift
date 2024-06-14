@@ -5,10 +5,11 @@
 //  Created by Max Gribov on 18.05.2022.
 //
 
-import Foundation
-import SwiftUI
 import Combine
+import ForaTools
+import Foundation
 import ScrollViewProxy
+import SwiftUI
 import UIPrimitives
 
 //MARK: - ViewModel
@@ -401,15 +402,18 @@ struct ProductGroupView: View {
                 OpeningProductView(dimensions: viewModel.dimensions)
             }
             
-            ForEach(0..<viewModel.visible.count, id: \.self) { index in
+            ForEach(viewModel.visible) { product in
                 
-                HStack {
-                    ShadowedProductView(
-                        productViewModel: viewModel.visible[index],
-                        dimensions: viewModel.dimensions
-                    )
+                viewModel.visible.firstIndex(matching: product).map { index in
                     
-                    if viewModel.needSeparator(for: index) { separator() }
+                    HStack {
+                        ShadowedProductView(
+                            productViewModel: product,
+                            dimensions: viewModel.dimensions
+                        )
+                        
+                        if viewModel.needSeparator(for: index) { separator() }
+                    }
                 }
             }
             
