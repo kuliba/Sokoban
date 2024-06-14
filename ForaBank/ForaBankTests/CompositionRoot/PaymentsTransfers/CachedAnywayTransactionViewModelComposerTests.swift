@@ -62,10 +62,12 @@ final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) -> Composer {
+        
         let sut = Composer(
             currencyOfProduct: { _ in "₽" },
             getProducts: { [] },
-            makeTransactionViewModel: makeAnywayTransactionViewModel
+            makeTransactionViewModel: makeAnywayTransactionViewModel,
+            spinnerActions: nil
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

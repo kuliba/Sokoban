@@ -47,11 +47,11 @@ extension PaymentsTransfersFlowManagerComposer {
         _ spinnerActions: RootViewModel.RootActions.Spinner?
     ) -> FlowManager {
         
-        let makeModel = makeTransactionViewModel(with: spinnerActions)
+        let makeModel = makeTransactionViewModel()
         let composer = makeReducerFactoryComposer(
             makeTransactionViewModel: makeModel
         )
-        let factory = composer.compose()
+        let factory = composer.compose(with: spinnerActions)
         
         return .init(
             handleEffect: makeHandleEffect(),
@@ -248,17 +248,12 @@ private extension PaymentsTransfersFlowManagerComposer {
     }
     
     private func makeTransactionViewModel(
-        with spinnerActions: RootViewModel.RootActions.Spinner?
     ) -> MakeTransactionViewModel {
         
         let composer = AnywayTransactionViewModelComposer(
             flag: flag.optionOrStub,
             httpClient: httpClient,
-            log: log,
-            decoration: .init(
-                onEffectStart: spinnerActions?.show ?? {},
-                onEffectFinish: spinnerActions?.hide ?? {}
-            )
+            log: log
         )
         
         return { initialState, observe in
