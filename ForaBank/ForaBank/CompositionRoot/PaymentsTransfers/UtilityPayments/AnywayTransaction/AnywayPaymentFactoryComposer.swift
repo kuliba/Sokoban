@@ -79,22 +79,16 @@ private extension AnywayPaymentFactoryComposer {
     ) -> AnywayPaymentParameterViewFactory {
         
         return .init(
-            makeSelectorView: makeSelectorView,
+            makeSelectView: makeSelectView,
             makeIconView: makeIconView
         )
     }
     
-    func makeSelectorView(
+    func makeSelectView(
         viewModel: ObservingSelectViewModel
-    ) -> SelectorWrapperView {
+    ) -> SelectWrapperView {
         
-        return .init(
-            viewModel: viewModel,
-            factory: .init(
-                createOptionView: OptionView.init,
-                createSelectedOptionView: SelectedOptionView.init
-            )
-        )
+        return .init(viewModel: viewModel)
     }
         
     typealias Option = UIComponent.Parameter.ParameterType.Option

@@ -7,6 +7,7 @@
 
 import AnywayPaymentDomain
 import PaymentComponents
+import SwiftUI
 
 final class AnywayElementModelMapper {
     
@@ -112,32 +113,28 @@ private extension AnywayElementModelMapper {
         
         let reducer = SelectReducer()
         
+        let image: Image = {
+            
+#warning("FIXME")
+            // extract image from parameter.image with fallback to .ic24MoreHorizontal
+            return .ic24MoreHorizontal
+        }()
+        
         return .init(
-            initialState: selector,
+            initialState: .init(
+                image: image,
+                state: .init(selector)
+            ),
             reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in },
-            observe: { [weak self] (state: SelectState) in
+            observe: { [weak self] in
                 
-                self?.event(.setValue(state.selected?.id ?? "", for: parameter.id))
+                self?.event(.setValue($0.state.selected?.id ?? "", for: parameter.id))
             }
         )
     }
     
     typealias Option = AnywayElement.UIComponent.Parameter.ParameterType.Option
-}
-
-private extension SelectState {
-    
-    var selected: Option? {
-        
-        switch self {
-        case let .collapsed(selected, _):
-            return selected
-            
-        case let .expanded(selected, _,_):
-            return selected
-        }
-    }
 }
 
 private extension AnywayElementModelMapper {
@@ -250,6 +247,54 @@ private extension AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.Parame
     func contains(_ string: String) -> Bool {
         
         key.contains(string) || value.contains(string)
+    }
+}
+
+private extension SelectState {
+    
+    var selected: Option? {
+        
+        switch self {
+        case let .collapsed(selected, _):  return selected
+        case let .expanded(selected, _,_): return selected
+        }
+    }
+    
+    init(_ selector: Selector<AnywayElementOption>) {
+
+        let selectOption = selector.selectedOption
+        let options = selector.selectStataOptions
+
+        if selector.isShowingOptions {
+            self = .expanded(
+                selectOption: selectOption,
+                options: options,
+                searchText: selector.searchQuery
+            )
+        } else {
+            self = .collapsed(
+                option: selectOption,
+                options: options
+            )
+        }
+    }
+    
+    typealias AnywayElementOption = AnywayElement.UIComponent.Parameter.ParameterType.Option
+}
+
+private extension Selector<AnywayElement.UIComponent.Parameter.ParameterType.Option> {
+    
+    var selectedOption: SelectState.Option {
+        
+        return .init(id: selected.key, title: selected.value, isSelected: true)
+    }
+    
+    var selectStataOptions: [SelectState.Option] {
+        
+        options.map {
+            
+            return .init(id: $0.key, title: $0.value, isSelected: $0 == self.selected)
+        }
     }
 }
 
