@@ -10,8 +10,6 @@ import RxViewModel
 import SwiftUI
 import Tagged
 
-typealias ObservingSelectorViewModel<T> = RxObservingViewModel<Selector<T>, SelectorEvent<T>, Never>
-
 struct SelectorWrapperView: View {
     
     @ObservedObject private var viewModel: ViewModel

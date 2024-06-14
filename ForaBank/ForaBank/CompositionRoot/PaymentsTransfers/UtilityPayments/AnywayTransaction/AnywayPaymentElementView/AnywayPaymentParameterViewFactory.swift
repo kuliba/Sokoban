@@ -20,7 +20,7 @@ extension AnywayPaymentParameterViewFactory {
     typealias AnywayPayment = AnywayPaymentDomain.AnywayPayment
     
     typealias Option = AnywayElement.UIComponent.Parameter.ParameterType.Option
-    typealias MakeSelectorView = (ObservingSelectorViewModel<Option>) -> SelectorWrapperView
+    typealias MakeSelectorView = (ObservingSelectViewModel) -> SelectorWrapperView
     
     typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
 }

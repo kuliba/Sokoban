@@ -455,6 +455,9 @@
 		2A20F8E62B05E43000E3AE79 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A20F8E52B05E43000E3AE79 /* CombineSchedulers */; };
 		2A2137F92B28A2F20044647C /* Config+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2137F82B28A2F20044647C /* Config+iFora.swift */; };
 		2A213D3A2C1C48C7008800FD /* ObservingSelectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A213D392C1C48C7008800FD /* ObservingSelectViewModel.swift */; };
+		2A213D3C2C1C528B008800FD /* ObservingSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A213D3B2C1C528B008800FD /* ObservingSelectorViewModel.swift */; };
+		2A213D3E2C1C52B6008800FD /* SelectWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A213D3D2C1C52B6008800FD /* SelectWrapperView.swift */; };
+		2A213D402C1C549A008800FD /* SelectConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A213D3F2C1C549A008800FD /* SelectConfig+iFora.swift */; };
 		2A218D10299C1583002C313D /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A218D0F299C1583002C313D /* Sequence+Extension.swift */; };
 		2A21E3612AC2069800DB6456 /* PaymentTemplateDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A21E3602AC2069800DB6456 /* PaymentTemplateDataTests.swift */; };
 		2A21E3642AC20C5D00DB6456 /* Model+PaymensSFPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A21E3632AC20C5D00DB6456 /* Model+PaymensSFPTests.swift */; };
@@ -3481,6 +3484,9 @@
 		2A20F8F22B05E77300E3AE79 /* QRReaderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRReaderButton.swift; sourceTree = "<group>"; };
 		2A2137F82B28A2F20044647C /* Config+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Config+iFora.swift"; sourceTree = "<group>"; };
 		2A213D392C1C48C7008800FD /* ObservingSelectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservingSelectViewModel.swift; sourceTree = "<group>"; };
+		2A213D3B2C1C528B008800FD /* ObservingSelectorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservingSelectorViewModel.swift; sourceTree = "<group>"; };
+		2A213D3D2C1C52B6008800FD /* SelectWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectWrapperView.swift; sourceTree = "<group>"; };
+		2A213D3F2C1C549A008800FD /* SelectConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A218D0F299C1583002C313D /* Sequence+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Extension.swift"; sourceTree = "<group>"; };
 		2A21E3602AC2069800DB6456 /* PaymentTemplateDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTemplateDataTests.swift; sourceTree = "<group>"; };
 		2A21E3632AC20C5D00DB6456 /* Model+PaymensSFPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymensSFPTests.swift"; sourceTree = "<group>"; };
@@ -7508,6 +7514,7 @@
 			isa = PBXGroup;
 			children = (
 				2A213D392C1C48C7008800FD /* ObservingSelectViewModel.swift */,
+				2A213D3D2C1C52B6008800FD /* SelectWrapperView.swift */,
 			);
 			path = Select;
 			sourceTree = "<group>";
@@ -9339,6 +9346,7 @@
 			isa = PBXGroup;
 			children = (
 				2AA3A9592BFF8E0100AEBCC9 /* SelectorWrapperView.swift */,
+				2A213D3B2C1C528B008800FD /* ObservingSelectorViewModel.swift */,
 				2AA3A95B2BFF8E1500AEBCC9 /* OptionView.swift */,
 				2AA3A95D2BFF8E2800AEBCC9 /* SelectedOptionView.swift */,
 			);
@@ -9371,6 +9379,7 @@
 				2AA3A9732BFF958800AEBCC9 /* AnywayPaymentFooterConfig+iFora.swift */,
 				2A326DA42C00A3C6005B25E7 /* AnywayPaymentElementConfig+iFora.swift */,
 				2A8A8FA32C00D5CD001ECAA3 /* OtherConfigs.swift */,
+				2A213D3F2C1C549A008800FD /* SelectConfig+iFora.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -17606,6 +17615,7 @@
 				2AA3A9642BFF8E6900AEBCC9 /* SelectorView.swift in Sources */,
 				2AEF68602AE565F300E0EBD7 /* ResponseMapper+mapChangePINResponse.swift in Sources */,
 				0B2A8D2E26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift in Sources */,
+				2A213D402C1C549A008800FD /* SelectConfig+iFora.swift in Sources */,
 				2A0D9B812B0E27EC00F1DFD1 /* ResponseMapper+mapGetPrintFormResponse.swift in Sources */,
 				0B8BC0412901EF110022DDE4 /* QRView.swift in Sources */,
 				2AA3A9622BFF8E5A00AEBCC9 /* SelectorEvent.swift in Sources */,
@@ -17893,6 +17903,7 @@
 				5047486C28565D250007128F /* TimerViewComponent.swift in Sources */,
 				2AA3A95C2BFF8E1500AEBCC9 /* OptionView.swift in Sources */,
 				2A3011E12A6AB2A500560B98 /* ServerCommands+CvvPin.swift in Sources */,
+				2A213D3C2C1C528B008800FD /* ObservingSelectorViewModel.swift in Sources */,
 				50037F7A2934D107009D1F0C /* TransfersInfoViewComponent.swift in Sources */,
 				2AA42C4C2B27990D003B5BB7 /* RootViewModelFactory+makePaymentsSuccessViewModel.swift in Sources */,
 				50D6C951287F45EE009F2193 /* CurrencyWalletAccountViewComponent.swift in Sources */,
@@ -18293,6 +18304,7 @@
 				833764F02A37015800F7C1AB /* MosParkingSelectorView.swift in Sources */,
 				0BA251EF26C26AE700AD087A /* AntiFraudDecodableModel.swift in Sources */,
 				ED9C1A0027567F6B00AF9DFF /* OpenNewDepositViewControllerCell.swift in Sources */,
+				2A213D3E2C1C52B6008800FD /* SelectWrapperView.swift in Sources */,
 				0BA40B3E286F9AFF009C9B0D /* NotificationTransition.swift in Sources */,
 				774EECDC29A638B800CCE94A /* PaymentsSpoilerGroupView.swift in Sources */,
 				2A1E76BF2AEEA1CD00B33AF7 /* LiveExtraLoggingCVVPINCrypto.swift in Sources */,

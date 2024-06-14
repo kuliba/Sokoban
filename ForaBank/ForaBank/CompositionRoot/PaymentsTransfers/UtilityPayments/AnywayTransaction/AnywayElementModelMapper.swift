@@ -108,22 +108,36 @@ private extension AnywayElementModelMapper {
     func makeSelectorViewModel(
         with selector: Selector<Option>,
         and parameter: AnywayElement.UIComponent.Parameter
-    ) -> ObservingSelectorViewModel<Option> {
+    ) -> ObservingSelectViewModel {
         
-        let reducer = SelectorReducer<Option>()
+        let reducer = SelectReducer()
         
         return .init(
             initialState: selector,
             reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in },
-            observe: { [weak self] in
+            observe: { [weak self] (state: SelectState) in
                 
-                self?.event(.setValue($0.selected.key, for: parameter.id))
+                self?.event(.setValue(state.selected?.id ?? "", for: parameter.id))
             }
         )
     }
     
     typealias Option = AnywayElement.UIComponent.Parameter.ParameterType.Option
+}
+
+private extension SelectState {
+    
+    var selected: Option? {
+        
+        switch self {
+        case let .collapsed(selected, _):
+            return selected
+            
+        case let .expanded(selected, _,_):
+            return selected
+        }
+    }
 }
 
 private extension AnywayElementModelMapper {

@@ -85,7 +85,7 @@ private extension AnywayPaymentFactoryComposer {
     }
     
     func makeSelectorView(
-        viewModel: ObservingSelectorViewModel<Option>
+        viewModel: ObservingSelectViewModel
     ) -> SelectorWrapperView {
         
         return .init(
