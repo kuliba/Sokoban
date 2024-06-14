@@ -88,19 +88,19 @@ extension CachedAnywayTransactionViewModelComposer {
             reduce: reducer.reduce(_:_:),
             handleEffect: { effect, dispatch in
                 
-                switch effect {
-                case .event(.continue):
-                    self.spinnerActions?.show()
-                    
-                    effectHandler.handleEffect(effect) {
-                        
-                        dispatch($0)
-                        self.spinnerActions?.hide()
-                    }
-                    
-                default:
+//                switch effect {
+//                case .event(.continue):
+//                    self.spinnerActions?.show()
+//                    
+//                    effectHandler.handleEffect(effect) {
+//                        
+//                        dispatch($0)
+//                        self.spinnerActions?.hide()
+//                    }
+//                    
+//                default:
                     effectHandler.handleEffect(effect, dispatch)
-                }
+//                }
             }
         )
     }
