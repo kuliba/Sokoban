@@ -6,33 +6,34 @@
 //
 
 import SelectComponent
+import RxViewModel
 import XCTest
 import SwiftUI
+
+extension SelectReducer: Reducer {}
 
 final class SelectReducerTests: XCTestCase {
     
     func test_reduce_select_shouldReturnCollapseState() {
         
         let sut = makeSUT()
+        let state = makeState(state: makeCollapsedState())
         
-        let state = makeState(state: makeExpandedState())
-        let newState = sut.reduce(
-            state, .chevronTapped(options: nil, selectOption: nil)
-        )
-        
-        XCTAssertEqual(newState.0.state.testState, .collapsed)
+        assert(sut: sut, .chevronTapped(options: nil, selectOption: nil), on: state) {state in 
+            state.state = .expanded(selectOption: nil, options: [], searchText: nil)
+        }
     }
     
     func test_reduce_select_shouldReturnExpanded() {
         
         let sut = makeSUT()
         
-        let state = makeState(state: makeCollapsedState())
-        let newState = sut.reduce(
-            state, .chevronTapped(options: nil, selectOption: nil)
-        )
+        let state = makeState(state: makeExpandedState())
         
-        XCTAssertEqual(newState.0.state.testState, .expanded)
+        assert(sut: sut, .chevronTapped(options: nil, selectOption: nil), on: state) { state in
+            
+            state.state = .collapsed(option: nil, options: nil)
+        }
     }
     
     
@@ -41,11 +42,12 @@ final class SelectReducerTests: XCTestCase {
         let sut = makeSUT()
         
         let state = makeState(state: makeExpandedState())
-        let newState = sut.reduce(
-            state, .optionTapped(.init(id: "id", title: "title", isSelected: true))
-        )
+        let option: SelectState.Option = .init(id: "id", title: "title", isSelected: true)
         
-        XCTAssertEqual(newState.0.state.testState, .collapsed)
+        assert(sut: sut, .optionTapped(option), on: state) { state in
+            
+            state.state = .collapsed(option: option, options: nil)
+        }
     }
     
     func test_reduce_select_search_shouldReturnExpanded() {
@@ -53,11 +55,11 @@ final class SelectReducerTests: XCTestCase {
         let sut = makeSUT()
         
         let state = makeState(state: makeCollapsedState())
-        let newState = sut.reduce(
-            state, .search("text")
-        )
         
-        XCTAssertEqual(newState.0.state.testState, .expanded)
+        assert(sut: sut, .search("text"), on: state) { state in
+            
+            state.state = .expanded(selectOption: nil, options: [], searchText: "text")
+        }
     }
     
     func test_filteredOption_shouldReturnOption() {
@@ -80,7 +82,6 @@ final class SelectReducerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = SelectReducer
-    private typealias Spy = CallSpy<SUT.State>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -113,6 +114,28 @@ final class SelectReducerTests: XCTestCase {
             state: state
         )
     }
+    
+    typealias State = SelectUIState
+    typealias Event = SelectReducer.Event
+    typealias Effect = SelectEffectTest
+    
+    private func assert(
+        sut: SUT? = nil,
+        _ event: Event,
+        on state: State,
+        updateStateToExpected: ((_ state: inout State) -> Void)? = nil,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let sut = sut ?? makeSUT(file: file, line: line)
+        _assertState(
+            sut,
+            event,
+            on: state,
+            updateStateToExpected: updateStateToExpected,
+            file: file, line: line
+        )
+    }
 }
 
 extension SelectState {
@@ -136,5 +159,29 @@ enum SelectStateTest: Equatable {
             self = .expanded
         }
     }
+}
+
+enum SelectEffectTest: Equatable {}
+
+extension SelectEvent {
+    
+    var testState: SelectEventTest {
+        
+        switch self {
+        case .chevronTapped:
+            return .chevronTapped
+        case .optionTapped:
+            return .optionTapped
+        case .search:
+            return .search
+        }
+    }
+}
+
+enum SelectEventTest: Equatable {
+    
+    case chevronTapped
+    case optionTapped
+    case search
 }
 

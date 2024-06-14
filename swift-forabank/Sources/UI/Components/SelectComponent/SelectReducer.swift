@@ -21,26 +21,23 @@ public extension SelectReducer {
         
         switch event {
         case let .chevronTapped(options: options, selectOption: option):
-            if case .collapsed = state.state {
-                return (.init(image: state.image, state: .expanded(
-                    selectOption: option,
-                    options: options ?? [],
-                    searchText: state.state.searchText
-                )), nil)
-            } else {
-                
-                return (.init(image: state.image, state: .collapsed(option: option, options: options)), nil)
-
+            let selectState: SelectState
+            switch state.state {
+            case .collapsed: selectState = .expanded(
+                selectOption: option,
+                options: options ?? [],
+                searchText: state.state.searchText
+            )
+            case .expanded: selectState = .collapsed(option: option, options: options)
             }
+            return (.init(image: state.image, state: selectState), nil)
+            
         case let .optionTapped(option):
             return (.init(image: state.image, state: .collapsed(option: option, options: nil)), nil)
             
         case let .search(text):
-            return (.init(image: state.image, state: .expanded(
-                selectOption: nil,
-                options: (state.state.filteredOption ?? state.state.options) ?? [],
-                searchText: text
-            )), nil)
+            let options = state.state.filteredOption ?? state.state.options ?? []
+            return (.init(image: state.image, state: .expanded(selectOption: nil, options: options, searchText: text)), nil)
         }
     }
 }

@@ -10,7 +10,7 @@ import RxViewModel
 
 public extension CodeInputWrapperView {
     
-    typealias State = CodeInputState
+    typealias State = CodeInputState.Status
     typealias CodeInputViewModel = RxObservingViewModel<State, OTPInputEvent, OTPInputEffect>
 }
 
@@ -29,7 +29,7 @@ public struct CodeInputWrapperView: View {
     
     public var body: some View {
         
-        switch viewModel.state.status {
+        switch viewModel.state {
         case .failure(_):
             CodeInputView(
                 state: .incompleteOTP,
@@ -60,7 +60,7 @@ struct CodeInputWrapperView_Preview: PreviewProvider {
         
         CodeInputWrapperView(
             viewModel: .default(
-                initialState: .init(status: .validOTP),
+                initialState: .validOTP,
                 observe: { _,_ in},
                 initiateOTP: { completion in }
             ),
@@ -72,11 +72,11 @@ struct CodeInputWrapperView_Preview: PreviewProvider {
 public extension CodeInputWrapperView.CodeInputViewModel {
     
     static func `default`(
-        initialState: CodeInputState,
+        initialState: CodeInputState.Status,
         timer: TimerProtocol = RealTimer(),
         duration: Int = 60,
         length: Int = 6,
-        observe: @escaping (CodeInputState, CodeInputState) -> Void,
+        observe: @escaping (CodeInputState.Status, CodeInputState.Status) -> Void,
         initiateOTP: @escaping CountdownEffectHandler.InitiateOTP,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> CodeInputWrapperView.CodeInputViewModel {

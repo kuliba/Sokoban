@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-public struct SelectUIState {
+public struct SelectUIState: Equatable {
 
     let image: Image
     public var state: SelectState
@@ -19,7 +19,7 @@ public struct SelectUIState {
     }
 }
 
-public enum SelectState {
+public enum SelectState: Equatable {
     
     case collapsed(option: Option?, options: [Option]?)
     case expanded(selectOption: Option?, options: [Option], searchText: String?)

@@ -1892,6 +1892,10 @@ private extension Target {
         name: .selectComponentTests,
         dependencies: [
             // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            .rxViewModel,
             // internal modules
             .selectComponent,
         ],

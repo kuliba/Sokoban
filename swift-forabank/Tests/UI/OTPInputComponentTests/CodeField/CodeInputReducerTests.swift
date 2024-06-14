@@ -25,7 +25,7 @@ final class CodeInputReducerTests: XCTestCase {
         
         assert(sut: sut, .countdown(.start), on: state) {
             input.countdown = .running(remaining: 5)
-            $0.status = .input(input)
+            $0 = .input(input)
         }
     }
     
@@ -49,7 +49,7 @@ final class CodeInputReducerTests: XCTestCase {
         )
         
         assert(sut: sut, .countdown(.start), on: state) {
-            $0.status = .failure(.connectivityError)
+            $0 = .failure(.connectivityError)
         }
     }
     
@@ -74,7 +74,7 @@ final class CodeInputReducerTests: XCTestCase {
         )
         
         assert(sut: sut, .countdown(.start), on: state) {
-            $0.status = .failure(.serverError(message))
+            $0 = .failure(.serverError(message))
         }
     }
     
@@ -141,7 +141,7 @@ final class CodeInputReducerTests: XCTestCase {
         
         assert(sut: sut, .otpField(.confirmOTP), on: state) {
             input.otpField = .init(text: "12345")
-            $0.status = .input(input)
+            $0 = .input(input)
         }
     }
     
@@ -167,7 +167,7 @@ final class CodeInputReducerTests: XCTestCase {
         )
         
         assert(sut: sut, .otpField(.confirmOTP), on: state) {
-            $0.status = .failure(.connectivityError)
+            $0 = .failure(.connectivityError)
         }
     }
     
@@ -193,7 +193,7 @@ final class CodeInputReducerTests: XCTestCase {
         )
         
         assert(sut: sut, .otpField(.confirmOTP), on: state) {
-            $0.status = .failure(.serverError(message))
+            $0 = .failure(.serverError(message))
         }
     }
     
@@ -219,7 +219,7 @@ final class CodeInputReducerTests: XCTestCase {
         )
         
         assert(sut: sut, .otpField(.confirmOTP), on: state) {
-            $0.status = .validOTP
+            $0 = .validOTP
         }
     }
     
@@ -361,7 +361,5 @@ private func makeState(
     _ status: CodeInputState.Status
 ) -> CodeInputReducer.State {
     
-    .init(
-        status: status
-    )
+    status
 }

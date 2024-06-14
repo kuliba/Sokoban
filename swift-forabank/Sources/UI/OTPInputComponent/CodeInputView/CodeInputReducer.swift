@@ -46,7 +46,7 @@ public extension CodeInputReducer {
 
 public extension CodeInputReducer {
     
-    typealias State = CodeInputState
+    typealias State = CodeInputState.Status
     typealias Event = OTPInputEvent
     typealias Effect = OTPInputEffect
 }
@@ -67,7 +67,7 @@ private extension CodeInputReducer {
         var state = state
         var effect: Effect?
         
-        switch state.status {
+        switch state {
         case .failure, .validOTP:
             break
 
@@ -78,16 +78,16 @@ private extension CodeInputReducer {
             case let .failure(countdownFailure):
                 switch countdownFailure {
                 case .connectivityError:
-                    state.status = .failure(.connectivityError)
+                    state = .failure(.connectivityError)
                     
                 case let .serverError(message):
-                    state.status = .failure(.serverError(message))
+                    state = .failure(.serverError(message))
                 }
                 effect = countdownEffect.map(Effect.countdown)
                 
             default:
                 input.countdown = countdownState
-                state.status = .input(input)
+                state = .input(input)
                 effect = countdownEffect.map(Effect.countdown)
             }
         }
@@ -103,7 +103,7 @@ private extension CodeInputReducer {
         var state = state
         var effect: Effect?
         
-        switch state.status {
+        switch state {
         case .failure, .validOTP:
             break
             
@@ -112,14 +112,14 @@ private extension CodeInputReducer {
         
             switch otpFieldState.status {
             case let .failure(otpFieldFailure):
-                state.status = .failure(otpFieldFailure)
+                state = .failure(otpFieldFailure)
                 
             case .validOTP:
-                state.status = .validOTP
+                state = .validOTP
                 
             default:
                 input.otpField = otpFieldState
-                state.status = .input(input)
+                state = .input(input)
             }
 
             effect = otpFieldEffect.map(Effect.otpField)
