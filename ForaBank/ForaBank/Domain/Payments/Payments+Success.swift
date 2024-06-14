@@ -883,22 +883,9 @@ extension Payments.ParameterSuccessLogo {
     
     static func sfpLogo(with operation: Payments.Operation) -> Payments.ParameterSuccessLogo? {
         
-        guard
-            case .sfp(_, let bankID) = operation.source,
-            operation.steps.first?.back.stage == .remote(.start)
-        else { return nil }
+        let bankId = try? operation.parameters.value(forId: Payments.Parameter.Identifier.sfpBank.rawValue)
         
-        if bankID == BankID.foraBankID.rawValue {
-            return nil
-        }
-        
-        if let bankParameterValue = try? operation.parameters.value(forId: Payments.Parameter.Identifier.sfpBank.rawValue),
-           bankParameterValue == BankID.foraBankID.rawValue {
-            
-            return nil
-        }
-        
-        return .init(icon: .sfp)
+        return bankId == BankID.foraBankID.rawValue ? nil : .init(icon: .sfp)
     }
 }
 
