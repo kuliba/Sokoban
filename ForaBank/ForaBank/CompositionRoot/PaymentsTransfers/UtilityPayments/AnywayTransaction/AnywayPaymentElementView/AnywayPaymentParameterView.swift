@@ -36,8 +36,8 @@ struct AnywayPaymentParameterView: View {
                 }
             )
             
-        case let .select(selectViewModel):
-            factory.makeSelectView(selectViewModel)
+        case let .select(viewModel):
+            factory.makeSelectorView(viewModel)
             
         case let .textInput(viewModel):
             InputWrapperView(

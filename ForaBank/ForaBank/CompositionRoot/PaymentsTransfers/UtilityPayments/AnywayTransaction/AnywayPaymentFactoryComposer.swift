@@ -65,7 +65,7 @@ extension AnywayPaymentFactoryComposer {
     
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
-
+    
     typealias UIComponent = AnywayPaymentDomain.AnywayElement.UIComponent
     typealias IconView = UIPrimitives.AsyncImage
     typealias MakeIconView = (String) -> IconView
@@ -80,6 +80,7 @@ private extension AnywayPaymentFactoryComposer {
         
         return .init(
             makeSelectView: makeSelectView,
+            makeSelectorView: makeSelectorView,
             makeIconView: makeIconView
         )
     }
@@ -90,9 +91,22 @@ private extension AnywayPaymentFactoryComposer {
         
         return .init(viewModel: viewModel)
     }
+    
+    func makeSelectorView(
+        viewModel: ObservingSelectorViewModel<Option>
+    ) -> SelectorWrapperView {
         
+        return .init(
+            viewModel: viewModel,
+            factory: .init(
+                createOptionView: OptionView.init,
+                createSelectedOptionView: SelectedOptionView.init
+            )
+        )
+    }
+    
     typealias Option = UIComponent.Parameter.ParameterType.Option
-
+    
     typealias Observe = (ProductID, Currency) -> Void
     typealias ProductID = AnywayElement.Widget.Product.ProductID
     typealias Currency = AnywayPaymentEvent.Widget.Currency
@@ -102,7 +116,7 @@ private extension CachedTransactionState {
     
     var footer: AnywayPaymentFooter {
         
-        #warning("FIXME: hardcoded buttonTitle")
+#warning("FIXME: hardcoded buttonTitle")
         return .init(buttonTitle: "Continue", core: core, isEnabled: isValid)
     }
     
