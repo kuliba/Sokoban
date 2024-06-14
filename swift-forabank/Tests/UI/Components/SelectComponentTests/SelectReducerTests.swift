@@ -14,51 +14,44 @@ extension SelectReducer: Reducer {}
 
 final class SelectReducerTests: XCTestCase {
     
-    func test_reduce_select_shouldReturnCollapseState() {
+    func test_reduce_select_shouldExpandCollapsed() {
         
-        let sut = makeSUT()
-        let state = makeState(state: makeCollapsedState())
-        
-        assert(sut: sut, .chevronTapped(options: nil, selectOption: nil), on: state) {state in 
-            state.state = .expanded(selectOption: nil, options: [], searchText: nil)
+        assert(
+            .chevronTapped(options: nil, selectOption: nil),
+            on: makeState(state: makeCollapsedState())
+        ) {
+            $0.state = self.makeExpanded()
         }
     }
     
-    func test_reduce_select_shouldReturnExpanded() {
+    func test_reduce_select_shouldCollapseExpanded() {
         
-        let sut = makeSUT()
-        
-        let state = makeState(state: makeExpandedState())
-        
-        assert(sut: sut, .chevronTapped(options: nil, selectOption: nil), on: state) { state in
-            
-            state.state = .collapsed(option: nil, options: nil)
+        assert(
+            .chevronTapped(options: nil, selectOption: nil),
+            on: makeState(state: makeExpandedState())
+        ) {
+            $0.state = .collapsed(option: nil, options: nil)
         }
     }
     
-    
-    func test_reduce_select_optionTapped_shouldReturnCollapsed() {
+    func test_reduce_select_optionTapped_shouldCollapseWithSelectedOption() {
         
-        let sut = makeSUT()
-        
-        let state = makeState(state: makeExpandedState())
         let option: SelectState.Option = .init(id: "id", title: "title", isSelected: true)
         
-        assert(sut: sut, .optionTapped(option), on: state) { state in
-            
-            state.state = .collapsed(option: option, options: nil)
+        assert(
+            .optionTapped(option), on: makeState(state: makeExpandedState())
+        ) {
+            $0.state = .collapsed(option: option, options: nil)
         }
     }
     
-    func test_reduce_select_search_shouldReturnExpanded() {
+    func test_reduce_select_search_shouldChangeSearchText() {
         
-        let sut = makeSUT()
-        
-        let state = makeState(state: makeCollapsedState())
-        
-        assert(sut: sut, .search("text"), on: state) { state in
-            
-            state.state = .expanded(selectOption: nil, options: [], searchText: "text")
+        assert(
+            .search("text"),
+            on: makeState(state: makeCollapsedState())
+        ) {
+            $0.state = self.makeExpanded(searchText: "text")
         }
     }
     
@@ -94,25 +87,34 @@ final class SelectReducerTests: XCTestCase {
         return sut
     }
     
-    private func makeExpandedState() -> SelectState {
-        .expanded(
-            selectOption: nil,
-            options: [.init(id: "", title: "title", isSelected: false)],
-            searchText: nil
+    private func makeExpanded(
+        selectOption: SelectState.Option? = nil,
+        options: [SelectState.Option] = [],
+        searchText: String? = nil
+    ) -> SelectState {
+        
+        return .expanded(
+            selectOption: selectOption,
+            options: options,
+            searchText: searchText
         )
+    }
+    
+    private func makeExpandedState(
+        options: [SelectState.Option] = [.init(id: "", title: "title", isSelected: false)]
+    ) -> SelectState {
+        
+        return makeExpanded(options: options)
     }
     
     private func makeCollapsedState() -> SelectState {
         
-        .collapsed(option: nil, options: nil)
+        return .collapsed(option: nil, options: nil)
     }
     
     private func makeState(state: SelectState) -> SUT.State {
         
-        .init(
-            image: .init(systemName: ""),
-            state: state
-        )
+        return .init(image: .init(systemName: ""), state: state)
     }
     
     typealias State = SelectUIState
