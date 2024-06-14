@@ -408,6 +408,13 @@
         "identifier" : "SelectComponentTests",
         "name" : "SelectComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "ChangeSVCardLimitAPITests",
+        "name" : "ChangeSVCardLimitAPITests"
+      }
     }
   ],
   "version" : 1
