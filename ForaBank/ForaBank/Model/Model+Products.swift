@@ -623,13 +623,13 @@ extension Model {
                 
                 let _ = try await productsSetSettingsWithCommand(command: command)
                     
-                self.productsOrdersUpdating.value = false
-                
                 // update products
                 let updatedProducts = Self.reduce(productsData: self.products.value, newOrders: payload.orders)
                                                       
                 self.products.value = updatedProducts
-                    
+                 
+                self.productsOrdersUpdating.value = false
+
                 do { // update cache
                         
                     try self.productsCacheStore(productsData: updatedProducts)
