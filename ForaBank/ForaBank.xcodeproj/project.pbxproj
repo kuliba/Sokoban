@@ -454,6 +454,7 @@
 		2A20F8D62B05E1D100E3AE79 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A20F8D52B05E1D100E3AE79 /* Preview Assets.xcassets */; };
 		2A20F8E62B05E43000E3AE79 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2A20F8E52B05E43000E3AE79 /* CombineSchedulers */; };
 		2A2137F92B28A2F20044647C /* Config+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2137F82B28A2F20044647C /* Config+iFora.swift */; };
+		2A213D3A2C1C48C7008800FD /* ObservingSelectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A213D392C1C48C7008800FD /* ObservingSelectViewModel.swift */; };
 		2A218D10299C1583002C313D /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A218D0F299C1583002C313D /* Sequence+Extension.swift */; };
 		2A21E3612AC2069800DB6456 /* PaymentTemplateDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A21E3602AC2069800DB6456 /* PaymentTemplateDataTests.swift */; };
 		2A21E3642AC20C5D00DB6456 /* Model+PaymensSFPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A21E3632AC20C5D00DB6456 /* Model+PaymensSFPTests.swift */; };
@@ -3479,6 +3480,7 @@
 		2A20F8EF2B05E61B00E3AE79 /* NavigationModel+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationModel+ext.swift"; sourceTree = "<group>"; };
 		2A20F8F22B05E77300E3AE79 /* QRReaderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRReaderButton.swift; sourceTree = "<group>"; };
 		2A2137F82B28A2F20044647C /* Config+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Config+iFora.swift"; sourceTree = "<group>"; };
+		2A213D392C1C48C7008800FD /* ObservingSelectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservingSelectViewModel.swift; sourceTree = "<group>"; };
 		2A218D0F299C1583002C313D /* Sequence+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Extension.swift"; sourceTree = "<group>"; };
 		2A21E3602AC2069800DB6456 /* PaymentTemplateDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTemplateDataTests.swift; sourceTree = "<group>"; };
 		2A21E3632AC20C5D00DB6456 /* Model+PaymensSFPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymensSFPTests.swift"; sourceTree = "<group>"; };
@@ -7502,6 +7504,14 @@
 			path = Buttons;
 			sourceTree = "<group>";
 		};
+		2A213D382C1C48A8008800FD /* Select */ = {
+			isa = PBXGroup;
+			children = (
+				2A213D392C1C48C7008800FD /* ObservingSelectViewModel.swift */,
+			);
+			path = Select;
+			sourceTree = "<group>";
+		};
 		2A21E35E2AC2067700DB6456 /* Template */ = {
 			isa = PBXGroup;
 			children = (
@@ -9299,6 +9309,7 @@
 				2AA3A94B2BFF8CBF00AEBCC9 /* MOVE OR REPLACE WITH MODULE */,
 				2AA3A94F2BFF8CF500AEBCC9 /* Input */,
 				2AA3A94E2BFF8CED00AEBCC9 /* ProductSelect */,
+				2A213D382C1C48A8008800FD /* Select */,
 				2AA3A94D2BFF8CE400AEBCC9 /* Selector */,
 			);
 			path = Components;
@@ -17664,6 +17675,7 @@
 				77577BB12992A05100D6BD66 /* MockKeysProvider.swift in Sources */,
 				6830A02227D37821003CA4F1 /* DepositProductData.swift in Sources */,
 				2AEF6BF22BF76DBE000249A1 /* SberOperatorFailureFlowState.swift in Sources */,
+				2A213D3A2C1C48C7008800FD /* ObservingSelectViewModel.swift in Sources */,
 				0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */,
 				2A61D07D2BECCD7300802C95 /* PaymentsTransfersFlowEffectHandler+preview.swift in Sources */,
 				C18D25FA2A25B96100DF5643 /* TemplateButtonViewComponent.swift in Sources */,
