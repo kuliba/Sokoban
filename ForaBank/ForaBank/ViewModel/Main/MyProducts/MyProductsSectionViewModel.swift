@@ -306,7 +306,7 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         var count = items.count
         groupingCards.forEach { key, value in
             
-            if productByID(key) == nil, value.count > 1{
+            if productByID(key) == nil, value.count > 0{
                 count += 1
             }
         }

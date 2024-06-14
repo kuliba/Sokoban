@@ -66,11 +66,11 @@ extension MyProductsSectionView {
                 case let .item(itemVM):
                     itemView(itemVM)
                         .modifier(HideSeparatorModifier())
-
+                    
                 case .placeholder:
                     placeholderView()
                         .modifier(HideSeparatorModifier())
-
+                    
                 }
             }
             .onMove { indexes, destination in
@@ -97,18 +97,12 @@ extension MyProductsSectionView {
                 
                 if let products = viewModel.groupingCards[id] {
                     
-                    if products.count == 1, let productData = products.first {
-                        itemView(viewModel.createSectionItemViewModel(productData))
-                            .modifier(HideSeparatorModifier())
-
-                    } else {
-                        _itemsList(products.compactMap {
-                            if $0.id != id {
-                                return viewModel.createSectionItemViewModel($0)
-                            } else { return nil}
-                        }, id)
-                        .modifier(HideSeparatorModifier())
-                    }
+                    _itemsList(products.compactMap {
+                        if $0.id != id {
+                            return viewModel.createSectionItemViewModel($0)
+                        } else { return nil}
+                    }, id)
+                    .modifier(HideSeparatorModifier())
                 }
             }
             .onMove { indexes, destination in
@@ -146,12 +140,12 @@ extension MyProductsSectionView {
             }
             .moveDisabled(editMode != .active || (editMode == .active && items.count == 1))
         }
-        .frame(height: 72 * CGFloat(items.count + 1))
+        .frame(height: 72 * CGFloat(items.isEmpty ? 1 : items.count + 1))
         .listStyle(.plain)
         .environment(\.editMode, $editMode)
-        .id(mainProductID)
         .listRowBackground(Color.barsBars)
-        .border(width: 2, edges: [.top, .bottom], color: .blurMediumGray30)
+        .modifier(BorderForAdditionalGroupsModifier(count: items.count))
+        .id(mainProductID)
     }
     
     private func itemView(
@@ -296,6 +290,24 @@ private extension MyProductsSectionView {
                     .listRowInsets(EdgeInsets())
                     .background(Color(UIColor.systemBackground))
                     .border(width: 0.5, edges: [.top], color: .blurMediumGray30)
+            }
+        }
+    }
+}
+
+private extension MyProductsSectionView {
+    
+    struct BorderForAdditionalGroupsModifier : ViewModifier {
+        
+        let count: Int
+        
+        func body(content: Content) -> some View {
+            
+            if count > 0  {
+                content
+                    .border(width: 2, edges: [.top, .bottom], color: .blurMediumGray30)
+            } else {
+                content
             }
         }
     }
