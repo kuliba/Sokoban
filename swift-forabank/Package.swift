@@ -517,7 +517,7 @@ private extension Product {
             .paymentComponents,
             .productSelectComponent,
             .selectComponent,
-            .selectorComponent,
+//            .selectorComponent,
             .sharedConfigs,
         ]
     )

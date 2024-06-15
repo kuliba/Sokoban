@@ -1,6 +1,6 @@
 //
 //  SelectorView.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 23.05.2024.
 //
@@ -18,7 +18,7 @@ where ID: Hashable,
     let idKeyPath: KeyPath<T, ID>
     
     public init(
-        state: State, 
+        state: State,
         event: @escaping (Event) -> Void,
         factory: Factory,
         idKeyPath: KeyPath<T, ID>
@@ -48,7 +48,6 @@ where ID: Hashable,
                     .animation(.easeInOut, value: state.isShowingOptions)
             }
         }
-        .padding()
     }
 }
 
@@ -106,4 +105,96 @@ private extension SelectorView {
             .contentShape(Rectangle())
             .onTapGesture { event(.selectOption(option)) }
     }
+}
+
+// MARK: - Previews
+
+struct SelectorView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        ScrollView(showsIndicators: false) {
+            
+            VStack(spacing: 32) {
+                
+                view(.collapsed)
+                view(.expanded)
+                view(.searching)
+            }
+            .padding()
+        }
+    }
+    
+    private static func view(
+        _ state: Selector<Item>
+    ) -> some View {
+        
+        Wrapper(state: state)
+    }
+    
+    private struct Wrapper: View {
+        
+        @State var state: Selector<Item>
+        
+        private let reducer = SelectorReducer<Item>()
+        
+        var body: some View {
+            
+            SelectorView(
+                state: state,
+                event: { event in
+                    
+                    self.state = reducer.reduce(self.state, event).0
+                },
+                factory: .init(
+                    createOptionView: { Text($0.value) },
+                    createSelectedOptionView: { Text($0.value).bold() }
+                )
+            )
+            .padding()
+            .background(Color.gray.opacity(0.1))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+}
+
+private struct Item: Equatable, Identifiable {
+    
+    let id: String
+    let value: String
+    
+    static let samples: [Self] = [
+        .init(id: "a", value: "A"),
+        .init(id: "b", value: "B"),
+        .init(id: "bb", value: "BB"),
+        .init(id: "bbb", value: "BBB"),
+        .init(id: "c", value: "C"),
+        .init(id: "d", value: "D"),
+    ]
+    
+    func contains(_ text: String) -> Bool {
+        
+        return id.localizedCaseInsensitiveContains(text) || value.localizedCaseInsensitiveContains(text)
+    }
+}
+
+private extension Selector where T == Item {
+    
+    static let collapsed: Self = try! .init(
+        options: Item.samples,
+        filterPredicate: { $0.contains($1) }
+    )
+    
+    static let expanded: Self = try! .init(
+        options: Item.samples,
+        isShowingOptions: true,
+        filterPredicate: { $0.contains($1) }
+    )
+    
+    static let searching: Self = try! .init(
+        options: Item.samples,
+        isShowingOptions: true,
+        searchQuery: "bb",
+        filterPredicate: { $0.contains($1) }
+    )
 }
