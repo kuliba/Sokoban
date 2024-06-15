@@ -38,6 +38,6 @@ struct SelectorWrapperView: View {
 extension SelectorWrapperView {
     
     typealias ViewModel = ObservingSelectorViewModel<Option>
-    typealias Factory = SelectorViewFactory<Option, OptionView, SelectedOptionView>
+    typealias Factory = SelectorViewFactory<Option, OptionView, SelectedOptionView, ChevronView>
     typealias Option = AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ParameterType.Option
 }

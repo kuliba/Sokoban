@@ -33,20 +33,6 @@ struct AnywayPaymentElementView<IconView: View>: View {
     }
 }
 
-private extension View {
-    
-    func paddedRoundedBackground(
-        color: Color = Color.gray.opacity(0.1),
-        cornerRadius: CGFloat = 12
-    ) -> some View {
-        
-        self
-            .padding()
-            .background(color)
-            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-    }
-}
-
 extension AnywayPaymentElementView {
     
     typealias State = CachedAnywayPayment<AnywayElementModel>.IdentifiedModel

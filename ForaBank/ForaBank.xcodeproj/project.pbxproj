@@ -384,6 +384,10 @@
 		2A0D9B842B0E2A1E00F1DFD1 /* ResponseMapper+ServerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B822B0E289900F1DFD1 /* ResponseMapper+ServerResponse.swift */; };
 		2A0D9B862B0E2C6100F1DFD1 /* RootViewModelFactory+makeDocumentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B852B0E2C6100F1DFD1 /* RootViewModelFactory+makeDocumentButton.swift */; };
 		2A0D9B882B0E3BD800F1DFD1 /* RootViewModelFactory+makeButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B872B0E3BD800F1DFD1 /* RootViewModelFactory+makeButtonLabel.swift */; };
+		2A0EF2EA2C1DAB96003F094D /* ChevronView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EF2E92C1DAB96003F094D /* ChevronView.swift */; };
+		2A0EF2EC2C1DABB2003F094D /* ChevronViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EF2EB2C1DABB2003F094D /* ChevronViewConfig+iFora.swift */; };
+		2A0EF2EE2C1DABCA003F094D /* ChevronViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EF2ED2C1DABCA003F094D /* ChevronViewConfig.swift */; };
+		2A0EF2F02C1DAEBC003F094D /* View+paddedRoundedBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EF2EF2C1DAEBC003F094D /* View+paddedRoundedBackground.swift */; };
 		2A0F1E2C2C06E144006E1231 /* AutoScrollingListPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F1E2B2C06E144006E1231 /* AutoScrollingListPreviewApp.swift */; };
 		2A0F1E2E2C06E144006E1231 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F1E2D2C06E144006E1231 /* ContentView.swift */; };
 		2A0F1E302C06E145006E1231 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A0F1E2F2C06E145006E1231 /* Assets.xcassets */; };
@@ -3399,6 +3403,10 @@
 		2A0D9B872B0E3BD800F1DFD1 /* RootViewModelFactory+makeButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeButtonLabel.swift"; sourceTree = "<group>"; };
 		2A0DBD792B05E89B008386DA /* Composer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Composer.swift; sourceTree = "<group>"; };
 		2A0EF2E82C1D9589003F094D /* SelectorComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SelectorComponent.xctestplan; sourceTree = "<group>"; };
+		2A0EF2E92C1DAB96003F094D /* ChevronView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChevronView.swift; sourceTree = "<group>"; };
+		2A0EF2EB2C1DABB2003F094D /* ChevronViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChevronViewConfig+iFora.swift"; sourceTree = "<group>"; };
+		2A0EF2ED2C1DABCA003F094D /* ChevronViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChevronViewConfig.swift; sourceTree = "<group>"; };
+		2A0EF2EF2C1DAEBC003F094D /* View+paddedRoundedBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+paddedRoundedBackground.swift"; sourceTree = "<group>"; };
 		2A0F1E292C06E143006E1231 /* AutoScrollingListPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoScrollingListPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A0F1E2B2C06E144006E1231 /* AutoScrollingListPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoScrollingListPreviewApp.swift; sourceTree = "<group>"; };
 		2A0F1E2D2C06E144006E1231 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -9296,6 +9304,7 @@
 				2AA3A9452BFF8C6300AEBCC9 /* AnywayPaymentParameterView.swift */,
 				2AA3A9472BFF8C7C00AEBCC9 /* AnywayPaymentParameterViewFactory.swift */,
 				2A213D412C1C9143008800FD /* AnywayPaymentWidgetViewFactory.swift */,
+				2A0EF2EF2C1DAEBC003F094D /* View+paddedRoundedBackground.swift */,
 				2AA3A9492BFF8CB300AEBCC9 /* Components */,
 			);
 			path = AnywayPaymentElementView;
@@ -9327,6 +9336,8 @@
 			children = (
 				2AA3A95F2BFF8E4700AEBCC9 /* SelectorTypes.swift */,
 				2AA3A9592BFF8E0100AEBCC9 /* SelectorWrapperView.swift */,
+				2A0EF2E92C1DAB96003F094D /* ChevronView.swift */,
+				2A0EF2ED2C1DABCA003F094D /* ChevronViewConfig.swift */,
 				2A213D3B2C1C528B008800FD /* ObservingSelectorViewModel.swift */,
 				2AA3A95B2BFF8E1500AEBCC9 /* OptionView.swift */,
 				2AA3A95D2BFF8E2800AEBCC9 /* SelectedOptionView.swift */,
@@ -9362,6 +9373,7 @@
 				2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */,
 				2A8A8FA32C00D5CD001ECAA3 /* OtherConfigs.swift */,
 				2A213D3F2C1C549A008800FD /* SelectConfig+iFora.swift */,
+				2A0EF2EB2C1DABB2003F094D /* ChevronViewConfig+iFora.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -17764,6 +17776,7 @@
 				0C42457A2846C79E00899EB2 /* ContactsAgentMock.swift in Sources */,
 				77F1581D28108C1800CA5E4E /* SessionState.swift in Sources */,
 				2A91009C2A7C3E200022308F /* PublicServerSessionKeyMapper.swift in Sources */,
+				2A0EF2EA2C1DAB96003F094D /* ChevronView.swift in Sources */,
 				6867F43D2769AFF60039A0EE /* ResultOperationView.swift in Sources */,
 				83FAD88729CD993700474B06 /* PaymentsServicesSectionViewModel.swift in Sources */,
 				774A8B212865FC4200B81140 /* MessagesHistoryViewModel.swift in Sources */,
@@ -18054,6 +18067,7 @@
 				EDF4F24D277249B90030F087 /* ReturnPaymentContactDecodableModel.swift in Sources */,
 				5008781E2853453A0033DDD5 /* PagerContentViewComponent.swift in Sources */,
 				77517F9427A800C6005CFB77 /* ServerCommands+Transfer.swift in Sources */,
+				2A0EF2EC2C1DABB2003F094D /* ChevronViewConfig+iFora.swift in Sources */,
 				2AA3A9702BFF91F800AEBCC9 /* AnywayPaymentFooterView.swift in Sources */,
 				2A9338562A17C8BB00397C88 /* PhoneNumberKitWrapper.swift in Sources */,
 				0B95C40526B6CB1D00AA57E6 /* ExtensionCustomPopUpWithRateView.swift in Sources */,
@@ -18323,6 +18337,7 @@
 				0B283FCB27038C5400B5E925 /* GetSessionTimeoutSaved.swift in Sources */,
 				6880D32726A5CC69008FBCB4 /* AES.swift in Sources */,
 				774A82CD27BAF5B600E5A5E9 /* KeychainValueType.swift in Sources */,
+				2A0EF2F02C1DAEBC003F094D /* View+paddedRoundedBackground.swift in Sources */,
 				2AF9ACD62AE5BFFE00AAB1DB /* LoggingRemoteServiceDecorator.swift in Sources */,
 				2A9CB0882BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift in Sources */,
 				7769F5C627D8B19300F80607 /* ProductDynamicParams.swift in Sources */,
@@ -18458,6 +18473,7 @@
 				2A01F93F2AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift in Sources */,
 				2A9499202B7362DA00C67F05 /* RemoteServiceErrorOf.swift in Sources */,
 				2AA3A9552BFF8D5D00AEBCC9 /* ProductSelectStateWrapperView.swift in Sources */,
+				2A0EF2EE2C1DABCA003F094D /* ChevronViewConfig.swift in Sources */,
 				834E3F682AC2C40900E49C2B /* Services+getScenarioQRData.swift in Sources */,
 				0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */,
 				EDFA7525277D181500EEB4AE /* TermsDepositTableViewCell.swift in Sources */,

@@ -38,6 +38,7 @@ struct AnywayPaymentParameterView: View {
             
         case let .select(viewModel):
             factory.makeSelectorView(viewModel)
+                .paddedRoundedBackground()
             
         case let .textInput(viewModel):
             InputWrapperView(

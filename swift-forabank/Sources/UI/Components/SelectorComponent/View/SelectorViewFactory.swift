@@ -5,22 +5,26 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
-public struct SelectorViewFactory<Option, OptionView, SelectedOptionView> {
+public struct SelectorViewFactory<Option, OptionView, SelectedOptionView, ToggleLabel> {
     
-    public let createOptionView: CreateOptionView
-    public let createSelectedOptionView: CreateSelectedOptionView
+    public let makeOptionView: MakeOptionView
+    public let makeSelectedOptionView: MakeSelectedOptionView
+    public let makeToggleLabel: MakeToggleLabel
     
     public init(
-        createOptionView: @escaping CreateOptionView, 
-        createSelectedOptionView: @escaping CreateSelectedOptionView
+        makeOptionView: @escaping MakeOptionView,
+        makeSelectedOptionView: @escaping MakeSelectedOptionView,
+        makeToggleLabel: @escaping MakeToggleLabel
     ) {
-        self.createOptionView = createOptionView
-        self.createSelectedOptionView = createSelectedOptionView
+        self.makeOptionView = makeOptionView
+        self.makeSelectedOptionView = makeSelectedOptionView
+        self.makeToggleLabel = makeToggleLabel
     }
 }
 
 public extension SelectorViewFactory {
     
-    typealias CreateOptionView = (Option) -> OptionView
-    typealias CreateSelectedOptionView = (Option) -> SelectedOptionView
+    typealias MakeOptionView = (Option) -> OptionView
+    typealias MakeSelectedOptionView = (Option) -> SelectedOptionView
+    typealias MakeToggleLabel = (Bool) -> ToggleLabel
 }

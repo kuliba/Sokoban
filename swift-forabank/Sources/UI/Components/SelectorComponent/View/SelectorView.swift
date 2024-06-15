@@ -7,10 +7,11 @@
 
 import SwiftUI
 
-public struct SelectorView<T, ID, OptionView, SelectedOptionView>: View
+public struct SelectorView<T, ID, OptionView, SelectedOptionView, ToggleLabel>: View
 where ID: Hashable,
       OptionView: View,
-      SelectedOptionView: View {
+      SelectedOptionView: View,
+      ToggleLabel: View {
     
     let state: State
     let event: (Event) -> Void
@@ -38,7 +39,7 @@ where ID: Hashable,
                 selectedOptionView()
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
-                toggleView()
+                toggleButton()
             }
             
             if state.isShowingOptions {
@@ -55,22 +56,22 @@ public extension SelectorView {
     
     typealias State = Selector<T>
     typealias Event = SelectorEvent<T>
-    typealias Factory = SelectorViewFactory<T, OptionView, SelectedOptionView>
+    typealias Factory = SelectorViewFactory<T, OptionView, SelectedOptionView, ToggleLabel>
 }
 
 private extension SelectorView {
     
     func selectedOptionView() -> some View {
         
-        factory.createSelectedOptionView(state.selected)
+        factory.makeSelectedOptionView(state.selected)
     }
     
-    func toggleView() -> some View {
+    func toggleButton() -> some View {
         
         Button {
             event(.toggleOptions)
         } label: {
-            Text(state.isShowingOptions ? "Hide" : "Show")
+            factory.makeToggleLabel(state.isShowingOptions)
         }
     }
     
@@ -100,7 +101,7 @@ private extension SelectorView {
         option: T
     ) -> some View {
         
-        factory.createOptionView(option)
+        factory.makeOptionView(option)
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(Rectangle())
             .onTapGesture { event(.selectOption(option)) }
@@ -147,8 +148,14 @@ struct SelectorView_Previews: PreviewProvider {
                     self.state = reducer.reduce(self.state, event).0
                 },
                 factory: .init(
-                    createOptionView: { Text($0.value) },
-                    createSelectedOptionView: { Text($0.value).bold() }
+                    makeOptionView: { Text($0.value) },
+                    makeSelectedOptionView: { Text($0.value).bold() },
+                    makeToggleLabel: {
+                        
+                        Image(systemName: "chevron.up")
+                            .rotationEffect(.degrees($0 ? 0 : -180))
+                            .foregroundColor(.red)
+                    }
                 )
             )
             .padding()
