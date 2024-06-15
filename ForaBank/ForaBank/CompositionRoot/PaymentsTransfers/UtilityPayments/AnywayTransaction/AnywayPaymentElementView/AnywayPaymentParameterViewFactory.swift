@@ -18,12 +18,7 @@ struct AnywayPaymentParameterViewFactory {
 
 extension AnywayPaymentParameterViewFactory {
     
-    typealias AnywayPayment = AnywayPaymentDomain.AnywayPayment
-    
     typealias MakeSelectView = (ObservingSelectViewModel) -> SelectWrapperView
-    
-    typealias Option = AnywayElement.UIComponent.Parameter.ParameterType.Option
-    typealias MakeSelectorView = (ObservingSelectorViewModel<Option>) -> SelectorWrapperView
-    
+    typealias MakeSelectorView = (ObservingSelectorViewModel) -> SelectorWrapperView
     typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
 }

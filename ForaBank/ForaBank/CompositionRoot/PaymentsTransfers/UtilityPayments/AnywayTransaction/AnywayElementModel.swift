@@ -24,7 +24,7 @@ extension AnywayElementModel {
         case hidden(AnywayElement.UIComponent.Parameter)
         case nonEditable(AnywayElement.UIComponent.Parameter)
         case numberInput(ObservingInputViewModel)
-        case select(ObservingSelectorViewModel<Option>)
+        case select(ObservingSelectorViewModel)
         case textInput(ObservingInputViewModel)
         case unknown(AnywayElement.UIComponent.Parameter)
         

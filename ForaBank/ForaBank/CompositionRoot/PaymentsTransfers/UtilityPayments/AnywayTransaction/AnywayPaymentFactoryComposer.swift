@@ -95,19 +95,35 @@ private extension AnywayPaymentFactoryComposer {
     }
     
     func makeSelectorView(
-        viewModel: ObservingSelectorViewModel<Option>
+        viewModel: ObservingSelectorViewModel
     ) -> SelectorWrapperView {
+        
+        let image = viewModel.state.image
+        let title = viewModel.state.title
         
         return .init(
             viewModel: viewModel,
             factory: .init(
-                makeIconView: { self.makeIconView("coins") },
+                makeIconView: { self.makeIconView(image) },
                 makeOptionLabel: OptionView.init,
                 makeSelectedOptionLabel: SelectedOptionView.init,
                 makeToggleLabel: { .init(state: $0, config: .iFora) }
             ),
-            config: .iFora(title: "title")
+            config: .iFora(title: title)
         )
+    }
+    
+    private func makeIconView(
+        _  image: AnywayElement.UIComponent.Image?
+    ) -> IconView {
+        
+        switch image {
+        case let .md5Hash(md5Hash):
+            return makeIconView(md5Hash)
+            
+        default:
+            return makeIconView("placeholder")
+        }
     }
     
     typealias Option = UIComponent.Parameter.ParameterType.Option

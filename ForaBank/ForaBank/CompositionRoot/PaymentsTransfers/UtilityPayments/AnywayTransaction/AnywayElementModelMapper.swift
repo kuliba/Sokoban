@@ -113,17 +113,25 @@ private extension AnywayElementModelMapper {
     func makeSelectorViewModel(
         with selector: Selector<Option>,
         and parameter: AnywayElement.UIComponent.Parameter
-    ) -> ObservingSelectorViewModel<Option> {
+    ) -> ObservingSelectorViewModel {
         
         let reducer = SelectorReducer<Option>()
         
         return .init(
-            initialState: selector,
-            reduce: reducer.reduce(_:_:),
+            initialState: .init(
+                title: parameter.title,
+                image: parameter.image,
+                selector: selector
+            ),
+            reduce: { state, event in
+            
+                let (selector, effect) = reducer.reduce(state.selector, event)
+                return (.init(title: state.title, image: state.image, selector: selector), effect)
+            },
             handleEffect: { _,_ in },
             observe: { [weak self] in
                 
-                self?.event(.setValue($0.selected.key, for: parameter.id))
+                self?.event(.setValue($0.selector.selected.key, for: parameter.id))
             }
         )
     }

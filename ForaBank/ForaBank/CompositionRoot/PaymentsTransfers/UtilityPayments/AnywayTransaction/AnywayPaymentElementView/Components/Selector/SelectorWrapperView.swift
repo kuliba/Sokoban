@@ -31,7 +31,7 @@ struct SelectorWrapperView: View {
     var body: some View {
         
         SelectorView(
-            state: viewModel.state,
+            state: viewModel.state.selector,
             event: viewModel.event(_:),
             factory: factory,
             idKeyPath: \.key,
@@ -42,8 +42,8 @@ struct SelectorWrapperView: View {
 
 extension SelectorWrapperView {
     
+    typealias ViewModel = ObservingSelectorViewModel
     typealias Option = AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ParameterType.Option
-    typealias ViewModel = ObservingSelectorViewModel<Option>
     typealias IconView = UIPrimitives.AsyncImage
     typealias Factory = SelectorViewFactory<Option, IconView, OptionView, SelectedOptionView, ChevronView>
     typealias Config = SelectorViewConfig
