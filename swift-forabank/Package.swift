@@ -62,9 +62,10 @@ let package = Package(
         .uiPrimitives,
         .userAccountNavigationComponent,
         // UI Components
+        .carouselComponent,
         .paymentComponents,
         .productProfileComponents,
-        .carouselComponent,
+        .selectorComponent,
         // Utilities
         .remoteServices,
         // tools
@@ -493,6 +494,14 @@ private extension Product {
     
     // MARK: - UI Components
     
+    static let carouselComponent = library(
+        name: .carouselComponent,
+        targets: [
+            .carouselComponent,
+            .rxViewModel
+        ]
+    )
+    
     static let paymentComponents = library(
         name: .paymentComponents,
         targets: [
@@ -501,13 +510,14 @@ private extension Product {
             .carouselComponent,
             .checkBoxComponent,
             .footerComponent,
-            .nameComponent,
-            .selectComponent,
+            .infoComponent,
             .inputComponent,
             .inputPhoneComponent,
-            .infoComponent,
+            .nameComponent,
             .paymentComponents,
             .productSelectComponent,
+            .selectComponent,
+            .selectorComponent,
             .sharedConfigs,
         ]
     )
@@ -524,12 +534,11 @@ private extension Product {
             .topUpCardUI,
         ]
     )
-
-    static let carouselComponent = library(
-        name: .carouselComponent,
+    
+    static let selectorComponent = library(
+        name: .selectorComponent,
         targets: [
-            .carouselComponent,
-            .rxViewModel
+            .selectorComponent,
         ]
     )
     

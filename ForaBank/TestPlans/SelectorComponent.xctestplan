@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "0EC6DEA1-E2DB-44F1-AA01-C9529F2A02A7",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SelectorComponentTests",
+        "name" : "SelectorComponentTests"
+      }
+    }
+  ],
+  "version" : 1
+}
