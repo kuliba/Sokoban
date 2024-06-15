@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-public struct SelectorView<T, ID, OptionView, SelectedOptionView, ToggleLabel>: View
+public struct SelectorView<T, ID, OptionLabel, SelectedOptionLabel, ToggleLabel>: View
 where ID: Hashable,
-      OptionView: View,
-      SelectedOptionView: View,
+      OptionLabel: View,
+      SelectedOptionLabel: View,
       ToggleLabel: View {
     
     let state: State
@@ -56,14 +56,14 @@ public extension SelectorView {
     
     typealias State = Selector<T>
     typealias Event = SelectorEvent<T>
-    typealias Factory = SelectorViewFactory<T, OptionView, SelectedOptionView, ToggleLabel>
+    typealias Factory = SelectorViewFactory<T, OptionLabel, SelectedOptionLabel, ToggleLabel>
 }
 
 private extension SelectorView {
     
     func selectedOptionView() -> some View {
         
-        factory.makeSelectedOptionView(state.selected)
+        factory.makeSelectedOptionLabel(state.selected)
     }
     
     func toggleButton() -> some View {
@@ -101,7 +101,7 @@ private extension SelectorView {
         option: T
     ) -> some View {
         
-        factory.makeOptionView(option)
+        factory.makeOptionLabel(option)
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(Rectangle())
             .onTapGesture { event(.selectOption(option)) }
@@ -148,8 +148,8 @@ struct SelectorView_Previews: PreviewProvider {
                     self.state = reducer.reduce(self.state, event).0
                 },
                 factory: .init(
-                    makeOptionView: { Text($0.value) },
-                    makeSelectedOptionView: { Text($0.value).bold() },
+                    makeOptionLabel: { Text($0.value) },
+                    makeSelectedOptionLabel: { Text($0.value).bold() },
                     makeToggleLabel: {
                         
                         Image(systemName: "chevron.up")

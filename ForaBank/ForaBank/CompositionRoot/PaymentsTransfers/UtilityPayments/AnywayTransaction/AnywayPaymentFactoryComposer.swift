@@ -101,8 +101,8 @@ private extension AnywayPaymentFactoryComposer {
         return .init(
             viewModel: viewModel,
             factory: .init(
-                makeOptionView: OptionView.init,
-                makeSelectedOptionView: SelectedOptionView.init,
+                makeOptionLabel: OptionView.init,
+                makeSelectedOptionLabel: SelectedOptionView.init,
                 makeToggleLabel: { .init(state: $0, config: .iFora) }
             )
         )
