@@ -388,6 +388,7 @@
 		2A0EF2EC2C1DABB2003F094D /* ChevronViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EF2EB2C1DABB2003F094D /* ChevronViewConfig+iFora.swift */; };
 		2A0EF2EE2C1DABCA003F094D /* ChevronViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EF2ED2C1DABCA003F094D /* ChevronViewConfig.swift */; };
 		2A0EF2F02C1DAEBC003F094D /* View+paddedRoundedBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EF2EF2C1DAEBC003F094D /* View+paddedRoundedBackground.swift */; };
+		2A0EF2F22C1DB7B0003F094D /* SelectorViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EF2F12C1DB7AF003F094D /* SelectorViewConfig+iFora.swift */; };
 		2A0F1E2C2C06E144006E1231 /* AutoScrollingListPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F1E2B2C06E144006E1231 /* AutoScrollingListPreviewApp.swift */; };
 		2A0F1E2E2C06E144006E1231 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0F1E2D2C06E144006E1231 /* ContentView.swift */; };
 		2A0F1E302C06E145006E1231 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A0F1E2F2C06E145006E1231 /* Assets.xcassets */; };
@@ -3407,6 +3408,7 @@
 		2A0EF2EB2C1DABB2003F094D /* ChevronViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChevronViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A0EF2ED2C1DABCA003F094D /* ChevronViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChevronViewConfig.swift; sourceTree = "<group>"; };
 		2A0EF2EF2C1DAEBC003F094D /* View+paddedRoundedBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+paddedRoundedBackground.swift"; sourceTree = "<group>"; };
+		2A0EF2F12C1DB7AF003F094D /* SelectorViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectorViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A0F1E292C06E143006E1231 /* AutoScrollingListPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoScrollingListPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A0F1E2B2C06E144006E1231 /* AutoScrollingListPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoScrollingListPreviewApp.swift; sourceTree = "<group>"; };
 		2A0F1E2D2C06E144006E1231 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -9373,6 +9375,7 @@
 				2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */,
 				2A8A8FA32C00D5CD001ECAA3 /* OtherConfigs.swift */,
 				2A213D3F2C1C549A008800FD /* SelectConfig+iFora.swift */,
+				2A0EF2F12C1DB7AF003F094D /* SelectorViewConfig+iFora.swift */,
 				2A0EF2EB2C1DABB2003F094D /* ChevronViewConfig+iFora.swift */,
 			);
 			path = Configs;
@@ -18511,6 +18514,7 @@
 				ED3A96742690FC8300252857 /* BankCell.swift in Sources */,
 				774A8B682865FDAF00B81140 /* PaymentsNameViewComponent.swift in Sources */,
 				2A1F08552A79058F00C5B11B /* Services+getProcessingSessionCode.swift in Sources */,
+				2A0EF2F22C1DB7B0003F094D /* SelectorViewConfig+iFora.swift in Sources */,
 				ED2D8A01286DB4AA0000B391 /* ImageGalleryAgent.swift in Sources */,
 				2ABD78372AF9277A001B5860 /* GetProcessingSessionCodeService+Fetcher.swift in Sources */,
 				77517FE227A98CC3005CFB77 /* UserSettingData.swift in Sources */,

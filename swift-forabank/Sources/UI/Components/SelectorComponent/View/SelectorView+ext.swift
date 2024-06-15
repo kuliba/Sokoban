@@ -10,13 +10,15 @@ public extension SelectorView where T: Hashable, T == ID {
     init(
         state: State,
         event: @escaping (Event) -> Void,
-        factory: Factory
+        factory: Factory,
+        config: Config
     ) {
         self.init(
             state: state,
             event: event,
             factory: factory,
-            idKeyPath: \.self
+            idKeyPath: \.self,
+            config: config
         )
     }
 }
@@ -26,13 +28,15 @@ public extension SelectorView where T: Identifiable, T.ID == ID {
     init(
         state: State,
         event: @escaping (Event) -> Void,
-        factory: Factory
+        factory: Factory,
+        config: Config
     ) {
         self.init(
             state: state,
             event: event,
             factory: factory,
-            idKeyPath: \.id
+            idKeyPath: \.id,
+            config: config
         )
     }
 }

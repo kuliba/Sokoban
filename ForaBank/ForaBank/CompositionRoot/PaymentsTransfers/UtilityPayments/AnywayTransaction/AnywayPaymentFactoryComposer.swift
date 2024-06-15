@@ -101,10 +101,12 @@ private extension AnywayPaymentFactoryComposer {
         return .init(
             viewModel: viewModel,
             factory: .init(
+                makeIconView: { self.makeIconView("coins") },
                 makeOptionLabel: OptionView.init,
                 makeSelectedOptionLabel: SelectedOptionView.init,
                 makeToggleLabel: { .init(state: $0, config: .iFora) }
-            )
+            ),
+            config: .iFora(title: "title")
         )
     }
     

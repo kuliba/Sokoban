@@ -34,6 +34,7 @@ private enum ImageCacheFallback {
     private static let fallbacks: [ImageCache.ImageKey: Image] = [
         "placeholder": .ic24MoreHorizontal,
         "sms": .ic24SmsCode,
+        "coins": .ic24Coins,
         "b6e5b5b8673544184896724799e50384": .ic40Goods
     ]
 }

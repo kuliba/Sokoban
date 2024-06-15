@@ -5,36 +5,44 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
+import SharedConfigs
 import SwiftUI
 
-public struct SelectorView<T, ID, OptionLabel, SelectedOptionLabel, ToggleLabel>: View
+public struct SelectorView<T, ID, IconView, OptionLabel, SelectedOptionLabel, ToggleLabel>: View
 where ID: Hashable,
+      IconView: View,
       OptionLabel: View,
       SelectedOptionLabel: View,
       ToggleLabel: View {
     
-    let state: State
-    let event: (Event) -> Void
-    let factory: Factory
-    let idKeyPath: KeyPath<T, ID>
+    private let state: State
+    private let event: (Event) -> Void
+    private let factory: Factory
+    private let idKeyPath: KeyPath<T, ID>
+    private let config: Config
     
     public init(
         state: State,
         event: @escaping (Event) -> Void,
         factory: Factory,
-        idKeyPath: KeyPath<T, ID>
+        idKeyPath: KeyPath<T, ID>,
+        config: Config
     ) {
         self.state = state
         self.event = event
         self.factory = factory
         self.idKeyPath = idKeyPath
+        self.config = config
     }
     
     public var body: some View {
         
         VStack {
             
-            HStack {
+            HStack(spacing: 16) {
+
+                factory.makeIconView()
+                    .frame(width: 24, height: 24)
                 
                 selectedOptionView()
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -44,7 +52,6 @@ where ID: Hashable,
             
             if state.isShowingOptions {
                 
-                searchView()
                 optionsView()
                     .animation(.easeInOut, value: state.isShowingOptions)
             }
@@ -56,21 +63,35 @@ public extension SelectorView {
     
     typealias State = Selector<T>
     typealias Event = SelectorEvent<T>
-    typealias Factory = SelectorViewFactory<T, OptionLabel, SelectedOptionLabel, ToggleLabel>
+    typealias Factory = SelectorViewFactory<T, IconView, OptionLabel, SelectedOptionLabel, ToggleLabel>
+    typealias Config = SelectorViewConfig
 }
 
 private extension SelectorView {
     
     func selectedOptionView() -> some View {
         
-        factory.makeSelectedOptionLabel(state.selected)
+        VStack(alignment: .leading, spacing: 4) {
+            
+            config.title.text
+                .text(withConfig: config.title.config)
+            
+            if state.isShowingOptions {
+                searchView()
+                    .apply(config: config.search)
+            } else {
+                button(event: .toggleOptions) {
+                    
+                    factory.makeSelectedOptionLabel(state.selected)
+                }
+            }
+        }
     }
     
     func toggleButton() -> some View {
         
-        Button {
-            event(.toggleOptions)
-        } label: {
+        button(event: .toggleOptions) {
+            
             factory.makeToggleLabel(state.isShowingOptions)
         }
     }
@@ -101,10 +122,24 @@ private extension SelectorView {
         option: T
     ) -> some View {
         
-        factory.makeOptionLabel(option)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .contentShape(Rectangle())
-            .onTapGesture { event(.selectOption(option)) }
+        button(event: .selectOption(option)) {
+            
+            factory.makeOptionLabel(option)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+    
+    private func button(
+        event: Event,
+        label: @escaping () -> some View
+    ) -> some View {
+        
+        Button {
+            self.event(event)
+        } label: {
+            label().contentShape(Rectangle())
+        }
+        .buttonStyle(PlainButtonStyle())
     }
 }
 
@@ -148,6 +183,10 @@ struct SelectorView_Previews: PreviewProvider {
                     self.state = reducer.reduce(self.state, event).0
                 },
                 factory: .init(
+                    makeIconView: {
+                        Image(systemName: "airplane")
+                            .foregroundColor(.green)
+                    },
                     makeOptionLabel: { Text($0.value) },
                     makeSelectedOptionLabel: { Text($0.value).bold() },
                     makeToggleLabel: {
@@ -156,7 +195,8 @@ struct SelectorView_Previews: PreviewProvider {
                             .rotationEffect(.degrees($0 ? 0 : -180))
                             .foregroundColor(.red)
                     }
-                )
+                ),
+                config: .preview
             )
             .padding()
             .background(Color.gray.opacity(0.1))
@@ -203,5 +243,22 @@ private extension Selector where T == Item {
         isShowingOptions: true,
         searchQuery: "bb",
         filterPredicate: { $0.contains($1) }
+    )
+}
+
+private extension SelectorViewConfig {
+    
+    static let preview: Self = .init(
+        title: .init(
+            text: "Выберите вид оплаты",
+            config: .init(
+                textFont: .subheadline,
+                textColor: .gray
+            )
+        ),
+        search: .init(
+            textFont: .body.italic(),
+            textColor: .pink
+        )
     )
 }

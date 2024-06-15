@@ -7,21 +7,25 @@
 
 import AnywayPaymentDomain
 import RxViewModel
+import SelectorComponent
 import SwiftUI
-import Tagged
+import UIPrimitives
 
 struct SelectorWrapperView: View {
     
     @ObservedObject private var viewModel: ViewModel
     
     private let factory: Factory
+    private let config: Config
     
     init(
         viewModel: ViewModel,
-        factory: Factory
+        factory: Factory,
+        config: Config
     ) {
-        self._viewModel = .init(wrappedValue: viewModel)
+        self.viewModel = viewModel
         self.factory = factory
+        self.config = config
     }
     
     var body: some View {
@@ -30,14 +34,17 @@ struct SelectorWrapperView: View {
             state: viewModel.state,
             event: viewModel.event(_:),
             factory: factory,
-            idKeyPath: \.key
+            idKeyPath: \.key,
+            config: config
         )
     }
 }
 
 extension SelectorWrapperView {
     
-    typealias ViewModel = ObservingSelectorViewModel<Option>
-    typealias Factory = SelectorViewFactory<Option, OptionView, SelectedOptionView, ChevronView>
     typealias Option = AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ParameterType.Option
+    typealias ViewModel = ObservingSelectorViewModel<Option>
+    typealias IconView = UIPrimitives.AsyncImage
+    typealias Factory = SelectorViewFactory<Option, IconView, OptionView, SelectedOptionView, ChevronView>
+    typealias Config = SelectorViewConfig
 }
