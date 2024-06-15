@@ -1626,6 +1626,7 @@ private extension Target {
             // internal modules
             .foraTools,
             .rxViewModel,
+            .sharedConfigs,
             .uiPrimitives,
         ],
         path: "Sources/UI/\(String.otpInputComponent)"

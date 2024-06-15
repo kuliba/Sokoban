@@ -5,7 +5,8 @@
 //  Created by Igor Malyarov on 14.06.2024.
 //
 
-import PaymentComponents
+import OTPInputComponent
+import UIPrimitives
 
 struct AnywayPaymentWidgetViewFactory {
     
@@ -15,5 +16,7 @@ struct AnywayPaymentWidgetViewFactory {
 extension AnywayPaymentWidgetViewFactory {
     
     typealias OTPViewModel = TimedOTPInputViewModel
-    typealias MakeOTPView = (OTPViewModel) -> TimedOTPInputWrapperView
+    typealias IconView = UIPrimitives.AsyncImage
+    typealias OTPView = TimedOTPInputWrapperView<IconView>
+    typealias MakeOTPView = (OTPViewModel) -> OTPView
 }

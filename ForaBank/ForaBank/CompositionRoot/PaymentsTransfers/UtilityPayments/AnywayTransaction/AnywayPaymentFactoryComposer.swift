@@ -124,9 +124,13 @@ private extension AnywayPaymentFactoryComposer {
     
     private func makeOTPView(
         viewModel: TimedOTPInputViewModel
-    ) -> TimedOTPInputWrapperView {
+    ) -> AnywayPaymentWidgetViewFactory.OTPView {
         
-        return .init(viewModel: viewModel, config: .iFora)
+        return .init(
+            viewModel: viewModel, 
+            config: .iFora,
+            iconView: { self.makeIconView("sms") }
+        )
     }
 }
 

@@ -834,6 +834,7 @@
 		2A6724122ADB30D000FAD522 /* KeyChainStore+Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6724112ADB30D000FAD522 /* KeyChainStore+Store.swift */; };
 		2A6724142ADB313A00FAD522 /* KeyTagKeyChainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6724132ADB313A00FAD522 /* KeyTagKeyChainStore.swift */; };
 		2A67A01E2A433135003BE637 /* MosParkingDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A67A01D2A433135003BE637 /* MosParkingDataMapper.swift */; };
+		2A69122A2C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */; };
 		2A6930302BE8C95800C9B6D2 /* PaymentsTransfersFlowReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69302F2BE8C95800C9B6D2 /* PaymentsTransfersFlowReducer.swift */; };
 		2A6930322BE8CCEB00C9B6D2 /* PaymentsTransfersFlowReducerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6930312BE8CCEB00C9B6D2 /* PaymentsTransfersFlowReducerFactory.swift */; };
 		2A6930342BE8DB1500C9B6D2 /* PaymentsTransfersReducerFactory+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6930332BE8DB1500C9B6D2 /* PaymentsTransfersReducerFactory+preview.swift */; };
@@ -3869,6 +3870,7 @@
 		2A6724112ADB30D000FAD522 /* KeyChainStore+Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyChainStore+Store.swift"; sourceTree = "<group>"; };
 		2A6724132ADB313A00FAD522 /* KeyTagKeyChainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyTagKeyChainStore.swift; sourceTree = "<group>"; };
 		2A67A01D2A433135003BE637 /* MosParkingDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingDataMapper.swift; sourceTree = "<group>"; };
+		2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimedOTPInputViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A69302F2BE8C95800C9B6D2 /* PaymentsTransfersFlowReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFlowReducer.swift; sourceTree = "<group>"; };
 		2A6930312BE8CCEB00C9B6D2 /* PaymentsTransfersFlowReducerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFlowReducerFactory.swift; sourceTree = "<group>"; };
 		2A6930332BE8DB1500C9B6D2 /* PaymentsTransfersReducerFactory+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersReducerFactory+preview.swift"; sourceTree = "<group>"; };
@@ -9383,6 +9385,7 @@
 			children = (
 				2AA3A9732BFF958800AEBCC9 /* AnywayPaymentFooterConfig+iFora.swift */,
 				2A326DA42C00A3C6005B25E7 /* AnywayPaymentElementConfig+iFora.swift */,
+				2A6912292C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift */,
 				2A8A8FA32C00D5CD001ECAA3 /* OtherConfigs.swift */,
 				2A213D3F2C1C549A008800FD /* SelectConfig+iFora.swift */,
 			);
@@ -18597,6 +18600,7 @@
 				ED84994E26A85A65005205C6 /* SettingsViewController.swift in Sources */,
 				2AD15D132C19D0FC003329C7 /* TransactionDocumentButton.swift in Sources */,
 				A50869E2276B9BAE004C5E17 /* QRFoundOrgCell.swift in Sources */,
+				2A69122A2C1D846C000801ED /* TimedOTPInputViewConfig+iFora.swift in Sources */,
 				774E319327A06F3D005A067B /* TemplatesListViewHostingViewController.swift in Sources */,
 				7744940227FDF9D7001E2B9E /* PlacesFilterView.swift in Sources */,
 				ED84995726A8831E005205C6 /* EPExtensions.swift in Sources */,

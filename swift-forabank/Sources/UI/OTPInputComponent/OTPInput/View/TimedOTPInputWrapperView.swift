@@ -7,42 +7,77 @@
 
 import SwiftUI
 
-public struct TimedOTPInputWrapperView: View {
+public struct TimedOTPInputWrapperView<IconView: View>: View {
     
-    @ObservedObject private var viewModel: TimedOTPInputViewModel
-    private let config: OTPInputConfig
+    @ObservedObject private var viewModel: ViewModel
+    
+    private let config: Config
+    private let iconView: () -> IconView
     
     public init(
-        viewModel: TimedOTPInputViewModel,
-        config: OTPInputConfig
+        viewModel: ViewModel,
+        config: Config,
+        iconView: @escaping () -> IconView
     ) {
         self.viewModel = viewModel
         self.config = config
+        self.iconView = iconView
     }
     
     public var body: some View {
         
-        switch viewModel.state.status {
-        case .failure:
-            EmptyView()
-            
-        case let .input(input):
-            OTPInputView(
-                state: input,
-                phoneNumber: viewModel.state.phoneNumber.rawValue,
-                event: viewModel.event(_:),
-                config: config
+        OTPInputStatusView(
+            state: viewModel.state.status
+        ) {
+            TimedOTPInputView(
+                state: $0,
+                event: event(_:),
+                config: config,
+                iconView: iconView
             )
-            
-        case .validOTP:
-            EmptyView()
         }
     }
 }
 
-#Preview {
-    TimedOTPInputWrapperView(
-        viewModel: .init(initiateOTP: { _ in }, submitOTP: { _,_ in }),
-        config: .preview
-    )
+public extension TimedOTPInputWrapperView {
+    
+    typealias ViewModel = TimedOTPInputViewModel
+    typealias Config = TimedOTPInputViewConfig
+}
+
+private extension TimedOTPInputWrapperView {
+    
+    func event(
+        _ event: InputViewEvent
+    ) {
+        switch event {
+        case .resend:
+            viewModel.event(.countdown(.prepare))
+            
+        case let .edit(text):
+            viewModel.event(.otpField(.edit(text)))
+        }
+    }
+}
+
+struct TimedOTPInputWrapperView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        TimedOTPInputWrapperView(
+            viewModel: .init(
+                timerDuration: 10,
+                initiateOTP: { _ in print("initiateOTP") },
+                submitOTP: { otp,_ in print("submitOTP") }
+            ),
+            config: .preview,
+            iconView: {
+                
+                Image(systemName: "square")
+                    .resizable()
+                    .background(Color.red.opacity(0.1))
+            }
+        )
+        .padding()
+    }
 }
