@@ -180,10 +180,14 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         with spinnerActions: RootViewModel.RootActions.Spinner?
     ) -> (AnywayTransactionState, @escaping NotifyStatus) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
         
-        let composer = CachedAnywayTransactionViewModelComposer(
+        let elementMapperComposer = AnywayElementModelMapperComposer(
             currencyOfProduct: currencyOfProduct,
             getProducts: model.productSelectProducts,
-            initiateOTP: initiateOTP,
+            initiateOTP: initiateOTP
+        )
+        
+        let composer = CachedAnywayTransactionViewModelComposer(
+            elementMapperComposer: elementMapperComposer,
             makeTransactionViewModel: makeTransactionViewModel,
             spinnerActions: spinnerActions
         )
