@@ -60,18 +60,4 @@ extension TimedOTPInputViewConfig {
             self.config = config
         }
     }
-    
-    public struct TitleConfig: Equatable {
-        
-        let text: String
-        let config: TextConfig
-        
-        public init(
-            text: String,
-            config: TextConfig
-        ) {
-            self.text = text
-            self.config = config
-        }
-    }
 }
