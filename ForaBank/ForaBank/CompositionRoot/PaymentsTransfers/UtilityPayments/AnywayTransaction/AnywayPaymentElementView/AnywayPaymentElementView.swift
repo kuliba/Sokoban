@@ -15,39 +15,35 @@ struct AnywayPaymentElementView<IconView: View>: View {
     let state: State
     let event: (Event) -> Void
     let factory: Factory
-#warning("better move config to factory")
     let config: Config
     
     var body: some View {
         
         switch state.model {
         case let .field(field):
-            PaymentComponents.InfoView(
-                info: field.info,
-                config: config.info,
-                icon: { makeIconView(field) }
-            )
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(12)
-
+            fieldView(field, config: config.info)
+                .paddedRoundedBackground()
+            
         case let .parameter(parameter):
-            AnywayPaymentParameterView(
-                parameter: parameter,
-                factory: factory.parameterFactory
-            )
+            parameterView(parameter)
             
         case let .widget(widget):
             widgetView(widget)
         }
     }
+}
+
+private extension View {
     
-    private func makeIconView(
-        _ field: AnywayPaymentDomain.AnywayElement.UIComponent.Field
+    func paddedRoundedBackground(
+        color: Color = Color.gray.opacity(0.1),
+        cornerRadius: CGFloat = 12
     ) -> some View {
         
-        #warning("FIX hardcoded value")
-        return factory.makeIconView("placeholder")
+        self
+            .padding()
+            .background(color)
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
     }
 }
 
@@ -61,6 +57,36 @@ extension AnywayPaymentElementView {
 
 private extension AnywayPaymentElementView {
     
+    func fieldView(
+        _ field: AnywayElement.UIComponent.Field,
+        config: InfoConfig
+    ) -> some View {
+        
+        PaymentComponents.InfoView(
+            info: field.info,
+            config: config,
+            icon: { makeIconView(field) }
+        )
+    }
+    
+    func parameterView(
+        _ parameter: AnywayElementModel.Parameter
+    ) -> some View {
+        
+        AnywayPaymentParameterView(
+            parameter: parameter,
+            factory: factory.parameterFactory
+        )
+    }
+    
+    func makeIconView(
+        _ field: AnywayPaymentDomain.AnywayElement.UIComponent.Field
+    ) -> some View {
+        
+#warning("FIX hardcoded value")
+        return factory.makeIconView("placeholder")
+    }
+    
     @ViewBuilder
     func widgetView(
         _ widget: AnywayElementModel.Widget
@@ -69,9 +95,11 @@ private extension AnywayPaymentElementView {
         switch widget {
         case let .otp(viewModel):
             factory.widgetFactory.makeOTPView(viewModel)
+                .paddedRoundedBackground()
             
         case let .simpleOTP(viewModel):
             SimpleOTPWrapperView(viewModel: viewModel)
+                .paddedRoundedBackground()
             
         case let .product(viewModel):
             ProductSelectWrapperView(viewModel: viewModel, config: .iFora)
