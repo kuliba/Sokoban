@@ -209,6 +209,8 @@ let package = Package(
         .nameComponent,
         .selectComponent,
         .selectComponentTests,
+        .selectorComponent,
+        .selectorComponentTests,
         .inputPhoneComponent,
         .inputComponent,
         .paymentComponents,
@@ -1904,6 +1906,28 @@ private extension Target {
         path: "Tests/UI/Components/\(String.selectComponentTests)"
     )
     
+    static let selectorComponent = target(
+        name: .selectorComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.selectorComponent)"
+    )
+    
+    static let selectorComponentTests = testTarget(
+        name: .selectorComponentTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            .rxViewModel,
+            // internal modules
+            .selectorComponent,
+        ],
+        path: "Tests/UI/Components/\(String.selectorComponentTests)"
+    )
+    
     static let inputPhoneComponent = target(
         name: .inputPhoneComponent,
         dependencies: [
@@ -1942,6 +1966,7 @@ private extension Target {
             .productSelectComponent,
             .rxViewModel,
             .selectComponent,
+            .selectorComponent,
             .sharedConfigs,
         ],
         path: "Sources/UI/Components/\(String.paymentComponents)"
@@ -2300,6 +2325,10 @@ private extension Target.Dependency {
         name: .selectComponent
     )
      
+    static let selectorComponent = byName(
+        name: .selectorComponent
+    )
+     
     static let inputPhoneComponent = byName(
         name: .inputPhoneComponent
     )
@@ -2564,6 +2593,9 @@ private extension String {
     
     static let selectComponent = "SelectComponent"
     static let selectComponentTests = "SelectComponentTests"
+    
+    static let selectorComponent = "SelectorComponent"
+    static let selectorComponentTests = "SelectorComponentTests"
     
     static let inputComponent = "InputComponent"
     
