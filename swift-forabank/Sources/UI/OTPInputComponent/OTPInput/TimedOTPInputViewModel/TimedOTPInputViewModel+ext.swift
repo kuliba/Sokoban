@@ -11,6 +11,7 @@ public extension TimedOTPInputViewModel {
     
     convenience init(
         phoneNumber: String? = nil,
+        otpText: String = "",
         timerDuration: Int = 60,
         otpLength: Int = 6,
         initiateOTP: @escaping InitiateOTP,
@@ -35,7 +36,8 @@ public extension TimedOTPInputViewModel {
         self.init(
             initialState: .starting(
                 phoneNumber: .init(phoneNumber ?? ""),
-                duration: timerDuration
+                duration: timerDuration,
+                text: otpText
             ),
             reduce: otpInputReducer.reduce(_:_:),
             handleEffect: otpInputEffectHandler.handleEffect(_:_:),

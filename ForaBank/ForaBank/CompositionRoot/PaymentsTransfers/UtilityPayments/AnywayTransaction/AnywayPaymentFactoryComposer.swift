@@ -7,6 +7,7 @@
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import OTPInputComponent
 import PaymentComponents
 import RxViewModel
 import SwiftUI
@@ -40,7 +41,8 @@ extension AnywayPaymentFactoryComposer {
         
         let elementFactory = AnywayPaymentElementViewFactory(
             makeIconView: makeIconView,
-            parameterFactory: makeElementFactory()
+            parameterFactory: makeElementFactory(), 
+            widgetFactory: makeWidgetFactory()
         )
         
         return .init(
@@ -110,6 +112,22 @@ private extension AnywayPaymentFactoryComposer {
     typealias Observe = (ProductID, Currency) -> Void
     typealias ProductID = AnywayElement.Widget.Product.ProductID
     typealias Currency = AnywayPaymentEvent.Widget.Currency
+}
+
+private extension AnywayPaymentFactoryComposer {
+    
+    func makeWidgetFactory(
+    ) -> AnywayPaymentWidgetViewFactory {
+        
+        return .init(makeOTPView: makeOTPView)
+    }
+    
+    private func makeOTPView(
+        viewModel: TimedOTPInputViewModel
+    ) -> TimedOTPInputWrapperView {
+        
+        return .init(viewModel: viewModel, config: .iFora)
+    }
 }
 
 private extension CachedTransactionState {

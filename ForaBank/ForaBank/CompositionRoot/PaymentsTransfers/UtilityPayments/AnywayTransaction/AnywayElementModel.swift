@@ -7,6 +7,7 @@
 
 import AnywayPaymentDomain
 import Foundation
+import PaymentComponents
 import RxViewModel
 
 enum AnywayElementModel {
@@ -34,12 +35,14 @@ extension AnywayElementModel {
         
         case product(ObservingProductSelectViewModel)
         case otp(OTPViewModel)
+        case simpleOTP(SimpleOTPViewModel)
     }
 }
 
 extension AnywayElementModel.Widget {
     
-    typealias OTPViewModel = RxObservingViewModel<OTPState, OTPEvent, OTPEffect>
+    typealias OTPViewModel = TimedOTPInputViewModel
+    typealias SimpleOTPViewModel = RxObservingViewModel<OTPState, OTPEvent, OTPEffect>
     
     struct OTPState: Equatable {
         

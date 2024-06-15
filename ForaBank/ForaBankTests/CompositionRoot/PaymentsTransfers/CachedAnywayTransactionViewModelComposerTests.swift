@@ -65,7 +65,8 @@ final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
         
         let sut = Composer(
             currencyOfProduct: { _ in "₽" },
-            getProducts: { [] }, 
+            getProducts: { [] },
+            initiateOTP: { _ in },
             makeTransactionViewModel: makeAnywayTransactionViewModel,
             spinnerActions: nil
         )

@@ -201,8 +201,24 @@ private extension PaymentsTransfersFlowManagerComposer {
             nanoServices: nanoServices
         )
         
+        let initiateOTP: AnywayElementModelMapper.InitiateOTP = { completion in
+            
+//            switch self.flag.optionOrStub {
+//            case .live:
+//                let initiateOTP = ForaBank.NanoServices.getVerificationCode(httpClient: httpClient, infoNetworkLog)
+//                initiateOTP { completion($0); _ = initiateOTP }
+//                
+//            case .stub:
+                DispatchQueue.main.delay(for: .seconds(1)) { 
+                    
+                    completion(.failure(.connectivityError))
+                }
+//            }
+        }
+        
         return .init(
             model: model,
+            initiateOTP: initiateOTP,
             observeLast: settings.observeLast,
             fraudDelay: settings.fraudDelay,
             navTitle: settings.utilityNavTitle,

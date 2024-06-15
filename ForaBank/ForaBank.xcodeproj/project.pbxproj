@@ -458,6 +458,7 @@
 		2A213D3C2C1C528B008800FD /* ObservingSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A213D3B2C1C528B008800FD /* ObservingSelectorViewModel.swift */; };
 		2A213D3E2C1C52B6008800FD /* SelectWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A213D3D2C1C52B6008800FD /* SelectWrapperView.swift */; };
 		2A213D402C1C549A008800FD /* SelectConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A213D3F2C1C549A008800FD /* SelectConfig+iFora.swift */; };
+		2A213D422C1C9143008800FD /* AnywayPaymentWidgetViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A213D412C1C9143008800FD /* AnywayPaymentWidgetViewFactory.swift */; };
 		2A218D10299C1583002C313D /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A218D0F299C1583002C313D /* Sequence+Extension.swift */; };
 		2A21E3612AC2069800DB6456 /* PaymentTemplateDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A21E3602AC2069800DB6456 /* PaymentTemplateDataTests.swift */; };
 		2A21E3642AC20C5D00DB6456 /* Model+PaymensSFPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A21E3632AC20C5D00DB6456 /* Model+PaymensSFPTests.swift */; };
@@ -3488,6 +3489,7 @@
 		2A213D3B2C1C528B008800FD /* ObservingSelectorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservingSelectorViewModel.swift; sourceTree = "<group>"; };
 		2A213D3D2C1C52B6008800FD /* SelectWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectWrapperView.swift; sourceTree = "<group>"; };
 		2A213D3F2C1C549A008800FD /* SelectConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectConfig+iFora.swift"; sourceTree = "<group>"; };
+		2A213D412C1C9143008800FD /* AnywayPaymentWidgetViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentWidgetViewFactory.swift; sourceTree = "<group>"; };
 		2A218D0F299C1583002C313D /* Sequence+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sequence+Extension.swift"; sourceTree = "<group>"; };
 		2A21E3602AC2069800DB6456 /* PaymentTemplateDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTemplateDataTests.swift; sourceTree = "<group>"; };
 		2A21E3632AC20C5D00DB6456 /* Model+PaymensSFPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymensSFPTests.swift"; sourceTree = "<group>"; };
@@ -9297,6 +9299,7 @@
 				2AA3A9382BFF8ADF00AEBCC9 /* AnywayPaymentElementConfig.swift */,
 				2AA3A9452BFF8C6300AEBCC9 /* AnywayPaymentParameterView.swift */,
 				2AA3A9472BFF8C7C00AEBCC9 /* AnywayPaymentParameterViewFactory.swift */,
+				2A213D412C1C9143008800FD /* AnywayPaymentWidgetViewFactory.swift */,
 				2AA3A9492BFF8CB300AEBCC9 /* Components */,
 			);
 			path = AnywayPaymentElementView;
@@ -17801,6 +17804,7 @@
 				0BB24ABA26F2884A00DDA4F6 /* ReturnAllCardList.swift in Sources */,
 				0BAD4D37273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift in Sources */,
 				2A65D8AD2A333135003B3FEA /* Purefs.swift in Sources */,
+				2A213D422C1C9143008800FD /* AnywayPaymentWidgetViewFactory.swift in Sources */,
 				0BF816FC27E122AF00AC890D /* EPContactSelfDataView.swift in Sources */,
 				2A3F1B232A49894100D8FE55 /* DefaultMosParkingPickerDataMapper.swift in Sources */,
 				ED84995626A8831E005205C6 /* EPContactsPicker.swift in Sources */,

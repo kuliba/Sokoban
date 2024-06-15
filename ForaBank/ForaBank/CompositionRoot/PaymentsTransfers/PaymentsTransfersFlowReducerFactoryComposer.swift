@@ -14,6 +14,7 @@ import UtilityServicePrepaymentCore
 final class PaymentsTransfersFlowReducerFactoryComposer {
     
     private let model: Model
+    private let initiateOTP: InitiateOTP
     private let observeLast: Int
     private let fraudDelay: Double
     private let navTitle: String
@@ -22,6 +23,7 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
     
     init(
         model: Model,
+        initiateOTP: @escaping InitiateOTP,
         observeLast: Int,
         fraudDelay: Double,
         navTitle: String,
@@ -29,12 +31,15 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
         makeTransactionViewModel: @escaping MakeTransactionViewModel
     ) {
         self.model = model
+        self.initiateOTP = initiateOTP
         self.observeLast = observeLast
         self.fraudDelay = fraudDelay
         self.navTitle = navTitle
         self.microServices = microServices
         self.makeTransactionViewModel = makeTransactionViewModel
     }
+    
+    typealias InitiateOTP = CountdownEffectHandler.InitiateOTP
     
     typealias MicroServices = PrepaymentPickerMicroServices<Operator>
     
@@ -178,6 +183,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         let composer = CachedAnywayTransactionViewModelComposer(
             currencyOfProduct: currencyOfProduct,
             getProducts: model.productSelectProducts,
+            initiateOTP: initiateOTP,
             makeTransactionViewModel: makeTransactionViewModel,
             spinnerActions: spinnerActions
         )

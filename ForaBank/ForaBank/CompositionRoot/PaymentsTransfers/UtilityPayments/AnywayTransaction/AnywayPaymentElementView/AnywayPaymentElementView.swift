@@ -47,7 +47,7 @@ struct AnywayPaymentElementView<IconView: View>: View {
     ) -> some View {
         
         #warning("FIX hardcoded value")
-        return factory.makeIconView("")
+        return factory.makeIconView("placeholder")
     }
 }
 
@@ -65,18 +65,13 @@ private extension AnywayPaymentElementView {
     func widgetView(
         _ widget: AnywayElementModel.Widget
     ) -> some View {
+        
         switch widget {
-        case let .otp(otpViewModel):
-            #warning("replace with real components")
-#warning("can't use CodeInputView - not a part  af any product (neither PaymentComponents nor any other)")
-#warning("need a wrapper with timer")
-            //            CodeInputView(
-            //                state: <#T##OTPInputState.Status.Input#>,
-            //                event: <#T##(OTPInputEvent) -> Void#>,
-            //                config: <#T##CodeInputConfig#>
-            //            )
-            SimpleOTPWrapperView(viewModel: otpViewModel)
-
+        case let .otp(viewModel):
+            factory.widgetFactory.makeOTPView(viewModel)
+            
+        case let .simpleOTP(viewModel):
+            SimpleOTPWrapperView(viewModel: viewModel)
             
         case let .product(viewModel):
             ProductSelectWrapperView(viewModel: viewModel, config: .iFora)

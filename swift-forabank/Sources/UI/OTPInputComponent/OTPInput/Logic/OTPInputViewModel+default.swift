@@ -11,14 +11,15 @@ public extension OTPInputState {
     
     static func starting(
         phoneNumber: PhoneNumberMask,
-        duration: Int
+        duration: Int,
+        text: String = ""
     ) -> Self {
         
         .init(
             phoneNumber: phoneNumber,
             status: .input(.init(
                 countdown: .starting(duration: duration),
-                otpField: .init()
+                otpField: .init(text: text)
             ))
         )
     }

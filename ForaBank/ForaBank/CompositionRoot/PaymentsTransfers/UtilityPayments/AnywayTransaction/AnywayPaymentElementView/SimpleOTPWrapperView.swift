@@ -19,7 +19,7 @@ struct SimpleOTPWrapperView: View {
 
 extension SimpleOTPWrapperView {
     
-    typealias ViewModel = AnywayElementModel.Widget.OTPViewModel
+    typealias ViewModel = AnywayElementModel.Widget.SimpleOTPViewModel
 }
 
 struct SimpleOTPView: View {

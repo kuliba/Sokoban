@@ -14,20 +14,24 @@ final class AnywayElementModelMapper {
     private let event: (Event) -> Void
     private let currencyOfProduct: CurrencyOfProduct
     private let getProducts: GetProducts
+    private let initiateOTP: InitiateOTP
     
     init(
         event: @escaping (Event) -> Void,
         currencyOfProduct: @escaping CurrencyOfProduct,
-        getProducts: @escaping GetProducts
+        getProducts: @escaping GetProducts,
+        initiateOTP: @escaping InitiateOTP
     ) {
         self.event = event
         self.currencyOfProduct = currencyOfProduct
         self.getProducts = getProducts
+        self.initiateOTP = initiateOTP
     }
     
     typealias Event = AnywayPaymentEvent
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
+    typealias InitiateOTP = CountdownEffectHandler.InitiateOTP
 }
 
 extension AnywayElementModelMapper {
@@ -164,11 +168,12 @@ private extension AnywayElementModelMapper {
     ) -> AnywayElementModel {
         
         switch widget {
+        case let .otp(otp):
+#warning("add duration to settings")
+            return .widget(.otp(makeOTPViewModel(duration: 60, otp: otp)))
+            
         case let .product(product):
             return .widget(.product(makeProductSelectViewModel(with: product)))
-            
-        case let .otp(otp):
-            return .widget(.otp(makeOTPViewModel(with: otp)))
         }
     }
     
@@ -203,8 +208,42 @@ private extension AnywayElementModelMapper {
     
 #warning("extract?")
     private func makeOTPViewModel(
-        with otp: Int?
+        duration timerDuration: Int,
+        otp: Int?
     ) -> AnywayElementModel.Widget.OTPViewModel {
+        
+        // TODO: add timeDuration and otpLength to Settings
+        let timerDuration = 60
+        let otpLength = 6
+                
+        return .init(
+            otpText: otp.map { "\($0)" } ?? "",
+            timerDuration: timerDuration,
+            otpLength: otpLength,
+            initiateOTP: initiateOTP,
+            submitOTP: { _,_ in },
+            observe: { state in
+                
+                switch state.status {
+                case let .failure(failure):
+#warning("add error handling widget event!")
+#warning("note 2 error case needed: recoverable wrong OTP value and terminal when all attempts are exhausted")
+                    // self.event(.widget(.otp(.failure(failure))))
+                    dump(failure)
+                    
+                case let .input(input):
+                    self.event(.widget(.otp(input.otpField.text)))
+                    
+                case .validOTP:
+                    break
+                }
+            }
+        )
+    }
+    
+    private func makeSimpleOTPViewModel(
+        with otp: Int?
+    ) -> AnywayElementModel.Widget.SimpleOTPViewModel {
         
         return .init(
             initialState: .init(value: otp),

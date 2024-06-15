@@ -13,23 +13,28 @@ final class CachedAnywayTransactionViewModelComposer {
     
     private let currencyOfProduct: CurrencyOfProduct
     private let getProducts: GetProducts
+    private let initiateOTP: InitiateOTP
     private let makeTransactionViewModel: MakeTransactionViewModel
     private let spinnerActions: SpinnerActions
     
     init(
         currencyOfProduct: @escaping CurrencyOfProduct,
         getProducts: @escaping GetProducts,
+        initiateOTP: @escaping InitiateOTP,
         makeTransactionViewModel: @escaping MakeTransactionViewModel,
         spinnerActions: SpinnerActions
     ) {
         self.currencyOfProduct = currencyOfProduct
         self.getProducts = getProducts
+        self.initiateOTP = initiateOTP
         self.makeTransactionViewModel = makeTransactionViewModel
         self.spinnerActions = spinnerActions
     }
     
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
+    
+    typealias InitiateOTP = CountdownEffectHandler.InitiateOTP
     
     typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
     typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
@@ -57,7 +62,8 @@ extension CachedAnywayTransactionViewModelComposer {
         let mapper = AnywayElementModelMapper(
             event: { transactionViewModel.event(.payment($0)) },
             currencyOfProduct: currencyOfProduct,
-            getProducts: getProducts
+            getProducts: getProducts,
+            initiateOTP: initiateOTP
         )
         let mapAnywayElement = mapper.map(_:)
         
