@@ -26,7 +26,6 @@ public extension OTPInputState {
 
 public extension OTPInputViewModel {
     
-#warning("improve duration with Tagged")
     static func `default`(
         initialState: OTPInputState,
         timer: TimerProtocol = RealTimer(),
