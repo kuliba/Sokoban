@@ -21,6 +21,7 @@ public final class TimedOTPInputViewModel: ObservableObject {
     public init(
         viewModel: OTPInputViewModel,
         timer: TimerProtocol = RealTimer(),
+        observe: @escaping Observe = { _ in },
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.state = viewModel.state
@@ -28,6 +29,7 @@ public final class TimedOTPInputViewModel: ObservableObject {
         
         cancellable = viewModel.$state
             .removeDuplicates()
+            .handleEvents(receiveOutput: observe)
             .receive(on: scheduler)
             .sink { [weak self, viewModel, timer] state in
                 
@@ -68,4 +70,5 @@ public extension TimedOTPInputViewModel {
     
     typealias State = OTPInputState
     typealias Event = OTPInputEvent
+    typealias Observe = (State) -> Void
 }
