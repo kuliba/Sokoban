@@ -66,11 +66,11 @@ extension MyProductsSectionView {
                 case let .item(itemVM):
                     itemView(itemVM)
                         .modifier(HideSeparatorModifier())
-
+                    
                 case .placeholder:
                     placeholderView()
                         .modifier(HideSeparatorModifier())
-
+                    
                 }
             }
             .onMove { indexes, destination in
@@ -97,18 +97,12 @@ extension MyProductsSectionView {
                 
                 if let products = viewModel.groupingCards[id] {
                     
-                    if products.count == 1, let productData = products.first {
-                        itemView(viewModel.createSectionItemViewModel(productData))
-                            .modifier(HideSeparatorModifier())
-
-                    } else {
-                        _itemsList(products.compactMap {
-                            if $0.id != id {
-                                return viewModel.createSectionItemViewModel($0)
-                            } else { return nil}
-                        }, id)
-                        .modifier(HideSeparatorModifier())
-                    }
+                    _itemsList(products.compactMap {
+                        if $0.id != id {
+                            return viewModel.createSectionItemViewModel($0)
+                        } else { return nil}
+                    }, id)
+                    .modifier(HideSeparatorModifier())
                 }
             }
             .onMove { indexes, destination in
@@ -132,7 +126,7 @@ extension MyProductsSectionView {
     ) -> some View {
         
         List {
-            mainCardView(mainProductID)
+            mainCardView(mainProductID, !(items.isEmpty || items.count == 1))
             
             ForEach(items, id: \.id) { item in
                 itemView(item)
@@ -146,12 +140,12 @@ extension MyProductsSectionView {
             }
             .moveDisabled(editMode != .active || (editMode == .active && items.count == 1))
         }
-        .frame(height: 72 * CGFloat(items.count + 1))
+        .frame(height: 72 * CGFloat(items.countRows(mainProductID: mainProductID, getProduct: viewModel.productByID(_:))))
         .listStyle(.plain)
         .environment(\.editMode, $editMode)
-        .id(mainProductID)
         .listRowBackground(Color.barsBars)
-        .border(width: 2, edges: [.top, .bottom], color: .blurMediumGray30)
+        .modifier(BorderForAdditionalGroupsModifier(needBorder: items.needBorder(mainProductID: mainProductID, getProduct: viewModel.productByID(_:))))
+        .id(mainProductID)
     }
     
     private func itemView(
@@ -170,14 +164,15 @@ extension MyProductsSectionView {
     }
     
     private func mainCardView(
-        _ productID: ProductData.ID
+        _ productID: ProductData.ID,
+        _ needDefaultCard: Bool
     ) -> some View {
         
         if let product = viewModel.productByID(productID) {
             AnyView(itemView(viewModel.createSectionItemViewModel(product)))
-        } else {
+        } else if needDefaultCard {
             AnyView(defaultMainCard())
-        }
+        } else { AnyView(EmptyView()) }
     }
     
     private func defaultMainCard() -> some View {
@@ -301,10 +296,45 @@ private extension MyProductsSectionView {
     }
 }
 
+private extension MyProductsSectionView {
+    
+    struct BorderForAdditionalGroupsModifier : ViewModifier {
+        
+        let needBorder: Bool
+        
+        func body(content: Content) -> some View {
+            
+            if needBorder  {
+                content
+                    .border(width: 2, edges: [.top, .bottom], color: .blurMediumGray30)
+            } else {
+                content
+            }
+        }
+    }
+}
+
 struct MyProductsSectionView_Previews: PreviewProvider {
     
     static var previews: some View {
         MyProductsSectionView(viewModel: .sample2, editMode: .constant(.inactive))
             .previewLayout(.sizeThatFits)
+    }
+}
+
+private extension Array where Element == MyProductsSectionItemViewModel {
+    
+    func countRows(
+        mainProductID: ProductData.ID,
+        getProduct: @escaping (ProductData.ID) -> ProductData?
+    ) -> Int {
+        return isEmpty || (count == 1 && getProduct(mainProductID) == nil) ? 1 : count + 1
+    }
+    
+    func needBorder(
+        mainProductID: ProductData.ID,
+        getProduct: @escaping (ProductData.ID) -> ProductData?
+    ) -> Bool {
+        return isEmpty || (count == 1 && getProduct(mainProductID) == nil) ? false : true
     }
 }
