@@ -15,20 +15,14 @@ import UIPrimitives
 
 final class AnywayPaymentFactoryComposer {
     
-    private let config: AnywayPaymentElementConfig
     private let currencyOfProduct: CurrencyOfProduct
-    private let getProducts: GetProducts
     private let makeIconView: MakeIconView
     
     init(
-        config: AnywayPaymentElementConfig,
         currencyOfProduct: @escaping CurrencyOfProduct,
-        getProducts: @escaping GetProducts,
         makeIconView: @escaping MakeIconView
     ) {
-        self.config = config
         self.currencyOfProduct = currencyOfProduct
-        self.getProducts = getProducts
         self.makeIconView = makeIconView
     }
 }
@@ -52,7 +46,7 @@ extension AnywayPaymentFactoryComposer {
                     state: $0,
                     event: event,
                     factory: elementFactory,
-                    config: self.config
+                    config: .iFora
                 )
             },
             makeFooterView: { state, event in
