@@ -44,13 +44,15 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
 
 extension PaymentsTransfersFlowReducerFactoryComposer {
     
-    func compose() -> Factory {
+    func compose(
+        with spinnerActions: RootViewModel.RootActions.Spinner?
+    ) -> Factory {
         
         return .init(
             getFormattedAmount: getFormattedAmount,
             makeFraud: makeFraudNoticePayload,
             makeUtilityPrepaymentState: makeUtilityPrepaymentState,
-            makeUtilityPaymentState: makeUtilityPaymentState,
+            makeUtilityPaymentState: makeUtilityPaymentState(with: spinnerActions),
             makePaymentsViewModel: makePayByInstructionsViewModel
         )
     }
@@ -170,23 +172,28 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
 private extension PaymentsTransfersFlowReducerFactoryComposer {
     
     func makeUtilityPaymentState(
-        transactionState: AnywayTransactionState,
-        notify: @escaping (AnywayTransactionStatus?) -> Void
-    ) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
+        with spinnerActions: RootViewModel.RootActions.Spinner?
+    ) -> (AnywayTransactionState, @escaping NotifyStatus) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
         
         let composer = CachedAnywayTransactionViewModelComposer(
             currencyOfProduct: currencyOfProduct,
             getProducts: model.productSelectProducts,
-            makeTransactionViewModel: makeTransactionViewModel
+            makeTransactionViewModel: makeTransactionViewModel,
+            spinnerActions: spinnerActions
         )
         
-        let viewModel = composer.makeCachedAnywayTransactionViewModel(
-            transactionState: transactionState,
-            notify: notify
-        )
-        
-        return .init(viewModel: viewModel)
+        return { transactionState, notify in
+            
+            let viewModel = composer.makeCachedAnywayTransactionViewModel(
+                transactionState: transactionState,
+                notify: notify
+            )
+            
+            return .init(viewModel: viewModel)
+        }
     }
+    
+    typealias NotifyStatus = (AnywayTransactionStatus?) -> Void
     
     private func currencyOfProduct(
         product: ProductSelect.Product
