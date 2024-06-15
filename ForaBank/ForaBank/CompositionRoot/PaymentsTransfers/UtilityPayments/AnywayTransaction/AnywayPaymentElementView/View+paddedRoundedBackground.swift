@@ -10,12 +10,13 @@ import SwiftUI
 extension View {
     
     func paddedRoundedBackground(
-        color: Color = Color.gray.opacity(0.1),
+        color: Color = .mainColorsGrayLightest,
         cornerRadius: CGFloat = 12
     ) -> some View {
         
         self
-            .padding()
+            .padding(.horizontal, 16)
+            .padding(.vertical, 13)
             .background(color)
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
     }
