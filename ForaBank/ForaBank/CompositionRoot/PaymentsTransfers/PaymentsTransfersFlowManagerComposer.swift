@@ -13,6 +13,7 @@ import OperatorsListComponents
 import ForaTools
 import Foundation
 import GenericRemoteService
+import PaymentComponents
 import RemoteServices
 import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
@@ -49,7 +50,8 @@ extension PaymentsTransfersFlowManagerComposer {
         
         let makeModel = makeTransactionViewModel()
         let composer = makeReducerFactoryComposer(
-            makeTransactionViewModel: makeModel
+            makeTransactionViewModel: makeModel,
+            spinnerActions: spinnerActions
         )
         let factory = composer.compose(with: spinnerActions)
         
@@ -190,7 +192,8 @@ private extension PaymentsTransfersFlowManagerComposer {
     typealias FlowReducer = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel>
     
     private func makeReducerFactoryComposer(
-        makeTransactionViewModel: @escaping MakeTransactionViewModel
+        makeTransactionViewModel: @escaping MakeTransactionViewModel,
+        spinnerActions: RootViewModel.RootActions.Spinner?
     ) -> PaymentsTransfersFlowReducerFactoryComposer {
         
         let nanoServices = UtilityPrepaymentNanoServices(
@@ -201,35 +204,73 @@ private extension PaymentsTransfersFlowManagerComposer {
             nanoServices: nanoServices
         )
         
-        let initiateOTP: AnywayElementModelMapper.InitiateOTP = { completion in
-            
-//            switch self.flag.optionOrStub {
-//            case .live:
-//                let initiateOTP = ForaBank.NanoServices.getVerificationCode(httpClient: httpClient, infoNetworkLog)
-//                initiateOTP { completion($0); _ = initiateOTP }
-//                
-//            case .stub:
-                DispatchQueue.main.delay(for: .seconds(1)) { 
-                    
-                    completion(.failure(.connectivityError))
-                }
-//            }
-        }
-        
         return .init(
             model: model,
-            initiateOTP: initiateOTP,
             observeLast: settings.observeLast,
             fraudDelay: settings.fraudDelay,
             navTitle: settings.utilityNavTitle,
             microServices: microComposer.compose(),
-            makeTransactionViewModel: makeTransactionViewModel
+            makeTransactionViewModel: makeTransactionViewModel,
+            makeUtilityPaymentState: makeUtilityPaymentState(with: spinnerActions)
         )
     }
     
     typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
     typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
     
+    func makeUtilityPaymentState(
+        with spinnerActions: RootViewModel.RootActions.Spinner?
+    ) -> (AnywayTransactionState, @escaping NotifyStatus) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
+        
+        let initiateOTP: AnywayElementModelMapper.InitiateOTP = { completion in
+            
+            #warning("FIXME")
+//            switch self.flag.optionOrStub {
+//            case .live:
+//                let initiateOTP = ForaBank.NanoServices.getVerificationCode(httpClient: httpClient, infoNetworkLog)
+//                initiateOTP { completion($0); _ = initiateOTP }
+//
+//            case .stub:
+                DispatchQueue.main.delay(for: .seconds(1)) {
+                    
+                    completion(.failure(.connectivityError))
+                }
+//            }
+        }
+        
+        let elementMapperComposer = AnywayElementModelMapperComposer(
+            currencyOfProduct: currencyOfProduct,
+            getProducts: model.productSelectProducts,
+            initiateOTP: initiateOTP
+        )
+        
+        let composer = CachedAnywayTransactionViewModelComposer(
+            elementMapperComposer: elementMapperComposer,
+            makeTransactionViewModel: makeTransactionViewModel(),
+            spinnerActions: spinnerActions
+        )
+        
+        return { transactionState, notify in
+            
+            let viewModel = composer.makeCachedAnywayTransactionViewModel(
+                transactionState: transactionState,
+                notify: notify
+            )
+            
+            return .init(viewModel: viewModel)
+        }
+    }
+    
+    typealias NotifyStatus = (AnywayTransactionStatus?) -> Void
+    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
+
+    private func currencyOfProduct(
+        product: ProductSelect.Product
+    ) -> String {
+        
+        model.currencyOf(product: product) ?? ""
+    }
+
     private func loadOperators(
         payload: LoadOperatorsPayload,
         completion: @escaping ([Operator]) -> Void

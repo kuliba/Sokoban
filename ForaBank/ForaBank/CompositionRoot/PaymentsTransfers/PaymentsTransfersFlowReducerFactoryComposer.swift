@@ -14,37 +14,37 @@ import UtilityServicePrepaymentCore
 final class PaymentsTransfersFlowReducerFactoryComposer {
     
     private let model: Model
-    private let initiateOTP: InitiateOTP
     private let observeLast: Int
     private let fraudDelay: Double
     private let navTitle: String
     private let microServices: MicroServices
     private let makeTransactionViewModel: MakeTransactionViewModel
+    private let makeUtilityPaymentState: MakeUtilityPaymentState
     
     init(
         model: Model,
-        initiateOTP: @escaping InitiateOTP,
         observeLast: Int,
         fraudDelay: Double,
         navTitle: String,
         microServices: MicroServices,
-        makeTransactionViewModel: @escaping MakeTransactionViewModel
+        makeTransactionViewModel: @escaping MakeTransactionViewModel,
+        makeUtilityPaymentState: @escaping MakeUtilityPaymentState
     ) {
         self.model = model
-        self.initiateOTP = initiateOTP
         self.observeLast = observeLast
         self.fraudDelay = fraudDelay
         self.navTitle = navTitle
         self.microServices = microServices
         self.makeTransactionViewModel = makeTransactionViewModel
+        self.makeUtilityPaymentState = makeUtilityPaymentState
     }
-    
-    typealias InitiateOTP = CountdownEffectHandler.InitiateOTP
     
     typealias MicroServices = PrepaymentPickerMicroServices<Operator>
     
     typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
     typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
+    
+    typealias MakeUtilityPaymentState = Factory.MakeUtilityPaymentState
 }
 
 extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -57,7 +57,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
             getFormattedAmount: getFormattedAmount,
             makeFraud: makeFraudNoticePayload,
             makeUtilityPrepaymentState: makeUtilityPrepaymentState,
-            makeUtilityPaymentState: makeUtilityPaymentState(with: spinnerActions),
+            makeUtilityPaymentState: makeUtilityPaymentState,
             makePaymentsViewModel: makePayByInstructionsViewModel
         )
     }
@@ -172,45 +172,6 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     
     typealias UtilityPrepaymentReducer = PrepaymentPickerReducer<UtilityPaymentLastPayment, UtilityPaymentOperator>
     typealias UtilityPrepaymentEffectHandler = PrepaymentPickerEffectHandler<UtilityPaymentOperator>
-}
-
-private extension PaymentsTransfersFlowReducerFactoryComposer {
-    
-    func makeUtilityPaymentState(
-        with spinnerActions: RootViewModel.RootActions.Spinner?
-    ) -> (AnywayTransactionState, @escaping NotifyStatus) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
-        
-        let elementMapperComposer = AnywayElementModelMapperComposer(
-            currencyOfProduct: currencyOfProduct,
-            getProducts: model.productSelectProducts,
-            initiateOTP: initiateOTP
-        )
-        
-        let composer = CachedAnywayTransactionViewModelComposer(
-            elementMapperComposer: elementMapperComposer,
-            makeTransactionViewModel: makeTransactionViewModel,
-            spinnerActions: spinnerActions
-        )
-        
-        return { transactionState, notify in
-            
-            let viewModel = composer.makeCachedAnywayTransactionViewModel(
-                transactionState: transactionState,
-                notify: notify
-            )
-            
-            return .init(viewModel: viewModel)
-        }
-    }
-    
-    typealias NotifyStatus = (AnywayTransactionStatus?) -> Void
-    
-    private func currencyOfProduct(
-        product: ProductSelect.Product
-    ) -> String {
-        
-        model.currencyOf(product: product) ?? ""
-    }
 }
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
