@@ -1,13 +1,16 @@
 //
 //  SelectorReducer.swift
-//  ForaBank
+//  
 //
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
-final class SelectorReducer<T: Equatable> {}
+public final class SelectorReducer<T: Equatable> {
+    
+    public init() {}
+}
 
-extension SelectorReducer {
+public extension SelectorReducer {
     
     func reduce(
         _ state: State,
@@ -35,7 +38,7 @@ extension SelectorReducer {
     }
 }
 
-extension SelectorReducer {
+public extension SelectorReducer {
     
     typealias State = Selector<T>
     typealias Event = SelectorEvent<T>

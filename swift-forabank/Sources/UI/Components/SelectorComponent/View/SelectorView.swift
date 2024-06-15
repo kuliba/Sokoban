@@ -1,13 +1,13 @@
 //
 //  SelectorView.swift
-//  ForaBank
+//  
 //
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
 import SwiftUI
 
-struct SelectorView<T, ID, OptionView, SelectedOptionView>: View
+public struct SelectorView<T, ID, OptionView, SelectedOptionView>: View
 where ID: Hashable,
       OptionView: View,
       SelectedOptionView: View {
@@ -17,7 +17,19 @@ where ID: Hashable,
     let factory: Factory
     let idKeyPath: KeyPath<T, ID>
     
-    var body: some View {
+    public init(
+        state: State, 
+        event: @escaping (Event) -> Void,
+        factory: Factory,
+        idKeyPath: KeyPath<T, ID>
+    ) {
+        self.state = state
+        self.event = event
+        self.factory = factory
+        self.idKeyPath = idKeyPath
+    }
+    
+    public var body: some View {
         
         VStack {
             
@@ -40,7 +52,7 @@ where ID: Hashable,
     }
 }
 
-extension SelectorView {
+public extension SelectorView {
     
     typealias State = Selector<T>
     typealias Event = SelectorEvent<T>
@@ -93,37 +105,5 @@ private extension SelectorView {
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(Rectangle())
             .onTapGesture { event(.selectOption(option)) }
-    }
-}
-
-extension SelectorView where T: Hashable, T == ID {
-    
-    init(
-        state: State,
-        event: @escaping (Event) -> Void,
-        factory: Factory
-    ) {
-        self.init(
-            state: state,
-            event: event,
-            factory: factory,
-            idKeyPath: \.self
-        )
-    }
-}
-
-extension SelectorView where T: Identifiable, T.ID == ID {
-    
-    init(
-        state: State,
-        event: @escaping (Event) -> Void,
-        factory: Factory
-    ) {
-        self.init(
-            state: state,
-            event: event,
-            factory: factory,
-            idKeyPath: \.id
-        )
     }
 }

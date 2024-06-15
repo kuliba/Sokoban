@@ -1,21 +1,40 @@
 //
 //  Selector.swift
-//  ForaBank
+//  
 //
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
-struct Selector<T> {
+import Foundation
+
+public struct Selector<T> {
     
-    var selected: T
-    let firstOption: T
-    let otherOptions: [T]
-    var isShowingOptions: Bool
-    var searchQuery: String
-    let filterPredicate: (T, String) -> Bool
+    public var selected: T
+    public var isShowingOptions: Bool
+    public var searchQuery: String
+
+    public let firstOption: T
+    public let otherOptions: [T]
+    public let filterPredicate: (T, String) -> Bool
+    
+    init(
+        selected: T,
+        isShowingOptions: Bool,
+        searchQuery: String,
+        firstOption: T,
+        otherOptions: [T],
+        filterPredicate: @escaping (T, String) -> Bool
+    ) {
+        self.selected = selected
+        self.isShowingOptions = isShowingOptions
+        self.searchQuery = searchQuery
+        self.firstOption = firstOption
+        self.otherOptions = otherOptions
+        self.filterPredicate = filterPredicate
+    }
 }
 
-extension Selector {
+public extension Selector {
     
     var options: [T] { [firstOption] + otherOptions }
     
@@ -27,7 +46,7 @@ extension Selector {
     }
 }
 
-extension Selector {
+public extension Selector {
     
     enum Error: Swift.Error {
         
@@ -36,7 +55,7 @@ extension Selector {
     }
 }
 
-extension Selector {
+public extension Selector {
     
     /// Initialiser with options array, setting selected to first option..
     /// - Parameters:
@@ -63,7 +82,7 @@ extension Selector {
     }
 }
 
-extension Selector where T: Equatable {
+public extension Selector where T: Equatable {
     
     /// Initialiser ensuring the selected option is in the options list.
     /// - Parameters:
@@ -128,7 +147,7 @@ extension Selector where T: Equatable {
     }
 }
 
-extension Selector where T == String {
+public extension Selector where T == String {
     
     /// Convenience initialiser for `String` options.
     /// - Parameters:
