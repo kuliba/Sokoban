@@ -206,9 +206,11 @@ private extension PaymentsTransfersFlowManagerComposer {
         
         return .init(
             model: model,
-            observeLast: settings.observeLast,
-            fraudDelay: settings.fraudDelay,
-            navTitle: settings.utilityNavTitle,
+            settings: .init(
+                observeLast: settings.observeLast,
+                fraudDelay: settings.fraudDelay,
+                navTitle: settings.utilityNavTitle
+            ),
             microServices: microComposer.compose(),
             makeTransactionViewModel: makeTransactionViewModel,
             makeUtilityPaymentState: makeUtilityPaymentState(with: spinnerActions)

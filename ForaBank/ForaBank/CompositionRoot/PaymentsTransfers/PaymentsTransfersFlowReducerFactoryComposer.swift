@@ -14,26 +14,20 @@ import UtilityServicePrepaymentCore
 final class PaymentsTransfersFlowReducerFactoryComposer {
     
     private let model: Model
-    private let observeLast: Int
-    private let fraudDelay: Double
-    private let navTitle: String
+    private let settings: Settings
     private let microServices: MicroServices
     private let makeTransactionViewModel: MakeTransactionViewModel
     private let makeUtilityPaymentState: MakeUtilityPaymentState
     
     init(
         model: Model,
-        observeLast: Int,
-        fraudDelay: Double,
-        navTitle: String,
+        settings: Settings,
         microServices: MicroServices,
         makeTransactionViewModel: @escaping MakeTransactionViewModel,
         makeUtilityPaymentState: @escaping MakeUtilityPaymentState
     ) {
         self.model = model
-        self.observeLast = observeLast
-        self.fraudDelay = fraudDelay
-        self.navTitle = navTitle
+        self.settings = settings
         self.microServices = microServices
         self.makeTransactionViewModel = makeTransactionViewModel
         self.makeUtilityPaymentState = makeUtilityPaymentState
@@ -45,6 +39,13 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
     typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
     
     typealias MakeUtilityPaymentState = Factory.MakeUtilityPaymentState
+    
+    struct Settings: Equatable {
+        
+        let observeLast: Int
+        let fraudDelay: Double
+        let navTitle: String
+    }
 }
 
 extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -112,7 +113,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
             title: payload.title,
             subtitle: payload.subtitle,
             formattedAmount: getFormattedAmount(state: state) ?? "",
-            delay: fraudDelay
+            delay: settings.fraudDelay
         )
     }
 }
@@ -146,7 +147,9 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         payload: UtilityPrepaymentPayload
     ) -> UtilityFlowState {
         
-        let reducer = UtilityPrepaymentReducer(observeLast: observeLast)
+        let reducer = UtilityPrepaymentReducer(
+            observeLast: settings.observeLast
+        )
         
         let effectHandler = UtilityPrepaymentEffectHandler(
             microServices: microServices
@@ -162,7 +165,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
             handleEffect: effectHandler.handleEffect(_:_:)
         )
         
-        return .init(content: viewModel, navTitle: navTitle)
+        return .init(content: viewModel, navTitle: settings.navTitle)
     }
     
     typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, UtilityPaymentViewModel>
