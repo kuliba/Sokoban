@@ -64,11 +64,14 @@ final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
     ) -> Composer {
         
         let sut = Composer(
-            elementMapperComposer: .init(
-                currencyOfProduct: { _ in "₽" },
-                getProducts: { [] },
-                initiateOTP: { _ in }
-            ),
+            makeElementMapper: {
+                .init(
+                    event: $0,
+                    currencyOfProduct: { _ in "₽" },
+                    getProducts: { [] },
+                    initiateOTP: { _ in }
+                )
+            },
             makeTransactionViewModel: makeAnywayTransactionViewModel,
             spinnerActions: nil
         )

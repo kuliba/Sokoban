@@ -11,19 +11,21 @@ import PaymentComponents
 
 final class CachedAnywayTransactionViewModelComposer {
     
-    private let elementMapperComposer: AnywayElementModelMapperComposer
+    private let makeElementMapper: MakeAnywayElementModelMapper
     private let makeTransactionViewModel: MakeTransactionViewModel
     private let spinnerActions: SpinnerActions
     
     init(
-        elementMapperComposer: AnywayElementModelMapperComposer,
+        makeElementMapper: @escaping MakeAnywayElementModelMapper,
         makeTransactionViewModel: @escaping MakeTransactionViewModel,
         spinnerActions: SpinnerActions
     ) {
-        self.elementMapperComposer = elementMapperComposer
+        self.makeElementMapper = makeElementMapper
         self.makeTransactionViewModel = makeTransactionViewModel
         self.spinnerActions = spinnerActions
     }
+    
+    typealias MakeAnywayElementModelMapper = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayElementModelMapper
     
     typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
     typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
@@ -38,7 +40,7 @@ extension CachedAnywayTransactionViewModelComposer {
         notify: @escaping (AnywayTransactionStatus?) -> Void
     ) -> CachedAnywayTransactionViewModel {
         
-        let transactionViewModel = makeTransactionViewModel(
+        let transactionVM = makeTransactionViewModel(
             transactionState,
             { _, state in
                 
@@ -48,9 +50,7 @@ extension CachedAnywayTransactionViewModelComposer {
             }
         )
         
-        let mapper = elementMapperComposer.compose(
-            event: { transactionViewModel.event(.payment($0)) }
-        )
+        let mapper = makeElementMapper { transactionVM.event(.payment($0)) }
         let mapAnywayElement = mapper.map(_:)
         
         typealias Updater = CachedAnywayTransactionUpdater<DocumentStatus, AnywayElementModel, OperationDetailID, OperationDetails>
@@ -60,10 +60,10 @@ extension CachedAnywayTransactionViewModelComposer {
         let reducer = Reducer(update: updater.update(_:with:))
         
         let effectHandler = CachedAnywayTransactionEffectHandler(
-            statePublisher: transactionViewModel.$state
+            statePublisher: transactionVM.$state
                 .removeDuplicates(by: hasNoSignificantDifference)
                 .eraseToAnyPublisher(),
-            event: transactionViewModel.event(_:)
+            event: transactionVM.event(_:)
         )
         
         let initialState = CachedTransactionState(

@@ -50,7 +50,9 @@ extension PaymentsTransfersFlowManagerComposer {
         
         let composer = makeReducerFactoryComposer()
         let factory = composer.compose(
-            makeUtilityPaymentState: makeUtilityPaymentState(with: spinnerActions)
+            makeUtilityPaymentState: makeUtilityPaymentState(
+                with: spinnerActions
+            )
         )
         
         return .init(
@@ -234,14 +236,18 @@ private extension PaymentsTransfersFlowManagerComposer {
 //            }
         }
         
-        let elementMapperComposer = AnywayElementModelMapperComposer(
-            currencyOfProduct: currencyOfProduct,
-            getProducts: model.productSelectProducts,
-            initiateOTP: initiateOTP
-        )
+        let makeElementMapper = {
+            
+            AnywayElementModelMapper(
+                event: $0,
+                currencyOfProduct: self.currencyOfProduct,
+                getProducts: self.model.productSelectProducts,
+                initiateOTP: initiateOTP
+            )
+        }
         
         let composer = CachedAnywayTransactionViewModelComposer(
-            elementMapperComposer: elementMapperComposer,
+            makeElementMapper: makeElementMapper,
             makeTransactionViewModel: makeTransactionViewModel(),
             spinnerActions: spinnerActions
         )
