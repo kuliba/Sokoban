@@ -16,29 +16,21 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
     private let model: Model
     private let settings: Settings
     private let microServices: MicroServices
-    private let makeTransactionViewModel: MakeTransactionViewModel
-    private let makeUtilityPaymentState: MakeUtilityPaymentState
     
     init(
         model: Model,
         settings: Settings,
-        microServices: MicroServices,
-        makeTransactionViewModel: @escaping MakeTransactionViewModel,
-        makeUtilityPaymentState: @escaping MakeUtilityPaymentState
+        microServices: MicroServices
     ) {
         self.model = model
         self.settings = settings
         self.microServices = microServices
-        self.makeTransactionViewModel = makeTransactionViewModel
-        self.makeUtilityPaymentState = makeUtilityPaymentState
     }
     
     typealias MicroServices = PrepaymentPickerMicroServices<Operator>
     
     typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
     typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
-    
-    typealias MakeUtilityPaymentState = Factory.MakeUtilityPaymentState
     
     struct Settings: Equatable {
         
@@ -51,7 +43,7 @@ final class PaymentsTransfersFlowReducerFactoryComposer {
 extension PaymentsTransfersFlowReducerFactoryComposer {
     
     func compose(
-        with spinnerActions: RootViewModel.RootActions.Spinner?
+        makeUtilityPaymentState: @escaping MakeUtilityPaymentState
     ) -> Factory {
         
         return .init(
@@ -64,9 +56,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     }
     
     typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, UtilityPaymentViewModel>
-}
-
-extension PaymentsTransfersFlowReducerFactoryComposer {
+    typealias MakeUtilityPaymentState = Factory.MakeUtilityPaymentState
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
@@ -93,6 +83,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
 #warning("look into model to extract currency symbol")
         if let currency {
             formattedAmount += " \(currency)"
+            _ = model
         }
         
         return formattedAmount

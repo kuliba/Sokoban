@@ -48,12 +48,10 @@ extension PaymentsTransfersFlowManagerComposer {
         _ spinnerActions: RootViewModel.RootActions.Spinner?
     ) -> FlowManager {
         
-        let makeModel = makeTransactionViewModel()
-        let composer = makeReducerFactoryComposer(
-            makeTransactionViewModel: makeModel,
-            spinnerActions: spinnerActions
+        let composer = makeReducerFactoryComposer()
+        let factory = composer.compose(
+            makeUtilityPaymentState: makeUtilityPaymentState(with: spinnerActions)
         )
-        let factory = composer.compose(with: spinnerActions)
         
         return .init(
             handleEffect: makeHandleEffect(),
@@ -128,7 +126,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         let microComposer = UtilityPrepaymentFlowMicroServicesComposer(
             flag: flag.rawValue,
             nanoServices: nanoComposer.compose(),
-            makeLegacyPaymentsServicesViewModel: makeLegacyPaymentsServicesViewModel
+            makeLegacyPaymentsServicesViewModel: makeLegacyViewModel
         )
         
         return .init(microServices: microComposer.compose())
@@ -144,7 +142,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         load(.init()) { completion($0); _ = load }
     }
     
-    private func makeLegacyPaymentsServicesViewModel(
+    private func makeLegacyViewModel(
         payload: MakePaymentPayload
     ) -> PaymentsServicesViewModel {
         
@@ -192,8 +190,6 @@ private extension PaymentsTransfersFlowManagerComposer {
     typealias FlowReducer = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel>
     
     private func makeReducerFactoryComposer(
-        makeTransactionViewModel: @escaping MakeTransactionViewModel,
-        spinnerActions: RootViewModel.RootActions.Spinner?
     ) -> PaymentsTransfersFlowReducerFactoryComposer {
         
         let nanoServices = UtilityPrepaymentNanoServices(
@@ -211,9 +207,7 @@ private extension PaymentsTransfersFlowManagerComposer {
                 fraudDelay: settings.fraudDelay,
                 navTitle: settings.utilityNavTitle
             ),
-            microServices: microComposer.compose(),
-            makeTransactionViewModel: makeTransactionViewModel,
-            makeUtilityPaymentState: makeUtilityPaymentState(with: spinnerActions)
+            microServices: microComposer.compose()
         )
     }
     
