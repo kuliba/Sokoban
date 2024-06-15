@@ -403,6 +403,13 @@
         "identifier" : "SelectComponentTests",
         "name" : "SelectComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "SelectorComponentTests",
+        "name" : "SelectorComponentTests"
+      }
     }
   ],
   "version" : 1
