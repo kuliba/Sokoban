@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 21.01.2024.
 //
 
+import ForaTools
+
 public extension OTPInputState {
     
     static func starting(

@@ -1624,6 +1624,7 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .foraTools,
             .rxViewModel,
             .uiPrimitives,
         ],
@@ -1700,8 +1701,8 @@ private extension Target {
     static let rxViewModel = target(
         name: .rxViewModel,
         dependencies: [
-            // external packages
-            .combineSchedulers,
+            // internal packages
+            .foraTools,
         ],
         path: "Sources/UI/\(String.rxViewModel)"
     )
