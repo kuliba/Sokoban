@@ -190,6 +190,8 @@ private extension TransactionReducer {
                 effect = .continue(digest)
             }
         }
+        
+        state.status = .inflight
     }
     
     func initiatePayment(
@@ -198,6 +200,7 @@ private extension TransactionReducer {
     ) {
         guard state.status == nil else { return }
     
+        state.status = .inflight
         effect = .initiatePayment(paymentInspector.makeDigest(state.context))
     }
     

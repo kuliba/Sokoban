@@ -205,6 +205,9 @@ private extension PaymentsTransfersFlowReducer {
                 state.setPaymentModal(to: .fraud(fraud))
             }
             
+        case .inflight:
+            break
+            
         case let .serverError(errorMessage):
             state.setPaymentAlert(to: .serverError(errorMessage))
             

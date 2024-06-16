@@ -33,6 +33,8 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
+            $0.status = .inflight
+        }, {
             $0.status = .result(.failure(.updatePaymentFailure))
         })
         
@@ -59,6 +61,8 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         
         assert(stateSpy, initialState, {
             _ in
+        }, {
+            $0.status = .inflight
         }, {
             $0.context = updatedPayment
             $0.isValid = true
@@ -94,11 +98,15 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
+            $0.status = .inflight
+        }, {
             $0.context = updatedPayment
             $0.isValid = true
             $0.status = .fraudSuspected
         }, {
             $0.status = nil
+        }, {
+            $0.status = .inflight
         }, {
             $0.status = .fraudSuspected
         })
@@ -123,6 +131,8 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         
         assert(stateSpy, initialState, {
             _ in
+        }, {
+            $0.status = .inflight
         }, {
             $0.context = updatedPayment
             $0.isValid = true
@@ -165,10 +175,19 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
+            $0.status = .inflight
+        }, {
             $0.context = updatedPayment
             $0.isValid = true
+            $0.status = nil
+        }, {
+            $0.status = .inflight
         }, {
             $0.status = .serverError(message)
+        }, {
+            $0.status = nil
+        }, {
+            $0.status = .inflight
         }, {
             $0.status = nil
         })
@@ -192,8 +211,13 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
+            $0.status = .inflight
+        }, {
             $0.context = updatedPayment
             $0.isValid = true
+            $0.status = nil
+        }, {
+            $0.status = .inflight
         }, {
             $0.status = .result(.failure(.updatePaymentFailure))
         })
@@ -267,8 +291,13 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
+            $0.status = .inflight
+        }, {
             $0.context = updatedPayment
             $0.isValid = true
+            $0.status = nil
+        }, {
+            $0.status = .inflight
         }, {
             $0.status = .result(.failure(.transactionFailure))
         })
@@ -299,8 +328,13 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
+            $0.status = .inflight
+        }, {
             $0.context = updatedPayment
             $0.isValid = true
+            $0.status = nil
+        }, {
+            $0.status = .inflight
         }, {
             $0.status = .result(.success(report))
         })
@@ -331,8 +365,13 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         assert(stateSpy, initialState, {
             _ in
         }, {
+            $0.status = .inflight
+        }, {
             $0.context = updatedPayment
             $0.isValid = true
+            $0.status = nil
+        }, {
+            $0.status = .inflight
         }, {
             $0.status = .result(.success(report))
         })
