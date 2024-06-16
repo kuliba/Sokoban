@@ -21,9 +21,12 @@ final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: Observa
     
     @Published private(set) var state: State
     
-    init(state: State) {
-     
-        self.state = state
+    init(transaction: State.Transaction) {
+        
+        self.state = .init(
+            models: [:],
+            transaction: transaction
+        )
     }
 }
 
@@ -53,9 +56,12 @@ import XCTest
 
 final class AnywayTransactionViewModelTests: XCTestCase {
     
-    func test_() {
+    func test_init_shouldSetTransactionValue() {
         
-        XCTFail()
+        let transaction = makeTransaction()
+        let (sut, spy) = makeSUT(initial: transaction)
+        
+        XCTAssertNoDiff(spy.values.map(\.transaction), [transaction])
     }
     
     // MARK: - Helpers
@@ -64,7 +70,25 @@ final class AnywayTransactionViewModelTests: XCTestCase {
     private typealias DocumentStatus = Int
     private typealias Response = String
     
-    final class Model {
+    private typealias Spy = ValueSpy<SUT.State>
+    
+    private func makeSUT(
+        initial: SUT.State.Transaction? = nil,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: SUT,
+        spy: Spy
+    ) {
+        let sut = SUT(transaction: initial ?? makeTransaction())
+        let spy = ValueSpy(sut.$state)
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        return (sut, spy)
+    }
+    
+    private final class Model {
         
         var value: AnywayElement
         
