@@ -240,7 +240,7 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         let reducer = Reducer(stub: stub)
         let sut = SUT(
             transaction: initial,
-            mapToModel: { .init(value: $0) },
+            mapToModel: { event in { .init(value: $0) } },
             reduce: reducer.reduce(_:_:),
             handleEffect: handleEffect,
             observe: observe,

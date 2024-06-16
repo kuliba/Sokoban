@@ -13,7 +13,7 @@ public struct CachedModelsTransaction<Model, DocumentStatus, Response> {
     public let models: [ID: Model]
     public let transaction: Transaction
     
-    private init(
+    internal init(
         models: [ID : Model],
         transaction: Transaction
     ) {

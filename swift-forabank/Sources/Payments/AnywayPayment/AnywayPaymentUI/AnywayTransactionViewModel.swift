@@ -31,10 +31,17 @@ public final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: 
         predicate: @escaping (TransactionStatus?, TransactionStatus?) -> Bool = { _,_ in false },
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
-        self.state = .init(with: transaction, using: mapToModel)
+        // model mapping needs `self.event(_:),
+        // so initially state is initialised empty
+        // after all properties are initialised
+        // `updating` is called
+        self.state = .init(models: [:], transaction: transaction)
         self.mapToModel = mapToModel
         self.reduce = reduce
         self.handleEffect = handleEffect
+        
+        // Update state with the initial transaction when `self` is avail
+        self.state = updating(state, with: transaction)
         
         let sharedSubject = stateSubject.share()
         
@@ -54,7 +61,7 @@ public extension AnywayTransactionViewModel {
     func event(_ event: Event) {
         
         let (transaction, effect) = reduce(state.transaction, event)
-        let state = state.updating(with: transaction, using: mapToModel)
+        let state = updating(state, with: transaction)
         
         stateSubject.send(state)
         
@@ -71,7 +78,8 @@ public extension AnywayTransactionViewModel {
     typealias Event = AnywayTransactionEvent<DocumentStatus, Response>
     typealias Effect = AnywayTransactionEffect
     
-    typealias MapToModel = (AnywayElement) -> Model
+    typealias Notify = (AnywayPaymentEvent) -> Void
+    typealias MapToModel = (@escaping Notify) -> (AnywayElement) -> Model
     
     typealias Reduce = (State.Transaction, Event) -> (State.Transaction, Effect?)
     
@@ -80,4 +88,18 @@ public extension AnywayTransactionViewModel {
     
     typealias Observe = (TransactionStatus?) -> Void
     typealias TransactionStatus = Status<DocumentStatus, Response>
+}
+
+private extension AnywayTransactionViewModel {
+    
+    func updating(
+        _ state: State,
+        with transaction: State.Transaction
+    ) -> State {
+        
+        state.updating(
+            with: transaction,
+            using: mapToModel { [weak self] in self?.event(.payment($0)) }
+        )
+    }
 }
