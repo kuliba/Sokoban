@@ -11,7 +11,7 @@ public typealias AnywayTransactionState<DocumentStatus, Response> = Transaction<
 public typealias AnywayTransactionEvent<DocumentStatus, Response> = TransactionEvent<Report<DocumentStatus, Response>, AnywayPaymentEvent, AnywayPaymentUpdate>
 public typealias AnywayTransactionEffect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>
 
-public typealias Status<DocumentStatus, Response> = TransactionStatus<Report<DocumentStatus, Response>>
+public typealias Status<DocumentStatus, Response> = TransactionStatus<AnywayPaymentContext, Report<DocumentStatus, Response>>
 public typealias Report<DocumentStatus, Response> = TransactionReport<DocumentStatus, OperationInfo<OperationDetailID, OperationDetails<Response>>>
 
 public typealias OperationDetailID = Int

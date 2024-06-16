@@ -51,7 +51,7 @@ typealias OperationDetailID = Int
 
 typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails>
 typealias Report = TransactionReport<DocumentStatus, _OperationInfo>
-typealias _TransactionStatus = TransactionStatus<Report>
+typealias _TransactionStatus = TransactionStatus<Context, Report>
 
 typealias _Transaction = Transaction<Context, _TransactionStatus>
 typealias _TransactionEvent = TransactionEvent<Report, PaymentEvent, PaymentUpdate>
@@ -76,10 +76,11 @@ func isValid(
 }
 
 func isFraudSuspected(
-    _ state: _Transaction
+    _ state: _Transaction,
+    context: Context = makeContext()
 ) -> Bool {
     
-    state.status == .fraudSuspected
+    state.status == .fraudSuspected(context)
 }
 
 func makeCompletePaymentFailureEvent(
@@ -142,8 +143,8 @@ func makeFraudSuspectedTransaction(
     _ context: Context = makeContext()
 ) -> _Transaction {
     
-    let state = makeTransaction(context, status: .fraudSuspected)
-    precondition(state.status == .fraudSuspected)
+    let state = makeTransaction(context, status: .fraudSuspected(context))
+    precondition(state.status == .fraudSuspected(context))
     return state
 }
 
@@ -177,7 +178,7 @@ func makeNonFraudSuspectedTransaction(
 ) -> _Transaction {
     
     let state = makeTransaction(context)
-    precondition(state.status != .fraudSuspected)
+    precondition(state.status != .fraudSuspected(context))
     return state
 }
 

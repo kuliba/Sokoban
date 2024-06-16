@@ -183,10 +183,10 @@ final class AnywayTransactionViewModelTests: XCTestCase {
             status: .awaitingPaymentRestartConfirmation
         )
         let transaction2 = makeTransaction(
-            status: .fraudSuspected
+            status: .inflight
         )
         let transaction2a = makeTransaction(
-            status: .fraudSuspected
+            status: .inflight
         )
         let transaction3 = makeTransaction(
             status: nil
@@ -209,8 +209,8 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(observed, [
             .awaitingPaymentRestartConfirmation,
-            .fraudSuspected,
-            nil
+            .inflight,
+            .none
         ])
     }
     

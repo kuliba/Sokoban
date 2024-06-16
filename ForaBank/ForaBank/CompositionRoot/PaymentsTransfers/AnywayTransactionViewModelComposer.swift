@@ -48,7 +48,7 @@ extension AnywayTransactionViewModelComposer {
             mapToModel: { event in { self.elementMapper.map($0, event) }},
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
-            observe: notify,
+            observe: { notify($0); print("transaction status: \(String(describing: $0))", #file, #line) },
             scheduler: scheduler
         )
     }

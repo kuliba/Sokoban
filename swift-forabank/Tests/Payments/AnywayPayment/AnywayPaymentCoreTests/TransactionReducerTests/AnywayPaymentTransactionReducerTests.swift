@@ -74,7 +74,7 @@ final class AnywayPaymentTransactionReducerTests: XCTestCase {
     private func makeState(
         context: AnywayPaymentContext? = nil,
         isValid: Bool = true,
-        status: TransactionStatus<Report>? = nil
+        status: TransactionStatus<AnywayPaymentContext, Report>? = nil
     ) -> State {
         
         return .init(

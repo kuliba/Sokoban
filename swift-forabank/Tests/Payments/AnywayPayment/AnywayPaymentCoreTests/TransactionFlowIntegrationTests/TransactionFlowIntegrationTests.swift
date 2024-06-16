@@ -64,9 +64,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         }, {
             $0.status = .inflight
         }, {
-            $0.context = updatedPayment
-            $0.isValid = true
-            $0.status = .fraudSuspected
+            $0.status = .fraudSuspected(updatedPayment)
         }, {
             $0.status = .result(.failure(.fraud(.cancelled)))
         })
@@ -100,15 +98,15 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         }, {
             $0.status = .inflight
         }, {
+            $0.status = .fraudSuspected(updatedPayment)
+        }, {
             $0.context = updatedPayment
             $0.isValid = true
-            $0.status = .fraudSuspected
-        }, {
             $0.status = nil
         }, {
             $0.status = .inflight
         }, {
-            $0.status = .fraudSuspected
+            $0.status = .fraudSuspected(updatedPayment)
         })
         
         XCTAssertEqual(paymentEffectHandler.callCount, 0)
@@ -134,9 +132,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         }, {
             $0.status = .inflight
         }, {
-            $0.context = updatedPayment
-            $0.isValid = true
-            $0.status = .fraudSuspected
+            $0.status = .fraudSuspected(updatedPayment)
         }, {
             $0.status = .result(.failure(.fraud(.expired)))
         })

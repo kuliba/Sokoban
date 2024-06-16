@@ -35,9 +35,11 @@ final class TransactionReducerTests: XCTestCase {
     
     func test_completePayment_shouldNotChangeFraudSuspectedStatusStateOnReportFailure() {
         
+        let context = makeContext()
+        
         assertState(
             .completePayment(nil),
-            on: makeFraudSuspectedTransaction()
+            on: makeFraudSuspectedTransaction(context)
         )
     }
     
@@ -1204,11 +1206,12 @@ final class TransactionReducerTests: XCTestCase {
     
     func test_update_shouldSetFraudToCheckFraudResult_suspected() {
         
+        let context = makeContext()
         let sut = makeSUT(checkFraud: { _ in true })
         
-        let (state, _) = sut.reduce(makeTransaction(), makeUpdateTransactionEvent())
+        let (state, _) = sut.reduce(makeTransaction(context), makeUpdateTransactionEvent())
         
-        XCTAssertTrue(isFraudSuspected(state))
+        XCTAssertTrue(isFraudSuspected(state, context: context))
     }
     
     func test_update_shouldNotDeliverEffectOnFraudSuspectedStatusOnConnectivityErrorFailure() {
