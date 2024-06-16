@@ -226,7 +226,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
                     return .services(services, for: `operator`)
                     
                 case let .startPayment(response):
-                    let state = makeState(from: response, with: outline)
+                    let state = makeTransaction(from: response, with: outline)
                     
                     return .startPayment(state)
                 }
@@ -234,10 +234,10 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             .mapError(PrepaymentEvent.ProcessSelectionFailure.init)
     }
     
-    private func makeState(
+    private func makeTransaction(
         from response: StartPaymentResponse,
         with outline: AnywayPaymentOutline
-    ) -> AnywayTransactionState {
+    ) -> AnywayTransactionState.Transaction {
         
         let update = AnywayPaymentUpdate(response)
         
@@ -247,7 +247,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         )
         
 #warning("hardcoded `isValid: false`")
-        let state = AnywayTransactionState(
+        let transaction = AnywayTransactionState.Transaction(
             context: .init(
                 payment: payment,
                 staged: .init(),
@@ -257,7 +257,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             isValid: false
         )
         
-        return state
+        return transaction
     }
     
     typealias StartPaymentResponse = NanoServices.StartAnywayPaymentSuccess.StartPaymentResponse

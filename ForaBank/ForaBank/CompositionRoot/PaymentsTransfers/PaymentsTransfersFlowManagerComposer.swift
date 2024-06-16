@@ -68,7 +68,7 @@ extension PaymentsTransfersFlowManagerComposer {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias PaymentViewModel = CachedAnywayTransactionViewModel
+    typealias PaymentViewModel = AnywayTransactionViewModel
 }
 
 private extension PaymentsTransfersFlowManagerComposer {
@@ -218,7 +218,7 @@ private extension PaymentsTransfersFlowManagerComposer {
     
     func makeUtilityPaymentState(
         with spinnerActions: RootViewModel.RootActions.Spinner?
-    ) -> (AnywayTransactionState, @escaping NotifyStatus) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
+    ) -> (AnywayTransactionState.Transaction, @escaping NotifyStatus) -> UtilityServicePaymentFlowState<AnywayTransactionViewModel> {
         
         let initiateOTP: AnywayElementModelMapper.InitiateOTP = { completion in
             
@@ -236,26 +236,24 @@ private extension PaymentsTransfersFlowManagerComposer {
 //            }
         }
         
-        let makeElementMapper = {
-            
-            AnywayElementModelMapper(
-                event: $0,
-                currencyOfProduct: self.currencyOfProduct,
-                getProducts: self.model.productSelectProducts,
-                initiateOTP: initiateOTP
-            )
-        }
+        let elementMapper = AnywayElementModelMapper(
+            currencyOfProduct: self.currencyOfProduct,
+            getProducts: self.model.productSelectProducts,
+            initiateOTP: initiateOTP
+        )
         
-        let composer = CachedAnywayTransactionViewModelComposer(
-            makeElementMapper: makeElementMapper,
-            makeTransactionViewModel: makeTransactionViewModel(),
+        let microServices = composeMicroServices()
+    
+        let composer = AnywayTransactionViewModelComposer(
+            elementMapper: elementMapper,
+            microServices: microServices,
             spinnerActions: spinnerActions
         )
         
-        return { transactionState, notify in
+        return { transaction, notify in
             
-            let viewModel = composer.makeCachedAnywayTransactionViewModel(
-                transactionState: transactionState,
+            let viewModel = composer.makeAnywayTransactionViewModel(
+                transaction: transaction,
                 notify: notify
             )
             
@@ -263,8 +261,26 @@ private extension PaymentsTransfersFlowManagerComposer {
         }
     }
     
+    private func composeMicroServices(
+    ) -> AnywayTransactionEffectHandlerMicroServices {
+        
+        typealias NanoServicesComposer = AnywayTransactionEffectHandlerNanoServicesComposer
+        typealias MicroServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer
+        
+        let nanoServicesComposer = NanoServicesComposer(
+            flag: flag.optionOrStub,
+            httpClient: httpClient,
+            log: log
+        )
+        
+        let microServicesComposer = MicroServicesComposer(
+            nanoServices: nanoServicesComposer.compose()
+        )
+        
+        return microServicesComposer.compose()
+    }
+    
     typealias NotifyStatus = (AnywayTransactionStatus?) -> Void
-    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
 
     private func currencyOfProduct(
         product: ProductSelect.Product
@@ -304,20 +320,5 @@ private extension PaymentsTransfersFlowManagerComposer {
         )
         
         return loaderComposer.compose()
-    }
-    
-    private func makeTransactionViewModel(
-    ) -> MakeTransactionViewModel {
-        
-        let composer = AnywayTransactionViewModelComposer(
-            flag: flag.optionOrStub,
-            httpClient: httpClient,
-            log: log
-        )
-        
-        return { initialState, observe in
-            
-            composer.compose(initialState: initialState, observe: observe)
-        }
     }
 }

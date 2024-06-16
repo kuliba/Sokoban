@@ -26,7 +26,7 @@ struct PaymentFlowModalView: View {
 
 extension PaymentFlowModalView {
     
-    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<UtilityPaymentViewModel>
 
     typealias State = UtilityServiceFlowState.Modal

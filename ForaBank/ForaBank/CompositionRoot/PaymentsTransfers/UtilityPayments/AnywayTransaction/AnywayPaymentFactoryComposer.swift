@@ -147,19 +147,21 @@ private extension AnywayPaymentFactoryComposer {
     }
 }
 
-private extension CachedTransactionState {
+private extension AnywayTransactionState {
     
     var footer: AnywayPaymentFooter {
         
 #warning("FIXME: hardcoded buttonTitle")
-        return .init(buttonTitle: "Continue", core: core, isEnabled: isValid)
+        return .init(buttonTitle: "Continue", core: core, isEnabled: transaction.isValid)
     }
     
     var core: AnywayPaymentFooter.Core? {
         
-        guard case let .amount(amount, currency) = context.payment.footer,
-              let currency
-        else { return nil }
+        let digest = transaction.context.makeDigest()
+        
+        let amount = digest.amount
+        let currency = digest.core?.currency
+        guard let amount, let currency else { return nil }
         
         return .init(value: amount, currency: currency)
     }

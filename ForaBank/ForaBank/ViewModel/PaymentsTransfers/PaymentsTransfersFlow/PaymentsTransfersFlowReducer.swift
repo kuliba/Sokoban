@@ -395,16 +395,16 @@ private extension PaymentsTransfersFlowReducer {
                 destination: nil
             )))
             
-        case let .startPayment(transactionState):
-            reduce(&state, with: transactionState)
+        case let .startPayment(transaction):
+            reduce(&state, with: transaction)
         }
     }
     
     private func reduce(
         _ state: inout State,
-        with transactionState: AnywayTransactionState
+        with transaction: AnywayTransactionState.Transaction
     ) {
-        let utilityPaymentState = factory.makeUtilityPaymentState(transactionState, notify)
+        let utilityPaymentState = factory.makeUtilityPaymentState(transaction, notify)
         
         switch state.utilityPrepaymentDestination {
         case .none:

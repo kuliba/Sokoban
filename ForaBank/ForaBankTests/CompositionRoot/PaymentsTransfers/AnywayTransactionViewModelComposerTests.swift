@@ -1,5 +1,5 @@
 //
-//  CachedAnywayTransactionViewModelComposerTests.swift
+//  AnywayTransactionViewModelComposerTests.swift
 //  ForaBankTests
 //
 //  Created by Igor Malyarov on 10.06.2024.
@@ -10,20 +10,17 @@ import AnywayPaymentDomain
 @testable import ForaBank
 import XCTest
 
-final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
+final class AnywayTransactionViewModelComposerTests: XCTestCase {
     
     func test_dismissRecoverableError_shouldNotResetTerminatedStatus() {
         
         let (sut, statusSpy) = makeSUT(
-            transactionState: makeTransactionState(
+            transaction: makeTransaction(
                 status: .result(.failure(.updatePaymentFailure))
             )
         )
         
-        sut.event(.transaction(.dismissRecoverableError))
-        
-        // TODO: add scheduler to Composer
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        sut.event(.dismissRecoverableError)
         
         XCTAssertNoDiff(statusSpy.values, [
             .result(.failure(.updatePaymentFailure)),
@@ -35,18 +32,15 @@ final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
         
         let message = anyMessage()
         let (sut, statusSpy) = makeSUT(
-            transactionState: makeTransactionState(
+            transaction: makeTransaction(
                 status: .serverError(message)
             )
         )
+        XCTAssertNoDiff(sut.state.transaction.status, .serverError(message))
         
-        sut.event(.transaction(.dismissRecoverableError))
-        
-        // TODO: add scheduler to Composer
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        sut.event(.dismissRecoverableError)
         
         XCTAssertNoDiff(statusSpy.values, [
-            .serverError(message),
             .serverError(message),
             nil,
         ])
@@ -54,8 +48,8 @@ final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Composer = CachedAnywayTransactionViewModelComposer
-    private typealias SUT = CachedAnywayTransactionViewModel
+    private typealias Composer = AnywayTransactionViewModelComposer
+    private typealias SUT = AnywayTransactionViewModel
     private typealias StatusSpy = ValueSpy<AnywayTransactionStatus?>
     
     private func makeComposer(
@@ -64,15 +58,17 @@ final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
     ) -> Composer {
         
         let sut = Composer(
-            makeElementMapper: {
-                .init(
-                    event: $0,
-                    currencyOfProduct: { _ in "₽" },
-                    getProducts: { [] },
-                    initiateOTP: { _ in }
-                )
-            },
-            makeTransactionViewModel: makeAnywayTransactionViewModel,
+            elementMapper: .init(
+                currencyOfProduct: { _ in "₽" },
+                getProducts: { [] },
+                initiateOTP: { _ in }
+            ),
+            microServices: .init(
+                initiatePayment: { _,_ in },
+                makePayment: { _,_ in },
+                paymentEffectHandle: { _,_ in },
+                processPayment: { _,_ in }
+            ),
             spinnerActions: nil
         )
         
@@ -82,7 +78,7 @@ final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
     }
     
     private func makeSUT(
-        transactionState: AnywayTransactionState,
+        transaction: AnywayTransactionState.Transaction,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -90,11 +86,12 @@ final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
         statusSpy: StatusSpy
     ) {
         let composer = makeComposer(file: file, line: line)
-        let sut = composer.makeCachedAnywayTransactionViewModel(
-            transactionState: transactionState,
-            notify: { _ in }
+        let sut = composer.makeAnywayTransactionViewModel(
+            transaction: transaction,
+            notify: { _ in },
+            scheduler: .immediate
         )
-        let statusSpy = ValueSpy(sut.$state.map(\.status).dropFirst())
+        let statusSpy = ValueSpy(sut.$state.map(\.transaction.status))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -103,33 +100,17 @@ final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
         return (sut, statusSpy)
     }
     
-    private func makeAnywayTransactionViewModel(
-        _ initialState: AnywayTransactionState,
-        _ observe: @escaping Observe
-    ) -> AnywayTransactionViewModel {
-        
-        let composer = ReducerComposer()
-        let reducer = composer.compose()
-        
-        return .init(
-            initialState: initialState,
-            reduce: reducer.reduce(_:_:),
-            handleEffect: { _,_ in },
-            observe: observe
-        )
-    }
-    
     typealias ReducerComposer = AnywayPaymentTransactionReducerComposer<AnywayTransactionReport>
     typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
     
-    private func makeTransactionState(
+    private func makeTransaction(
         context: AnywayPaymentContext? = nil,
         isValid: Bool = true,
         status: AnywayTransactionStatus? = nil
-    ) -> AnywayTransactionState {
+    ) -> AnywayTransactionState.Transaction {
         
         return .init(
-            context: context ?? makeAnywayPaymentContext(), 
+            context: context ?? makeAnywayPaymentContext(),
             isValid: isValid,
             status: status
         )
@@ -177,7 +158,7 @@ final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
     ) -> AnywayPaymentOutline {
         
         return .init(
-            core: core ?? makePaymentCore(), 
+            core: core ?? makePaymentCore(),
             fields: fields,
             payload: payload ?? makeAnywayPaymentPayload()
         )
@@ -191,7 +172,7 @@ final class CachedAnywayTransactionViewModelComposerTests: XCTestCase {
     ) -> AnywayPaymentOutline.PaymentCore {
         
         return .init(
-            amount: amount, 
+            amount: amount,
             currency: currency,
             productID: productID,
             productType: productType

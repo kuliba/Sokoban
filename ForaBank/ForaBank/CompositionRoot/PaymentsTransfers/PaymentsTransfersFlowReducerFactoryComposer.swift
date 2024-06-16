@@ -63,7 +63,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
 }
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -72,13 +72,15 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         state: Factory.ReducerState
     ) -> String? {
         
-        guard let context = state.paymentFlowState?.viewModel.state.context
+        guard let state = state.paymentFlowState?.viewModel.state
         else { return nil }
         
-        guard case let .amount(amount, currency) = context.payment.footer
-        else { return "" }
+        let context = state.transaction.context
+        let digest = context.makeDigest()
+        let amount = digest.amount
+        let currency = digest.core?.currency
         
-        var formattedAmount = "\(amount)"
+        var formattedAmount = amount.map { "\($0)" } ?? ""
         
 #warning("look into model to extract currency symbol")
         if let currency {
@@ -97,7 +99,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
               case let .payment(paymentFlowState) = utilityPrepayment.destination
         else { return nil }
         
-        let context = paymentFlowState.viewModel.state.context
+        let context = paymentFlowState.viewModel.state.transaction.context
         let payload = context.outline.payload
         
         return .init(
@@ -118,17 +120,6 @@ private extension PaymentsTransfersViewModel._Route {
         else { return nil }
         
         return paymentFlowState
-    }
-}
-
-private extension CachedAnywayPayment<AnywayElementModel>.Footer {
-    
-    var formattedAmount: String? {
-        
-        guard case let .amount(amount, currency) = self
-        else { return nil }
-        
-        return "\(amount) \(currency ?? "")"
     }
 }
 

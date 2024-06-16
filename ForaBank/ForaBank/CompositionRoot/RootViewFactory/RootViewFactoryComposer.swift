@@ -151,7 +151,7 @@ private extension RootViewFactoryComposer {
         )
     }
     
-    typealias TransactionResult = UtilityServicePaymentFlowState<CachedAnywayTransactionViewModel>.FullScreenCover.TransactionResult
+    typealias TransactionResult = UtilityServicePaymentFlowState<AnywayTransactionViewModel>.FullScreenCover.TransactionResult
     
     private func map(
         _ result: TransactionResult

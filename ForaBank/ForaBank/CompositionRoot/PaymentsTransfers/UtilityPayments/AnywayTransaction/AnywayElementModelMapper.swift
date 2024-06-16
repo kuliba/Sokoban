@@ -11,24 +11,20 @@ import SwiftUI
 
 final class AnywayElementModelMapper {
     
-    private let event: (Event) -> Void
     private let currencyOfProduct: CurrencyOfProduct
     private let getProducts: GetProducts
     private let initiateOTP: InitiateOTP
     
     init(
-        event: @escaping (Event) -> Void,
         currencyOfProduct: @escaping CurrencyOfProduct,
         getProducts: @escaping GetProducts,
         initiateOTP: @escaping InitiateOTP
     ) {
-        self.event = event
         self.currencyOfProduct = currencyOfProduct
         self.getProducts = getProducts
         self.initiateOTP = initiateOTP
     }
     
-    typealias Event = AnywayPaymentEvent
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
     typealias InitiateOTP = CountdownEffectHandler.InitiateOTP
@@ -37,7 +33,8 @@ final class AnywayElementModelMapper {
 extension AnywayElementModelMapper {
     
     func map(
-        _ element: AnywayElement
+        _ element: AnywayElement,
+        _ event: @escaping (AnywayPaymentEvent) -> Void
     ) -> AnywayElementModel {
         
         switch (element, element.uiComponent) {
@@ -45,10 +42,10 @@ extension AnywayElementModelMapper {
             return .field(field)
             
         case let (_, .parameter(parameter)):
-            return makeParameterViewModel(with: parameter)
+            return makeParameterViewModel(with: parameter, event: event)
             
         case let (.widget(widget), _):
-            return makeWidgetViewModel(with: widget)
+            return makeWidgetViewModel(with: widget, event: event)
             
         default:
             fatalError("impossible case; would be removed on change to models")
@@ -59,7 +56,8 @@ extension AnywayElementModelMapper {
 private extension AnywayElementModelMapper {
     
     func makeParameterViewModel(
-        with parameter: AnywayElement.UIComponent.Parameter
+        with parameter: AnywayElement.UIComponent.Parameter,
+        event: @escaping (AnywayPaymentEvent) -> Void
     ) -> AnywayElementModel {
         
         switch parameter.type {
@@ -71,17 +69,17 @@ private extension AnywayElementModelMapper {
             
         case .numberInput:
 #warning("how to add differentiation for numeric input")
-            return .parameter(.numberInput(makeInputViewModel(with: parameter)))
+            return .parameter(.numberInput(makeInputViewModel(with: parameter, event: event)))
             
         case let .select(option, options):
             if let selector = try? Selector(option: option, options: options) {
-                return .parameter(.select(makeSelectorViewModel(with: selector, and: parameter)))
+                return .parameter(.select(makeSelectorViewModel(with: selector, and: parameter, event: event)))
             } else {
                 return .parameter(.unknown(parameter))
             }
             
         case .textInput:
-            return .parameter(.textInput(makeInputViewModel(with: parameter)))
+            return .parameter(.textInput(makeInputViewModel(with: parameter, event: event)))
             
         case .unknown:
             return .parameter(.unknown(parameter))
@@ -93,7 +91,8 @@ private extension AnywayElementModelMapper {
     
 #warning("extract?")
     func makeInputViewModel(
-        with parameter: AnywayElement.UIComponent.Parameter
+        with parameter: AnywayElement.UIComponent.Parameter,
+        event: @escaping (AnywayPaymentEvent) -> Void
     ) -> ObservingInputViewModel {
         
         let inputState = InputState(parameter)
@@ -103,16 +102,14 @@ private extension AnywayElementModelMapper {
             initialState: inputState,
             reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in },
-            observe: { [weak self] in
-                
-                self?.event(.setValue($0.dynamic.value, for: parameter.id))
-            }
+            observe: { event(.setValue($0.dynamic.value, for: parameter.id)) }
         )
     }
     
     func makeSelectorViewModel(
         with selector: Selector<Option>,
-        and parameter: AnywayElement.UIComponent.Parameter
+        and parameter: AnywayElement.UIComponent.Parameter,
+        event: @escaping (AnywayPaymentEvent) -> Void
     ) -> ObservingSelectorViewModel {
         
         let reducer = SelectorReducer<Option>()
@@ -129,16 +126,14 @@ private extension AnywayElementModelMapper {
                 return (.init(title: state.title, image: state.image, selector: selector), effect)
             },
             handleEffect: { _,_ in },
-            observe: { [weak self] in
-                
-                self?.event(.setValue($0.selector.selected.key, for: parameter.id))
-            }
+            observe: { event(.setValue($0.selector.selected.key, for: parameter.id)) }
         )
     }
     
     func makeSelectorViewModel(
         with selector: Selector<Option>,
-        and parameter: AnywayElement.UIComponent.Parameter
+        and parameter: AnywayElement.UIComponent.Parameter,
+        event: @escaping (AnywayPaymentEvent) -> Void
     ) -> ObservingSelectViewModel {
         
         let reducer = SelectReducer()
@@ -159,10 +154,7 @@ private extension AnywayElementModelMapper {
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in },
-            observe: { [weak self] in
-                
-                self?.event(.setValue($0.state.selected?.id ?? "", for: parameter.id))
-            }
+            observe: { event(.setValue($0.state.selected?.id ?? "", for: parameter.id)) }
         )
     }
     
@@ -171,23 +163,26 @@ private extension AnywayElementModelMapper {
 
 private extension AnywayElementModelMapper {
     
+#warning("event here is too wide, contain to widget")
     func makeWidgetViewModel(
-        with widget: AnywayElement.Widget
+        with widget: AnywayElement.Widget,
+        event: @escaping (AnywayPaymentEvent) -> Void
     ) -> AnywayElementModel {
         
         switch widget {
         case let .otp(otp):
 #warning("add duration to settings")
-            return .widget(.otp(makeOTPViewModel(duration: 60, otp: otp)))
+            return .widget(.otp(makeOTPViewModel(duration: 60, otp: otp, event: event)))
             
         case let .product(product):
-            return .widget(.product(makeProductSelectViewModel(with: product)))
+            return .widget(.product(makeProductSelectViewModel(with: product, event: event)))
         }
     }
     
-#warning("extract?")
+#warning("event here is too wide, contain to widget")
     private func makeProductSelectViewModel(
-        with core: AnywayElement.Widget.Product
+        with core: AnywayElement.Widget.Product,
+        event: @escaping (AnywayPaymentEvent) -> Void
     ) -> ObservingProductSelectViewModel {
         
         let products = getProducts()
@@ -214,10 +209,11 @@ private extension AnywayElementModelMapper {
         )
     }
     
-#warning("extract?")
+#warning("event here is too wide, contain to widget")
     private func makeOTPViewModel(
         duration timerDuration: Int,
-        otp: Int?
+        otp: Int?,
+        event: @escaping (AnywayPaymentEvent) -> Void
     ) -> AnywayElementModel.Widget.OTPViewModel {
         
         // TODO: add timeDuration and otpLength to Settings
@@ -240,7 +236,7 @@ private extension AnywayElementModelMapper {
                     dump(failure)
                     
                 case let .input(input):
-                    self.event(.widget(.otp(input.otpField.text)))
+                    event(.widget(.otp(input.otpField.text)))
                     
                 case .validOTP:
                     break
@@ -249,8 +245,10 @@ private extension AnywayElementModelMapper {
         )
     }
     
+    #warning("event here is too wide, contain to widget")
     private func makeSimpleOTPViewModel(
-        with otp: Int?
+        with otp: Int?,
+        event: @escaping (AnywayPaymentEvent) -> Void
     ) -> AnywayElementModel.Widget.SimpleOTPViewModel {
         
         return .init(
@@ -264,10 +262,7 @@ private extension AnywayElementModelMapper {
                 }
             },
             handleEffect: { _,_ in },
-            observe: { [weak self] in
-                
-                self?.event(.widget(.otp($0.value.map { "\($0)" } ?? "")))
-            }
+            observe: { event(.widget(.otp($0.value.map { "\($0)" } ?? ""))) }
         )
     }
 }
