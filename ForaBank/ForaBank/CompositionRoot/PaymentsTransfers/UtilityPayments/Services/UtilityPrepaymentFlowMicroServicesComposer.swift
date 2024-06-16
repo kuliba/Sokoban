@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
 import ForaTools
 import Foundation
@@ -246,15 +247,16 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             outline: outline
         )
         
-#warning("hardcoded `isValid: false`")
+        let context = AnywayPaymentContext(
+            payment: payment,
+            staged: .init(),
+            outline: outline,
+            shouldRestart: false
+        )
+        
         let transaction = AnywayTransactionState.Transaction(
-            context: .init(
-                payment: payment,
-                staged: .init(),
-                outline: outline,
-                shouldRestart: false
-            ),
-            isValid: false
+            context: context,
+            isValid: validatePayment(context)
         )
         
         return transaction
@@ -262,7 +264,18 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
     
     typealias StartPaymentResponse = NanoServices.StartAnywayPaymentSuccess.StartPaymentResponse
     typealias StartPaymentSuccess = PrepaymentEvent.ProcessSelectionSuccess
-}
+    
+    private func validatePayment(
+        _ context: AnywayPaymentContext
+    ) -> Bool {
+        
+        let parameterValidator = AnywayPaymentParameterValidator()
+        let validator = AnywayPaymentValidator(
+            isValidParameter: parameterValidator.isValid(_:)
+        )
+        
+        return validator.isValid(context.payment)
+    }}
 
 // MARK: - Adapters
 
