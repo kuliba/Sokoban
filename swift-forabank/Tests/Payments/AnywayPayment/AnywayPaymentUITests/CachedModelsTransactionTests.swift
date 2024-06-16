@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentDomain
+import AnywayPaymentUI
 import XCTest
 
 final class CachedModelsTransactionTests: XCTestCase {

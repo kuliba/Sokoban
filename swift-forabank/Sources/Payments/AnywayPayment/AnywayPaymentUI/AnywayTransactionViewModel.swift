@@ -7,11 +7,13 @@
 
 import AnywayPaymentDomain
 import Combine
+import CombineSchedulers
+import ForaTools
 import Foundation
 
-final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: ObservableObject {
+public final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: ObservableObject {
     
-    @Published private(set) var state: State
+    @Published public private(set) var state: State
     
     private let mapToModel: MapToModel
     private let reduce: Reduce
@@ -20,7 +22,7 @@ final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: Observa
     
     private var cancellable: AnyCancellable?
     
-    init(
+    public init(
         transaction: State.Transaction,
         mapToModel: @escaping MapToModel,
         reduce: @escaping Reduce,
@@ -47,7 +49,7 @@ final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: Observa
     }
 }
 
-extension AnywayTransactionViewModel {
+public extension AnywayTransactionViewModel {
     
     func event(_ event: Event) {
         
@@ -63,7 +65,7 @@ extension AnywayTransactionViewModel {
     }
 }
 
-extension AnywayTransactionViewModel {
+public extension AnywayTransactionViewModel {
     
     typealias State = CachedModelsTransaction<Model, DocumentStatus, Response>
     typealias Event = AnywayTransactionEvent<DocumentStatus, Response>

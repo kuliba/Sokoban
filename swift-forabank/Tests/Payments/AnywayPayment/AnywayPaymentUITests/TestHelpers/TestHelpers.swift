@@ -7,6 +7,7 @@
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import AnywayPaymentUI
 import Foundation
 
 typealias AnywayTransaction = AnywayTransactionState<DocumentStatus, Response>

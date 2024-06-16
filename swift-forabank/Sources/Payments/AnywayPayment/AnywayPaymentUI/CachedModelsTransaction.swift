@@ -5,12 +5,13 @@
 //  Created by Igor Malyarov on 16.06.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
 
-struct CachedModelsTransaction<Model, DocumentStatus, Response> {
+public struct CachedModelsTransaction<Model, DocumentStatus, Response> {
     
-    let models: [ID: Model]
-    let transaction: Transaction
+    public let models: [ID: Model]
+    public let transaction: Transaction
     
     private init(
         models: [ID : Model],
@@ -20,11 +21,11 @@ struct CachedModelsTransaction<Model, DocumentStatus, Response> {
         self.transaction = transaction
     }
     
-    typealias ID = AnywayElement.ID
-    typealias Transaction = AnywayTransactionState<DocumentStatus, Response>
+    public typealias ID = AnywayElement.ID
+    public typealias Transaction = AnywayTransactionState<DocumentStatus, Response>
 }
 
-extension CachedModelsTransaction {
+public extension CachedModelsTransaction {
     
     init(
         with transaction: Transaction,

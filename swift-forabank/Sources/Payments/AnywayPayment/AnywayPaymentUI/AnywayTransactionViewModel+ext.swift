@@ -5,7 +5,10 @@
 //  Created by Igor Malyarov on 16.06.2024.
 //
 
-extension AnywayTransactionViewModel
+import CombineSchedulers
+import ForaTools
+
+public extension AnywayTransactionViewModel
 where DocumentStatus: Equatable,
       Response: Equatable {
     

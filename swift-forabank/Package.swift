@@ -1081,8 +1081,12 @@ private extension Target {
     static let anywayPaymentUI = target(
         name: .anywayPaymentUI,
         dependencies: [
+            // external packages
+            .combineSchedulers,
+            // internal modules
             .anywayPaymentCore,
             .anywayPaymentDomain,
+            .foraTools,
             .paymentComponents,
             .rxViewModel,
             .uiPrimitives,
