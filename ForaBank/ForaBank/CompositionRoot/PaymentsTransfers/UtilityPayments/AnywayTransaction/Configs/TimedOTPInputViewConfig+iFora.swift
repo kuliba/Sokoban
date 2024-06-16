@@ -17,7 +17,10 @@ extension TimedOTPInputViewConfig {
         resend: .init(
             text: "Отправить повторно",
             backgroundColor: .mainColorsWhite,
-            config: .secondary
+            config: .init(
+                textFont: .textBodyMR14180(),
+                textColor: .textRed
+            )
         ),
         timer: .init(
             backgroundColor: .mainColorsWhite,
