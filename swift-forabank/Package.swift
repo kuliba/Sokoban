@@ -1085,6 +1085,7 @@ private extension Target {
             .anywayPaymentDomain,
             .paymentComponents,
             .rxViewModel,
+            .uiPrimitives,
         ],
         path: "Sources/Payments/AnywayPayment/\(String.anywayPaymentUI)"
     )
@@ -1092,6 +1093,7 @@ private extension Target {
         name: .anywayPaymentUITests,
         dependencies: [
             // external packages
+            .combineSchedulers,
             .customDump,
             .tagged,
             // internal modules
