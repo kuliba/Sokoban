@@ -34,11 +34,7 @@ final class AnywayTransactionViewModelTests: XCTestCase {
     func test_init_shouldSetTransactionOnNonEmptyTransaction() {
         
         let transaction = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [makeFieldAnywayElement()]
-                )
-            )
+            elements: [makeFieldAnywayElement()]
         )
         let (_, spy) = makeSUT(initial: transaction)
         
@@ -51,11 +47,7 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         let field = makeFieldAnywayElement()
         let parameter = makeParameterAnywayElement()
         let transaction = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [field, parameter]
-                )
-            )
+            elements: [field, parameter]
         )
         let (_, spy) = makeSUT(initial: transaction)
         
@@ -68,18 +60,10 @@ final class AnywayTransactionViewModelTests: XCTestCase {
     func test_event_shouldChangeTransaction() {
         
         let initial = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [makeFieldAnywayElement()]
-                )
-            )
+            elements: [makeFieldAnywayElement()]
         )
         let transaction = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [makeParameterAnywayElement()]
-                )
-            )
+            elements: [makeParameterAnywayElement()]
         )
         let (sut, spy) = makeSUT(
             initial: initial,
@@ -98,27 +82,15 @@ final class AnywayTransactionViewModelTests: XCTestCase {
     func test_event_shouldNotChangeModelsOnSameElements() {
         
         let id = anyMessage()
-        let field = makeFieldAnywayElement(
-            makeAnywayElementField(id: id)
-        )
+        let field = makeFieldAnywayElement(id: id)
         let initial = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [field]
-                )
-            )
+            elements: [field]
         )
         
-        let updatedField = makeFieldAnywayElement(
-            makeAnywayElementField(id: id)
-        )
+        let updatedField = makeFieldAnywayElement(id: id)
         XCTAssertNotEqual(field, updatedField)
         let transaction = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [updatedField]
-                )
-            )
+            elements: [updatedField]
         )
         
         let (sut, spy) = makeSUT(
@@ -137,19 +109,11 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         
         let field = makeFieldAnywayElement()
         let initial = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [field]
-                )
-            )
+            elements: [field]
         )
         let parameter = makeParameterAnywayElement()
         let transaction = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [field, parameter]
-                )
-            )
+            elements: [field, parameter]
         )
         let (sut, spy) = makeSUT(
             initial: initial,
@@ -157,7 +121,7 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         )
         
         sut.event(.continue)
-
+        
         let models = spy.values.map(\.models)
         XCTAssertEqual(models.count, 2)
         

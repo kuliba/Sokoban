@@ -33,6 +33,23 @@ func makeTransaction(
     )
 }
 
+func makeTransaction(
+    elements: [AnywayElement],
+    isValid: Bool = true,
+    status: Status<DocumentStatus, Response>? = nil
+) -> AnywayTransaction {
+    
+    return .init(
+        context: makeAnywayPaymentContext(
+            payment: makeAnywayPayment(
+                elements: elements
+            )
+        ),
+        isValid: isValid,
+        status: status
+    )
+}
+
 func makeAnywayPaymentContext(
     payment: AnywayPayment = makeAnywayPayment(),
     staged: AnywayPaymentStaged = [],
@@ -85,6 +102,15 @@ func makeFieldAnywayElement(
 ) -> AnywayElement {
     
     return .field(field)
+}
+
+func makeFieldAnywayElement(
+    id: AnywayElement.Field.ID
+) -> AnywayElement {
+    
+    return makeFieldAnywayElement(
+        makeAnywayElementField(id: id)
+    )
 }
 
 func makeAnywayElementField(

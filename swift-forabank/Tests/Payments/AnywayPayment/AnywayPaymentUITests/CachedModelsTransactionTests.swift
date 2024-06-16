@@ -37,11 +37,7 @@ final class CachedModelsTransactionTests: XCTestCase {
         let field = makeFieldAnywayElement()
         let parameter = makeParameterAnywayElement()
         let transaction = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [field, parameter]
-                )
-            )
+            elements: [field, parameter]
         )
         XCTAssertFalse(isEmpty(transaction))
         
@@ -55,11 +51,7 @@ final class CachedModelsTransactionTests: XCTestCase {
         let field = makeFieldAnywayElement()
         let parameter = makeParameterAnywayElement()
         let transaction = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [field, parameter]
-                )
-            )
+            elements: [field, parameter]
         )
         
         let sut = makeSUT(with: transaction)
@@ -76,22 +68,14 @@ final class CachedModelsTransactionTests: XCTestCase {
         
         let field = makeFieldAnywayElement()
         let initial = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [field]
-                )
-            )
+            elements: [field]
         )
         
         let sut = makeSUT(with: initial)
         
         let parameter = makeParameterAnywayElement()
         let updated = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [field, parameter]
-                )
-            )
+            elements: [field, parameter]
         )
         
         let updatedSUT = updating(sut, with: updated)
@@ -103,22 +87,14 @@ final class CachedModelsTransactionTests: XCTestCase {
         
         let field = makeFieldAnywayElement()
         let initial = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [field]
-                )
-            )
+            elements: [field]
         )
         
         let sut = makeSUT(with: initial)
         
         let parameter = makeParameterAnywayElement()
         let updated = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [field, parameter]
-                )
-            )
+            elements: [field, parameter]
         )
         
         let updatedSUT = updating(sut, with: updated)
@@ -131,31 +107,20 @@ final class CachedModelsTransactionTests: XCTestCase {
     func test_update_shouldPreserveExistingModels() throws {
         
         let id = anyMessage()
-        let field = makeFieldAnywayElement(
-            makeAnywayElementField(id: id)
-        )
+        let field = makeFieldAnywayElement(id: id)
         let initial = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [field]
-                )
-            )
+            elements: [field]
         )
         
         let sut = makeSUT(with: initial)
         let initialFieldModel = try XCTUnwrap(sut.models[.fieldID(id)])
         
-        let updatedField = makeFieldAnywayElement(
-            makeAnywayElementField(id: id)
-        )
+        let updatedField = makeFieldAnywayElement(id: id)
         XCTAssertNotEqual(updatedField, field)
+        
         let parameter = makeParameterAnywayElement()
         let updated = makeTransaction(
-            context: makeAnywayPaymentContext(
-                payment: makeAnywayPayment(
-                    elements: [updatedField, parameter]
-                )
-            )
+            elements: [updatedField, parameter]
         )
         
         let updatedSUT = updating(sut, with: updated)
