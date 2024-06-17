@@ -24,11 +24,29 @@ func assertOTPisLast(
     )
 }
 
-func hasAmountWidget(
+func hasAmountFooter(
     _ payment: AnywayPayment
 ) -> Bool {
     
-    payment.elements.compactMap(\.widget).map(\.id).contains(.core)
+    guard case .amount = payment.footer else { return false }
+    
+    return true
+}
+
+func hasContinueFooter(
+    _ payment: AnywayPayment
+) -> Bool {
+    
+    guard case .continue = payment.footer else { return false }
+    
+    return true
+}
+
+func hasProductWidget(
+    _ payment: AnywayPayment
+) -> Bool {
+    
+    payment.elements.compactMap(\.widget).map(\.id).contains(.product)
 }
 
 func hasOTPField(
@@ -38,7 +56,7 @@ func hasOTPField(
     payment.elements.compactMap(\.widget).map(\.id).contains(.otp)
 }
 
-private extension AnywayPayment.Element {
+private extension AnywayElement {
     
     var widget: Widget? {
         
@@ -68,94 +86,135 @@ func makeAmount(
     return amount
 }
 
+func makeAnywayPaymentContext(
+    payment: AnywayPayment = makeAnywayPayment(),
+    staged: AnywayPaymentStaged = [],
+    outline: AnywayPaymentOutline = makeAnywayPaymentOutline(),
+    shouldRestart: Bool = false
+) -> AnywayPaymentContext {
+    
+    return .init(
+        payment: payment,
+        staged: staged,
+        outline: outline,
+        shouldRestart: shouldRestart
+    )
+}
+
 func makeAnywayPayment(
-    fields: [AnywayPayment.Element.Field],
+    fields: [AnywayElement.Field],
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    core: AnywayPayment.Element.Widget.PaymentCore? = nil,
-    puref: AnywayPayment.Puref? = nil
+    core: AnywayElement.Widget.Product? = nil
 ) -> AnywayPayment {
     
-    var elements = fields.map(AnywayPayment.Element.field)
+    var elements = fields.map(AnywayElement.field)
     if let core {
-        elements.append(.widget(.core(core)))
+        elements.append(.widget(.product(core)))
     }
     
     return makeAnywayPayment(
         elements: elements,
         isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected,
-        puref: puref
+        isFraudSuspected: isFraudSuspected
     )
 }
 
+func makeAnywayPaymentPayload(
+    puref: AnywayPaymentOutline.Payload.Puref = anyMessage(),
+    title: String = anyMessage(),
+    subtitle: String = anyMessage(),
+    icon: String = anyMessage()
+) -> AnywayPaymentOutline.Payload {
+    
+    return .init(puref: puref, title: title, subtitle: subtitle, icon: icon)
+}
+
 func makeAnywayPayment(
-    parameters: [AnywayPayment.Element.Parameter] = [],
+    parameters: [AnywayElement.Parameter],
+    footer: AnywayPayment.Footer = .continue,
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
-    core: AnywayPayment.Element.Widget.PaymentCore? = nil,
-    puref: AnywayPayment.Puref? = nil
+    product: AnywayElement.Widget.Product? = nil
 ) -> AnywayPayment {
     
-    var elements = parameters.map(AnywayPayment.Element.parameter)
-    if let core {
-        elements.append(.widget(.core(core)))
+    var elements = parameters.map(AnywayElement.parameter)
+    if let product {
+        elements.append(.widget(.product(product)))
     }
     
     return makeAnywayPayment(
         elements: elements,
+        footer: footer,
         isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected,
-        puref: puref
+        isFraudSuspected: isFraudSuspected
     )
 }
 
 func makeAnywayPayment(
-    elements: [AnywayPayment.Element],
+    elements: [AnywayElement] = [],
+    footer: AnywayPayment.Footer = .continue,
     infoMessage: String? = nil,
     isFinalStep: Bool = false,
-    isFraudSuspected: Bool = false,
-    puref: AnywayPayment.Puref? = nil
+    isFraudSuspected: Bool = false
 ) -> AnywayPayment {
     
-    .init(
+    return .init(
         elements: elements,
+        footer: footer,
         infoMessage: infoMessage,
         isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected,
-        puref: puref ?? .init(anyMessage())
+        isFraudSuspected: isFraudSuspected
     )
 }
 
 func makeAnywayPaymentOutline(
     _ fields: [String: String] = [:],
-    core: AnywayPaymentOutline.PaymentCore = makeOutlinePaymentCore(productType: .account)
+    core: AnywayPaymentOutline.PaymentCore = makeOutlinePaymentCore(productType: .account),
+    payload: AnywayPaymentOutline.Payload = makeAnywayPaymentPayload()
 ) -> AnywayPaymentOutline {
     
-    .init(
+    return .init(
         core: core,
-        fields: fields.reduce(into: [:]) {
-            
-            $0[.init($1.key)] = .init($1.value)
-        }
+        fields: fields.reduce(into: [:]) { $0[$1.key] = $1.value },
+        payload: payload
     )
 }
 
 func makeAnywayPaymentWithAmount(
-    _ amount: Decimal = 99_999.99,
-    _ currency: String = anyMessage(),
-    _ productID: AnywayPayment.Element.Widget.PaymentCore.ProductID = .accountID(.init(generateRandom11DigitNumber())),
+    elements: [AnywayElement] = [],
+    _ amount: Decimal = .init(Double.random(in: 1...1_000)),
     file: StaticString = #file,
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(core: .init(
-        amount: amount,
-        currency: .init(currency),
-        productID: productID
-    ))
+    let payment = makeAnywayPayment(
+        elements: elements,
+        footer: .amount(amount)
+    )
+    XCTAssert(hasAmountFooter(payment), "Expected amount field.", file: file, line: line)
+    return payment
+}
+
+func makeAnywayPaymentWithProduct(
+    parameters: [AnywayElement.Parameter] = [],
+    _ currency: String = anyMessage(),
+    _ productID: AnywayElement.Widget.Product.ProductID = generateRandom11DigitNumber(),
+    _ productType: AnywayElement.Widget.Product.ProductType = .account,
+    file: StaticString = #file,
+    line: UInt = #line
+) -> AnywayPayment {
+    
+    let payment = makeAnywayPayment(
+        parameters: parameters,
+        product: .init(
+            currency: currency,
+            productID: productID,
+            productType: productType
+        )
+    )
     XCTAssertFalse(currency.isEmpty, "Expected non-empty currency.", file: file, line: line)
-    XCTAssert(hasAmountWidget(payment), "Expected amount field.", file: file, line: line)
+    XCTAssert(hasProductWidget(payment), "Expected amount field.", file: file, line: line)
     return payment
 }
 
@@ -165,7 +224,7 @@ func makeAnywayPaymentWithoutAmount(
 ) -> AnywayPayment {
     
     let payment = makeAnywayPayment()
-    XCTAssertFalse(hasAmountWidget(payment), "Expected no amount field.", file: file, line: line)
+    XCTAssertFalse(hasAmountFooter(payment), "Expected no amount field.", file: file, line: line)
     return payment
 }
 
@@ -200,33 +259,33 @@ func makeAnywayPaymentWithOTP(
 }
 
 func makeAnywayPaymentField(
-    _ id: AnywayPayment.Element.Field.ID = .init(anyMessage()),
+    _ id: AnywayElement.Field.ID = anyMessage(),
     value: String = anyMessage(),
     title: String = anyMessage(),
-    image: AnywayPayment.Element.Image? = nil
-) -> AnywayPayment.Element.Field {
+    image: AnywayElement.Image? = nil
+) -> AnywayElement.Field {
     
-    .init(id: id, title: title, value: .init(value), image: image)
+    return .init(id: id, title: title, value: value, image: image)
 }
 
 func makeAnywayPaymentField(
     id: String,
     value: String = anyMessage(),
     title: String = anyMessage()
-) -> AnywayPayment.Element.Field {
+) -> AnywayElement.Field {
     
-    makeAnywayPaymentField(.init(id), value: value, title: title)
+    return makeAnywayPaymentField(id, value: value, title: title)
 }
 
 func makeAnywayPaymentParameter(
-    field: AnywayPayment.Element.Parameter.Field = makeAnywayPaymentElementParameterField(),
-    image: AnywayPayment.Element.Image? = nil,
-    masking: AnywayPayment.Element.Parameter.Masking = makeAnywayPaymentElementParameterMasking(),
-    validation: AnywayPayment.Element.Parameter.Validation = makeAnywayPaymentElementParameterValidation(),
-    uiAttributes: AnywayPayment.Element.Parameter.UIAttributes = makeAnywayPaymentElementParameterUIAttributes()
-) -> AnywayPayment.Element.Parameter {
+    field: AnywayElement.Parameter.Field = makeAnywayPaymentElementParameterField(),
+    image: AnywayElement.Image? = nil,
+    masking: AnywayElement.Parameter.Masking = makeAnywayPaymentElementParameterMasking(),
+    validation: AnywayElement.Parameter.Validation = makeAnywayPaymentElementParameterValidation(),
+    uiAttributes: AnywayElement.Parameter.UIAttributes = makeAnywayPaymentElementParameterUIAttributes()
+) -> AnywayElement.Parameter {
     
-    .init(
+    return .init(
         field: field,
         image: image,
         masking: masking,
@@ -238,13 +297,10 @@ func makeAnywayPaymentParameter(
 func makeAnywayPaymentParameter(
     id: String,
     value: String
-) -> AnywayPayment.Element.Parameter {
+) -> AnywayElement.Parameter {
     
-    makeAnywayPaymentParameter(
-        field: makeAnywayPaymentElementParameterField(
-            id: id,
-            value: value
-        )
+    return makeAnywayPaymentParameter(
+        field: makeAnywayPaymentElementParameterField(id: id, value: value)
     )
 }
 
@@ -252,13 +308,10 @@ func makeAnywayPaymentParameter(
     id: String = anyMessage(),
     value: String? = anyMessage(),
     isRequired: Bool
-) -> AnywayPayment.Element.Parameter {
+) -> AnywayElement.Parameter {
     
-    makeAnywayPaymentParameter(
-        field: makeAnywayPaymentElementParameterField(
-            id: id,
-            value: value
-        ),
+    return makeAnywayPaymentParameter(
+        field: makeAnywayPaymentElementParameterField(id: id, value: value),
         validation: .init(
             isRequired: isRequired,
             maxLength: nil,
@@ -272,13 +325,10 @@ func makeAnywayPaymentParameter(
     id: String = anyMessage(),
     value: String? = anyMessage(),
     minLength: Int?
-) -> AnywayPayment.Element.Parameter {
+) -> AnywayElement.Parameter {
     
-    makeAnywayPaymentParameter(
-        field: makeAnywayPaymentElementParameterField(
-            id: id,
-            value: value
-        ),
+    return makeAnywayPaymentParameter(
+        field: makeAnywayPaymentElementParameterField(id: id, value: value),
         validation: .init(
             isRequired: false,
             maxLength: nil,
@@ -292,13 +342,10 @@ func makeAnywayPaymentParameter(
     id: String = anyMessage(),
     value: String? = anyMessage(),
     maxLength: Int?
-) -> AnywayPayment.Element.Parameter {
+) -> AnywayElement.Parameter {
     
-    makeAnywayPaymentParameter(
-        field: makeAnywayPaymentElementParameterField(
-            id: id,
-            value: value
-        ),
+    return makeAnywayPaymentParameter(
+        field: makeAnywayPaymentElementParameterField(id: id, value: value),
         validation: .init(
             isRequired: false,
             maxLength: maxLength,
@@ -312,13 +359,10 @@ func makeAnywayPaymentParameter(
     id: String = anyMessage(),
     value: String? = anyMessage(),
     regExp: String
-) -> AnywayPayment.Element.Parameter {
+) -> AnywayElement.Parameter {
     
-    makeAnywayPaymentParameter(
-        field: makeAnywayPaymentElementParameterField(
-            id: id,
-            value: value
-        ),
+    return makeAnywayPaymentParameter(
+        field: makeAnywayPaymentElementParameterField(id: id, value: value),
         validation: .init(
             isRequired: false,
             maxLength: nil,
@@ -331,10 +375,10 @@ func makeAnywayPaymentParameter(
 func makeAnywayPaymentParameter(
     id: String = anyMessage(),
     value: String? = anyMessage(),
-    viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType = .input
-) -> AnywayPayment.Element.Parameter {
+    viewType: AnywayElement.Parameter.UIAttributes.ViewType = .input
+) -> AnywayElement.Parameter {
     
-    makeAnywayPaymentParameter(
+    return makeAnywayPaymentParameter(
         field: makeAnywayPaymentElementParameterField(
             id: id,
             value: value
@@ -348,17 +392,17 @@ func makeAnywayPaymentParameter(
 func makeAnywayPaymentElementParameterField(
     id: String = anyMessage(),
     value: String? = anyMessage()
-) -> AnywayPayment.Element.Parameter.Field {
+) -> AnywayElement.Parameter.Field {
     
-    .init(id: .init(id), value: value.map { .init($0) })
+    return .init(id: id, value: value)
 }
 
 private func makeAnywayPaymentElementParameterMasking(
     inputMask: String? = nil,
     mask: String? = nil
-) -> AnywayPayment.Element.Parameter.Masking {
+) -> AnywayElement.Parameter.Masking {
     
-    .init(inputMask: inputMask, mask: mask)
+    return .init(inputMask: inputMask, mask: mask)
 }
 
 private func makeAnywayPaymentElementParameterValidation(
@@ -366,9 +410,9 @@ private func makeAnywayPaymentElementParameterValidation(
     maxLength: Int? = nil,
     minLength: Int? = nil,
     regExp: String = anyMessage()
-) -> AnywayPayment.Element.Parameter.Validation {
+) -> AnywayElement.Parameter.Validation {
     
-    .init(
+    return .init(
         isRequired: isRequired,
         maxLength: maxLength,
         minLength: minLength,
@@ -377,7 +421,7 @@ private func makeAnywayPaymentElementParameterValidation(
 }
 
 func makeAnywayPaymentElementParameterUIAttributes(
-    dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType = .string,
+    dataType: AnywayElement.Parameter.UIAttributes.DataType = .string,
     group: String? = nil,
     isPrint: Bool = true,
     phoneBook: Bool = false,
@@ -386,11 +430,11 @@ func makeAnywayPaymentElementParameterUIAttributes(
     subTitle: String? = nil,
     svgImage: String? = nil,
     title: String = anyMessage(),
-    type: AnywayPayment.Element.Parameter.UIAttributes.FieldType = .input,
-    viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType = .input
-) -> AnywayPayment.Element.Parameter.UIAttributes {
+    type: AnywayElement.Parameter.UIAttributes.FieldType = .input,
+    viewType: AnywayElement.Parameter.UIAttributes.ViewType = .input
+) -> AnywayElement.Parameter.UIAttributes {
     
-    .init(
+    return .init(
         dataType: dataType,
         group: group,
         isPrint: isPrint,
@@ -405,31 +449,31 @@ func makeAnywayPaymentElementParameterUIAttributes(
 }
 
 func makeAnywayPaymentFieldElement(
-    _ field: AnywayPayment.Element.Field = makeAnywayPaymentField()
-) -> AnywayPayment.Element {
+    _ field: AnywayElement.Field = makeAnywayPaymentField()
+) -> AnywayElement {
     
-    .field(field)
+    return .field(field)
 }
 
 func makeAnywayPaymentParameterElement(
-    _ parameter: AnywayPayment.Element.Parameter = makeAnywayPaymentParameter()
-) -> AnywayPayment.Element {
+    _ parameter: AnywayElement.Parameter = makeAnywayPaymentParameter()
+) -> AnywayElement {
     
-    .parameter(parameter)
+    return .parameter(parameter)
 }
 
 func makeAnywayPaymentWidgetElement(
-    _ widget: AnywayPayment.Element.Widget
-) -> AnywayPayment.Element {
+    _ widget: AnywayElement.Widget
+) -> AnywayElement {
     
-    .widget(widget)
+    return .widget(widget)
 }
 
 func makeOTPWidget(
     _ value: Int? = nil
-) -> AnywayPayment.Element.Widget {
+) -> AnywayElement.Widget {
     
-    .otp(value)
+    return .otp(value)
 }
 
 func makeAnywayPaymentWithoutOTP(
@@ -472,7 +516,7 @@ func makeAnywayPaymentUpdate(
     isMultiSum: Bool = false
 ) -> AnywayPaymentUpdate {
     
-    makeAnywayPaymentUpdate(
+    return makeAnywayPaymentUpdate(
         details: makeAnywayPaymentUpdateDetails(
             control: makeAnywayPaymentUpdateDetailsControl(
                 isFinalStep: isFinalStep,
@@ -495,7 +539,7 @@ func makeAnywayPaymentUpdate(
     parameters: [AnywayPaymentUpdate.Parameter] = []
 ) -> AnywayPaymentUpdate {
     
-    .init(
+    return .init(
         details: details,
         fields: fields,
         parameters: parameters
@@ -508,7 +552,7 @@ private func makeAnywayPaymentUpdateDetails(
     info: AnywayPaymentUpdate.Details.Info = makeAnywayPaymentUpdateDetailsInfo()
 ) -> AnywayPaymentUpdate.Details {
     
-    .init(
+    return .init(
         amounts: amounts,
         control: control,
         info: info
@@ -526,7 +570,7 @@ private func makeAnywayPaymentUpdateDetailsAmounts(
     fee: Decimal? = nil
 ) -> AnywayPaymentUpdate.Details.Amounts {
     
-    .init(
+    return .init(
         amount: amount,
         creditAmount: creditAmount,
         currencyAmount: currencyAmount,
@@ -565,7 +609,7 @@ private func makeAnywayPaymentUpdateDetailsInfo(
     printFormType: String? = nil
 ) -> AnywayPaymentUpdate.Details.Info {
     
-    .init(
+    return .init(
         documentStatus: documentStatus,
         infoMessage: infoMessage,
         payeeName: payeeName,
@@ -581,14 +625,14 @@ func makeAnywayPaymentUpdateField(
     image: AnywayPaymentUpdate.Image? = nil
 ) -> AnywayPaymentUpdate.Field {
     
-    .init(name: name, value: value, title: title, image: image)
+    return .init(name: name, value: value, title: title, image: image)
 }
 
 func makeAnywayPaymentAndUpdateFields(
     _ name: String = anyMessage(),
     value: String = anyMessage(),
     title: String = anyMessage()
-) -> (update: AnywayPaymentUpdate.Field, updated: AnywayPayment.Element.Field) {
+) -> (update: AnywayPaymentUpdate.Field, updated: AnywayElement.Field) {
     
     let update = makeAnywayPaymentUpdateField(
         name,
@@ -613,7 +657,7 @@ func makeAnywayPaymentUpdateParameter(
     uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes = makeAnywayPaymentUpdateParameterUIAttributes()
 ) -> AnywayPaymentUpdate.Parameter {
     
-    .init(
+    return .init(
         field: field,
         image: image,
         masking: masking,
@@ -644,7 +688,7 @@ func makeAnywayPaymentAndUpdateParameters(
     type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
     viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType = .input
     
-) -> (update: AnywayPaymentUpdate.Parameter, updated: AnywayPayment.Element.Parameter) {
+) -> (update: AnywayPaymentUpdate.Parameter, updated: AnywayElement.Parameter) {
     
     let (fieldUpdate, updatedField) = makeAnywayPaymentAndUpdateParameterField(
         id: id,
@@ -694,7 +738,7 @@ func makeAnywayPaymentAndUpdateParameters(
 private func makeAnywayPaymentAndUpdateParameterField(
     id: String = anyMessage(),
     value: String? = nil
-) -> (update: AnywayPaymentUpdate.Parameter.Field, updated: AnywayPayment.Element.Parameter.Field) {
+) -> (update: AnywayPaymentUpdate.Parameter.Field, updated: AnywayElement.Parameter.Field) {
     
     let update = makeAnywayPaymentUpdateParameterField(
         content: value,
@@ -711,7 +755,7 @@ private func makeAnywayPaymentAndUpdateParameterField(
 private func makeAnywayPaymentAndUpdateParameterMasking(
     inputMask: String? = nil,
     mask: String? = nil
-) -> (update: AnywayPaymentUpdate.Parameter.Masking, updated: AnywayPayment.Element.Parameter.Masking) {
+) -> (update: AnywayPaymentUpdate.Parameter.Masking, updated: AnywayElement.Parameter.Masking) {
     
     let update = makeAnywayPaymentUpdateParameterMasking(
         inputMask: inputMask,
@@ -730,7 +774,7 @@ private func makeAnywayPaymentAndUpdateParameterValidation(
     maxLength: Int? = nil,
     minLength: Int? = nil,
     regExp: String = anyMessage()
-) -> (update: AnywayPaymentUpdate.Parameter.Validation, updated: AnywayPayment.Element.Parameter.Validation) {
+) -> (update: AnywayPaymentUpdate.Parameter.Validation, updated: AnywayElement.Parameter.Validation) {
     
     let update = makeAnywayPaymentUpdateParameterValidation(
         isRequired: isRequired,
@@ -762,7 +806,7 @@ private func makeAnywayPaymentAndUpdateParameterUIAttributes(
     title: String = anyMessage(),
     type: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType = .input,
     viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType = .input
-) -> (update: AnywayPaymentUpdate.Parameter.UIAttributes, updated: AnywayPayment.Element.Parameter.UIAttributes) {
+) -> (update: AnywayPaymentUpdate.Parameter.UIAttributes, updated: AnywayElement.Parameter.UIAttributes) {
     
     let update = makeAnywayPaymentUpdateParameterUIAttributes(
         dataType: dataType,
@@ -794,7 +838,7 @@ private func makeAnywayPaymentAndUpdateParameterUIAttributes(
     return (update, updated)
 }
 
-private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
+private extension AnywayElement.Parameter.UIAttributes.DataType {
     
     init(with dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType) {
         
@@ -816,13 +860,13 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
 
 private extension AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair {
     
-    var pair: AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
+    var pair: AnywayElement.Parameter.UIAttributes.DataType.Pair {
         
         .init(key: key, value: value)
     }
 }
 
-private extension AnywayPayment.Element.Parameter.UIAttributes.FieldType {
+private extension AnywayElement.Parameter.UIAttributes.FieldType {
     
     init(with fieldType: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType) {
         
@@ -835,7 +879,7 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.FieldType {
     }
 }
 
-private extension AnywayPayment.Element.Parameter.UIAttributes.ViewType {
+private extension AnywayElement.Parameter.UIAttributes.ViewType {
     
     init(with viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType) {
         
@@ -854,7 +898,7 @@ func makeAnywayPaymentUpdateParameterField(
     id: String = anyMessage()
 ) -> AnywayPaymentUpdate.Parameter.Field {
     
-    .init(
+    return .init(
         content: content,
         dataDictionary: dataDictionary,
         dataDictionaryРarent: dataDictionaryРarent,
@@ -867,7 +911,7 @@ private func makeAnywayPaymentUpdateParameterMasking(
     mask: String? = nil
 ) -> AnywayPaymentUpdate.Parameter.Masking {
     
-    .init(inputMask: inputMask, mask: mask)
+    return .init(inputMask: inputMask, mask: mask)
 }
 
 private func makeAnywayPaymentUpdateParameterValidation(
@@ -878,7 +922,7 @@ private func makeAnywayPaymentUpdateParameterValidation(
     regExp: String = anyMessage()
 ) -> AnywayPaymentUpdate.Parameter.Validation {
     
-    .init(
+    return .init(
         isRequired: isRequired,
         maxLength: maxLength,
         minLength: minLength,
@@ -902,7 +946,7 @@ func makeAnywayPaymentUpdateParameterUIAttributes(
     viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType = .input
 ) -> AnywayPaymentUpdate.Parameter.UIAttributes {
     
-    .init(
+    return .init(
         dataType: dataType,
         group: group,
         inputFieldType: inputFieldType,
@@ -932,7 +976,7 @@ func makeOutlinePaymentCore(
     productType: AnywayPaymentOutline.PaymentCore.ProductType
 ) -> AnywayPaymentOutline.PaymentCore {
     
-    .init(
+    return .init(
         amount: amount,
         currency: currency,
         productID: productID,
@@ -940,34 +984,27 @@ func makeOutlinePaymentCore(
     )
 }
 
-func makeWidgetPaymentCore(
-    amount: Decimal = makeAmount(),
+func makeProductWidget(
     currency: String = anyMessage(),
     productID: Int = makeIntID(),
-    productType: AnywayPaymentOutline.PaymentCore.ProductType
-) -> AnywayPayment.Element.Widget.PaymentCore {
+    productType: AnywayElement.Widget.Product.ProductType = .account
+) -> AnywayElement.Widget.Product {
     
-    .init(
-        amount: amount,
-        currency: .init(currency),
-        productID: {
-            
-            switch productType {
-            case .account: return .accountID(.init(productID))
-            case .card: return .cardID(.init(productID))
-            }
-        }()
+    return .init(
+        currency: currency,
+        productID: productID,
+        productType: productType
     )
 }
 
 func parameters(
     of payment: AnywayPayment
-) -> [AnywayPayment.Element.Parameter] {
+) -> [AnywayElement.Parameter] {
     
     payment.elements.compactMap(\.parameter)
 }
 
-private extension AnywayPayment.Element {
+private extension AnywayElement {
     
     var parameter: Parameter? {
         
@@ -978,7 +1015,7 @@ private extension AnywayPayment.Element {
     }
 }
 
-extension AnywayPayment.Element.Parameter {
+extension AnywayElement.Parameter {
     
     func updating(value: String?) -> Self {
         
@@ -1007,14 +1044,14 @@ extension AnywayPaymentContext {
 
 extension AnywayPayment {
     
-    func updating(elements: [Element]) -> Self {
+    func updating(elements: [AnywayElement]) -> Self {
         
         return .init(
             elements: elements,
+            footer: footer,
             infoMessage: infoMessage,
             isFinalStep: isFinalStep,
-            isFraudSuspected: isFraudSuspected,
-            puref: puref
+            isFraudSuspected: isFraudSuspected
         )
     }
 }

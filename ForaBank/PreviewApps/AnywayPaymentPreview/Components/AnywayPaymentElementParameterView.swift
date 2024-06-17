@@ -11,7 +11,7 @@ import Tagged
 
 struct AnywayPaymentElementParameterView: View {
     
-    let state: AnywayPayment.Element.UIComponent.Parameter
+    let state: AnywayElement.UIComponent.Parameter
     let event: (String) -> Void
     
     var body: some View {
@@ -27,20 +27,20 @@ struct AnywayPaymentElementParameterView: View {
             ExpandablePickerStateWrapperView(
                 viewModel: .decorated(
                     initialState: .init(items: options),
-                    onSelect: { event($0.key.rawValue) }
+                    onSelect: { event($0.key) }
                 ),
-                itemView: { Text($0.value.rawValue) }
+                itemView: { Text($0.value) }
             )
             
         case .numberInput:
             TextFieldMockWrapperView(
-                initial: state.value?.rawValue ?? "",
+                initial: state.value ?? "",
                 onChange: event
             )
             
         case .textInput:
             TextFieldMockWrapperView(
-                initial: state.value?.rawValue ?? "",
+                initial: state.value ?? "",
                 onChange: event
             )
             
@@ -50,7 +50,7 @@ struct AnywayPaymentElementParameterView: View {
     }
 }
 
-extension AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option: Identifiable {
+extension AnywayElement.UIComponent.Parameter.ParameterType.Option: Identifiable {
     
     public var id: Key { key }
 }
@@ -74,7 +74,7 @@ struct AnywayPaymentElementParameterView_Previews: PreviewProvider {
     }
     
     static func anywayPaymentElementParameterView(
-        _ parameter: AnywayPayment.Element.Parameter
+        _ parameter: AnywayElement.Parameter
     ) -> some View {
         
         AnywayPaymentElementParameterView(state: parameter.uiComponent, event: { _ in })

@@ -1,11 +1,11 @@
 //
-//  ObservingAnywayTransactionViewModel+preview.swift
+//  ObservingCachedAnywayTransactionViewModel+preview.swift
 //  TransactionPreview
 //
 //  Created by Igor Malyarov on 21.05.2024.
 //
 
-extension ObservingAnywayTransactionViewModel {
+extension ObservingCachedAnywayTransactionViewModel {
     
     static func preview(
         initialState: AnywayTransactionState = .preview

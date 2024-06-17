@@ -36,7 +36,7 @@ final class MainViewModelTests: XCTestCase {
         model.images.value = ["1": .tiny()]
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
                 
-        XCTAssertNoDiff(stickerSpy.values, [nil])
+        XCTAssertNoDiff(stickerSpy.values, [nil, nil])
     }
     
     func test_tapTemplates_shouldSetLinkToTemplates() {

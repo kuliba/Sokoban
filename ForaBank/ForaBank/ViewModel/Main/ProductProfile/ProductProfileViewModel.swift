@@ -23,7 +23,7 @@ class ProductProfileViewModel: ObservableObject {
     typealias ResultShowCVV = Swift.Result<CardInfo.CVV, Error>
     typealias CompletionShowCVV = (ResultShowCVV) -> Void
     typealias ShowCVV = (CardDomain.CardId, @escaping CompletionShowCVV) -> Void
-    
+
     let action: PassthroughSubject<Action, Never> = .init()
     
     let navigationBar: NavigationBarView.ViewModel
@@ -53,7 +53,7 @@ class ProductProfileViewModel: ObservableObject {
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
     private let fastPaymentsFactory: FastPaymentsFactory
-    private let paymentsTransfersFlowManager: PTFlowManger
+    private let makePaymentsTransfersFlowManager: MakePTFlowManger
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let unblockCardServices: UnblockCardServices
@@ -85,7 +85,7 @@ class ProductProfileViewModel: ObservableObject {
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
          fastPaymentsFactory: FastPaymentsFactory,
-         paymentsTransfersFlowManager: PTFlowManger,
+         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
          userAccountNavigationStateManager: UserAccountNavigationStateManager,
          sberQRServices: SberQRServices,
          unblockCardServices: UnblockCardServices,
@@ -108,7 +108,7 @@ class ProductProfileViewModel: ObservableObject {
         self.historyPool = historyPool
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
-        self.paymentsTransfersFlowManager = paymentsTransfersFlowManager
+        self.makePaymentsTransfersFlowManager = makePaymentsTransfersFlowManager
         self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
         self.unblockCardServices = unblockCardServices
@@ -142,7 +142,7 @@ class ProductProfileViewModel: ObservableObject {
     convenience init?(
         _ model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
-        paymentsTransfersFlowManager: PTFlowManger,
+        makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         unblockCardServices: UnblockCardServices,
@@ -178,7 +178,7 @@ class ProductProfileViewModel: ObservableObject {
             accentColor: accentColor,
             model: model,
             fastPaymentsFactory: fastPaymentsFactory,
-            paymentsTransfersFlowManager: paymentsTransfersFlowManager,
+            makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             unblockCardServices: unblockCardServices,
@@ -434,7 +434,7 @@ private extension ProductProfileViewModel {
                 
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
-                    flowManager: paymentsTransfersFlowManager,
+                    makeFlowManager: makePaymentsTransfersFlowManager,
                     userAccountNavigationStateManager: userAccountNavigationStateManager,
                     sberQRServices: sberQRServices,
                     qrViewModelFactory: qrViewModelFactory,
@@ -1604,7 +1604,7 @@ private extension ProductProfileViewModel {
         .init(
             model,
             fastPaymentsFactory: fastPaymentsFactory,
-            paymentsTransfersFlowManager: paymentsTransfersFlowManager,
+            makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             unblockCardServices: unblockCardServices,

@@ -13,7 +13,7 @@ where FieldView: View,
       ParameterView: View,
       WidgetView: View {
     
-    let state: AnywayPayment.Element
+    let state: AnywayElement
     let event: (AnywayPaymentEvent) -> Void
     let factory: AnywayPaymentElementViewFactory<FieldView, ParameterView, WidgetView>
     
@@ -26,7 +26,7 @@ where FieldView: View,
         case let .parameter(parameter):
             factory.parameterView(
                 parameter,
-                { event(.setValue($0, for: parameter.id.parameterID)) }
+                { event(.setValue($0, for: parameter.id)) }
             )
             
         case let .widget(widget):
@@ -39,13 +39,6 @@ where FieldView: View,
 }
 
 // MARK: - Adapters
-private extension AnywayPayment.Element.UIComponent.Parameter.ID {
-    
-    var parameterID: AnywayPaymentEvent.ParameterID {
-    
-        return .init(rawValue)
-    }
-}
 
 struct AnywayPaymentElementView_Previews: PreviewProvider {
     
@@ -68,7 +61,7 @@ struct AnywayPaymentElementView_Previews: PreviewProvider {
     }
     
     static func anywayPaymentElementView(
-        _ element: AnywayPayment.Element
+        _ element: AnywayElement
     ) -> some View {
         
         AnywayPaymentElementView(

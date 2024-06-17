@@ -7,4 +7,4 @@
 
 import Tagged
 
-public typealias AnywayPaymentStaged = Set<AnywayPayment.Element.Parameter.Field.ID>
+public typealias AnywayPaymentStaged = Set<AnywayElement.Parameter.Field.ID>

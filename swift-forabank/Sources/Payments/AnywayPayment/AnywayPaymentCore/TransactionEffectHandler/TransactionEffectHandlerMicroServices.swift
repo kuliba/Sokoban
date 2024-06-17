@@ -44,4 +44,3 @@ public extension TransactionEffectHandlerMicroServices {
     typealias Event = TransactionEvent<TransactionReport, PaymentEvent, PaymentUpdate>
     typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
-

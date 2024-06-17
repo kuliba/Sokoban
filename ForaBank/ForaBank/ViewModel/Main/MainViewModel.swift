@@ -150,6 +150,22 @@ class MainViewModel: ObservableObject, Resetable {
             bind(sections)
         }
     }
+    
+    private func updateProducts(
+        _ model: Model
+    ) {
+        if let index = sections.indexProductsSection,
+            let section = sections[index] as? MainSectionProductsView.ViewModel {
+            
+            withAnimation {
+                sections[index] = MainSectionProductsView.ViewModel(
+                    model,
+                    stickerViewModel: section.productCarouselViewModel.stickerViewModel
+                )
+            }
+            bind(sections)
+        }
+    }
 }
 
 extension MainViewModel {
@@ -338,6 +354,14 @@ private extension MainViewModel {
                 self?.action.send($0)
                 
             }).store(in: &bindings)
+        
+        model.productsOrdersUpdating
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let self else { return }
+
+                if !$0 { self.updateProducts(model) }
+            }.store(in: &bindings)
         
         model.products
             .receive(on: DispatchQueue.main)

@@ -55,9 +55,21 @@ public final class LandingViewModel: ObservableObject {
 
 extension LandingViewModel {
     
-    public enum Destination: Hashable, Identifiable {
+    public enum Destination: Equatable, Identifiable {
         
         case detail([UILanding.Component])
-        public var id: Self { self }
+        
+        public var id: Case {
+            
+            switch self {
+            case .detail:
+                return .detail
+            }
+        }
+        
+        public enum Case {
+            
+            case detail
+        }
     }
 }

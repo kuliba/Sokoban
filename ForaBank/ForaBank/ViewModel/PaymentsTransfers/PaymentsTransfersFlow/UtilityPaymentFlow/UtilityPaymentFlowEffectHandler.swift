@@ -31,9 +31,10 @@ extension UtilityPaymentFlowEffectHandler {
 
 extension UtilityPaymentFlowEffectHandler {
     
-    typealias UtilityPrepaymentFlowDispatch = (PrepaymentEvent) -> Void
     typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
-    typealias UtilityPrepaymentFlowEffectHandle = (Effect.UtilityPrepaymentFlowEffect, @escaping UtilityPrepaymentFlowDispatch) -> Void
+    typealias PrepaymentFlowDispatch = (PrepaymentEvent) -> Void
+    typealias PrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
+    typealias UtilityPrepaymentFlowEffectHandle = (PrepaymentEffect, @escaping PrepaymentFlowDispatch) -> Void
     
     typealias Dispatch = (Event) -> Void
     

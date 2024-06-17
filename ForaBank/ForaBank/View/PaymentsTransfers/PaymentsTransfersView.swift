@@ -5,12 +5,15 @@
 //  Created by Dmitry Martynov on 09.05.2022.
 //
 
+import AnywayPaymentDomain
 import ActivateSlider
 import InfoComponent
+import OperatorsListComponents
+import PaymentComponents
 import SberQR
 import SwiftUI
-import OperatorsListComponents
 import TextFieldModel
+import UIPrimitives
 
 struct PaymentsTransfersView: View {
     
@@ -237,18 +240,22 @@ struct PaymentsTransfersView: View {
             
         case let .sberQRPayment(sberQRPaymentViewModel):
             viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
-                .navigationBar(
-                    sberQRPaymentViewModel.navTitle,
+                .navigationBarWithBack(
+                    title: sberQRPaymentViewModel.navTitle,
                     dismiss: { viewModel.event(.dismiss(.destination)) }
                 )
             
         case let .utilityPayment(flowState):
             let event = { viewModel.event(.utilityFlow($0)) }
+            let dismissDestination = { viewModel.event(.dismiss(.destination)) }
             
-#warning("add nav bar")
             utilityPaymentFlowView(state: flowState, event: event)
-                .navigationTitle("Utility Prepayment View")
-                .navigationBarTitleDisplayMode(.inline)
+                .ignoresSafeArea()
+                .navigationBarWithBack(
+                    title: flowState.navTitle,
+                    dismiss: dismissDestination,
+                    rightItem: .barcodeScanner(action: viewModel.openScanner)
+                )
         }
     }
     
@@ -410,6 +417,7 @@ struct PaymentsTransfersView: View {
 
 private extension PaymentsTransfersView {
     
+    // TODO: move to viewFactory
     func utilityPaymentFlowView(
         state: UtilityFlowState,
         event: @escaping (UtilityFlowEvent) -> Void
@@ -423,7 +431,7 @@ private extension PaymentsTransfersView {
                 UtilityPrepaymentWrapperView(
                     viewModel: state.content,
                     completionEvent: { event(.prepayment($0.flowEvent)) },
-                    makeIconView: { viewFactory.makeIconView(.md5Hash(.init($0))) }
+                    makeIconView: { viewFactory.makeIconView($0.map { .md5Hash(.init($0)) }) }
                 )
             },
             destinationView: {
@@ -441,24 +449,52 @@ private extension PaymentsTransfersView {
         
         switch state {
         case let .operatorFailure(operatorFailure):
+            let operatorIconView = viewFactory.makeIconView(
+                operatorFailure.content.icon.map { .md5Hash(.init($0)) }
+            )
             operatorFailureView(
                 operatorFailure: operatorFailure,
                 payByInstructions: { event(.prepayment(.payByInstructions)) },
                 dismissDestination: { event(.prepayment(.dismiss(.operatorFailureDestination))) }
             )
-            .navigationTitle(String(describing: operatorFailure.content))
-            .navigationBarTitleDisplayMode(.inline)
+            .frame(maxHeight: .infinity)
+            .navigationBarWithAsyncIcon(
+                title: operatorFailure.content.title,
+                subtitle: operatorFailure.content.subtitle,
+                dismiss: { event(.prepayment(.dismiss(.operatorFailureDestination))) },
+                icon: operatorIconView,
+                style: .large
+            )
             
         case let .payByInstructions(paymentsViewModel):
             payByInstructionsView(paymentsViewModel)
             
         case let .payment(state):
-#warning("FIXME: navbar")
+            let payload = state.viewModel.state.context.outline.payload
+            let operatorIconView = viewFactory.makeIconView(
+                payload.icon.map { .md5Hash(.init($0)) }
+            )
             paymentFlowView(state: state, event: { event(.payment($0)) })
+                .navigationBarWithAsyncIcon(
+                    title: payload.title,
+                    subtitle: payload.subtitle,
+                    dismiss: { event(.prepayment(.dismiss(.destination))) },
+                    icon: operatorIconView,
+                    style: .large
+                )
             
         case let .servicePicker(state):
-#warning("FIXME: navbar")
+            let operatorIconView = viewFactory.makeIconView(
+                state.content.operator.icon.map { .md5Hash(.init($0)) }
+            )
             servicePickerView(state: state, event: event)
+                .navigationBarWithAsyncIcon(
+                    title: state.content.operator.title,
+                    subtitle: state.content.operator.subtitle,
+                    dismiss: { event(.prepayment(.dismiss(.servicesDestination))) },
+                    icon: operatorIconView,
+                    style: .large
+                )
         }
     }
     
@@ -473,9 +509,19 @@ private extension PaymentsTransfersView {
             event: dismissDestination,
             contentView: {
                 
-                OperatorFailureView(
-                    state: operatorFailure.content,
-                    event: payByInstructions
+                FooterView(
+                    state: .failure(.iFora),
+                    event: { event in
+                        
+                        switch event {
+                        case .payByInstruction:
+                            payByInstructions()
+                            
+                        case .addCompany:
+                            break
+                        }
+                    },
+                    config: .iFora
                 )
             },
             destinationView: operatorFailureDestinationView
@@ -499,59 +545,59 @@ private extension PaymentsTransfersView {
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
-        let factory = viewFactory.makeAnywayPaymentFactory { event in
-#warning("move event mapping to factory")
-            switch event {
-                
-            case let .setValue(value, for: id):
-                state.viewModel.event(.payment(.setValue(value, for: id)))
-                
-            case let .widget(widget):
-                state.viewModel.event(.payment(.widget(widget)))
-            }
+        let transactionEvent = { state.viewModel.event(.transaction($0)) }
+        
+        let factory = viewFactory.makeAnywayPaymentFactory {
+            
+            transactionEvent(.payment($0))
         }
         
-        AnywayTransactionStateWrapperView(viewModel: state.viewModel) {
+        AnywayTransactionStateWrapperView(viewModel: state.viewModel) { state, event in
             
-            AnywayTransactionView(state: $0, event: $1, factory: factory)
+            AnywayTransactionView(state: state, event: transactionEvent, factory: factory)
         }
         .alert(
             item: state.alert,
-            content: paymentFlowAlert(event: event)
+            content: paymentFlowAlert(event: { transactionEvent($0) })
         )
         .fullScreenCover(
             cover: state.fullScreenCover,
             dismissFullScreenCover: { event(.dismiss(.fullScreenCover)) },
             content: paymentFlowFullScreenCoverView
         )
-        .sheet(
-            modal: state.modal,
-            dismissModal: { event(.dismiss(.fraud)) },
-            content: paymentFlowModalView(event: { event(.fraud($0)) })
+        .bottomSheet(
+            sheet: state.modal,
+            dismiss: { event(.dismiss(.fraud)) },
+            content: paymentFlowModalView(
+                event: { transactionEvent(.fraud($0)) }
+            )
         )
         .navigationTitle("Payment: \(state.viewModel.state.isValid ? "valid" : "invalid")")
         .navigationBarTitleDisplayMode(.inline)
     }
     
     func paymentFlowAlert(
-        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
+        event: @escaping (AnywayTransactionEvent) -> Void
     ) -> (UtilityServiceFlowState.Alert) -> Alert {
         
         return { alert in
             
             switch alert {
-            case let .terminalError(errorMessage):
-                
+            case .paymentRestartConfirmation:
                 return .init(
-                    with: .init(
-                        title: "Error!",
-                        message: errorMessage,
-                        primaryButton: .init(
-                            type: .default,
-                            title: "OK",
-                            event: .dismiss(.paymentError)
-                        )
-                    ),
+                    with: .paymentRestartConfirmation,
+                    event: event
+                )
+                
+            case let .serverError(errorMessage):
+                return .init(
+                    with: .serverError(message: errorMessage),
+                    event: event
+                )
+                
+            case let .terminalError(errorMessage):
+                return .init(
+                    with: .terminalError(message: errorMessage),
                     event: event
                 )
             }
@@ -564,21 +610,13 @@ private extension PaymentsTransfersView {
     ) -> some View {
         
         switch fullScreenCover {
-        case .completed:
-            VStack(spacing: 32) {
-                
-                Text("TBD: Payment Complete View")
-                    .frame(maxHeight: .infinity)
-                
-                Divider()
-                
-                Button("go to Main", action: { viewModel.event(.outside(.goToMain)) })
-            }
+        case let .completed(result):
+            viewFactory.makePaymentCompleteView(result, { viewModel.event(.outside(.goToMain)) })
         }
     }
     
     func paymentFlowModalView(
-        event: @escaping (PaymentFraudMockView.Event) -> Void
+        event: @escaping (FraudEvent) -> Void
     ) -> (UtilityServiceFlowState.Modal) -> PaymentFlowModalView {
         
         return { PaymentFlowModalView(state: $0, event: event) }
@@ -597,7 +635,7 @@ private extension PaymentsTransfersView {
         }
         
         let operatorIconView = viewFactory.makeIconView(
-            .md5Hash(.init(state.content.operator.icon))
+            state.content.operator.icon.map { .md5Hash(.init($0)) }
         )
         
         ServicePickerFlowView(
@@ -615,7 +653,12 @@ private extension PaymentsTransfersView {
                 
                 servicePickerDestinationView(
                     destination: $0,
-                    event: { event(.payment($0)) }
+                    event: { event(.payment($0)) },
+                    navBar: .init(
+                        title: state.content.operator.title,
+                        subtitle: state.content.operator.subtitle,
+                        icon: operatorIconView
+                    )
                 )
             }
         )
@@ -648,14 +691,28 @@ private extension PaymentsTransfersView {
     @ViewBuilder
     func servicePickerDestinationView(
         destination: ServicePickerState.Destination,
-        event: @escaping (UtilityServicePaymentFlowEvent) -> Void
+        event: @escaping (UtilityServicePaymentFlowEvent) -> Void,
+        navBar: NavBar
     ) -> some View {
         
         switch destination {
         case let .payment(state):
-#warning("FIXME: navbar")
             paymentFlowView(state: state, event: event)
+                .navigationBarWithAsyncIcon(
+                    title: navBar.title,
+                    subtitle: navBar.subtitle,
+                    dismiss: { viewModel.event(.utilityFlow(.prepayment(.dismiss(.servicesDestination)))) },
+                    icon: navBar.icon,
+                    style: .large
+                )
         }
+    }
+    
+    struct NavBar {
+        
+        let title: String
+        let subtitle: String?
+        let icon: UIPrimitives.AsyncImage
     }
     
     typealias LastPayment = UtilityPaymentLastPayment
@@ -663,7 +720,7 @@ private extension PaymentsTransfersView {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
     
     typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content, UtilityPaymentViewModel>
     
@@ -676,17 +733,28 @@ private extension PaymentsTransfersView {
     typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<UtilityPaymentViewModel>
 }
 
+extension UtilityServicePaymentFlowState.Modal: BottomSheetCustomizable {}
+
 extension UtilityServicePaymentFlowState.Alert: Identifiable {
     
     var id: ID {
         
         switch self {
-        case .terminalError: return  .terminalError
+        case .paymentRestartConfirmation:
+            return .paymentRestartConfirmation
+            
+        case .serverError:
+            return .serverError
+            
+        case .terminalError:
+            return .terminalError
         }
     }
     
     enum ID: Hashable {
         
+        case paymentRestartConfirmation
+        case serverError
         case terminalError
     }
 }
@@ -718,6 +786,61 @@ extension UtilityServicePaymentFlowState.Modal: Identifiable {
     enum ID: Hashable {
         
         case fraud
+    }
+}
+
+// MARK: - Alerts
+
+private extension AlertModel
+where PrimaryEvent == AnywayTransactionEvent,
+      SecondaryEvent == AnywayTransactionEvent {
+    
+    static var paymentRestartConfirmation: Self {
+        
+        return .init(
+            title: "Внимание",
+            message: "Изменение параметров перевода потребует повторного заполнение всех полей формы",
+            primaryButton: .init(
+                type: .default,
+                title: "Продолжить",
+                event: .paymentRestartConfirmation(true)
+            ),
+            secondaryButton: .init(
+                type: .cancel,
+                title: "Отмена",
+                event: .paymentRestartConfirmation(false)
+            )
+        )
+    }
+    
+    static func serverError(
+        message: String
+    ) -> Self {
+        
+        return .init(
+            title: "Ошибка",
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: .dismissRecoverableError
+            )
+        )
+    }
+    
+    static func terminalError(
+        message: String
+    ) -> Self {
+        
+        return .init(
+            title: "Ошибка",
+            message: message,
+            primaryButton: .init(
+                type: .default,
+                title: "OK",
+                event: .completePayment(.none)
+            )
+        )
     }
 }
 

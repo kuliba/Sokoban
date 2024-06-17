@@ -42,6 +42,5 @@ extension PaymentsTransfersFlowEvent {
 extension PaymentsTransfersFlowEvent.PaymentButton {
     
     typealias LegacyPaymentPayload = PrepaymentEffect.LegacyPaymentPayload
-    typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
+    typealias PrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
 }
