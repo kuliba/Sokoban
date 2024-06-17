@@ -32,7 +32,12 @@ extension ProductProfileDetailView {
             
             ZStack {
                 
-                CircleSegmentedBarView(progress: .constant(viewModel.progress), width: 4, primaryColor: viewModel.primaryColor, secondaryColor: viewModel.secondaryColor)
+                CircleSegmentedBarView(
+                    progress: .constant(viewModel.progress),
+                    width: 4,
+                    primaryColor: viewModel.primaryColor,
+                    secondaryColor: viewModel.secondaryColor
+                )
                     .frame(width: 96, height: 96)
                 
                 Button(action: viewModel.action) {
@@ -77,5 +82,5 @@ struct ProductProfileDetailCircleProgressViewComponent_Previews: PreviewProvider
 
 extension ProductProfileDetailView.ViewModel.CircleProgressViewModel {
     
-    static let sample = ProductProfileDetailView.ViewModel.CircleProgressViewModel(progress: 0.7, primaryColor: .mainColorsRed, secondaryColor: .textPlaceholder, action: {})
+    static let sample = ProductProfileDetailView.ViewModel.CircleProgressViewModel(progress: 0.0002, primaryColor: .mainColorsRed, secondaryColor: .textPlaceholder, action: {})
 }

@@ -22,7 +22,7 @@ struct CircleSegmentedBarView: View {
         ZStack {
             
             Circle()
-                .trim(from: 0 + gap, to: max(min(1 - progress, 1), 0) - gap)
+                .trim(from: 0 + gap, to: max(min(progress, 1), 0) - gap)
                 .stroke(style: StrokeStyle(lineWidth: width, lineCap: .round, lineJoin: .round))
                 .foregroundColor(secondaryColor)
                 .rotationEffect(Angle(degrees: 270))
@@ -30,7 +30,7 @@ struct CircleSegmentedBarView: View {
                 .padding(max(width / 2, 0))
             
             Circle()
-                .trim(from: 0.0, to: max(min(progress, 1), 0))
+                .trim(from: 0.0, to: max(min(1 - progress, 1), 0))
                 .stroke(style: StrokeStyle(lineWidth: width, lineCap: .round, lineJoin: .round))
                 .foregroundColor(primaryColor)
                 .rotationEffect(Angle(degrees: 270.0))
@@ -48,13 +48,10 @@ struct CircleSegmentedBarView_Previews: PreviewProvider {
             CircleSegmentedBarView(progress: .constant(0))
                 .previewLayout(.fixed(width: 96, height: 96))
             
-            CircleSegmentedBarView(progress: .constant(0.35))
+            CircleSegmentedBarView(progress: .constant(0.00021995161064565795))
                 .previewLayout(.fixed(width: 96, height: 96))
             
-            CircleSegmentedBarView(progress: .constant(0.5))
-                .previewLayout(.fixed(width: 96, height: 96))
-            
-            CircleSegmentedBarView(progress: .constant(0.75))
+            CircleSegmentedBarView(progress: .constant(0.4))
                 .previewLayout(.fixed(width: 96, height: 96))
             
             CircleSegmentedBarView(progress: .constant(1.0))
