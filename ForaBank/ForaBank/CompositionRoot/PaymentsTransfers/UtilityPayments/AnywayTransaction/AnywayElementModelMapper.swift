@@ -13,21 +13,29 @@ final class AnywayElementModelMapper {
     
     private let currencyOfProduct: CurrencyOfProduct
     private let getProducts: GetProducts
+    private let settings: Settings
     
-    // TODO: add timeDuration and otpLength to Settings
-    private let timerDuration = 60
-    private let otpLength = 6
-
     init(
         currencyOfProduct: @escaping CurrencyOfProduct,
-        getProducts: @escaping GetProducts
+        getProducts: @escaping GetProducts,
+        flag: StubbedFeatureFlag.Option
     ) {
         self.currencyOfProduct = currencyOfProduct
         self.getProducts = getProducts
+        self.settings = flag == .stub ? .test : .default
     }
     
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
+    
+    struct Settings: Equatable {
+        
+        let timerDuration: Int
+        let otpLength: Int
+        
+        static let `default`: Self = .init(timerDuration: 60, otpLength: 6)
+        static let test: Self = .init(timerDuration: 6, otpLength: 6)
+    }
 }
 
 extension AnywayElementModelMapper {
@@ -222,8 +230,8 @@ private extension AnywayElementModelMapper {
                         
         return .init(
             otpText: otp.map { "\($0)" } ?? "",
-            timerDuration: timerDuration,
-            otpLength: otpLength,
+            timerDuration: settings.timerDuration,
+            otpLength: settings.otpLength,
             initiateOTP: { _ in event(.getVerificationCode) },
             submitOTP: { _,_ in },
             observe: { state in

@@ -222,7 +222,8 @@ private extension PaymentsTransfersFlowManagerComposer {
         
         let elementMapper = AnywayElementModelMapper(
             currencyOfProduct: self.currencyOfProduct,
-            getProducts: self.model.productSelectProducts
+            getProducts: self.model.productSelectProducts,
+            flag: flag.optionOrStub
         )
         
         let microServices = composeMicroServices()
