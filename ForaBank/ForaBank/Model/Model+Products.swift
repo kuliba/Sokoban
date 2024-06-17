@@ -499,14 +499,14 @@ extension Model {
             
             if let response {
                 
-                self.updateInfo.value.setValue(true, for: productType)
-
                 let result = Services.mapProductResponse(response)
                                 
                 // update products
                 let updatedProducts = Self.reduce(products: self.products.value, with: result.productList, for: productType)
                 self.products.value = updatedProducts
                 
+                self.updateInfo.value.setValue(true, for: productType)
+
                 //md5hash -> image
                 let md5Products = result.productList.reduce(Set<String>(), {
                     $0.union([$1.smallDesignMd5hash,
@@ -699,34 +699,7 @@ extension Model {
             }
         }
     }
-    
-    func productsFetchWithCommand(command: ServerCommands.ProductController.GetProductListByType) async throws -> (products: [ProductData], serial: String) {
         
-        try await withCheckedThrowingContinuation { continuation in
-            
-            serverAgent.executeCommand(command: command) { result in
-                switch result{
-                case .success(let response):
-                    switch response.statusCode {
-                    case .ok:
-                        
-                        guard let data = response.data else {
-                            continuation.resume(with: .failure(ModelProductsError.emptyData(message: response.errorMessage)))
-                            return
-                        }
-                        
-                        continuation.resume(returning: (data.productList, data.serial))
-
-                    default:
-                        continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
-                    }
-                case .failure(let error):
-                    continuation.resume(with: .failure(ModelProductsError.serverCommandError(error: error.localizedDescription)))
-                }
-            }
-        }
-    }
-    
     func productsSetSettingsWithCommand<Command: ServerCommand>(command: Command) async throws -> Bool {
         
         try await withCheckedThrowingContinuation { continuation in
