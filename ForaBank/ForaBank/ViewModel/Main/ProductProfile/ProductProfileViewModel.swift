@@ -2418,7 +2418,7 @@ extension ProductProfileViewModel {
         cardId: CardDomain.CardId,
         completion: @escaping ShowCVVCompletion
     ) {
-        if productData?.productStatus == .active {
+        if productData?.productStatus == .active || productData?.productStatus == .notVisible {
             cvvPINServicesClient.showCVV(
                 cardId: cardId.rawValue
             ) { [weak self] result in
