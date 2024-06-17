@@ -185,7 +185,7 @@ private extension AnywayElementModelMapper {
         switch widget {
         case let .otp(otp):
 #warning("add duration to settings")
-            return .widget(.otp(makeOTPViewModel(duration: 60, otp: otp, event: event)))
+            return .widget(.otp(makeOTPViewModel(otp: otp, event: event)))
             
         case let .product(product):
             return .widget(.product(makeProductSelectViewModel(with: product, event: { event(.payment($0)) })))
@@ -223,7 +223,6 @@ private extension AnywayElementModelMapper {
     }
     
     private func makeOTPViewModel(
-        duration timerDuration: Int,
         otp: Int?,
         event: @escaping (NotifyEvent) -> Void
     ) -> AnywayElementModel.Widget.OTPViewModel {
@@ -234,21 +233,9 @@ private extension AnywayElementModelMapper {
             otpLength: settings.otpLength,
             initiateOTP: { _ in event(.getVerificationCode) },
             submitOTP: { _,_ in },
-            observe: { state in
+            observe: {
                 
-                switch state.status {
-                case let .failure(failure):
-#warning("add error handling widget event!")
-#warning("note 2 error case needed: recoverable wrong OTP value and terminal when all attempts are exhausted")
-                    // self.event(.widget(.otp(.failure(failure))))
-                    dump(failure)
-                    
-                case let .input(input):
-                    event(.payment(.widget(.otp(input.otpField.text))))
-                    
-                case .validOTP:
-                    break
-                }
+                event(.payment(.widget(.otp($0))))
             }
         )
     }
