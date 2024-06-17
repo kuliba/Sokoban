@@ -500,7 +500,13 @@ extension Model {
             if let response {
                 
                 let result = Services.mapProductResponse(response)
-                                
+                
+                // updating status
+                if let index = self.productsUpdating.value.firstIndex(of: productType) {
+
+                    self.productsUpdating.value.remove(at: index)
+                }
+
                 // update products
                 let updatedProducts = Self.reduce(products: self.products.value, with: result.productList, for: productType)
                 self.products.value = updatedProducts
@@ -545,6 +551,11 @@ extension Model {
                 }
             }
             else {
+                // updating status
+                if let index = self.productsUpdating.value.firstIndex(of: productType) {
+
+                    self.productsUpdating.value.remove(at: index)
+                }
                 self.updateInfo.value.setValue(false, for: productType)
             }
         }
