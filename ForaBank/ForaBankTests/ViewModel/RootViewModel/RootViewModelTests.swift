@@ -207,7 +207,8 @@ final class RootViewModelTests: XCTestCase {
         }
         let sut = RootViewModel(
             fastPaymentsFactory: .legacy,
-            navigationStateManager: .preview,
+            navigationStateManager: .preview, 
+            productNavigationStateManager: .preview,
             mainViewModel: .init(
                 model,
                 makeProductProfileViewModel: { _,_,_ in nil },
@@ -215,11 +216,12 @@ final class RootViewModelTests: XCTestCase {
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(),
                 paymentsTransfersFactory: .preview,
+                updateInfoStatusFlag: .init(.inactive),
                 onRegister: {}
             ),
             paymentsViewModel: .init(
                 model: model,
-                flowManager: .preview,
+                makeFlowManager: { _ in .preview },
                 userAccountNavigationStateManager: .preview,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(), 
@@ -227,7 +229,7 @@ final class RootViewModelTests: XCTestCase {
             ),
             chatViewModel: .init(),
             informerViewModel: .init(model),
-            infoDictionary: infoDictionary,
+            infoDictionary: infoDictionary, 
             model,
             showLoginAction: { _ in
                 

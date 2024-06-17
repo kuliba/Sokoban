@@ -10,6 +10,7 @@ import LandingUIComponent
 import PaymentSticker
 import SberQR
 import ScrollViewProxy
+import ActivateSlider
 import SwiftUI
 
 struct MainView<NavigationOperationView: View>: View {
@@ -19,6 +20,7 @@ struct MainView<NavigationOperationView: View>: View {
     
     let viewFactory: MainViewFactory
     let paymentsTransfersViewFactory: PaymentsTransfersViewFactory
+    let productProfileViewFactory: ProductProfileViewFactory
     let getUImage: (Md5hash) -> UIImage?
     
     var body: some View {
@@ -113,6 +115,9 @@ struct MainView<NavigationOperationView: View>: View {
     ) -> some View {
         
         switch section {
+        case let updateInfoViewModel as UpdateInfoViewModel:
+            viewFactory.makeUpdateInfoView(updateInfoViewModel.content)
+            
         case let productsSectionViewModel as MainSectionProductsView.ViewModel:
             MainSectionProductsView(viewModel: productsSectionViewModel)
                 .padding(.bottom, 19)
@@ -159,6 +164,7 @@ struct MainView<NavigationOperationView: View>: View {
             ProductProfileView(
                 viewModel: productProfileViewModel,
                 viewFactory: paymentsTransfersViewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
             
@@ -184,6 +190,7 @@ struct MainView<NavigationOperationView: View>: View {
             MyProductsView(
                 viewModel: myProductsViewModel,
                 viewFactory: paymentsTransfersViewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
             
@@ -221,8 +228,8 @@ struct MainView<NavigationOperationView: View>: View {
             
         case let .sberQRPayment(sberQRPaymentViewModel):
             viewFactory.makeSberQRConfirmPaymentView(sberQRPaymentViewModel)
-                .navigationBar(
-                    sberQRPaymentViewModel.navTitle,
+                .navigationBarWithBack(
+                    title: sberQRPaymentViewModel.navTitle,
                     dismiss: viewModel.resetDestination
                 )
         case let .landing(viewModel):
@@ -249,6 +256,7 @@ struct MainView<NavigationOperationView: View>: View {
             ProductProfileView(
                 viewModel: productProfileViewModel,
                 viewFactory: paymentsTransfersViewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
                 getUImage: getUImage
             )
             
@@ -410,6 +418,7 @@ struct MainView_Previews: PreviewProvider {
             navigationOperationView: EmptyView.init,
             viewFactory: .preview,
             paymentsTransfersViewFactory: .preview,
+            productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)),
             getUImage: { _ in nil }
         )
     }
@@ -424,11 +433,12 @@ extension MainViewFactory {
                 
                 .init(
                     viewModel: $0,
-                    map: Info.preview(info:),
+                    map: PublishingInfo.preview(info:),
                     config: .iFora
                 )
             },
-            makeUserAccountView: UserAccountView.init(viewModel:)
+            makeUserAccountView: UserAccountView.init(viewModel:),
+            makeUpdateInfoView: UpdateInfoView.init(text:)
         )
     }
 }
@@ -441,16 +451,21 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            paymentsTransfersFlowManager: .preview,
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview, 
+        updateInfoStatusFlag: .init(.active),
         onRegister: {}
     )
     
@@ -460,16 +475,21 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            paymentsTransfersFlowManager: .preview,
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
+        updateInfoStatusFlag: .init(.active),
         onRegister: {}
     )
     
@@ -479,16 +499,21 @@ extension MainViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            paymentsTransfersFlowManager: .preview,
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
+            unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
-            cvvPINServicesClient: HappyCVVPINServicesClient()
+            cvvPINServicesClient: HappyCVVPINServicesClient(),
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
+        updateInfoStatusFlag: .init(.active),
         onRegister: {}
     )
 }

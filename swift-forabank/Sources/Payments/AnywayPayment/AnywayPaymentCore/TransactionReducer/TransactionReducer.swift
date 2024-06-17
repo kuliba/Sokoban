@@ -7,7 +7,8 @@
 
 import AnywayPaymentDomain
 
-public final class TransactionReducer<Report, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate> {
+public final class TransactionReducer<Report, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate> 
+where Payment: RestartablePayment {
     
     private let paymentReduce: PaymentReduce
     private let stagePayment: StagePayment
@@ -38,6 +39,9 @@ public extension TransactionReducer {
         var effect: Effect?
         
         switch (state.status, event) {
+        case let (.awaitingPaymentRestartConfirmation, .paymentRestartConfirmation(shouldRestartPayment)):
+            reduce(&state, shouldRestartPayment: shouldRestartPayment)
+            
         case (.result, _):
             break
             
@@ -84,6 +88,22 @@ public extension TransactionReducer {
 
 private extension TransactionReducer {
     
+    func reduce(
+        _ state: inout State,
+        shouldRestartPayment: Bool
+    ) {
+        guard case .awaitingPaymentRestartConfirmation = state.status
+        else { return }
+        
+        if shouldRestartPayment {
+            state.context.shouldRestart = true
+            state.status = nil
+        } else {
+            state.context = paymentInspector.restorePayment(state.context)
+            state.status = nil
+        }
+    }
+    
     func reduceDismissRecoverableError(
         _ state: inout State
     ) {
@@ -105,7 +125,7 @@ private extension TransactionReducer {
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        with event: Event.Fraud
+        with event: FraudEvent
     ) {
         guard case .fraudSuspected = state.status else { return }
         
@@ -140,8 +160,14 @@ private extension TransactionReducer {
         with event: PaymentEvent
     ) {
         let payment: Payment
-        (payment, effect) = paymentReduce(state.payment, event)
-        state.payment = payment
+        (payment, effect) = paymentReduce(state.context, event)
+        state.context = payment
+        
+        let shouldConfirmRestart = paymentInspector.wouldNeedRestart(payment) && !state.context.shouldRestart
+        if shouldConfirmRestart {
+             state.status = .awaitingPaymentRestartConfirmation
+        }
+        
         state.isValid = paymentInspector.validatePayment(payment)
     }
     
@@ -151,15 +177,17 @@ private extension TransactionReducer {
     ) {
         guard state.isValid, state.status == nil else { return }
         
-        state.payment = stagePayment(state.payment)
+        state.context = stagePayment(state.context)
         
-        if let verificationCode = paymentInspector.getVerificationCode(state.payment) {
+        if let verificationCode = paymentInspector.getVerificationCode(state.context) {
             effect = .makePayment(verificationCode)
         } else {
-            if paymentInspector.shouldRestartPayment(state.payment) {
-                effect = .initiatePayment(paymentInspector.makeDigest(state.payment))
+            let digest = paymentInspector.makeDigest(state.context)
+            
+            if state.context.shouldRestart {
+                effect = .initiatePayment(digest)
             } else {
-                effect = .continue(paymentInspector.makeDigest(state.payment))
+                effect = .continue(digest)
             }
         }
     }
@@ -170,7 +198,7 @@ private extension TransactionReducer {
     ) {
         guard state.status == nil else { return }
     
-        effect = .initiatePayment(paymentInspector.makeDigest(state.payment))
+        effect = .initiatePayment(paymentInspector.makeDigest(state.context))
     }
     
     func reduce(
@@ -188,8 +216,8 @@ private extension TransactionReducer {
             }
             
         case let .success(update):
-            let updated = updatePayment(state.payment, update)
-            state.payment = updated
+            let updated = updatePayment(state.context, update)
+            state.context = updated
             state.isValid = paymentInspector.validatePayment(updated)
             state.status = paymentInspector.checkFraud(updated) ? .fraudSuspected : nil
         }

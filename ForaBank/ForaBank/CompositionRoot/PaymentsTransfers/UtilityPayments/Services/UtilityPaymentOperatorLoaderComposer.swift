@@ -23,9 +23,6 @@ final class UtilityPaymentOperatorLoaderComposer {
         self.model = model
         self.pageSize = pageSize
     }
-}
-
-extension UtilityPaymentOperatorLoaderComposer {
     
     typealias Flag = StubbedFeatureFlag.Option
     typealias PageSize = Int
@@ -35,32 +32,9 @@ extension UtilityPaymentOperatorLoaderComposer {
     
     func compose() -> LoadOperators {
         
-        return { [weak self] payload, completion in
-            
-            guard let self else { return }
-            
-            switch flag {
-            case .live:
-                model.loadOperators(
-                    .init(
-                        operatorID: payload.operatorID,
-                        searchText: payload.searchText,
-                        pageSize: pageSize
-                    ),
-                    completion
-                )
-                
-            case .stub:
-                DispatchQueue.main.delay(for: .seconds(1)) {
-                    switch payload.operatorID {
-                    case .none:
-                        completion(.stub)
-                        
-                    case .some:
-                        completion([])
-                    }
-                }
-            }
+        switch flag {
+        case .live: return live
+        case .stub: return stub
         }
     }
     
@@ -84,6 +58,41 @@ extension UtilityPaymentOperatorLoaderComposer {
     typealias Operator = UtilityPaymentOperator
 }
 
+private extension UtilityPaymentOperatorLoaderComposer {
+    
+    func live(
+        payload: Payload,
+        completion: @escaping LoadOperatorsCompletion
+    ) {
+        let payload = LoadOperatorsPayload(
+            operatorID: payload.operatorID,
+            searchText: payload.searchText,
+            pageSize: pageSize
+        )
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            
+            self.model.loadOperators(payload, completion)
+        }
+    }
+    
+    func stub(
+        payload: Payload,
+        completion: @escaping LoadOperatorsCompletion
+    ) {
+        DispatchQueue.main.delay(for: .seconds(1)) {
+            
+            switch payload.operatorID {
+            case .none:
+                completion(.stub)
+                
+            case .some:
+                completion([])
+            }
+        }
+    }
+}
+
 // MARK: - Live
 
 private extension Model {
@@ -92,13 +101,19 @@ private extension Model {
         _ payload: LoadOperatorsPayload,
         _ completion: @escaping LoadOperatorsCompletion
     ) {
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+        let log = LoggerAgent().log
+        let cacheLog = { log(.debug, .cache, $0, $1, $2) }
+        
+        if let operators = localAgent.load(type: [CachingSberOperator].self) {
+            cacheLog("Operators count \(operators.count)", #file, #line)
             
-            if let operators = self?.localAgent.load(type: [CachingSberOperator].self) {
-                completion(operators.operators(for: payload))
-            } else {
-                completion([])
-            }
+            let page = operators.operators(for: payload)
+            cacheLog("Operators page count \(page.count)", #file, #line)
+            
+            completion(page)
+        } else {
+            cacheLog("No more Operators", #file, #line)
+            completion([])
         }
     }
     
@@ -117,18 +132,16 @@ struct LoadOperatorsPayload: Equatable {
 // TODO: - add tests
 extension Array where Element == CachingSberOperator {
     
-    /// - Warning: expensive with sorting and search. Sorting could be moved to cache.
+    /// - Warning: expensive with sorting and search. Sorting is expected to happen at cache phase.
     func operators(
         for payload: LoadOperatorsPayload
     ) -> [UtilityPaymentOperator] {
         
         // sorting is performed at cache phase
-        let operators = self
+        return self
             .search(searchText: payload.searchText)
             .page(startingAfter: payload.operatorID, pageSize: payload.pageSize)
             .map(UtilityPaymentOperator.init(with:))
-        
-        return operators
     }
 }
 
@@ -179,23 +192,18 @@ private extension UtilityPaymentOperator {
 
 private extension Array where Element == UtilityPaymentOperator {
     
-    static let stub: Self = [
-        .single,
-        .singleFailure,
-        .multiple,
-        .multipleFailure,
-    ]
+    static let stub: Self = [.empty, .failing, .single, .multi]
 }
 
 private extension UtilityPaymentOperator {
     
-    static let multiple: Self = .init("multiple", "Multiple")
-    static let multipleFailure: Self = .init("multipleFailure", "MultipleFailure")
-    static let single: Self = .init("single", "Single")
-    static let singleFailure: Self = .init("singleFailure", "SingleFailure")
+    static let empty:   Self = .init("empty", "No Service Operator", "123")
+    static let failing: Self = .init("failing", "Failing Operator", "456")
+    static let multi:   Self = .init("multi-d1", "Multi Service Operator", "abc")
+    static let single:  Self = .init("single-d2", "Single Service Operator", "cde")
     
-    private init(_ id: String, _ title: String) {
+    private init(_ id: String, _ title: String, _ subtitle: String? = nil) {
         
-        self.init(id: id, title: title, subtitle: nil, icon: "abc")
+        self.init(id: id, title: title, subtitle: subtitle, icon: nil)
     }
 }

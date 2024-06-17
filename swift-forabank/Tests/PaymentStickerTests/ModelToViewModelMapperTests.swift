@@ -118,7 +118,8 @@ private extension ModelToViewModelMapper {
                     cardImage: .named(""),
                     paymentSystem: .named(""),
                     backgroundImage: nil,
-                    backgroundColor: ""
+                    backgroundColor: "", 
+                    clover: .named("")
                 ),
                 allProducts: [])
             )

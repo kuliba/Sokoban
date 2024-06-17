@@ -6,10 +6,13 @@
 //
 
 import SberQR
+import ActivateSlider
+import SwiftUI
 
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
+typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
 
 struct RootViewFactory {
     
@@ -17,11 +20,17 @@ struct RootViewFactory {
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeUserAccountView: MakeUserAccountView
     let makeIconView: MakeIconView
+    let makeActivateSliderView: MakeActivateSliderView
+    let makeUpdateInfoView: MakeUpdateInfoView
+    let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
+    let makePaymentCompleteView: MakePaymentCompleteView
 }
 
 extension RootViewFactory {
     
     typealias MakeIconView = IconDomain.MakeIconView
+    typealias MakeAnywayPaymentFactory = PaymentsTransfersViewFactory.MakeAnywayPaymentFactory
+    typealias MakePaymentCompleteView = PaymentsTransfersViewFactory.MakePaymentCompleteView
 }
 
 extension RootViewFactory {
@@ -30,7 +39,8 @@ extension RootViewFactory {
         
         return .init(
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: makeUserAccountView
+            makeUserAccountView: makeUserAccountView,
+            makeUpdateInfoView: makeUpdateInfoView
         )
     }
 }
@@ -42,7 +52,25 @@ extension RootViewFactory {
         return .init(
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView,
-            makeIconView: makeIconView
+            makeIconView: makeIconView,
+            makeUpdateInfoView: makeUpdateInfoView,
+            makeAnywayPaymentFactory: makeAnywayPaymentFactory,
+            makePaymentCompleteView: makePaymentCompleteView
+        )
+    }
+}
+
+struct ProductProfileViewFactory {
+    
+    let makeActivateSliderView: MakeActivateSliderView
+}
+
+extension RootViewFactory {
+    
+    var productProfileViewFactory: ProductProfileViewFactory {
+ 
+        .init(
+            makeActivateSliderView: makeActivateSliderView
         )
     }
 }

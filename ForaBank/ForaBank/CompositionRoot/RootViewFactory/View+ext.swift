@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Extending SwiftUI API
 extension View {
     
     func alert<Item: Identifiable>(
@@ -63,6 +64,25 @@ extension View {
             item: .init(
                 get: { modal },
                 set: { if $0 == nil { dismissModal() }}
+            ),
+            content: content
+        )
+    }
+}
+
+/// Extending custom API
+extension View {
+
+    func bottomSheet<BottomSheet: BottomSheetCustomizable, Content: View>(
+        sheet: BottomSheet?,
+        dismiss: @escaping () -> Void,
+        @ViewBuilder content: @escaping (BottomSheet) -> Content
+    ) -> some View {
+        
+        bottomSheet(
+            item: .init(
+                get: { sheet },
+                set: { if $0 == nil { dismiss() }}
             ),
             content: content
         )

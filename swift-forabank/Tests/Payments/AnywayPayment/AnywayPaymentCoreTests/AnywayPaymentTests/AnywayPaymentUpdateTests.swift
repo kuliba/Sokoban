@@ -13,31 +13,57 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     
     // MARK: - amount (core)
     
-    func test_update_shouldNotAddAmountFieldOnNeedSumFalse() {
+    func test_update_shouldNotAddAmountWidgetOnNeedSumFalseAndIsMultiSumFalse() {
         
         assert(
             makeAnywayPaymentWithoutAmount(),
-            on: makeAnywayPaymentUpdate(needSum: false)
+            on: makeAnywayPaymentUpdate(needSum: false, isMultiSum: false)
         )
     }
     
-    func test_update_shouldAddAmountFieldOnNeedSumTrue() {
+    func test_update_shouldNotAddAmountWidgetOnNeedSumFalseAndIsMultiSumTrue() {
+        
+        assert(
+            makeAnywayPaymentWithoutAmount(),
+            on: makeAnywayPaymentUpdate(needSum: false, isMultiSum: true)
+        )
+    }
+    
+    func test_update_shouldSetFooterToAmountOnNeedSumTrueAndIsMultiSumFalse() {
         
         let payment = makeAnywayPaymentWithoutAmount()
-        let update = makeAnywayPaymentUpdate(needSum: true)
+        let update = makeAnywayPaymentUpdate(needSum: true, isMultiSum: false)
         
-        XCTAssert(hasAmountField(updatePayment(payment, with: update)))
+        XCTAssert(hasAmountFooter(updatePayment(payment, with: update)))
     }
     
-    func test_update_shouldRemoveAmountFieldOnNeedSumFalse() {
+    func test_update_shouldNotSetFooterToAmountOnNeedSumTrueAndIsMultiSumTrue() {
+        
+        let payment = makeAnywayPaymentWithoutAmount()
+        let update = makeAnywayPaymentUpdate(needSum: true, isMultiSum: true)
+        
+        XCTAssertFalse(hasAmountFooter(updatePayment(payment, with: update)))
+    }
+    
+    func test_update_shouldSetFooterToContinueOnNeedSumFalseAndIsMultiSumFalse() {
         
         let payment = makeAnywayPaymentWithAmount()
-        let update = makeAnywayPaymentUpdate(needSum: false)
+        let update = makeAnywayPaymentUpdate(needSum: false, isMultiSum: false)
         
-        XCTAssertFalse(hasAmountField(updatePayment(payment, with: update)))
+        XCTAssertFalse(hasAmountFooter(updatePayment(payment, with: update)))
+        XCTAssertTrue(hasContinueFooter(updatePayment(payment, with: update)))
     }
     
-    func test_update_shouldSetCoreWidgetWithAccountIDFromOutline() {
+    func test_update_shouldSetFooterToContinueOnNeedSumFalseAndIsMultiSumTrue() {
+        
+        let payment = makeAnywayPaymentWithAmount()
+        let update = makeAnywayPaymentUpdate(needSum: false, isMultiSum: true)
+        
+        XCTAssertFalse(hasAmountFooter(updatePayment(payment, with: update)))
+        XCTAssertTrue(hasContinueFooter(updatePayment(payment, with: update)))
+    }
+    
+    func test_update_shouldSetProductWidgetWithAccountIDFromOutline() {
         
         let payment = makeAnywayPaymentWithoutAmount()
         let update = makeAnywayPaymentUpdate(needSum: true)
@@ -45,16 +71,16 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         let core = makeOutlinePaymentCore(amount: amount, currency: currency, productID: id, productType: .account)
         let outline = makeAnywayPaymentOutline(core: core)
         
-        let widgetCore = widgetCore(updatePayment(payment, with: update, and: outline))
+        let widgetProduct = makeProductWidget(updatePayment(payment, with: update, and: outline))
         
-        XCTAssertNoDiff(widgetCore, .init(
-            amount: amount,
+        XCTAssertNoDiff(widgetProduct, .init(
             currency: .init(currency),
-            productID: .accountID(.init(id))
+            productID: id,
+            productType: .account
         ))
     }
     
-    func test_update_shouldSetCoreWidgetWithCardIDFromOutline() {
+    func test_update_shouldSetProductWidgetWithCardIDFromOutline() {
         
         let payment = makeAnywayPaymentWithoutAmount()
         let update = makeAnywayPaymentUpdate(needSum: true)
@@ -62,22 +88,22 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         let core = makeOutlinePaymentCore(amount: amount, currency: currency, productID: id, productType: .card)
         let outline = makeAnywayPaymentOutline(core: core)
         
-        let widgetCore = widgetCore(updatePayment(payment, with: update, and: outline))
+        let widgetCore = makeProductWidget(updatePayment(payment, with: update, and: outline))
         
         XCTAssertNoDiff(widgetCore, .init(
-            amount: amount,
             currency: .init(currency),
-            productID: .cardID(.init(id))
+            productID: id,
+            productType: .card
         ))
     }
     
-    private func widgetCore(
+    private func makeProductWidget(
         _ payment: AnywayPayment
-    ) -> AnywayPayment.Element.Widget.PaymentCore? {
+    ) -> AnywayElement.Widget.Product? {
         
-        let cores: [AnywayPayment.Element.Widget.PaymentCore] = payment.elements.compactMap {
+        let cores: [AnywayElement.Widget.Product] = payment.elements.compactMap {
             
-            guard case let .widget(.core(core)) = $0
+            guard case let .widget(.product(core)) = $0
             else { return nil }
             
             return core
@@ -98,7 +124,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         XCTAssertNoDiff(payment.elements, [])
         assert(payment, on: update) {
             
-            $0.elements = [AnywayPayment.Element.field(updated)]
+            $0.elements = [AnywayElement.field(updated)]
         }
     }
     
@@ -117,10 +143,10 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         assert(payment, on: update) {
             
             $0.elements = [
-                .init(id: "a", title: "aaa", value: "aa"),
-                .init(id: "b", title: "bbb", value: "bb"),
-                .init(id: "c", title: "ccc", value: "cc"),
-            ].map(AnywayPayment.Element.field)
+                makeAnywayPaymentField("a", value: "aa", title: "aaa"),
+                makeAnywayPaymentField("b", value: "bb", title: "bbb"),
+                makeAnywayPaymentField("c", value: "cc", title: "ccc"),
+            ].map(AnywayElement.field)
         }
     }
     
@@ -134,7 +160,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         assert(payment, on: update) {
             
             let fields = [field].appending(updatedField)
-            $0.elements = fields.map(AnywayPayment.Element.field)
+            $0.elements = fields.map(AnywayElement.field)
         }
     }
     
@@ -151,7 +177,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         assert(payment, on: update) {
             
             let fields = [field, updatedField1, updatedField2]
-            $0.elements = fields.map(AnywayPayment.Element.field)
+            $0.elements = fields.map(AnywayElement.field)
         }
     }
     
@@ -272,6 +298,28 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         assert(payment, on: update) {
             
             $0.elements = [.field(updatedField), .field(updatedField2)]
+        }
+    }
+    
+    func test_update_withSumSTrsAndNeedSumFalse() {
+        
+        let payment = makeAnywayPayment()
+        let update = makeAnywayPaymentUpdate(
+            details: .init(
+                amounts: makeDetailsAmounts(amount: 4273.87),
+                control: makeDetailsControl(needSum: false),
+                info: makeDetailsInfo()
+            ),
+            fields: [
+                makeField(name: "SumSTrs", value: "4273.87", title: "Сумма")
+            ],
+            parameters: []
+        )
+        
+        assert(payment, on: update) {
+            
+            let field = makeAnywayPaymentField("SumSTrs", value: "4273.87", title: "Сумма")
+            $0.elements = [.field(field)]
         }
     }
     
@@ -464,7 +512,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            $0.elements = [parameter1, parameter2, updatedParameter].map(AnywayPayment.Element.parameter)
+            $0.elements = [parameter1, parameter2, updatedParameter].map(AnywayElement.parameter)
         }
     }
     
@@ -479,7 +527,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            $0.elements = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
+            $0.elements = [updatedParameter1, updatedParameter2].map(AnywayElement.parameter)
         }
     }
     
@@ -495,7 +543,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
+            let appending = [updatedParameter1, updatedParameter2].map(AnywayElement.parameter)
             $0.elements = [.field(field)] + appending
         }
     }
@@ -513,7 +561,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
+            let appending = [updatedParameter1, updatedParameter2].map(AnywayElement.parameter)
             $0.elements = [.field(field1), .field(field2)] + appending
         }
     }
@@ -533,7 +581,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
+            let appending = [updatedParameter1, updatedParameter2].map(AnywayElement.parameter)
             $0.elements = [.field(field), .parameter(parameter)] + appending
         }
     }
@@ -553,7 +601,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         assert(payment, on: update) {
             
-            let appending = [updatedParameter1, updatedParameter2].map(AnywayPayment.Element.parameter)
+            let appending = [updatedParameter1, updatedParameter2].map(AnywayElement.parameter)
             $0.elements = [.parameter(parameter), .field(field)] + appending
         }
     }
@@ -571,7 +619,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         assert(payment, on: update) {
             
             $0.elements = [parameter, updatedParameter1, updatedParameter2]
-                .map(AnywayPayment.Element.parameter)
+                .map(AnywayElement.parameter)
         }
     }
     
@@ -589,7 +637,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         assert(payment, on: update) {
             
             $0.elements = [parameter1, parameter2, updatedParameter1, updatedParameter2]
-                .map(AnywayPayment.Element.parameter)
+                .map(AnywayElement.parameter)
         }
     }
     
@@ -625,8 +673,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             
             let complimentaryFields = [updatedField1, updatedField2]
             let parameters = [updatedParameter1, updatedParameter2]
-            $0.elements = complimentaryFields.map(AnywayPayment.Element.field)
-            + parameters.map(AnywayPayment.Element.parameter)
+            $0.elements = complimentaryFields.map(AnywayElement.field)
+            + parameters.map(AnywayElement.parameter)
         }
     }
     
@@ -668,8 +716,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             let complimentaryFields = [updatedField1, updatedField2]
             let parameters = [updatedParameter1, updatedParameter2]
             $0.elements = [.field(field), .parameter(parameter)]
-            + complimentaryFields.map(AnywayPayment.Element.field)
-            + parameters.map(AnywayPayment.Element.parameter)
+            + complimentaryFields.map(AnywayElement.field)
+            + parameters.map(AnywayElement.parameter)
         }
     }
     
@@ -743,10 +791,10 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             
             $0.elements = [
                 .field(
-                    .init(
-                        id: .init(matchingFieldID),
-                        title: newFieldTitle,
-                        value: .init(newFieldValue)
+                    makeAnywayPaymentField(
+                        .init(matchingFieldID),
+                        value: .init(newFieldValue),
+                        title: newFieldTitle
                     )
                 ),
                 .parameter(parameter.updating(value: newParameterValue)),
@@ -867,11 +915,85 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             file: file, line: line
         )
     }
+    
+    private func makeDetailsAmounts(
+        amount: Decimal? = nil,
+        creditAmount: Decimal? = nil,
+        currencyAmount: String? = nil,
+        currencyPayee: String? = nil,
+        currencyPayer: String? = nil,
+        currencyRate: Decimal? = nil,
+        debitAmount: Decimal? = nil,
+        fee: Decimal? = nil
+    ) -> AnywayPaymentUpdate.Details.Amounts {
+        
+        return .init(
+            amount: amount,
+            creditAmount: creditAmount,
+            currencyAmount: currencyAmount,
+            currencyPayee: currencyPayee,
+            currencyPayer: currencyPayer,
+            currencyRate: currencyRate,
+            debitAmount: debitAmount,
+            fee: fee
+        )
+    }
+    
+    private func makeDetailsControl(
+        isFinalStep: Bool = false,
+        isFraudSuspected: Bool = false,
+        isMultiSum: Bool = false,
+        needMake: Bool = false,
+        needOTP: Bool = false,
+        needSum: Bool = false
+    ) -> AnywayPaymentUpdate.Details.Control {
+        
+        return .init(
+            isFinalStep: isFinalStep,
+            isFraudSuspected: isFraudSuspected,
+            isMultiSum: isMultiSum,
+            needMake: needMake,
+            needOTP: needOTP,
+            needSum: needSum
+        )
+    }
+    
+    private func makeDetailsInfo(
+        documentStatus: AnywayPaymentUpdate.Details.Info.DocumentStatus? = nil,
+        infoMessage: String? = nil,
+        payeeName: String? = nil,
+        paymentOperationDetailID: Int? = nil,
+        printFormType: String? = nil
+    ) -> AnywayPaymentUpdate.Details.Info {
+        
+        return .init(
+            documentStatus: documentStatus,
+            infoMessage: infoMessage,
+            payeeName: payeeName,
+            paymentOperationDetailID: paymentOperationDetailID,
+            printFormType: printFormType
+        )
+    }
+    
+    private func makeField(
+        name: String,
+        value: String,
+        title: String,
+        image: AnywayPaymentUpdate.Image? = nil
+    ) -> AnywayPaymentUpdate.Field {
+        
+        return .init(
+            name: name,
+            value: value,
+            title: title,
+            image: image
+        )
+    }
 }
 
 private extension AnywayPayment {
     
-    subscript(parameterID id: String) -> Element.Parameter? {
+    subscript(parameterID id: String) -> AnywayElement.Parameter? {
         
         elements.compactMap {
             

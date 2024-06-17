@@ -14,7 +14,7 @@ final class CardReducerTests: XCTestCase {
     
     func test_activateCard_shouldSetEffectNone() {
         
-        assertEffect(.none, onEvent: .activateCard, state: .status(.none))
+        assertEffect(.none, onEvent: .activateCard(.payload), state: .status(.none))
     }
     
     func test_confirmActivateCancel_shouldSetEffectNone() {
@@ -24,7 +24,7 @@ final class CardReducerTests: XCTestCase {
     
     func test_confirmActivate_shouldSetEffectActivate() {
         
-        assertEffect(.activate, onEvent: .confirmActivate(.activate), state: .status(.none))
+        assertEffect(.activate(.payload), onEvent: .confirmActivate(.activate(.payload)), state: .status(.none))
     }
     
     func test_activateCardResponseConnectivityError_shouldSetEffectNone() {
@@ -88,4 +88,9 @@ final class CardReducerTests: XCTestCase {
         
         XCTAssertNoDiff(receivedEffect, expectedEffect, file: file, line: line)
     }
+}
+
+private extension Int {
+    
+    static let payload: Int = 1
 }

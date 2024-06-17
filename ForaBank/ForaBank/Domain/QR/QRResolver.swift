@@ -36,6 +36,10 @@ extension QRResolver {
                 
                 return .sberQR(url)
                 
+            } else if let qrCode = QRCode(string: string) {
+                
+                return .qrCode(qrCode)
+                
             } else {
                 
                 return .url(url)

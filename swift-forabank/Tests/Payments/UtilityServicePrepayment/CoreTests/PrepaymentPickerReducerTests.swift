@@ -149,7 +149,7 @@ final class PrepaymentPickerReducerTests: XCTestCase {
         assert(.page([]), on: makeState(), effect: nil)
     }
     
-    func test_page_shouldAppendOperators() {
+    func test_page_shouldAppendNewOperators() {
         
         let (oldOperator, newOperator) = (makeOperator(), makeOperator())
         let state = makeState(operators: [oldOperator])
@@ -157,6 +157,18 @@ final class PrepaymentPickerReducerTests: XCTestCase {
         assertState(.page([newOperator]), on: state) {
             
             $0.operators = [oldOperator, newOperator]
+        }
+    }
+    
+    func test_page_shouldNotAppendExistingOperators() {
+        
+        let oldOperator = makeOperator()
+        let newOperator = oldOperator
+        let state = makeState(operators: [oldOperator])
+        
+        assertState(.page([newOperator]), on: state) {
+            
+            $0.operators = [oldOperator]
         }
     }
     

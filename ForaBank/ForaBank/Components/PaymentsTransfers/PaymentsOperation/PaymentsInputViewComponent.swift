@@ -405,20 +405,24 @@ struct PaymentsInputView: View {
 
 struct PaymentsInputView_Previews: PreviewProvider {
     
+    private static func preview(_ viewModel: PaymentsGroupViewModel) -> some View {
+        PaymentsGroupView(viewModel: viewModel)
+    }
+
     static var previews: some View {
         
         Group {
             
-            PaymentsGroupView(viewModel: .init(items: [PaymentsInputView.ViewModel.sampleEmptyValue]))
+            preview(.init(items: [PaymentsInputView.ViewModel.sampleEmptyValue]))
                 .previewDisplayName("Empty Value")
             
-            PaymentsGroupView(viewModel: .init(items: [PaymentsInputView.ViewModel.sample]))
+            preview(.init(items: [PaymentsInputView.ViewModel.sample]))
                 .previewDisplayName("Value")
             
-            PaymentsGroupView(viewModel: .init(items: [PaymentsInputView.ViewModel.sampleLongValue]))
+            preview(.init(items: [PaymentsInputView.ViewModel.sampleLongValue]))
                 .previewDisplayName("Long Value")
             
-            PaymentsGroupView(viewModel: .init(items: [PaymentsInputView.ViewModel.sampleNotEditable]))
+            preview(.init(items: [PaymentsInputView.ViewModel.sampleNotEditable]))
                 .previewDisplayName("Not Editable")
        
             previewGroup()

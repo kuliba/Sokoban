@@ -10,6 +10,7 @@ struct UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewMod
     var alert: Alert?
     let content: Content
     var destination: Destination?
+    let navTitle: String
 }
 
 extension UtilityPaymentFlowState {

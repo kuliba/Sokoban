@@ -8,13 +8,13 @@
 extension UtilityPrepaymentFlowMicroServices
 where LastPayment == UtilityPaymentLastPayment,
       Operator == UtilityPaymentOperator,
-      UtilityService == ForaBank.UtilityService {
+      Service == UtilityService {
     
     static var preview: Self {
         
         return .init(
-            initiateUtilityPayment: { _ in },
-            startPayment: { _,_ in }
+            initiateUtilityPayment: { _,_  in },
+            processSelection: { _,_ in }
         )
     }
 }

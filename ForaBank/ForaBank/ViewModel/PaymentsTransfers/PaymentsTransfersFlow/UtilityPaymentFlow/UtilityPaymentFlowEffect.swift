@@ -5,25 +5,12 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
-enum UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService> {
+enum UtilityPaymentFlowEffect<LastPayment, Operator, Service> {
     
-    case prepayment(UtilityPrepaymentFlowEffect)
+    case prepayment(PrepaymentEffect)
 }
 
 extension UtilityPaymentFlowEffect {
     
-    enum UtilityPrepaymentFlowEffect {
-        
-        case initiate
-        case startPayment(with: Select)
-    }
+    typealias PrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
 }
-
-extension UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect {
-    
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
-    typealias Select = Event.UtilityPrepaymentFlowEvent.Select
-}
-
-extension UtilityPaymentFlowEffect: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}
-extension UtilityPaymentFlowEffect.UtilityPrepaymentFlowEffect: Equatable where LastPayment: Equatable, Operator: Equatable, UtilityService: Equatable {}

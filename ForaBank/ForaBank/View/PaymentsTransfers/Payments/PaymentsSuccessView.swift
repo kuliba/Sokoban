@@ -224,6 +224,23 @@ struct PaymentsSuccessView_Previews: PreviewProvider {
     }
 }
 
+struct PaymentsSuccessView_More_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        Group {
+            
+            PaymentsSuccessView(viewModel: .fraudCancelled(
+                goToMain: { print("Go to Main") }
+            ))
+            .previewDisplayName("Fraud: Cancelled")
+            
+            PaymentsSuccessView(viewModel: .fraudExpired)
+                .previewDisplayName("Fraud: Expired")
+        }
+    }
+}
+
 //MARK: - Preview Content
 
 extension PaymentsSuccessViewModel {

@@ -36,6 +36,7 @@ public extension Operation.Parameter {
             let paymentSystem: ImageData
             let backgroundImage: ImageData?
             let backgroundColor: String
+            let clover: ImageData?
             
             public init(
                 id: Int,
@@ -47,7 +48,8 @@ public extension Operation.Parameter {
                 cardImage: ImageData,
                 paymentSystem: ImageData,
                 backgroundImage: ImageData?,
-                backgroundColor: String
+                backgroundColor: String,
+                clover: ImageData?
             ) {
                 self.id = id
                 self.title = title
@@ -59,6 +61,7 @@ public extension Operation.Parameter {
                 self.paymentSystem = paymentSystem
                 self.backgroundImage = backgroundImage
                 self.backgroundColor = backgroundColor
+                self.clover = clover
             }
         }
         

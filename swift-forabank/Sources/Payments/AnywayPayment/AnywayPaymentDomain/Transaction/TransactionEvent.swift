@@ -10,19 +10,15 @@ public enum TransactionEvent<TransactionReport, PaymentEvent, PaymentUpdate> {
     case completePayment(TransactionReport?)
     case `continue`
     case dismissRecoverableError
-    case fraud(Fraud)
+    case fraud(FraudEvent)
     case initiatePayment
     case payment(PaymentEvent)
+    case paymentRestartConfirmation(Bool)
     case updatePayment(UpdatePaymentResult)
 }
 
 public extension TransactionEvent {
     
-    enum Fraud: Equatable {
-        
-        case cancel, `continue`, expired
-    }
-        
     typealias UpdatePaymentResult = Result<PaymentUpdate, ServiceFailure>
 }
 

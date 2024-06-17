@@ -14,7 +14,7 @@ extension ContentViewModelFactory {
     
     typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> TransactionViewModel
     typealias Observe = (AnywayTransactionState) -> Void
-    typealias TransactionViewModel = ObservingAnywayTransactionViewModel
+    typealias TransactionViewModel = ObservingCachedAnywayTransactionViewModel
 }
 
 extension ContentViewModelFactory {
@@ -45,9 +45,9 @@ extension ContentViewModelFactory {
                     )
                 )
                 
-                let viewModel = composer.compose(initialState: initialState)
+                let observable = composer.compose(initialState: initialState)
                 
-                return .init(observable: viewModel, observe: observe)
+                return .init(observable: observable, observe: observe)
             }
         )
     }

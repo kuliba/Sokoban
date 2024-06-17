@@ -7,38 +7,38 @@
 
 import UtilityServicePrepaymentCore
 
-struct UtilityPrepaymentFlowMicroServices<LastPayment, Operator, UtilityService> {
+struct UtilityPrepaymentFlowMicroServices<LastPayment, Operator, Service> {
     
-    /// `InitiateUtilityPayment` combines
+    /// For `legacy` `InitiateUtilityPayment` wraps `PaymentsServicesViewModel` creation
+    /// For `v1` `InitiateUtilityPayment` combines
     /// - `b`: getOperatorsListByParam
     /// - `c`: getAllLatestPayments
     let initiateUtilityPayment: InitiateUtilityPayment
     
-    /// `StartPayment` combines
+    /// `ProcessSelection` combines
     /// - `e` from LastPayment
     /// - `d1`
     /// - `d2e`
     /// - `d3`, `d4`, `d5`
-    let startPayment: StartPayment
+    let processSelection: ProcessSelection
 }
 
 extension UtilityPrepaymentFlowMicroServices {
     
-    /// Combines `b` and `c`
-    typealias InitiateUtilityPayload = Event.UtilityPrepaymentPayload
-    typealias InitiateUtilityPaymentCompletion = (InitiateUtilityPayload) -> Void
-    typealias InitiateUtilityPayment = (@escaping InitiateUtilityPaymentCompletion) -> Void
+    typealias InitiateUtilityPaymentCompletion = (Event.Initiated) -> Void
+    /// Combines `b` and `c` for `v1`
+    typealias InitiateUtilityPayment = (Effect.LegacyPaymentPayload, @escaping InitiateUtilityPaymentCompletion) -> Void
     
-    /// StartPayment is a micro-service, that combines
+    /// `ProcessSelection` is a micro-service, that combines
     /// - `e` from LastPayment
     /// - `d1`
     /// - `d2e`
     /// - `d3`, `d4`, `d5`
-    typealias StartPaymentPayload = Effect.Select
-    typealias StartPaymentResult = Event.StartPaymentResult
-    typealias StartPaymentCompletion = (StartPaymentResult) -> Void
-    typealias StartPayment = (StartPaymentPayload, @escaping StartPaymentCompletion) -> Void
+    typealias ProcessSelectionPayload = Effect.Select
+    typealias ProcessSelectionResult = Event.ProcessSelectionResult
+    typealias ProcessSelectionCompletion = (ProcessSelectionResult) -> Void
+    typealias ProcessSelection = (ProcessSelectionPayload, @escaping ProcessSelectionCompletion) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEffect
+    typealias Event = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
+    typealias Effect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
 }

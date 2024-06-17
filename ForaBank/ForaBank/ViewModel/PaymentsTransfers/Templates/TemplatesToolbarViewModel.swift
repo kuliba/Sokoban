@@ -252,3 +252,15 @@ struct NavigationBarButtonViewModel: Identifiable {
     }
 }
  
+extension NavigationBarView.ViewModel.ButtonItemViewModel {
+    
+    static func barcodeScanner(
+        action: @escaping () -> Void
+    ) -> NavigationBarView.ViewModel.ButtonItemViewModel {
+        
+        return .init(
+            icon: .ic24BarcodeScanner2,
+            action: action
+        )
+    }
+}
