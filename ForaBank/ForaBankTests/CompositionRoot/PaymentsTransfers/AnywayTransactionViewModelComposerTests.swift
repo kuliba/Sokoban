@@ -64,6 +64,7 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
                 initiateOTP: { _ in }
             ),
             microServices: .init(
+                getVerificationCode: { _ in },
                 initiatePayment: { _,_ in },
                 makePayment: { _,_ in },
                 paymentEffectHandle: { _,_ in },

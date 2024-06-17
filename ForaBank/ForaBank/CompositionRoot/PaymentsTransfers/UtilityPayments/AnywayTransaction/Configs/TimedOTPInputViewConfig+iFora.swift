@@ -19,7 +19,7 @@ extension TimedOTPInputViewConfig {
             backgroundColor: .mainColorsWhite,
             config: .init(
                 textFont: .textBodyMR14180(),
-                textColor: .textRed
+                textColor: .textSecondary
             )
         ),
         timer: .init(

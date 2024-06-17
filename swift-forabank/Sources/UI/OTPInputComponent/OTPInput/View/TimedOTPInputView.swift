@@ -46,6 +46,7 @@ struct TimedOTPInputView<IconView: View>: View {
                         resend: { event(.resend) }
                     )
                     .frame(maxWidth: .infinity, alignment: .trailing)
+                    .layoutPriority(1)
                 }
             }
         }
@@ -125,6 +126,7 @@ private extension TimedOTPInputView {
         
         text
             .text(withConfig: config)
+            .lineLimit(1)
             .padding(4)
             .padding(.horizontal, 4)
             .background(backgroundColor)

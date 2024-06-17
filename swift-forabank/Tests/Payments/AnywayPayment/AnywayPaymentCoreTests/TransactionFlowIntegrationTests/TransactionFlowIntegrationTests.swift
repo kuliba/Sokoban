@@ -378,6 +378,8 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         XCTAssertEqual(paymentProcessing.callCount, 0)
     }
     
+    // TODO: add tests for getVerificationCode flow
+    
     // MARK: - Helpers
     
     private typealias State = _Transaction
@@ -388,7 +390,8 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     private typealias StateSpy = ValueSpy<State>
     private typealias Reducer = _TransactionReducer
     private typealias EffectHandler = _TransactionEffectHandler
-    
+    private typealias GetVerificationCodeSpy = Spy<Void, Event.VerificationCode.GetVerificationCodeResult>
+
     private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Context, Effect?), restorePayment: Context, stagePayment: Context?, updatePayment: Context, validatePayment: Bool, wouldNeedRestart: Bool)
     
     private typealias Inspector = PaymentInspector<Context, PaymentDigest>
@@ -420,12 +423,14 @@ final class TransactionFlowIntegrationTests: XCTestCase {
                 wouldNeedRestart: { _ in stub.wouldNeedRestart }
             )
         )
+        let getVerificationCodeSpy = GetVerificationCodeSpy()
         let paymentInitiator = PaymentInitiator()
         let paymentEffectHandler = PaymentEffectHandleSpy()
         let paymentMaker = PaymentMaker()
         let paymentProcessing = PaymentProcessing()
         let effectHandler = EffectHandler(
             microServices: .init(
+                getVerificationCode: getVerificationCodeSpy.process,
                 initiatePayment: paymentInitiator.process,
                 makePayment: paymentMaker.process,
                 paymentEffectHandle: paymentEffectHandler.handleEffect,

@@ -52,7 +52,7 @@ private extension TimedOTPInputWrapperView {
     ) {
         switch event {
         case .resend:
-            viewModel.event(.countdown(.prepare))
+            viewModel.event(.countdown(.start))
             
         case let .edit(text):
             viewModel.event(.otpField(.edit(text)))
