@@ -71,7 +71,12 @@ where InfoView: View {
         }
     }
     
+    @ViewBuilder
     private func textField() -> some View {
+        
+        let textFieldPublisher = textFieldModel.$state
+            .map(getDecimal)
+            .removeDuplicates()
         
         TextFieldView(
             viewModel: textFieldModel,
@@ -83,7 +88,7 @@ where InfoView: View {
                 placeholderColor: .clear
             )
         )
-        .onReceive(textFieldModel.$state.map(getDecimal)) { event(.edit($0)) }
+        .onReceive(textFieldPublisher) { event(.edit($0)) }
     }
     
     @ViewBuilder
