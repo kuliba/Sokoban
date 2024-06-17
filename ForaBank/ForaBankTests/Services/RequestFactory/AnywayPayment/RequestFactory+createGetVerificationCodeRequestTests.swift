@@ -17,7 +17,7 @@ final class RequestFactory_createGetVerificationCodeRequestTests: XCTestCase {
         
         XCTAssertNoDiff(
             request.url?.absoluteString,
-            "https://pl.forabank.ru/dbo/api/v3/rest/transfer/getVerificationCode"
+            "https://pl.forabank.ru/dbo/api/v3/rest/transfer/v2/getVerificationCode"
         )
     }
     
