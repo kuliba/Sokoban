@@ -7,6 +7,7 @@
 
 import AnywayPaymentDomain
 import Foundation
+import PaymentComponents
 import RxViewModel
 
 enum AnywayElementModel {
@@ -23,7 +24,7 @@ extension AnywayElementModel {
         case hidden(AnywayElement.UIComponent.Parameter)
         case nonEditable(AnywayElement.UIComponent.Parameter)
         case numberInput(ObservingInputViewModel)
-        case select(ObservingSelectorViewModel<Option>)
+        case select(ObservingSelectorViewModel)
         case textInput(ObservingInputViewModel)
         case unknown(AnywayElement.UIComponent.Parameter)
         
@@ -34,12 +35,14 @@ extension AnywayElementModel {
         
         case product(ObservingProductSelectViewModel)
         case otp(OTPViewModel)
+        case simpleOTP(SimpleOTPViewModel)
     }
 }
 
 extension AnywayElementModel.Widget {
     
-    typealias OTPViewModel = RxObservingViewModel<OTPState, OTPEvent, OTPEffect>
+    typealias OTPViewModel = TimedOTPInputViewModel
+    typealias SimpleOTPViewModel = RxObservingViewModel<OTPState, OTPEvent, OTPEffect>
     
     struct OTPState: Equatable {
         

@@ -35,9 +35,11 @@ final class TransactionReducerTests: XCTestCase {
     
     func test_completePayment_shouldNotChangeFraudSuspectedStatusStateOnReportFailure() {
         
+        let context = makeContext()
+        
         assertState(
             .completePayment(nil),
-            on: makeFraudSuspectedTransaction()
+            on: makeFraudSuspectedTransaction(context)
         )
     }
     
@@ -259,11 +261,14 @@ final class TransactionReducerTests: XCTestCase {
         assert(.continue, on: makeServerErrorTransaction(), effect: nil)
     }
     
-    func test_continue_shouldNotChangeStateOnValidPaymentWithoutVerificationCode() {
+    func test_continue_shouldSetStatusToInflightOnValidPaymentWithoutVerificationCode() {
         
         let sut = makeSUT(getVerificationCode: { _ in nil })
         
-        assertState(sut: sut, .continue, on: makeValidTransaction())
+        assertState(sut: sut, .continue, on: makeValidTransaction()) {
+            
+            $0.status = .inflight
+        }
     }
     
     func test_continue_shouldDeliverContinueEffectOnValidPaymentWithoutVerificationCode() {
@@ -306,11 +311,14 @@ final class TransactionReducerTests: XCTestCase {
         XCTAssertNoDiff(getVerificationCodeSpy.payloads, [payment])
     }
     
-    func test_continue_shouldNotChangeStateOnValidPaymentWithVerificationCode() {
+    func test_continue_shouldSetStatusToInflightOnValidPaymentWithVerificationCode() {
         
         let sut = makeSUT(getVerificationCode: { _ in makeVerificationCode() })
         
-        assertState(sut: sut, .continue, on: makeValidTransaction())
+        assertState(sut: sut, .continue, on: makeValidTransaction()) {
+            
+            $0.status = .inflight
+        }
     }
     
     func test_continue_shouldDeliverMakePaymentEffectWithVerificationCodeOnValidPaymentWithVerificationCode() {
@@ -349,11 +357,11 @@ final class TransactionReducerTests: XCTestCase {
         XCTAssertNoDiff(getVerificationCodeSpy.payloads, [payment])
     }
     
-    func test_continue_shouldNotChangeStateOnValidPaymentWithShouldRestartPayment() {
+    func test_continue_shouldSetStatusToInflightOnValidPaymentWithShouldRestartPayment() {
         
         let state = makeValidTransaction(makeContext(shouldRestart: true))
         
-        assertState(.continue, on: state)
+        assertState(.continue, on: state) { $0.status = .inflight }
     }
     
     func test_continue_shouldDeliverInitiatePaymentEffectWithPaymentDigestOnValidPaymentWithShouldRestartPayment() {
@@ -365,11 +373,11 @@ final class TransactionReducerTests: XCTestCase {
         assert(sut: sut, .continue, on: state, effect: .initiatePayment(digest))
     }
     
-    func test_continue_shouldNotChangeStateOnValidPaymentWithoutShouldRestartPayment() {
+    func test_continue_shouldSetStatusToInflightOnValidPaymentWithoutShouldRestartPayment() {
         
         let state = makeValidTransaction(makeContext(shouldRestart: false))
         
-        assertState(.continue, on: state)
+        assertState(.continue, on: state) { $0.status = .inflight }
     }
     
     func test_continue_shouldDeliverContinueEffectOnValidPaymentWithoutShouldRestartPayment() {
@@ -442,7 +450,7 @@ final class TransactionReducerTests: XCTestCase {
         XCTAssertNoDiff(stagePaymentSpy.payloads, [payment])
     }
     
-    func test_continue_shouldChangePaymentToStagedOnValidTransaction() {
+    func test_continue_shouldSetStatusToInflightAndChangePaymentToStagedOnValidTransaction() {
         
         let staged = makeContext()
         let stagePaymentSpy = StagePaymentSpy(response: staged)
@@ -450,6 +458,7 @@ final class TransactionReducerTests: XCTestCase {
         
         assertState(sut: sut, .continue, on: makeValidTransaction(makeContext())) {
             
+            $0.status = .inflight
             $0.context = staged
         }
     }
@@ -694,9 +703,12 @@ final class TransactionReducerTests: XCTestCase {
         assert(.initiatePayment, on: makeResultSuccessTransaction(), effect: nil)
     }
     
-    func test_initiatePayment_shouldNotChangeState() {
+    func test_initiatePayment_shouldSetStatusToInflight() {
         
-        assertState(.initiatePayment, on: makeTransaction())
+        assertState(.initiatePayment, on: makeTransaction()) {
+            
+            $0.status = .inflight
+        }
     }
     
     func test_initiatePayment_shouldDeliverEffect() {
@@ -1194,11 +1206,12 @@ final class TransactionReducerTests: XCTestCase {
     
     func test_update_shouldSetFraudToCheckFraudResult_suspected() {
         
+        let context = makeContext()
         let sut = makeSUT(checkFraud: { _ in true })
         
-        let (state, _) = sut.reduce(makeTransaction(), makeUpdateTransactionEvent())
+        let (state, _) = sut.reduce(makeTransaction(context), makeUpdateTransactionEvent())
         
-        XCTAssertTrue(isFraudSuspected(state))
+        XCTAssertTrue(isFraudSuspected(state, context: context))
     }
     
     func test_update_shouldNotDeliverEffectOnFraudSuspectedStatusOnConnectivityErrorFailure() {

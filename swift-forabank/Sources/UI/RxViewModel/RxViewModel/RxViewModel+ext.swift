@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 20.01.2024.
 //
 
+import ForaTools
+
 public extension RxViewModel where State: Equatable {
     
     convenience init(

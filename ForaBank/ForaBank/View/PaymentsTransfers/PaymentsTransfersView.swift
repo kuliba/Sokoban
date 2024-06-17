@@ -470,7 +470,7 @@ private extension PaymentsTransfersView {
             payByInstructionsView(paymentsViewModel)
             
         case let .payment(state):
-            let payload = state.viewModel.state.context.outline.payload
+            let payload = state.viewModel.state.transaction.context.outline.payload
             let operatorIconView = viewFactory.makeIconView(
                 payload.icon.map { .md5Hash(.init($0)) }
             )
@@ -545,7 +545,7 @@ private extension PaymentsTransfersView {
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
-        let transactionEvent = { state.viewModel.event(.transaction($0)) }
+        let transactionEvent = { state.viewModel.event($0) }
         
         let factory = viewFactory.makeAnywayPaymentFactory {
             
@@ -572,7 +572,7 @@ private extension PaymentsTransfersView {
                 event: { transactionEvent(.fraud($0)) }
             )
         )
-        .navigationTitle("Payment: \(state.viewModel.state.isValid ? "valid" : "invalid")")
+        .navigationTitle("Payment: \(state.viewModel.state.transaction.isValid ? "valid" : "invalid")")
         .navigationBarTitleDisplayMode(.inline)
     }
     
@@ -720,7 +720,7 @@ private extension PaymentsTransfersView {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     
     typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content, UtilityPaymentViewModel>
     

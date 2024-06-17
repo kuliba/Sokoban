@@ -6,9 +6,9 @@
 //
 
 import ActivateSlider
-import Foundation
 import CardUI
 import Combine
+import ForaTools
 import Foundation
 import OperatorsListComponents
 import PDFKit

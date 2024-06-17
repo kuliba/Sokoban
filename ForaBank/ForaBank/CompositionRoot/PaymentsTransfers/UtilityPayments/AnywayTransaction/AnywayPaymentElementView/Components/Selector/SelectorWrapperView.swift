@@ -7,39 +7,44 @@
 
 import AnywayPaymentDomain
 import RxViewModel
+import SelectorComponent
 import SwiftUI
-import Tagged
-
-typealias ObservingSelectorViewModel<T> = RxObservingViewModel<Selector<T>, SelectorEvent<T>, Never>
+import UIPrimitives
 
 struct SelectorWrapperView: View {
     
     @ObservedObject private var viewModel: ViewModel
     
     private let factory: Factory
+    private let config: Config
     
     init(
         viewModel: ViewModel,
-        factory: Factory
+        factory: Factory,
+        config: Config
     ) {
-        self._viewModel = .init(wrappedValue: viewModel)
+        self.viewModel = viewModel
         self.factory = factory
+        self.config = config
     }
     
     var body: some View {
         
         SelectorView(
-            state: viewModel.state,
+            state: viewModel.state.selector,
             event: viewModel.event(_:),
             factory: factory,
-            idKeyPath: \.key
+            idKeyPath: \.key,
+            config: config
         )
     }
 }
 
 extension SelectorWrapperView {
     
-    typealias ViewModel = ObservingSelectorViewModel<Option>
-    typealias Factory = SelectorViewFactory<Option, OptionView, SelectedOptionView>
+    typealias ViewModel = ObservingSelectorViewModel
     typealias Option = AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ParameterType.Option
+    typealias IconView = UIPrimitives.AsyncImage
+    typealias Factory = SelectorViewFactory<Option, IconView, OptionView, SelectedOptionView, ChevronView>
+    typealias Config = SelectorViewConfig
 }
