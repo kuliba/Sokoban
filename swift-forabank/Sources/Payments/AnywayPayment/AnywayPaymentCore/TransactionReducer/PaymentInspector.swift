@@ -7,7 +7,7 @@
 
 import AnywayPaymentDomain
 
-public struct PaymentInspector<Payment, PaymentDigest> 
+public struct PaymentInspector<Payment, PaymentDigest, PaymentUpdate>
 where Payment: RestartablePayment {
     
     public let checkFraud: CheckFraud
@@ -36,7 +36,7 @@ where Payment: RestartablePayment {
 
 public extension PaymentInspector {
     
-    typealias CheckFraud = (Payment) -> Bool
+    typealias CheckFraud = (PaymentUpdate) -> Bool
     typealias GetVerificationCode = (Payment) -> VerificationCode?
     typealias MakeDigest = (Payment) -> PaymentDigest
     typealias RestorePayment = (Payment) -> Payment

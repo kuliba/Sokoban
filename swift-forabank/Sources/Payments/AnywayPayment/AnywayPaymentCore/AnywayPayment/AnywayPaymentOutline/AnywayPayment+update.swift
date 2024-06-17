@@ -30,8 +30,7 @@ extension AnywayPayment {
             elements: elements,
             footer: footer,
             infoMessage: update.details.info.infoMessage,
-            isFinalStep: update.details.control.isFinalStep,
-            isFraudSuspected: update.details.control.isFraudSuspected
+            isFinalStep: update.details.control.isFinalStep
         )
     }
 }

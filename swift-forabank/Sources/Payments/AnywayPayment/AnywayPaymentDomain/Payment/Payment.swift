@@ -13,20 +13,17 @@ public struct Payment<Element> {
     public var footer: Footer
     public var infoMessage: String?
     public let isFinalStep: Bool
-    public let isFraudSuspected: Bool
     
     public init(
         elements: [Element],
         footer: Footer,
         infoMessage: String?,
-        isFinalStep: Bool,
-        isFraudSuspected: Bool
+        isFinalStep: Bool
     ) {
         self.elements = elements
         self.footer = footer
         self.infoMessage = infoMessage
         self.isFinalStep = isFinalStep
-        self.isFraudSuspected = isFraudSuspected
     }
     
     public enum Footer: Equatable {

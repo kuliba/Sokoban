@@ -147,8 +147,7 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
             elements: elements,
             footer: footer,
             infoMessage: infoMessage,
-            isFinalStep: isFinalStep,
-            isFraudSuspected: isFraudSuspected
+            isFinalStep: isFinalStep
         )
     }
     

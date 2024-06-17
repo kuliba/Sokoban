@@ -378,16 +378,14 @@ final class AnywayPaymentReducerTests: XCTestCase {
         elements: [AnywayElement],
         footer: AnywayPayment.Footer = .continue,
         infoMessage: String? = nil,
-        isFinalStep: Bool = false,
-        isFraudSuspected: Bool = false
+        isFinalStep: Bool = false
     ) -> State {
         
         return .init(
             elements: elements,
             footer: footer,
             infoMessage: infoMessage,
-            isFinalStep: isFinalStep,
-            isFraudSuspected: isFraudSuspected
+            isFinalStep: isFinalStep
         )
     }
 }

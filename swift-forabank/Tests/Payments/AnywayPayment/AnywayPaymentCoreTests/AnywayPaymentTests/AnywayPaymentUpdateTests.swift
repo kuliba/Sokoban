@@ -181,32 +181,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         }
     }
     
-    // MARK: - fraud
-    
-    func test_update_shouldNotChangeFraudSuspectedOnFraudSuspectedFalse() {
-        
-        assert(
-            makeAnywayPaymentWithoutFraudSuspected(),
-            on: makeAnywayPaymentUpdate(isFraudSuspected: false)
-        )
-    }
-    
-    func test_update_shouldSetFraudSuspectedOnFraudSuspectedTrue() {
-        
-        let update = makeAnywayPaymentUpdate(isFraudSuspected: true)
-        let updated = updatePayment(makeAnywayPaymentWithoutFraudSuspected(), with: update)
-        
-        XCTAssert(isFraudSuspected(updated))
-    }
-    
-    func test_update_shouldRemoveFraudSuspectedFieldOnFraudSuspectedFalse() {
-        
-        let update = makeAnywayPaymentUpdate(isFraudSuspected: false)
-        let updated = updatePayment(makeAnywayPaymentWithFraudSuspected(), with: update)
-        
-        XCTAssertFalse(isFraudSuspected(updated))
-    }
-    
     // MARK: - isFinalStep
     
     func test_update_shouldNotChangeIsFinalStepFlagOnIsFinalStepFalse() {

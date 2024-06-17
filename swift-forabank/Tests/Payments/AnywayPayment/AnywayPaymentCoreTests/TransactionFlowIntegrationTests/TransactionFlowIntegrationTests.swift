@@ -394,7 +394,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
 
     private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Context, Effect?), restorePayment: Context, stagePayment: Context?, updatePayment: Context, validatePayment: Bool, wouldNeedRestart: Bool)
     
-    private typealias Inspector = PaymentInspector<Context, PaymentDigest>
+    private typealias Inspector = PaymentInspector<Context, PaymentDigest, PaymentUpdate>
 
     private func makeSUT(
         _ stub: Stub? = nil,
