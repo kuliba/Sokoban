@@ -54,6 +54,9 @@ public extension TransactionReducer {
         case (.fraudSuspected,_):
             break
             
+        case let (_, .verificationCode(verificationCode)):
+            reduce(&state, &effect, with: verificationCode)
+            
         case let (_, .completePayment(report)):
             reduce(&state, with: report)
             
@@ -219,6 +222,26 @@ private extension TransactionReducer {
             } else {
                 updateState(&state, with: updated)
             }
+        }
+    }
+    
+    private func reduce(
+    _ state: inout State,
+    _ effect: inout Effect?,
+    with verificationCode: Event.VerificationCode
+    ) {
+        switch verificationCode {
+        case let .receive(result):
+            switch result {
+            case let .failure(serviceFailure):
+                state.status = .result(.failure(.transactionFailure))
+
+            case .success:
+                break
+            }
+            
+        case .request:
+            effect = .getVerificationCode
         }
     }
     

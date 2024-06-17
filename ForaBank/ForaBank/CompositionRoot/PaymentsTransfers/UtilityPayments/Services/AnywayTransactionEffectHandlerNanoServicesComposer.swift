@@ -36,6 +36,7 @@ extension AnywayTransactionEffectHandlerNanoServicesComposer {
     func compose() -> NanoServices {
         
         return .init(
+            getVerificationCode: getVerificationCode,
             initiatePayment: initiatePayment(),
             getDetails: getDetails(),
             makeTransfer: makeTransfer(),
@@ -44,6 +45,70 @@ extension AnywayTransactionEffectHandlerNanoServicesComposer {
     }
     
     typealias NanoServices = AnywayTransactionEffectHandlerNanoServices
+}
+
+// MARK: - InitiatePayment
+
+private extension AnywayTransactionEffectHandlerNanoServicesComposer {
+    
+    func getVerificationCode(
+        _ completion: @escaping NanoServices.GetVerificationCodeCompletion
+    ) {
+        switch flag {
+        case .live: return getVerificationCodeLive(completion)
+        case .stub: return getVerificationCodeStub(completion)
+        }
+    }
+    
+    private func getVerificationCodeLive(
+        _ completion: @escaping NanoServices.GetVerificationCodeCompletion
+    ) {
+        let createRequest = ForaBank.RequestFactory.createGetVerificationCodeRequest
+        let mapResponse = AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse
+        
+        let service = LoggingRemoteServiceDecorator(
+            createRequest: createRequest,
+            performRequest: httpClient.performRequest,
+            mapResponse: mapResponse,
+            log: infoNetworkLog
+        )
+        
+        service(()) {
+            
+            completion($0.map(\.resendOTPCount).mapError { .init($0) })
+        }
+    }
+    
+    private func getVerificationCodeStub(
+        _ completion: @escaping NanoServices.GetVerificationCodeCompletion
+    ) {
+        DispatchQueue.main.delay(for: .seconds(1)) {
+            
+            completion(.success(1))
+        }
+    }
+}
+
+extension AnywayPaymentDomain.ServiceFailure {
+    
+    init(_ error: MappingError) {
+        
+        switch error {
+        case .createRequest, .performRequest:
+            self = .connectivityError
+            
+        case let .mapResponse(error):
+            switch error {
+            case .invalid:
+                self = .connectivityError
+                
+            case let .server(_, errorMessage: errorMessage):
+                self = .serverError(errorMessage)
+            }
+        }
+    }
+    
+    typealias MappingError = MappingRemoteServiceError<RemoteServices.ResponseMapper.MappingError>
 }
 
 // MARK: - InitiatePayment

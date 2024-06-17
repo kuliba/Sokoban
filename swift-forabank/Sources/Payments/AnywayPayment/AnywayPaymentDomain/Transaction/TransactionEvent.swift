@@ -11,16 +11,25 @@ public enum TransactionEvent<TransactionReport, PaymentEvent, PaymentUpdate> {
     case `continue`
     case dismissRecoverableError
     case fraud(FraudEvent)
-    case getVerificationCode
     case initiatePayment
     case payment(PaymentEvent)
     case paymentRestartConfirmation(Bool)
     case updatePayment(UpdatePaymentResult)
+    case verificationCode(VerificationCode)
 }
 
 public extension TransactionEvent {
     
     typealias UpdatePaymentResult = Result<PaymentUpdate, ServiceFailure>
+    
+    enum VerificationCode: Equatable {
+        
+        case receive(GetVerificationCodeResult)
+        case request
+        
+        public typealias ResendOTPCount = Int
+        public typealias GetVerificationCodeResult = Result<ResendOTPCount, ServiceFailure>
+    }
 }
 
 extension TransactionEvent: Equatable where TransactionReport: Equatable, PaymentEvent: Equatable, PaymentUpdate: Equatable {}

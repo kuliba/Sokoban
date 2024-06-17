@@ -24,6 +24,7 @@ extension AnywayTransactionEffectHandlerMicroServicesComposer {
     func compose() -> MicroServices {
         
         return .init(
+            getVerificationCode: getVerificationCode(_:),
             initiatePayment: initiatePayment(_:_:),
             makePayment: makePayment(_:_:),
             paymentEffectHandle: paymentEffectHandle(_:_:),
@@ -39,6 +40,12 @@ extension AnywayTransactionEffectHandlerMicroServicesComposer {
 }
 
 private extension AnywayTransactionEffectHandlerMicroServicesComposer {
+    
+    func getVerificationCode(
+        _ completion: @escaping MicroServices.GetVerificationCodeCompletion
+    ) {
+        nanoServices.getVerificationCode(completion)
+    }
     
     func initiatePayment(
         _ digest: AnywayPaymentDigest,

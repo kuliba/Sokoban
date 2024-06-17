@@ -109,7 +109,7 @@ private extension AnywayTransactionViewModel {
                 // TODO: add tests
                 switch event{
                 case .getVerificationCode:
-                    self?.event(.getVerificationCode)
+                    self?.event(.verificationCode(.request))
                     
                 case let .payment(paymentEvent):
                     self?.event(.payment(paymentEvent))

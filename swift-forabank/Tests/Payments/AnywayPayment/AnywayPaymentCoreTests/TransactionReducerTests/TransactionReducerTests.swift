@@ -1268,6 +1268,83 @@ final class TransactionReducerTests: XCTestCase {
         )
     }
     
+    // MARK: - verificationCode: request
+    
+    func test_verificationCode_request_shouldNotChangeState() {
+        
+        assertState(.verificationCode(.request), on: makeTransaction())
+    }
+    
+    func test_verificationCode_request_shouldDeliverEffect() {
+        
+        assert(
+            .verificationCode(.request), 
+            on: makeTransaction(),
+            effect: .getVerificationCode
+        )
+    }
+    
+    // MARK: - verificationCode: receive
+    
+    func test_verificationCode_receive_shouldChangeStatusOnConnectivityError() {
+        
+        assertState(
+            .verificationCode(.receive(.failure(.connectivityError))),
+            on: makeTransaction()
+        ) {
+            $0.status = .result(.failure(.transactionFailure))
+        }
+    }
+    
+    func test_verificationCode_receive_shouldNotDeliverEffectOnConnectivityError() {
+        
+        assert(
+            .verificationCode(.receive(.failure(.connectivityError))),
+            on: makeTransaction(),
+            effect: nil
+        )
+    }
+    
+    func test_verificationCode_receive_shouldChangeStatusOnServerError() {
+        
+        let message = anyMessage()
+        
+        assertState(
+            .verificationCode(.receive(.failure(.serverError(message)))),
+            on: makeTransaction()
+        ) {
+            $0.status = .result(.failure(.transactionFailure))
+        }
+    }
+    
+    func test_verificationCode_receive_shouldNotDeliverEffectOnServerError() {
+        
+        let message = anyMessage()
+
+        assert(
+            .verificationCode(.receive(.failure(.serverError(message)))),
+            on: makeTransaction(),
+            effect: nil
+        )
+    }
+    
+    func test_verificationCode_receive_shouldNotChangeStateOnSuccess() {
+        
+        assertState(
+            .verificationCode(.receive(.success(Int.random(in: 1...10)))),
+            on: makeTransaction()
+        )
+    }
+    
+    func test_verificationCode_receive_shouldNotDeliverEffectOnSuccess() {
+        
+        assert(
+            .verificationCode(.receive(.success(Int.random(in: 1...10)))),
+            on: makeTransaction(),
+            effect: nil
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = _TransactionReducer
