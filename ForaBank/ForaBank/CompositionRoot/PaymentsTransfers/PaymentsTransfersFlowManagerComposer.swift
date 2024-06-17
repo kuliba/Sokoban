@@ -220,26 +220,9 @@ private extension PaymentsTransfersFlowManagerComposer {
         with spinnerActions: RootViewModel.RootActions.Spinner?
     ) -> (AnywayTransactionState.Transaction, @escaping NotifyStatus) -> UtilityServicePaymentFlowState<AnywayTransactionViewModel> {
         
-        let initiateOTP: AnywayElementModelMapper.InitiateOTP = { completion in
-            
-            #warning("FIXME")
-//            switch self.flag.optionOrStub {
-//            case .live:
-//                let initiateOTP = ForaBank.NanoServices.getVerificationCode(httpClient: httpClient, infoNetworkLog)
-//                initiateOTP { completion($0); _ = initiateOTP }
-//
-//            case .stub:
-                DispatchQueue.main.delay(for: .seconds(1)) {
-                    
-                    completion(.failure(.connectivityError))
-                }
-//            }
-        }
-        
         let elementMapper = AnywayElementModelMapper(
             currencyOfProduct: self.currencyOfProduct,
-            getProducts: self.model.productSelectProducts,
-            initiateOTP: initiateOTP
+            getProducts: self.model.productSelectProducts
         )
         
         let microServices = composeMicroServices()

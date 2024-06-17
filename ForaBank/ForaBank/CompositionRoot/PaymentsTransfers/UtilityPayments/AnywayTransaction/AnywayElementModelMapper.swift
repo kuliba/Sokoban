@@ -13,21 +13,21 @@ final class AnywayElementModelMapper {
     
     private let currencyOfProduct: CurrencyOfProduct
     private let getProducts: GetProducts
-    private let initiateOTP: InitiateOTP
     
+    // TODO: add timeDuration and otpLength to Settings
+    private let timerDuration = 60
+    private let otpLength = 6
+
     init(
         currencyOfProduct: @escaping CurrencyOfProduct,
-        getProducts: @escaping GetProducts,
-        initiateOTP: @escaping InitiateOTP
+        getProducts: @escaping GetProducts
     ) {
         self.currencyOfProduct = currencyOfProduct
         self.getProducts = getProducts
-        self.initiateOTP = initiateOTP
     }
     
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
-    typealias InitiateOTP = CountdownEffectHandler.InitiateOTP
 }
 
 extension AnywayElementModelMapper {
@@ -214,17 +214,12 @@ private extension AnywayElementModelMapper {
         )
     }
     
-#warning("event here is too wide, contain to widget")
     private func makeOTPViewModel(
         duration timerDuration: Int,
         otp: Int?,
         event: @escaping (NotifyEvent) -> Void
     ) -> AnywayElementModel.Widget.OTPViewModel {
-        
-        // TODO: add timeDuration and otpLength to Settings
-        let timerDuration = 60
-        let otpLength = 6
-                
+                        
         return .init(
             otpText: otp.map { "\($0)" } ?? "",
             timerDuration: timerDuration,
