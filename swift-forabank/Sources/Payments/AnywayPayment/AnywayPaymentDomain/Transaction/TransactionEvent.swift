@@ -11,6 +11,7 @@ public enum TransactionEvent<TransactionReport, PaymentEvent, PaymentUpdate> {
     case `continue`
     case dismissRecoverableError
     case fraud(FraudEvent)
+    case getVerificationCode
     case initiatePayment
     case payment(PaymentEvent)
     case paymentRestartConfirmation(Bool)

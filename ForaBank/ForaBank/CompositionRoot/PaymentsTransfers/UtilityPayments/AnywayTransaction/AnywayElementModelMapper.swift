@@ -34,7 +34,7 @@ extension AnywayElementModelMapper {
     
     func map(
         _ element: AnywayElement,
-        _ event: @escaping (AnywayPaymentEvent) -> Void
+        _ event: @escaping (NotifyEvent) -> Void
     ) -> AnywayElementModel {
         
         switch (element, element.uiComponent) {
@@ -42,7 +42,10 @@ extension AnywayElementModelMapper {
             return .field(field)
             
         case let (_, .parameter(parameter)):
-            return makeParameterViewModel(with: parameter, event: event)
+            return makeParameterViewModel(
+                with: parameter, 
+                event: { event(.payment($0)) }
+            )
             
         case let (.widget(widget), _):
             return makeWidgetViewModel(with: widget, event: event)
@@ -51,6 +54,8 @@ extension AnywayElementModelMapper {
             fatalError("impossible case; would be removed on change to models")
         }
     }
+    
+    typealias NotifyEvent = AnywayTransactionViewModel.NotifyEvent
 }
 
 private extension AnywayElementModelMapper {
@@ -166,7 +171,7 @@ private extension AnywayElementModelMapper {
 #warning("event here is too wide, contain to widget")
     func makeWidgetViewModel(
         with widget: AnywayElement.Widget,
-        event: @escaping (AnywayPaymentEvent) -> Void
+        event: @escaping (NotifyEvent) -> Void
     ) -> AnywayElementModel {
         
         switch widget {
@@ -175,7 +180,7 @@ private extension AnywayElementModelMapper {
             return .widget(.otp(makeOTPViewModel(duration: 60, otp: otp, event: event)))
             
         case let .product(product):
-            return .widget(.product(makeProductSelectViewModel(with: product, event: event)))
+            return .widget(.product(makeProductSelectViewModel(with: product, event: { event(.payment($0)) })))
         }
     }
     
@@ -213,7 +218,7 @@ private extension AnywayElementModelMapper {
     private func makeOTPViewModel(
         duration timerDuration: Int,
         otp: Int?,
-        event: @escaping (AnywayPaymentEvent) -> Void
+        event: @escaping (NotifyEvent) -> Void
     ) -> AnywayElementModel.Widget.OTPViewModel {
         
         // TODO: add timeDuration and otpLength to Settings
@@ -224,7 +229,7 @@ private extension AnywayElementModelMapper {
             otpText: otp.map { "\($0)" } ?? "",
             timerDuration: timerDuration,
             otpLength: otpLength,
-            initiateOTP: initiateOTP,
+            initiateOTP: { _ in event(.getVerificationCode) },
             submitOTP: { _,_ in },
             observe: { state in
                 
@@ -236,7 +241,7 @@ private extension AnywayElementModelMapper {
                     dump(failure)
                     
                 case let .input(input):
-                    event(.widget(.otp(input.otpField.text)))
+                    event(.payment(.widget(.otp(input.otpField.text))))
                     
                 case .validOTP:
                     break
@@ -244,7 +249,7 @@ private extension AnywayElementModelMapper {
             }
         )
     }
-    
+
     #warning("event here is too wide, contain to widget")
     private func makeSimpleOTPViewModel(
         with otp: Int?,

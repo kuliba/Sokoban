@@ -78,7 +78,12 @@ public extension AnywayTransactionViewModel {
     typealias Event = AnywayTransactionEvent<DocumentStatus, Response>
     typealias Effect = AnywayTransactionEffect
     
-    typealias Notify = (AnywayPaymentEvent) -> Void
+    enum NotifyEvent: Equatable {
+        
+        case payment(AnywayPaymentEvent)
+        case getVerificationCode
+    }
+    typealias Notify = (NotifyEvent) -> Void
     typealias MapToModel = (@escaping Notify) -> (AnywayElement) -> Model
     
     typealias Reduce = (State.Transaction, Event) -> (State.Transaction, Effect?)
@@ -99,7 +104,17 @@ private extension AnywayTransactionViewModel {
         
         state.updating(
             with: transaction,
-            using: mapToModel { [weak self] in self?.event(.payment($0)) }
+            using: mapToModel { [weak self] event in
+                
+                // TODO: add tests
+                switch event{
+                case .getVerificationCode:
+                    self?.event(.getVerificationCode)
+                    
+                case let .payment(paymentEvent):
+                    self?.event(.payment(paymentEvent))
+                }
+            }
         )
     }
 }
