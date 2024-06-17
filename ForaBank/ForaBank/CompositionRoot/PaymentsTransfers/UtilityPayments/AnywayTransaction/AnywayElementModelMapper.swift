@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentDomain
+import ForaTools
 import PaymentComponents
 import SwiftUI
 
@@ -226,17 +227,13 @@ private extension AnywayElementModelMapper {
         otp: Int?,
         event: @escaping (NotifyEvent) -> Void
     ) -> AnywayElementModel.Widget.OTPViewModel {
-                        
+        
         return .init(
             otpText: otp.map { "\($0)" } ?? "",
             timerDuration: settings.timerDuration,
             otpLength: settings.otpLength,
-            initiateOTP: { _ in event(.getVerificationCode) },
-            submitOTP: { _,_ in },
-            observe: {
-                
-                event(.payment(.widget(.otp($0))))
-            }
+            resend: { event(.getVerificationCode) },
+            observe: { event(.payment(.widget(.otp($0)))) }
         )
     }
 
@@ -263,6 +260,54 @@ private extension AnywayElementModelMapper {
 }
 
 // MARK: - Adapters
+
+private extension TimedOTPInputViewModel {
+    
+    convenience init(
+        otpText: String,
+        timerDuration: Int,
+        otpLength: Int,
+        timer: any TimerProtocol = RealTimer(),
+        resend: @escaping () -> Void,
+        observe: @escaping Observe = { _ in },
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) {
+        let countdownReducer = CountdownReducer(duration: timerDuration)
+        let decorated: OTPInputReducer.CountdownReduce = { state, event in
+            
+            if case (.completed, .start) = (state, event) {
+                resend()
+            }
+            
+            return countdownReducer.reduce(state, event)
+        }
+        
+        let otpFieldReducer = OTPFieldReducer(length: otpLength)
+        let otpInputReducer = OTPInputReducer(
+            countdownReduce: decorated,
+            otpFieldReduce : otpFieldReducer.reduce(_:_:)
+        )
+        
+        let countdownEffectHandler = CountdownEffectHandler(initiate: { _ in })
+        let otpFieldEffectHandler = OTPFieldEffectHandler(submitOTP: { _,_ in })
+        let otpInputEffectHandler = OTPInputEffectHandler(
+            handleCountdownEffect: countdownEffectHandler.handleEffect(_:_:),
+            handleOTPFieldEffect: otpFieldEffectHandler.handleEffect(_:_:))
+
+        self.init(
+            initialState: .starting(
+                phoneNumber: "",
+                duration: timerDuration,
+                text: otpText
+            ),
+            reduce: otpInputReducer.reduce(_:_:),
+            handleEffect: otpInputEffectHandler.handleEffect(_:_:),
+            timer: timer,
+            observe: observe,
+            scheduler: scheduler
+        )
+    }
+}
 
 private extension InputState where Icon == String {
     
