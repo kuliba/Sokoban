@@ -15,18 +15,23 @@ public enum AnywayPaymentEvent: Equatable {
 
 public extension AnywayPaymentEvent {
     
-    typealias ParameterID = AnywayPayment.Element.Parameter.Field.ID
+    typealias ParameterID = AnywayElement.Parameter.Field.ID
     
     enum Widget: Equatable {
         
         case amount(Decimal)
         case otp(String)
-        case product(ProductID, Currency)
+        case product(ProductID, ProductType, Currency)
     }
 }
 
 public extension AnywayPaymentEvent.Widget {
     
-    typealias Currency = AnywayPayment.Element.Widget.PaymentCore.Currency
-    typealias ProductID = AnywayPayment.Element.Widget.PaymentCore.ProductID
+    typealias Currency = String
+    typealias ProductID = Int
+    
+    enum ProductType: Equatable {
+        
+        case account, card
+    }
 }

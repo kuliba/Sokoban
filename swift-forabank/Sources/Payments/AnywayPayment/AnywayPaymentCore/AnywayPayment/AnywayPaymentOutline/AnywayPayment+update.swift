@@ -21,52 +21,70 @@ extension AnywayPayment {
         elements.appendComplementaryFields(from: update.fields)
         elements.appendParameters(from: update.parameters, with: outline)
         
-        elements.adjustWidget(.core(.init(outline.core)), on: update.details.control.needSum && !update.details.control.isMultiSum)
+        elements.adjustWidget(.product(.init(outline.core)), on: update.details.control.needSum && !update.details.control.isMultiSum)
         elements.adjustWidget(.otp(nil), on: update.details.control.needOTP)
+        
+        let footer = footer.update(with: update, and: outline)
         
         return .init(
             elements: elements,
+            footer: footer,
             infoMessage: update.details.info.infoMessage,
             isFinalStep: update.details.control.isFinalStep,
-            isFraudSuspected: update.details.control.isFraudSuspected,
-            puref: puref
+            isFraudSuspected: update.details.control.isFraudSuspected
         )
     }
 }
 
-private extension AnywayPayment.Element.Widget.PaymentCore {
+private extension AnywayPayment.Footer {
     
-    init(_ core: AnywayPaymentOutline.PaymentCore) {
+    func update(
+        with update: AnywayPaymentUpdate,
+        and outline: AnywayPaymentOutline
+    ) -> Self {
         
-        self.init(
-            amount: core.amount,
-            currency: .init(core.currency),
-            productID: .init(core)
-        )
-    }
-}
-
-private extension AnywayPayment.Element.Widget.PaymentCore.ProductID {
-    
-    init(_ core: AnywayPaymentOutline.PaymentCore) {
-        
-        switch core.productType {
-        case .account: self = .accountID(.init(core.productID))
-        case .card:    self = .cardID(.init(core.productID))
+        if update.details.control.needSum
+            && !update.details.control.isMultiSum {
+            return .amount(outline.core.amount)
+        } else {
+            return .continue
         }
     }
 }
 
-private extension AnywayPayment.Element {
+private extension AnywayElement.Widget.Product {
+    
+    init(_ core: AnywayPaymentOutline.PaymentCore) {
+        
+        self.init(
+            currency: core.currency,
+            productID: core.productID,
+            productType: core._productType
+        )
+    }
+}
+
+private extension AnywayPaymentOutline.PaymentCore {
+    
+    var _productType: AnywayElement.Widget.Product.ProductType {
+        
+        switch productType {
+        case .account: return .account
+        case .card:    return .card
+        }
+    }
+}
+
+private extension AnywayElement {
     
     var stringID: String? {
         
         switch self {
         case let .field(field):
-            return field.id.rawValue
+            return field.id
             
         case let .parameter(parameter):
-            return parameter.field.id.rawValue
+            return parameter.field.id
             
         case .widget:
             return nil
@@ -95,20 +113,20 @@ private extension AnywayPayment.Element {
     }
 }
 
-private extension AnywayPayment.Element.Field {
+private extension AnywayElement.Field {
     
     func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
         
         .init(
             id: id,
             title: fieldUpdate.title,
-            value: .init(fieldUpdate.value),
+            value: fieldUpdate.value,
             image: fieldUpdate.image.map { .init($0) }
         )
     }
 }
 
-private extension AnywayPayment.Element.Image {
+private extension AnywayElement.Image {
     
     init(_ image: AnywayPaymentUpdate.Image) {
         
@@ -126,14 +144,14 @@ private extension AnywayPayment.Element.Image {
     }
 }
 
-private extension AnywayPayment.Element.Parameter {
+private extension AnywayElement.Parameter {
     
     func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
         
         return .init(
             field: .init(
                 id: field.id,
-                value: .init(fieldUpdate.value)
+                value: fieldUpdate.value
             ),
             image: image,
             masking: masking,
@@ -143,7 +161,7 @@ private extension AnywayPayment.Element.Parameter {
     }
 }
 
-private extension Array where Element == AnywayPayment.Element {
+private extension Array where Element == AnywayElement {
     
     mutating func adjustWidget(
         _ widget: Element.Widget,
@@ -220,9 +238,9 @@ private extension Array where Element == AnywayPayment.Element {
     ) {
         let parameters = updateParameters.map {
             
-            AnywayPayment.Element.Parameter(
+            AnywayElement.Parameter(
                 parameter: $0,
-                fallbackValue: outline.fields[.init($0.field.id)]
+                fallbackValue: outline.fields[$0.field.id]
             )
         }
         append(contentsOf: parameters.map(Element.parameter))
@@ -231,20 +249,20 @@ private extension Array where Element == AnywayPayment.Element {
 
 // MARK: - Adapters
 
-private extension AnywayPayment.Element.Field {
+private extension AnywayElement.Field {
     
     init(_ field: AnywayPaymentUpdate.Field) {
         
         self.init(
-            id: .init(field.name),
+            id: field.name,
             title: field.title,
-            value: .init(field.value),
+            value: field.value,
             image: field.image.map { .init($0) }
         )
     }
 }
 
-private extension AnywayPayment.Element.Parameter {
+private extension AnywayElement.Parameter {
     
     init(
         parameter: AnywayPaymentUpdate.Parameter,
@@ -260,7 +278,7 @@ private extension AnywayPayment.Element.Parameter {
     }
 }
 
-private extension AnywayPayment.Element.Image {
+private extension AnywayElement.Image {
     
     init?(_ parameter: AnywayPaymentUpdate.Parameter) {
         
@@ -280,7 +298,7 @@ private extension AnywayPayment.Element.Image {
     }
 }
 
-private extension AnywayPayment.Element.Parameter.Field {
+private extension AnywayElement.Parameter.Field {
     
     init(
         _ field: AnywayPaymentUpdate.Parameter.Field,
@@ -288,12 +306,12 @@ private extension AnywayPayment.Element.Parameter.Field {
     ) {
         self.init(
             id: .init(field.id),
-            value: field.content.map { .init($0) } ?? fallbackValue.map { .init($0.rawValue) }
+            value: field.content.map { $0 } ?? fallbackValue.map { $0 }
         )
     }
 }
 
-private extension AnywayPayment.Element.Parameter.Masking {
+private extension AnywayElement.Parameter.Masking {
     
     init(_ masking: AnywayPaymentUpdate.Parameter.Masking) {
         
@@ -301,7 +319,7 @@ private extension AnywayPayment.Element.Parameter.Masking {
     }
 }
 
-private extension AnywayPayment.Element.Parameter.Validation {
+private extension AnywayElement.Parameter.Validation {
     
     init(_ validation: AnywayPaymentUpdate.Parameter.Validation) {
         
@@ -314,7 +332,7 @@ private extension AnywayPayment.Element.Parameter.Validation {
     }
 }
 
-private extension AnywayPayment.Element.Parameter.UIAttributes {
+private extension AnywayElement.Parameter.UIAttributes {
     
     init(_ uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes) {
         
@@ -333,7 +351,7 @@ private extension AnywayPayment.Element.Parameter.UIAttributes {
     }
 }
 
-private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
+private extension AnywayElement.Parameter.UIAttributes.DataType {
     
     init(_ dataType: AnywayPaymentUpdate.Parameter.UIAttributes.DataType) {
         
@@ -355,13 +373,13 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.DataType {
 
 private extension AnywayPaymentUpdate.Parameter.UIAttributes.DataType.Pair {
     
-    var pair: AnywayPayment.Element.Parameter.UIAttributes.DataType.Pair {
+    var pair: AnywayElement.Parameter.UIAttributes.DataType.Pair {
         
         .init(key: key, value: value)
     }
 }
 
-private extension AnywayPayment.Element.Parameter.UIAttributes.FieldType {
+private extension AnywayElement.Parameter.UIAttributes.FieldType {
     
     init(_ fieldType: AnywayPaymentUpdate.Parameter.UIAttributes.FieldType) {
         
@@ -374,7 +392,7 @@ private extension AnywayPayment.Element.Parameter.UIAttributes.FieldType {
     }
 }
 
-private extension AnywayPayment.Element.Parameter.UIAttributes.ViewType {
+private extension AnywayElement.Parameter.UIAttributes.ViewType {
     
     init(_ viewType: AnywayPaymentUpdate.Parameter.UIAttributes.ViewType) {
         

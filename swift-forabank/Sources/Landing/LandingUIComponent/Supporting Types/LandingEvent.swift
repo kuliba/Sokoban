@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 04.09.2023.
 //
 
+// TODO: - add cases for limits
+
 public enum LandingEvent: Equatable {
     
     case card(Card)

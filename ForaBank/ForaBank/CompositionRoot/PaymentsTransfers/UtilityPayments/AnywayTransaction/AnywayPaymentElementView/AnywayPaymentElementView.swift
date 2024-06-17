@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
 import PaymentComponents
 import SwiftUI
@@ -19,19 +20,21 @@ struct AnywayPaymentElementView<IconView: View>: View {
     
     var body: some View {
         
-        switch state.uiComponent {
+        switch state.model {
         case let .field(field):
             PaymentComponents.InfoView(
                 info: field.info,
                 config: config.info,
                 icon: { makeIconView(field) }
             )
-            
+            .padding()
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(12)
+
         case let .parameter(parameter):
             AnywayPaymentParameterView(
                 parameter: parameter,
-                event: { event(.setValue($0, for: parameter.id.parameterID)) },
-                factory: factory.elementFactory
+                factory: factory.parameterFactory
             )
             
         case let .widget(widget):
@@ -40,18 +43,19 @@ struct AnywayPaymentElementView<IconView: View>: View {
     }
     
     private func makeIconView(
-        _ field: AnywayPaymentDomain.AnywayPayment.Element.UIComponent.Field
+        _ field: AnywayPaymentDomain.AnywayElement.UIComponent.Field
     ) -> some View {
         
-        factory.makeIconView(.field(field))
+        #warning("FIX hardcoded value")
+        return factory.makeIconView("")
     }
 }
 
 extension AnywayPaymentElementView {
     
-    typealias State = AnywayPaymentDomain.AnywayPayment.Element
+    typealias State = CachedAnywayPayment<AnywayElementModel>.IdentifiedModel
     typealias Event = AnywayPaymentEvent
-    typealias Factory = AnywayPaymentElementViewFactory<IconView>
+    typealias Factory = AnywayPaymentElementViewFactory
     typealias Config = AnywayPaymentElementConfig
 }
 
@@ -59,28 +63,11 @@ private extension AnywayPaymentElementView {
     
     @ViewBuilder
     func widgetView(
-        _ widget: State.UIComponent.Widget
+        _ widget: AnywayElementModel.Widget
     ) -> some View {
         switch widget {
-        case let .otp(otp):
-#warning("replace with real components")
-            HStack {
-                
-                VStack(alignment: .leading) {
-                    
-                    Text("OTP")
-                    Text(otp.map { "\($0)" } ?? "")
-                        .font(.caption)
-                }
-                
-                TextField(
-                    "Введите код",
-                    text: .init(
-                        get: { otp.map { "\($0)" } ?? "" },
-                        set: { event(.widget(.otp($0))) }
-                    )
-                )
-            }
+        case let .otp(otpViewModel):
+            #warning("replace with real components")
 #warning("can't use CodeInputView - not a part  af any product (neither PaymentComponents nor any other)")
 #warning("need a wrapper with timer")
             //            CodeInputView(
@@ -88,16 +75,18 @@ private extension AnywayPaymentElementView {
             //                event: <#T##(OTPInputEvent) -> Void#>,
             //                config: <#T##CodeInputConfig#>
             //            )
+            SimpleOTPWrapperView(viewModel: otpViewModel)
+
             
-        case let .productPicker(productID):
-            factory.makeProductSelectView(productID, { event(.widget(.product($0, $1))) })
+        case let .product(viewModel):
+            ProductSelectWrapperView(viewModel: viewModel, config: .iFora)
         }
     }
 }
 
 // MARK: - Adapters
 
-private extension AnywayPaymentDomain.AnywayPayment.Element.UIComponent.Field {
+private extension AnywayElement.UIComponent.Field {
     
     var info: PaymentComponents.Info {
         
@@ -106,7 +95,7 @@ private extension AnywayPaymentDomain.AnywayPayment.Element.UIComponent.Field {
     }
 }
 
-private extension  AnywayPaymentDomain.AnywayPayment.Element.UIComponent.Field {
+private extension AnywayElement.UIComponent.Field {
     
     var id: PaymentComponents.Info.ID {
         
@@ -116,13 +105,5 @@ private extension  AnywayPaymentDomain.AnywayPayment.Element.UIComponent.Field {
         case "recipientBank": return .recipientBank
         default:              return .other(name)
         }
-    }
-}
-
-private extension AnywayPaymentDomain.AnywayPayment.Element.UIComponent.Parameter.ID {
-    
-    var parameterID: AnywayPaymentEvent.ParameterID {
-        
-        return .init(rawValue)
     }
 }

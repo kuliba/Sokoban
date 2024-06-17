@@ -7,13 +7,14 @@
 
 import AnywayPaymentDomain
 
-extension AnywayPayment.Element.UIComponent.Parameter {
+extension AnywayElement.UIComponent.Parameter {
     
     static let preview: Self = .init(
         id: .init("abc"),
         type: .numberInput,
         title: "Enter some number",
         subtitle: nil,
-        value: nil
+        value: nil,
+        image: nil
     )
 }

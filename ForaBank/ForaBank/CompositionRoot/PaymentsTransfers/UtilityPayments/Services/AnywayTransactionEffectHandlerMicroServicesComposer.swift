@@ -7,6 +7,7 @@
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import RemoteServices
 
 final class AnywayTransactionEffectHandlerMicroServicesComposer {
     
@@ -97,8 +98,8 @@ private extension AnywayTransactionEffectHandlerMicroServicesComposer {
 private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferResponse {
     
     func makeTransactionReport(
-        with operationDetails: OperationDetails?
-    ) -> TransactionReport<DocumentStatus, OperationInfo<OperationDetailID, OperationDetails>> {
+        with operationDetails: Response?
+    ) -> AnywayTransactionReport {
         
         switch operationDetails {
         case .none:
@@ -110,8 +111,15 @@ private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferRespons
         case let .some(operationDetails):
             return .init(
                 status: status,
-                info: .details(operationDetails)
+                info: .details(
+                    .init(
+                        id: detailID,
+                        response: operationDetails
+                    )
+                )
             )
         }
     }
+    
+    typealias Response = RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
 }

@@ -21,7 +21,7 @@ extension Model {
         log(.debug, .cache, "Cache count: \(cache.count)", #file, #line)
         
         loggingCache(
-            data.makeCache(),
+            cache,
             serial: serial,
             save: localAgent.store,
             log: { log(.error, .cache, $0, $1, $2) }

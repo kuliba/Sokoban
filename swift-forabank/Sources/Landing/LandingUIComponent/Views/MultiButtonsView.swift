@@ -16,7 +16,7 @@ struct MultiButtonsView: View {
     @ObservedObject var model: ViewModel
     private let config: Config
     
-    public init(
+    init(
         model: ViewModel,
         config: Config
     ) {
@@ -24,7 +24,7 @@ struct MultiButtonsView: View {
         self.config = config
     }
     
-    public var body: some View {
+    var body: some View {
         
         VStack(spacing: config.settings.spacing) {
             ForEach(model.data.list, content: itemView)

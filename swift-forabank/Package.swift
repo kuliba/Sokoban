@@ -32,6 +32,7 @@ let package = Package(
         .utilityServicePrepayment,
         // Services
         .cardStatementAPI,
+        .changeSVCardLimitAPI,
         .cryptoSwaddler,
         .cvvPin,
         .cvvPIN_Services,
@@ -131,6 +132,8 @@ let package = Package(
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
+        .changeSVCardLimitAPI,
+        .changeSVCardLimitAPITests,
         .cryptoSwaddler,
         .cryptoSwaddlerTests,
         .cvvPin,
@@ -160,6 +163,8 @@ let package = Package(
         .activateSliderTests,
         .accountInfoPanel,
         .accountInfoPanelTests,
+        .calendarUI,
+        .calendarUITests,
         .cardUI,
         .cardUITests,
         .productDetailsUI,
@@ -203,6 +208,7 @@ let package = Package(
         .footerComponent,
         .nameComponent,
         .selectComponent,
+        .selectComponentTests,
         .inputPhoneComponent,
         .inputComponent,
         .paymentComponents,
@@ -335,6 +341,14 @@ private extension Product {
             .accountInfoPanel
         ]
     )
+    
+    static let calendarUI = library(
+        name: .calendarUI,
+        targets: [
+            .calendarUI
+        ]
+    )
+    
     
     static let cardUI = library(
         name: .cardUI,
@@ -577,6 +591,13 @@ private extension Product {
         name: .cardStatementAPI,
         targets: [
             .cardStatementAPI,
+        ]
+    )
+    
+    static let changeSVCardLimitAPI = library(
+        name: .changeSVCardLimitAPI,
+        targets: [
+            .changeSVCardLimitAPI,
         ]
     )
 
@@ -1167,6 +1188,26 @@ private extension Target {
             .copy("Resources/StatementSample.json"),
         ]
     )
+    
+    static let changeSVCardLimitAPI = target(
+        name: .changeSVCardLimitAPI,
+        dependencies: [
+            .remoteServices,
+        ],
+        path: "Sources/\(String.changeSVCardLimitAPI)"
+    )
+    static let changeSVCardLimitAPITests = testTarget(
+        name: .changeSVCardLimitAPITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            .combineSchedulers,
+            // internal modules
+            .changeSVCardLimitAPI,
+        ],
+        path: "Tests/\(String.changeSVCardLimitAPITests)"
+        //TODO: add resources
+    )
 
     static let cryptoSwaddler = target(
         name: .cryptoSwaddler,
@@ -1437,6 +1478,30 @@ private extension Target {
             .remoteServices,
         ],
         path: "Tests/UI/ProductProfileTests/\(String.accountInfoPanelTests)"
+    )
+    
+    static let calendarUI = target(
+        name: .calendarUI,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .tagged,
+            // internal modules
+            .rxViewModel,
+            .uiPrimitives,
+        ],
+        path: "Sources/\(String.calendarUI)"
+    )
+    
+    static let calendarUITests = target(
+        name: .calendarUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .calendarUI,
+        ],
+        path: "Tests/\(String.calendarUITests)"
     )
     
     static let cardUI = target(
@@ -1823,6 +1888,20 @@ private extension Target {
         path: "Sources/UI/Components/\(String.selectComponent)"
     )
     
+    static let selectComponentTests = testTarget(
+        name: .selectComponentTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            .rxViewModel,
+            // internal modules
+            .selectComponent,
+        ],
+        path: "Tests/UI/Components/\(String.selectComponentTests)"
+    )
+    
     static let inputPhoneComponent = target(
         name: .inputPhoneComponent,
         dependencies: [
@@ -1856,11 +1935,11 @@ private extension Target {
             .footerComponent,
             .nameComponent,
             .otpInputComponent,
-            .selectComponent,
             .inputComponent,
             .inputPhoneComponent,
             .productSelectComponent,
             .rxViewModel,
+            .selectComponent,
             .sharedConfigs,
         ],
         path: "Sources/UI/Components/\(String.paymentComponents)"
@@ -2117,6 +2196,10 @@ private extension Target.Dependency {
         name: .accountInfoPanel
     )
     
+    static let calendarUI = byName(
+        name: .calendarUI
+    )
+    
     static let cardUI = byName(
         name: .cardUI
     )
@@ -2298,6 +2381,10 @@ private extension Target.Dependency {
     static let cardStatementAPI = byName(
         name: .cardStatementAPI
     )
+    
+    static let changeSVCardLimitAPI = byName(
+        name: .changeSVCardLimitAPI
+    )
 
     static let cryptoSwaddler = byName(
         name: .cryptoSwaddler
@@ -2406,6 +2493,9 @@ private extension String {
     static let accountInfoPanel = "AccountInfoPanel"
     static let accountInfoPanelTests = "AccountInfoPanelTests"
     
+    static let calendarUI = "CalendarUI"
+    static let calendarUITests = "CalendarUITests"
+    
     static let cardUI = "CardUI"
     static let cardUITests = "CardUITests"
 
@@ -2471,6 +2561,7 @@ private extension String {
     static let nameComponent = "NameComponent"
     
     static let selectComponent = "SelectComponent"
+    static let selectComponentTests = "SelectComponentTests"
     
     static let inputComponent = "InputComponent"
     
@@ -2530,6 +2621,9 @@ private extension String {
     
     static let cardStatementAPI = "CardStatementAPI"
     static let cardStatementAPITests = "CardStatementAPITests"
+
+    static let changeSVCardLimitAPI = "ChangeSVCardLimitAPI"
+    static let changeSVCardLimitAPITests = "ChangeSVCardLimitAPITests"
 
     static let cryptoSwaddler = "CryptoSwaddler"
     static let cryptoSwaddlerTests = "CryptoSwaddlerTests"

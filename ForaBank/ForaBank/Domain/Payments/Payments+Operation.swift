@@ -326,6 +326,14 @@ extension Payments.Operation {
             !$0.contains(parameterId: Payments.Parameter.Identifier.code.rawValue)
         }).last
     }
+    
+    var isLastStep: Bool {
+      
+        !self.steps.filter({
+            
+            $0.contains(parameterId: Payments.Parameter.Identifier.code.rawValue)
+        }).isEmpty
+    }
 }
 
 //MARK: - Error

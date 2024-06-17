@@ -208,7 +208,8 @@ extension PaymentsTransfersViewFactory {
             makeUserAccountView: UserAccountView.init(viewModel:),
             makeIconView: IconDomain.preview,
             makeUpdateInfoView: UpdateInfoView.init(text:),
-            makeAnywayPaymentFactory: { _ in fatalError() }
+            makeAnywayPaymentFactory: { _ in fatalError() },
+            makePaymentCompleteView: { _,_ in fatalError() }
         )
     }
 }

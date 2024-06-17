@@ -5,21 +5,29 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
+import AnywayPaymentBackend
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import RemoteServices
 import RxViewModel
 
-typealias ObservingAnywayTransactionViewModel = RxObservingViewModel<AnywayTransactionState, AnywayTransactionEvent, TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>>
+typealias CachedAnywayTransactionViewModel = RxViewModel<CachedTransactionState, CachedTransactionEvent, CachedTransactionEffect>
 
-typealias AnywayTransactionViewModel = RxViewModel<AnywayTransactionState, AnywayTransactionEvent, TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>>
+typealias CachedTransactionState = Transaction<CachedPaymentContext<AnywayElementModel>, AnywayTransactionStatus>
+typealias CachedTransactionEvent = CachedAnywayTransactionEvent<AnywayTransactionState, AnywayTransactionEvent>
+typealias CachedTransactionEffect = CachedAnywayTransactionEffect<AnywayTransactionEvent>
 
-typealias AnywayTransactionState = TransactionOf<OperationDetailID, OperationDetails, DocumentStatus, AnywayPaymentContext>
+typealias AnywayTransactionViewModel = RxObservingViewModel<AnywayTransactionState, AnywayTransactionEvent, AnywayTransactionEffect>
 
-typealias AnywayTransactionEvent = TransactionEventOf<OperationDetailID, OperationDetails, DocumentStatus, AnywayPaymentEvent, AnywayPaymentUpdate>
+typealias AnywayTransactionState = Transaction<AnywayPaymentContext, AnywayTransactionStatus>
+typealias AnywayTransactionEvent = TransactionEvent<AnywayTransactionReport, AnywayPaymentEvent, AnywayPaymentUpdate>
+typealias AnywayTransactionEffect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>
 
-typealias AnywayTransactionEffectHandlerMicroServices = TransactionEffectHandlerMicroServices<Report, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
+typealias AnywayTransactionEffectHandlerMicroServices = TransactionEffectHandlerMicroServices<AnywayTransactionReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
 
-typealias Report = TransactionReport<DocumentStatus, _OperationInfo>
+typealias AnywayTransactionStatus = TransactionStatus<AnywayTransactionReport>
+typealias AnywayTransactionReport = TransactionReport<DocumentStatus, _OperationInfo>
+#warning("rename _OperationInfo")
 typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails>
 
 enum DocumentStatus {
@@ -28,4 +36,10 @@ enum DocumentStatus {
 }
 
 typealias OperationDetailID = Int
-typealias OperationDetails = String
+struct OperationDetails: Equatable {
+    
+    let id: OperationDetailID
+    let response: Response
+    
+    typealias Response = RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
+}

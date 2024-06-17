@@ -12,7 +12,7 @@ where LastPayment == UtilityPaymentLastPayment,
       Operator == UtilityPaymentOperator,
       Service == UtilityService,
       Content == UtilityPrepaymentViewModel,
-      PaymentViewModel == ObservingAnywayTransactionViewModel {
+      PaymentViewModel == CachedAnywayTransactionViewModel {
     
     static var preview: Self {
         

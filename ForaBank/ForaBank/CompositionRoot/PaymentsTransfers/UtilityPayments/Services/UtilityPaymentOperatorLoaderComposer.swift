@@ -197,13 +197,13 @@ private extension Array where Element == UtilityPaymentOperator {
 
 private extension UtilityPaymentOperator {
     
-    static let empty:   Self = .init("empty", "No Service Operator")
-    static let failing: Self = .init("failing", "Failing Operator")
-    static let multi:   Self = .init("multi-d1", "Multi Service Operator")
-    static let single:  Self = .init("single-d2", "Single Service Operator")
+    static let empty:   Self = .init("empty", "No Service Operator", "123")
+    static let failing: Self = .init("failing", "Failing Operator", "456")
+    static let multi:   Self = .init("multi-d1", "Multi Service Operator", "abc")
+    static let single:  Self = .init("single-d2", "Single Service Operator", "cde")
     
-    private init(_ id: String, _ title: String) {
+    private init(_ id: String, _ title: String, _ subtitle: String? = nil) {
         
-        self.init(id: id, title: title, subtitle: nil, icon: "abc")
+        self.init(id: id, title: title, subtitle: subtitle, icon: nil)
     }
 }

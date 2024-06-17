@@ -14,11 +14,11 @@ struct OptionView: View {
     
     var body: some View {
         
-        Text(option.value.rawValue)
+        Text(option.value)
     }
 }
 
 extension OptionView {
     
-    typealias Option = AnywayPaymentDomain.AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option
+    typealias Option = AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ParameterType.Option
 }

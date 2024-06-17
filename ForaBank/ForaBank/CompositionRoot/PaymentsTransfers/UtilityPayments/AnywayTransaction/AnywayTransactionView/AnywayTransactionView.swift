@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
 import SwiftUI
 import UIPrimitives
@@ -17,24 +18,17 @@ struct AnywayTransactionView: View {
     
     var body: some View {
         
-        VStack(spacing: 32) {
-            
-            state.status.map {
-                
-                Text("transaction status: \(String(describing: $0))")
-                    .font(.caption.bold())
-                    .foregroundColor(.red)
-            }
+        VStack(spacing: 16) {
             
             paymentView(elements: elements)
-            factory.makeFooterView(state, { event($0.transactionEvent) })
+            factory.makeFooterView(state) { event($0.transactionEvent) }
         }
     }
 }
 
 extension AnywayTransactionView {
     
-    typealias State = AnywayTransactionState
+    typealias State = CachedTransactionState
     typealias Event = AnywayTransactionEvent
     typealias Factory = AnywayPaymentFactory<IconView>
     typealias IconView = UIPrimitives.AsyncImage
@@ -42,7 +36,7 @@ extension AnywayTransactionView {
 
 private extension AnywayTransactionView {
     
-    var elements: [Element] { state.payment.payment.elements }
+    var elements: [Element] { state.context.payment.models }
     
     private func paymentView(
         elements: [Element]
@@ -61,9 +55,9 @@ private extension AnywayTransactionView {
     
     private func scrollContent() -> some View {
         
-        VStack(spacing: 32) {
+        VStack(spacing: 16) {
             
-            ForEach(elements, content: factory.makeElementView)
+            ForEach(elements) { factory.makeElementView($0) }
         }
         .padding()
     }
@@ -88,7 +82,7 @@ private extension AnywayTransactionView {
         }
     }
     
-    typealias Element = AnywayPaymentDomain.AnywayPayment.Element
+    typealias Element = CachedAnywayPayment<AnywayElementModel>.IdentifiedModel
 }
 
 // MARK: - Adapters
