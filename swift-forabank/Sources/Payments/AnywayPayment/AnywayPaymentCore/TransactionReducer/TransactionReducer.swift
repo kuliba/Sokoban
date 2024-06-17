@@ -48,8 +48,11 @@ public extension TransactionReducer {
         case (_, .dismissRecoverableError):
             reduceDismissRecoverableError(&state)
             
-        case (.fraudSuspected, _):
-            reduceFraudSuspected(&state, &effect, with: event)
+        case let (.fraudSuspected(payment), .fraud(fraudEvent)):
+            reduceFraudSuspected(&state, &effect, with: payment, and: fraudEvent)
+            
+        case (.fraudSuspected,_):
+            break
             
         case let (_, .completePayment(report)):
             reduce(&state, with: report)
@@ -81,7 +84,7 @@ public extension TransactionReducer {
     typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
     typealias Inspector = PaymentInspector<Payment, PaymentDigest>
     
-    typealias State = Transaction<Payment, TransactionStatus<Report>>
+    typealias State = Transaction<Payment, TransactionStatus<Payment, Report>>
     typealias Event = TransactionEvent<Report, PaymentEvent, PaymentUpdate>
     typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
@@ -108,33 +111,22 @@ private extension TransactionReducer {
         _ state: inout State
     ) {
         guard case .serverError = state.status else { return }
-
+        
         state.status = nil
     }
     
     func reduceFraudSuspected(
         _ state: inout State,
         _ effect: inout Effect?,
-        with event: Event
+        with payment: Payment,
+        and fraudEvent: FraudEvent
     ) {
-        guard case let .fraud(fraudEvent) = event else { return }
-        
-        reduce(&state, &effect, with: fraudEvent)
-    }
-    
-    func reduce(
-        _ state: inout State,
-        _ effect: inout Effect?,
-        with event: FraudEvent
-    ) {
-        guard case .fraudSuspected = state.status else { return }
-        
-        switch event {
+        switch fraudEvent {
         case .cancel:
             state.status = .result(.failure(.fraud(.cancelled)))
             
         case .continue:
-            state.status = nil
+            updateState(&state, with: payment)
             
         case .expired:
             state.status = .result(.failure(.fraud(.expired)))
@@ -165,7 +157,7 @@ private extension TransactionReducer {
         
         let shouldConfirmRestart = paymentInspector.wouldNeedRestart(payment) && !state.context.shouldRestart
         if shouldConfirmRestart {
-             state.status = .awaitingPaymentRestartConfirmation
+            state.status = .awaitingPaymentRestartConfirmation
         }
         
         state.isValid = paymentInspector.validatePayment(payment)
@@ -190,6 +182,8 @@ private extension TransactionReducer {
                 effect = .continue(digest)
             }
         }
+        
+        state.status = .inflight
     }
     
     func initiatePayment(
@@ -197,7 +191,8 @@ private extension TransactionReducer {
         _ effect: inout Effect?
     ) {
         guard state.status == nil else { return }
-    
+        
+        state.status = .inflight
         effect = .initiatePayment(paymentInspector.makeDigest(state.context))
     }
     
@@ -217,9 +212,22 @@ private extension TransactionReducer {
             
         case let .success(update):
             let updated = updatePayment(state.context, update)
-            state.context = updated
-            state.isValid = paymentInspector.validatePayment(updated)
-            state.status = paymentInspector.checkFraud(updated) ? .fraudSuspected : nil
+            
+            if paymentInspector.checkFraud(updated) {
+                // postpone payment update
+                state.status = .fraudSuspected(updated)
+            } else {
+                updateState(&state, with: updated)
+            }
         }
+    }
+    
+    private func updateState(
+        _ state: inout State,
+        with payment: Payment
+    ) {
+        state.status = nil
+        state.context = payment
+        state.isValid = paymentInspector.validatePayment(payment)
     }
 }

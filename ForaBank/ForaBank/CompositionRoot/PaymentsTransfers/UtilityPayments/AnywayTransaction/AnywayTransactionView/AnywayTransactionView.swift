@@ -28,15 +28,32 @@ struct AnywayTransactionView: View {
 
 extension AnywayTransactionView {
     
-    typealias State = CachedTransactionState
+    typealias State = AnywayTransactionState
     typealias Event = AnywayTransactionEvent
     typealias Factory = AnywayPaymentFactory<IconView>
     typealias IconView = UIPrimitives.AsyncImage
 }
 
+extension AnywayTransactionState {
+    
+    var models: [IdentifiedModel] {
+        
+        transaction.context.payment.elements.compactMap { element in
+            
+            models[element.id].map { .init(id: element.id, model: $0)}
+        }
+    }
+    
+    struct IdentifiedModel: Identifiable {
+        
+         let id: AnywayElement.ID
+         let model: Model
+    }
+}
+
 private extension AnywayTransactionView {
     
-    var elements: [Element] { state.context.payment.models }
+    var elements: [Element] { state.models }
     
     private func paymentView(
         elements: [Element]
@@ -82,7 +99,7 @@ private extension AnywayTransactionView {
         }
     }
     
-    typealias Element = CachedAnywayPayment<AnywayElementModel>.IdentifiedModel
+    typealias Element = State.IdentifiedModel
 }
 
 // MARK: - Adapters

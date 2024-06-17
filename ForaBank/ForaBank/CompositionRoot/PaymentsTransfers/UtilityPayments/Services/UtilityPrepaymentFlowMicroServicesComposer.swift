@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 14.05.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
 import ForaTools
 import Foundation
@@ -226,7 +227,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
                     return .services(services, for: `operator`)
                     
                 case let .startPayment(response):
-                    let state = makeState(from: response, with: outline)
+                    let state = makeTransaction(from: response, with: outline)
                     
                     return .startPayment(state)
                 }
@@ -234,10 +235,10 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             .mapError(PrepaymentEvent.ProcessSelectionFailure.init)
     }
     
-    private func makeState(
+    private func makeTransaction(
         from response: StartPaymentResponse,
         with outline: AnywayPaymentOutline
-    ) -> AnywayTransactionState {
+    ) -> AnywayTransactionState.Transaction {
         
         let update = AnywayPaymentUpdate(response)
         
@@ -246,23 +247,35 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             outline: outline
         )
         
-#warning("hardcoded `isValid: false`")
-        let state = AnywayTransactionState(
-            context: .init(
-                payment: payment,
-                staged: .init(),
-                outline: outline,
-                shouldRestart: false
-            ),
-            isValid: false
+        let context = AnywayPaymentContext(
+            payment: payment,
+            staged: .init(),
+            outline: outline,
+            shouldRestart: false
         )
         
-        return state
+        let transaction = AnywayTransactionState.Transaction(
+            context: context,
+            isValid: validatePayment(context)
+        )
+        
+        return transaction
     }
     
     typealias StartPaymentResponse = NanoServices.StartAnywayPaymentSuccess.StartPaymentResponse
     typealias StartPaymentSuccess = PrepaymentEvent.ProcessSelectionSuccess
-}
+    
+    private func validatePayment(
+        _ context: AnywayPaymentContext
+    ) -> Bool {
+        
+        let parameterValidator = AnywayPaymentParameterValidator()
+        let validator = AnywayPaymentValidator(
+            isValidParameter: parameterValidator.isValid(_:)
+        )
+        
+        return validator.isValid(context.payment)
+    }}
 
 // MARK: - Adapters
 

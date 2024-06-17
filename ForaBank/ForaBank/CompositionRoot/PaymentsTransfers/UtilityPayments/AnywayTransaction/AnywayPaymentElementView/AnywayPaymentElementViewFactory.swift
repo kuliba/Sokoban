@@ -11,6 +11,7 @@ struct AnywayPaymentElementViewFactory {
 
     let makeIconView: MakeIconView
     let parameterFactory: AnywayPaymentParameterViewFactory
+    let widgetFactory: AnywayPaymentWidgetViewFactory
 }
 
 extension AnywayPaymentElementViewFactory {

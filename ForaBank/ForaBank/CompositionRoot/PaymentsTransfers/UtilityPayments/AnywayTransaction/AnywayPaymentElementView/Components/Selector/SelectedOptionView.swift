@@ -16,6 +16,8 @@ struct SelectedOptionView: View {
         
         Text(option.value)
             .bold()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
     }
 }
 

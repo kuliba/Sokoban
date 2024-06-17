@@ -7,32 +7,34 @@
 
 import AnywayPaymentDomain
 import PaymentComponents
+import SwiftUI
 
 final class AnywayElementModelMapper {
     
-    private let event: (Event) -> Void
     private let currencyOfProduct: CurrencyOfProduct
     private let getProducts: GetProducts
+    private let initiateOTP: InitiateOTP
     
     init(
-        event: @escaping (Event) -> Void,
         currencyOfProduct: @escaping CurrencyOfProduct,
-        getProducts: @escaping GetProducts
+        getProducts: @escaping GetProducts,
+        initiateOTP: @escaping InitiateOTP
     ) {
-        self.event = event
         self.currencyOfProduct = currencyOfProduct
         self.getProducts = getProducts
+        self.initiateOTP = initiateOTP
     }
     
-    typealias Event = AnywayPaymentEvent
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
+    typealias InitiateOTP = CountdownEffectHandler.InitiateOTP
 }
 
 extension AnywayElementModelMapper {
     
     func map(
-        _ element: AnywayElement
+        _ element: AnywayElement,
+        _ event: @escaping (AnywayPaymentEvent) -> Void
     ) -> AnywayElementModel {
         
         switch (element, element.uiComponent) {
@@ -40,10 +42,10 @@ extension AnywayElementModelMapper {
             return .field(field)
             
         case let (_, .parameter(parameter)):
-            return makeParameterViewModel(with: parameter)
+            return makeParameterViewModel(with: parameter, event: event)
             
         case let (.widget(widget), _):
-            return makeWidgetViewModel(with: widget)
+            return makeWidgetViewModel(with: widget, event: event)
             
         default:
             fatalError("impossible case; would be removed on change to models")
@@ -54,7 +56,8 @@ extension AnywayElementModelMapper {
 private extension AnywayElementModelMapper {
     
     func makeParameterViewModel(
-        with parameter: AnywayElement.UIComponent.Parameter
+        with parameter: AnywayElement.UIComponent.Parameter,
+        event: @escaping (AnywayPaymentEvent) -> Void
     ) -> AnywayElementModel {
         
         switch parameter.type {
@@ -66,17 +69,17 @@ private extension AnywayElementModelMapper {
             
         case .numberInput:
 #warning("how to add differentiation for numeric input")
-            return .parameter(.numberInput(makeInputViewModel(with: parameter)))
+            return .parameter(.numberInput(makeInputViewModel(with: parameter, event: event)))
             
         case let .select(option, options):
             if let selector = try? Selector(option: option, options: options) {
-                return .parameter(.select(makeSelectorViewModel(with: selector, and: parameter)))
+                return .parameter(.select(makeSelectorViewModel(with: selector, and: parameter, event: event)))
             } else {
                 return .parameter(.unknown(parameter))
             }
             
         case .textInput:
-            return .parameter(.textInput(makeInputViewModel(with: parameter)))
+            return .parameter(.textInput(makeInputViewModel(with: parameter, event: event)))
             
         case .unknown:
             return .parameter(.unknown(parameter))
@@ -88,7 +91,8 @@ private extension AnywayElementModelMapper {
     
 #warning("extract?")
     func makeInputViewModel(
-        with parameter: AnywayElement.UIComponent.Parameter
+        with parameter: AnywayElement.UIComponent.Parameter,
+        event: @escaping (AnywayPaymentEvent) -> Void
     ) -> ObservingInputViewModel {
         
         let inputState = InputState(parameter)
@@ -98,28 +102,59 @@ private extension AnywayElementModelMapper {
             initialState: inputState,
             reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in },
-            observe: { [weak self] in
-                
-                self?.event(.setValue($0.dynamic.value, for: parameter.id))
-            }
+            observe: { event(.setValue($0.dynamic.value, for: parameter.id)) }
         )
     }
     
     func makeSelectorViewModel(
         with selector: Selector<Option>,
-        and parameter: AnywayElement.UIComponent.Parameter
-    ) -> ObservingSelectorViewModel<Option> {
+        and parameter: AnywayElement.UIComponent.Parameter,
+        event: @escaping (AnywayPaymentEvent) -> Void
+    ) -> ObservingSelectorViewModel {
         
         let reducer = SelectorReducer<Option>()
         
         return .init(
-            initialState: selector,
+            initialState: .init(
+                title: parameter.title,
+                image: parameter.image,
+                selector: selector
+            ),
+            reduce: { state, event in
+            
+                let (selector, effect) = reducer.reduce(state.selector, event)
+                return (.init(title: state.title, image: state.image, selector: selector), effect)
+            },
+            handleEffect: { _,_ in },
+            observe: { event(.setValue($0.selector.selected.key, for: parameter.id)) }
+        )
+    }
+    
+    func makeSelectorViewModel(
+        with selector: Selector<Option>,
+        and parameter: AnywayElement.UIComponent.Parameter,
+        event: @escaping (AnywayPaymentEvent) -> Void
+    ) -> ObservingSelectViewModel {
+        
+        let reducer = SelectReducer()
+        
+        let image: Image = {
+            
+#warning("FIXME")
+            // extract image from parameter.image with fallback to .ic24MoreHorizontal
+            return .ic24MoreHorizontal
+        }()
+        
+        let initialState = SelectUIState(
+            image: image,
+            state: .init(selector)
+        )
+        
+        return .init(
+            initialState: initialState,
             reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in },
-            observe: { [weak self] in
-                
-                self?.event(.setValue($0.selected.key, for: parameter.id))
-            }
+            observe: { event(.setValue($0.state.selected?.id ?? "", for: parameter.id)) }
         )
     }
     
@@ -128,22 +163,26 @@ private extension AnywayElementModelMapper {
 
 private extension AnywayElementModelMapper {
     
+#warning("event here is too wide, contain to widget")
     func makeWidgetViewModel(
-        with widget: AnywayElement.Widget
+        with widget: AnywayElement.Widget,
+        event: @escaping (AnywayPaymentEvent) -> Void
     ) -> AnywayElementModel {
         
         switch widget {
-        case let .product(product):
-            return .widget(.product(makeProductSelectViewModel(with: product)))
-            
         case let .otp(otp):
-            return .widget(.otp(makeOTPViewModel(with: otp)))
+#warning("add duration to settings")
+            return .widget(.otp(makeOTPViewModel(duration: 60, otp: otp, event: event)))
+            
+        case let .product(product):
+            return .widget(.product(makeProductSelectViewModel(with: product, event: event)))
         }
     }
     
-#warning("extract?")
+#warning("event here is too wide, contain to widget")
     private func makeProductSelectViewModel(
-        with core: AnywayElement.Widget.Product
+        with core: AnywayElement.Widget.Product,
+        event: @escaping (AnywayPaymentEvent) -> Void
     ) -> ObservingProductSelectViewModel {
         
         let products = getProducts()
@@ -170,10 +209,47 @@ private extension AnywayElementModelMapper {
         )
     }
     
-#warning("extract?")
+#warning("event here is too wide, contain to widget")
     private func makeOTPViewModel(
-        with otp: Int?
+        duration timerDuration: Int,
+        otp: Int?,
+        event: @escaping (AnywayPaymentEvent) -> Void
     ) -> AnywayElementModel.Widget.OTPViewModel {
+        
+        // TODO: add timeDuration and otpLength to Settings
+        let timerDuration = 60
+        let otpLength = 6
+                
+        return .init(
+            otpText: otp.map { "\($0)" } ?? "",
+            timerDuration: timerDuration,
+            otpLength: otpLength,
+            initiateOTP: initiateOTP,
+            submitOTP: { _,_ in },
+            observe: { state in
+                
+                switch state.status {
+                case let .failure(failure):
+#warning("add error handling widget event!")
+#warning("note 2 error case needed: recoverable wrong OTP value and terminal when all attempts are exhausted")
+                    // self.event(.widget(.otp(.failure(failure))))
+                    dump(failure)
+                    
+                case let .input(input):
+                    event(.widget(.otp(input.otpField.text)))
+                    
+                case .validOTP:
+                    break
+                }
+            }
+        )
+    }
+    
+    #warning("event here is too wide, contain to widget")
+    private func makeSimpleOTPViewModel(
+        with otp: Int?,
+        event: @escaping (AnywayPaymentEvent) -> Void
+    ) -> AnywayElementModel.Widget.SimpleOTPViewModel {
         
         return .init(
             initialState: .init(value: otp),
@@ -186,10 +262,7 @@ private extension AnywayElementModelMapper {
                 }
             },
             handleEffect: { _,_ in },
-            observe: { [weak self] in
-                
-                self?.event(.widget(.otp($0.value.map { "\($0)" } ?? "")))
-            }
+            observe: { event(.widget(.otp($0.value.map { "\($0)" } ?? ""))) }
         )
     }
 }
@@ -236,6 +309,54 @@ private extension AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.Parame
     func contains(_ string: String) -> Bool {
         
         key.contains(string) || value.contains(string)
+    }
+}
+
+private extension SelectState {
+    
+    var selected: Option? {
+        
+        switch self {
+        case let .collapsed(selected, _):  return selected
+        case let .expanded(selected, _,_): return selected
+        }
+    }
+    
+    init(_ selector: Selector<AnywayElementOption>) {
+
+        let selectOption = selector.selectedOption
+        let options = selector.selectStataOptions
+
+        if selector.isShowingOptions {
+            self = .expanded(
+                selectOption: selectOption,
+                options: options,
+                searchText: selector.searchQuery
+            )
+        } else {
+            self = .collapsed(
+                option: selectOption,
+                options: options
+            )
+        }
+    }
+    
+    typealias AnywayElementOption = AnywayElement.UIComponent.Parameter.ParameterType.Option
+}
+
+private extension Selector<AnywayElement.UIComponent.Parameter.ParameterType.Option> {
+    
+    var selectedOption: SelectState.Option {
+        
+        return .init(id: selected.key, title: selected.value, isSelected: true)
+    }
+    
+    var selectStataOptions: [SelectState.Option] {
+        
+        options.map {
+            
+            return .init(id: $0.key, title: $0.value, isSelected: $0 == self.selected)
+        }
     }
 }
 
