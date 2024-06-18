@@ -26,13 +26,8 @@ private extension GetSVCardLimitPayload {
     var httpBody: Data {
         
         get throws {
-            
-            let parameters: [String: Any] = [
-                "cardId": cardId
-            ]
-                        
             return try JSONSerialization.data(
-                withJSONObject: parameters as [String: Any]
+                withJSONObject: ["cardId": cardId] as [String: Int]
             )
         }
     }
