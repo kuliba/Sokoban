@@ -5,11 +5,12 @@
 //  Created by Max Gribov on 09.03.2022.
 //
 
+import AccountInfoPanel
+import CardStatementAPI
 import CloudKit
+import ForaTools
 import Foundation
 import ServerAgent
-import CardStatementAPI
-import AccountInfoPanel
 
 //MARK: - Actions
 
@@ -489,69 +490,74 @@ extension Model {
     }
     
     func updateProduct(_ command: ServerCommands.ProductController.GetProductListByType, productType: ProductType) {
-        
-        getProducts(productType) { response in
+                
+        ThrottleDecorator(delay: 0.5) { [weak self] in
+            
+            guard let self else { return }
+            
+            getProducts(productType) { response in
+                
+                if let response {
+                    
+                    let result = Services.mapProductResponse(response)
+                    
+                    // updating status
+                    if let index = self.productsUpdating.value.firstIndex(of: productType) {
                         
-            if let response {
-                
-                let result = Services.mapProductResponse(response)
-                
-                // updating status
-                if let index = self.productsUpdating.value.firstIndex(of: productType) {
-
-                    self.productsUpdating.value.remove(at: index)
-                }
-
-                // update products
-                let updatedProducts = Self.reduce(products: self.products.value, with: result.productList, for: productType)
-                self.products.value = updatedProducts
-                
-                self.updateInfo.value.setValue(true, for: productType)
-
-                //md5hash -> image
-                let md5Products = result.productList.reduce(Set<String>(), {
-                    $0.union([$1.smallDesignMd5hash,
-                              $1.smallBackgroundDesignHash,
-                              $1.xlDesignMd5Hash,
-                              $1.largeDesignMd5Hash,
-                              $1.mediumDesignMd5Hash,
-                              $1.paymentSystemMd5Hash
-                             ]) })
-                
-                let md5ToUpload = Array(md5Products.subtracting(self.images.value.keys))
-                if !md5ToUpload.isEmpty {
-                    self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: md5ToUpload ))
-                }
-                
-                // cache products
-                do {
+                        self.productsUpdating.value.remove(at: index)
+                    }
                     
-                    try self.productsCacheStore(productsData: updatedProducts)
+                    // update products
+                    let updatedProducts = Self.reduce(products: self.products.value, with: result.productList, for: productType)
+                    self.products.value = updatedProducts
                     
-                } catch {
+                    self.updateInfo.value.setValue(true, for: productType)
                     
-                    self.handleServerCommandCachingError(error: error, command: command)
+                    //md5hash -> image
+                    let md5Products = result.productList.reduce(Set<String>(), {
+                        $0.union([$1.smallDesignMd5hash,
+                                  $1.smallBackgroundDesignHash,
+                                  $1.xlDesignMd5Hash,
+                                  $1.largeDesignMd5Hash,
+                                  $1.mediumDesignMd5Hash,
+                                  $1.paymentSystemMd5Hash
+                                 ]) })
+                    
+                    let md5ToUpload = Array(md5Products.subtracting(self.images.value.keys))
+                    if !md5ToUpload.isEmpty {
+                        self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: md5ToUpload ))
+                    }
+                    
+                    // cache products
+                    do {
+                        
+                        try self.productsCacheStore(productsData: updatedProducts)
+                        
+                    } catch {
+                        
+                        self.handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                    // update additional products data
+                    switch productType {
+                    case .deposit:
+                        self.action.send(ModelAction.Deposits.Info.All())
+                        
+                    case .loan:
+                        self.action.send(ModelAction.Loans.Update.All())
+                        
+                    default:
+                        break
+                    }
                 }
-                
-                // update additional products data
-                switch productType {
-                case .deposit:
-                    self.action.send(ModelAction.Deposits.Info.All())
-                    
-                case .loan:
-                    self.action.send(ModelAction.Loans.Update.All())
-                    
-                default:
-                    break
+                else {
+                    // updating status
+                    if let index = self.productsUpdating.value.firstIndex(of: productType) {
+                        
+                        self.productsUpdating.value.remove(at: index)
+                    }
+                    self.updateInfo.value.setValue(false, for: productType)
                 }
-            }
-            else {
-                // updating status
-                if let index = self.productsUpdating.value.firstIndex(of: productType) {
-
-                    self.productsUpdating.value.remove(at: index)
-                }
-                self.updateInfo.value.setValue(false, for: productType)
             }
         }
     }
