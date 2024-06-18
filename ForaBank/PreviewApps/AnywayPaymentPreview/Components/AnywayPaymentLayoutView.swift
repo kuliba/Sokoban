@@ -12,8 +12,8 @@ struct AnywayPaymentLayoutView<ElementView, FooterView>: View
 where ElementView: View,
       FooterView: View {
     
-    let elements: [AnywayPayment.Element]
-    let elementView: (AnywayPayment.Element) -> ElementView
+    let elements: [AnywayElement]
+    let elementView: (AnywayElement) -> ElementView
     let footerView: () -> FooterView
     
     var body: some View {

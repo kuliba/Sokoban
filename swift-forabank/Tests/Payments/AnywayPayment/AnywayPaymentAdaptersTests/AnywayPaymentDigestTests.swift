@@ -15,7 +15,7 @@ final class AnywayPaymentDigestTests: XCTestCase {
     func test_json_shouldDeliverDataWithPuref() throws {
         
         let purefRawValue = anyMessage()
-        let digest = makeAnywayPaymentDigest(purefRawValue: purefRawValue)
+        let digest = makeAnywayPaymentDigest(puref: purefRawValue)
         
         let decoded = try JSONDecoder().decode(_DTO.self, from: digest.json)
         
@@ -103,12 +103,13 @@ final class AnywayPaymentDigestTests: XCTestCase {
         let purefRawValue = anyMessage()
         let digest = makeAnywayPaymentDigest(
             additional: [],
+            amount: 1_234.56,
             core: .init(
-                amount: 1_234.56,
                 currency: "RUB",
-                productID: .card(.init(cardIDRawValue))
+                productID: cardIDRawValue,
+                productType: .card
             ),
-            purefRawValue: purefRawValue
+            puref: purefRawValue
         )
         
         let decoded = try JSONDecoder().decode(_DTO.self, from: digest.json)
@@ -131,12 +132,13 @@ final class AnywayPaymentDigestTests: XCTestCase {
         let purefRawValue = anyMessage()
         let digest = makeAnywayPaymentDigest(
             additional: [],
+            amount: 1_234.56,
             core: .init(
-                amount: 1_234.56,
                 currency: "RUB",
-                productID: .account(.init(accountIDRawValue))
+                productID: accountIDRawValue,
+                productType: .account
             ),
-            purefRawValue: purefRawValue
+            puref: purefRawValue
         )
         
         let decoded = try JSONDecoder().decode(_DTO.self, from: digest.json)
@@ -157,11 +159,17 @@ final class AnywayPaymentDigestTests: XCTestCase {
     
     private func makeAnywayPaymentDigest(
         additional: [AnywayPaymentDigest.Additional] = [],
+        amount: Decimal? = nil,
         core: AnywayPaymentDigest.PaymentCore? = nil,
-        purefRawValue: String = anyMessage()
+        puref purefRawValue: String = anyMessage()
     ) -> AnywayPaymentDigest {
         
-        .init(additional: additional, core: core, puref: .init(purefRawValue))
+        return .init(
+            additional: additional,
+            amount: amount,
+            core: core,
+            puref: .init(purefRawValue)
+        )
     }
     
     private struct _DTO: Decodable, Equatable {

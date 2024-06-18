@@ -140,6 +140,10 @@ class AuthLoginViewModelTests: XCTestCase {
                 statePublisher: Just(.success(.preview)).eraseToAnyPublisher(),
                 imagePublisher: imagePublisher,
                 imageLoader: { _ in },
+                makeIconView: { _ in .init(
+                    image: .cardPlaceholder,
+                    publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
+                )},
                 config: .default) { [weak self] event in
                     switch event {
                         

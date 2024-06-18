@@ -152,7 +152,7 @@ extension Model {
             let bankParameterId = Payments.Parameter.Identifier.sfpBank.rawValue
             if let bankParameter = parameters.first(where: { $0.id == bankParameterId }),
                let bankParameterValue = bankParameter.value {
-             
+                
                 isForaBankValue = isForaBank(bankId: bankParameterValue)
             }
             
@@ -166,7 +166,16 @@ extension Model {
             
         case Payments.Parameter.Identifier.header.rawValue:
             
-            return Payments.ParameterHeader(title: "Подтвердите реквизиты", icon: .init(parameters: parameters))
+            let codeParameterId = Payments.Parameter.Identifier.code.rawValue
+            let parametersIds = parameters.map{ $0.id }
+           
+            if parametersIds.contains(codeParameterId) {
+                
+                return Payments.ParameterHeader(title: "Подтвердите реквизиты", icon: .init(parameters: parameters))
+            } else {
+                
+                return Payments.ParameterHeader(title: "\(operation.service.name)", icon: .init(parameters: parameters))
+            }
             
         case Payments.Parameter.Identifier.sfpMessage.rawValue:
             

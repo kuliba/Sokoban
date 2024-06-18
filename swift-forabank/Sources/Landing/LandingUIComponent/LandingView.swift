@@ -7,6 +7,7 @@
 
 import Combine
 import SwiftUI
+import UIPrimitives
 
 public struct LandingView: View {
     
@@ -17,17 +18,20 @@ public struct LandingView: View {
     private let action: (LandingEvent) -> Void
     private let openURL: (URL) -> Void
     private let images: [String: Image]
+    private let makeIconView: MakeIconView
     
     public init(
         viewModel: LandingViewModel,
         images: [String: Image],
         action: @escaping (LandingEvent) -> Void,
-        openURL: @escaping (URL) -> Void
+        openURL: @escaping (URL) -> Void,
+        makeIconView: @escaping MakeIconView
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
         self.images = images
         self.action = action
         self.openURL = openURL
+        self.makeIconView = makeIconView
     }
     
     struct ViewOffsetKey: PreferenceKey {
@@ -101,7 +105,7 @@ public struct LandingView: View {
         _ components: [UILanding.Component]
     ) -> some View {
         
-        ForEach(components, content: itemView)
+        ForEach(components, id: \.id, content: itemView)
     }
     
     private func orderCard(
@@ -129,7 +133,8 @@ public struct LandingView: View {
             config: viewModel.config,
             selectDetail: viewModel.selectDetail,
             action: action,
-            orderCard: orderCard
+            orderCard: orderCard,
+            makeIconView: makeIconView
             )
         
         switch component {
@@ -184,6 +189,7 @@ extension LandingView {
         let selectDetail: (DetailDestination?) -> Void
         let action: (LandingEvent) -> Void
         let orderCard: (Int, Int) -> Void
+        let makeIconView: MakeIconView
         
         var body: some View {
             
@@ -263,6 +269,14 @@ extension LandingView {
                     config: config.listHorizontalRectangleImage,
                     selectDetail: selectDetail)
                 
+            case let .list(.horizontalRectangleLimits(model)):
+                ListHorizontalRectangleLimitsView(
+                    model: .init(
+                        data: model,
+                        makeIconView: makeIconView),
+                    config: config.listHorizontalRectangleLimits)
+
+                
             case let .multi(.typeButtons(model)):
                 MultiTypeButtonsView(
                     
@@ -277,9 +291,22 @@ extension LandingView {
                 
             case let .multi(.markersText(model)):
                 MultiMarkersTextView(model: model, config: config.multiMarkersText)
+                
+            case let .blockHorizontalRectangular(model):
+                BlockHorizontalRectangularView(
+                    model: .init(
+                        data: model,
+                        makeIconView: makeIconView),
+                    config: config.blockHorizontalRectangular)
             }
         }
     }
+}
+
+public extension LandingView {
+    
+    typealias MakeIconView = (String) -> IconView
+    typealias IconView = UIPrimitives.AsyncImage
 }
 
 // MARK: - Previews
@@ -300,7 +327,11 @@ struct LandingUIView_Previews: PreviewProvider {
             ),
             images: .defaultValue,
             action: { _ in },
-            openURL: { _ in }
+            openURL: { _ in },
+            makeIconView: { _ in .init(
+                image: .flag,
+                publisher: Just(.percent).eraseToAnyPublisher()
+            )}
         )
     }
 }

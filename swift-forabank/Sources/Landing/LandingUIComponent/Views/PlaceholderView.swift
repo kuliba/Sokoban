@@ -1,7 +1,7 @@
 import SwiftUI
 import UIPrimitives
 
-public struct PlaceholderView: View {
+struct PlaceholderView: View {
     
     private let config: Placeholder.Config
     
@@ -12,7 +12,7 @@ public struct PlaceholderView: View {
     private let cornerRadius: Placeholder.Config.CornerRadius
     private let action: (LandingEvent) -> Void
 
-    public init(
+    init(
         config: Placeholder.Config,
         action: @escaping (LandingEvent) -> Void
     ) {
@@ -32,7 +32,7 @@ public struct PlaceholderView: View {
         }) { Image(systemName: "chevron.backward") }
     }
 
-    public var body: some View {
+    var body: some View {
         
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading, spacing: spacing.globalVStack) {

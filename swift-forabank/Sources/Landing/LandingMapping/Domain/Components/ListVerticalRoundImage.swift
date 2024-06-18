@@ -23,9 +23,10 @@ extension DecodableLanding.Data {
             let title, subInfo: String?
             let link, appStore, googlePlay: String?
             let detail: Detail?
+            let action: Action?
                         
             enum CodingKeys: String, CodingKey {
-                case md5hash, title, link, appStore, googlePlay
+                case md5hash, title, link, appStore, googlePlay, action
                 case detail = "details"
                 case subInfo = "subTitle"
             }
@@ -37,6 +38,14 @@ extension DecodableLanding.Data {
                 enum CodingKeys: String, CodingKey {
                     case groupId = "detailsGroupId"
                     case viewId = "detailViewId"
+                }
+            }
+            
+            struct Action: Decodable, Equatable {
+                let type: String
+                
+                enum CodingKeys: String, CodingKey {
+                    case type = "actionType"
                 }
             }
         }

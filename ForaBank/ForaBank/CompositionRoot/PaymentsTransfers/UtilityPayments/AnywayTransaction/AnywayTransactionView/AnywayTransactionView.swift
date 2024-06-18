@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
+import AnywayPaymentCore
 import AnywayPaymentDomain
 import SwiftUI
 import UIPrimitives
@@ -17,17 +18,10 @@ struct AnywayTransactionView: View {
     
     var body: some View {
         
-        VStack(spacing: 32) {
-            
-            state.status.map {
-                
-                Text("transaction status: \(String(describing: $0))")
-                    .font(.caption.bold())
-                    .foregroundColor(.red)
-            }
+        VStack(spacing: 16) {
             
             paymentView(elements: elements)
-            factory.makeFooterView(state, { event($0.transactionEvent) })
+            factory.makeFooterView(state) { event($0.transactionEvent) }
         }
     }
 }
@@ -40,9 +34,26 @@ extension AnywayTransactionView {
     typealias IconView = UIPrimitives.AsyncImage
 }
 
+extension AnywayTransactionState {
+    
+    var models: [IdentifiedModel] {
+        
+        transaction.context.payment.elements.compactMap { element in
+            
+            models[element.id].map { .init(id: element.id, model: $0)}
+        }
+    }
+    
+    struct IdentifiedModel: Identifiable {
+        
+         let id: AnywayElement.ID
+         let model: Model
+    }
+}
+
 private extension AnywayTransactionView {
     
-    var elements: [Element] { state.payment.payment.elements }
+    var elements: [Element] { state.models }
     
     private func paymentView(
         elements: [Element]
@@ -61,9 +72,9 @@ private extension AnywayTransactionView {
     
     private func scrollContent() -> some View {
         
-        VStack(spacing: 32) {
+        VStack(spacing: 16) {
             
-            ForEach(elements, content: factory.makeElementView)
+            ForEach(elements) { factory.makeElementView($0) }
         }
         .padding()
     }
@@ -88,7 +99,7 @@ private extension AnywayTransactionView {
         }
     }
     
-    typealias Element = AnywayPaymentDomain.AnywayPayment.Element
+    typealias Element = State.IdentifiedModel
 }
 
 // MARK: - Adapters

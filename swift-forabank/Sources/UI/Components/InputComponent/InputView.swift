@@ -63,10 +63,6 @@ public struct InputView<Icon, IconView: View>: View {
                 }
             }
         }
-        .padding(.horizontal, config.imageSize == 16 ? 16 : 12)
-        .padding(.vertical, 13)
-        .background(config.backgroundColor)
-        .cornerRadius(12)
     }
 }
 

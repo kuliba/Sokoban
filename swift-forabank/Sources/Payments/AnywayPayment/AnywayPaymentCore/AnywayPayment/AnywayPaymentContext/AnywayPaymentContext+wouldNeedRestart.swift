@@ -28,7 +28,7 @@ private extension AnywayPaymentContext {
     var stagedOutlinedPairs: Pairs {
         
         outline.fields
-            .filter { staged.contains(.init($0.key.rawValue)) }
+            .filter { staged.contains($0.key) }
             .mapValues(Optional<AnywayPaymentOutline.Value>.init)
     }
     
@@ -37,23 +37,20 @@ private extension AnywayPaymentContext {
         let parameterFieldPairs = payment.elements.parameterFields
             .map { field -> (AnywayPaymentOutline.ID, AnywayPaymentOutline.Value?) in
                 
-                let id: AnywayPaymentOutline.ID = .init(field.id.rawValue)
-                let value: AnywayPaymentOutline.Value? = field.value.map { .init($0.rawValue) }
-                
-                return (id, value)
+                return (field.id, field.value.map { $0 })
             }
         
         let dict = Dictionary(parameterFieldPairs) { _, last in last}
         
-        return dict.filter { staged.contains(.init($0.key.rawValue)) }
+        return dict.filter { staged.contains($0.key) }
     }
     
     typealias Pairs = [AnywayPaymentOutline.ID : AnywayPaymentOutline.Value?]
 }
 
-private extension Array where Element == AnywayPayment.Element {
+private extension Array where Element == AnywayElement {
     
-    var parameterFields: [AnywayPayment.Element.Parameter.Field] {
+    var parameterFields: [AnywayElement.Parameter.Field] {
         
         compactMap {
             

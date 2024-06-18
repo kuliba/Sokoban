@@ -14,17 +14,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var bindings = Set<AnyCancellable>()
     
     private lazy var model: Model = AppDelegate.shared.model
+    private lazy var httpClient: HTTPClient = model.authenticatedHTTPClient()
     private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
     private lazy var featureFlags = loadFeatureFlags()
     private lazy var rootViewModel = RootViewModelFactory.make(
         model: model,
+        httpClient: httpClient,
         logger: logger,
         qrResolverFeatureFlag: .init(.active),
         fastPaymentsSettingsFlag: .init(.active(.live)),
         utilitiesPaymentsFlag: featureFlags.utilitiesPaymentsFlag,
         updateInfoStatusFlag: .init(.active)
     )
-    private lazy var rootViewFactory = RootViewFactoryComposer(model: model).compose()
+    private lazy var rootViewFactory = RootViewFactoryComposer(
+        model: model,
+        httpClient: httpClient
+    ).compose()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         

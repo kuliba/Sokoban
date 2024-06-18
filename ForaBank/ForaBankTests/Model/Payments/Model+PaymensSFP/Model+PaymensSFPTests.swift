@@ -208,7 +208,7 @@ final class Model_PaymensSFPTests: XCTestCase {
 
     func test_sfpLogo_sfpOperation_notForaBank_returnsSfpIcon() {
         
-        XCTAssertEqual(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId"))?.icon.equatable, EquatableParameterSuccessLogoIcon(.sfp))
+        XCTAssertEqual(PPLogo.sfpLogo(with: .sfpOperation(bankId: "otherBankId"))?.icon.equatable, nil)
     }
 
     func test_sfpLogo_sfpOperation_nonForaBankIdInSource_nonForaBankIdInParameters_returnsSfpIcon() {
@@ -226,7 +226,7 @@ final class Model_PaymensSFPTests: XCTestCase {
             bankId: "otherBankId",
             parameters: [Payments.ParameterInput.makePPInput(id: "id1", value: "otherBankId")]
         )
-        XCTAssertEqual(PPLogo.sfpLogo(with: operation)?.icon.equatable, EquatableParameterSuccessLogoIcon(.sfp))
+        XCTAssertEqual(PPLogo.sfpLogo(with: operation)?.icon.equatable, nil)
     }
 
     func test_sfpLogo_notSfpOperation_returnsNil() {
@@ -359,6 +359,72 @@ final class Model_PaymensSFPTests: XCTestCase {
         
         XCTAssertNoDiff(sut.value, nil)
     }
+        
+    // MARK: payments Process Dependency Reducer SFP
+    
+    func test_paymentsProcessDependencyReducerSFP_headerCase_returnsExpectedParameterHeader() {
+        
+        let operation = Payments.Operation(service: .sfp, source: .sfp(phone: "123123123", bankId: "someBankID"))
+        let sut = makeSUT()
+        
+        do {
+            let result = try XCTUnwrap(sut.paymentsProcessDependencyReducerSFP(
+                operation: operation,
+                parameterId: Payments.Parameter.Identifier.header.rawValue,
+                parameters: []
+            ) as? Payments.ParameterHeader, "Результат должен быть типа Payments.ParameterHeader")
+            
+            XCTAssertEqual(result.title, operation.service.name)
+            
+        } catch {
+            XCTFail("Результат не может быть извлечен: \(error)")
+        }
+    }
+    
+    func test_paymentsProcessDependencyReducerSFP_headerCase_withCodeParameter_returnsExpectedParameterHeader() {
+        
+        let operation = Payments.Operation(service: .sfp, source: .sfp(phone: "123123123", bankId: "someBankID"))
+        let sut = makeSUT()
+
+        let parameters: [PaymentsParameterRepresentable] = [
+            Payments.ParameterSelectBank.getTestParametersWithFora(),
+            Payments.ParameterMock(id: Payments.Parameter.Identifier.code.rawValue, value: Payments.Parameter.Identifier.mock.rawValue, placement: .feed)
+        ]
+        
+        do {
+            let result = try XCTUnwrap(sut.paymentsProcessDependencyReducerSFP(
+                operation: operation,
+                parameterId: Payments.Parameter.Identifier.header.rawValue,
+                parameters: parameters
+            ) as? Payments.ParameterHeader, "Результат должен быть типа Payments.ParameterHeader")
+
+            XCTAssertEqual(result.title, "Подтвердите реквизиты")
+            XCTAssertEqual(result.icon?.equatable, .testSBPIcon)
+            
+        } catch {
+            XCTFail("Результат не может быть извлечен: \(error)")
+        }
+    }
+
+    func test_paymentsProcessDependencyReducerSFP_headerCase_withoutCodeParameter_returnsExpectedParameterHeader() {
+       
+        let operation = Payments.Operation(service: .sfp, source: .sfp(phone: "123123123", bankId: .foraBankID))
+        let sut = makeSUT()
+        
+        do {
+            let result = try XCTUnwrap(sut.paymentsProcessDependencyReducerSFP(
+                operation: operation,
+                parameterId: Payments.Parameter.Identifier.header.rawValue,
+                parameters: [Payments.ParameterSelectBank.getTestParametersWithFora()]
+            ) as? Payments.ParameterHeader, "Результат должен быть типа Payments.ParameterHeader")
+
+            XCTAssertEqual(result.title, operation.service.name)
+            XCTAssertEqual(result.icon?.equatable, .testSBPIcon)
+            
+        } catch {
+            XCTFail("Результат не может быть извлечен: \(error)")
+        }
+    }
     
     // MARK: - Helpers
     private typealias PPIcon = Payments.ParameterHeader.Icon
@@ -483,9 +549,9 @@ private struct EquatableIcon: Equatable {
     
     init(_ icon: Payments.ParameterHeader.Icon) {
         switch icon {
-        case .image(let imageData):
+        case let .image(imageData):
             self.value = .image(imageData)
-        case .name(let name):
+        case let .name(name):
             self.value = .name(name)
         }
     }
@@ -566,6 +632,7 @@ private extension Payments.ParameterSuccessLogo.Icon {
 }
 
 private extension Payments.Operation {
+    
     static func sfpOperation(
         phone: String = "123",
         bankId: String,

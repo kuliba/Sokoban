@@ -48,8 +48,14 @@ public extension TransactionReducer {
         case (_, .dismissRecoverableError):
             reduceDismissRecoverableError(&state)
             
-        case (.fraudSuspected, _):
-            reduceFraudSuspected(&state, &effect, with: event)
+        case let (.fraudSuspected(payment), .fraud(fraudEvent)):
+            reduceFraudSuspected(&state, &effect, with: payment, and: fraudEvent)
+            
+        case (.fraudSuspected,_):
+            break
+            
+        case let (_, .verificationCode(verificationCode)):
+            reduce(&state, &effect, with: verificationCode)
             
         case let (_, .completePayment(report)):
             reduce(&state, with: report)
@@ -81,7 +87,7 @@ public extension TransactionReducer {
     typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
     typealias Inspector = PaymentInspector<Payment, PaymentDigest>
     
-    typealias State = Transaction<Payment, TransactionStatus<Report>>
+    typealias State = Transaction<Payment, TransactionStatus<Payment, Report>>
     typealias Event = TransactionEvent<Report, PaymentEvent, PaymentUpdate>
     typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
@@ -96,10 +102,10 @@ private extension TransactionReducer {
         else { return }
         
         if shouldRestartPayment {
-            state.payment.shouldRestart = true
+            state.context.shouldRestart = true
             state.status = nil
         } else {
-            state.payment = paymentInspector.restorePayment(state.payment)
+            state.context = paymentInspector.restorePayment(state.context)
             state.status = nil
         }
     }
@@ -108,33 +114,22 @@ private extension TransactionReducer {
         _ state: inout State
     ) {
         guard case .serverError = state.status else { return }
-
+        
         state.status = nil
     }
     
     func reduceFraudSuspected(
         _ state: inout State,
         _ effect: inout Effect?,
-        with event: Event
+        with payment: Payment,
+        and fraudEvent: FraudEvent
     ) {
-        guard case let .fraud(fraudEvent) = event else { return }
-        
-        reduce(&state, &effect, with: fraudEvent)
-    }
-    
-    func reduce(
-        _ state: inout State,
-        _ effect: inout Effect?,
-        with event: Event.Fraud
-    ) {
-        guard case .fraudSuspected = state.status else { return }
-        
-        switch event {
+        switch fraudEvent {
         case .cancel:
             state.status = .result(.failure(.fraud(.cancelled)))
             
         case .continue:
-            state.status = nil
+            updateState(&state, with: payment)
             
         case .expired:
             state.status = .result(.failure(.fraud(.expired)))
@@ -160,12 +155,12 @@ private extension TransactionReducer {
         with event: PaymentEvent
     ) {
         let payment: Payment
-        (payment, effect) = paymentReduce(state.payment, event)
-        state.payment = payment
+        (payment, effect) = paymentReduce(state.context, event)
+        state.context = payment
         
-        let shouldConfirmRestart = paymentInspector.wouldNeedRestart(payment) && !state.payment.shouldRestart
+        let shouldConfirmRestart = paymentInspector.wouldNeedRestart(payment) && !state.context.shouldRestart
         if shouldConfirmRestart {
-            // state.status = .awaitingPaymentRestartConfirmation
+            state.status = .awaitingPaymentRestartConfirmation
         }
         
         state.isValid = paymentInspector.validatePayment(payment)
@@ -177,19 +172,21 @@ private extension TransactionReducer {
     ) {
         guard state.isValid, state.status == nil else { return }
         
-        state.payment = stagePayment(state.payment)
+        state.context = stagePayment(state.context)
         
-        if let verificationCode = paymentInspector.getVerificationCode(state.payment) {
+        if let verificationCode = paymentInspector.getVerificationCode(state.context) {
             effect = .makePayment(verificationCode)
         } else {
-            let digest = paymentInspector.makeDigest(state.payment)
+            let digest = paymentInspector.makeDigest(state.context)
             
-            if state.payment.shouldRestart {
+            if state.context.shouldRestart {
                 effect = .initiatePayment(digest)
             } else {
                 effect = .continue(digest)
             }
         }
+        
+        state.status = .inflight
     }
     
     func initiatePayment(
@@ -197,8 +194,9 @@ private extension TransactionReducer {
         _ effect: inout Effect?
     ) {
         guard state.status == nil else { return }
-    
-        effect = .initiatePayment(paymentInspector.makeDigest(state.payment))
+        
+        state.status = .inflight
+        effect = .initiatePayment(paymentInspector.makeDigest(state.context))
     }
     
     func reduce(
@@ -216,10 +214,43 @@ private extension TransactionReducer {
             }
             
         case let .success(update):
-            let updated = updatePayment(state.payment, update)
-            state.payment = updated
-            state.isValid = paymentInspector.validatePayment(updated)
-            state.status = paymentInspector.checkFraud(updated) ? .fraudSuspected : nil
+            let updated = updatePayment(state.context, update)
+            
+            if paymentInspector.checkFraud(updated) {
+                // postpone payment update
+                state.status = .fraudSuspected(updated)
+            } else {
+                updateState(&state, with: updated)
+            }
         }
+    }
+    
+    private func reduce(
+    _ state: inout State,
+    _ effect: inout Effect?,
+    with verificationCode: Event.VerificationCode
+    ) {
+        switch verificationCode {
+        case let .receive(result):
+            switch result {
+            case let .failure(serviceFailure):
+                state.status = .result(.failure(.transactionFailure))
+
+            case .success:
+                break
+            }
+            
+        case .request:
+            effect = .getVerificationCode
+        }
+    }
+    
+    private func updateState(
+        _ state: inout State,
+        with payment: Payment
+    ) {
+        state.status = nil
+        state.context = payment
+        state.isValid = paymentInspector.validatePayment(payment)
     }
 }

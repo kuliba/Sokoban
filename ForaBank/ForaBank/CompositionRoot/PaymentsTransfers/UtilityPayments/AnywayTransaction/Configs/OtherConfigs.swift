@@ -15,7 +15,7 @@ import UtilityServicePrepaymentUI
 
 #warning("move to the call site and make private")
 /*private*/ extension FooterComponent.FooterState.Footer {
-        
+    
     static let iFora: Self = .init(
         title: "Нет компании в списке?",
         description: "Воспользуйтесь другими способами оплаты",
@@ -25,7 +25,7 @@ import UtilityServicePrepaymentUI
 
 #warning("move to the call site and make private")
 /*private*/ extension FooterComponent.FooterState.Failure {
-
+    
     static let iFora: Self = .init(
         image: .init(systemName: "photo.artframe"),
         description: "Что-то пошло не так.\nПопробуйте позже."
@@ -41,25 +41,25 @@ import UtilityServicePrepaymentUI
             textColor: .black
         ),
         description: .init(
-            textFont: .footnote,
-            textColor: .gray.opacity(0.3)
+            textFont: .textBodyMM14200(),
+            textColor: .textPlaceholder
         ),
         subtitle: .init(
-            textFont: .footnote,
-            textColor: .gray.opacity(0.3)
+            textFont: .textBodyMM14200(),
+            textColor: .textPlaceholder
         ),
         background: .gray,
         requisitesButtonTitle: "Оплатить по реквизитам",
         requisitesButtonConfig: .init(
             titleFont: .body,
-            titleForeground: .white,
-            backgroundColor: .blue
+            titleForeground: .textSecondary,
+            backgroundColor: .buttonSecondary
         ),
         addCompanyButtonTitle: "Добавить организацию",
         addCompanyButtonConfiguration: .init(
             titleFont: .body,
-            titleForeground: .white,
-            backgroundColor: .green
+            titleForeground: .textSecondary,
+            backgroundColor: .buttonSecondary
         )
     )
 }
@@ -69,12 +69,12 @@ import UtilityServicePrepaymentUI
     
     static let iFora: Self = .init(
         amount: .init(
-            textFont: .caption2,
-            textColor: .red
+            textFont: .textBodySR12160() ,
+            textColor: .textRed
         ),
         title: .init(
-            textFont: .caption2,
-            textColor: .gray
+            textFont: .textBodySR12160(),
+            textColor: .textSecondary
         )
     )
 }
@@ -84,12 +84,12 @@ import UtilityServicePrepaymentUI
     
     static let iFora: Self = .init(
         title: .init(
-            textFont: .headline,
-            textColor: .black
+            textFont: .textH4M16240(),
+            textColor: .textSecondary
         ),
         subtitle: .init(
-            textFont: .footnote,
-            textColor: .gray
+            textFont: .textBodyMR14180(),
+            textColor: .textPlaceholder
         )
     )
 }

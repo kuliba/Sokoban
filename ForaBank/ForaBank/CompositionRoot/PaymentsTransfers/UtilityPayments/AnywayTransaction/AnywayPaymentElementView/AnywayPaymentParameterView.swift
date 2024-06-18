@@ -13,12 +13,11 @@ import SwiftUI
 struct AnywayPaymentParameterView: View {
     
     let parameter: Parameter
-    let event: (String) -> Void
     let factory: Factory
     
     var body: some View {
         
-        switch parameter.type {
+        switch parameter {
         case .hidden:
             EmptyView()
             
@@ -26,19 +25,32 @@ struct AnywayPaymentParameterView: View {
 #warning("replace with real components")
             Text("TBD: nonEditable parameter view")
             
-        case .numberInput:
+        case let .numberInput(viewModel):
 #warning("replace with specific number input view")
-            factory.makeTextInputView(parameter, { event($0.dynamic.value) })
+            InputWrapperView(
+                viewModel: viewModel,
+                makeIconView: {
+                    
+                    factory.makeIconView(viewModel.state.settings.icon)
+                        .frame(width: 32, height: 32)
+                }
+            )
+            .paddedRoundedBackground()
             
-        case let .select(option, options):
-            let selector = try? Selector(option: option, options: options)
-            selector.map {
-             
-                factory.makeSelectorView($0, { event($0.selected.key.rawValue) })
-            }
+        case let .select(viewModel):
+            factory.makeSelectorView(viewModel)
+                .paddedRoundedBackground()
             
-        case .textInput:
-            factory.makeTextInputView(parameter, { event($0.dynamic.value) })
+        case let .textInput(viewModel):
+            InputWrapperView(
+                viewModel: viewModel,
+                makeIconView: {
+                    
+                    factory.makeIconView(viewModel.state.settings.icon)
+                        .frame(width: 32, height: 32)
+                }
+            )
+            .paddedRoundedBackground()
             
         case .unknown:
             EmptyView()
@@ -48,35 +60,6 @@ struct AnywayPaymentParameterView: View {
 
 extension AnywayPaymentParameterView {
     
-    typealias Parameter = AnywayPaymentDomain.AnywayPayment.Element.UIComponent.Parameter
+    typealias Parameter = AnywayElementModel.Parameter
     typealias Factory = AnywayPaymentParameterViewFactory
-}
-
-extension InputConfig {
-    
-    static var iFora: Self { .preview }
-}
-
-// MARK: - Adapters
-
-private extension Selector where T == AnywayPaymentDomain.AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option {
-    
-    init(option: Option, options: [Option]) throws {
-        
-        try self.init(
-            selected: option,
-            options: options,
-            filterPredicate: { $0.contains($1) }
-        )
-    }
-    
-    typealias Option = AnywayPaymentDomain.AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option
-}
-
-private extension AnywayPaymentDomain.AnywayPayment.Element.UIComponent.Parameter.ParameterType.Option {
-    
-    func contains(_ string: String) -> Bool {
-        
-        key.rawValue.contains(string) || value.rawValue.contains(string)
-    }
 }

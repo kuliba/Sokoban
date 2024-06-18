@@ -14,7 +14,7 @@ where LastPayment == UtilityPaymentLastPayment,
         
         return .init(
             initiateUtilityPayment: { _,_  in },
-            startPayment: { _,_ in }
+            processSelection: { _,_ in }
         )
     }
 }

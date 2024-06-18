@@ -14,8 +14,8 @@ enum UtilityPrepaymentFlowEvent<LastPayment, Operator, Service> {
     case outside(Outside)
     case payByInstructions
     case payByInstructionsFromError
-    case paymentStarted(StartPaymentResult)
     case select(Select)
+    case selectionProcessed(ProcessSelectionResult)
 }
 
 extension UtilityPrepaymentFlowEvent {
@@ -46,15 +46,15 @@ extension UtilityPrepaymentFlowEvent {
         case service(Service, for: Operator)
     }
     
-    typealias StartPaymentResult = Result<StartPaymentSuccess, StartPaymentFailure>
+    typealias ProcessSelectionResult = Result<ProcessSelectionSuccess, ProcessSelectionFailure>
     
-    enum StartPaymentSuccess {
+    enum ProcessSelectionSuccess {
         
         case services(MultiElementArray<Service>, for: Operator)
-        case startPayment(AnywayTransactionState)
+        case startPayment(AnywayTransactionState.Transaction)
     }
     
-    enum StartPaymentFailure: Error {
+    enum ProcessSelectionFailure: Error {
         
         case operatorFailure(Operator)
         case serviceFailure(ServiceFailure)
@@ -97,6 +97,6 @@ extension UtilityPrepaymentFlowEvent.Initiated {
 
 extension UtilityPrepaymentFlowEvent: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
 extension UtilityPrepaymentFlowEvent.Select: Equatable where LastPayment: Equatable, Operator: Equatable, Service: Equatable {}
-extension UtilityPrepaymentFlowEvent.StartPaymentSuccess: Equatable where Operator: Equatable, Service: Equatable {}
-extension UtilityPrepaymentFlowEvent.StartPaymentFailure: Equatable where Operator: Equatable {}
+extension UtilityPrepaymentFlowEvent.ProcessSelectionSuccess: Equatable where Operator: Equatable, Service: Equatable {}
+extension UtilityPrepaymentFlowEvent.ProcessSelectionFailure: Equatable where Operator: Equatable {}
 extension UtilityPrepaymentFlowEvent.Initiated.UtilityPrepaymentPayload: Equatable where LastPayment: Equatable, Operator: Equatable {}

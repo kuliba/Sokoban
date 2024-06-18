@@ -6,6 +6,7 @@
 //
 
 import Combine
+import ForaTools
 import Foundation
 
 public final class RxViewModel<State, Event, Effect>: ObservableObject {

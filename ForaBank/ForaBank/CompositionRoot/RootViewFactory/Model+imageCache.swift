@@ -26,14 +26,20 @@ private enum ImageCacheFallback {
     
     static func image(forKey key: ImageCache.ImageKey) -> Image {
         
-        let image = fallbacks[key] ?? Self.default
+        let image = fallbacks[key] ?? .default
         
         return image
     }
     
-    private static let `default`: Image = .ic24MoreHorizontal
-    
     private static let fallbacks: [ImageCache.ImageKey: Image] = [
+        "placeholder": .ic24MoreHorizontal,
+        "sms": .ic24SmsCode,
+        "coins": .ic24Coins,
         "b6e5b5b8673544184896724799e50384": .ic40Goods
     ]
+}
+
+private extension Image {
+    
+    static let `default`: Image = .ic24MoreHorizontal
 }

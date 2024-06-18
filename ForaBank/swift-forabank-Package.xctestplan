@@ -389,6 +389,27 @@
         "identifier" : "UtilityServicePrepaymentCoreTests",
         "name" : "UtilityServicePrepaymentCoreTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ChangeSVCardLimitAPITests",
+        "name" : "ChangeSVCardLimitAPITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SelectComponentTests",
+        "name" : "SelectComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "SelectorComponentTests",
+        "name" : "SelectorComponentTests"
+      }
     }
   ],
   "version" : 1

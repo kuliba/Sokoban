@@ -10,13 +10,14 @@ import SharedConfigs
 import TextFieldComponent
 import SwiftUI
 
-public struct AmountView: View {
+public struct AmountView<InfoView>: View
+where InfoView: View {
     
     @StateObject private var textFieldModel: DecimalTextFieldViewModel
     
     let amount: Amount
-    let event: (Decimal) -> Void
-    let pay: () -> Void
+    let event: (AmountEvent) -> Void
+    let infoView: () -> InfoView
     
     let config: AmountConfig
     
@@ -24,10 +25,10 @@ public struct AmountView: View {
     
     public init(
         amount: Amount,
-        event: @escaping (Decimal) -> Void,
-        pay: @escaping () -> Void,
+        event: @escaping (AmountEvent) -> Void,
         currencySymbol: String,
-        config: AmountConfig
+        config: AmountConfig,
+        infoView: @escaping () -> InfoView
     ) {
         let formatter = DecimalFormatter(
             currencySymbol: currencySymbol
@@ -40,8 +41,8 @@ public struct AmountView: View {
         self.getDecimal = formatter.getDecimal
         self.amount = amount
         self.event = event
-        self.pay = pay
         self.config = config
+        self.infoView = infoView
     }
     
     private let buttonSize = CGSize(width: 114, height: 40)
@@ -66,6 +67,7 @@ public struct AmountView: View {
             textField()
             Divider().background(config.dividerColor)
                 .padding(.top, 4)
+            infoView()
         }
     }
     
@@ -81,7 +83,7 @@ public struct AmountView: View {
                 placeholderColor: .clear
             )
         )
-        .onReceive(textFieldModel.$state.map(getDecimal), perform: event)
+        .onReceive(textFieldModel.$state.map(getDecimal)) { event(.edit($0)) }
     }
     
     @ViewBuilder
@@ -92,7 +94,7 @@ public struct AmountView: View {
             Button {
                 
                 textFieldModel.finishEditing()
-                pay()
+                event(.pay)
             } label: {
                 buttonLabel(config: config.button.active)
             }
@@ -128,6 +130,19 @@ struct AmountView_Previews: PreviewProvider {
             
             amountView(amount: .preview)
             amountView(amount: .disabled)
+            
+            AmountView(
+                amount: .preview,
+                event: { print($0) },
+                currencySymbol: "₽",
+                config: .preview,
+                infoView: {
+                    
+                    Text("Info View here")
+                        .font(.caption)
+                        .foregroundColor(.pink)
+                }
+            )
         }
     }
     

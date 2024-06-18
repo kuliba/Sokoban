@@ -13,6 +13,7 @@ import OperatorsListComponents
 import ForaTools
 import Foundation
 import GenericRemoteService
+import PaymentComponents
 import RemoteServices
 import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
@@ -23,23 +24,17 @@ final class PaymentsTransfersFlowManagerComposer {
     private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
-    private let pageSize: Int
-    private let observeLast: Int
-    
+        
     init(
         flag: Flag,
         model: Model,
         httpClient: HTTPClient,
-        log: @escaping Log,
-        pageSize: Int,
-        observeLast: Int
+        log: @escaping Log
     ) {
         self.flag = flag
         self.model = model
         self.httpClient = httpClient
         self.log = log
-        self.pageSize = pageSize
-        self.observeLast = observeLast
     }
     
     typealias Flag = UtilitiesPaymentsFlag
@@ -49,11 +44,20 @@ final class PaymentsTransfersFlowManagerComposer {
 
 extension PaymentsTransfersFlowManagerComposer {
     
-    func compose() -> FlowManager {
+    func compose(
+        _ spinnerActions: RootViewModel.RootActions.Spinner?
+    ) -> FlowManager {
+        
+        let composer = makeReducerFactoryComposer()
+        let factory = composer.compose(
+            makeUtilityPaymentState: makeUtilityPaymentState(
+                with: spinnerActions
+            )
+        )
         
         return .init(
             handleEffect: makeHandleEffect(),
-            makeReduce: makeReduce()
+            makeReduce: makeReduce(with: factory)
         )
     }
     
@@ -64,7 +68,26 @@ extension PaymentsTransfersFlowManagerComposer {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias PaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias PaymentViewModel = AnywayTransactionViewModel
+}
+
+private extension PaymentsTransfersFlowManagerComposer {
+    
+    struct Settings: Equatable {
+        
+        let pageSize: Int = 50
+        let observeLast: Int = 10
+        let fraudDelay: Double
+        let utilityNavTitle = "Услуги ЖКХ"
+        
+        static let live: Self = .init(fraudDelay: 120)
+        static let stub: Self = .init(fraudDelay: 12)
+    }
+    
+    var settings: Settings {
+        
+        flag.isStub ? .stub : .live
+    }
 }
 
 private extension PaymentsTransfersFlowManagerComposer {
@@ -105,7 +128,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         let microComposer = UtilityPrepaymentFlowMicroServicesComposer(
             flag: flag.rawValue,
             nanoServices: nanoComposer.compose(),
-            makeLegacyPaymentsServicesViewModel: makeLegacyPaymentsServicesViewModel
+            makeLegacyPaymentsServicesViewModel: makeLegacyViewModel
         )
         
         return .init(microServices: microComposer.compose())
@@ -121,7 +144,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         load(.init()) { completion($0); _ = load }
     }
     
-    private func makeLegacyPaymentsServicesViewModel(
+    private func makeLegacyViewModel(
         payload: MakePaymentPayload
     ) -> PaymentsServicesViewModel {
         
@@ -150,23 +173,23 @@ private extension PaymentsTransfersFlowManagerComposer {
         )
     }
     
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
-    typealias PrepaymentEffect = Effect.UtilityPrepaymentFlowEffect
+    typealias PrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
     typealias MakePaymentPayload = PrepaymentEffect.LegacyPaymentPayload
     
-    func makeReduce() -> FlowManager.MakeReduce {
-        
-        let factory = makeReducerFactoryComposer().compose()
-        
-        typealias Reducer = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel>
+    func makeReduce(
+        with factory: ReducerFactory
+    ) -> FlowManager.MakeReduce {
         
         let makeReducer = {
             
-            Reducer(factory: factory, closeAction: $0, notify: $1)
+            FlowReducer(factory: factory, closeAction: $0, notify: $1)
         }
         
         return { makeReducer($0, $1).reduce(_:_:) }
     }
+    
+    typealias ReducerFactory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Content, PaymentViewModel>
+    typealias FlowReducer = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel>
     
     private func makeReducerFactoryComposer(
     ) -> PaymentsTransfersFlowReducerFactoryComposer {
@@ -175,18 +198,97 @@ private extension PaymentsTransfersFlowManagerComposer {
             loadOperators: loadOperators
         )
         let microComposer = UtilityPrepaymentMicroServicesComposer(
-            pageSize: pageSize,
+            pageSize: settings.pageSize,
             nanoServices: nanoServices
         )
         
         return .init(
             model: model,
-            observeLast: observeLast,
-            microServices: microComposer.compose(),
-            makeTransactionViewModel: makeTransactionViewModel
+            settings: .init(
+                observeLast: settings.observeLast,
+                fraudDelay: settings.fraudDelay,
+                navTitle: settings.utilityNavTitle
+            ),
+            microServices: microComposer.compose()
         )
     }
     
+    typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
+    typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
+    
+    func makeUtilityPaymentState(
+        with spinnerActions: RootViewModel.RootActions.Spinner?
+    ) -> (AnywayTransactionState.Transaction, @escaping NotifyStatus) -> UtilityServicePaymentFlowState<AnywayTransactionViewModel> {
+        
+        let initiateOTP: AnywayElementModelMapper.InitiateOTP = { completion in
+            
+            #warning("FIXME")
+//            switch self.flag.optionOrStub {
+//            case .live:
+//                let initiateOTP = ForaBank.NanoServices.getVerificationCode(httpClient: httpClient, infoNetworkLog)
+//                initiateOTP { completion($0); _ = initiateOTP }
+//
+//            case .stub:
+                DispatchQueue.main.delay(for: .seconds(1)) {
+                    
+                    completion(.failure(.connectivityError))
+                }
+//            }
+        }
+        
+        let elementMapper = AnywayElementModelMapper(
+            currencyOfProduct: self.currencyOfProduct,
+            getProducts: self.model.productSelectProducts,
+            initiateOTP: initiateOTP
+        )
+        
+        let microServices = composeMicroServices()
+    
+        let composer = AnywayTransactionViewModelComposer(
+            elementMapper: elementMapper,
+            microServices: microServices,
+            spinnerActions: spinnerActions
+        )
+        
+        return { transaction, notify in
+            
+            let viewModel = composer.makeAnywayTransactionViewModel(
+                transaction: transaction,
+                notify: notify
+            )
+            
+            return .init(viewModel: viewModel)
+        }
+    }
+    
+    private func composeMicroServices(
+    ) -> AnywayTransactionEffectHandlerMicroServices {
+        
+        typealias NanoServicesComposer = AnywayTransactionEffectHandlerNanoServicesComposer
+        typealias MicroServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer
+        
+        let nanoServicesComposer = NanoServicesComposer(
+            flag: flag.optionOrStub,
+            httpClient: httpClient,
+            log: log
+        )
+        
+        let microServicesComposer = MicroServicesComposer(
+            nanoServices: nanoServicesComposer.compose()
+        )
+        
+        return microServicesComposer.compose()
+    }
+    
+    typealias NotifyStatus = (AnywayTransactionStatus?) -> Void
+
+    private func currencyOfProduct(
+        product: ProductSelect.Product
+    ) -> String {
+        
+        model.currencyOf(product: product) ?? ""
+    }
+
     private func loadOperators(
         payload: LoadOperatorsPayload,
         completion: @escaping ([Operator]) -> Void
@@ -214,22 +316,9 @@ private extension PaymentsTransfersFlowManagerComposer {
         let loaderComposer = UtilityPaymentOperatorLoaderComposer(
             flag: flag.optionOrStub,
             model: model,
-            pageSize: pageSize
+            pageSize: settings.pageSize
         )
         
         return loaderComposer.compose()
-    }
-    
-    private func makeTransactionViewModel(
-        initialState: AnywayTransactionState
-    ) -> AnywayTransactionViewModel {
-        
-        let composer = AnywayTransactionViewModelComposer(
-            flag: flag.optionOrStub,
-            httpClient: httpClient,
-            log: log
-        )
-        
-        return composer.compose(initialState: initialState)
     }
 }

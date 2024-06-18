@@ -11,6 +11,20 @@ import XCTest
 
 final class CachedPaymentContextTests: XCTestCase {
     
+    func test_init_shouldCreateInstanceWithPurefFromAnywayPaymentWithPuref() {
+        
+        let puref = anyMessage()
+        let context = makeAnywayPaymentContext(
+            outline: makeAnywayPaymentOutline(
+                payload: makeAnywayPaymentPayload(puref: puref)
+            )
+        )
+        
+        let cached = CachedPaymentContext(context, using: { $0 })
+        
+        XCTAssertNoDiff(cached.outline.payload.puref, puref)
+    }
+    
     // MARK: - updating
     
     func test_updating_shouldUpdatePayment() {
@@ -31,10 +45,8 @@ final class CachedPaymentContextTests: XCTestCase {
     
     func test_updating_shouldUpdateEmptyStaged() {
         
-        let context = makeContext(staged: [])
-        
         let updated = updating(
-            context,
+            makeContext(staged: []),
             with: makeAnywayPaymentContext(staged: [.init("1"), .init("2")])
         )
         
@@ -43,10 +55,8 @@ final class CachedPaymentContextTests: XCTestCase {
     
     func test_updating_shouldUpdateNonEmptyStaged() {
         
-        let context = makeContext(staged: [.init("0")])
-        
         let updated = updating(
-            context,
+            makeContext(staged: [.init("0")]),
             with: makeAnywayPaymentContext(staged: [.init("1"), .init("2")])
         )
         
@@ -55,17 +65,17 @@ final class CachedPaymentContextTests: XCTestCase {
     
     func test_updating_shouldUpdateOutline() {
         
-        let context = makeContext(outline: .init(
+        let outline = makeAnywayPaymentOutline(
+            ["321": "abc"],
             core: makeOutlinePaymentCore(
                 amount: 123,
                 currency: "RUB",
                 productID: 321,
                 productType: .account
-            ),
-            fields: ["321": "abc"]
-        ))
+            )
+        )
         
-        let outline = makeAnywayPaymentOutline(
+        let newOutline = makeAnywayPaymentOutline(
             ["a": "aaa"],
             core: makeOutlinePaymentCore(
                 amount: 321,
@@ -76,19 +86,17 @@ final class CachedPaymentContextTests: XCTestCase {
         )
         
         let updated = updating(
-            context,
-            with: makeAnywayPaymentContext(outline: outline)
+            makeContext(outline: outline),
+            with: makeAnywayPaymentContext(outline: newOutline)
         )
         
-        XCTAssertNoDiff(updated.outline, outline)
+        XCTAssertNoDiff(updated.outline, newOutline)
     }
     
     func test_updating_shouldUpdateShouldRestart_false() {
         
-        let context = makeContext(shouldRestart: true)
-        
         let updated = updating(
-            context,
+            makeContext(shouldRestart: true),
             with: makeAnywayPaymentContext(shouldRestart: false)
         )
         
@@ -97,14 +105,35 @@ final class CachedPaymentContextTests: XCTestCase {
     
     func test_updating_shouldUpdateShouldRestart_true() {
         
-        let context = makeContext(shouldRestart: false)
-        
         let updated = updating(
-            context,
+            makeContext(shouldRestart: false),
             with: makeAnywayPaymentContext(shouldRestart: true)
         )
         
         XCTAssertTrue(updated.shouldRestart)
+    }
+    
+    func test_updating_shouldUpdateWithPurefFromAnywayPaymentContextWithPuref() {
+        
+        let puref1 = anyMessage()
+        let context = makeContext(
+            outline: makeAnywayPaymentOutline(
+                payload: makeAnywayPaymentPayload(puref: puref1)
+            )
+        )
+        XCTAssertNoDiff(context.outline.payload.puref, puref1)
+        
+        let puref2 = anyMessage()
+        let updated = updating(
+            context,
+            with: makeAnywayPaymentContext(
+                outline: makeAnywayPaymentOutline(
+                    payload: makeAnywayPaymentPayload(puref: puref2)
+                )
+            )
+        )
+        
+        XCTAssertNoDiff(updated.outline.payload.puref, puref2)
     }
     
     // MARK: - Helpers
@@ -118,8 +147,8 @@ final class CachedPaymentContextTests: XCTestCase {
     }
 }
 
-private typealias CachedContext = CachedPaymentContext<AnywayPayment.Element>
-private typealias CachedPayment = CachedAnywayPayment<AnywayPayment.Element>
+private typealias CachedContext = CachedPaymentContext<AnywayElement>
+private typealias CachedPayment = CachedAnywayPayment<AnywayElement>
 
 private func makeContext(
     payment: CachedPayment = makeCachedPayment(),
@@ -141,19 +170,4 @@ private func makeCachedPayment(
 ) -> CachedPayment {
     
     return .init(payment, using: { $0 })
-}
-
-private func makeAnywayPaymentContext(
-    payment: AnywayPayment = makeAnywayPayment(),
-    staged: AnywayPaymentStaged = [],
-    outline: AnywayPaymentOutline = makeAnywayPaymentOutline(),
-    shouldRestart: Bool = false
-) -> AnywayPaymentContext {
-    
-    return .init(
-        payment: payment,
-        staged: staged,
-        outline: outline,
-        shouldRestart: shouldRestart
-    )
 }

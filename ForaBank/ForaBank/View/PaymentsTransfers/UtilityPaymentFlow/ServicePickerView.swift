@@ -17,11 +17,14 @@ where Service: Identifiable,
     
     var body: some View {
         
-        List {
+        ScrollView(showsIndicators: false) {
             
-            ForEach(state, content: serviceView)
+            VStack(spacing: 16) {
+                
+                ForEach(state, content: serviceView)
+            }
+            .padding()
         }
-        .listStyle(.plain)
     }
 }
 
