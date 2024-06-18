@@ -48,8 +48,8 @@ public extension TransactionReducer {
         case (_, .dismissRecoverableError):
             reduceDismissRecoverableError(&state)
             
-        case let (.fraudSuspected(payment), .fraud(fraudEvent)):
-            reduceFraudSuspected(&state, &effect, with: payment, and: fraudEvent)
+        case let (.fraudSuspected, .fraud(fraudEvent)):
+            reduce(&state, with: fraudEvent)
             
         case (.fraudSuspected,_):
             break
@@ -87,7 +87,7 @@ public extension TransactionReducer {
     typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
     typealias Inspector = PaymentInspector<Payment, PaymentDigest, PaymentUpdate>
     
-    typealias State = Transaction<Payment, TransactionStatus<Payment, Report>>
+    typealias State = Transaction<Payment, TransactionStatus<Payment, PaymentUpdate, Report>>
     typealias Event = TransactionEvent<Report, PaymentEvent, PaymentUpdate>
     typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
 }
@@ -118,18 +118,19 @@ private extension TransactionReducer {
         state.status = nil
     }
     
-    func reduceFraudSuspected(
+    func reduce(
         _ state: inout State,
-        _ effect: inout Effect?,
-        with payment: Payment,
-        and fraudEvent: FraudEvent
+        with fraudEvent: FraudEvent
     ) {
+        guard case let .fraudSuspected(update) = state.status
+        else { return }
+        
         switch fraudEvent {
         case .cancel:
             state.status = .result(.failure(.fraud(.cancelled)))
             
-        case .continue:
-            updateState(&state, with: payment)
+        case .consent:
+            updateState(&state, with: update)
             
         case .expired:
             state.status = .result(.failure(.fraud(.expired)))
@@ -215,12 +216,11 @@ private extension TransactionReducer {
             
         case let .success(update):
             
-            let updated = updatePayment(state.context, update)
             if paymentInspector.checkFraud(update) {
                 // postpone payment update
-                state.status = .fraudSuspected(updated)
+                state.status = .fraudSuspected(update)
             } else {
-                updateState(&state, with: updated)
+                updateState(&state, with: update)
             }
         }
     }
@@ -247,10 +247,11 @@ private extension TransactionReducer {
     
     private func updateState(
         _ state: inout State,
-        with payment: Payment
+        with update: PaymentUpdate
     ) {
-        state.context = payment
-        state.isValid = paymentInspector.validatePayment(payment)
+        let updated = updatePayment(state.context, update)
+        state.context = updated
+        state.isValid = paymentInspector.validatePayment(updated)
         state.status = nil
     }
 }

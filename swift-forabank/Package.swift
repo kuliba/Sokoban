@@ -1060,6 +1060,8 @@ private extension Target {
             .customDump,
             .tagged,
             // internal modules
+            .anywayPaymentAdapters,
+            .anywayPaymentBackend,
             .anywayPaymentCore,
             .anywayPaymentDomain,
             .foraTools,

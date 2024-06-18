@@ -73,7 +73,7 @@ func isFinalStep(
 }
 
 func makeAmount(
-    _ amount: Decimal = Decimal(generateRandom11DigitNumber())/100
+    _ amount: Decimal = .init(Double.random(in: 1...1_000))
 ) -> Decimal {
     
     return amount
