@@ -71,20 +71,6 @@ final class CachedAnywayPaymentTests: XCTestCase {
         XCTAssertTrue(Payment(anywayPayment).isFinalStep)
     }
     
-    func test_init_shouldCreateInstanceWithIsFraudSuspectedFalseFromAnywayPaymentWithIsFraudSuspectedFalse() {
-        
-        let anywayPayment = makeAnywayPayment(isFraudSuspected: false)
-        
-        XCTAssertFalse(Payment(anywayPayment).isFraudSuspected)
-    }
-    
-    func test_init_shouldCreateInstanceWithIsFraudSuspectedTrueFromAnywayPaymentWithIsFraudSuspectedTrue() {
-        
-        let anywayPayment = makeAnywayPayment(isFraudSuspected: true)
-        
-        XCTAssertTrue(Payment(anywayPayment).isFraudSuspected)
-    }
-    
     func test_init_shouldCreateInstanceWithEmptyModelsFromAnywayPaymentWithEmptyElements() {
         
         let anywayPayment = makeAnywayPayment(elements: [])
@@ -237,26 +223,6 @@ final class CachedAnywayPaymentTests: XCTestCase {
         let updated = updating(payment, with: makeAnywayPayment(isFinalStep: true))
         
         XCTAssertTrue(updated.isFinalStep)
-    }
-    
-    func test_updating_shouldUpdateWithIsFraudSuspectedFalseFromAnywayPaymentWithIsFraudSuspectedFalse() {
-        
-        let payment = Payment(makeAnywayPayment(isFraudSuspected: true))
-        XCTAssertTrue(payment.isFraudSuspected)
-        
-        let updated = updating(payment, with: makeAnywayPayment(isFraudSuspected: false))
-        
-        XCTAssertFalse(updated.isFraudSuspected)
-    }
-    
-    func test_updating_shouldUpdateIsFraudSuspectedTrueFromAnywayPaymentIsFraudSuspectedTrue() {
-        
-        let payment = Payment(makeAnywayPayment(isFraudSuspected: false))
-        XCTAssertFalse(payment.isFraudSuspected)
-        
-        let updated = updating(payment, with: makeAnywayPayment(isFraudSuspected: true))
-        
-        XCTAssertTrue(updated.isFraudSuspected)
     }
     
     func test_updating_shouldUpdateWithEmptyModelsFromAnywayPaymentWithEmptyElements() {

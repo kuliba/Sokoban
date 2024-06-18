@@ -69,7 +69,7 @@ private extension AnywayPaymentTransactionReducerComposer {
     func composeInspector() -> Inspector {
         
         return .init(
-            checkFraud: { $0.payment.isFraudSuspected },
+            checkFraud: { $0.details.control.isFraudSuspected },
             getVerificationCode: { $0.payment.otp },
             makeDigest: { $0.makeDigest() },
             restorePayment: { $0.restorePayment() },
@@ -91,7 +91,7 @@ private extension AnywayPaymentTransactionReducerComposer {
     }
     
     typealias Effect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>
-    typealias Inspector = PaymentInspector<AnywayPaymentContext, AnywayPaymentDigest>
+    typealias Inspector = PaymentInspector<AnywayPaymentContext, AnywayPaymentDigest, AnywayPaymentUpdate>
 }
 
 private extension AnywayPaymentContext {

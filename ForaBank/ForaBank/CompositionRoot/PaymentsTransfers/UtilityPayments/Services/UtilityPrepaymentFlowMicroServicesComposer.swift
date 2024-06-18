@@ -315,8 +315,7 @@ private extension AnywayPaymentDomain.AnywayPayment {
             elements: [],
             footer: .continue,
             infoMessage: nil,
-            isFinalStep: false,
-            isFraudSuspected: false
+            isFinalStep: false
         )
         self = empty.update(with: update, and: outline)
     }
