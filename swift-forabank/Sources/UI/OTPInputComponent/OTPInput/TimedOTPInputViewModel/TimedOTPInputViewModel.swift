@@ -17,7 +17,7 @@ public final class TimedOTPInputViewModel: ObservableObject {
     @Published public private(set) var state: State
     
     private let viewModel: OTPInputViewModel
-    private var cancellable: AnyCancellable?
+    private var cancellables = Set<AnyCancellable>()
     
     public init(
         viewModel: OTPInputViewModel,
@@ -28,9 +28,10 @@ public final class TimedOTPInputViewModel: ObservableObject {
         self.state = viewModel.state
         self.viewModel = viewModel
         
-        cancellable = viewModel.$state
+        let statePublisher = viewModel.$state.share()
+        
+        statePublisher
             .removeDuplicates()
-            .handleEvents(receiveOutput: observe)
             .receive(on: scheduler)
             .sink { [weak self, viewModel, timer] state in
                 
@@ -56,6 +57,18 @@ public final class TimedOTPInputViewModel: ObservableObject {
                     }
                 }
             }
+            .store(in: &cancellables)
+        
+        statePublisher
+            .compactMap {
+                
+                guard case let .input(input) = $0.status else { return nil }
+                
+                return input.otpField.text
+            }
+            .removeDuplicates()
+            .sink(receiveValue: observe)
+            .store(in: &cancellables)
     }
 }
 
@@ -71,5 +84,5 @@ public extension TimedOTPInputViewModel {
     
     typealias State = OTPInputState
     typealias Event = OTPInputEvent
-    typealias Observe = (State) -> Void
+    typealias Observe = (String) -> Void
 }
