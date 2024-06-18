@@ -9,29 +9,32 @@ import PaymentComponents
 
 extension SelectConfig {
     
-    static let iFora: Self = .init(
-        title: "Title",
-        titleConfig: .secondary,
-        placeholder: "placeholder",
-        placeholderConfig: .placeholder,
-        backgroundIcon: .buttonSecondary,
-        foregroundIcon: .mainColorsWhite,
-        icon: .init(systemName: "circle"),
-        isSearchable: true,
-        optionConfig: .iFora
-    )
+    static func iFora(title: String, placeholder: String) -> Self{
+     
+        .init(
+            title: title,
+            titleConfig: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder),
+            placeholder: placeholder,
+            placeholderConfig: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder),
+            backgroundIcon: .clear,
+            foregroundIcon: .iconGray,
+            icon: .ic24FileHash,
+            isSearchable: true,
+            optionConfig: .iFora
+        )
+    }
 }
 
 extension SelectConfig.OptionConfig {
     
     static let iFora: Self = .init(
-        icon: .init(systemName: "circle"),
-        foreground: .mainColorsWhite,
-        background: .buttonSecondary,
-        selectIcon: .init(systemName: "checkmark"),
-        selectForeground: .textSecondary,
-        selectBackground: .buttonSecondary,
-        mainBackground: .buttonSecondary,
+        icon: .ic24RadioDefolt,
+        foreground: .buttonSecondaryHover,
+        background: .clear,
+        selectIcon: .ic24RadioChecked,
+        selectForeground: .buttonPrimary,
+        selectBackground: .clear,
+        mainBackground: .mainColorsGrayLightest,
         size: 24
     )
 }

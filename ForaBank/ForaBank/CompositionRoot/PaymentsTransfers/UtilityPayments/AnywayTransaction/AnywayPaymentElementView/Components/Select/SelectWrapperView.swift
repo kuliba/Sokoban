@@ -22,7 +22,7 @@ struct SelectWrapperView: View {
         SelectView(
             state: viewModel.state,
             event: viewModel.event(_:),
-            config: .iFora
+            config: .iFora(title: "Тип услуги", placeholder: "Выберите услугу")
         )
     }
 }
