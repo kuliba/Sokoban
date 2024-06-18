@@ -491,12 +491,7 @@ extension Model {
     func updateProduct(_ command: ServerCommands.ProductController.GetProductListByType, productType: ProductType) {
         
         getProducts(productType) { response in
-            
-            if let index = self.productsUpdating.value.firstIndex(of: productType) {
-                
-                self.productsUpdating.value.remove(at: index)
-            }
-            
+                        
             if let response {
                 
                 let result = Services.mapProductResponse(response)

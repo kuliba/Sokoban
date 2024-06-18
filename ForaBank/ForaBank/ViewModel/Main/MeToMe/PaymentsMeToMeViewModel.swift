@@ -358,22 +358,18 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     
                 case _ as PaymentsMeToMeAction.Response.Success:
                     if let productIdFrom = swapViewModel.productIdFrom,
-                       let productIdTo = swapViewModel.productIdTo {
-                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
-                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+                       let productIdTo = swapViewModel.productIdTo,
+                       let productFrom = model.product(productId: productIdFrom),
+                       let productTo = model.product(productId: productIdTo)
+                    {
                         
-                        switch mode {
-                        case .transferAndCloseDeposit, .closeDeposit, .demandDeposit:
-                            break
-                        default:
-                            if let productFrom = model.product(productId: productIdFrom) as? ProductDepositData, paymentsAmount.textField.value != productFrom.balanceValue {
-                                model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
-                            }
-                            else {
-                                if let productTo = model.product(productId: productIdTo), productTo is ProductDepositData {
-                                    model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
-                                }
-                            }
+                        if productTo.productType == productFrom.productType {
+                            
+                            model.action.send(ModelAction.Products.Update.ForProductType(productType: productTo.productType))
+
+                        } else {
+                            model.action.send(ModelAction.Products.Update.ForProductType(productType: productTo.productType))
+                            model.action.send(ModelAction.Products.Update.ForProductType(productType: productFrom.productType))
                         }
                     }
                     

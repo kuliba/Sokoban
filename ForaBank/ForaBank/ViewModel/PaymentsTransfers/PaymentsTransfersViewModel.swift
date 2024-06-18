@@ -1296,9 +1296,19 @@ private extension PaymentsTransfersViewModel {
               let productIdTo = meToMeViewModel?.swapViewModel.productIdTo
         else { return }
         
-        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
-        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
         
+        if let productFrom = model.product(productId: productIdFrom),
+           let productTo = model.product(productId: productIdTo)
+        {
+            if productTo.productType == productFrom.productType {
+                
+                model.action.send(ModelAction.Products.Update.ForProductType(productType: productTo.productType))
+            } else {
+                model.action.send(ModelAction.Products.Update.ForProductType(productType: productTo.productType))
+                model.action.send(ModelAction.Products.Update.ForProductType(productType: productFrom.productType))
+            }
+        }
+
         bind(successViewModel)
         fullCover = .init(type: .successMeToMe(successViewModel))
     }
