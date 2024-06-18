@@ -29,6 +29,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         let parameterTwo = makeAnywayPaymentParameter(id: "two", value: "TWO")
         let payment = makeAnywayPayment(parameters: [parameterOne, parameterTwo])
         let context = AnywayPaymentContext(
+            initial: makeAnywayPayment(),
             payment: payment,
             staged: [.init("one")],
             outline: makeAnywayPaymentOutline(["one": "one"]),
@@ -337,7 +338,13 @@ final class AnywayPaymentContextTests: XCTestCase {
     ) -> AnywayPaymentContext {
         
         let payment = makeAnywayPayment(elements: elements)
-        return .init(payment: payment, staged: staged, outline: outline, shouldRestart: shouldRestart)
+        return .init(
+            initial: payment,
+            payment: payment,
+            staged: staged,
+            outline: outline,
+            shouldRestart: shouldRestart
+        )
     }
     
     private func makeTwoParameters(

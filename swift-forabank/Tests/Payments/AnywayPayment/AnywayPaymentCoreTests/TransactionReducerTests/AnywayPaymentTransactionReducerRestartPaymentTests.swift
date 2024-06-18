@@ -55,11 +55,25 @@ final class AnywayPaymentTransactionReducerRestartPaymentTests: AnywayPaymentTra
         XCTAssertNoDiff(state.context.outline.fields, ["1": "009"], "Outline should be updated after `continue`")
         
         try restart_7_continue(&state, &states)
-        assertValue("00", forParameterID: "1", in: state)
+        XCTAssertNoDiff(state.elementIDs, []) // OR WHAT IS IN PAYMENT_RESET
         XCTAssertTrue(state.isValid)
         XCTAssertNoDiff(state.status, .inflight)
         XCTAssertTrue(state.context.shouldRestart)
-        XCTAssertNoDiff(state.context.staged, ["1", "4", "6", "8"])
+        XCTAssertNoDiff(state.context.staged, [])
+        XCTAssertNoDiff(state.context.outline.fields, [
+            "1": "00",
+            "4": "0720",
+            "6": "1000.15",
+            "8": "200.15",
+        ], "Outline should be updated after `continue`")
+        
+        try restart_8_confirm_update(&state, &states)
+        XCTAssertNoDiff(state.parameterIDs, ["1"])
+        assertValue("00", forParameterID: "1", in: state)
+        XCTAssertTrue(state.isValid)
+        XCTAssertNil(state.status)
+        XCTAssertFalse(state.context.shouldRestart)
+        XCTAssertNoDiff(state.context.staged, [])
         XCTAssertNoDiff(state.context.outline.fields, [
             "1": "00",
             "4": "0720",
@@ -180,6 +194,15 @@ final class AnywayPaymentTransactionReducerRestartPaymentTests: AnywayPaymentTra
     ) throws {
         
         reduce(&state, .continue)
+        states.append(state)
+    }
+    
+    private func restart_8_confirm_update(
+        _ state: inout State,
+        _ states: inout [State]
+    ) throws {
+        
+        try update(&state, with: .restartStep1)
         states.append(state)
     }
 }
