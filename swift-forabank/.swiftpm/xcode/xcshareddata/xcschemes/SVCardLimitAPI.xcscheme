@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ChangeSVCardLimitAPI"
-               BuildableName = "ChangeSVCardLimitAPI"
-               BlueprintName = "ChangeSVCardLimitAPI"
+               BlueprintIdentifier = "SVCardLimitAPI"
+               BuildableName = "SVCardLimitAPI"
+               BlueprintName = "SVCardLimitAPI"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -34,9 +34,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ChangeSVCardLimitAPITests"
-               BuildableName = "ChangeSVCardLimitAPITests"
-               BlueprintName = "ChangeSVCardLimitAPITests"
+               BlueprintIdentifier = "SVCardLimitAPITests"
+               BuildableName = "SVCardLimitAPITests"
+               BlueprintName = "SVCardLimitAPITests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
@@ -62,9 +62,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "ChangeSVCardLimitAPI"
-            BuildableName = "ChangeSVCardLimitAPI"
-            BlueprintName = "ChangeSVCardLimitAPI"
+            BlueprintIdentifier = "SVCardLimitAPI"
+            BuildableName = "SVCardLimitAPI"
+            BlueprintName = "SVCardLimitAPI"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

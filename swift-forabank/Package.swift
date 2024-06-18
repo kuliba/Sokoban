@@ -32,7 +32,7 @@ let package = Package(
         .utilityServicePrepayment,
         // Services
         .cardStatementAPI,
-        .changeSVCardLimitAPI,
+        .svCardLimitAPI,
         .cryptoSwaddler,
         .cvvPin,
         .cvvPIN_Services,
@@ -133,8 +133,8 @@ let package = Package(
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
-        .changeSVCardLimitAPI,
-        .changeSVCardLimitAPITests,
+        .svCardLimitAPI,
+        .svCardLimitAPITests,
         .cryptoSwaddler,
         .cryptoSwaddlerTests,
         .cvvPin,
@@ -605,10 +605,10 @@ private extension Product {
         ]
     )
     
-    static let changeSVCardLimitAPI = library(
-        name: .changeSVCardLimitAPI,
+    static let svCardLimitAPI = library(
+        name: .svCardLimitAPI,
         targets: [
-            .changeSVCardLimitAPI,
+            .svCardLimitAPI,
         ]
     )
 
@@ -1206,23 +1206,23 @@ private extension Target {
         ]
     )
     
-    static let changeSVCardLimitAPI = target(
-        name: .changeSVCardLimitAPI,
+    static let svCardLimitAPI = target(
+        name: .svCardLimitAPI,
         dependencies: [
             .remoteServices,
         ],
-        path: "Sources/\(String.changeSVCardLimitAPI)"
+        path: "Sources/\(String.svCardLimitAPI)"
     )
-    static let changeSVCardLimitAPITests = testTarget(
-        name: .changeSVCardLimitAPITests,
+    static let svCardLimitAPITests = testTarget(
+        name: .svCardLimitAPITests,
         dependencies: [
             // external packages
             .customDump,
             .combineSchedulers,
             // internal modules
-            .changeSVCardLimitAPI,
+            .svCardLimitAPI,
         ],
-        path: "Tests/\(String.changeSVCardLimitAPITests)"
+        path: "Tests/\(String.svCardLimitAPITests)"
         //TODO: add resources
     )
 
@@ -2428,8 +2428,8 @@ private extension Target.Dependency {
         name: .cardStatementAPI
     )
     
-    static let changeSVCardLimitAPI = byName(
-        name: .changeSVCardLimitAPI
+    static let svCardLimitAPI = byName(
+        name: .svCardLimitAPI
     )
 
     static let cryptoSwaddler = byName(
@@ -2671,8 +2671,8 @@ private extension String {
     static let cardStatementAPI = "CardStatementAPI"
     static let cardStatementAPITests = "CardStatementAPITests"
 
-    static let changeSVCardLimitAPI = "ChangeSVCardLimitAPI"
-    static let changeSVCardLimitAPITests = "ChangeSVCardLimitAPITests"
+    static let svCardLimitAPI = "SVCardLimitAPI"
+    static let svCardLimitAPITests = "SVCardLimitAPITests"
 
     static let cryptoSwaddler = "CryptoSwaddler"
     static let cryptoSwaddlerTests = "CryptoSwaddlerTests"
