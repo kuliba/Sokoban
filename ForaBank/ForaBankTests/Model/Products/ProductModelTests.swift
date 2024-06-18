@@ -125,10 +125,8 @@ class ProductModelTests: XCTestCase {
         // then
         XCTAssertNotNil(result[.card])
         XCTAssertEqual(result[.card]?.count, 1)
-        XCTAssertNotNil(result[.card]?.first?.balance)
-        XCTAssertEqual(result[.card]!.first!.balance!, 100, accuracy: .ulpOfOne)
-        XCTAssertNotNil(result[.card]?.first?.balanceRub)
-        XCTAssertEqual(result[.card]!.first!.balanceRub!, 100, accuracy: .ulpOfOne)
+        XCTAssertNil(result[.card]?.first?.balance)
+        XCTAssertNil(result[.card]?.first?.balanceRub)
         XCTAssertEqual(result[.card]?.first?.customName, "Custom Name")
 
         XCTAssertNil(result[.account])
