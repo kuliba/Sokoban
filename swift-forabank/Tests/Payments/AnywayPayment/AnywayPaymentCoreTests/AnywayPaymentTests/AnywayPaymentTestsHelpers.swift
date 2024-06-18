@@ -72,13 +72,6 @@ func isFinalStep(
     payment.isFinalStep
 }
 
-func isFraudSuspected(
-    _ payment: AnywayPayment
-) -> Bool {
-    
-    payment.isFraudSuspected
-}
-
 func makeAmount(
     _ amount: Decimal = Decimal(generateRandom11DigitNumber())/100
 ) -> Decimal {
@@ -104,7 +97,6 @@ func makeAnywayPaymentContext(
 func makeAnywayPayment(
     fields: [AnywayElement.Field],
     isFinalStep: Bool = false,
-    isFraudSuspected: Bool = false,
     core: AnywayElement.Widget.Product? = nil
 ) -> AnywayPayment {
     
@@ -115,8 +107,7 @@ func makeAnywayPayment(
     
     return makeAnywayPayment(
         elements: elements,
-        isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected
+        isFinalStep: isFinalStep
     )
 }
 
@@ -134,7 +125,6 @@ func makeAnywayPayment(
     parameters: [AnywayElement.Parameter],
     footer: AnywayPayment.Footer = .continue,
     isFinalStep: Bool = false,
-    isFraudSuspected: Bool = false,
     product: AnywayElement.Widget.Product? = nil
 ) -> AnywayPayment {
     
@@ -146,8 +136,7 @@ func makeAnywayPayment(
     return makeAnywayPayment(
         elements: elements,
         footer: footer,
-        isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected
+        isFinalStep: isFinalStep
     )
 }
 
@@ -155,16 +144,14 @@ func makeAnywayPayment(
     elements: [AnywayElement] = [],
     footer: AnywayPayment.Footer = .continue,
     infoMessage: String? = nil,
-    isFinalStep: Bool = false,
-    isFraudSuspected: Bool = false
+    isFinalStep: Bool = false
 ) -> AnywayPayment {
     
     return .init(
         elements: elements,
         footer: footer,
         infoMessage: infoMessage,
-        isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected
+        isFinalStep: isFinalStep
     )
 }
 
@@ -225,26 +212,6 @@ func makeAnywayPaymentWithoutAmount(
     
     let payment = makeAnywayPayment()
     XCTAssertFalse(hasAmountFooter(payment), "Expected no amount field.", file: file, line: line)
-    return payment
-}
-
-func makeAnywayPaymentWithFraudSuspected(
-    file: StaticString = #file,
-    line: UInt = #line
-) -> AnywayPayment {
-    
-    let payment = makeAnywayPayment(isFraudSuspected: true)
-    XCTAssert(isFraudSuspected(payment), "Expected fraud suspected payment.", file: file, line: line)
-    return payment
-}
-
-func makeAnywayPaymentWithoutFraudSuspected(
-    file: StaticString = #file,
-    line: UInt = #line
-) -> AnywayPayment {
-    
-    let payment = makeAnywayPayment()
-    XCTAssertFalse(isFraudSuspected(payment), "Expected pyament without fraud suspected.", file: file, line: line)
     return payment
 }
 
@@ -1050,8 +1017,7 @@ extension AnywayPayment {
             elements: elements,
             footer: footer,
             infoMessage: infoMessage,
-            isFinalStep: isFinalStep,
-            isFraudSuspected: isFraudSuspected
+            isFinalStep: isFinalStep
         )
     }
 }

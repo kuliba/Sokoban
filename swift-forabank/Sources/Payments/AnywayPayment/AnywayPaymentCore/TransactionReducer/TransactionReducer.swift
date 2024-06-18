@@ -85,7 +85,7 @@ public extension TransactionReducer {
     typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, Effect?) // or `PaymentEffect?`
     typealias StagePayment = (Payment) -> Payment
     typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
-    typealias Inspector = PaymentInspector<Payment, PaymentDigest>
+    typealias Inspector = PaymentInspector<Payment, PaymentDigest, PaymentUpdate>
     
     typealias State = Transaction<Payment, TransactionStatus<Payment, Report>>
     typealias Event = TransactionEvent<Report, PaymentEvent, PaymentUpdate>
@@ -214,9 +214,9 @@ private extension TransactionReducer {
             }
             
         case let .success(update):
-            let updated = updatePayment(state.context, update)
             
-            if paymentInspector.checkFraud(updated) {
+            let updated = updatePayment(state.context, update)
+            if paymentInspector.checkFraud(update) {
                 // postpone payment update
                 state.status = .fraudSuspected(updated)
             } else {
@@ -249,8 +249,8 @@ private extension TransactionReducer {
         _ state: inout State,
         with payment: Payment
     ) {
-        state.status = nil
         state.context = payment
         state.isValid = paymentInspector.validatePayment(payment)
+        state.status = nil
     }
 }

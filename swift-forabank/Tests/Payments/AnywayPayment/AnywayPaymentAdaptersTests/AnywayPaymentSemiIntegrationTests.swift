@@ -278,8 +278,7 @@ private func makeEmptyPayment(
         elements: [],
         footer: .continue,
         infoMessage: nil,
-        isFinalStep: false,
-        isFraudSuspected: false
+        isFinalStep: false
     )
 }
 

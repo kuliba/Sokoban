@@ -1133,9 +1133,9 @@ final class TransactionReducerTests: XCTestCase {
         let checkFraudSpy = CheckFraudSpy(response: false)
         let sut = makeSUT(checkFraud: checkFraudSpy.call)
         
-        let (updated, _) = sut.reduce(makeTransaction(), makeUpdateTransactionEvent(update))
+        _ = sut.reduce(makeTransaction(), makeUpdateTransactionEvent(update))
         
-        XCTAssertNoDiff(checkFraudSpy.payloads, [updated.context])
+        XCTAssertNoDiff(checkFraudSpy.payloads, [update])
     }
     
     func test_update_shouldNotChangeStateOnFraudSuspectedStatus() {
@@ -1353,7 +1353,7 @@ final class TransactionReducerTests: XCTestCase {
     private typealias Event = _TransactionEvent
     private typealias Effect = _TransactionEffect
     
-    private typealias CheckFraudSpy = CallSpy<Context, Bool>
+    private typealias CheckFraudSpy = CallSpy<PaymentUpdate, Bool>
     private typealias MakeDigestSpy = CallSpy<Context, PaymentDigest>
     private typealias GetVerificationCodeSpy = CallSpy<Context, VerificationCode?>
     private typealias PaymentReduceSpy = CallSpy<(Context, PaymentEvent), (Context, SUT.Effect?)>
@@ -1362,7 +1362,7 @@ final class TransactionReducerTests: XCTestCase {
     private typealias UpdatePaymentSpy = CallSpy<(Context, PaymentUpdate), Context>
     private typealias ValidatePaymentSpy = CallSpy<Context, Bool>
     
-    private typealias Inspector = PaymentInspector<Context, PaymentDigest>
+    private typealias Inspector = PaymentInspector<Context, PaymentDigest, PaymentUpdate>
     
     private func makeSUT(
         checkFraud: @escaping Inspector.CheckFraud = { _ in false },
