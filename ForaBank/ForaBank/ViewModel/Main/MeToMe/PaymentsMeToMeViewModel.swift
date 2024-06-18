@@ -368,8 +368,13 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             model.action.send(ModelAction.Products.Update.ForProductType(productType: productTo.productType))
 
                         } else {
-                            model.action.send(ModelAction.Products.Update.ForProductType(productType: productTo.productType))
-                            model.action.send(ModelAction.Products.Update.ForProductType(productType: productFrom.productType))
+                            
+                            let scheduler = DispatchQueue.global()
+                            let interval: TimeInterval = 0.5
+
+                            scheduler.schedule(after: .init(.now() + interval), { self.model.action.send(ModelAction.Products.Update.ForProductType(productType: productTo.productType)) })
+
+                            scheduler.schedule(after: .init(.now() + 2*interval), { self.model.action.send(ModelAction.Products.Update.ForProductType(productType: productFrom.productType)) })
                         }
                     }
                     

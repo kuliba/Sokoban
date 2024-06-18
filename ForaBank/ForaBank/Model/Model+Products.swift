@@ -455,14 +455,15 @@ extension Model {
             
             self.productsUpdating.value = Array(productsAllowed)
             
-            for productType in ProductType.allCases {
+            let scheduler = DispatchQueue.global()
+            let interval: TimeInterval = 0.5
+            
+            ProductType.allCases.enumerated().forEach { index, productType in
                 
-                guard productsAllowed.contains(productType) else {
-                    continue
+                if productsAllowed.contains(productType) {
+                    let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: productType)
+                    scheduler.schedule(after: .init(.now() + Double(index) * interval), { self.updateProduct(command, productType: productType) })
                 }
-                
-                let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: productType)
-                updateProduct(command, productType: productType)
             }
         }
     }
@@ -491,7 +492,8 @@ extension Model {
     
     func updateProduct(_ command: ServerCommands.ProductController.GetProductListByType, productType: ProductType) {
                 
-        ThrottleDecorator(delay: 0.5) { [weak self] in
+        DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(1)) {
+  [weak self] in
             
             guard let self else { return }
             
