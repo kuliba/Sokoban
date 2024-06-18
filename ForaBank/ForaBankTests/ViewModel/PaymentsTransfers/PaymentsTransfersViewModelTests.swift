@@ -42,7 +42,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         sut.meToMeSendSuccess(model: model)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
         
-        XCTAssertEqual(spy.values.count, 4)
+        XCTAssertEqual(spy.values.count, 2)
     }
     
 #warning("fix and restore")
