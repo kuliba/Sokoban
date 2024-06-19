@@ -17,6 +17,8 @@ import SwiftUI
 import Tagged
 import RxViewModel
 
+struct HistoryState {}
+
 class ProductProfileViewModel: ObservableObject {
     
     typealias CardAction = CardDomain.CardAction
@@ -33,6 +35,8 @@ class ProductProfileViewModel: ObservableObject {
     @Published var history: ProductProfileHistoryView.ViewModel?
     @Published var operationDetail: OperationDetailViewModel?
     @Published var accentColor: Color
+    
+    @Published var historyState: HistoryState? //Optional?
     
     @Published var bottomSheet: BottomSheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
@@ -210,16 +214,16 @@ class ProductProfileViewModel: ObservableObject {
                 
                 switch event {
                 case let .delayAlert(kind):
-                    self.event(.delayAlert(kind))
+                    self.event(.alert(.delayAlert(kind)))
                  
                 case let .delayAlertViewModel(alertViewModel):
-                    self.event(.delayAlertViewModel(alertViewModel))
+                    self.event(.alert(.delayAlertViewModel(alertViewModel)))
                     
                 case .closeAlert:
-                    self.event(.closeAlert)
+                    self.event(.alert(.closeAlert))
                     
                 case let .showAlert(alert):
-                    self.event(.showAlert(alert))
+                    self.event(.alert(.showAlert(alert)))
                 }
             }
         )!
@@ -1102,7 +1106,7 @@ private extension ProductProfileViewModel {
                             guard let card = productData?.asCard else { return }
                             
                             if card.cardType == .additionalOther {
-                                self.event(.delayAlert(.showTransferAdditionalOther))
+                                self.event(.alert(.delayAlert(.showTransferAdditionalOther)))
                             } else {
                                 self.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
                             }
@@ -1321,9 +1325,10 @@ private extension ProductProfileViewModel {
                                         self.showCvvByTap(
                                             cardId: cardId,
                                             completion: completion)
-                                    },
-                                    events: self.event(_:))
+                                    }
+                                )
                             )
+                            
                             self.link = .productInfo(productInfoViewModel)
                             self.bind(product: productInfoViewModel)
                             
@@ -2165,7 +2170,7 @@ extension ProductProfileViewModel {
         guard let card = productData?.asCard, let alertViewModel = alertBlockedCard(with: card) else {
             return
         }
-        event(.delayAlertViewModel(alertViewModel))
+        event(.alert(.delayAlertViewModel(alertViewModel)))
     }
     
     private func unblockCard(with productData: ProductData?) {
@@ -2199,7 +2204,7 @@ extension ProductProfileViewModel {
             
         case .changePin:
             if productCard.statusCard != .active {
-                event(.delayAlert(.showBlockAlert))
+                event(.alert(.delayAlert(.showBlockAlert)))
             } else {
                 checkCertificate(.init(productCard.id), certificate: self.cvvPINServicesClient, productCard)
             }
@@ -2435,7 +2440,7 @@ extension ProductProfileViewModel {
                 }
             }
         } else {
-            event(.delayAlert(.showBlockAlert))
+            event(.alert(.delayAlert(.showBlockAlert)))
         }
     }
     
@@ -2468,29 +2473,27 @@ extension ProductProfileViewModel {
             switch event {
                 
             case let .showAlert(alert):
-                self?.event(.showAlert(alert))
+                self?.event(.alert(.showAlert(alert)))
             case let .showBottomSheet(bottomSheet):
-                self?.event(.showBottomSheet(bottomSheet))
+                self?.event(.bottomSheet(.showBottomSheet(bottomSheet)))
             }
         }
     }
     
-    func event(_ event: AlertEvent) {
-
-        let (alert, effect) = productNavigationStateManager.alertReduce(alert, event)
-        alertSubject.send(alert)
-
-        if let effect {
-            
-            handleEffect(effect)
-        }
-    }
-    
-    func event(_ event: BottomSheetEvent) {
-
-        let (bottomSheet, effect) = productNavigationStateManager.bottomSheetReduce(bottomSheet, event)
-        bottomSheetSubject.send(bottomSheet)
-
+    func event(_ event: ProductProfileFlowEvent) {
+        
+        let state = ProductProfileFlowState(
+            alert: alert,
+            bottomSheet: bottomSheet,
+            history: historyState
+        )
+        
+        let (newState, effect) = productNavigationStateManager.reduce(state, event)
+        
+        alertSubject.send(newState.alert)
+        bottomSheetSubject.send(newState.bottomSheet)
+//        historySubject.send(newState.history)
+        
         if let effect {
             
             handleEffect(effect)
@@ -2511,8 +2514,8 @@ extension ProductProfileViewModel {
                     self.showCvvByTap(
                         cardId: cardId,
                         completion: completion)
-                },
-                events: self.event(_:))
+                }
+            )
         )
         self.link = .productInfo(productInfoViewModel)
         self.bind(product: productInfoViewModel)
@@ -2530,7 +2533,7 @@ extension ProductProfileViewModel {
     func showPaymentOurBank(_ productData: ProductCardData) {
         switch productData.cardType {
         case .additionalOther:
-            self.event(.delayAlert(.showServiceOnlyOwnerCard))
+            self.event(.alert(.delayAlert(.showServiceOnlyOwnerCard)))
             
         default:
             guard let viewModel = PaymentsMeToMeViewModel(
@@ -2540,14 +2543,14 @@ extension ProductProfileViewModel {
             
             self.bind(viewModel)
             
-            self.event(.delayBottomSheet(.init(type: .meToMe(viewModel))))
+            self.event(.bottomSheet(.delayBottomSheet(.init(type: .meToMe(viewModel)))))
         }
     }
     
     func showPaymentAnotherBank(_ productData: ProductCardData) {
         switch productData.cardType {
         case .additionalSelf, .additionalOther:
-            self.event(.delayAlert(.showServiceOnlyMainCard))
+            self.event(.alert(.delayAlert(.showServiceOnlyMainCard)))
             
         default:
             let meToMeExternalViewModel = MeToMeExternalViewModel(

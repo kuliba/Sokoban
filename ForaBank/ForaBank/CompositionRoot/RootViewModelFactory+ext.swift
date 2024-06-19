@@ -120,11 +120,18 @@ extension RootViewModelFactory {
             log: infoNetworkLog
         )
 
-        let productNavigationStateManager = makeProductNavigationStateManager(
-            alertsReduce: AlertReducer(productAlertsViewModel: .default),
-            bottomSheetReduce: BottomSheetReducer(),
-            handleEffect: ProductNavigationStateEffectHandler()
+        //TODO: extract to file
+        let ppfReducer = ProductProfileFlowReducer(
+            alertReduce: AlertReducer(productAlertsViewModel: .default).reduce,
+            bottomSheetReduce: BottomSheetReducer().reduce,
+            historyReduce: { state,_ in (state, nil) } //TODO: HistoryReducer().reduce
         )
+        
+        let productNavigationStateManager = ProductNavigationStateManager(
+            reduce: ppfReducer.reduce,
+            handleEffect: ProductNavigationStateEffectHandler().handleEffect
+        )
+        
         let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
             
             .init(

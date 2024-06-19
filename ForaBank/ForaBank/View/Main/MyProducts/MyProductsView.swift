@@ -186,7 +186,10 @@ struct MyProductsView_Previews: PreviewProvider {
         MyProductsView(
             viewModel: viewModel,
             viewFactory: .preview,
-            productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)),
+            productProfileViewFactory: .init(
+                makeHistoryButton: { _ in HistoryButtonView.init(active: true, event: { _ in }) },
+                makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)
+            ),
             getUImage: { _ in nil }
         )
     }

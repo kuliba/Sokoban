@@ -24,6 +24,7 @@ struct RootViewFactory {
     let makeUpdateInfoView: MakeUpdateInfoView
     let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
     let makePaymentCompleteView: MakePaymentCompleteView
+    let makeHistoryButtonView: () -> any View
 }
 
 extension RootViewFactory {
@@ -62,6 +63,7 @@ extension RootViewFactory {
 
 struct ProductProfileViewFactory {
     
+    let makeHistoryButton: (@escaping (HistoryEvent) -> Void) -> HistoryButtonView
     let makeActivateSliderView: MakeActivateSliderView
 }
 
@@ -70,7 +72,25 @@ extension RootViewFactory {
     var productProfileViewFactory: ProductProfileViewFactory {
  
         .init(
+            makeHistoryButton: { event in
+                HistoryButtonView(active: true, event: event)
+            },
             makeActivateSliderView: makeActivateSliderView
         )
+    }
+}
+
+struct HistoryButtonView: View {
+    
+    let active: Bool
+    let event: (HistoryEvent) -> Void
+    
+    var body: some View {
+        
+        if active {
+            Text("2")
+        } else {
+            EmptyView()
+        }
     }
 }

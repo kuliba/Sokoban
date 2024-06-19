@@ -7,23 +7,84 @@
 
 import SwiftUI
 
-struct ProductNavigationStateManager {
-    
-    let alertReduce: AlertReduce
-    let bottomSheetReduce: BottomSheetReduce
-    let handleEffect: HandleEffect
-}
+final class ProductProfileFlowReducer {
 
-extension ProductNavigationStateManager {
-    
+    typealias State = ProductProfileFlowState
+    typealias Event = ProductProfileFlowEvent
     typealias Effect = ProductNavigationStateEffect
-    typealias Event = ProductNavigationEvent
 
     typealias AlertReduce = (AlertState, AlertEvent) -> (AlertState, Effect?)
     typealias AlertState = Alert.ViewModel?
 
     typealias BottomSheetReduce = (BottomSheetState, BottomSheetEvent) -> (BottomSheetState, Effect?)
     typealias BottomSheetState = ProductProfileViewModel.BottomSheet?
+    
+    typealias HistoryReduce = (HistoryState?, HistoryEvent) -> (HistoryState?, Effect?)
+    
+    private let alertReduce: AlertReduce
+    private let bottomSheetReduce: BottomSheetReduce
+    private let historyReduce: HistoryReduce
+    
+    init(
+        alertReduce: @escaping AlertReduce,
+        bottomSheetReduce: @escaping BottomSheetReduce,
+        historyReduce: @escaping HistoryReduce
+    ) {
+        self.alertReduce = alertReduce
+        self.bottomSheetReduce = bottomSheetReduce
+        self.historyReduce = historyReduce
+    }
+    
+    func reduce(
+        _ state: State,
+        _ event: Event
+    ) -> (State, Effect?) {
+     
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case let .alert(alertEvent):
+            let alert: AlertState
+            (alert, effect) = alertReduce(state.alert, alertEvent)
+            state.alert = alert
+            
+        case let .bottomSheet(bottomEvent):
+            let bottomSheet: BottomSheetState
+            (bottomSheet, effect) = bottomSheetReduce(state.bottomSheet, bottomEvent)
+            state.bottomSheet = bottomSheet
+            
+        case let .history(historyEvent):
+            let history: HistoryState?
+            (history, effect) = historyReduce(state.history, historyEvent)
+            state.history = history
+        }
+        
+        return (state, effect)
+    }
+}
+
+struct ProductNavigationStateManager {
+    //TODO: rename ProductProfileFlowManager
+    
+    let reduce: Reduce
+    let handleEffect: HandleEffect
+    
+    internal init(
+        reduce: @escaping ProductNavigationStateManager.Reduce,
+        handleEffect: @escaping ProductNavigationStateManager.HandleEffect
+    ) {
+        self.reduce = reduce
+        self.handleEffect = handleEffect
+    }
+}
+
+extension ProductNavigationStateManager {
+    
+    typealias Reduce = (ProductProfileFlowState, ProductProfileFlowEvent) -> (ProductProfileFlowState, Effect?)
+    
+    typealias Effect = ProductNavigationStateEffect
+    typealias Event = ProductNavigationEvent
 
     typealias Dispatch = (Event) -> Void
     typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
@@ -51,7 +112,7 @@ enum BottomSheetEvent {
     case delayBottomSheet(ProductProfileViewModel.BottomSheet)
 }
 
-enum ProductNavigationStateEffect {
+enum ProductNavigationStateEffect { //TODO: rename ProductProfileFlowEffect
     
     case delayAlert(Alert.ViewModel, DispatchTimeInterval)
     case delayBottomSheet(ProductProfileViewModel.BottomSheet, DispatchTimeInterval)
@@ -60,8 +121,30 @@ enum ProductNavigationStateEffect {
 extension ProductNavigationStateManager {
     
     static let preview: Self = .init(
-        alertReduce: AlertReducer(alertLifespan: .microseconds(0), productAlertsViewModel: .default).reduce,
-        bottomSheetReduce: BottomSheetReducer(bottomSheetLifespan: .microseconds(0)).reduce,
+        reduce: { state,_ in (state, nil) },
         handleEffect: ProductNavigationStateEffectHandler().handleEffect
     )
+}
+
+struct ProductProfileFlowState {
+    
+    var alert: Alert.ViewModel?
+    var bottomSheet: ProductProfileViewModel.BottomSheet?
+    var history: HistoryState? //TODO: replace to type
+}
+
+enum ProductProfileFlowEvent {
+    case alert(AlertEvent)
+    case bottomSheet(BottomSheetEvent)
+    case history(HistoryEvent)
+}
+
+enum HistoryEvent: Equatable {
+    case button(ButtonEvent)
+    //case payload
+    
+    enum ButtonEvent: Equatable {
+        case calendar
+        case filter
+    }
 }
