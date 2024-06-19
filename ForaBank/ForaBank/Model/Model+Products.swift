@@ -456,14 +456,14 @@ extension Model {
             self.productsUpdating.value = Array(productsAllowed)
             
             let queue = DispatchQueue.global()
-            let interval: Int = 500
+            let interval: Int = 1 // seconds
             
             ProductType.allCases.enumerated().forEach { index, productType in
                 
                 if productsAllowed.contains(productType) {
                     let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: productType)
                     queue.delay(
-                        for: .milliseconds((1 + index) * interval),
+                        for: .seconds((1 + index) * interval),
                         execute: { self.updateProduct(command, productType: productType) })
                 }
             }
@@ -1460,24 +1460,24 @@ extension Model {
     func reloadProducts(
         productTo: ProductData,
         productFrom: ProductData,
-        _ timeIntervalMilliseconds: Int = 500,
+        _ timeIntervalInSeconds: Int = 1,
         _ queue: DispatchQueue = DispatchQueue.global()
     ) {
         if productTo.productType == productFrom.productType {
-            reloadProduct(productType: productTo.productType, timeIntervalMilliseconds, queue)
+            reloadProduct(productType: productTo.productType, timeIntervalInSeconds, queue)
         } else {
-            reloadProduct(productType: productTo.productType, timeIntervalMilliseconds, queue)
-            reloadProduct(productType: productFrom.productType, timeIntervalMilliseconds, queue)
+            reloadProduct(productType: productTo.productType, timeIntervalInSeconds, queue)
+            reloadProduct(productType: productFrom.productType, 2 * timeIntervalInSeconds, queue)
         }
     }
     
     func reloadProduct(
         productType: ProductType,
-        _ timeIntervalMilliseconds: Int = 500,
+        _ timeIntervalInSeconds: Int,
         _ queue: DispatchQueue = DispatchQueue.global()
     ) {
         queue.delay(
-            for: .milliseconds(timeIntervalMilliseconds),
+            for: .seconds(timeIntervalInSeconds),
             execute: { self.handleProductsUpdateTotalProduct(.init(productType: productType))})
     }
 }
