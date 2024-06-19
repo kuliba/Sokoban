@@ -2391,6 +2391,7 @@
 		83A9C6DE2C060ED0005EAF62 /* UpdateInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A9C6DD2C060ED0005EAF62 /* UpdateInfoView.swift */; };
 		83AB45262BAD9A9F0055A4E9 /* ProductProfileComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 83AB45252BAD9A9F0055A4E9 /* ProductProfileComponents */; };
 		83AB45292BADB9170055A4E9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83AB45282BADB9170055A4E9 /* Preview Assets.xcassets */; };
+		83AE35452C22F6360079272A /* Model+reloadProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83AE35442C22F6360079272A /* Model+reloadProducts.swift */; };
 		83B2B8842AE7A90500DAD486 /* PhoneNumberWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 83B2B8832AE7A90500DAD486 /* PhoneNumberWrapper */; };
 		83B2B8892AE94E2A00DAD486 /* ContactsListSectionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B2B8882AE94E2A00DAD486 /* ContactsListSectionViewModelTests.swift */; };
 		83B377462A0D2F9E00A8618E /* GetProcessingSessionCodeGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 83B377452A0D2F9200A8618E /* GetProcessingSessionCodeGeneric.json */; };
@@ -5364,6 +5365,7 @@
 		83A9C6DB2C060010005EAF62 /* UpdateInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateInfo.swift; sourceTree = "<group>"; };
 		83A9C6DD2C060ED0005EAF62 /* UpdateInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateInfoView.swift; sourceTree = "<group>"; };
 		83AB45282BADB9170055A4E9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		83AE35442C22F6360079272A /* Model+reloadProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+reloadProducts.swift"; sourceTree = "<group>"; };
 		83B2B8882AE94E2A00DAD486 /* ContactsListSectionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsListSectionViewModelTests.swift; sourceTree = "<group>"; };
 		83B377452A0D2F9200A8618E /* GetProcessingSessionCodeGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProcessingSessionCodeGeneric.json; sourceTree = "<group>"; };
 		83B377472A0D2FDC00A8618E /* GetProcessingSessionCodeError.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProcessingSessionCodeError.json; sourceTree = "<group>"; };
@@ -12223,6 +12225,7 @@
 				77C3829027E0CA2200B5246E /* Model+General.swift */,
 				770DCE8E27BBE6AB004099C1 /* Model+Auth.swift */,
 				7769F5C127D8AC4800F80607 /* Model+Products.swift */,
+				83AE35442C22F6360079272A /* Model+reloadProducts.swift */,
 				5066506E2857D9130039A745 /* Model+Account.swift */,
 				0C4B0BBB28623DD5004B7F69 /* Model+FastPaymentSettings.swift */,
 				0CEA32002875D8E7005B80BA /* Model+CurrencyWallet.swift */,
@@ -18822,6 +18825,7 @@
 				774A8B6A2865FE5C00B81140 /* ProductProfileDetailViewComponent.swift in Sources */,
 				68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */,
 				503F074D28252D3B00E84A77 /* DepositCalculatorView.swift in Sources */,
+				83AE35452C22F6360079272A /* Model+reloadProducts.swift in Sources */,
 				2AB63F382B26F8060086B5EB /* SberQRServices.swift in Sources */,
 				77517FCE27A97913005CFB77 /* ColorData.swift in Sources */,
 				0CF3D7192836E141001A1BEA /* PTSectionPaymentsViewComponent.swift in Sources */,
