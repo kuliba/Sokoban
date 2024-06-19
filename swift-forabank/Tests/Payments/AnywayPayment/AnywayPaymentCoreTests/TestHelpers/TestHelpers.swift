@@ -285,7 +285,11 @@ func makeTransaction(
     status: _TransactionStatus? = nil
 ) -> _Transaction {
     
-    .init(context: context, isValid: isValid, status: status)
+    return .init(
+        context: context,
+        isValid: isValid,
+        status: status
+    )
 }
 
 func makeResponse(

@@ -7,9 +7,9 @@
 
 import AnywayPaymentDomain
 
-extension AnywayPaymentContext {
+public extension AnywayPaymentContext {
     
-    public func restorePayment() -> Self {
+    func restorePayment() -> Self {
         
         guard !staged.isEmpty else { return self }
         
@@ -22,6 +22,7 @@ private extension AnywayPaymentContext {
     func updating(payment: AnywayPayment) -> Self {
         
         return .init(
+            initial: initial,
             payment: payment,
             staged: staged,
             outline: outline,

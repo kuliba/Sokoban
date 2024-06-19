@@ -225,4 +225,16 @@ class AnywayPaymentTransactionReducerTests: XCTestCase {
             file: file, line: line
         )
     }
+    
+    func assertValue(
+        _ value: String?,
+        forParameterID id: String,
+        in state: State,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let field = state.parameters.first(where: { $0.field.id == id })?.field
+        
+        XCTAssertNoDiff(field?.value, value, "Expected \(String(describing: value)), but got \(String(describing: field?.id)) instead.", file: file, line: line)
+    }
 }

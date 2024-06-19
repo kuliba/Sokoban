@@ -103,11 +103,12 @@ private extension TransactionReducer {
         
         if shouldRestartPayment {
             state.context.shouldRestart = true
-            state.status = nil
         } else {
             state.context = paymentInspector.restorePayment(state.context)
-            state.status = nil
+            state.isValid = paymentInspector.validatePayment(state.context)
         }
+        
+        state.status = nil
     }
     
     func reduceDismissRecoverableError(
@@ -171,16 +172,31 @@ private extension TransactionReducer {
         _ state: inout State,
         _ effect: inout Effect?
     ) {
-        guard state.isValid, state.status == nil else { return }
+        guard state.status == nil else {
+#if DEBUG
+            print("\(String(describing: self)): can't continue with status \(String(describing: state.status))")
+#endif
+            return
+        }
+        
+        guard state.isValid else {
+#if DEBUG
+            print("\(String(describing: self)): can't continue with invalid transaction")
+#endif
+            return
+        }
         
         state.context = stagePayment(state.context)
         
         if let verificationCode = paymentInspector.getVerificationCode(state.context) {
+            
             effect = .makePayment(verificationCode)
         } else {
+            
             let digest = paymentInspector.makeDigest(state.context)
             
             if state.context.shouldRestart {
+                state.context = paymentInspector.resetPayment(state.context)
                 effect = .initiatePayment(digest)
             } else {
                 effect = .continue(digest)
@@ -204,6 +220,8 @@ private extension TransactionReducer {
         _ state: inout State,
         with updateResult: Event.UpdatePaymentResult
     ) {
+        state.context.shouldRestart = false
+        
         switch updateResult {
         case let .failure(serviceFailure):
             switch serviceFailure {

@@ -80,6 +80,7 @@ func makeAmount(
 }
 
 func makeAnywayPaymentContext(
+    initial: AnywayPayment = makeAnywayPayment(),
     payment: AnywayPayment = makeAnywayPayment(),
     staged: AnywayPaymentStaged = [],
     outline: AnywayPaymentOutline = makeAnywayPaymentOutline(),
@@ -87,6 +88,7 @@ func makeAnywayPaymentContext(
 ) -> AnywayPaymentContext {
     
     return .init(
+        initial: initial,
         payment: payment,
         staged: staged,
         outline: outline,
@@ -1001,6 +1003,7 @@ extension AnywayPaymentContext {
     func updating(payment: AnywayPayment) -> Self {
         
         return .init(
+            initial: initial,
             payment: payment,
             staged: staged,
             outline: outline,
