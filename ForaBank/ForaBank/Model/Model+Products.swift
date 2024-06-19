@@ -455,14 +455,16 @@ extension Model {
             
             self.productsUpdating.value = Array(productsAllowed)
             
-            let scheduler = DispatchQueue.global()
-            let interval: TimeInterval = 0.5
+            let queue = DispatchQueue.global()
+            let interval: Int = 500
             
             ProductType.allCases.enumerated().forEach { index, productType in
                 
                 if productsAllowed.contains(productType) {
                     let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: productType)
-                    scheduler.schedule(after: .init(.now() + Double(index) * interval), { self.updateProduct(command, productType: productType) })
+                    queue.delay(
+                        for: .milliseconds((1 + index) * interval),
+                        execute: { self.updateProduct(command, productType: productType) })
                 }
             }
         }
@@ -1450,6 +1452,33 @@ extension Model {
             
             throw ModelProductsError.cacheClearErrors(errors)
         }
+    }
+}
+
+extension Model {
+    
+    func reloadProducts(
+        productTo: ProductData,
+        productFrom: ProductData,
+        _ timeIntervalMilliseconds: Int = 500,
+        _ queue: DispatchQueue = DispatchQueue.global()
+    ) {
+        if productTo.productType == productFrom.productType {
+            reloadProduct(productType: productTo.productType, timeIntervalMilliseconds, queue)
+        } else {
+            reloadProduct(productType: productTo.productType, timeIntervalMilliseconds, queue)
+            reloadProduct(productType: productFrom.productType, timeIntervalMilliseconds, queue)
+        }
+    }
+    
+    func reloadProduct(
+        productType: ProductType,
+        _ timeIntervalMilliseconds: Int = 500,
+        _ queue: DispatchQueue = DispatchQueue.global()
+    ) {
+        queue.delay(
+            for: .milliseconds(timeIntervalMilliseconds),
+            execute: { self.handleProductsUpdateTotalProduct(.init(productType: productType))})
     }
 }
 

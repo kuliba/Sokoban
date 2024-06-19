@@ -1518,19 +1518,10 @@ private extension ProductProfileViewModel {
                        let productFrom = model.product(productId: productIdFrom),
                        let productTo = model.product(productId: productIdTo)
                     {
-                        
-                        if productTo.productType == productFrom.productType {
-                            model.action.send(ModelAction.Products.Update.ForProductType(productType: productTo.productType))
-
-                        } else {
-                            
-                            let scheduler = DispatchQueue.global()
-                            let interval: TimeInterval = 0.5
-
-                            scheduler.schedule(after: .init(.now() + interval), { self.model.action.send(ModelAction.Products.Update.ForProductType(productType: productTo.productType)) })
-
-                            scheduler.schedule(after: .init(.now() + 2*interval), { self.model.action.send(ModelAction.Products.Update.ForProductType(productType: productFrom.productType)) })
-                        }
+                        model.reloadProducts(
+                            productTo: productTo,
+                            productFrom: productFrom
+                        )
                     }
                     
                     self.bind(payload.viewModel)
