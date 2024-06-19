@@ -9,6 +9,8 @@ import Combine
 import SwiftUI
 import UIPrimitives
 
+// MARK: - for preview app
+
 public struct LandingView: View {
     
     @StateObject private var viewModel: LandingViewModel
@@ -16,7 +18,6 @@ public struct LandingView: View {
     @State private var scrollViewContentSize: CGSize = .zero
     
     private let action: (LandingEvent) -> Void
-    private let openURL: (URL) -> Void
     private let images: [String: Image]
     private let makeIconView: MakeIconView
     
@@ -24,13 +25,11 @@ public struct LandingView: View {
         viewModel: LandingViewModel,
         images: [String: Image],
         action: @escaping (LandingEvent) -> Void,
-        openURL: @escaping (URL) -> Void,
         makeIconView: @escaping MakeIconView
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
         self.images = images
         self.action = action
-        self.openURL = openURL
         self.makeIconView = makeIconView
     }
     
@@ -327,7 +326,6 @@ struct LandingUIView_Previews: PreviewProvider {
             ),
             images: .defaultValue,
             action: { _ in },
-            openURL: { _ in },
             makeIconView: { _ in .init(
                 image: .flag,
                 publisher: Just(.percent).eraseToAnyPublisher()

@@ -15,6 +15,7 @@ public enum LandingEvent: Equatable {
     public enum Card: Equatable {
         
         case goToMain
+        case openUrl(String)
         case order(cardTarif: Int, cardType: Int)
     }
     

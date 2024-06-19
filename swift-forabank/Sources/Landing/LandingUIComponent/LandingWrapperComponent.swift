@@ -76,9 +76,12 @@ public final class LandingWrapperViewModel: ObservableObject {
             
         case .card(let card):
             switch card {
-                
             case .goToMain:
                 self.landingActions(.card(.goToMain))
+                
+            case let .openUrl(link):
+                self.landingActions(.card(.openUrl(link)))
+                
             case .order(cardTarif: let cardTarif, cardType: let cardType):
                 self.landingActions(.card(.order(cardTarif: cardTarif, cardType: cardType)))
             }
@@ -144,7 +147,6 @@ public struct LandingWrapperView: View {
             viewModel: .init(landing: landing, config: config),
             images: images,
             action: viewModel.action,
-            openURL: { openURL($0) },
             makeIconView: viewModel.makeIconView
         )
     }
