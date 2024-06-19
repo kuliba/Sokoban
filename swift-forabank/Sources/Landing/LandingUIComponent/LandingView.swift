@@ -264,9 +264,12 @@ extension LandingView {
                 ListHorizontalRectangleImageView(
                     model: .init(
                         data: model,
-                        images: images),
-                    config: config.listHorizontalRectangleImage,
-                    selectDetail: selectDetail)
+                        images: images,
+                        action: action,
+                        selectDetail: selectDetail
+                    ),
+                    config: config.listHorizontalRectangleImage
+                )
                 
             case let .list(.horizontalRectangleLimits(model)):
                 ListHorizontalRectangleLimitsView(
