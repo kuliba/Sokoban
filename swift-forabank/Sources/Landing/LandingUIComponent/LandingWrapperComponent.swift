@@ -108,9 +108,7 @@ public final class LandingWrapperViewModel: ObservableObject {
 }
 
 public struct LandingWrapperView: View {
-    
-    @Environment(\.openURL) private var openURL
-    
+        
     @ObservedObject private var viewModel: LandingWrapperViewModel
     
     public init(viewModel: LandingWrapperViewModel) {
