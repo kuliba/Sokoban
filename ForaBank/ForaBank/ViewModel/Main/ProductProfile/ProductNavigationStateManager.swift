@@ -42,6 +42,7 @@ final class ProductProfileFlowReducer {
      
         var state = state
         var effect: Effect?
+        state.alert = nil
         
         switch event {
         case let .alert(alertEvent):
@@ -121,7 +122,11 @@ enum ProductNavigationStateEffect { //TODO: rename ProductProfileFlowEffect
 extension ProductNavigationStateManager {
     
     static let preview: Self = .init(
-        reduce: { state,_ in (state, nil) },
+        reduce: ProductProfileFlowReducer(
+            alertReduce: AlertReducer(alertLifespan: .microseconds(0), productAlertsViewModel: .default).reduce,
+            bottomSheetReduce: BottomSheetReducer(bottomSheetLifespan: .microseconds(0)).reduce,
+            historyReduce: { state,_ in (state, nil) }
+        ).reduce,
         handleEffect: ProductNavigationStateEffectHandler().handleEffect
     )
 }

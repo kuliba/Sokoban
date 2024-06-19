@@ -1325,7 +1325,8 @@ private extension ProductProfileViewModel {
                                         self.showCvvByTap(
                                             cardId: cardId,
                                             completion: completion)
-                                    }
+                                    },
+                                    events: { event in self.event(.alert(event)) }
                                 )
                             )
                             
@@ -2514,7 +2515,8 @@ extension ProductProfileViewModel {
                     self.showCvvByTap(
                         cardId: cardId,
                         completion: completion)
-                }
+                },
+                events: { event in self.event(.alert(event)) }
             )
         )
         self.link = .productInfo(productInfoViewModel)
