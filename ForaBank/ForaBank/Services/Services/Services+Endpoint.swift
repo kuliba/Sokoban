@@ -91,6 +91,7 @@ extension Services {
             case getSberQRData
             case getStickerPayment
             case getSvgImageList
+            case getVerificationCode
             case makeSetBankDefault
             case makeTransfer
             case prepareSetBankDefault
@@ -314,6 +315,12 @@ extension Services.Endpoint {
         pathPrefix: .dict,
         version: .v2,
         serviceName: .getJsonAbroad
+    )
+    
+    static let getVerificationCode: Self = .init(
+        pathPrefix: .transfer,
+        version: .v2,
+        serviceName: .getVerificationCode
     )
     
     static let makeSetBankDefault: Self = .init(

@@ -27,6 +27,9 @@ public extension TransactionEffectHandler {
         case let .continue(digest):
             process(digest, dispatch)
             
+        case .getVerificationCode:
+            getVerificationCode(dispatch)
+            
         case let .initiatePayment(digest):
             initiatePayment(digest, dispatch)
             
@@ -34,7 +37,7 @@ public extension TransactionEffectHandler {
             makePayment(verificationCode, dispatch)
             
         case let .payment(effect):
-            handle(effect, dispatch)
+            handlePaymentEffect(effect, dispatch)
         }
     }
 }
@@ -51,15 +54,24 @@ public extension TransactionEffectHandler {
 
 private extension TransactionEffectHandler {
     
-    func process(
-        _ digest: PaymentDigest,
+    func getVerificationCode(
         _ dispatch: @escaping Dispatch
     ) {
-        microServices.processPayment(digest) { [weak self] in
+        microServices.getVerificationCode {
+            
+            dispatch(.verificationCode(.receive($0)))
+        }
+    }
+    
+    func handlePaymentEffect(
+        _ paymentEffect: PaymentEffect,
+        _ dispatch: @escaping Dispatch
+    ) {
+        microServices.paymentEffectHandle(paymentEffect) { [weak self] in
             
             guard self != nil else { return }
             
-            dispatch(.updatePayment($0))
+            dispatch(.payment($0))
         }
     }
     
@@ -87,15 +99,15 @@ private extension TransactionEffectHandler {
         }
     }
     
-    func handle(
-        _ paymentEffect: PaymentEffect,
+    func process(
+        _ digest: PaymentDigest,
         _ dispatch: @escaping Dispatch
     ) {
-        microServices.paymentEffectHandle(paymentEffect) { [weak self] in
+        microServices.processPayment(digest) { [weak self] in
             
             guard self != nil else { return }
             
-            dispatch(.payment($0))
+            dispatch(.updatePayment($0))
         }
     }
 }

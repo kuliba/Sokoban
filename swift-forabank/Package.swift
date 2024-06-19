@@ -32,7 +32,7 @@ let package = Package(
         .utilityServicePrepayment,
         // Services
         .cardStatementAPI,
-        .changeSVCardLimitAPI,
+        .svCardLimitAPI,
         .cryptoSwaddler,
         .cvvPin,
         .cvvPIN_Services,
@@ -62,9 +62,10 @@ let package = Package(
         .uiPrimitives,
         .userAccountNavigationComponent,
         // UI Components
+        .carouselComponent,
         .paymentComponents,
         .productProfileComponents,
-        .carouselComponent,
+        .selectorComponent,
         // Utilities
         .remoteServices,
         // tools
@@ -132,8 +133,8 @@ let package = Package(
         // Services
         .cardStatementAPI,
         .cardStatementAPITests,
-        .changeSVCardLimitAPI,
-        .changeSVCardLimitAPITests,
+        .svCardLimitAPI,
+        .svCardLimitAPITests,
         .cryptoSwaddler,
         .cryptoSwaddlerTests,
         .cvvPin,
@@ -209,6 +210,8 @@ let package = Package(
         .nameComponent,
         .selectComponent,
         .selectComponentTests,
+        .selectorComponent,
+        .selectorComponentTests,
         .inputPhoneComponent,
         .inputComponent,
         .paymentComponents,
@@ -491,6 +494,14 @@ private extension Product {
     
     // MARK: - UI Components
     
+    static let carouselComponent = library(
+        name: .carouselComponent,
+        targets: [
+            .carouselComponent,
+            .rxViewModel
+        ]
+    )
+    
     static let paymentComponents = library(
         name: .paymentComponents,
         targets: [
@@ -499,13 +510,14 @@ private extension Product {
             .carouselComponent,
             .checkBoxComponent,
             .footerComponent,
-            .nameComponent,
-            .selectComponent,
+            .infoComponent,
             .inputComponent,
             .inputPhoneComponent,
-            .infoComponent,
+            .nameComponent,
             .paymentComponents,
             .productSelectComponent,
+            .selectComponent,
+//            .selectorComponent,
             .sharedConfigs,
         ]
     )
@@ -522,12 +534,11 @@ private extension Product {
             .topUpCardUI,
         ]
     )
-
-    static let carouselComponent = library(
-        name: .carouselComponent,
+    
+    static let selectorComponent = library(
+        name: .selectorComponent,
         targets: [
-            .carouselComponent,
-            .rxViewModel
+            .selectorComponent,
         ]
     )
     
@@ -594,10 +605,10 @@ private extension Product {
         ]
     )
     
-    static let changeSVCardLimitAPI = library(
-        name: .changeSVCardLimitAPI,
+    static let svCardLimitAPI = library(
+        name: .svCardLimitAPI,
         targets: [
-            .changeSVCardLimitAPI,
+            .svCardLimitAPI,
         ]
     )
 
@@ -1049,6 +1060,8 @@ private extension Target {
             .customDump,
             .tagged,
             // internal modules
+            .anywayPaymentAdapters,
+            .anywayPaymentBackend,
             .anywayPaymentCore,
             .anywayPaymentDomain,
             .foraTools,
@@ -1070,10 +1083,15 @@ private extension Target {
     static let anywayPaymentUI = target(
         name: .anywayPaymentUI,
         dependencies: [
+            // external packages
+            .combineSchedulers,
+            // internal modules
             .anywayPaymentCore,
             .anywayPaymentDomain,
+            .foraTools,
             .paymentComponents,
             .rxViewModel,
+            .uiPrimitives,
         ],
         path: "Sources/Payments/AnywayPayment/\(String.anywayPaymentUI)"
     )
@@ -1081,6 +1099,7 @@ private extension Target {
         name: .anywayPaymentUITests,
         dependencies: [
             // external packages
+            .combineSchedulers,
             .customDump,
             .tagged,
             // internal modules
@@ -1189,23 +1208,23 @@ private extension Target {
         ]
     )
     
-    static let changeSVCardLimitAPI = target(
-        name: .changeSVCardLimitAPI,
+    static let svCardLimitAPI = target(
+        name: .svCardLimitAPI,
         dependencies: [
             .remoteServices,
         ],
-        path: "Sources/\(String.changeSVCardLimitAPI)"
+        path: "Sources/\(String.svCardLimitAPI)"
     )
-    static let changeSVCardLimitAPITests = testTarget(
-        name: .changeSVCardLimitAPITests,
+    static let svCardLimitAPITests = testTarget(
+        name: .svCardLimitAPITests,
         dependencies: [
             // external packages
             .customDump,
             .combineSchedulers,
             // internal modules
-            .changeSVCardLimitAPI,
+            .svCardLimitAPI,
         ],
-        path: "Tests/\(String.changeSVCardLimitAPITests)"
+        path: "Tests/\(String.svCardLimitAPITests)"
         //TODO: add resources
     )
 
@@ -1624,7 +1643,9 @@ private extension Target {
             .combineSchedulers,
             .tagged,
             // internal modules
+            .foraTools,
             .rxViewModel,
+            .sharedConfigs,
             .uiPrimitives,
         ],
         path: "Sources/UI/\(String.otpInputComponent)"
@@ -1700,8 +1721,8 @@ private extension Target {
     static let rxViewModel = target(
         name: .rxViewModel,
         dependencies: [
-            // external packages
-            .combineSchedulers,
+            // internal packages
+            .foraTools,
         ],
         path: "Sources/UI/\(String.rxViewModel)"
     )
@@ -1902,6 +1923,28 @@ private extension Target {
         path: "Tests/UI/Components/\(String.selectComponentTests)"
     )
     
+    static let selectorComponent = target(
+        name: .selectorComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.selectorComponent)"
+    )
+    
+    static let selectorComponentTests = testTarget(
+        name: .selectorComponentTests,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            .customDump,
+            .tagged,
+            .rxViewModel,
+            // internal modules
+            .selectorComponent,
+        ],
+        path: "Tests/UI/Components/\(String.selectorComponentTests)"
+    )
+    
     static let inputPhoneComponent = target(
         name: .inputPhoneComponent,
         dependencies: [
@@ -1940,6 +1983,7 @@ private extension Target {
             .productSelectComponent,
             .rxViewModel,
             .selectComponent,
+            .selectorComponent,
             .sharedConfigs,
         ],
         path: "Sources/UI/Components/\(String.paymentComponents)"
@@ -2298,6 +2342,10 @@ private extension Target.Dependency {
         name: .selectComponent
     )
      
+    static let selectorComponent = byName(
+        name: .selectorComponent
+    )
+     
     static let inputPhoneComponent = byName(
         name: .inputPhoneComponent
     )
@@ -2382,8 +2430,8 @@ private extension Target.Dependency {
         name: .cardStatementAPI
     )
     
-    static let changeSVCardLimitAPI = byName(
-        name: .changeSVCardLimitAPI
+    static let svCardLimitAPI = byName(
+        name: .svCardLimitAPI
     )
 
     static let cryptoSwaddler = byName(
@@ -2563,6 +2611,9 @@ private extension String {
     static let selectComponent = "SelectComponent"
     static let selectComponentTests = "SelectComponentTests"
     
+    static let selectorComponent = "SelectorComponent"
+    static let selectorComponentTests = "SelectorComponentTests"
+    
     static let inputComponent = "InputComponent"
     
     static let inputPhoneComponent = "InputPhoneComponent"
@@ -2622,8 +2673,8 @@ private extension String {
     static let cardStatementAPI = "CardStatementAPI"
     static let cardStatementAPITests = "CardStatementAPITests"
 
-    static let changeSVCardLimitAPI = "ChangeSVCardLimitAPI"
-    static let changeSVCardLimitAPITests = "ChangeSVCardLimitAPITests"
+    static let svCardLimitAPI = "SVCardLimitAPI"
+    static let svCardLimitAPITests = "SVCardLimitAPITests"
 
     static let cryptoSwaddler = "CryptoSwaddler"
     static let cryptoSwaddlerTests = "CryptoSwaddlerTests"

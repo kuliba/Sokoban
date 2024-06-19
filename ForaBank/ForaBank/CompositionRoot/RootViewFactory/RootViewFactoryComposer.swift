@@ -112,9 +112,7 @@ private extension RootViewFactoryComposer {
     ) -> AnywayPaymentFactory<IconView> {
         
         let composer = AnywayPaymentFactoryComposer(
-            config: .iFora,
             currencyOfProduct: currencyOfProduct,
-            getProducts: model.productSelectProducts,
             makeIconView: makeIconView
         )
         
@@ -153,7 +151,7 @@ private extension RootViewFactoryComposer {
         )
     }
     
-    typealias TransactionResult = UtilityServicePaymentFlowState<CachedAnywayTransactionViewModel>.FullScreenCover.TransactionResult
+    typealias TransactionResult = UtilityServicePaymentFlowState<AnywayTransactionViewModel>.FullScreenCover.TransactionResult
     
     private func map(
         _ result: TransactionResult

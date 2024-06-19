@@ -423,7 +423,20 @@ extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
     
     static let step1: Self = .make(
         parametersForNextStep: [
-            .make(id: "1", title: "Лицевой счет (\"1111\" = ошибка, \"2222\" = финальная ошибка, другое = ok)")
+            .make(id: "1", title: "Лицевой счет (\"1111\" = ошибка, \"2222\" = финальная ошибка, другое = ok)"),
+            .make(
+                dataType: .pairs(
+                    .init(key: "a", value: "A"), [
+                        .init(key: "a", value: "A"),
+                        .init(key: "b", value: "B"),
+                        .init(key: "c", value: "C"),
+                        .init(key: "d", value: "D"),
+                    ]
+                ),
+                id: "select", 
+                title: "select",
+                type: .select
+            )
         ]
     )
     

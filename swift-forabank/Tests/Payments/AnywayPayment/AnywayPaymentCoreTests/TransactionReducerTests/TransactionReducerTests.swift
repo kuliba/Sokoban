@@ -35,9 +35,11 @@ final class TransactionReducerTests: XCTestCase {
     
     func test_completePayment_shouldNotChangeFraudSuspectedStatusStateOnReportFailure() {
         
+        let context = makeContext()
+        
         assertState(
             .completePayment(nil),
-            on: makeFraudSuspectedTransaction()
+            on: makeFraudSuspectedTransaction(context)
         )
     }
     
@@ -259,11 +261,14 @@ final class TransactionReducerTests: XCTestCase {
         assert(.continue, on: makeServerErrorTransaction(), effect: nil)
     }
     
-    func test_continue_shouldNotChangeStateOnValidPaymentWithoutVerificationCode() {
+    func test_continue_shouldSetStatusToInflightOnValidPaymentWithoutVerificationCode() {
         
         let sut = makeSUT(getVerificationCode: { _ in nil })
         
-        assertState(sut: sut, .continue, on: makeValidTransaction())
+        assertState(sut: sut, .continue, on: makeValidTransaction()) {
+            
+            $0.status = .inflight
+        }
     }
     
     func test_continue_shouldDeliverContinueEffectOnValidPaymentWithoutVerificationCode() {
@@ -306,11 +311,14 @@ final class TransactionReducerTests: XCTestCase {
         XCTAssertNoDiff(getVerificationCodeSpy.payloads, [payment])
     }
     
-    func test_continue_shouldNotChangeStateOnValidPaymentWithVerificationCode() {
+    func test_continue_shouldSetStatusToInflightOnValidPaymentWithVerificationCode() {
         
         let sut = makeSUT(getVerificationCode: { _ in makeVerificationCode() })
         
-        assertState(sut: sut, .continue, on: makeValidTransaction())
+        assertState(sut: sut, .continue, on: makeValidTransaction()) {
+            
+            $0.status = .inflight
+        }
     }
     
     func test_continue_shouldDeliverMakePaymentEffectWithVerificationCodeOnValidPaymentWithVerificationCode() {
@@ -349,11 +357,17 @@ final class TransactionReducerTests: XCTestCase {
         XCTAssertNoDiff(getVerificationCodeSpy.payloads, [payment])
     }
     
-    func test_continue_shouldNotChangeStateOnValidPaymentWithShouldRestartPayment() {
+    func test_continue_shouldResetPaymentAnsSetStatusToInflightOnValidPaymentWithShouldRestartPayment() {
         
         let state = makeValidTransaction(makeContext(shouldRestart: true))
+        let initial = makeContext()
+        let sut = makeSUT(resetPayment: { _ in initial })
         
-        assertState(.continue, on: state)
+        assertState(sut: sut, .continue, on: state) {
+        
+            $0.context = initial
+            $0.status = .inflight
+        }
     }
     
     func test_continue_shouldDeliverInitiatePaymentEffectWithPaymentDigestOnValidPaymentWithShouldRestartPayment() {
@@ -365,11 +379,11 @@ final class TransactionReducerTests: XCTestCase {
         assert(sut: sut, .continue, on: state, effect: .initiatePayment(digest))
     }
     
-    func test_continue_shouldNotChangeStateOnValidPaymentWithoutShouldRestartPayment() {
+    func test_continue_shouldSetStatusToInflightOnValidPaymentWithoutShouldRestartPayment() {
         
         let state = makeValidTransaction(makeContext(shouldRestart: false))
         
-        assertState(.continue, on: state)
+        assertState(.continue, on: state) { $0.status = .inflight }
     }
     
     func test_continue_shouldDeliverContinueEffectOnValidPaymentWithoutShouldRestartPayment() {
@@ -442,7 +456,7 @@ final class TransactionReducerTests: XCTestCase {
         XCTAssertNoDiff(stagePaymentSpy.payloads, [payment])
     }
     
-    func test_continue_shouldChangePaymentToStagedOnValidTransaction() {
+    func test_continue_shouldSetStatusToInflightAndChangePaymentToStagedOnValidTransaction() {
         
         let staged = makeContext()
         let stagePaymentSpy = StagePaymentSpy(response: staged)
@@ -450,6 +464,7 @@ final class TransactionReducerTests: XCTestCase {
         
         assertState(sut: sut, .continue, on: makeValidTransaction(makeContext())) {
             
+            $0.status = .inflight
             $0.context = staged
         }
     }
@@ -694,9 +709,12 @@ final class TransactionReducerTests: XCTestCase {
         assert(.initiatePayment, on: makeResultSuccessTransaction(), effect: nil)
     }
     
-    func test_initiatePayment_shouldNotChangeState() {
+    func test_initiatePayment_shouldSetStatusToInflight() {
         
-        assertState(.initiatePayment, on: makeTransaction())
+        assertState(.initiatePayment, on: makeTransaction()) {
+            
+            $0.status = .inflight
+        }
     }
     
     func test_initiatePayment_shouldDeliverEffect() {
@@ -960,17 +978,19 @@ final class TransactionReducerTests: XCTestCase {
         assert(.paymentRestartConfirmation(false), on: state, effect: nil)
     }
     
-    func test_paymentRestartConfirmation_shouldResetStatusOnResetConfirmation() {
+    func test_paymentRestartConfirmation_true_shouldSetShouldRestartAndNilStatus() {
         
+        let initial = makeContext()
         let state = makeTransaction(status: .awaitingPaymentRestartConfirmation)
-        
-        assertState(.paymentRestartConfirmation(true), on: state) {
+        let sut = makeSUT(resetPayment: { _ in initial })
+                
+        assertState(sut: sut, .paymentRestartConfirmation(true), on: state) {
             
             $0.context.shouldRestart = true
             $0.status = nil
         }
     }
-    
+        
     func test_paymentRestartConfirmation_shouldNotDeliverEffectOnResetConfirmationOnAwaitingState() {
         
         let state = makeTransaction(status: .awaitingPaymentRestartConfirmation)
@@ -1121,9 +1141,9 @@ final class TransactionReducerTests: XCTestCase {
         let checkFraudSpy = CheckFraudSpy(response: false)
         let sut = makeSUT(checkFraud: checkFraudSpy.call)
         
-        let (updated, _) = sut.reduce(makeTransaction(), makeUpdateTransactionEvent(update))
+        _ = sut.reduce(makeTransaction(), makeUpdateTransactionEvent(update))
         
-        XCTAssertNoDiff(checkFraudSpy.payloads, [updated.context])
+        XCTAssertNoDiff(checkFraudSpy.payloads, [update])
     }
     
     func test_update_shouldNotChangeStateOnFraudSuspectedStatus() {
@@ -1194,9 +1214,10 @@ final class TransactionReducerTests: XCTestCase {
     
     func test_update_shouldSetFraudToCheckFraudResult_suspected() {
         
+        let context = makeContext()
         let sut = makeSUT(checkFraud: { _ in true })
         
-        let (state, _) = sut.reduce(makeTransaction(), makeUpdateTransactionEvent())
+        let (state, _) = sut.reduce(makeTransaction(context), makeUpdateTransactionEvent())
         
         XCTAssertTrue(isFraudSuspected(state))
     }
@@ -1255,6 +1276,83 @@ final class TransactionReducerTests: XCTestCase {
         )
     }
     
+    // MARK: - verificationCode: request
+    
+    func test_verificationCode_request_shouldNotChangeState() {
+        
+        assertState(.verificationCode(.request), on: makeTransaction())
+    }
+    
+    func test_verificationCode_request_shouldDeliverEffect() {
+        
+        assert(
+            .verificationCode(.request), 
+            on: makeTransaction(),
+            effect: .getVerificationCode
+        )
+    }
+    
+    // MARK: - verificationCode: receive
+    
+    func test_verificationCode_receive_shouldChangeStatusOnConnectivityError() {
+        
+        assertState(
+            .verificationCode(.receive(.failure(.connectivityError))),
+            on: makeTransaction()
+        ) {
+            $0.status = .result(.failure(.transactionFailure))
+        }
+    }
+    
+    func test_verificationCode_receive_shouldNotDeliverEffectOnConnectivityError() {
+        
+        assert(
+            .verificationCode(.receive(.failure(.connectivityError))),
+            on: makeTransaction(),
+            effect: nil
+        )
+    }
+    
+    func test_verificationCode_receive_shouldChangeStatusOnServerError() {
+        
+        let message = anyMessage()
+        
+        assertState(
+            .verificationCode(.receive(.failure(.serverError(message)))),
+            on: makeTransaction()
+        ) {
+            $0.status = .result(.failure(.transactionFailure))
+        }
+    }
+    
+    func test_verificationCode_receive_shouldNotDeliverEffectOnServerError() {
+        
+        let message = anyMessage()
+
+        assert(
+            .verificationCode(.receive(.failure(.serverError(message)))),
+            on: makeTransaction(),
+            effect: nil
+        )
+    }
+    
+    func test_verificationCode_receive_shouldNotChangeStateOnSuccess() {
+        
+        assertState(
+            .verificationCode(.receive(.success(Int.random(in: 1...10)))),
+            on: makeTransaction()
+        )
+    }
+    
+    func test_verificationCode_receive_shouldNotDeliverEffectOnSuccess() {
+        
+        assert(
+            .verificationCode(.receive(.success(Int.random(in: 1...10)))),
+            on: makeTransaction(),
+            effect: nil
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = _TransactionReducer
@@ -1263,7 +1361,7 @@ final class TransactionReducerTests: XCTestCase {
     private typealias Event = _TransactionEvent
     private typealias Effect = _TransactionEffect
     
-    private typealias CheckFraudSpy = CallSpy<Context, Bool>
+    private typealias CheckFraudSpy = CallSpy<PaymentUpdate, Bool>
     private typealias MakeDigestSpy = CallSpy<Context, PaymentDigest>
     private typealias GetVerificationCodeSpy = CallSpy<Context, VerificationCode?>
     private typealias PaymentReduceSpy = CallSpy<(Context, PaymentEvent), (Context, SUT.Effect?)>
@@ -1272,13 +1370,14 @@ final class TransactionReducerTests: XCTestCase {
     private typealias UpdatePaymentSpy = CallSpy<(Context, PaymentUpdate), Context>
     private typealias ValidatePaymentSpy = CallSpy<Context, Bool>
     
-    private typealias Inspector = PaymentInspector<Context, PaymentDigest>
+    private typealias Inspector = PaymentInspector<Context, PaymentDigest, PaymentUpdate>
     
     private func makeSUT(
         checkFraud: @escaping Inspector.CheckFraud = { _ in false },
         getVerificationCode: @escaping Inspector.GetVerificationCode = { _ in nil },
         makeDigest: @escaping Inspector.MakeDigest = { _ in makePaymentDigest() },
         paymentReduce: @escaping SUT.PaymentReduce = { payment, _ in (payment, nil) },
+        resetPayment: @escaping Inspector.ResetPayment = { _ in makeContext() },
         restorePayment: @escaping Inspector.RestorePayment = { _ in makeContext() },
         stagePayment: @escaping SUT.StagePayment = { $0 },
         updatePayment: @escaping SUT.UpdatePayment = { payment, _ in payment },
@@ -1296,6 +1395,7 @@ final class TransactionReducerTests: XCTestCase {
                 checkFraud: checkFraud,
                 getVerificationCode: getVerificationCode,
                 makeDigest: makeDigest,
+                resetPayment: resetPayment,
                 restorePayment: restorePayment,
                 validatePayment: validatePayment,
                 wouldNeedRestart: wouldNeedRestart

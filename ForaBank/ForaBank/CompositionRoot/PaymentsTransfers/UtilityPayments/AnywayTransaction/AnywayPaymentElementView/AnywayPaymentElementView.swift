@@ -15,45 +15,27 @@ struct AnywayPaymentElementView<IconView: View>: View {
     let state: State
     let event: (Event) -> Void
     let factory: Factory
-#warning("better move config to factory")
     let config: Config
     
     var body: some View {
         
         switch state.model {
         case let .field(field):
-            PaymentComponents.InfoView(
-                info: field.info,
-                config: config.info,
-                icon: { makeIconView(field) }
-            )
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(12)
-
+            fieldView(field, config: config.info)
+                .paddedRoundedBackground()
+            
         case let .parameter(parameter):
-            AnywayPaymentParameterView(
-                parameter: parameter,
-                factory: factory.parameterFactory
-            )
+            parameterView(parameter)
             
         case let .widget(widget):
             widgetView(widget)
         }
     }
-    
-    private func makeIconView(
-        _ field: AnywayPaymentDomain.AnywayElement.UIComponent.Field
-    ) -> some View {
-        
-        #warning("FIX hardcoded value")
-        return factory.makeIconView("")
-    }
 }
 
 extension AnywayPaymentElementView {
     
-    typealias State = CachedAnywayPayment<AnywayElementModel>.IdentifiedModel
+    typealias State = AnywayTransactionState.IdentifiedModel
     typealias Event = AnywayPaymentEvent
     typealias Factory = AnywayPaymentElementViewFactory
     typealias Config = AnywayPaymentElementConfig
@@ -61,22 +43,49 @@ extension AnywayPaymentElementView {
 
 private extension AnywayPaymentElementView {
     
+    func fieldView(
+        _ field: AnywayElement.UIComponent.Field,
+        config: InfoConfig
+    ) -> some View {
+        
+        PaymentComponents.InfoView(
+            info: field.info,
+            config: config,
+            icon: { makeIconView(field) }
+        )
+    }
+    
+    func parameterView(
+        _ parameter: AnywayElementModel.Parameter
+    ) -> some View {
+        
+        AnywayPaymentParameterView(
+            parameter: parameter,
+            factory: factory.parameterFactory
+        )
+    }
+    
+    func makeIconView(
+        _ field: AnywayPaymentDomain.AnywayElement.UIComponent.Field
+    ) -> some View {
+        
+#warning("FIX hardcoded value")
+        return factory.makeIconView("placeholder")
+    }
+    
     @ViewBuilder
     func widgetView(
         _ widget: AnywayElementModel.Widget
     ) -> some View {
+        
         switch widget {
-        case let .otp(otpViewModel):
-            #warning("replace with real components")
-#warning("can't use CodeInputView - not a part  af any product (neither PaymentComponents nor any other)")
-#warning("need a wrapper with timer")
-            //            CodeInputView(
-            //                state: <#T##OTPInputState.Status.Input#>,
-            //                event: <#T##(OTPInputEvent) -> Void#>,
-            //                config: <#T##CodeInputConfig#>
-            //            )
-            SimpleOTPWrapperView(viewModel: otpViewModel)
-
+        case let .otp(viewModel):
+            factory.widgetFactory.makeOTPView(viewModel)
+                .paddedRoundedBackground()
+            
+        case let .simpleOTP(viewModel):
+            SimpleOTPWrapperView(viewModel: viewModel)
+                .paddedRoundedBackground()
             
         case let .product(viewModel):
             ProductSelectWrapperView(viewModel: viewModel, config: .iFora)

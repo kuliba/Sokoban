@@ -7,5 +7,5 @@
 
 public enum FraudEvent: Equatable {
     
-    case cancel, `continue`, expired
+    case cancel, consent, expired
 }

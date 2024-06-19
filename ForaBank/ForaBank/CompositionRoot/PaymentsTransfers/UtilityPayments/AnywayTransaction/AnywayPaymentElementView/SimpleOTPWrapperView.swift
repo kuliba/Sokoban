@@ -19,7 +19,7 @@ struct SimpleOTPWrapperView: View {
 
 extension SimpleOTPWrapperView {
     
-    typealias ViewModel = AnywayElementModel.Widget.OTPViewModel
+    typealias ViewModel = AnywayElementModel.Widget.SimpleOTPViewModel
 }
 
 struct SimpleOTPView: View {
@@ -47,11 +47,6 @@ struct SimpleOTPView: View {
                 )
             )
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .foregroundColor(.gray.opacity(0.1))
-        )
     }
 }
 

@@ -6,6 +6,7 @@
 //
 
 @testable import ProductProfile
+import ForaTools
 import ProductProfileComponents
 import RxViewModel
 import UIPrimitives

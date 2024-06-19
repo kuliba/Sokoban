@@ -35,9 +35,11 @@ struct AnywayPaymentParameterView: View {
                         .frame(width: 32, height: 32)
                 }
             )
+            .paddedRoundedBackground()
             
-        case let .select(selectorViewModel):
-            factory.makeSelectorView(selectorViewModel)
+        case let .select(viewModel):
+            factory.makeSelectorView(viewModel)
+                .paddedRoundedBackground()
             
         case let .textInput(viewModel):
             InputWrapperView(
@@ -48,6 +50,7 @@ struct AnywayPaymentParameterView: View {
                         .frame(width: 32, height: 32)
                 }
             )
+            .paddedRoundedBackground()
             
         case .unknown:
             EmptyView()
