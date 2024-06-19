@@ -21,13 +21,13 @@ final class UtilityPaymentNanoServicesComposer {
     private let loadOperators: LoadOperators
     
     init(
-        flag: Flag,
+        flag: UtilitiesPaymentsFlag,
         model: Model,
         httpClient: HTTPClient,
         log: @escaping Log,
         loadOperators: @escaping LoadOperators
     ) {
-        self.flag = flag
+        self.flag = .init(flag)
         self.model = model
         self.httpClient = httpClient
         self.log = log
@@ -36,18 +36,25 @@ final class UtilityPaymentNanoServicesComposer {
     
     enum Flag {
         
-        case live
-        case stub(Stub)
+        case live, stub
         
-        typealias Stub = (Payload) -> StartPaymentResult
-        typealias Payload = NanoServices.StartAnywayPaymentPayload
-        typealias StartPaymentResult = NanoServices.StartAnywayPaymentResult
+        init(_ flag: UtilitiesPaymentsFlag) {
+            
+            switch flag.rawValue {
+            case .inactive, .active(.live): self = .live
+            case .active(.stub):            self = .stub
+            }
+        }
     }
     
     typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
     
     typealias LoadOperatorsCompletion = ([Operator]) -> Void
     typealias LoadOperators = (@escaping LoadOperatorsCompletion) -> Void
+    
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
 }
 
 extension UtilityPaymentNanoServicesComposer {
@@ -63,12 +70,10 @@ extension UtilityPaymentNanoServicesComposer {
         )
     }
     
-    typealias NanoServices = UtilityPaymentNanoServices<LastPayment, Operator, Service>
-    
-    typealias LastPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
-    typealias Service = UtilityService
+    typealias NanoServices = UtilityPaymentNanoServices
 }
+
+// MARK: - getOperatorsListByParam
 
 private extension UtilityPaymentNanoServicesComposer {
     
@@ -79,6 +84,11 @@ private extension UtilityPaymentNanoServicesComposer {
     ) {
         loadOperators(completion)
     }
+}
+
+// MARK: - getAllLatestPayments
+
+private extension UtilityPaymentNanoServicesComposer {
     
     /// `c`
     /// Получение последних платежей по ЖКХ
@@ -87,15 +97,12 @@ private extension UtilityPaymentNanoServicesComposer {
         _ completion: @escaping ([LastPayment]) -> Void
     ) {
         switch flag {
-        case .live:
-            getAllLatestPaymentsLive(completion)
-            
-        case .stub:
-            DispatchQueue.main.delay(for: .seconds(1)) { completion(.stub) }
+        case .live: getAllLatestPaymentsLive(completion)
+        case .stub: getAllLatestPaymentsStub(completion)
         }
     }
     
-    private  func getAllLatestPaymentsLive(
+    private func getAllLatestPaymentsLive(
         _ completion: @escaping ([LastPayment]) -> Void
     ) {
         // TODO: add logging // NanoServices.adaptedLoggingFetch
@@ -108,6 +115,17 @@ private extension UtilityPaymentNanoServicesComposer {
         }
     }
     
+    private func getAllLatestPaymentsStub(
+        _ completion: @escaping ([LastPayment]) -> Void
+    ) {
+        DispatchQueue.main.delay(for: .seconds(1)) { completion(.stub) }
+    }
+}
+
+// MARK: - startAnywayPayment
+
+private extension UtilityPaymentNanoServicesComposer {
+    
     /// `e`
     /// Начало выполнения перевода - 1шаг, передаем `isNewPayment=true`
     /// POST /rest/transfer/createAnywayTransfer?isNewPayment=true
@@ -116,11 +134,8 @@ private extension UtilityPaymentNanoServicesComposer {
         _ completion: @escaping StartAnywayPaymentCompletion
     ) {
         switch flag {
-        case .live:
-            startAnywayPaymentLive(payload, completion)
-            
-        case let .stub(stub):
-            startAnywayPaymentStub(stub, payload, completion)
+        case .live: startAnywayPaymentLive(payload, completion)
+        case .stub: startAnywayPaymentStub(payload, completion)
         }
     }
     
@@ -142,17 +157,36 @@ private extension UtilityPaymentNanoServicesComposer {
     }
     
     private func startAnywayPaymentStub(
-        _ stub: @escaping Flag.Stub,
         _ payload: StartAnywayPaymentPayload,
         _ completion: @escaping StartAnywayPaymentCompletion
     ) {
-        DispatchQueue.main.delay(for: .seconds(1)) { completion(stub(payload)) }
+        DispatchQueue.main.delay(for: .seconds(1)) {
+            
+            let result = payload.startAnywayPaymentResultStub
+            self.networkLog(level: .default, message: "Remote Service Start AnywayPayment Stub Result: \(result)", file: #file, line: #line)
+            completion(result)
+        }
     }
+}
+
+// MARK: - getServicesFor
+
+private extension UtilityPaymentNanoServicesComposer {
     
     /// `d`
     /// Получение услуг юр. лица по "customerId" и типу housingAndCommunalService
     /// dict/getOperatorsListByParam?customerId=8798&operatorOnly=false&type=housingAndCommunalService
     func getServicesFor(
+        _ `operator`: Operator,
+        _ completion: @escaping NanoServices.GetServicesForCompletion
+    ) {
+        switch flag {
+        case .live: getServicesForLive(`operator`, completion)
+        case .stub: getServicesForStub(`operator`, completion)
+        }
+    }
+    
+    func getServicesForLive(
         _ `operator`: Operator,
         _ completion: @escaping NanoServices.GetServicesForCompletion
     ) {
@@ -167,21 +201,27 @@ private extension UtilityPaymentNanoServicesComposer {
         
         let mapped = MapPayloadDecorator(
             decoratee: fetch,
-            mapPayload: { (`operator`: Operator) in
-                
-#if MOCK
-                return "21757"
-#else
-                return `operator`.id
-#endif
-            }
+            mapPayload: { (`operator`: Operator) in return `operator`.id }
         )
         
         mapped(`operator`) { [mapped] in completion($0); _ = mapped }
     }
     
+    func getServicesForStub(
+        _ `operator`: Operator,
+        _ completion: @escaping NanoServices.GetServicesForCompletion
+    ) {
+        DispatchQueue.main.delay(for: .seconds(1)) {
+            
+            let result = `operator`.getServicesForResultStub
+            self.networkLog(level: .default, message: "Remote Service GetServicesFor operator \(`operator`) Stub Result: \(result)", file: #file, line: #line)
+            completion(result)
+        }
+    }
+    
     private func makeAnywayPaymentOutline(
-        lastPayment: LastPayment?
+        lastPayment: LastPayment?,
+        and payload: AnywayPaymentOutline.Payload
     ) -> AnywayPaymentOutline {
         
 #warning("fix filtering according to https://shorturl.at/hIE5B")
@@ -199,8 +239,13 @@ private extension UtilityPaymentNanoServicesComposer {
             productType: coreProductType
         )
         
-        return .init(core: core, fields: .init())
+        return .init(core: core, fields: .init(), payload: payload)
     }
+}
+
+// MARK: - Log
+
+private extension UtilityPaymentNanoServicesComposer {
     
     private func networkLog(
         level: LoggerAgentLevel,
@@ -239,12 +284,7 @@ private extension RemoteServices.RequestFactory.CreateAnywayTransferPayload {
     
     init(_ payload: StartAnywayPaymentPayload) {
         
-#if MOCK
-        // "puref": "iForaNKORR||126732"
-        let puref = "iForaNKORR||126732"
-#else
         let puref = payload.puref
-#endif
         
         /// - Note: `check` is optional
         /// Признак проверки операции:
@@ -286,22 +326,15 @@ private extension StartAnywayPaymentResult {
             }
             
         case let .success(response):
-#if MOCK
-            let response = response.mock(value: "6068506999", forTitle: "Лицевой счет")
             self = .success(.startPayment(response))
-#else
-            self = .success(.startPayment(response))
-#endif
         }
     }
 }
 
-typealias StartAnywayPayment = _UtilityPaymentNanoServices.StartAnywayPayment
-typealias StartAnywayPaymentPayload = _UtilityPaymentNanoServices.StartAnywayPaymentPayload
-typealias StartAnywayPaymentResult = _UtilityPaymentNanoServices.StartAnywayPaymentResult
-typealias StartAnywayPaymentCompletion = _UtilityPaymentNanoServices.StartAnywayPaymentCompletion
-
-typealias _UtilityPaymentNanoServices = UtilityPaymentNanoServices<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
+typealias StartAnywayPayment = UtilityPaymentNanoServices.StartAnywayPayment
+typealias StartAnywayPaymentPayload = UtilityPaymentNanoServices.StartAnywayPaymentPayload
+typealias StartAnywayPaymentResult = UtilityPaymentNanoServices.StartAnywayPaymentResult
+typealias StartAnywayPaymentCompletion = UtilityPaymentNanoServices.StartAnywayPaymentCompletion
 
 private extension OperatorsListComponents.ResponseMapper.SberUtilityService {
     
@@ -323,14 +356,133 @@ private extension ProductType {
     }
 }
 
-// MARK: - Mocking
+// MARK: - Stubs
 
-#if MOCK
-private extension NanoServices.CreateAnywayTransferResponse {
+private extension Array where Element == UtilityPaymentLastPayment {
     
-    func mock(
-        value: String,
-        forTitle title: String
+    static let stub: Self = [
+        .failure,
+        .preview,
+    ]
+}
+
+private extension UtilityPaymentLastPayment {
+    
+    static let failure: Self = .init(amount: 123.45, name: "failure", md5Hash: nil, puref: UUID().uuidString)
+    static let preview: Self = .init(amount: 567.89, name: UUID().uuidString, md5Hash: nil, puref: UUID().uuidString)
+}
+
+private extension UtilityPaymentOperator {
+    
+    var getServicesForResultStub: GetServicesForResult {
+        
+        switch id {
+        case "empty":  return .success([])
+        case "single-d2": return .success([.sample])
+        case "multi-d1":  return .success([.sample, .failing, .failingWithMessage])
+        default:       return .failure(.init())
+        }
+    }
+    
+    typealias GetServicesForResult = UtilityPaymentNanoServices.GetServicesForResult
+}
+
+private extension UtilityService {
+    
+    static let sample: Self = .init(name: "Service", puref: "service")
+    static let failing: Self = .init(name: "Failing Service", puref: "failing")
+    static let failingWithMessage: Self = .init(name: "Failing with Message Service", puref: "failingWithMessage")
+}
+
+private extension UtilityPaymentNanoServices.StartAnywayPaymentPayload {
+    
+    var startAnywayPaymentResultStub: StartAnywayPaymentResult {
+        
+        switch self {
+        case let .lastPayment(lastPayment):
+            fatalError("unimplemented")
+            
+        case let .service(service, `operator`):
+            switch service.id {
+            case "service":
+                return .success(.startPayment(.step1))
+                
+            case "failingWithMessage":
+                return .failure(.serviceFailure(.serverError("Error #12345. Try later.")))
+                
+            default:
+                return .failure(.serviceFailure(.connectivityError))
+            }
+        }
+    }
+    
+    typealias StartAnywayPaymentResult = UtilityPaymentNanoServices.StartAnywayPaymentResult
+}
+
+extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
+    
+    static let step1: Self = .make(
+        parametersForNextStep: [
+            .make(id: "1", title: "Лицевой счет (\"1111\" = ошибка, \"2222\" = финальная ошибка, другое = ok)"),
+            .make(
+                dataType: .pairs(
+                    .init(key: "a", value: "A"), [
+                        .init(key: "a", value: "A"),
+                        .init(key: "b", value: "B"),
+                        .init(key: "c", value: "C"),
+                        .init(key: "d", value: "D"),
+                    ]
+                ),
+                id: "select", 
+                title: "select",
+                type: .select
+            )
+        ]
+    )
+    
+    static let step2: Self = .make(
+        needSum: true
+    )
+    
+    static let step3: Self = .make(
+        parametersForNextStep: [
+            .make(id: "SumSTrs", title: "Сумма (\"11\" = ok, \"22\" = fraud, другое = ошибка)")
+        ]
+    )
+    
+    static let step4: Self = .make(
+        needMake: true,
+        needOTP: true
+    )
+    
+    static let step4Fraud: Self = .make(
+        needMake: true,
+        needOTP: true,
+        scenario: .suspect
+    )
+    
+    private static func make(
+        additional: [Additional] = [],
+        amount: Decimal? = nil,
+        creditAmount: Decimal? = nil,
+        currencyAmount: String? = nil,
+        currencyPayee: String? = nil,
+        currencyPayer: String? = nil,
+        currencyRate: Decimal? = nil,
+        debitAmount: Decimal? = nil,
+        documentStatus: DocumentStatus? = nil,
+        fee: Decimal? = nil,
+        finalStep: Bool = false,
+        infoMessage: String? = nil,
+        needMake: Bool = false,
+        needOTP: Bool = false,
+        needSum: Bool = false,
+        parametersForNextStep: [Parameter] = [],
+        paymentOperationDetailID: Int? = nil,
+        payeeName: String? = nil,
+        printFormType: String? = nil,
+        scenario: AntiFraudScenario? = nil,
+        options: [Option] = []
     ) -> Self {
         
         return .init(
@@ -349,28 +501,49 @@ private extension NanoServices.CreateAnywayTransferResponse {
             needMake: needMake,
             needOTP: needOTP,
             needSum: needSum,
-            parametersForNextStep: parametersForNextStep.map {
-                
-                return $0.mock(value: value, forTitle: title)
-            },
+            parametersForNextStep: parametersForNextStep,
             paymentOperationDetailID: paymentOperationDetailID,
             payeeName: payeeName,
             printFormType: printFormType,
             scenario: scenario,
-            options: []
+            options: options
         )
     }
 }
 
-private extension NanoServices.CreateAnywayTransferResponse.Parameter {
+private extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse.Parameter {
     
-    func mock(
-        value: String,
-        forTitle title: String
+    static func make(
+        content: String? = nil,
+        dataDictionary: String? = nil,
+        dataDictionaryРarent: String? = nil,
+        dataType: DataType = .string,
+        group: String? = nil,
+        id: String,
+        inputFieldType: InputFieldType? = nil,
+        inputMask: String? = nil,
+        isPrint: Bool = false,
+        isRequired: Bool = true,
+        maxLength: Int? = nil,
+        mask: String? = nil,
+        minLength: Int? = nil,
+        order: Int? = nil,
+        phoneBook: Bool = false,
+        rawLength: Int = 0,
+        isReadOnly: Bool = false,
+        regExp: String = "^.{1,250}$",
+        subGroup: String? = nil,
+        subTitle: String? = nil,
+        md5hash: String? = nil,
+        svgImage: String? = nil,
+        title: String,
+        type: FieldType = .input,
+        viewType: ViewType = .input,
+        visible: Bool = true
     ) -> Self {
         
         return .init(
-            content: self.title == title ? value : content,
+            content: content,
             dataDictionary: dataDictionary,
             dataDictionaryРarent: dataDictionaryРarent,
             dataType: dataType,
@@ -392,27 +565,10 @@ private extension NanoServices.CreateAnywayTransferResponse.Parameter {
             subTitle: subTitle,
             md5hash: md5hash,
             svgImage: svgImage,
-            title: self.title,
+            title: title,
             type: type,
             viewType: viewType,
-            visible: true
+            visible: visible
         )
     }
-}
-#endif
-
-// MARK: - Stubs
-
-private extension Array where Element == UtilityPaymentLastPayment {
-    
-    static let stub: Self = [
-        .failure,
-        .preview,
-    ]
-}
-
-private extension UtilityPaymentLastPayment {
-    
-    static let failure: Self = .init(amount: 123.45, name: "failure", md5Hash: UUID().uuidString, puref: UUID().uuidString)
-    static let preview: Self = .init(amount: 567.89, name: UUID().uuidString, md5Hash: UUID().uuidString, puref: UUID().uuidString)
 }

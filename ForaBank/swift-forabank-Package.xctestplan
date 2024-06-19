@@ -389,6 +389,27 @@
         "identifier" : "UtilityServicePrepaymentCoreTests",
         "name" : "UtilityServicePrepaymentCoreTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SelectComponentTests",
+        "name" : "SelectComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SelectorComponentTests",
+        "name" : "SelectorComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SVCardLimitAPITests",
+        "name" : "SVCardLimitAPITests"
+      }
     }
   ],
   "version" : 1

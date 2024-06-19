@@ -12,17 +12,17 @@ final class PaymentsTransfersFlowManagerComposerTests: XCTestCase {
     
     func test_compose_inactive_shouldNotFail() {
         
-        _ = makeSUT(flag: .inactive).compose()
+        _ = makeSUT(flag: .inactive).compose(nil)
     }
     
     func test_compose_live_shouldNotFail() {
         
-        _ = makeSUT(flag: .active(.live)).compose()
+        _ = makeSUT(flag: .active(.live)).compose(nil)
     }
     
     func test_compose_stub_shouldNotFail() {
         
-        _ = makeSUT(flag: .active(.stub)).compose()
+        _ = makeSUT(flag: .active(.stub)).compose(nil)
     }
     
     // MARK: - Helpers
@@ -44,9 +44,7 @@ final class PaymentsTransfersFlowManagerComposerTests: XCTestCase {
             flag: .init(flag),
             model: model,
             httpClient: httpClient,
-            log: { _,_,_,_,_  in },
-            pageSize: pageSize,
-            observeLast: observeLast
+            log: { _,_,_,_,_  in }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

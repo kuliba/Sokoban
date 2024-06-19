@@ -13,8 +13,9 @@ final class TransactionEffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT()
+        let (_, getVerificationCodeSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing) = makeSUT()
         
+        XCTAssertEqual(getVerificationCodeSpy.callCount, 0)
         XCTAssertEqual(paymentEffectHandler.callCount, 0)
         XCTAssertEqual(paymentInitiator.callCount, 0)
         XCTAssertEqual(paymentMaker.callCount, 0)
@@ -26,7 +27,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
     func test_continue_shouldCallProcessingWithDigest() {
         
         let digest = makePaymentDigest()
-        let (sut, _,_,_, paymentProcessing) = makeSUT()
+        let (sut, _,_,_,_, paymentProcessing) = makeSUT()
         
         sut.handleEffect(.continue(digest)) { _ in }
         
@@ -68,7 +69,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         
         var sut: SUT?
         let paymentProcessing: PaymentProcessing
-        (sut, _,_,_, paymentProcessing) = makeSUT()
+        (sut, _,_,_,_, paymentProcessing) = makeSUT()
         var received = [SUT.Event]()
         
         sut?.handleEffect(makeContinueTransactionEffect()) { received.append($0) }
@@ -83,7 +84,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         
         var sut: SUT?
         let paymentProcessing: PaymentProcessing
-        (sut, _,_,_, paymentProcessing) = makeSUT()
+        (sut, _,_,_,_, paymentProcessing) = makeSUT()
         var received = [SUT.Event]()
         
         sut?.handleEffect(makeContinueTransactionEffect()) { received.append($0) }
@@ -94,12 +95,64 @@ final class TransactionEffectHandlerTests: XCTestCase {
         XCTAssert(received.isEmpty)
     }
     
+    // MARK: - getVerificationCode
+    
+    func test_getVerificationCode_shouldCallGetVerificationCode() {
+        
+        let (sut, getCodeSpy, _,_,_,_) = makeSUT()
+        
+        sut.handleEffect(.getVerificationCode) { _ in }
+        
+        XCTAssertEqual(getCodeSpy.callCount, 1)
+    }
+    
+    func test_getVerificationCode_shouldDeliverConnectivityErrorOnGetVerificationCodeConnectivityFailure() {
+        
+        let (sut, getCodeSpy, _,_,_,_) = makeSUT()
+        
+        expect(
+            sut,
+            toDeliver: .verificationCode(.receive(.failure(.connectivityError))),
+            for: .getVerificationCode
+        ) {
+            getCodeSpy.complete(with: .failure(.connectivityError))
+        }
+    }
+    
+    func test_getVerificationCode_shouldDeliverServerErrorOnGetVerificationCodeServerFailure() {
+        
+        let message = anyMessage()
+        let (sut, getCodeSpy, _,_,_,_) = makeSUT()
+        
+        expect(
+            sut,
+            toDeliver: .verificationCode(.receive(.failure(.serverError(message)))),
+            for: .getVerificationCode
+        ) {
+            getCodeSpy.complete(with: .failure(.serverError(message)))
+        }
+    }
+    
+    func test_getVerificationCode_shouldDeliverResendOTPCountOnGetVerificationCodeSuccess() {
+        
+        let resendOTPCount = Int.random(in: 1...10)
+        let (sut, getCodeSpy, _,_,_,_) = makeSUT()
+        
+        expect(
+            sut,
+            toDeliver: .verificationCode(.receive(.success(resendOTPCount))),
+            for: .getVerificationCode
+        ) {
+            getCodeSpy.complete(with: .success(resendOTPCount))
+        }
+    }
+    
     // MARK: - initiatePayment
     
     func test_initiatePayment_shouldCallPaymentInitiatorWithDigest() {
         
         let digest = makePaymentDigest()
-        let (sut, _, paymentInitiator, _, _) = makeSUT()
+        let (sut, _,_, paymentInitiator, _, _) = makeSUT()
         
         sut.handleEffect(makeInitiateTransactionEffect(digest)) { _ in }
         
@@ -108,7 +161,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
     
     func test_initiatePayment_shouldDeliverUpdateWithConnectivityErrorOnPaymentInitiatorConnectivityErrorFailure() {
         
-        let (sut, _, paymentInitiator, _, _) = makeSUT()
+        let (sut, _,_, paymentInitiator, _, _) = makeSUT()
         
         expect(
             sut,
@@ -121,7 +174,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
     func test_initiatePayment_shouldDeliverUpdateWithServerErrorOnPaymentInitiatorServerErrorFailure() {
         
         let message = anyMessage()
-        let (sut, _, paymentInitiator, _, _) = makeSUT()
+        let (sut, _,_, paymentInitiator, _, _) = makeSUT()
         
         expect(
             sut,
@@ -134,7 +187,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
     func test_initiatePayment_shouldDeliverUpdateOnPaymentInitiatorSuccess() {
         
         let update = makeUpdate()
-        let (sut, _, paymentInitiator, _, _) = makeSUT()
+        let (sut, _,_, paymentInitiator, _, _) = makeSUT()
         
         expect(
             sut,
@@ -148,7 +201,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         
         var sut: SUT?
         let paymentInitiator: PaymentInitiator
-        (sut, _, paymentInitiator, _,_) = makeSUT()
+        (sut, _,_, paymentInitiator, _,_) = makeSUT()
         var receivedEvents = [SUT.Event]()
         
         sut?.handleEffect(makeInitiateTransactionEffect()) { receivedEvents.append($0) }
@@ -164,7 +217,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
     func test_makePayment_shouldCallProcessingWithDigest() {
         
         let code = makeVerificationCode()
-        let (sut, _,_, paymentMaker, _) = makeSUT()
+        let (sut, _,_,_, paymentMaker, _) = makeSUT()
         
         sut.handleEffect(.makePayment(code)) { _ in }
         
@@ -206,7 +259,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         
         var sut: SUT?
         let paymentMaker: PaymentMaker
-        (sut, _,_, paymentMaker, _) = makeSUT()
+        (sut, _,_,_, paymentMaker, _) = makeSUT()
         var received = [SUT.Event]()
         
         sut?.handleEffect(makeTransactionEffect()) { received.append($0) }
@@ -221,7 +274,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         
         var sut: SUT?
         let paymentMaker: PaymentMaker
-        (sut, _,_, paymentMaker, _) = makeSUT()
+        (sut, _,_,_, paymentMaker, _) = makeSUT()
         var received = [SUT.Event]()
         
         sut?.handleEffect(makeTransactionEffect()) { received.append($0) }
@@ -237,7 +290,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
     func test_paymentEffect_shouldCallPaymentEffectHandleWithEffect() {
         
         let effect = makePaymentEffect()
-        let (sut, paymentEffectHandler, _,_, _) = makeSUT()
+        let (sut, _, paymentEffectHandler, _,_, _) = makeSUT()
         
         sut.handleEffect(.payment(effect)) { _ in }
         
@@ -247,7 +300,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
     func test_paymentEffect_shouldDeliverPaymentEffectHandleEvent() {
         
         let event = makePaymentEvent()
-        let (sut, paymentEffectHandler, _,_, _) = makeSUT()
+        let (sut, _, paymentEffectHandler, _,_, _) = makeSUT()
         
         expect(sut, toDeliver: .payment(event), for:  makePaymentTransactionEffect(), on: {
             
@@ -259,7 +312,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         
         var sut: SUT?
         let paymentEffectHandler: PaymentEffectHandleSpy
-        (sut, paymentEffectHandler, _,_,_) = makeSUT()
+        (sut, _, paymentEffectHandler, _,_,_) = makeSUT()
         var received = [SUT.Event]()
         
         sut?.handleEffect(makePaymentTransactionEffect()) { received.append($0) }
@@ -273,17 +326,20 @@ final class TransactionEffectHandlerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = _TransactionEffectHandler
-        
+    private typealias GetVerificationCodeSpy = Spy<Void, SUT.Event.VerificationCode.GetVerificationCodeResult>
+    
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
+        getVerificationCodeSpy: GetVerificationCodeSpy,
         paymentEffectHandler: PaymentEffectHandleSpy,
         paymentInitiator: PaymentInitiator,
         paymentMaker: PaymentMaker,
         paymentProcessing: PaymentProcessing
     ) {
+        let getVerificationCodeSpy = GetVerificationCodeSpy()
         let paymentEffectHandler = PaymentEffectHandleSpy()
         let paymentInitiator = PaymentInitiator()
         let paymentMaker = PaymentMaker()
@@ -291,6 +347,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         
         let sut = SUT(
             microServices: .init(
+                getVerificationCode: getVerificationCodeSpy.process,
                 initiatePayment: paymentInitiator.process,
                 makePayment: paymentMaker.process,
                 paymentEffectHandle: paymentEffectHandler.handleEffect,
@@ -299,12 +356,13 @@ final class TransactionEffectHandlerTests: XCTestCase {
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(getVerificationCodeSpy, file: file, line: line)
         trackForMemoryLeaks(paymentEffectHandler, file: file, line: line)
         trackForMemoryLeaks(paymentInitiator, file: file, line: line)
         trackForMemoryLeaks(paymentMaker, file: file, line: line)
         trackForMemoryLeaks(paymentProcessing, file: file, line: line)
         
-        return (sut, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing)
+        return (sut, getVerificationCodeSpy, paymentEffectHandler, paymentInitiator, paymentMaker, paymentProcessing)
     }
     
     private func updateEvent(
@@ -328,7 +386,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let (sut, _,_,_, paymentProcessing) = makeSUT()
+        let (sut, _,_,_,_, paymentProcessing) = makeSUT()
         expect(sut, toDeliver: expectedEvent, for: effect, on: { paymentProcessing.complete(with: paymentProcessingResult) }, file: file, line: line)
     }
     
@@ -339,7 +397,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let (sut, _,_, paymentMaker, _) = makeSUT()
+        let (sut, _,_,_, paymentMaker, _) = makeSUT()
         expect(sut, toDeliver: expectedEvent, for: effect, on: { paymentMaker.complete(with: makePaymentResult) }, file: file, line: line)
     }
     

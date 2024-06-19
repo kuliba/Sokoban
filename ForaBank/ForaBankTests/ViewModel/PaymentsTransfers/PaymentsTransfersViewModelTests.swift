@@ -92,7 +92,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertNoDiff(linkSpy.values, [.other, .template])
     }
     
-    func test_tapTemplates_updateCardFailure_shouldPresentAlert_flagActive() {
+    func test_tapTemplates_updateCardFailureAccountFailure_shouldPresentAlert_flagActive() {
         
         let (sut, model,_) = makeSUT(
             flowManager: makeFlowManagerOnlyModalAlert(),
@@ -102,6 +102,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
 
         model.updateInfo.value.setValue(false, for: .card)
+        model.updateInfo.value.setValue(false, for: .account)
 
         XCTAssertNoDiff(alertMessageSpy.values, [nil])
         
@@ -111,6 +112,25 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             nil,
             "Мы не смогли загрузить ваши продукты. Попробуйте позже.",
         ])
+    }
+    
+    func test_tapTemplates_updateCardFailureAccountSuccess_shouldNotPresentAlert_flagActive() {
+        
+        let (sut, model,_) = makeSUT(
+            flowManager: makeFlowManagerOnlyModalAlert(),
+            makeAlertDataUpdateFailureViewModel: { _ in .dataUpdateFailure {}},
+            updateInfoStatusFlag: .init(rawValue: .active))
+        
+        let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
+
+        model.updateInfo.value.setValue(false, for: .card)
+        model.updateInfo.value.setValue(true, for: .account)
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        
+        sut.section?.tapTemplatesAndWait()
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, nil])
     }
     
 //    func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
@@ -760,7 +780,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in }, 
             makeTemplatesListViewModel: { _ in .sampleComplete },
-            paymentsTransfersFlowManager: .preview,
+            makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
             unblockCardServices: unblockCardServices,
@@ -783,7 +803,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let sut = SUT(
             model: model,
-            flowManager: flowManager,
+            makeFlowManager: { _ in flowManager },
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,

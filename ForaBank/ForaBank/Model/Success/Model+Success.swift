@@ -180,6 +180,7 @@ extension TemplateButton {
         
         let payloadParameters = payload.additional
             .filter({ !$0.fieldname.contained(in: sfpRestrictedAdditional) })
+            .filter({ !$0.fieldname.contained(in: Model.restrictedParametersAbroad) })
             .filter({ !$0.fieldname.contained(in: Payments.Parameter.systemIdentifiers.map({ $0.rawValue })) })
         
         for additional in payloadParameters {
@@ -372,7 +373,7 @@ extension Model {
         case .abroad:
             return try? paymentsTransferAnywayAbroadAdditional(
                 parameters,
-                restrictedParameters: restrictedParametersAbroad
+                restrictedParameters: Self.restrictedParametersAbroad
             )
             
         case .sfp:

@@ -10,6 +10,7 @@ import Foundation
 final class EncryptionLocalAgent<E>: LocalAgent where E: EncryptionAgent {
     
     private let encryptionAgent: E
+    private let lock = NSLock()
     
     init(context: Context, encryptionAgent: E) {
         self.encryptionAgent = encryptionAgent
@@ -17,6 +18,9 @@ final class EncryptionLocalAgent<E>: LocalAgent where E: EncryptionAgent {
     }
     
     override func store<T>(_ data: T, serial: String? = nil) throws where T : Encodable {
+        
+        lock.lock()
+        defer { lock.unlock() }
         
         let dataFileName = fileName(for: T.self)
         let data = try context.encoder.encode(data)
@@ -29,6 +33,9 @@ final class EncryptionLocalAgent<E>: LocalAgent where E: EncryptionAgent {
     }
     
     override func load<T>(type: T.Type) -> T? where T : Decodable {
+        
+        lock.lock()
+        defer { lock.unlock() }
         
         let fileName = fileName(for: type)
         

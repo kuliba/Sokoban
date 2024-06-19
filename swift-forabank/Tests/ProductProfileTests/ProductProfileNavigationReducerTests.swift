@@ -6,10 +6,11 @@
 //
 
 @testable import ProductProfile
-import XCTest
-import UIPrimitives
-import RxViewModel
+import ForaTools
 import ProductProfileComponents
+import RxViewModel
+import UIPrimitives
+import XCTest
 
 final class ProductProfileNavigationReducerTests: XCTestCase {
     

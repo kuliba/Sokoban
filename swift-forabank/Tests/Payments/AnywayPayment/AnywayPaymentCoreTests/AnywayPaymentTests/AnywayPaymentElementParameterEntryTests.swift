@@ -689,10 +689,10 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
     
     // MARK: - Helpers
 
-    private typealias DataType = AnywayPayment.Element.Parameter.UIAttributes.DataType
-    private typealias Entry = AnywayPayment.Element.Parameter.Entry
-    private typealias FieldType = AnywayPayment.Element.Parameter.UIAttributes.FieldType
-    private typealias ViewType = AnywayPayment.Element.Parameter.UIAttributes.ViewType
+    private typealias DataType = AnywayElement.Parameter.UIAttributes.DataType
+    private typealias Entry = AnywayElement.Parameter.Entry
+    private typealias FieldType = AnywayElement.Parameter.UIAttributes.FieldType
+    private typealias ViewType = AnywayElement.Parameter.UIAttributes.ViewType
     private typealias Pair = (key: String, value: String)
     
     private func makePairsDataType(
@@ -712,7 +712,7 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
         viewType: ViewType,
         dataType: DataType,
         type: FieldType
-    ) -> AnywayPayment.Element.Parameter {
+    ) -> AnywayElement.Parameter {
         
         makeAnywayPaymentParameter(
             field: makeAnywayPaymentElementParameterField(
@@ -731,7 +731,7 @@ final class AnywayPaymentElementParameterEntryTests: XCTestCase {
         type: FieldType,
         dataType: DataType,
         viewType: ViewType
-    ) -> AnywayPayment.Element.Parameter.UIAttributes {
+    ) -> AnywayElement.Parameter.UIAttributes {
         
         makeAnywayPaymentElementParameterUIAttributes(
             dataType: dataType,

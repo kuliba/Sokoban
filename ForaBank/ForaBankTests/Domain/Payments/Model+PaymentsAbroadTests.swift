@@ -139,14 +139,11 @@ extension Model_PaymentsAbroadTests {
     
     func test_model_restrictedParametersAbroad_shouldReturnIdentifiers() async throws {
         
-        // given
-        let sut = makeSut()
-        
-        let count = sut.restrictedParametersAbroad.count
+        let sut = Model.restrictedParametersAbroad
         // then
-        XCTAssertEqual(count, 10)
+        XCTAssertEqual(sut.count, 11)
         XCTAssertNoDiff(
-            sut.restrictedParametersAbroad,
+            sut,
             [
                 "ru.forabank.sense.code",
                 "ru.forabank.sense.product",
@@ -157,7 +154,8 @@ extension Model_PaymentsAbroadTests {
                 "ru.forabank.sense.category",
                 "countryDropDownList",
                 "countryCurrencyFilter",
-                "paymentSystem"
+                "paymentSystem",
+                "countryPayeeAmount"
             ])
     }
 }

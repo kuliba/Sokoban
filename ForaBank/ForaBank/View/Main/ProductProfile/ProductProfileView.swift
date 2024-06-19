@@ -5,11 +5,12 @@
 //  Created by Дмитрий on 09.03.2022.
 //
 
+import ActivateSlider
+import ForaTools
 import InfoComponent
 import PinCodeUI
 import SberQR
 import SwiftUI
-import ActivateSlider
 
 struct ProductProfileView: View {
     
@@ -433,7 +434,7 @@ extension ProductProfileViewModel {
         detail: .sample,
         history: .sampleHistory,
         fastPaymentsFactory: .legacy,
-        paymentsTransfersFlowManager: .preview,
+        makePaymentsTransfersFlowManager: { _ in .preview },
         userAccountNavigationStateManager: .preview,
         sberQRServices: .empty(),
         unblockCardServices: .preview(),
@@ -453,7 +454,7 @@ extension ProductProfileViewModel {
         detail: .sample,
         history: .sampleHistory,
         fastPaymentsFactory: .legacy,
-        paymentsTransfersFlowManager: .preview,
+        makePaymentsTransfersFlowManager: { _ in .preview },
         userAccountNavigationStateManager: .preview,
         sberQRServices: .empty(),
         unblockCardServices: .preview(),

@@ -29,6 +29,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         let parameterTwo = makeAnywayPaymentParameter(id: "two", value: "TWO")
         let payment = makeAnywayPayment(parameters: [parameterOne, parameterTwo])
         let context = AnywayPaymentContext(
+            initial: makeAnywayPayment(),
             payment: payment,
             staged: [.init("one")],
             outline: makeAnywayPaymentOutline(["one": "one"]),
@@ -327,17 +328,23 @@ final class AnywayPaymentContextTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Parameter = AnywayPayment.Element.Parameter
+    private typealias Parameter = AnywayElement.Parameter
     
     private func makeAnywayPaymentContext(
-        elements: [AnywayPayment.Element],
+        elements: [AnywayElement],
         staged: AnywayPaymentStaged = [],
         outline: AnywayPaymentOutline = makeAnywayPaymentOutline(),
         shouldRestart: Bool = false
     ) -> AnywayPaymentContext {
         
         let payment = makeAnywayPayment(elements: elements)
-        return .init(payment: payment, staged: staged, outline: outline, shouldRestart: shouldRestart)
+        return .init(
+            initial: payment,
+            payment: payment,
+            staged: staged,
+            outline: outline,
+            shouldRestart: shouldRestart
+        )
     }
     
     private func makeTwoParameters(

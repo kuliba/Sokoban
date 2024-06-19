@@ -15,6 +15,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
+    typealias MakeFlowManger = (RootViewModel.RootActions.Spinner?) -> FlowManger
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -40,7 +41,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     var rootActions: RootViewModel.RootActions?
     
     private let model: Model
-    private let flowManager: FlowManger
+    private let makeFlowManager: MakeFlowManger
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let qrViewModelFactory: QRViewModelFactory
@@ -50,7 +51,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     init(
         model: Model,
-        flowManager: FlowManger,
+        makeFlowManager: @escaping MakeFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -69,7 +70,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.route = route
-        self.flowManager = flowManager
+        self.makeFlowManager = makeFlowManager
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
         
@@ -86,7 +87,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     init(
         sections: [PaymentsTransfersSectionViewModel],
         model: Model,
-        flowManager: FlowManger,
+        makeFlowManager: @escaping MakeFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
@@ -100,7 +101,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         self.mode = mode
         self.model = model
         self.route = route
-        self.flowManager = flowManager
+        self.makeFlowManager = makeFlowManager
         self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
         self.qrViewModelFactory = qrViewModelFactory
@@ -119,7 +120,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 
 extension PaymentsTransfersViewModel {
     
-    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     typealias FlowManger = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
     typealias Route = _Route<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
@@ -142,11 +143,12 @@ extension PaymentsTransfersViewModel {
             
             self?.event(.dismiss(.destination))
         }
-        let notify: (PaymentStateProjection) -> Void = { [weak self] in
+        let notify: (AnywayTransactionStatus?) -> Void = { [weak self] in
             
             self?.event(.utilityFlow(.payment(.notified($0))))
         }
         
+        let flowManager = makeFlowManager(rootActions?.spinner)
         let reduce = flowManager.makeReduce(closeAction, notify)
         let (route, effect) = reduce(route, event)
         
@@ -360,34 +362,6 @@ extension PaymentsTransfersViewModel {
         case bottomSheet(BottomSheet)
         case fullScreenSheet(FullScreenSheet)
         case sheet(Sheet)
-        
-        var alert: Alert.ViewModel? {
-            guard case let .alert(alert) = self
-            else { return nil }
-            
-            return alert
-        }
-        
-        var bottomSheet: BottomSheet? {
-            guard case let .bottomSheet(bottomSheet) = self
-            else { return nil }
-            
-            return bottomSheet
-        }
-        
-        var fullScreenSheet: FullScreenSheet? {
-            guard case let .fullScreenSheet(fullScreenSheet) = self
-            else { return nil }
-            
-            return fullScreenSheet
-        }
-        
-        var sheet: Sheet? {
-            guard case let .sheet(sheet) = self
-            else { return nil }
-            
-            return sheet
-        }
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -474,89 +448,7 @@ extension PaymentsTransfersViewModel {
         case openDepositsList(OpenDepositListViewModel)
         case utilityPayment(UtilityFlowState)
         
-        var id: Case {
-            
-            switch self {
-            case .exampleDetail:
-                return .exampleDetail
-            case .userAccount:
-                return .userAccount
-            case .mobile:
-                return .mobile
-            case .phone:
-                return .phone
-            case .payments:
-                return .payments
-            case .serviceOperators:
-                return .serviceOperators
-            case .internetOperators:
-                return .internetOperators
-            case .transportOperators:
-                return .transportOperators
-            case .service:
-                return .service
-            case .internet:
-                return .internet
-            case .transport:
-                return .transport
-            case .template:
-                return .template
-            case .country:
-                return .country
-            case .currencyWallet:
-                return .currencyWallet
-            case .failedView:
-                return .failedView
-            case .c2b:
-                return .c2b
-            case .searchOperators:
-                return .searchOperators
-            case .operatorView:
-                return .operatorView
-            case .paymentsServices:
-                return .paymentsServices
-            case .transportPayments:
-                return .transportPayments
-            case .productProfile:
-                return .productProfile
-            case .openDeposit:
-                return .openDeposit
-            case .openDepositsList:
-                return .openDepositsList
-            case .sberQRPayment:
-                return .sberQRPayment
-            case .utilityPayment:
-                return .utilityPayment
-            }
-        }
-        
-        enum Case {
-            case exampleDetail
-            case userAccount
-            case mobile
-            case phone
-            case payments
-            case serviceOperators
-            case internetOperators
-            case transportOperators
-            case service
-            case internet
-            case transport
-            case template
-            case country
-            case currencyWallet
-            case failedView
-            case c2b
-            case searchOperators
-            case operatorView
-            case paymentsServices
-            case transportPayments
-            case productProfile
-            case openDeposit
-            case openDepositsList
-            case sberQRPayment
-            case utilityPayment
-        }
+        typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
     }
     
     struct FullScreenSheet: Identifiable, Equatable {
@@ -577,9 +469,124 @@ extension PaymentsTransfersViewModel {
     }
 }
 
+// MARK: - Properties
+
+extension PaymentsTransfersViewModel.Modal {
+    
+    var alert: Alert.ViewModel? {
+        guard case let .alert(alert) = self
+        else { return nil }
+        
+        return alert
+    }
+    
+    var bottomSheet: PaymentsTransfersViewModel.BottomSheet? {
+        guard case let .bottomSheet(bottomSheet) = self
+        else { return nil }
+        
+        return bottomSheet
+    }
+    
+    var fullScreenSheet: PaymentsTransfersViewModel.FullScreenSheet? {
+        guard case let .fullScreenSheet(fullScreenSheet) = self
+        else { return nil }
+        
+        return fullScreenSheet
+    }
+    
+    var sheet: PaymentsTransfersViewModel.Sheet? {
+        guard case let .sheet(sheet) = self
+        else { return nil }
+        
+        return sheet
+    }
+}
+
 extension PaymentsTransfersViewModel._Link {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
+    var id: Case {
+        
+        switch self {
+        case .exampleDetail:
+            return .exampleDetail
+        case .userAccount:
+            return .userAccount
+        case .mobile:
+            return .mobile
+        case .phone:
+            return .phone
+        case .payments:
+            return .payments
+        case .serviceOperators:
+            return .serviceOperators
+        case .internetOperators:
+            return .internetOperators
+        case .transportOperators:
+            return .transportOperators
+        case .service:
+            return .service
+        case .internet:
+            return .internet
+        case .transport:
+            return .transport
+        case .template:
+            return .template
+        case .country:
+            return .country
+        case .currencyWallet:
+            return .currencyWallet
+        case .failedView:
+            return .failedView
+        case .c2b:
+            return .c2b
+        case .searchOperators:
+            return .searchOperators
+        case .operatorView:
+            return .operatorView
+        case .paymentsServices:
+            return .paymentsServices
+        case .transportPayments:
+            return .transportPayments
+        case .productProfile:
+            return .productProfile
+        case .openDeposit:
+            return .openDeposit
+        case .openDepositsList:
+            return .openDepositsList
+        case .sberQRPayment:
+            return .sberQRPayment
+        case .utilityPayment:
+            return .utilityPayment
+        }
+    }
+    
+    enum Case {
+        case exampleDetail
+        case userAccount
+        case mobile
+        case phone
+        case payments
+        case serviceOperators
+        case internetOperators
+        case transportOperators
+        case service
+        case internet
+        case transport
+        case template
+        case country
+        case currencyWallet
+        case failedView
+        case c2b
+        case searchOperators
+        case operatorView
+        case paymentsServices
+        case transportPayments
+        case productProfile
+        case openDeposit
+        case openDepositsList
+        case sberQRPayment
+        case utilityPayment
+    }
 }
 
 // MARK: - Action
@@ -667,10 +674,12 @@ private extension PaymentsTransfersViewModel {
     ) {
         rootActions?.spinner.show()
         
+        let flowManager = makeFlowManager(rootActions?.spinner)
         flowManager.handleEffect(effect) { [weak self] in
             
             self?.rootActions?.spinner.hide()
             self?.event($0)
+            _ = flowManager
         }
     }
     
@@ -921,7 +930,7 @@ private extension PaymentsTransfersViewModel {
     
     func handlePaymentButtonTapped(_ action: any Action) {
         
-        if let alertViewModel = paymentsTransfersFactory.makeAlertDataUpdateFailureViewModel({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }), !model.updateInfo.value.areProductsUpdated {
+        if !model.updateInfo.value.areCardsOrAccountsUpdated, let alertViewModel = paymentsTransfersFactory.makeAlertDataUpdateFailureViewModel({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }) {
             event(.setModal(to: .alert(alertViewModel)))
         } else {
             
@@ -1766,11 +1775,22 @@ private extension PaymentsTransfersViewModel {
         route.modal = .alert(alertViewModel)
     }
     
-    private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
+    private func createNavButtonsRight(
+    ) -> [NavigationBarButtonViewModel] {
         
-        [.init(
+        [.barcodeScanner(action: { [weak self] in self?.openScanner() })]
+    }
+}
+
+private extension NavigationBarButtonViewModel {
+    
+    static func barcodeScanner(
+        action: @escaping () -> Void
+    ) -> Self {
+        
+        return .init(
             icon: .ic24BarcodeScanner2,
-            action: { [weak self] in self?.openScanner() }
-        )]
+            action: action
+        )
     }
 }

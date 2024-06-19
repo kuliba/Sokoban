@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import UIPrimitives
 
 struct ListVerticalRoundImageView: View {
     
@@ -23,7 +24,7 @@ struct ListVerticalRoundImageView: View {
             
             LazyVStack(alignment: .leading, spacing: config.spacings.lazyVstack) {
                 
-                ForEach(model.list(showAll: showAll), content: itemView(item:))
+                ForEach(model.list(showAll: showAll), content: itemView)
                 
                 if let _ = model.data.displayedCount {
                     buttonShowAll

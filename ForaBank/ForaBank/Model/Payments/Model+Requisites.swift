@@ -314,14 +314,14 @@ extension Model {
                     do {
                         
                         let amount: Double = try qrData.value(type: .general(.amount), mapping: qrMapping)
-                        let amountParameter = createAmountParameter(value: String(amount), currencySymbol: currencySymbol, product: product)
+                        let amountParameter = createAmountParameter(value: String(amount), currencySymbol: currencySymbol, productBalance: product.balance)
                         parameters.append(amountParameter)
                         
                         return createOperationStep(parameters: parameters, isCompleted: false, innValueCount: innValue.count, kppParameterId: kppParameterId)
                         
                     } catch {
                         
-                        let amountParameter = createAmountParameter(currencySymbol: currencySymbol, product: product)
+                        let amountParameter = createAmountParameter(currencySymbol: currencySymbol, productBalance: product.balance)
                         parameters.append(amountParameter)
                         
                        return createOperationStep(parameters: parameters, isCompleted: false, innValueCount: innValue.count, kppParameterId: kppParameterId)
@@ -329,7 +329,7 @@ extension Model {
                     
                 } else {
                     
-                    let amountParameter = createAmountParameter(currencySymbol: currencySymbol, product: product)
+                    let amountParameter = createAmountParameter(currencySymbol: currencySymbol, productBalance: product.balance)
                     parameters.append(amountParameter)
                     
                    return createOperationStep(parameters: parameters, isCompleted: false, innValueCount: innValue.count, kppParameterId: kppParameterId)
@@ -337,7 +337,7 @@ extension Model {
                 
             } else {
                 
-                let amountParameter = createAmountParameter(currencySymbol: currencySymbol, product: product, withMaxAmountInfinity: true)
+                let amountParameter = createAmountParameter(currencySymbol: currencySymbol, productBalance: product.balance)
                 parameters.append(amountParameter)
                 
                 return createOperationStep(parameters: parameters, isCompleted: false, innValueCount: innValue.count, kppParameterId: kppParameterId)
@@ -349,19 +349,18 @@ extension Model {
     }
     // MARK: Amount Parameter
     
-    private func createAmountParameter(value: String? = nil, currencySymbol: String, product: ProductData, withMaxAmountInfinity: Bool = false) -> Payments.ParameterAmount {
-        
-        let validator: Payments.ParameterAmount.Validator
-        
-        if withMaxAmountInfinity {
-            validator = .init(minAmount: 0.01, maxAmount: .infinity)
-        } else {
-            validator = .init(minAmount: 0.01, maxAmount: product.balance)
-        }
+    private func createAmountParameter(value: String? = nil, currencySymbol: String, productBalance: Double?) -> Payments.ParameterAmount {
         
         let info = Payments.ParameterAmount.Info.action(title: "Возможна комиссия", .name("ic24Info"), .feeInfo)
         
-        return Payments.ParameterAmount(value: value, title: "Сумма перевода", currencySymbol: currencySymbol, transferButtonTitle: "Продолжить", validator: validator, info: info)
+        return Payments.ParameterAmount(
+            value: value,
+            title: "Сумма перевода",
+            currencySymbol: currencySymbol,
+            transferButtonTitle: "Продолжить",
+            validator: .init(minAmount: 0.01, maxAmount: productBalance),
+            info: info
+        )
     }
 
     private func createOperationStep(

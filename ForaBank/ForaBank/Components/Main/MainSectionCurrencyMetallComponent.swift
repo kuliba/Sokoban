@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
-import Shimmer
+import UIPrimitives
 
 //MARK: - ViewModel
 
@@ -344,7 +344,7 @@ extension MainSectionCurrencyMetallView {
                                 Circle()
                                     .fill(Color.mainColorsGrayMedium)
                                     .frame(width: 40, height: 40)
-                                    .shimmering(active: true, bounce: false)
+                                    .shimmering()
                             }
                         
                             VStack(spacing: 2) {
@@ -389,7 +389,7 @@ extension MainSectionCurrencyMetallView {
                     RoundedRectangle(cornerRadius: 12)
                         .frame(width: 183, height: 124)
                         .foregroundColor(.mainColorsGray)
-                        .shimmering(active: true, bounce: false)
+                        .shimmering()
                 }
             }
         }

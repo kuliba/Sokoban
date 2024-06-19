@@ -6,10 +6,7 @@
 //
 
 import PaymentComponents
-import RxViewModel
 import SwiftUI
-
-typealias ObservingProductSelectViewModel = RxObservingViewModel<ProductSelect, ProductSelectEvent, Never>
 
 struct ProductSelectStateWrapperView: View {
     
