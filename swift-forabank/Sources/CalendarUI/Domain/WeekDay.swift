@@ -1,13 +1,16 @@
 //
-//  File.swift
-//  
+//  WeekDay.swift
+//
 //
 //  Created by Дмитрий Савушкин on 22.05.2024.
 //
 
 import Foundation
 
-public enum WeekDay: Int { case sunday = 1, monday, tuesday, wednesday, thursday, friday, saturday }
+public enum WeekDay: Int {
+    
+    case sunday = 1, monday, tuesday, wednesday, thursday, friday, saturday
+}
 
 public enum WeekdaySymbolFormat { case veryShort, short, full }
 

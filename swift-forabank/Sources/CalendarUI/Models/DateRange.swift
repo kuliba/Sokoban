@@ -9,8 +9,8 @@ import Foundation
 
 public class MDateRange {
     
-    private var lowerDate: Date?
-    private var upperDate: Date?
+    public var lowerDate: Date?
+    public var upperDate: Date?
 
     init(_ lowerDate: Date?, _ upperDate: Date?) {
         
@@ -32,8 +32,11 @@ extension MDateRange {
 extension MDateRange {
     
     func setLowerDate(_ date: Date) {
-        if let upperDate, date <= upperDate { lowerDate = date }
-        else if upperDate == nil { lowerDate = date }
+        if let upperDate, date <= upperDate {
+            lowerDate = date
+        } else if upperDate == nil {
+            lowerDate = date
+        }
     }
     
     func setUpperDate(_ date: Date) {
@@ -49,8 +52,11 @@ extension MDateRange {
 
 // MARK: - Getting Range
 extension MDateRange {
+    
     func _getRange() -> ClosedRange<Date>? {
-        if let lowerDate { return .init(uncheckedBounds: (lowerDate, upperDate ?? lowerDate)) }
+        if let lowerDate {
+            return .init(uncheckedBounds: (lowerDate, upperDate ?? lowerDate))
+        }
         return nil
     }
 }

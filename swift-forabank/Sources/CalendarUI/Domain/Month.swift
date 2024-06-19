@@ -23,22 +23,30 @@ extension [Month] {
             .map(createMonthViewData)
     }
 }
-private extension [Month] {
+
+extension [Month] {
     
     static func createDatesRange() -> ClosedRange<Int> { 
         let startDate = MCalendar.startDate, endDate = MCalendar.endDate
-        guard startDate <= endDate else { fatalError("Start date must be lower than end date") }
+        guard startDate <= endDate else { 
+            fatalError("Start date must be lower than end date")
+        }
 
         let numberOfMonthsBetweenDates = startDate.distance(to: endDate, in: .month)
         return 0...Swift.min(numberOfMonthsBetweenDates, 10)
     }
     
-    static func createMonthDate(_ index: Int) -> Date { MCalendar.startDate.adding(index, .month) }
-    static func createMonthViewData(_ monthStart: Date) -> Month { .generate(monthStart) }
+    static func createMonthDate(_ index: Int) -> Date {
+        MCalendar.startDate.adding(index, .month)
+    }
+    
+    static func createMonthViewData(_ monthStart: Date) -> Month {
+        .generate(monthStart)
+    }
 }
 
 // MARK: - Generating Single Month
-private extension Month {
+extension Month {
     
     static func generate(_ month: Date) -> Self {
         let rawDates = createRawDates(month)
@@ -47,7 +55,8 @@ private extension Month {
         return .init(month: month, items: groupedDates)
     }
 }
-private extension Month {
+
+extension Month {
     
     static func createRawDates(_ month: Date) -> [Date] {
         let items = createRawDateItems(month, month.getWeekday())
@@ -60,7 +69,8 @@ private extension Month {
             .reduce(into: [], reduceRawDates)
     }
 }
-private extension Month {
+
+extension Month {
     
     static func createRawDateItems(
         _ monthStartDate: Date,
@@ -89,7 +99,8 @@ private extension Month {
         }
     }
 }
-private extension Month {
+
+extension Month {
     
     static func createRawDate(_ index: Int, _ monthStartDate: Date, _ monthStartWeekday: WeekDay) -> Date {
         let shiftIndex = {
@@ -104,7 +115,8 @@ private extension Month {
         return date.isLater(.month, than: monthStartDate)
     }
 }
-private extension Month {
+
+extension Month {
     
     static var weekdaysNumber: Int { WeekDay.allCases.count }
 }

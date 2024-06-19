@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MCalendar {
+public struct MCalendar {
     
     static var startDate: Date = .now.start(of: .year)
     static var endDate: Date = .distantFuture.end(of: .month)
