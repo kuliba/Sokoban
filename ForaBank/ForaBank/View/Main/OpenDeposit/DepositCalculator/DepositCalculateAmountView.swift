@@ -150,6 +150,10 @@ extension DepositCalculateAmountView {
             textField.font = UIFont(name: "Inter-SemiBold", size: 24)
             textField.keyboardType = .numberPad
             
+            textField.autocorrectionType = .no
+            textField.autocapitalizationType = .none
+            textField.spellCheckingType = .no
+            
             return textField
         }
         
@@ -188,26 +192,30 @@ extension DepositCalculateAmountView {
             }
             
             func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-                
+             
                 guard let text = textField.text else {
                     return false
                 }
                 
                 var temporary = text.filtered()
                 
-                if string.isEmpty && temporary.count > 0 {
+                if string.isEmpty {
+
+                    if temporary.count > 0 {
+                        temporary.removeLast()
+                    }
+                    viewModel.value = Double(temporary) ?? 0
                     
-                    guard let stringRange = Range(range, in: text) else { return false }
-                    temporary = text.replacingCharacters(in: stringRange, with: string)
-                }
-                
-                let filtered = "\(temporary)\(string)".filtered()
-                
-                if filtered.isEmpty == true {
                     return true
                 }
                 
+                var filtered = "\(temporary)\(string)".filtered()
+                
                 if filtered.count > 1 && filtered.first == "0" {
+                  
+                    filtered.removeFirst()
+                    viewModel.value = Double(filtered) ?? 0
+                    
                     return false
                 }
                 
