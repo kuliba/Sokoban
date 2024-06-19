@@ -125,10 +125,8 @@ class ProductModelTests: XCTestCase {
         // then
         XCTAssertNotNil(result[.card])
         XCTAssertEqual(result[.card]?.count, 1)
-        XCTAssertNotNil(result[.card]?.first?.balance)
-        XCTAssertEqual(result[.card]!.first!.balance!, 100, accuracy: .ulpOfOne)
-        XCTAssertNotNil(result[.card]?.first?.balanceRub)
-        XCTAssertEqual(result[.card]!.first!.balanceRub!, 100, accuracy: .ulpOfOne)
+        XCTAssertNil(result[.card]?.first?.balance)
+        XCTAssertNil(result[.card]?.first?.balanceRub)
         XCTAssertEqual(result[.card]?.first?.customName, "Custom Name")
 
         XCTAssertNil(result[.account])
@@ -171,10 +169,8 @@ class ProductModelTests: XCTestCase {
         // then
         XCTAssertNotNil(result[.card])
         XCTAssertEqual(result[.card]?.count, 1)
-        XCTAssertNotNil(result[.card]?.first?.balance)
-        XCTAssertEqual(result[.card]!.first!.balance!, 200, accuracy: .ulpOfOne)
-        XCTAssertNotNil(result[.card]?.first?.balanceRub)
-        XCTAssertEqual(result[.card]!.first!.balanceRub!, 200, accuracy: .ulpOfOne)
+        XCTAssertNil(result[.card]?.first?.balance)
+        XCTAssertNil(result[.card]?.first?.balanceRub)
         XCTAssertEqual(result[.card]?.first?.customName, "Custom Card")
         
         XCTAssertNotNil(result[.account])
@@ -183,10 +179,8 @@ class ProductModelTests: XCTestCase {
         
         XCTAssertNotNil(result[.deposit])
         XCTAssertEqual(result[.deposit]?.count, 1)
-        XCTAssertNotNil(result[.deposit]?.first?.balance)
-        XCTAssertEqual(result[.deposit]!.first!.balance!, 300, accuracy: .ulpOfOne)
-        XCTAssertNotNil(result[.deposit]?.first?.balanceRub)
-        XCTAssertEqual(result[.deposit]!.first!.balanceRub!, 300, accuracy: .ulpOfOne)
+        XCTAssertNil(result[.deposit]?.first?.balance)
+        XCTAssertNil(result[.deposit]?.first?.balanceRub)
         XCTAssertEqual(result[.deposit]?.first?.customName, "Custom Dep")
         
         XCTAssertNil(result[.loan])

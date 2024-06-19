@@ -29,7 +29,9 @@ extension RootViewModelFactory {
         
         let httpClient: HTTPClient = model.authenticatedHTTPClient()
         
-        model.getProducts = Services.getProductListByType(httpClient, logger: logger)
+        let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
+        
+        model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
         
         let rsaKeyPairStore = makeLoggingStore(
             store: KeyTagKeyChainStore<RSADomain.KeyPair>(

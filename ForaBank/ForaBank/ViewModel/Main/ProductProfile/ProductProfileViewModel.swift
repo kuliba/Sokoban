@@ -1518,14 +1518,10 @@ private extension ProductProfileViewModel {
                        let productFrom = model.product(productId: productIdFrom),
                        let productTo = model.product(productId: productIdTo)
                     {
-                        
-                        if productTo.productType == productFrom.productType {
-                            model.action.send(ModelAction.Products.Update.ForProductType(productType: productTo.productType))
-
-                        } else {
-                            model.action.send(ModelAction.Products.Update.ForProductType(productType: productTo.productType))
-                            model.action.send(ModelAction.Products.Update.ForProductType(productType: productFrom.productType))
-                        }
+                        model.reloadProducts(
+                            productTo: productTo,
+                            productFrom: productFrom
+                        )
                     }
                     
                     self.bind(payload.viewModel)
