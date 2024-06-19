@@ -1896,3 +1896,8 @@ extension Payments.ParameterHeader.Icon {
     
     static let sbpIcon: Self = .name("ic24Sbp")
 }
+
+extension Payments.ParameterSelect {
+    
+    static let kppTitle: String = "КПП получателя"
+}

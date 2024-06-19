@@ -218,7 +218,7 @@ extension Model {
                         let kppParameterSelect = Payments.ParameterSelect(
                             .init(id: kppParameterId, value: options.first?.id),
                             icon: .name("ic24FileHash"),
-                            title: "КПП получателя",
+                            title: Payments.ParameterSelect.kppTitle,
                             placeholder: "Начните ввод для поиска",
                             options: options,
                             description: "Выберите из \(options.count)",

@@ -286,6 +286,11 @@ extension PaymentsSelectView.ViewModel {
                     
                 }.store(in: &bindings)
         }
+        
+        func isDisabledTF(_ title: String) -> Bool {
+            
+            title == Payments.ParameterSelect.kppTitle
+        }
     }
     
     struct OptionViewModel: Identifiable, Equatable {
@@ -566,6 +571,7 @@ extension PaymentsSelectView {
                         
                         RegularTextFieldView(viewModel: viewModel.textField, font: .systemFont(ofSize: 16), backgroundColor: Color.clear, tintColor: .textSecondary, textColor: .textSecondary)
                             .accessibilityIdentifier("ParameterSelectFilterInputText")
+                            .disabled(viewModel.isDisabledTF(viewModel.title))
                     }
                     
                     Spacer()

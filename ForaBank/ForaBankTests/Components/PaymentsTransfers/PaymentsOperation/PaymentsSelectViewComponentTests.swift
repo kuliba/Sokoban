@@ -224,6 +224,35 @@ final class PaymentsSelectViewComponentTests: XCTestCase {
         
         XCTAssertNil(limit)
     }
+    
+    // MARK: - Is Disabled TextField
+   
+    func test_isDisabledTF_withKppTitle_shouldReturnTrue() {
+        
+        let sut = makeSut(selectedOptionId: nil, title: "КПП получателя")
+        if case let .list(optionsListViewModel) = sut.state {
+            
+            XCTAssertTrue(optionsListViewModel.isDisabledTF(optionsListViewModel.title))
+        }
+    }
+    
+    func test_isDisabledTF_withNonKppTitle_shouldReturnFalse() {
+        
+        let sut = makeSut(selectedOptionId: nil, title: "Тип оплаты")
+        if case let .list(optionsListViewModel) = sut.state {
+            
+            XCTAssertFalse(optionsListViewModel.isDisabledTF(optionsListViewModel.title))
+        }
+    }
+    
+    func test_isDisabledTF_withEmptyString_shouldReturnFalse() {
+        
+        let sut = makeSut(selectedOptionId: nil, title: "")
+        if case let .list(optionsListViewModel) = sut.state {
+            
+            XCTAssertFalse(optionsListViewModel.isDisabledTF(optionsListViewModel.title))
+        }
+    }
 }
 
 //MARK: - Helpers
@@ -232,7 +261,10 @@ private extension PaymentsSelectViewComponentTests {
     
     typealias OptionsListVM = PaymentsSelectView.ViewModel.OptionsListViewModel
     
-    func makeSut(selectedOptionId: String?, options: [Payments.ParameterSelect.Option] = Payments.ParameterSelect.sampleOptions) -> PaymentsSelectView.ViewModel {
+    func makeSut(
+        selectedOptionId: String?,
+        title: String = "Тип оплаты",
+        options: [Payments.ParameterSelect.Option] = Payments.ParameterSelect.sampleOptions) -> PaymentsSelectView.ViewModel {
         
         PaymentsSelectView.ViewModel(
             with: .init(
@@ -240,7 +272,7 @@ private extension PaymentsSelectViewComponentTests {
                     id: UUID().uuidString,
                     value: selectedOptionId),
                 icon: .name("ic24Bank"),
-                title: "Тип оплаты",
+                title: title,
                 placeholder: "Выберете тип",
                 options: options))
     }
@@ -276,4 +308,11 @@ private extension Payments.ParameterSelect {
         .init(id: "0", name: "Оплата наличными"),
         .init(id: "1", name: "Оплата переводом")
     ]
+}
+
+private struct EmptyReducer<State, Event>: Reducer {
+    
+    func reduce(_ state: State, _ event: Event, _ completion: @escaping (State) -> Void) {
+        completion(state)
+    }
 }

@@ -10,8 +10,9 @@ import XCTest
 
 final class Model_RequisitesTests: XCTestCase {
     
-    func testValidateKppRules() {
-        let rules = makeSUT().validateKppParameter()
+    func testValidateKppRulesWhenInnCountGreaterThan10() {
+        
+        let rules = makeSUT().validateKppParameter(12)
         
         XCTAssertEqual(rules.rules.count, 2)
         
@@ -20,6 +21,13 @@ final class Model_RequisitesTests: XCTestCase {
         
         let regexpRule = rules.rules[1] as! Payments.Validation.RegExpRule
         XCTAssertEqual(regexpRule.regExp, "^[0-9]\\d*$")
+    }
+    
+    func testValidateKppRulesWhenInnCountLessThanOrEqualTo10() {
+        
+        let rules = makeSUT().validateKppParameter(10)
+        
+        XCTAssertTrue(rules.rules.isEmpty)
     }
     
     func testValidateCompanyNameRules() {
