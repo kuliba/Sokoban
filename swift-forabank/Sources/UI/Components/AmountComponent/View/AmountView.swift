@@ -71,7 +71,12 @@ where InfoView: View {
         }
     }
     
+    @ViewBuilder
     private func textField() -> some View {
+        
+        let textFieldPublisher = textFieldModel.$state
+            .map(getDecimal)
+            .removeDuplicates(by: decimalEqual)
         
         TextFieldView(
             viewModel: textFieldModel,
@@ -83,7 +88,7 @@ where InfoView: View {
                 placeholderColor: .clear
             )
         )
-        .onReceive(textFieldModel.$state.map(getDecimal)) { event(.edit($0)) }
+        .onReceive(textFieldPublisher) { event(.edit($0)) }
     }
     
     @ViewBuilder
@@ -118,6 +123,19 @@ where InfoView: View {
             amount.button.title.text(withConfig: config.text)
         }
     }
+}
+
+// MARK: - Helpers
+
+private func decimalEqual(
+    _ lhs: Decimal,
+    _ rhs: Decimal
+) -> Bool {
+
+    let lhs = NSDecimalNumber(decimal: lhs)
+    let rhs = NSDecimalNumber(decimal: rhs)
+    
+    return lhs.compare(rhs) == .orderedSame
 }
 
 // MARK: - Previews

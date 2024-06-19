@@ -6,6 +6,7 @@
 //
 
 import AnywayPaymentDomain
+import ForaTools
 import PaymentComponents
 import SwiftUI
 
@@ -13,21 +14,29 @@ final class AnywayElementModelMapper {
     
     private let currencyOfProduct: CurrencyOfProduct
     private let getProducts: GetProducts
-    private let initiateOTP: InitiateOTP
+    private let settings: Settings
     
     init(
         currencyOfProduct: @escaping CurrencyOfProduct,
         getProducts: @escaping GetProducts,
-        initiateOTP: @escaping InitiateOTP
+        flag: StubbedFeatureFlag.Option
     ) {
         self.currencyOfProduct = currencyOfProduct
         self.getProducts = getProducts
-        self.initiateOTP = initiateOTP
+        self.settings = flag == .stub ? .test : .default
     }
     
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
-    typealias InitiateOTP = CountdownEffectHandler.InitiateOTP
+    
+    struct Settings: Equatable {
+        
+        let timerDuration: Int
+        let otpLength: Int
+        
+        static let `default`: Self = .init(timerDuration: 60, otpLength: 6)
+        static let test: Self = .init(timerDuration: 6, otpLength: 6)
+    }
 }
 
 extension AnywayElementModelMapper {
@@ -177,7 +186,7 @@ private extension AnywayElementModelMapper {
         switch widget {
         case let .otp(otp):
 #warning("add duration to settings")
-            return .widget(.otp(makeOTPViewModel(duration: 60, otp: otp, event: event)))
+            return .widget(.otp(makeOTPViewModel(otp: otp, event: event)))
             
         case let .product(product):
             return .widget(.product(makeProductSelectViewModel(with: product, event: { event(.payment($0)) })))
@@ -214,39 +223,17 @@ private extension AnywayElementModelMapper {
         )
     }
     
-#warning("event here is too wide, contain to widget")
     private func makeOTPViewModel(
-        duration timerDuration: Int,
         otp: Int?,
         event: @escaping (NotifyEvent) -> Void
     ) -> AnywayElementModel.Widget.OTPViewModel {
         
-        // TODO: add timeDuration and otpLength to Settings
-        let timerDuration = 60
-        let otpLength = 6
-                
         return .init(
             otpText: otp.map { "\($0)" } ?? "",
-            timerDuration: timerDuration,
-            otpLength: otpLength,
-            initiateOTP: { _ in event(.getVerificationCode) },
-            submitOTP: { _,_ in },
-            observe: { state in
-                
-                switch state.status {
-                case let .failure(failure):
-#warning("add error handling widget event!")
-#warning("note 2 error case needed: recoverable wrong OTP value and terminal when all attempts are exhausted")
-                    // self.event(.widget(.otp(.failure(failure))))
-                    dump(failure)
-                    
-                case let .input(input):
-                    event(.payment(.widget(.otp(input.otpField.text))))
-                    
-                case .validOTP:
-                    break
-                }
-            }
+            timerDuration: settings.timerDuration,
+            otpLength: settings.otpLength,
+            resend: { event(.getVerificationCode) },
+            observe: { event(.payment(.widget(.otp($0)))) }
         )
     }
 
@@ -273,6 +260,54 @@ private extension AnywayElementModelMapper {
 }
 
 // MARK: - Adapters
+
+private extension TimedOTPInputViewModel {
+    
+    convenience init(
+        otpText: String,
+        timerDuration: Int,
+        otpLength: Int,
+        timer: any TimerProtocol = RealTimer(),
+        resend: @escaping () -> Void,
+        observe: @escaping Observe = { _ in },
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) {
+        let countdownReducer = CountdownReducer(duration: timerDuration)
+        let decorated: OTPInputReducer.CountdownReduce = { state, event in
+            
+            if case (.completed, .start) = (state, event) {
+                resend()
+            }
+            
+            return countdownReducer.reduce(state, event)
+        }
+        
+        let otpFieldReducer = OTPFieldReducer(length: otpLength)
+        let otpInputReducer = OTPInputReducer(
+            countdownReduce: decorated,
+            otpFieldReduce : otpFieldReducer.reduce(_:_:)
+        )
+        
+        let countdownEffectHandler = CountdownEffectHandler(initiate: { _ in })
+        let otpFieldEffectHandler = OTPFieldEffectHandler(submitOTP: { _,_ in })
+        let otpInputEffectHandler = OTPInputEffectHandler(
+            handleCountdownEffect: countdownEffectHandler.handleEffect(_:_:),
+            handleOTPFieldEffect: otpFieldEffectHandler.handleEffect(_:_:))
+
+        self.init(
+            initialState: .starting(
+                phoneNumber: "",
+                duration: timerDuration,
+                text: otpText
+            ),
+            reduce: otpInputReducer.reduce(_:_:),
+            handleEffect: otpInputEffectHandler.handleEffect(_:_:),
+            timer: timer,
+            observe: observe,
+            scheduler: scheduler
+        )
+    }
+}
 
 private extension InputState where Icon == String {
     

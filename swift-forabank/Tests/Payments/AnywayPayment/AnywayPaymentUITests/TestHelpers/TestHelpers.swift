@@ -52,6 +52,7 @@ func makeTransaction(
 }
 
 func makeAnywayPaymentContext(
+    initial: AnywayPayment = makeAnywayPayment(),
     payment: AnywayPayment = makeAnywayPayment(),
     staged: AnywayPaymentStaged = [],
     outline: AnywayPaymentOutline = makeAnywayPaymentOutline(),
@@ -59,6 +60,7 @@ func makeAnywayPaymentContext(
 ) -> AnywayPaymentContext {
     
     return .init(
+        initial: initial,
         payment: payment,
         staged: staged,
         outline: outline,
@@ -70,16 +72,14 @@ func makeAnywayPayment(
     elements: [AnywayElement] = [],
     footer: Payment<AnywayElement>.Footer = .continue,
     infoMessage: String? = nil,
-    isFinalStep: Bool = false,
-    isFraudSuspected: Bool = false
+    isFinalStep: Bool = false
 ) -> AnywayPayment {
     
     return .init(
         elements: elements,
         footer: footer,
         infoMessage: infoMessage,
-        isFinalStep: isFinalStep,
-        isFraudSuspected: isFraudSuspected
+        isFinalStep: isFinalStep
     )
 }
 

@@ -227,7 +227,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
                     return .services(services, for: `operator`)
                     
                 case let .startPayment(response):
-                    let state = makeTransaction(from: response, with: outline)
+                    let state = initiateTransaction(from: response, with: outline)
                     
                     return .startPayment(state)
                 }
@@ -235,7 +235,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             .mapError(PrepaymentEvent.ProcessSelectionFailure.init)
     }
     
-    private func makeTransaction(
+    private func initiateTransaction(
         from response: StartPaymentResponse,
         with outline: AnywayPaymentOutline
     ) -> AnywayTransactionState.Transaction {
@@ -248,6 +248,12 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         )
         
         let context = AnywayPaymentContext(
+            initial: .init(
+                elements: [], 
+                footer: .continue,
+                infoMessage: nil,
+                isFinalStep: false
+            ),
             payment: payment,
             staged: .init(),
             outline: outline,
@@ -315,8 +321,7 @@ private extension AnywayPaymentDomain.AnywayPayment {
             elements: [],
             footer: .continue,
             infoMessage: nil,
-            isFinalStep: false,
-            isFraudSuspected: false
+            isFinalStep: false
         )
         self = empty.update(with: update, and: outline)
     }

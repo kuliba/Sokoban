@@ -46,7 +46,6 @@ struct TimedOTPInputView<IconView: View>: View {
                         resend: { event(.resend) }
                     )
                     .frame(maxWidth: .infinity, alignment: .trailing)
-                    .layoutPriority(1)
                 }
             }
         }
@@ -83,15 +82,8 @@ private extension TimedOTPInputView {
                 with: config.resend
             )
             
-        case .failure(.connectivityError):
-            Text("connectivityError")
-                .bold()
-                .foregroundColor(.red)
-            
-        case let .failure(.serverError(message)):
-            Text(message)
-                .bold()
-                .foregroundColor(.red)
+        case .failure:
+            EmptyView()
             
         case let .running(remaining: seconds),
             let .starting(duration: seconds):
@@ -116,6 +108,7 @@ private extension TimedOTPInputView {
                 config: config.config
             )
         }
+        .buttonStyle(PlainButtonStyle())
     }
     
     func timerLabel(

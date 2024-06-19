@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 14.06.2024.
 //
 
-import ChangeSVCardLimitAPI
+import SVCardLimitAPI
 import RemoteServices
 import XCTest
 

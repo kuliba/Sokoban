@@ -42,6 +42,7 @@ private extension AnywayPaymentTransactionReducerComposer {
         let paymentReducer = AnywayPaymentReducer()
         let (payment, effect): (AnywayPayment, AnywayPaymentReducer.Effect?) = paymentReducer.reduce(state.payment, event)
         let state = AnywayPaymentContext(
+            initial: state.initial,
             payment: payment,
             staged: state.staged,
             outline: state.outline,
@@ -69,9 +70,10 @@ private extension AnywayPaymentTransactionReducerComposer {
     func composeInspector() -> Inspector {
         
         return .init(
-            checkFraud: { $0.payment.isFraudSuspected },
+            checkFraud: { $0.details.control.isFraudSuspected },
             getVerificationCode: { $0.payment.otp },
             makeDigest: { $0.makeDigest() },
+            resetPayment: { $0.resetPayment() },
             restorePayment: { $0.restorePayment() },
             validatePayment: validatePayment,
             wouldNeedRestart: { $0.wouldNeedRestart }
@@ -91,7 +93,7 @@ private extension AnywayPaymentTransactionReducerComposer {
     }
     
     typealias Effect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>
-    typealias Inspector = PaymentInspector<AnywayPaymentContext, AnywayPaymentDigest>
+    typealias Inspector = PaymentInspector<AnywayPaymentContext, AnywayPaymentDigest, AnywayPaymentUpdate>
 }
 
 private extension AnywayPaymentContext {
@@ -103,7 +105,13 @@ private extension AnywayPaymentContext {
         
         let payment = payment.update(with: update, and: outline)
         
-        return .init(payment: payment, staged: staged, outline: outline, shouldRestart: shouldRestart)
+        return .init(
+            initial: initial,
+            payment: payment,
+            staged: staged,
+            outline: outline,
+            shouldRestart: shouldRestart
+        )
     }
 }
 

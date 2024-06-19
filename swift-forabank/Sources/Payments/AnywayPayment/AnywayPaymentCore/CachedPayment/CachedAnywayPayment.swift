@@ -15,20 +15,17 @@ public struct CachedAnywayPayment<ElementModel> {
     public let footer: Footer
     public let infoMessage: String?
     public let isFinalStep: Bool
-    public let isFraudSuspected: Bool
     
     private init(
         cachedModels: CachedModels,
         footer: Footer,
         infoMessage: String?,
-        isFinalStep: Bool,
-        isFraudSuspected: Bool
+        isFinalStep: Bool
     ) {
         self.cachedModels = cachedModels
         self.footer = footer
         self.infoMessage = infoMessage
         self.isFinalStep = isFinalStep
-        self.isFraudSuspected = isFraudSuspected
     }
     
     public init(
@@ -39,8 +36,7 @@ public struct CachedAnywayPayment<ElementModel> {
             cachedModels: .init(pairs: payment.elements.map { ($0.id, map($0)) }),
             footer: .init(payment),
             infoMessage: payment.infoMessage,
-            isFinalStep: payment.isFinalStep,
-            isFraudSuspected: payment.isFraudSuspected
+            isFinalStep: payment.isFinalStep
         )
     }
     
@@ -97,8 +93,7 @@ extension CachedAnywayPayment {
             cachedModels: updatedCachedModels,
             footer: .init(payment),
             infoMessage: payment.infoMessage,
-            isFinalStep: payment.isFinalStep,
-            isFraudSuspected: payment.isFraudSuspected
+            isFinalStep: payment.isFinalStep
         )
     }
 }

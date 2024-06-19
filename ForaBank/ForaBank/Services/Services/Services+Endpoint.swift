@@ -319,7 +319,7 @@ extension Services.Endpoint {
     
     static let getVerificationCode: Self = .init(
         pathPrefix: .transfer,
-        version: nil,
+        version: .v2,
         serviceName: .getVerificationCode
     )
     

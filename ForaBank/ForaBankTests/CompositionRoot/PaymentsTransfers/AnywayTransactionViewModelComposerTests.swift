@@ -61,7 +61,7 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
             elementMapper: .init(
                 currencyOfProduct: { _ in "₽" },
                 getProducts: { [] },
-                initiateOTP: { _ in }
+                flag: .stub
             ),
             microServices: .init(
                 getVerificationCode: { _ in },
@@ -120,6 +120,7 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
     private typealias AnywayPayment = AnywayPaymentDomain.AnywayPayment
     
     private func makeAnywayPaymentContext(
+        initial: AnywayPayment? = nil,
         payment: AnywayPayment? = nil,
         staged: AnywayPaymentStaged = [],
         outline: AnywayPaymentOutline? = nil,
@@ -127,6 +128,7 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
     ) -> AnywayPaymentContext {
         
         return .init(
+            initial: initial ?? makeAnywayPayment(),
             payment: payment ?? makeAnywayPayment(),
             staged: staged,
             outline: outline ?? makeAnywayPaymentOutline(),
@@ -147,8 +149,7 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
             elements: elements,
             footer: footer,
             infoMessage: infoMessage,
-            isFinalStep: isFinalStep,
-            isFraudSuspected: isFraudSuspected
+            isFinalStep: isFinalStep
         )
     }
     

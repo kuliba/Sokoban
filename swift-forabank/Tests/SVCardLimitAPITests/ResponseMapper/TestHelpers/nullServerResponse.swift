@@ -2,7 +2,7 @@
 //  nullServerResponse.swift
 //  
 //
-//  Created by Andryusina Nataly on 14.06.2024.
+//  Created by Andryusina Nataly on 18.06.2024.
 //
 
 let nullServerResponse = """

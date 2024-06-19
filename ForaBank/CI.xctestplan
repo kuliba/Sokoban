@@ -412,15 +412,15 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "ChangeSVCardLimitAPITests",
-        "name" : "ChangeSVCardLimitAPITests"
+        "identifier" : "SelectorComponentTests",
+        "name" : "SelectorComponentTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
-        "identifier" : "SelectorComponentTests",
-        "name" : "SelectorComponentTests"
+        "containerPath" : "container:",
+        "identifier" : "SVCardLimitAPITests",
+        "name" : "SVCardLimitAPITests"
       }
     }
   ],

@@ -357,11 +357,17 @@ final class TransactionReducerTests: XCTestCase {
         XCTAssertNoDiff(getVerificationCodeSpy.payloads, [payment])
     }
     
-    func test_continue_shouldSetStatusToInflightOnValidPaymentWithShouldRestartPayment() {
+    func test_continue_shouldResetPaymentAnsSetStatusToInflightOnValidPaymentWithShouldRestartPayment() {
         
         let state = makeValidTransaction(makeContext(shouldRestart: true))
+        let initial = makeContext()
+        let sut = makeSUT(resetPayment: { _ in initial })
         
-        assertState(.continue, on: state) { $0.status = .inflight }
+        assertState(sut: sut, .continue, on: state) {
+        
+            $0.context = initial
+            $0.status = .inflight
+        }
     }
     
     func test_continue_shouldDeliverInitiatePaymentEffectWithPaymentDigestOnValidPaymentWithShouldRestartPayment() {
@@ -972,17 +978,19 @@ final class TransactionReducerTests: XCTestCase {
         assert(.paymentRestartConfirmation(false), on: state, effect: nil)
     }
     
-    func test_paymentRestartConfirmation_shouldResetStatusOnResetConfirmation() {
+    func test_paymentRestartConfirmation_true_shouldSetShouldRestartAndNilStatus() {
         
+        let initial = makeContext()
         let state = makeTransaction(status: .awaitingPaymentRestartConfirmation)
-        
-        assertState(.paymentRestartConfirmation(true), on: state) {
+        let sut = makeSUT(resetPayment: { _ in initial })
+                
+        assertState(sut: sut, .paymentRestartConfirmation(true), on: state) {
             
             $0.context.shouldRestart = true
             $0.status = nil
         }
     }
-    
+        
     func test_paymentRestartConfirmation_shouldNotDeliverEffectOnResetConfirmationOnAwaitingState() {
         
         let state = makeTransaction(status: .awaitingPaymentRestartConfirmation)
@@ -1133,9 +1141,9 @@ final class TransactionReducerTests: XCTestCase {
         let checkFraudSpy = CheckFraudSpy(response: false)
         let sut = makeSUT(checkFraud: checkFraudSpy.call)
         
-        let (updated, _) = sut.reduce(makeTransaction(), makeUpdateTransactionEvent(update))
+        _ = sut.reduce(makeTransaction(), makeUpdateTransactionEvent(update))
         
-        XCTAssertNoDiff(checkFraudSpy.payloads, [updated.context])
+        XCTAssertNoDiff(checkFraudSpy.payloads, [update])
     }
     
     func test_update_shouldNotChangeStateOnFraudSuspectedStatus() {
@@ -1211,7 +1219,7 @@ final class TransactionReducerTests: XCTestCase {
         
         let (state, _) = sut.reduce(makeTransaction(context), makeUpdateTransactionEvent())
         
-        XCTAssertTrue(isFraudSuspected(state, context: context))
+        XCTAssertTrue(isFraudSuspected(state))
     }
     
     func test_update_shouldNotDeliverEffectOnFraudSuspectedStatusOnConnectivityErrorFailure() {
@@ -1353,7 +1361,7 @@ final class TransactionReducerTests: XCTestCase {
     private typealias Event = _TransactionEvent
     private typealias Effect = _TransactionEffect
     
-    private typealias CheckFraudSpy = CallSpy<Context, Bool>
+    private typealias CheckFraudSpy = CallSpy<PaymentUpdate, Bool>
     private typealias MakeDigestSpy = CallSpy<Context, PaymentDigest>
     private typealias GetVerificationCodeSpy = CallSpy<Context, VerificationCode?>
     private typealias PaymentReduceSpy = CallSpy<(Context, PaymentEvent), (Context, SUT.Effect?)>
@@ -1362,13 +1370,14 @@ final class TransactionReducerTests: XCTestCase {
     private typealias UpdatePaymentSpy = CallSpy<(Context, PaymentUpdate), Context>
     private typealias ValidatePaymentSpy = CallSpy<Context, Bool>
     
-    private typealias Inspector = PaymentInspector<Context, PaymentDigest>
+    private typealias Inspector = PaymentInspector<Context, PaymentDigest, PaymentUpdate>
     
     private func makeSUT(
         checkFraud: @escaping Inspector.CheckFraud = { _ in false },
         getVerificationCode: @escaping Inspector.GetVerificationCode = { _ in nil },
         makeDigest: @escaping Inspector.MakeDigest = { _ in makePaymentDigest() },
         paymentReduce: @escaping SUT.PaymentReduce = { payment, _ in (payment, nil) },
+        resetPayment: @escaping Inspector.ResetPayment = { _ in makeContext() },
         restorePayment: @escaping Inspector.RestorePayment = { _ in makeContext() },
         stagePayment: @escaping SUT.StagePayment = { $0 },
         updatePayment: @escaping SUT.UpdatePayment = { payment, _ in payment },
@@ -1386,6 +1395,7 @@ final class TransactionReducerTests: XCTestCase {
                 checkFraud: checkFraud,
                 getVerificationCode: getVerificationCode,
                 makeDigest: makeDigest,
+                resetPayment: resetPayment,
                 restorePayment: restorePayment,
                 validatePayment: validatePayment,
                 wouldNeedRestart: wouldNeedRestart
