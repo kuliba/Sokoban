@@ -895,7 +895,7 @@ final class TransactionReducerTests: XCTestCase {
     
     func test_payment_shouldNotDeliverEffectOnFraudSuspectedStatus() {
         
-        let sut = makeSUT(paymentReduce: { _,_ in (makeContext(), makePaymentTransactionEffect()) })
+        let sut = makeSUT(paymentReduce: { _,_ in (makeContext(), makePaymentEffect()) })
         
         assert(
             sut: sut,
@@ -907,14 +907,14 @@ final class TransactionReducerTests: XCTestCase {
     
     func test_payment_shouldDeliverPaymentReduceEffect() {
         
-        let effect = makePaymentTransactionEffect()
+        let effect = makePaymentEffect()
         let sut = makeSUT(paymentReduce: { _,_ in (makeContext(), effect) })
         
         assert(
             sut: sut,
             makePaymentTransactionEvent(),
             on: makeTransaction(),
-            effect: effect
+            effect: Effect.payment(effect)
         )
     }
     
@@ -1364,7 +1364,7 @@ final class TransactionReducerTests: XCTestCase {
     private typealias CheckFraudSpy = CallSpy<PaymentUpdate, Bool>
     private typealias MakeDigestSpy = CallSpy<Context, PaymentDigest>
     private typealias GetVerificationCodeSpy = CallSpy<Context, VerificationCode?>
-    private typealias PaymentReduceSpy = CallSpy<(Context, PaymentEvent), (Context, SUT.Effect?)>
+    private typealias PaymentReduceSpy = CallSpy<(Context, PaymentEvent), (Context, PaymentEffect?)>
     private typealias ShouldRestartPaymentSpy = CallSpy<Context, Bool>
     private typealias StagePaymentSpy = CallSpy<Context, Context>
     private typealias UpdatePaymentSpy = CallSpy<(Context, PaymentUpdate), Context>

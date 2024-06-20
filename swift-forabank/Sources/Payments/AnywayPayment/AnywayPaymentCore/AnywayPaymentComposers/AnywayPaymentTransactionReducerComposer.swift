@@ -37,15 +37,14 @@ private extension AnywayPaymentTransactionReducerComposer {
     func paymentReduce(
         _ state: AnywayPaymentContext,
         _ event: AnywayPaymentEvent
-    ) -> (AnywayPaymentContext, Effect?) {
+    ) -> (AnywayPaymentContext, AnywayPaymentEffect?) {
         
         let paymentReducer = AnywayPaymentReducer()
         let reducer = AnywayPaymentContextReducer(
             anywayPaymentReduce: paymentReducer.reduce(_:_:)
         )
-        let (state, effect) = reducer.reduce(state, event)
         
-        return (state, effect.map(Effect.payment))
+        return reducer.reduce(state, event)
     }
     
     func stagePayment(
