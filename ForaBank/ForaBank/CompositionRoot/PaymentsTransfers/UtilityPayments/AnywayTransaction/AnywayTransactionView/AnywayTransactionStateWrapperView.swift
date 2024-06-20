@@ -23,9 +23,6 @@ where TransactionView: View {
     }
     
     var body: some View {
-        if #available(iOS 15.0, *) {
-            let _ = Self._printChanges()
-        }
 
         makeTransactionView(viewModel.state, viewModel.event(_:))
             .spinnerDecorated(if: viewModel.isInflight)

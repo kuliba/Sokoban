@@ -119,8 +119,8 @@ private extension AnywayPayment {
     
     var otp: VerificationCode? {
         
-        guard case let .widget(otp) = elements[id: .widgetID(.otp)],
-              case let .otp(otp) = otp
+        guard case let .widget(widget) = elements[id: .widgetID(.otp)],
+              case let .otp(otp) = widget
         else { return nil }
         
         return otp.map { "\($0)" }
