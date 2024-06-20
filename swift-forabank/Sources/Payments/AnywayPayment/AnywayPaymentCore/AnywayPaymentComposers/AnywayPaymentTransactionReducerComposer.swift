@@ -17,7 +17,7 @@ public extension AnywayPaymentTransactionReducerComposer {
     func compose() -> Reducer {
         
         return .init(
-            paymentReduce: paymentReduce,
+            paymentReduce: paymentReduce(),
             stagePayment: stagePayment,
             updatePayment: updatePayment,
             paymentInspector: composeInspector()
@@ -34,17 +34,14 @@ extension AnywayPaymentContext: RestartablePayment {}
 
 private extension AnywayPaymentTransactionReducerComposer {
     
-    func paymentReduce(
-        _ state: AnywayPaymentContext,
-        _ event: AnywayPaymentEvent
-    ) -> (AnywayPaymentContext, AnywayPaymentEffect?) {
+    func paymentReduce() -> Reducer.PaymentReduce {
         
         let paymentReducer = AnywayPaymentReducer()
         let reducer = AnywayPaymentContextReducer(
             anywayPaymentReduce: paymentReducer.reduce(_:_:)
         )
         
-        return reducer.reduce(state, event)
+        return reducer.reduce(_:_:)
     }
     
     func stagePayment(
