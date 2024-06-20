@@ -165,6 +165,48 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNotNil(sut.alert?.secondary)
     }
     
+    func test_cardActivatedVisible_showActivateCertificateAlert() throws {
+        
+        let (sut, _, _) = try makeSUT(statusCard: .active, visibility: true)
+        
+        XCTAssertNil(sut.alert)
+        
+        sut.handlePinError(111, .activationFailure, "*4585")
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Активируйте сертификат")
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .default)
+        XCTAssertNoDiff(sut.alert?.primary.title, "Отмена")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNotNil(sut.alert?.secondary)
+    }
+    
+    func test_cardActivatedNotVisible_showActivateCertificateAlert() throws {
+        
+        let (sut, _, _) = try makeSUT(statusCard: .active, visibility: false)
+        
+        XCTAssertNil(sut.alert)
+        
+        sut.handlePinError(111, .activationFailure, "*4585")
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.alert)
+        
+        XCTAssertNoDiff(sut.alert?.title, "Активируйте сертификат")
+        
+        XCTAssertNoDiff(sut.alert?.primary.type, .default)
+        XCTAssertNoDiff(sut.alert?.primary.title, "Отмена")
+        XCTAssertNotNil(sut.alert?.primary.action)
+        
+        XCTAssertNotNil(sut.alert?.secondary)
+    }
+    
     func test_activateCertificateAction_happyPathActivateCertificate_shouldShowConfirmOtpViewHideSpinner() throws {
         
         let (sut, _, _) = try makeSUT()
@@ -687,6 +729,7 @@ final class ProductProfileViewModelTests: XCTestCase {
     private func makeSUT(
         statusCard: ProductCardData.StatusCard = .active,
         cardType: ProductCardData.CardType = .main,
+        visibility: Bool = true,
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         file: StaticString = #file,
         line: UInt = #line
@@ -696,7 +739,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         card: ProductCardData
     ) {
         let model = Model.mockWithEmptyExcept()
-        let card = ProductCardData(statusCard: statusCard, cardType: cardType)
+        let card = ProductCardData(statusCard: statusCard, cardType: cardType, visibility: visibility)
 
         model.products.value = [.card: [ card ]]
                 
@@ -814,7 +857,8 @@ private extension ProductCardData {
         statusCard: ProductCardData.StatusCard = .active,
         loanBaseParam: ProductCardData.LoanBaseParamInfoData? = nil,
         isMain: Bool = true,
-        cardType: ProductCardData.CardType = .main
+        cardType: ProductCardData.CardType = .main,
+        visibility: Bool = true
     ) {
         
         self.init(
@@ -858,7 +902,7 @@ private extension ProductCardData {
             isMain: isMain,
             externalId: nil,
             order: 0,
-            visibility: true,
+            visibility: visibility,
             smallDesignMd5hash: "",
             smallBackgroundDesignHash: "",
             statusCard: statusCard,
