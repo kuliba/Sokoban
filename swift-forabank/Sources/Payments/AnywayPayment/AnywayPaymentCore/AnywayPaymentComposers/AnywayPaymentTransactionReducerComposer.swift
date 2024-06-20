@@ -40,14 +40,10 @@ private extension AnywayPaymentTransactionReducerComposer {
     ) -> (AnywayPaymentContext, Effect?) {
         
         let paymentReducer = AnywayPaymentReducer()
-        let (payment, effect): (AnywayPayment, AnywayPaymentReducer.Effect?) = paymentReducer.reduce(state.payment, event)
-        let state = AnywayPaymentContext(
-            initial: state.initial,
-            payment: payment,
-            staged: state.staged,
-            outline: state.outline,
-            shouldRestart: state.shouldRestart
+        let reducer = AnywayPaymentContextReducer(
+            anywayPaymentReduce: paymentReducer.reduce(_:_:)
         )
+        let (state, effect) = reducer.reduce(state, event)
         
         return (state, effect.map(Effect.payment))
     }
