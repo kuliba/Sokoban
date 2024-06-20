@@ -445,7 +445,7 @@ private extension UILanding.List.HorizontalRectangleLimits.Item.Limit {
     init(
         data: Landing.DataView.List.HorizontalRectangleLimits.Item.Limit
     ) {
-        self.init(id: data.id, title: data.title, colorHEX: data.colorHEX)
+        self.init(id: data.id, title: data.title, color: .init(hex: data.colorHEX))
     }
 }
 

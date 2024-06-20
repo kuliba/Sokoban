@@ -44,12 +44,12 @@ extension UILanding.List {
                 
                 let id: String
                 let title: String
-                let colorHEX: String
+                let color: Color
                 
-                public init(id: String, title: String, colorHEX: String) {
+                public init(id: String, title: String, color: Color) {
                     self.id = id
                     self.title = title
-                    self.colorHEX = colorHEX
+                    self.color = color
                 }
             }
             
