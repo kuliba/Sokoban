@@ -80,6 +80,8 @@ struct ProductProfileView: View {
                             
                             if let historyViewModel = viewModel.history {
                                 
+                                productProfileViewFactory.makeHistoryButton({ event in viewModel.event(.history(event))})
+                                
                                 ProductProfileHistoryView(viewModel: historyViewModel)
                             }
                         }
@@ -112,6 +114,8 @@ struct ProductProfileView: View {
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
             
+            historySheet()
+            
             viewModel.closeAccountSpinner.map(CloseAccountSpinnerView.init)
             
             viewModel.spinner.map { spinner in
@@ -143,6 +147,24 @@ struct ProductProfileView: View {
             content: fullScreenCoverContent
         )
         .sheet(item: $viewModel.sheet, content: sheetContent)
+    }
+    
+    private func historySheet() -> some View {
+        
+        Color.clear
+            .sheet(
+                modal: viewModel.historyState,
+                dismissModal: { self.viewModel.historyState = nil },
+                content: { historyState in
+                    
+                    switch historyState {
+                    case .calendar:
+                        Text("Calendar")
+                    case .filter:
+                        Text("Filter")
+                    }
+                }
+            )
     }
     
     @ViewBuilder

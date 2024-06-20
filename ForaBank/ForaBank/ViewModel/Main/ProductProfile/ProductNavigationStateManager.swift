@@ -42,7 +42,6 @@ final class ProductProfileFlowReducer {
      
         var state = state
         var effect: Effect?
-        state.alert = nil
         
         switch event {
         case let .alert(alertEvent):

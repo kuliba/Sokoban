@@ -30,7 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var rootViewFactory = RootViewFactoryComposer(
         model: model,
         httpClient: httpClient
-    ).compose()
+    ).compose(historyFeatureFlag: featureFlags.historyFilterFlag)
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         

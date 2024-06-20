@@ -2605,6 +2605,7 @@
 		C18D25FA2A25B96100DF5643 /* TemplateButtonViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25F92A25B96100DF5643 /* TemplateButtonViewComponent.swift */; };
 		C18D25FC2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25FB2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift */; };
 		C18FDF0E2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18FDF0D2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift */; };
+		C192D4292C23E87700A6B338 /* HistoryReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192D4282C23E87700A6B338 /* HistoryReducer.swift */; };
 		C19738D92AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift */; };
 		C19738DC2AF2A31600101B1B /* PaymentStickerResponseMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738DB2AF2A31600101B1B /* PaymentStickerResponseMapperTests.swift */; };
 		C19738DE2AF2A52C00101B1B /* StickerOrderForm.json in Resources */ = {isa = PBXBuildFile; fileRef = C19738DD2AF2A52C00101B1B /* StickerOrderForm.json */; };
@@ -5586,6 +5587,7 @@
 		C18D25F92A25B96100DF5643 /* TemplateButtonViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateButtonViewComponent.swift; sourceTree = "<group>"; };
 		C18D25FB2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSourceReducerTemplatesTests.swift; sourceTree = "<group>"; };
 		C18FDF0D2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeOperationStateViewModel.swift; sourceTree = "<group>"; };
+		C192D4282C23E87700A6B338 /* HistoryReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryReducer.swift; sourceTree = "<group>"; };
 		C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+getJsonAbroadDict.swift"; sourceTree = "<group>"; };
 		C19738DB2AF2A31600101B1B /* PaymentStickerResponseMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentStickerResponseMapperTests.swift; sourceTree = "<group>"; };
 		C19738DD2AF2A52C00101B1B /* StickerOrderForm.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StickerOrderForm.json; sourceTree = "<group>"; };
@@ -11274,6 +11276,7 @@
 				68821586283C027100B27D54 /* InfoProduct */,
 				77EA0DBC2779B40100C6ED12 /* OperationDetail */,
 				833EC1112BBEA56F0050ABE9 /* ProductAlertsViewModel.swift */,
+				C192D4282C23E87700A6B338 /* HistoryReducer.swift */,
 			);
 			path = ProductProfile;
 			sourceTree = "<group>";
@@ -17750,6 +17753,7 @@
 				503F074B28252D3B00E84A77 /* DepositCapitalizationView.swift in Sources */,
 				0BB24A9726EFE66900DDA4F6 /* GetPaymentCountriesList.swift in Sources */,
 				77F5CE0D28056BB700611B66 /* LocationData.swift in Sources */,
+				C192D4292C23E87700A6B338 /* HistoryReducer.swift in Sources */,
 				0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
 				6820929227ABD46F003DCAFD /* ParameterData.swift in Sources */,

@@ -32,7 +32,9 @@ final class RootViewFactoryComposer {
 
 extension RootViewFactoryComposer {
     
-    func compose() -> Factory {
+    func compose(
+        historyFeatureFlag: HistoryFilterFlag
+    ) -> Factory {
         
         let imageCache = model.imageCache()
 
@@ -45,7 +47,7 @@ extension RootViewFactoryComposer {
             makeUpdateInfoView: UpdateInfoView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
             makePaymentCompleteView: makePaymentCompleteView, 
-            makeHistoryButtonView: { EmptyView() }
+            makeHistoryButtonView: { self.makeHistoryButtonView(historyFeatureFlag) }
         )
     }
 }
@@ -155,6 +157,13 @@ private extension RootViewFactoryComposer {
                 makeTemplateButton: makeTemplateButtonView(with: result)
             )
         )
+    }
+    
+    func makeHistoryButtonView(
+        _ historyFeatureFlag: HistoryFilterFlag
+    ) -> HistoryButtonView {
+        
+        HistoryButtonView(active: historyFeatureFlag.rawValue, event: { _ in })
     }
     
     typealias TransactionResult = UtilityServicePaymentFlowState<AnywayTransactionViewModel>.FullScreenCover.TransactionResult

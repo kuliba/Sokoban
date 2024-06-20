@@ -17,7 +17,27 @@ import SwiftUI
 import Tagged
 import RxViewModel
 
-struct HistoryState {}
+enum HistoryState: Identifiable {
+    
+    case calendar
+    case filter
+    
+    var id: ID {
+        switch self {
+        case .calendar:
+            return .calendar
+            
+        case .filter:
+            return .filter
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case calendar
+        case filter
+    }
+}
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -78,6 +98,7 @@ class ProductProfileViewModel: ObservableObject {
     
     private let bottomSheetSubject = PassthroughSubject<BottomSheet?, Never>()
     private let alertSubject = PassthroughSubject<Alert.ViewModel?, Never>()
+    private let historySubject = PassthroughSubject<HistoryState?, Never>()
 
     init(navigationBar: NavigationBarView.ViewModel,
          product: ProductProfileCardView.ViewModel,
@@ -134,6 +155,11 @@ class ProductProfileViewModel: ObservableObject {
             //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$alert)
+        
+        self.historySubject
+            //.removeDuplicates()
+            .receive(on: scheduler)
+            .assign(to: &$historyState)
 
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
     }
@@ -2493,7 +2519,7 @@ extension ProductProfileViewModel {
         
         alertSubject.send(newState.alert)
         bottomSheetSubject.send(newState.bottomSheet)
-//        historySubject.send(newState.history)
+        historySubject.send(newState.history)
         
         if let effect {
             

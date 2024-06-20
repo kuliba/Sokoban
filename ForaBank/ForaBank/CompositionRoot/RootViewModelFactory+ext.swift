@@ -124,7 +124,7 @@ extension RootViewModelFactory {
         let ppfReducer = ProductProfileFlowReducer(
             alertReduce: AlertReducer(productAlertsViewModel: .default).reduce,
             bottomSheetReduce: BottomSheetReducer().reduce,
-            historyReduce: { state,_ in (state, nil) } //TODO: HistoryReducer().reduce
+            historyReduce: HistoryReducer().reduce
         )
         
         let productNavigationStateManager = ProductNavigationStateManager(
