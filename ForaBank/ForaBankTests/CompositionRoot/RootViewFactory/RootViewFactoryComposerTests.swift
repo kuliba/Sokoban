@@ -12,7 +12,7 @@ final class RootViewFactoryComposerTests: XCTestCase {
     
     func test_compose_shouldNotFail() {
         
-        _ = makeSUT().compose()
+        _ = makeSUT().compose(historyFeatureFlag: .init(rawValue: false))
     }
     
     // MARK: - Helpers
