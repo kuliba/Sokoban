@@ -499,7 +499,10 @@ private extension ProductProfileViewModel {
             .sink { [unowned self] action in
                 switch action {
                 case _ as ProductProfileViewModelAction.PullToRefresh:
-                    model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: product.activeProductId))
+                    
+                    if let productType = productData?.productType {
+                        model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
+                    }
                     model.action.send(ModelAction.Statement.List.Request(productId: product.activeProductId, direction: .latest))
                     switch product.productType {
                     case .deposit:
@@ -1511,9 +1514,14 @@ private extension ProductProfileViewModel {
                     
                     if let viewModel = viewModel,
                        let productIdFrom = viewModel.swapViewModel.productIdFrom,
-                       let productIdTo = viewModel.swapViewModel.productIdTo {
-                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
-                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+                       let productIdTo = viewModel.swapViewModel.productIdTo,
+                       let productFrom = model.product(productId: productIdFrom),
+                       let productTo = model.product(productId: productIdTo)
+                    {
+                        model.reloadProducts(
+                            productTo: productTo,
+                            productFrom: productFrom
+                        )
                     }
                     
                     self.bind(payload.viewModel)
@@ -2418,7 +2426,7 @@ extension ProductProfileViewModel {
         cardId: CardDomain.CardId,
         completion: @escaping ShowCVVCompletion
     ) {
-        if productData?.productStatus == .active {
+        if productData?.productStatus == .active || productData?.productStatus == .notVisible {
             cvvPINServicesClient.showCVV(
                 cardId: cardId.rawValue
             ) { [weak self] result in
