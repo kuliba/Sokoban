@@ -14,7 +14,7 @@ public struct BottomAmount: Equatable {
     public var status: Status?
     
     public init(
-        value: Decimal,
+        value: Decimal = 0,
         button: AmountButton,
         status: Status?
     ) {
