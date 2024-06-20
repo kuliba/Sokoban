@@ -483,11 +483,17 @@ extension UILanding.List.HorizontalRectangleImage.Config {
 extension UILanding.List.HorizontalRectangleLimits.Config {
     
     static let `default`: Self = .init(
+        colors: .init(
+            arc: .init(red: 153/255, green: 153/255, blue: 153/255),
+            background: .init(red: 246/255, green: 246/255, blue: 247/255),
+            divider: .init(red: 211/255, green: 211/255, blue: 211/255, opacity: 0.3),
+            title: .init(red: 28/255, green: 28/255, blue: 1/255),
+            subtitle: .init(red: 153/255, green: 153/255, blue: 153/255)),
         cornerRadius: 12,
-        size: .init(height: 124, width: 272),
-        paddings: .init(horizontal: 16, vertical: 8),
+        paddings: .init(horizontal: 12, vertical: 8),
+        size: .init(height: 176, icon: 20, width: 180),
         spacing: 8)
-}
+    }
 
 extension UILanding.Multi.Buttons.Config {
     

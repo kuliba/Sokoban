@@ -61,9 +61,9 @@ extension ListHorizontalRectangleLimitsView {
         var body: some View {
             
             ZStack {
-                Color.init(hex: "#F6F6F7")
+                config.colors.background
                     .ignoresSafeArea()
-                    .cornerRadius(12)
+                    .cornerRadius(config.cornerRadius)
                 
                 VStack(alignment: .leading) {
                     
@@ -72,30 +72,31 @@ extension ListHorizontalRectangleLimitsView {
                         ZStack {
                             
                             Capsule(style: .circular)
-                                .frame(width: 40, height: 40)
+                                .frame(width: config.size.icon * 2, height: config.size.icon * 2)
                                 .foregroundColor(.white)
                             
                             makeIcon(item.md5hash)
                                 .aspectRatio(contentMode: .fit)
-                                .frame(width: 20, height: 20)
+                                .frame(width: config.size.icon, height: config.size.icon)
                         }
                         
                         Text(item.title)
                             .lineLimit(2)
+                            .foregroundColor(config.colors.title)
                     }
-                    .padding(.horizontal, 12)
+                    .padding(.horizontal, config.paddings.horizontal)
                     
                     ForEach(item.limits, id: \.id) { itemView(limit: $0)
                         if $0 != item.limits.last {
-                            Divider()
+                            
+                            HorizontalDivider(color: config.colors.divider)
                                 .padding(.vertical, 0)
                         }
                     }
-                    .padding(.horizontal, 12)
-
+                    .padding(.horizontal, config.paddings.horizontal)
                 }
             }
-            .frame(width: 180, height: 176)
+            .frame(width: config.size.width, height: config.size.height)
         }
         
         private func itemView(
@@ -106,6 +107,7 @@ extension ListHorizontalRectangleLimitsView {
                 
                 Text(limit.title)
                     .font(.caption)
+                    .foregroundColor(config.colors.subtitle)
                 
                 limitView(limit: makeLimit(limit.id), color: limit.color)
             }
@@ -121,12 +123,15 @@ extension ListHorizontalRectangleLimitsView {
                 HStack {
                     Text(value(limit: limit?.value))
                         .font(.subheadline)
+                        .foregroundColor(config.colors.title)
                     Text(limit?.currency ?? "")
                         .font(.subheadline)
-                    
-                    circleLimit(limit: limit, mainColor: color)
-                        .frame(width: 20, height: 20)
-                    
+                        .foregroundColor(config.colors.title)
+                    circleLimit(
+                        limit: limit,
+                        mainColor: color,
+                        currentColor: config.colors.arc)
+                        .frame(width: config.size.icon, height: config.size.icon)
                 }
             }
         }
@@ -134,7 +139,7 @@ extension ListHorizontalRectangleLimitsView {
         private func circleLimit(
             limit: LimitValues?,
             mainColor: Color,
-            currentColor: Color = .init(hex: "#999999")
+            currentColor: Color
         ) -> some View {
             
             ZStack {
@@ -145,7 +150,7 @@ extension ListHorizontalRectangleLimitsView {
                     .stroke(currentColor, lineWidth: 2)
                     .frame(width: 12, height: 12)
             }
-            .frame(width: 20, height: 20)
+            .frame(width: config.size.icon, height: config.size.icon)
         }
         
         struct Arc: Shape {
@@ -195,11 +200,11 @@ struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
                             .init(
                                 id: "1",
                                 title: "Осталось сегодня",
-                                color: .init(hex: "#1C1C1C")),
+                                color: Color(red: 28/255, green: 28/255, blue: 28/255)),
                             .init(
                                 id: "2",
                                 title: "Осталось в этом месяце",
-                                color: .init(hex: "#FF3636")),
+                                color: Color(red: 255/255, green: 54/255, blue: 54/255)),
                             
                         ]),
                     .init(
@@ -211,11 +216,11 @@ struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
                             .init(
                                 id: "3",
                                 title: "Осталось сегодня",
-                                color: .init(hex: "#1C1C1C")),
+                                color: Color(red: 28/255, green: 28/255, blue: 28/255)),
                             .init(
                                 id: "4",
                                 title: "Осталось в этом месяце",
-                                color: .init(hex: "#FF3636")),
+                                color: Color(red: 255/255, green: 54/255, blue: 54/255)),
                         ])
                 ]),
         action: { _ in }
@@ -246,34 +251,4 @@ struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
         return .init(currency: "$", currentValue: 200, name: "2", value: 400)
     }
         })
-}
-
-// TODO: only for debug
-
-private extension Color {
-    
-    init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&int)
-        let a, r, g, b: UInt64
-        switch hex.count {
-        case 3: // RGB (12-bit)
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6: // RGB (24-bit)
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8: // ARGB (32-bit)
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            (a, r, g, b) = (1, 1, 1, 0)
-        }
-
-        self.init(
-            .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue:  Double(b) / 255,
-            opacity: Double(a) / 255
-        )
-    }
 }

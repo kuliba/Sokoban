@@ -6,15 +6,40 @@
 //
 
 import Foundation
+import SwiftUI
 
 public extension UILanding.List.HorizontalRectangleLimits {
     
     struct Config {
         
+        let colors: Colors
         let cornerRadius: CGFloat
-        let size: Size
         let paddings: Paddings
+        let size: Size
         let spacing: CGFloat
+        
+        public struct Colors {
+            
+            let arc: Color
+            let background: Color
+            let divider: Color
+            let title: Color
+            let subtitle: Color
+            
+            public init(
+                arc: Color,
+                background: Color,
+                divider: Color,
+                title: Color,
+                subtitle: Color
+            ) {
+                self.arc = arc
+                self.background = background
+                self.divider = divider
+                self.title = title
+                self.subtitle = subtitle
+            }
+        }
         
         public struct Paddings {
             
@@ -30,23 +55,27 @@ public extension UILanding.List.HorizontalRectangleLimits {
         public struct Size {
             
             let height: CGFloat
+            let icon: CGFloat
             let width: CGFloat
             
-            public init(height: CGFloat, width: CGFloat) {
+            public init(height: CGFloat, icon: CGFloat, width: CGFloat) {
                 self.height = height
+                self.icon = icon
                 self.width = width
             }
         }
         
         public init(
+            colors: Colors,
             cornerRadius: CGFloat,
-            size: Size,
             paddings: Paddings,
+            size: Size,
             spacing: CGFloat
-        ){
+        ) {
+            self.colors = colors
             self.cornerRadius = cornerRadius
-            self.size = size
             self.paddings = paddings
+            self.size = size
             self.spacing = spacing
         }
     }

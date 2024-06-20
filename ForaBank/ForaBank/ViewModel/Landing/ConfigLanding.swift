@@ -385,17 +385,17 @@ extension UILanding.List.HorizontalRectangleImage.Config {
 extension UILanding.List.HorizontalRectangleLimits.Config {
         
     static let `default`: Self = .init(
+        colors: .init(
+            arc: .mainColorsGray,
+            background: .mainColorsGrayLightest,
+            divider: .blurMediumGray30,
+            title: .secondary,
+            subtitle: .textPlaceholder
+        ),
         cornerRadius: 12,
-        size: .init(
-            height: 124,
-            width: 272
-        ),
-        paddings: .init(
-            horizontal: 16,
-            vertical: 8
-        ),
-        spacing: 8
-    )
+        paddings: .init(horizontal: 12, vertical: 8),
+        size: .init(height: 176, icon: 20, width: 180),
+        spacing: 8)
 }
 
 extension UILanding.BlockHorizontalRectangular.Config {
