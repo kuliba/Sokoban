@@ -177,43 +177,6 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         XCTAssertNotEqual(transaction1, transaction2)
     }
     
-    func test_event_shouldDeliverStatusToObserveWithoutDuplicates() {
-        
-        let transaction1 = makeTransaction(
-            status: .awaitingPaymentRestartConfirmation
-        )
-        let transaction2 = makeTransaction(
-            status: .inflight
-        )
-        let transaction2a = makeTransaction(
-            status: .inflight
-        )
-        let transaction3 = makeTransaction(
-            status: nil
-        )
-        var observed = [TransactionStatus?]()
-        let (sut, _) = makeSUT(
-            stub: [
-                (transaction1, nil),
-                (transaction2, nil),
-                (transaction2a, nil),
-                (transaction3, nil),
-            ],
-            observe: { observed.append($0) }
-        )
-        
-        sut.event(.continue)
-        sut.event(.continue)
-        sut.event(.continue)
-        sut.event(.continue)
-        
-        XCTAssertNoDiff(observed, [
-            .awaitingPaymentRestartConfirmation,
-            .inflight,
-            .none
-        ])
-    }
-    
     // MARK: - Helpers
     
     private typealias SUT = AnywayTransactionViewModel<Model, DocumentStatus, Response>
@@ -230,7 +193,6 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         initial: SUT.State.Transaction = makeTransaction(),
         stub: [(SUT.State.Transaction, SUT.Effect?)] = [],
         handleEffect: @escaping SUT.HandleEffect = { _,_ in },
-        observe: @escaping SUT.Observe = { _ in },
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -243,7 +205,6 @@ final class AnywayTransactionViewModelTests: XCTestCase {
             mapToModel: { event in { .init(value: $0) } },
             reduce: reducer.reduce(_:_:),
             handleEffect: handleEffect,
-            observe: observe,
             scheduler: .immediate
         )
         let spy = ValueSpy(sut.$state)

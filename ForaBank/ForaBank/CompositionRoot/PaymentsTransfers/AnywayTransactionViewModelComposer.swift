@@ -34,7 +34,6 @@ extension AnywayTransactionViewModelComposer {
     
     func makeAnywayTransactionViewModel(
         transaction: AnywayTransactionState.Transaction,
-        notify: @escaping (AnywayTransactionStatus?) -> Void,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> AnywayTransactionViewModel {
         
@@ -48,7 +47,6 @@ extension AnywayTransactionViewModelComposer {
             mapToModel: { event in { self.elementMapper.map($0, event) }},
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
-            observe: { notify($0); print("transaction status: \(String(describing: $0))", #file, #line) },
             scheduler: scheduler
         )
     }
