@@ -11,10 +11,16 @@ struct BottomFooterState: Equatable {
     
     var amount: Decimal
     var buttonState: ButtonState
+    var style: Style
     
     enum ButtonState: Equatable {
         
         case active, inactive, tapped
+    }
+    
+    enum Style: Equatable {
+        
+        case amount, button
     }
 }
 
@@ -22,11 +28,14 @@ enum BottomFooterEvent: Equatable {
     
     case button(ButtonEvent)
     case edit(Decimal)
+    case style(Style)
     
     enum ButtonEvent: Equatable {
         
         case disable, enable, tap
     }
+    
+    typealias Style = BottomFooterState.Style
 }
 
 enum BottomFooterEffect: Equatable {}
@@ -49,6 +58,9 @@ extension BottomFooterReducer {
             
         case let .edit(amount):
             reduce(&state, with: amount)
+            
+        case let .style(style):
+            state.style = style
         }
         
         return (state, effect)
@@ -258,6 +270,47 @@ final class BottomFooterReducerTests: XCTestCase {
         assert(.edit(99), on: makeState(buttonState: .tapped), effect: nil)
     }
     
+    // MARK: - style
+    
+    func test_style_shouldNotChangeStyleToAmountOnAmountStyle() {
+        
+        let state = makeState(style: .amount)
+        
+        assertState(.style(.amount), on: state)
+    }
+    
+    func test_style_shouldSetStyleToAmountOnButtonStyle() {
+        
+        let state = makeState(style: .button)
+        
+        assertState(.style(.amount), on: state) {
+            
+            $0.style = .amount
+        }
+    }
+    
+    func test_style_shouldNotChangeStyleToButtonOnButtonStyle() {
+        
+        let state = makeState(style: .button)
+        
+        assertState(.style(.button), on: state)
+    }
+    
+    func test_style_shouldSetStyleToButtonOnAmountStyle() {
+        
+        let state = makeState(style: .amount)
+        
+        assertState(.style(.button), on: state) {
+            
+            $0.style = .button
+        }
+    }
+    
+    func test_style_shouldNotDeliverEffectOnTappedState() {
+        
+        assert(.style(.amount), on: makeState(style: .button), effect: nil)
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = BottomFooterReducer
@@ -280,12 +333,14 @@ final class BottomFooterReducerTests: XCTestCase {
     
     private func makeState(
         amount: Decimal = .init(Double.random(in: 1...100)),
-        buttonState: State.ButtonState = .active
+        buttonState: State.ButtonState = .active,
+        style: State.Style = .amount
     ) -> State {
         
         return .init(
             amount: amount,
-            buttonState: buttonState
+            buttonState: buttonState,
+            style: style
         )
     }
     
