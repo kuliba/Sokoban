@@ -224,8 +224,8 @@ private extension RootViewFactory {
                         makePaymentCompleteView: { _,_ in fatalError() }
                     ),
                     productProfileViewFactory: .init(
-                        makeHistoryButton: { _ in HistoryButtonView(active: true, event: { event in })},
-                        makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)
+                        makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
+                        makeHistoryButton: { _ in HistoryButtonView(active: true, event: { event in })}
                     ),
                     getUImage: { _ in nil }
                 )

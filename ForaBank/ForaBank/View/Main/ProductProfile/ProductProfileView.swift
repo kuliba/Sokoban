@@ -438,11 +438,11 @@ struct ProfileView_Previews: PreviewProvider {
             viewModel: viewModel,
             viewFactory: .preview,
             productProfileViewFactory: .init(
+                makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
                 makeHistoryButton: { event in
                         
                     return HistoryButtonView(active: true, event: event)
-                },
-                makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)
+                }
             ),
             getUImage: { _ in nil }
         )
