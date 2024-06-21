@@ -343,6 +343,14 @@ extension ProductCardData {
         case additionalSelf = "ADDITIONAL_SELF"
         case additionalSelfAccOwn = "ADDITIONAL_SELF_ACC_OWN"
         case additionalOther = "ADDITIONAL_OTHER"
+        
+        
+        var isMainOrRegularOrAdditionalSelfAccOwn: Bool {
+            
+            return self == .regular ||
+            self == .main ||
+            self == .additionalSelfAccOwn
+        }
     }
 }
 
