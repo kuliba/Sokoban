@@ -21,7 +21,7 @@ struct AnywayTransactionView: View {
         VStack(spacing: 16) {
             
             paymentView(elements: elements)
-            factory.makeFooterView(state) { event($0.transactionEvent) }
+            factory.makeFooterView(state.footer)
         }
     }
 }

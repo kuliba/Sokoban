@@ -52,10 +52,7 @@ extension AnywayTransactionViewModelComposer {
         return .init(
             transaction: transaction,
             mapToModel: { event in { self.elementMapper.map($0, event) }},
-            makeAmount: { event in
-                
-                self.makeAmount(event: event, scheduler: scheduler)
-            },
+            makeFooter: makeFooter(scheduler: scheduler),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: scheduler
@@ -65,40 +62,84 @@ extension AnywayTransactionViewModelComposer {
     typealias EffectHandler = TransactionEffectHandler<AnywayTransactionReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
     typealias ReducerComposer = AnywayPaymentTransactionReducerComposer<AnywayTransactionReport>
     
-    private func makeAmount(
-        event: @escaping (Decimal) -> Void,
+    private func makeFooter(
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
-    ) -> (AnywayTransactionState.Transaction) -> Node<BottomAmountViewModel> {
+    ) -> AnywayTransactionViewModel.MakeFooter {
         
-        return { transaction in
+        return { event in
             
-            let digest = transaction.context.makeDigest()
-            
-            let currency = digest.core?.currency
-            let currencySymbol = currency.map(self.getCurrencySymbol) ?? ""
-            
-            let amount = digest.amount ?? 0
-            
-            let button = BottomAmount.AmountButton(
-                title: self.buttonTitle,
-                isEnabled: transaction.isValid
-            )
-            
-            let initialState = BottomAmount(value: amount, button: button, status: nil)
-            
-            let viewModel = BottomAmountViewModel(
-                currencySymbol: currencySymbol,
-                initialState: initialState,
-                scheduler: scheduler
-            )
-            
-            let subscription = viewModel.$state
-                .map(\.value)
-                .removeDuplicates()
-                .receive(on: scheduler)
-                .sink(receiveValue: event)
-            
-            return .init(model: viewModel, subscription: subscription)
+            return { transaction in
+                
+                let digest = transaction.context.makeDigest()
+                
+                guard digest.amount != nil,
+                      digest.core?.currency != nil
+                else { 
+                    
+                    return .continueButton { event(.buttonTap) }
+                }
+                
+                let node = self.makeBottomAmountNode(
+                    transaction: transaction,
+                    event: event,
+                    scheduler: scheduler
+                )
+                
+                return .amount(node)
+            }
+        }
+    }
+    
+    private func makeBottomAmountNode(
+        transaction: AnywayTransactionViewModel.State.Transaction,
+        event: @escaping AnywayTransactionViewModel.NotifyAmount,
+        scheduler: AnySchedulerOfDispatchQueue
+    ) -> Node<BottomAmountViewModel> {
+        
+        let digest = transaction.context.makeDigest()
+        
+        let currency = digest.core?.currency
+        let currencySymbol = currency.map(getCurrencySymbol) ?? ""
+        
+        let amount = digest.amount ?? 0
+        
+        let button = BottomAmount.AmountButton(
+            title: buttonTitle,
+            isEnabled: transaction.isValid
+        )
+        
+        let initialState = BottomAmount(
+            value: amount,
+            button: button,
+            status: nil
+        )
+        
+        let viewModel = BottomAmountViewModel(
+            currencySymbol: currencySymbol,
+            initialState: initialState,
+            scheduler: scheduler
+        )
+        
+        print("===>>>", ObjectIdentifier(viewModel), "created BottomAmountViewModel", #file, #line)
+        
+        let subscription = viewModel.$state
+            .map(AnywayTransactionViewModel.AmountEvent.init(bottomAmount:))
+            .removeDuplicates()
+            .receive(on: scheduler)
+            .sink(receiveValue: event)
+        
+        return .init(model: viewModel, subscription: subscription)
+    }
+}
+
+private extension AnywayTransactionViewModel.AmountEvent {
+    
+    init(bottomAmount: BottomAmount) {
+        
+        if case .tapped = bottomAmount.status {
+            self = .buttonTap
+        } else {
+            self = .edit(bottomAmount.value)
         }
     }
 }

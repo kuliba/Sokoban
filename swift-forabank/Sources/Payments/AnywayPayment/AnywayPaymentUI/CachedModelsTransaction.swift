@@ -8,7 +8,7 @@
 import AnywayPaymentCore
 import AnywayPaymentDomain
 
-public struct CachedModelsTransaction<AmountViewModel, Model, DocumentStatus, Response> {
+public struct CachedModelsTransaction<Amount, Model, DocumentStatus, Response> {
     
     public let models: Models
     public let footer: AmountFooter
@@ -16,7 +16,7 @@ public struct CachedModelsTransaction<AmountViewModel, Model, DocumentStatus, Re
     
     internal init(
         models: Models,
-        footer: AmountFooter = .continueButton,
+        footer: AmountFooter,
         transaction: Transaction
     ) {
         self.models = models
@@ -26,7 +26,7 @@ public struct CachedModelsTransaction<AmountViewModel, Model, DocumentStatus, Re
     
     public typealias ID = AnywayElement.ID
     public typealias Models = [ID: Model]
-    public typealias AmountFooter = Footer<AmountViewModel>
+    public typealias AmountFooter = Footer<Amount>
     public typealias Transaction = AnywayTransactionState<DocumentStatus, Response>
 }
 
@@ -35,11 +35,11 @@ public extension CachedModelsTransaction {
     init(
         with transaction: Transaction,
         using map: @escaping Map,
-        makeAmount: @escaping MakeAmount
+        makeFooter: @escaping MakeFooter
     ) {
         self.init(
             models: transaction.makeModels(using: map),
-            footer: transaction.makeFooter(using: makeAmount),
+            footer: makeFooter(transaction),
             transaction: transaction
         )
     }
@@ -47,18 +47,18 @@ public extension CachedModelsTransaction {
     func updating(
         with transaction: Transaction,
         using map: @escaping Map,
-        makeAmount: @escaping MakeAmount
+        makeFooter: @escaping MakeFooter
     ) -> Self {
         
         return .init(
             models: transaction.updatingModels(models, using: map),
-            footer: transaction.updatingFooter(footer, using: makeAmount),
+            footer: transaction.updatingFooter(footer, using: makeFooter),
             transaction: transaction
         )
     }
     
     typealias Map = (AnywayElement) -> Model
-    typealias MakeAmount = (Transaction) -> AmountViewModel
+    typealias MakeFooter = (Transaction) -> AmountFooter
 }
 
 public extension CachedModelsTransaction {
@@ -106,35 +106,25 @@ extension Transaction where Context == AnywayPaymentContext {
     
     typealias Models<Model> = [AnywayElement.ID: Model]
     
-    func makeFooter<AmountViewModel>(
-        using makeAmountViewModel: (Self) -> AmountViewModel
-    ) -> Footer<AmountViewModel> {
+    func updatingFooter<Amount>(
+        _ footer: Footer<Amount>,
+        using makeFooter: (Self) -> Footer<Amount>
+    ) -> Footer<Amount> {
         
-        let digest = context.makeDigest()
-        
-        guard digest.amount != nil,
-              digest.core?.currency != nil
-        else { return .continueButton }
-        
-        return .amount(makeAmountViewModel(self))
-    }
-    
-    func updatingFooter<AmountViewModel>(
-        _ footer: Footer<AmountViewModel>,
-        using makeAmountViewModel: (Self) -> AmountViewModel
-    ) -> Footer<AmountViewModel> {
-        
-        let newFooter = makeFooter(using: makeAmountViewModel)
+        let newFooter = makeFooter(self)
         
         switch (footer, newFooter) {
         case (.continueButton, _):
+            print("===>>> using new footer", newFooter, #file, #line)
             return newFooter
             
         case (_, .continueButton):
-            return .continueButton
+            print("===>>> using new footer", newFooter, #file, #line)
+            return newFooter
             
-        case let (.amount(amountViewModel), .amount):
-            return .amount(amountViewModel)
+        case let (.amount(amount), .amount):
+            print("===>>> Re-using footer", amount, #file, #line)
+            return .amount(amount)
         }
     }
 }

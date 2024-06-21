@@ -206,7 +206,7 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         let sut = SUT(
             transaction: initial,
             mapToModel: { event in { .init(value: $0) } },
-            makeAmount: { event in { _ in "AmountViewModel" }},
+            makeFooter: { event in { _ in .continueButton({}) }},
             reduce: reducer.reduce(_:_:),
             handleEffect: handleEffect,
             scheduler: .immediate

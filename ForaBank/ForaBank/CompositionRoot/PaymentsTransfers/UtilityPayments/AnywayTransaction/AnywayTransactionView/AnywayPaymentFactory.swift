@@ -20,5 +20,5 @@ extension AnywayPaymentFactory {
     typealias Element = AnywayTransactionState.IdentifiedModel
     typealias MakeElementView = (Element) -> AnywayPaymentElementView<IconView>
     
-    typealias MakeFooterView = (AnywayTransactionState, @escaping (AnywayPaymentFooterEvent) -> Void) -> AnywayPaymentFooterView
+    typealias MakeFooterView = (AnywayTransactionState.AmountFooter) -> AnywayPaymentFooterView
 }

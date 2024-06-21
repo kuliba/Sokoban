@@ -142,7 +142,7 @@ final class CachedModelsTransactionTests: XCTestCase {
         using map: @escaping SUT.Map = { .init(value: $0) }
     ) -> SUT {
         
-        return SUT(with: transaction, using: map, makeAmount: { _ in "Amount" })
+        return SUT(with: transaction, using: map, makeFooter: { _ in .continueButton({}) })
     }
     
     private func updating(
@@ -151,7 +151,7 @@ final class CachedModelsTransactionTests: XCTestCase {
         using map: @escaping SUT.Map = { .init(value: $0) }
     ) -> SUT {
         
-        sut.updating(with: transaction, using: map, makeAmount: { _ in "Amount" })
+        sut.updating(with: transaction, using: map, makeFooter: { _ in .continueButton({}) })
     }
     
     private final class Model {

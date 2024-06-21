@@ -35,5 +35,13 @@ import Combine
 struct Node<Model> {
     
     let model: Model
-    let subscription: AnyCancellable
+    private let subscription: AnyCancellable
+    
+    init(
+        model: Model, 
+        subscription: AnyCancellable
+    ) {
+        self.model = model
+        self.subscription = subscription
+    }
 }

@@ -9,6 +9,6 @@ import Foundation
 
 public enum Footer<AmountViewModel> {
     
-    case continueButton
+    case continueButton(() -> Void)
     case amount(AmountViewModel)
 }
