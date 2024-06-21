@@ -52,8 +52,8 @@ private extension FeatureFlagsLoader {
         
         switch retrieve(.historyFilterFlag) {
         case "history_filter_off": return false
-        case "history_filter_on": return true
-        default:                    return false
+        case "history_filter_on":  return true
+        default:                   return false
         }
     }
 }
