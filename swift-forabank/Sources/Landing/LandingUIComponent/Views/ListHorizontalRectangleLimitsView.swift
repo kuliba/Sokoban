@@ -90,7 +90,8 @@ extension ListHorizontalRectangleLimitsView {
                     }
                     .padding(.horizontal, config.paddings.horizontal)
                     
-                    ForEach(item.limits, id: \.id) { itemView(limit: $0)
+                    ForEach(item.limits, id: \.id) { 
+                        itemView(limit: $0)
                         if $0 != item.limits.last {
                             
                             HorizontalDivider(color: config.colors.divider)
