@@ -45,7 +45,7 @@ private extension UILanding.Component {
             self = .list(.horizontalRectangleImage(.init(data: x)))
             
         case let .list(.horizontalRectangleLimits(x)):
-            self = .list(.horizontalRectangleLimits(.init(data: x)))
+            self = .list(.horizontalRectangleLimits(.init(data: x), .inflight))
             
         case let .list(.horizontalRoundImage(x)):
             self = .list(.horizontalRoundImage(.init(data: x)))

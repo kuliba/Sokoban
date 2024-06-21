@@ -11,7 +11,9 @@ import UIPrimitives
 
 struct ListHorizontalRectangleLimitsView: View {
     
-    @ObservedObject var model: ViewModel
+    let state: ListHorizontalRectangleLimitsState
+    let event: (ListHorizontalRectangleLimitsEvent) -> Void
+    let factory: Factory
     let config: Config
     
     var body: some View {
@@ -19,7 +21,7 @@ struct ListHorizontalRectangleLimitsView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             
             HStack(spacing: config.spacing) {
-                ForEach(model.data.list, content: itemView)
+                ForEach(state.list.list, content: itemView)
             }
         }
         .padding(.horizontal, config.paddings.horizontal)
@@ -32,28 +34,33 @@ struct ListHorizontalRectangleLimitsView: View {
         
         ItemView(
             item: item,
-            makeIcon: model.makeIconView,
-            makeLimit: model.makeLimit,
-            config: config,
-            spentConfig: model.spentConfig
+            factory: factory,
+            limitsLoadingStatus: state.limitsLoadingStatus,
+            config: config
         )
         .gesture(
             TapGesture()
                 .onEnded {
-                    model.itemAction(item: item)
+                    event(.buttonTapped(.init(limitType: item.limitType, action: item.action.type)))
                 }
         )
     }
+}
+
+extension ListHorizontalRectangleLimitsView {
     
-    typealias Item = UILanding.List.HorizontalRectangleLimits.Item
+    typealias Event = ListHorizontalRectangleLimitsEvent
+    typealias Factory = ListHorizontalRectangleLimitsViewFactory
     typealias Config = UILanding.List.HorizontalRectangleLimits.Config
+    typealias Item = UILanding.List.HorizontalRectangleLimits.Item
 }
 
 extension Spent {
     
     static func spentPercent(
         limit: LimitValues?,
-        interval: CGFloat
+        interval: CGFloat,
+        startAngle: CGFloat
     ) -> Spent {
         
         guard let limit else { return .noSpent }
@@ -69,7 +76,7 @@ extension Spent {
             
         default:
             let currentPercent = min(Double(truncating: (limit.currentValue/limit.value * 100.00) as NSNumber), 99.6)
-            return .spent(ceil((360 - interval * 2)/100 * currentPercent))
+            return .spent(ceil((360 - interval * 2)/100 * currentPercent) + startAngle)
         }
     }
 }
@@ -79,12 +86,11 @@ extension ListHorizontalRectangleLimitsView {
     struct ItemView: View {
         
         let item: UILanding.List.HorizontalRectangleLimits.Item
-        let makeIcon: LandingView.MakeIconView
-        let makeLimit: LandingView.MakeLimit
-        
+        let factory: Factory
+        let limitsLoadingStatus: LimitsLoadingStatus
         let config: Config
-        let spentConfig: SpentConfig
-
+        let spentConfig: SpentConfig = .init()
+        
         var body: some View {
             
             ZStack {
@@ -102,7 +108,7 @@ extension ListHorizontalRectangleLimitsView {
                                 .frame(width: config.size.icon * 2, height: config.size.icon * 2)
                                 .foregroundColor(.white)
                             
-                            makeIcon(item.md5hash)
+                            factory.makeIconView(item.md5hash)
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: config.size.icon, height: config.size.icon)
                         }
@@ -113,7 +119,7 @@ extension ListHorizontalRectangleLimitsView {
                     }
                     .padding(.horizontal, config.paddings.horizontal)
                     
-                    ForEach(item.limits, id: \.id) { 
+                    ForEach(item.limits, id: \.id) {
                         itemView(limit: $0)
                         if $0 != item.limits.last {
                             
@@ -137,30 +143,62 @@ extension ListHorizontalRectangleLimitsView {
                     .font(.caption)
                     .foregroundColor(config.colors.subtitle)
                 
-                limitView(limit: makeLimit(limit.id), color: limit.color)
+                limitView(limit: limit, limitsLoadingStatus: limitsLoadingStatus, color: limit.color)
             }
         }
         
+        @ViewBuilder
         private func limitView(
-            limit: LimitValues?,
+            limit: UILanding.List.HorizontalRectangleLimits.Item.Limit,
+            limitsLoadingStatus: LimitsLoadingStatus,
             color: Color
         ) -> some View {
             
-            VStack(alignment: .leading) {
+            switch limitsLoadingStatus {
+            case .inflight:
+                Rectangle()
+                    .fill(config.colors.divider)
+                    .frame(height: 20)
+                    .frame(maxWidth: .infinity)
+                    .shimmering()
                 
-                HStack {
-                    Text(value(limit: limit?.value))
-                        .font(.subheadline)
-                        .foregroundColor(config.colors.title)
-                    Text(limit?.currency ?? "")
-                        .font(.subheadline)
-                        .foregroundColor(config.colors.title)
-                    circleLimit(
-                        limit: limit,
-                        mainColor: color,
-                        currentColor: config.colors.arc,
-                        spent: Spent.spentPercent(limit: limit, interval: spentConfig.interval))
-                    .frame(width: config.size.icon, height: config.size.icon)
+            case .failure:
+                Text("Попробуйте позже")
+                
+            case let .limits(limits):
+                
+                if let limit = limits.first(where: { $0.name == limit.id }) {
+                    
+                    switch limit.value {
+                    case 999999999:
+                        Text("Без ограничений")
+                        
+                    default:
+                        VStack(alignment: .leading) {
+                            
+                            HStack {
+                                Text(value(limit.value - limit.currentValue))
+                                    .font(.subheadline)
+                                    .foregroundColor(config.colors.title)
+                                Text(limit.currency)
+                                    .font(.subheadline)
+                                    .foregroundColor(config.colors.title)
+                                circleLimit(
+                                    limit: limit,
+                                    mainColor: color,
+                                    currentColor: config.colors.arc,
+                                    spent: Spent.spentPercent(
+                                        limit: limit,
+                                        interval: spentConfig.interval,
+                                        startAngle: spentConfig.startSpentAngle)
+                                )
+                                .frame(width: config.size.icon, height: config.size.icon)
+                            }
+                        }
+                        
+                    }
+                } else {
+                    Text("Не установлен")
                 }
             }
         }
@@ -183,8 +221,8 @@ extension ListHorizontalRectangleLimitsView {
             case let .spent(currentAngle):
                 ZStack {
                     
-                    arc(start: currentAngle + spentConfig.interval, end: spentConfig.startMainAngle, mainColor, spentConfig.mainWidth, spentConfig.mainArcSize)
                     arc(start: spentConfig.startSpentAngle, end: currentAngle, currentColor, spentConfig.spentWidth, spentConfig.size)
+                    arc(start: currentAngle + spentConfig.interval, end: spentConfig.startMainAngle, mainColor, spentConfig.mainWidth, spentConfig.mainArcSize)
                 }
             }
         }
@@ -201,8 +239,8 @@ extension ListHorizontalRectangleLimitsView {
                 endAngle: .degrees(end),
                 clockwise: false
             )
-                .stroke(color, lineWidth: lineWidth)
-                .frame(width: width, height: width)
+            .stroke(color, lineWidth: lineWidth)
+            .frame(width: width, height: width)
         }
         
         private func circle(
@@ -237,89 +275,48 @@ extension ListHorizontalRectangleLimitsView {
                 return path
             }
         }
-        
-        // TODO: перенести в основной таргет + добавить все case
-        
-        private func value(limit: Decimal?) -> String {
-            
-            if let limit {
-                return "\(limit)"
-            }
-            else { return "Не установлен" }
+                
+        private func value(_ value: Decimal) -> String {
+            value > 0 ? "\(value)" : "0"
         }
     }
 }
 
 struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
     
-    static var previews: some View {
-        
-        ListHorizontalRectangleLimitsView(
-            model: defaultValue,
-            config: .default)
+    static func state(_ status: LimitsLoadingStatus) -> ListHorizontalRectangleLimitsState {
+        .init(
+            list: .default,
+            limitsLoadingStatus: status
+        )
     }
     
-    static let defaultValue: ListHorizontalRectangleLimitsView.ViewModel = .init(
-        data:
-                .init(
-                    list: [
-                        .init(
-                            action: .init(type: "action"),
-                            limitType: "Debit",
-                            md5hash: "1",
-                            title: "Платежи и переводы",
-                            limits: [
-                                .init(
-                                    id: "1",
-                                    title: "Осталось сегодня",
-                                    color: Color(red: 28/255, green: 28/255, blue: 28/255)),
-                                .init(
-                                    id: "2",
-                                    title: "Осталось в этом месяце",
-                                    color: Color(red: 255/255, green: 54/255, blue: 54/255)),
-                                
-                            ]),
-                        .init(
-                            action: .init(type: "action"),
-                            limitType: "Credit",
-                            md5hash: "md5Hash",
-                            title: "Снятие наличных",
-                            limits: [
-                                .init(
-                                    id: "3",
-                                    title: "Осталось сегодня",
-                                    color: Color(red: 28/255, green: 28/255, blue: 28/255)),
-                                .init(
-                                    id: "4",
-                                    title: "Осталось в этом месяце",
-                                    color: Color(red: 255/255, green: 54/255, blue: 54/255)),
-                            ])
-                    ]),
-        action: { _ in },
-        makeIconView: {
-            if $0 == "1" {
-                .init(
-                    image: .flag,
-                    publisher: Just(.percent).eraseToAnyPublisher()
-                ) } else {
-                    .init(
-                        image: .percent,
-                        publisher: Just(.flag).eraseToAnyPublisher()
-                        
-                    )}
-        },
-        makeLimit: {
-            switch $0 {
-            case "1":
-                return .init(currency: "₽", currentValue: 90, name: $0, value: 100)
-            case "2":
-                return .init(currency: "$", currentValue: 199.99, name: $0, value: 200)
-            case "3":
-                return .init(currency: "ђ", currentValue: 300, name: $0, value: 300)
-            case "4":
-                return .init(currency: "§", currentValue: 0, name: $0, value: 400)
-            default:
-                return .init(currency: "$", currentValue: 0, name: "5", value: 400)
-            }
-        })
+    static func preview(_ status: LimitsLoadingStatus) -> ListHorizontalRectangleLimitsView {
+        
+        ListHorizontalRectangleLimitsView(
+            state: state(status),
+            event: { _ in },
+            factory: .default,
+            config: .default)
+    }
+
+    static var previews: some View {
+        
+        Group {
+            preview(.inflight)
+                .previewDisplayName("inflight")
+            
+            preview(.failure)
+                .previewDisplayName("failure")
+            
+            preview(.limits(.default))
+                .previewDisplayName("limits")
+            
+            preview(.limits([]))
+                .previewDisplayName("noLimits")
+            
+            preview(.limits(.withoutValue))
+                .previewDisplayName("withoutValueLimits")
+        }
+    }
 }
