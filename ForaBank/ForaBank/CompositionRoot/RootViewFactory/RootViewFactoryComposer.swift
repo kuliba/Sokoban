@@ -75,10 +75,10 @@ private extension RootViewFactoryComposer {
                 makePaymentCompleteView: makePaymentCompleteView
             ),
             productProfileViewFactory: .init(
+                makeActivateSliderView: ActivateSliderStateWrapperView.init,
                 makeHistoryButton: { event in
-                    HistoryButtonView.init(active: true, event: event)
-                },
-                makeActivateSliderView: ActivateSliderStateWrapperView.init
+                    HistoryButtonView(active: true, event: event)
+                }
             ),
             getUImage: getUImage
         )

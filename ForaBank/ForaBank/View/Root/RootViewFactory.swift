@@ -63,8 +63,8 @@ extension RootViewFactory {
 
 struct ProductProfileViewFactory {
     
-    let makeHistoryButton: (@escaping (HistoryEvent) -> Void) -> HistoryButtonView
     let makeActivateSliderView: MakeActivateSliderView
+    let makeHistoryButton: (@escaping (HistoryEvent) -> Void) -> HistoryButtonView
 }
 
 extension RootViewFactory {
@@ -72,10 +72,10 @@ extension RootViewFactory {
     var productProfileViewFactory: ProductProfileViewFactory {
  
         .init(
+            makeActivateSliderView: makeActivateSliderView,
             makeHistoryButton: { event in
                 HistoryButtonView(active: true, event: event)
-            },
-            makeActivateSliderView: makeActivateSliderView
+            }
         )
     }
 }
