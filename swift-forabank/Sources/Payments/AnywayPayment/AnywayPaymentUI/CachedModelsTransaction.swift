@@ -54,4 +54,21 @@ public extension CachedModelsTransaction {
     typealias Map = (AnywayElement) -> Model
 }
 
+public extension CachedModelsTransaction {
+    
+    var identifiedModels: [IdentifiedModel] {
+        
+        transaction.context.payment.elements.compactMap { element in
+            
+            models[element.id].map { .init(id: element.id, model: $0)}
+        }
+    }
+    
+    struct IdentifiedModel: Identifiable {
+        
+         public let id: AnywayElement.ID
+         public let model: Model
+    }
+}
+
 extension CachedModelsTransaction: Equatable where Model: Equatable, DocumentStatus: Equatable, Response: Equatable {}
