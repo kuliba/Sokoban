@@ -35,13 +35,11 @@ public extension CachedModelsTransaction {
     init(
         with transaction: Transaction,
         using map: @escaping Map,
-        makeAmountViewModel: @escaping MakeAmountViewModel
+        makeAmount: @escaping MakeAmount
     ) {
         self.init(
             models: transaction.makeModels(using: map),
-            footer: transaction.makeFooter(
-                using: makeAmountViewModel
-            ),
+            footer: transaction.makeFooter(using: makeAmount),
             transaction: transaction
         )
     }
@@ -49,18 +47,18 @@ public extension CachedModelsTransaction {
     func updating(
         with transaction: Transaction,
         using map: @escaping Map,
-        makeAmountViewModel: @escaping MakeAmountViewModel
+        makeAmount: @escaping MakeAmount
     ) -> Self {
         
         return .init(
             models: transaction.updatingModels(models, using: map),
-            footer: transaction.updatingFooter(footer, using: makeAmountViewModel),
+            footer: transaction.updatingFooter(footer, using: makeAmount),
             transaction: transaction
         )
     }
     
     typealias Map = (AnywayElement) -> Model
-    typealias MakeAmountViewModel = (Transaction) -> AmountViewModel
+    typealias MakeAmount = (Transaction) -> AmountViewModel
 }
 
 public extension CachedModelsTransaction {

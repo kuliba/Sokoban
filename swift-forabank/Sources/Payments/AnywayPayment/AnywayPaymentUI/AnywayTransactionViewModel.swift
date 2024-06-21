@@ -11,12 +11,12 @@ import CombineSchedulers
 import ForaTools
 import Foundation
 
-public final class AnywayTransactionViewModel<AmountViewModel, Model, DocumentStatus, Response>: ObservableObject {
+public final class AnywayTransactionViewModel<Amount, Model, DocumentStatus, Response>: ObservableObject {
     
     @Published public private(set) var state: State
     
     private let mapToModel: MapToModel
-    private let makeAmountViewModel: MakeAmountViewModel
+    private let makeAmount: MakeAmount
     private let reduce: TransactionReduce
     private let handleEffect: HandleEffect
     private let stateSubject = PassthroughSubject<State, Never>()
@@ -24,7 +24,7 @@ public final class AnywayTransactionViewModel<AmountViewModel, Model, DocumentSt
     public init(
         transaction: State.Transaction,
         mapToModel: @escaping MapToModel,
-        makeAmountViewModel: @escaping MakeAmountViewModel,
+        makeAmount: @escaping MakeAmount,
         reduce: @escaping TransactionReduce,
         handleEffect: @escaping HandleEffect,
         scheduler: AnySchedulerOfDispatchQueue = .main
@@ -35,7 +35,7 @@ public final class AnywayTransactionViewModel<AmountViewModel, Model, DocumentSt
         // `updating` is called
         self.state = .init(models: [:], transaction: transaction)
         self.mapToModel = mapToModel
-        self.makeAmountViewModel = makeAmountViewModel
+        self.makeAmount = makeAmount
         self.reduce = reduce
         self.handleEffect = handleEffect
         
@@ -66,7 +66,7 @@ public extension AnywayTransactionViewModel {
 
 public extension AnywayTransactionViewModel {
     
-    typealias State = CachedModelsTransaction<AmountViewModel, Model, DocumentStatus, Response>
+    typealias State = CachedModelsTransaction<Amount, Model, DocumentStatus, Response>
     typealias Event = AnywayTransactionEvent<DocumentStatus, Response>
     typealias Effect = AnywayTransactionEffect
     
@@ -79,7 +79,7 @@ public extension AnywayTransactionViewModel {
     typealias MapToModel = (@escaping Notify) -> (AnywayElement) -> Model
 
     typealias NotifyAmount = (Decimal) -> Void
-    typealias MakeAmountViewModel = (@escaping NotifyAmount) -> (State.Transaction) -> AmountViewModel
+    typealias MakeAmount = (@escaping NotifyAmount) -> (State.Transaction) -> Amount
 
     typealias TransactionReduce = (State.Transaction, Event) -> (State.Transaction, Effect?)
     
@@ -109,7 +109,7 @@ private extension AnywayTransactionViewModel {
                     self?.event(.payment(paymentEvent))
                 }
             },
-            makeAmountViewModel: makeAmountViewModel { [weak self] in
+            makeAmount: makeAmount { [weak self] in
                 
                 // TODO: add tests
                 self?.event(.payment(.widget(.amount($0))))

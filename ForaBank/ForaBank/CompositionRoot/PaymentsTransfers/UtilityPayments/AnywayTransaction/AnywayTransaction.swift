@@ -12,9 +12,9 @@ import PaymentComponents
 import RemoteServices
 import RxViewModel
 
-typealias AnywayTransactionViewModel = AnywayPaymentUI.AnywayTransactionViewModel<BottomAmountViewModel, AnywayElementModel, DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
+typealias AnywayTransactionViewModel = AnywayPaymentUI.AnywayTransactionViewModel<Node<BottomAmountViewModel>, AnywayElementModel, DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 
-typealias AnywayTransactionState = AnywayPaymentUI.CachedModelsTransaction<BottomAmountViewModel, AnywayElementModel, DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
+typealias AnywayTransactionState = AnywayPaymentUI.CachedModelsTransaction<Node<BottomAmountViewModel>, AnywayElementModel, DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 typealias AnywayTransactionEvent = AnywayPaymentUI.AnywayTransactionEvent<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 typealias AnywayTransactionEffect = AnywayPaymentUI.AnywayTransactionEffect
 
@@ -29,3 +29,11 @@ enum DocumentStatus {
 }
 
 typealias OperationDetailID = AnywayPaymentUI.OperationDetailID
+
+import Combine
+
+struct Node<Model> {
+    
+    let model: Model
+    let subscription: AnyCancellable
+}

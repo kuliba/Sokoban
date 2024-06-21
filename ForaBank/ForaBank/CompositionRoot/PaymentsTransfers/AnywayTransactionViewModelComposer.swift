@@ -52,12 +52,9 @@ extension AnywayTransactionViewModelComposer {
         return .init(
             transaction: transaction,
             mapToModel: { event in { self.elementMapper.map($0, event) }},
-            makeAmountViewModel: { event in
+            makeAmount: { event in
                 
-                self.makeAmountViewModel(
-                    event: event,
-                    scheduler: scheduler
-                )
+                self.makeAmount(event: event, scheduler: scheduler)
             },
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
@@ -68,10 +65,10 @@ extension AnywayTransactionViewModelComposer {
     typealias EffectHandler = TransactionEffectHandler<AnywayTransactionReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
     typealias ReducerComposer = AnywayPaymentTransactionReducerComposer<AnywayTransactionReport>
     
-    private func makeAmountViewModel(
+    private func makeAmount(
         event: @escaping (Decimal) -> Void,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
-    ) -> (AnywayTransactionState.Transaction) -> BottomAmountViewModel {
+    ) -> (AnywayTransactionState.Transaction) -> Node<BottomAmountViewModel> {
         
         return { transaction in
             
@@ -89,11 +86,19 @@ extension AnywayTransactionViewModelComposer {
             
             let initialState = BottomAmount(value: amount, button: button, status: nil)
             
-            return .init(
+            let viewModel = BottomAmountViewModel(
                 currencySymbol: currencySymbol,
                 initialState: initialState,
                 scheduler: scheduler
             )
+            
+            let subscription = viewModel.$state
+                .map(\.value)
+                .removeDuplicates()
+                .receive(on: scheduler)
+                .sink(receiveValue: event)
+            
+            return .init(model: viewModel, subscription: subscription)
         }
     }
 }
