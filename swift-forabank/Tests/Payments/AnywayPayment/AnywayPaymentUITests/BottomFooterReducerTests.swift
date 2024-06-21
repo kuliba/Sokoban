@@ -5,8 +5,11 @@
 //  Created by Igor Malyarov on 21.06.2024.
 //
 
+import Foundation
+
 struct BottomFooterState: Equatable {
     
+    var amount: Decimal
     var buttonState: ButtonState
     
     enum ButtonState: Equatable {
@@ -18,6 +21,7 @@ struct BottomFooterState: Equatable {
 enum BottomFooterEvent: Equatable {
     
     case button(ButtonEvent)
+    case edit(Decimal)
     
     enum ButtonEvent: Equatable {
         
@@ -42,6 +46,9 @@ extension BottomFooterReducer {
         switch event {
         case let .button(event):
             reduce(&state, with: event)
+            
+        case let .edit(amount):
+            reduce(&state, with: amount)
         }
         
         return (state, effect)
@@ -82,6 +89,21 @@ private extension BottomFooterReducer {
             case .inactive, .tapped:
                 break
             }
+        }
+    }
+    
+    func reduce(
+        _ state: inout State,
+        with amount: Decimal
+    ) {
+        guard amount >= .zero else { return }
+        
+        switch state.buttonState {
+        case .active:
+            state.amount = amount
+            
+        case .inactive, .tapped:
+            break
         }
     }
 }
@@ -167,11 +189,73 @@ final class BottomFooterReducerTests: XCTestCase {
         assertState(.button(.tap), on: state)
     }
     
-    func test_shouldNotDeliverEffect() {
+    func test_buttonEvent_shouldNotDeliverEffectOnActiveState() {
         
         let state = makeState(buttonState: .active)
         
         assert(.button(.disable), on: state, effect: nil)
+    }
+    
+    func test_buttonEvent_shouldNotDeliverEffectOnInactiveState() {
+        
+        let state = makeState(buttonState: .inactive)
+        
+        assert(.button(.disable), on: state, effect: nil)
+    }
+    
+    func test_buttonEvent_shouldNotDeliverEffectOnATappedState() {
+        
+        let state = makeState(buttonState: .tapped)
+        
+        assert(.button(.disable), on: state, effect: nil)
+    }
+    
+    // MARK: - edit
+    
+    func test_edit_shouldNotSetNegativeAmount() {
+        
+        let state = makeState(amount: 99)
+        
+        assertState(.edit(-9), on: state)
+    }
+    
+    func test_edit_shouldSetAmountToGivenOnActiveState() {
+        
+        let state = makeState(amount: 99)
+        
+        assertState(.edit(9), on: state) {
+            
+            $0.amount = 9
+        }
+    }
+    
+    func test_edit_shouldNotChangeAmountOnInactiveState() {
+        
+        let state = makeState(amount: 99, buttonState: .inactive)
+        
+        assertState(.edit(9), on: state)
+    }
+    
+    func test_edit_shouldNotChangeAmountOnTappedState() {
+        
+        let state = makeState(amount: 99, buttonState: .tapped)
+        
+        assertState(.edit(9), on: state)
+    }
+    
+    func test_edit_shouldNotDeliverEffectOnActiveState() {
+        
+        assert(.edit(99), on: makeState(buttonState: .active), effect: nil)
+    }
+    
+    func test_edit_shouldNotDeliverEffectOnInactiveState() {
+        
+        assert(.edit(99), on: makeState(buttonState: .inactive), effect: nil)
+    }
+    
+    func test_edit_shouldNotDeliverEffectOnTappedState() {
+        
+        assert(.edit(99), on: makeState(buttonState: .tapped), effect: nil)
     }
     
     // MARK: - Helpers
@@ -195,10 +279,14 @@ final class BottomFooterReducerTests: XCTestCase {
     }
     
     private func makeState(
-        buttonState: State.ButtonState
+        amount: Decimal = .init(Double.random(in: 1...100)),
+        buttonState: State.ButtonState = .active
     ) -> State {
         
-        return .init(buttonState: buttonState)
+        return .init(
+            amount: amount,
+            buttonState: buttonState
+        )
     }
     
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void
