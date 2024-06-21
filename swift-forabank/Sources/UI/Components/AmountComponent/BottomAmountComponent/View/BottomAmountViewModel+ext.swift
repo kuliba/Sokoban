@@ -8,7 +8,7 @@
 import TextFieldComponent
 import TextFieldModel
 
-extension BottomAmountViewModel {
+public extension BottomAmountViewModel {
     
     convenience init(
         currencySymbol: String,

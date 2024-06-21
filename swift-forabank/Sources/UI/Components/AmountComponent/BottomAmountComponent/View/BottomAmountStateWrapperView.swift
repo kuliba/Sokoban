@@ -9,7 +9,7 @@ import SwiftUI
 import TextFieldComponent
 import SharedConfigs
 
-struct BottomAmountStateWrapperView<InfoView>: View
+public struct BottomAmountStateWrapperView<InfoView>: View
 where InfoView: View {
     
     @StateObject private var viewModel: ViewModel
@@ -18,7 +18,7 @@ where InfoView: View {
     private let config: Config
     private let infoView: () -> InfoView
     
-    init(
+    public init(
         viewModel: ViewModel,
         config: Config,
         infoView: @escaping () -> InfoView
@@ -36,7 +36,7 @@ where InfoView: View {
         trailing: 19
     )
     
-    var body: some View {
+    public var body: some View {
         
         HStack(spacing: 24) {
             
@@ -48,7 +48,7 @@ where InfoView: View {
     }
 }
 
-extension BottomAmountStateWrapperView {
+public extension BottomAmountStateWrapperView {
     
     typealias ViewModel = BottomAmountViewModel
     typealias Config = BottomAmountConfig
