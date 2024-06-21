@@ -19,7 +19,7 @@ final class ProductProfileFlowReducer {
     typealias BottomSheetReduce = (BottomSheetState, BottomSheetEvent) -> (BottomSheetState, Effect?)
     typealias BottomSheetState = ProductProfileViewModel.BottomSheet?
     
-    typealias HistoryReduce = (HistoryState?, HistoryEvent) -> (HistoryState?, Effect?)
+    typealias HistoryReduce = (ProductProfileViewModel.HistoryState?, HistoryEvent) -> (ProductProfileViewModel.HistoryState?, Effect?)
     
     private let alertReduce: AlertReduce
     private let bottomSheetReduce: BottomSheetReduce
@@ -55,7 +55,7 @@ final class ProductProfileFlowReducer {
             state.bottomSheet = bottomSheet
             
         case let .history(historyEvent):
-            let history: HistoryState?
+            let history: ProductProfileViewModel.HistoryState?
             (history, effect) = historyReduce(state.history, historyEvent)
             state.history = history
         }
@@ -134,7 +134,7 @@ struct ProductProfileFlowState {
     
     var alert: Alert.ViewModel?
     var bottomSheet: ProductProfileViewModel.BottomSheet?
-    var history: HistoryState? //TODO: replace to type
+    var history: ProductProfileViewModel.HistoryState?
 }
 
 enum ProductProfileFlowEvent {

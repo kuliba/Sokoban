@@ -17,28 +17,6 @@ import SwiftUI
 import Tagged
 import RxViewModel
 
-enum HistoryState: Identifiable {
-    
-    case calendar
-    case filter
-    
-    var id: ID {
-        switch self {
-        case .calendar:
-            return .calendar
-            
-        case .filter:
-            return .filter
-        }
-    }
-    
-    enum ID: Hashable {
-        
-        case calendar
-        case filter
-    }
-}
-
 class ProductProfileViewModel: ObservableObject {
     
     typealias CardAction = CardDomain.CardAction
@@ -56,7 +34,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var operationDetail: OperationDetailViewModel?
     @Published var accentColor: Color
     
-    @Published var historyState: HistoryState? //Optional?
+    @Published var historyState: HistoryState?
     
     @Published var bottomSheet: BottomSheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
@@ -1983,6 +1961,28 @@ private extension ProductProfileViewModel {
 //MARK: - Types
 
 extension ProductProfileViewModel {
+    
+    enum HistoryState: Identifiable {
+        
+        case calendar
+        case filter
+        
+        var id: ID {
+            switch self {
+            case .calendar:
+                return .calendar
+                
+            case .filter:
+                return .filter
+            }
+        }
+        
+        enum ID: Hashable {
+            
+            case calendar
+            case filter
+        }
+    }
     
     struct BottomSheet: BottomSheetCustomizable {
         
