@@ -422,6 +422,13 @@
         "identifier" : "SVCardLimitAPITests",
         "name" : "SVCardLimitAPITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AmountComponentTests",
+        "name" : "AmountComponentTests"
+      }
     }
   ],
   "version" : 1
