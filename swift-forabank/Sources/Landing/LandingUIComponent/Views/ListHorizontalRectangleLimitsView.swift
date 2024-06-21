@@ -130,27 +130,51 @@ extension ListHorizontalRectangleLimitsView {
                     circleLimit(
                         limit: limit,
                         mainColor: color,
-                        currentColor: config.colors.arc)
-                        .frame(width: config.size.icon, height: config.size.icon)
+                        currentColor: config.colors.arc,
+                        spent: limit?.spentPercent ?? .noSpent)
                 }
             }
         }
         
+        @ViewBuilder
         private func circleLimit(
             limit: LimitValues?,
             mainColor: Color,
-            currentColor: Color
+            currentColor: Color,
+            spent: LimitValues.Spent
         ) -> some View {
             
-            ZStack {
-                Arc(startAngle: .degrees(-90), endAngle: .degrees(15), clockwise: true)
-                    .stroke(mainColor, lineWidth: 4)
-                    .frame(width: 12, height: 12)
-                Arc(startAngle: .degrees(0), endAngle: .degrees(-75), clockwise: true)
-                    .stroke(currentColor, lineWidth: 2)
-                    .frame(width: 12, height: 12)
+            let startCurrent = 270.0
+            let startMain = 255.0
+            
+            switch spent {
+            case .noSpent:
+                ZStack {
+                    Arc(startAngle: .degrees(startCurrent), endAngle: .degrees(startCurrent + 360), clockwise: false)
+                        .stroke(mainColor, lineWidth: 4)
+                        .frame(width: 12, height: 12)
+                }
+                .frame(width: config.size.icon, height: config.size.icon)
+                
+            case .spentEverything:
+                ZStack {
+                    Arc(startAngle: .degrees(startCurrent), endAngle: .degrees(startCurrent + 360), clockwise: false)
+                        .stroke(currentColor, lineWidth: 2)
+                        .frame(width: 14, height: 14)
+                }
+                .frame(width: config.size.icon, height: config.size.icon)
+                
+            case let .spent(currentAngle):
+                ZStack {
+                    Arc(startAngle: .degrees(currentAngle + startCurrent + 15), endAngle: .degrees(startMain), clockwise: false)
+                        .stroke(mainColor, lineWidth: 4)
+                        .frame(width: 12, height: 12)
+                    Arc(startAngle: .degrees(startCurrent), endAngle: .degrees(currentAngle + startCurrent), clockwise: false)
+                        .stroke(currentColor, lineWidth: 2)
+                        .frame(width: 14, height: 14)
+                }
+                .frame(width: config.size.icon, height: config.size.icon)
             }
-            .frame(width: config.size.icon, height: config.size.icon)
         }
         
         struct Arc: Shape {
@@ -189,66 +213,103 @@ struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
     }
     static let defaultValue: ListHorizontalRectangleLimitsView.ViewModel = .init(
         data:
-            .init(
-                list: [
-                    .init(
-                        action: .init(type: "action"),
-                        limitType: "Debit",
-                        md5hash: "1",
-                        title: "Платежи и переводы",
-                        limits: [
-                            .init(
-                                id: "1",
-                                title: "Осталось сегодня",
-                                color: Color(red: 28/255, green: 28/255, blue: 28/255)),
-                            .init(
-                                id: "2",
-                                title: "Осталось в этом месяце",
-                                color: Color(red: 255/255, green: 54/255, blue: 54/255)),
-                            
-                        ]),
-                    .init(
-                        action: .init(type: "action"),
-                        limitType: "Credit",
-                        md5hash: "md5Hash",
-                        title: "Снятие наличных",
-                        limits: [
-                            .init(
-                                id: "3",
-                                title: "Осталось сегодня",
-                                color: Color(red: 28/255, green: 28/255, blue: 28/255)),
-                            .init(
-                                id: "4",
-                                title: "Осталось в этом месяце",
-                                color: Color(red: 255/255, green: 54/255, blue: 54/255)),
-                        ])
-                ]),
+                .init(
+                    list: [
+                        .init(
+                            action: .init(type: "action"),
+                            limitType: "Debit",
+                            md5hash: "1",
+                            title: "Платежи и переводы",
+                            limits: [
+                                .init(
+                                    id: "1",
+                                    title: "Осталось сегодня",
+                                    color: Color(red: 28/255, green: 28/255, blue: 28/255)),
+                                .init(
+                                    id: "2",
+                                    title: "Осталось в этом месяце",
+                                    color: Color(red: 255/255, green: 54/255, blue: 54/255)),
+                                
+                            ]),
+                        .init(
+                            action: .init(type: "action"),
+                            limitType: "Credit",
+                            md5hash: "md5Hash",
+                            title: "Снятие наличных",
+                            limits: [
+                                .init(
+                                    id: "3",
+                                    title: "Осталось сегодня",
+                                    color: Color(red: 28/255, green: 28/255, blue: 28/255)),
+                                .init(
+                                    id: "4",
+                                    title: "Осталось в этом месяце",
+                                    color: Color(red: 255/255, green: 54/255, blue: 54/255)),
+                            ])
+                    ]),
         action: { _ in }
         ,
         makeIconView: {
             if $0 == "1" {
-        .init(
-            image: .flag,
-            publisher: Just(.percent).eraseToAnyPublisher()
-        ) } else {
-        .init(
-            image: .percent,
-            publisher: Just(.flag).eraseToAnyPublisher()
-            
-        )}
+                .init(
+                    image: .flag,
+                    publisher: Just(.percent).eraseToAnyPublisher()
+                ) } else {
+                    .init(
+                        image: .percent,
+                        publisher: Just(.flag).eraseToAnyPublisher()
+                        
+                    )}
         },
         makeLimit: {
             switch $0 {
-    case "1":
-        return .init(currency: "₽", currentValue: 10, name: "1", value: 100)
-    case "2":
-        return .init(currency: "$", currentValue: 20, name: "1", value: 200)
-    case "3":
-        return .init(currency: "ђ", currentValue: 30, name: "1", value: 300)
-    case "4":
-        return .init(currency: "§", currentValue: 30, name: "1", value: 400)
-    default:
-        return .init(currency: "$", currentValue: 200, name: "2", value: 400)
-    }
+            case "1":
+                return .init(currency: "₽", currentValue: 100, name: "1", value: 100)
+            case "2":
+                return .init(currency: "$", currentValue: 100, name: "1", value: 200)
+            case "3":
+                return .init(currency: "ђ", currentValue: 30, name: "1", value: 300)
+            case "4":
+                return .init(currency: "§", currentValue: 30, name: "1", value: 400)
+            default:
+                return .init(currency: "$", currentValue: 200, name: "2", value: 400)
+            }
         })
 }
+
+extension LimitValues {
+    
+    enum Spent {
+        
+        case noSpent
+        case spentEverything
+        case spent(Double)
+    }
+    
+    // 270->595 325 -> 100%
+    /*
+     
+     270 - 0
+     595 - 100
+     cur - x
+     
+     435 - 50%
+     */
+    var spentPercent: Spent {
+        
+        let balance = value - currentValue
+        
+        switch balance {
+        case 0:
+            return .spentEverything
+            
+        case value:
+            return .noSpent
+            
+        default:
+            let currentPercent = Double(truncating: (currentValue/value * 100.00) as NSNumber)
+            return  .spent(ceil(325/100 * currentPercent))
+        }
+    }
+}
+
