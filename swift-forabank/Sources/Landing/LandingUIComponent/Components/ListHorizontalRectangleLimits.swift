@@ -76,6 +76,7 @@ extension ListHorizontalRectangleLimitsView {
         let makeIconView: LandingView.MakeIconView
         let makeLimit: LandingView.MakeLimit
         private let action: (LandingEvent) -> Void
+        let spentConfig: SpentConfig = .init()
 
         init(
             data: HorizontalList,
@@ -96,5 +97,61 @@ extension ListHorizontalRectangleLimitsView {
             print("tap \(item.limitType)")
             action(.card(.goToMain))
         }
+        
+        func spentPercent(
+            limit: LimitValues?
+        ) -> Spent {
+            
+            guard let limit else { return .noSpent }
+            
+            let balance = limit.value - limit.currentValue
+            
+            switch balance {
+            case 0:
+                return .spentEverything
+                
+            case limit.value:
+                return .noSpent
+                
+            default:
+                let currentPercent = min(Double(truncating: (limit.currentValue/limit.value * 100.00) as NSNumber), 99.6)
+                return .spent(ceil((360 - spentConfig.interval * 2)/100 * currentPercent))
+            }
+        }
+    }
+}
+
+enum Spent {
+    
+    case noSpent
+    case spentEverything
+    case spent(Double)
+}
+
+struct SpentConfig {
+    
+    let startMainAngle: Double
+    let startSpentAngle: Double
+    let interval: Double
+    let size: CGFloat
+    let mainWidth: CGFloat
+    let spentWidth: CGFloat
+    
+    init(
+        startSpentAngle: Double = 270,
+        interval: Double = 15,
+        size: CGFloat = 14,
+        mainWidth: CGFloat = 4
+    ) {
+        self.startMainAngle = startSpentAngle - interval
+        self.startSpentAngle = startSpentAngle
+        self.interval = interval
+        self.size = size
+        self.mainWidth = mainWidth
+        self.spentWidth = mainWidth/2 
+    }
+    
+    var mainArcSize: CGFloat {
+        size - spentWidth
     }
 }

@@ -34,7 +34,9 @@ struct ListHorizontalRectangleLimitsView: View {
             item: item,
             makeIcon: model.makeIconView,
             makeLimit: model.makeLimit,
-            config: config
+            spent: model.spentPercent,
+            config: config,
+            spentConfig: model.spentConfig
         )
         .gesture(
             TapGesture()
@@ -55,9 +57,11 @@ extension ListHorizontalRectangleLimitsView {
         let item: UILanding.List.HorizontalRectangleLimits.Item
         let makeIcon: LandingView.MakeIconView
         let makeLimit: LandingView.MakeLimit
+        let spent: (LimitValues?) -> Spent
         
         let config: Config
-        
+        let spentConfig: SpentConfig
+
         var body: some View {
             
             ZStack {
@@ -131,7 +135,8 @@ extension ListHorizontalRectangleLimitsView {
                         limit: limit,
                         mainColor: color,
                         currentColor: config.colors.arc,
-                        spent: limit?.spentPercent ?? .noSpent)
+                        spent: spent(limit))
+                    .frame(width: config.size.icon, height: config.size.icon)
                 }
             }
         }
@@ -141,56 +146,67 @@ extension ListHorizontalRectangleLimitsView {
             limit: LimitValues?,
             mainColor: Color,
             currentColor: Color,
-            spent: LimitValues.Spent
+            spent: Spent
         ) -> some View {
-            
-            let startCurrent = 270.0
-            let startMain = 255.0
             
             switch spent {
             case .noSpent:
-                ZStack {
-                    Arc(startAngle: .degrees(startCurrent), endAngle: .degrees(startCurrent + 360), clockwise: false)
-                        .stroke(mainColor, lineWidth: 4)
-                        .frame(width: 12, height: 12)
-                }
-                .frame(width: config.size.icon, height: config.size.icon)
+                Circle()
+                    .stroke(
+                        mainColor,
+                        lineWidth: spentConfig.mainWidth
+                    )
+                    .frame(width: spentConfig.mainArcSize, height: spentConfig.mainArcSize)
                 
             case .spentEverything:
-                ZStack {
-                    Arc(startAngle: .degrees(startCurrent), endAngle: .degrees(startCurrent + 360), clockwise: false)
-                        .stroke(currentColor, lineWidth: 2)
-                        .frame(width: 14, height: 14)
-                }
-                .frame(width: config.size.icon, height: config.size.icon)
+                Circle()
+                    .stroke(
+                        currentColor,
+                        lineWidth: spentConfig.spentWidth
+                    )
+                    .frame(width: spentConfig.size, height: spentConfig.size)
                 
             case let .spent(currentAngle):
                 ZStack {
-                    Arc(startAngle: .degrees(currentAngle + startCurrent + 15), endAngle: .degrees(startMain), clockwise: false)
-                        .stroke(mainColor, lineWidth: 4)
-                        .frame(width: 12, height: 12)
-                    Arc(startAngle: .degrees(startCurrent), endAngle: .degrees(currentAngle + startCurrent), clockwise: false)
-                        .stroke(currentColor, lineWidth: 2)
-                        .frame(width: 14, height: 14)
+                    Arc(
+                        startAngle: .degrees(currentAngle + spentConfig.interval),
+                        endAngle: .degrees(spentConfig.startMainAngle), 
+                        clockwise: false
+                    )
+                        .stroke(mainColor, lineWidth: spentConfig.mainWidth)
+                        .frame(width: spentConfig.mainArcSize, height: spentConfig.mainArcSize)
+                    Arc(
+                        startAngle: .degrees(spentConfig.startSpentAngle),
+                        endAngle: .degrees(currentAngle),
+                        clockwise: false
+                    )
+                        .stroke(currentColor, lineWidth: spentConfig.spentWidth)
+                        .frame(width: spentConfig.size, height: spentConfig.size)
                 }
-                .frame(width: config.size.icon, height: config.size.icon)
             }
         }
         
         struct Arc: Shape {
-            var startAngle: Angle
-            var endAngle: Angle
-            var clockwise: Bool
+            
+            let startAngle: Angle
+            let endAngle: Angle
+            let clockwise: Bool
             
             func path(in rect: CGRect) -> Path {
+                
                 var path = Path()
-                path.addArc(center: CGPoint(x: rect.midX, y: rect.midY), radius: rect.width / 2, startAngle: startAngle, endAngle: endAngle, clockwise: clockwise)
+                path.addArc(
+                    center: CGPoint(x: rect.midX, y: rect.midY),
+                    radius: rect.width / 2,
+                    startAngle: startAngle,
+                    endAngle: endAngle,
+                    clockwise: clockwise)
                 
                 return path
             }
         }
         
-        // возможно стоит перенести в основной таргет
+        // TODO: перенести в основной таргет + добавить все case
         
         private func value(limit: Decimal?) -> String {
             
@@ -209,8 +225,8 @@ struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
         ListHorizontalRectangleLimitsView(
             model: defaultValue,
             config: .default)
-        
     }
+    
     static let defaultValue: ListHorizontalRectangleLimitsView.ViewModel = .init(
         data:
                 .init(
@@ -247,8 +263,7 @@ struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
                                     color: Color(red: 255/255, green: 54/255, blue: 54/255)),
                             ])
                     ]),
-        action: { _ in }
-        ,
+        action: { _ in },
         makeIconView: {
             if $0 == "1" {
                 .init(
@@ -264,52 +279,15 @@ struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
         makeLimit: {
             switch $0 {
             case "1":
-                return .init(currency: "₽", currentValue: 100, name: "1", value: 100)
+                return .init(currency: "₽", currentValue: 90, name: $0, value: 100)
             case "2":
-                return .init(currency: "$", currentValue: 100, name: "1", value: 200)
+                return .init(currency: "$", currentValue: 199.99, name: $0, value: 200)
             case "3":
-                return .init(currency: "ђ", currentValue: 30, name: "1", value: 300)
+                return .init(currency: "ђ", currentValue: 300, name: $0, value: 300)
             case "4":
-                return .init(currency: "§", currentValue: 30, name: "1", value: 400)
+                return .init(currency: "§", currentValue: 0, name: $0, value: 400)
             default:
-                return .init(currency: "$", currentValue: 200, name: "2", value: 400)
+                return .init(currency: "$", currentValue: 0, name: "5", value: 400)
             }
         })
 }
-
-extension LimitValues {
-    
-    enum Spent {
-        
-        case noSpent
-        case spentEverything
-        case spent(Double)
-    }
-    
-    // 270->595 325 -> 100%
-    /*
-     
-     270 - 0
-     595 - 100
-     cur - x
-     
-     435 - 50%
-     */
-    var spentPercent: Spent {
-        
-        let balance = value - currentValue
-        
-        switch balance {
-        case 0:
-            return .spentEverything
-            
-        case value:
-            return .noSpent
-            
-        default:
-            let currentPercent = Double(truncating: (currentValue/value * 100.00) as NSNumber)
-            return  .spent(ceil(325/100 * currentPercent))
-        }
-    }
-}
-
