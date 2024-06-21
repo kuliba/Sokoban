@@ -10,9 +10,9 @@ import Foundation
 import TextFieldDomain
 import TextFieldComponent
 
-final class BottomAmountViewModel: ObservableObject {
+public final class BottomAmountViewModel: ObservableObject {
     
-    @Published private(set) var state: State
+    @Published public private(set) var state: State
     
     let textFieldModel: DecimalTextFieldViewModel
     
@@ -22,7 +22,7 @@ final class BottomAmountViewModel: ObservableObject {
     private let stateSubject = PassthroughSubject<State, Never>()
     private var cancellables = Set<AnyCancellable>()
     
-    init(
+    public init(
         initialState: State,
         reduce: @escaping Reduce,
         formatter: DecimalFormatter,
@@ -54,7 +54,7 @@ final class BottomAmountViewModel: ObservableObject {
     }
 }
 
-extension BottomAmountViewModel {
+public extension BottomAmountViewModel {
     
     typealias State = BottomAmount
     typealias Event = BottomAmountEvent
@@ -63,7 +63,7 @@ extension BottomAmountViewModel {
     typealias GetDecimal = (TextFieldState) -> Decimal
 }
 
-extension BottomAmountViewModel {
+public extension BottomAmountViewModel {
     
     func event(_ event: Event) {
         
