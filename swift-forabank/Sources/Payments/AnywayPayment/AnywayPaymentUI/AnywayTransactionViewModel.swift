@@ -78,7 +78,8 @@ public extension AnywayTransactionViewModel {
     typealias Notify = (NotifyEvent) -> Void
     typealias MapToModel = (@escaping Notify) -> (AnywayElement) -> Model
 
-    typealias MakeAmountViewModel = (State.Transaction) -> AmountViewModel
+    typealias NotifyAmount = (Decimal) -> Void
+    typealias MakeAmountViewModel = (@escaping NotifyAmount) -> (State.Transaction) -> AmountViewModel
 
     typealias TransactionReduce = (State.Transaction, Event) -> (State.Transaction, Effect?)
     
@@ -108,7 +109,11 @@ private extension AnywayTransactionViewModel {
                     self?.event(.payment(paymentEvent))
                 }
             },
-            makeAmountViewModel: makeAmountViewModel
+            makeAmountViewModel: makeAmountViewModel { [weak self] in
+                
+                // TODO: add tests
+                self?.event(.payment(.widget(.amount($0))))
+            }
         )
     }
 }

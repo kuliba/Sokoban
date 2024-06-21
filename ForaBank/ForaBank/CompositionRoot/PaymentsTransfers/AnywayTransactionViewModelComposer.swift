@@ -8,6 +8,7 @@
 import AnywayPaymentCore
 import AnywayPaymentDomain
 import ForaTools
+import Foundation
 import PaymentComponents
 
 final class AnywayTransactionViewModelComposer {
@@ -51,9 +52,13 @@ extension AnywayTransactionViewModelComposer {
         return .init(
             transaction: transaction,
             mapToModel: { event in { self.elementMapper.map($0, event) }},
-            makeAmountViewModel: makeAmountViewModel(
-                scheduler: scheduler
-            ),
+            makeAmountViewModel: { event in
+                
+                self.makeAmountViewModel(
+                    event: event,
+                    scheduler: scheduler
+                )
+            },
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: scheduler
@@ -64,6 +69,7 @@ extension AnywayTransactionViewModelComposer {
     typealias ReducerComposer = AnywayPaymentTransactionReducerComposer<AnywayTransactionReport>
     
     private func makeAmountViewModel(
+        event: @escaping (Decimal) -> Void,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) -> (AnywayTransactionState.Transaction) -> BottomAmountViewModel {
         
