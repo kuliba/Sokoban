@@ -12,7 +12,7 @@ final class RootViewFactoryComposerTests: XCTestCase {
     
     func test_compose_shouldNotFail() {
         
-        _ = makeSUT().compose(historyFeatureFlag: .init(rawValue: false))
+        _ = makeSUT().compose()
     }
     
     // MARK: - Helpers
@@ -27,7 +27,8 @@ final class RootViewFactoryComposerTests: XCTestCase {
         
         let sut = SUT(
             model: model ?? .mockWithEmptyExcept(),
-            httpClient: HTTPClientSpy()
+            httpClient: HTTPClientSpy(),
+            historyFeatureFlag: .init(false)
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)

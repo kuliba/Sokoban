@@ -441,7 +441,7 @@ struct ProfileView_Previews: PreviewProvider {
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
                 makeHistoryButton: { event in
                         
-                    return HistoryButtonView(active: true, event: event)
+                    HistoryButtonView(event: event)
                 }
             ),
             getUImage: { _ in nil }

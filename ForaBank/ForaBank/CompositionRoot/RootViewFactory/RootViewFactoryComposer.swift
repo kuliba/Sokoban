@@ -20,21 +20,22 @@ final class RootViewFactoryComposer {
     
     private let model: Model
     private let httpClient: HTTPClient
+    private let historyFeatureFlag: HistoryFilterFlag
     
     init(
         model: Model,
-        httpClient: HTTPClient
+        httpClient: HTTPClient,
+        historyFeatureFlag: HistoryFilterFlag
     ) {
         self.model = model
         self.httpClient = httpClient
+        self.historyFeatureFlag = historyFeatureFlag
     }
 }
 
 extension RootViewFactoryComposer {
     
-    func compose(
-        historyFeatureFlag: HistoryFilterFlag
-    ) -> Factory {
+    func compose() -> Factory {
         
         let imageCache = model.imageCache()
 
@@ -47,7 +48,7 @@ extension RootViewFactoryComposer {
             makeUpdateInfoView: UpdateInfoView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
             makePaymentCompleteView: makePaymentCompleteView, 
-            makeHistoryButtonView: { self.makeHistoryButtonView(historyFeatureFlag) }
+            makeHistoryButtonView: { self.makeHistoryButtonView(self.historyFeatureFlag) }
         )
     }
 }
@@ -79,7 +80,7 @@ private extension RootViewFactoryComposer {
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
                 makeHistoryButton: { event in
-                    HistoryButtonView(active: true, event: event)
+                    HistoryButtonView(event: event)
                 }
             ),
             getUImage: getUImage
@@ -161,9 +162,13 @@ private extension RootViewFactoryComposer {
     
     func makeHistoryButtonView(
         _ historyFeatureFlag: HistoryFilterFlag
-    ) -> HistoryButtonView {
+    ) -> HistoryButtonView? {
         
-        HistoryButtonView(active: historyFeatureFlag.rawValue, event: { _ in })
+        if historyFeatureFlag.rawValue {
+            return HistoryButtonView(event: { _ in })
+        } else {
+           return nil
+        }
     }
     
     typealias TransactionResult = UtilityServicePaymentFlowState<AnywayTransactionViewModel>.FullScreenCover.TransactionResult
