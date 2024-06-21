@@ -97,27 +97,6 @@ extension ListHorizontalRectangleLimitsView {
             print("tap \(item.limitType)")
             action(.card(.goToMain))
         }
-        
-        func spentPercent(
-            limit: LimitValues?
-        ) -> Spent {
-            
-            guard let limit else { return .noSpent }
-            
-            let balance = limit.value - limit.currentValue
-            
-            switch balance {
-            case 0:
-                return .spentEverything
-                
-            case limit.value:
-                return .noSpent
-                
-            default:
-                let currentPercent = min(Double(truncating: (limit.currentValue/limit.value * 100.00) as NSNumber), 99.6)
-                return .spent(ceil((360 - spentConfig.interval * 2)/100 * currentPercent))
-            }
-        }
     }
 }
 

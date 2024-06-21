@@ -34,7 +34,6 @@ struct ListHorizontalRectangleLimitsView: View {
             item: item,
             makeIcon: model.makeIconView,
             makeLimit: model.makeLimit,
-            spent: model.spentPercent,
             config: config,
             spentConfig: model.spentConfig
         )
@@ -50,6 +49,31 @@ struct ListHorizontalRectangleLimitsView: View {
     typealias Config = UILanding.List.HorizontalRectangleLimits.Config
 }
 
+extension Spent {
+    
+    static func spentPercent(
+        limit: LimitValues?,
+        interval: CGFloat
+    ) -> Spent {
+        
+        guard let limit else { return .noSpent }
+        
+        let balance = limit.value - limit.currentValue
+        
+        switch balance {
+        case 0:
+            return .spentEverything
+            
+        case limit.value:
+            return .noSpent
+            
+        default:
+            let currentPercent = min(Double(truncating: (limit.currentValue/limit.value * 100.00) as NSNumber), 99.6)
+            return .spent(ceil((360 - interval * 2)/100 * currentPercent))
+        }
+    }
+}
+
 extension ListHorizontalRectangleLimitsView {
     
     struct ItemView: View {
@@ -57,7 +81,6 @@ extension ListHorizontalRectangleLimitsView {
         let item: UILanding.List.HorizontalRectangleLimits.Item
         let makeIcon: LandingView.MakeIconView
         let makeLimit: LandingView.MakeLimit
-        let spent: (LimitValues?) -> Spent
         
         let config: Config
         let spentConfig: SpentConfig
@@ -136,7 +159,7 @@ extension ListHorizontalRectangleLimitsView {
                         limit: limit,
                         mainColor: color,
                         currentColor: config.colors.arc,
-                        spent: spent(limit))
+                        spent: Spent.spentPercent(limit: limit, interval: spentConfig.interval))
                     .frame(width: config.size.icon, height: config.size.icon)
                 }
             }
@@ -152,39 +175,47 @@ extension ListHorizontalRectangleLimitsView {
             
             switch spent {
             case .noSpent:
-                Circle()
-                    .stroke(
-                        mainColor,
-                        lineWidth: spentConfig.mainWidth
-                    )
-                    .frame(width: spentConfig.mainArcSize, height: spentConfig.mainArcSize)
+                circle(mainColor, spentConfig.mainWidth, spentConfig.mainArcSize)
                 
             case .spentEverything:
-                Circle()
-                    .stroke(
-                        currentColor,
-                        lineWidth: spentConfig.spentWidth
-                    )
-                    .frame(width: spentConfig.size, height: spentConfig.size)
+                circle(currentColor, spentConfig.spentWidth, spentConfig.size)
                 
             case let .spent(currentAngle):
                 ZStack {
-                    Arc(
-                        startAngle: .degrees(currentAngle + spentConfig.interval),
-                        endAngle: .degrees(spentConfig.startMainAngle), 
-                        clockwise: false
-                    )
-                        .stroke(mainColor, lineWidth: spentConfig.mainWidth)
-                        .frame(width: spentConfig.mainArcSize, height: spentConfig.mainArcSize)
-                    Arc(
-                        startAngle: .degrees(spentConfig.startSpentAngle),
-                        endAngle: .degrees(currentAngle),
-                        clockwise: false
-                    )
-                        .stroke(currentColor, lineWidth: spentConfig.spentWidth)
-                        .frame(width: spentConfig.size, height: spentConfig.size)
+                    
+                    arc(start: currentAngle + spentConfig.interval, end: spentConfig.startMainAngle, mainColor, spentConfig.mainWidth, spentConfig.mainArcSize)
+                    arc(start: spentConfig.startSpentAngle, end: currentAngle, currentColor, spentConfig.spentWidth, spentConfig.size)
                 }
             }
+        }
+        
+        private func arc(
+            start: Double,
+            end: Double,
+            _ color: Color,
+            _ lineWidth: CGFloat,
+            _ width: CGFloat
+        ) -> some View {
+            Arc(
+                startAngle: .degrees(start),
+                endAngle: .degrees(end),
+                clockwise: false
+            )
+                .stroke(color, lineWidth: lineWidth)
+                .frame(width: width, height: width)
+        }
+        
+        private func circle(
+            _ color: Color,
+            _ lineWidth: CGFloat,
+            _ width: CGFloat
+        ) -> some View {
+            Circle()
+                .stroke(
+                    color,
+                    lineWidth: lineWidth
+                )
+                .frame(width: width, height: width)
         }
         
         struct Arc: Shape {
