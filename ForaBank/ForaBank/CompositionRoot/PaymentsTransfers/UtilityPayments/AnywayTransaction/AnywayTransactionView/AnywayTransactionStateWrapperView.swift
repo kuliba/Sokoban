@@ -23,7 +23,7 @@ where TransactionView: View {
     }
     
     var body: some View {
-        
+
         makeTransactionView(viewModel.state, viewModel.event(_:))
             .spinnerDecorated(if: viewModel.isInflight)
     }

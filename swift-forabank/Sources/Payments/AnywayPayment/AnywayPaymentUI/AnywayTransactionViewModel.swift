@@ -20,15 +20,11 @@ public final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: 
     private let handleEffect: HandleEffect
     private let stateSubject = PassthroughSubject<State, Never>()
     
-    private var cancellable: AnyCancellable?
-    
     public init(
         transaction: State.Transaction,
         mapToModel: @escaping MapToModel,
         reduce: @escaping Reduce,
         handleEffect: @escaping HandleEffect,
-        observe: @escaping Observe,
-        predicate: @escaping (TransactionStatus?, TransactionStatus?) -> Bool = { _,_ in false },
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         // model mapping needs `self.event(_:),
@@ -43,16 +39,9 @@ public final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: 
         // Update state with the initial transaction when `self` is avail
         self.state = updating(state, with: transaction)
         
-        let sharedSubject = stateSubject.share()
-        
-        sharedSubject
+        stateSubject
             .receive(on: scheduler)
             .assign(to: &$state)
-        
-        cancellable = sharedSubject
-            .map(\.transaction.status)
-            .removeDuplicates(by: predicate)
-            .sink(receiveValue: observe)
     }
 }
 
@@ -91,7 +80,6 @@ public extension AnywayTransactionViewModel {
     typealias Dispatch = (Event) -> Void
     typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
     
-    typealias Observe = (TransactionStatus?) -> Void
     typealias TransactionStatus = Status<DocumentStatus, Response>
 }
 
