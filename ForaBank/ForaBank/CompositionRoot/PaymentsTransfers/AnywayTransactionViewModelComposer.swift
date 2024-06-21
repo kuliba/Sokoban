@@ -12,20 +12,26 @@ import PaymentComponents
 
 final class AnywayTransactionViewModelComposer {
     
+    private let getCurrencySymbol: GetCurrencySymbol
     private let elementMapper: AnywayElementModelMapper
     private let microServices: MicroServices
     private let spinnerActions: SpinnerActions
     
+    private let buttonTitle = "Проверить"
+    
     init(
+        getCurrencySymbol: @escaping GetCurrencySymbol,
         elementMapper: AnywayElementModelMapper,
         microServices: MicroServices,
         spinnerActions: SpinnerActions
     ) {
+        self.getCurrencySymbol = getCurrencySymbol
         self.elementMapper = elementMapper
         self.microServices = microServices
         self.spinnerActions = spinnerActions
     }
     
+    typealias GetCurrencySymbol = (String) -> String
     typealias MicroServices = AnywayTransactionEffectHandlerMicroServices
     typealias SpinnerActions = RootViewModel.RootActions.Spinner?
 }
@@ -45,6 +51,9 @@ extension AnywayTransactionViewModelComposer {
         return .init(
             transaction: transaction,
             mapToModel: { event in { self.elementMapper.map($0, event) }},
+            makeAmountViewModel: makeAmountViewModel(
+                scheduler: scheduler
+            ),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: scheduler
@@ -53,4 +62,32 @@ extension AnywayTransactionViewModelComposer {
     
     typealias EffectHandler = TransactionEffectHandler<AnywayTransactionReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
     typealias ReducerComposer = AnywayPaymentTransactionReducerComposer<AnywayTransactionReport>
+    
+    private func makeAmountViewModel(
+        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+    ) -> (AnywayTransactionState.Transaction) -> BottomAmountViewModel {
+        
+        return { transaction in
+            
+            let digest = transaction.context.makeDigest()
+            
+            let currency = digest.core?.currency
+            let currencySymbol = currency.map(self.getCurrencySymbol) ?? ""
+            
+            let amount = digest.amount ?? 0
+            
+            let button = BottomAmount.AmountButton(
+                title: self.buttonTitle,
+                isEnabled: transaction.isValid
+            )
+            
+            let initialState = BottomAmount(value: amount, button: button, status: nil)
+            
+            return .init(
+                currencySymbol: currencySymbol,
+                initialState: initialState,
+                scheduler: scheduler
+            )
+        }
+    }
 }

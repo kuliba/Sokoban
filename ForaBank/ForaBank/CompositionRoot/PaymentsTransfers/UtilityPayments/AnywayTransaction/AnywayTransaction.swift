@@ -8,12 +8,13 @@
 import AnywayPaymentCore
 import AnywayPaymentDomain
 import AnywayPaymentUI
+import PaymentComponents
 import RemoteServices
 import RxViewModel
 
-typealias AnywayTransactionViewModel = AnywayPaymentUI.AnywayTransactionViewModel<AnywayElementModel, DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
+typealias AnywayTransactionViewModel = AnywayPaymentUI.AnywayTransactionViewModel<BottomAmountViewModel, AnywayElementModel, DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 
-typealias AnywayTransactionState = AnywayPaymentUI.CachedModelsTransaction<AnywayElementModel, DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
+typealias AnywayTransactionState = AnywayPaymentUI.CachedModelsTransaction<BottomAmountViewModel, AnywayElementModel, DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 typealias AnywayTransactionEvent = AnywayPaymentUI.AnywayTransactionEvent<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 typealias AnywayTransactionEffect = AnywayPaymentUI.AnywayTransactionEffect
 

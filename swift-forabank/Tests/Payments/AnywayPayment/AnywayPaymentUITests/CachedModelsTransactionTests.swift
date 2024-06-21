@@ -130,16 +130,19 @@ final class CachedModelsTransactionTests: XCTestCase {
         XCTAssertTrue(initialFieldModel === fieldModel)
     }
     
+    // TODO: add tests for makeAmountViewModel
+    
     // MARK: - Helpers
     
-    private typealias SUT = CachedModelsTransaction<Model, DocumentStatus, Response>
-    
+    private typealias SUT = CachedModelsTransaction<AmountViewModel, Model, DocumentStatus, Response>
+    private typealias AmountViewModel = String
+
     private func makeSUT(
         with transaction: SUT.Transaction = makeTransaction(),
         using map: @escaping SUT.Map = { .init(value: $0) }
     ) -> SUT {
         
-        return SUT(with: transaction, using: map)
+        return SUT(with: transaction, using: map, makeAmountViewModel: { _ in "AmountViewModel" })
     }
     
     private func updating(
@@ -148,7 +151,7 @@ final class CachedModelsTransactionTests: XCTestCase {
         using map: @escaping SUT.Map = { .init(value: $0) }
     ) -> SUT {
         
-        sut.updating(with: transaction, using: map)
+        sut.updating(with: transaction, using: map, makeAmountViewModel: { _ in "AmountViewModel" })
     }
     
     private final class Model {

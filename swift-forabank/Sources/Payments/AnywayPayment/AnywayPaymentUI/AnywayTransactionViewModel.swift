@@ -11,19 +11,21 @@ import CombineSchedulers
 import ForaTools
 import Foundation
 
-public final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: ObservableObject {
+public final class AnywayTransactionViewModel<AmountViewModel, Model, DocumentStatus, Response>: ObservableObject {
     
     @Published public private(set) var state: State
     
     private let mapToModel: MapToModel
-    private let reduce: Reduce
+    private let makeAmountViewModel: MakeAmountViewModel
+    private let reduce: TransactionReduce
     private let handleEffect: HandleEffect
     private let stateSubject = PassthroughSubject<State, Never>()
     
     public init(
         transaction: State.Transaction,
         mapToModel: @escaping MapToModel,
-        reduce: @escaping Reduce,
+        makeAmountViewModel: @escaping MakeAmountViewModel,
+        reduce: @escaping TransactionReduce,
         handleEffect: @escaping HandleEffect,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
@@ -33,6 +35,7 @@ public final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: 
         // `updating` is called
         self.state = .init(models: [:], transaction: transaction)
         self.mapToModel = mapToModel
+        self.makeAmountViewModel = makeAmountViewModel
         self.reduce = reduce
         self.handleEffect = handleEffect
         
@@ -63,7 +66,7 @@ public extension AnywayTransactionViewModel {
 
 public extension AnywayTransactionViewModel {
     
-    typealias State = CachedModelsTransaction<Model, DocumentStatus, Response>
+    typealias State = CachedModelsTransaction<AmountViewModel, Model, DocumentStatus, Response>
     typealias Event = AnywayTransactionEvent<DocumentStatus, Response>
     typealias Effect = AnywayTransactionEffect
     
@@ -74,8 +77,10 @@ public extension AnywayTransactionViewModel {
     }
     typealias Notify = (NotifyEvent) -> Void
     typealias MapToModel = (@escaping Notify) -> (AnywayElement) -> Model
-    
-    typealias Reduce = (State.Transaction, Event) -> (State.Transaction, Effect?)
+
+    typealias MakeAmountViewModel = (State.Transaction) -> AmountViewModel
+
+    typealias TransactionReduce = (State.Transaction, Event) -> (State.Transaction, Effect?)
     
     typealias Dispatch = (Event) -> Void
     typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
@@ -102,7 +107,8 @@ private extension AnywayTransactionViewModel {
                 case let .payment(paymentEvent):
                     self?.event(.payment(paymentEvent))
                 }
-            }
+            },
+            makeAmountViewModel: makeAmountViewModel
         )
     }
 }
