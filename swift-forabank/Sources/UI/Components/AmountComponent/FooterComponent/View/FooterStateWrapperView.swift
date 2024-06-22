@@ -133,6 +133,8 @@ private extension FooterStateWrapperView {
             config: config.button
         )
         .disabled(viewModel.state.isDisabled)
+        .padding([.horizontal, .bottom])
+        .ignoresSafeArea()
     }
 }
 

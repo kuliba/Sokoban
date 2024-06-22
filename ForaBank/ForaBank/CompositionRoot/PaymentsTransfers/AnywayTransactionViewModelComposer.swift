@@ -18,7 +18,7 @@ final class AnywayTransactionViewModelComposer {
     private let microServices: MicroServices
     private let spinnerActions: SpinnerActions
     
-    private let buttonTitle = "Проверить"
+    private let buttonTitle = "Продолжить"
     
     init(
         getCurrencySymbol: @escaping GetCurrencySymbol,

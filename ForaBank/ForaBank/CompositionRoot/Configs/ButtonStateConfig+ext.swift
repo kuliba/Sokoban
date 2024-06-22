@@ -18,10 +18,10 @@ extension ButtonStateConfig {
     )
     
     static let inactive: Self = .init(
-        backgroundColor: .mainColorsGrayMedium.opacity(0.1),
+        backgroundColor: .buttonPrimaryDisabled,
         text: .init(
             textFont: .textH4R16240(),
-            textColor: .mainColorsWhite.opacity(0.5)
+            textColor: .white
         )
     )
 

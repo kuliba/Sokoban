@@ -40,10 +40,10 @@ extension AnywayPaymentFactoryComposer {
         )
         
         return .init(
-            makeElementView: {
+            makeElementView: { state in
                 
                 return .init(
-                    state: $0,
+                    state: state,
                     event: event,
                     factory: elementFactory,
                     config: .iFora
