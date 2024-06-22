@@ -1,5 +1,5 @@
 //
-//  BottomFooterReducerTests.swift
+//  FooterReducerTests.swift
 //  
 //
 //  Created by Igor Malyarov on 21.06.2024.
@@ -8,7 +8,7 @@
 import AmountComponent
 import XCTest
 
-final class BottomFooterReducerTests: XCTestCase {
+final class FooterReducerTests: XCTestCase {
     
     // MARK: - button events
     
@@ -199,7 +199,7 @@ final class BottomFooterReducerTests: XCTestCase {
 
     // MARK: - Helpers
     
-    private typealias SUT = BottomFooterReducer
+    private typealias SUT = FooterReducer
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event

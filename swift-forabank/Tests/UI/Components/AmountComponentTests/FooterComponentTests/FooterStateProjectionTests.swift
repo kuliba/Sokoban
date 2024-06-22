@@ -1,5 +1,5 @@
 //
-//  BottomFooterStateProjectionTests.swift
+//  FooterStateProjectionTests.swift
 //
 //
 //  Created by Igor Malyarov on 21.06.2024.
@@ -8,11 +8,11 @@
 import AmountComponent
 import XCTest
 
-final class BottomFooterStateProjectionTests: XCTestCase {
+final class FooterStateProjectionTests: XCTestCase {
     
     func test_shouldSetAmount() {
         
-        let state = BottomFooterState(
+        let state = FooterState(
             amount: 99,
             buttonState: .active,
             style: .amount
@@ -23,7 +23,7 @@ final class BottomFooterStateProjectionTests: XCTestCase {
     
     func test_shouldSetButtonTap() {
         
-        let state = BottomFooterState(
+        let state = FooterState(
             amount: 11,
             buttonState: .tapped,
             style: .button

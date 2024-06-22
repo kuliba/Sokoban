@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  FooterReducer.swift
 //  
 //
 //  Created by Igor Malyarov on 21.06.2024.
@@ -7,12 +7,12 @@
 
 import Foundation
 
-public final class BottomFooterReducer {
+public final class FooterReducer {
     
     public init() {}
 }
 
-public extension BottomFooterReducer {
+public extension FooterReducer {
     
     func reduce(
         _ state: State,
@@ -37,14 +37,14 @@ public extension BottomFooterReducer {
     }
 }
 
-public extension BottomFooterReducer {
+public extension FooterReducer {
     
-    typealias State = BottomFooterState
-    typealias Event = BottomFooterEvent
-    typealias Effect = BottomFooterEffect
+    typealias State = FooterState
+    typealias Event = FooterEvent
+    typealias Effect = FooterEffect
 }
 
-private extension BottomFooterReducer {
+private extension FooterReducer {
     
     func reduce(
         _ state: inout State,

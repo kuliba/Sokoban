@@ -1,5 +1,5 @@
 //
-//  BottomFooterState+projection.swift
+//  FooterState+projection.swift
 //
 //
 //  Created by Igor Malyarov on 21.06.2024.
@@ -9,7 +9,7 @@ import Foundation
 
 import Foundation
 
-extension BottomFooterState {
+extension FooterState {
     
     public var projection: Projection {
         

@@ -1,5 +1,5 @@
 //
-//  BottomFooterEvent.swift
+//  FooterEvent.swift
 //
 //
 //  Created by Igor Malyarov on 21.06.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum BottomFooterEvent: Equatable {
+public enum FooterEvent: Equatable {
     
     case button(ButtonEvent)
     case edit(Decimal)
@@ -18,5 +18,5 @@ public enum BottomFooterEvent: Equatable {
         case disable, enable, tap
     }
     
-    public typealias Style = BottomFooterState.Style
+    public typealias Style = FooterState.Style
 }

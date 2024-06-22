@@ -1,5 +1,5 @@
 //
-//  BottomFooterState.swift
+//  FooterState.swift
 //
 //
 //  Created by Igor Malyarov on 21.06.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct BottomFooterState: Equatable {
+public struct FooterState: Equatable {
     
     public var amount: Decimal
     public var buttonState: ButtonState
