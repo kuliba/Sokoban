@@ -8,15 +8,15 @@
 import AnywayPaymentCore
 import AnywayPaymentDomain
 
-public struct CachedModelsTransaction<Amount, Model, DocumentStatus, Response> {
+public struct CachedModelsTransaction<Footer, Model, DocumentStatus, Response> {
     
     public let models: Models
-    public let footer: AmountFooter
+    public let footer: Footer
     public let transaction: Transaction
     
     internal init(
         models: Models,
-        footer: AmountFooter,
+        footer: Footer,
         transaction: Transaction
     ) {
         self.models = models
@@ -26,7 +26,6 @@ public struct CachedModelsTransaction<Amount, Model, DocumentStatus, Response> {
     
     public typealias ID = AnywayElement.ID
     public typealias Models = [ID: Model]
-    public typealias AmountFooter = Footer<Amount>
     public typealias Transaction = AnywayTransactionState<DocumentStatus, Response>
 }
 
@@ -46,19 +45,18 @@ public extension CachedModelsTransaction {
     
     func updating(
         with transaction: Transaction,
-        using map: @escaping Map,
-        makeFooter: @escaping MakeFooter
+        using map: @escaping Map
     ) -> Self {
         
         return .init(
             models: transaction.updatingModels(models, using: map),
-            footer: transaction.updatingFooter(footer, using: makeFooter),
+            footer: footer,
             transaction: transaction
         )
     }
     
     typealias Map = (AnywayElement) -> Model
-    typealias MakeFooter = (Transaction) -> AmountFooter
+    typealias MakeFooter = (Transaction) -> Footer
 }
 
 public extension CachedModelsTransaction {
@@ -105,26 +103,4 @@ extension Transaction where Context == AnywayPaymentContext {
     }
     
     typealias Models<Model> = [AnywayElement.ID: Model]
-    
-    func updatingFooter<Amount>(
-        _ footer: Footer<Amount>,
-        using makeFooter: (Self) -> Footer<Amount>
-    ) -> Footer<Amount> {
-        
-        let newFooter = makeFooter(self)
-        
-        switch (footer, newFooter) {
-        case (.continueButton, _):
-            print("===>>> using new footer", newFooter, #file, #line)
-            return newFooter
-            
-        case (_, .continueButton):
-            print("===>>> using new footer", newFooter, #file, #line)
-            return newFooter
-            
-        case let (.amount(amount), .amount):
-            print("===>>> Re-using footer", amount, #file, #line)
-            return .amount(amount)
-        }
-    }
 }

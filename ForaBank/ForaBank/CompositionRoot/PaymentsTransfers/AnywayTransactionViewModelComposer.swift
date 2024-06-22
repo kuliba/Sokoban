@@ -49,10 +49,15 @@ extension AnywayTransactionViewModelComposer {
         let composer = ReducerComposer()
         let reducer = composer.compose()
         
+        let footer = makeFooterViewModel(
+            transaction: transaction,
+            scheduler: scheduler
+        )
+        
         return .init(
             transaction: transaction,
             mapToModel: { event in { self.elementMapper.map($0, event) }},
-            makeFooter: makeFooter(scheduler: scheduler),
+            footer: footer,
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: scheduler
@@ -62,84 +67,30 @@ extension AnywayTransactionViewModelComposer {
     typealias EffectHandler = TransactionEffectHandler<AnywayTransactionReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
     typealias ReducerComposer = AnywayPaymentTransactionReducerComposer<AnywayTransactionReport>
     
-    private func makeFooter(
+    private func makeFooterViewModel(
+        transaction: AnywayTransactionState.Transaction,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
-    ) -> AnywayTransactionViewModel.MakeFooter {
-        
-        return { event in
-            
-            return { transaction in
-                
-                let digest = transaction.context.makeDigest()
-                
-                guard digest.amount != nil,
-                      digest.core?.currency != nil
-                else { 
-                    
-                    return .continueButton { event(.buttonTap) }
-                }
-                
-                let node = self.makeBottomAmountNode(
-                    transaction: transaction,
-                    event: event,
-                    scheduler: scheduler
-                )
-                
-                return .amount(node)
-            }
-        }
-    }
-    
-    private func makeBottomAmountNode(
-        transaction: AnywayTransactionViewModel.State.Transaction,
-        event: @escaping AnywayTransactionViewModel.NotifyAmount,
-        scheduler: AnySchedulerOfDispatchQueue
-    ) -> Node<BottomAmountViewModel> {
+    ) -> FooterViewModel {
         
         let digest = transaction.context.makeDigest()
         
+        let amount = digest.amount ?? 0
         let currency = digest.core?.currency
         let currencySymbol = currency.map(getCurrencySymbol) ?? ""
         
-        let amount = digest.amount ?? 0
-        
-        let button = BottomAmount.AmountButton(
-            title: buttonTitle,
-            isEnabled: transaction.isValid
+        let footerState = FooterState(
+            amount: amount,
+            button: .init(
+                title: buttonTitle,
+                state: transaction.isValid ? .active : .inactive
+            ),
+            style: .button
         )
         
-        let initialState = BottomAmount(
-            value: amount,
-            button: button,
-            status: nil
-        )
-        
-        let viewModel = BottomAmountViewModel(
+        return .init(
             currencySymbol: currencySymbol,
-            initialState: initialState,
+            initialState: footerState,
             scheduler: scheduler
         )
-        
-        print("===>>>", ObjectIdentifier(viewModel), "created BottomAmountViewModel", #file, #line)
-        
-        let subscription = viewModel.$state
-            .map(AnywayTransactionViewModel.AmountEvent.init(bottomAmount:))
-            .removeDuplicates()
-            .receive(on: scheduler)
-            .sink(receiveValue: event)
-        
-        return .init(model: viewModel, subscription: subscription)
-    }
-}
-
-private extension AnywayTransactionViewModel.AmountEvent {
-    
-    init(bottomAmount: BottomAmount) {
-        
-        if case .tapped = bottomAmount.status {
-            self = .buttonTap
-        } else {
-            self = .edit(bottomAmount.value)
-        }
     }
 }

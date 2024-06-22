@@ -130,7 +130,7 @@ final class CachedModelsTransactionTests: XCTestCase {
         XCTAssertTrue(initialFieldModel === fieldModel)
     }
     
-    // TODO: add tests for makeAmountViewModel
+    // TODO: add tests for footer
     
     // MARK: - Helpers
     
@@ -142,7 +142,7 @@ final class CachedModelsTransactionTests: XCTestCase {
         using map: @escaping SUT.Map = { .init(value: $0) }
     ) -> SUT {
         
-        return SUT(with: transaction, using: map, makeFooter: { _ in .continueButton({}) })
+        return SUT(with: transaction, using: map, makeFooter: { _ in "Footer" })
     }
     
     private func updating(
@@ -151,7 +151,7 @@ final class CachedModelsTransactionTests: XCTestCase {
         using map: @escaping SUT.Map = { .init(value: $0) }
     ) -> SUT {
         
-        sut.updating(with: transaction, using: map, makeFooter: { _ in .continueButton({}) })
+        sut.updating(with: transaction, using: map)
     }
     
     private final class Model {

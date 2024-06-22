@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
+import AmountComponent
 import AnywayPaymentCore
 import AnywayPaymentDomain
 import SwiftUI
@@ -20,5 +21,5 @@ extension AnywayPaymentFactory {
     typealias Element = AnywayTransactionState.IdentifiedModel
     typealias MakeElementView = (Element) -> AnywayPaymentElementView<IconView>
     
-    typealias MakeFooterView = (AnywayTransactionState.AmountFooter) -> AnywayPaymentFooterView
+    typealias MakeFooterView = (FooterViewModel) -> AnywayPaymentFooterView
 }

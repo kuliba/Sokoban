@@ -8,13 +8,14 @@
 import AnywayPaymentCore
 import AnywayPaymentDomain
 import AnywayPaymentUI
+import Combine
 import PaymentComponents
 import RemoteServices
 import RxViewModel
 
-typealias AnywayTransactionViewModel = AnywayPaymentUI.AnywayTransactionViewModel<Node<BottomAmountViewModel>, AnywayElementModel, DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
+typealias AnywayTransactionViewModel = AnywayPaymentUI.AnywayTransactionViewModel<FooterViewModel, AnywayElementModel, DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 
-typealias AnywayTransactionState = AnywayPaymentUI.CachedModelsTransaction<Node<BottomAmountViewModel>, AnywayElementModel, DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
+typealias AnywayTransactionState = AnywayPaymentUI.CachedModelsTransaction<FooterViewModel, AnywayElementModel, DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 typealias AnywayTransactionEvent = AnywayPaymentUI.AnywayTransactionEvent<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 typealias AnywayTransactionEffect = AnywayPaymentUI.AnywayTransactionEffect
 
@@ -30,18 +31,39 @@ enum DocumentStatus {
 
 typealias OperationDetailID = AnywayPaymentUI.OperationDetailID
 
-import Combine
+// MARK: - Adapters
 
-struct Node<Model> {
+extension FooterViewModel: FooterInterface {
     
-    let model: Model
-    private let subscription: AnyCancellable
+    public var projectionPublisher: AnyPublisher<FooterProjection, Never> {
+        
+        $state
+            .map(\.projection)
+            .map(FooterProjection.init)
+            .eraseToAnyPublisher()
+    }
     
-    init(
-        model: Model, 
-        subscription: AnyCancellable
-    ) {
-        self.model = model
-        self.subscription = subscription
+    public func enableButton(_ isEnabled: Bool) {
+        
+        self.event(.button(isEnabled ? .enable : .disable))
+    }
+}
+
+private extension FooterProjection {
+    
+    init(_ projection: AmountComponent.FooterState.Projection) {
+        
+        self.init(
+            amount: projection.amount, 
+            buttonTap: projection.buttonTap.map { .init($0) }
+        )
+    }
+}
+
+private extension FooterProjection.ButtonTap {
+    
+    init(_ buttonTap: AmountComponent.FooterState.Projection.ButtonTap) {
+        
+        self.init()
     }
 }

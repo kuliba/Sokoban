@@ -7,8 +7,6 @@
 
 import Foundation
 
-import Foundation
-
 extension FooterState {
     
     public var projection: Projection {
