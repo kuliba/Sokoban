@@ -56,10 +56,10 @@ private extension FooterReducer {
         switch event {
         case .disable:
             switch state.button.state {
-            case .active:
+            case .active, .tapped:
                 state.button.state = .inactive
                 
-            case .inactive, .tapped:
+            case .inactive:
                 break
             }
             

@@ -29,11 +29,14 @@ final class FooterReducerTests: XCTestCase {
         assertState(.button(.disable), on: state)
     }
     
-    func test_disable_shouldNotChangeTappedButtonState() {
+    func test_disable_shouldSetTappedButtonStateToInactive() {
         
         let state = makeState(buttonState: .tapped)
         
-        assertState(.button(.disable), on: state)
+        assertState(.button(.disable), on: state) {
+            
+            $0.button.state = .inactive
+        }
     }
     
     func test_enable_shouldSetInactiveButtonStateToActive() {
