@@ -12,11 +12,16 @@ public protocol FooterInterface: AnyObject {
     
     var projectionPublisher: AnyPublisher<Projection, Never> { get }
     
-    func enableButton(_ isEnabled: Bool)
+    func event(_ event: FooterTransactionEvent)
 }
 
 public enum Projection: Equatable {
     
     case amount(Decimal)
     case buttonTapped
+}
+
+public enum FooterTransactionEvent: Equatable {
+    
+    case isEnabled(Bool)
 }

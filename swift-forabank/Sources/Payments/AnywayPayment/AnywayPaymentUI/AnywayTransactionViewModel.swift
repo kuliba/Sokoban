@@ -134,16 +134,13 @@ private extension AnywayTransactionViewModel {
             .sink { [weak self] in self?.update(with: $0) }
             .store(in: &cancellables)
         
-        // update footer
-        let shared = $state.share()
-        
-        shared
-            .map(\.transaction.isValid)
+        $state
+            .diff(using: { $1.diff(from: $0) })
             .removeDuplicates()
-            .sink { [weak footer] in footer?.enableButton($0) }
+            .sink { [weak footer] in footer?.event($0) }
             .store(in: &cancellables)
         
-        #warning("add footer switch amount/button")
+#warning("add footer switch amount/button")
     }
     
     func update(
@@ -152,8 +149,24 @@ private extension AnywayTransactionViewModel {
         switch projection {
         case let .amount(amount):
             event(.payment(.widget(.amount(amount))))
+            
         case .buttonTapped:
             event(.continue)
         }
+    }
+}
+
+private extension CachedModelsTransaction {
+    
+    func diff(from old: Self?) -> FooterTransactionEvent? {
+        
+        guard let old else { return nil }
+        
+        if transaction.isValid != old.transaction.isValid {
+            
+            return .isEnabled(transaction.isValid)
+        }
+        
+        return nil
     }
 }

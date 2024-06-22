@@ -204,6 +204,7 @@ final class AnywayTransactionViewModelTests: XCTestCase {
     func test_transaction_change_shouldSetFooterButtonStateWithoutDuplicates() {
         
         let (sut, _,_, footer) = makeSUT(stubs: [
+            (makeTransaction(isValid: false), nil),
             (makeTransaction(isValid: true), nil),
             (makeTransaction(isValid: false), nil),
             (makeTransaction(isValid: false), nil),
@@ -216,8 +217,14 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         sut.event(.continue)
         sut.event(.continue)
         sut.event(.continue)
+        sut.event(.continue)
         
-        XCTAssertNoDiff(footer.messages, [true, false, true])
+        XCTAssertNoDiff(footer.messages, [
+            .isEnabled(false),
+            .isEnabled(true),
+            .isEnabled(false),
+            .isEnabled(true),
+        ])
         XCTAssertNotNil(sut)
     }
     
@@ -325,16 +332,16 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         
         @Published var state: Projection = .amount(0)
         
-        private(set) var messages = [Bool]()
+        private(set) var messages = [FooterTransactionEvent]()
         
         var projectionPublisher: AnyPublisher<Projection, Never> {
             
             $state.eraseToAnyPublisher()
         }
         
-        func enableButton(_ isEnabled: Bool) {
+        func event(_ event: FooterTransactionEvent) {
             
-            messages.append(isEnabled)
+            messages.append(event)
         }
     }
     

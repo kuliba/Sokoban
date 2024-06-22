@@ -35,35 +35,18 @@ typealias OperationDetailID = AnywayPaymentUI.OperationDetailID
 
 extension FooterViewModel: FooterInterface {
     
-    public var projectionPublisher: AnyPublisher<FooterProjection, Never> {
+    public var projectionPublisher: AnyPublisher<Projection, Never> {
         
         $state
-            .map(\.projection)
-            .map(FooterProjection.init)
+            .diff(using: { $1.diff(from: $0) })
             .eraseToAnyPublisher()
     }
     
-    public func enableButton(_ isEnabled: Bool) {
+    public func event(_ event: FooterTransactionEvent) {
         
-        self.event(.button(isEnabled ? .enable : .disable))
-    }
-}
-
-private extension FooterProjection {
-    
-    init(_ projection: AmountComponent.FooterState.Projection) {
-        
-        self.init(
-            amount: projection.amount, 
-            buttonTap: projection.buttonTap.map { .init($0) }
-        )
-    }
-}
-
-private extension FooterProjection.ButtonTap {
-    
-    init(_ buttonTap: AmountComponent.FooterState.Projection.ButtonTap) {
-        
-        self.init()
+        switch event {
+        case let .isEnabled(isEnabled):
+            self.event(.button(isEnabled ? .enable : .disable))
+        }
     }
 }
