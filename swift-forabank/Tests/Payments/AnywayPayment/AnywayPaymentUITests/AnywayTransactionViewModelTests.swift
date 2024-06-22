@@ -195,7 +195,7 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         let amount = anyAmount()
         let (sut, _, reducer, footer) = makeSUT(stubs: [makeStubs()])
         
-        footer.state = .init(amount: amount, buttonTap: nil)
+        footer.state = .amount(amount)
         
         XCTAssertNoDiff(reducer.messages.map(\.event), [.payment(.widget(.amount(amount)))])
         XCTAssertNotNil(sut)
@@ -323,11 +323,11 @@ final class AnywayTransactionViewModelTests: XCTestCase {
     
     private final class TestFooter: FooterInterface, ObservableObject {
         
-        @Published var state: FooterProjection = .init(amount: 0, buttonTap: nil)
+        @Published var state: Projection = .amount(0)
         
         private(set) var messages = [Bool]()
         
-        var projectionPublisher: AnyPublisher<FooterProjection, Never> {
+        var projectionPublisher: AnyPublisher<Projection, Never> {
             
             $state.eraseToAnyPublisher()
         }
@@ -342,6 +342,6 @@ final class AnywayTransactionViewModelTests: XCTestCase {
     
     private func tapContinue(_ footer: TestFooter) {
         
-        footer.state = .init(amount: 0, buttonTap: .init())
+        footer.state = .buttonTapped
     }
 }

@@ -147,12 +147,13 @@ private extension AnywayTransactionViewModel {
     }
     
     func update(
-        with projection: FooterProjection
+        with projection: Projection
     ) {
-        if projection.buttonTap != nil {
+        switch projection {
+        case let .amount(amount):
+            event(.payment(.widget(.amount(amount))))
+        case .buttonTapped:
             event(.continue)
-        } else {
-            event(.payment(.widget(.amount(projection.amount))))
         }
     }
 }
