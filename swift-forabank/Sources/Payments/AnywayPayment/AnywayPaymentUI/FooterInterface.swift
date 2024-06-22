@@ -13,7 +13,7 @@ public protocol FooterInterface: AnyObject {
     
     var projectionPublisher: AnyPublisher<Projection, Never> { get }
     
-    func event(_ event: FooterTransactionEvent)
+    func project(_ projection: FooterTransactionProjection)
 }
 
 public enum Projection: Equatable {
@@ -22,8 +22,16 @@ public enum Projection: Equatable {
     case buttonTapped
 }
 
-public enum FooterTransactionEvent: Equatable {
+public struct FooterTransactionProjection: Equatable {
     
-    case isEnabled(Bool)
-    case setStyle(FooterState.Style)
+    public let isEnabled: Bool
+    public let style: FooterState.Style
+    
+    public init(
+        isEnabled: Bool,
+        style: FooterState.Style
+    ) {
+        self.isEnabled = isEnabled
+        self.style = style
+    }
 }

@@ -42,14 +42,8 @@ extension FooterViewModel: FooterInterface {
             .eraseToAnyPublisher()
     }
     
-    public func event(_ event: FooterTransactionEvent) {
+    public func project(_ projection: FooterTransactionProjection) {
         
-        switch event {
-        case let .isEnabled(isEnabled):
-            self.event(.button(isEnabled ? .enable : .disable))
-
-        case let .setStyle(style):
-            self.event(.style(style))
-        }
+        self.event(.set(isActive: projection.isEnabled, projection.style))
     }
 }

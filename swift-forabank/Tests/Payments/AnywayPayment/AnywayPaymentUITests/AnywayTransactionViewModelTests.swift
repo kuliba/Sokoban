@@ -219,11 +219,11 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         sut.event(.continue)
         sut.event(.continue)
         
-        XCTAssertNoDiff(footer.messages, [
-            .isEnabled(false),
-            .isEnabled(true),
-            .isEnabled(false),
-            .isEnabled(true),
+        XCTAssertNoDiff(footer.messages.map(\.isEnabled), [
+            false,
+            true,
+            false,
+            true,
         ])
         XCTAssertNotNil(sut)
     }
@@ -244,10 +244,10 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         sut.event(.continue)
         sut.event(.continue)
         
-        XCTAssertNoDiff(footer.messages, [
-            .setStyle(.amount),
-            .setStyle(.button),
-            .setStyle(.amount)
+        XCTAssertNoDiff(footer.messages.map(\.style), [
+            .amount,
+            .button,
+            .amount
         ])
         XCTAssertNotNil(sut)
     }
@@ -373,14 +373,14 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         
         @Published var state: Projection = .amount(0)
         
-        private(set) var messages = [FooterTransactionEvent]()
+        private(set) var messages = [FooterTransactionProjection]()
         
         var projectionPublisher: AnyPublisher<Projection, Never> {
             
             $state.eraseToAnyPublisher()
         }
         
-        func event(_ event: FooterTransactionEvent) {
+        func project(_ event: FooterTransactionProjection) {
             
             messages.append(event)
         }

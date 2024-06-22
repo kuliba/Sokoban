@@ -158,26 +158,30 @@ private extension AnywayTransactionViewModel {
 
 private extension CachedModelsTransaction {
     
-    func diff(from old: Self?) -> FooterTransactionEvent? {
+    func diff(from old: Self?) -> FooterTransactionProjection? {
         
         guard let old else { return nil }
         
-        if transaction.isValid != old.transaction.isValid {
+        if projection != old.projection {
             
-            return .isEnabled(transaction.isValid)
-        }
-        
-        if transaction.context.payment.footer != old.transaction.context.payment.footer {
-            
-            switch transaction.context.payment.footer {
-            case .amount:
-                return .setStyle(.amount)
-                
-            case .continue:
-                return .setStyle(.button)
-            }
+            return projection
         }
         
         return nil
+    }
+    
+    private var projection: FooterTransactionProjection {
+        
+        return .init(isEnabled: isEnabled, style: style)
+    }
+    
+    private var isEnabled: Bool { transaction.isValid }
+    
+    private var style: AmountComponent.FooterState.Style {
+        
+        switch transaction.context.payment.footer {
+        case .amount:   return .amount
+        case .continue: return .button
+        }
     }
 }
