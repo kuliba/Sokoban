@@ -34,6 +34,10 @@ public extension FooterReducer {
             
         case let .title(title):
             state.button.title = title
+            
+        case let .set(isActive: isActive, style):
+            state.button.state = isActive ? .active : .inactive
+            state.style = style
         }
         
         return (state, effect)

@@ -13,7 +13,8 @@ public enum FooterEvent: Equatable {
     case edit(Decimal)
     case style(Style)
     case title(String)
-    
+    case set(isActive: Bool, Style)
+
     public enum ButtonEvent: Equatable {
         
         case disable, enable, tap
