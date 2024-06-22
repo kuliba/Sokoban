@@ -118,7 +118,7 @@ private extension FooterStateWrapperView {
         switch viewModel.state.button.state {
         case .active:   return config.button.active
         case .inactive: return config.button.inactive
-        case .tapped:   return config.button.inactive
+        case .tapped:   return config.button.tapped
         }
     }
 }
@@ -127,26 +127,11 @@ private extension FooterStateWrapperView {
     
     private func withButtonView() -> some View {
         
-        Button {
-            viewModel.event(.button(.tap))
-        } label: {
-            
-            Group {
-                switch viewModel.state.button.state {
-                case .active:
-                    Text("TBD: Continue")
-                    
-                case .inactive:
-                    Text("TBD: Continue inactive")
-                        .foregroundColor(.secondary)
-                    
-                case .tapped:
-                    Text("TBD: Continue tapped")
-                        .foregroundColor(.green)
-                }
-            }
-            .font(.title3.bold())
-        }
+        FooterButtonView(
+            state: viewModel.state.button,
+            event: { viewModel.event(.button(.tap)) },
+            config: config.button
+        )
         .disabled(viewModel.state.isDisabled)
     }
 }
@@ -168,6 +153,7 @@ struct FooterStateWrapperView_Previews: PreviewProvider {
                 previewButton(.inactive)
                 previewButton(.tapped)
             }
+            .padding(.horizontal)
             
             VStack(spacing: 32) {
                 
