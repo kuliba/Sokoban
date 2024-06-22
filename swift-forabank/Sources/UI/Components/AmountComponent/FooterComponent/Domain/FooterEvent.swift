@@ -12,6 +12,7 @@ public enum FooterEvent: Equatable {
     case button(ButtonEvent)
     case edit(Decimal)
     case style(Style)
+    case title(String)
     
     public enum ButtonEvent: Equatable {
         

@@ -10,25 +10,39 @@ import Foundation
 public struct FooterState: Equatable {
     
     public var amount: Decimal
-    public var buttonState: ButtonState
+    public var button: FooterButton
     public var style: Style
     
     public init(
         amount: Decimal,
-        buttonState: ButtonState,
+        button: FooterButton,
         style: Style
     ) {
         self.amount = amount
-        self.buttonState = buttonState
+        self.button = button
         self.style = style
     }
     
-    public enum ButtonState: Equatable {
+    public struct FooterButton: Equatable {
         
-        case active, inactive, tapped
+        public var title: String
+        public var state: ButtonState
+        
+        public init(
+            title: String,
+            state: ButtonState
+        ) {
+            self.title = title
+            self.state = state
+        }
+        
+        public enum ButtonState: Equatable {
+            
+            case active, inactive, tapped
+        }
     }
     
-    public  enum Style: Equatable {
+    public enum Style: Equatable {
         
         case amount, button
     }

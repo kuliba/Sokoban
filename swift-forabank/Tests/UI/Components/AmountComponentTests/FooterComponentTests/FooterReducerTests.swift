@@ -1,6 +1,6 @@
 //
 //  FooterReducerTests.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 21.06.2024.
 //
@@ -18,7 +18,7 @@ final class FooterReducerTests: XCTestCase {
         
         assertState(.button(.disable), on: state) {
             
-            $0.buttonState = .inactive
+            $0.button.state = .inactive
         }
     }
     
@@ -42,7 +42,7 @@ final class FooterReducerTests: XCTestCase {
         
         assertState(.button(.enable), on: state) {
             
-            $0.buttonState = .active
+            $0.button.state = .active
         }
     }
     
@@ -59,10 +59,10 @@ final class FooterReducerTests: XCTestCase {
         
         assertState(.button(.enable), on: state) {
             
-            $0.buttonState = .active
+            $0.button.state = .active
         }
     }
-
+    
     func test_tap_shouldNotChangeInactiveButtonState() {
         
         let state = makeState(buttonState: .inactive)
@@ -76,7 +76,7 @@ final class FooterReducerTests: XCTestCase {
         
         assertState(.button(.tap), on: state) {
             
-            $0.buttonState = .tapped
+            $0.button.state = .tapped
         }
     }
     
@@ -196,7 +196,25 @@ final class FooterReducerTests: XCTestCase {
         
         assert(.style(.amount), on: makeState(style: .button), effect: nil)
     }
-
+    
+    // MARK: - title
+    
+    func test_style_shouldSetButtonTitle() {
+        
+        let title = anyMessage()
+        let state = makeState()
+        
+        assertState(.title(title), on: state) {
+            
+            $0.button.title = title
+        }
+    }
+    
+    func test_title_shouldNotDeliverEffect() {
+        
+        assert(.title(anyMessage()), on: makeState(), effect: nil)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = FooterReducer
@@ -204,7 +222,7 @@ final class FooterReducerTests: XCTestCase {
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
-
+    
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
@@ -219,15 +237,23 @@ final class FooterReducerTests: XCTestCase {
     
     private func makeState(
         amount: Decimal = .init(Double.random(in: 1...100)),
-        buttonState: State.ButtonState = .active,
+        buttonState: State.FooterButton.ButtonState = .active,
         style: State.Style = .amount
     ) -> State {
         
         return .init(
             amount: amount,
-            buttonState: buttonState,
+            button: makeFooterButton(state: buttonState),
             style: style
         )
+    }
+    
+    private func makeFooterButton(
+        title: String = anyMessage(),
+        state: State.FooterButton.ButtonState = .active
+    ) -> State.FooterButton {
+        
+        return .init(title: title, state: state)
     }
     
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void

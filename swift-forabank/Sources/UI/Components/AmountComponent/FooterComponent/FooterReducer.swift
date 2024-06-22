@@ -1,6 +1,6 @@
 //
 //  FooterReducer.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 21.06.2024.
 //
@@ -31,6 +31,9 @@ public extension FooterReducer {
             
         case let .style(style):
             state.style = style
+            
+        case let .title(title):
+            state.button.title = title
         }
         
         return (state, effect)
@@ -52,22 +55,22 @@ private extension FooterReducer {
     ) {
         switch event {
         case .disable:
-            switch state.buttonState {
+            switch state.button.state {
             case .active:
-                state.buttonState = .inactive
+                state.button.state = .inactive
                 
             case .inactive, .tapped:
                 break
             }
             
         case .enable:
-            state.buttonState = .active
+            state.button.state = .active
             
         case .tap:
-            switch state.buttonState {
+            switch state.button.state {
             case .active:
-                state.buttonState = .tapped
-            
+                state.button.state = .tapped
+                
             case .inactive, .tapped:
                 break
             }
@@ -80,7 +83,7 @@ private extension FooterReducer {
     ) {
         guard amount >= .zero else { return }
         
-        switch state.buttonState {
+        switch state.button.state {
         case .active:
             state.amount = amount
             

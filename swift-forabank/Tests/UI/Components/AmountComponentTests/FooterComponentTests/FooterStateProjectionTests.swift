@@ -14,7 +14,7 @@ final class FooterStateProjectionTests: XCTestCase {
         
         let state = FooterState(
             amount: 99,
-            buttonState: .active,
+            button: .init(title: anyMessage(), state: .active),
             style: .amount
         )
         
@@ -25,7 +25,7 @@ final class FooterStateProjectionTests: XCTestCase {
         
         let state = FooterState(
             amount: 11,
-            buttonState: .tapped,
+            button: .init(title: anyMessage(), state: .tapped),
             style: .button
         )
         

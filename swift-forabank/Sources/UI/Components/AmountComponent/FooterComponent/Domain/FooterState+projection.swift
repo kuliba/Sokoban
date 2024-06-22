@@ -15,7 +15,7 @@ extension FooterState {
         
         return .init(
             amount: amount,
-            buttonTap: buttonState == .tapped ? .init() : nil
+            buttonTap: button.state == .tapped ? .init() : nil
         )
     }
     
