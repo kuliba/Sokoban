@@ -203,13 +203,13 @@ final class AnywayTransactionViewModelTests: XCTestCase {
     
     func test_transaction_change_shouldSetFooterButtonStateWithoutDuplicates() {
         
-        let (sut, _,_, footer) = makeSUT(stubs: [
-            (makeTransaction(isValid: false), nil),
-            (makeTransaction(isValid: true), nil),
-            (makeTransaction(isValid: false), nil),
-            (makeTransaction(isValid: false), nil),
-            (makeTransaction(isValid: false), nil),
-            (makeTransaction(isValid: true), nil),
+        let (sut, _,_, footer) = makeSUT([
+            makeTransaction(isValid: false),
+            makeTransaction(isValid: true),
+            makeTransaction(isValid: false),
+            makeTransaction(isValid: false),
+            makeTransaction(isValid: false),
+            makeTransaction(isValid: true),
         ])
         
         sut.event(.continue)
@@ -228,6 +228,30 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    func test_transaction_core_change_shouldSetFooterStyleWithoutDuplicates() {
+        
+        let (sut, _,_, footer) = makeSUT([
+            makeTransactionWithAmount(amount: 10),
+            makeTransactionWithAmount(amount: 30),
+            makeTransactionWithAmount(amount: 40),
+            makeTransactionWithContinue(),
+            makeTransactionWithAmount(amount: 20),
+        ])
+        
+        sut.event(.continue)
+        sut.event(.continue)
+        sut.event(.continue)
+        sut.event(.continue)
+        sut.event(.continue)
+        
+        XCTAssertNoDiff(footer.messages, [
+            .setStyle(.amount),
+            .setStyle(.button),
+            .setStyle(.amount)
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = AnywayTransactionViewModel<TestFooter, Model, DocumentStatus, Response>
@@ -241,6 +265,23 @@ final class AnywayTransactionViewModelTests: XCTestCase {
     
     private typealias Reducer = ReducerSpy<SUT.State.Transaction, SUT.Event, SUT.Effect>
     private typealias Stub = (SUT.State.Transaction, SUT.Effect?)
+    
+    private func makeSUT(
+        _ stubs: [SUT.State.Transaction],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: SUT,
+        spy: Spy,
+        reducerSpy: Reducer,
+        footer: TestFooter
+    ) {
+        makeSUT(
+            stubs: stubs.map { ($0, nil) },
+            file: file,
+            line: line
+        )
+    }
     
     private func makeSUT(
         initial: SUT.State.Transaction = makeTransaction(),

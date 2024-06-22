@@ -47,6 +47,9 @@ extension FooterViewModel: FooterInterface {
         switch event {
         case let .isEnabled(isEnabled):
             self.event(.button(isEnabled ? .enable : .disable))
+
+        case let .setStyle(style):
+            self.event(.style(style))
         }
     }
 }

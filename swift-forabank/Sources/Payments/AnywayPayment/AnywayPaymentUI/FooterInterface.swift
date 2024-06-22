@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 22.06.2024.
 //
 
+import AmountComponent
 import Combine
 import Foundation
 
@@ -24,4 +25,5 @@ public enum Projection: Equatable {
 public enum FooterTransactionEvent: Equatable {
     
     case isEnabled(Bool)
+    case setStyle(FooterState.Style)
 }

@@ -167,6 +167,17 @@ private extension CachedModelsTransaction {
             return .isEnabled(transaction.isValid)
         }
         
+        if transaction.context.payment.footer != old.transaction.context.payment.footer {
+            
+            switch transaction.context.payment.footer {
+            case .amount:
+                return .setStyle(.amount)
+                
+            case .continue:
+                return .setStyle(.button)
+            }
+        }
+        
         return nil
     }
 }
