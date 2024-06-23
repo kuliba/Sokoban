@@ -16,7 +16,6 @@ final class AnywayPaymentValidatorTests: XCTestCase {
         let payment = makeAnywayPayment(footer: .amount(-1))
         let sut = makeSUT(validateParameter: { _ in nil })
         
-        XCTAssertFalse(sut.isValid(payment))
         XCTAssertNoDiff(sut.validate(payment), .footerValidationError)
         XCTAssertTrue(parameters(of: payment).isEmpty)
     }
@@ -29,7 +28,6 @@ final class AnywayPaymentValidatorTests: XCTestCase {
         )
         let sut = makeSUT(validateParameter: { _ in nil })
         
-        XCTAssertFalse(sut.isValid(payment))
         XCTAssertNoDiff(sut.validate(payment), .footerValidationError)
     }
     
@@ -38,7 +36,6 @@ final class AnywayPaymentValidatorTests: XCTestCase {
         let payment = makeAnywayPayment(footer: .amount(1))
         let sut = makeSUT(validateParameter: { _ in nil })
         
-        XCTAssertTrue(sut.isValid(payment))
         XCTAssertNil(sut.validate(payment))
         XCTAssertTrue(parameters(of: payment).isEmpty)
     }
@@ -51,7 +48,6 @@ final class AnywayPaymentValidatorTests: XCTestCase {
         )
         let sut = makeSUT(validateParameter: { _ in nil })
         
-        XCTAssertTrue(sut.isValid(payment))
         XCTAssertNil(sut.validate(payment))
     }
     
@@ -60,7 +56,6 @@ final class AnywayPaymentValidatorTests: XCTestCase {
         let payment = makeAnywayPayment()
         let sut = makeSUT(validateParameter: { _ in .emptyRequired })
         
-        XCTAssertTrue(sut.isValid(payment))
         XCTAssertNil(sut.validate(payment))
         XCTAssertTrue(parameters(of: payment).isEmpty)
     }
@@ -72,7 +67,6 @@ final class AnywayPaymentValidatorTests: XCTestCase {
         let validateParameter: ValidateParameter = { $0.field.id == "invalid" ? .emptyRequired : nil }
         let sut = makeSUT(validateParameter: validateParameter)
         
-        XCTAssertFalse(sut.isValid(payment))
         XCTAssertNoDiff(
             sut.validate(payment),
             .parameterValidationErrors(["invalid": .emptyRequired])
@@ -95,7 +89,6 @@ final class AnywayPaymentValidatorTests: XCTestCase {
         }
         let sut = makeSUT(validateParameter: validateParameter)
         
-        XCTAssertFalse(sut.isValid(payment))
         XCTAssertNoDiff(sut.validate(payment), .parameterValidationErrors([
             "one": .emptyRequired,
             "two": .regExViolation,
@@ -112,7 +105,6 @@ final class AnywayPaymentValidatorTests: XCTestCase {
         let validateParameter: ValidateParameter = { _ in nil }
         let sut = makeSUT(validateParameter: validateParameter)
         
-        XCTAssertTrue(sut.isValid(payment))
         XCTAssertNil(sut.validate(payment))
         XCTAssertNil(validateParameter(validOne))
         XCTAssertNil(validateParameter(validTwo))

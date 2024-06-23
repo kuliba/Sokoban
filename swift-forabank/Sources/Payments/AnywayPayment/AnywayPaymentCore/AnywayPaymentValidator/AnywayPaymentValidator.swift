@@ -20,12 +20,6 @@ public final class AnywayPaymentValidator {
 
 public extension AnywayPaymentValidator {
     
-    @available(*, deprecated, message: "Use `validate(_:)`")
-    func isValid(_ payment: Payment) -> Bool {
-        
-        return validate(payment) == nil
-    }
-        
     func validate(
         _ payment: Payment
     ) -> AnywayPaymentValidationError? {
