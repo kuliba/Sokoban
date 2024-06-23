@@ -104,7 +104,7 @@ private extension TransactionReducer {
         if shouldRestartPayment {
             state.context.shouldRestart = true
         } else {
-            state.context = paymentInspector.restorePayment(state.context)
+            state.context = paymentInspector.rollbackPayment(state.context)
             state.isValid = paymentInspector.validatePayment(state.context)
         }
         

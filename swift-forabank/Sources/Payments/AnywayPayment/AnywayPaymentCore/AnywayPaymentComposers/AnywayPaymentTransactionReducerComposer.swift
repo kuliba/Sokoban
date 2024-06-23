@@ -66,7 +66,7 @@ private extension AnywayPaymentTransactionReducerComposer {
             getVerificationCode: { $0.payment.otp },
             makeDigest: { $0.makeDigest() },
             resetPayment: { $0.resetPayment() },
-            restorePayment: { $0.restorePayment() },
+            rollbackPayment: { $0.rollbackPayment() },
             validatePayment: validatePayment,
             wouldNeedRestart: { $0.wouldNeedRestart }
         )
