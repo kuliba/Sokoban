@@ -20,6 +20,18 @@ public final class AnywayPaymentContextValidator {
             validateParameter: parameterValidator.validate
         )
         
-        return validator.validate(context.payment)
+        let error = validator.validate(context.payment)
+        
+        // TODO: add tests
+        guard let error else { return nil }
+        
+        switch (context.shouldRestart, error) {
+            // TODO: a better way would be to collect all - not just first - validation errors and check that it contains `footerValidationError`
+        case (true, .footerValidationError):
+            return nil
+            
+        default:
+            return error
+        }
     }
 }
