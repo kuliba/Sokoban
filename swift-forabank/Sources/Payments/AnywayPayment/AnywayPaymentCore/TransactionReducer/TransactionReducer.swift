@@ -174,14 +174,14 @@ private extension TransactionReducer {
     ) {
         guard state.status == nil else {
 #if DEBUG
-            print("\(String(describing: self)): can't continue with status \(String(describing: state.status))")
+            print("===>>> \(String(describing: self)): can't continue with status \(String(describing: state.status))")
 #endif
             return
         }
         
         guard state.isValid else {
 #if DEBUG
-            print("\(String(describing: self)): can't continue with invalid transaction")
+            print("===>>> \(String(describing: self)): can't continue with invalid transaction")
 #endif
             return
         }
