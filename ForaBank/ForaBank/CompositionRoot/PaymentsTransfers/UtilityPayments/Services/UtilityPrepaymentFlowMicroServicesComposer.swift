@@ -249,7 +249,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         
         let context = AnywayPaymentContext(
             initial: .init(
-                elements: [], 
+                elements: [],
                 footer: .continue,
                 infoMessage: nil,
                 isFinalStep: false
@@ -275,13 +275,11 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         _ context: AnywayPaymentContext
     ) -> Bool {
         
-        let parameterValidator = AnywayPaymentParameterValidator()
-        let validator = AnywayPaymentValidator(
-            validateParameter: parameterValidator.validate
-        )
+        let validator = AnywayPaymentContextValidator()
         
-        return validator.isValid(context.payment)
-    }}
+        return validator.validate(context) == nil
+    }
+}
 
 // MARK: - Adapters
 

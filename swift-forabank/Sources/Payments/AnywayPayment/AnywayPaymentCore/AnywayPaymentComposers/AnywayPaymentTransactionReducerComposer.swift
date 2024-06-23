@@ -76,12 +76,9 @@ private extension AnywayPaymentTransactionReducerComposer {
         context: AnywayPaymentContext
     ) -> Bool {
         
-        let parameterValidator = AnywayPaymentParameterValidator()
-        let validator = AnywayPaymentValidator(
-            validateParameter: parameterValidator.validate
-        )
+        let validator = AnywayPaymentContextValidator()
         
-        return validator.isValid(context.payment)
+        return validator.validate(context) == nil
     }
     
     typealias Effect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>
