@@ -20,17 +20,22 @@ public final class AnywayPaymentValidator {
 
 public extension AnywayPaymentValidator {
     
+    /// Validates the provided payment.
+    ///
+    /// - Parameter payment: The payment to be validated.
+    /// - Returns: An optional `AnywayPaymentValidationError`. If the payment is valid, returns `nil`. If there are parameter validation errors, returns `.parameterValidationErrors(errors)`. If the parameters are valid, it then validates the footer. If the footer is invalid, returns `.footerValidationError`.
     func validate(
-        _ payment: Payment
+        _ payment: AnywayPayment
     ) -> AnywayPaymentValidationError? {
-        
-        guard isValid(payment.footer) else { return .footerValidationError }
-        
-        guard !payment.parameters.isEmpty else { return nil }
         
         let errors = validate(payment.parameters)
         
-        return errors.isEmpty ? nil : .parameterValidationErrors(errors)
+        if !errors.isEmpty {
+            
+            return .parameterValidationErrors(errors)
+        }
+        
+        return validate(payment.footer)
     }
 }
 
@@ -38,23 +43,18 @@ public extension AnywayPaymentValidator {
     
     typealias ValidateParameter = (Parameter) -> AnywayPaymentParameterValidationError?
     
-    typealias Payment = AnywayPayment
     typealias Parameter = AnywayElement.Parameter
 }
 
 private extension AnywayPaymentValidator {
     
-    func isValid(
-        _ footer: Payment.Footer
-    ) -> Bool {
+    func validate(
+        _ footer: AnywayPayment.Footer
+    ) -> AnywayPaymentValidationError? {
         
-        switch footer {
-        case let .amount(amount):
-            return amount > 0
-            
-        case .continue:
-            return true
-        }
+        guard case let .amount(amount) = footer else { return nil }
+        
+        return amount > 0 ? nil : .footerValidationError
     }
     
     func validate(
@@ -68,7 +68,7 @@ private extension AnywayPaymentValidator {
         
         return .init(errors, uniquingKeysWith: { _, last in last })
     }
-
+    
     typealias ID = Parameter.Field.ID
 }
 
