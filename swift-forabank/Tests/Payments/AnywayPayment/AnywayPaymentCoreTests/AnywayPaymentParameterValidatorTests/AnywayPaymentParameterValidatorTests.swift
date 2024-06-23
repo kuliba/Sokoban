@@ -246,6 +246,6 @@ final class AnywayPaymentParameterValidatorTests: XCTestCase {
         
         let sut = makeSUT(file: file, line: line)
         
-        return sut.isValid(parameter)
+        return sut.validate(parameter) == nil
     }
 }

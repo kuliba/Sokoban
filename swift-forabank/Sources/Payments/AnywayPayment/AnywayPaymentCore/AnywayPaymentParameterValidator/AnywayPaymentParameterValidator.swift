@@ -15,7 +15,9 @@ public final class AnywayPaymentParameterValidator {
 
 public extension AnywayPaymentParameterValidator {
     
-    func isValid(_ parameter: Parameter) -> Bool {
+    func validate(
+        _ parameter: Parameter
+    ) -> AnywayPaymentParameterValidationError? {
         
         let validationErrors = [
             validateRequired(parameter),
@@ -24,9 +26,7 @@ public extension AnywayPaymentParameterValidator {
             validateRegExp(parameter),
         ].compactMap { $0 }
         
-        let validationError = validationErrors.first
-        
-        return validationError == nil
+        return validationErrors.first
     }
 }
 
