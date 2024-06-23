@@ -9,30 +9,40 @@ import AnywayPaymentDomain
 
 public final class AnywayPaymentValidator {
     
-    private let isValidParameter: IsValidParameter
+    private let validateParameter: ValidateParameter
     
     public init(
-        isValidParameter: @escaping IsValidParameter
+        validateParameter: @escaping ValidateParameter
     ) {
-        self.isValidParameter = isValidParameter
+        self.validateParameter = validateParameter
     }
 }
 
 public extension AnywayPaymentValidator {
     
+    @available(*, deprecated, message: "Use `validate(_:)`")
     func isValid(_ payment: Payment) -> Bool {
         
-        guard isValid(payment.footer) else { return false }
+        return validate(payment) == nil
+    }
         
-        guard !payment.parameters.isEmpty else { return true }
+    func validate(
+        _ payment: Payment
+    ) -> AnywayPaymentValidationError? {
         
-        return payment.parameters.allSatisfy(isValidParameter)
+        guard isValid(payment.footer) else { return .footerValidationError }
+        
+        guard !payment.parameters.isEmpty else { return nil }
+        
+        let errors = validate(payment.parameters)
+        
+        return errors.isEmpty ? nil : .parameterValidationErrors(errors)
     }
 }
 
 public extension AnywayPaymentValidator {
     
-    typealias IsValidParameter = (Parameter) -> Bool
+    typealias ValidateParameter = (Parameter) -> AnywayPaymentParameterValidationError?
     
     typealias Payment = AnywayPayment
     typealias Parameter = AnywayElement.Parameter
@@ -52,6 +62,20 @@ private extension AnywayPaymentValidator {
             return true
         }
     }
+    
+    func validate(
+        _ parameters: [Parameter]
+    ) -> AnywayPaymentValidationError.Errors {
+        
+        let errors = parameters.compactMap { parameter in
+            
+            validateParameter(parameter).map { (parameter.field.id, $0) }
+        }
+        
+        return .init(errors, uniquingKeysWith: { _, last in last })
+    }
+
+    typealias ID = Parameter.Field.ID
 }
 
 // MARK: - Helpers

@@ -78,7 +78,7 @@ private extension AnywayPaymentTransactionReducerComposer {
         
         let parameterValidator = AnywayPaymentParameterValidator()
         let validator = AnywayPaymentValidator(
-            isValidParameter: { parameterValidator.validate($0) == nil }
+            validateParameter: parameterValidator.validate
         )
         
         return validator.isValid(context.payment)
