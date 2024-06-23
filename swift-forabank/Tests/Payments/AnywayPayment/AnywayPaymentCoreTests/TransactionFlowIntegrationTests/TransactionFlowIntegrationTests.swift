@@ -419,14 +419,14 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         let stub = stub ?? makeStub()
         let reducer = Reducer(
             paymentReduce: { _,_ in stub.paymentReduce },
-            stagePayment: { stub.stagePayment ?? $0 },
-            updatePayment: { _,_ in stub.updatePayment },
             paymentInspector: .init(
                 checkFraud: { _ in stub.checkFraud },
                 getVerificationCode: { _ in stub.getVerificationCode },
                 makeDigest: { _ in stub.makeDigest },
                 resetPayment: { _ in stub.resetPayment },
                 rollbackPayment: { _ in stub.rollbackPayment },
+                stagePayment: { stub.stagePayment ?? $0 },
+                updatePayment: { _,_ in stub.updatePayment },
                 validatePayment: { _ in stub.validatePayment },
                 wouldNeedRestart: { _ in stub.wouldNeedRestart }
             )

@@ -18,8 +18,6 @@ public extension AnywayPaymentTransactionReducerComposer {
         
         return .init(
             paymentReduce: paymentReduce(),
-            stagePayment: stagePayment,
-            updatePayment: updatePayment,
             paymentInspector: composeInspector()
         )
     }
@@ -67,6 +65,8 @@ private extension AnywayPaymentTransactionReducerComposer {
             makeDigest: { $0.makeDigest() },
             resetPayment: { $0.resetPayment() },
             rollbackPayment: { $0.rollbackPayment() },
+            stagePayment: stagePayment,
+            updatePayment: updatePayment,
             validatePayment: validatePayment,
             wouldNeedRestart: { $0.wouldNeedRestart }
         )

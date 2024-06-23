@@ -11,19 +11,13 @@ public final class TransactionReducer<Report, Payment, PaymentEvent, PaymentEffe
 where Payment: RestartablePayment {
     
     private let paymentReduce: PaymentReduce
-    private let stagePayment: StagePayment
-    private let updatePayment: UpdatePayment
     private let paymentInspector: Inspector
 
     public init(
         paymentReduce: @escaping PaymentReduce,
-        stagePayment: @escaping StagePayment,
-        updatePayment: @escaping UpdatePayment,
         paymentInspector: Inspector
     ) {
         self.paymentReduce = paymentReduce
-        self.stagePayment = stagePayment
-        self.updatePayment = updatePayment
         self.paymentInspector = paymentInspector
     }
 }
@@ -83,8 +77,6 @@ public extension TransactionReducer {
 public extension TransactionReducer {
     
     typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, PaymentEffect?)
-    typealias StagePayment = (Payment) -> Payment
-    typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
     typealias Inspector = PaymentInspector<Payment, PaymentDigest, PaymentUpdate>
     
     typealias State = Transaction<Payment, TransactionStatus<Payment, PaymentUpdate, Report>>
@@ -186,7 +178,7 @@ private extension TransactionReducer {
             return
         }
         
-        state.context = stagePayment(state.context)
+        state.context = paymentInspector.stagePayment(state.context)
         
         if let verificationCode = paymentInspector.getVerificationCode(state.context) {
             
@@ -267,7 +259,7 @@ private extension TransactionReducer {
         _ state: inout State,
         with update: PaymentUpdate
     ) {
-        let updated = updatePayment(state.context, update)
+        let updated = paymentInspector.updatePayment(state.context, update)
         state.context = updated
         state.isValid = paymentInspector.validatePayment(updated)
         state.status = nil
