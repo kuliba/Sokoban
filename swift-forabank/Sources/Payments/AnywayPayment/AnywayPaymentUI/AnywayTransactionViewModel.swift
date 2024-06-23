@@ -64,7 +64,8 @@ public extension AnywayTransactionViewModel {
         let (transaction, effect) = reduce(state.transaction, event)
         let state = updating(state, with: transaction)
 #if DEBUG
-        print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: updated state for reduced transaction on event", event, #file, #line)
+        print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: reduced transaction on event:", event, #file, #line)
+        print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: updated state for reduced transaction:", state, #file, #line)
 #endif
         stateSubject.send(state)
         
@@ -124,23 +125,24 @@ private extension AnywayTransactionViewModel {
 
 private extension AnywayTransactionViewModel {
     
+    /// Does not use `.removeDuplicates()` in the pipelines due to different sources of change.
+    /// For example, button status `active`/`inactive` is set depending on transaction, but `tapped` is set reacting to UI event. Using `.removeDuplicates()` would drop changes.
     func bind(_ footer: Footer) {
         
-        // subscribe to footer
+        // subscribe to footer state projection
+        /// - Note: looks like this pipeline needs `dropFirst` but if `dropFirst` is added the button does not gets active after first submit
         footer.projectionPublisher
-            .dropFirst()
-            .removeDuplicates()
+            .handleEvents(receiveOutput: { print("===>>> projectionPublisher:", $0) })
             .receive(on: scheduler)
             .sink { [weak self] in self?.update(with: $0) }
             .store(in: &cancellables)
         
+        // update footer active/inactive and style
         $state
-            .diff(using: { $1.diff(from: $0) })
-            .removeDuplicates()
-            .sink { [weak footer] in footer?.event($0) }
+            .map(\.projection)
+            .handleEvents(receiveOutput: { print("===>>> transaction projection:", $0) })
+            .sink { [weak footer] in footer?.project($0) }
             .store(in: &cancellables)
-        
-#warning("add footer switch amount/button")
     }
     
     func update(
@@ -158,19 +160,7 @@ private extension AnywayTransactionViewModel {
 
 private extension CachedModelsTransaction {
     
-    func diff(from old: Self?) -> FooterTransactionProjection? {
-        
-        guard let old else { return nil }
-        
-        if projection != old.projection {
-            
-            return projection
-        }
-        
-        return nil
-    }
-    
-    private var projection: FooterTransactionProjection {
+    var projection: FooterTransactionProjection {
         
         return .init(isEnabled: isEnabled, style: style)
     }

@@ -24,6 +24,11 @@ public final class FooterViewModel: ObservableObject {
     public init(
         initialState: State,
         reduce: @escaping Reduce,
+        // replace with struct with 2 fields:
+        // let makeFormat: MakeFormat
+        // MakeFormat = (CurrencySymbol, Locale) -> (Decimal) -> String?
+        // let getDecimal: GetDecimal
+        // GetDecimal = (TextFieldState) -> Decimal
         formatter: DecimalFormatter,
         textFieldModel: DecimalTextFieldViewModel,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -36,15 +41,10 @@ public final class FooterViewModel: ObservableObject {
         textFieldModel.setText(to: formatter.format(initialState.amount))
         
         textFieldModel.$state
-        //            .dropFirst(2)
             .map(formatter.getDecimal)
             .removeDuplicates()
             .receive(on: scheduler)
-            .sink { [weak self] in
-                
-                // print(self.map(ObjectIdentifier.init) ?? "", "sink", $0)
-                self?.state.amount = $0
-            }
+            .sink { [weak self] in self?.state.amount = $0 }
             .store(in: &cancellables)
         
         stateSubject

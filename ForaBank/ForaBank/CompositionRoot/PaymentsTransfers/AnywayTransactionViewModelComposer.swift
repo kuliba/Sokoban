@@ -76,7 +76,7 @@ extension AnywayTransactionViewModelComposer {
         
         let amount = digest.amount ?? 0
         let currency = digest.core?.currency
-        let currencySymbol = currency.map(getCurrencySymbol) ?? ""
+        let currencySymbol = currency.map(getCurrencySymbol) ?? "₽"
         
         let footerState = FooterState(
             amount: amount,

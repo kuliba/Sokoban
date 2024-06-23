@@ -24,6 +24,7 @@ public enum Projection: Equatable {
 
 public struct FooterTransactionProjection: Equatable {
     
+    // TODO: add currency
     public let isEnabled: Bool
     public let style: FooterState.Style
     
