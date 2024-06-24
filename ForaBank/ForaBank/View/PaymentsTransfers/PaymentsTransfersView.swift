@@ -558,7 +558,10 @@ private extension PaymentsTransfersView {
         }
         .alert(
             item: state.alert,
-            content: paymentFlowAlert(event: { transactionEvent($0) })
+            content: paymentFlowAlert(
+                transactionEvent: { transactionEvent($0) },
+                flowEvent: { viewModel.event(.utilityFlow(.payment($0))) }
+            )
         )
         .fullScreenCover(
             cover: state.fullScreenCover,
@@ -577,7 +580,8 @@ private extension PaymentsTransfersView {
     }
     
     func paymentFlowAlert(
-        event: @escaping (AnywayTransactionEvent) -> Void
+        transactionEvent: @escaping (AnywayTransactionEvent) -> Void,
+        flowEvent: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> (UtilityServiceFlowState.Alert) -> Alert {
         
         return { alert in
@@ -586,19 +590,19 @@ private extension PaymentsTransfersView {
             case .paymentRestartConfirmation:
                 return .init(
                     with: .paymentRestartConfirmation,
-                    event: event
+                    event: transactionEvent
                 )
                 
             case let .serverError(errorMessage):
                 return .init(
                     with: .serverError(message: errorMessage),
-                    event: event
+                    event: transactionEvent
                 )
                 
             case let .terminalError(errorMessage):
                 return .init(
                     with: .terminalError(message: errorMessage),
-                    event: event
+                    event: flowEvent
                 )
             }
         }
@@ -827,6 +831,11 @@ where PrimaryEvent == AnywayTransactionEvent,
             )
         )
     }
+}
+
+private extension AlertModel
+where PrimaryEvent == UtilityServicePaymentFlowEvent,
+      SecondaryEvent == UtilityServicePaymentFlowEvent {
     
     static func terminalError(
         message: String
@@ -838,7 +847,7 @@ where PrimaryEvent == AnywayTransactionEvent,
             primaryButton: .init(
                 type: .default,
                 title: "OK",
-                event: .completePayment(.none)
+                event: .dismiss(.paymentError)
             )
         )
     }

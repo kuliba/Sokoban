@@ -186,9 +186,7 @@ extension ProductData {
     
     func update(with params: ProductDynamicParamsData) {
         
-        self.balance = params.balance
         self.customName = params.customName
-        self.balanceRub = params.balanceRub
     }
     
     func update(isVisible: Bool) {
@@ -203,9 +201,7 @@ extension ProductData {
     
     func update(with params: CardStatementAPI.DynamicParams) {
         
-        self.balance = params.variableParams.balance?.doubleValue
         self.customName = params.variableParams.customName
-        self.balanceRub = params.variableParams.balanceRub?.doubleValue
     }
 }
 

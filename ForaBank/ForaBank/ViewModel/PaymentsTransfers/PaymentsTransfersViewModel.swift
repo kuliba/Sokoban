@@ -1297,13 +1297,7 @@ private extension PaymentsTransfersViewModel {
         meToMeViewModel: PaymentsMeToMeViewModel?,
         successViewModel: PaymentsSuccessViewModel
     ) {
-        guard let productIdFrom = meToMeViewModel?.swapViewModel.productIdFrom,
-              let productIdTo = meToMeViewModel?.swapViewModel.productIdTo
-        else { return }
-        
-        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
-        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
-        
+
         bind(successViewModel)
         fullCover = .init(type: .successMeToMe(successViewModel))
     }
@@ -1329,9 +1323,7 @@ private extension PaymentsTransfersViewModel {
     }
     
     private func closeSuccess() {
-        
-        model.action.send(ModelAction.Products.Update.ForProductType(productType: .deposit))
-        
+                
         self.action.send(PaymentsTransfersViewModelAction.Close.FullCover())
         self.action.send(PaymentsTransfersViewModelAction.Close.DismissAll())
         self.rootActions?.switchTab(.main)
