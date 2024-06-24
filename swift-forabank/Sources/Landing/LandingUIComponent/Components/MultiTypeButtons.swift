@@ -54,6 +54,7 @@ public extension UILanding.Multi {
             enum ActionType: String {
                 
                 case goMain
+                case openLink
                 case orderCard
                 case sticker
             }
@@ -128,6 +129,12 @@ extension MultiTypeButtonsView {
             return images[byImageLink]
         }
         
+        func openUrl(for link: String?) {
+            
+            guard let link else { return }
+            action(.card(.openUrl(link)))
+        }
+        
         func handler(for item: UILanding.Multi.TypeButtons) {
             
             if let actionValue = item.action {
@@ -135,18 +142,19 @@ extension MultiTypeButtonsView {
                 actionValue.actionType.map {
                     
                     switch $0 {
-                        
                     case .goMain:
-                        
                         action(.card(.goToMain))
-                    case .orderCard:
                         
+                    case .orderCard:
                         if let outputData = actionValue.outputData {
                             self.orderCard(outputData.tarif.rawValue, outputData.type.rawValue)
                         }
-                    case .sticker:
                         
+                    case .sticker:
                         action(.sticker(.order))
+                        
+                    case .openLink:
+                        break
                     }
                 }
             } else if let detailDestination = item.detailDestination {
@@ -162,14 +170,6 @@ extension UILanding.Multi.TypeButtons {
     func imageRequests() -> [ImageRequest] {
         
         return [ImageRequest.md5Hash(self.md5hash)]
-    }
-    
-    func openUrl(
-        _ link: String?
-    )  {
-        if let link, let url = URL(string: link), UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url)
-        }
     }
 }
 

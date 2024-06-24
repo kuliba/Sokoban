@@ -19,4 +19,6 @@ public struct ButtonStateConfig {
         self.backgroundColor = backgroundColor
         self.text = text
     }
+    
+    public var color: Color { backgroundColor }
 }

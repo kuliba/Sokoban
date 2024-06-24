@@ -58,6 +58,7 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
     ) -> Composer {
         
         let sut = Composer(
+            getCurrencySymbol: { _ in "₽" },
             elementMapper: .init(
                 currencyOfProduct: { _ in "₽" },
                 getProducts: { [] },
@@ -89,7 +90,6 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
         let composer = makeComposer(file: file, line: line)
         let sut = composer.makeAnywayTransactionViewModel(
             transaction: transaction,
-            notify: { _ in },
             scheduler: .immediate
         )
         let statusSpy = ValueSpy(sut.$state.map(\.transaction.status))

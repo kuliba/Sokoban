@@ -24,7 +24,7 @@ struct MultiTypeButtonsView: View {
         
         HStack(spacing: config.spacing) {
             
-            Button(action: { model.data.openUrl(model.data.textLink) }) {
+            Button(action: { model.openUrl(for: model.data.textLink) }) {
                 
                 switch model.image(byImageLink: model.data.md5hash) {
                 case .none:

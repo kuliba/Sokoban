@@ -24,7 +24,7 @@ final class PaymentsTransfersFlowManagerComposer {
     private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
-        
+    
     init(
         flag: Flag,
         model: Model,
@@ -227,8 +227,9 @@ private extension PaymentsTransfersFlowManagerComposer {
         )
         
         let microServices = composeMicroServices()
-    
+        
         let composer = AnywayTransactionViewModelComposer(
+            getCurrencySymbol: getCurrencySymbol,
             elementMapper: elementMapper,
             microServices: microServices,
             spinnerActions: spinnerActions
@@ -237,11 +238,16 @@ private extension PaymentsTransfersFlowManagerComposer {
         return { transaction, notify in
             
             let viewModel = composer.makeAnywayTransactionViewModel(
-                transaction: transaction,
-                notify: notify
+                transaction: transaction
             )
             
-            return .init(viewModel: viewModel)
+            let subscription = viewModel.$state
+                .dropFirst()
+                .map(\.transaction.status)
+                .removeDuplicates()
+                .sink(receiveValue: notify)
+            
+            return .init(viewModel: viewModel, subscription: subscription)
         }
     }
     
@@ -264,15 +270,22 @@ private extension PaymentsTransfersFlowManagerComposer {
         return microServicesComposer.compose()
     }
     
+    private func getCurrencySymbol(
+        for currency: String
+    ) -> String {
+        
+        model.dictionaryCurrencySymbol(for: currency) ?? ""
+    }
+    
     typealias NotifyStatus = (AnywayTransactionStatus?) -> Void
-
+    
     private func currencyOfProduct(
         product: ProductSelect.Product
     ) -> String {
         
         model.currencyOf(product: product) ?? ""
     }
-
+    
     private func loadOperators(
         payload: LoadOperatorsPayload,
         completion: @escaping ([Operator]) -> Void
