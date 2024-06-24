@@ -9,6 +9,7 @@ import CombineSchedulers
 import ForaTools
 import XCTest
 
+@available(iOS 16.0.0, *)
 final class ResourceLoaderComposerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
