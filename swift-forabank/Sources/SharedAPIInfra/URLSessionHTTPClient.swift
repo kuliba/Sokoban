@@ -29,7 +29,11 @@ public final class URLSessionHTTPClient {
         
         session.dataTask(with: request) { [weak self] data, response, error in
             
-            guard self != nil else { return }
+            guard self != nil else {
+                
+                completion(.failure(.nonHTTPURLResponse))
+                return
+            }
             
             if let error {
                 

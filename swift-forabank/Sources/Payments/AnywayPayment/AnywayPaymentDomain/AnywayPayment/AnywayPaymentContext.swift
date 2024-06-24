@@ -10,7 +10,7 @@ import Tagged
 public struct AnywayPaymentContext: Equatable {
     
     public let initial: AnywayPayment
-    public let payment: AnywayPayment
+    public var payment: AnywayPayment
     public let staged: AnywayPaymentStaged
     public let outline: AnywayPaymentOutline
     public var shouldRestart: Bool
