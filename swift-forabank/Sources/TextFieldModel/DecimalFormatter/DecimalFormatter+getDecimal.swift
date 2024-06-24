@@ -13,7 +13,6 @@ public extension DecimalFormatter {
     func getDecimal(_ textFieldState: TextFieldState) -> Decimal {
         
         switch textFieldState {
-        
         case .placeholder:
             return 0
 

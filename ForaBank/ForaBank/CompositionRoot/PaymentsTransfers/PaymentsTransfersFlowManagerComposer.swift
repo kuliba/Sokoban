@@ -229,6 +229,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         let microServices = composeMicroServices()
         
         let composer = AnywayTransactionViewModelComposer(
+            getCurrencySymbol: getCurrencySymbol,
             elementMapper: elementMapper,
             microServices: microServices,
             spinnerActions: spinnerActions
@@ -267,6 +268,13 @@ private extension PaymentsTransfersFlowManagerComposer {
         )
         
         return microServicesComposer.compose()
+    }
+    
+    private func getCurrencySymbol(
+        for currency: String
+    ) -> String {
+        
+        model.dictionaryCurrencySymbol(for: currency) ?? ""
     }
     
     typealias NotifyStatus = (AnywayTransactionStatus?) -> Void
