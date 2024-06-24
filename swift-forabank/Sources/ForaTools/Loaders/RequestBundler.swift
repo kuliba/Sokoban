@@ -9,7 +9,7 @@ import Foundation
 
 /// A class that batches multiple requests for the same resource and ensures that the requests are only performed once.
 /// It stores pending requests and invokes all the completion handlers once the request is completed.
-final class RequestBundler<Request, Response>
+public final class RequestBundler<Request, Response>
 where Request: Hashable {
     
     private var pendingRequests: PendingRequests = .init()
@@ -19,13 +19,13 @@ where Request: Hashable {
     /// Initialises a new instance of `RequestBundler`.
     ///
     /// - Parameter performer: The performer responsible for executing the requests.
-    init(
+    public init(
         performer: any Performer
     ) {
         self.performer = performer
     }
     
-    typealias Performer = Loader<Request, Response>
+    public typealias Performer = Loader<Request, Response>
     
     private typealias PendingRequests = [Request: [(Response) -> Void]]
 }
@@ -38,7 +38,7 @@ extension RequestBundler: Loader {
     /// - Parameters:
     ///   - request: The request to be loaded.
     ///   - completion: The completion handler to be called when the response is received.
-    func load(
+    public func load(
         _ request: Request,
         _ completion: @escaping (Response) -> Void
     ) {

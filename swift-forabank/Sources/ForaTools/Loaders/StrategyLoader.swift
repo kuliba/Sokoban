@@ -6,7 +6,7 @@
 //
 
 /// A class that attempts to load data using a primary loader and falls back to a secondary loader if the primary fails.
-final class StrategyLoader<Payload, Response, Failure>
+public final class StrategyLoader<Payload, Response, Failure>
 where Failure: Error {
     
     private let primary: any Primary
@@ -17,7 +17,7 @@ where Failure: Error {
     /// - Parameters:
     ///   - primary: The primary loader.
     ///   - secondary: The secondary loader.
-    init(
+    public init(
         primary: any Primary,
         secondary: any Secondary
     ) {
@@ -25,9 +25,9 @@ where Failure: Error {
         self.secondary = secondary
     }
     
-    typealias Primary = Loader<Payload, LoadResult>
-    typealias Secondary = Loader<Payload, LoadResult>
-    typealias LoadResult = Result<Response, Failure>
+    public typealias Primary = Loader<Payload, LoadResult>
+    public typealias Secondary = Loader<Payload, LoadResult>
+    public typealias LoadResult = Result<Response, Failure>
 }
 
 extension StrategyLoader: Loader {
@@ -37,7 +37,7 @@ extension StrategyLoader: Loader {
     /// - Parameters:
     ///   - payload: The payload to be loaded.
     ///   - completion: The completion handler to be called with the result of the loading operation.
-    func load(
+    public func load(
         _ payload: Payload,
         _ completion: @escaping (LoadResult) -> Void
     ) {

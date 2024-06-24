@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 24.06.2024.
 //
 
+import ForaTools
 import XCTest
 
 final class RequestBundlerTests: XCTestCase {

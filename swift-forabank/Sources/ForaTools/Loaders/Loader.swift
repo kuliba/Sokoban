@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 24.06.2024.
 //
 
-protocol Loader<Payload, Response> {
+public protocol Loader<Payload, Response> {
     
     associatedtype Payload
     associatedtype Response
@@ -16,7 +16,7 @@ protocol Loader<Payload, Response> {
     )
 }
 
-extension Loader where Payload == Void {
+public extension Loader where Payload == Void {
     
     func load(
         _ completion: @escaping (Response) -> Void
