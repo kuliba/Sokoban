@@ -29,4 +29,25 @@ public extension AnyLoader {
             }
         }
     }
+    
+    /// Creates a new instance of `AnyLoader` that uses a blacklist decorator.
+    ///
+    /// This method wraps the current loader with a `BlacklistDecorator` that checks if a request is blacklisted using the provided closure.
+    ///
+    /// - Parameter isBlacklisted: A closure that determines whether a request should be blacklisted based on the request and the number of attempts.
+    /// - Returns: A new `AnyLoader` with blacklist checking.
+    func blacklisted<Success, Failure>(
+        isBlacklisted: @escaping (Payload, Int) -> Bool
+    ) -> AnyLoader<Payload, Result<Success, BlacklistDecorator<Payload, Success, Failure>.Error>>
+    where Response == Result<Success, Failure>, Payload: Hashable {
+        
+        let blacklistFilter = BlacklistFilter(isBlacklisted: isBlacklisted)
+        let blacklistDecorator = BlacklistDecorator(
+            decoratee: self, 
+            isBlacklisted: blacklistFilter.isBlacklisted(_:)
+        )
+        
+        return .init(blacklistDecorator)
+    }
+
 }
