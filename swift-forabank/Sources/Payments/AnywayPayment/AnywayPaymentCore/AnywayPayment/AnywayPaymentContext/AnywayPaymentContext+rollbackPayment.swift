@@ -1,5 +1,5 @@
 //
-//  AnywayPaymentContext+restorePayment.swift
+//  AnywayPaymentContext+rollbackPayment.swift
 //
 //
 //  Created by Igor Malyarov on 28.05.2024.
@@ -9,11 +9,11 @@ import AnywayPaymentDomain
 
 public extension AnywayPaymentContext {
     
-    func restorePayment() -> Self {
+    func rollbackPayment() -> Self {
         
         guard !staged.isEmpty else { return self }
         
-        return updating(payment: payment.restoring(with: snapshot))
+        return updating(payment: payment.rollback(with: snapshot))
     }
 }
 
@@ -50,11 +50,11 @@ private typealias Snapshot = [AnywayElement.Parameter.Field.ID: AnywayElement.Pa
 
 private extension AnywayPayment {
     
-    func restoring(with snapshot: Snapshot) -> Self {
+    func rollback(with snapshot: Snapshot) -> Self {
         
-        let elements = elements.map { $0.restoring(with: snapshot) }
+        let elements = elements.map { $0.rollback(with: snapshot) }
 #warning("add tests")
-        let footer = footer.restoring(with: snapshot)
+        let footer = footer.rollback(with: snapshot)
         return updating(with: elements, and: footer)
     }
     
@@ -74,11 +74,11 @@ private extension AnywayPayment {
 
 private extension AnywayElement {
     
-    func restoring(with snapshot: Snapshot) -> Self {
+    func rollback(with snapshot: Snapshot) -> Self {
         
         switch self {
         case let .parameter(parameter):
-            return .parameter(parameter.restoring(with: snapshot))
+            return .parameter(parameter.rollback(with: snapshot))
             
         default:
             return self
@@ -89,7 +89,7 @@ private extension AnywayElement {
 private extension Payment.Footer {
     
 #warning("FIXME add tests")
-    func restoring(with snapshot: Snapshot) -> Self {
+    func rollback(with snapshot: Snapshot) -> Self {
         
         self
     }
@@ -97,7 +97,7 @@ private extension Payment.Footer {
 
 private extension AnywayElement.Parameter {
     
-    func restoring(with snapshot: Snapshot) -> Self {
+    func rollback(with snapshot: Snapshot) -> Self {
         
         guard let snapshottedValue = snapshot[field.id] else { return self }
         
