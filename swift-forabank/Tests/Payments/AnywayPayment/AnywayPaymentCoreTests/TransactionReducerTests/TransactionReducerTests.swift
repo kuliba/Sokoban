@@ -998,6 +998,38 @@ final class TransactionReducerTests: XCTestCase {
         assert(.paymentRestartConfirmation(true), on: state, effect: nil)
     }
     
+    func test_paymentRestartConfirmation_shouldCallValidatePaymentOnDenial() {
+        
+        let state = makeTransaction(status: .awaitingPaymentRestartConfirmation)
+        var validatePaymentCount = 0
+        let sut = makeSUT(
+            validatePayment: { _ in
+                validatePaymentCount += 1
+                return true
+            }
+        )
+        
+        _ = sut.reduce(state, .paymentRestartConfirmation(false))
+        
+        XCTAssertEqual(validatePaymentCount, 1)
+    }
+    
+    func test_paymentRestartConfirmation_shouldCallValidatePaymentOnConsent() {
+        
+        let state = makeTransaction(status: .awaitingPaymentRestartConfirmation)
+        var validatePaymentCount = 0
+        let sut = makeSUT(
+            validatePayment: { _ in
+                validatePaymentCount += 1
+                return true
+            }
+        )
+        
+        _ = sut.reduce(state, .paymentRestartConfirmation(true))
+        
+        XCTAssertEqual(validatePaymentCount, 1)
+    }
+    
     // MARK: - updatePayment
     
     func test_update_shouldNotChangeResultFailureStateOnUpdateConnectivityErrorFailure() {
