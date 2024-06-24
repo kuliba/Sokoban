@@ -1,14 +1,14 @@
 //
-//  BottomAmountViewModel+ext.swift
+//  FooterViewModel+ext.swift
 //
 //
-//  Created by Igor Malyarov on 20.06.2024.
+//  Created by Igor Malyarov on 22.06.2024.
 //
 
 import TextFieldComponent
 import TextFieldModel
 
-public extension BottomAmountViewModel {
+public extension FooterViewModel {
     
     convenience init(
         currencySymbol: String,
@@ -22,7 +22,7 @@ public extension BottomAmountViewModel {
             formatter: formatter,
             scheduler: scheduler
         )
-        let reducer = BottomAmountReducer()
+        let reducer = FooterReducer()
         
         self.init(
             initialState: initialState,

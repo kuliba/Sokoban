@@ -40,10 +40,10 @@ extension AnywayPaymentFactoryComposer {
         )
         
         return .init(
-            makeElementView: {
+            makeElementView: { state in
                 
                 return .init(
-                    state: $0,
+                    state: state,
                     event: event,
                     factory: elementFactory,
                     config: .iFora
@@ -51,7 +51,7 @@ extension AnywayPaymentFactoryComposer {
             },
             makeFooterView: { footer in
                 
-                return .init(state: footer, config: .iFora)
+                return .init(viewModel: footer, config: .iFora)
             }
         )
     }
