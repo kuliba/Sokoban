@@ -6,10 +6,9 @@
 //
 
 import CombineSchedulers
-import ForaTools
 import Foundation
 
-final class ResourceLoaderComposer<Payload, Response, Failure>
+public final class ResourceLoaderComposer<Payload, Response, Failure>
 where Payload: Hashable,
       Failure: Error {
     
@@ -18,7 +17,7 @@ where Payload: Hashable,
     private let remoteLoader: any RemoteLoader
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
-    init(
+    public init(
         cache: @escaping Cache,
         localLoader: any LocalLoader,
         remoteLoader: any RemoteLoader,
@@ -30,10 +29,23 @@ where Payload: Hashable,
         self.scheduler = scheduler
     }
     
+    public typealias LocalLoader = Loader<Payload, Result<Response, Error>>
+    public typealias RemoteLoader = Loader<Payload, LoadResult>
+    public typealias LoadResult = Result<Response, Failure>
+    
+    public typealias Cache = (Response, @escaping () -> Void) -> Void
+}
+
+public extension ResourceLoaderComposer {
+    
+    typealias ComposedLoader = Loader<Payload, BlacklistedResult>
+    typealias BlacklistedResult = Result<Response, BlacklistedError>
+    typealias BlacklistedError = BlacklistDecorator<Payload, Response, Failure>.Error
+    
     func compose(
         isBlacklisted: @escaping (Payload, Int) -> Bool,
         retryPolicy: RetryPolicy
-    ) -> any Loader {
+    ) -> any ComposedLoader {
         
         let blacklistFilter = BlacklistFilter(isBlacklisted: isBlacklisted)
         
@@ -56,10 +68,4 @@ where Payload: Hashable,
             )
         )
     }
-    
-    public typealias LocalLoader = Loader<Payload, Result<Response, Error>>
-    public typealias RemoteLoader = Loader<Payload, LoadResult>
-    public typealias LoadResult = Result<Response, Failure>
-    
-    public typealias Cache = (Response, @escaping () -> Void) -> Void
 }
