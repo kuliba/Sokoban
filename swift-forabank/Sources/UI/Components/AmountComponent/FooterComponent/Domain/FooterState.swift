@@ -10,6 +10,7 @@ import Foundation
 public struct FooterState: Equatable {
     
     public var amount: Decimal
+    // TODO: add currency
     public var button: FooterButton
     public var style: Style
     

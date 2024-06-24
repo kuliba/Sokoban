@@ -10,7 +10,19 @@ import UIPrimitives
 extension ButtonConfig {
     
     static let iFora: Self = .init(
-        active: .active,
-        inactive: .inactive
+        active: .init(
+            backgroundColor: .init(hex: "#FF3636"),
+            text: .init(
+                textFont: .textH4R16240(),
+                textColor: .textWhite
+            )
+        ),
+        inactive: .init(
+            backgroundColor: .mainColorsGrayMedium.opacity(0.1),
+            text: .init(
+                textFont: .textH4R16240(),
+                textColor: .mainColorsWhite.opacity(0.5)
+            )
+        )
     )
 }

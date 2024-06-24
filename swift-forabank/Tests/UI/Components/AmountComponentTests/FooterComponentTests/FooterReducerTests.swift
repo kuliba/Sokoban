@@ -202,7 +202,7 @@ final class FooterReducerTests: XCTestCase {
     
     // MARK: - title
     
-    func test_style_shouldSetButtonTitle() {
+    func test_title_shouldSetButtonTitle() {
         
         let title = anyMessage()
         let state = makeState()
@@ -216,6 +216,79 @@ final class FooterReducerTests: XCTestCase {
     func test_title_shouldNotDeliverEffect() {
         
         assert(.title(anyMessage()), on: makeState(), effect: nil)
+    }
+    
+    // MARK: - set
+    
+    func test_set_shouldChangeStyleOnIsActive_true() {
+        
+        let state = makeState(buttonState: .active, style: .amount)
+        
+        assertState(.set(isActive: true, .button), on: state) {
+            
+            $0.button.state = .active
+            $0.style = .button
+        }
+    }
+    
+    func test_set_shouldSetInactiveButtonStateAndStyleOnIsActive_true() {
+        
+        let state = makeState(buttonState: .inactive, style: .amount)
+        
+        assertState(.set(isActive: true, .button), on: state) {
+            
+            $0.button.state = .active
+            $0.style = .button
+        }
+    }
+    
+    func test_set_shouldSetTappedButtonStateToActiveAndStyleOnIsActive_true() {
+        
+        let state = makeState(buttonState: .tapped, style: .amount)
+        
+        assertState(.set(isActive: true, .button), on: state) {
+            
+            $0.button.state = .active
+            $0.style = .button
+        }
+    }
+    
+    func test_set_shouldSetActiveButtonStateToInactiveOnIsActive_false() {
+        
+        let state = makeState(buttonState: .active, style: .amount)
+        
+        assertState(.set(isActive: false, .button), on: state) {
+            
+            $0.button.state = .inactive
+            $0.style = .button
+        }
+    }
+    
+    func test_set_shouldNotChangeInactiveButtonStateAndStyleOnIsActive_false() {
+        
+        let state = makeState(buttonState: .inactive, style: .amount)
+        
+        assertState(.set(isActive: false, .button), on: state) {
+            
+            $0.button.state = .inactive
+            $0.style = .button
+        }
+    }
+    
+    func test_set_shouldSetTappedButtonStateToInactiveAndStyleOnIsActive_false() {
+        
+        let state = makeState(buttonState: .tapped, style: .amount)
+        
+        assertState(.set(isActive: false, .button), on: state) {
+            
+            $0.button.state = .inactive
+            $0.style = .button
+        }
+    }
+    
+    func test_set_shouldNotDeliverEffect() {
+        
+        assert(.set(isActive: Bool.random(), .amount), on: makeState(), effect: nil)
     }
     
     // MARK: - Helpers

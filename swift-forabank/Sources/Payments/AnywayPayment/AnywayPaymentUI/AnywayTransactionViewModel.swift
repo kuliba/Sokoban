@@ -10,21 +10,24 @@ import Combine
 import CombineSchedulers
 import ForaTools
 import Foundation
+import PaymentComponents
 
-public final class AnywayTransactionViewModel<Amount, Model, DocumentStatus, Response>: ObservableObject {
+public final class AnywayTransactionViewModel<Footer: FooterInterface, Model, DocumentStatus, Response>: ObservableObject {
     
     @Published public private(set) var state: State
     
     private let mapToModel: MapToModel
-    private let makeFooter: MakeFooter
     private let reduce: TransactionReduce
     private let handleEffect: HandleEffect
+    
     private let stateSubject = PassthroughSubject<State, Never>()
+    private let scheduler: AnySchedulerOfDispatchQueue
+    private var cancellables = Set<AnyCancellable>()
     
     public init(
         transaction: State.Transaction,
         mapToModel: @escaping MapToModel,
-        makeFooter: @escaping MakeFooter,
+        footer: Footer,
         reduce: @escaping TransactionReduce,
         handleEffect: @escaping HandleEffect,
         scheduler: AnySchedulerOfDispatchQueue = .main
@@ -34,14 +37,14 @@ public final class AnywayTransactionViewModel<Amount, Model, DocumentStatus, Res
         // after all properties are initialised
         // `updating` is called
         self.state = .init(
-            models: [:], 
-            footer: .continueButton {},
+            models: [:],
+            footer: footer,
             transaction: transaction
         )
         self.mapToModel = mapToModel
-        self.makeFooter = makeFooter
         self.reduce = reduce
         self.handleEffect = handleEffect
+        self.scheduler = scheduler
         
         // Update state with the initial transaction when `self` is avail
         self.state = updating(state, with: transaction)
@@ -49,6 +52,8 @@ public final class AnywayTransactionViewModel<Amount, Model, DocumentStatus, Res
         stateSubject
             .receive(on: scheduler)
             .assign(to: &$state)
+        
+        bind(footer)
     }
 }
 
@@ -58,7 +63,10 @@ public extension AnywayTransactionViewModel {
         
         let (transaction, effect) = reduce(state.transaction, event)
         let state = updating(state, with: transaction)
-        print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: updated state for reduced transaction on event", event, #file, #line)
+#if DEBUG
+        print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: reduced transaction on event:", event, #file, #line)
+        print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: updated state for reduced transaction:", state, #file, #line)
+#endif
         stateSubject.send(state)
         
         if let effect {
@@ -70,7 +78,7 @@ public extension AnywayTransactionViewModel {
 
 public extension AnywayTransactionViewModel {
     
-    typealias State = CachedModelsTransaction<Amount, Model, DocumentStatus, Response>
+    typealias State = CachedModelsTransaction<Footer, Model, DocumentStatus, Response>
     typealias Event = AnywayTransactionEvent<DocumentStatus, Response>
     typealias Effect = AnywayTransactionEffect
     
@@ -81,14 +89,6 @@ public extension AnywayTransactionViewModel {
     }
     typealias Notify = (NotifyEvent) -> Void
     typealias MapToModel = (@escaping Notify) -> (AnywayElement) -> Model
-    
-    enum AmountEvent: Equatable {
-        
-        case buttonTap
-        case edit(Decimal)
-    }
-    typealias NotifyAmount = (AmountEvent) -> Void
-    typealias MakeFooter = (@escaping NotifyAmount) -> (State.Transaction) -> Footer<Amount>
     
     typealias TransactionReduce = (State.Transaction, Event) -> (State.Transaction, Effect?)
     
@@ -118,20 +118,60 @@ private extension AnywayTransactionViewModel {
                 case let .payment(paymentEvent):
                     self?.event(.payment(paymentEvent))
                 }
-            },
-            makeFooter: makeFooter { [weak self] event in
-                
-                // TODO: add tests
-                print("===>>>", self.map { ObjectIdentifier($0) } ?? "", "makeFooter call", event, #file, #line)
-                
-                switch event {
-                case .buttonTap:
-                    self?.event(.continue)
-                    
-                case let .edit(amount):
-                    self?.event(.payment(.widget(.amount(amount))))
-                }
             }
         )
+    }
+}
+
+private extension AnywayTransactionViewModel {
+    
+    /// Does not use `.removeDuplicates()` in the pipelines due to different sources of change.
+    /// For example, button status `active`/`inactive` is set depending on transaction, but `tapped` is set reacting to UI event. Using `.removeDuplicates()` would drop changes.
+    func bind(_ footer: Footer) {
+        
+        // subscribe to footer state projection
+        /// - Note: looks like this pipeline needs `dropFirst` but if `dropFirst` is added the button does not gets active after first submit
+        footer.projectionPublisher
+            .handleEvents(receiveOutput: { print("===>>> projectionPublisher:", $0) })
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.update(with: $0) }
+            .store(in: &cancellables)
+        
+        // update footer active/inactive and style
+        $state
+            .map(\.projection)
+            .handleEvents(receiveOutput: { print("===>>> transaction projection:", $0) })
+            .sink { [weak footer] in footer?.project($0) }
+            .store(in: &cancellables)
+    }
+    
+    func update(
+        with projection: Projection
+    ) {
+        switch projection {
+        case let .amount(amount):
+            event(.payment(.widget(.amount(amount))))
+            
+        case .buttonTapped:
+            event(.continue)
+        }
+    }
+}
+
+private extension CachedModelsTransaction {
+    
+    var projection: FooterTransactionProjection {
+        
+        return .init(isEnabled: isEnabled, style: style)
+    }
+    
+    private var isEnabled: Bool { transaction.isValid }
+    
+    private var style: AmountComponent.FooterState.Style {
+        
+        switch transaction.context.payment.footer {
+        case .amount:   return .amount
+        case .continue: return .button
+        }
     }
 }

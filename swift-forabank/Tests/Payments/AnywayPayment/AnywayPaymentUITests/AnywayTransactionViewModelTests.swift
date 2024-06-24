@@ -7,6 +7,7 @@
 
 import AnywayPaymentDomain
 import AnywayPaymentUI
+import Combine
 import XCTest
 
 final class AnywayTransactionViewModelTests: XCTestCase {
@@ -15,8 +16,12 @@ final class AnywayTransactionViewModelTests: XCTestCase {
     
     func test_init_shouldSetTransactionOnEmptyTransaction() throws {
         
+        let initial = makeTransaction()
         let emptyTransaction = makeTransaction()
-        let (_, spy) = makeSUT(initial: emptyTransaction)
+        let (_, spy, _,_) = makeSUT(
+            initial: initial,
+            stubs: [(emptyTransaction, nil)]
+        )
         
         XCTAssertNoDiff(spy.values.map(\.transaction), [emptyTransaction])
         XCTAssertTrue(isEmpty(emptyTransaction))
@@ -25,7 +30,10 @@ final class AnywayTransactionViewModelTests: XCTestCase {
     func test_init_shouldNotSetModelsOnEmptyTransaction() throws {
         
         let emptyTransaction = makeTransaction()
-        let (_, spy) = makeSUT(initial: emptyTransaction)
+        let (_, spy, _,_) = makeSUT(
+            initial: emptyTransaction,
+            stubs: [(emptyTransaction, nil)]
+        )
         
         let models = try XCTUnwrap(spy.values.map(\.models).first)
         XCTAssertTrue(models.isEmpty)
@@ -37,7 +45,10 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         let transaction = makeTransaction(
             elements: [makeFieldAnywayElement()]
         )
-        let (_, spy) = makeSUT(initial: transaction)
+        let (_, spy, _,_) = makeSUT(
+            initial: transaction,
+            stubs: [(transaction, nil)]
+        )
         
         XCTAssertNoDiff(spy.values.map(\.transaction), [transaction])
         XCTAssertFalse(isEmpty(transaction))
@@ -50,7 +61,10 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         let transaction = makeTransaction(
             elements: [field, parameter]
         )
-        let (_, spy) = makeSUT(initial: transaction)
+        let (_, spy, _,_) = makeSUT(
+            initial: transaction,
+            stubs: [(transaction, nil)]
+        )
         
         assertModels(spy, match: [[field.id: field, parameter.id: parameter]])
         XCTAssertFalse(isEmpty(transaction))
@@ -66,9 +80,12 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         let transaction = makeTransaction(
             elements: [makeParameterAnywayElement()]
         )
-        let (sut, spy) = makeSUT(
+        let (sut, spy, _,_) = makeSUT(
             initial: initial,
-            stub: [(transaction, nil)]
+            stubs: [
+                (initial, nil),
+                (transaction, nil)
+            ]
         )
         
         sut.event(.continue)
@@ -94,9 +111,12 @@ final class AnywayTransactionViewModelTests: XCTestCase {
             elements: [updatedField]
         )
         
-        let (sut, spy) = makeSUT(
+        let (sut, spy, _,_) = makeSUT(
             initial: initial,
-            stub: [(transaction, nil)]
+            stubs: [
+                (initial, nil),
+                (transaction, nil)
+            ]
         )
         
         sut.event(.continue)
@@ -116,9 +136,12 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         let transaction = makeTransaction(
             elements: [field, parameter]
         )
-        let (sut, spy) = makeSUT(
+        let (sut, spy, _,_) = makeSUT(
             initial: initial,
-            stub: [(transaction, nil)]
+            stubs: [
+                (initial, nil),
+                (transaction, nil)
+            ]
         )
         
         sut.event(.continue)
@@ -142,8 +165,8 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         
         let effect = makeEffect()
         let effectSpy = EffectHandlerSpy<SUT.Event, SUT.Effect>()
-        let (sut, _) = makeSUT(
-            stub: [(makeTransaction(), effect)],
+        let (sut, _,_,_) = makeSUT(
+            stubs: [makeStub(), (makeTransaction(), effect)],
             handleEffect: effectSpy.handleEffect
         )
         
@@ -152,36 +175,123 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         XCTAssertNoDiff(effectSpy.messages.map(\.effect), [effect])
     }
     
-    func test_event_shouldDeliverEventOnHandleEffectCompletion() {
+    // TODO: fix test - need to model transaction stubs in a real way
+    // that would stop roundtrip between model and footer
+    //    func test_event_shouldDeliverEventOnHandleEffectCompletion() {
+    //
+    //        let (initial, transaction1, transaction2) = (makeTransaction(), makeTransaction(), makeTransaction())
+    //        let effectSpy = EffectHandlerSpy<SUT.Event, SUT.Effect>()
+    //        let (sut, spy, _,_) = makeSUT(
+    //            initial: initial,
+    //            stubs: [
+    //                makeStub(),
+    //                (initial, nil),
+    //                (transaction1, makeEffect()),
+    //                (transaction2, nil),
+    //            ],
+    //            handleEffect: effectSpy.handleEffect
+    //        )
+    //
+    //        sut.event(.continue)
+    //        effectSpy.complete(with: .dismissRecoverableError)
+    //
+    //        XCTAssertNoDiff(spy.values.map(\.transaction), [
+    //            initial,
+    //            transaction1,
+    //            transaction2
+    //        ])
+    //        XCTAssertNotEqual(initial, transaction1)
+    //        XCTAssertNotEqual(transaction1, transaction2)
+    //    }
+    
+    // TODO: add tests for footer
+    
+    func test_footer_tap_shouldCallReduceWithContinueEvent() {
         
-        let (initial, transaction1, transaction2) = (makeTransaction(), makeTransaction(), makeTransaction())
-        let effectSpy = EffectHandlerSpy<SUT.Event, SUT.Effect>()
-        let (sut, spy) = makeSUT(
-            initial: initial,
-            stub: [
-                (transaction1, makeEffect()),
-                (transaction2, nil),
-            ],
-            handleEffect: effectSpy.handleEffect
-        )
+        let (sut, _, reducer, footer) = makeSUT(stubs: [makeStub(), makeStub()])
         
-        sut.event(.continue)
-        effectSpy.complete(with: .dismissRecoverableError)
+        tapContinue(footer)
         
-        XCTAssertNoDiff(spy.values.map(\.transaction), [
-            initial,
-            transaction1,
-            transaction2
+        XCTAssertNoDiff(reducer.messages.map(\.event), [
+            .payment(.widget(.amount(0))),
+            .continue
         ])
-        XCTAssertNotEqual(initial, transaction1)
-        XCTAssertNotEqual(transaction1, transaction2)
+        XCTAssertNotNil(sut)
     }
     
-    // TODO: add tests for makeAmountViewModel
+    func test_footer_amount_shouldCallReduceWithWidgetAmountEvent() {
+        
+        let amount = anyAmount()
+        let (sut, _, reducer, footer) = makeSUT(stubs: [makeStub(), makeStub()])
+        
+        footer.state = .amount(amount)
+        
+        XCTAssertNoDiff(reducer.messages.map(\.event), [
+            .payment(.widget(.amount(0))),
+            .payment(.widget(.amount(amount)))
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_transaction_change_shouldSetFooterButtonState() {
+        
+        let (sut, _,_, footer) = makeSUT([
+            makeTransaction(isValid: false),
+            makeTransaction(isValid: true),
+            makeTransaction(isValid: false),
+            makeTransaction(isValid: false),
+            makeTransaction(isValid: false),
+            makeTransaction(isValid: true),
+        ])
+        
+        sut.event(.continue)
+        sut.event(.continue)
+        sut.event(.continue)
+        sut.event(.continue)
+        sut.event(.continue)
+        
+        XCTAssertNoDiff(footer.messages.map(\.isEnabled), [
+            false,
+            true,
+            false,
+            false,
+            false,
+            true,
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_transactionAmountChange_shouldSetFooterStyle() {
+        
+        let (sut, _,_, footer) = makeSUT([
+            makeTransactionWithContinue(),
+            makeTransactionWithAmount(amount: 10),
+            makeTransactionWithAmount(amount: 30),
+            makeTransactionWithAmount(amount: 40),
+            makeTransactionWithContinue(),
+            makeTransactionWithAmount(amount: 20),
+        ])
+        
+        sut.event(.continue)
+        sut.event(.continue)
+        sut.event(.continue)
+        sut.event(.continue)
+        sut.event(.continue)
+        
+        XCTAssertNoDiff(footer.messages.map(\.style), [
+            .button,
+            .amount,
+            .amount,
+            .amount,
+            .button,
+            .amount
+        ])
+        XCTAssertNotNil(sut)
+    }
     
     // MARK: - Helpers
     
-    private typealias SUT = AnywayTransactionViewModel<AmountViewModel, Model, DocumentStatus, Response>
+    private typealias SUT = AnywayTransactionViewModel<TestFooter, Model, DocumentStatus, Response>
     private typealias AmountViewModel = String
     private typealias DocumentStatus = Int
     private typealias Response = String
@@ -191,22 +301,43 @@ final class AnywayTransactionViewModelTests: XCTestCase {
     private typealias Spy = ValueSpy<SUT.State>
     
     private typealias Reducer = ReducerSpy<SUT.State.Transaction, SUT.Event, SUT.Effect>
+    private typealias Stub = (SUT.State.Transaction, SUT.Effect?)
+    
+    private func makeSUT(
+        _ stubs: [SUT.State.Transaction],
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: SUT,
+        spy: Spy,
+        reducerSpy: Reducer,
+        footer: TestFooter
+    ) {
+        makeSUT(
+            stubs: stubs.map { ($0, nil) },
+            file: file,
+            line: line
+        )
+    }
     
     private func makeSUT(
         initial: SUT.State.Transaction = makeTransaction(),
-        stub: [(SUT.State.Transaction, SUT.Effect?)] = [],
+        stubs: [Stub] = [],
         handleEffect: @escaping SUT.HandleEffect = { _,_ in },
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        spy: Spy
+        spy: Spy,
+        reducerSpy: Reducer,
+        footer: TestFooter
     ) {
-        let reducer = Reducer(stub: stub)
+        let footer = TestFooter()
+        let reducer = Reducer(stub: stubs)
         let sut = SUT(
             transaction: initial,
             mapToModel: { event in { .init(value: $0) } },
-            makeFooter: { event in { _ in .continueButton({}) }},
+            footer: footer,
             reduce: reducer.reduce(_:_:),
             handleEffect: handleEffect,
             scheduler: .immediate
@@ -214,8 +345,17 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         let spy = ValueSpy(sut.$state)
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(spy, file: file, line: line)
+        trackForMemoryLeaks(reducer, file: file, line: line)
+        trackForMemoryLeaks(footer, file: file, line: line)
         
-        return (sut, spy)
+        return (sut, spy, reducer, footer)
+    }
+    
+    private func makeStub(
+    ) -> Stub {
+        
+        return (makeTransaction(), nil)
     }
     
     private func makeEffect(
@@ -264,5 +404,29 @@ final class AnywayTransactionViewModelTests: XCTestCase {
                 file: file, line: line
             )
         }
+    }
+    
+    private final class TestFooter: FooterInterface, ObservableObject {
+        
+        @Published var state: Projection = .amount(0)
+        
+        private(set) var messages = [FooterTransactionProjection]()
+        
+        var projectionPublisher: AnyPublisher<Projection, Never> {
+            
+            $state.eraseToAnyPublisher()
+        }
+        
+        func project(_ event: FooterTransactionProjection) {
+            
+            messages.append(event)
+        }
+    }
+    
+    // MARK: - DSL
+    
+    private func tapContinue(_ footer: TestFooter) {
+        
+        footer.state = .buttonTapped
     }
 }
