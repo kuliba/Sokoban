@@ -261,6 +261,28 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    func test_transaction_change_shouldSetFooterButtonStateOnIsValidAndInlightStatus() {
+        
+        let (sut, _,_, footer) = makeSUT([
+            makeTransaction(isValid: false),
+            makeTransaction(isValid: true),
+            makeTransaction(isValid: true, status: .inflight),
+            makeTransaction(isValid: true),
+        ])
+        
+        sut.event(.continue)
+        sut.event(.continue)
+        sut.event(.continue)
+        
+        XCTAssertNoDiff(footer.messages.map(\.isEnabled), [
+            false,
+            true,
+            false,
+            true,
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
     func test_transactionAmountChange_shouldSetFooterStyle() {
         
         let (sut, _,_, footer) = makeSUT([
