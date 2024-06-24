@@ -949,6 +949,7 @@ private extension Target {
             .tagged,
             .shimmer,
             .uiPrimitives,
+            .rxViewModel
         ],
         path: "Sources/Landing/\(String.landingUIComponent)"
     )
