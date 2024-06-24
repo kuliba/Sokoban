@@ -17,7 +17,7 @@ public extension AnywayPaymentTransactionReducerComposer {
     func compose() -> Reducer {
         
         return .init(
-            paymentReduce: paymentReduce,
+            paymentReduce: paymentReduce(),
             stagePayment: stagePayment,
             updatePayment: updatePayment,
             paymentInspector: composeInspector()
@@ -34,21 +34,14 @@ extension AnywayPaymentContext: RestartablePayment {}
 
 private extension AnywayPaymentTransactionReducerComposer {
     
-    func paymentReduce(
-        _ state: AnywayPaymentContext,
-        _ event: AnywayPaymentEvent
-    ) -> (AnywayPaymentContext, Effect?) {
+    func paymentReduce() -> Reducer.PaymentReduce {
         
         let paymentReducer = AnywayPaymentReducer()
-        let (payment, effect): (AnywayPayment, AnywayPaymentReducer.Effect?) = paymentReducer.reduce(state.payment, event)
-        let state = AnywayPaymentContext(
-            payment: payment,
-            staged: state.staged,
-            outline: state.outline,
-            shouldRestart: state.shouldRestart
+        let reducer = AnywayPaymentContextReducer(
+            anywayPaymentReduce: paymentReducer.reduce(_:_:)
         )
         
-        return (state, effect.map(Effect.payment))
+        return reducer.reduce(_:_:)
     }
     
     func stagePayment(
@@ -69,9 +62,10 @@ private extension AnywayPaymentTransactionReducerComposer {
     func composeInspector() -> Inspector {
         
         return .init(
-            checkFraud: { $0.payment.isFraudSuspected },
+            checkFraud: { $0.details.control.isFraudSuspected },
             getVerificationCode: { $0.payment.otp },
-            makeDigest: { $0.payment.makeDigest() },
+            makeDigest: { $0.makeDigest() },
+            resetPayment: { $0.resetPayment() },
             restorePayment: { $0.restorePayment() },
             validatePayment: validatePayment,
             wouldNeedRestart: { $0.wouldNeedRestart }
@@ -91,7 +85,7 @@ private extension AnywayPaymentTransactionReducerComposer {
     }
     
     typealias Effect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>
-    typealias Inspector = PaymentInspector<AnywayPaymentContext, AnywayPaymentDigest>
+    typealias Inspector = PaymentInspector<AnywayPaymentContext, AnywayPaymentDigest, AnywayPaymentUpdate>
 }
 
 private extension AnywayPaymentContext {
@@ -103,7 +97,13 @@ private extension AnywayPaymentContext {
         
         let payment = payment.update(with: update, and: outline)
         
-        return .init(payment: payment, staged: staged, outline: outline, shouldRestart: shouldRestart)
+        return .init(
+            initial: initial,
+            payment: payment,
+            staged: staged,
+            outline: outline,
+            shouldRestart: shouldRestart
+        )
     }
 }
 
@@ -111,8 +111,8 @@ private extension AnywayPayment {
     
     var otp: VerificationCode? {
         
-        guard case let .widget(otp) = elements[id: .widgetID(.otp)],
-              case let .otp(otp) = otp
+        guard case let .widget(widget) = elements[id: .widgetID(.otp)],
+              case let .otp(otp) = widget
         else { return nil }
         
         return otp.map { "\($0)" }

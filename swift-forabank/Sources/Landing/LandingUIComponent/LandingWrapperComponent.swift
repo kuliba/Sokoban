@@ -25,6 +25,8 @@ public final class LandingWrapperViewModel: ObservableObject {
     
     private var bindings = Set<AnyCancellable>()
     private var landingActions: (LandingEvent) -> Void
+    let makeIconView: LandingView.MakeIconView
+
     let config: UILanding.Component.Config
     
     public init(
@@ -32,6 +34,7 @@ public final class LandingWrapperViewModel: ObservableObject {
         statePublisher: StatePublisher,
         imagePublisher: ImagePublisher,
         imageLoader: @escaping ImageLoader,
+        makeIconView: @escaping LandingView.MakeIconView,
         scheduler: AnySchedulerOf<DispatchQueue> = .main,
         config: UILanding.Component.Config,
         landingActions: @escaping (LandingEvent) -> Void
@@ -39,6 +42,7 @@ public final class LandingWrapperViewModel: ObservableObject {
         self.state = initialState
         self.landingActions = landingActions
         self.config = config
+        self.makeIconView = makeIconView
         
         let landing = try? initialState.get()
         
@@ -72,9 +76,12 @@ public final class LandingWrapperViewModel: ObservableObject {
             
         case .card(let card):
             switch card {
-                
             case .goToMain:
                 self.landingActions(.card(.goToMain))
+                
+            case let .openUrl(link):
+                self.landingActions(.card(.openUrl(link)))
+                
             case .order(cardTarif: let cardTarif, cardType: let cardType):
                 self.landingActions(.card(.order(cardTarif: cardTarif, cardType: cardType)))
             }
@@ -101,9 +108,7 @@ public final class LandingWrapperViewModel: ObservableObject {
 }
 
 public struct LandingWrapperView: View {
-    
-    @Environment(\.openURL) private var openURL
-    
+        
     @ObservedObject private var viewModel: LandingWrapperViewModel
     
     public init(viewModel: LandingWrapperViewModel) {
@@ -140,7 +145,7 @@ public struct LandingWrapperView: View {
             viewModel: .init(landing: landing, config: config),
             images: images,
             action: viewModel.action,
-            openURL: { openURL($0) }
+            makeIconView: viewModel.makeIconView
         )
     }
 }
@@ -158,6 +163,10 @@ struct LandingWrapperView_Previews: PreviewProvider {
                     statePublisher: Just(.failure(.preview)).eraseToAnyPublisher(),
                     imagePublisher: imagePublisher,
                     imageLoader: { _ in },
+                    makeIconView: { _ in .init(
+                        image: .flag,
+                        publisher: Just(.percent).eraseToAnyPublisher()
+                    )}, 
                     scheduler: .immediate,
                     config: .defaultValue,
                     landingActions: { _ in }
@@ -169,6 +178,10 @@ struct LandingWrapperView_Previews: PreviewProvider {
                     statePublisher: Just(.success(.preview)).eraseToAnyPublisher(),
                     imagePublisher: imagePublisher,
                     imageLoader: { _ in },
+                    makeIconView: { _ in .init(
+                        image: .flag,
+                        publisher: Just(.percent).eraseToAnyPublisher()
+                    )},
                     scheduler: .immediate,
                     config: .defaultValue,
                     landingActions: { _ in }

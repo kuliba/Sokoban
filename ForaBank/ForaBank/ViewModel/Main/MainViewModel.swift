@@ -103,25 +103,32 @@ class MainViewModel: ObservableObject, Resetable {
     }
     
     private func makeStickerViewModel(
-        _ model: Model,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
+        _ model: Model
     ) -> ProductCarouselView.StickerViewModel? {
         
-        return ProductCarouselView.ViewModel.makeStickerViewModel(model) {
-            self.handleLandingAction(.sticker)
-        } hide: { [self] in
+        return ProductCarouselView.ViewModel.makeStickerViewModel(model) { [weak self] in
+            self?.handleLandingAction(.sticker)
+        } hide: { [weak self] in
             model.settingsAgent.saveShowStickerSetting(shouldShow: false)
-            self.removeSticker(model)
+            self?.removeSticker(model)
+        }
+    }
+    
+    func createSticker(
+        _ model: Model
+    ) {
+        if sections.stickerViewModel == nil,
+           let stickerViewModel = makeStickerViewModel(model) {
+            updateSticker(model, stickerViewModel: stickerViewModel)
         }
     }
     
     private func updateSticker(
         _ model: Model,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         stickerViewModel: ProductCarouselView.StickerViewModel
     ) {
         
-        if let index = sections.firstIndex(where: { $0.type == .products }),
+        if let index = sections.indexProductsSection,
             let section = sections[index] as? MainSectionProductsView.ViewModel,
            section.productCarouselViewModel.stickerViewModel?.backgroundImage != stickerViewModel.backgroundImage {
             sections[index] = MainSectionProductsView.ViewModel(
@@ -134,12 +141,28 @@ class MainViewModel: ObservableObject, Resetable {
     
     private func removeSticker(_ model: Model) {
         
-        if let index = sections.firstIndex(where: { $0.type == .products }) {
+        if let index = sections.indexProductsSection {
             
             sections[index] = MainSectionProductsView.ViewModel(
                 model,
                 stickerViewModel: nil
             )
+            bind(sections)
+        }
+    }
+    
+    private func updateProducts(
+        _ model: Model
+    ) {
+        if let index = sections.indexProductsSection,
+            let section = sections[index] as? MainSectionProductsView.ViewModel {
+            
+            withAnimation {
+                sections[index] = MainSectionProductsView.ViewModel(
+                    model,
+                    stickerViewModel: section.productCarouselViewModel.stickerViewModel
+                )
+            }
             bind(sections)
         }
     }
@@ -193,12 +216,9 @@ private extension MainViewModel {
         
         model.images
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] images in
-                if let products = self.sections.first(where: { $0.type == .products }) as? MainSectionProductsView.ViewModel,
-                   products.productCarouselViewModel.stickerViewModel == nil, 
-                    let stickerViewModel = makeStickerViewModel(model, updateInfoStatusFlag: updateInfoStatusFlag) {
-                    self.updateSticker(model, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: stickerViewModel)
-                }
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.createSticker(self.model)
             }
             .store(in: &bindings)
         
@@ -334,6 +354,14 @@ private extension MainViewModel {
                 self?.action.send($0)
                 
             }).store(in: &bindings)
+        
+        model.productsOrdersUpdating
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                guard let self else { return }
+
+                if !$0 { self.updateProducts(model) }
+            }.store(in: &bindings)
         
         model.products
             .receive(on: DispatchQueue.main)
@@ -1519,3 +1547,17 @@ enum MainViewModelAction {
     }
 }
 
+extension Array where Element == MainSectionViewModel {
+    
+    var productsSection: MainSectionProductsView.ViewModel? {
+        first(where: { $0.type == .products }) as? MainSectionProductsView.ViewModel
+    }
+    
+    var indexProductsSection: Int? {
+        firstIndex(where: { $0.type == .products })
+    }
+    
+    var stickerViewModel: ProductCarouselView.StickerViewModel? {
+        productsSection?.productCarouselViewModel.stickerViewModel
+    }
+}

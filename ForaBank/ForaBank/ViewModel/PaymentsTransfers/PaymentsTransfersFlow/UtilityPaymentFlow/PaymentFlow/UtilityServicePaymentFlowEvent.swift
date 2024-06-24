@@ -5,11 +5,13 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
+import AnywayPaymentDomain
+
 enum UtilityServicePaymentFlowEvent: Equatable {
     
     case dismiss(Dismiss)
-    case fraud(FraudEvent)
-    case notified(PaymentStateProjection)
+    case notified(AnywayTransactionStatus?)
+    case showResult(TransactionResult)
 }
 
 extension UtilityServicePaymentFlowEvent {
@@ -19,5 +21,13 @@ extension UtilityServicePaymentFlowEvent {
         case fullScreenCover
         case fraud
         case paymentError
+    }
+    
+    typealias TransactionResult = Result<AnywayTransactionReport, Fraud>
+
+    struct Fraud: Equatable, Error {
+        
+        let formattedAmount: String
+        let hasExpired: Bool
     }
 }

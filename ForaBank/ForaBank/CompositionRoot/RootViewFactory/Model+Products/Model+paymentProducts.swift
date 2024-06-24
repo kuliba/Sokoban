@@ -17,6 +17,17 @@ extension Model {
     }
 }
 
+extension Model {
+    
+    func paymentProductsForSberQR() -> [ProductData] {
+     
+        allProducts
+            .filter(\.allowDebit)
+            .filter(\.isActive)
+            .filter(\.isMainOrAdditionalSelfAccOwnProduct)
+    }
+}
+
 private extension ProductData {
     
     var isActive: Bool {
@@ -40,6 +51,21 @@ private extension ProductData {
            let isMain = card.isMain {
             
             return isMain
+        }
+        
+        if self is ProductAccountData {
+            
+            return true
+        }
+        
+        return false
+    }
+    
+    var isMainOrAdditionalSelfAccOwnProduct: Bool {
+        
+        if let card = self as? ProductCardData, let cardType = card.cardType {
+            
+            return cardType.isMainOrRegularOrAdditionalSelfAccOwn
         }
         
         if self is ProductAccountData {

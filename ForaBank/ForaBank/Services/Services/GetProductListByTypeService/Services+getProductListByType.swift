@@ -38,6 +38,7 @@ extension Services {
             loggingRemoteService.process((productType, timeout)) { result in
                 
                 completion(try? result.get())
+                _ = loggingRemoteService
             }
         }
     }

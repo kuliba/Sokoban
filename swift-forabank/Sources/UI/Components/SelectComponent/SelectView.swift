@@ -11,21 +11,21 @@ import SharedConfigs
 
 public struct SelectView: View {
     
-    var state: SelectUIState
-    let event: (SelectEvent) -> Void
-    let config: SelectConfig
+    public typealias State = SelectUIState
+    public typealias Event = SelectEvent
+    public typealias Config = SelectConfig
     
-    var searchText: String
+    let state: State
+    let event: (Event) -> Void
+    let config: Config
     
     public init(
-        state: SelectUIState,
-        event: @escaping (SelectEvent) -> Void,
-        searchText: String,
-        config: SelectConfig
+        state: State,
+        event: @escaping (Event) -> Void,
+        config: Config
     ) {
         self.state = state
         self.event = event
-        self.searchText = searchText
         self.config = config
     }
     
@@ -140,15 +140,22 @@ public struct SelectView: View {
         }
     }
     
+    @ViewBuilder
     private func textField() -> some View {
         
-        TextField(
-            "Начните ввод для поиска",
-            text: .init(
-                get: { searchText },
-                set: { _ in event(.search("")) }
+        switch state.state {
+        case .collapsed:
+            EmptyView()
+            
+        case let .expanded(_,_, searchText: searchText):
+            TextField(
+                "Начните ввод для поиска",
+                text: .init(
+                    get: { searchText ?? "" },
+                    set: { event(.search($0)) }
+                )
             )
-        )
+        }
     }
     
     private func optionView(
@@ -257,8 +264,7 @@ struct SelectView_Previews: PreviewProvider {
         
         SelectView(
             state: .init(image: config.icon, state: state),
-            event: { _ in },
-            searchText: "",
+            event: { print($0) },
             config: config
             
         )

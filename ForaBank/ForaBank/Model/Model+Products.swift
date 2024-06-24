@@ -5,11 +5,12 @@
 //  Created by Max Gribov on 09.03.2022.
 //
 
+import AccountInfoPanel
+import CardStatementAPI
 import CloudKit
+import ForaTools
 import Foundation
 import ServerAgent
-import CardStatementAPI
-import AccountInfoPanel
 
 //MARK: - Actions
 
@@ -454,14 +455,17 @@ extension Model {
             
             self.productsUpdating.value = Array(productsAllowed)
             
-            for productType in ProductType.allCases {
+            let queue = DispatchQueue.global()
+            let interval: Int = 1 // seconds
+            
+            ProductType.allCases.enumerated().forEach { index, productType in
                 
-                guard productsAllowed.contains(productType) else {
-                    continue
+                if productsAllowed.contains(productType) {
+                    let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: productType)
+                    queue.delay(
+                        for: .seconds((1 + index) * interval),
+                        execute: { self.updateProduct(command, productType: productType) })
                 }
-                
-                let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: productType)
-                updateProduct(command, productType: productType)
             }
         }
     }
@@ -489,23 +493,21 @@ extension Model {
     }
     
     func updateProduct(_ command: ServerCommands.ProductController.GetProductListByType, productType: ProductType) {
-        
-        getProducts(productType) { response in
             
-            if let index = self.productsUpdating.value.firstIndex(of: productType) {
-                
-                self.productsUpdating.value.remove(at: index)
-            }
+        getProducts(productType) { response in
             
             if let response {
                 
-                self.updateInfo.value.setValue(true, for: productType)
-
                 let result = Services.mapProductResponse(response)
-                                
+                
+                // updating status
+                self.productsUpdating.value.removeAll(where: { $0 == productType })
+                
                 // update products
                 let updatedProducts = Self.reduce(products: self.products.value, with: result.productList, for: productType)
                 self.products.value = updatedProducts
+                
+                self.updateInfo.value.setValue(true, for: productType)
                 
                 //md5hash -> image
                 let md5Products = result.productList.reduce(Set<String>(), {
@@ -545,6 +547,9 @@ extension Model {
                 }
             }
             else {
+                // updating status
+                self.productsUpdating.value.removeAll(where: { $0 == productType })
+                
                 self.updateInfo.value.setValue(false, for: productType)
             }
         }
@@ -623,13 +628,13 @@ extension Model {
                 
                 let _ = try await productsSetSettingsWithCommand(command: command)
                     
-                self.productsOrdersUpdating.value = false
-                
                 // update products
                 let updatedProducts = Self.reduce(productsData: self.products.value, newOrders: payload.orders)
                                                       
                 self.products.value = updatedProducts
-                    
+                 
+                self.productsOrdersUpdating.value = false
+
                 do { // update cache
                         
                     try self.productsCacheStore(productsData: updatedProducts)
@@ -699,34 +704,7 @@ extension Model {
             }
         }
     }
-    
-    func productsFetchWithCommand(command: ServerCommands.ProductController.GetProductListByType) async throws -> (products: [ProductData], serial: String) {
         
-        try await withCheckedThrowingContinuation { continuation in
-            
-            serverAgent.executeCommand(command: command) { result in
-                switch result{
-                case .success(let response):
-                    switch response.statusCode {
-                    case .ok:
-                        
-                        guard let data = response.data else {
-                            continuation.resume(with: .failure(ModelProductsError.emptyData(message: response.errorMessage)))
-                            return
-                        }
-                        
-                        continuation.resume(returning: (data.productList, data.serial))
-
-                    default:
-                        continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
-                    }
-                case .failure(let error):
-                    continuation.resume(with: .failure(ModelProductsError.serverCommandError(error: error.localizedDescription)))
-                }
-            }
-        }
-    }
-    
     func productsSetSettingsWithCommand<Command: ServerCommand>(command: Command) async throws -> Bool {
         
         try await withCheckedThrowingContinuation { continuation in

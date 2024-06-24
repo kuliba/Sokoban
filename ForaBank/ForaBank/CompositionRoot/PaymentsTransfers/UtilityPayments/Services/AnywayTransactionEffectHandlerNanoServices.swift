@@ -6,9 +6,11 @@
 //
 
 import AnywayPaymentDomain
+import RemoteServices
 
 struct AnywayTransactionEffectHandlerNanoServices {
     
+    let getVerificationCode: GetVerificationCode
     let initiatePayment: InitiatePayment
     let getDetails: GetDetails
     let makeTransfer: MakeTransfer
@@ -17,13 +19,18 @@ struct AnywayTransactionEffectHandlerNanoServices {
 
 extension AnywayTransactionEffectHandlerNanoServices {
     
+    typealias GetVerificationCodeResult = Result<Int, ServiceFailure>
+    typealias GetVerificationCodeCompletion = (GetVerificationCodeResult) -> Void
+    typealias GetVerificationCode = (@escaping GetVerificationCodeCompletion) -> Void
+    
     typealias InitiatePayment = ProcessPayment
     
     typealias ProcessResult = Result<AnywayPaymentUpdate, ServiceFailure>
     typealias ProcessCompletion = (ProcessResult) -> Void
     typealias ProcessPayment = (AnywayPaymentDigest, @escaping ProcessCompletion) -> Void
     
-    typealias GetDetailsResult = OperationDetails?
+    typealias GetDetailsResponse = RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
+    typealias GetDetailsResult = GetDetailsResponse?
     typealias GetDetailsCompletion = (GetDetailsResult) -> Void
     typealias GetDetails = (OperationDetailID, @escaping GetDetailsCompletion) -> Void
     
@@ -35,17 +42,9 @@ extension AnywayTransactionEffectHandlerNanoServices {
 extension AnywayTransactionEffectHandlerNanoServices {
     
 #warning("reuse generic TransactionReport")
-    public struct MakeTransferResponse {
+    struct MakeTransferResponse {
         
-        public let status: DocumentStatus
-        public let detailID: OperationDetailID
-        
-        public init(
-            status: DocumentStatus,
-            detailID: OperationDetailID
-        ) {
-            self.status = status
-            self.detailID = detailID
-        }
+        let status: DocumentStatus
+        let detailID: OperationDetailID
     }
 }

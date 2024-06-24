@@ -11,27 +11,28 @@ import SwiftUI
 
 extension UILanding.List {
     
-    public struct VerticalRoundImage: Hashable {
+    public struct VerticalRoundImage: Equatable {
         
-        public let title: String?
-        public let displayedCount: Double?
-        public let dropButtonOpenTitle, dropButtonCloseTitle: String?
-        public let list: [ListItem]
+        let id: UUID
+        let title: String?
+        let displayedCount: Double?
+        let dropButtonOpenTitle, dropButtonCloseTitle: String?
+        let list: [ListItem]
         
-        public struct ListItem: Hashable, Identifiable {
+        public struct ListItem: Identifiable, Equatable {
             
-            public var id: Self { self }
-            public let md5hash: String
-            public let title, subInfo: String?
-            public let link, appStore, googlePlay: String?
+            public let id: UUID
+            let md5hash: String
+            let title, subInfo: String?
+            let link, appStore, googlePlay: String?
             
-            public let detail: Detail?
-            
-            public struct Detail: Hashable, Identifiable {
+            let detail: Detail?
+            let action: Action?
+
+            public struct Detail: Equatable {
                 
-                public var id: Self { self }
-                public let groupId: GroupId
-                public let viewId: ViewId
+                let groupId: GroupId
+                let viewId: ViewId
                 
                 public init(groupId: GroupId, viewId: ViewId) {
                     self.groupId = groupId
@@ -39,15 +40,26 @@ extension UILanding.List {
                 }
             }
             
+            public struct Action: Equatable {
+                let type: String
+                
+                public init(type: String) {
+                    self.type = type
+                }
+            }
+            
             public init(
+                id: UUID = UUID(),
                 md5hash: String,
                 title: String?,
                 subInfo: String?,
                 link: String?,
                 appStore: String?,
                 googlePlay: String?,
-                detail: Detail?
+                detail: Detail?,
+                action: Action?
             ) {
+                self.id = id
                 self.md5hash = md5hash
                 self.title = title
                 self.subInfo = subInfo
@@ -55,16 +67,19 @@ extension UILanding.List {
                 self.appStore = appStore
                 self.googlePlay = googlePlay
                 self.detail = detail
+                self.action = action
             }
         }
         
         public init(
+            id: UUID = UUID(),
             title: String?,
             displayedCount: Double?,
             dropButtonOpenTitle: String?,
             dropButtonCloseTitle: String?,
             list: [ListItem]
         ) {
+            self.id = id
             self.title = title
             self.displayedCount = displayedCount
             self.dropButtonOpenTitle = dropButtonOpenTitle

@@ -14,10 +14,16 @@ struct UpdateInfo: Equatable {
     var areDepositsUpdated: Bool
     var areAccountsUpdated: Bool
     
+    // TODO: вернуть после оптимизации запросов
+    
     var areProductsUpdated: Bool {
-        return areCardsUpdated && areLoansUpdated && areDepositsUpdated && areAccountsUpdated
+        return true /*areCardsUpdated && areLoansUpdated && areDepositsUpdated && areAccountsUpdated*/
     }
     
+    var areCardsOrAccountsUpdated: Bool {
+        return true /*areCardsUpdated || areAccountsUpdated*/
+    }
+
     init(
         areCardsUpdated: Bool = true,
         areLoansUpdated: Bool = true,

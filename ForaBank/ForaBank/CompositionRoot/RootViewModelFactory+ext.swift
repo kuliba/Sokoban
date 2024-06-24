@@ -18,8 +18,8 @@ extension RootViewModelFactory {
     typealias MakeOperationStateViewModel = (@escaping PaymentSticker.BusinessLogic.SelectOffice) -> OperationStateViewModel
     
     static func make(
-        httpClient: HTTPClient,
         model: Model,
+        httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
@@ -28,7 +28,11 @@ extension RootViewModelFactory {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
         
-        model.getProducts = Services.getProductListByType(httpClient, logger: logger)
+        let httpClient: HTTPClient = model.authenticatedHTTPClient()
+        
+        let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
+        
+        model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
         
         let rsaKeyPairStore = makeLoggingStore(
             store: KeyTagKeyChainStore<RSADomain.KeyPair>(
@@ -134,15 +138,11 @@ extension RootViewModelFactory {
                 })
         }
         
-        let (pageSize, observeLast) = (50, 10) // TODO: extract to some settings
-        
         let ptfmComposer = PaymentsTransfersFlowManagerComposer(
             flag: utilitiesPaymentsFlag,
             model: model,
             httpClient: httpClient,
-            log: logger.log,
-            pageSize: pageSize,
-            observeLast: observeLast
+            log: logger.log
         )
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
@@ -152,7 +152,7 @@ extension RootViewModelFactory {
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
             makeTemplatesListViewModel: makeTemplatesListViewModel,
-            paymentsTransfersFlowManager: makePaymentsTransfersFlowManager(),
+            makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             unblockCardServices: unblockCardServices,
@@ -168,7 +168,7 @@ extension RootViewModelFactory {
             makeTemplatesListViewModel: makeTemplatesListViewModel,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            paymentsTransfersFlowManager: makePaymentsTransfersFlowManager(),
+            makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             productNavigationStateManager: productNavigationStateManager,
             sberQRServices: sberQRServices,
@@ -181,7 +181,7 @@ extension RootViewModelFactory {
     typealias LatestPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     
-    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
     static func makeNavigationOperationView(
@@ -287,8 +287,7 @@ extension RootViewModelFactory {
         )
         
         let makeDocumentButton = makeDocumentButton(
-            httpClient: httpClient,
-            model: model
+            httpClient: httpClient
         )
         
         return make
@@ -313,7 +312,8 @@ extension ProductProfileViewModel {
     typealias LatestPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     
-    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
+    typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PTFlowManger
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
@@ -323,7 +323,7 @@ extension ProductProfileViewModel {
         fastPaymentsFactory: FastPaymentsFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
         makeTemplatesListViewModel: @escaping PaymentsTransfersFactory.MakeTemplatesListViewModel,
-        paymentsTransfersFlowManager: PTFlowManger,
+        makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         unblockCardServices: UnblockCardServices,
@@ -340,7 +340,7 @@ extension ProductProfileViewModel {
                 fastPaymentsFactory: fastPaymentsFactory,
                 makeUtilitiesViewModel: makeUtilitiesViewModel,
                 makeTemplatesListViewModel: makeTemplatesListViewModel,
-                paymentsTransfersFlowManager: paymentsTransfersFlowManager,
+                makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
                 unblockCardServices: unblockCardServices,
@@ -403,7 +403,7 @@ extension ProductProfileViewModel {
             return .init(
                 model,
                 fastPaymentsFactory: fastPaymentsFactory,
-                paymentsTransfersFlowManager: paymentsTransfersFlowManager,
+                makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
                 unblockCardServices: unblockCardServices,
@@ -449,6 +449,7 @@ private extension RootViewModelFactory {
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     typealias OnRegister = () -> Void
+    typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PTFlowManger
     
     static func make(
         model: Model,
@@ -456,7 +457,7 @@ private extension RootViewModelFactory {
         makeTemplatesListViewModel: @escaping PaymentsTransfersFactory.MakeTemplatesListViewModel,
         fastPaymentsFactory: FastPaymentsFactory,
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
-        paymentsTransfersFlowManager: PTFlowManger,
+        makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         productNavigationStateManager: ProductNavigationStateManager,
         sberQRServices: SberQRServices,
@@ -488,7 +489,7 @@ private extension RootViewModelFactory {
         
         let paymentsViewModel = PaymentsTransfersViewModel(
             model: model,
-            flowManager: paymentsTransfersFlowManager,
+            makeFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,

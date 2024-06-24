@@ -34,6 +34,7 @@ class MyProductsViewModel: ObservableObject {
     let openProductTitle = "Открыть продукт"
     var rootActions: RootViewModel.RootActions?
     var contactsAction: () -> Void = { }
+    var informerWasShown: Bool = false
 
     let openOrderSticker: () -> Void
     
@@ -97,6 +98,7 @@ class MyProductsViewModel: ObservableObject {
         updateNavBar(state: .normal)
         bind()
         bind(openProductVM)
+        createInformer(model.updateInfo.value)
     }
     
     private func bind() {
@@ -174,14 +176,7 @@ class MyProductsViewModel: ObservableObject {
         
         model.updateInfo
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] updateInfo in
-                
-                guard let self else { return }
-                
-                if updateInfo.areProductsUpdated, let informerData = makeMyProductsViewFactory.makeInformerDataUpdateFailure() {
-                    self.model.action.send(ModelAction.Informer.Show(informer: informerData))
-                }
-            }
+            .sink { [weak self] in self?.createInformer($0) }
             .store(in: &bindings)
   
         model.productsOrdersUpdating
@@ -317,7 +312,8 @@ class MyProductsViewModel: ObservableObject {
             if let section = sections.first(where: { $0.id == productType.rawValue }) {
                 
                 section.update(with: productsForType, productsOpening: productsOpening)
-                
+                section.itemsId = productsForType?.uniqueProductIDs() ?? []
+                section.groupingCards = productsForType?.groupingCards() ?? [:]
                 guard !section.items.isEmpty else { continue }
                 
                 updatedSections.append(section)
@@ -569,6 +565,22 @@ class MyProductsViewModel: ObservableObject {
             }
             
             updateNavBar(state: .orderedNotMove)
+        }
+    }
+    
+    func createInformer(_ updateInfo: UpdateInfo) {
+        
+        switch (informerWasShown, updateInfo.areProductsUpdated) {
+            
+        case (true, true):
+            informerWasShown = false
+        case (false, false):
+            if let informerData = makeMyProductsViewFactory.makeInformerDataUpdateFailure() {
+                informerWasShown = true
+                model.action.send(ModelAction.Informer.Show(informer: informerData))
+            }
+        default:
+            break
         }
     }
 }

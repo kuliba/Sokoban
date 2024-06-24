@@ -10,20 +10,20 @@ import Combine
 
 extension UILanding.List {
     
-    public struct HorizontalRectangleImage: Hashable {
+    public struct HorizontalRectangleImage: Equatable {
         
-        public let list: [Item]
+        let id: UUID
+        let list: [Item]
         
-        public struct Item: Hashable, Identifiable {
+        public struct Item: Equatable {
             
-            public var id: Self { self }
-            public let imageLink: String
-            public let link: String
-            public let detail: Detail?
+            let imageLink: String
+            let link: String
+            let detail: Detail?
             
             public struct Detail: Hashable {
-                public let groupId: String
-                public let viewId: String
+                let groupId: String
+                let viewId: String
                 
                 public init(groupId: String, viewId: String) {
                     self.groupId = groupId
@@ -38,7 +38,8 @@ extension UILanding.List {
             }
         }
         
-        public init(list: [Item]) {
+        public init(id: UUID = UUID(), list: [Item]) {
+            self.id = id
             self.list = list
         }
     }
@@ -54,17 +55,47 @@ extension ListHorizontalRectangleImageView {
         
         @Published private(set) var images: [String: Image] = [:]
         
+        private let action: (LandingEvent) -> Void
+        private let selectDetail: SelectDetail
+
         init(
             data: HorizontalList,
-            images: [String: Image]
+            images: [String: Image],
+            action: @escaping (LandingEvent) -> Void,
+            selectDetail: @escaping SelectDetail
         ) {
             self.data = data
             self.images = images
+            self.action = action
+            self.selectDetail = selectDetail
         }
         
         func image(byImageLink: String) -> Image? {
             
             return images[byImageLink]
+        }
+        
+        static func itemAction(
+            item: HorizontalList.Item,
+            selectDetail: SelectDetail,
+            action: (LandingEvent) -> Void
+        ) {
+            if let detailDestination = item.detailDestination {
+                selectDetail(detailDestination)
+            } else if !item.link.isEmpty {
+                action(.card(.openUrl(item.link)))
+            }
+        }
+        
+        func itemAction(
+            item: HorizontalList.Item
+        ) {
+            
+           Self.itemAction(
+                item: item,
+                selectDetail: selectDetail,
+                action: action
+            )
         }
     }
 }

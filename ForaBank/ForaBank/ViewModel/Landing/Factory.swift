@@ -33,6 +33,7 @@ extension Model {
             statePublisher: statePublisher(abroadType)(),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
+            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
             scheduler: .main,
             config: config,
             landingActions: { event in
@@ -62,6 +63,7 @@ extension Model {
             statePublisher: statePublisher(abroadType)(),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
+            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
             scheduler: .main,
             config: config,
             landingActions: { event in

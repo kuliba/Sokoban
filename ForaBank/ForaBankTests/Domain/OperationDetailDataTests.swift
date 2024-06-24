@@ -382,7 +382,7 @@ final class OperationDetailDataTests: XCTestCase {
     
     func test_payerTransferData_withOperationDetailStub_shouldReturnPayerTransferData() {
         
-        let sut = Detail.stub()
+        let sut = Detail.stub(payerCardId: 1)
         
         XCTAssertNoDiff(sut.payerTransferData, .init(
             inn: nil,
@@ -448,9 +448,29 @@ final class OperationDetailDataTests: XCTestCase {
     }
     
     func test_shouldHaveTemplateButton_withOperationDetailStub_forCardToCard_shouldReturnTrue() {
-        
+                
         let sut = Detail.stub(transferEnum: .cardToCard)
         
         XCTAssertTrue(sut.shouldHaveTemplateButton)
+    }
+    
+    //MARK: Computed Property
+    
+    func test_payerGeneralTransferData_shouldReturnCardId() {
+        
+        XCTAssertEqual(Detail.stub(payerCardId: 1).payerGeneralTransferData.cardId, 1)
+    }
+    
+    func test_payerGeneralTransferData_shouldReturnAccountId() {
+        
+        XCTAssertEqual(Detail.stub(payerAccountId: 1).payerGeneralTransferData.accountId, 1)
+    }
+    
+    func test_payerGeneralTransferData_shouldReturnCardIdWithAccountId() {
+        
+        let sut = Detail.stub(payerCardId: 1, payerAccountId: 1)
+        
+        XCTAssertEqual(sut.payerGeneralTransferData.cardId, 1)
+        XCTAssertEqual(sut.payerGeneralTransferData.accountId, nil)
     }
 }

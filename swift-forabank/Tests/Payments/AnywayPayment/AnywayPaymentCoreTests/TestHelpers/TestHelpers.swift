@@ -31,7 +31,7 @@ enum PaymentEvent {
     case select
 }
 
-struct Payment: Equatable & RestartablePayment {
+struct Context: Equatable & RestartablePayment {
     
     let value: String
     var shouldRestart: Bool
@@ -51,13 +51,13 @@ typealias OperationDetailID = Int
 
 typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails>
 typealias Report = TransactionReport<DocumentStatus, _OperationInfo>
-typealias _TransactionStatus = TransactionStatus<Report>
+typealias _TransactionStatus = TransactionStatus<Context, PaymentUpdate, Report>
 
-typealias _Transaction = Transaction<Payment, _TransactionStatus>
+typealias _Transaction = Transaction<Context, _TransactionStatus>
 typealias _TransactionEvent = TransactionEvent<Report, PaymentEvent, PaymentUpdate>
 typealias _TransactionEffect = TransactionEffect<PaymentDigest, PaymentEffect>
 
-typealias _TransactionReducer = TransactionReducer<Report, Payment, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate>
+typealias _TransactionReducer = TransactionReducer<Report, Context, PaymentEvent, PaymentEffect, PaymentDigest, PaymentUpdate>
 typealias _TransactionEffectHandler = TransactionEffectHandler<Report, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate>
 
 typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
@@ -79,7 +79,17 @@ func isFraudSuspected(
     _ state: _Transaction
 ) -> Bool {
     
-    state.status == .fraudSuspected
+    switch state.status {
+    case .fraudSuspected: return true
+    default: return false
+    }
+}
+
+func makePaymentUpdate(
+    _ value: String = anyMessage()
+) -> PaymentUpdate {
+    
+    return .init(value: value)
 }
 
 func makeCompletePaymentFailureEvent(
@@ -129,7 +139,7 @@ func makeFraudCancelTransactionEvent(
 func makeFraudContinueTransactionEvent(
 ) -> _TransactionEvent {
     
-    .fraud(.continue)
+    .fraud(.consent)
 }
 
 func makeFraudExpiredTransactionEvent(
@@ -139,11 +149,12 @@ func makeFraudExpiredTransactionEvent(
 }
 
 func makeFraudSuspectedTransaction(
-    _ payment: Payment = makePayment()
+    _ context: Context = makeContext(),
+    _ update: PaymentUpdate = makePaymentUpdate()
 ) -> _Transaction {
     
-    let state = makeTransaction(payment, status: .fraudSuspected)
-    precondition(state.status == .fraudSuspected)
+    let state = makeTransaction(context, status: .fraudSuspected(update))
+    precondition(state.status == .fraudSuspected(update))
     return state
 }
 
@@ -155,30 +166,41 @@ func makeInitiateTransactionEffect(
 }
 
 func makeInvalidTransaction(
-    _ payment: Payment = makePayment()
+    _ context: Context = makeContext()
 ) -> _Transaction {
     
-    let state = makeTransaction(payment, isValid: false)
+    let state = makeTransaction(context, isValid: false)
     precondition(!isValid(state))
     return state
 }
 
 func makeNilStatusTransaction(
-    _ payment: Payment = makePayment()
+    _ context: Context = makeContext()
 ) -> _Transaction {
     
-    let state = makeTransaction(payment)
+    let state = makeTransaction(context)
     precondition(state.status == nil)
     return state
 }
 
 func makeNonFraudSuspectedTransaction(
-    _ payment: Payment = makePayment()
+    _ context: Context = makeContext()
 ) -> _Transaction {
     
-    let state = makeTransaction(payment)
-    precondition(state.status != .fraudSuspected)
+    let state = makeTransaction(context)
+    precondition(!state.isFraudSuspected)
     return state
+}
+
+extension _Transaction {
+    
+    var isFraudSuspected: Bool {
+        
+        switch status {
+        case .fraudSuspected: return true
+        default: return false
+        }
+    }
 }
 
 func makeOperationDetailsTransactionReport(
@@ -242,10 +264,10 @@ func makePaymentTransactionEvent(
     .payment(.select)
 }
 
-func makePayment(
+func makeContext(
     _ value: String = UUID().uuidString,
     shouldRestart: Bool = false
-) -> Payment {
+) -> Context {
     
     .init(value: value, shouldRestart: shouldRestart)
 }
@@ -258,12 +280,16 @@ func makeTransactionEffect(
 }
 
 func makeTransaction(
-    _ payment: Payment = makePayment(),
+    _ context: Context = makeContext(),
     isValid: Bool = false,
     status: _TransactionStatus? = nil
 ) -> _Transaction {
     
-    .init(payment: payment, isValid: isValid, status: status)
+    return .init(
+        context: context,
+        isValid: isValid,
+        status: status
+    )
 }
 
 func makeResponse(
@@ -278,41 +304,41 @@ func makeResponse(
 }
 
 func makeResultFailureTransaction(
-    _ payment: Payment = makePayment(),
+    _ context: Context = makeContext(),
     failure: _TransactionStatus.Terminated = .transactionFailure
 ) -> _Transaction {
     
-    let state = makeTransaction(payment, status: .result(.failure(failure)))
+    let state = makeTransaction(context, status: .result(.failure(failure)))
     precondition(state.status == .result(.failure(failure)))
     return state
 }
 
 func makeResultSuccessTransaction(
-    _ payment: Payment = makePayment(),
+    _ context: Context = makeContext(),
     report: TransactionReport<DocumentStatus, _OperationInfo> = makeDetailIDTransactionReport()
 ) -> _Transaction {
     
-    let state = makeTransaction(payment, status: .result(.success(report)))
+    let state = makeTransaction(context, status: .result(.success(report)))
     precondition(state.status == .result(.success(report)))
     return state
 }
 
 func makeServerErrorTransaction(
-    _ payment: Payment = makePayment(),
+    _ context: Context = makeContext(),
     _ message: String = anyMessage()
 ) -> _Transaction {
     
-    let state = makeTransaction(payment, status: .serverError(message))
+    let state = makeTransaction(context, status: .serverError(message))
     precondition(state.status == .serverError(message))
     return state
 }
 
 func makeValidTransaction(
-    _ payment: Payment = makePayment(),
+    _ context: Context = makeContext(),
     status: _TransactionStatus? = nil
 ) -> _Transaction {
     
-    let state = makeTransaction(payment, isValid: true, status: status)
+    let state = makeTransaction(context, isValid: true, status: status)
     precondition(isValid(state))
     return state
 }

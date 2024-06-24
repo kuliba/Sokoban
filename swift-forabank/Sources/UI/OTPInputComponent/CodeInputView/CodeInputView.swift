@@ -9,15 +9,19 @@ import SwiftUI
 import UIPrimitives
 
 public struct CodeInputView: View {
+
+    public typealias State = OTPInputState.Status.Input
+    public typealias Event = OTPInputEvent
+    public typealias Config = CodeInputConfig
     
-    private let state: OTPInputState.Status.Input
-    private let event: (OTPInputEvent) -> Void
-    private let config: CodeInputConfig
+    private let state: State
+    private let event: (Event) -> Void
+    private let config: Config
     
     public init(
-        state: OTPInputState.Status.Input,
-        event: @escaping (OTPInputEvent) -> Void,
-        config: CodeInputConfig
+        state: State,
+        event: @escaping (Event) -> Void,
+        config: Config
     ) {
         self.state = state
         self.event = event

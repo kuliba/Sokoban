@@ -20,7 +20,8 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
         
         let payment1 = try update(payment0, with: .step1Response)
         XCTAssertNoDiff(payment1.elementsView, [
-            .init("p: 1", "Лицевой счет")
+            .init("p: 1", "Лицевой счет"),
+            .init("footer", "continue")
         ])
         //        XCTAssertNoDiff(payment1.makeDigest(), .init(
         //            additional: [],
@@ -34,7 +35,8 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
         let payment2 = try update(payment1, with: .step2Response)
         XCTAssertNoDiff(payment2.elementsView, [
             .init("p: 1", "Лицевой счет"),
-            .init("p: 2", "Признак платежа")
+            .init("p: 2", "Признак платежа"),
+            .init("footer", "continue")
         ])
         
         let payment3 = try update(payment2, with: .step3Response)
@@ -59,7 +61,8 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 25", "ТЕК. ПОКАЗАНИЯ ХВ_ГВС №1012018015708"),
             .init("p: 29", "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213"),
             .init("p: 65", "УСЛУГИ_ЖКУ"),
-            .init("p: 143", "Сумма пени")
+            .init("p: 143", "Сумма пени"),
+            .init("footer", "continue")
         ])
         
         let payment4 = try update(payment3, with: .step4Response)
@@ -86,9 +89,10 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 65", "УСЛУГИ_ЖКУ"),
             .init("p: 143", "Сумма пени"),
             .init("f: SumSTrs", "Сумма"),
-            .init("w: core", "123.45, RUB, accountID(1234567890)")
+            .init("w: core", "RUB, 1234567890, account"),
+            .init("footer", "amount 123.45")
         ])
-                
+        
         let payment5 = try update(payment4, with: .step5Response)
         XCTAssertNoDiff(payment4.elementsView, [
             .init("p: 1", "Лицевой счет"),
@@ -113,7 +117,8 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 65", "УСЛУГИ_ЖКУ"),
             .init("p: 143", "Сумма пени"),
             .init("f: SumSTrs", "Сумма"),
-            .init("w: core", "123.45, RUB, accountID(1234567890)")
+            .init("w: core", "RUB, 1234567890, account"),
+            .init("footer", "amount 123.45")
         ])
     }
     
@@ -163,10 +168,30 @@ private struct TestView: Equatable {
 
 private extension AnywayPayment {
     
-    var elementsView: [TestView] { elements.map(\.testView) }
+    var elementsView: [TestView] {
+        
+        var elements = elements.map(\.testView)
+        elements.append(footer.testView)
+        
+        return elements
+    }
 }
 
-private extension AnywayPayment.Element {
+private extension AnywayPayment.Footer {
+    
+    var testView: TestView {
+        
+        switch self {
+        case let .amount(amount):
+            return .init("footer", "amount \(amount)")
+            
+        case .continue:
+            return .init("footer", "continue")
+        }
+    }
+}
+
+private extension AnywayElement {
     
     var testView: TestView {
         
@@ -183,29 +208,29 @@ private extension AnywayPayment.Element {
     }
 }
 
-private extension AnywayPayment.Element.Field {
+private extension AnywayElement.Field {
     
     var testView: TestView {
         
-        .init("f: \(id.rawValue)", title)
+        return .init("f: \(id)", title)
     }
 }
 
-private extension AnywayPayment.Element.Parameter {
+private extension AnywayElement.Parameter {
     
     var testView: TestView {
         
-        .init("p: \(field.id.rawValue)", uiAttributes.title)
+        return .init("p: \(field.id)", uiAttributes.title)
     }
 }
 
-private extension AnywayPayment.Element.Widget {
+private extension AnywayElement.Widget {
     
     var testView: TestView {
         
         switch self {
-        case let .core(core):
-            return .init("w: core", "\(core.amount), \(core.currency), \(core.productID)")
+        case let .product(product):
+            return .init("w: core", "\(product.currency), \(product.productID), \(product.productType)")
         case .otp:
             return .init("w: otp", "otp")
         }
@@ -214,10 +239,11 @@ private extension AnywayPayment.Element.Widget {
 
 private func makeEmptyOutline(
     core: AnywayPaymentOutline.PaymentCore = makePaymentCore(),
-    fields: [AnywayPaymentOutline.ID: AnywayPaymentOutline.Value] = [:]
+    fields: [AnywayPaymentOutline.ID: AnywayPaymentOutline.Value] = [:],
+    payload: AnywayPaymentOutline.Payload = makeAnywayPaymentPayload()
 ) -> AnywayPaymentOutline {
     
-    return .init(core: core, fields: fields)
+    return .init(core: core, fields: fields, payload: payload)
 }
 
 private func makePaymentCore(
@@ -235,15 +261,24 @@ private func makePaymentCore(
     )
 }
 
+private func makeAnywayPaymentPayload(
+    puref: AnywayPaymentOutline.Payload.Puref = anyMessage(),
+    title: String = anyMessage(),
+    subtitle: String = anyMessage(),
+    icon: String = anyMessage()
+) -> AnywayPaymentOutline.Payload {
+    
+    return .init(puref: puref, title: title, subtitle: subtitle, icon: icon)
+}
+
 private func makeEmptyPayment(
 ) -> AnywayPayment {
     
     return .init(
         elements: [],
+        footer: .continue,
         infoMessage: nil,
-        isFinalStep: false,
-        isFraudSuspected: false,
-        puref: "iFora||abc123"
+        isFinalStep: false
     )
 }
 

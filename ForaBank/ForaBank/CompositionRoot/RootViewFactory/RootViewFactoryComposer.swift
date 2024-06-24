@@ -8,8 +8,10 @@
 import ActivateSlider
 import AnywayPaymentDomain
 import Combine
+import GenericRemoteService
 import InfoComponent
 import PaymentComponents
+import PDFKit
 import SberQR
 import SwiftUI
 import UIPrimitives
@@ -17,10 +19,14 @@ import UIPrimitives
 final class RootViewFactoryComposer {
     
     private let model: Model
+    private let httpClient: HTTPClient
     
-    init(model: Model) {
-     
+    init(
+        model: Model,
+        httpClient: HTTPClient
+    ) {
         self.model = model
+        self.httpClient = httpClient
     }
 }
 
@@ -37,7 +43,8 @@ extension RootViewFactoryComposer {
             makeIconView: imageCache.makeIconView(for:), 
             makeActivateSliderView: ActivateSliderStateWrapperView.init, 
             makeUpdateInfoView: UpdateInfoView.init,
-            makeAnywayPaymentFactory: makeAnywayPaymentFactory
+            makeAnywayPaymentFactory: makeAnywayPaymentFactory,
+            makePaymentCompleteView: makePaymentCompleteView
         )
     }
 }
@@ -55,16 +62,17 @@ private extension RootViewFactoryComposer {
         
         let imageCache = model.imageCache()
         let getUImage = { self.model.images.value[$0]?.uiImage }
-
+        
         return .init(
             viewModel: viewModel,
             viewFactory: .init(
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeUserAccountView: makeUserAccountView,
-                makeIconView: imageCache.makeIconView(for:), 
+                makeIconView: imageCache.makeIconView(for:),
                 makeUpdateInfoView: UpdateInfoView.init(text:),
-                makeAnywayPaymentFactory: makeAnywayPaymentFactory
-            ), 
+                makeAnywayPaymentFactory: makeAnywayPaymentFactory,
+                makePaymentCompleteView: makePaymentCompleteView
+            ),
             productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init),
             getUImage: getUImage
         )
@@ -104,9 +112,7 @@ private extension RootViewFactoryComposer {
     ) -> AnywayPaymentFactory<IconView> {
         
         let composer = AnywayPaymentFactoryComposer(
-            config: .iFora,
             currencyOfProduct: currencyOfProduct,
-            getProducts: model.productSelectProducts,
             makeIconView: makeIconView
         )
         
@@ -123,20 +129,108 @@ private extension RootViewFactoryComposer {
     typealias IconView = UIPrimitives.AsyncImage
     
     private func makeIconView(
-        component: UIComponent
+        _ icon: String
     ) -> IconView {
         
-        return model.imageCache().makeIconView(for: component.md5Hash)
+        return model.imageCache().makeIconView(for: .md5Hash(.init(icon)))
     }
     
-    private typealias UIComponent = AnywayPaymentDomain.AnywayPayment.Element.UIComponent
+    func makePaymentCompleteView(
+        result: TransactionResult,
+        goToMain: @escaping () -> Void
+    ) -> PaymentCompleteView {
+        
+        return PaymentCompleteView(
+            state: map(result),
+            goToMain: goToMain,
+            factory: .init(
+                makeDetailButton: TransactionDetailButton.init,
+                makeDocumentButton: makeDocumentButton,
+                makeTemplateButton: makeTemplateButtonView(with: result)
+            )
+        )
+    }
+    
+    typealias TransactionResult = UtilityServicePaymentFlowState<AnywayTransactionViewModel>.FullScreenCover.TransactionResult
+    
+    private func map(
+        _ result: TransactionResult
+    ) -> PaymentCompleteView.State {
+        
+        return result
+            .map {
+                
+                return .init(
+                    status: $0.status,
+                    detailID: $0.detailID,
+                    details: model.makeTransactionDetailButtonDetail(with: $0.info)
+                )
+            }
+            .mapError {
+                
+                return .init(
+                    formattedAmount: $0.formattedAmount,
+                    hasExpired: $0.hasExpired
+                )
+            }
+    }
+    
+    private func makeDocumentButton(
+        documentID: DocumentID
+    ) -> TransactionDocumentButton {
+        
+        return .init(getDocument: getDocument(forID: documentID))
+    }
+    
+    private func getDocument(
+        forID documentID: DocumentID
+    ) -> TransactionDocumentButton.GetDocument {
+        
+        let getDetailService = RemoteService(
+            createRequest: RequestFactory.createGetPrintFormRequest,
+            performRequest: httpClient.performRequest(_:completion:),
+            mapResponse: ResponseMapper.mapGetPrintFormResponse
+        )
+        
+        return { completion in
+ 
+            getDetailService.fetch(documentID) { result in
+                
+                completion(try? result.map(PDFDocument.init(data:)).get())
+                _ = getDetailService
+            }
+        }
+    }
+    
+    private func makeTemplateButtonView(
+        with result: TransactionResult
+    ) -> () -> TemplateButtonStateWrapperView? {
+    
+        return {
+            
+            guard let report = try? result.get(),
+                  let operationDetail = report.info.operationDetail
+            else { return nil }
+            
+            let viewModel = TemplateButtonStateWrapperView.ViewModel(
+                model: self.model,
+                operation: nil,
+                operationDetail: operationDetail
+            )
+            
+            return .init(viewModel: viewModel)
+        }
+    }
 }
 
-private extension AnywayPaymentDomain.AnywayPayment.Element.UIComponent {
+private extension AnywayTransactionReport {
     
-    var md5Hash: MD5Hash {
-        #warning("FIXME")
-        return .init("")
+    var detailID: Int {
+        
+        switch self.info {
+        case let .detailID(detailID): return detailID
+        case let .details(details):   return details.id
+        }
     }
 }
 
@@ -168,20 +262,21 @@ extension ImageCache {
     }
     
     func makeIconView(
-        for icon: IconDomain.Icon
+        for icon: IconDomain.Icon?
     ) -> UIPrimitives.AsyncImage {
         
-        switch icon {
-        case let .md5Hash(md5Hash):
-            return makeIconView(for: md5Hash)
-        }
+        guard case let .md5Hash(md5Hash) = icon,
+              !md5Hash.rawValue.isEmpty
+        else { return makeIconView(for: "placeholder") }
+                    
+        return makeIconView(for: md5Hash.rawValue)
     }
     
     func makeIconView(
-        for md5Hash: MD5Hash
+        for rawValue: String
     ) -> UIPrimitives.AsyncImage {
         
-        let imageSubject = image(forKey: .init(md5Hash.rawValue))
+        let imageSubject = image(forKey: .init(rawValue))
         
         return .init(
             image: imageSubject.value,

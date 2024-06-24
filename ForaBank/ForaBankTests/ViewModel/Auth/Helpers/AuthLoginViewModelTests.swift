@@ -121,6 +121,8 @@ class AuthLoginViewModelTests: XCTestCase {
         private(set) var cardOrders = [CardOrder]()
         private(set) var stickerOrders = [Int]()
         private(set) var goToMainCount = 0
+        private(set) var openUrl = 0
+
         
         func makeCardLandingViewModel(
             _ type: ForaBank.AbroadType,
@@ -140,6 +142,10 @@ class AuthLoginViewModelTests: XCTestCase {
                 statePublisher: Just(.success(.preview)).eraseToAnyPublisher(),
                 imagePublisher: imagePublisher,
                 imageLoader: { _ in },
+                makeIconView: { _ in .init(
+                    image: .cardPlaceholder,
+                    publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
+                )},
                 config: .default) { [weak self] event in
                     switch event {
                         
@@ -152,6 +158,8 @@ class AuthLoginViewModelTests: XCTestCase {
                             self?.cardOrders.append(
                                 .init(cardTarif: cardTarif, cardType: cardType)
                             )
+                        case .openUrl:
+                            self?.openUrl += 1
                         }
                         
                     case let .sticker(sticker):

@@ -7,6 +7,7 @@
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import RemoteServices
 
 final class AnywayTransactionEffectHandlerMicroServicesComposer {
     
@@ -23,6 +24,7 @@ extension AnywayTransactionEffectHandlerMicroServicesComposer {
     func compose() -> MicroServices {
         
         return .init(
+            getVerificationCode: getVerificationCode(_:),
             initiatePayment: initiatePayment(_:_:),
             makePayment: makePayment(_:_:),
             paymentEffectHandle: paymentEffectHandle(_:_:),
@@ -38,6 +40,12 @@ extension AnywayTransactionEffectHandlerMicroServicesComposer {
 }
 
 private extension AnywayTransactionEffectHandlerMicroServicesComposer {
+    
+    func getVerificationCode(
+        _ completion: @escaping MicroServices.GetVerificationCodeCompletion
+    ) {
+        nanoServices.getVerificationCode(completion)
+    }
     
     func initiatePayment(
         _ digest: AnywayPaymentDigest,
@@ -97,8 +105,8 @@ private extension AnywayTransactionEffectHandlerMicroServicesComposer {
 private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferResponse {
     
     func makeTransactionReport(
-        with operationDetails: OperationDetails?
-    ) -> TransactionReport<DocumentStatus, OperationInfo<OperationDetailID, OperationDetails>> {
+        with operationDetails: Response?
+    ) -> AnywayTransactionReport {
         
         switch operationDetails {
         case .none:
@@ -110,8 +118,15 @@ private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferRespons
         case let .some(operationDetails):
             return .init(
                 status: status,
-                info: .details(operationDetails)
+                info: .details(
+                    .init(
+                        id: detailID,
+                        response: operationDetails
+                    )
+                )
             )
         }
     }
+    
+    typealias Response = RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
 }

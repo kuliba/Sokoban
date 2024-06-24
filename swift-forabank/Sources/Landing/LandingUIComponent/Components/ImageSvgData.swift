@@ -11,10 +11,10 @@ import SwiftUI
 
 public extension UILanding {
     
-    struct ImageSvg: Hashable {
+    struct ImageSvg: Equatable {
         
-        public let backgroundColor: BackgroundColor
-        public let md5hash: Md5hash
+        let backgroundColor: BackgroundColor
+        let md5hash: Md5hash
         
         public init(backgroundColor: BackgroundColor, md5hash: Md5hash) {
             self.backgroundColor = backgroundColor
