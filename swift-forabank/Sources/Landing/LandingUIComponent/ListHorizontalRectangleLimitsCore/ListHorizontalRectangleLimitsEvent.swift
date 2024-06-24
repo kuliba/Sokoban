@@ -9,6 +9,8 @@ import Foundation
 
 public enum ListHorizontalRectangleLimitsEvent: Equatable {
     
+    case buttonTapped(Info)
+    
     public struct Info: Equatable {
         let limitType: String
         let action: String
@@ -18,5 +20,4 @@ public enum ListHorizontalRectangleLimitsEvent: Equatable {
             self.action = action
         }
     }
-    case buttonTapped(Info)
 }

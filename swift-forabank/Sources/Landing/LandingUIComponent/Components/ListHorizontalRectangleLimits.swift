@@ -100,7 +100,7 @@ extension ListHorizontalRectangleLimitsView {
     }
 }
 
-enum Spent {
+enum Spent: Equatable {
     
     case noSpent
     case spentEverything

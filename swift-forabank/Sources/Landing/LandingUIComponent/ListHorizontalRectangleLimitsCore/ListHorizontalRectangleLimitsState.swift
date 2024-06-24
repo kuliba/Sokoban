@@ -9,9 +9,9 @@ import Foundation
 
 public struct ListHorizontalRectangleLimitsState: Equatable {
     
-    public let list: UILanding.List.HorizontalRectangleLimits
-    public var limitsLoadingStatus: LimitsLoadingStatus
-    public var event: ListHorizontalRectangleLimitsEvent?
+    let list: UILanding.List.HorizontalRectangleLimits
+    var limitsLoadingStatus: LimitsLoadingStatus
+    var event: ListHorizontalRectangleLimitsEvent?
     
     public init(
         list: UILanding.List.HorizontalRectangleLimits,
