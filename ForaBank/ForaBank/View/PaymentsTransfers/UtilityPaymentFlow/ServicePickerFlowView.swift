@@ -96,11 +96,11 @@ private extension ServiceFailureAlert.ServiceFailure {
         
         switch self {
         case .connectivityError:
-            let model = alertModelOf(title: "Error!", message: "alert message")
+            let model = alertModelOf(title: "Ошибка", message: "alert message")
             return .init(with: model, event: event)
             
         case let .serverError(message):
-            let model = alertModelOf(title: "Error!", message: message)
+            let model = alertModelOf(title: "Ошибка", message: message)
             return .init(with: model, event: event)
         }
     }
