@@ -399,7 +399,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     private typealias EffectHandler = _TransactionEffectHandler
     private typealias GetVerificationCodeSpy = Spy<Void, Event.VerificationCode.GetVerificationCodeResult>
 
-    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Context, Effect?), resetPayment: Context, restorePayment: Context, stagePayment: Context?, updatePayment: Context, validatePayment: Bool, wouldNeedRestart: Bool)
+    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Context, PaymentEffect?), resetPayment: Context, restorePayment: Context, stagePayment: Context?, updatePayment: Context, validatePayment: Bool, wouldNeedRestart: Bool)
     
     private typealias Inspector = PaymentInspector<Context, PaymentDigest, PaymentUpdate>
 
@@ -469,7 +469,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         checkFraud: Bool = false,
         getVerificationCode: VerificationCode? = nil,
         makeDigest: PaymentDigest = makePaymentDigest(),
-        paymentReduce: (Context, Effect?) = (makeContext(), nil),
+        paymentReduce: (Context, PaymentEffect?) = (makeContext(), nil),
         resetPayment: Context = makeContext(),
         restorePayment: Context = makeContext(),
         stagePayment: Context? = nil,

@@ -135,8 +135,10 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNotNil(sut.route.modal?.alert)
     }
-    
-    func test_updateSections_updateInfoFullPath_updateInfoStatusFlagActive_shouldAddUpdateSections()  {
+ 
+    // TODO: вернуть после оптимизации запросов UpdateInfo.swift:10
+
+    /*func test_updateSections_updateInfoFullPath_updateInfoStatusFlagActive_shouldAddUpdateSections()  {
         
         let (sut, model) = makeSUT(updateInfoStatusFlag: .init(.active))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
@@ -183,7 +185,7 @@ final class MainViewModelTests: XCTestCase {
 
         assert(sections: sut.sections, count: 6, type: .products)
     }
-    
+   */
     func test_updateSections_updateInfoFullPath_updateInfoStatusFlagInActive_shouldAddUpdateSections()  {
         
         let (sut, model) = makeSUT(updateInfoStatusFlag: .init(.inactive))

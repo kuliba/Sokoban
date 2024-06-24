@@ -17,7 +17,7 @@ public extension AnywayPaymentTransactionReducerComposer {
     func compose() -> Reducer {
         
         return .init(
-            paymentReduce: paymentReduce,
+            paymentReduce: paymentReduce(),
             stagePayment: stagePayment,
             updatePayment: updatePayment,
             paymentInspector: composeInspector()
@@ -34,22 +34,14 @@ extension AnywayPaymentContext: RestartablePayment {}
 
 private extension AnywayPaymentTransactionReducerComposer {
     
-    func paymentReduce(
-        _ state: AnywayPaymentContext,
-        _ event: AnywayPaymentEvent
-    ) -> (AnywayPaymentContext, Effect?) {
+    func paymentReduce() -> Reducer.PaymentReduce {
         
         let paymentReducer = AnywayPaymentReducer()
-        let (payment, effect): (AnywayPayment, AnywayPaymentReducer.Effect?) = paymentReducer.reduce(state.payment, event)
-        let state = AnywayPaymentContext(
-            initial: state.initial,
-            payment: payment,
-            staged: state.staged,
-            outline: state.outline,
-            shouldRestart: state.shouldRestart
+        let reducer = AnywayPaymentContextReducer(
+            anywayPaymentReduce: paymentReducer.reduce(_:_:)
         )
         
-        return (state, effect.map(Effect.payment))
+        return reducer.reduce(_:_:)
     }
     
     func stagePayment(
@@ -119,8 +111,8 @@ private extension AnywayPayment {
     
     var otp: VerificationCode? {
         
-        guard case let .widget(otp) = elements[id: .widgetID(.otp)],
-              case let .otp(otp) = otp
+        guard case let .widget(widget) = elements[id: .widgetID(.otp)],
+              case let .otp(otp) = widget
         else { return nil }
         
         return otp.map { "\($0)" }

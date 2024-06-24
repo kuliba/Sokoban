@@ -82,7 +82,7 @@ public extension TransactionReducer {
 
 public extension TransactionReducer {
     
-    typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, Effect?) // or `PaymentEffect?`
+    typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, PaymentEffect?)
     typealias StagePayment = (Payment) -> Payment
     typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
     typealias Inspector = PaymentInspector<Payment, PaymentDigest, PaymentUpdate>
@@ -156,9 +156,9 @@ private extension TransactionReducer {
         _ effect: inout Effect?,
         with event: PaymentEvent
     ) {
-        let payment: Payment
-        (payment, effect) = paymentReduce(state.context, event)
+        let (payment, paymentEffect) = paymentReduce(state.context, event)
         state.context = payment
+        effect = paymentEffect.map(Effect.payment)
         
         let shouldConfirmRestart = paymentInspector.wouldNeedRestart(payment) && !state.context.shouldRestart
         if shouldConfirmRestart {

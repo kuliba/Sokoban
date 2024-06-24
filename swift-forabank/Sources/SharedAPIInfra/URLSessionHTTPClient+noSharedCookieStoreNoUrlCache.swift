@@ -14,6 +14,8 @@ extension URLSessionHTTPClient {
     ) -> Self {
         
         let configuration = URLSessionConfiguration.default
+        configuration.waitsForConnectivity = true
+        configuration.timeoutIntervalForResource = 120
         configuration.httpShouldSetCookies = false
         configuration.httpCookieAcceptPolicy = .never
         configuration.urlCache = nil
