@@ -14,7 +14,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var bindings = Set<AnyCancellable>()
     
     private lazy var model: Model = AppDelegate.shared.model
-    private lazy var httpClient: HTTPClient = model.authenticatedHTTPClient()
+    private lazy var httpClient = HTTPClientFactory.makeHTTPClient(
+        with: model, 
+        logger: logger
+    )
     private lazy var logger: LoggerAgentProtocol = LoggerAgent.shared
     private lazy var featureFlags = loadFeatureFlags()
     private lazy var rootViewModel = RootViewModelFactory.make(
