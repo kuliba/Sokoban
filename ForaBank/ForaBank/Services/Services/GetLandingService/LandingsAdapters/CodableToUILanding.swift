@@ -45,7 +45,7 @@ private extension UILanding.Component {
             self = .list(.horizontalRectangleImage(.init(data: x)))
             
         case let .list(.horizontalRectangleLimits(x)):
-            self = .list(.horizontalRectangleLimits(.init(data: x)))
+            self = .list(.horizontalRectangleLimits(.init(data: x), .inflight))
             
         case let .list(.horizontalRoundImage(x)):
             self = .list(.horizontalRoundImage(.init(data: x)))
@@ -439,7 +439,7 @@ private extension UILanding.List.HorizontalRectangleLimits.Item.Limit {
     init(
         data: LocalAgentDomain.Landing.List.HorizontalRectangleLimits.Item.Limit
     ) {
-        self.init(id: data.id, title: data.title, colorHEX: data.colorHEX)
+        self.init(id: data.id, title: data.title, color: .init(hex: data.colorHEX))
     }
 }
 

@@ -20,17 +20,20 @@ public struct LandingView: View {
     private let action: (LandingEvent) -> Void
     private let images: [String: Image]
     private let makeIconView: MakeIconView
+    private let makeLimit: MakeLimit
     
     public init(
         viewModel: LandingViewModel,
         images: [String: Image],
         action: @escaping (LandingEvent) -> Void,
-        makeIconView: @escaping MakeIconView
+        makeIconView: @escaping MakeIconView,
+        makeLimit: @escaping MakeLimit = { _ in nil }
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
         self.images = images
         self.action = action
         self.makeIconView = makeIconView
+        self.makeLimit = makeLimit
     }
     
     struct ViewOffsetKey: PreferenceKey {
@@ -133,8 +136,9 @@ public struct LandingView: View {
             selectDetail: viewModel.selectDetail,
             action: action,
             orderCard: orderCard,
-            makeIconView: makeIconView
-            )
+            makeIconView: makeIconView,
+            makeLimit: makeLimit
+        )
         
         switch component {
             
@@ -189,7 +193,8 @@ extension LandingView {
         let action: (LandingEvent) -> Void
         let orderCard: (Int, Int) -> Void
         let makeIconView: MakeIconView
-        
+        let makeLimit: MakeLimit
+
         var body: some View {
             
             switch component {
@@ -271,13 +276,12 @@ extension LandingView {
                     config: config.listHorizontalRectangleImage
                 )
                 
-            case let .list(.horizontalRectangleLimits(model)):
-                ListHorizontalRectangleLimitsView(
-                    model: .init(
-                        data: model,
-                        makeIconView: makeIconView),
+            case let .list(.horizontalRectangleLimits(list, limitsLoadingStatus)):
+                
+                ListHorizontalRectangleLimitsWrappedView(
+                    model: .init(initialState: .init(list: list, limitsLoadingStatus: limitsLoadingStatus), reduce: {state,_ in (state, .none)}, handleEffect: {_,_ in }),
+                    factory: .init(makeIconView: makeIconView),
                     config: config.listHorizontalRectangleLimits)
-
                 
             case let .multi(.typeButtons(model)):
                 MultiTypeButtonsView(
@@ -309,6 +313,8 @@ public extension LandingView {
     
     typealias MakeIconView = (String) -> IconView
     typealias IconView = UIPrimitives.AsyncImage
+    
+    typealias MakeLimit = (String) -> LimitValues?
 }
 
 // MARK: - Previews
@@ -332,7 +338,8 @@ struct LandingUIView_Previews: PreviewProvider {
             makeIconView: { _ in .init(
                 image: .flag,
                 publisher: Just(.percent).eraseToAnyPublisher()
-            )}
+            )}, 
+            makeLimit: { _ in nil }
         )
     }
 }
