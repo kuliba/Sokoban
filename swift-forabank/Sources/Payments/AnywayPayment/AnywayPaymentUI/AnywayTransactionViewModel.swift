@@ -165,7 +165,16 @@ private extension CachedModelsTransaction {
         return .init(isEnabled: isEnabled, style: style)
     }
     
-    private var isEnabled: Bool { transaction.isValid }
+    private var isEnabled: Bool {
+        
+        switch transaction.status {
+        case .inflight:
+            return false
+            
+        default:
+            return transaction.isValid
+        }
+    }
     
     private var style: AmountComponent.FooterState.Style {
         
