@@ -11,19 +11,21 @@ import CombineSchedulers
 import ForaTools
 import Foundation
 
-public final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: ObservableObject {
+public final class AnywayTransactionViewModel<Amount, Model, DocumentStatus, Response>: ObservableObject {
     
     @Published public private(set) var state: State
     
     private let mapToModel: MapToModel
-    private let reduce: Reduce
+    private let makeFooter: MakeFooter
+    private let reduce: TransactionReduce
     private let handleEffect: HandleEffect
     private let stateSubject = PassthroughSubject<State, Never>()
     
     public init(
         transaction: State.Transaction,
         mapToModel: @escaping MapToModel,
-        reduce: @escaping Reduce,
+        makeFooter: @escaping MakeFooter,
+        reduce: @escaping TransactionReduce,
         handleEffect: @escaping HandleEffect,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
@@ -31,8 +33,13 @@ public final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: 
         // so initially state is initialised empty
         // after all properties are initialised
         // `updating` is called
-        self.state = .init(models: [:], transaction: transaction)
+        self.state = .init(
+            models: [:], 
+            footer: .continueButton {},
+            transaction: transaction
+        )
         self.mapToModel = mapToModel
+        self.makeFooter = makeFooter
         self.reduce = reduce
         self.handleEffect = handleEffect
         
@@ -51,7 +58,7 @@ public extension AnywayTransactionViewModel {
         
         let (transaction, effect) = reduce(state.transaction, event)
         let state = updating(state, with: transaction)
-        
+        print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: updated state for reduced transaction on event", event, #file, #line)
         stateSubject.send(state)
         
         if let effect {
@@ -63,7 +70,7 @@ public extension AnywayTransactionViewModel {
 
 public extension AnywayTransactionViewModel {
     
-    typealias State = CachedModelsTransaction<Model, DocumentStatus, Response>
+    typealias State = CachedModelsTransaction<Amount, Model, DocumentStatus, Response>
     typealias Event = AnywayTransactionEvent<DocumentStatus, Response>
     typealias Effect = AnywayTransactionEffect
     
@@ -75,7 +82,15 @@ public extension AnywayTransactionViewModel {
     typealias Notify = (NotifyEvent) -> Void
     typealias MapToModel = (@escaping Notify) -> (AnywayElement) -> Model
     
-    typealias Reduce = (State.Transaction, Event) -> (State.Transaction, Effect?)
+    enum AmountEvent: Equatable {
+        
+        case buttonTap
+        case edit(Decimal)
+    }
+    typealias NotifyAmount = (AmountEvent) -> Void
+    typealias MakeFooter = (@escaping NotifyAmount) -> (State.Transaction) -> Footer<Amount>
+    
+    typealias TransactionReduce = (State.Transaction, Event) -> (State.Transaction, Effect?)
     
     typealias Dispatch = (Event) -> Void
     typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
@@ -95,12 +110,26 @@ private extension AnywayTransactionViewModel {
             using: mapToModel { [weak self] event in
                 
                 // TODO: add tests
-                switch event{
+                
+                switch event {
                 case .getVerificationCode:
                     self?.event(.verificationCode(.request))
                     
                 case let .payment(paymentEvent):
                     self?.event(.payment(paymentEvent))
+                }
+            },
+            makeFooter: makeFooter { [weak self] event in
+                
+                // TODO: add tests
+                print("===>>>", self.map { ObjectIdentifier($0) } ?? "", "makeFooter call", event, #file, #line)
+                
+                switch event {
+                case .buttonTap:
+                    self?.event(.continue)
+                    
+                case let .edit(amount):
+                    self?.event(.payment(.widget(.amount(amount))))
                 }
             }
         )

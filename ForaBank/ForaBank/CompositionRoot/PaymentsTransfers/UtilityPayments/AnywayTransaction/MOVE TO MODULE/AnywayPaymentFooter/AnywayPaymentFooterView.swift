@@ -12,51 +12,37 @@ import SwiftUI
 struct AnywayPaymentFooterView: View {
     
     let state: State
-    let event: (Event) -> Void
     let config: Config
     
     var body: some View {
         
-        if let core = state.core {
-            amountView(state.buttonTitle, core, state.isEnabled, config.amountConfig)
-        } else {
-            continueButton(state.buttonTitle, config.buttonConfig)
+        switch state {
+        case let .amount(node):
+            BottomAmountStateWrapperView(
+                viewModel: node.model,
+                config: config.amountConfig,
+                infoView: EmptyView.init
+            )
+            
+        case let .continueButton(action):
+            // TODO: move title to config
+            continueButton("Продолжить", action: action, config: config.buttonConfig)
         }
     }
 }
 
 extension AnywayPaymentFooterView {
     
-    typealias State = AnywayPaymentFooter
-    typealias Event = AnywayPaymentFooterEvent
+    typealias State = AnywayTransactionState.AmountFooter
     typealias Config = AnywayPaymentFooterConfig
 }
 
 private extension AnywayPaymentFooterView {
     
-    func amountView(
-        _ buttonTitle: String,
-        _ core: AnywayPaymentFooter.Core,
-        _ isEnabled: Bool,
-        _ config: AmountConfig
-    ) -> some View {
-        
-        PaymentComponents.AmountView(
-            amount: .init(
-                buttonTitle: buttonTitle,
-                value: core.value,
-                isEnabled: isEnabled
-            ),
-            event: { event($0.event) },
-            currencySymbol: core.currency,
-            config: config,
-            infoView: EmptyView.init
-        )
-    }
-    
     func continueButton(
         _ title: String,
-        _ config: ButtonConfig
+        action: @escaping () -> Void,
+        config: ButtonConfig
     ) -> some View {
         
         PaymentComponents.ButtonView(
@@ -67,11 +53,11 @@ private extension AnywayPaymentFooterView {
                 action: .pay,
                 placement: .bottom
             ),
-            event: { event(.continue) },
+            event: action,
             config: config
         )
         .padding(.horizontal)
-//        .disabled(!state.isEnabled)
+        //        .disabled(!state.isEnabled)
     }
 }
 
@@ -82,7 +68,7 @@ private extension AmountEvent {
         switch self {
         case let .edit(decimal):
             return .edit(decimal)
-
+            
         case .pay:
             return .continue
         }
@@ -105,49 +91,4 @@ private extension PaymentComponents.Amount {
             )
         )
     }
-}
-
-// MARK: - Previews
-
-struct AnywayPaymentFooterView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        VStack(spacing: 32) {
-            
-            Group {
-                
-                footer(core: nil, isEnabled: false)
-                footer(buttonTitle: "Pay!", core: nil, isEnabled: true)
-            }
-            .padding(.horizontal)
-            
-            footer(
-                buttonTitle: "Оплатить",
-                core: .init(value: 12_345.67, currency: "₽")
-            )
-        }
-    }
-    
-    private static func footer(
-        buttonTitle: String = "Продолжить",
-        core: AnywayPaymentFooter.Core? = nil,
-        isEnabled: Bool = true
-    ) -> some View {
-        
-        AnywayPaymentFooterView(
-            state: .init(
-                buttonTitle: buttonTitle,
-                core: core,
-                isEnabled: isEnabled
-            ),
-            event: { _ in },
-            config: .preview
-        )
-    }
-}
-
-private extension AnywayPaymentFooterConfig {
-    
-    static let preview: Self = .init(amountConfig: .preview, buttonConfig: .preview)
 }

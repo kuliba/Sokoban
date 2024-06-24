@@ -177,9 +177,12 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         XCTAssertNotEqual(transaction1, transaction2)
     }
     
+    // TODO: add tests for makeAmountViewModel
+    
     // MARK: - Helpers
     
-    private typealias SUT = AnywayTransactionViewModel<Model, DocumentStatus, Response>
+    private typealias SUT = AnywayTransactionViewModel<AmountViewModel, Model, DocumentStatus, Response>
+    private typealias AmountViewModel = String
     private typealias DocumentStatus = Int
     private typealias Response = String
     
@@ -203,6 +206,7 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         let sut = SUT(
             transaction: initial,
             mapToModel: { event in { .init(value: $0) } },
+            makeFooter: { event in { _ in .continueButton({}) }},
             reduce: reducer.reduce(_:_:),
             handleEffect: handleEffect,
             scheduler: .immediate

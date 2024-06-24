@@ -49,9 +49,9 @@ extension AnywayPaymentFactoryComposer {
                     config: .iFora
                 )
             },
-            makeFooterView: { state, event in
+            makeFooterView: { footer in
                 
-                return .init(state: state.footer, event: event, config: .iFora)
+                return .init(state: footer, config: .iFora)
             }
         )
     }
