@@ -105,12 +105,12 @@ extension ListHorizontalRectangleLimitsView {
                         ZStack {
                             
                             Capsule(style: .circular)
-                                .frame(width: config.size.icon * 2, height: config.size.icon * 2)
+                                .frame(widthAndHeight: config.sizes.icon * 2)
                                 .foregroundColor(.white)
                             
                             factory.makeIconView(item.md5hash)
                                 .aspectRatio(contentMode: .fit)
-                                .frame(width: config.size.icon, height: config.size.icon)
+                                .frame(widthAndHeight: config.sizes.icon)
                         }
                         
                         Text(item.title)
@@ -130,7 +130,7 @@ extension ListHorizontalRectangleLimitsView {
                     .padding(.horizontal, config.paddings.horizontal)
                 }
             }
-            .frame(width: config.size.width, height: config.size.height)
+            .frame(config)
         }
         
         private func itemView(
@@ -192,7 +192,7 @@ extension ListHorizontalRectangleLimitsView {
                                         interval: spentConfig.interval,
                                         startAngle: spentConfig.startSpentAngle)
                                 )
-                                .frame(width: config.size.icon, height: config.size.icon)
+                                .frame(widthAndHeight: config.sizes.icon)
                             }
                         }
                         
@@ -318,5 +318,31 @@ struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
             preview(.limits(.withoutValue))
                 .previewDisplayName("withoutValueLimits")
         }
+    }
+}
+
+extension View {
+    
+    func frame(
+        widthAndHeight: CGFloat
+    ) -> some View {
+        
+        self.frame(
+            width: widthAndHeight,
+            height: widthAndHeight
+        )
+    }
+}
+
+extension View {
+    
+    func frame(
+        _ config: UILanding.List.HorizontalRectangleLimits.Config
+    ) -> some View {
+        
+        self.frame(
+            width: config.sizes.width,
+            height: config.sizes.height
+        )
     }
 }

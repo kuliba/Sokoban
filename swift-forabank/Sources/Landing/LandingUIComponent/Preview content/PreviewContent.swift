@@ -491,7 +491,7 @@ extension UILanding.List.HorizontalRectangleLimits.Config {
             subtitle: .init(red: 153/255, green: 153/255, blue: 153/255)),
         cornerRadius: 12,
         paddings: .init(horizontal: 12, vertical: 8),
-        size: .init(height: 176, icon: 20, width: 180),
+        sizes: .init(height: 176, icon: 20, width: 180),
         spacing: 8)
     }
 

@@ -15,7 +15,7 @@ public extension UILanding.List.HorizontalRectangleLimits {
         let colors: Colors
         let cornerRadius: CGFloat
         let paddings: Paddings
-        let size: Size
+        let sizes: Sizes
         let spacing: CGFloat
         
         public struct Colors {
@@ -52,7 +52,7 @@ public extension UILanding.List.HorizontalRectangleLimits {
             }
         }
 
-        public struct Size {
+        public struct Sizes {
             
             let height: CGFloat
             let icon: CGFloat
@@ -69,13 +69,13 @@ public extension UILanding.List.HorizontalRectangleLimits {
             colors: Colors,
             cornerRadius: CGFloat,
             paddings: Paddings,
-            size: Size,
+            sizes: Sizes,
             spacing: CGFloat
         ) {
             self.colors = colors
             self.cornerRadius = cornerRadius
             self.paddings = paddings
-            self.size = size
+            self.sizes = sizes
             self.spacing = spacing
         }
     }
