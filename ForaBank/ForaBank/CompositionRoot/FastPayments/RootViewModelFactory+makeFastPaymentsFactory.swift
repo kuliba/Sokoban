@@ -174,7 +174,7 @@ private extension ProductData {
         case .card:
             guard let card = self as? ProductCardData,
                   let accountID = card.accountId,
-                  (card.isMain ?? false),
+                  (card.cardType?.isMainOrRegularOrAdditionalSelfAccOwn ?? false),
                   card.status == .active,
                   card.statusPc == .active,
                   card.currency == rub
@@ -208,7 +208,7 @@ private extension ProductData {
         case .card:
             guard let card = self as? ProductCardData,
                   let accountID = card.accountId,
-                  (card.isMain ?? false),
+                  (card.cardType?.isMainOrRegularOrAdditionalSelfAccOwn ?? false),
                   card.status == .active,
                   card.statusPc == .active,
                   card.currency == rub

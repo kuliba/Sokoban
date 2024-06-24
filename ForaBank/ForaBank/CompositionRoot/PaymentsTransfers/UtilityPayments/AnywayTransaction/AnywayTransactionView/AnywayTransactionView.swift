@@ -21,7 +21,7 @@ struct AnywayTransactionView: View {
         VStack(spacing: 16) {
             
             paymentView(elements: elements)
-            factory.makeFooterView(state) { event($0.transactionEvent) }
+            factory.makeFooterView(state.footer)
         }
     }
 }
@@ -34,26 +34,9 @@ extension AnywayTransactionView {
     typealias IconView = UIPrimitives.AsyncImage
 }
 
-extension AnywayTransactionState {
-    
-    var models: [IdentifiedModel] {
-        
-        transaction.context.payment.elements.compactMap { element in
-            
-            models[element.id].map { .init(id: element.id, model: $0)}
-        }
-    }
-    
-    struct IdentifiedModel: Identifiable {
-        
-         let id: AnywayElement.ID
-         let model: Model
-    }
-}
-
 private extension AnywayTransactionView {
     
-    var elements: [Element] { state.models }
+    var elements: [Element] { state.identifiedModels }
     
     private func paymentView(
         elements: [Element]

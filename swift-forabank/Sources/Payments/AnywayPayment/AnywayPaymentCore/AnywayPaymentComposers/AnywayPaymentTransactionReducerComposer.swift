@@ -17,9 +17,7 @@ public extension AnywayPaymentTransactionReducerComposer {
     func compose() -> Reducer {
         
         return .init(
-            paymentReduce: paymentReduce,
-            stagePayment: stagePayment,
-            updatePayment: updatePayment,
+            paymentReduce: paymentReduce(),
             paymentInspector: composeInspector()
         )
     }
@@ -34,22 +32,14 @@ extension AnywayPaymentContext: RestartablePayment {}
 
 private extension AnywayPaymentTransactionReducerComposer {
     
-    func paymentReduce(
-        _ state: AnywayPaymentContext,
-        _ event: AnywayPaymentEvent
-    ) -> (AnywayPaymentContext, Effect?) {
+    func paymentReduce() -> Reducer.PaymentReduce {
         
         let paymentReducer = AnywayPaymentReducer()
-        let (payment, effect): (AnywayPayment, AnywayPaymentReducer.Effect?) = paymentReducer.reduce(state.payment, event)
-        let state = AnywayPaymentContext(
-            initial: state.initial,
-            payment: payment,
-            staged: state.staged,
-            outline: state.outline,
-            shouldRestart: state.shouldRestart
+        let reducer = AnywayPaymentContextReducer(
+            anywayPaymentReduce: paymentReducer.reduce(_:_:)
         )
         
-        return (state, effect.map(Effect.payment))
+        return reducer.reduce(_:_:)
     }
     
     func stagePayment(
@@ -74,7 +64,9 @@ private extension AnywayPaymentTransactionReducerComposer {
             getVerificationCode: { $0.payment.otp },
             makeDigest: { $0.makeDigest() },
             resetPayment: { $0.resetPayment() },
-            restorePayment: { $0.restorePayment() },
+            rollbackPayment: { $0.rollbackPayment() },
+            stagePayment: stagePayment,
+            updatePayment: updatePayment,
             validatePayment: validatePayment,
             wouldNeedRestart: { $0.wouldNeedRestart }
         )
@@ -84,12 +76,9 @@ private extension AnywayPaymentTransactionReducerComposer {
         context: AnywayPaymentContext
     ) -> Bool {
         
-        let parameterValidator = AnywayPaymentParameterValidator()
-        let validator = AnywayPaymentValidator(
-            isValidParameter: parameterValidator.isValid(_:)
-        )
+        let validator = AnywayPaymentContextValidator()
         
-        return validator.isValid(context.payment)
+        return validator.validate(context) == nil
     }
     
     typealias Effect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>
@@ -119,8 +108,8 @@ private extension AnywayPayment {
     
     var otp: VerificationCode? {
         
-        guard case let .widget(otp) = elements[id: .widgetID(.otp)],
-              case let .otp(otp) = otp
+        guard case let .widget(widget) = elements[id: .widgetID(.otp)],
+              case let .otp(otp) = widget
         else { return nil }
         
         return otp.map { "\($0)" }

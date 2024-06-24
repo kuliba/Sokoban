@@ -47,7 +47,7 @@ extension AnywayTransactionEffectHandlerNanoServicesComposer {
     typealias NanoServices = AnywayTransactionEffectHandlerNanoServices
 }
 
-// MARK: - InitiatePayment
+// MARK: - GetVerificationCode
 
 private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     
