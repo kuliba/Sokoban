@@ -1,0 +1,143 @@
+//
+//  BlockHorizontalRectangularView.swift
+//
+//
+//  Created by Andryusina Nataly on 11.06.2024.
+//
+
+import SwiftUI
+import Combine
+import UIPrimitives
+
+struct BlockHorizontalRectangularView: View {
+    
+    let state: BlockHorizontalRectangularState
+    let event: (Event) -> Void
+    let factory: Factory
+    let config: Config
+
+    var body: some View {
+        
+        ScrollView(.vertical, showsIndicators: false) {
+            
+            VStack(spacing: config.spacing) {
+                ForEach(state.block.list, content: itemView)
+            }
+        }
+        .padding(.horizontal, config.paddings.horizontal)
+        .padding(.vertical, config.paddings.vertical)
+    }
+    
+    private func itemView (item: Item) -> some View {
+        
+        ItemView(
+            item: item,
+            inputStates: state.inputStates,
+            config: config,
+            factory: factory, 
+            event: event
+        )
+    }
+}
+
+extension BlockHorizontalRectangularView {
+    
+    typealias Event = BlockHorizontalRectangularEvent
+    typealias Factory = ViewFactory
+    typealias Config = UILanding.BlockHorizontalRectangular.Config
+    typealias Item = UILanding.BlockHorizontalRectangular.Item
+}
+
+extension BlockHorizontalRectangularView {
+    
+    struct ItemView: View {
+        
+        let item: Item
+        let inputStates: [InputState]
+        let config: Config
+        let factory: Factory
+        let event: (Event) -> Void
+        
+        let formatter: NumberFormatter = {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            return formatter
+        }()
+
+        var body: some View {
+            
+            ZStack {
+                config.colors.background
+                    .ignoresSafeArea()
+                    .cornerRadius(config.cornerRadius)
+                
+                VStack {
+                    
+                    Text(item.title)
+                    Text(item.description)
+                    
+                    ForEach(item.limits, id: \.id, content: limit)
+                }
+            }
+        }
+        
+        private func limit(_ limit: Item.Limit) -> some View {
+            
+            if let inputState = inputStates.first(where: { $0.id == limit.id }) {
+                return AnyView(VStack {
+                    
+                    Text(limit.title)
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        
+                        HStack(alignment: .center, spacing: 16) {
+                            
+                            factory.makeIconView(limit.md5hash)
+                                .aspectRatio(contentMode: .fit)
+                                .frame(widthAndHeight: config.sizes.iconWidth)
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                
+                                Text(limit.text)
+                                
+                                TextField(
+                                    "",
+                                    text: .init(
+                                        get: { inputState.value.formattedValue("R") },
+                                        set: { event(.change(.init(id: limit.id, value: $0))) }
+                                    )
+                                )
+                            }
+                        }
+                        
+                        if let warning = inputState.warning {
+                            
+                            HStack(alignment: .center, spacing: 16) {
+                                
+                                Color.clear
+                                    .frame(widthAndHeight: config.sizes.iconWidth)
+                                
+                                Text(warning)
+                                    .font(.body)
+                                    .lineLimit(2)
+                                    .foregroundColor(.gray)
+                            }
+                        }
+                    }
+                })
+            }
+            else { return AnyView(EmptyView()) }
+        }
+    }
+}
+
+struct BlockHorizontalRectangularView_Previews: PreviewProvider {
+    static var previews: some View {
+        
+        BlockHorizontalRectangularView(
+            state: .init(block: .defaultValue),
+            event: { _ in },
+            factory: .default,
+            config: .default)
+    }
+}

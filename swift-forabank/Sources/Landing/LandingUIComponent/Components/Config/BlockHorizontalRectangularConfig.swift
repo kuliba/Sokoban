@@ -6,16 +6,39 @@
 //
 
 import Foundation
+import SwiftUI
+import UIPrimitives
 
 public extension UILanding.BlockHorizontalRectangular {
     
     struct Config {
         
         let cornerRadius: CGFloat
-        let size: Size
+        let colors: Colors
+        let sizes: Sizes
         let paddings: Paddings
         let spacing: CGFloat
         
+        public struct Colors {
+            
+            let background: Color
+            let divider: Color
+            let title: Color
+            let subtitle: Color
+            
+            public init(
+                background: Color,
+                divider: Color,
+                title: Color,
+                subtitle: Color
+            ) {
+                self.background = background
+                self.divider = divider
+                self.title = title
+                self.subtitle = subtitle
+            }
+        }
+
         public struct Paddings {
             
             let horizontal: CGFloat
@@ -27,27 +50,33 @@ public extension UILanding.BlockHorizontalRectangular {
             }
         }
 
-        public struct Size {
+        public struct Sizes {
             
+            let iconWidth: CGFloat
             let height: CGFloat
             let width: CGFloat
             
-            public init(height: CGFloat, width: CGFloat) {
+            public init(iconWidth: CGFloat, height: CGFloat, width: CGFloat) {
+                self.iconWidth = iconWidth
                 self.height = height
                 self.width = width
             }
         }
         
         public init(
+            colors: Colors,
             cornerRadius: CGFloat,
-            size: Size,
+            sizes: Sizes,
             paddings: Paddings,
             spacing: CGFloat
         ){
+            self.colors = colors
             self.cornerRadius = cornerRadius
-            self.size = size
+            self.sizes = sizes
             self.paddings = paddings
             self.spacing = spacing
         }
     }
+    
+    
 }

@@ -394,8 +394,14 @@ extension UILanding.List.HorizontalRectangleLimits.Config {
 extension UILanding.BlockHorizontalRectangular.Config {
     
     static let stickerDefault: Self = .init(
+        colors: .init(
+            background: .mainColorsGrayLightest,
+            divider: .blurMediumGray30,
+            title: .secondary,
+            subtitle: .textPlaceholder),
         cornerRadius: 12,
-        size: .init(
+        sizes: .init(
+            iconWidth: 24,
             height: 124,
             width: 272
         ),

@@ -298,11 +298,13 @@ extension LandingView {
             case let .multi(.markersText(model)):
                 MultiMarkersTextView(model: model, config: config.multiMarkersText)
                 
-            case let .blockHorizontalRectangular(model):
-                BlockHorizontalRectangularView(
+            case let .blockHorizontalRectangular(block):
+                BlockHorizontalRectangularWrappedView(
                     model: .init(
-                        data: model,
-                        makeIconView: makeIconView),
+                        initialState: .init(block: block),
+                        reduce: {state,_ in (state, .none)},
+                        handleEffect: {_,_ in }),
+                    factory: .init(makeIconView: makeIconView),
                     config: config.blockHorizontalRectangular)
             }
         }
