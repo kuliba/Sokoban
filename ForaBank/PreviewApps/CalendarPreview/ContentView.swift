@@ -23,7 +23,7 @@ struct ContentView: View {
             
             NavigationStack {
                 
-                CalendarView3(closeAction: { showingSheet = false })
+                CalendarViewWrapper(closeAction: { showingSheet = false })
                     .navigationTitle("Выберите даты или период")
                     .navigationBarTitleDisplayMode(.inline)
             }
@@ -31,16 +31,11 @@ struct ContentView: View {
     }
 }
 
-//#Preview {
-////    ContentView()
-//}
+#Preview {
+    ContentView()
+}
 
-
-
-
-import SwiftUI
-
-struct CalendarView3: View {
+struct CalendarViewWrapper: View {
     
     @State private var selectedRange: MDateRange? = .init()
     let closeAction: () -> Void
@@ -60,48 +55,17 @@ struct CalendarView3: View {
                     
                     HStack {
                         
-                        Button(action: closeAction) {
-                            
-                            Text("Закрыть")
-                                .frame(minWidth: 100, idealWidth: 100, maxWidth: .infinity, minHeight: 56, idealHeight: 56, maxHeight: 56, alignment: .center)
-                                .padding(.horizontal, 16)
-                                .background(Color.gray)
-                                .foregroundColor(.black)
-                                .font(.system(size: 18))
-                                .fontWeight(.semibold)
-                                .clipShape(.rect(cornerRadius: 12))
-
-                        }
+                        createSimpleButtonView(
+                            title: "Закрыть",
+                            action: closeAction
+                        )
                         
-                        if let _ = selectedRange?.getRange()?.upperBound {
-                         
-                            Button(action: closeAction) {
-                                
-                                Text("Показать")
-                                    .frame(minWidth: 100, idealWidth: 100, maxWidth: .infinity, minHeight: 56, idealHeight: 56, maxHeight: 56, alignment: .center)
-                                    .padding(.horizontal, 16)
-                                    .background(Color.red)
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 18))
-                                    .fontWeight(.semibold)
-                                    .clipShape(.rect(cornerRadius: 12))
-                            }
-                            
-                        } else {
-                            Button(action: {}) {
-                                
-                                Text("Выбрать")
-                                    .frame(minWidth: 100, idealWidth: 100, maxWidth: .infinity, minHeight: 56, idealHeight: 56, maxHeight: 56, alignment: .center)
-                                    .padding(.horizontal, 16)
-                                    .background(Color.gray)
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 18))
-                                    .fontWeight(.semibold)
-                                    .clipShape(.rect(cornerRadius: 12))
-                            }
-                            .allowsHitTesting(false)
-                        }
-
+                        createSimpleButtonView(
+                            title: selectedRange?.rangeSelected == true ? "Показать" : "Выбрать",
+                            action: closeAction
+                        )
+                        .allowsHitTesting(selectedRange?.rangeSelected == true ? false : true)
+                        
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 30)
@@ -111,36 +75,56 @@ struct CalendarView3: View {
         }
     }
 }
-private extension CalendarView3 {
+
+private extension CalendarViewWrapper {
     
     func createSelectedRangeView() -> some View {
         SelectedRangeView(selectedRange: $selectedRange)
     }
+    
     func createCalendarView() -> some View {
         CalendarView(selectedDate: nil, selectedRange: $selectedRange, configBuilder: configureCalendar)
     }
+    
     func createBottomView() -> some View {
-        Button("Continue", action: onContinueButtonTap)
+        Button("Continue", action: closeAction)
             .padding(.top, 12)
             .padding(.horizontal, margins)
     }
-}
-private extension CalendarView3 {
-    func configureCalendar(_ config: CalendarConfig) -> CalendarConfig { config
-        .dayView(DV.RangeSelector.init)
-        .scrollTo(date: .now)
+    
+    func createSimpleButtonView(
+        title: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        
+        Button(action: action) {
+            
+            Text(title)
+                .frame(minWidth: 100, idealWidth: 100, maxWidth: .infinity, minHeight: 56, idealHeight: 56, maxHeight: 56, alignment: .center)
+                .padding(.horizontal, 16)
+                .background(Color.gray)
+                .foregroundColor(.white)
+                .font(.system(size: 18))
+                .fontWeight(.semibold)
+                .clipShape(.rect(cornerRadius: 12))
+        }
     }
 }
-private extension CalendarView3 {
-    func onContinueButtonTap() {
 
+private extension CalendarViewWrapper {
+    
+    func configureCalendar(_ config: CalendarConfig) -> CalendarConfig {
+       
+        config
+            .dayView(DV.RangeSelector.init)
+            .scrollTo(date: .now)
     }
 }
 
 // MARK: - Selected Range View
 fileprivate struct SelectedRangeView: View {
+    
     @Binding var selectedRange: MDateRange?
-
 
     var body: some View {
         HStack(spacing: 12) {
@@ -153,6 +137,7 @@ fileprivate struct SelectedRangeView: View {
         .animation(.bouncy, value: selectedRange?.getRange())
     }
 }
+
 private extension SelectedRangeView {
     func createDateText(_ text: String) -> some View {
         Text(text)
@@ -168,6 +153,7 @@ private extension SelectedRangeView {
             .foregroundStyle(.black)
     }
 }
+
 private extension SelectedRangeView {
     var startDateText: String {
         guard let date = selectedRange?.getRange()?.lowerBound else { return "N/A" }
@@ -178,6 +164,7 @@ private extension SelectedRangeView {
         return dateFormatter.string(from: date)
     }
 }
+
 private extension SelectedRangeView {
     var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
