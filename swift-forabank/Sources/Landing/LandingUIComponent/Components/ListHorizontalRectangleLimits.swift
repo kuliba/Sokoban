@@ -73,21 +73,14 @@ extension ListHorizontalRectangleLimitsView {
         
         @Published private(set) var data: HorizontalList
                 
-        let makeIconView: LandingView.MakeIconView
-        let makeLimit: LandingView.MakeLimit
         private let action: (LandingEvent) -> Void
-        let spentConfig: SpentConfig = .init()
 
         init(
             data: HorizontalList,
-            action: @escaping (LandingEvent) -> Void,
-            makeIconView: @escaping LandingView.MakeIconView,
-            makeLimit: @escaping LandingView.MakeLimit
+            action: @escaping (LandingEvent) -> Void
         ) {
             self.data = data
             self.action = action
-            self.makeIconView = makeIconView
-            self.makeLimit = makeLimit
         }
         
         func itemAction(
