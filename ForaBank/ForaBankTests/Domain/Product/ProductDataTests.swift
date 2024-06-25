@@ -124,6 +124,44 @@ class ProductDataTests: XCTestCase {
         XCTAssertNoDiff(sut.displayName, "Card1")
     }
     
+    // MARK: - Navigation Bar Name
+    
+    func test_navigationBarName_shouldReturnCustomName() throws {
+        
+        let sut = makeSUT(
+            additionalField: "AdditionalField", 
+            customName: "CustomName",
+            mainField: "MainField",
+            productType: .card
+        )
+
+        XCTAssertNoDiff(sut.navigationBarName, "CustomName")
+    }
+
+    func test_navigationBarName_shouldReturnAdditionalField_whenCustomNameIsNil() throws {
+        
+        let sut = makeSUT(
+            additionalField: "AdditionalField", 
+            customName: nil,
+            mainField: "MainField",
+            productType: .card
+        )
+
+        XCTAssertNoDiff(sut.navigationBarName, "AdditionalField")
+    }
+
+    func test_navigationBarName_shouldReturnMainField_whenCustomNameAndAdditionalFieldAreNil() throws {
+        
+        let sut = makeSUT(
+            additionalField: nil, customName: nil,
+            mainField: "MainField",
+            productType: .card
+        )
+
+        XCTAssertNoDiff(sut.navigationBarName, "MainField")
+    }
+
+    
     //MARK: Balance Value Helper
     
     func test_balance_card_shouldReturnBalanceValue() throws {
@@ -316,6 +354,7 @@ extension ProductDataTests {
         additionalField: String? = "Зарплатная",
         balance: Double? = nil,
         customName: String? = nil,
+        mainField: String = "Card",
         dateLong: Date = .dateUTC(with: 1),
         endDate: Date? = .dateUTC(with: 1),
         accountNumber: String? = "1234",
@@ -336,7 +375,7 @@ extension ProductDataTests {
                 balance: balance,
                 balanceRub: nil,
                 currency: "RUB",
-                mainField: "Card",
+                mainField: mainField,
                 additionalField: additionalField,
                 customName: customName,
                 productName: "Card",
