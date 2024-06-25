@@ -59,7 +59,7 @@ extension AlertReducer {
     
     typealias Event = AlertEvent
     typealias State = Alert.ViewModel?
-    typealias Effect = ProductNavigationStateEffect
+    typealias Effect = ProductProfileFlowEffect
 }
 
 extension ProductAlertsViewModel {

@@ -27,11 +27,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         qrResolverFeatureFlag: .init(.active),
         fastPaymentsSettingsFlag: .init(.active(.live)),
         utilitiesPaymentsFlag: featureFlags.utilitiesPaymentsFlag,
+        historyFilterFlag: featureFlags.historyFilterFlag,
         updateInfoStatusFlag: .init(.active)
     )
     private lazy var rootViewFactory = RootViewFactoryComposer(
         model: model,
-        httpClient: httpClient
+        httpClient: httpClient,
+        historyFeatureFlag: featureFlags.historyFilterFlag
     ).compose()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {

@@ -85,10 +85,12 @@ final class FeatureFlagsLoaderTests: XCTestCase {
     }
     
     private func makeFeatureFlags(
+        historyFilterFlag: HistoryFilterFlag? = nil,
         utilitiesPaymentsFlag: StubbedFeatureFlag? = nil
     ) -> FeatureFlags {
         
         return .init(
+            historyFilterFlag: historyFilterFlag?.map { .init($0) } ?? .init(false),
             utilitiesPaymentsFlag: utilitiesPaymentsFlag.map { .init($0) } ?? .init(.inactive)
         )
     }

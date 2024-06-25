@@ -223,7 +223,10 @@ private extension RootViewFactory {
                         makeAnywayPaymentFactory: { _ in fatalError() },
                         makePaymentCompleteView: { _,_ in fatalError() }
                     ),
-                    productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)),
+                    productProfileViewFactory: .init(
+                        makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
+                        makeHistoryButton: { _ in HistoryButtonView(event: { event in })}
+                    ),
                     getUImage: { _ in nil }
                 )
             },
@@ -233,7 +236,8 @@ private extension RootViewFactory {
             makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
             makeUpdateInfoView: UpdateInfoView.init(text:),
             makeAnywayPaymentFactory: { _ in fatalError() },
-            makePaymentCompleteView: { _,_ in fatalError() }
+            makePaymentCompleteView: { _,_ in fatalError() }, 
+            makeHistoryButtonView: { HistoryButtonView(event: { event in })}
         )
     }
 }
