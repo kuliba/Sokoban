@@ -1302,6 +1302,7 @@
 		2ADFE5A12B0D0CEA0020B382 /* RequestFactory+createGetOperationDetailByPaymentIDRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADFE5A02B0D0CEA0020B382 /* RequestFactory+createGetOperationDetailByPaymentIDRequestTests.swift */; };
 		2ADFE5A32B0D0E1C0020B382 /* ResponseMapper+mapOperationDetailByPaymentIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADFE5A22B0D0E1C0020B382 /* ResponseMapper+mapOperationDetailByPaymentIDTests.swift */; };
 		2ADFE5A52B0D225D0020B382 /* ResponseMapper+mapOperationDetailByPaymentIDResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADFE5A42B0D225D0020B382 /* ResponseMapper+mapOperationDetailByPaymentIDResponse.swift */; };
+		2AE1487B2C2AB02B00597DB7 /* RequestFactory_createMakeTransferV2RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE1487A2C2AB02B00597DB7 /* RequestFactory_createMakeTransferV2RequestTests.swift */; };
 		2AE2215E2C0C2DD100618E7C /* UtilityPrepaymentFlowEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2215D2C0C2DD100618E7C /* UtilityPrepaymentFlowEvent.swift */; };
 		2AE221632C0C3A0000618E7C /* UtilityServiceLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE221622C0C3A0000618E7C /* UtilityServiceLabel.swift */; };
 		2AE266282C1869CA0054C274 /* PaymentCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE266272C1869CA0054C274 /* PaymentCompleteView.swift */; };
@@ -4328,6 +4329,7 @@
 		2ADFE5A02B0D0CEA0020B382 /* RequestFactory+createGetOperationDetailByPaymentIDRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetOperationDetailByPaymentIDRequestTests.swift"; sourceTree = "<group>"; };
 		2ADFE5A22B0D0E1C0020B382 /* ResponseMapper+mapOperationDetailByPaymentIDTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapOperationDetailByPaymentIDTests.swift"; sourceTree = "<group>"; };
 		2ADFE5A42B0D225D0020B382 /* ResponseMapper+mapOperationDetailByPaymentIDResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapOperationDetailByPaymentIDResponse.swift"; sourceTree = "<group>"; };
+		2AE1487A2C2AB02B00597DB7 /* RequestFactory_createMakeTransferV2RequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestFactory_createMakeTransferV2RequestTests.swift; sourceTree = "<group>"; };
 		2AE2215D2C0C2DD100618E7C /* UtilityPrepaymentFlowEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowEvent.swift; sourceTree = "<group>"; };
 		2AE221622C0C3A0000618E7C /* UtilityServiceLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServiceLabel.swift; sourceTree = "<group>"; };
 		2AE266272C1869CA0054C274 /* PaymentCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCompleteView.swift; sourceTree = "<group>"; };
@@ -7634,6 +7636,7 @@
 				2A2E3FC72BB2CC5500730D37 /* RequestFactory+createGetOperationDetailByPaymentIDRequestModuleTests.swift */,
 				2A72920B2C2028F00077B139 /* RequestFactory+createGetVerificationCodeRequestTests.swift */,
 				2A2E3FC02BB2C73500730D37 /* RequestFactory+createMakeTransferRequestTests.swift */,
+				2AE1487A2C2AB02B00597DB7 /* RequestFactory_createMakeTransferV2RequestTests.swift */,
 			);
 			path = AnywayPayment;
 			sourceTree = "<group>";
@@ -19234,6 +19237,7 @@
 				77289F6429AE4B8E004DC3D0 /* ParameterDataTests.swift in Sources */,
 				77FE6F2329ED65F400CE65EA /* PaymentsSelectDropDownComponentTests.swift in Sources */,
 				2AB35DCC2B07F1CD0001EC5D /* TransformingReducerTests.swift in Sources */,
+				2AE1487B2C2AB02B00597DB7 /* RequestFactory_createMakeTransferV2RequestTests.swift in Sources */,
 				2A235F7B2AFA4A0600E42E36 /* ChangePINService+FetcherTests.swift in Sources */,
 				77E1805E27AC8CE60006ACC9 /* TestingSceneDelegate.swift in Sources */,
 				2A58FAB22AD71F3600BD1967 /* anyData.swift in Sources */,

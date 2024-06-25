@@ -19,7 +19,7 @@ extension BottomAmountConfig {
         button: .iFora,
         buttonSize: .init(width: 114, height: 40),
         dividerColor: .bordersDivider,
-        title: "Продолжить",
+        title: "Сумма платежа",
         titleConfig: .init(
             textFont: .textBodySR12160(),
             textColor: .textPlaceholder

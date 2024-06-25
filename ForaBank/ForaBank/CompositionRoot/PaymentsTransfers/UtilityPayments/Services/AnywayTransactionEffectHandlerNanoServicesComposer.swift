@@ -222,7 +222,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     
     private func makeTransferLive() -> MakeTransfer {
         
-        let createRequest = ForaBank.RequestFactory.createMakeTransferRequest
+        let createRequest = ForaBank.RequestFactory.createMakeTransferV2Request
         let mapResponse = AnywayPaymentBackend.ResponseMapper.mapMakeTransferResponse
         
         let service = LoggingRemoteServiceDecorator(
