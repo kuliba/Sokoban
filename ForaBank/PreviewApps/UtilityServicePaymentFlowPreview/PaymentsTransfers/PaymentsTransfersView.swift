@@ -208,7 +208,7 @@ private extension PaymentsTransfersView {
                 
                 return .init(
                     with: .init(
-                        title: "Error!",
+                        title: "Ошибка!",
                         message: errorMessage,
                         primaryButton: .init(
                             type: .default,

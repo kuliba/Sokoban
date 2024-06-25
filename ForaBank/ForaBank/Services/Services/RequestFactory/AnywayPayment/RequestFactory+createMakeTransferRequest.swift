@@ -24,4 +24,18 @@ extension ForaBank.RequestFactory {
             payload: payload
         )
     }
+    
+    static func createMakeTransferV2Request(
+        _ payload: RemoteServices.RequestFactory.VerificationCode
+    ) throws -> URLRequest {
+        
+        let base = Config.serverAgentEnvironment.baseURL
+        let endpoint = Services.Endpoint.makeTransferV2
+        let endpointURL = try! endpoint.url(withBase: base)
+        
+        return try RemoteServices.RequestFactory.createMakeTransferRequest(
+            url: endpointURL,
+            payload: payload
+        )
+    }
 }

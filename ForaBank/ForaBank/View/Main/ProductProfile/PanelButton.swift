@@ -104,5 +104,5 @@ extension PanelButton.Details {
 
 extension PanelButton.Details {
     
-    typealias Event = ProductNavigationStateManager.ButtonEvent
+    typealias Event = ProductProfileFlowManager.ButtonEvent
 }

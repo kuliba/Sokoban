@@ -58,6 +58,7 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
     ) -> Composer {
         
         let sut = Composer(
+            getCurrencySymbol: { _ in "₽" },
             elementMapper: .init(
                 currencyOfProduct: { _ in "₽" },
                 getProducts: { [] },

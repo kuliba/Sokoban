@@ -88,11 +88,7 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: .init(
-                alertReduce: AlertReducer(productAlertsViewModel: .default).reduce,
-                bottomSheetReduce: BottomSheetReducer().reduce,
-                handleEffect: ProductNavigationStateEffectHandler().handleEffect
-            ),
+            productNavigationStateManager: ProductProfileFlowManager.preview,
             updateInfoStatusFlag: .init(.inactive)
         )
         return .init(

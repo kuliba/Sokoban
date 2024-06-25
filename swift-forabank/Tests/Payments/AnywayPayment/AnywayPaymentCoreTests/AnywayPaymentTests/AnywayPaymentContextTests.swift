@@ -11,19 +11,19 @@ import XCTest
 
 final class AnywayPaymentContextTests: XCTestCase {
     
-    // MARK: - restorePayment
+    // MARK: - rollbackPayment
     
-    func test_restorePayment_shouldNotChangePaymentOnEmptyStaged() {
+    func test_rollbackPayment_shouldNotChangePaymentOnEmptyStaged() {
         
         let context = makeAnywayPaymentContext(elements: [])
         
-        let restored = context.restorePayment()
+        let restored = context.rollbackPayment()
         
         XCTAssertNoDiff(restored, context)
         XCTAssert(context.staged.isEmpty)
     }
     
-    func test_restorePayment_shouldChangeParameterValuesToOutlinedForStaged() {
+    func test_rollbackPayment_shouldChangeParameterValuesToOutlinedForStaged() {
         
         let parameterOne = makeAnywayPaymentParameter(id: "one", value: "ONE")
         let parameterTwo = makeAnywayPaymentParameter(id: "two", value: "TWO")
@@ -36,7 +36,7 @@ final class AnywayPaymentContextTests: XCTestCase {
             shouldRestart: false
         )
         
-        let restored = context.restorePayment()
+        let restored = context.rollbackPayment()
         
         XCTAssertNoDiff(restored, context.updating(
             payment: payment.updating(elements: [

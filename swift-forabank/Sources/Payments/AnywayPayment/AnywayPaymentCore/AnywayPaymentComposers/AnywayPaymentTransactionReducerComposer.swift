@@ -18,8 +18,6 @@ public extension AnywayPaymentTransactionReducerComposer {
         
         return .init(
             paymentReduce: paymentReduce(),
-            stagePayment: stagePayment,
-            updatePayment: updatePayment,
             paymentInspector: composeInspector()
         )
     }
@@ -66,7 +64,9 @@ private extension AnywayPaymentTransactionReducerComposer {
             getVerificationCode: { $0.payment.otp },
             makeDigest: { $0.makeDigest() },
             resetPayment: { $0.resetPayment() },
-            restorePayment: { $0.restorePayment() },
+            rollbackPayment: { $0.rollbackPayment() },
+            stagePayment: stagePayment,
+            updatePayment: updatePayment,
             validatePayment: validatePayment,
             wouldNeedRestart: { $0.wouldNeedRestart }
         )
@@ -76,12 +76,9 @@ private extension AnywayPaymentTransactionReducerComposer {
         context: AnywayPaymentContext
     ) -> Bool {
         
-        let parameterValidator = AnywayPaymentParameterValidator()
-        let validator = AnywayPaymentValidator(
-            isValidParameter: parameterValidator.isValid(_:)
-        )
+        let validator = AnywayPaymentContextValidator()
         
-        return validator.isValid(context.payment)
+        return validator.validate(context) == nil
     }
     
     typealias Effect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>

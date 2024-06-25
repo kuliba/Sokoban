@@ -246,6 +246,7 @@ extension ProductData {
     }
     
     var displayName: String { customName ?? mainField }
+    var navigationBarName: String { customName ?? additionalField ?? mainField }
     var balanceValue: Double { balance ?? 0 }
     var backgroundColor: Color { background.first?.color ?? .mainColorsBlackMedium }
     var overlayImageColor: Color {

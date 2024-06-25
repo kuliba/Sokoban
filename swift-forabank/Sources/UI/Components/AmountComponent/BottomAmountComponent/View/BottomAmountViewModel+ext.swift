@@ -19,7 +19,8 @@ public extension BottomAmountViewModel {
             currencySymbol: currencySymbol
         )
         let textField = DecimalTextFieldViewModel.decimal(
-            formatter: formatter
+            formatter: formatter,
+            scheduler: scheduler
         )
         let reducer = BottomAmountReducer()
         

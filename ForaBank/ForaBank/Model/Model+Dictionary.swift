@@ -2108,6 +2108,8 @@ extension Model {
     //DownloadImages
     func handleDictionaryDownloadImages(payload: ModelAction.Dictionary.DownloadImages.Request) {
         
+        guard let payload = payload.cleaned() else { return }
+        
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
             return
@@ -2181,6 +2183,24 @@ extension Model {
         guard let inn = code.stringValue(type: .general(.inn), mapping: mapping) else { return nil }
         
         return dictionaryAnywayOperators()?.filter( { $0.synonymList.contains(inn) }).filter({$0.parameterList.isEmpty == false})
+    }
+}
+
+// MARK: - Helper
+
+private extension ModelAction.Dictionary.DownloadImages.Request {
+    
+    // TODO: temp solution
+    // should implement HTTPClient blacklisting in the Composition Root
+    /// Returns an optional instance of `Request` with placeholder and empty image IDs removed.
+    ///
+    /// If the initial list of image IDs is empty or all IDs are placeholders or empty, the method returns `nil`.
+    ///
+    /// - Returns: An optional `Request` instance with cleaned image IDs, or `nil` if the initial list is empty or all IDs were placeholders or empty.
+    func cleaned() -> Self? {
+        
+        let filtered = imagesIds.filter { !$0.isEmpty && $0 != "placeholder" }
+        return filtered.isEmpty ? nil : .init(imagesIds: filtered)
     }
 }
 
