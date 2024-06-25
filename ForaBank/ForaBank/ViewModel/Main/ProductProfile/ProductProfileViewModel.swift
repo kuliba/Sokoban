@@ -66,7 +66,7 @@ class ProductProfileViewModel: ObservableObject {
     private var cardAction: CardAction?
     private let productProfileViewModelFactory: ProductProfileViewModelFactory
     
-    private let productNavigationStateManager: ProductNavigationStateManager
+    private let productNavigationStateManager: ProductProfileFlowManager
 
     private var bindings = Set<AnyCancellable>()
     
@@ -95,7 +95,7 @@ class ProductProfileViewModel: ObservableObject {
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
          operationDetailFactory: OperationDetailFactory,
-         productNavigationStateManager: ProductNavigationStateManager,
+         productNavigationStateManager: ProductProfileFlowManager,
          cvvPINServicesClient: CVVPINServicesClient,
          productProfileViewModelFactory: ProductProfileViewModelFactory,
          rootView: String,
@@ -159,7 +159,7 @@ class ProductProfileViewModel: ObservableObject {
         operationDetailFactory: OperationDetailFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
-        productNavigationStateManager: ProductNavigationStateManager,
+        productNavigationStateManager: ProductProfileFlowManager,
         productProfileViewModelFactory: ProductProfileViewModelFactory,
         rootView: String,
         dismissAction: @escaping () -> Void,
@@ -2501,7 +2501,7 @@ extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
-    func handleEffect(_ effect: ProductNavigationStateManager.Effect) {
+    func handleEffect(_ effect: ProductProfileFlowManager.Effect) {
         
         productNavigationStateManager.handleEffect(effect) { [weak self] event in
             
@@ -2600,7 +2600,7 @@ extension ProductProfileViewModel {
         }
     }
     
-    func event(_ event: ProductNavigationStateManager.ButtonEvent) {
+    func event(_ event: ProductProfileFlowManager.ButtonEvent) {
         
         self.bottomSheet = nil
 

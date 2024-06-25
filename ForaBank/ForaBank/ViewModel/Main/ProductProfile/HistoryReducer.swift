@@ -37,5 +37,5 @@ extension HistoryReducer {
     
     typealias Event = HistoryEvent
     typealias State = ProductProfileViewModel.HistoryState?
-    typealias Effect = ProductNavigationStateEffect
+    typealias Effect = ProductProfileFlowEffect
 }
