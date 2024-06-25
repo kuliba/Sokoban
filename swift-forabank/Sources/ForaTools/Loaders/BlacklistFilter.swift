@@ -31,12 +31,20 @@ public final class BlacklistFilter<Request: Hashable> {
         self.isBlacklisted = isBlacklisted
     }
     
-    public typealias IsBlacklisted = (Request, Int) -> Bool?
+    /// A typealias for the closure that determines whether a request should be blacklisted.
+    ///
+    /// - Parameters:
+    ///   - request: The request to be checked.
+    ///   - attempts: The number of attempts made for the request.
+    /// - Returns: A boolean indicating whether the request should be blacklisted.
+    public typealias IsBlacklisted = (Request, Int) -> Bool
 }
 
 public extension BlacklistFilter {
     
     /// Checks whether the given request is blacklisted.
+    ///
+    /// This method increments the attempt count for the request and uses the provided `isBlacklisted` closure to determine if the request should be blacklisted.
     ///
     /// - Parameter request: The request to be checked.
     /// - Returns: A boolean indicating whether the request is blacklisted.
