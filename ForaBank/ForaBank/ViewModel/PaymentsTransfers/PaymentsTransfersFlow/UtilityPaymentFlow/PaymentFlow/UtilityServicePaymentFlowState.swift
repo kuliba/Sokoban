@@ -5,20 +5,25 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
+import Combine
+
 struct UtilityServicePaymentFlowState<ViewModel> {
     
     let viewModel: ViewModel
+    let subscription: AnyCancellable
     var alert: Alert?
     var fullScreenCover: FullScreenCover?
     var modal: Modal?
     
     init(
         viewModel: ViewModel,
+        subscription: AnyCancellable,
         alert: Alert? = nil,
         fullScreenCover: FullScreenCover? = nil,
         modal: Modal? = nil
     ) {
         self.viewModel = viewModel
+        self.subscription = subscription
         self.alert = alert
         self.fullScreenCover = fullScreenCover
         self.modal = modal

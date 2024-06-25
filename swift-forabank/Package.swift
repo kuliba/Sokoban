@@ -204,6 +204,7 @@ let package = Package(
         .userAccountNavigationComponentTests,
         // UI Components
         .amountComponent,
+        .amountComponentTests,
         .buttonComponent,
         .infoComponent,
         .checkBoxComponent,
@@ -949,6 +950,7 @@ private extension Target {
             .tagged,
             .shimmer,
             .uiPrimitives,
+            .rxViewModel
         ],
         path: "Sources/Landing/\(String.landingUIComponent)"
     )
@@ -1861,6 +1863,20 @@ private extension Target {
         path: "Sources/UI/Components/\(String.amountComponent)"
     )
     
+    static let amountComponentTests = testTarget(
+        name: .amountComponentTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .amountComponent,
+            .foraTools,
+            .textFieldComponent,
+            .sharedConfigs,
+        ],
+        path: "Tests/UI/Components/\(String.amountComponentTests)"
+    )
+    
     static let buttonComponent = target(
         name: .buttonComponent,
         dependencies: [
@@ -2598,6 +2614,7 @@ private extension String {
     // MARK: - UI Components
 
     static let amountComponent = "AmountComponent"
+    static let amountComponentTests = "AmountComponentTests"
     
     static let buttonComponent = "ButtonComponent"
     

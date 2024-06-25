@@ -39,6 +39,13 @@ final class ResponseMapper_getProductListByTypeServiceTests: XCTestCase {
         )
     }
     
+    func test_map_returnEmptyProductsOnEmptyList() throws {
+       
+        let result = try XCTUnwrap(map(statusCode: 200, data: Data(String.emptyList.utf8))).get()
+
+        XCTAssertNoDiff(result, .init(serial: "04ba222dd6021a0e41582c669cb8e9a4", products: []))
+    }
+    
     func test_map_returnAccountOnAccountData() throws {
         
         let result = try XCTUnwrap(map(data: JSON(for: .account))).get()
@@ -170,6 +177,16 @@ private extension String {
     }
 """
     
+    static let emptyList: Self = """
+    {
+        "statusCode":0,
+        "errorMessage":null,
+        "data":{
+            "serial":"04ba222dd6021a0e41582c669cb8e9a4",
+            "productList":[]
+        }
+    }
+"""
     static func createJson(with statusPC: String) -> Self {
       
         return 
