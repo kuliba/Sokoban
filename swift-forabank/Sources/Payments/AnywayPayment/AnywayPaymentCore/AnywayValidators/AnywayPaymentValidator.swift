@@ -35,11 +35,6 @@ public extension AnywayPaymentValidator {
             return .parameterValidationErrors(errors)
         }
         
-//        if let otpError = validateOTP(payment) {
-//            
-//            return otpError
-//        }
-        
         return validateOTP(payment) ?? validate(payment.footer)
     }
 }
