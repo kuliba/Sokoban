@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIPrimitives
 
 public final class BlockHorizontalRectangularReducer {
     
@@ -33,7 +32,7 @@ public extension BlockHorizontalRectangularReducer {
 //            state.warning = ""
 //        }
 //        state.value = "\(limit.value)"
-//            
+//
 //        }
         
         return (state, effect)

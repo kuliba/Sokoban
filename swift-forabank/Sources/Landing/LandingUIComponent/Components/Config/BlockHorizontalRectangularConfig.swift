@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import UIPrimitives
 
 public extension UILanding.BlockHorizontalRectangular {
     
@@ -80,6 +79,4 @@ public extension UILanding.BlockHorizontalRectangular {
             self.spacing = spacing
         }
     }
-    
-    
 }

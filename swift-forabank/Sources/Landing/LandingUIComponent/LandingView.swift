@@ -299,6 +299,7 @@ extension LandingView {
                 MultiMarkersTextView(model: model, config: config.multiMarkersText)
                 
             case let .blockHorizontalRectangular(block):
+                // TODO: add reduce, handleEffect
                 BlockHorizontalRectangularWrappedView(
                     model: .init(
                         initialState: .init(block: block),
