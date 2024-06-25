@@ -11,6 +11,24 @@ import XCTest
 
 final class AnywayPaymentValidatorTests: XCTestCase {
     
+    func test_validate_shouldDeliverOTPValidationErrorOnNilOTPAndEmptyParameters() {
+        
+        let payment = makeAnywayPaymentWithOTP(nil)
+        let sut = makeSUT(validateParameter: { _ in nil })
+        
+        XCTAssertNoDiff(sut.validate(payment), .otpValidationError)
+        XCTAssertTrue(parameters(of: payment).isEmpty)
+    }
+    
+    func test_validate_shouldDeliverOTPValidationErrorOnInvalidOTPAndEmptyParameters() {
+        
+        let payment = makeAnywayPaymentWithOTP(123)
+        let sut = makeSUT(validateParameter: { _ in nil })
+        
+        XCTAssertNoDiff(sut.validate(payment), .otpValidationError)
+        XCTAssertTrue(parameters(of: payment).isEmpty)
+    }
+    
     func test_validate_shouldDeliverFooterValidationErrorOnInvalidFooterAndEmptyParameters() {
         
         let payment = makeAnywayPayment(footer: .amount(-1))

@@ -218,11 +218,12 @@ func makeAnywayPaymentWithoutAmount(
 }
 
 func makeAnywayPaymentWithOTP(
+    _ value: Int? = nil,
     file: StaticString = #file,
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(elements: [.widget(makeOTPWidget())])
+    let payment = makeAnywayPayment(elements: [.widget(makeOTPWidget(value))])
     XCTAssert(hasOTPField(payment), "Expected to have OTP field.", file: file, line: line)
     return payment
 }
