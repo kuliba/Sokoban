@@ -160,8 +160,3 @@ final class CacheDecoratorTests: XCTestCase {
         let value: String
     }
 }
-
-private func anyError(_ domain: String = "any error") -> Error {
-    
-    NSError(domain: domain, code: -1)
-}

@@ -77,7 +77,7 @@ final class StrategyLoaderTests: XCTestCase {
     func test_load_shouldNotDeliverSecondaryResponseOnInstanceDeallocation() {
         
         var sut: SUT?
-        let (primary, secondary): (LoadSpy, LoadSpy)
+        let (primary, secondary): (Primary, Secondary)
         var results = [LoadResult]()
         (sut, primary, secondary) = makeSUT()
         
@@ -90,7 +90,8 @@ final class StrategyLoaderTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = StrategyLoader<Payload, Response, LoadFailure>
-    private typealias LoadSpy = Spy<Payload, LoadResult>
+    private typealias Primary = Spy<Payload, Result<Response, Error>>
+    private typealias Secondary = Spy<Payload, LoadResult>
     
     private typealias Payload = Int
     private typealias Response = String
@@ -101,11 +102,11 @@ final class StrategyLoaderTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
-        primary: LoadSpy,
-        secondary: LoadSpy
+        primary: Primary,
+        secondary: Secondary
     ) {
-        let primary = LoadSpy()
-        let secondary = LoadSpy()
+        let primary = Primary()
+        let secondary = Secondary()
         
         let sut = SUT(primary: primary, secondary: secondary)
         
