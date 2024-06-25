@@ -44,12 +44,12 @@ extension UILanding.List {
                 
                 let id: String
                 let title: String
-                let colorHEX: String
+                let color: Color
                 
-                public init(id: String, title: String, colorHEX: String) {
+                public init(id: String, title: String, color: Color) {
                     self.id = id
                     self.title = title
-                    self.colorHEX = colorHEX
+                    self.color = color
                 }
             }
             
@@ -73,14 +73,57 @@ extension ListHorizontalRectangleLimitsView {
         
         @Published private(set) var data: HorizontalList
                 
-        let makeIconView: LandingView.MakeIconView
-        
+        private let action: (LandingEvent) -> Void
+
         init(
             data: HorizontalList,
-            makeIconView: @escaping LandingView.MakeIconView
+            action: @escaping (LandingEvent) -> Void
         ) {
             self.data = data
-            self.makeIconView = makeIconView
+            self.action = action
         }
+        
+        func itemAction(
+            item: HorizontalList.Item
+        ) {
+            // TODO: добавить корректный
+            print("tap \(item.limitType)")
+            action(.card(.goToMain))
+        }
+    }
+}
+
+enum Spent: Equatable {
+    
+    case noSpent
+    case spentEverything
+    case spent(Double)
+}
+
+struct SpentConfig {
+    
+    let startMainAngle: Double
+    let startSpentAngle: Double
+    let interval: Double
+    let size: CGFloat
+    let mainWidth: CGFloat
+    let spentWidth: CGFloat
+    
+    init(
+        startSpentAngle: Double = 270,
+        interval: Double = 15,
+        size: CGFloat = 14,
+        mainWidth: CGFloat = 4
+    ) {
+        self.startMainAngle = startSpentAngle - interval
+        self.startSpentAngle = startSpentAngle
+        self.interval = interval
+        self.size = size
+        self.mainWidth = mainWidth
+        self.spentWidth = mainWidth/2 
+    }
+    
+    var mainArcSize: CGFloat {
+        size - spentWidth
     }
 }

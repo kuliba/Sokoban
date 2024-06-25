@@ -21,14 +21,14 @@ struct AnywayTransactionView: View {
         VStack(spacing: 16) {
             
             paymentView(elements: elements)
-            factory.makeFooterView(state) { event($0.transactionEvent) }
+            factory.makeFooterView(state.footer)
         }
     }
 }
 
 extension AnywayTransactionView {
     
-    typealias State = CachedTransactionState
+    typealias State = AnywayTransactionState
     typealias Event = AnywayTransactionEvent
     typealias Factory = AnywayPaymentFactory<IconView>
     typealias IconView = UIPrimitives.AsyncImage
@@ -36,7 +36,7 @@ extension AnywayTransactionView {
 
 private extension AnywayTransactionView {
     
-    var elements: [Element] { state.context.payment.models }
+    var elements: [Element] { state.identifiedModels }
     
     private func paymentView(
         elements: [Element]
@@ -82,7 +82,7 @@ private extension AnywayTransactionView {
         }
     }
     
-    typealias Element = CachedAnywayPayment<AnywayElementModel>.IdentifiedModel
+    typealias Element = State.IdentifiedModel
 }
 
 // MARK: - Adapters

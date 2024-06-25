@@ -205,6 +205,9 @@ private extension PaymentsTransfersFlowReducer {
                 state.setPaymentModal(to: .fraud(fraud))
             }
             
+        case .inflight:
+            break
+            
         case let .serverError(errorMessage):
             state.setPaymentAlert(to: .serverError(errorMessage))
             
@@ -236,7 +239,7 @@ private extension PaymentsTransfersFlowReducer {
                 
 #warning("the case should have associated string")
             case .transactionFailure:
-                state.setPaymentAlert(to: .terminalError("Error"))
+                state.setPaymentAlert(to: .terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
                 
 #warning("the case should have associated string")
             case .updatePaymentFailure:
@@ -395,16 +398,16 @@ private extension PaymentsTransfersFlowReducer {
                 destination: nil
             )))
             
-        case let .startPayment(transactionState):
-            reduce(&state, with: transactionState)
+        case let .startPayment(transaction):
+            reduce(&state, with: transaction)
         }
     }
     
     private func reduce(
         _ state: inout State,
-        with transactionState: AnywayTransactionState
+        with transaction: AnywayTransactionState.Transaction
     ) {
-        let utilityPaymentState = factory.makeUtilityPaymentState(transactionState, notify)
+        let utilityPaymentState = factory.makeUtilityPaymentState(transaction, notify)
         
         switch state.utilityPrepaymentDestination {
         case .none:

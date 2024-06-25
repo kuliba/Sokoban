@@ -11,7 +11,7 @@ extension ButtonConfig {
     
     static let iFora: Self = .init(
         active: .init(
-            backgroundColor: .init(hex: "#FF3636"),
+            backgroundColor: .mainColorsRed,
             text: .init(
                 textFont: .textH4R16240(),
                 textColor: .textWhite

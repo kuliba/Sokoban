@@ -8,4 +8,4 @@
 import PaymentComponents
 import RxViewModel
 
-typealias ObservingSelectViewModel = RxViewModel<SelectUIState, SelectEvent, Never>
+typealias ObservingSelectViewModel = RxObservingViewModel<SelectUIState, SelectEvent, Never>

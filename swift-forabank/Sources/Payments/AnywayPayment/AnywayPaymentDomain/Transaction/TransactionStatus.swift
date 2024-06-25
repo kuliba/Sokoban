@@ -5,10 +5,11 @@
 //  Created by Igor Malyarov on 19.05.2024.
 //
 
-public enum TransactionStatus<Report> {
+public enum TransactionStatus<Payment, PaymentUpdate, Report> {
     
     case awaitingPaymentRestartConfirmation
-    case fraudSuspected
+    case fraudSuspected(PaymentUpdate)
+    case inflight
     case result(TransactionResult)
     case serverError(String)
 }
@@ -33,4 +34,4 @@ public extension TransactionStatus.Terminated {
     }
 }
 
-extension TransactionStatus: Equatable where Report: Equatable {}
+extension TransactionStatus: Equatable where Payment: Equatable, PaymentUpdate: Equatable, Report: Equatable {}

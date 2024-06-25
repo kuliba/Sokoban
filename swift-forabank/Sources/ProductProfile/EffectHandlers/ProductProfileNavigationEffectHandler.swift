@@ -5,6 +5,7 @@
 //  Created by Andryusina Nataly on 07.02.2024.
 //
 
+import ForaTools
 import Foundation
 import ProductProfileComponents
 import RxViewModel

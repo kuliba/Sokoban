@@ -36,7 +36,7 @@ final class ListHorizontalRectangleLimitsViewModelTests: XCTestCase {
 
 private extension Array where Element == UILanding.List.HorizontalRectangleLimits.Item.Limit {
     
-    static let `default`: Self = [.init(id: "id", title: "limitTitle", colorHEX: "color")]
+    static let `default`: Self = [.init(id: "id", title: "limitTitle", color: .blue)]
 }
 
 private extension Array where Element == UILanding.List.HorizontalRectangleLimits.Item {

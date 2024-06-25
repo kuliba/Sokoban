@@ -51,7 +51,7 @@ extension UtilityPrepaymentFlowEvent {
     enum ProcessSelectionSuccess {
         
         case services(MultiElementArray<Service>, for: Operator)
-        case startPayment(AnywayTransactionState)
+        case startPayment(AnywayTransactionState.Transaction)
     }
     
     enum ProcessSelectionFailure: Error {

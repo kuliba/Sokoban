@@ -6,6 +6,7 @@
 //
 
 import Combine
+import ForaTools
 import Foundation
 
 /// A view model that maps a list of identifiable items to a list of models using a provided mapping function.

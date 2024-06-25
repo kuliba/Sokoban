@@ -28,7 +28,7 @@ extension PaymentsTransfersFlowReducerFactory {
     typealias MakeUtilityPrepaymentState = (Payload) -> UtilityPaymentFlowState<Operator, Service, Content, PaymentViewModel>
     
     typealias Notify = (AnywayTransactionStatus?) -> Void
-    typealias MakeUtilityPaymentState = (AnywayTransactionState, @escaping Notify) -> UtilityServicePaymentFlowState<PaymentViewModel>
+    typealias MakeUtilityPaymentState = (AnywayTransactionState.Transaction, @escaping Notify) -> UtilityServicePaymentFlowState<PaymentViewModel>
     
     typealias CloseAction = () -> Void
     typealias MakePaymentsViewModel = (@escaping CloseAction) -> PaymentsViewModel

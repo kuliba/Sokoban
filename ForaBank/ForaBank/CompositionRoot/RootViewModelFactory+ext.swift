@@ -28,7 +28,11 @@ extension RootViewModelFactory {
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
         
-        model.getProducts = Services.getProductListByType(httpClient, logger: logger)
+        let httpClient: HTTPClient = model.authenticatedHTTPClient()
+        
+        let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
+        
+        model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
         
         let rsaKeyPairStore = makeLoggingStore(
             store: KeyTagKeyChainStore<RSADomain.KeyPair>(
@@ -177,7 +181,7 @@ extension RootViewModelFactory {
     typealias LatestPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     
-    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
     static func makeNavigationOperationView(
@@ -308,7 +312,7 @@ extension ProductProfileViewModel {
     typealias LatestPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     
-    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PTFlowManger
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
