@@ -13,6 +13,7 @@ import OperatorsListComponents
 import ForaTools
 import Foundation
 import GenericRemoteService
+import PaymentComponents
 import RemoteServices
 import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
@@ -23,7 +24,7 @@ final class PaymentsTransfersFlowManagerComposer {
     private let model: Model
     private let httpClient: HTTPClient
     private let log: Log
-        
+    
     init(
         flag: Flag,
         model: Model,
@@ -47,11 +48,12 @@ extension PaymentsTransfersFlowManagerComposer {
         _ spinnerActions: RootViewModel.RootActions.Spinner?
     ) -> FlowManager {
         
-        let makeModel = makeTransactionViewModel()
-        let composer = makeReducerFactoryComposer(
-            makeTransactionViewModel: makeModel
+        let composer = makeReducerFactoryComposer()
+        let factory = composer.compose(
+            makeUtilityPaymentState: makeUtilityPaymentState(
+                with: spinnerActions
+            )
         )
-        let factory = composer.compose(with: spinnerActions)
         
         return .init(
             handleEffect: makeHandleEffect(),
@@ -66,7 +68,7 @@ extension PaymentsTransfersFlowManagerComposer {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias PaymentViewModel = CachedAnywayTransactionViewModel
+    typealias PaymentViewModel = AnywayTransactionViewModel
 }
 
 private extension PaymentsTransfersFlowManagerComposer {
@@ -126,7 +128,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         let microComposer = UtilityPrepaymentFlowMicroServicesComposer(
             flag: flag.rawValue,
             nanoServices: nanoComposer.compose(),
-            makeLegacyPaymentsServicesViewModel: makeLegacyPaymentsServicesViewModel
+            makeLegacyPaymentsServicesViewModel: makeLegacyViewModel
         )
         
         return .init(microServices: microComposer.compose())
@@ -142,7 +144,7 @@ private extension PaymentsTransfersFlowManagerComposer {
         load(.init()) { completion($0); _ = load }
     }
     
-    private func makeLegacyPaymentsServicesViewModel(
+    private func makeLegacyViewModel(
         payload: MakePaymentPayload
     ) -> PaymentsServicesViewModel {
         
@@ -190,7 +192,6 @@ private extension PaymentsTransfersFlowManagerComposer {
     typealias FlowReducer = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel>
     
     private func makeReducerFactoryComposer(
-        makeTransactionViewModel: @escaping MakeTransactionViewModel
     ) -> PaymentsTransfersFlowReducerFactoryComposer {
         
         let nanoServices = UtilityPrepaymentNanoServices(
@@ -203,16 +204,87 @@ private extension PaymentsTransfersFlowManagerComposer {
         
         return .init(
             model: model,
-            observeLast: settings.observeLast,
-            fraudDelay: settings.fraudDelay,
-            navTitle: settings.utilityNavTitle,
-            microServices: microComposer.compose(),
-            makeTransactionViewModel: makeTransactionViewModel
+            settings: .init(
+                observeLast: settings.observeLast,
+                fraudDelay: settings.fraudDelay,
+                navTitle: settings.utilityNavTitle
+            ),
+            microServices: microComposer.compose()
         )
     }
     
     typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
     typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
+    
+    func makeUtilityPaymentState(
+        with spinnerActions: RootViewModel.RootActions.Spinner?
+    ) -> (AnywayTransactionState.Transaction, @escaping NotifyStatus) -> UtilityServicePaymentFlowState<AnywayTransactionViewModel> {
+        
+        let elementMapper = AnywayElementModelMapper(
+            currencyOfProduct: self.currencyOfProduct,
+            getProducts: self.model.productSelectProducts,
+            flag: flag.optionOrStub
+        )
+        
+        let microServices = composeMicroServices()
+        
+        let composer = AnywayTransactionViewModelComposer(
+            getCurrencySymbol: getCurrencySymbol,
+            elementMapper: elementMapper,
+            microServices: microServices,
+            spinnerActions: spinnerActions
+        )
+        
+        return { transaction, notify in
+            
+            let viewModel = composer.makeAnywayTransactionViewModel(
+                transaction: transaction
+            )
+            
+            let subscription = viewModel.$state
+                .dropFirst()
+                .map(\.transaction.status)
+                .removeDuplicates()
+                .sink(receiveValue: notify)
+            
+            return .init(viewModel: viewModel, subscription: subscription)
+        }
+    }
+    
+    private func composeMicroServices(
+    ) -> AnywayTransactionEffectHandlerMicroServices {
+        
+        typealias NanoServicesComposer = AnywayTransactionEffectHandlerNanoServicesComposer
+        typealias MicroServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer
+        
+        let nanoServicesComposer = NanoServicesComposer(
+            flag: flag.optionOrStub,
+            httpClient: httpClient,
+            log: log
+        )
+        
+        let microServicesComposer = MicroServicesComposer(
+            nanoServices: nanoServicesComposer.compose()
+        )
+        
+        return microServicesComposer.compose()
+    }
+    
+    private func getCurrencySymbol(
+        for currency: String
+    ) -> String {
+        
+        model.dictionaryCurrencySymbol(for: currency) ?? ""
+    }
+    
+    typealias NotifyStatus = (AnywayTransactionStatus?) -> Void
+    
+    private func currencyOfProduct(
+        product: ProductSelect.Product
+    ) -> String {
+        
+        model.currencyOf(product: product) ?? ""
+    }
     
     private func loadOperators(
         payload: LoadOperatorsPayload,
@@ -245,20 +317,5 @@ private extension PaymentsTransfersFlowManagerComposer {
         )
         
         return loaderComposer.compose()
-    }
-    
-    private func makeTransactionViewModel(
-    ) -> MakeTransactionViewModel {
-        
-        let composer = AnywayTransactionViewModelComposer(
-            flag: flag.optionOrStub,
-            httpClient: httpClient,
-            log: log
-        )
-        
-        return { initialState, observe in
-            
-            composer.compose(initialState: initialState, observe: observe)
-        }
     }
 }

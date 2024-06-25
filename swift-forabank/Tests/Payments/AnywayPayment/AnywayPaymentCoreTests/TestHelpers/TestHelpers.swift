@@ -51,7 +51,7 @@ typealias OperationDetailID = Int
 
 typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails>
 typealias Report = TransactionReport<DocumentStatus, _OperationInfo>
-typealias _TransactionStatus = TransactionStatus<Report>
+typealias _TransactionStatus = TransactionStatus<Context, PaymentUpdate, Report>
 
 typealias _Transaction = Transaction<Context, _TransactionStatus>
 typealias _TransactionEvent = TransactionEvent<Report, PaymentEvent, PaymentUpdate>
@@ -79,7 +79,17 @@ func isFraudSuspected(
     _ state: _Transaction
 ) -> Bool {
     
-    state.status == .fraudSuspected
+    switch state.status {
+    case .fraudSuspected: return true
+    default: return false
+    }
+}
+
+func makePaymentUpdate(
+    _ value: String = anyMessage()
+) -> PaymentUpdate {
+    
+    return .init(value: value)
 }
 
 func makeCompletePaymentFailureEvent(
@@ -129,7 +139,7 @@ func makeFraudCancelTransactionEvent(
 func makeFraudContinueTransactionEvent(
 ) -> _TransactionEvent {
     
-    .fraud(.continue)
+    .fraud(.consent)
 }
 
 func makeFraudExpiredTransactionEvent(
@@ -139,11 +149,12 @@ func makeFraudExpiredTransactionEvent(
 }
 
 func makeFraudSuspectedTransaction(
-    _ context: Context = makeContext()
+    _ context: Context = makeContext(),
+    _ update: PaymentUpdate = makePaymentUpdate()
 ) -> _Transaction {
     
-    let state = makeTransaction(context, status: .fraudSuspected)
-    precondition(state.status == .fraudSuspected)
+    let state = makeTransaction(context, status: .fraudSuspected(update))
+    precondition(state.status == .fraudSuspected(update))
     return state
 }
 
@@ -177,8 +188,19 @@ func makeNonFraudSuspectedTransaction(
 ) -> _Transaction {
     
     let state = makeTransaction(context)
-    precondition(state.status != .fraudSuspected)
+    precondition(!state.isFraudSuspected)
     return state
+}
+
+extension _Transaction {
+    
+    var isFraudSuspected: Bool {
+        
+        switch status {
+        case .fraudSuspected: return true
+        default: return false
+        }
+    }
 }
 
 func makeOperationDetailsTransactionReport(
@@ -263,7 +285,11 @@ func makeTransaction(
     status: _TransactionStatus? = nil
 ) -> _Transaction {
     
-    .init(context: context, isValid: isValid, status: status)
+    return .init(
+        context: context,
+        isValid: isValid,
+        status: status
+    )
 }
 
 func makeResponse(

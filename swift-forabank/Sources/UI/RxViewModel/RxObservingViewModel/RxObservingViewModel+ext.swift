@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 20.04.2024.
 //
 
+import ForaTools
+
 public extension RxObservingViewModel {
     
     convenience init(

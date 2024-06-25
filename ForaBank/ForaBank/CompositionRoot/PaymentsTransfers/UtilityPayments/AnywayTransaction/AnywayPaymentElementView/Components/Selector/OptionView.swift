@@ -15,6 +15,8 @@ struct OptionView: View {
     var body: some View {
         
         Text(option.value)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
     }
 }
 

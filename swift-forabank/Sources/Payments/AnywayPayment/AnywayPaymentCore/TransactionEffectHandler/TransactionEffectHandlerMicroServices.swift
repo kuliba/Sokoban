@@ -9,17 +9,20 @@ import AnywayPaymentDomain
 
 public struct TransactionEffectHandlerMicroServices<TransactionReport, PaymentDigest, PaymentEffect, PaymentEvent, PaymentUpdate> {
     
+    public let getVerificationCode: GetVerificationCode
     public let initiatePayment: InitiatePayment
     public let makePayment: MakePayment
     public let paymentEffectHandle: PaymentEffectHandle
     public let processPayment: ProcessPayment
     
     public init(
+        getVerificationCode: @escaping GetVerificationCode,
         initiatePayment: @escaping InitiatePayment,
         makePayment: @escaping MakePayment,
         paymentEffectHandle: @escaping PaymentEffectHandle,
         processPayment: @escaping ProcessPayment
     ) {
+        self.getVerificationCode = getVerificationCode
         self.initiatePayment = initiatePayment
         self.makePayment = makePayment
         self.paymentEffectHandle = paymentEffectHandle
@@ -29,6 +32,10 @@ public struct TransactionEffectHandlerMicroServices<TransactionReport, PaymentDi
 
 public extension TransactionEffectHandlerMicroServices {
     
+    typealias GetVerificationCodeResult = Event.VerificationCode.GetVerificationCodeResult
+    typealias GetVerificationCodeCompletion = (GetVerificationCodeResult) -> Void
+    typealias GetVerificationCode = (@escaping GetVerificationCodeCompletion) -> Void
+
     typealias InitiatePayment = ProcessPayment
     
     typealias ProcessResult = Event.UpdatePaymentResult

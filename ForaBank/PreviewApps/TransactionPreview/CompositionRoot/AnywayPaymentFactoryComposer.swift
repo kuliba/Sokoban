@@ -178,14 +178,14 @@ private extension AnywayPaymentFactoryComposer {
     typealias Option = UIComponent.Parameter.ParameterType.Option
 
     typealias Observe = (ProductID, Currency) -> Void
-    typealias ProductID = AnywayElement.Widget.PaymentCore.ProductID
+    typealias ProductID = AnywayElement.Widget.Product.ProductID
     typealias Currency = AnywayPaymentEvent.Widget.Currency
 }
 
 private extension ProductSelect.Product {
     
     func isMatching(
-        _ productID: AnywayElement.Widget.PaymentCore.ProductID
+        _ productID: AnywayElement.Widget.Product.ProductID
     ) -> Bool {
         
         switch productID {

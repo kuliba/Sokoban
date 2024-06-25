@@ -121,6 +121,8 @@ class AuthLoginViewModelTests: XCTestCase {
         private(set) var cardOrders = [CardOrder]()
         private(set) var stickerOrders = [Int]()
         private(set) var goToMainCount = 0
+        private(set) var openUrl = 0
+
         
         func makeCardLandingViewModel(
             _ type: ForaBank.AbroadType,
@@ -156,6 +158,8 @@ class AuthLoginViewModelTests: XCTestCase {
                             self?.cardOrders.append(
                                 .init(cardTarif: cardTarif, cardType: cardType)
                             )
+                        case .openUrl:
+                            self?.openUrl += 1
                         }
                         
                     case let .sticker(sticker):

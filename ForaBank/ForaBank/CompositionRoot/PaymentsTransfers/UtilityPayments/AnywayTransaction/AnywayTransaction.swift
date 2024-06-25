@@ -5,41 +5,45 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
-import AnywayPaymentBackend
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import AnywayPaymentUI
+import Combine
+import PaymentComponents
 import RemoteServices
 import RxViewModel
 
-typealias CachedAnywayTransactionViewModel = RxViewModel<CachedTransactionState, CachedTransactionEvent, CachedTransactionEffect>
+typealias AnywayTransactionViewModel = AnywayPaymentUI.AnywayTransactionViewModel<FooterViewModel, AnywayElementModel, DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 
-typealias CachedTransactionState = Transaction<CachedPaymentContext<AnywayElementModel>, AnywayTransactionStatus>
-typealias CachedTransactionEvent = CachedAnywayTransactionEvent<AnywayTransactionState, AnywayTransactionEvent>
-typealias CachedTransactionEffect = CachedAnywayTransactionEffect<AnywayTransactionEvent>
-
-typealias AnywayTransactionViewModel = RxObservingViewModel<AnywayTransactionState, AnywayTransactionEvent, AnywayTransactionEffect>
-
-typealias AnywayTransactionState = Transaction<AnywayPaymentContext, AnywayTransactionStatus>
-typealias AnywayTransactionEvent = TransactionEvent<AnywayTransactionReport, AnywayPaymentEvent, AnywayPaymentUpdate>
-typealias AnywayTransactionEffect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>
+typealias AnywayTransactionState = AnywayPaymentUI.CachedModelsTransaction<FooterViewModel, AnywayElementModel, DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
+typealias AnywayTransactionEvent = AnywayPaymentUI.AnywayTransactionEvent<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
+typealias AnywayTransactionEffect = AnywayPaymentUI.AnywayTransactionEffect
 
 typealias AnywayTransactionEffectHandlerMicroServices = TransactionEffectHandlerMicroServices<AnywayTransactionReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
 
-typealias AnywayTransactionStatus = TransactionStatus<AnywayTransactionReport>
-typealias AnywayTransactionReport = TransactionReport<DocumentStatus, _OperationInfo>
-#warning("rename _OperationInfo")
-typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails>
-
+typealias AnywayTransactionStatus = AnywayPaymentUI.Status<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
+typealias AnywayTransactionReport = AnywayPaymentUI.Report<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
+typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails<RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>>
 enum DocumentStatus {
     
     case completed, inflight, rejected
 }
 
-typealias OperationDetailID = Int
-struct OperationDetails: Equatable {
+typealias OperationDetailID = AnywayPaymentUI.OperationDetailID
+
+// MARK: - Adapters
+
+extension FooterViewModel: FooterInterface {
     
-    let id: OperationDetailID
-    let response: Response
+    public var projectionPublisher: AnyPublisher<Projection, Never> {
+        
+        $state
+            .diff(using: { $1.diff(from: $0) })
+            .eraseToAnyPublisher()
+    }
     
-    typealias Response = RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
+    public func project(_ projection: FooterTransactionProjection) {
+        
+        self.event(.set(isActive: projection.isEnabled, projection.style))
+    }
 }

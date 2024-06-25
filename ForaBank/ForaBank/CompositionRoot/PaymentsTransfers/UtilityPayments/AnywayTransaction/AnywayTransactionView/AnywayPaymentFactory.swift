@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
+import AmountComponent
 import AnywayPaymentCore
 import AnywayPaymentDomain
 import SwiftUI
@@ -17,8 +18,8 @@ struct AnywayPaymentFactory<IconView: View> {
 
 extension AnywayPaymentFactory {
     
-    typealias Element = CachedAnywayPayment<AnywayElementModel>.IdentifiedModel
+    typealias Element = AnywayTransactionState.IdentifiedModel
     typealias MakeElementView = (Element) -> AnywayPaymentElementView<IconView>
     
-    typealias MakeFooterView = (CachedTransactionState, @escaping (AnywayPaymentFooterEvent) -> Void) -> AnywayPaymentFooterView
+    typealias MakeFooterView = (FooterViewModel) -> AnywayPaymentFooterView
 }
