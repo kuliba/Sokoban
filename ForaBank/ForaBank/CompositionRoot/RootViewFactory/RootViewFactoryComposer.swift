@@ -20,13 +20,16 @@ final class RootViewFactoryComposer {
     
     private let model: Model
     private let httpClient: HTTPClient
+    private let historyFeatureFlag: HistoryFilterFlag
     
     init(
         model: Model,
-        httpClient: HTTPClient
+        httpClient: HTTPClient,
+        historyFeatureFlag: HistoryFilterFlag
     ) {
         self.model = model
         self.httpClient = httpClient
+        self.historyFeatureFlag = historyFeatureFlag
     }
 }
 
@@ -45,7 +48,7 @@ extension RootViewFactoryComposer {
             makeUpdateInfoView: UpdateInfoView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
             makePaymentCompleteView: makePaymentCompleteView, 
-            makeHistoryButtonView: { EmptyView() }
+            makeHistoryButtonView: { self.makeHistoryButtonView(self.historyFeatureFlag) }
         )
     }
 }
@@ -77,7 +80,7 @@ private extension RootViewFactoryComposer {
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
                 makeHistoryButton: { event in
-                    HistoryButtonView(active: true, event: event)
+                    HistoryButtonView(event: event)
                 }
             ),
             getUImage: getUImage
@@ -155,6 +158,17 @@ private extension RootViewFactoryComposer {
                 makeTemplateButton: makeTemplateButtonView(with: result)
             )
         )
+    }
+    
+    func makeHistoryButtonView(
+        _ historyFeatureFlag: HistoryFilterFlag
+    ) -> HistoryButtonView? {
+        
+        if historyFeatureFlag.rawValue {
+            return HistoryButtonView(event: { _ in })
+        } else {
+           return nil
+        }
     }
     
     typealias TransactionResult = UtilityServicePaymentFlowState<AnywayTransactionViewModel>.FullScreenCover.TransactionResult

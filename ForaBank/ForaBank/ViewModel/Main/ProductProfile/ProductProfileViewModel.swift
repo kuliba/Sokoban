@@ -17,8 +17,6 @@ import SwiftUI
 import Tagged
 import RxViewModel
 
-struct HistoryState {}
-
 class ProductProfileViewModel: ObservableObject {
     
     typealias CardAction = CardDomain.CardAction
@@ -36,7 +34,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var operationDetail: OperationDetailViewModel?
     @Published var accentColor: Color
     
-    @Published var historyState: HistoryState? //Optional?
+    @Published var historyState: HistoryState?
     
     @Published var bottomSheet: BottomSheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
@@ -68,7 +66,7 @@ class ProductProfileViewModel: ObservableObject {
     private var cardAction: CardAction?
     private let productProfileViewModelFactory: ProductProfileViewModelFactory
     
-    private let productNavigationStateManager: ProductNavigationStateManager
+    private let productNavigationStateManager: ProductProfileFlowManager
 
     private var bindings = Set<AnyCancellable>()
     
@@ -78,6 +76,7 @@ class ProductProfileViewModel: ObservableObject {
     
     private let bottomSheetSubject = PassthroughSubject<BottomSheet?, Never>()
     private let alertSubject = PassthroughSubject<Alert.ViewModel?, Never>()
+    private let historySubject = PassthroughSubject<HistoryState?, Never>()
 
     init(navigationBar: NavigationBarView.ViewModel,
          product: ProductProfileCardView.ViewModel,
@@ -96,7 +95,7 @@ class ProductProfileViewModel: ObservableObject {
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
          operationDetailFactory: OperationDetailFactory,
-         productNavigationStateManager: ProductNavigationStateManager,
+         productNavigationStateManager: ProductProfileFlowManager,
          cvvPINServicesClient: CVVPINServicesClient,
          productProfileViewModelFactory: ProductProfileViewModelFactory,
          rootView: String,
@@ -134,6 +133,11 @@ class ProductProfileViewModel: ObservableObject {
             //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$alert)
+        
+        self.historySubject
+            //.removeDuplicates()
+            .receive(on: scheduler)
+            .assign(to: &$historyState)
 
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
     }
@@ -155,7 +159,7 @@ class ProductProfileViewModel: ObservableObject {
         operationDetailFactory: OperationDetailFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
-        productNavigationStateManager: ProductNavigationStateManager,
+        productNavigationStateManager: ProductProfileFlowManager,
         productProfileViewModelFactory: ProductProfileViewModelFactory,
         rootView: String,
         dismissAction: @escaping () -> Void,
@@ -1966,6 +1970,28 @@ private extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
+    enum HistoryState: Identifiable {
+        
+        case calendar
+        case filter
+        
+        var id: ID {
+            switch self {
+            case .calendar:
+                return .calendar
+                
+            case .filter:
+                return .filter
+            }
+        }
+        
+        enum ID: Hashable {
+            
+            case calendar
+            case filter
+        }
+    }
+    
     struct BottomSheet: BottomSheetCustomizable {
         
         let id = UUID()
@@ -2475,7 +2501,7 @@ extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
-    func handleEffect(_ effect: ProductNavigationStateManager.Effect) {
+    func handleEffect(_ effect: ProductProfileFlowManager.Effect) {
         
         productNavigationStateManager.handleEffect(effect) { [weak self] event in
             
@@ -2501,7 +2527,7 @@ extension ProductProfileViewModel {
         
         alertSubject.send(newState.alert)
         bottomSheetSubject.send(newState.bottomSheet)
-//        historySubject.send(newState.history)
+        historySubject.send(newState.history)
         
         if let effect {
             
@@ -2574,7 +2600,7 @@ extension ProductProfileViewModel {
         }
     }
     
-    func event(_ event: ProductNavigationStateManager.ButtonEvent) {
+    func event(_ event: ProductProfileFlowManager.ButtonEvent) {
         
         self.bottomSheet = nil
 

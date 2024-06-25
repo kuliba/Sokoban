@@ -59,7 +59,7 @@ extension PaymentsTransfersFactory {
             unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: ProductNavigationStateManager.preview,
+            productNavigationStateManager: ProductProfileFlowManager.preview,
             updateInfoStatusFlag: .init(.inactive)
         )
         return .init(

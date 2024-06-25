@@ -11,7 +11,7 @@ final class ProductProfileFlowReducer {
 
     typealias State = ProductProfileFlowState
     typealias Event = ProductProfileFlowEvent
-    typealias Effect = ProductNavigationStateEffect
+    typealias Effect = ProductProfileFlowEffect
 
     typealias AlertReduce = (AlertState, AlertEvent) -> (AlertState, Effect?)
     typealias AlertState = Alert.ViewModel?
@@ -19,7 +19,7 @@ final class ProductProfileFlowReducer {
     typealias BottomSheetReduce = (BottomSheetState, BottomSheetEvent) -> (BottomSheetState, Effect?)
     typealias BottomSheetState = ProductProfileViewModel.BottomSheet?
     
-    typealias HistoryReduce = (HistoryState?, HistoryEvent) -> (HistoryState?, Effect?)
+    typealias HistoryReduce = (ProductProfileViewModel.HistoryState?, HistoryEvent) -> (ProductProfileViewModel.HistoryState?, Effect?)
     
     private let alertReduce: AlertReduce
     private let bottomSheetReduce: BottomSheetReduce
@@ -42,7 +42,6 @@ final class ProductProfileFlowReducer {
      
         var state = state
         var effect: Effect?
-        state.alert = nil
         
         switch event {
         case let .alert(alertEvent):
@@ -56,7 +55,7 @@ final class ProductProfileFlowReducer {
             state.bottomSheet = bottomSheet
             
         case let .history(historyEvent):
-            let history: HistoryState?
+            let history: ProductProfileViewModel.HistoryState?
             (history, effect) = historyReduce(state.history, historyEvent)
             state.history = history
         }
@@ -65,26 +64,25 @@ final class ProductProfileFlowReducer {
     }
 }
 
-struct ProductNavigationStateManager {
-    //TODO: rename ProductProfileFlowManager
+struct ProductProfileFlowManager {
     
     let reduce: Reduce
     let handleEffect: HandleEffect
     
     internal init(
-        reduce: @escaping ProductNavigationStateManager.Reduce,
-        handleEffect: @escaping ProductNavigationStateManager.HandleEffect
+        reduce: @escaping ProductProfileFlowManager.Reduce,
+        handleEffect: @escaping ProductProfileFlowManager.HandleEffect
     ) {
         self.reduce = reduce
         self.handleEffect = handleEffect
     }
 }
 
-extension ProductNavigationStateManager {
+extension ProductProfileFlowManager {
     
     typealias Reduce = (ProductProfileFlowState, ProductProfileFlowEvent) -> (ProductProfileFlowState, Effect?)
     
-    typealias Effect = ProductNavigationStateEffect
+    typealias Effect = ProductProfileFlowEffect
     typealias Event = ProductNavigationEvent
 
     typealias Dispatch = (Event) -> Void
@@ -113,19 +111,19 @@ enum BottomSheetEvent {
     case delayBottomSheet(ProductProfileViewModel.BottomSheet)
 }
 
-enum ProductNavigationStateEffect { //TODO: rename ProductProfileFlowEffect
+enum ProductProfileFlowEffect {
     
     case delayAlert(Alert.ViewModel, DispatchTimeInterval)
     case delayBottomSheet(ProductProfileViewModel.BottomSheet, DispatchTimeInterval)
 }
 
-extension ProductNavigationStateManager {
+extension ProductProfileFlowManager {
     
     static let preview: Self = .init(
         reduce: ProductProfileFlowReducer(
             alertReduce: AlertReducer(alertLifespan: .microseconds(0), productAlertsViewModel: .default).reduce,
             bottomSheetReduce: BottomSheetReducer(bottomSheetLifespan: .microseconds(0)).reduce,
-            historyReduce: { state,_ in (state, nil) }
+            historyReduce: HistoryReducer().reduce
         ).reduce,
         handleEffect: ProductNavigationStateEffectHandler().handleEffect
     )
@@ -135,7 +133,7 @@ struct ProductProfileFlowState {
     
     var alert: Alert.ViewModel?
     var bottomSheet: ProductProfileViewModel.BottomSheet?
-    var history: HistoryState? //TODO: replace to type
+    var history: ProductProfileViewModel.HistoryState?
 }
 
 enum ProductProfileFlowEvent {
@@ -145,8 +143,8 @@ enum ProductProfileFlowEvent {
 }
 
 enum HistoryEvent: Equatable {
+    
     case button(ButtonEvent)
-    //case payload
     
     enum ButtonEvent: Equatable {
         case calendar

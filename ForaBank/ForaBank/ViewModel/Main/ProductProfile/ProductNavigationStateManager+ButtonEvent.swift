@@ -7,7 +7,7 @@
 
 import Tagged
 
-extension ProductNavigationStateManager {
+extension ProductProfileFlowManager {
     
     struct ButtonEvent {
         
