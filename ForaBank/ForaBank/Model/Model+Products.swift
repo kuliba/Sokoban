@@ -66,6 +66,19 @@ extension Model {
         products.value.keys.map {$0}
     }
     
+    var cardsTypes: [ProductCardData.CardType] {
+        
+        guard let products = products(.card) else {
+            return []
+        }
+        
+        return products.compactMap {
+            if let card = $0.asCard {
+                return card.cardType
+            } else { return nil }
+        }.uniqued()
+    }
+    
     func product() -> ProductData? {
         
         products.value.values.flatMap {$0}.sorted { $0.productType.order < $1.productType.order }.first
