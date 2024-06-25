@@ -16,6 +16,14 @@ public final class BlacklistFilter<Request: Hashable> {
     
     /// Initialises a new instance of `BlacklistFilter`.
     ///
+    /// The `isBlacklisted` closure determines whether a request should be blacklisted based on the request and the number of attempts.
+    /// The closure can return:
+    /// - `true`: if the request should be blacklisted.
+    /// - `false`: if the request should not be blacklisted.
+    /// - `nil`: if the attempt should not be recorded.
+    ///
+    /// The `nil` return value is useful in scenarios where certain conditions mean that attempts should not be counted at all, such as temporary network issues or other non-critical failures.
+    ///
     /// - Parameter isBlacklisted: A closure that determines whether a request should be blacklisted based on the request and the number of attempts.
     public init(
         isBlacklisted: @escaping IsBlacklisted
@@ -23,7 +31,7 @@ public final class BlacklistFilter<Request: Hashable> {
         self.isBlacklisted = isBlacklisted
     }
     
-    public typealias IsBlacklisted = (Request, Int) -> Bool
+    public typealias IsBlacklisted = (Request, Int) -> Bool?
 }
 
 public extension BlacklistFilter {
@@ -36,10 +44,14 @@ public extension BlacklistFilter {
         
         queue.sync {
             
-            attempts[request, default: 0] += 1
-            let attemptCount = attempts[request] ?? 0
+            let attemptCount = attempts[request, default: 0] + 1
             
-            return isBlacklisted(request, attemptCount)
+            if let isBlacklisted = isBlacklisted(request, attemptCount) {
+                attempts[request] = attemptCount
+                return isBlacklisted
+            } else {
+                return false
+            }
         }
     }
 }

@@ -65,6 +65,26 @@ final class BlacklistFilterTests: XCTestCase {
         XCTAssertNoDiff(requests.map(\.attempts), [1, 2, 3])
     }
     
+    func test_isBlacklisted_shouldNotCountAttemptsOnIsBlacklistedReturnsNil() {
+        
+        let request = anyRequest()
+        var requests = [(request: Request, attempts: Int)]()
+        let sut = makeSUT(
+            isBlacklisted: { request, attempts in
+                
+                requests.append((request, attempts))
+                return nil
+            }
+        )
+        
+        _ = sut.isBlacklisted(request)
+        _ = sut.isBlacklisted(request)
+        _ = sut.isBlacklisted(request)
+        
+        XCTAssertNoDiff(requests.map(\.request), [request, request, request])
+        XCTAssertNoDiff(requests.map(\.attempts), [1, 1, 1])
+    }
+    
     func test_isBlacklisted_shouldReturnIsBlacklistedResultFalse() {
         
         let sut = makeSUT(isBlacklisted: { _,_ in return false })
