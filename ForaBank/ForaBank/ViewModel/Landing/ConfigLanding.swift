@@ -13,6 +13,7 @@ extension UILanding.Component.Config {
     static let `default`: Self = .init(
         listHorizontalRoundImage: .default,
         listHorizontalRectangleImage: .default,
+        listHorizontalRectangleLimits: .default,
         listVerticalRoundImage: .default,
         listDropDownTexts: .default,
         multiLineHeader: .default,
@@ -27,6 +28,7 @@ extension UILanding.Component.Config {
         image: .default,
         imageSvg: .default,
         verticalSpacing: .default,
+        blockHorizontalRectangular: .default,
         offsetForDisplayHeader: 100
     )
 }
@@ -379,6 +381,39 @@ extension UILanding.List.HorizontalRectangleImage.Config {
         spacing: 8
     )
 }
+
+extension UILanding.List.HorizontalRectangleLimits.Config {
+        
+    static let `default`: Self = .init(
+        colors: .init(
+            arc: .mainColorsGray,
+            background: .mainColorsGrayLightest,
+            divider: .blurMediumGray30,
+            title: .secondary,
+            subtitle: .textPlaceholder
+        ),
+        cornerRadius: 12,
+        paddings: .init(horizontal: 12, vertical: 8),
+        sizes: .init(height: 176, icon: 20, width: 180),
+        spacing: 8)
+}
+
+extension UILanding.BlockHorizontalRectangular.Config {
+        
+    static let `default`: Self = .init(
+        cornerRadius: 12,
+        size: .init(
+            height: 124,
+            width: 272
+        ),
+        paddings: .init(
+            horizontal: 16,
+            vertical: 8
+        ),
+        spacing: 8
+    )
+}
+
 
 extension UILanding.Multi.TypeButtons.Config {
     

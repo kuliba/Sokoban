@@ -91,6 +91,7 @@ extension Services {
             case getSberQRData
             case getStickerPayment
             case getSvgImageList
+            case getVerificationCode
             case makeSetBankDefault
             case makeTransfer
             case prepareSetBankDefault
@@ -173,11 +174,16 @@ extension Services.Endpoint {
         serviceName: .changePIN
     )
     
-    static let createAnywayTransfer: Self = .init(
-        pathPrefix: .transfer,
-        version: nil,
-        serviceName: .createAnywayTransfer
-    )
+    static func createAnywayTransfer(
+        version: Services.Endpoint.Version? = nil
+    ) -> Self {
+        
+        return .init(
+            pathPrefix: .transfer,
+            version: version,
+            serviceName: .createAnywayTransfer
+        )
+    }
     
     static let createCommissionProductTransfer: Self = .init(
         pathPrefix: .transfer,
@@ -309,6 +315,12 @@ extension Services.Endpoint {
         pathPrefix: .dict,
         version: .v2,
         serviceName: .getJsonAbroad
+    )
+    
+    static let getVerificationCode: Self = .init(
+        pathPrefix: .transfer,
+        version: .v2,
+        serviceName: .getVerificationCode
     )
     
     static let makeSetBankDefault: Self = .init(

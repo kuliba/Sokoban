@@ -9,11 +9,11 @@ import SwiftUI
 
 public extension UILanding {
     
-    struct TextsWithIconHorizontal: Hashable {
+    struct TextsWithIconHorizontal: Equatable {
         
-        public let md5hash: String
-        public let title: String
-        public let contentCenterAndPull: Bool
+        let md5hash: String
+        let title: String
+        let contentCenterAndPull: Bool
         
         public init(
             md5hash: String,

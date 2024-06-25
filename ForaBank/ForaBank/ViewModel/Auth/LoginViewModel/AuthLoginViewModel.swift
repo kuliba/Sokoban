@@ -317,6 +317,12 @@ private extension AuthLoginViewModel {
                 return { [weak self] in
                     self?.orderCard(cardTarif, cardType) }
                 
+            case let .openUrl(link):
+                return {
+                    if let url = URL(string: link), UIApplication.shared.canOpenURL(url) {
+                        UIApplication.shared.open(url)
+                    }
+                }
             }
     }
     

@@ -5,16 +5,20 @@
 //  Created by Igor Malyarov on 20.04.2024.
 //
 
+import ForaTools
+
 public extension RxObservingViewModel {
     
     convenience init(
         observable: ObservableViewModel,
         observe: @escaping (State) -> Void,
+        predicate: @escaping (State, State) -> Bool = { _,_ in false },
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.init(
             observable: observable,
             observe: { _, last in observe(last) },
+            predicate: predicate,
             scheduler: scheduler
         )
     }
@@ -42,6 +46,7 @@ public extension RxObservingViewModel {
                 scheduler: scheduler
             ),
             observe: observe,
+            predicate: predicate,
             scheduler: scheduler
         )
     }
@@ -63,6 +68,7 @@ public extension RxObservingViewModel {
                 scheduler: scheduler
             ),
             observe: { _, last in observe(last) },
+            predicate: predicate,
             scheduler: scheduler
         )
     }
@@ -85,6 +91,7 @@ public extension RxObservingViewModel where State: Equatable {
                 scheduler: scheduler
             ),
             observe: observe,
+            predicate: ==,
             scheduler: scheduler
         )
     }
@@ -104,6 +111,7 @@ public extension RxObservingViewModel where State: Equatable {
                 scheduler: scheduler
             ),
             observe: { _, last in observe(last) },
+            predicate: ==,
             scheduler: scheduler
         )
     }

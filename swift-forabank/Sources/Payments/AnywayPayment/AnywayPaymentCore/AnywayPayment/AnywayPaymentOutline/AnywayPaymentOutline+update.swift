@@ -16,11 +16,11 @@ extension AnywayPaymentOutline {
             uniquingKeysWith: { _, new in new }
         )
         
-        return .init(core: core, fields: fields)
+        return .init(core: core, fields: fields, payload: payload)
     }
 }
 
-private extension AnywayPayment.Element {
+private extension AnywayElement {
     
     var idValuePair: (AnywayPaymentOutline.ID, AnywayPaymentOutline.Value)? {
         
@@ -30,13 +30,13 @@ private extension AnywayPayment.Element {
         
         return parameter.field.value.map {
             
-            (.init(parameter.field.id.rawValue), .init($0.rawValue))
+            (parameter.field.id, $0)
         }
     }
 }
 
-private extension AnywayPayment.Element.Parameter {
-
+private extension AnywayElement.Parameter {
+    
     var isOutlinable: Bool {
         
         uiAttributes.viewType == .input

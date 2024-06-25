@@ -88,3 +88,22 @@ extension Alert.ViewModel {
         )
     }
 }
+
+extension Alert.ViewModel {
+    
+    static func dataUpdateFailure(
+        message: String = .updateInfoText,
+        primaryAction: @escaping () -> Void
+    ) -> Self {
+        
+        .init(
+            title: "Ошибка",
+            message: message,
+            primary: .init(
+                type: .default,
+                title: "OK",
+                action: primaryAction
+            )
+        )
+    }
+}

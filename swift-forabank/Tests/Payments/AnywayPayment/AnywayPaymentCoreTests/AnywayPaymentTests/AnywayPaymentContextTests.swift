@@ -11,6 +11,43 @@ import XCTest
 
 final class AnywayPaymentContextTests: XCTestCase {
     
+    // MARK: - rollbackPayment
+    
+    func test_rollbackPayment_shouldNotChangePaymentOnEmptyStaged() {
+        
+        let context = makeAnywayPaymentContext(elements: [])
+        
+        let restored = context.rollbackPayment()
+        
+        XCTAssertNoDiff(restored, context)
+        XCTAssert(context.staged.isEmpty)
+    }
+    
+    func test_rollbackPayment_shouldChangeParameterValuesToOutlinedForStaged() {
+        
+        let parameterOne = makeAnywayPaymentParameter(id: "one", value: "ONE")
+        let parameterTwo = makeAnywayPaymentParameter(id: "two", value: "TWO")
+        let payment = makeAnywayPayment(parameters: [parameterOne, parameterTwo])
+        let context = AnywayPaymentContext(
+            initial: makeAnywayPayment(),
+            payment: payment,
+            staged: [.init("one")],
+            outline: makeAnywayPaymentOutline(["one": "one"]),
+            shouldRestart: false
+        )
+        
+        let restored = context.rollbackPayment()
+        
+        XCTAssertNoDiff(restored, context.updating(
+            payment: payment.updating(elements: [
+                .parameter(parameterOne.updating(value: "one")),
+                .parameter(parameterTwo)
+            ])
+        ))
+    }
+    
+    // MARK: - staging
+    
     func test_staging_shouldNotChangeEmptyStagedOnEmptyElements() {
         
         let context = makeAnywayPaymentContext(elements: [])
@@ -29,7 +66,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssert(context.staged.isEmpty)
         
         let stagedContext = context.staging()
-
+        
         XCTAssert(stagedContext.staged.isEmpty)
     }
     
@@ -42,7 +79,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssert(context.staged.isEmpty)
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(
             stagedContext.staged,
             [parameter1.field.id, parameter2.field.id]
@@ -59,7 +96,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssertFalse(context.staged.isEmpty)
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(
             stagedContext.staged,
             [parameter1.field.id, parameter2.field.id]
@@ -72,7 +109,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssert(context.outline.fields.isEmpty)
         
         let stagedContext = context.staging()
-
+        
         XCTAssert(stagedContext.outline.fields.isEmpty)
     }
     
@@ -86,7 +123,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssertFalse(context.outline.fields.isEmpty)
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline, outline)
     }
     
@@ -100,7 +137,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssertFalse(context.outline.fields.isEmpty)
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline, outline)
     }
     
@@ -115,7 +152,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         )
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.fields, [
             "a": "1",
             "x": "X",
@@ -135,7 +172,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         )
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.fields, [
             "a": "1",
             "y": "Y",
@@ -157,12 +194,14 @@ final class AnywayPaymentContextTests: XCTestCase {
         XCTAssertFalse(context.outline.fields.isEmpty)
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.fields, [
             "a": "1",
             "b": "222",
         ])
     }
+    
+    // MARK: - update
     
     func test_update_shouldUpdateExistingAndAppendMissing() {
         
@@ -179,7 +218,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         )
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.fields, [
             "a": "1",
             "b": "222",
@@ -194,7 +233,7 @@ final class AnywayPaymentContextTests: XCTestCase {
         let core = context.outline.core
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.core, core)
     }
     
@@ -206,9 +245,9 @@ final class AnywayPaymentContextTests: XCTestCase {
             outline: outline
         )
         let core = context.outline.core
-
+        
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.core, core)
     }
     
@@ -220,9 +259,9 @@ final class AnywayPaymentContextTests: XCTestCase {
             outline: outline
         )
         let core = context.outline.core
-
+        
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.core, core)
     }
     
@@ -237,22 +276,75 @@ final class AnywayPaymentContextTests: XCTestCase {
         let core = context.outline.core
         
         let stagedContext = context.staging()
-
+        
         XCTAssertNoDiff(stagedContext.outline.core, core)
+    }
+    
+    // MARK: - wouldNeedRestart
+    
+    func test_wouldNeedRestart_shouldDeliverFalseOnEmptyStagedEmptyParameters() {
+        
+        let context = makeAnywayPaymentContext(elements: [])
+        
+        XCTAssertFalse(context.wouldNeedRestart)
+        XCTAssertTrue(parameters(of: context.payment).isEmpty)
+        XCTAssertTrue(context.staged.isEmpty)
+    }
+    
+    func test_wouldNeedRestart_shouldDeliverFalseOnEmptyStagedNonEmptyParameters() {
+        
+        let context = makeAnywayPaymentContext(elements: [makeAnywayPaymentParameterElement()])
+        
+        XCTAssertFalse(context.wouldNeedRestart)
+        XCTAssertFalse(parameters(of: context.payment).isEmpty)
+        XCTAssertTrue(context.staged.isEmpty)
+    }
+    
+    func test_wouldNeedRestart_shouldDeliverFalseOnSameOutlineValuesForStagedAndParameterValues() {
+        
+        let (id, value) = (anyMessage(), anyMessage())
+        let parameter = makeAnywayPaymentParameter(id: id, value: value)
+        let context = makeAnywayPaymentContext(
+            elements: [.parameter(parameter)],
+            staged: [.init(id)],
+            outline: makeAnywayPaymentOutline([id: value])
+        )
+        
+        XCTAssertFalse(context.wouldNeedRestart)
+    }
+    
+    func test_wouldNeedRestart_shouldDeliverTrueOnDifferentOutlineValuesForStagedAndParameterValues() {
+        
+        let (id, value, outlinedValue) = (anyMessage(), anyMessage(), anyMessage())
+        let parameter = makeAnywayPaymentParameter(id: id, value: value)
+        let context = makeAnywayPaymentContext(
+            elements: [.parameter(parameter)],
+            staged: .init([.init(id)]),
+            outline: makeAnywayPaymentOutline([id: outlinedValue])
+        )
+        
+        XCTAssertTrue(context.wouldNeedRestart)
     }
     
     // MARK: - Helpers
     
-    private typealias Parameter = AnywayPayment.Element.Parameter
+    private typealias Parameter = AnywayElement.Parameter
     
     private func makeAnywayPaymentContext(
-        elements: [AnywayPayment.Element],
+        elements: [AnywayElement],
         staged: AnywayPaymentStaged = [],
-        outline: AnywayPaymentOutline = makeAnywayPaymentOutline()
+        outline: AnywayPaymentOutline = makeAnywayPaymentOutline(),
+        shouldRestart: Bool = false
     ) -> AnywayPaymentContext {
         
         let payment = makeAnywayPayment(elements: elements)
-        return .init(payment: payment, staged: staged, outline: outline)
+        return .init(
+            initial: payment,
+            payment: payment,
+            staged: staged,
+            outline: outline,
+            shouldRestart: shouldRestart
+        )
     }
     
     private func makeTwoParameters(

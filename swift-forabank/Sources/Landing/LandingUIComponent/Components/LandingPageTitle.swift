@@ -9,17 +9,20 @@ import Foundation
 
 public extension UILanding {
     
-    struct PageTitle: Hashable {
+    struct PageTitle: Equatable {
         
-        public let text: String
-        public let subTitle: String?
-        public let transparency: Bool
+        let id: UUID
+        let text: String
+        let subTitle: String?
+        let transparency: Bool
         
         public init(
+            id: UUID = UUID(),
             text: String,
             subTitle: String?,
             transparency: Bool
         ) {
+            self.id = id
             self.text = text
             self.subTitle = subTitle
             self.transparency = transparency

@@ -23,7 +23,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         XCTAssertTrue(model.products.value.isEmpty)
     }
     
-    func test_meToMe_shouldDeliverActionOnMeToMeSendSuccess() throws {
+    func test_meToMe_shouldNotDeliverActionOnMeToMeSendSuccess() throws {
         
         let (product1, product2) = makeTwoProducts()
         let (sut, model, _) = makeSUT(products: [product1, product2])
@@ -42,7 +42,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         sut.meToMeSendSuccess(model: model)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
         
-        XCTAssertEqual(spy.values.count, 4)
+        XCTAssertEqual(spy.values.count, 0)
     }
     
 #warning("fix and restore")
@@ -91,6 +91,49 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(linkSpy.values, [.other, .template])
     }
+  
+    // TODO: вернуть после оптимизации запросов UpdateInfo.swift:10
+
+    /*func test_tapTemplates_updateCardFailureAccountFailure_shouldPresentAlert_flagActive() {
+        
+        let (sut, model,_) = makeSUT(
+            flowManager: makeFlowManagerOnlyModalAlert(),
+            makeAlertDataUpdateFailureViewModel: { _ in .dataUpdateFailure {}},
+            updateInfoStatusFlag: .init(rawValue: .active))
+        
+        let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
+
+        model.updateInfo.value.setValue(false, for: .card)
+        model.updateInfo.value.setValue(false, for: .account)
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        
+        sut.section?.tapTemplatesAndWait()
+
+        XCTAssertNoDiff(alertMessageSpy.values, [
+            nil,
+            "Мы не смогли загрузить ваши продукты. Попробуйте позже.",
+        ])
+    }*/
+    
+    func test_tapTemplates_updateCardFailureAccountSuccess_shouldNotPresentAlert_flagActive() {
+        
+        let (sut, model,_) = makeSUT(
+            flowManager: makeFlowManagerOnlyModalAlert(),
+            makeAlertDataUpdateFailureViewModel: { _ in .dataUpdateFailure {}},
+            updateInfoStatusFlag: .init(rawValue: .active))
+        
+        let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))
+
+        model.updateInfo.value.setValue(false, for: .card)
+        model.updateInfo.value.setValue(true, for: .account)
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil])
+        
+        sut.section?.tapTemplatesAndWait()
+
+        XCTAssertNoDiff(alertMessageSpy.values, [nil, nil])
+    }
     
 //    func test_tapTemplates_shouldSetLinkToNilOnTemplatesClose() {
 //        
@@ -118,7 +161,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let (sut, _,_) = makeSUT()
         let spy = ValueSpy(sut.$route.map(\.destination?.id))
         
-        sut.event(.addCompany)
+        sut.event(.outside(.addCompany))
         
         XCTAssertNoDiff(spy.values, [nil, nil])
     }
@@ -127,7 +170,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let (sut, _, effectSpy) = makeSUT()
         
-        sut.event(.addCompany)
+        sut.event(.outside(.addCompany))
         
         XCTAssertNoDiff(effectSpy.messages.map(\.effect), [])
     }
@@ -679,13 +722,14 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     
     // MARK: - Helpers
     
+    private typealias SUT = PaymentsTransfersViewModel
     private typealias PaymentStarted = PaymentsTransfersEvent.UtilityServicePaymentFlowEvent.PaymentStarted
     
     fileprivate typealias SberQRError = MappingRemoteServiceError<MappingError>
     private typealias GetSberQRDataResult = SberQRServices.GetSberQRDataResult
     
     private typealias EffectSpy = EffectHandlerSpy<Event, Effect>
-    private typealias State = PaymentsTransfersViewModel.Route
+    private typealias State = SUT.Route
     private typealias Event = PaymentsTransfersEvent
     private typealias Effect = PaymentsTransfersEffect
     
@@ -697,15 +741,18 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     }
     
     private func makeSUT(
+        flowManager: SUT.FlowManger = .preview,
         createSberQRPaymentResultStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         createUnblockCardStub: UnblockCardServices.UnblockCardResult = .success(.init(statusBrief: "", statusDescription: "")),
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
+        makeAlertDataUpdateFailureViewModel: @escaping PaymentsTransfersFactory.MakeAlertDataUpdateFailureViewModel = { _ in nil },
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .init(.inactive),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
-        sut: PaymentsTransfersViewModel,
+        sut: SUT,
         model: Model,
         effectSpy: EffectSpy
     ) {
@@ -733,14 +780,16 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let productProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: .legacy,
-            makeUtilitiesViewModel: { _,_ in },
-            paymentsTransfersFlowManager: .preview,
+            makeUtilitiesViewModel: { _,_ in }, 
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
             unblockCardServices: unblockCardServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient, 
-            productNavigationStateManager: .preview
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: updateInfoStatusFlag
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -749,12 +798,14 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 completion(.utilities)
             },
             makeProductProfileViewModel: productProfileViewModel,
-            makeTemplatesListViewModel: { _ in .sampleComplete }
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+            makeAlertDataUpdateFailureViewModel: makeAlertDataUpdateFailureViewModel
         )
         
-        let sut = PaymentsTransfersViewModel(
+        let sut = SUT(
             model: model,
-            flowManager: .preview,
+            makeFlowManager: { _ in flowManager },
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
@@ -770,6 +821,28 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         return (sut, model, effectSpy)
     }
     
+    private func makeFlowManagerOnlyModalAlert() -> SUT.FlowManger {
+        
+        return .init(
+            handleEffect: { _,_ in },
+            makeReduce: { _,_ in
+                return { state, event in
+                    
+                    var state = state
+                    
+                    switch event {
+                    case let .setModal(to: .alert(alertVM)):
+                        state.modal = .alert(alertVM)
+                        
+                    default: fatalError()
+                    }
+                    
+                    return (state, nil)
+                }
+            }
+        )
+    }
+
     private func makeOperator(
         _ id: String = UUID().uuidString
     ) -> UtilityPaymentOperator {

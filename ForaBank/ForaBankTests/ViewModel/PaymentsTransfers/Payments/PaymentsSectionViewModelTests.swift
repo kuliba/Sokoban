@@ -37,6 +37,36 @@ extension PaymentsSectionViewModelTests {
         XCTAssertEqual(result[0].items[2].source.parameter, paramThree.parameter)
     }
     
+    func testReduceOperation_ContinueButtonTitle() throws {
+        
+        let parameters: [Payments.ParameterMock] = []
+        let visible: [String] = []
+        
+        let step1 = Payments.Operation.Step(
+            parameters: parameters,
+            front: .init(visible: visible, isCompleted: false),
+            back: .init(stage: .local, required: [], processed: nil)
+        )
+        
+        let step2 = Payments.Operation.Step(
+            parameters: [Payments.ParameterMock(id: Payments.Parameter.Identifier.code.rawValue, value: nil, placement: .feed)],
+            front: .init(visible: visible, isCompleted: false),
+            back: .init(stage: .local, required: [], processed: nil)
+        )
+        
+        let operation1 = Payments.Operation(service: .fms, source: nil, steps: [step1], visible: [])
+        let operation2 = Payments.Operation(service: .fms, source: nil, steps: [step1, step2], visible: [])
+        
+        let result1 = PaymentsSectionViewModel.reduce(operation: operation1, model: .emptyMock)
+        let result2 = PaymentsSectionViewModel.reduce(operation: operation2, model: .emptyMock)
+        
+        let continueButton1 = try XCTUnwrap(result1.first?.items.first?.source as? Payments.ParameterButton, "Failed to cast to Payments.ParameterButton")
+        XCTAssertEqual(continueButton1.title, "Продолжить")
+        
+        let continueButton2 = try XCTUnwrap(result2.first?.items.first?.source as? Payments.ParameterButton, "Failed to cast to Payments.ParameterButton")
+        XCTAssertEqual(continueButton2.title, "Перевести")
+    }
+    
     func testReduceOperation_Feed_Visible_Partly() throws {
         
         // given

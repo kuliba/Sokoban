@@ -9,17 +9,23 @@ import Tagged
 
 public struct AnywayPaymentContext: Equatable {
     
-    public let payment: AnywayPayment
+    public let initial: AnywayPayment
+    public var payment: AnywayPayment
     public let staged: AnywayPaymentStaged
     public let outline: AnywayPaymentOutline
+    public var shouldRestart: Bool
     
     public init(
+        initial: AnywayPayment,
         payment: AnywayPayment,
         staged: AnywayPaymentStaged,
-        outline: AnywayPaymentOutline
+        outline: AnywayPaymentOutline,
+        shouldRestart: Bool
     ) {
+        self.initial = initial
         self.payment = payment
         self.staged = staged
         self.outline = outline
+        self.shouldRestart = shouldRestart
     }
 }

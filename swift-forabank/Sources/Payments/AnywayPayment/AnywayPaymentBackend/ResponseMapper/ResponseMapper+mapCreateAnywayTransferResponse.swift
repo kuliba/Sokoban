@@ -21,10 +21,12 @@ public extension ResponseMapper {
 
 private extension ResponseMapper.CreateAnywayTransferResponse {
     
-    init(_ data: ResponseMapper._Data) {
+    init(_ data: ResponseMapper._Data) throws {
+        
+        if let error = data.validationError { throw error }
         
         self.init(
-            additional: data.additionalList.map { .init($0) },
+            additional: (data.additionalList ?? []).map { .init($0) },
             amount: data.amount,
             creditAmount: data.creditAmount,
             currencyAmount: data.currencyAmount,
@@ -39,12 +41,42 @@ private extension ResponseMapper.CreateAnywayTransferResponse {
             needMake: data.needMake ?? false,
             needOTP: data.needOTP ?? false,
             needSum: data.needSum ?? false,
-            parametersForNextStep: data.parameterListForNextStep.compactMap { .init($0) },
+            parametersForNextStep: (data.parameterListForNextStep ?? []).compactMap { .init($0) },
             paymentOperationDetailID: data.paymentOperationDetailId,
             payeeName: data.payeeName,
             printFormType: data.printFormType,
-            scenario: .init(data.scenario)
+            scenario: .init(data.scenario),
+            options: (data.options ?? []).compactMap(Option.init)
         )
+    }
+}
+
+private extension ResponseMapper._Data {
+    
+    var validationError: ValidationError? {
+        
+        if additionalList == nil && parameterListForNextStep == nil {
+            
+            return .bothAdditionalAndParameterListForNextStepAreNil
+        }
+        
+        return nil
+    }
+    
+    enum ValidationError: Error, Equatable {
+        
+        case bothAdditionalAndParameterListForNextStepAreNil
+    }
+}
+
+private extension ResponseMapper.CreateAnywayTransferResponse.Option {
+    
+    init?(string: String) {
+        
+        switch string {
+        case "MULTI_SUM": self = .multiSum
+        default:          return nil
+        }
     }
 }
 
@@ -56,6 +88,7 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Additional {
             fieldName: additional.fieldName,
             fieldValue: additional.fieldValue,
             fieldTitle: additional.fieldTitle,
+            md5Hash: additional.md5hash,
             recycle: additional.recycle ?? false,
             svgImage: additional.svgImage,
             typeIdParameterList: additional.typeIdParameterList
@@ -116,10 +149,12 @@ private extension ResponseMapper.CreateAnywayTransferResponse.Parameter {
             regExp: parameter.regExp ?? "",
             subGroup: parameter.subGroup,
             subTitle: parameter.subTitle,
+            md5hash: parameter.md5hash,
             svgImage: parameter.svgImage,
             title: parameter.title ?? "",
             type: parameter.type.map { .init($0) } ?? .missing,
-            viewType: .init(parameter.viewType)
+            viewType: .init(parameter.viewType),
+            visible: parameter.visible ?? true
         )
     }
 }
@@ -220,7 +255,7 @@ private extension ResponseMapper {
     
     struct _Data: Decodable {
         
-        let additionalList: [_Additional]
+        let additionalList: [_Additional]?
         let amount: Decimal?
         let creditAmount: Decimal?
         let currencyAmount: String?
@@ -235,11 +270,12 @@ private extension ResponseMapper {
         let needMake: Bool?
         let needOTP: Bool?
         let needSum: Bool?
-        let parameterListForNextStep: [_Parameter]
+        let parameterListForNextStep: [_Parameter]?
         let paymentOperationDetailId: Int?
         let payeeName: String?
         let printFormType: String?
         let scenario: String?
+        let options: [String]?
     }
 }
 
@@ -250,6 +286,7 @@ private extension ResponseMapper._Data {
         let fieldName: String
         let fieldValue: String
         let fieldTitle: String
+        let md5hash: String?
         let recycle: Bool?
         let svgImage: String?
         let typeIdParameterList: String?
@@ -277,10 +314,12 @@ private extension ResponseMapper._Data {
         let regExp: String?
         let subGroup: String?
         let subTitle: String?
+        let md5hash: String?
         let svgImage: String?
         let title: String?
         let type: FieldType?
         let viewType: ViewType
+        let visible: Bool?
     }
 }
 

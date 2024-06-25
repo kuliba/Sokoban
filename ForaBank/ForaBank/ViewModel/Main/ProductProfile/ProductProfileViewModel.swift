@@ -6,9 +6,9 @@
 //
 
 import ActivateSlider
-import Foundation
 import CardUI
 import Combine
+import ForaTools
 import Foundation
 import OperatorsListComponents
 import PDFKit
@@ -23,7 +23,7 @@ class ProductProfileViewModel: ObservableObject {
     typealias ResultShowCVV = Swift.Result<CardInfo.CVV, Error>
     typealias CompletionShowCVV = (ResultShowCVV) -> Void
     typealias ShowCVV = (CardDomain.CardId, @escaping CompletionShowCVV) -> Void
-    
+
     let action: PassthroughSubject<Action, Never> = .init()
     
     let navigationBar: NavigationBarView.ViewModel
@@ -53,7 +53,7 @@ class ProductProfileViewModel: ObservableObject {
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
     private let fastPaymentsFactory: FastPaymentsFactory
-    private let paymentsTransfersFlowManager: PTFlowManger
+    private let makePaymentsTransfersFlowManager: MakePTFlowManger
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
     private let unblockCardServices: UnblockCardServices
@@ -85,7 +85,7 @@ class ProductProfileViewModel: ObservableObject {
          historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:],
          model: Model = .emptyMock,
          fastPaymentsFactory: FastPaymentsFactory,
-         paymentsTransfersFlowManager: PTFlowManger,
+         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
          userAccountNavigationStateManager: UserAccountNavigationStateManager,
          sberQRServices: SberQRServices,
          unblockCardServices: UnblockCardServices,
@@ -108,7 +108,7 @@ class ProductProfileViewModel: ObservableObject {
         self.historyPool = historyPool
         self.model = model
         self.fastPaymentsFactory = fastPaymentsFactory
-        self.paymentsTransfersFlowManager = paymentsTransfersFlowManager
+        self.makePaymentsTransfersFlowManager = makePaymentsTransfersFlowManager
         self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
         self.unblockCardServices = unblockCardServices
@@ -142,7 +142,7 @@ class ProductProfileViewModel: ObservableObject {
     convenience init?(
         _ model: Model,
         fastPaymentsFactory: FastPaymentsFactory,
-        paymentsTransfersFlowManager: PTFlowManger,
+        makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
         unblockCardServices: UnblockCardServices,
@@ -178,7 +178,7 @@ class ProductProfileViewModel: ObservableObject {
             accentColor: accentColor,
             model: model,
             fastPaymentsFactory: fastPaymentsFactory,
-            paymentsTransfersFlowManager: paymentsTransfersFlowManager,
+            makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             unblockCardServices: unblockCardServices,
@@ -434,7 +434,7 @@ private extension ProductProfileViewModel {
                 
                 let paymentsTransfersViewModel = PaymentsTransfersViewModel(
                     model: model,
-                    flowManager: paymentsTransfersFlowManager,
+                    makeFlowManager: makePaymentsTransfersFlowManager,
                     userAccountNavigationStateManager: userAccountNavigationStateManager,
                     sberQRServices: sberQRServices,
                     qrViewModelFactory: qrViewModelFactory,
@@ -499,7 +499,10 @@ private extension ProductProfileViewModel {
             .sink { [unowned self] action in
                 switch action {
                 case _ as ProductProfileViewModelAction.PullToRefresh:
-                    model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: product.activeProductId))
+                    
+                    if let productType = productData?.productType {
+                        model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
+                    }
                     model.action.send(ModelAction.Statement.List.Request(productId: product.activeProductId, direction: .latest))
                     switch product.productType {
                     case .deposit:
@@ -946,7 +949,8 @@ private extension ProductProfileViewModel {
                             model,
                             cardAction: cardAction,
                             makeProductProfileViewModel: makeProductProfileViewModel,
-                            openOrderSticker: {}
+                            openOrderSticker: {}, 
+                            makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: productProfileViewModelFactory.makeInformerDataUpdateFailure)
                         )
                         myProductsViewModel.rootActions = rootActions
                         link = .myProducts(myProductsViewModel)
@@ -1510,9 +1514,14 @@ private extension ProductProfileViewModel {
                     
                     if let viewModel = viewModel,
                        let productIdFrom = viewModel.swapViewModel.productIdFrom,
-                       let productIdTo = viewModel.swapViewModel.productIdTo {
-                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdFrom))
-                        model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productIdTo))
+                       let productIdTo = viewModel.swapViewModel.productIdTo,
+                       let productFrom = model.product(productId: productIdFrom),
+                       let productTo = model.product(productId: productIdTo)
+                    {
+                        model.reloadProducts(
+                            productTo: productTo,
+                            productFrom: productFrom
+                        )
                     }
                     
                     self.bind(payload.viewModel)
@@ -1603,7 +1612,7 @@ private extension ProductProfileViewModel {
         .init(
             model,
             fastPaymentsFactory: fastPaymentsFactory,
-            paymentsTransfersFlowManager: paymentsTransfersFlowManager,
+            makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             unblockCardServices: unblockCardServices,
@@ -2417,7 +2426,7 @@ extension ProductProfileViewModel {
         cardId: CardDomain.CardId,
         completion: @escaping ShowCVVCompletion
     ) {
-        if productData?.productStatus == .active {
+        if productData?.productStatus == .active || productData?.productStatus == .notVisible {
             cvvPINServicesClient.showCVV(
                 cardId: cardId.rawValue
             ) { [weak self] result in

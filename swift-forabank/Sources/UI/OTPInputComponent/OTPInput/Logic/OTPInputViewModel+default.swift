@@ -5,18 +5,21 @@
 //  Created by Igor Malyarov on 21.01.2024.
 //
 
+import ForaTools
+
 public extension OTPInputState {
     
     static func starting(
         phoneNumber: PhoneNumberMask,
-        duration: Int
+        duration: Int,
+        text: String = ""
     ) -> Self {
         
         .init(
             phoneNumber: phoneNumber,
             status: .input(.init(
                 countdown: .starting(duration: duration),
-                otpField: .init()
+                otpField: .init(text: text)
             ))
         )
     }
@@ -24,7 +27,6 @@ public extension OTPInputState {
 
 public extension OTPInputViewModel {
     
-#warning("improve duration with Tagged")
     static func `default`(
         initialState: OTPInputState,
         timer: TimerProtocol = RealTimer(),

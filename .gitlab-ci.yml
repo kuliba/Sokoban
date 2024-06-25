@@ -1,5 +1,4 @@
 ############
-
 stages:
   - test
   - build
@@ -50,3 +49,4 @@ fastlane-deploy:
     - develop
   script:
     - bundle exec fastlane deploy
+  

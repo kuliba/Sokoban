@@ -23,16 +23,19 @@ extension MyProductsViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            paymentsTransfersFlowManager: .preview,
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: .preview
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: .init(.active)
         ),
         refreshingIndicator: .init(isActive: true),
-        openOrderSticker: {}
+        openOrderSticker: {},
+        makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { nil })
     )
     
     static let sampleOpenProduct = MyProductsViewModel(
@@ -49,16 +52,19 @@ extension MyProductsViewModel {
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
             makeUtilitiesViewModel: { _,_ in },
-            paymentsTransfersFlowManager: .preview,
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: .empty(),
             unblockCardServices: .preview(),
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
-            productNavigationStateManager: .preview
+            productNavigationStateManager: .preview,
+            updateInfoStatusFlag: .init(.active)
         ),
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false],
-        openOrderSticker: {}
+        openOrderSticker: {},
+        makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { nil })
     )
 }

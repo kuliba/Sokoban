@@ -5,8 +5,9 @@
 //  Created by Mikhail on 03.06.2022.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
+import UIPrimitives
 
 extension NavigationBarView {
     
@@ -237,6 +238,28 @@ extension NavigationBarView.ViewModel {
         }
     }
     
+    class AsyncImageItemViewModel: ItemViewModel {
+        
+        let icon: UIPrimitives.AsyncImage
+        let style: Style
+        
+        init(
+            icon: UIPrimitives.AsyncImage,
+            style: Style
+        ) {
+            self.icon = icon
+            self.style = style
+            
+            super.init()
+        }
+        
+        enum Style {
+            
+            case normal //24pt
+            case large //32pt
+        }
+    }
+    
     struct BackgroundColorDimm {
         
         let color: Color
@@ -348,23 +371,31 @@ struct NavigationBarView: View {
 
 extension NavigationBarView {
     
-    func view(for item: ViewModel.ItemViewModel, foregroundColor: Color, backgroundColor: Color) -> AnyView {
+    @ViewBuilder
+    func view(
+        for item: ViewModel.ItemViewModel,
+        foregroundColor: Color,
+        backgroundColor: Color
+    ) -> some View {
         
         switch item {
         case let backButtonItem as NavigationBarView.ViewModel.BackButtonItemViewModel:
-            return AnyView(BackButtonItemView(viewModel: backButtonItem, foregroundColor: foregroundColor))
+            BackButtonItemView(viewModel: backButtonItem, foregroundColor: foregroundColor)
         
         case let buttonItem as NavigationBarView.ViewModel.ButtonItemViewModel:
-            return AnyView(ButtonItemView(viewModel: buttonItem, foregroundColor: foregroundColor))
+            ButtonItemView(viewModel: buttonItem, foregroundColor: foregroundColor)
             
         case let buttonMarkedItem as NavigationBarView.ViewModel.ButtonMarkedItemViewModel:
-            return AnyView(ButtonMarkedItemView(viewModel: buttonMarkedItem, foreground: foregroundColor, background: backgroundColor))
+            ButtonMarkedItemView(viewModel: buttonMarkedItem, foreground: foregroundColor, background: backgroundColor)
             
         case let iconItem as NavigationBarView.ViewModel.IconItemViewModel:
-            return AnyView(IconItemView(viewModel: iconItem))
+            IconItemView(viewModel: iconItem)
+            
+        case let asyncImage as NavigationBarView.ViewModel.AsyncImageItemViewModel:
+            AsyncImageItemView(viewModel: asyncImage)
             
         default:
-            return AnyView(EmptyView())
+            EmptyView()
         }
     }
 }
@@ -401,7 +432,7 @@ extension NavigationBarView {
         
         let viewModel: ViewModel.ButtonItemViewModel
         let foregroundColor: Color
- 
+        
         var body: some View {
             
             Button(action: viewModel.action) {
@@ -426,21 +457,21 @@ extension NavigationBarView {
         var body: some View {
             
             Button(action: viewModel.action) {
-            
-                ZStack(alignment: .leading) {
                 
+                ZStack(alignment: .leading) {
+                    
                     viewModel.icon
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 24, height: 24)
                         .foregroundColor(viewModel.isDisabled ? .mainColorsGrayMedium
-                                                              : foreground)
+                                         : foreground)
                         .accessibilityIdentifier("NavigationBarIcon2")
-                
-                    if let markedDot = viewModel.markedDot {
                     
-                        if markedDot.isBlinking {
+                    if let markedDot = viewModel.markedDot {
                         
+                        if markedDot.isBlinking {
+                            
                             Circle()
                                 .fill(blinking ? background : Color.red)
                                 .background(Circle().stroke(background, lineWidth: 3))
@@ -452,10 +483,10 @@ extension NavigationBarView {
                                     DispatchQueue.main.asyncAfter(
                                         deadline: .now() + .milliseconds(50)) {
                                             blinking = true
-                                    }
+                                        }
                                 }
                         } else {
-                        
+                            
                             Circle()
                                 .fill(Color.red)
                                 .background(Circle().stroke(background, lineWidth: 3))
@@ -473,25 +504,42 @@ extension NavigationBarView {
     struct IconItemView: View {
         
         let viewModel: ViewModel.IconItemViewModel
- 
+        
         var body: some View {
             
+            viewModel.icon
+                .renderingMode(.original)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(frameSize)
+                .accessibilityIdentifier("NavigationBarIconLarge")
+        }
+        
+        private var frameSize: CGSize {
+            
             switch viewModel.style {
-            case .normal:
-                viewModel.icon
-                    .renderingMode(.original)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 24, height: 24)
-                    .accessibilityIdentifier("NavigationBarIconNormal")
-                
-            case .large:
-                viewModel.icon
-                    .renderingMode(.original)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 32, height: 32)
-                    .accessibilityIdentifier("NavigationBarIconLarge")
+            case .large: return .init(width: 32, height: 32)
+            case .normal: return .init(width: 24, height: 24)
+            }
+        }
+    }
+    
+    struct AsyncImageItemView: View {
+        
+        let viewModel: ViewModel.AsyncImageItemViewModel
+        
+        var body: some View {
+            
+            viewModel.icon
+                .frame(frameSize)
+                .accessibilityIdentifier("NavigationBarIconLarge")
+        }
+        
+        private var frameSize: CGSize {
+            
+            switch viewModel.style {
+            case .large: return .init(width: 32, height: 32)
+            case .normal: return .init(width: 24, height: 24)
             }
         }
     }

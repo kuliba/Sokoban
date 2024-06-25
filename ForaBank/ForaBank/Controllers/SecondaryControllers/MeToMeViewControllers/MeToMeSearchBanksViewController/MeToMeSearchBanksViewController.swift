@@ -219,7 +219,7 @@ class MeToMeSearchBanksViewController: UIViewController {
         var list = filterBank.sorted(by: {$0.rusName ?? "" < $1.rusName ?? ""})
         //#if RELEASE
         list.forEach { bank in
-            if bank.memberID == "100000000217" {
+            if bank.memberID == BankID.foraBankID.rawValue {
                 if let index = list.firstIndex(where: {$0.memberID == bank.memberID}) {
                     list.remove(at: index)
                 }

@@ -15,16 +15,68 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     
     func test_uiComponent_shouldDeliverFieldForField() {
         
-        let element = makeAnywayPaymentFieldElement(.init(
+        let element = makeAnywayPaymentFieldElement(makeAnywayPaymentField(
             id: "123",
-            title: "CDE",
-            value: "abc"
+            value: "abc",
+            title: "CDE"
         ))
         
         XCTAssertNoDiff(element.uiComponent, .field(.init(
             name: "123",
             title: "CDE",
-            value: "abc"
+            value: "abc",
+            image: nil
+        )))
+    }
+    
+    func test_uiComponent_shouldDeliverFieldForFieldWithMD5Hash() {
+        
+        let element = makeAnywayPaymentFieldElement(makeAnywayPaymentField(
+            "123",
+            value: "abc",
+            title: "CDE",
+            image: .md5Hash("md5Hash")
+        ))
+        
+        XCTAssertNoDiff(element.uiComponent, .field(.init(
+            name: "123",
+            title: "CDE",
+            value: "abc",
+            image: .md5Hash("md5Hash")
+        )))
+    }
+    
+    func test_uiComponent_shouldDeliverFieldForFieldWithSVG() {
+        
+        let element = makeAnywayPaymentFieldElement(makeAnywayPaymentField(
+            "123",
+            value: "abc",
+            title: "CDE",
+            image: .svg("svg")
+        ))
+        
+        XCTAssertNoDiff(element.uiComponent, .field(.init(
+            name: "123",
+            title: "CDE",
+            value: "abc",
+            image: .svg("svg")
+        )))
+    }
+    
+    func test_uiComponent_shouldDeliverFieldForFieldWithFallback() {
+        
+        let element = makeAnywayPaymentFieldElement(makeAnywayPaymentField(
+            "123",
+            value: "abc",
+            title: "CDE",
+            image: .withFallback(md5Hash: "md5Hash", svg: "svg")
+        ))
+        
+        XCTAssertNoDiff(element.uiComponent, .field(.init(
+            name: "123",
+            title: "CDE",
+            value: "abc",
+            image: .withFallback(md5Hash: "md5Hash", svg: "svg")
         )))
     }
     
@@ -252,7 +304,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             type: .textInput,
             title: "abcde",
             subtitle: "defg",
-            value: "ABC"
+            value: "ABC",
+            image: nil
         )))
     }
     
@@ -275,7 +328,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             type: .select(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
             title: "abcde",
             subtitle: "defg",
-            value: nil
+            value: nil,
+            image: nil
         )))
     }
     
@@ -298,7 +352,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             type: .select(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
             title: "abcde",
             subtitle: "defg",
-            value: "ABC"
+            value: "ABC",
+            image: nil
         )))
     }
     
@@ -325,7 +380,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
                 ]),
             title: "abcde",
             subtitle: "defg",
-            value: "ABC"
+            value: "ABC",
+            image: nil
         )))
     }
     
@@ -348,8 +404,8 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     func test_uiComponent_shouldDeliverProductPickerWithAccountForCoreWidget() {
         
         let id = generateRandom11DigitNumber()
-        let element = makeAnywayPaymentWidgetElement(.core(
-            makeWidgetPaymentCore(
+        let element = makeAnywayPaymentWidgetElement(.product(
+            makeProductWidget(
                 productID: id,
                 productType: .account
             )
@@ -357,15 +413,15 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         XCTAssertNoDiff(
             element.uiComponent,
-            .widget(.productPicker(.accountID(.init(id))))
+            .widget(.productPicker(id, .account))
         )
     }
     
     func test_uiComponent_shouldDeliverProductPickerWithCardForCoreWidget() {
         
         let id = generateRandom11DigitNumber()
-        let element = makeAnywayPaymentWidgetElement(.core(
-            makeWidgetPaymentCore(
+        let element = makeAnywayPaymentWidgetElement(.product(
+            makeProductWidget(
                 productID: id,
                 productType: .card
             )
@@ -373,13 +429,13 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
         
         XCTAssertNoDiff(
             element.uiComponent,
-            .widget(.productPicker(.cardID(.init(id))))
+            .widget(.productPicker(id, .card))
         )
     }
     
     // MARK: - Helpers
     
-    private typealias DataType = AnywayPayment.Element.Parameter.UIAttributes.DataType
+    private typealias DataType = AnywayElement.Parameter.UIAttributes.DataType
     private typealias Pair = (key: String, value: String)
     
     private func makePairsDataType(
@@ -394,10 +450,10 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     }
     
     private func makeElement(
-        type: AnywayPayment.Element.Parameter.UIAttributes.FieldType,
-        dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType,
-        viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType
-    ) -> AnywayPayment.Element {
+        type: AnywayElement.Parameter.UIAttributes.FieldType,
+        dataType: AnywayElement.Parameter.UIAttributes.DataType,
+        viewType: AnywayElement.Parameter.UIAttributes.ViewType
+    ) -> AnywayElement {
         
         makeAnywayPaymentParameterElement(
             makeAnywayPaymentParameter(
@@ -411,10 +467,10 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     }
     
     private func makeUIAttributes(
-        type: AnywayPayment.Element.Parameter.UIAttributes.FieldType,
-        dataType: AnywayPayment.Element.Parameter.UIAttributes.DataType,
-        viewType: AnywayPayment.Element.Parameter.UIAttributes.ViewType
-    ) -> AnywayPayment.Element.Parameter.UIAttributes {
+        type: AnywayElement.Parameter.UIAttributes.FieldType,
+        dataType: AnywayElement.Parameter.UIAttributes.DataType,
+        viewType: AnywayElement.Parameter.UIAttributes.ViewType
+    ) -> AnywayElement.Parameter.UIAttributes {
         
         makeAnywayPaymentElementParameterUIAttributes(
             dataType: dataType,
@@ -426,9 +482,9 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
 
 // MARK: - DSL
 
-private extension AnywayPayment.Element {
+private extension AnywayElement {
     
-    var parameterType: AnywayPayment.Element.UIComponent.Parameter.ParameterType? {
+    var parameterType: AnywayElement.UIComponent.Parameter.ParameterType? {
         
         guard case let .parameter(parameter) = self
         else { return nil }

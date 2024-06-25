@@ -11,23 +11,24 @@ import UIKit
 
 public extension UILanding.Multi {
     
-    struct Buttons: Hashable {
+    struct Buttons: Equatable {
         
-        public let list: [Item]
+        let id: UUID
+        let list: [Item]
         
-        public struct Item: Hashable, Identifiable {
+        public struct Item: Identifiable, Equatable {
             
-            public var id: Self { self }
-            public let text: String
-            public let style: String
-            public let detail: Detail?
-            public let link: String?
-            public let action: Action?
+            public let id: UUID
+            let text: String
+            let style: String
+            let detail: Detail?
+            let link: String?
+            let action: Action?
             
             public struct Detail: Hashable {
                 
-                public let groupId: GroupId
-                public let viewId: ViewId
+                let groupId: GroupId
+                let viewId: ViewId
                 
                 public init(
                     groupId: GroupId,
@@ -46,7 +47,7 @@ public extension UILanding.Multi {
             
             public struct Action: Hashable {
                 
-                public let type: ActionType
+                let type: ActionType
                 
                 public init(type: ActionType) {
                     self.type = type
@@ -58,12 +59,14 @@ public extension UILanding.Multi {
             }
             
             public init(
+                id: UUID = UUID(),
                 text: String,
                 style: String,
                 detail: Detail?,
                 link: String?,
                 action: Action?
             ) {
+                self.id = id
                 self.text = text
                 self.style = style
                 self.detail = detail
@@ -78,7 +81,8 @@ public extension UILanding.Multi {
             }
         }
         
-        public init(list: [Item]) {
+        public init(id: UUID = UUID(), list: [Item]) {
+            self.id = id
             self.list = list
         }
     }
@@ -106,12 +110,11 @@ extension MultiButtonsView {
         static func itemAction(
             item: UILanding.Multi.Buttons.Item,
             selectDetail: SelectDetail,
-            action: (LandingEvent) -> Void,
-            openLink: @escaping () -> Void
+            action: (LandingEvent) -> Void
         ) {
             
             if let type = item.action?.type,
-                let actionType = item.actionType(by: type) {
+               let actionType = item.actionType(by: type) {
                 switch actionType {
                 case .goToMain:
                     action(.card(.goToMain))
@@ -122,8 +125,8 @@ extension MultiButtonsView {
                 }
             } else if let detailDestination = item.detailDestination {
                 selectDetail(detailDestination)
-            } else {
-                openLink()
+            } else if let link = item.link {
+                action(.card(.openUrl(link)))
             }
         }
         
@@ -134,18 +137,8 @@ extension MultiButtonsView {
            Self.itemAction(
                 item: item,
                 selectDetail: selectDetail,
-                action: action,
-                openLink: { self.openLink(item.link) }
+                action: action
             )
-        }
-        
-        func openLink(
-            _ link: String?
-        ) {
-            guard let strUrl = link, let url = URL(string: strUrl)
-            else { return }
-            
-            UIApplication.shared.open(url)
         }
     }
 }

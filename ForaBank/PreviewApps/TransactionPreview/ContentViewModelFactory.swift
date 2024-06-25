@@ -14,7 +14,7 @@ extension ContentViewModelFactory {
     
     typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> TransactionViewModel
     typealias Observe = (AnywayTransactionState) -> Void
-    typealias TransactionViewModel = ObservingAnywayTransactionViewModel
+    typealias TransactionViewModel = ObservingCachedAnywayTransactionViewModel
 }
 
 extension ContentViewModelFactory {

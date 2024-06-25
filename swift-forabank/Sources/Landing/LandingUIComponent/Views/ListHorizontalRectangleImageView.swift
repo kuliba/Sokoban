@@ -7,20 +7,19 @@
 
 import SwiftUI
 import Combine
+import UIPrimitives
 
 struct ListHorizontalRectangleImageView: View {
     
     @ObservedObject var model: ViewModel
     let config: UILanding.List.HorizontalRectangleImage.Config
-    
-    let selectDetail: SelectDetail
-    
+        
     var body: some View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                
                 HStack(spacing: config.spacing) {
-                    ForEach(model.data.list, content: itemView)
+                    ForEach(model.data.list, id: \.imageLink, content: itemView)
                 }
             }
             .padding(.horizontal, config.paddings.horizontal)
@@ -33,7 +32,7 @@ struct ListHorizontalRectangleImageView: View {
             item: item,
             config: config,
             image: model.image(byImageLink: item.imageLink),
-            selectDetail: selectDetail
+            action: { model.itemAction(item: item) }
         )
     }
 }
@@ -45,11 +44,11 @@ extension ListHorizontalRectangleImageView {
         let item: UILanding.List.HorizontalRectangleImage.Item
         let config: UILanding.List.HorizontalRectangleImage.Config
         let image: Image?
-        let selectDetail: (DetailDestination?) -> Void
-        
+        let action: () -> Void
+
         var body: some View {
             
-            Button(action: { selectDetail(item.detailDestination) }) {
+            Button(action: action) {
                 
                 VStack(spacing: config.spacing) {
                     
@@ -59,7 +58,7 @@ extension ListHorizontalRectangleImageView {
                             .cornerRadius(config.cornerRadius)
                             .frame(width: config.size.width)
                             .frame(maxHeight: config.size.height)
-                            .shimmering(active: true, bounce: false)
+                            .shimmering()
                             .accessibilityIdentifier("HorizontalRectangleImageNone")
                         
                     case let .some(image):
@@ -74,7 +73,7 @@ extension ListHorizontalRectangleImageView {
                 }
                 .fixedSize(horizontal: false, vertical: true)
             }
-            .disabled(item.detail == nil)
+            .disabled(item.detail == nil && item.link.isEmpty)
         }
     }
 }
@@ -97,13 +96,17 @@ struct ListHorizontalRectangleImageView_Previews: PreviewProvider {
         
         ListHorizontalRectangleImageView(
             model: defaultValue,
-            config: .default,
-            selectDetail: { _ in })
+            config: .default)
         
     }
-    static let defaultValue: ListHorizontalRectangleImageView.ViewModel = .init(data: .init(
+    static let defaultValue: ListHorizontalRectangleImageView.ViewModel = .init(
+        data: .init(
         list: [
             .init(imageLink: "111", link: "2222", detail: .none),
             .init(imageLink: "122", link: "2222", detail: .none)
-        ]), images: .defaultValue)
+        ]), 
+        images: .defaultValue,
+        action: { _ in },
+        selectDetail: { _ in }
+    )
 }

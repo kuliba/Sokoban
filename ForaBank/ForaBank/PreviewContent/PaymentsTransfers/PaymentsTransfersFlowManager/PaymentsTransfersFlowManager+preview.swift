@@ -10,9 +10,9 @@ import OperatorsListComponents
 extension PaymentsTransfersFlowManager
 where LastPayment == UtilityPaymentLastPayment,
       Operator == UtilityPaymentOperator,
-      UtilityService == ForaBank.UtilityService,
+      Service == UtilityService,
       Content == UtilityPrepaymentViewModel,
-      PaymentViewModel == ObservingAnywayTransactionViewModel {
+      PaymentViewModel == AnywayTransactionViewModel {
     
     static var preview: Self {
         

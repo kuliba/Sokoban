@@ -15,7 +15,7 @@ struct UtilityPrepaymentWrapperView: View {
     
     @ObservedObject var viewModel: ViewModel
     
-    let flowEvent: (FlowEvent) -> Void
+    let completionEvent: (CompletionEvent) -> Void
     let makeIconView: MakeIconView
     
     var body: some View {
@@ -35,12 +35,12 @@ struct UtilityPrepaymentWrapperView: View {
 
 extension UtilityPrepaymentWrapperView {
     
-    typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
+    typealias MakeIconView = (String?) -> UIPrimitives.AsyncImage
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     
-    typealias FlowEvent = UtilityPrepaymentFlowEvent
+    typealias CompletionEvent = UtilityPrepaymentCompletionEvent
     typealias ViewModel = UtilityPrepaymentViewModel
 }
 
@@ -52,7 +52,7 @@ private extension UtilityPrepaymentWrapperView {
         
         FooterView(
             state: isFailure ? .failure(.iFora) : .footer(.iFora),
-            event: { flowEvent($0.event) },
+            event: { completionEvent($0.event) },
             config: .iFora
         )
     }
@@ -62,7 +62,7 @@ private extension UtilityPrepaymentWrapperView {
     ) -> some View {
         
         Button(
-            action: { flowEvent(.select(.lastPayment(latestPayment))) },
+            action: { completionEvent(.select(.lastPayment(latestPayment))) },
             label: {
                 #warning("md5Hash is unwrapped to empty - iconView should be able to deal with it at composition level")
                 LastPaymentLabel(
@@ -81,12 +81,12 @@ private extension UtilityPrepaymentWrapperView {
     ) -> some View {
         
         Button(
-            action: { flowEvent(.select(.operator(`operator`))) },
+            action: { completionEvent(.select(.operator(`operator`))) },
             label: {
                 
                 OperatorLabel(
                     title: `operator`.title,
-                    subtitle: `operator`.subtitle,
+                    subtitle: `operator`.inn,
                     config: .iFora,
                     iconView: makeIconView(`operator`.icon)
                 )
@@ -98,12 +98,31 @@ private extension UtilityPrepaymentWrapperView {
     func makeSearchView() -> some View {
         
         TextField(
-            "Type to search",
+            "Наименование или ИНН",
             text: .init(
                 get: { viewModel.state.searchText },
                 set: { viewModel.event(.search($0)) }
             )
         )
+        .frame(height: 44)
+        .padding(.leading, 14)
+        .padding(.trailing, 15)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(Color.bordersDivider, lineWidth: 1)
+        )
+    }
+}
+
+// MARK: - Helpers
+
+private extension UtilityPaymentOperator {
+    
+    var inn: String? {
+        
+        guard let subtitle, !subtitle.isEmpty else { return nil }
+        
+        return "ИНН \(subtitle)"
     }
 }
 
@@ -111,7 +130,7 @@ private extension UtilityPrepaymentWrapperView {
 
 private extension FooterEvent {
     
-    var event: UtilityPrepaymentFlowEvent {
+    var event: UtilityPrepaymentCompletionEvent {
         
         switch self {
         case .addCompany:

@@ -6,16 +6,17 @@
 //
 
 import AnywayPaymentDomain
-import Tagged
 
 extension AnywayPaymentContext {
     
     public func staging() -> Self {
         
         return .init(
+            initial: initial,
             payment: payment,
             staged: payment.getStaged(),
-            outline: outline.updating(with: payment)
+            outline: outline.updating(with: payment),
+            shouldRestart: shouldRestart
         )
     }
 }

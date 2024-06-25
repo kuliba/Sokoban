@@ -23,7 +23,7 @@ where Content: View,
         content()
             .navigationDestination(
                 destination: state.destination,
-                dismissDestination: { event(.dismissDestination) },
+                dismissDestination: { event(.dismiss(.destination)) },
                 content: destinationView
             )
             .alert(
@@ -42,7 +42,7 @@ where Content: View,
                 event: event,
                 map: {
                     switch $0 {
-                    case .dismissAlert: return .dismissAlert
+                    case .dismissAlert: return .dismiss(.alert)
                     }
                 }
             )
@@ -56,10 +56,11 @@ extension UtilityPaymentFlowView {
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
 
-    typealias UtilityPaymentViewModel = ObservingAnywayTransactionViewModel
-    typealias State = UtilityPaymentFlowState<Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>.UtilityPrepaymentFlowEvent
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
+    typealias State = UtilityPaymentFlowState<Operator, Service, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
+    typealias Event = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
 }
 
 extension UtilityPaymentFlowState.Destination: Identifiable
@@ -131,11 +132,11 @@ private extension ServiceFailureAlert.ServiceFailure {
         
         switch self {
         case .connectivityError:
-            let model = alertModelOf(title: "Error!", message: "alert message")
+            let model = alertModelOf(title: "Ошибка", message: "alert message")
             return .init(with: model, event: event)
             
         case let .serverError(message):
-            let model = alertModelOf(title: "Error!", message: message)
+            let model = alertModelOf(title: "Ошибка", message: message)
             return .init(with: model, event: event)
         }
     }

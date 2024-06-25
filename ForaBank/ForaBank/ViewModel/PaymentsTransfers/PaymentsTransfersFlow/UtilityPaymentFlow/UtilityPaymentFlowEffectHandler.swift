@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
-final class UtilityPaymentFlowEffectHandler<LastPayment, Operator, UtilityService> {
+final class UtilityPaymentFlowEffectHandler<LastPayment, Operator, Service> {
     
     private let utilityPrepaymentEffectHandle: UtilityPrepaymentFlowEffectHandle
     
@@ -31,11 +31,13 @@ extension UtilityPaymentFlowEffectHandler {
 
 extension UtilityPaymentFlowEffectHandler {
     
-    typealias UtilityPrepaymentFlowDispatch = (Event.UtilityPrepaymentFlowEvent) -> Void
-    typealias UtilityPrepaymentFlowEffectHandle = (Effect.UtilityPrepaymentFlowEffect, @escaping UtilityPrepaymentFlowDispatch) -> Void
+    typealias PrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
+    typealias PrepaymentFlowDispatch = (PrepaymentEvent) -> Void
+    typealias PrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
+    typealias UtilityPrepaymentFlowEffectHandle = (PrepaymentEffect, @escaping PrepaymentFlowDispatch) -> Void
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, UtilityService>
-    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, UtilityService>
+    typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
+    typealias Effect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
 }

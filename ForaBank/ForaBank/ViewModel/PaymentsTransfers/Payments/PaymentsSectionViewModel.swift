@@ -206,24 +206,28 @@ extension PaymentsSectionViewModel {
             
             switch placement {
             case .bottom:
-                if items.isEmpty == false {
+                if !items.isEmpty {
                     
                     result.append(PaymentsSectionViewModel(placement: placement, items: items))
                     
                 } else {
                     
                     //TODO: move to Model side
-                    let continueButtonParameter = Payments.ParameterButton(parameterId: Payments.Parameter.Identifier.continue.rawValue, title: "Продолжить", style: .primary, acton: .continue)
-                    let continueButtonItem = PaymentsButtonView.ViewModel( continueButtonParameter)
+                    let continueButtonParameter = Payments.ParameterButton(
+                        parameterId: Payments.Parameter.Identifier.continue.rawValue,
+                        title: operation.isLastStep ? "Перевести" : "Продолжить",
+                        style: .primary,
+                        acton: .continue
+                    )
+                    let continueButtonItem = PaymentsButtonView.ViewModel(continueButtonParameter)
                     result.append(PaymentsSectionViewModel(placement: placement, items: [continueButtonItem]))
                 }
                 
             default:
-                guard items.isEmpty == false else {
-                    continue
-                }
                 
-                result.append(PaymentsSectionViewModel(placement: placement, items: items))
+                if !items.isEmpty {
+                    result.append(PaymentsSectionViewModel(placement: placement, items: items))
+                }
             }
         }
         

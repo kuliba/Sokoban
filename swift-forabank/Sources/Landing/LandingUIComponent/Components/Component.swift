@@ -9,39 +9,94 @@ import Foundation
 
 extension UILanding {
     
-    public enum Component: Hashable, Identifiable {
+    public enum Component: Equatable {
         
-        case list(List)
-        case multi(Multi)
-        
-        public enum List: Hashable, Identifiable {
-            case horizontalRoundImage(UILanding.List.HorizontalRoundImage)
-            case horizontalRectangleImage(UILanding.List.HorizontalRectangleImage)
-            case verticalRoundImage(UILanding.List.VerticalRoundImage)
-            case dropDownTexts(UILanding.List.DropDownTexts)
-            
-            public var id: Self { self }
-        }
-        
-        public enum Multi: Hashable, Identifiable {
-            case lineHeader(UILanding.Multi.LineHeader)
-            case textsWithIconsHorizontal(UILanding.Multi.TextsWithIconsHorizontal)
-            case texts(UILanding.Multi.Texts)
-            case markersText(UILanding.Multi.MarkersText)
-            case buttons(UILanding.Multi.Buttons)
-            case typeButtons(UILanding.Multi.TypeButtons)
-            
-            public var id: Self { self }
-        }
-        
-        case pageTitle(UILanding.PageTitle)
-        case textWithIconHorizontal(UILanding.TextsWithIconHorizontal)
+        case blockHorizontalRectangular(UILanding.BlockHorizontalRectangular)
+
         case iconWithTwoTextLines(UILanding.IconWithTwoTextLines)
         case image(UILanding.ImageBlock)
         case imageSvg(UILanding.ImageSvg)
+        case list(List)
+        case multi(Multi)
+        case pageTitle(UILanding.PageTitle)
+        case textWithIconHorizontal(UILanding.TextsWithIconHorizontal)
         case verticalSpacing(UILanding.VerticalSpacing)
         
-        public var id: Self { self }
+        var id: String {
+            switch self {
+            case let .list(list):
+                return list.id.uuidString
+            case let .multi(multi):
+                return multi.id.uuidString
+            case let .pageTitle(pageTitle):
+                return pageTitle.id.uuidString
+            case let .textWithIconHorizontal(textsWithIconHorizontal):
+                return textsWithIconHorizontal.md5hash
+            case let .iconWithTwoTextLines(iconWithTwoTextLines):
+                return iconWithTwoTextLines.md5hash
+            case let .image(imageBlock):
+                return imageBlock.id.uuidString
+            case let .imageSvg(imageSvg):
+                return imageSvg.md5hash.rawValue
+            case let .verticalSpacing(verticalSpacing):
+                return verticalSpacing.id.uuidString
+            case let .blockHorizontalRectangular(value):
+                return value.id.uuidString
+            }
+        }
+    }
+}
+
+extension UILanding.Component {
+    
+    public enum List: Equatable { 
+
+        case dropDownTexts(UILanding.List.DropDownTexts)
+        case horizontalRectangleImage(UILanding.List.HorizontalRectangleImage)
+        case horizontalRectangleLimits(UILanding.List.HorizontalRectangleLimits, LimitsLoadingStatus)
+        case horizontalRoundImage(UILanding.List.HorizontalRoundImage)
+        case verticalRoundImage(UILanding.List.VerticalRoundImage)
+        
+        public var id: UUID {
+            switch self {
+            case let .dropDownTexts(value):
+                return value.id
+            case let .horizontalRectangleImage(value):
+                return value.id
+            case let .horizontalRectangleLimits(value, _): // ??? need add limits id
+                return value.id
+            case let .horizontalRoundImage(value):
+                return value.id
+            case let .verticalRoundImage(value):
+                return value.id
+            }
+        }
+    }
+    
+    public enum Multi: Equatable {
+        case buttons(UILanding.Multi.Buttons)
+        case lineHeader(UILanding.Multi.LineHeader)
+        case markersText(UILanding.Multi.MarkersText)
+        case texts(UILanding.Multi.Texts)
+        case textsWithIconsHorizontal(UILanding.Multi.TextsWithIconsHorizontal)
+        case typeButtons(UILanding.Multi.TypeButtons)
+        
+        public var id: UUID {
+            switch self {
+            case let .buttons(value):
+                return value.id
+            case let .lineHeader(value):
+                return value.id
+            case let .markersText(value):
+                return value.id
+            case let .texts(value):
+                return value.id
+            case let .textsWithIconsHorizontal(value):
+                return value.id
+            case let .typeButtons(value):
+                return value.id
+            }
+        }
     }
 }
 
@@ -56,6 +111,8 @@ extension UILanding.Component {
                 return data.imageRequests()
             case let .horizontalRectangleImage(data):
                 return data.imageRequests()
+            case .horizontalRectangleLimits:
+                return []
             case let .verticalRoundImage(data):
                 return data.imageRequests()
             case let .dropDownTexts(data):
@@ -88,6 +145,8 @@ extension UILanding.Component {
             return data.imageRequests()
         case let .verticalSpacing(data):
             return data.imageRequests()
+        case .blockHorizontalRectangular:
+            return []
         }
     }
 }

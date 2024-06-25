@@ -208,7 +208,7 @@ private extension PaymentsTransfersView {
                 
                 return .init(
                     with: .init(
-                        title: "Error!",
+                        title: "Ошибка!",
                         message: errorMessage,
                         primaryButton: .init(
                             type: .default,
@@ -230,7 +230,7 @@ private extension PaymentsTransfersView {
         case .completed:
             VStack(spacing: 32) {
                 
-                Text("TBD: Payment Complete View")
+                Text("TBD: Payment Complete FullScreenCover View")
                     .frame(maxHeight: .infinity)
                 
                 Divider()

@@ -216,11 +216,12 @@ final class RootViewModelTests: XCTestCase {
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(),
                 paymentsTransfersFactory: .preview,
+                updateInfoStatusFlag: .init(.inactive),
                 onRegister: {}
             ),
             paymentsViewModel: .init(
                 model: model,
-                flowManager: .preview,
+                makeFlowManager: { _ in .preview },
                 userAccountNavigationStateManager: .preview,
                 sberQRServices: .empty(),
                 qrViewModelFactory: .preview(), 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum SelectEvent {
+public enum SelectEvent: Equatable {
     
     case chevronTapped(options: [SelectState.Option]?, selectOption: SelectState.Option?)
     case optionTapped(SelectState.Option)
