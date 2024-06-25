@@ -46,12 +46,12 @@ final class Model_allProductTests: XCTestCase {
                 makeAccountProduct(id: 2),
             ],
             .card: [
-                makeCardProduct(id: 3, parentID: nil),
-                makeCardProduct(id: 4, parentID: nil),
-                makeCardProduct(id: 5, parentID: nil),
-                makeCardProduct(id: 6, parentID: nil),
-                makeCardProduct(id: 7, parentID: nil),
-                makeCardProduct(id: 8, parentID: nil),
+                makeCardProduct(id: 3),
+                makeCardProduct(id: 4),
+                makeCardProduct(id: 5),
+                makeCardProduct(id: 6),
+                makeCardProduct(id: 7),
+                makeCardProduct(id: 8),
             ],
         ])
         
