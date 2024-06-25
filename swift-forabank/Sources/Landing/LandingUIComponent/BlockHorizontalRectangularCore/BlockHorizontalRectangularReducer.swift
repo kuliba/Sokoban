@@ -33,8 +33,6 @@ public extension BlockHorizontalRectangularReducer {
 //            state.warning = ""
 //        }
 //        state.value = "\(limit.value)"
-//
-//        case let .save(info):
 //            
 //        }
         
