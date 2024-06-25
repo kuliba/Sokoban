@@ -25,17 +25,20 @@ public extension UILanding.BlockHorizontalRectangular {
             let divider: Color
             let title: Color
             let subtitle: Color
+            let warning: Color
             
             public init(
                 background: Color,
                 divider: Color,
                 title: Color,
-                subtitle: Color
+                subtitle: Color,
+                warning: Color
             ) {
                 self.background = background
                 self.divider = divider
                 self.title = title
                 self.subtitle = subtitle
+                self.warning = warning
             }
         }
 

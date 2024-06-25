@@ -398,7 +398,9 @@ extension UILanding.BlockHorizontalRectangular.Config {
             background: .mainColorsGrayLightest,
             divider: .blurMediumGray30,
             title: .secondary,
-            subtitle: .textPlaceholder),
+            subtitle: .textPlaceholder,
+            warning: .mainColorsRed
+        ),
         cornerRadius: 12,
         sizes: .init(
             iconWidth: 24,

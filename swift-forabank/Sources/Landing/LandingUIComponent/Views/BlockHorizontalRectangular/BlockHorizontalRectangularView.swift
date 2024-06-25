@@ -58,12 +58,6 @@ extension BlockHorizontalRectangularView {
         let factory: Factory
         let event: (Event) -> Void
         
-        let formatter: NumberFormatter = {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            return formatter
-        }()
-
         var body: some View {
             
             ZStack {
@@ -71,23 +65,30 @@ extension BlockHorizontalRectangularView {
                     .ignoresSafeArea()
                     .cornerRadius(config.cornerRadius)
                 
-                VStack {
+                VStack(alignment: .leading) {
                     
                     Text(item.title)
+                        .font(.headline)
+                        .foregroundColor(config.colors.title)
                     Text(item.description)
+                        .font(.caption)
+                        .foregroundColor(config.colors.subtitle)
                     
                     ForEach(item.limits, id: \.id, content: limit)
                 }
+                .padding()
             }
         }
         
         private func limit(_ limit: Item.Limit) -> some View {
             
             if let inputState = inputStates.first(where: { $0.id == limit.id }) {
-                return AnyView(VStack {
+                return AnyView(VStack(alignment: .leading) {
                     
                     Text(limit.title)
-                    
+                        .font(.headline)
+                        .foregroundColor(config.colors.title)
+
                     VStack(alignment: .leading, spacing: 4) {
                         
                         HStack(alignment: .center, spacing: 16) {
@@ -99,7 +100,9 @@ extension BlockHorizontalRectangularView {
                             VStack(alignment: .leading, spacing: 4) {
                                 
                                 Text(limit.text)
-                                
+                                    .font(.caption)
+                                    .foregroundColor(config.colors.subtitle)
+
                                 TextField(
                                     "",
                                     text: .init(
@@ -107,6 +110,8 @@ extension BlockHorizontalRectangularView {
                                         set: { event(.change(.init(id: limit.id, value: $0))) }
                                     )
                                 )
+                                .font(.caption)
+                                .foregroundColor(config.colors.title)
                             }
                         }
                         
@@ -118,9 +123,10 @@ extension BlockHorizontalRectangularView {
                                     .frame(widthAndHeight: config.sizes.iconWidth)
                                 
                                 Text(warning)
-                                    .font(.body)
+                                    .font(.caption)
                                     .lineLimit(2)
-                                    .foregroundColor(.gray)
+                                    .fixedSize()
+                                    .foregroundColor(config.colors.warning)
                             }
                         }
                     }
