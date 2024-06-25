@@ -105,13 +105,28 @@ private extension UtilityPaymentNanoServicesComposer {
     private func getAllLatestPaymentsLive(
         _ completion: @escaping ([LastPayment]) -> Void
     ) {
-        // TODO: add logging // NanoServices.adaptedLoggingFetch
-        // TODO: remake as ForaBank.NanoServices.startAnywayPayment
-        let service = Services.getAllLatestPayments(httpClient: httpClient)
-        service.process(.service) { [service] result in
+        struct MappingError: Error {}
+
+        let fetch = ForaBank.NanoServices.adaptedLoggingFetch(
+            createRequest: RequestFactory.getAllLatestPaymentsRequest(_:),
+            httpClient: httpClient,
+            mapResponse: {
+                
+                let response = ResponseMapper.mapGetAllLatestPaymentsResponse($0, $1)
+                return Result<[ResponseMapper.LatestServicePayment], MappingError>.success(response)
+            },
+            mapOutput: {
+                
+                $0.map(UtilityPaymentNanoServicesComposer.LastPayment.init)
+            },
+            mapError: { _ in MappingError() },
+            log: infoNetworkLog
+        )
+        
+        fetch(.service) { [fetch] in
             
-            completion((try? result.get().map(LastPayment.init(with:))) ?? [])
-            _ = service
+            completion((try? $0.get()) ?? [])
+            _ = fetch
         }
     }
     

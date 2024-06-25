@@ -980,6 +980,7 @@
 		2A85DEAF29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A85DEAE29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift */; };
 		2A872E8F2B00DE50007A8E72 /* SessionCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A872E8E2B00DE50007A8E72 /* SessionCode.swift */; };
 		2A872E912B00DE6C007A8E72 /* SessionKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A872E902B00DE6C007A8E72 /* SessionKey.swift */; };
+		2A8764FF2C2B0B9D006DBCF1 /* ResponseMapper+mapGetAllLatestPaymentsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8764FE2C2B0B9D006DBCF1 /* ResponseMapper+mapGetAllLatestPaymentsResponse.swift */; };
 		2A87848B29DC18020067DE04 /* UIFont+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A87848A29DC18020067DE04 /* UIFont+Assets.swift */; };
 		2A89FB9A2A836179008F6B87 /* Crypto+AESTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A89FB992A836179008F6B87 /* Crypto+AESTests.swift */; };
 		2A8A283B2A408694000D3807 /* Model+PaymentsTransportMosParkingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8A283A2A408694000D3807 /* Model+PaymentsTransportMosParkingTests.swift */; };
@@ -4025,6 +4026,7 @@
 		2A85DEAE29ED3A1D00691BC5 /* PaymentsInputViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsInputViewComponentTests.swift; sourceTree = "<group>"; };
 		2A872E8E2B00DE50007A8E72 /* SessionCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCode.swift; sourceTree = "<group>"; };
 		2A872E902B00DE6C007A8E72 /* SessionKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionKey.swift; sourceTree = "<group>"; };
+		2A8764FE2C2B0B9D006DBCF1 /* ResponseMapper+mapGetAllLatestPaymentsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapGetAllLatestPaymentsResponse.swift"; sourceTree = "<group>"; };
 		2A87848A29DC18020067DE04 /* UIFont+Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Assets.swift"; sourceTree = "<group>"; };
 		2A87FCCA2B9310E4008257ED /* swift-forabank-Package.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "swift-forabank-Package.xctestplan"; sourceTree = "<group>"; };
 		2A89FB992A836179008F6B87 /* Crypto+AESTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Crypto+AESTests.swift"; sourceTree = "<group>"; };
@@ -7450,6 +7452,7 @@
 				834E3F6D2AC2CF4200E49C2B /* GetScenarioQRData */,
 				2A4593CE2A7CF908008593A3 /* Services+Endpoint */,
 				2A5190372A7E11C90014B0B7 /* RequestFactory */,
+				2A8765002C2B0C54006DBCF1 /* UtilityPayment */,
 				2A1F08562A7905B500C5B11B /* Services+getProcessingSessionCodeTests.swift */,
 				2A80D8162AAA4A000054A121 /* BindPublicKey */,
 				2AB3E78E2AAB33B9006A0D53 /* GetLandingService */,
@@ -9158,6 +9161,14 @@
 				2A850F492A448609006B5C4B /* XCTestCase+XCTAssertThrowsAsNSError.swift */,
 			);
 			path = "XCTestCase+Ext";
+			sourceTree = "<group>";
+		};
+		2A8765002C2B0C54006DBCF1 /* UtilityPayment */ = {
+			isa = PBXGroup;
+			children = (
+				2A8764FE2C2B0B9D006DBCF1 /* ResponseMapper+mapGetAllLatestPaymentsResponse.swift */,
+			);
+			path = UtilityPayment;
 			sourceTree = "<group>";
 		};
 		2A8A283C2A4088C5000D3807 /* Helpers */ = {
@@ -19477,6 +19488,7 @@
 				83C990E52B051CCA003EC486 /* TemplatesListViewModel+GetPhoneNumberTests.swift in Sources */,
 				2A6DC7312AF3E03400688401 /* LoaderSpy.swift in Sources */,
 				2AE9834D29A223040001DF72 /* ValueSpy.swift in Sources */,
+				2A8764FF2C2B0B9D006DBCF1 /* ResponseMapper+mapGetAllLatestPaymentsResponse.swift in Sources */,
 				2AA5556E2A3E5F7F00B13D47 /* ServerAgentTestStubTests.swift in Sources */,
 				2A2E3FC82BB2CC5500730D37 /* RequestFactory+createGetOperationDetailByPaymentIDRequestModuleTests.swift in Sources */,
 				2AD5E22C2A42FFFD007D7196 /* MosParkingDataMapperTests.swift in Sources */,
