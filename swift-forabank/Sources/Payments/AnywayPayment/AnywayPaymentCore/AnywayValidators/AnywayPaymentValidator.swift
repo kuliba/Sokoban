@@ -35,7 +35,12 @@ public extension AnywayPaymentValidator {
             return .parameterValidationErrors(errors)
         }
         
-        return validate(payment.footer)
+//        if let otpError = validateOTP(payment) {
+//            
+//            return otpError
+//        }
+        
+        return validateOTP(payment) ?? validate(payment.footer)
     }
 }
 
@@ -47,6 +52,21 @@ public extension AnywayPaymentValidator {
 }
 
 private extension AnywayPaymentValidator {
+    
+    func validateOTP(
+        _ payment: AnywayPayment
+    ) -> AnywayPaymentValidationError? {
+        
+        guard let widget = payment.elements.first(where: { $0.id == .widgetID(.otp) }),
+              case let .widget(.otp(otp)) = widget
+        else { return nil }
+        
+        guard let string = otp.map({ "\($0)" }),
+              string.count == 6
+        else { return .otpValidationError }
+        
+        return nil
+    }
     
     func validate(
         _ footer: AnywayPayment.Footer
