@@ -64,22 +64,21 @@ final class ProductProfileFlowReducer {
     }
 }
 
-struct ProductNavigationStateManager {
-    //TODO: rename ProductProfileFlowManager
+struct ProductProfileFlowManager {
     
     let reduce: Reduce
     let handleEffect: HandleEffect
     
     internal init(
-        reduce: @escaping ProductNavigationStateManager.Reduce,
-        handleEffect: @escaping ProductNavigationStateManager.HandleEffect
+        reduce: @escaping ProductProfileFlowManager.Reduce,
+        handleEffect: @escaping ProductProfileFlowManager.HandleEffect
     ) {
         self.reduce = reduce
         self.handleEffect = handleEffect
     }
 }
 
-extension ProductNavigationStateManager {
+extension ProductProfileFlowManager {
     
     typealias Reduce = (ProductProfileFlowState, ProductProfileFlowEvent) -> (ProductProfileFlowState, Effect?)
     
@@ -118,7 +117,7 @@ enum ProductNavigationStateEffect { //TODO: rename ProductProfileFlowEffect
     case delayBottomSheet(ProductProfileViewModel.BottomSheet, DispatchTimeInterval)
 }
 
-extension ProductNavigationStateManager {
+extension ProductProfileFlowManager {
     
     static let preview: Self = .init(
         reduce: ProductProfileFlowReducer(
