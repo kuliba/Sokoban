@@ -63,7 +63,7 @@ public extension AnywayTransactionViewModel {
         
         let (transaction, effect) = reduce(state.transaction, event)
         let state = updating(state, with: transaction)
-#if DEBUG
+#if DEBUG || MOCK
         print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: reduced transaction on event:", event, #file, #line)
         print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: updated state for reduced transaction:", state, #file, #line)
 #endif
@@ -132,15 +132,16 @@ private extension AnywayTransactionViewModel {
         // subscribe to footer state projection
         /// - Note: looks like this pipeline needs `dropFirst` but if `dropFirst` is added the button does not gets active after first submit
         footer.projectionPublisher
-            .handleEvents(receiveOutput: { print("===>>> projectionPublisher:", $0) })
+            .handleEvents(receiveOutput: { print("===>>>", ObjectIdentifier(self), "projectionPublisher:", $0, #file, #line) })
             .receive(on: scheduler)
             .sink { [weak self] in self?.update(with: $0) }
             .store(in: &cancellables)
         
         // update footer active/inactive and style
         $state
+            .handleEvents(receiveOutput: { print("===>>>", ObjectIdentifier(self), "$state change:", $0, #file, #line) })
             .map(\.projection)
-            .handleEvents(receiveOutput: { print("===>>> transaction projection:", $0) })
+            .handleEvents(receiveOutput: { print("===>>>", ObjectIdentifier(self), "transaction projection:", $0, #file, #line) })
             .sink { [weak footer] in footer?.project($0) }
             .store(in: &cancellables)
     }
