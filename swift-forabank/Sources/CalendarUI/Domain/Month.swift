@@ -18,18 +18,24 @@ extension [Month] {
     
     static func generate() -> Self {
         
-        createDatesRange()
-            .map(createMonthDate)
-            .map(createMonthViewData)
+        do {
+            
+            return try createDatesRange()
+                .map(createMonthDate)
+                .map(createMonthViewData)
+        } catch {
+            
+            return []
+        }
     }
 }
 
 extension [Month] {
     
-    static func createDatesRange() -> ClosedRange<Int> { 
+    static func createDatesRange() throws -> ClosedRange<Int> {
         let startDate = MCalendar.startDate, endDate = MCalendar.endDate
         guard startDate <= endDate else { 
-            fatalError("Start date must be lower than end date")
+            throw MonthErrors.monthGenerate
         }
 
         let numberOfMonthsBetweenDates = startDate.distance(to: endDate, in: .month)
@@ -119,4 +125,8 @@ extension Month {
 extension Month {
     
     static var weekdaysNumber: Int { WeekDay.allCases.count }
+}
+
+enum MonthErrors: Error {
+    case monthGenerate
 }

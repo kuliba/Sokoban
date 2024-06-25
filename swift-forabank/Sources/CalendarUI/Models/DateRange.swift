@@ -81,3 +81,11 @@ public extension MDateRange {
 public extension MDateRange {
     func getRange() -> ClosedRange<Date>? { _getRange() }
 }
+
+public extension MDateRange {
+    
+    var rangeSelected: Bool {
+        
+        ((self.getRange()?.upperBound) != nil)
+    }
+}

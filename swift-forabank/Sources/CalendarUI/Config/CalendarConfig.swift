@@ -7,6 +7,26 @@
 
 import SwiftUI
 
+// MARK: - Internal
+public struct CalendarConfig: Configurable {
+    
+    private(set) var monthLabelDaysSpacing: CGFloat = 12
+    private(set) var monthsPadding: (top: CGFloat, bottom: CGFloat) = (12, 24)
+    private(set) var monthsSpacing: CGFloat = 24
+    private(set) var daysSpacing: (vertical: CGFloat, horizontal: CGFloat) = (2, 0)
+
+    private(set) var monthsViewBackground: Color = .clear
+
+    private(set) var weekdaysView: () -> any WeekdaysView = DefaultWeekdaysView.init
+    private(set) var monthLabel: (Date) -> any MonthLabel = DefaultMonthLabel.init
+    private(set) var dayView: (Date, Bool, Binding<Date?>?, Binding<MDateRange?>?) -> any DayView = DefaultDayView.init
+
+    private(set) var scrollDate: Date? = nil
+    private(set) var onMonthChange: (Date) -> () = {_ in}
+    
+    public init() {}
+}
+
 // MARK: - Calendar Configuration
 public extension CalendarConfig {
     /// Sets the start date of the calendar.
@@ -109,25 +129,4 @@ public extension CalendarConfig {
     func onMonthChange(_ value: @escaping (Date) -> ()) -> Self {
         changing(path: \.onMonthChange, to: value)
     }
-}
-
-
-// MARK: - Internal
-public struct CalendarConfig: Configurable {
-    
-    private(set) var monthLabelDaysSpacing: CGFloat = 12
-    private(set) var monthsPadding: (top: CGFloat, bottom: CGFloat) = (12, 24)
-    private(set) var monthsSpacing: CGFloat = 24
-    private(set) var daysSpacing: (vertical: CGFloat, horizontal: CGFloat) = (2, 0)
-
-    private(set) var monthsViewBackground: Color = .clear
-
-    private(set) var weekdaysView: () -> any WeekdaysView = DefaultWeekdaysView.init
-    private(set) var monthLabel: (Date) -> any MonthLabel = DefaultMonthLabel.init
-    private(set) var dayView: (Date, Bool, Binding<Date?>?, Binding<MDateRange?>?) -> any DayView = DefaultDayView.init
-
-    private(set) var scrollDate: Date? = nil
-    private(set) var onMonthChange: (Date) -> () = {_ in}
-    
-    public init() {}
 }
