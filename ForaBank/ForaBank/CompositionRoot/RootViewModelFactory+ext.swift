@@ -123,16 +123,9 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             log: infoNetworkLog
         )
-
-        //TODO: extract to file
-        let ppfReducer = ProductProfileFlowReducer(
-            alertReduce: AlertReducer(productAlertsViewModel: .default).reduce,
-            bottomSheetReduce: BottomSheetReducer().reduce,
-            historyReduce: HistoryReducer().reduce
-        )
         
-        let productNavigationStateManager = ProductNavigationStateManager(
-            reduce: ppfReducer.reduce,
+        let productNavigationStateManager = ProductProfileFlowManager(
+            reduce: makeProductProfileFlowReducer().reduce(_:_:),
             handleEffect: ProductNavigationStateEffectHandler().handleEffect
         )
         
@@ -337,7 +330,7 @@ extension ProductProfileViewModel {
         unblockCardServices: UnblockCardServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
-        productNavigationStateManager: ProductNavigationStateManager,
+        productNavigationStateManager: ProductProfileFlowManager,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> MakeProductProfileViewModel {
         
@@ -467,7 +460,7 @@ private extension RootViewModelFactory {
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
-        productNavigationStateManager: ProductNavigationStateManager,
+        productNavigationStateManager: ProductProfileFlowManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,

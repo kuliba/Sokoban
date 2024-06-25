@@ -693,6 +693,34 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNotNil(sut.fullScreenCoverState)
     }
     
+    //MARK: bottom sheet
+    
+    func test_show_calendarBottomSheet() throws {
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNil(sut.historyState)
+        
+        sut.event(.history(.button(.calendar)))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.historyState)
+    }
+    
+    func test_show_filterBottomSheet() throws {
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNil(sut.historyState)
+        
+        sut.event(.history(.button(.filter)))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.historyState)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
