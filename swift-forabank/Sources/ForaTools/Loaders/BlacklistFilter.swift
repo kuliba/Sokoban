@@ -20,7 +20,7 @@ public final class BlacklistFilter<Request: Hashable> {
     /// The closure can return:
     /// - `true`: if the request should be blacklisted.
     /// - `false`: if the request should not be blacklisted.
-    /// - `nil`: if the attempt should not be recorded.
+    /// - `nil`: if counting the attempt is deemed unnecessary or irrelevant.
     ///
     /// The `nil` return value is useful in scenarios where certain conditions mean that attempts should not be counted at all, such as temporary network issues or other non-critical failures.
     ///
@@ -31,13 +31,7 @@ public final class BlacklistFilter<Request: Hashable> {
         self.isBlacklisted = isBlacklisted
     }
     
-    /// A typealias for the closure that determines whether a request should be blacklisted.
-    ///
-    /// - Parameters:
-    ///   - request: The request to be checked.
-    ///   - attempts: The number of attempts made for the request.
-    /// - Returns: A boolean indicating whether the request should be blacklisted.
-    public typealias IsBlacklisted = (Request, Int) -> Bool
+    public typealias IsBlacklisted = (Request, Int) -> Bool?
 }
 
 public extension BlacklistFilter {
