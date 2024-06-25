@@ -211,13 +211,13 @@ extension Model {
                 } else {
                     
                     //MARK: Kpp Parameter
-                    let options: [Payments.ParameterSelect.Option] = createParameterOptions(suggestedCompanies)
+                    let options: [Payments.ParameterSelect.Option] = createParameterOptions(suggestedCompanies, innValue.count)
                     
-                    if shouldShowKppParameter(operation.source, innValue.count) {
+                    if shouldShowKppParameter(operation.service, innValue.count) {
 
                         let kppParameterSelect = Payments.ParameterSelect(
                             .init(id: kppParameterId, value: options.first?.id),
-                            icon: .name("ic24FileHash"),
+                            icon: nil,
                             title: Payments.ParameterSelect.kppTitle,
                             placeholder: "Начните ввод для поиска",
                             options: options,
@@ -230,16 +230,34 @@ extension Model {
                     
                     // MARK: Company Name Parameter
                     let companyNameValue = options.first?.subname
-                    let companyNameParameter = Payments.ParameterInput(
-                        .init(id: companyNameParameterId, value: companyNameValue),
-                        icon: nil,
-                        title: "Наименование получателя",
-                        validator: companyNameValidator,
-                        limitator: .init(limit: 160)
-                    )
-                    parameters.append(companyNameParameter)
-
-                    if shouldShowKppParameter(operation.source, innValue.count) {
+                    
+                    if innValue.count <= 10 {
+                        
+                        let companyNameParameterInput = Payments.ParameterInput(
+                            .init(id: companyNameParameterId, value: companyNameValue),
+                            icon: nil,
+                            title: "Наименование получателя",
+                            validator: companyNameValidator,
+                            limitator: .init(limit: 160)
+                        )
+                        parameters.append(companyNameParameterInput)
+                        
+                    } else {
+                        
+                        let companyNameParameterSelect = Payments.ParameterSelect(
+                            .init(id: companyNameParameterId, value: options.first?.id),
+                            icon: .name("ic24FileHash"),
+                            title: "Наименование получателя",
+                            placeholder: "Начните ввод для поиска",
+                            options: options,
+                            description: "Выберите из \(options.count)",
+                            validator: companyNameValidator,
+                            keyboardType: .default
+                        )
+                        parameters.append(companyNameParameterSelect)
+                    }
+                    
+                    if shouldShowKppParameter(operation.service, innValue.count) {
                         // helper required to support update company name with kpp parameter selector change and manual user name update
                         let companyNameParameterHelperId = Payments.Parameter.Identifier.requisitsCompanyNameHelper.rawValue
                         let companyNameParameterHelper = Payments.ParameterHidden(
@@ -363,33 +381,31 @@ extension Model {
         )
     }
 
-    private func createOperationStep(
+    func createOperationStep(
         parameters: [PaymentsParameterRepresentable],
         isCompleted: Bool,
         innValueCount: Int,
         kppParameterId: String
     ) -> Payments.Operation.Step {
         
+        let filteredParameters: [PaymentsParameterRepresentable] = innValueCount <= 10
+            ? parameters
+            : parameters.filter { $0.id != kppParameterId }
         
-        let visible = parameters.map { $0.id }
-        let required: [String]
+        let parameterIds = filteredParameters.map { $0.id }
         
-        if innValueCount <= 10 {
-            required = parameters.filter { $0.id != kppParameterId }.map { $0.id }
-            
-        } else {
-            required = parameters.map { $0.id }
-        }
-        return .init(parameters: parameters, front: .init(visible: visible, isCompleted: isCompleted), back: .init(stage: .remote(.start), required: required, processed: nil))
+        return .init(
+            parameters: parameters,
+            front: .init(visible: parameterIds, isCompleted: isCompleted),
+            back: .init(stage: .remote(.start), required: parameterIds, processed: nil)
+        )
     }
     
     // MARK: - Case 2
     func validateKppParameter(_ innCount: Int) -> Payments.Validation.RulesSystem {
         
         if innCount <= 10 {
-            return .init(rules: [])
             
-        } else {
             var rules = [any PaymentsValidationRulesSystemRule]()
             
             rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
@@ -397,6 +413,10 @@ extension Model {
             rules.append(Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [.post: .warning("Введено некорректное значение")]))
             
             return .init(rules: rules)
+            
+        } else {
+            
+            return .init(rules: [])
         }
     }
 
@@ -423,11 +443,12 @@ extension Model {
         return !suggestedCompanies.isEmpty
     }
     
-    private func shouldShowKppParameter(_ source: Payments.Operation.Source?, _ innValueCount: Int) -> Bool {
+    func shouldShowKppParameter(_ service: Payments.Service, _ innValueCount: Int) -> Bool {
         
-        switch source {
+        switch service {
         case .requisites:
             return innValueCount <= 10
+            
         default:
             return true
         }
@@ -456,14 +477,25 @@ extension Model {
         )
     }
     
-    func createParameterOptions(_ suggestedCompanies: [(kpp: String?, name: String)]) -> [Payments.ParameterSelect.Option] {
+    func createParameterOptions(
+        _ suggestedCompanies: [(kpp: String?, name: String)],
+        _ innCount: Int
+    ) -> [Payments.ParameterSelect.Option] {
         
         return suggestedCompanies.compactMap { company in
-            guard let kpp = company.kpp else {
-                return nil
-            }
             
-            return .init(id: kpp, name: kpp, subname: company.name)
+            if innCount <= 10 {
+                
+                guard let kpp = company.kpp else {
+                    return nil
+                }
+                
+                return .init(id: kpp, name: kpp, subname: company.name)
+                
+            } else {
+                
+                return .init(id: "\(company.name)\(UUID().uuidString)", name: company.name, subname: nil)
+            }
         }
     }
     
