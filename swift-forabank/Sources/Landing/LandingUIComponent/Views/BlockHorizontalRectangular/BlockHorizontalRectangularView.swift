@@ -129,6 +129,12 @@ extension BlockHorizontalRectangularView {
                                     .foregroundColor(config.colors.warning)
                             }
                         }
+                        
+                        if limit != item.limits.last {
+                            
+                            HorizontalDivider(color: config.colors.divider)
+                                .padding(.vertical, 0)
+                        }
                     }
                 })
             }
