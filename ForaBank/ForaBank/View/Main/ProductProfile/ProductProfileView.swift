@@ -14,13 +14,9 @@ import SwiftUI
 
 struct ProductProfileView: View {
     
-//    typealias Factory = ProductProfileViewFactory
-    
     @ObservedObject var viewModel: ProductProfileViewModel
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
-//    let paymentsTransfersViewFactory: PaymentsTransfersViewFactory
-//    let factory: Factory
     let viewFactory: PaymentsTransfersViewFactory
     let productProfileViewFactory: ProductProfileViewFactory
     let getUImage: (Md5hash) -> UIImage?

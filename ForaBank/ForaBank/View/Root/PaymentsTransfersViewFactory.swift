@@ -8,16 +8,6 @@
 import UIPrimitives
 import AnywayPaymentDomain
 
-//struct ProductProfileViewFactory {
-//    
-//    let makeHistoryCalendarView: MakeHistoryCalendarView
-//}
-//
-//extension ProductProfileViewFactory {
-//    //MAKR: Period optional or not
-//    typealias MakeHistoryCalendarView = (Period?) -> HistoryCalendarStateWrapperView
-//}
-
 struct PaymentsTransfersViewFactory {
     
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
@@ -36,19 +26,3 @@ extension PaymentsTransfersViewFactory {
     typealias TransactionResult = UtilityServicePaymentFlowState<AnywayTransactionViewModel>.FullScreenCover.TransactionResult
     typealias MakePaymentCompleteView = (TransactionResult, @escaping () -> Void) -> PaymentCompleteView
 }
-
-//struct HistoryCalendarStateWrapperView: View {
-//    
-//    @StateObject private var viewModel: HistoryCalendarViewModel
-//    
-//    var body: some View {
-//        
-//        HistoryCalendarView(
-//            state: viewModel.state,
-//            event: viewModel.event,
-//            config: .iFora
-//        )
-//    }
-//}
-//
-//typealias HistoryCalendarViewModel = RxViewModel<Int, String, Never>
