@@ -983,7 +983,10 @@ struct Payments_TransfersView_Previews: PreviewProvider {
         PaymentsTransfersView(
             viewModel: .sample,
             viewFactory: .preview,
-            productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)),
+            productProfileViewFactory: .init(
+                makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
+                makeHistoryButton: { event in HistoryButtonView(event: event) }
+            ),
             getUImage: { _ in nil }
         )
     }
