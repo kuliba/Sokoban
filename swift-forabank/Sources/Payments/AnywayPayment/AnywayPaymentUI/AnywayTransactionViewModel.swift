@@ -95,7 +95,7 @@ public extension AnywayTransactionViewModel {
     typealias Dispatch = (Event) -> Void
     typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
     
-    typealias TransactionStatus = Status<DocumentStatus, Response>
+    typealias TransactionStatus = AnywayStatus<DocumentStatus, Response>
 }
 
 private extension AnywayTransactionViewModel {
