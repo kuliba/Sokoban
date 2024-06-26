@@ -61,7 +61,7 @@ extension ProductProfileDetailView.ViewModel {
                     .init(type: .available, value: availableAmount, prefix: .legend(.mainColorsRed), postfix: .value(totalAmount))
                 ]
                 
-                self.progress = .init(progress: progressValue, primaryColor: .mainColorsRed, secondaryColor: .textPlaceholder, action: action)
+                self.progress = .init(progress: progressValue, primaryColor: .mainColorsRed, secondaryColor: .bgIconBlack, action: action)
             }
         }
         
@@ -77,7 +77,7 @@ extension ProductProfileDetailView.ViewModel {
                 .init(type: .repaid, value: repaidAmount, prefix: .legend(.mainColorsRed))
             ]
             
-            self.progress = .init(progress: progressValue, primaryColor: .mainColorsRed, secondaryColor: .textPlaceholder, action: action)
+            self.progress = .init(progress: progressValue, primaryColor: .mainColorsRed, secondaryColor: .bgIconBlack, action: action)
         }
     }
 }

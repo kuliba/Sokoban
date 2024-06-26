@@ -15,7 +15,7 @@ struct CircleSegmentedBarView: View {
     var primaryColor: Color = .red
     var secondaryColor: Color = .gray
     
-    private var gap: CGFloat { progress > 0 ? 0.03 : 0 }
+    private var gap: CGFloat { progress > 0 && progress < 1 ? 0.03 : 0 }
     
     var body: some View {
 
@@ -47,15 +47,19 @@ struct CircleSegmentedBarView_Previews: PreviewProvider {
             
             CircleSegmentedBarView(progress: .constant(0))
                 .previewLayout(.fixed(width: 96, height: 96))
+                .previewDisplayName("0")
             
             CircleSegmentedBarView(progress: .constant(0.00021995161064565795))
                 .previewLayout(.fixed(width: 96, height: 96))
+                .previewDisplayName("0.0002")
             
             CircleSegmentedBarView(progress: .constant(0.4))
                 .previewLayout(.fixed(width: 96, height: 96))
+                .previewDisplayName("0.4")
             
             CircleSegmentedBarView(progress: .constant(1.0))
                 .previewLayout(.fixed(width: 96, height: 96))
+                .previewDisplayName("1.0")
         }
     }
 }
