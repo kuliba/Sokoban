@@ -12,7 +12,9 @@ import ForaTools
 import Foundation
 import PaymentComponents
 
-public final class AnywayTransactionViewModel<Footer: FooterInterface, Model, DocumentStatus, Response>: ObservableObject {
+public final class AnywayTransactionViewModel<Footer: FooterInterface, Model, DocumentStatus, Response>: ObservableObject
+where DocumentStatus: Equatable,
+      Response: Equatable {
     
     @Published public private(set) var state: State
     
@@ -39,7 +41,8 @@ public final class AnywayTransactionViewModel<Footer: FooterInterface, Model, Do
         self.state = .init(
             models: [:],
             footer: footer,
-            transaction: transaction
+            transaction: transaction,
+            isAwaitingConfirmation: transaction.status == .awaitingPaymentRestartConfirmation
         )
         self.mapToModel = mapToModel
         self.reduce = reduce

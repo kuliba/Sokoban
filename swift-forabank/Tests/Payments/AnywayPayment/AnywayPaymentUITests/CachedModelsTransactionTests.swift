@@ -130,6 +130,33 @@ final class CachedModelsTransactionTests: XCTestCase {
         XCTAssertTrue(initialFieldModel === fieldModel)
     }
     
+    func test_update_shouldRecreateModelsOnStatusFlipFromAwaitingPaymentRestartConfirmation() throws {
+        
+        let id = anyMessage()
+        let field = makeFieldAnywayElement(id: id)
+        let initial = makeTransaction(
+            elements: [field],
+            status: .awaitingPaymentRestartConfirmation
+        )
+        
+        let sut = makeSUT(with: initial)
+        let initialFieldModel = try XCTUnwrap(sut.models[.fieldID(id)])
+        
+        let updatedField = makeFieldAnywayElement(id: id)
+        XCTAssertNotEqual(updatedField, field)
+        
+        let parameter = makeParameterAnywayElement()
+        let updated = makeTransaction(
+            elements: [updatedField, parameter],
+            status: .inflight
+        )
+        
+        let updatedSUT = updating(sut, with: updated)
+        let fieldModel = try XCTUnwrap(updatedSUT.models[.fieldID(id)])
+        
+        XCTAssertFalse(initialFieldModel === fieldModel)
+    }
+    
     // TODO: add tests for footer
     
     // MARK: - Helpers
