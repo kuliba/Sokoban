@@ -67,9 +67,6 @@ struct ProductProfileView: View {
                             makeSliderViewModel: viewModel.makeSliderViewModel()
                         )
                         
-                        if viewModel.islimitsFlagOn {
-                            Text("Limits Flag On")
-                        }
                         VStack(spacing: 32) {
                             
                             ProductProfileButtonsView(viewModel: viewModel.buttons)

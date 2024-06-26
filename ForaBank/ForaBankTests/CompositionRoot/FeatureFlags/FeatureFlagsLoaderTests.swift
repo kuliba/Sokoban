@@ -67,25 +67,25 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
-    func test_load_shouldDeliverActiveLimitsFlagForActiveRetrieveResult() {
+    func test_load_shouldDeliverActiveChangeSVCardLimitsFlagForActiveRetrieveResult() {
         
-        let sut = makeSUT { _ in "limits_on" }
+        let sut = makeSUT { _ in "changeSVCardLimits_on" }
         
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            limitsFlag: .init(.active)
+            changeSVCardLimitsFlag: .init(.active)
         ))
     }
     
-    func test_load_shouldDeliverInactiveLimitsFlagForInactiveRetrieveResult() {
+    func test_load_shouldDeliverInactiveChangeSVCardLimitsFlagForInactiveRetrieveResult() {
         
-        let sut = makeSUT { _ in "limits_off" }
+        let sut = makeSUT { _ in "changeSVCardLimits_off" }
         
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            limitsFlag: .init(.inactive)
+            changeSVCardLimitsFlag: .init(.inactive)
         ))
     }
     
@@ -108,13 +108,13 @@ final class FeatureFlagsLoaderTests: XCTestCase {
     
     private func makeFeatureFlags(
         historyFilterFlag: HistoryFilterFlag? = nil,
-        limitsFlag: LimitsFlag? = nil,
+        changeSVCardLimitsFlag: ChangeSVCardLimitsFlag? = nil,
         utilitiesPaymentsFlag: StubbedFeatureFlag? = nil
     ) -> FeatureFlags {
         
         return .init(
             historyFilterFlag: historyFilterFlag?.map { .init($0) } ?? .init(false),
-            limitsFlag: limitsFlag.map { .init($0.rawValue) } ?? .init(.inactive),
+            changeSVCardLimitsFlag: changeSVCardLimitsFlag.map { .init($0.rawValue) } ?? .init(.inactive),
             utilitiesPaymentsFlag: utilitiesPaymentsFlag.map { .init($0) } ?? .init(.inactive)
         )
     }

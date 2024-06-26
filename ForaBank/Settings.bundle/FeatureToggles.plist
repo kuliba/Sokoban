@@ -54,13 +54,13 @@
 			<key>Title</key>
 			<string>Установка лимитов</string>
 			<key>Key</key>
-			<string>limits</string>
+			<string>changeSVCardLimits</string>
 			<key>DefaultValue</key>
-			<string>limits_off</string>
+			<string>changeSVCardLimits_off</string>
 			<key>Values</key>
 			<array>
-				<string>limits_off</string>
-				<string>limits_on</string>
+				<string>changeSVCardLimits_off</string>
+				<string>changeSVCardLimits_on</string>
 			</array>
 			<key>Titles</key>
 			<array>

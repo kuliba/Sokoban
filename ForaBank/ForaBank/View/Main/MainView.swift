@@ -462,7 +462,7 @@ extension MainViewModel {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
-            limitsFlag: .init(.inactive),
+            changeSVCardLimitsFlag: .init(.inactive),
             updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
@@ -487,7 +487,7 @@ extension MainViewModel {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
-            limitsFlag: .init(.inactive),
+            changeSVCardLimitsFlag: .init(.inactive),
             updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
@@ -512,7 +512,7 @@ extension MainViewModel {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
-            limitsFlag: .init(.inactive),
+            changeSVCardLimitsFlag: .init(.inactive),
             updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
