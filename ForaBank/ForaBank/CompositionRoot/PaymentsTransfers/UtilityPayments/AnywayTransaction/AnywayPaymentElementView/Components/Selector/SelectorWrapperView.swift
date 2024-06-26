@@ -45,6 +45,6 @@ extension SelectorWrapperView {
     typealias ViewModel = ObservingSelectorViewModel
     typealias Option = AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ParameterType.Option
     typealias IconView = UIPrimitives.AsyncImage
-    typealias Factory = SelectorViewFactory<Option, IconView, OptionView, SelectedOptionView, ChevronView>
+    typealias Factory = SelectorViewFactory<Option, IconView, OptionView<Image>, SelectedOptionView, ChevronView>
     typealias Config = SelectorViewConfig
 }

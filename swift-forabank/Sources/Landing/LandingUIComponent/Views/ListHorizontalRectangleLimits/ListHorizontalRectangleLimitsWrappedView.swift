@@ -14,12 +14,12 @@ public typealias ListHorizontalRectangleLimitsViewModel = RxViewModel<ListHorizo
 struct ListHorizontalRectangleLimitsWrappedView: View {
     
     @ObservedObject var model: ListHorizontalRectangleLimitsViewModel
-    let factory: ListHorizontalRectangleLimitsViewFactory
+    let factory: ViewFactory
     let config: ListHorizontalRectangleLimitsView.Config
     
     public init(
         model: ListHorizontalRectangleLimitsViewModel,
-        factory: ListHorizontalRectangleLimitsViewFactory,
+        factory: ViewFactory,
         config: ListHorizontalRectangleLimitsView.Config
     ) {
         self.model = model
