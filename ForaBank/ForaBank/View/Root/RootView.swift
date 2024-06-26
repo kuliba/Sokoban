@@ -225,9 +225,7 @@ private extension RootViewFactory {
                     ),
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                        makeHistoryButton: { _ in
-                            HistoryButtonView(event: { event in })
-                        }
+                        makeHistoryButton: { .init(event: $0 ) }
                     ),
                     getUImage: { _ in nil }
                 )

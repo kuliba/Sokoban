@@ -74,10 +74,7 @@ extension RootViewFactory {
  
         .init(
             makeActivateSliderView: makeActivateSliderView,
-            makeHistoryButton: { event in
-                
-                HistoryButtonView(event: event)
-            }
+            makeHistoryButton: { .init(event: $0 ) }
         )
     }
 }
