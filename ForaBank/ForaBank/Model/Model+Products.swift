@@ -68,15 +68,7 @@ extension Model {
     
     var cardsTypes: [ProductCardData.CardType] {
         
-        guard let products = products(.card) else {
-            return []
-        }
-        
-        return products.compactMap {
-            if let card = $0.asCard {
-                return card.cardType
-            } else { return nil }
-        }.uniqued()
+        return (products(.card) ?? []).compactMap(\.asCard?.cardType).uniqued()
     }
     
     func product() -> ProductData? {
