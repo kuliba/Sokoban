@@ -161,7 +161,6 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager, 
-            changeSVCardLimitsFlag: changeSVCardLimitsFlag,
             updateInfoStatusFlag: updateInfoStatusFlag
         )
         
@@ -333,7 +332,6 @@ extension ProductProfileViewModel {
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         productNavigationStateManager: ProductProfileFlowManager,
-        changeSVCardLimitsFlag: ChangeSVCardLimitsFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> MakeProductProfileViewModel {
         
@@ -351,7 +349,6 @@ extension ProductProfileViewModel {
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager,
-                changeSVCardLimitsFlag: changeSVCardLimitsFlag,
                 updateInfoStatusFlag: updateInfoStatusFlag
             )
             

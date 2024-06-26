@@ -60,7 +60,6 @@ extension PaymentsTransfersFactory {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: ProductProfileFlowManager.preview,
-            changeSVCardLimitsFlag: .init(.inactive),
             updateInfoStatusFlag: .init(.inactive)
         )
         return .init(

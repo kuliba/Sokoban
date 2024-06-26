@@ -748,7 +748,6 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         makeAlertDataUpdateFailureViewModel: @escaping PaymentsTransfersFactory.MakeAlertDataUpdateFailureViewModel = { _ in nil },
-        changeSVCardLimitsFlag: ChangeSVCardLimitsFlag = .init(.inactive),
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .init(.inactive),
         file: StaticString = #file,
         line: UInt = #line
@@ -790,7 +789,6 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient, 
             productNavigationStateManager: .preview,
-            changeSVCardLimitsFlag: changeSVCardLimitsFlag,
             updateInfoStatusFlag: updateInfoStatusFlag
         )
         
