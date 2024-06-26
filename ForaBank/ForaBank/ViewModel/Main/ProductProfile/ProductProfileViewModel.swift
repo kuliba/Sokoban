@@ -1970,25 +1970,40 @@ private extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
-    enum HistoryState: Identifiable {
+    struct HistoryState: Identifiable {
         
-        case calendar
-        case filter
+        var id: Int { buttonAction.hashValue }
         
-        var id: ID {
-            switch self {
-            case .calendar:
-                return .calendar
-                
-            case .filter:
-                return .filter
-            }
+        var date: Date?
+        var filters: [Filter]?
+        var buttonAction: ButtonAction
+        var showSheet: Bool
+        
+        enum Filter {
+        
+            case debit
+            case credit
         }
         
-        enum ID: Hashable {
-            
+        enum ButtonAction: Identifiable {
             case calendar
             case filter
+            
+            var id: ID {
+                switch self {
+                case .calendar:
+                    return .calendar
+                    
+                case .filter:
+                    return .filter
+                }
+            }
+            
+            enum ID: Hashable {
+                
+                case calendar
+                case filter
+            }
         }
     }
     
