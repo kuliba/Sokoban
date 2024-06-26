@@ -52,7 +52,7 @@
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
-			<string>Установка лимитов</string>
+			<string>Установка лимитов для карт</string>
 			<key>Key</key>
 			<string>changeSVCardLimits</string>
 			<key>DefaultValue</key>
