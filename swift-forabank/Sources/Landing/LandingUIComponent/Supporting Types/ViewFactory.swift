@@ -1,5 +1,5 @@
 //
-//  ListHorizontalRectangleLimitsViewFactory.swift
+//  ViewFactory.swift
 //
 //
 //  Created by Andryusina Nataly on 21.06.2024.
@@ -7,12 +7,12 @@
 
 import UIPrimitives
 
-struct ListHorizontalRectangleLimitsViewFactory {
+struct ViewFactory {
 
     let makeIconView: MakeIconView
 }
 
-extension ListHorizontalRectangleLimitsViewFactory {
+extension ViewFactory {
         
     typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
 }
