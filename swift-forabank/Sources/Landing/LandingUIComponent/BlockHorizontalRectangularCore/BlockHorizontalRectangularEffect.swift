@@ -7,4 +7,4 @@
 
 import Foundation
 
-public typealias BlockHorizontalRectangularEffect = Never
+public enum BlockHorizontalRectangularEffect: Equatable {}
