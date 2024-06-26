@@ -75,6 +75,7 @@ extension RootViewFactory {
         .init(
             makeActivateSliderView: makeActivateSliderView,
             makeHistoryButton: { event in
+                
                 HistoryButtonView(event: event)
             }
         )
@@ -88,6 +89,7 @@ struct HistoryButtonView: View {
     var body: some View {
         
         HStack {
+            
             Button(action: {
                 event(.button(.calendar))
             }) {
@@ -95,6 +97,7 @@ struct HistoryButtonView: View {
                 Text("Calendar")
                     .font(.system(size: 16))
                     .foregroundColor(.black)
+                
             }
             
             Button(action: {
@@ -104,6 +107,7 @@ struct HistoryButtonView: View {
                 Text("Filter")
                     .font(.system(size: 16))
                     .foregroundColor(.black)
+                
             }
         }
     }

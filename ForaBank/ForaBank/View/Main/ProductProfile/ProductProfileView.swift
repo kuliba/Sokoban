@@ -80,7 +80,13 @@ struct ProductProfileView: View {
                             
                             if let historyViewModel = viewModel.history {
                                 
-                                productProfileViewFactory.makeHistoryButton({ event in viewModel.event(.history(event))})
+                                productProfileViewFactory.makeHistoryButton { event in
+                                    viewModel.event(.history(event))
+                                }
+                                
+                                Text(viewModel.historyState?.date?.description ?? "not selected date")
+                                
+                                Text(viewModel.historyState?.filters.map({ $0.description }) ?? "not selected filters")
                                 
                                 ProductProfileHistoryView(viewModel: historyViewModel)
                             }
@@ -113,8 +119,11 @@ struct ProductProfileView: View {
             // workaround to fix mini-cards jumps when product name editing alert presents
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
-            
-            historySheet()
+               
+            if viewModel.historyState?.showSheet == true {
+                
+                historySheet()
+            }
             
             viewModel.closeAccountSpinner.map(CloseAccountSpinnerView.init)
             
@@ -154,14 +163,38 @@ struct ProductProfileView: View {
         Color.clear
             .sheet(
                 modal: viewModel.historyState,
-                dismissModal: { self.viewModel.historyState = nil },
+                dismissModal: { viewModel.historyState?.showSheet = false },
                 content: { historyState in
                     
-                    switch historyState {
-                    case .calendar:
-                        Text("Calendar")
-                    case .filter:
-                        Text("Filter")
+                    VStack(spacing: 15) {
+                        if let state = viewModel.historyState {
+                            
+                            switch state.buttonAction {
+                            case .calendar:
+                                
+                                Text("Calendar")
+                                
+                                Button(action: { viewModel.event(.history(.calendar(Date()))) }, label: {
+                                    Text("setup date")
+                                })
+                                
+                                Button(action: { viewModel.event(.history(.calendar(nil))) }, label: {
+                                    Text("clear date")
+                                })
+                                
+                            case .filter:
+                                
+                                Text("Filter")
+                                
+                                Button(action: { viewModel.event(.history(.filter([.debit]))) }) {
+                                    Text("setup debit filter")
+                                }
+                                
+                                Button(action: { viewModel.event(.history(.filter(nil))) }, label: {
+                                    Text("clear filters")
+                                })
+                            }
+                        }
                     }
                 }
             )
