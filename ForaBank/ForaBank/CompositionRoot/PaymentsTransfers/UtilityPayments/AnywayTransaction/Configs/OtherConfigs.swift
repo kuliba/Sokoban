@@ -27,8 +27,8 @@ import UtilityServicePrepaymentUI
 /*private*/ extension FooterComponent.FooterState.Failure {
     
     static let iFora: Self = .init(
-        image: .init(systemName: "photo.artframe"),
-        description: "Что-то пошло не так.\nПопробуйте позже."
+        image: .ic24Search,
+        description: "Что-то пошло не так.\nПопробуйте позже или воспользуйтесь другим способом оплаты.."
     )
 }
 
@@ -41,14 +41,14 @@ import UtilityServicePrepaymentUI
             textColor: .black
         ),
         description: .init(
-            textFont: .textBodyMM14200(),
+            textFont: .textH4R16240(),
             textColor: .textPlaceholder
         ),
         subtitle: .init(
             textFont: .textBodyMM14200(),
             textColor: .textPlaceholder
         ),
-        background: .gray,
+        background: .mainColorsGrayLightest,
         requisitesButtonTitle: "Оплатить по реквизитам",
         requisitesButtonConfig: .init(
             titleFont: .body,

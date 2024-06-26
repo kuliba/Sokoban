@@ -101,8 +101,8 @@ private extension AnywayPaymentFactoryComposer {
                 makeIconView: { self.makeIconView(image) },
                 makeOptionLabel: {
                     
-                    OptionView(
-                        option: $0, 
+                    SimpleLabel(
+                        text: $0.value, 
                         makeIconView: { Image.ic24RadioDefolt }
                     )
                 },
