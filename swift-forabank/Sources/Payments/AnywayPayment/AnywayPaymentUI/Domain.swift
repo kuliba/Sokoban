@@ -7,11 +7,11 @@
 
 import AnywayPaymentDomain
 
-public typealias AnywayTransactionState<DocumentStatus, Response> = Transaction<AnywayPaymentContext, Status<DocumentStatus, Response>>
+public typealias AnywayTransactionState<DocumentStatus, Response> = Transaction<AnywayPaymentContext, AnywayStatus<DocumentStatus, Response>>
 public typealias AnywayTransactionEvent<DocumentStatus, Response> = TransactionEvent<Report<DocumentStatus, Response>, AnywayPaymentEvent, AnywayPaymentUpdate>
 public typealias AnywayTransactionEffect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>
 
-public typealias Status<DocumentStatus, Response> = TransactionStatus<AnywayPaymentContext, AnywayPaymentUpdate, Report<DocumentStatus, Response>>
+public typealias AnywayStatus<DocumentStatus, Response> = TransactionStatus<AnywayPaymentContext, AnywayPaymentUpdate, Report<DocumentStatus, Response>>
 public typealias Report<DocumentStatus, Response> = TransactionReport<DocumentStatus, OperationInfo<OperationDetailID, OperationDetails<Response>>>
 
 public typealias OperationDetailID = Int
