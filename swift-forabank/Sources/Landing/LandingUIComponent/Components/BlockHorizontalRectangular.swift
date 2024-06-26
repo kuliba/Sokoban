@@ -65,14 +65,21 @@ extension BlockHorizontalRectangularView {
         
         @Published private(set) var data: HorizontalList
                 
-        let makeIconView: LandingView.MakeIconView
-        
+        private let action: (LandingEvent) -> Void
+
         init(
             data: HorizontalList,
-            makeIconView: @escaping LandingView.MakeIconView
+            action: @escaping (LandingEvent) -> Void
         ) {
             self.data = data
-            self.makeIconView = makeIconView
+            self.action = action
+        }
+        
+        func itemAction(
+            item: HorizontalList.Item
+        ) {
+            // TODO: добавить корректный
+            print("tap \(item.limitType)")
         }
     }
 }
