@@ -17,12 +17,16 @@ extension ResponseMapper {
         _ httpURLResponse: HTTPURLResponse
     ) -> [LatestServicePayment] {
         
-        switch httpURLResponse.statusCode {
-        case 200:
-            let operators = try? JSONDecoder().decode([LatestPaymentCodable].self, from: data)
-            return (operators ?? []).map(LatestServicePayment.init)
-            
-        default:
+        do {
+            switch httpURLResponse.statusCode {
+            case 200:
+                let lastPayments = try JSONDecoder().decode(_DTO.self, from: data)
+                return lastPayments.data.map(LatestServicePayment.init)
+                
+            default:
+                return []
+            }
+        } catch {
             return []
         }
     }
@@ -42,9 +46,10 @@ private extension ResponseMapper.LatestServicePayment {
 }
 
 //TODO: move to module
+
 extension ResponseMapper {
     
-    struct LatestServicePayment: Identifiable {
+    struct LatestServicePayment: Equatable, Identifiable {
         
         var id: String { title }
         let title: String
@@ -90,6 +95,13 @@ extension LatestPaymentKind {
 
 private extension ResponseMapper {
     
+    struct _DTO: Decodable {
+        
+        let statusCode: Int
+        let errorMessage: String?
+        let data: [LatestPaymentCodable]
+    }
+    
     struct LatestPaymentCodable: Decodable {
         
         let name: String
@@ -118,4 +130,3 @@ private extension ResponseMapper {
         }
     }
 }
-

@@ -16,4 +16,45 @@ public extension AnyLoader {
         
         self.init(loader.load(_:_:))
     }
+    
+    /// Creates a new instance of `AnyLoader` with the error type mapped using the provided closure.
+    ///
+    /// - Parameter mapError: A closure that maps the current error type to a new error type.
+    /// - Returns: A new `AnyLoader` with the error type mapped.
+    func mapError<Success, Failure, NewFailure>(
+        _ mapError: @escaping (Failure) -> NewFailure
+    ) -> AnyLoader<Payload, Result<Success, NewFailure>>
+    where Response == Result<Success, Failure> {
+        
+        AnyLoader<Payload, Result<Success, NewFailure>> { payload, completion in
+            
+            self.load(payload) { result in
+                switch result {
+                case let .success(response):
+                    completion(.success(response))
+                    
+                case let .failure(error):
+                    completion(.failure(mapError(error)))
+                }
+            }
+        }
+    }
+    
+    /// Wraps the current loader with a blacklist decorator that checks if a request should be blacklisted.
+    ///
+    /// - Parameter isBlacklisted: A closure that determines whether a request should be blacklisted based on the request payload and the number of attempts.
+    /// - Returns: A new `AnyLoader` instance with the blacklist decorator.
+    func blacklisted<Success, Failure>(
+        isBlacklisted: @escaping (Payload, Int) -> Bool
+    ) -> AnyLoader<Payload, Result<Success, BlacklistDecorator<Payload, Success, Failure>.Error>>
+    where Response == Result<Success, Failure>, Payload: Hashable {
+        
+        let blacklistFilter = BlacklistFilter(isBlacklisted: isBlacklisted)
+        let blacklistDecorator = BlacklistDecorator(
+            decoratee: self,
+            isBlacklisted: blacklistFilter.isBlacklisted(_:)
+        )
+        
+        return .init(blacklistDecorator)
+    }
 }

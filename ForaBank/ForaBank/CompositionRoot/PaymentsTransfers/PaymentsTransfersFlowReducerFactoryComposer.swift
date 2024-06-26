@@ -95,9 +95,11 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         state: Factory.ReducerState
     ) -> FraudNoticePayload? {
         
-        guard case let .utilityPayment(utilityPrepayment) = state.destination,
-              case let .payment(paymentFlowState) = utilityPrepayment.destination
-        else { return nil }
+        guard let paymentFlowState = state.paymentFlowState
+        else {
+            print("===>>>", "makeFraudNoticePayload failure: state.destination:", state.destination ?? "nil", #file, #line)
+            return .init(title: "", subtitle: "", formattedAmount: "", delay: settings.fraudDelay)
+        }
         
         let context = paymentFlowState.viewModel.state.transaction.context
         let payload = context.outline.payload
@@ -113,10 +115,28 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
 
 private extension PaymentsTransfersViewModel._Route {
     
-    var paymentFlowState: UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>.Destination.Payment? {
+    // UtilityPaymentFlowState could be nested in two destinations:
+    // - utilityPrepayment.destination, or
+    // - servicePicker.destination
+    var paymentFlowState: UtilityServicePaymentFlowState<PaymentViewModel>? {
+        
+        paymentFlowStateInPrepaymentDestination ?? paymentFlowStateInServicePickerDestination
+    }
+    
+    private var paymentFlowStateInPrepaymentDestination: UtilityServicePaymentFlowState<PaymentViewModel>? {
         
         guard case let .utilityPayment(utilityPrepayment) = destination,
               case let .payment(paymentFlowState) = utilityPrepayment.destination
+        else { return nil }
+        
+        return paymentFlowState
+    }
+    
+    private var paymentFlowStateInServicePickerDestination: UtilityServicePaymentFlowState<PaymentViewModel>? {
+        
+        guard case let .utilityPayment(utilityPrepayment) = destination,
+              case let .servicePicker(servicePicker) = utilityPrepayment.destination,
+              case let .payment(paymentFlowState) = servicePicker.destination
         else { return nil }
         
         return paymentFlowState
