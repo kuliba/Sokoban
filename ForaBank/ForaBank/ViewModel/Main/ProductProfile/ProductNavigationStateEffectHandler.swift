@@ -37,7 +37,7 @@ extension ProductNavigationStateEffectHandler {
 extension ProductNavigationStateEffectHandler {
     
     typealias Event = ProductNavigationEvent
-    typealias Effect = ProductNavigationStateEffect
+    typealias Effect = ProductProfileFlowEffect
     typealias Dispatch = (Event) -> Void
 }
 
