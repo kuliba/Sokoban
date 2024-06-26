@@ -24,7 +24,7 @@ func isEmpty(
 func makeTransaction(
     context: AnywayPaymentContext = makeAnywayPaymentContext(),
     isValid: Bool = true,
-    status: Status<DocumentStatus, Response>? = nil
+    status: AnywayStatus<DocumentStatus, Response>? = nil
 ) -> AnywayTransaction {
     
     return .init(
@@ -38,7 +38,7 @@ func makeTransaction(
     elements: [AnywayElement],
     footer: Payment<AnywayElement>.Footer = .continue,
     isValid: Bool = true,
-    status: Status<DocumentStatus, Response>? = nil
+    status: AnywayStatus<DocumentStatus, Response>? = nil
 ) -> AnywayTransaction {
     
     return .init(
@@ -57,7 +57,7 @@ func makeTransactionWithAmount(
     elements: [AnywayElement] = [],
     amount: Decimal,
     isValid: Bool = true,
-    status: Status<DocumentStatus, Response>? = nil
+    status: AnywayStatus<DocumentStatus, Response>? = nil
 ) -> AnywayTransaction {
     
     return .init(
@@ -75,7 +75,7 @@ func makeTransactionWithAmount(
 func makeTransactionWithContinue(
     elements: [AnywayElement] = [],
     isValid: Bool = true,
-    status: Status<DocumentStatus, Response>? = nil
+    status: AnywayStatus<DocumentStatus, Response>? = nil
 ) -> AnywayTransaction {
     
     return .init(

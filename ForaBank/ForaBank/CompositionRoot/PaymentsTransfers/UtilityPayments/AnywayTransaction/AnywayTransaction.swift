@@ -21,7 +21,7 @@ typealias AnywayTransactionEffect = AnywayPaymentUI.AnywayTransactionEffect
 
 typealias AnywayTransactionEffectHandlerMicroServices = TransactionEffectHandlerMicroServices<AnywayTransactionReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
 
-typealias AnywayTransactionStatus = AnywayPaymentUI.Status<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
+typealias AnywayTransactionStatus = AnywayPaymentUI.AnywayStatus<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 typealias AnywayTransactionReport = AnywayPaymentUI.Report<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails<RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>>
 enum DocumentStatus {
