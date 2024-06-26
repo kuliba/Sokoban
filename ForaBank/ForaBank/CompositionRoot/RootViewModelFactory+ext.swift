@@ -25,6 +25,7 @@ extension RootViewModelFactory {
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         historyFilterFlag: HistoryFilterFlag,
+        changeSVCardLimitsFlag: ChangeSVCardLimitsFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
@@ -159,7 +160,7 @@ extension RootViewModelFactory {
             unblockCardServices: unblockCardServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
-            productNavigationStateManager: productNavigationStateManager,
+            productNavigationStateManager: productNavigationStateManager, 
             updateInfoStatusFlag: updateInfoStatusFlag
         )
         
