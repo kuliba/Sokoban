@@ -8,12 +8,6 @@
 import SharedConfigs
 import SwiftUI
 
-enum InputViewEvent: Equatable {
-    
-    case resend
-    case edit(String)
-}
-
 struct TimedOTPInputView<IconView: View>: View {
     
     let state: State
