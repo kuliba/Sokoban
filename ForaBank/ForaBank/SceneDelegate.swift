@@ -28,6 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         fastPaymentsSettingsFlag: .init(.active(.live)),
         utilitiesPaymentsFlag: featureFlags.utilitiesPaymentsFlag,
         historyFilterFlag: featureFlags.historyFilterFlag,
+        limitsFlag: featureFlags.limitsFlag,
         updateInfoStatusFlag: .init(.active)
     )
     private lazy var rootViewFactory = RootViewFactoryComposer(

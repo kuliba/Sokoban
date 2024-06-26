@@ -26,6 +26,7 @@ extension FeatureFlagsLoader {
         
         return .init(
             historyFilterFlag: loadHistoryFilterFlag(),
+            limitsFlag: loadLimitsFlag(),
             utilitiesPaymentsFlag: loadUtilitiesPaymentsFlag()
         )
     }
@@ -34,6 +35,7 @@ extension FeatureFlagsLoader {
 enum FeatureFlagKey: String {
     
     case historyFilterFlag = "history_filter"
+    case limitsFlag = "limits"
     case utilitiesPaymentsFlag = "sber_providers"
 }
 
@@ -54,6 +56,15 @@ private extension FeatureFlagsLoader {
         case "history_filter_off": return false
         case "history_filter_on":  return true
         default:                   return false
+        }
+    }
+    
+    func loadLimitsFlag() -> LimitsFlag {
+        
+        switch retrieve(.limitsFlag) {
+        case "limits_on":  return .init(.active)
+        case "limits_off": return .init(.inactive)
+        default:           return .init(.inactive)
         }
     }
 }

@@ -68,13 +68,16 @@ struct ProductProfileFlowManager {
     
     let reduce: Reduce
     let handleEffect: HandleEffect
+    let limitsFlag: LimitsFlag
     
     internal init(
         reduce: @escaping ProductProfileFlowManager.Reduce,
-        handleEffect: @escaping ProductProfileFlowManager.HandleEffect
+        handleEffect: @escaping ProductProfileFlowManager.HandleEffect,
+        limitsFlag: LimitsFlag
     ) {
         self.reduce = reduce
         self.handleEffect = handleEffect
+        self.limitsFlag = limitsFlag
     }
 }
 
@@ -125,7 +128,8 @@ extension ProductProfileFlowManager {
             bottomSheetReduce: BottomSheetReducer(bottomSheetLifespan: .microseconds(0)).reduce,
             historyReduce: HistoryReducer().reduce
         ).reduce,
-        handleEffect: ProductNavigationStateEffectHandler().handleEffect
+        handleEffect: ProductNavigationStateEffectHandler().handleEffect,
+        limitsFlag: .init(.inactive)
     )
 }
 

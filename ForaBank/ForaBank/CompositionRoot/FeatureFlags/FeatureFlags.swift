@@ -8,5 +8,6 @@
 struct FeatureFlags: Equatable {
     
     let historyFilterFlag: HistoryFilterFlag
+    let limitsFlag: LimitsFlag
     let utilitiesPaymentsFlag: UtilitiesPaymentsFlag
 }

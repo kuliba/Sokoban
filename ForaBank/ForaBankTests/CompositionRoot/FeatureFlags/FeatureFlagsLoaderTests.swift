@@ -67,6 +67,28 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
+    func test_load_shouldDeliverActiveLimitsFlagForActiveRetrieveResult() {
+        
+        let sut = makeSUT { _ in "limits_on" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            limitsFlag: .init(.active)
+        ))
+    }
+    
+    func test_load_shouldDeliverInactiveLimitsFlagForInactiveRetrieveResult() {
+        
+        let sut = makeSUT { _ in "limits_off" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            limitsFlag: .init(.inactive)
+        ))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = FeatureFlagsLoader
@@ -86,11 +108,13 @@ final class FeatureFlagsLoaderTests: XCTestCase {
     
     private func makeFeatureFlags(
         historyFilterFlag: HistoryFilterFlag? = nil,
+        limitsFlag: LimitsFlag? = nil,
         utilitiesPaymentsFlag: StubbedFeatureFlag? = nil
     ) -> FeatureFlags {
         
         return .init(
             historyFilterFlag: historyFilterFlag?.map { .init($0) } ?? .init(false),
+            limitsFlag: limitsFlag.map { .init($0.rawValue) } ?? .init(.inactive),
             utilitiesPaymentsFlag: utilitiesPaymentsFlag.map { .init($0) } ?? .init(.inactive)
         )
     }

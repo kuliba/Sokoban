@@ -25,6 +25,7 @@ extension RootViewModelFactory {
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         historyFilterFlag: HistoryFilterFlag,
+        limitsFlag: LimitsFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
@@ -126,7 +127,8 @@ extension RootViewModelFactory {
         
         let productNavigationStateManager = ProductProfileFlowManager(
             reduce: makeProductProfileFlowReducer().reduce(_:_:),
-            handleEffect: ProductNavigationStateEffectHandler().handleEffect
+            handleEffect: ProductNavigationStateEffectHandler().handleEffect,
+            limitsFlag: limitsFlag
         )
         
         let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
@@ -159,7 +161,8 @@ extension RootViewModelFactory {
             unblockCardServices: unblockCardServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
-            productNavigationStateManager: productNavigationStateManager,
+            productNavigationStateManager: productNavigationStateManager, 
+            limitsFlag: limitsFlag,
             updateInfoStatusFlag: updateInfoStatusFlag
         )
         
@@ -174,6 +177,7 @@ extension RootViewModelFactory {
             productNavigationStateManager: productNavigationStateManager,
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
+            limitsFlag: limitsFlag,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: resetCVVPINActivation
         )
@@ -331,6 +335,7 @@ extension ProductProfileViewModel {
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         productNavigationStateManager: ProductProfileFlowManager,
+        limitsFlag: LimitsFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> MakeProductProfileViewModel {
         
@@ -348,6 +353,7 @@ extension ProductProfileViewModel {
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager,
+                limitsFlag: limitsFlag,
                 updateInfoStatusFlag: updateInfoStatusFlag
             )
             
@@ -463,6 +469,7 @@ private extension RootViewModelFactory {
         productNavigationStateManager: ProductProfileFlowManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
+        limitsFlag: LimitsFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping OnRegister
     ) -> RootViewModel {
