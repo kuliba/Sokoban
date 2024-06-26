@@ -236,7 +236,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             
             return service(.init(payload.rawValue)) {
                 
-                completion(try? $0.map(\.response).get())
+                completion($0.map(\.response).mapError { .init($0) })
             }
         }
     }
@@ -324,6 +324,34 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
 }
 
 // MARK: - Adapters
+
+private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferFailure {
+    
+    init(_ error: ServiceError) {
+ 
+        switch error {
+        case .createRequest, .performRequest:
+            self = .terminal
+            
+        case let .mapResponse(mappingError):
+            switch mappingError {
+            case .invalid:
+                self = .terminal
+                
+            case let .server(statusCode, errorMessage):
+                switch (statusCode, errorMessage) {
+                case (102, "Введен некорректный код. Попробуйте еще раз."):
+                    self = .otpFailure(errorMessage)
+                    
+                default:
+                    self = .terminal
+                }
+            }
+        }
+    }
+    
+    typealias ServiceError = RemoteServiceError<any Error, any Error, RemoteServices.ResponseMapper.MappingError>
+}
 
 private extension NanoServices.CreateAnywayTransferResult {
     
@@ -639,10 +667,11 @@ private extension VerificationCode {
     var makeTransferResultStub: MakeTransferResult {
         
         switch rawValue {
-        case "111111": return .g1Completed
-        case "222222": return .g1Inflight
-        case "333333": return .g1Rejected
-        default:       return .none
+        case "111111": return .success(.g1Completed)
+        case "222222": return .success(.g1Inflight)
+        case "333333": return .success(.g1Rejected)
+        case "444444": return .failure(.otpFailure("Код введен неверно"))
+        default:       return .failure(.terminal)
         }
     }
     

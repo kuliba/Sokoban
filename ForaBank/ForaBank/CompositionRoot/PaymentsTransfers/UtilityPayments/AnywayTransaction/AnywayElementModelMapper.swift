@@ -177,15 +177,14 @@ private extension AnywayElementModelMapper {
 
 private extension AnywayElementModelMapper {
     
-#warning("event here is too wide, contain to widget")
     func makeWidgetViewModel(
         with widget: AnywayElement.Widget,
         event: @escaping (NotifyEvent) -> Void
     ) -> AnywayElementModel {
         
         switch widget {
-        case let .otp(otp):
-#warning("add duration to settings")
+            // initially there could be no OTP warning, so it's safe to ignore it
+        case let .otp(otp, _):
             return .widget(.otp(makeOTPViewModel(otp: otp, event: event)))
             
         case let .product(product):
@@ -283,7 +282,7 @@ private extension TimedOTPInputViewModel {
         }
         
         let otpFieldReducer = OTPFieldReducer(length: otpLength)
-        let otpInputReducer = OTPInputReducer(
+        let otpInputReducer = OTPComponentInputReducer(
             countdownReduce: decorated,
             otpFieldReduce : otpFieldReducer.reduce(_:_:)
         )

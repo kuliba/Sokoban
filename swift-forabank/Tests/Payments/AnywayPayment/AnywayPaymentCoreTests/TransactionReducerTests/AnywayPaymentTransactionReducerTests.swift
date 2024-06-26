@@ -48,6 +48,13 @@ class AnywayPaymentTransactionReducerTests: XCTestCase {
         assert(.dismissRecoverableError, on: state, effect: nil)
     }
     
+    // MARK: - OTP
+    
+    func test_otp_____() {
+        
+        XCTFail()
+    }
+    
     // TODO: add integration tests
     
     // MARK: - helpers tests

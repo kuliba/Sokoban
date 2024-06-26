@@ -389,16 +389,32 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
     
     func test_uiComponent_shouldDeliverNilOTPForOTPWidgetWithNil() {
         
-        let element = makeAnywayPaymentWidgetElement(.otp(nil))
+        let element = makeAnywayPaymentWidgetElement(.otp(nil, nil))
         
-        XCTAssertNoDiff(element.uiComponent, .widget(.otp(nil)))
+        XCTAssertNoDiff(element.uiComponent, .widget(.otp(nil, nil)))
     }
     
-    func test_uiComponent_shouldDeliverOTPForOTPWidget() {
+    func test_uiComponent_shouldDeliverWarningWithNilOTPForOTPWidgetWithNil() {
         
-        let element = makeAnywayPaymentWidgetElement(.otp(123_456))
+        let warning = anyMessage()
+        let element = makeAnywayPaymentWidgetElement(.otp(nil, warning))
         
-        XCTAssertNoDiff(element.uiComponent, .widget(.otp(123_456)))
+        XCTAssertNoDiff(element.uiComponent, .widget(.otp(nil, warning)))
+    }
+    
+    func test_uiComponent_shouldDeliverOTPWithNilWarningForOTPWidget() {
+        
+        let element = makeAnywayPaymentWidgetElement(.otp(123_456, nil))
+        
+        XCTAssertNoDiff(element.uiComponent, .widget(.otp(123_456, nil)))
+    }
+    
+    func test_uiComponent_shouldDeliverOTPWithWarningForOTPWidget() {
+        
+        let warning = anyMessage()
+        let element = makeAnywayPaymentWidgetElement(.otp(123_456, warning))
+        
+        XCTAssertNoDiff(element.uiComponent, .widget(.otp(123_456, warning)))
     }
     
     func test_uiComponent_shouldDeliverProductPickerWithAccountForCoreWidget() {

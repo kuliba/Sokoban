@@ -180,6 +180,28 @@ final class OTPFieldReducerTests: XCTestCase {
         assert(sut: sut, .edit(digits), on: state, effect: nil)
     }
     
+    func test_edit_shouldResetStatusOnEmpty() {
+        
+        let state = makeState("", status: .failure(.connectivityError))
+        
+        assert(.edit("1"), on: state) {
+            
+            $0.text = "1"
+            $0.status = nil
+        }
+    }
+    
+    func test_edit_shouldResetStatusOnNonEmpty() {
+        
+        let state = makeState("321", status: .failure(.connectivityError))
+        
+        assert(.edit("1"), on: state) {
+            
+            $0.text = "1"
+            $0.status = nil
+        }
+    }
+    
     // MARK: - failure connectivityError
     
     func test_failure_connectivityError_shouldNotChangeIncompleteState() {

@@ -1104,6 +1104,7 @@
 		2AB109AA2C2C18E100325D3A /* OTPWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB109A92C2C18E100325D3A /* OTPWarningView.swift */; };
 		2AB109AD2C2C193200325D3A /* OTPWarningViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB109AC2C2C193200325D3A /* OTPWarningViewConfig.swift */; };
 		2AB109AF2C2C199500325D3A /* OTPWarningViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB109AE2C2C199500325D3A /* OTPWarningViewConfig+iFora.swift */; };
+		2AB109B12C2C3EB900325D3A /* AnywayElementModel+Receiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB109B02C2C3EB900325D3A /* AnywayElementModel+Receiver.swift */; };
 		2AB139F12AEEDA6D008159A0 /* ComposedCVVPINService+log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB139F02AEEDA6D008159A0 /* ComposedCVVPINService+log.swift */; };
 		2AB1979B2B245FA300F0F87B /* MapGetSberQRDataResponseToProductTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB1979A2B245FA300F0F87B /* MapGetSberQRDataResponseToProductTypeTests.swift */; };
 		2AB1979D2B2467AF00F0F87B /* MapGetSberQRDataResponseToCurrenciesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB1979C2B2467AF00F0F87B /* MapGetSberQRDataResponseToCurrenciesTests.swift */; };
@@ -4151,6 +4152,7 @@
 		2AB109A92C2C18E100325D3A /* OTPWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPWarningView.swift; sourceTree = "<group>"; };
 		2AB109AC2C2C193200325D3A /* OTPWarningViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPWarningViewConfig.swift; sourceTree = "<group>"; };
 		2AB109AE2C2C199500325D3A /* OTPWarningViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OTPWarningViewConfig+iFora.swift"; sourceTree = "<group>"; };
+		2AB109B02C2C3EB900325D3A /* AnywayElementModel+Receiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayElementModel+Receiver.swift"; sourceTree = "<group>"; };
 		2AB139F02AEEDA6D008159A0 /* ComposedCVVPINService+log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ComposedCVVPINService+log.swift"; sourceTree = "<group>"; };
 		2AB1979A2B245FA300F0F87B /* MapGetSberQRDataResponseToProductTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapGetSberQRDataResponseToProductTypeTests.swift; sourceTree = "<group>"; };
 		2AB1979C2B2467AF00F0F87B /* MapGetSberQRDataResponseToCurrenciesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapGetSberQRDataResponseToCurrenciesTests.swift; sourceTree = "<group>"; };
@@ -9331,6 +9333,7 @@
 			children = (
 				2AA3A92F2BFF886300AEBCC9 /* AnywayTransaction.swift */,
 				2AB87C4E2C1336570013EFFE /* AnywayElementModel.swift */,
+				2AB109B02C2C3EB900325D3A /* AnywayElementModel+Receiver.swift */,
 				2AB87C4C2C13346F0013EFFE /* AnywayElementModelMapper.swift */,
 				2AA3A9352BFF8A1900AEBCC9 /* AnywayPaymentFactoryComposer.swift */,
 				2AA3A9562BFF8DBB00AEBCC9 /* Configs */,
@@ -18653,6 +18656,7 @@
 				77E289A02859221D0048141B /* Calendar+Extensions.swift in Sources */,
 				2AD15D192C19FFCA003329C7 /* FraudNoticePayload.swift in Sources */,
 				68FFA551268538CF002DADFA /* PhoneContactModel.swift in Sources */,
+				2AB109B12C2C3EB900325D3A /* AnywayElementModel+Receiver.swift in Sources */,
 				777460F92922EE2300D3FF46 /* ContactsSectionHeaderViewComponent.swift in Sources */,
 				ED84994E26A85A65005205C6 /* SettingsViewController.swift in Sources */,
 				2AD15D132C19D0FC003329C7 /* TransactionDocumentButton.swift in Sources */,
