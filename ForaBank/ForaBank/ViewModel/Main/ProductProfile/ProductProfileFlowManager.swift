@@ -145,8 +145,11 @@ enum ProductProfileFlowEvent {
 enum HistoryEvent: Equatable {
     
     case button(ButtonEvent)
+    case filter([ProductProfileViewModel.HistoryState.Filter]?)
+    case calendar(Date?)
     
     enum ButtonEvent: Equatable {
+        
         case calendar
         case filter
     }
