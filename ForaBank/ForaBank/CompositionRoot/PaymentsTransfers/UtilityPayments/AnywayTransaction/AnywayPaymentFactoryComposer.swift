@@ -99,7 +99,13 @@ private extension AnywayPaymentFactoryComposer {
             viewModel: viewModel,
             factory: .init(
                 makeIconView: { self.makeIconView(image) },
-                makeOptionLabel: OptionView.init,
+                makeOptionLabel: {
+                    
+                    OptionView(
+                        option: $0, 
+                        makeIconView: { Image.ic24RadioDefolt }
+                    )
+                },
                 makeSelectedOptionLabel: SelectedOptionView.init,
                 makeToggleLabel: { .init(state: $0, config: .iFora) }
             ),
