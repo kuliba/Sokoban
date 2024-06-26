@@ -393,15 +393,29 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "ChangeSVCardLimitAPITests",
-        "name" : "ChangeSVCardLimitAPITests"
+        "identifier" : "SelectComponentTests",
+        "name" : "SelectComponentTests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "SelectComponentTests",
-        "name" : "SelectComponentTests"
+        "identifier" : "SelectorComponentTests",
+        "name" : "SelectorComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SVCardLimitAPITests",
+        "name" : "SVCardLimitAPITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AmountComponentTests",
+        "name" : "AmountComponentTests"
       }
     }
   ],

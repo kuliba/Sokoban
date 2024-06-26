@@ -7,6 +7,7 @@
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import OTPInputComponent
 import PaymentComponents
 import RxViewModel
 import SwiftUI
@@ -14,20 +15,14 @@ import UIPrimitives
 
 final class AnywayPaymentFactoryComposer {
     
-    private let config: AnywayPaymentElementConfig
     private let currencyOfProduct: CurrencyOfProduct
-    private let getProducts: GetProducts
     private let makeIconView: MakeIconView
     
     init(
-        config: AnywayPaymentElementConfig,
         currencyOfProduct: @escaping CurrencyOfProduct,
-        getProducts: @escaping GetProducts,
         makeIconView: @escaping MakeIconView
     ) {
-        self.config = config
         self.currencyOfProduct = currencyOfProduct
-        self.getProducts = getProducts
         self.makeIconView = makeIconView
     }
 }
@@ -40,22 +35,23 @@ extension AnywayPaymentFactoryComposer {
         
         let elementFactory = AnywayPaymentElementViewFactory(
             makeIconView: makeIconView,
-            parameterFactory: makeElementFactory()
+            parameterFactory: makeElementFactory(), 
+            widgetFactory: makeWidgetFactory()
         )
         
         return .init(
-            makeElementView: {
+            makeElementView: { state in
                 
                 return .init(
-                    state: $0,
+                    state: state,
                     event: event,
                     factory: elementFactory,
-                    config: self.config
+                    config: .iFora
                 )
             },
-            makeFooterView: { state, event in
+            makeFooterView: { footer in
                 
-                return .init(state: state.footer, event: event, config: .iFora)
+                return .init(viewModel: footer, config: .iFora)
             }
         )
     }
@@ -65,7 +61,7 @@ extension AnywayPaymentFactoryComposer {
     
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
-
+    
     typealias UIComponent = AnywayPaymentDomain.AnywayElement.UIComponent
     typealias IconView = UIPrimitives.AsyncImage
     typealias MakeIconView = (String) -> IconView
@@ -79,44 +75,99 @@ private extension AnywayPaymentFactoryComposer {
     ) -> AnywayPaymentParameterViewFactory {
         
         return .init(
+            makeSelectView: makeSelectView,
             makeSelectorView: makeSelectorView,
             makeIconView: makeIconView
         )
     }
     
+    func makeSelectView(
+        viewModel: ObservingSelectViewModel
+    ) -> SelectWrapperView {
+        
+        return .init(viewModel: viewModel)
+    }
+    
     func makeSelectorView(
-        viewModel: ObservingSelectorViewModel<Option>
+        viewModel: ObservingSelectorViewModel
     ) -> SelectorWrapperView {
+        
+        let image = viewModel.state.image
+        let title = viewModel.state.title
         
         return .init(
             viewModel: viewModel,
             factory: .init(
-                createOptionView: OptionView.init,
-                createSelectedOptionView: SelectedOptionView.init
-            )
+                makeIconView: { self.makeIconView(image) },
+                makeOptionLabel: {
+                    
+                    OptionView(
+                        option: $0, 
+                        makeIconView: { Image.ic24RadioDefolt }
+                    )
+                },
+                makeSelectedOptionLabel: SelectedOptionView.init,
+                makeToggleLabel: { .init(state: $0, config: .iFora) }
+            ),
+            config: .iFora(title: title)
         )
     }
+    
+    private func makeIconView(
+        _  image: AnywayElement.UIComponent.Image?
+    ) -> IconView {
         
+        switch image {
+        case let .md5Hash(md5Hash):
+            return makeIconView(md5Hash)
+            
+        default:
+            return makeIconView("placeholder")
+        }
+    }
+    
     typealias Option = UIComponent.Parameter.ParameterType.Option
-
+    
     typealias Observe = (ProductID, Currency) -> Void
     typealias ProductID = AnywayElement.Widget.Product.ProductID
     typealias Currency = AnywayPaymentEvent.Widget.Currency
 }
 
-private extension CachedTransactionState {
+private extension AnywayPaymentFactoryComposer {
+    
+    func makeWidgetFactory(
+    ) -> AnywayPaymentWidgetViewFactory {
+        
+        return .init(makeOTPView: makeOTPView)
+    }
+    
+    private func makeOTPView(
+        viewModel: TimedOTPInputViewModel
+    ) -> AnywayPaymentWidgetViewFactory.OTPView {
+        
+        return .init(
+            viewModel: viewModel, 
+            config: .iFora,
+            iconView: { self.makeIconView("sms") }
+        )
+    }
+}
+
+private extension AnywayTransactionState {
     
     var footer: AnywayPaymentFooter {
         
-        #warning("FIXME: hardcoded buttonTitle")
-        return .init(buttonTitle: "Continue", core: core, isEnabled: isValid)
+#warning("FIXME: hardcoded buttonTitle")
+        return .init(buttonTitle: "Continue", core: core, isEnabled: transaction.isValid)
     }
     
     var core: AnywayPaymentFooter.Core? {
         
-        guard case let .amount(amount, currency) = context.payment.footer,
-              let currency
-        else { return nil }
+        let digest = transaction.context.makeDigest()
+        
+        let amount = digest.amount
+        let currency = digest.core?.currency
+        guard let amount, let currency else { return nil }
         
         return .init(value: amount, currency: currency)
     }

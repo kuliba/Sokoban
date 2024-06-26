@@ -20,13 +20,16 @@ final class RootViewFactoryComposer {
     
     private let model: Model
     private let httpClient: HTTPClient
+    private let historyFeatureFlag: HistoryFilterFlag
     
     init(
         model: Model,
-        httpClient: HTTPClient
+        httpClient: HTTPClient,
+        historyFeatureFlag: HistoryFilterFlag
     ) {
         self.model = model
         self.httpClient = httpClient
+        self.historyFeatureFlag = historyFeatureFlag
     }
 }
 
@@ -44,7 +47,8 @@ extension RootViewFactoryComposer {
             makeActivateSliderView: ActivateSliderStateWrapperView.init, 
             makeUpdateInfoView: UpdateInfoView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
-            makePaymentCompleteView: makePaymentCompleteView
+            makePaymentCompleteView: makePaymentCompleteView, 
+            makeHistoryButtonView: { self.makeHistoryButtonView(self.historyFeatureFlag) }
         )
     }
 }
@@ -73,7 +77,12 @@ private extension RootViewFactoryComposer {
                 makeAnywayPaymentFactory: makeAnywayPaymentFactory,
                 makePaymentCompleteView: makePaymentCompleteView
             ),
-            productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init),
+            productProfileViewFactory: .init(
+                makeActivateSliderView: ActivateSliderStateWrapperView.init,
+                makeHistoryButton: { event in
+                    HistoryButtonView(event: event)
+                }
+            ),
             getUImage: getUImage
         )
     }
@@ -112,9 +121,7 @@ private extension RootViewFactoryComposer {
     ) -> AnywayPaymentFactory<IconView> {
         
         let composer = AnywayPaymentFactoryComposer(
-            config: .iFora,
             currencyOfProduct: currencyOfProduct,
-            getProducts: model.productSelectProducts,
             makeIconView: makeIconView
         )
         
@@ -153,7 +160,18 @@ private extension RootViewFactoryComposer {
         )
     }
     
-    typealias TransactionResult = UtilityServicePaymentFlowState<CachedAnywayTransactionViewModel>.FullScreenCover.TransactionResult
+    func makeHistoryButtonView(
+        _ historyFeatureFlag: HistoryFilterFlag
+    ) -> HistoryButtonView? {
+        
+        if historyFeatureFlag.rawValue {
+            return HistoryButtonView(event: { _ in })
+        } else {
+           return nil
+        }
+    }
+    
+    typealias TransactionResult = UtilityServicePaymentFlowState<AnywayTransactionViewModel>.FullScreenCover.TransactionResult
     
     private func map(
         _ result: TransactionResult

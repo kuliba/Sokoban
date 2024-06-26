@@ -26,7 +26,7 @@ struct PaymentFlowModalView: View {
 
 extension PaymentFlowModalView {
     
-    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<UtilityPaymentViewModel>
 
     typealias State = UtilityServiceFlowState.Modal
@@ -62,7 +62,7 @@ private extension PaymentsAntifraudViewModel {
                 continueButton: .init(
                     title: "Продолжить",
                     style: .gray,
-                    action: { event(.continue) }
+                    action: { event(.consent) }
                 )
             )
         )

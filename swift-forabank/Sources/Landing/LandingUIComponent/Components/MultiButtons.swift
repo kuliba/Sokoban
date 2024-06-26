@@ -110,12 +110,11 @@ extension MultiButtonsView {
         static func itemAction(
             item: UILanding.Multi.Buttons.Item,
             selectDetail: SelectDetail,
-            action: (LandingEvent) -> Void,
-            openLink: @escaping () -> Void
+            action: (LandingEvent) -> Void
         ) {
             
             if let type = item.action?.type,
-                let actionType = item.actionType(by: type) {
+               let actionType = item.actionType(by: type) {
                 switch actionType {
                 case .goToMain:
                     action(.card(.goToMain))
@@ -126,8 +125,8 @@ extension MultiButtonsView {
                 }
             } else if let detailDestination = item.detailDestination {
                 selectDetail(detailDestination)
-            } else {
-                openLink()
+            } else if let link = item.link {
+                action(.card(.openUrl(link)))
             }
         }
         
@@ -138,18 +137,8 @@ extension MultiButtonsView {
            Self.itemAction(
                 item: item,
                 selectDetail: selectDetail,
-                action: action,
-                openLink: { self.openLink(item.link) }
+                action: action
             )
-        }
-        
-        func openLink(
-            _ link: String?
-        ) {
-            guard let strUrl = link, let url = URL(string: strUrl)
-            else { return }
-            
-            UIApplication.shared.open(url)
         }
     }
 }

@@ -43,5 +43,5 @@ extension BottomSheetReducer {
     
     typealias Event = BottomSheetEvent
     typealias State = ProductProfileViewModel.BottomSheet?
-    typealias Effect = ProductNavigationStateEffect
+    typealias Effect = ProductProfileFlowEffect
 }

@@ -5,11 +5,12 @@
 //  Created by Дмитрий on 09.03.2022.
 //
 
+import ActivateSlider
+import ForaTools
 import InfoComponent
 import PinCodeUI
 import SberQR
 import SwiftUI
-import ActivateSlider
 
 struct ProductProfileView: View {
     
@@ -79,6 +80,8 @@ struct ProductProfileView: View {
                             
                             if let historyViewModel = viewModel.history {
                                 
+                                productProfileViewFactory.makeHistoryButton({ event in viewModel.event(.history(event))})
+                                
                                 ProductProfileHistoryView(viewModel: historyViewModel)
                             }
                         }
@@ -111,6 +114,8 @@ struct ProductProfileView: View {
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
             
+            historySheet()
+            
             viewModel.closeAccountSpinner.map(CloseAccountSpinnerView.init)
             
             viewModel.spinner.map { spinner in
@@ -142,6 +147,24 @@ struct ProductProfileView: View {
             content: fullScreenCoverContent
         )
         .sheet(item: $viewModel.sheet, content: sheetContent)
+    }
+    
+    private func historySheet() -> some View {
+        
+        Color.clear
+            .sheet(
+                modal: viewModel.historyState,
+                dismissModal: { self.viewModel.historyState = nil },
+                content: { historyState in
+                    
+                    switch historyState {
+                    case .calendar:
+                        Text("Calendar")
+                    case .filter:
+                        Text("Filter")
+                    }
+                }
+            )
     }
     
     @ViewBuilder
@@ -415,7 +438,11 @@ struct ProfileView_Previews: PreviewProvider {
             viewModel: viewModel,
             viewFactory: .preview,
             productProfileViewFactory: .init(
-                makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)
+                makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
+                makeHistoryButton: { event in
+                        
+                    HistoryButtonView(event: event)
+                }
             ),
             getUImage: { _ in nil }
         )

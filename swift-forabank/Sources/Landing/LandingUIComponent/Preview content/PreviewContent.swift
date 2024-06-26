@@ -483,11 +483,17 @@ extension UILanding.List.HorizontalRectangleImage.Config {
 extension UILanding.List.HorizontalRectangleLimits.Config {
     
     static let `default`: Self = .init(
+        colors: .init(
+            arc: .init(red: 153/255, green: 153/255, blue: 153/255),
+            background: .init(red: 246/255, green: 246/255, blue: 247/255),
+            divider: .init(red: 211/255, green: 211/255, blue: 211/255, opacity: 0.3),
+            title: .init(red: 28/255, green: 28/255, blue: 1/255),
+            subtitle: .init(red: 153/255, green: 153/255, blue: 153/255)),
         cornerRadius: 12,
-        size: .init(height: 124, width: 272),
-        paddings: .init(horizontal: 16, vertical: 8),
+        paddings: .init(horizontal: 12, vertical: 8),
+        sizes: .init(height: 176, icon: 20, width: 180),
         spacing: 8)
-}
+    }
 
 extension UILanding.Multi.Buttons.Config {
     
@@ -592,28 +598,88 @@ extension UILanding.Multi.MarkersText.Config {
             textFont: .system(size: 14)))
 }
 
-// MARK: - BlockHorizontalRectangular ViewModel
+// MARK: - BlockHorizontalRectangular 
 
-extension BlockHorizontalRectangularView.ViewModel {
+extension UILanding.BlockHorizontalRectangular {
     
-    static let defaultValue: BlockHorizontalRectangularView.ViewModel = .init(
-        data: .init(
-            list: [.init(
-                limitType: "linitType",
-                description: "",
-                title: "title",
+    static let defaultValue: Self = .init(
+        list: [
+            .init(
+                limitType: "DEBIT_OPERATIONS",
+                description: "Переводы себе, другим людям и организациям, оплата услуг в приложении",
+                title: "Лимит платежей и переводов",
                 limits: [
                     .init(
-                        id: "1",
-                        title: "title",
-                        md5hash: "md5hash",
-                        text: "text",
-                        maxSum: 10)])
+                        id: "LMTTZ01",
+                        title: "В день",
+                        md5hash: "1",
+                        text: "Сумма",
+                        maxSum: 999999999),
+                    .init(
+                        id: "LMTTZ02",
+                        title: "В месяц",
+                        md5hash: "22",
+                        text: "Сумма",
+                        maxSum: 999999999)
+                ]),
+            .init(
+                limitType: "WITHDRAWAL",
+                description: "Снятие наличных в банкоматах или операции приравненные к снятию наличных",
+                title: "Лимит снятия наличных",
+                limits: [
+                    .init(
+                        id: "LMTTZ03",
+                        title: "В день",
+                        md5hash: "11",
+                        text: "Сумма",
+                        maxSum: 50000),
+                    .init(
+                        id: "LMTTZ04",
+                        title: "В месяц",
+                        md5hash: "1",
+                        text: "Сумма",
+                        maxSum: 150000)
+                ])
+        ])
+}
+
+// MARK: - List.HorizontalRectangleLimits
+
+extension UILanding.List.HorizontalRectangleLimits {
+    
+    static let `default`: Self = .init(list: [
+        .init(
+            action: .init(type: "action"),
+            limitType: "Debit",
+            md5hash: "1",
+            title: "Платежи и переводы",
+            limits: [
+                .init(
+                    id: "1",
+                    title: "Осталось сегодня",
+                    color: Color(red: 28/255, green: 28/255, blue: 28/255)),
+                .init(
+                    id: "2",
+                    title: "Осталось в этом месяце",
+                    color: Color(red: 255/255, green: 54/255, blue: 54/255)),
+                
             ]),
-        makeIconView: { _ in .init(
-            image: .flag,
-            publisher: Just(.percent).eraseToAnyPublisher()
-        )})
+        .init(
+            action: .init(type: "action"),
+            limitType: "Credit",
+            md5hash: "md5Hash",
+            title: "Снятие наличных",
+            limits: [
+                .init(
+                    id: "3",
+                    title: "Осталось сегодня",
+                    color: Color(red: 28/255, green: 28/255, blue: 28/255)),
+                .init(
+                    id: "4",
+                    title: "Осталось в этом месяце",
+                    color: Color(red: 255/255, green: 54/255, blue: 54/255)),
+            ])
+    ])
 }
 
 // MARK: - BlockHorizontalRectangular Config
@@ -621,8 +687,49 @@ extension BlockHorizontalRectangularView.ViewModel {
 extension UILanding.BlockHorizontalRectangular.Config {
     
     static let `default`: Self = .init(
+        colors: .init(
+            background: .init(red: 246/255, green: 246/255, blue: 247/255),
+            divider: .init(red: 211/255, green: 211/255, blue: 211/255, opacity: 0.3),
+            title: .init(red: 28/255, green: 28/255, blue: 1/255),
+            subtitle: .init(red: 153/255, green: 153/255, blue: 153/255),
+            warning: .red),
         cornerRadius: 12,
-        size: .init(height: 124, width: 272),
+        sizes: .init(iconWidth: 24, height: 124, width: 272),
         paddings: .init(horizontal: 16, vertical: 8),
         spacing: 8)
+}
+
+// MARK: - LimitsValue
+
+extension Array where Element == LimitValues {
+    
+    static let `default`: Self =  [
+        .init(currency: "₽", currentValue: 90, name: "1", value: 100),
+        .init(currency: "$", currentValue: 199.99, name: "2", value: 200),
+        .init(currency: "ђ", currentValue: 300, name: "3", value: 300),
+        .init(currency: "§", currentValue: 0, name: "4", value: 400)
+    ]
+    
+    static let withoutValue: Self = [
+        .init(currency: "$", currentValue: 1, name: "1", value: 999999999),
+        .init(currency: "P", currentValue: 12, name: "2", value: 100)
+    ]
+}
+
+// MARK: -
+
+extension ViewFactory {
+    
+    static let `default`: Self = .init(makeIconView: {
+        if $0 == "1" {
+            .init(
+                image: .flag,
+                publisher: Just(.percent).eraseToAnyPublisher()
+            ) } else {
+                .init(
+                    image: .percent,
+                    publisher: Just(.flag).eraseToAnyPublisher()
+                    
+                )}
+    })
 }

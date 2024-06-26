@@ -24,11 +24,16 @@ extension RootViewModelFactory {
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
+        historyFilterFlag: HistoryFilterFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
         
-        model.getProducts = Services.getProductListByType(httpClient, logger: logger)
+        let httpClient: HTTPClient = model.authenticatedHTTPClient()
+        
+        let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
+        
+        model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
         
         let rsaKeyPairStore = makeLoggingStore(
             store: KeyTagKeyChainStore<RSADomain.KeyPair>(
@@ -118,12 +123,12 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             log: infoNetworkLog
         )
-
-        let productNavigationStateManager = makeProductNavigationStateManager(
-            alertsReduce: AlertReducer(productAlertsViewModel: .default),
-            bottomSheetReduce: BottomSheetReducer(),
-            handleEffect: ProductNavigationStateEffectHandler()
+        
+        let productNavigationStateManager = ProductProfileFlowManager(
+            reduce: makeProductProfileFlowReducer().reduce(_:_:),
+            handleEffect: ProductNavigationStateEffectHandler().handleEffect
         )
+        
         let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
             
             .init(
@@ -177,7 +182,7 @@ extension RootViewModelFactory {
     typealias LatestPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     
-    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
     static func makeNavigationOperationView(
@@ -308,7 +313,7 @@ extension ProductProfileViewModel {
     typealias LatestPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     
-    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PTFlowManger
     typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
@@ -325,7 +330,7 @@ extension ProductProfileViewModel {
         unblockCardServices: UnblockCardServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
-        productNavigationStateManager: ProductNavigationStateManager,
+        productNavigationStateManager: ProductProfileFlowManager,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> MakeProductProfileViewModel {
         
@@ -455,7 +460,7 @@ private extension RootViewModelFactory {
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
-        productNavigationStateManager: ProductNavigationStateManager,
+        productNavigationStateManager: ProductProfileFlowManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,

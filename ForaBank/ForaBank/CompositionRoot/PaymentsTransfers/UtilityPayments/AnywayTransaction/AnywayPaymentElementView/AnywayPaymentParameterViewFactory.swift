@@ -7,20 +7,22 @@
 
 import AnywayPaymentDomain
 import PaymentComponents
+import SwiftUI
 import UIPrimitives
 
 struct AnywayPaymentParameterViewFactory {
     
+    let makeSelectView: MakeSelectView
     let makeSelectorView: MakeSelectorView
     let makeIconView: MakeIconView
 }
 
 extension AnywayPaymentParameterViewFactory {
     
-    typealias AnywayPayment = AnywayPaymentDomain.AnywayPayment
+    typealias MakeSelectView = (ObservingSelectViewModel) -> SelectWrapperView
     
-    typealias Option = AnywayElement.UIComponent.Parameter.ParameterType.Option
-    typealias MakeSelectorView = (ObservingSelectorViewModel<Option>) -> SelectorWrapperView
+    typealias SelectorView = SelectorWrapperView
+    typealias MakeSelectorView = (ObservingSelectorViewModel) -> SelectorView
     
     typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
 }

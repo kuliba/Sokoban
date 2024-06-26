@@ -470,7 +470,7 @@ private extension PaymentsTransfersView {
             payByInstructionsView(paymentsViewModel)
             
         case let .payment(state):
-            let payload = state.viewModel.state.context.outline.payload
+            let payload = state.viewModel.state.transaction.context.outline.payload
             let operatorIconView = viewFactory.makeIconView(
                 payload.icon.map { .md5Hash(.init($0)) }
             )
@@ -545,7 +545,7 @@ private extension PaymentsTransfersView {
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
-        let transactionEvent = { state.viewModel.event(.transaction($0)) }
+        let transactionEvent = { state.viewModel.event($0) }
         
         let factory = viewFactory.makeAnywayPaymentFactory {
             
@@ -558,7 +558,10 @@ private extension PaymentsTransfersView {
         }
         .alert(
             item: state.alert,
-            content: paymentFlowAlert(event: { transactionEvent($0) })
+            content: paymentFlowAlert(
+                transactionEvent: { transactionEvent($0) },
+                flowEvent: { viewModel.event(.utilityFlow(.payment($0))) }
+            )
         )
         .fullScreenCover(
             cover: state.fullScreenCover,
@@ -572,12 +575,13 @@ private extension PaymentsTransfersView {
                 event: { transactionEvent(.fraud($0)) }
             )
         )
-        .navigationTitle("Payment: \(state.viewModel.state.isValid ? "valid" : "invalid")")
+        .navigationTitle("Payment: \(state.viewModel.state.transaction.isValid ? "valid" : "invalid")")
         .navigationBarTitleDisplayMode(.inline)
     }
     
     func paymentFlowAlert(
-        event: @escaping (AnywayTransactionEvent) -> Void
+        transactionEvent: @escaping (AnywayTransactionEvent) -> Void,
+        flowEvent: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> (UtilityServiceFlowState.Alert) -> Alert {
         
         return { alert in
@@ -586,19 +590,19 @@ private extension PaymentsTransfersView {
             case .paymentRestartConfirmation:
                 return .init(
                     with: .paymentRestartConfirmation,
-                    event: event
+                    event: transactionEvent
                 )
                 
             case let .serverError(errorMessage):
                 return .init(
                     with: .serverError(message: errorMessage),
-                    event: event
+                    event: transactionEvent
                 )
                 
             case let .terminalError(errorMessage):
                 return .init(
                     with: .terminalError(message: errorMessage),
-                    event: event
+                    event: flowEvent
                 )
             }
         }
@@ -720,7 +724,7 @@ private extension PaymentsTransfersView {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     
     typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content, UtilityPaymentViewModel>
     
@@ -827,6 +831,11 @@ where PrimaryEvent == AnywayTransactionEvent,
             )
         )
     }
+}
+
+private extension AlertModel
+where PrimaryEvent == UtilityServicePaymentFlowEvent,
+      SecondaryEvent == UtilityServicePaymentFlowEvent {
     
     static func terminalError(
         message: String
@@ -838,7 +847,7 @@ where PrimaryEvent == AnywayTransactionEvent,
             primaryButton: .init(
                 type: .default,
                 title: "OK",
-                event: .completePayment(.none)
+                event: .dismiss(.paymentError)
             )
         )
     }
@@ -974,7 +983,10 @@ struct Payments_TransfersView_Previews: PreviewProvider {
         PaymentsTransfersView(
             viewModel: .sample,
             viewFactory: .preview,
-            productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)),
+            productProfileViewFactory: .init(
+                makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
+                makeHistoryButton: { event in HistoryButtonView(event: event) }
+            ),
             getUImage: { _ in nil }
         )
     }

@@ -10,6 +10,7 @@ import RemoteServices
 
 struct AnywayTransactionEffectHandlerNanoServices {
     
+    let getVerificationCode: GetVerificationCode
     let initiatePayment: InitiatePayment
     let getDetails: GetDetails
     let makeTransfer: MakeTransfer
@@ -17,6 +18,10 @@ struct AnywayTransactionEffectHandlerNanoServices {
 }
 
 extension AnywayTransactionEffectHandlerNanoServices {
+    
+    typealias GetVerificationCodeResult = Result<Int, ServiceFailure>
+    typealias GetVerificationCodeCompletion = (GetVerificationCodeResult) -> Void
+    typealias GetVerificationCode = (@escaping GetVerificationCodeCompletion) -> Void
     
     typealias InitiatePayment = ProcessPayment
     

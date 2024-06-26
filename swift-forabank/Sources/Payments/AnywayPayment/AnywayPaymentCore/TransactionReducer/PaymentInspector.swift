@@ -1,19 +1,22 @@
 //
 //  PaymentInspector.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 01.04.2024.
 //
 
 import AnywayPaymentDomain
 
-public struct PaymentInspector<Payment, PaymentDigest> 
+public struct PaymentInspector<Payment, PaymentDigest, PaymentUpdate>
 where Payment: RestartablePayment {
     
     public let checkFraud: CheckFraud
     public let getVerificationCode: GetVerificationCode
     public let makeDigest: MakeDigest
-    public let restorePayment: RestorePayment
+    public let resetPayment: ResetPayment
+    public let rollbackPayment: RollbackPayment
+    public let stagePayment: StagePayment
+    public let updatePayment: UpdatePayment
     public let validatePayment: ValidatePayment
     public let wouldNeedRestart: WouldNeedRestart
     
@@ -21,14 +24,20 @@ where Payment: RestartablePayment {
         checkFraud: @escaping CheckFraud,
         getVerificationCode: @escaping GetVerificationCode,
         makeDigest: @escaping MakeDigest,
-        restorePayment: @escaping RestorePayment,
+        resetPayment: @escaping ResetPayment,
+        rollbackPayment: @escaping RollbackPayment,
+        stagePayment: @escaping StagePayment,
+        updatePayment: @escaping UpdatePayment,
         validatePayment: @escaping ValidatePayment,
         wouldNeedRestart: @escaping WouldNeedRestart
     ) {
         self.checkFraud = checkFraud
         self.getVerificationCode = getVerificationCode
         self.makeDigest = makeDigest
-        self.restorePayment = restorePayment
+        self.resetPayment = resetPayment
+        self.rollbackPayment = rollbackPayment
+        self.stagePayment = stagePayment
+        self.updatePayment = updatePayment
         self.validatePayment = validatePayment
         self.wouldNeedRestart = wouldNeedRestart
     }
@@ -36,10 +45,13 @@ where Payment: RestartablePayment {
 
 public extension PaymentInspector {
     
-    typealias CheckFraud = (Payment) -> Bool
+    typealias CheckFraud = (PaymentUpdate) -> Bool
     typealias GetVerificationCode = (Payment) -> VerificationCode?
     typealias MakeDigest = (Payment) -> PaymentDigest
-    typealias RestorePayment = (Payment) -> Payment
+    typealias ResetPayment = (Payment) -> Payment
+    typealias RollbackPayment = (Payment) -> Payment
+    typealias StagePayment = (Payment) -> Payment
+    typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
     typealias ValidatePayment = (Payment) -> Bool
     typealias WouldNeedRestart = (Payment) -> Bool
 }

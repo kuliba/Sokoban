@@ -23,13 +23,45 @@ where TransactionView: View {
     }
     
     var body: some View {
-        
+
         makeTransactionView(viewModel.state, viewModel.event(_:))
+            .spinnerDecorated(if: viewModel.isInflight)
     }
 }
 
 extension AnywayTransactionStateWrapperView {
     
-    typealias ViewModel = CachedAnywayTransactionViewModel
-    typealias MakeTransactionView = (CachedTransactionState, @escaping (CachedTransactionEvent) -> Void) -> TransactionView
+    typealias ViewModel = AnywayTransactionViewModel
+    typealias MakeTransactionView = (AnywayTransactionState, @escaping (AnywayTransactionEvent) -> Void) -> TransactionView
+}
+
+private extension View {
+    
+    @ViewBuilder
+    func spinnerDecorated(
+        if shouldShowSpinner: Bool
+    ) -> some View {
+        
+        self
+            .disabled(shouldShowSpinner)
+            .opacity(shouldShowSpinner ? 0.8 : 1)
+            .overlay(spinner(if: shouldShowSpinner))
+    }
+    
+    @ViewBuilder
+    private func spinner(if shouldShowSpinner: Bool) -> some View {
+        
+        if shouldShowSpinner {
+            
+            SpinnerRefreshView(icon: .init("Logo Fora Bank"))
+        }
+    }
+}
+
+private extension AnywayTransactionViewModel {
+    
+    var isInflight: Bool {
+        
+        state.transaction.status == .inflight
+    }
 }

@@ -30,8 +30,7 @@ extension AnywayPayment {
             elements: elements,
             footer: footer,
             infoMessage: update.details.info.infoMessage,
-            isFinalStep: update.details.control.isFinalStep,
-            isFraudSuspected: update.details.control.isFraudSuspected
+            isFinalStep: update.details.control.isFinalStep
         )
     }
 }
@@ -269,12 +268,27 @@ private extension AnywayElement.Parameter {
         fallbackValue: AnywayPaymentOutline.Value?
     ) {
         self.init(
-            field: .init(parameter.field, fallbackValue: fallbackValue),
+            field: .init(
+                parameter.field,
+                // TODO: add tests
+                fallbackValue: parameter.selectedValue ?? fallbackValue
+            ),
             image: .init(parameter),
             masking: .init(parameter.masking),
             validation: .init(parameter.validation),
             uiAttributes: .init(parameter.uiAttributes)
         )
+    }
+}
+
+private extension AnywayPaymentUpdate.Parameter {
+    
+    var selectedValue: String? {
+        
+        guard case let .pairs(pair, _) = uiAttributes.dataType
+        else { return nil }
+        
+        return pair.key
     }
 }
 
@@ -306,7 +320,7 @@ private extension AnywayElement.Parameter.Field {
     ) {
         self.init(
             id: .init(field.id),
-            value: field.content.map { $0 } ?? fallbackValue.map { $0 }
+            value: field.content ?? fallbackValue.map { $0 }
         )
     }
 }

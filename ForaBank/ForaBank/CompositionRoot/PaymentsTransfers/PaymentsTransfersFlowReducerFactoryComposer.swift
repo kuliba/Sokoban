@@ -14,60 +14,56 @@ import UtilityServicePrepaymentCore
 final class PaymentsTransfersFlowReducerFactoryComposer {
     
     private let model: Model
-    private let observeLast: Int
-    private let fraudDelay: Double
-    private let navTitle: String
+    private let settings: Settings
     private let microServices: MicroServices
-    private let makeTransactionViewModel: MakeTransactionViewModel
     
     init(
         model: Model,
-        observeLast: Int,
-        fraudDelay: Double,
-        navTitle: String,
-        microServices: MicroServices,
-        makeTransactionViewModel: @escaping MakeTransactionViewModel
+        settings: Settings,
+        microServices: MicroServices
     ) {
         self.model = model
-        self.observeLast = observeLast
-        self.fraudDelay = fraudDelay
-        self.navTitle = navTitle
+        self.settings = settings
         self.microServices = microServices
-        self.makeTransactionViewModel = makeTransactionViewModel
     }
     
     typealias MicroServices = PrepaymentPickerMicroServices<Operator>
     
     typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
     typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
+    
+    struct Settings: Equatable {
+        
+        let observeLast: Int
+        let fraudDelay: Double
+        let navTitle: String
+    }
 }
 
 extension PaymentsTransfersFlowReducerFactoryComposer {
     
     func compose(
-        with spinnerActions: RootViewModel.RootActions.Spinner?
+        makeUtilityPaymentState: @escaping MakeUtilityPaymentState
     ) -> Factory {
         
         return .init(
             getFormattedAmount: getFormattedAmount,
             makeFraud: makeFraudNoticePayload,
             makeUtilityPrepaymentState: makeUtilityPrepaymentState,
-            makeUtilityPaymentState: makeUtilityPaymentState(with: spinnerActions),
+            makeUtilityPaymentState: makeUtilityPaymentState,
             makePaymentsViewModel: makePayByInstructionsViewModel
         )
     }
     
     typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, UtilityPaymentViewModel>
-}
-
-extension PaymentsTransfersFlowReducerFactoryComposer {
+    typealias MakeUtilityPaymentState = Factory.MakeUtilityPaymentState
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias UtilityPaymentViewModel = CachedAnywayTransactionViewModel
+    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
 }
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {
@@ -76,17 +72,20 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         state: Factory.ReducerState
     ) -> String? {
         
-        guard let context = state.paymentFlowState?.viewModel.state.context
+        guard let state = state.paymentFlowState?.viewModel.state
         else { return nil }
         
-        guard case let .amount(amount, currency) = context.payment.footer
-        else { return "" }
+        let context = state.transaction.context
+        let digest = context.makeDigest()
+        let amount = digest.amount
+        let currency = digest.core?.currency
         
-        var formattedAmount = "\(amount)"
+        var formattedAmount = amount.map { "\($0)" } ?? ""
         
 #warning("look into model to extract currency symbol")
         if let currency {
             formattedAmount += " \(currency)"
+            _ = model
         }
         
         return formattedAmount
@@ -96,25 +95,35 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         state: Factory.ReducerState
     ) -> FraudNoticePayload? {
         
-        guard case let .utilityPayment(utilityPrepayment) = state.destination,
-              case let .payment(paymentFlowState) = utilityPrepayment.destination
-        else { return nil }
+        guard let paymentFlowState = state.paymentFlowState
+        else {
+            print("===>>>", "makeFraudNoticePayload failure: state.destination:", state.destination ?? "nil", #file, #line)
+            return .init(title: "", subtitle: "", formattedAmount: "", delay: settings.fraudDelay)
+        }
         
-        let context = paymentFlowState.viewModel.state.context
+        let context = paymentFlowState.viewModel.state.transaction.context
         let payload = context.outline.payload
         
         return .init(
             title: payload.title,
             subtitle: payload.subtitle,
             formattedAmount: getFormattedAmount(state: state) ?? "",
-            delay: fraudDelay
+            delay: settings.fraudDelay
         )
     }
 }
 
 private extension PaymentsTransfersViewModel._Route {
     
-    var paymentFlowState: UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>.Destination.Payment? {
+    // UtilityPaymentFlowState could be nested in two destinations:
+    // - utilityPrepayment.destination, or
+    // - servicePicker.destination
+    var paymentFlowState: UtilityServicePaymentFlowState<PaymentViewModel>? {
+        
+        paymentFlowStateInPrepaymentDestination ?? paymentFlowStateInServicePickerDestination
+    }
+    
+    private var paymentFlowStateInPrepaymentDestination: UtilityServicePaymentFlowState<PaymentViewModel>? {
         
         guard case let .utilityPayment(utilityPrepayment) = destination,
               case let .payment(paymentFlowState) = utilityPrepayment.destination
@@ -122,16 +131,15 @@ private extension PaymentsTransfersViewModel._Route {
         
         return paymentFlowState
     }
-}
-
-private extension CachedAnywayPayment<AnywayElementModel>.Footer {
     
-    var formattedAmount: String? {
+    private var paymentFlowStateInServicePickerDestination: UtilityServicePaymentFlowState<PaymentViewModel>? {
         
-        guard case let .amount(amount, currency) = self
+        guard case let .utilityPayment(utilityPrepayment) = destination,
+              case let .servicePicker(servicePicker) = utilityPrepayment.destination,
+              case let .payment(paymentFlowState) = servicePicker.destination
         else { return nil }
         
-        return "\(amount) \(currency ?? "")"
+        return paymentFlowState
     }
 }
 
@@ -141,7 +149,9 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         payload: UtilityPrepaymentPayload
     ) -> UtilityFlowState {
         
-        let reducer = UtilityPrepaymentReducer(observeLast: observeLast)
+        let reducer = UtilityPrepaymentReducer(
+            observeLast: settings.observeLast
+        )
         
         let effectHandler = UtilityPrepaymentEffectHandler(
             microServices: microServices
@@ -157,7 +167,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
             handleEffect: effectHandler.handleEffect(_:_:)
         )
         
-        return .init(content: viewModel, navTitle: navTitle)
+        return .init(content: viewModel, navTitle: settings.navTitle)
     }
     
     typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, UtilityPaymentViewModel>
@@ -167,40 +177,6 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     
     typealias UtilityPrepaymentReducer = PrepaymentPickerReducer<UtilityPaymentLastPayment, UtilityPaymentOperator>
     typealias UtilityPrepaymentEffectHandler = PrepaymentPickerEffectHandler<UtilityPaymentOperator>
-}
-
-private extension PaymentsTransfersFlowReducerFactoryComposer {
-    
-    func makeUtilityPaymentState(
-        with spinnerActions: RootViewModel.RootActions.Spinner?
-    ) -> (AnywayTransactionState, @escaping NotifyStatus) -> UtilityServicePaymentFlowState<UtilityPaymentViewModel> {
-        
-        let composer = CachedAnywayTransactionViewModelComposer(
-            currencyOfProduct: currencyOfProduct,
-            getProducts: model.productSelectProducts,
-            makeTransactionViewModel: makeTransactionViewModel,
-            spinnerActions: spinnerActions
-        )
-        
-        return { transactionState, notify in
-            
-            let viewModel = composer.makeCachedAnywayTransactionViewModel(
-                transactionState: transactionState,
-                notify: notify
-            )
-            
-            return .init(viewModel: viewModel)
-        }
-    }
-    
-    typealias NotifyStatus = (AnywayTransactionStatus?) -> Void
-    
-    private func currencyOfProduct(
-        product: ProductSelect.Product
-    ) -> String {
-        
-        model.currencyOf(product: product) ?? ""
-    }
 }
 
 private extension PaymentsTransfersFlowReducerFactoryComposer {

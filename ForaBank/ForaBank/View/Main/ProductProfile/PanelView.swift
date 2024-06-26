@@ -34,5 +34,5 @@ struct PanelView: View {
 
 extension PanelView {
     
-    typealias Event = ProductNavigationStateManager.ButtonEvent
+    typealias Event = ProductProfileFlowManager.ButtonEvent
 }
