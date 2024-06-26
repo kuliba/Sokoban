@@ -1182,7 +1182,14 @@ private extension ProductProfileViewModel {
                             guard let card = productData?.asCard else {
                                 return
                             }
-                            createCardGuardianPanel(card)
+                            let panel = productProfileViewModelFactory.makeCardGuardianPanel(card)
+                            
+                            switch panel {
+                            case let .bottomSheet(buttons):
+                                bottomSheet = .init(type: .optionsPanelNew(buttons))
+                            case let .fullScreen(buttons):
+                                link = .controlPanel(buttons)
+                            }
                             
                         case .account:
                             
@@ -1992,6 +1999,12 @@ extension ProductProfileViewModel {
         }
     }
     
+    enum CardGuardianPanelKind {
+        
+        case bottomSheet([PanelButton.Details])
+        case fullScreen([PanelButton.Details])
+    }
+    
     struct BottomSheet: BottomSheetCustomizable {
         
         let id = UUID()
@@ -2026,6 +2039,7 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
+        case controlPanel([PanelButton.Details])
     }
     
     struct Sheet: Identifiable {

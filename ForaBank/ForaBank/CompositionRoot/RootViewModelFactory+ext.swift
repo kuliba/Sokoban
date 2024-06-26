@@ -149,6 +149,17 @@ extension RootViewModelFactory {
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
 
+        let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = { card in
+            
+            let buttons: [PanelButton.Details] = .cardGuardian(card)
+
+            if changeSVCardLimitsFlag.isActive {
+                return .fullScreen(buttons)
+            } else {
+                return .bottomSheet(buttons)
+            }
+        }
+
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -160,7 +171,8 @@ extension RootViewModelFactory {
             unblockCardServices: unblockCardServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
-            productNavigationStateManager: productNavigationStateManager, 
+            productNavigationStateManager: productNavigationStateManager,
+            makeCardGuardianPanel: makeCardGuardianPanel,
             updateInfoStatusFlag: updateInfoStatusFlag
         )
         
@@ -332,6 +344,7 @@ extension ProductProfileViewModel {
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         productNavigationStateManager: ProductProfileFlowManager,
+        makeCardGuardianPanel: @escaping ProductProfileViewModelFactory.MakeCardGuardianPanel,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> MakeProductProfileViewModel {
         
@@ -349,6 +362,7 @@ extension ProductProfileViewModel {
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager,
+                makeCardGuardianPanel: makeCardGuardianPanel,
                 updateInfoStatusFlag: updateInfoStatusFlag
             )
             
@@ -399,7 +413,8 @@ extension ProductProfileViewModel {
                 },
                 makeInformerDataUpdateFailure: {
                     updateInfoStatusFlag.isActive ? .updateFailureInfo : nil
-                }
+                }, 
+                makeCardGuardianPanel: makeCardGuardianPanel
             )
             
             return .init(

@@ -361,8 +361,10 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
         XCTAssertNil(sut.optionsPannel)
 
-        sut.createCardGuardianPanel(product)
+        sut.buttons.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped.init(buttonType: .bottomRight))
         
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+
         XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
         XCTAssertNil(sut.optionsPannel)
 
@@ -400,8 +402,10 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNil(sut.alert)
         XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
         
-        sut.createCardGuardianPanel(product)
+        sut.buttons.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped.init(buttonType: .bottomRight))
         
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+
         XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
 
         sut.event(.init(productID: product.id, type: .cardGuardian))
@@ -438,8 +442,10 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNil(sut.alert)
         XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
 
-        sut.createCardGuardianPanel(product)
+        sut.buttons.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped.init(buttonType: .bottomRight))
         
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+
         XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
         XCTAssertTrue(sut.optionsPanelNew.containsTitle("Разблокировать"))
 
@@ -476,8 +482,10 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
         XCTAssertNil(sut.alert)
 
-        sut.createCardGuardianPanel(product)
+        sut.buttons.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped.init(buttonType: .bottomRight))
         
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+
         XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
         XCTAssertNil(sut.alert)
         
@@ -504,8 +512,10 @@ final class ProductProfileViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(sut.optionsPanelNew.count, 0)
 
-        sut.createCardGuardianPanel(product)
+        sut.buttons.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped.init(buttonType: .bottomRight))
         
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.4)
+
         XCTAssertNoDiff(sut.optionsPanelNew.count, 3)
         XCTAssertNil(sut.fullScreenCoverState)
         
@@ -859,6 +869,8 @@ private extension ProductProfileViewModel {
         case let .myProducts(viewModel):
             return viewModel
         case let .paymentsTransfers(viewModel):
+            return viewModel
+        case let .controlPanel(viewModel):
             return viewModel
         }
     }
