@@ -196,7 +196,6 @@ extension Model {
                         
                         //MARK: Kpp Parameter
                         let kppParameter = createKppParameterInput(id: kppParameterId, value: suggestedCompanies[0].kpp, validator: kppParameterValidator)
-
                         parameters.append(kppParameter)
                     }
                     
@@ -222,7 +221,7 @@ extension Model {
                             placeholder: "Начните ввод для поиска",
                             options: options,
                             description: "Выберите из \(options.count)",
-                            validator: validateKppParameter(innValue.count),
+                            validator: kppParameterValidator,
                             keyboardType: .number
                         )
                         parameters.append(kppParameterSelect)
@@ -388,29 +387,34 @@ extension Model {
         kppParameterId: String
     ) -> Payments.Operation.Step {
         
-        let filteredParameters: [PaymentsParameterRepresentable] = innValueCount <= 10
-            ? parameters
-            : parameters.filter { $0.id != kppParameterId }
+        let visible = innValueCount <= 10
+            ? parameters.map { $0.id }
+            : parameters.filter { $0.id != kppParameterId }.map { $0.id }
         
-        let parameterIds = filteredParameters.map { $0.id }
+        let required = parameters.filter { $0.id != kppParameterId }.map { $0.id }
         
         return .init(
             parameters: parameters,
-            front: .init(visible: parameterIds, isCompleted: isCompleted),
-            back: .init(stage: .remote(.start), required: parameterIds, processed: nil)
+            front: .init(visible: visible, isCompleted: isCompleted),
+            back: .init(stage: .remote(.start), required: required, processed: nil)
         )
     }
     
     // MARK: - Case 2
+    
     func validateKppParameter(_ innCount: Int) -> Payments.Validation.RulesSystem {
         
         if innCount <= 10 {
             
             var rules = [any PaymentsValidationRulesSystemRule]()
-            
-            rules.append(Payments.Validation.LengthLimitsRule(lengthLimits: [9], actions: [.post: .warning("Должен состоять из 9 цифр.")]))
-            
-            rules.append(Payments.Validation.RegExpRule(regExp: "^[0-9]\\d*$", actions: [.post: .warning("Введено некорректное значение")]))
+            rules.append(Payments.Validation.OptionalRegExpRule(
+                regExp: "^\\d{9}$",
+                actions: [.post: .warning("Должен состоять из 9 цифр.")]
+            ))
+            rules.append(Payments.Validation.OptionalRegExpRule(
+                regExp: "^[0-9]\\d*$",
+                actions: [.post: .warning("Введено некорректное значение")]
+            ))
             
             return .init(rules: rules)
             

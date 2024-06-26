@@ -10,19 +10,19 @@ import XCTest
 
 final class Model_RequisitesTests: XCTestCase {
     
-    func testValidateKppRulesWhenInnCountLessThanOrEqualTo10() {
+    func testValidateKppRulesWhenInnCountLessThanOrEqualTo10() throws {
         
         let rules = makeSUT().validateKppParameter(10)
         
         XCTAssertEqual(rules.rules.count, 2)
         
-        let lengthRule = rules.rules[0] as! Payments.Validation.LengthLimitsRule
-        XCTAssertEqual(lengthRule.lengthLimits, [9])
+        let lengthRule = try XCTUnwrap(rules.rules[0] as? Payments.Validation.OptionalRegExpRule)
+        XCTAssertEqual(lengthRule.regExp, "^\\d{9}$")
         
-        let regexpRule = rules.rules[1] as! Payments.Validation.RegExpRule
+        let regexpRule = try XCTUnwrap(rules.rules[1] as? Payments.Validation.OptionalRegExpRule)
         XCTAssertEqual(regexpRule.regExp, "^[0-9]\\d*$")
     }
-    
+
     func testValidateKppRulesWhenInnCountGreaterThan10() {
         
         let rules = makeSUT().validateKppParameter(12)
@@ -94,7 +94,7 @@ final class Model_RequisitesTests: XCTestCase {
         XCTAssertEqual(step.front.visible.count, 3)
         XCTAssertEqual(step.front.visible, ["param1", "kppParam", "param3"])
         XCTAssertFalse(step.front.isCompleted)
-        XCTAssertEqual(step.back.required, ["param1", "kppParam", "param3"])
+        XCTAssertEqual(step.back.required, ["param1", "param3"])
         XCTAssertNil(step.back.processed)
         XCTAssertEqual(step.back.stage, .remote(.start))
     }
