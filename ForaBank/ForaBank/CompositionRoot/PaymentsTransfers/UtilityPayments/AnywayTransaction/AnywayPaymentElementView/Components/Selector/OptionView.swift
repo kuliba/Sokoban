@@ -8,15 +8,24 @@
 import AnywayPaymentDomain
 import SwiftUI
 
-struct OptionView: View {
+struct OptionView<IconView: View>: View {
     
     let option: Option
+    let makeIconView: () -> IconView
     
     var body: some View {
-        
-        Text(option.value)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .contentShape(Rectangle())
+
+        HStack(alignment: .top, spacing: 16) {
+            
+            makeIconView()
+                .foregroundColor(.textTertiary)
+                .frame(width: 24, height: 24)
+            
+            Text(option.value)
+                .foregroundColor(.textSecondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .contentShape(Rectangle())
     }
 }
 
