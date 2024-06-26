@@ -164,40 +164,43 @@ struct ProductProfileView: View {
             .sheet(
                 modal: viewModel.historyState,
                 dismissModal: { viewModel.historyState?.showSheet = false },
-                content: { historyState in
-                    
-                    VStack(spacing: 15) {
-                        if let state = viewModel.historyState {
-                            
-                            switch state.buttonAction {
-                            case .calendar:
-                                
-                                Text("Calendar")
-                                
-                                Button(action: { viewModel.event(.history(.calendar(Date()))) }, label: {
-                                    Text("setup date")
-                                })
-                                
-                                Button(action: { viewModel.event(.history(.calendar(nil))) }, label: {
-                                    Text("clear date")
-                                })
-                                
-                            case .filter:
-                                
-                                Text("Filter")
-                                
-                                Button(action: { viewModel.event(.history(.filter([.debit]))) }) {
-                                    Text("setup debit filter")
-                                }
-                                
-                                Button(action: { viewModel.event(.history(.filter(nil))) }, label: {
-                                    Text("clear filters")
-                                })
-                            }
-                        }
-                    }
-                }
+                content: { historyState in historySheetContent() }
             )
+    }
+    
+    private func historySheetContent() -> some View {
+        
+        VStack(spacing: 15) {
+            
+            if let state = viewModel.historyState {
+                
+                switch state.buttonAction {
+                case .calendar:
+                    
+                    Text("Calendar")
+                    
+                    Button(action: { viewModel.event(.history(.calendar(Date()))) }, label: {
+                        Text("setup date")
+                    })
+                    
+                    Button(action: { viewModel.event(.history(.calendar(nil))) }, label: {
+                        Text("clear date")
+                    })
+                    
+                case .filter:
+                    
+                    Text("Filter")
+                    
+                    Button(action: { viewModel.event(.history(.filter([.debit]))) }) {
+                        Text("setup debit filter")
+                    }
+                    
+                    Button(action: { viewModel.event(.history(.filter(nil))) }, label: {
+                        Text("clear filters")
+                    })
+                }
+            }
+        }
     }
     
     @ViewBuilder
