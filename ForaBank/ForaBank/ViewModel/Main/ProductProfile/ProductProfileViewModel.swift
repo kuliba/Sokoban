@@ -1178,11 +1178,7 @@ private extension ProductProfileViewModel {
                         
                         switch product.productType {
                         case .card:
-                            
-                            guard let card = productData?.asCard else {
-                                return
-                            }
-                            createCardGuardianPanel(card)
+                            createCardGuardianPanel(productData)
                             
                         case .account:
                             
@@ -1965,7 +1961,25 @@ private extension ProductProfileViewModel {
         )
     }
 }
+// MARK: - create panel
 
+extension ProductProfileViewModel {
+    
+    func createCardGuardianPanel(_ product: ProductData?) {
+        
+        guard let card = product?.asCard else {
+            return
+        }
+        let panel = productProfileViewModelFactory.makeCardGuardianPanel(card)
+        
+        switch panel {
+        case let .bottomSheet(buttons):
+            bottomSheet = .init(type: .optionsPanelNew(buttons))
+        case let .fullScreen(buttons):
+            link = .controlPanel(buttons)
+        }
+    }
+}
 //MARK: - Types
 
 extension ProductProfileViewModel {
@@ -1990,6 +2004,12 @@ extension ProductProfileViewModel {
             case calendar
             case filter
         }
+    }
+    
+    enum CardGuardianPanelKind {
+        
+        case bottomSheet([PanelButton.Details])
+        case fullScreen([PanelButton.Details])
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -2026,6 +2046,7 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
+        case controlPanel([PanelButton.Details])
     }
     
     struct Sheet: Identifiable {
