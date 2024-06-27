@@ -173,6 +173,9 @@ struct ProductProfileView: View {
     ) -> some View {
         
         switch link {
+        case let .controlPanel(items):
+            PanelView(items: items, event: viewModel.event)
+
         case let .productInfo(viewModel):
             InfoProductView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.bottom)

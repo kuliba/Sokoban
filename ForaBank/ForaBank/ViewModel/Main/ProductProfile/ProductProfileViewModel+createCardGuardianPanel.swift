@@ -12,27 +12,6 @@ extension ProductProfileViewModel {
     enum PanelButtonType {
         case block, unblock, changePin, visibility
     }
-    
-    func createCardGuardianPanel(_ card: ProductCardData) {
-        
-        let buttons: [PanelButton.Details] = {
-            
-            switch card.cardType {
-            case .additionalOther:
-                return [
-                    .createCardGuardianButton(by: card),
-                    .createVisibilityButton(by: card)
-                ]
-            default:
-                return [
-                    .createCardGuardianButton(by: card),
-                    .createChangePinButton(by: card),
-                    .createVisibilityButton(by: card)
-                ]
-            }
-        }()
-        bottomSheet = .init(type: .optionsPanelNew(buttons))
-    }
 }
 
 private extension String {
@@ -114,5 +93,25 @@ private extension PanelButton.Details {
             icon: .ic24Pass,
             subtitle: nil,
             kind: .changePin)
+    }
+}
+
+extension Array where Element == PanelButton.Details {
+    
+    static func cardGuardian(_ card: ProductCardData) -> Self {
+        
+        switch card.cardType {
+        case .additionalOther:
+            return [
+                .createCardGuardianButton(by: card),
+                .createVisibilityButton(by: card)
+            ]
+        default:
+            return [
+                .createCardGuardianButton(by: card),
+                .createChangePinButton(by: card),
+                .createVisibilityButton(by: card)
+            ]
+        }
     }
 }

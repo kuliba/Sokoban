@@ -12,7 +12,8 @@ struct ProductProfileViewModelFactory {
     let makeInfoProductViewModel: (Parameters) -> InfoProductViewModel
     let makeAlert: (AlertParameters) -> Alert.ViewModel
     let makeInformerDataUpdateFailure: MakeInformerDataUpdateFailure
-
+    let makeCardGuardianPanel: MakeCardGuardianPanel
+    
     struct Parameters {
         let model: Model
         let productData: ProductData
@@ -53,9 +54,14 @@ struct ProductProfileViewModelFactory {
             self.secondaryButton = secondaryButton
         }
     }
+}
 
+extension ProductProfileViewModelFactory {
+    
     typealias Event = AlertEvent
     typealias Events = (Event) -> Void
+
+    typealias MakeCardGuardianPanel = (ProductCardData) -> ProductProfileViewModel.CardGuardianPanelKind
 }
 
 extension ProductProfileViewModelFactory {
@@ -70,7 +76,8 @@ extension ProductProfileViewModelFactory {
             primary: $0.primaryButton,
             secondary: $0.secondaryButton)
         },
-        makeInformerDataUpdateFailure: { nil }
+        makeInformerDataUpdateFailure: { nil }, 
+        makeCardGuardianPanel: { .bottomSheet(.cardGuardian($0))}
     )
 }
 
@@ -95,4 +102,9 @@ private extension String {
             return nil
         }
     }
+}
+
+extension ProductProfileViewModelFactory {
+    
+    static let makeCardGuardianPanelPreview: MakeCardGuardianPanel = { card in .bottomSheet(.cardGuardian(card))}
 }
