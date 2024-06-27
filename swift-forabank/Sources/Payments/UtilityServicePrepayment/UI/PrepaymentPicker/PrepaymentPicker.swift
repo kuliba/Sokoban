@@ -106,7 +106,7 @@ private extension PrepaymentPicker {
         
         if !operators.isEmpty {
             
-            LazyVStack(alignment: .leading, spacing: 8) {
+            LazyVStack(alignment: .leading, spacing: 13) {
                 
                 ForEach(operators, content: _operatorView)
             }
