@@ -38,7 +38,7 @@ extension ProductProfileDetailView {
                     primaryColor: viewModel.primaryColor,
                     secondaryColor: viewModel.secondaryColor
                 )
-                    .frame(width: 96, height: 96)
+                .frame(width: 96, height: 96)
                 
                 Button(action: viewModel.action) {
                     
@@ -47,7 +47,7 @@ extension ProductProfileDetailView {
                         Circle()
                             .frame(width: 40, height: 40)
                             .foregroundColor(.mainColorsBlackMedium)
-                            
+                        
                         Image.ic24AlertCircle
                             .resizable()
                             .frame(width: 24, height: 24)
