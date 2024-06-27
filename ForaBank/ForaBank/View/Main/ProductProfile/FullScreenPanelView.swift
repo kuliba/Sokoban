@@ -20,7 +20,9 @@ struct FullScreenPanelView: View {
                 ForEach(items, id: \.title, content: view)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            Spacer()
+            
+            Text("Просмотр и изменение лимитов")
+                .frame(maxHeight: .infinity)
         }
         .padding(.horizontal, config.paddings.horizontal)
         .padding(.top, config.paddings.top)
