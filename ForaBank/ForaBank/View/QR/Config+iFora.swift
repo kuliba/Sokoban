@@ -15,7 +15,7 @@ extension SberQR.Config {
         background: .init(
             color: .mainColorsGrayLightest
         ),
-        button: .iFora, 
+        button: .iForaFooter,
         carousel: .iForaSmall,
         info: .iFora,
         productSelect: .iFora
@@ -30,7 +30,7 @@ extension AmountComponent.AmountConfig {
             textColor: .white
         ),
         backgroundColor: .mainColorsBlackMedium,
-        button: .iFora,
+        button: .iForaFooter,
         dividerColor: .bordersDivider,
         title: .init(
             textFont: .textBodySR12160(),
