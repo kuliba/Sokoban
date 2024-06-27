@@ -38,7 +38,7 @@ import UtilityServicePrepaymentUI
     static let iFora: Self = .init(
         title: .init(
             textFont: .textH3Sb18240(),
-            textColor: .black
+            textColor: .textSecondary
         ),
         description: .init(
             textFont: .textH4R16240(),
