@@ -184,7 +184,7 @@ struct ProductProfileView: View {
                                 .foregroundColor(.textSecondary)
                                 .font(.textH3M18240())
 
-                            Text(viewModel.navTitle)
+                            Text(viewModel.navigationTitleForControlPanel)
                                 .foregroundColor(.textPlaceholder)
                                 .font(.textBodyMR14180())
                         }

@@ -51,9 +51,7 @@ class ProductProfileViewModel: ObservableObject {
     var rootActions: RootViewModel.RootActions?
     var rootView: String
     var contactsAction: () -> Void = { }
-    var navTitle: String {
-        "\(productData?.navigationBarName ?? "")  •\(productData?.displayNumber ?? "")"
-    }
+    var navigationTitleForControlPanel: String { productData?.navigationTitleForControlPanel ?? ""}
     
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
