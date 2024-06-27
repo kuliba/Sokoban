@@ -33,6 +33,13 @@ class Model {
     
     //MARK: Sticker
     let stickerLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
+    
+    //MARK: SVCardLimits
+    let mainCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
+    let regularCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
+    let additionalSelfCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
+    let additionalSelfAccOwnCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
+    let additionalOtherCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
 
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
@@ -197,6 +204,11 @@ class Model {
         self.transferLanding = .init(.success(.none))
         self.orderCardLanding = .init(.success(.none))
         self.stickerLanding = .init(.success(.none))
+        self.mainCardLanding = .init(.success(.none))
+        self.regularCardLanding = .init(.success(.none))
+        self.additionalSelfCardLanding = .init(.success(.none))
+        self.additionalSelfAccOwnCardLanding = .init(.success(.none))
+        self.additionalOtherCardLanding = .init(.success(.none))
         self.rates = .init([])
         self.ratesUpdating = .init([])
         self.catalogProducts = .init([])
@@ -1502,6 +1514,31 @@ private extension LocalAgentProtocol {
             return load(type: LocalAgentDomain.AbroadSticker.self)
                 .map(\.landing)
                 .map(UILanding.init)
+            
+        case .main:
+            return load(type: LocalAgentDomain.MainCard.self)
+                .map(\.landing)
+                .map(UILanding.init)
+
+        case .regular:
+            return load(type: LocalAgentDomain.RegularCard.self)
+                .map(\.landing)
+                .map(UILanding.init)
+            
+        case .additionalSelf:
+            return load(type: LocalAgentDomain.AdditionalSelfCard.self)
+                .map(\.landing)
+                .map(UILanding.init)
+            
+        case .additionalSelfAccOwn:
+            return load(type: LocalAgentDomain.AdditionalSelfAccOwnCard.self)
+                .map(\.landing)
+                .map(UILanding.init)
+
+        case .additionalOther:
+            return load(type: LocalAgentDomain.AdditionalOtherCard.self)
+                .map(\.landing)
+                .map(UILanding.init)
         }
     }
 }
@@ -1529,6 +1566,31 @@ extension LocalAgentDomain {
     }
     
     struct AbroadSticker: Codable {
+        
+        let landing: Landing
+    }
+
+    struct MainCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct RegularCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct AdditionalSelfCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct AdditionalSelfAccOwnCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct AdditionalOtherCard: Codable {
         
         let landing: Landing
     }

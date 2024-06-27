@@ -89,6 +89,17 @@ private extension Model {
                 return self.transferLanding
             case .sticker:
                 return self.stickerLanding
+                
+            case .additionalOther:
+                return self.additionalOtherCardLanding
+            case .additionalSelf:
+                return self.additionalSelfCardLanding
+            case .additionalSelfAccOwn:
+                return self.additionalSelfAccOwnCardLanding
+            case .main:
+                return self.mainCardLanding
+            case .regular:
+                return self.regularCardLanding
             }
         }()
         return currentValueSubject
@@ -173,16 +184,13 @@ private extension Model {
         
         let httpClient: HTTPClient = {
             switch abroadType {
-            case .sticker:
-                return self.authenticatedHTTPClient()
-            default:
+            case .orderCard, .transfer:
                 return HTTPFactory.loggingNoSharedCookieStoreURLSessionHTTPClient()
+            default:
+                return self.authenticatedHTTPClient()
             }
         }()
-        
-        // TODO:
-        /* let serial = localAgent.serial(for type: T.Type) -> String? {*/
-        
+                
         let cache: Services.Cache = { codableLanding in
             
             let landingUI = UILanding(codableLanding)
@@ -200,6 +208,17 @@ private extension Model {
                     return LocalAgentDomain.AbroadOrderCard(landing: codableLanding)
                 case .sticker:
                     return LocalAgentDomain.AbroadSticker(landing: codableLanding)
+
+                case .additionalOther:
+                    return LocalAgentDomain.AdditionalOtherCard(landing: codableLanding)
+                case .additionalSelf:
+                    return LocalAgentDomain.AdditionalSelfCard(landing: codableLanding)
+                case .additionalSelfAccOwn:
+                    return LocalAgentDomain.AdditionalSelfAccOwnCard(landing: codableLanding)
+                case .main:
+                    return LocalAgentDomain.MainCard(landing: codableLanding)
+                case .regular:
+                    return LocalAgentDomain.RegularCard(landing: codableLanding)
                 }
             }()
             
@@ -210,5 +229,4 @@ private extension Model {
             httpClient: httpClient,
             withCache: cache)
     }
-    
 }
