@@ -34,13 +34,6 @@ class Model {
     //MARK: Sticker
     let stickerLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
     
-    //MARK: SVCardLimits
-    let mainCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
-    let regularCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
-    let additionalSelfCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
-    let additionalSelfAccOwnCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
-    let additionalOtherCardLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
-
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
     let productsUpdating: CurrentValueSubject<[ProductType], Never>
@@ -204,11 +197,6 @@ class Model {
         self.transferLanding = .init(.success(.none))
         self.orderCardLanding = .init(.success(.none))
         self.stickerLanding = .init(.success(.none))
-        self.mainCardLanding = .init(.success(.none))
-        self.regularCardLanding = .init(.success(.none))
-        self.additionalSelfCardLanding = .init(.success(.none))
-        self.additionalSelfAccOwnCardLanding = .init(.success(.none))
-        self.additionalOtherCardLanding = .init(.success(.none))
         self.rates = .init([])
         self.ratesUpdating = .init([])
         self.catalogProducts = .init([])

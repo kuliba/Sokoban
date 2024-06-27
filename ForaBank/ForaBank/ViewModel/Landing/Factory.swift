@@ -89,17 +89,8 @@ private extension Model {
                 return self.transferLanding
             case .sticker:
                 return self.stickerLanding
-                
-            case .additionalOther:
-                return self.additionalOtherCardLanding
-            case .additionalSelf:
-                return self.additionalSelfCardLanding
-            case .additionalSelfAccOwn:
-                return self.additionalSelfAccOwnCardLanding
-            case .main:
-                return self.mainCardLanding
-            case .regular:
-                return self.regularCardLanding
+            default:
+                return .init(.failure(NSError(domain: "", code: 0, userInfo: [ NSLocalizedDescriptionKey: "No CurrentValueSubject"])))
             }
         }()
         return currentValueSubject
