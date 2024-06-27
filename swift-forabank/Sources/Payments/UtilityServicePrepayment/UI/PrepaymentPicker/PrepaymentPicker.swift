@@ -63,6 +63,9 @@ private extension PrepaymentPicker {
         VStack(spacing: 16) {
             
             factory.makeSearchView()
+                .padding(.horizontal, 16)
+            
+            Divider()
             
             ScrollView(.vertical, showsIndicators: false) {
                 
@@ -73,9 +76,9 @@ private extension PrepaymentPicker {
                     factory.makeFooterView(state.operators.isEmpty)
                 }
             }
+            .padding(.horizontal, 16)
         }
-        .padding(.horizontal, 16)
-        .padding(.top, 8)
+        .padding(.top, 12)
         .padding(.bottom, 20)
     }
     

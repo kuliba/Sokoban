@@ -90,6 +90,7 @@ private extension AnywayPaymentElementView {
             
         case let .product(viewModel):
             ProductSelectWrapperView(viewModel: viewModel, config: .iFora)
+                .paddedRoundedBackground()
         }
     }
 }

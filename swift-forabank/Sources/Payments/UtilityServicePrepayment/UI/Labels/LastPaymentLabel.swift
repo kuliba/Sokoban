@@ -29,7 +29,7 @@ where IconView: View {
     
     public var body: some View {
         
-        VStack {
+        VStack(spacing: 8) {
             
             iconView
                 .frame(width: 40, height: 40)

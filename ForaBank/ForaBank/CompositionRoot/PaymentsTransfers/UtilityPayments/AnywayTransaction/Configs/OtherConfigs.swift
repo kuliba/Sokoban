@@ -37,7 +37,7 @@ import UtilityServicePrepaymentUI
     
     static let iFora: Self = .init(
         title: .init(
-            textFont: .body,
+            textFont: .textH3Sb18240(),
             textColor: .black
         ),
         description: .init(
@@ -51,13 +51,13 @@ import UtilityServicePrepaymentUI
         background: .mainColorsGrayLightest,
         requisitesButtonTitle: "Оплатить по реквизитам",
         requisitesButtonConfig: .init(
-            titleFont: .body,
+            titleFont: .textH3Sb18240(),
             titleForeground: .textSecondary,
             backgroundColor: .buttonSecondary
         ),
         addCompanyButtonTitle: "Добавить организацию",
         addCompanyButtonConfiguration: .init(
-            titleFont: .body,
+            titleFont: .textH3Sb18240(),
             titleForeground: .textSecondary,
             backgroundColor: .buttonSecondary
         )
