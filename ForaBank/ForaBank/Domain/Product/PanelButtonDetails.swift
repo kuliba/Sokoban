@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PanelButtonDetails {
     
-    let ID: ProductData.ID
+    let id: ProductData.ID
     let title: String
     let icon: Image?
     let subtitle: String?
@@ -36,19 +36,19 @@ extension PanelButtonDetails {
     
         switch kind {
         case .accountDetails:
-            return .init(productID: ID, type: .accountDetails)
+            return .init(productID: id, type: .accountDetails)
         case .accountStatement:
-            return .init(productID: ID, type: .accountStatement)
+            return .init(productID: id, type: .accountStatement)
         case .accountOurBank:
-            return .init(productID: ID, type: .accountOurBank)
+            return .init(productID: id, type: .accountOurBank)
         case .accountAnotherBank:
-            return .init(productID: ID, type: .accountAnotherBank)
+            return .init(productID: id, type: .accountAnotherBank)
         case .cardGuardian:
-            return .init(productID: ID, type: .cardGuardian)
+            return .init(productID: id, type: .cardGuardian)
         case .changePin:
-            return .init(productID: ID, type: .changePin)
+            return .init(productID: id, type: .changePin)
         case .visibility:
-            return .init(productID: ID, type: .visibility)
+            return .init(productID: id, type: .visibility)
         }
     }
 }

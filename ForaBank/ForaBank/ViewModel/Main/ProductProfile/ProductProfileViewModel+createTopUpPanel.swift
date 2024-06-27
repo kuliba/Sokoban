@@ -13,14 +13,14 @@ extension ProductProfileViewModel {
         
         let buttons: [PanelButtonDetails] = [
             .init(
-                ID: card.id,
+                id: card.id,
                 title: .accountAnotherBankTitle(),
                 icon: .ic24Sbp,
                 subtitle: .accountAnotherBankSubtitle(by: card.cardType),
                 kind: .accountAnotherBank
             ),
             .init(
-                ID: card.id,
+                id: card.id,
                 title: .accountOurBankTitle(),
                 icon: .ic24Between,
                 subtitle: .accountOurBankSubtitle(by: card.cardType),

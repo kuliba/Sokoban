@@ -71,7 +71,7 @@ private extension PanelButtonDetails {
     static func createCardGuardianButton(by card: ProductCardData, _ flag: ChangeSVCardLimitsFlag) -> Self {
         
         return .init(
-            ID: card.id,
+            id: card.id,
             title: .cardGuardianTitle(by: card.statusCard, flag),
             icon: .cardGuardian(by: card.statusCard),
             subtitle: nil,
@@ -81,7 +81,7 @@ private extension PanelButtonDetails {
     static func createVisibilityButton(by card: ProductCardData) -> Self {
         
         return .init(
-            ID: card.id,
+            id: card.id,
             title: .visibilityTitle(by: card.isVisible),
             icon: .visibility(by: card.isVisible),
             subtitle: .visibilitySubtitle(by: card.isVisible),
@@ -91,7 +91,7 @@ private extension PanelButtonDetails {
     static func createChangePinButton(by card: ProductCardData) -> Self {
         
         return .init(
-            ID: card.id,
+            id: card.id,
             title: .changePinTitle(),
             icon: .ic24Pass,
             subtitle: nil,
