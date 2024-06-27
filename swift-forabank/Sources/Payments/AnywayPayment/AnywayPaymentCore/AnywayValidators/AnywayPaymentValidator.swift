@@ -53,7 +53,7 @@ private extension AnywayPaymentValidator {
     ) -> AnywayPaymentValidationError? {
         
         guard let widget = payment.elements.first(where: { $0.id == .widgetID(.otp) }),
-              case let .widget(.otp(otp)) = widget
+              case let .widget(.otp(otp, _)) = widget
         else { return nil }
         
         guard let string = otp.map({ "\($0)" }),

@@ -22,7 +22,7 @@ extension AnywayPayment {
         elements.appendParameters(from: update.parameters, with: outline)
         
         elements.adjustWidget(.product(.init(outline.core)), on: update.details.control.needSum && !update.details.control.isMultiSum)
-        elements.adjustWidget(.otp(nil), on: update.details.control.needOTP)
+        elements.adjustWidget(.otp(nil, nil), on: update.details.control.needOTP)
         
         let footer = footer.update(with: update, and: outline)
         

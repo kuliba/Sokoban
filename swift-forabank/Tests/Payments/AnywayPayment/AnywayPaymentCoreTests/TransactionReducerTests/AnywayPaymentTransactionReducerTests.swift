@@ -48,6 +48,8 @@ class AnywayPaymentTransactionReducerTests: XCTestCase {
         assert(.dismissRecoverableError, on: state, effect: nil)
     }
     
+    // MARK: - add tests for OTP
+    
     // TODO: add integration tests
     
     // MARK: - helpers tests

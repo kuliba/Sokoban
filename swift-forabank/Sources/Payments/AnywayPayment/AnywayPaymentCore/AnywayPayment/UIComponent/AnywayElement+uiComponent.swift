@@ -82,7 +82,7 @@ extension AnywayElement.UIComponent {
     
     public enum Widget: Equatable {
         
-        case otp(Int?)
+        case otp(Int?, String?)
         case productPicker(ProductID, ProductType)
         
         public typealias ProductID = AnywayElement.Widget.Product.ProductID
@@ -200,8 +200,8 @@ private extension AnywayElement.Widget {
         case let .product(core):
             return .widget(.productPicker(core.productID, core.productType))
             
-        case let .otp(otp):
-            return .widget(.otp(otp))
+        case let .otp(otp, warning):
+            return .widget(.otp(otp, warning))
         }
     }
 }

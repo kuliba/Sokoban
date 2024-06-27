@@ -82,6 +82,7 @@ private extension AnywayPaymentElementView {
         case let .otp(viewModel):
             factory.widgetFactory.makeOTPView(viewModel)
                 .paddedRoundedBackground()
+                .keyboardType(.numberPad)
             
         case let .simpleOTP(viewModel):
             SimpleOTPWrapperView(viewModel: viewModel)

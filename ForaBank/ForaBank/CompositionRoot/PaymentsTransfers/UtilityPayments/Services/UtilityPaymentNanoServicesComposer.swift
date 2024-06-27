@@ -461,7 +461,11 @@ extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
     
     static let step3: Self = .make(
         parametersForNextStep: [
-            .make(id: "SumSTrs", title: "Сумма (\"11\" = ok, \"22\" = fraud, другое = ошибка)")
+            .make(
+                dataType: .number,
+                id: "SumSTrs",
+                title: "Сумма (\"11\" = ok, \"22\" = fraud, другое = ошибка)"
+            )
         ]
     )
     

@@ -136,7 +136,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         assertState(.widget(.otp(nonDigitString)), on: state) {
             
-            $0.elements = [.widget(.otp(nil))]
+            $0.elements = [makeOTP(nil)]
         }
     }
     
@@ -146,7 +146,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         assertState(.widget(.otp("abc3578")), on: state) {
             
-            $0.elements = [.widget(.otp(3578))]
+            $0.elements = [makeOTP(3578)]
         }
     }
     
@@ -156,7 +156,7 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         assertState(.widget(.otp("abc3578_12345")), on: state) {
             
-            $0.elements = [.widget(.otp(357812))]
+            $0.elements = [makeOTP(357812)]
         }
     }
     
@@ -173,7 +173,105 @@ final class AnywayPaymentReducerTests: XCTestCase {
         
         assertState(.widget(.otp("12345")), on: state) {
             
-            $0.elements = [.widget(.otp(12345))]
+            $0.elements = [makeOTP(12345)]
+        }
+    }
+    
+    func test_widget_otpWarning_shouldNotDeliverEffectOnNilWarning() {
+        
+        let state = makeState(elements: [.widget(anyOTP())])
+        
+        assert(.widget(.otpWarning(nil)), on: state, effect: nil)
+    }
+    
+    func test_widget_otpWarning_shouldNotDeliverEffectOnNonNilWarning() {
+        
+        let state = makeState(elements: [.widget(anyOTP())])
+        
+        assert(.widget(.otpWarning(anyMessage())), on: state, effect: nil)
+    }
+    
+    func test_widget_otpWarning_shouldChangeToNilOTPWarningStateOnNilValueNilWarning() {
+        
+        let state = makeState(elements: [.widget(anyOTP(value: nil, warning: nil))])
+        
+        assertState(.widget(.otpWarning(nil)), on: state) {
+            
+            $0.elements = [makeOTP(nil, warning: nil)]
+        }
+    }
+    
+    func test_widget_otpWarning_shouldChangToNileOTPWarningStateOnNonNilValueNilWarning() {
+        
+        let state = makeState(elements: [.widget(anyOTP(value: 12345, warning: nil))])
+        
+        assertState(.widget(.otpWarning(nil)), on: state) {
+            
+            $0.elements = [makeOTP(12345, warning: nil)]
+        }
+    }
+    
+    func test_widget_otpWarning_shouldChangeOTPWarningStateOnNilValueNilWarning() {
+        
+        let warning = anyMessage()
+        let state = makeState(elements: [.widget(anyOTP(value: nil, warning: nil))])
+        
+        assertState(.widget(.otpWarning(warning)), on: state) {
+            
+            $0.elements = [makeOTP(nil, warning: warning)]
+        }
+    }
+    
+    func test_widget_otpWarning_shouldChangeOTPWarningStateOnNonNilValueNilWarning() {
+        
+        let warning = anyMessage()
+        let state = makeState(elements: [.widget(anyOTP(value: 12345, warning: nil))])
+        
+        assertState(.widget(.otpWarning(warning)), on: state) {
+            
+            $0.elements = [makeOTP(12345, warning: warning)]
+        }
+    }
+    
+    func test_widget_otpWarning_shouldChangeToNilOTPWarningStateOnNilValueNonNilWarning() {
+        
+        let state = makeState(elements: [.widget(anyOTP(value: nil, warning: anyMessage()))])
+        
+        assertState(.widget(.otpWarning(nil)), on: state) {
+            
+            $0.elements = [makeOTP(nil, warning: nil)]
+        }
+    }
+    
+    func test_widget_otpWarning_shouldChangeToNilOTPWarningStateOnNonNilValueNonNilWarning() {
+        
+        let state = makeState(elements: [.widget(anyOTP(value: 12345, warning: anyMessage()))])
+        
+        assertState(.widget(.otpWarning(nil)), on: state) {
+            
+            $0.elements = [makeOTP(12345, warning: nil)]
+        }
+    }
+    
+    func test_widget_otpWarning_shouldChangeOTPWarningStateOnNilValueNonNilWarning() {
+        
+        let warning = anyMessage()
+        let state = makeState(elements: [.widget(anyOTP(value: nil, warning: anyMessage()))])
+        
+        assertState(.widget(.otpWarning(warning)), on: state) {
+            
+            $0.elements = [makeOTP(nil, warning: warning)]
+        }
+    }
+    
+    func test_widget_otpWarning_shouldChangeOTPWarningStateOnNonNilValueNonNilWarning() {
+        
+        let warning = anyMessage()
+        let state = makeState(elements: [.widget(anyOTP(value: 12345, warning: anyMessage()))])
+        
+        assertState(.widget(.otpWarning(warning)), on: state) {
+            
+            $0.elements = [makeOTP(12345, warning: warning)]
         }
     }
     
@@ -345,10 +443,11 @@ final class AnywayPaymentReducerTests: XCTestCase {
     }
     
     private func anyOTP(
-        value: Int? = generateRandom11DigitNumber()
+        value: Int? = generateRandom11DigitNumber(),
+        warning: String? = nil
     ) -> AnywayElement.Widget {
         
-        return .otp(value)
+        return .otp(value, warning)
     }
     
     private func anyOTP(
@@ -395,6 +494,14 @@ private func anyAmount(
 ) -> Decimal {
     
     return amount
+}
+
+private func makeOTP(
+    _ otp: Int? = nil,
+    warning: String? = nil
+) -> AnywayElement {
+    
+    return .widget(.otp(otp, warning))
 }
 
 private extension Array where Element == AnywayElement {

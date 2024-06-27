@@ -65,6 +65,9 @@ private extension AnywayPaymentReducer {
             let digits = otp.filter(\.isWholeNumber)
             state.update(otp: .init(digits.prefix(6)))
             
+        case let .otpWarning(warning):
+            state.update(otpWarning: warning)
+            
         case let .product(productID, productType, currency):
             state.update(with: productID, productType._productType, and: currency)
         }
@@ -125,7 +128,17 @@ private extension AnywayPayment {
               case .widget(.otp) = elements[index]
         else { return }
         
-        elements[index] = .widget(.otp(otp))
+        elements[index] = .widget(.otp(otp, nil))
+    }
+    
+    mutating func update(
+        otpWarning warning: String?
+    ) {
+        guard let index = elements.firstIndex(matching: .otp),
+              case let .widget(.otp(otp, _)) = elements[index]
+        else { return }
+        
+        elements[index] = .widget(.otp(otp, warning))
     }
 }
 

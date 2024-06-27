@@ -148,8 +148,24 @@ private extension AnywayPaymentFactoryComposer {
         return .init(
             viewModel: viewModel, 
             config: .iFora,
-            iconView: { self.makeIconView("sms") }
+            iconView: { self.makeIconView("sms") },
+            warningView: {
+                
+                OTPWarningView(text: viewModel.state.warning, config: .iFora)
+            }
         )
+    }
+}
+
+private extension OTPInputState {
+    
+    var warning: String? {
+        
+        guard case let .input(input) = status,
+              case let .failure(.serverError(warning)) = input.otpField.status
+        else { return nil }
+        
+        return warning
     }
 }
 

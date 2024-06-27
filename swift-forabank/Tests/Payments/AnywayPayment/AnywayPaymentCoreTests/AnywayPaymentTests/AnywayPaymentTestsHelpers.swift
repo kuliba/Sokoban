@@ -440,10 +440,11 @@ func makeAnywayPaymentWidgetElement(
 }
 
 func makeOTPWidget(
-    _ value: Int? = nil
+    _ value: Int? = nil,
+    warning: String? = nil
 ) -> AnywayElement.Widget {
     
-    return .otp(value)
+    return .otp(value, warning)
 }
 
 func makeAnywayPaymentWithoutOTP(
