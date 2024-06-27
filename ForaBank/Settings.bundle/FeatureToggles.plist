@@ -10,7 +10,7 @@
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
-			<string> Фильтр Истории Операций</string>
+			<string>Фильтр Истории Операций</string>
 			<key>Key</key>
 			<string>history_filter</string>
 			<key>DefaultValue</key>
