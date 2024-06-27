@@ -25,7 +25,7 @@ extension PaymentComponents.ButtonView {
                 placement: .bottom
             ),
             event: goToMain,
-            config: .iFora
+            config: .iForaMain
         )
     }
 }
