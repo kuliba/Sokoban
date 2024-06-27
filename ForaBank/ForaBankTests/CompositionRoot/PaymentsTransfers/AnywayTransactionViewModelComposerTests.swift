@@ -21,9 +21,10 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
         )
         
         sut.event(.dismissRecoverableError)
+        sut.event(.dismissRecoverableError)
+        sut.event(.dismissRecoverableError)
         
         XCTAssertNoDiff(statusSpy.values, [
-            .result(.failure(.updatePaymentFailure)),
             .result(.failure(.updatePaymentFailure)),
         ])
     }
