@@ -9,27 +9,26 @@ import SwiftUI
 
 struct FullScreenPanelView: View {
     
-    let items: [PanelButton.Details]
+    let items: [PanelButtonDetails]
     let event: (Event) -> Void
-    let config: PanelView.Config = .default
+    let config: FullScreenPanelView.Config = .default
     
     var body: some View {
         
-        VStack {
-            HStack(spacing: config.spacings.vstack) {
+        VStack(alignment: .leading) {
+            HStack {
                 ForEach(items, id: \.title, content: view)
             }
-            .frame(maxWidth: .infinity)
-            .padding(.leading, config.paddings.leading)
-            .padding(.trailing, config.paddings.trailing)
-            
+            .frame(maxWidth: .infinity, alignment: .leading)
             Spacer()
         }
+        .padding(.horizontal, config.paddings.horizontal)
+        .padding(.top, config.paddings.top)
     }
     
-    private func view(details: PanelButton.Details) -> some View {
+    private func view(details: PanelButtonDetails) -> some View {
         
-        PanelButton(
+        HorizontalPanelButton(
             details: details,
             event: { event(details.event()) },
             config: config)

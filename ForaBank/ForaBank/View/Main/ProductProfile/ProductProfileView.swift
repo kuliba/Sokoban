@@ -175,6 +175,21 @@ struct ProductProfileView: View {
         switch link {
         case let .controlPanel(items):
             FullScreenPanelView(items: items, event: viewModel.event)
+                .edgesIgnoringSafeArea(.bottom)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        VStack {
+                            Text("Управление")
+                                .foregroundColor(.textSecondary)
+                                .font(.textH3M18240())
+
+                            Text(viewModel.navTitle)
+                                .foregroundColor(.textPlaceholder)
+                                .font(.textBodyMR14180())
+                        }
+                    }
+                }
 
         case let .productInfo(viewModel):
             InfoProductView(viewModel: viewModel)

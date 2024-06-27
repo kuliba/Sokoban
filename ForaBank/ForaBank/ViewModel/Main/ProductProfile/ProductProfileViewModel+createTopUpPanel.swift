@@ -11,7 +11,7 @@ extension ProductProfileViewModel {
     
     func createTopUpPanel(_ card: ProductCardData) {
         
-        let buttons: [PanelButton.Details] = [
+        let buttons: [PanelButtonDetails] = [
             .init(
                 ID: card.id,
                 title: .accountAnotherBankTitle(),

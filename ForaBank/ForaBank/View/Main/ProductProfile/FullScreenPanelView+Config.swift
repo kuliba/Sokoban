@@ -20,15 +20,13 @@ extension FullScreenPanelView {
     
     struct Paddings {
         
-        let leading: CGFloat
-        let trailing: CGFloat
-        let subtitleLeading: CGFloat
+        let horizontal: CGFloat
+        let top: CGFloat
     }
     
     struct Fonts {
         
         let title: Font
-        let subtitle: Font
     }
     
     struct Colors {
@@ -52,11 +50,8 @@ extension FullScreenPanelView.Config {
             background: .bgIconGrayLightest,
             title: .textSecondary,
             subtitle: .textPlaceholder),
-        height: 40,
-        paddings: .init(
-            leading: 8,
-            trailing: 8,
-            subtitleLeading: 48),
+        height: 56,
+        paddings: .init(horizontal: 16, top: 30),
         spacings: .init(vstack: 24, hstack: 8),
-        fonts: .init(title: .textH4M16240(), subtitle: .textBodyMR14200()))
+        fonts: .init(title: .textBodySR12160()))
 }

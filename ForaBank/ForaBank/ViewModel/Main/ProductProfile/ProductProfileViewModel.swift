@@ -51,6 +51,9 @@ class ProductProfileViewModel: ObservableObject {
     var rootActions: RootViewModel.RootActions?
     var rootView: String
     var contactsAction: () -> Void = { }
+    var navTitle: String {
+        "\(productData?.navigationBarName ?? "")  •\(productData?.displayNumber ?? "")"
+    }
     
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
@@ -2008,8 +2011,8 @@ extension ProductProfileViewModel {
     
     enum CardGuardianPanelKind {
         
-        case bottomSheet([PanelButton.Details])
-        case fullScreen([PanelButton.Details])
+        case bottomSheet([PanelButtonDetails])
+        case fullScreen([PanelButtonDetails])
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -2030,7 +2033,7 @@ extension ProductProfileViewModel {
             
             case operationDetail(OperationDetailViewModel)
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
-            case optionsPanelNew([PanelButton.Details])
+            case optionsPanelNew([PanelButtonDetails])
             case meToMe(PaymentsMeToMeViewModel)
             case meToMeLegacy(MeToMeViewModel)
             case printForm(PrintFormView.ViewModel)
@@ -2046,7 +2049,7 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
-        case controlPanel([PanelButton.Details])
+        case controlPanel([PanelButtonDetails])
     }
     
     struct Sheet: Identifiable {
