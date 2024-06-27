@@ -62,9 +62,8 @@ private extension FeatureFlagsLoader {
     func loadChangeSVCardLimitsFlag() -> ChangeSVCardLimitsFlag {
         
         switch retrieve(.changeSVCardLimitsFlag) {
-        case "changeSVCardLimits_on":  return .init(.active)
-        case "changeSVCardLimits_off": return .init(.inactive)
-        default:           return .init(.inactive)
+        case "1":  return .init(.active)
+        default:   return .init(.inactive)
         }
     }
 }
