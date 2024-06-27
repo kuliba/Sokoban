@@ -84,9 +84,15 @@ struct ProductProfileView: View {
                                     viewModel.event(.history(event))
                                 }
                                 
-                                Text(viewModel.historyState?.date?.description ?? "not selected date")
+                                if let selectedDate = viewModel.historyState?.date?.description {
+                                    
+                                    Text(selectedDate)
+                                }
                                 
-                                Text(viewModel.historyState?.filters.map({ $0.description }) ?? "not selected filters")
+                                if let filters = viewModel.historyState?.filters.map({ $0.description }) {
+                                    
+                                    Text(filters)
+                                }
                                 
                                 ProductProfileHistoryView(viewModel: historyViewModel)
                             }
@@ -177,15 +183,7 @@ struct ProductProfileView: View {
                 switch state.buttonAction {
                 case .calendar:
                     
-                    Text("Calendar")
-                    
-                    Button(action: { viewModel.event(.history(.calendar(Date()))) }, label: {
-                        Text("setup date")
-                    })
-                    
-                    Button(action: { viewModel.event(.history(.calendar(nil))) }, label: {
-                        Text("clear date")
-                    })
+                    calendarView()
                     
                 case .filter:
                     
@@ -200,6 +198,22 @@ struct ProductProfileView: View {
                     })
                 }
             }
+        }
+    }
+    
+    private func calendarView() -> some View {
+        
+        VStack {
+            
+            Text("Calendar")
+            
+            Button(action: { viewModel.event(.history(.calendar(Date()))) }, label: {
+                Text("setup date")
+            })
+            
+            Button(action: { viewModel.event(.history(.calendar(nil))) }, label: {
+                Text("clear date")
+            })
         }
     }
     
