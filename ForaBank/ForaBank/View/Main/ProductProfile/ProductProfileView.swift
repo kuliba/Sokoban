@@ -174,7 +174,7 @@ struct ProductProfileView: View {
         
         switch link {
         case let .controlPanel(items):
-            PanelView(items: items, event: viewModel.event)
+            FullScreenPanelView(items: items, event: viewModel.event)
 
         case let .productInfo(viewModel):
             InfoProductView(viewModel: viewModel)
