@@ -78,9 +78,9 @@ private extension AnywayPaymentTransactionReducerComposer {
         with message: String
     ) -> AnywayPaymentContext {
         
-        let optWidget = context.payment.elements[id: .widgetID(.otp)]
+        let otpWidget = context.payment.elements[id: .widgetID(.otp)]
         
-        guard case let .widget(.otp(value, _)) = optWidget
+        guard case let .widget(.otp(value, _)) = otpWidget
         else { return context }
         
         var context = context
