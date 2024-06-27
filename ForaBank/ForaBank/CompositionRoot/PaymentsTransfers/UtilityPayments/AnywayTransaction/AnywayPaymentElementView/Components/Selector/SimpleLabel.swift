@@ -1,5 +1,5 @@
 //
-//  OptionView.swift
+//  SimpleLabel.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 23.05.2024.
@@ -8,9 +8,9 @@
 import AnywayPaymentDomain
 import SwiftUI
 
-struct OptionView<IconView: View>: View {
+struct SimpleLabel<IconView: View>: View {
     
-    let option: Option
+    let text: String
     let makeIconView: () -> IconView
     
     var body: some View {
@@ -21,15 +21,10 @@ struct OptionView<IconView: View>: View {
                 .foregroundColor(.textTertiary)
                 .frame(width: 24, height: 24)
             
-            Text(option.value)
+            Text(text)
                 .foregroundColor(.textSecondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .contentShape(Rectangle())
     }
-}
-
-extension OptionView {
-    
-    typealias Option = AnywayPaymentDomain.AnywayElement.UIComponent.Parameter.ParameterType.Option
 }

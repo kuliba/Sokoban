@@ -60,7 +60,51 @@ final class Model_allProductTests: XCTestCase {
         XCTAssertNoDiff(products.map(\.id), [3, 4, 5, 6, 7, 8, 1, 2])
     }
 
+    // MARK: test cardsTypes
     
+    func test_cardsTypes_productsWithCards_shouldReturnArrayOfCardTypes() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 1),
+                makeAccountProduct(id: 2),
+            ],
+            .card: [
+                makeCardProduct(cardType: .additionalOther),
+                makeCardProduct(cardType: .main),
+                makeCardProduct(cardType: .additionalSelf),
+                makeCardProduct(cardType: .main),
+                makeCardProduct(cardType: .additionalOther),
+                makeCardProduct(cardType: .additionalSelfAccOwn),
+                makeCardProduct(cardType: .additionalSelfAccOwn),
+                makeCardProduct(cardType: .regular),
+                makeCardProduct(cardType: .additionalSelf),
+                makeCardProduct(cardType: .additionalOther),
+                makeCardProduct(cardType: .regular),
+            ],
+        ])
+        
+        let products = sut.cardsTypes
+        
+        XCTAssertNoDiff(products, [.additionalOther, .main, .additionalSelf, .additionalSelfAccOwn, .regular])
+    }
+    
+    func test_cardsTypes_productsWithOutCards_shouldReturnEmptyArray() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 1),
+                makeAccountProduct(id: 2),
+            ]
+        ])
+        
+        let products = sut.cardsTypes
+        
+        XCTAssertNoDiff(products, [])
+    }
+
     // MARK: - Helpers
     
     func makeSUT(
@@ -73,6 +117,59 @@ final class Model_allProductTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func makeCardProduct(
+        cardType: ProductCardData.CardType
+    ) -> ProductCardData {
+        
+        .init(
+            id: 1,
+            productType: .card,
+            number: "1111",
+            numberMasked: "****",
+            accountNumber: nil,
+            balance: nil,
+            balanceRub: nil,
+            currency: "RUB",
+            mainField: "Card",
+            additionalField: nil,
+            customName: nil,
+            productName: "Card",
+            openDate: nil,
+            ownerId: 0,
+            branchId: 0,
+            allowCredit: true,
+            allowDebit: true,
+            extraLargeDesign: .test,
+            largeDesign: .test,
+            mediumDesign: .test,
+            smallDesign: .test,
+            fontDesignColor: .init(description: ""),
+            background: [],
+            accountId: nil,
+            cardId: 0,
+            name: "CARD",
+            validThru: Date(),
+            status: .active,
+            expireDate: "01/01/01",
+            holderName: "Иванов",
+            product: nil,
+            branch: "",
+            miniStatement: nil,
+            paymentSystemName: nil,
+            paymentSystemImage: nil,
+            loanBaseParam: nil,
+            statusPc: nil,
+            isMain: nil,
+            externalId: nil,
+            order: 0,
+            visibility: true,
+            smallDesignMd5hash: "",
+            smallBackgroundDesignHash: "",
+            cardType: cardType,
+            idParent: nil
+        )
     }
 }
 
