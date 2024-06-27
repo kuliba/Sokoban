@@ -48,8 +48,9 @@ final class FooterViewModelTests: XCTestCase {
         textField.setText(to: "abc")
         textField.setText(to: "abc123")
         textField.setText(to: "123")
+        textField.setText(to: "12345")
         
-        XCTAssertNoDiff(textFieldSpy.values, ["987 ₽", "", "0 ₽", "123 ₽"])
+        XCTAssertNoDiff(textFieldSpy.values, ["987 ₽", "", "0 ₽", "123 ₽", "12 345 ₽"])
         XCTAssertNotNil(sut)
     }
     
@@ -101,7 +102,8 @@ final class FooterViewModelTests: XCTestCase {
                 
                 payload.append(($0, $1))
                 return ($0, nil)
-            })
+            }
+        )
         
         sut.event(.button(.disable))
         
@@ -115,7 +117,8 @@ final class FooterViewModelTests: XCTestCase {
         let newState = makeState(amount: 123)
         let (sut, _, spy) = makeSUT(
             initialState: initial,
-            reduce: { _,_ in return (newState, nil) })
+            reduce: { _,_ in return (newState, nil) }
+        )
         
         sut.event(.button(.disable))
         
@@ -132,6 +135,7 @@ final class FooterViewModelTests: XCTestCase {
     private func makeSUT(
         initialState: SUT.State? = nil,
         currencySymbol: String = "₽",
+        locale: Locale = .init(identifier: "en_US"),
         reduce: @escaping Reduce = { state, _ in (state, nil) },
         file: StaticString = #file,
         line: UInt = #line
@@ -148,7 +152,8 @@ final class FooterViewModelTests: XCTestCase {
         let sut = SUT(
             initialState: initialState ?? makeState(),
             reduce: reduce,
-            formatter: formatter,
+            format: formatter.format(_:),
+            getDecimal: formatter.getDecimal(_:),
             textFieldModel: textField,
             scheduler: .immediate
         )
