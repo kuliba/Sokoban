@@ -176,15 +176,15 @@ private extension TransactionReducer {
         _ effect: inout Effect?
     ) {
         guard state.status == nil else {
-#if DEBUG
-            print("===>>> \(String(describing: self)): can't continue with status \(String(describing: state.status))")
+#if DEBUG || MOCK
+            print("===>>> can't continue with non-nil status \(String(describing: state.status))", #file, #line)
 #endif
             return
         }
         
         guard state.isValid else {
-#if DEBUG
-            print("===>>> \(String(describing: self)): can't continue with invalid transaction")
+#if DEBUG || MOCK
+            print("===>>> can't continue with invalid transaction", #file, #line)
 #endif
             return
         }
