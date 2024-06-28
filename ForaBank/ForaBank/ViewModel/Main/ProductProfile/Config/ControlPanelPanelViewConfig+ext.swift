@@ -1,5 +1,5 @@
 //
-//  FullScreenPanelViewConfig+ext.swift
+//  ControlPanelViewConfig+ext.swift
 //  ForaBank
 //
 //  Created by Andryusina Nataly on 27.06.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension FullScreenPanelView.Config {
+extension ControlPanelView.Config {
     
     static let `default`: Self = .init(
         colors: .init(

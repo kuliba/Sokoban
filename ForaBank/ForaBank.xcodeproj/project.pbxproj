@@ -2358,7 +2358,7 @@
 		83378ABC2AA0DFE20087F8B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83378ABB2AA0DFE20087F8B1 /* Assets.xcassets */; };
 		83378ABF2AA0DFE20087F8B1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83378ABE2AA0DFE20087F8B1 /* Preview Assets.xcassets */; };
 		833AF9662A93922A00C3DF54 /* ProductSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */; };
-		833D3E212C2DAD76006626F2 /* FullScreenPanelViewConfig+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D3E202C2DAD76006626F2 /* FullScreenPanelViewConfig+ext.swift */; };
+		833D3E212C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D3E202C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift */; };
 		833E87232B920027009A01AB /* TopUpCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833E87222B920027009A01AB /* TopUpCardView.swift */; };
 		833E87292B94C60A009A01AB /* ProductProfileComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 833E87282B94C60A009A01AB /* ProductProfileComponents */; };
 		833EC1122BBEA56F0050ABE9 /* ProductAlertsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833EC1112BBEA56F0050ABE9 /* ProductAlertsViewModel.swift */; };
@@ -2454,8 +2454,8 @@
 		83CE89FD2BC43074008CA98C /* PanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CE89FC2BC43074008CA98C /* PanelView.swift */; };
 		83CE8A012BC44912008CA98C /* PanelView+Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CE8A002BC44912008CA98C /* PanelView+Config.swift */; };
 		83CFA2952C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA2942C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift */; };
-		83CFA2992C2D72BD003B5E49 /* FullScreenPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA2982C2D72BD003B5E49 /* FullScreenPanelView.swift */; };
-		83CFA29B2C2D7302003B5E49 /* FullScreenPanelView+Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA29A2C2D7302003B5E49 /* FullScreenPanelView+Config.swift */; };
+		83CFA2992C2D72BD003B5E49 /* ControlPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA2982C2D72BD003B5E49 /* ControlPanelView.swift */; };
+		83CFA29B2C2D7302003B5E49 /* ControlPanelView+Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA29A2C2D7302003B5E49 /* ControlPanelView+Config.swift */; };
 		83CFA29F2C2D7C51003B5E49 /* PanelButtonDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA29E2C2D7C51003B5E49 /* PanelButtonDetails.swift */; };
 		83CFA2A12C2D7D9D003B5E49 /* HorizontalPanelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA2A02C2D7D9D003B5E49 /* HorizontalPanelButton.swift */; };
 		83D6447F2AA0E0C0002D5301 /* LandingMapping in Frameworks */ = {isa = PBXBuildFile; productRef = 83D6447E2AA0E0C0002D5301 /* LandingMapping */; };
@@ -5377,7 +5377,7 @@
 		83378ABB2AA0DFE20087F8B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		83378ABE2AA0DFE20087F8B1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectorViewTests.swift; sourceTree = "<group>"; };
-		833D3E202C2DAD76006626F2 /* FullScreenPanelViewConfig+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FullScreenPanelViewConfig+ext.swift"; sourceTree = "<group>"; };
+		833D3E202C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ControlPanelPanelViewConfig+ext.swift"; sourceTree = "<group>"; };
 		833E87222B920027009A01AB /* TopUpCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopUpCardView.swift; sourceTree = "<group>"; };
 		833E872A2B94CA07009A01AB /* ProductProfileComponents.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ProductProfileComponents.xctestplan; sourceTree = "<group>"; };
 		833EC1112BBEA56F0050ABE9 /* ProductAlertsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAlertsViewModel.swift; sourceTree = "<group>"; };
@@ -5466,8 +5466,8 @@
 		83CE89FC2BC43074008CA98C /* PanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelView.swift; sourceTree = "<group>"; };
 		83CE8A002BC44912008CA98C /* PanelView+Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PanelView+Config.swift"; sourceTree = "<group>"; };
 		83CFA2942C2BFBCE003B5E49 /* СhangeSVCardLimitsFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СhangeSVCardLimitsFlag.swift"; sourceTree = "<group>"; };
-		83CFA2982C2D72BD003B5E49 /* FullScreenPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenPanelView.swift; sourceTree = "<group>"; };
-		83CFA29A2C2D7302003B5E49 /* FullScreenPanelView+Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FullScreenPanelView+Config.swift"; sourceTree = "<group>"; };
+		83CFA2982C2D72BD003B5E49 /* ControlPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelView.swift; sourceTree = "<group>"; };
+		83CFA29A2C2D7302003B5E49 /* ControlPanelView+Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ControlPanelView+Config.swift"; sourceTree = "<group>"; };
 		83CFA29E2C2D7C51003B5E49 /* PanelButtonDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelButtonDetails.swift; sourceTree = "<group>"; };
 		83CFA2A02C2D7D9D003B5E49 /* HorizontalPanelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalPanelButton.swift; sourceTree = "<group>"; };
 		83D644822AA0F0AC002D5301 /* JsonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonView.swift; sourceTree = "<group>"; };
@@ -11315,8 +11315,8 @@
 			isa = PBXGroup;
 			children = (
 				83CE89FC2BC43074008CA98C /* PanelView.swift */,
-				83CFA2982C2D72BD003B5E49 /* FullScreenPanelView.swift */,
-				83CFA29A2C2D7302003B5E49 /* FullScreenPanelView+Config.swift */,
+				83CFA2982C2D72BD003B5E49 /* ControlPanelView.swift */,
+				83CFA29A2C2D7302003B5E49 /* ControlPanelView+Config.swift */,
 				8324819F2BC5175200D20A2F /* PanelButton.swift */,
 				83CFA2A02C2D7D9D003B5E49 /* HorizontalPanelButton.swift */,
 				83CE8A002BC44912008CA98C /* PanelView+Config.swift */,
@@ -13260,7 +13260,7 @@
 			isa = PBXGroup;
 			children = (
 				8357E3372B6BD20D0065E581 /* CardGuardianConfig.swift */,
-				833D3E202C2DAD76006626F2 /* FullScreenPanelViewConfig+ext.swift */,
+				833D3E202C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -17551,7 +17551,7 @@
 				0B2A8D2C26E8D9B600651BCB /* GetLatestPhonePayments.swift in Sources */,
 				2AD54D342B03686A00481463 /* Services+makeCVVPINInitiateActivationService.swift in Sources */,
 				2A8A8FA42C00D5CD001ECAA3 /* OtherConfigs.swift in Sources */,
-				83CFA29B2C2D7302003B5E49 /* FullScreenPanelView+Config.swift in Sources */,
+				83CFA29B2C2D7302003B5E49 /* ControlPanelView+Config.swift in Sources */,
 				774A8B702865FEB200B81140 /* OptionSelectorViewComponent.swift in Sources */,
 				EDDFE3BA2756ED7A00F57C71 /* DepositCalculatorViewControllerDataSource.swift in Sources */,
 				ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */,
@@ -18384,7 +18384,7 @@
 				77A76A9827FC4BA400A271B3 /* PlacesDetailView.swift in Sources */,
 				0C39B784289FBE840017FAAB /* ProductsSectionsSettings.swift in Sources */,
 				EDF68215266F9EC800FD5C07 /* URLConstruct.swift in Sources */,
-				833D3E212C2DAD76006626F2 /* FullScreenPanelViewConfig+ext.swift in Sources */,
+				833D3E212C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift in Sources */,
 				77BF27AF284651D4009624BB /* Model+Formatters.swift in Sources */,
 				77448C1328734643009EEEA8 /* ChangeReturnView+Legacy.swift in Sources */,
 				68FFA5402682C6CF002DADFA /* LastPaymentsCollectionViewCell.swift in Sources */,
@@ -19072,7 +19072,7 @@
 				2A1F084C2A79049E00C5B11B /* Services.swift in Sources */,
 				C10CE65D29070CDF00FC5706 /* TextViewPhoneNumberViewComponent.swift in Sources */,
 				2A61D0672BECB65A00802C95 /* UtilityPrepaymentViewModel.swift in Sources */,
-				83CFA2992C2D72BD003B5E49 /* FullScreenPanelView.swift in Sources */,
+				83CFA2992C2D72BD003B5E49 /* ControlPanelView.swift in Sources */,
 				2AA3A0F92BF3E97B00B1D104 /* UtilityPrepaymentMicroServicesComposer.swift in Sources */,
 				0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */,
 				774A8B2C2865FC6F00B81140 /* MyProductsViewModel.swift in Sources */,
