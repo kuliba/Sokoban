@@ -117,6 +117,7 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 65", "УСЛУГИ_ЖКУ"),
             .init("p: 143", "Сумма пени"),
             .init("f: SumSTrs", "Сумма"),
+            .init("w: core", "RUB, 1234567890, account"),
             .init("w: otp", "otp"),
             .init("footer", "continue"),
         ])

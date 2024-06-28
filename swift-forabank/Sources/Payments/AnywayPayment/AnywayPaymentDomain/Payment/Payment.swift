@@ -12,7 +12,7 @@ public struct Payment<Element> {
     public var amount: Decimal?
     public var elements: [Element]
     public var footer: Footer
-    public let isFinalStep: Bool
+    public var isFinalStep: Bool
     
     public init(
         amount: Decimal?,

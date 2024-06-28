@@ -461,21 +461,23 @@ func makeAnywayPaymentWithoutOTP(
 }
 
 func makeFinalStepAnywayPayment(
+    footer: AnywayPayment.Footer = .continue,
     file: StaticString = #file,
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(isFinalStep: true)
+    let payment = makeAnywayPayment(footer: footer, isFinalStep: true)
     XCTAssert(isFinalStep(payment), "Expected non final step payment.", file: file, line: line)
     return payment
 }
 
 func makeNonFinalStepAnywayPayment(
+    footer: AnywayPayment.Footer = .continue,
     file: StaticString = #file,
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(isFinalStep: false)
+    let payment = makeAnywayPayment(footer: footer, isFinalStep: false)
     XCTAssert(!isFinalStep(payment), "Expected non final step payment.", file: file, line: line)
     return payment
 }
@@ -504,6 +506,38 @@ func makeAnywayPaymentUpdate(
             )
         ),
         fields: fields
+    )
+}
+
+func makeAnywayPaymentUpdate(
+    amount: Decimal?,
+    fee: Decimal? = nil,
+    isFinalStep: Bool = false,
+    isFraudSuspected: Bool = false,
+    isMultiSum: Bool = false,
+    needOTP: Bool = false,
+    needSum: Bool = false,
+    fields: [AnywayPaymentUpdate.Field] = [],
+    parameters: [AnywayPaymentUpdate.Parameter] = []
+) -> AnywayPaymentUpdate {
+    
+    return .init(
+        details: .init(
+            amounts: makeAnywayPaymentUpdateDetailsAmounts(
+                amount: amount,
+                fee: fee
+            ),
+            control: makeAnywayPaymentUpdateDetailsControl(
+                isFinalStep: isFinalStep,
+                isFraudSuspected: isFraudSuspected,
+                isMultiSum: isMultiSum,
+                needOTP: needOTP,
+                needSum: needSum
+            ),
+            info: makeAnywayPaymentUpdateDetailsInfo()
+        ),
+        fields: fields,
+        parameters: parameters
     )
 }
 
