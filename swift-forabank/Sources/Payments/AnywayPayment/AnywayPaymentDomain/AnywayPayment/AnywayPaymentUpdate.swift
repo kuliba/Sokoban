@@ -48,22 +48,22 @@ extension AnywayPaymentUpdate {
         public let name: String
         public let value: String
         public let title: String
-        public let image: Image?
+        public let icon: Icon?
         
         public init(
             name: String,
             value: String,
             title: String,
-            image: Image?
+            icon: Icon?
         ) {
             self.name = name
             self.value = value
             self.title = title
-            self.image = image
+            self.icon = icon
         }
     }
     
-    public enum Image: Equatable {
+    public enum Icon: Equatable {
         
         case md5Hash(String)
         case svg(String)
@@ -73,20 +73,20 @@ extension AnywayPaymentUpdate {
     public struct Parameter: Equatable {
         
         public let field: Field
-        public let image: Image?
+        public let icon: Icon?
         public let masking: Masking
         public let validation: Validation
         public let uiAttributes: UIAttributes
         
         public init(
             field: Field,
-            image: Image?,
+            icon: Icon?,
             masking: Masking,
             validation: Validation,
             uiAttributes: UIAttributes
         ) {
             self.field = field
-            self.image = image
+            self.icon = icon
             self.masking = masking
             self.validation = validation
             self.uiAttributes = uiAttributes

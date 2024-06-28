@@ -259,7 +259,6 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             initial: .init(
                 elements: [],
                 footer: .continue,
-                infoMessage: nil,
                 isFinalStep: false
             ),
             payment: payment,
@@ -326,7 +325,6 @@ private extension AnywayPaymentDomain.AnywayPayment {
         let empty: Self = .init(
             elements: [],
             footer: .continue,
-            infoMessage: nil,
             isFinalStep: false
         )
         self = empty.update(with: update, and: outline)

@@ -25,7 +25,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             name: "123",
             title: "CDE",
             value: "abc",
-            image: nil
+            icon: nil
         )))
     }
     
@@ -35,14 +35,14 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             "123",
             value: "abc",
             title: "CDE",
-            image: .md5Hash("md5Hash")
+            icon: .md5Hash("md5Hash")
         ))
         
         XCTAssertNoDiff(element.uiComponent, .field(.init(
             name: "123",
             title: "CDE",
             value: "abc",
-            image: .md5Hash("md5Hash")
+            icon: .md5Hash("md5Hash")
         )))
     }
     
@@ -52,14 +52,14 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             "123",
             value: "abc",
             title: "CDE",
-            image: .svg("svg")
+            icon: .svg("svg")
         ))
         
         XCTAssertNoDiff(element.uiComponent, .field(.init(
             name: "123",
             title: "CDE",
             value: "abc",
-            image: .svg("svg")
+            icon: .svg("svg")
         )))
     }
     
@@ -69,14 +69,14 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             "123",
             value: "abc",
             title: "CDE",
-            image: .withFallback(md5Hash: "md5Hash", svg: "svg")
+            icon: .withFallback(md5Hash: "md5Hash", svg: "svg")
         ))
         
         XCTAssertNoDiff(element.uiComponent, .field(.init(
             name: "123",
             title: "CDE",
             value: "abc",
-            image: .withFallback(md5Hash: "md5Hash", svg: "svg")
+            icon: .withFallback(md5Hash: "md5Hash", svg: "svg")
         )))
     }
     
@@ -305,7 +305,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             title: "abcde",
             subtitle: "defg",
             value: "ABC",
-            image: nil
+            icon: nil
         )))
     }
     
@@ -329,7 +329,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             title: "abcde",
             subtitle: "defg",
             value: nil,
-            image: nil
+            icon: nil
         )))
     }
     
@@ -353,7 +353,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             title: "abcde",
             subtitle: "defg",
             value: "ABC",
-            image: nil
+            icon: nil
         )))
     }
     
@@ -381,7 +381,7 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             title: "abcde",
             subtitle: "defg",
             value: "ABC",
-            image: nil
+            icon: nil
         )))
     }
     

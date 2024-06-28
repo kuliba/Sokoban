@@ -16,7 +16,7 @@ public enum AnywayElement: Equatable {
 
 extension AnywayElement {
     
-    public enum Image: Equatable {
+    public enum Icon: Equatable {
         
         case md5Hash(String)
         case svg(String)

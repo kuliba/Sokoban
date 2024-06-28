@@ -476,14 +476,12 @@ final class AnywayPaymentReducerTests: XCTestCase {
     private func makeState(
         elements: [AnywayElement],
         footer: AnywayPayment.Footer = .continue,
-        infoMessage: String? = nil,
         isFinalStep: Bool = false
     ) -> State {
         
         return .init(
             elements: elements,
             footer: footer,
-            infoMessage: infoMessage,
             isFinalStep: isFinalStep
         )
     }

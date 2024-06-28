@@ -13,18 +13,15 @@ public struct CachedAnywayPayment<ElementModel> {
     
     private let cachedModels: CachedModels
     public let footer: Footer
-    public let infoMessage: String?
     public let isFinalStep: Bool
     
     private init(
         cachedModels: CachedModels,
         footer: Footer,
-        infoMessage: String?,
         isFinalStep: Bool
     ) {
         self.cachedModels = cachedModels
         self.footer = footer
-        self.infoMessage = infoMessage
         self.isFinalStep = isFinalStep
     }
     
@@ -35,7 +32,6 @@ public struct CachedAnywayPayment<ElementModel> {
         self.init(
             cachedModels: .init(pairs: payment.elements.map { ($0.id, map($0)) }),
             footer: .init(payment),
-            infoMessage: payment.infoMessage,
             isFinalStep: payment.isFinalStep
         )
     }
@@ -92,7 +88,6 @@ extension CachedAnywayPayment {
         return .init(
             cachedModels: updatedCachedModels,
             footer: .init(payment),
-            infoMessage: payment.infoMessage,
             isFinalStep: payment.isFinalStep
         )
     }

@@ -140,7 +140,6 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
     private func makeAnywayPayment(
         elements: [AnywayElement] = [],
         footer: Payment<AnywayElement>.Footer = .continue,
-        infoMessage: String? = nil,
         isFinalStep: Bool = false,
         isFraudSuspected: Bool = false,
         puref: String = UUID().uuidString
@@ -149,7 +148,6 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
         return .init(
             elements: elements,
             footer: footer,
-            infoMessage: infoMessage,
             isFinalStep: isFinalStep
         )
     }

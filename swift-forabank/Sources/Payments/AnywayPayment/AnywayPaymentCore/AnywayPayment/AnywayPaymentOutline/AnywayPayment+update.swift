@@ -29,7 +29,6 @@ extension AnywayPayment {
         return .init(
             elements: elements,
             footer: footer,
-            infoMessage: update.details.info.infoMessage,
             isFinalStep: update.details.control.isFinalStep
         )
     }
@@ -120,14 +119,14 @@ private extension AnywayElement.Field {
             id: id,
             title: fieldUpdate.title,
             value: fieldUpdate.value,
-            image: fieldUpdate.image.map { .init($0) }
+            icon: fieldUpdate.icon.map { .init($0) }
         )
     }
 }
 
-private extension AnywayElement.Image {
+private extension AnywayElement.Icon {
     
-    init(_ image: AnywayPaymentUpdate.Image) {
+    init(_ image: AnywayPaymentUpdate.Icon) {
         
         switch image {
             
@@ -152,7 +151,7 @@ private extension AnywayElement.Parameter {
                 id: field.id,
                 value: fieldUpdate.value
             ),
-            image: image,
+            icon: icon,
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes
@@ -256,7 +255,7 @@ private extension AnywayElement.Field {
             id: field.name,
             title: field.title,
             value: field.value,
-            image: field.image.map { .init($0) }
+            icon: field.icon.map { .init($0) }
         )
     }
 }
@@ -273,7 +272,7 @@ private extension AnywayElement.Parameter {
                 // TODO: add tests
                 fallbackValue: parameter.selectedValue ?? fallbackValue
             ),
-            image: .init(parameter),
+            icon: .init(parameter),
             masking: .init(parameter.masking),
             validation: .init(parameter.validation),
             uiAttributes: .init(parameter.uiAttributes)
@@ -292,11 +291,11 @@ private extension AnywayPaymentUpdate.Parameter {
     }
 }
 
-private extension AnywayElement.Image {
+private extension AnywayElement.Icon {
     
     init?(_ parameter: AnywayPaymentUpdate.Parameter) {
         
-        switch parameter.image {
+        switch parameter.icon {
         case .none:
             return nil
             
