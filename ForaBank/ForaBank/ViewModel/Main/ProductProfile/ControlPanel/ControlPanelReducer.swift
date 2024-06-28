@@ -1,0 +1,78 @@
+//
+//  ControlPanelReducer.swift
+//  ForaBank
+//
+//  Created by Andryusina Nataly on 28.06.2024.
+//
+
+import Foundation
+
+final class ControlPanelReducer {
+    
+    private let controlPanelLifespan: DispatchTimeInterval
+    private let blockCard: () -> Void
+
+    init(
+        controlPanelLifespan: DispatchTimeInterval = .milliseconds(400),
+        blockCard: @escaping () -> Void
+    ) {
+        self.controlPanelLifespan = controlPanelLifespan
+        self.blockCard = blockCard
+    }
+}
+
+extension ControlPanelReducer {
+    
+    func reduce(
+        _ state: State,
+        _ event: Event
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+            
+        case let .controlButtonEvent(buttonEvent):
+            (state, effect) = reduce(state, buttonEvent)
+        case let .updateState(buttons):
+            if buttons != state.buttons {
+                state.buttons = buttons
+            }
+        }
+        return (state, effect)
+    }
+}
+
+extension ControlPanelReducer {
+    
+    func reduce(
+        _ state: State,
+        _ event: ControlButtonEvent
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+            
+        case let .cardGuardian(productId):
+            blockCard()
+            
+        case let .changePin(productId):
+            print("changePin")
+            
+        case let .visibility(productId):
+            print("visibility")
+            
+        }
+        return (state, effect)
+    }
+}
+
+extension ControlPanelReducer {
+    
+    typealias Event = ControlPanelEvent
+    typealias State = ControlPanelState
+    typealias Effect = ControlPanelEffect
+}

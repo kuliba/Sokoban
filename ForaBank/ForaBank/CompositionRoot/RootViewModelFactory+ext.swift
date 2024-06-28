@@ -151,12 +151,10 @@ extension RootViewModelFactory {
 
         let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = { card in
             
-            let buttons: [PanelButtonDetails] = .cardGuardian(card, changeSVCardLimitsFlag)
-
             if changeSVCardLimitsFlag.isActive {
-                return .fullScreen(buttons)
+                return .fullScreen(.cardGuardian(card, changeSVCardLimitsFlag))
             } else {
-                return .bottomSheet(buttons)
+                return .bottomSheet(.cardGuardian(card, changeSVCardLimitsFlag))
             }
         }
 

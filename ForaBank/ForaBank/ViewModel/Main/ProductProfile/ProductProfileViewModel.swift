@@ -48,6 +48,7 @@ class ProductProfileViewModel: ObservableObject {
     
     @Published var closeAccountSpinner: CloseAccountSpinnerView.ViewModel?
     
+    var controlPanelViewModel: ControlPanelViewModel?
     var rootActions: RootViewModel.RootActions?
     var rootView: String
     var contactsAction: () -> Void = { }
@@ -1977,6 +1978,10 @@ extension ProductProfileViewModel {
         case let .bottomSheet(buttons):
             bottomSheet = .init(type: .optionsPanelNew(buttons))
         case let .fullScreen(buttons):
+            controlPanelViewModel = .init(
+                initialState: .init(buttons: buttons),
+                reduce: ControlPanelReducer(blockCard: { self.unblockCard(with: card) }).reduce(_:_:),
+                handleEffect: { _,_  in })
             link = .controlPanel(buttons)
         }
     }
@@ -2010,7 +2015,7 @@ extension ProductProfileViewModel {
     enum CardGuardianPanelKind {
         
         case bottomSheet([PanelButtonDetails])
-        case fullScreen([PanelButtonDetails])
+        case fullScreen([ControlPanelButtonDetails])
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -2047,7 +2052,7 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
-        case controlPanel([PanelButtonDetails])
+        case controlPanel([ControlPanelButtonDetails])
     }
     
     struct Sheet: Identifiable {

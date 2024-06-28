@@ -121,3 +121,56 @@ extension Array where Element == PanelButtonDetails {
         }
     }
 }
+
+private extension ControlPanelButtonDetails {
+    
+    static func createCardGuardianButton(by card: ProductCardData, _ flag: ChangeSVCardLimitsFlag) -> Self {
+        
+        return .init(
+            id: card.id,
+            title: .cardGuardianTitle(by: card.statusCard, flag),
+            icon: .cardGuardian(by: card.statusCard),
+            event: .cardGuardian(card))
+    }
+    
+    static func createVisibilityButton(by card: ProductCardData) -> Self {
+        
+        return .init(
+            id: card.id,
+            title: .visibilityTitle(by: card.isVisible),
+            icon: .visibility(by: card.isVisible),
+            event: .visibility(card))
+    }
+    
+    static func createChangePinButton(by card: ProductCardData) -> Self {
+        
+        return .init(
+            id: card.id,
+            title: .changePinTitle(),
+            icon: .ic24Pass,
+            event: .changePin(card))
+    }
+}
+
+extension Array where Element == ControlPanelButtonDetails {
+    
+    static func cardGuardian(
+        _ card: ProductCardData,
+        _ flag: ChangeSVCardLimitsFlag
+    ) -> Self {
+        
+        switch card.cardType {
+        case .additionalOther:
+            return [
+                .createCardGuardianButton(by: card, flag),
+                .createVisibilityButton(by: card)
+            ]
+        default:
+            return [
+                .createCardGuardianButton(by: card, flag),
+                .createVisibilityButton(by: card),
+                .createChangePinButton(by: card)
+            ]
+        }
+    }
+}
