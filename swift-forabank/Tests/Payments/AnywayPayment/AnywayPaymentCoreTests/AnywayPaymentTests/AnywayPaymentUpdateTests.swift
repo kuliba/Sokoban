@@ -183,6 +183,22 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     
     // MARK: - footer
     
+    func test_update_shouldNotUpdateAmountOnNil() {
+        
+        let state = makeAnywayPayment(
+            amount: 123.45,
+            elements: [makeProductWidgetElement()],
+            footer: .amount
+        )
+        
+        assert(
+            state,
+            on: makeAnywayPaymentUpdate(needSum: true)
+        ) {
+            $0.amount = 123.45
+        }
+    }
+    
     func test_update_shouldUpdateAmount() {
         
         let state = makeAnywayPayment(

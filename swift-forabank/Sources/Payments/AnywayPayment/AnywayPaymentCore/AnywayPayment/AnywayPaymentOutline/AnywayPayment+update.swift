@@ -33,7 +33,7 @@ extension AnywayPayment {
         let footer = footer.update(with: update)
         
         return .init(
-            amount: update.details.amounts.amount,
+            amount: update.details.amounts.amount ?? amount,
             elements: elements,
             footer: footer,
             isFinalStep: update.details.control.isFinalStep
