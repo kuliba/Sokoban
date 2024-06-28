@@ -21,13 +21,13 @@ extension AnywayPayment {
         elements.appendComplementaryFields(from: update.fields)
         elements.appendParameters(from: update.parameters, with: outline)
         
-        elements.addWidget(
-            .product(.init(outline.core)),
-            on: update.details.control.needSum
+        elements.addIfMissing(
+            widget: .product(.init(outline.core)),
+            condition: update.details.control.needSum
         )
-        elements.addWidget(
-            .otp(nil, nil),
-            on: update.details.control.needOTP
+        elements.addIfMissing(
+            widget: .otp(nil, nil),
+            condition: update.details.control.needOTP
         )
         
         let footer = footer.update(with: update)
@@ -124,7 +124,7 @@ private extension AnywayElement.Field {
     
     func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
         
-        .init(
+        return .init(
             id: id,
             title: fieldUpdate.title,
             value: fieldUpdate.value,
@@ -170,9 +170,9 @@ private extension AnywayElement.Parameter {
 
 private extension Array where Element == AnywayElement {
     
-    mutating func addWidget(
-        _ widget: Element.Widget,
-        on condition: Bool
+    mutating func addIfMissing(
+        widget: Element.Widget,
+        condition: Bool
     ) {
         guard isMissing(widget) else { return }
         
