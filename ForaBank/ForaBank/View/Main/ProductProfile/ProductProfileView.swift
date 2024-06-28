@@ -174,7 +174,7 @@ struct ProductProfileView: View {
         
         switch link {
         case let .controlPanel(items):
-            FullScreenPanelView(items: items, event: viewModel.event)
+            ControlPanelView(items: items, event: viewModel.event)
                 .edgesIgnoringSafeArea(.bottom)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {

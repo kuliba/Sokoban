@@ -1,5 +1,5 @@
 //
-//  FullScreenPanelView.swift
+//  ControlPanelView.swift
 //  ForaBank
 //
 //  Created by Andryusina Nataly on 27.06.2024.
@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct FullScreenPanelView: View {
+struct ControlPanelView: View {
     
     let items: [PanelButtonDetails]
     let event: (Event) -> Void
-    let config: FullScreenPanelView.Config = .default
+    let config: ControlPanelView.Config = .default
     
     var body: some View {
         
@@ -37,7 +37,7 @@ struct FullScreenPanelView: View {
     }
 }
 
-extension FullScreenPanelView {
+extension ControlPanelView {
     
     typealias Event = ProductProfileFlowManager.ButtonEvent
 }
