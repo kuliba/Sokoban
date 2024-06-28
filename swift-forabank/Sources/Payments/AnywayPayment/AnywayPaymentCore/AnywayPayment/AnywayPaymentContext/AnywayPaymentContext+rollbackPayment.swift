@@ -110,7 +110,7 @@ private extension AnywayElement.Parameter {
         
         return .init(
             field: .init(id: field.id, value: value),
-            image: image,
+            icon: icon,
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes

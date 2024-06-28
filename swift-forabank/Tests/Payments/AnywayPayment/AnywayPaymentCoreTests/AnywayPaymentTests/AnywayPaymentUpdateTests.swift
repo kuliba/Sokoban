@@ -951,14 +951,14 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         name: String,
         value: String,
         title: String,
-        image: AnywayPaymentUpdate.Image? = nil
+        icon: AnywayPaymentUpdate.Icon? = nil
     ) -> AnywayPaymentUpdate.Field {
         
         return .init(
             name: name,
             value: value,
             title: title,
-            image: image
+            icon: icon
         )
     }
 }

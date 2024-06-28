@@ -232,10 +232,10 @@ func makeAnywayPaymentField(
     _ id: AnywayElement.Field.ID = anyMessage(),
     value: String = anyMessage(),
     title: String = anyMessage(),
-    image: AnywayElement.Image? = nil
+    icon: AnywayElement.Icon? = nil
 ) -> AnywayElement.Field {
     
-    return .init(id: id, title: title, value: value, image: image)
+    return .init(id: id, title: title, value: value, icon: icon)
 }
 
 func makeAnywayPaymentField(
@@ -249,7 +249,7 @@ func makeAnywayPaymentField(
 
 func makeAnywayPaymentParameter(
     field: AnywayElement.Parameter.Field = makeAnywayPaymentElementParameterField(),
-    image: AnywayElement.Image? = nil,
+    icon: AnywayElement.Icon? = nil,
     masking: AnywayElement.Parameter.Masking = makeAnywayPaymentElementParameterMasking(),
     validation: AnywayElement.Parameter.Validation = makeAnywayPaymentElementParameterValidation(),
     uiAttributes: AnywayElement.Parameter.UIAttributes = makeAnywayPaymentElementParameterUIAttributes()
@@ -257,7 +257,7 @@ func makeAnywayPaymentParameter(
     
     return .init(
         field: field,
-        image: image,
+        icon: icon,
         masking: masking,
         validation: validation,
         uiAttributes: uiAttributes
@@ -591,10 +591,10 @@ func makeAnywayPaymentUpdateField(
     _ name: String = anyMessage(),
     title: String = anyMessage(),
     value: String = anyMessage(),
-    image: AnywayPaymentUpdate.Image? = nil
+    icon: AnywayPaymentUpdate.Icon? = nil
 ) -> AnywayPaymentUpdate.Field {
     
-    return .init(name: name, value: value, title: title, image: image)
+    return .init(name: name, value: value, title: title, icon: icon)
 }
 
 func makeAnywayPaymentAndUpdateFields(
@@ -620,7 +620,7 @@ func makeAnywayPaymentAndUpdateFields(
 
 func makeAnywayPaymentUpdateParameter(
     field: AnywayPaymentUpdate.Parameter.Field = makeAnywayPaymentUpdateParameterField(),
-    image: AnywayPaymentUpdate.Image? = nil,
+    icon: AnywayPaymentUpdate.Icon? = nil,
     masking: AnywayPaymentUpdate.Parameter.Masking = makeAnywayPaymentUpdateParameterMasking(),
     validation: AnywayPaymentUpdate.Parameter.Validation = makeAnywayPaymentUpdateParameterValidation(),
     uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes = makeAnywayPaymentUpdateParameterUIAttributes()
@@ -628,7 +628,7 @@ func makeAnywayPaymentUpdateParameter(
     
     return .init(
         field: field,
-        image: image,
+        icon: icon,
         masking: masking,
         validation: validation,
         uiAttributes: uiAttributes
@@ -990,7 +990,7 @@ extension AnywayElement.Parameter {
         
         return .init(
             field: .init(id: field.id, value: value.map { .init($0) }),
-            image: image,
+            icon: icon,
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes

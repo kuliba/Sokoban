@@ -157,10 +157,10 @@ func makeAnywayElementField(
     id: AnywayElement.Field.ID = anyMessage(),
     title: String = anyMessage(),
     value: AnywayElement.Field.Value = anyMessage(),
-    image: AnywayElement.Image? = nil
+    icon: AnywayElement.Icon? = nil
 ) -> AnywayElement.Field {
     
-    return .init(id: id, title: title, value: value, image: image)
+    return .init(id: id, title: title, value: value, icon: icon)
 }
 
 func makeParameterAnywayElement(
@@ -172,7 +172,7 @@ func makeParameterAnywayElement(
 
 func makeAnywayElementParameter(
     field: AnywayElement.Parameter.Field = makeAnywayElementParameterField(),
-    image: AnywayElement.Image? = nil,
+    icon: AnywayElement.Icon? = nil,
     masking: AnywayElement.Parameter.Masking = makeAnywayElementParameterMasking(),
     validation: AnywayElement.Parameter.Validation = makeAnywayElementParameterValidation(),
     uiAttributes: AnywayElement.Parameter.UIAttributes = makeAnywayElementParameterUIAttributes()
@@ -180,7 +180,7 @@ func makeAnywayElementParameter(
     
     return .init(
         field: field,
-        image: image,
+        icon: icon,
         masking: masking,
         validation: validation,
         uiAttributes: uiAttributes

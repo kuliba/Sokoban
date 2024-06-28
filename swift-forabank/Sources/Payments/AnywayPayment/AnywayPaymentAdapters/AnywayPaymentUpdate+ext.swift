@@ -118,12 +118,12 @@ private extension AnywayPaymentUpdate.Field {
             name: additional.fieldName,
             value: additional.fieldValue,
             title: additional.fieldTitle,
-            image: .init(additional)
+            icon: .init(additional)
         )
     }
 }
 
-private extension AnywayPaymentUpdate.Image {
+private extension AnywayPaymentUpdate.Icon {
     
     init?(_ additional: ResponseMapper.CreateAnywayTransferResponse.Additional) {
         
@@ -166,7 +166,7 @@ private extension AnywayPaymentUpdate.Parameter {
         
         self.init(
             field: .init(parameter),
-            image: .init(parameter),
+            icon: .init(parameter),
             masking: .init(parameter),
             validation: .init(parameter),
             uiAttributes: .init(parameter)

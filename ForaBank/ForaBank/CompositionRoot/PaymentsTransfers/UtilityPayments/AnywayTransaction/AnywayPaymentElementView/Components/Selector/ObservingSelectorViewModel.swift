@@ -13,7 +13,7 @@ typealias ObservingSelectorViewModel = RxObservingViewModel<SelectingParameter, 
 struct SelectingParameter {
  
     let title: String
-    let image: AnywayElement.UIComponent.Image?
+    let icon: AnywayElement.UIComponent.Icon?
     let selector: Selector<Option>
     
     typealias Option = AnywayElement.UIComponent.Parameter.ParameterType.Option
