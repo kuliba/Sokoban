@@ -207,28 +207,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         XCTAssertFalse(isFinalStep(updated))
     }
     
-    // MARK: - infoMessage
-    
-    func test_update_shouldNotChangeInfoMessageOnNilInfoMessage() {
-        
-        assert(
-            makeAnywayPayment(),
-            on: makeAnywayPaymentUpdate(infoMessage: nil)
-        )
-    }
-    
-    func test_update_shouldChangeInfoMessageOnNonNilInfoMessage() {
-        
-        let message = anyMessage()
-        
-        assert(
-            makeAnywayPayment(),
-            on: makeAnywayPaymentUpdate(infoMessage: message)
-        ) {
-            $0.infoMessage = message
-        }
-    }
-    
     // MARK: - non-complimentary (primary) fields
     
     func test_update_shouldNotChangeStringIDFieldWithSameValueInNonComplementaryFields() {

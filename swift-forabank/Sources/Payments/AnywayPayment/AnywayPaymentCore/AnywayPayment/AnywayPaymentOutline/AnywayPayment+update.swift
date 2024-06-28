@@ -29,7 +29,6 @@ extension AnywayPayment {
         return .init(
             elements: elements,
             footer: footer,
-            infoMessage: update.details.info.infoMessage,
             isFinalStep: update.details.control.isFinalStep
         )
     }

@@ -277,7 +277,6 @@ private func makeEmptyPayment(
     return .init(
         elements: [],
         footer: .continue,
-        infoMessage: nil,
         isFinalStep: false
     )
 }

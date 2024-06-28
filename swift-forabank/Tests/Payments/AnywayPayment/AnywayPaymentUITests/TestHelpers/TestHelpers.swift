@@ -110,14 +110,12 @@ func makeAnywayPaymentContext(
 func makeAnywayPayment(
     elements: [AnywayElement] = [],
     footer: Payment<AnywayElement>.Footer = .continue,
-    infoMessage: String? = nil,
     isFinalStep: Bool = false
 ) -> AnywayPayment {
     
     return .init(
         elements: elements,
         footer: footer,
-        infoMessage: infoMessage,
         isFinalStep: isFinalStep
     )
 }

@@ -42,21 +42,6 @@ final class CachedAnywayPaymentTests: XCTestCase {
         XCTAssertNoDiff(Payment(anywayPayment).footer, .amount(amount, currency))
     }
     
-    func test_init_shouldCreateInstanceWithNilInfoMessageFromAnywayPaymentWithNilInfoMessage() {
-        
-        let anywayPayment = makeAnywayPayment(infoMessage: nil)
-        
-        XCTAssertNil(Payment(anywayPayment).infoMessage)
-    }
-    
-    func test_init_shouldCreateInstanceWithInfoMessageFromAnywayPaymentWithInfoMessage() {
-        
-        let infoMessage = anyMessage()
-        let anywayPayment = makeAnywayPayment(infoMessage: infoMessage)
-        
-        XCTAssertNoDiff(Payment(anywayPayment).infoMessage, infoMessage)
-    }
-    
     func test_init_shouldCreateInstanceWithIsFinalStepFalseFromAnywayPaymentWithIsFinalStepFalse() {
         
         let anywayPayment = makeAnywayPayment(isFinalStep: false)
@@ -182,27 +167,6 @@ final class CachedAnywayPaymentTests: XCTestCase {
         )
         
         XCTAssertNoDiff(updated.footer, .amount(amount, currency))
-    }
-    
-    func test_updating_shouldUpdateWithNilInfoMessageFromAnywayPaymentWithNilInfoMessage() {
-        
-        let payment = Payment(makeAnywayPayment(infoMessage: anyMessage()))
-        XCTAssertNotNil(payment.infoMessage)
-        
-        let updated = updating(payment, with: makeAnywayPayment(infoMessage: nil))
-        
-        XCTAssertNil(updated.infoMessage)
-    }
-    
-    func test_updating_shouldUpdateWithInfoMessageFromAnywayPaymentWithInfoMessage() {
-        
-        let payment = Payment(makeAnywayPayment(infoMessage: nil))
-        XCTAssertNil(payment.infoMessage)
-        
-        let infoMessage = anyMessage()
-        let updated = updating(payment, with: makeAnywayPayment(infoMessage: infoMessage))
-        
-        XCTAssertNoDiff(updated.infoMessage, infoMessage)
     }
     
     func test_updating_shouldUpdateWithIsFinalStepFalseFromAnywayPaymentWithIsFinalStepFalse() {

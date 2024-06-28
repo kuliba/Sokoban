@@ -145,14 +145,12 @@ func makeAnywayPayment(
 func makeAnywayPayment(
     elements: [AnywayElement] = [],
     footer: AnywayPayment.Footer = .continue,
-    infoMessage: String? = nil,
     isFinalStep: Bool = false
 ) -> AnywayPayment {
     
     return .init(
         elements: elements,
         footer: footer,
-        infoMessage: infoMessage,
         isFinalStep: isFinalStep
     )
 }
@@ -1019,7 +1017,6 @@ extension AnywayPayment {
         return .init(
             elements: elements,
             footer: footer,
-            infoMessage: infoMessage,
             isFinalStep: isFinalStep
         )
     }

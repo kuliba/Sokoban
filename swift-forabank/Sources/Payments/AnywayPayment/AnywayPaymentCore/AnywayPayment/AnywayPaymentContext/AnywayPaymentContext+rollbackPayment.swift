@@ -66,7 +66,6 @@ private extension AnywayPayment {
         return .init(
             elements: elements,
             footer: footer,
-            infoMessage: infoMessage,
             isFinalStep: isFinalStep
         )
     }
