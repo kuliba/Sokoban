@@ -12,12 +12,15 @@ import RemoteServices
 
 public extension AnywayPaymentUpdate {
     
-    init(_ response: ResponseMapper.CreateAnywayTransferResponse) {
+    init?(_ response: ResponseMapper.CreateAnywayTransferResponse) {
         
         let visible = response.parametersForNextStep.filter(\.visible)
         
+        guard let details = AnywayPaymentUpdate.Details(response)
+        else { return nil }
+        
         self.init(
-            details: .init(response),
+            details: details,
             fields: response.additional.map { .init($0) },
             parameters: visible.map { .init($0) }
         )
@@ -26,11 +29,14 @@ public extension AnywayPaymentUpdate {
 
 private extension AnywayPaymentUpdate.Details {
     
-    init(_ response: ResponseMapper.CreateAnywayTransferResponse) {
+    init?(_ response: ResponseMapper.CreateAnywayTransferResponse) {
+        
+        guard let control = AnywayPaymentUpdate.Details.Control(response)
+        else { return nil }
         
         self.init(
             amounts: .init(response),
-            control: .init(response),
+            control: control,
             info: .init(response)
         )
     }
@@ -55,16 +61,26 @@ private extension AnywayPaymentUpdate.Details.Amounts {
 
 private extension AnywayPaymentUpdate.Details.Control {
     
-    init(_ response: ResponseMapper.CreateAnywayTransferResponse) {
+    init?(_ response: ResponseMapper.CreateAnywayTransferResponse) {
+        
+        guard let isFinalStep = response.isFinalStep else { return nil }
         
         self.init(
-            isFinalStep: response.finalStep,
+            isFinalStep: isFinalStep,
             isFraudSuspected: response.scenario == .suspect,
             isMultiSum: response.options.contains(.multiSum),
-            needMake: response.needMake,
             needOTP: response.needOTP,
             needSum: response.needSum
         )
+    }
+}
+
+private extension ResponseMapper.CreateAnywayTransferResponse {
+    
+    var isFinalStep: Bool? {
+        
+        guard finalStep == needMake else { return nil }
+        return finalStep
     }
 }
 

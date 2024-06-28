@@ -127,21 +127,21 @@ class AnywayPaymentTransactionReducerTests: XCTestCase {
         from string: String
     ) throws -> AnywayPaymentUpdate {
         
-        return try .init(makeResponse(from: string))
+        return try XCTUnwrap(.init(makeResponse(from: string)))
     }
     
      func makeUpdatePaymentResult(
         _ response: Response
-    ) -> Event.UpdatePaymentResult {
+    ) throws -> Event.UpdatePaymentResult {
         
-        return .success(.init(response))
+        return try .success(XCTUnwrap(.init(response)))
     }
     
      func makeUpdatePaymentResult(
         from string: String
     ) throws -> Event.UpdatePaymentResult {
         
-        return try .success(.init(makeResponse(from: string)))
+        return try .success(XCTUnwrap(.init(makeResponse(from: string))))
     }
     
      func makeResponse(
