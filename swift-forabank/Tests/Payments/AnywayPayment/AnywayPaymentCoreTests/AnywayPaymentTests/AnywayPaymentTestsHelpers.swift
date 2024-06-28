@@ -557,7 +557,6 @@ private func makeAnywayPaymentUpdateDetailsControl(
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
     isMultiSum: Bool = false,
-    needMake: Bool = false,
     needOTP: Bool = false,
     needSum: Bool = false
 ) -> AnywayPaymentUpdate.Details.Control {
@@ -566,7 +565,6 @@ private func makeAnywayPaymentUpdateDetailsControl(
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected,
         isMultiSum: isMultiSum,
-        needMake: needMake,
         needOTP: needOTP,
         needSum: needSum
     )

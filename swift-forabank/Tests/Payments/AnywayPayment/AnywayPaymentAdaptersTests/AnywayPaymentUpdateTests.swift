@@ -13,6 +13,38 @@ import XCTest
 
 final class AnywayPaymentUpdateTests: XCTestCase {
     
+    func test_init_shouldFailOnFinalStepTrueNeedMakeFalse() throws {
+        
+        try XCTAssertNil(makeUpdate(from: .makeResponse(
+            finalStep: true, 
+            needMake: false
+        )))
+    }
+    
+    func test_init_shouldFailOnFinalStepTrueNeedMakeNil() throws {
+        
+        try XCTAssertNil(makeUpdate(from: .makeResponse(
+            finalStep: true, 
+            needMake: nil
+        )))
+    }
+    
+    func test_init_shouldFailOnFinalStepFalseNeedMakeTrue() throws {
+        
+        try XCTAssertNil(makeUpdate(from: .makeResponse(
+            finalStep: false, 
+            needMake: true
+        )))
+    }
+    
+    func test_init_shouldFailOnFinalStepNilNeedMakeTrue() throws {
+        
+        try XCTAssertNil(makeUpdate(from: .makeResponse(
+            finalStep: nil, 
+            needMake: true
+        )))
+    }
+    
     func test_init_validData() throws {
         
         try assert(.validData, mapsTo: .init(
@@ -80,7 +112,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 control: makeDetailsControl(
                     isFinalStep: true,
                     isFraudSuspected: true,
-                    needMake: true,
                     needOTP: true,
                     needSum: true
                 ),
@@ -216,7 +247,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 control: makeDetailsControl(
                     isFinalStep: false,
                     isFraudSuspected: false,
-                    needMake: false,
                     needOTP: false,
                     needSum: true
                 ),
@@ -358,7 +388,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 control: makeDetailsControl(
                     isFinalStep: false,
                     isFraudSuspected: false,
-                    needMake: false,
                     needOTP: false,
                     needSum: true
                 ),
@@ -388,7 +417,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 control: makeDetailsControl(
                     isFinalStep: true,
                     isFraudSuspected: false,
-                    needMake: false,
                     needOTP: false,
                     needSum: true
                 ),
@@ -554,7 +582,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         isFinalStep: Bool = false,
         isFraudSuspected: Bool = false,
         isMultiSum: Bool = false,
-        needMake: Bool = false,
         needOTP: Bool = false,
         needSum: Bool = false
     ) -> AnywayPaymentUpdate.Details.Control {
@@ -563,7 +590,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,
             isMultiSum: isMultiSum,
-            needMake: needMake,
             needOTP: needOTP,
             needSum: needSum
         )
@@ -679,9 +705,26 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         line: UInt = #line
     ) throws {
         
-        let response = try decode(string)
+        try XCTAssertNoDiff(
+            makeUpdate(from: string, file: file, line: line),
+            update,
+            file: file, line: line
+        )
+    }
+    
+    private func makeUpdate(
+        from string: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> AnywayPaymentUpdate? {
         
-        XCTAssertNoDiff(.init(response), update, file: file, line: line)
+        do {
+            let response = try decode(string)
+            return .init(response)
+        } catch {
+            XCTFail(error.localizedDescription, file: file, line: line)
+            throw error
+        }
     }
     
     private func decode(
@@ -698,6 +741,25 @@ final class AnywayPaymentUpdateTests: XCTestCase {
 private extension String {
     
     var json: Data { .init(self.utf8) }
+    
+    static func makeResponse(
+        finalStep: Bool?,
+        needMake: Bool?
+    ) -> String {
+        
+"""
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "amount": 4273.87,
+        "finalStep": \(finalStep?.description ?? "null"),
+        "needMake": \(needMake?.description ?? "null"),
+        "parameterListForNextStep": []
+    }
+}
+"""
+    }
     
     static let validData = """
 {
@@ -1256,7 +1318,7 @@ private extension String {
     "statusCode": 0,
     "errorMessage": null,
     "data": {
-        "needMake": null,
+        "needMake": true,
         "needOTP": null,
         "amount": 5888.10,
         "creditAmount": null,

@@ -132,7 +132,7 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
         and outline: AnywayPaymentOutline = makeEmptyOutline()
     ) throws -> AnywayPayment {
         
-        let update = try AnywayPaymentUpdate(makeResponse(from: string))
+        let update = try XCTUnwrap(AnywayPaymentUpdate(makeResponse(from: string)))
         
         return payment.update(with: update, and: outline)
     }
