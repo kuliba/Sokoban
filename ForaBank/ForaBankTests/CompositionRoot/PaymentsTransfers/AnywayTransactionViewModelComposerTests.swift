@@ -138,6 +138,7 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
     }
     
     private func makeAnywayPayment(
+        amount: Decimal? = nil,
         elements: [AnywayElement] = [],
         footer: Payment<AnywayElement>.Footer = .continue,
         isFinalStep: Bool = false,
@@ -146,6 +147,7 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
     ) -> AnywayPayment {
         
         return .init(
+            amount: amount,
             elements: elements,
             footer: footer,
             isFinalStep: isFinalStep

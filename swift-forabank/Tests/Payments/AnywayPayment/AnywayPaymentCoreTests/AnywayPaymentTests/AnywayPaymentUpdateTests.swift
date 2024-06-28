@@ -270,6 +270,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         assert(payment, on: update) {
             
+            $0.amount = 4273.87
             let field = makeAnywayPaymentField("SumSTrs", value: "4273.87", title: "Сумма")
             $0.elements = [.field(field)]
         }

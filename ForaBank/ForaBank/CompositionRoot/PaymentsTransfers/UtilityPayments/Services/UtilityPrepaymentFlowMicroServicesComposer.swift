@@ -257,6 +257,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         
         let context = AnywayPaymentContext(
             initial: .init(
+                amount: outline.core.amount,
                 elements: [],
                 footer: .continue,
                 isFinalStep: false
@@ -323,6 +324,7 @@ private extension AnywayPaymentDomain.AnywayPayment {
         outline: AnywayPaymentOutline
     ) {
         let empty: Self = .init(
+            amount: nil,
             elements: [],
             footer: .continue,
             isFinalStep: false

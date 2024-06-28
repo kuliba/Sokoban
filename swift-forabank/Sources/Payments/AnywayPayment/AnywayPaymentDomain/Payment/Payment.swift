@@ -9,15 +9,18 @@ import Foundation
 
 public struct Payment<Element> {
     
+    public var amount: Decimal?
     public var elements: [Element]
     public var footer: Footer
     public let isFinalStep: Bool
     
     public init(
+        amount: Decimal?,
         elements: [Element],
         footer: Footer,
         isFinalStep: Bool
     ) {
+        self.amount = amount
         self.elements = elements
         self.footer = footer
         self.isFinalStep = isFinalStep
@@ -25,8 +28,7 @@ public struct Payment<Element> {
     
     public enum Footer: Equatable {
         
-        case amount(Decimal)
-        case `continue`
+        case amount, `continue`
     }
 }
 

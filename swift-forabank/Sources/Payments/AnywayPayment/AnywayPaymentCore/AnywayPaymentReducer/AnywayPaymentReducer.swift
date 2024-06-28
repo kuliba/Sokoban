@@ -59,7 +59,8 @@ private extension AnywayPaymentReducer {
     ) {
         switch widget {
         case let .amount(amount):
-            state.update(with: amount)
+            guard state.hasProduct else { return }
+            state.amount = amount
             
         case let .otp(otp):
             let digits = otp.filter(\.isWholeNumber)
@@ -71,6 +72,14 @@ private extension AnywayPaymentReducer {
         case let .product(productID, productType, currency):
             state.update(with: productID, productType._productType, and: currency)
         }
+    }
+}
+
+private extension AnywayPayment {
+    
+    var hasProduct: Bool {
+        
+        elements[id: .widgetID(.product)] != nil
     }
 }
 
@@ -99,15 +108,6 @@ private extension AnywayPayment {
     }
     
     typealias ParameterID = AnywayElement.Parameter.Field.ID
-    
-    mutating func update(
-        with amount: Decimal
-    ) {
-#warning("add tests")
-        guard case .amount = footer else { return }
-        
-        footer = .amount(amount)
-    }
     
     mutating func update(
         with productID: AnywayElement.Widget.Product.ProductID,

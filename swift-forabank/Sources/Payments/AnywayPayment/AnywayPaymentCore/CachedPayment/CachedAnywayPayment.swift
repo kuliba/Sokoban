@@ -12,12 +12,12 @@ import Foundation
 public struct CachedAnywayPayment<ElementModel> {
     
     private let cachedModels: CachedModels
-    public let footer: Footer
+    public let footer: UIFooter
     public let isFinalStep: Bool
     
     private init(
         cachedModels: CachedModels,
-        footer: Footer,
+        footer: UIFooter,
         isFinalStep: Bool
     ) {
         self.cachedModels = cachedModels
@@ -31,20 +31,32 @@ public struct CachedAnywayPayment<ElementModel> {
     ) {
         self.init(
             cachedModels: .init(pairs: payment.elements.map { ($0.id, map($0)) }),
-            footer: .init(payment),
+            footer: payment.uiFooter,
             isFinalStep: payment.isFinalStep
         )
     }
     
     public typealias CachedModels = CachedModelsState<AnywayElement.ID, ElementModel>
     public typealias Map = (AnywayElement) -> ElementModel
+}
+
+public enum UIFooter: Equatable {
     
-    public enum Footer: Equatable {
+    case amount(Amount)
+    case `continue`
+    
+    public struct Amount: Equatable {
         
-        case amount(Decimal, Currency?)
-        case `continue`
+        public let amount: Decimal
+        public let currency: String
         
-        public typealias Currency = String
+        public init(
+            amount: Decimal,
+            currency: String
+        ) {
+            self.amount = amount
+            self.currency = currency
+        }
     }
 }
 
@@ -87,32 +99,35 @@ extension CachedAnywayPayment {
         )
         return .init(
             cachedModels: updatedCachedModels,
-            footer: .init(payment),
+            footer: payment.uiFooter,
             isFinalStep: payment.isFinalStep
         )
     }
 }
 
-private extension CachedAnywayPayment.Footer {
+private extension AnywayPayment {
     
-    init(_ payment: AnywayPayment) {
+    var uiFooter: UIFooter {
         
-        switch payment.footer {
-        case let .amount(amount):
-            self = .amount(amount, payment.currency)
+        switch footer {
+        case .amount:
+            return uiAmount.map(UIFooter.amount) ?? .continue
             
         case .continue:
-            self = .continue
+            return .continue
         }
     }
-}
-
-private extension AnywayPayment {
+    
+    private var uiAmount: UIFooter.Amount? {
+        
+        guard let amount, let currency else { return nil }
+        
+        return .init(amount: amount, currency: currency)
+    }
     
     var currency: String? {
         
         guard case let .widget(.product(product)) = elements[id: .widgetID(.product)]
-                // guard case let .widget(.core(productSelect, amount)) = self[id: .widgetID(.core)]?.model
         else { return nil }
         
         return product.currency

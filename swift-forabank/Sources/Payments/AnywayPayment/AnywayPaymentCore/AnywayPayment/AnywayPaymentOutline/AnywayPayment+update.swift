@@ -27,6 +27,7 @@ extension AnywayPayment {
         let footer = footer.update(with: update, and: outline)
         
         return .init(
+            amount: update.details.amounts.amount,
             elements: elements,
             footer: footer,
             isFinalStep: update.details.control.isFinalStep
@@ -41,13 +42,14 @@ private extension AnywayPayment.Footer {
         and outline: AnywayPaymentOutline
     ) -> Self {
         
-        if update.details.control.needSum
-            && !update.details.control.isMultiSum {
-            return .amount(outline.core.amount)
-        } else {
-            return .continue
-        }
+        return update.needSum && !update.isMultiSum ? .amount : .continue
     }
+}
+
+private extension AnywayPaymentUpdate {
+    
+    var needSum: Bool { details.control.needSum }
+    var isMultiSum: Bool { details.control.isMultiSum }
 }
 
 private extension AnywayElement.Widget.Product {

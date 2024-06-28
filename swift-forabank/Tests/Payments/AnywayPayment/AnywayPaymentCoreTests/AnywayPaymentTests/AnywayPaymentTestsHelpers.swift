@@ -124,6 +124,7 @@ func makeAnywayPaymentPayload(
 }
 
 func makeAnywayPayment(
+    amount: Decimal? = nil,
     parameters: [AnywayElement.Parameter],
     footer: AnywayPayment.Footer = .continue,
     isFinalStep: Bool = false,
@@ -136,6 +137,7 @@ func makeAnywayPayment(
     }
     
     return makeAnywayPayment(
+        amount: amount,
         elements: elements,
         footer: footer,
         isFinalStep: isFinalStep
@@ -143,12 +145,14 @@ func makeAnywayPayment(
 }
 
 func makeAnywayPayment(
+    amount: Decimal? = nil,
     elements: [AnywayElement] = [],
     footer: AnywayPayment.Footer = .continue,
     isFinalStep: Bool = false
 ) -> AnywayPayment {
     
     return .init(
+        amount: amount,
         elements: elements,
         footer: footer,
         isFinalStep: isFinalStep
@@ -176,8 +180,9 @@ func makeAnywayPaymentWithAmount(
 ) -> AnywayPayment {
     
     let payment = makeAnywayPayment(
+        amount: amount,
         elements: elements,
-        footer: .amount(amount)
+        footer: .amount
     )
     XCTAssert(hasAmountFooter(payment), "Expected amount field.", file: file, line: line)
     return payment
@@ -964,6 +969,17 @@ func makeProductWidget(
     )
 }
 
+func makeProductWidgetElement(
+    currency: String = anyMessage(),
+    productID: Int = makeIntID(),
+    productType: AnywayElement.Widget.Product.ProductType = .account
+) -> AnywayElement {
+    
+    return .widget(.product(makeProductWidget(
+        currency: currency, productID: productID, productType: productType
+    )))
+}
+
 func parameters(
     of payment: AnywayPayment
 ) -> [AnywayElement.Parameter] {
@@ -1015,6 +1031,7 @@ extension AnywayPayment {
     func updating(elements: [AnywayElement]) -> Self {
         
         return .init(
+            amount: amount,
             elements: elements,
             footer: footer,
             isFinalStep: isFinalStep
