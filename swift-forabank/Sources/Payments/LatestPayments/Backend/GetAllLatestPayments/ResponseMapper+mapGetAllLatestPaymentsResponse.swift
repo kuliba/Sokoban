@@ -18,7 +18,11 @@ public extension ResponseMapper {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
         
-        return map(data, httpURLResponse, dateDecodingStrategy: .formatted(dateFormatter), mapOrThrow: [LatestServicePayment].init)
+        return map(
+            data, httpURLResponse,
+            dateDecodingStrategy: .formatted(dateFormatter),
+            mapOrThrow: [LatestServicePayment].init
+        )
     }
 }
 
@@ -34,7 +38,7 @@ extension ResponseMapper {
         public let additionalItems: [AdditionalItem]
         
         public init(
-            date: Date, 
+            date: Date,
             amount: Decimal,
             name: String,
             md5Hash: String?,
@@ -57,8 +61,8 @@ extension ResponseMapper {
             public let svgImage: String?
             
             public init(
-                fieldName: String, 
-                fieldValue: String, 
+                fieldName: String,
+                fieldValue: String,
                 fieldTitle: String?,
                 svgImage: String?
             ) {
@@ -73,15 +77,21 @@ extension ResponseMapper {
 
 private extension Array where Element == ResponseMapper.LatestServicePayment {
     
-    init(_ data: [ResponseMapper._Data]) {
+    init(_ data: [ResponseMapper._Data]) throws {
         
-        self = data.map(ResponseMapper.LatestServicePayment.init)
+        self = try data.map(ResponseMapper.LatestServicePayment.init)
     }
 }
 
 private extension ResponseMapper.LatestServicePayment {
     
-    init(_ data: ResponseMapper._Data) {
+    init(_ data: ResponseMapper._Data) throws {
+        
+        guard data.type == "service"
+        else {
+            struct NonServiceLatestPayment: Error {}
+            throw NonServiceLatestPayment()
+        }
         
         self.init(
             date: data.paymentDate,

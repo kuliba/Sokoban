@@ -63,8 +63,10 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
     
     func test_map_shouldDeliverServerErrorOnServerError() {
         
+        let serverError: Data = .serverError
+        
         XCTAssertNoDiff(
-            map(.serverError),
+            map(serverError),
             .failure(.server(
                 statusCode: 102,
                 errorMessage: "Возникла техническая ошибка"
@@ -86,6 +88,16 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
                 ))
             )
         }
+    }
+    
+    func test_map_shouldDeliverInvalidFailureOnNonService() {
+        
+        let nonService: Data = .nonService
+        
+        XCTAssertNoDiff(
+            map(nonService),
+            .failure(.invalid(statusCode: 200, data: nonService))
+        )
     }
     
     func test_map_shouldDeliverResponse_validDataSingle() throws {
@@ -170,7 +182,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
             ),
         ])
     }
-        
+    
     // MARK: - Helpers
     
     private typealias Response = [ResponseMapper.LatestServicePayment]
@@ -259,6 +271,7 @@ private extension Data {
     static let emptyDataResponse: Data = String.emptyDataResponse.json
     static let nullServerResponse: Data = String.nullServerResponse.json
     static let serverError: Data = String.serverError.json
+    static let nonService: Data = String.nonService.json
     static let validDataSingle: Data = String.validDataSingle.json
     static let validData: Data = String.validData.json
 }
@@ -310,6 +323,35 @@ private extension String {
             "paymentDate": "04.09.2023 16:51:53",
             "date": 1693835513315,
             "type": "service",
+            "amount": 999.00,
+            "puref": "iFora||KSK",
+            "lpName": null,
+            "md5hash": "aeacabf71618e6f66aac16ed3b1922f3",
+            "name": "ПАО Калужская сбытовая компания",
+            "additionalList": [
+                {
+                    "fieldName": "account",
+                    "fieldValue": "110110581",
+                    "fieldTitle": null,
+                    "svgImage": null,
+                    "recycle": null,
+                    "typeIdParameterList": null
+                }
+            ]
+        }
+    ]
+}
+"""
+    
+    static let nonService = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": [
+        {
+            "paymentDate": "04.09.2023 16:51:53",
+            "date": 1693835513315,
+            "type": "non-service",
             "amount": 999.00,
             "puref": "iFora||KSK",
             "lpName": null,
