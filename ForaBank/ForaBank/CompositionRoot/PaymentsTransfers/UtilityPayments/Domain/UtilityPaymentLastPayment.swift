@@ -10,9 +10,3 @@ import Foundation
 import RemoteServices
 
 typealias UtilityPaymentLastPayment = RemoteServices.ResponseMapper.LatestServicePayment
-
-    let name: String
-extension UtilityPaymentLastPayment: Identifiable {
-    
-    public var id: String { puref }
-}
