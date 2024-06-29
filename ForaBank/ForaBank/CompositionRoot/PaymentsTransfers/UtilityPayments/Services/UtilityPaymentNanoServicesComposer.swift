@@ -233,6 +233,11 @@ private extension UtilityPaymentNanoServicesComposer {
         and payload: AnywayPaymentOutline.Payload
     ) -> AnywayPaymentOutline {
         
+        if let lastPayment {
+            
+            return .init(latestServicePayment: lastPayment)
+        }
+        
 #warning("fix filtering according to https://shorturl.at/hIE5B")
         guard let product = model.paymentProducts().first,
               let outlineProductType = product.productType.outlineProductType
