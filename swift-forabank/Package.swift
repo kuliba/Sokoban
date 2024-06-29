@@ -1125,7 +1125,10 @@ private extension Target {
     
     static let latestPayments = target(
         name: .latestPayments,
-        dependencies: [],
+        dependencies: [
+            // internal modules
+            .remoteServices,
+        ],
         path: "Sources/Payments/\(String.latestPayments)"
     )
     static let latestPaymentsTests = testTarget(
