@@ -7,13 +7,12 @@
 
 import Foundation
 import RemoteServices
-import OperatorsListComponents
 
 extension RequestFactory {
     
     static func getAllLatestPaymentsRequest(
         _ kind: LatestPaymentKind
-    ) throws -> URLRequest {
+    ) -> URLRequest {
         
         let parameters: [(String, String)] = [
             kind.parameterService()
@@ -25,9 +24,6 @@ extension RequestFactory {
             parameters: parameters
         )
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-        return request
+        return RemoteServices.RequestFactory.createEmptyRequest(.get, with: url)
     }
 }
