@@ -241,20 +241,22 @@ private extension UtilityPaymentNanoServicesComposer {
         
 #warning("fix filtering according to https://shorturl.at/hIE5B")
         guard let product = model.paymentProducts().first,
-              let coreProductType = product.productType.coreProductType
+              let outlineProductType = product.productType.outlineProductType
         else {
             // TODO: unimplemented graceful failure for missing products
             fatalError("unimplemented graceful failure")
         }
         
-        let core = AnywayPaymentOutline.PaymentCore(
-            amount: 0,
-            currency: product.currency,
-            productID: product.id,
-            productType: coreProductType
+        return .init(
+            amount: 0, 
+            product: .init(
+                currency: product.currency,
+                productID: product.id,
+                productType: outlineProductType
+            ),
+            fields: .init(),
+            payload: payload
         )
-        
-        return .init(core: core, fields: .init(), payload: payload)
     }
 }
 
@@ -361,7 +363,7 @@ private extension OperatorsListComponents.ResponseMapper.SberUtilityService {
 
 private extension ProductType {
     
-    var coreProductType: AnywayPaymentOutline.PaymentCore.ProductType? {
+    var outlineProductType: AnywayPaymentOutline.Product.ProductType? {
         
         switch self {
         case .card:    return .card

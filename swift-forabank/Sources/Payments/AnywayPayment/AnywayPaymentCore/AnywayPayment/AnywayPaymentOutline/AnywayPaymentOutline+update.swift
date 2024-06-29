@@ -16,7 +16,46 @@ extension AnywayPaymentOutline {
             uniquingKeysWith: { _, new in new }
         )
         
-        return .init(core: core, fields: fields, payload: payload)
+        return .init(
+            amount: payment.amount ?? 0,
+            product: payment.product ?? product,
+            fields: fields,
+            payload: payload
+        )
+    }
+}
+
+private extension AnywayPayment {
+    
+    var product: AnywayPaymentOutline.Product? {
+        
+        guard case let .widget(.product(product)) = elements[id: .widgetID(.product)]
+        else { return nil }
+        
+        return .init(product)
+    }
+}
+
+private extension AnywayPaymentOutline.Product {
+    
+    init(_ product: AnywayElement.Widget.Product) {
+        
+        self.init(
+            currency: product.currency,
+            productID: product.productID,
+            productType: .init(product.productType)
+        )
+    }
+}
+
+private extension AnywayPaymentOutline.Product.ProductType {
+    
+    init(_ type: AnywayElement.Widget.Product.ProductType) {
+        
+        switch type {
+        case .account: self = .account
+        case .card:    self = .card
+        }
     }
 }
 

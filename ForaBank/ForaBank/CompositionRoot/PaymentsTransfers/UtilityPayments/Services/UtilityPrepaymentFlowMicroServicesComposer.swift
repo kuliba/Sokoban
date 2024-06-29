@@ -257,7 +257,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         
         let context = AnywayPaymentContext(
             initial: .init(
-                amount: outline.core.amount,
+                amount: outline.amount,
                 elements: [],
                 footer: .continue,
                 isFinalStep: false
