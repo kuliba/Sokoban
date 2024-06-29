@@ -278,6 +278,30 @@ private extension UtilityPaymentNanoServicesComposer {
 
 // MARK: - Adapters
 
+extension AnywayPaymentOutline {
+    
+    init(latestServicePayment latest: RemoteServices.ResponseMapper.LatestServicePayment) {
+        
+        let pairs = latest.additionalItems.map {
+            
+            ($0.fieldName, $0.fieldValue)
+        }
+        let fields = Dictionary(uniqueKeysWithValues: pairs)
+        
+        self.init(
+            amount: latest.amount,
+            product: nil,
+            fields: fields,
+            payload: .init(
+                puref: latest.puref,
+                title: latest.name,
+                subtitle: nil,
+                icon: latest.md5Hash
+            )
+        )
+    }
+}
+
 private extension RemoteServices.RequestFactory.CreateAnywayTransferPayload {
     
     init(_ payload: StartAnywayPaymentPayload) {
