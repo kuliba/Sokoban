@@ -130,7 +130,7 @@ private extension ControlPanelButtonDetails {
             id: card.id,
             title: .cardGuardianTitle(by: card.statusCard, flag),
             icon: .cardGuardian(by: card.statusCard),
-            event: .cardGuardian(card))
+            event: card.statusCard == .active ? .blockCard(card) : .unblockCard(card))
     }
     
     static func createVisibilityButton(by card: ProductCardData) -> Self {

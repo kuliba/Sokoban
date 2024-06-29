@@ -745,6 +745,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         createSberQRPaymentResultStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         createUnblockCardStub: UnblockCardServices.UnblockCardResult = .success(.init(statusBrief: "", statusDescription: "")),
+        createBlockCardStub: BlockCardServices.BlockCardResult = .success(.init(statusBrief: "", statusDescription: "")),
         products: [ProductData] = [],
         cvvPINServicesClient: CVVPINServicesClient = HappyCVVPINServicesClient(),
         makeAlertDataUpdateFailureViewModel: @escaping PaymentsTransfersFactory.MakeAlertDataUpdateFailureViewModel = { _ in nil },
@@ -768,6 +769,12 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let unblockCardServices = UnblockCardServices.preview(createUnblockCardStub: createUnblockCardStub)
         
+        let blockCardServices = BlockCardServices.preview(createBlockCardStub: createBlockCardStub)
+
+        let productProfileServices = ProductProfileServices(
+            createBlockCardService: blockCardServices,
+            createUnblockCardService: unblockCardServices)
+        
         let qrViewModelFactory = QRViewModelFactory.preview()
         
         let effectSpy = EffectSpy()
@@ -785,7 +792,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
             sberQRServices: sberQRServices,
-            unblockCardServices: unblockCardServices,
+            productProfileServices: productProfileServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient, 
             productNavigationStateManager: .preview,

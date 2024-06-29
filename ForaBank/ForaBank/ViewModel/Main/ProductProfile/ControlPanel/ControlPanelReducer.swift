@@ -10,14 +10,14 @@ import Foundation
 final class ControlPanelReducer {
     
     private let controlPanelLifespan: DispatchTimeInterval
-    private let blockCard: () -> Void
+    private let productProfileServices: ProductProfileServices
 
     init(
         controlPanelLifespan: DispatchTimeInterval = .milliseconds(400),
-        blockCard: @escaping () -> Void
+        productProfileServices: ProductProfileServices
     ) {
         self.controlPanelLifespan = controlPanelLifespan
-        self.blockCard = blockCard
+        self.productProfileServices = productProfileServices
     }
 }
 
@@ -56,9 +56,26 @@ extension ControlPanelReducer {
         
         switch event {
             
-        case let .cardGuardian(productId):
-            blockCard()
-            
+        case let .blockCard(card):
+            productProfileServices.createBlockCardService.createBlockCard(.init(cardId: .init(card.cardId), cardNumber: .init(card.number ?? ""))) { result in
+                switch result {
+                case .failure:
+                    break
+                case .success:
+                    break
+                }
+            }
+
+        case let .unblockCard(card):
+            productProfileServices.createUnblockCardService.createUnblockCard(.init(cardId: .init(card.cardId), cardNumber: .init(card.number ?? ""))) { result in
+                switch result {
+                case .failure:
+                    break
+                case .success:
+                    break
+                }
+            }
+
         case let .changePin(productId):
             print("changePin")
             

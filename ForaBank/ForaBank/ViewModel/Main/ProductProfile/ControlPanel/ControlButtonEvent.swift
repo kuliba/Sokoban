@@ -9,7 +9,8 @@ import Foundation
 
 enum ControlButtonEvent: Equatable {
     
-    case cardGuardian(ProductCardData)
+    case blockCard(ProductCardData)
+    case unblockCard(ProductCardData)
     case changePin(ProductCardData)
     case visibility(ProductCardData)
 }
