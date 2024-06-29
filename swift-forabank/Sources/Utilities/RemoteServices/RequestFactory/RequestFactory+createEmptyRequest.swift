@@ -11,12 +11,13 @@ public extension RequestFactory {
     
     static func createEmptyRequest(
         _ httpMethod: URLRequest.HTTPMethod,
-        with url: URL
+        with url: URL,
+        cachePolicy: URLRequest.CachePolicy = .reloadIgnoringLocalAndRemoteCacheData
     ) -> URLRequest {
         
         var request = URLRequest(url: url)
         request.httpMethod = httpMethod.rawValue
-        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        request.cachePolicy = cachePolicy
         return request
     }
 }
