@@ -10,7 +10,7 @@ import RemoteServices
 
 extension RequestFactory {
     
-    static func getAllLatestPaymentsRequest(
+    static func createGetAllLatestPaymentsRequest(
         _ kind: LatestPaymentKind
     ) -> URLRequest {
         

@@ -108,7 +108,7 @@ private extension UtilityPaymentNanoServicesComposer {
         struct MappingError: Error {}
 
         let fetch = ForaBank.NanoServices.adaptedLoggingFetch(
-            createRequest: RequestFactory.getAllLatestPaymentsRequest(_:),
+            createRequest: RequestFactory.createGetAllLatestPaymentsRequest(_:),
             httpClient: httpClient,
             mapResponse: {
                 

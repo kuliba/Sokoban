@@ -40,6 +40,6 @@ final class RequestFactory_createGetAllLatestPaymentsRequestTests: XCTestCase {
     
     private func createRequest() -> URLRequest {
         
-        RequestFactory.getAllLatestPaymentsRequest(.service)
+        RequestFactory.createGetAllLatestPaymentsRequest(.service)
     }
 }
