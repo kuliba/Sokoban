@@ -1,5 +1,5 @@
 //
-//  ResponseMapper+mapGetAllLatestPaymentsResponseTests.swift
+//  ResponseMapper+mapGetAllLatestServicePaymentsResponseTests.swift
 //
 //
 //  Created by Igor Malyarov on 25.03.2024.
@@ -9,7 +9,7 @@ import LatestPayments
 import RemoteServices
 import XCTest
 
-final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
+final class ResponseMapper_mapGetAllLatestServicePaymentsResponseTests: XCTestCase {
     
     func test_map_shouldDeliverInvalidFailureOnEmptyData() {
         
@@ -193,7 +193,7 @@ final class ResponseMapper_mapGetAllLatestPaymentsResponseTests: XCTestCase {
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
     ) -> MappingResult {
         
-        ResponseMapper.mapGetAllLatestPaymentsResponse(data, httpURLResponse)
+        ResponseMapper.mapGetAllLatestServicePaymentsResponse(data, httpURLResponse)
     }
     
     private func assert(

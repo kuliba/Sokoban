@@ -1,5 +1,5 @@
 //
-//  ResponseMapper+mapGetAllLatestPaymentsResponse.swift
+//  ResponseMapper+mapGetAllLatestServicePaymentsResponse.swift
 //
 //
 //  Created by Igor Malyarov on 28.06.2024.
@@ -10,7 +10,7 @@ import RemoteServices
 
 public extension ResponseMapper {
     
-    static func mapGetAllLatestPaymentsResponse(
+    static func mapGetAllLatestServicePaymentsResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
     ) -> MappingResult<[LatestServicePayment]> {
