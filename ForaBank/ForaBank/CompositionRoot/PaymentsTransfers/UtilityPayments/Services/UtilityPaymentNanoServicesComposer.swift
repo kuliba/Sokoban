@@ -9,6 +9,7 @@ import AnywayPaymentAdapters
 import AnywayPaymentDomain
 import Fetcher
 import Foundation
+import LatestPayments
 import OperatorsListComponents
 import RemoteServices
 
@@ -110,15 +111,8 @@ private extension UtilityPaymentNanoServicesComposer {
         let fetch = ForaBank.NanoServices.adaptedLoggingFetch(
             createRequest: RequestFactory.createGetAllLatestPaymentsRequest(_:),
             httpClient: httpClient,
-            mapResponse: {
-                
-                let response = ResponseMapper.mapGetAllLatestPaymentsResponse($0, $1)
-                return Result<[ResponseMapper.LatestServicePayment], MappingError>.success(response)
-            },
-            mapOutput: {
-                
-                $0.map(UtilityPaymentNanoServicesComposer.LastPayment.init)
-            },
+            mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestServicePaymentsResponse(_:_:),
+            mapOutput: { $0 },
             mapError: { _ in MappingError() },
             log: infoNetworkLog
         )
@@ -284,19 +278,6 @@ private extension UtilityPaymentNanoServicesComposer {
 
 // MARK: - Adapters
 
-private extension UtilityPaymentLastPayment {
-    
-    init(with last: ResponseMapper.LatestServicePayment) {
-        
-        self.init(
-            amount: last.amount,
-            name: last.title,
-            md5Hash: last.md5Hash,
-            puref: last.puref
-        )
-    }
-}
-
 private extension RemoteServices.RequestFactory.CreateAnywayTransferPayload {
     
     init(_ payload: StartAnywayPaymentPayload) {
@@ -385,8 +366,8 @@ private extension Array where Element == UtilityPaymentLastPayment {
 
 private extension UtilityPaymentLastPayment {
     
-    static let failure: Self = .init(amount: 123.45, name: "failure", md5Hash: nil, puref: UUID().uuidString)
-    static let preview: Self = .init(amount: 567.89, name: UUID().uuidString, md5Hash: nil, puref: UUID().uuidString)
+    static let failure: Self = .init(date: .init(), amount: 123.45, name: "failure", md5Hash: nil, puref: UUID().uuidString, additionalItems: [])
+    static let preview: Self = .init(date: .init(), amount: 567.89, name: UUID().uuidString, md5Hash: nil, puref: UUID().uuidString, additionalItems: [])
 }
 
 private extension UtilityPaymentOperator {

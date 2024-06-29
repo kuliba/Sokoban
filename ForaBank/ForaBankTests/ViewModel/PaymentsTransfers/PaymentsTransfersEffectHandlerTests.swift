@@ -7,6 +7,7 @@
 
 @testable import ForaBank
 import OperatorsListComponents
+import RemoteServices
 import XCTest
 
 final class PaymentsTransfersEffectHandlerTests: XCTestCase {
@@ -179,12 +180,14 @@ final class PaymentsTransfersEffectHandlerTests: XCTestCase {
     }
     
     private func makeLatestPayment(
+        date: Date = .init(),
         _ title: String = UUID().uuidString,
         _ icon: String = UUID().uuidString,
-        _ puref: String = UUID().uuidString
+        _ puref: String = UUID().uuidString,
+        additionalItems: [RemoteServices.ResponseMapper.LatestServicePayment.AdditionalItem] = []
     ) -> LatestPayment {
         
-        .init(amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: icon, puref: puref)
+        return .init(date: date, amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: UUID().uuidString, puref: UUID().uuidString, additionalItems: additionalItems)
     }
     
     private func makeStartPaymentPayload(
