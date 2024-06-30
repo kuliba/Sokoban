@@ -420,9 +420,16 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-forabank",
+        "containerPath" : "container:",
         "identifier" : "LatestPaymentsTests",
         "name" : "LatestPaymentsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UIPrimitivesTests",
+        "name" : "UIPrimitivesTests"
       }
     }
   ],
