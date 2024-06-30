@@ -11,7 +11,7 @@ import XCTest
 
 final class AsyncImageViewTests: XCTestCase {
     
-    func testFetchCalledOnAppear() {
+    func test_shouldCallFetchOnAppear() {
         
         let exp = expectation(description: "wait for fetch")
         
@@ -26,7 +26,6 @@ final class AsyncImageViewTests: XCTestCase {
                 callback(.star)  // Provide a dummy image
             }
         )
-        
         view.simulateOnAppear()
         
         wait(for: [exp], timeout: 1.0)

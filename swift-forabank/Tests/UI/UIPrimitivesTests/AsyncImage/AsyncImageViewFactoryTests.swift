@@ -49,8 +49,8 @@ final class AsyncImageViewFactoryTests: XCTestCase {
             renderedImages.append($0)
             return .init(image: $0)
         }
-        
         view.simulateOnAppear()
+        
         XCTAssertEqual(renderedImages, [.placeholder])
     }
     
@@ -80,14 +80,12 @@ final class AsyncImageViewFactoryTests: XCTestCase {
         XCTAssertEqual(fetcher.payloads, [md5Hash])
         
         fetcher.complete(with: .star)
-        
         controller.loadViewIfNeeded()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         XCTAssertEqual(renderedImages, [.placeholder, .star])
         
         fetcher.complete(with: .pencil)
-        
         controller.loadViewIfNeeded()
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
@@ -101,13 +99,13 @@ final class AsyncImageViewFactoryTests: XCTestCase {
         let name = UUID().uuidString
         let (sut, _) = makeSUT()
         var renderedImages = [Image]()
+        
         let view = sut.makeAsyncImageView(.named(name)) {
             
             renderedImages.append($0)
             return .init(image: $0)
         }
-        
-        _ = view.body
+        view.simulateOnAppear()
         
         XCTAssertEqual(renderedImages, [.init(name)])
     }
@@ -118,13 +116,13 @@ final class AsyncImageViewFactoryTests: XCTestCase {
         
         let (sut, _) = makeSUT()
         var renderedImages = [Image]()
+        
         let view = sut.makeAsyncImageView(.svg(.invalidSVG)) {
             
             renderedImages.append($0)
             return .init(image: $0)
         }
-        
-        _ = view.body
+        view.simulateOnAppear()
         
         XCTAssertEqual(renderedImages, [.placeholder])
     }
@@ -133,14 +131,12 @@ final class AsyncImageViewFactoryTests: XCTestCase {
         
         let (sut, _) = makeSUT()
         var renderedImages = [Image]()
-#warning("add render spy")
         let view = sut.makeAsyncImageView(.svg(.smallSVG)) {
             
             renderedImages.append($0)
             return .init(image: $0)
         }
-        
-        _ = view.body
+        view.simulateOnAppear()
         
         XCTAssertEqual(renderedImages.count, 1, "The image should be rendered, but more precise assertion is too complex and involves diving into SVGKit implementations.")
         XCTAssertNotEqual(renderedImages, [.placeholder])
