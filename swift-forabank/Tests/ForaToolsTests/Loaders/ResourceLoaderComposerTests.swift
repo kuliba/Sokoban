@@ -139,7 +139,7 @@ final class ResourceLoaderComposerTests: XCTestCase {
     
     private func makeSUT(
         isBlacklisted: @escaping (Payload, Int) -> Bool = { _,_ in false},
-        retryPolicy: RetryPolicy = .init(maxRetries: 1, strategy: .equal(interval: .seconds(1))),
+        retryPolicy: RetryPolicy = .onceForSecond,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
