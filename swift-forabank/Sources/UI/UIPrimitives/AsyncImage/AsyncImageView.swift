@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+/// A SwiftUI view that asynchronously fetches and displays an image.
+///
+/// `AsyncImageView` is a generic view that takes an initial image, a view builder closure to create
+/// the view for displaying the image, and a fetch closure to asynchronously load the image. When the view
+/// appears, it triggers the fetch closure to load the image and updates the view accordingly.
 public struct AsyncImageView<ImageView: View>: View {
     
     @State private var image: Image
@@ -14,6 +19,12 @@ public struct AsyncImageView<ImageView: View>: View {
     let imageView: (Image) -> ImageView
     let fetchImage: FetchImage
     
+    /// Initialises an `AsyncImageView` with the specified initial image, view builder, and fetch closure.
+    ///
+    /// - Parameters:
+    ///   - initialImage: The initial image to display.
+    ///   - imageView: A closure that creates a view for displaying the image.
+    ///   - fetchImage: A closure that asynchronously fetches the image.
     public init(
         initialImage: Image,
         imageView: @escaping (Image) -> ImageView,
@@ -38,6 +49,11 @@ public extension AsyncImageView {
 
 public extension AsyncImageView where ImageView == ResizableFit {
     
+    /// Initialises an `AsyncImageView` with the specified initial image and fetch closure, using a `ResizableFit` view for display.
+    ///
+    /// - Parameters:
+    ///   - initialImage: The initial image to display.
+    ///   - fetchImage: A closure that asynchronously fetches the image.
     init(
         initialImage: Image,
         fetchImage: @escaping FetchImage
@@ -52,6 +68,11 @@ public extension AsyncImageView where ImageView == ResizableFit {
 
 public extension AsyncImageView where ImageView == Image {
     
+    /// Initialises an `AsyncImageView` with the specified initial image and fetch closure, using an `Image` view for display.
+    ///
+    /// - Parameters:
+    ///   - initialImage: The initial image to display.
+    ///   - fetchImage: A closure that asynchronously fetches the image.
     init(
         initialImage: Image,
         fetchImage: @escaping FetchImage
@@ -66,6 +87,10 @@ public extension AsyncImageView where ImageView == Image {
 
 private extension AsyncImageView {
     
+    /// Updates the image by calling the fetch closure.
+    ///
+    /// This method is called when the view appears. It uses the fetch closure to load the image and updates
+    /// the `@State` property `image` on the main thread.
     func updateImage() {
         
         DispatchQueue.main.async {

@@ -8,11 +8,20 @@
 import ForaTools
 import SwiftUI
 
+/// A factory class for creating instances of `AsyncImageView` with different fetching strategies.
+///
+/// `AsyncImageViewFactory` provides methods to create `AsyncImageView` instances that can fetch images
+/// using different strategies, such as fetching based on an MD5 hash, named images, or SVG data.
 public final class AsyncImageViewFactory<ImageView: View> {
     
     private let placeholder: Image
     private let md5HashFetch: MD5HashFetch
     
+    /// Initialises an `AsyncImageViewFactory` with a placeholder image and an MD5 hash fetch closure.
+    ///
+    /// - Parameters:
+    ///   - placeholder: The placeholder image to display while the image is being fetched.
+    ///   - md5HashFetch: A closure that fetches an image based on an MD5 hash string.
     public init(
         placeholder: Image,
         md5HashFetch: @escaping MD5HashFetch
@@ -21,12 +30,23 @@ public final class AsyncImageViewFactory<ImageView: View> {
         self.md5HashFetch = md5HashFetch
     }
     
+    /// A type alias for the completion handler used when an image is fetched.
     public typealias ImageCompletion = (Image) -> Void
+    
+    /// A type alias for the MD5 hash fetch closure.
+    ///
+    /// The closure takes an MD5 hash string and a completion handler that should be called with the fetched image.
     public typealias MD5HashFetch = (String, @escaping ImageCompletion) -> Void
 }
 
 public extension AsyncImageViewFactory {
     
+    /// Creates an `AsyncImageView` for the given `AsyncIcon` and image view builder closure.
+    ///
+    /// - Parameters:
+    ///   - icon: The `AsyncIcon` specifying the image fetching strategy.
+    ///   - imageView: A closure that creates a view for displaying the image.
+    /// - Returns: An `AsyncImageView` configured with the specified icon and image view builder.
     func makeAsyncImageView(
         _ icon: AsyncIcon,
         imageView:  @escaping (Image) -> ImageView
@@ -57,6 +77,10 @@ public extension AsyncImageViewFactory {
 
 public extension AsyncImageViewFactory where ImageView == ResizableFit {
     
+    /// Creates an `AsyncImageView` for the given `AsyncIcon` using a `ResizableFit` view for display.
+    ///
+    /// - Parameter icon: The `AsyncIcon` specifying the image fetching strategy.
+    /// - Returns: An `AsyncImageView` configured with the specified icon and using `ResizableFit` for display.
     func makeAsyncImageView(
         _ icon: AsyncIcon
     ) -> AsyncImageView<ImageView> {
@@ -67,7 +91,14 @@ public extension AsyncImageViewFactory where ImageView == ResizableFit {
 
 private extension AsyncImageViewFactory {
     
-    // if no fetch is needed
+    /// Creates an `AsyncImageView` with the given image and image view builder closure.
+    ///
+    /// This method is used when no fetch is needed, such as for static images or SVG data.
+    ///
+    /// - Parameters:
+    ///   - image: The image to display.
+    ///   - imageView: A closure that creates a view for displaying the image.
+    /// - Returns: An `AsyncImageView` configured with the specified image and image view builder.
     func makeAsyncImageView(
         with image: Image,
         imageView:  @escaping (Image) -> ImageView
@@ -104,9 +135,9 @@ struct AsyncImageViewFactoryDemo_Previews: PreviewProvider {
     )
     
     static var previews: some View {
-
+        
         VStack {
-             
+            
             Group {
                 
                 factory.makeAsyncImageView(.image(.init(systemName: "photo")))
