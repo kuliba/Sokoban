@@ -11,7 +11,7 @@ class LocalAgent: LocalAgentProtocol {
     
     internal let context: Context
     internal var serials: [String: String]
-    private let lock = NSLock()
+    private let lock = NSRecursiveLock()
 
     init(context: Context) {
         
@@ -98,6 +98,27 @@ class LocalAgent: LocalAgentProtocol {
         
         return serials[fileName]
     }
+}
+
+// MARK: - update
+
+extension LocalAgent {
+    
+    func update<T: Codable>(
+        with newData: T,
+        serial: String?,
+        using reduce: (T, T) -> T
+    ) throws {
+        
+        lock.lock()
+        defer { lock.unlock() }
+        
+        let existing = try load(type: T.self).get(orThrow: LoadError())
+        let updated = reduce(existing, newData)
+        try store(updated, serial: serial)
+    }
+
+    struct LoadError: Error {}
 }
 
 //MARK: - Internal Helpers
