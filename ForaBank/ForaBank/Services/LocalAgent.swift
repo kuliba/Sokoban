@@ -107,17 +107,21 @@ extension LocalAgent {
     func update<T: Codable>(
         with newData: T,
         serial: String?,
-        using reduce: (T, T) -> T
+        using reduce: (T, T) -> (T, Bool)
     ) throws {
         
         lock.lock()
         defer { lock.unlock() }
         
         let existing = try load(type: T.self).get(orThrow: LoadError())
-        let updated = reduce(existing, newData)
-        try store(updated, serial: serial)
+        let (updated, hasChanges) = reduce(existing, newData)
+        
+        if hasChanges {
+    
+            try store(updated, serial: serial)
+        }
     }
-
+    
     struct LoadError: Error {}
 }
 
