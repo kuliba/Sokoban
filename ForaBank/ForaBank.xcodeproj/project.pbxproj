@@ -1103,6 +1103,7 @@
 		2AABD3D12A2540D90085CDA6 /* QRSearchCityViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */; };
 		2AAE0A2529F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */; };
 		2AAF3E242BF37C1800A623DA /* CacheSberOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAF3E232BF37C1800A623DA /* CacheSberOperator.swift */; };
+		2AB03A132C31F0020085D79F /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB03A122C31F0020085D79F /* ImageLoader.swift */; };
 		2AB109AA2C2C18E100325D3A /* OTPWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB109A92C2C18E100325D3A /* OTPWarningView.swift */; };
 		2AB109AD2C2C193200325D3A /* OTPWarningViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB109AC2C2C193200325D3A /* OTPWarningViewConfig.swift */; };
 		2AB109AF2C2C199500325D3A /* OTPWarningViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB109AE2C2C199500325D3A /* OTPWarningViewConfig+iFora.swift */; };
@@ -4159,6 +4160,7 @@
 		2AABD3D02A2540D90085CDA6 /* QRSearchCityViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchCityViewModelTests.swift; sourceTree = "<group>"; };
 		2AAE0A2429F9830D007786B7 /* ReducerTextFieldViewModel+DSL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReducerTextFieldViewModel+DSL.swift"; sourceTree = "<group>"; };
 		2AAF3E232BF37C1800A623DA /* CacheSberOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheSberOperator.swift; sourceTree = "<group>"; };
+		2AB03A122C31F0020085D79F /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		2AB109A92C2C18E100325D3A /* OTPWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPWarningView.swift; sourceTree = "<group>"; };
 		2AB109AC2C2C193200325D3A /* OTPWarningViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPWarningViewConfig.swift; sourceTree = "<group>"; };
 		2AB109AE2C2C199500325D3A /* OTPWarningViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OTPWarningViewConfig+iFora.swift"; sourceTree = "<group>"; };
@@ -9614,6 +9616,14 @@
 			path = Cache;
 			sourceTree = "<group>";
 		};
+		2AB03A0D2C31EEF90085D79F /* ImageLoader */ = {
+			isa = PBXGroup;
+			children = (
+				2AB03A122C31F0020085D79F /* ImageLoader.swift */,
+			);
+			path = ImageLoader;
+			sourceTree = "<group>";
+		};
 		2AB109AB2C2C192200325D3A /* OTPWarningView */ = {
 			isa = PBXGroup;
 			children = (
@@ -10335,6 +10345,7 @@
 				8394B2ED2BBF09410078CB10 /* ProductProfile */,
 				2AF50A142B315CB2009CB9E5 /* RootViewFactory */,
 				2A8CC2442B29D44D00191B8E /* ImageCache.swift */,
+				2AB03A0D2C31EEF90085D79F /* ImageLoader */,
 				2AF1774E2AC476CD00D100DD /* RootViewModelFactory.swift */,
 				2A235F802AFA6DD600E42E36 /* RootViewModelFactory+ext.swift */,
 				2A1F5E802C26E9FF002B3F65 /* Configs */,
@@ -17797,6 +17808,7 @@
 				C109B01929921806009CFCFA /* Model+PaymentsAnywayAbroad.swift in Sources */,
 				5028F76A28DB2A70000DB351 /* CurrencyWalletSelectorViewComponent.swift in Sources */,
 				77517F9D27A86321005CFB77 /* TransferResponseBaseData.swift in Sources */,
+				2AB03A132C31F0020085D79F /* ImageLoader.swift in Sources */,
 				0BE270B826B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift in Sources */,
 				835D0DF32BEA576300FFE90B /* Services+makeUnblockCardServices.swift in Sources */,
 				EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */,
