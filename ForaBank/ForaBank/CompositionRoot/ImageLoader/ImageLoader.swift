@@ -8,4 +8,4 @@
 import ForaTools
 import SwiftUI
 
-typealias ImageLoader = ForaTools.Loader<String, Result<Image, Error>>
+typealias ImageLoader = ForaTools.Loader<String, Result<(String, Image), Error>>
