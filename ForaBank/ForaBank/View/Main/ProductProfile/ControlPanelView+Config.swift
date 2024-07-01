@@ -1,5 +1,5 @@
 //
-//  FullScreenPanelView+Config.swift
+//  ControlPanelView+Config.swift
 //  ForaBank
 //
 //  Created by Andryusina Nataly on 27.06.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension FullScreenPanelView {
+extension ControlPanelView {
     
     struct Config {
         
