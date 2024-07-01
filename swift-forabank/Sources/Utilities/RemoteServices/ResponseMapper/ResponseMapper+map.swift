@@ -15,12 +15,13 @@ public extension ResponseMapper {
     static func map<D: Decodable, T>(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse,
+        dateDecodingStrategy: JSONDecoder.DateDecodingStrategy? = nil,
         file: StaticString = #file,
         line: Int = #line,
         mapOrThrow: (D) throws -> T
     ) -> MappingResult<T> {
         
-        map(data, httpURLResponse, file: file, line: line) { (data: D?) in
+        map(data, httpURLResponse, dateDecodingStrategy: dateDecodingStrategy, file: file, line: line) { (data: D?) in
             
             guard let data else { throw InvalidResponse() }
             
@@ -32,6 +33,7 @@ public extension ResponseMapper {
     static func map<D: Decodable, T>(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse,
+        dateDecodingStrategy: JSONDecoder.DateDecodingStrategy? = nil,
         file: StaticString = #file,
         line: Int = #line,
         mapOrThrow: (D?) throws -> T
@@ -39,7 +41,14 @@ public extension ResponseMapper {
         
         do {
             
-            let response = try JSONDecoder().decode(_Response<D>.self, from: data)
+            let decoder = JSONDecoder()
+            
+            if let dateDecodingStrategy {
+                
+                decoder.dateDecodingStrategy = dateDecodingStrategy
+            }
+            
+            let response = try decoder.decode(_Response<D>.self, from: data)
             
             switch (httpURLResponse.statusCode, response.errorMessage, response.data) {
             case let (200, .none, data):

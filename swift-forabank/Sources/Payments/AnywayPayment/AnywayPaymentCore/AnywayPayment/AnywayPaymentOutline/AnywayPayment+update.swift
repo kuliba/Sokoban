@@ -21,10 +21,14 @@ extension AnywayPayment {
         elements.appendComplementaryFields(from: update.fields)
         elements.appendParameters(from: update.parameters, with: outline)
         
-        elements.addIfMissing(
-            widget: .product(.init(outline.core)),
-            condition: update.details.control.needSum
-        )
+        if let product = outline.product {
+            
+            elements.addIfMissing(
+                widget: .product(.init(product)),
+                condition: update.details.control.needSum
+            )
+        }
+        
         elements.addIfMissing(
             widget: .otp(nil, nil),
             condition: update.details.control.needOTP
@@ -59,7 +63,7 @@ private extension AnywayPaymentUpdate {
 
 private extension AnywayElement.Widget.Product {
     
-    init(_ core: AnywayPaymentOutline.PaymentCore) {
+    init(_ core: AnywayPaymentOutline.Product) {
         
         self.init(
             currency: core.currency,
@@ -69,7 +73,7 @@ private extension AnywayElement.Widget.Product {
     }
 }
 
-private extension AnywayPaymentOutline.PaymentCore {
+private extension AnywayPaymentOutline.Product {
     
     var _productType: AnywayElement.Widget.Product.ProductType {
         

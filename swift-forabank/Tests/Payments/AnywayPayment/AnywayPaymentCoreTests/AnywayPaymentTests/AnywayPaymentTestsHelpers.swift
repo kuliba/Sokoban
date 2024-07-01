@@ -161,12 +161,14 @@ func makeAnywayPayment(
 
 func makeAnywayPaymentOutline(
     _ fields: [String: String] = [:],
-    core: AnywayPaymentOutline.PaymentCore = makeOutlinePaymentCore(productType: .account),
+    amount: Decimal = makeAmount(),
+    product: AnywayPaymentOutline.Product = makeOutlineProduct(productType: .account),
     payload: AnywayPaymentOutline.Payload = makeAnywayPaymentPayload()
 ) -> AnywayPaymentOutline {
     
     return .init(
-        core: core,
+        amount: amount,
+        product: product,
         fields: fields.reduce(into: [:]) { $0[$1.key] = $1.value },
         payload: payload
     )
@@ -975,15 +977,13 @@ func makeIntID(
     return id
 }
 
-func makeOutlinePaymentCore(
-    amount: Decimal = makeAmount(),
+func makeOutlineProduct(
     currency: String = anyMessage(),
     productID: Int = makeIntID(),
-    productType: AnywayPaymentOutline.PaymentCore.ProductType
-) -> AnywayPaymentOutline.PaymentCore {
+    productType: AnywayPaymentOutline.Product.ProductType
+) -> AnywayPaymentOutline.Product {
     
     return .init(
-        amount: amount,
         currency: currency,
         productID: productID,
         productType: productType

@@ -247,27 +247,27 @@ func makeAnywayElementParameterUIAttributes(
 }
 
 func makeAnywayPaymentOutline(
-    core: AnywayPaymentOutline.PaymentCore = makePaymentCore(),
+    amount: Decimal = anyAmount(),
+    product: AnywayPaymentOutline.Product = makeOutlineProduct(),
     fields: AnywayPaymentOutline.Fields = [:],
     payload: AnywayPaymentOutline.Payload = makeOutlinePayload()
 ) -> AnywayPaymentOutline {
     
     return .init(
-        core: core,
+        amount: amount,
+        product: product,
         fields: fields,
         payload: payload
     )
 }
 
-func makePaymentCore(
-    amount: Decimal = anyAmount(),
+func makeOutlineProduct(
     currency: String = "RUB",
     productID: Int = anyProductID(),
-    productType: AnywayPaymentOutline.PaymentCore.ProductType = .account
-) -> AnywayPaymentOutline.PaymentCore {
+    productType: AnywayPaymentOutline.Product.ProductType = .account
+) -> AnywayPaymentOutline.Product {
     
     return .init(
-        amount: amount,
         currency: currency,
         productID: productID,
         productType: productType
