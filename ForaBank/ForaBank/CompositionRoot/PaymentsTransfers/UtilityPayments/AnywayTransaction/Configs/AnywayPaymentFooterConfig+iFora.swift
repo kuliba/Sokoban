@@ -11,6 +11,6 @@ extension AnywayPaymentFooterConfig {
     
     static let iFora: Self = .init(
         amountConfig: .iFora,
-        buttonConfig: .iFora
+        buttonConfig: .iForaFooter
     )
 }

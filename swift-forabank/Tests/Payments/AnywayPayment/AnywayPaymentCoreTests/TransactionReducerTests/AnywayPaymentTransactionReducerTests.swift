@@ -48,6 +48,8 @@ class AnywayPaymentTransactionReducerTests: XCTestCase {
         assert(.dismissRecoverableError, on: state, effect: nil)
     }
     
+    // MARK: - add tests for OTP
+    
     // TODO: add integration tests
     
     // MARK: - helpers tests
@@ -58,7 +60,6 @@ class AnywayPaymentTransactionReducerTests: XCTestCase {
         
         XCTAssertNoDiff(state.context.payment.elements, [])
         XCTAssertNoDiff(state.context.payment.footer, .continue)
-        XCTAssertNil(state.context.payment.infoMessage)
         XCTAssertFalse(state.context.payment.isFinalStep)
         
         XCTAssertNotNil(state.context.outline.core)
@@ -125,21 +126,21 @@ class AnywayPaymentTransactionReducerTests: XCTestCase {
         from string: String
     ) throws -> AnywayPaymentUpdate {
         
-        return try .init(makeResponse(from: string))
+        return try XCTUnwrap(.init(makeResponse(from: string)))
     }
     
      func makeUpdatePaymentResult(
         _ response: Response
-    ) -> Event.UpdatePaymentResult {
+    ) throws -> Event.UpdatePaymentResult {
         
-        return .success(.init(response))
+        return try .success(XCTUnwrap(.init(response)))
     }
     
      func makeUpdatePaymentResult(
         from string: String
     ) throws -> Event.UpdatePaymentResult {
         
-        return try .success(.init(makeResponse(from: string)))
+        return try .success(XCTUnwrap(.init(makeResponse(from: string))))
     }
     
      func makeResponse(

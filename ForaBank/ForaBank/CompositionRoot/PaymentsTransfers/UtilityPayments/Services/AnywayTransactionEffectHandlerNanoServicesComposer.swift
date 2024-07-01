@@ -222,7 +222,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
     
     private func makeTransferLive() -> MakeTransfer {
         
-        let createRequest = ForaBank.RequestFactory.createMakeTransferRequest
+        let createRequest = ForaBank.RequestFactory.createMakeTransferV2Request
         let mapResponse = AnywayPaymentBackend.ResponseMapper.mapMakeTransferResponse
         
         let service = LoggingRemoteServiceDecorator(
@@ -236,7 +236,7 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
             
             return service(.init(payload.rawValue)) {
                 
-                completion(try? $0.map(\.response).get())
+                completion($0.map(\.response).mapError { .init($0) })
             }
         }
     }
@@ -325,13 +325,51 @@ private extension AnywayTransactionEffectHandlerNanoServicesComposer {
 
 // MARK: - Adapters
 
+private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferFailure {
+    
+    init(_ error: ServiceError) {
+ 
+        switch error {
+        case .createRequest, .performRequest:
+            self = .terminal
+            
+        case let .mapResponse(mappingError):
+            switch mappingError {
+            case .invalid:
+                self = .terminal
+                
+            case let .server(statusCode, errorMessage):
+                switch (statusCode, errorMessage) {
+                case (102, "Введен некорректный код. Попробуйте еще раз."):
+                    self = .otpFailure(errorMessage)
+                    
+                default:
+                    self = .terminal
+                }
+            }
+        }
+    }
+    
+    typealias ServiceError = RemoteServiceError<any Error, any Error, RemoteServices.ResponseMapper.MappingError>
+}
+
 private extension NanoServices.CreateAnywayTransferResult {
     
     var result: Result<AnywayPaymentUpdate, AnywayPaymentDomain.ServiceFailure> {
-        // dump(self, name: "NanoServices.CreateAnywayTransferResult")
-        return self
-            .map(AnywayPaymentUpdate.init)
-            .mapError(ServiceFailure.init)
+        
+        switch self {
+        case let .failure(failure):
+            return .failure(ServiceFailure(failure))
+            
+        case let .success(response):
+            switch AnywayPaymentUpdate(response) {
+            case .none:
+                return .failure(.connectivityError)
+                
+            case let .some(update):
+                return .success(update)
+            }
+        }
     }
 }
 
@@ -420,12 +458,12 @@ private extension AnywayPaymentDigest {
     
     var processResultStub: ProcessResult {
         
-        if isStep4 { return .success(.init(.step4)) }
-        if isStep4Fraud { return .success(.init(.step4Fraud)) }
+        if isStep4 { return .success(.init(.step4)!) }
+        if isStep4Fraud { return .success(.init(.step4Fraud)!) }
         if isStep3Alert { return .failure(.connectivityError) }
-        if isStep3 { return .success(.init(.step3)) }
+        if isStep3 { return .success(.init(.step3)!) }
         if isStep2Alert { return .failure(.serverError("Неверный лицевой счет.")) }
-        if isStep2 { return .success(.init(.step2)) }
+        if isStep2 { return .success(.init(.step2)!) }
         
         return .failure(.connectivityError)
     }
@@ -639,10 +677,11 @@ private extension VerificationCode {
     var makeTransferResultStub: MakeTransferResult {
         
         switch rawValue {
-        case "111111": return .g1Completed
-        case "222222": return .g1Inflight
-        case "333333": return .g1Rejected
-        default:       return .none
+        case "111111": return .success(.g1Completed)
+        case "222222": return .success(.g1Inflight)
+        case "333333": return .success(.g1Rejected)
+        case "444444": return .failure(.otpFailure("Код введен неверно"))
+        default:       return .failure(.terminal)
         }
     }
     
@@ -694,7 +733,6 @@ private extension AnywayPaymentUpdate.Details.Control {
         isFinalStep: false,
         isFraudSuspected: false,
         isMultiSum: false,
-        needMake: false,
         needOTP: false,
         needSum: false
     )

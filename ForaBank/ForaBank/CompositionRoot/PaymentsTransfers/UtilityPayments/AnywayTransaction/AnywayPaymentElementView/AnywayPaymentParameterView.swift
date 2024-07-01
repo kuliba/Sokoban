@@ -36,6 +36,7 @@ struct AnywayPaymentParameterView: View {
                 }
             )
             .paddedRoundedBackground()
+            .keyboardType(.numberPad)
             
         case let .select(viewModel):
             factory.makeSelectorView(viewModel)

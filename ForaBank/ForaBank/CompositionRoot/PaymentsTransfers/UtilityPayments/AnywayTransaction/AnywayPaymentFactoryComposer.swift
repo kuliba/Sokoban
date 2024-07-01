@@ -40,18 +40,18 @@ extension AnywayPaymentFactoryComposer {
         )
         
         return .init(
-            makeElementView: {
+            makeElementView: { state in
                 
                 return .init(
-                    state: $0,
+                    state: state,
                     event: event,
                     factory: elementFactory,
                     config: .iFora
                 )
             },
-            makeFooterView: { state, event in
+            makeFooterView: { footer in
                 
-                return .init(state: state.footer, event: event, config: .iFora)
+                return .init(viewModel: footer, config: .iFora)
             }
         )
     }
@@ -92,14 +92,20 @@ private extension AnywayPaymentFactoryComposer {
         viewModel: ObservingSelectorViewModel
     ) -> SelectorWrapperView {
         
-        let image = viewModel.state.image
+        let icon = viewModel.state.icon
         let title = viewModel.state.title
         
         return .init(
             viewModel: viewModel,
             factory: .init(
-                makeIconView: { self.makeIconView(image) },
-                makeOptionLabel: OptionView.init,
+                makeIconView: { self.makeIconView(icon) },
+                makeOptionLabel: {
+                    
+                    SimpleLabel(
+                        text: $0.value, 
+                        makeIconView: { Image.ic24RadioDefolt }
+                    )
+                },
                 makeSelectedOptionLabel: SelectedOptionView.init,
                 makeToggleLabel: { .init(state: $0, config: .iFora) }
             ),
@@ -108,10 +114,10 @@ private extension AnywayPaymentFactoryComposer {
     }
     
     private func makeIconView(
-        _  image: AnywayElement.UIComponent.Image?
+        _  icon: AnywayElement.UIComponent.Icon?
     ) -> IconView {
         
-        switch image {
+        switch icon {
         case let .md5Hash(md5Hash):
             return makeIconView(md5Hash)
             
@@ -142,8 +148,24 @@ private extension AnywayPaymentFactoryComposer {
         return .init(
             viewModel: viewModel, 
             config: .iFora,
-            iconView: { self.makeIconView("sms") }
+            iconView: { self.makeIconView("sms") },
+            warningView: {
+                
+                OTPWarningView(text: viewModel.state.warning, config: .iFora)
+            }
         )
+    }
+}
+
+private extension OTPInputState {
+    
+    var warning: String? {
+        
+        guard case let .input(input) = status,
+              case let .failure(.serverError(warning)) = input.otpField.status
+        else { return nil }
+        
+        return warning
     }
 }
 

@@ -18,8 +18,6 @@ public extension AnywayPaymentTransactionReducerComposer {
         
         return .init(
             paymentReduce: paymentReduce(),
-            stagePayment: stagePayment,
-            updatePayment: updatePayment,
             paymentInspector: composeInspector()
         )
     }
@@ -64,24 +62,40 @@ private extension AnywayPaymentTransactionReducerComposer {
         return .init(
             checkFraud: { $0.details.control.isFraudSuspected },
             getVerificationCode: { $0.payment.otp },
+            handleOTPFailure: handleOTPFailure,
             makeDigest: { $0.makeDigest() },
             resetPayment: { $0.resetPayment() },
-            restorePayment: { $0.restorePayment() },
+            rollbackPayment: { $0.rollbackPayment() },
+            stagePayment: stagePayment,
+            updatePayment: updatePayment,
             validatePayment: validatePayment,
             wouldNeedRestart: { $0.wouldNeedRestart }
         )
+    }
+    
+    private func handleOTPFailure(
+        context: AnywayPaymentContext,
+        with message: String
+    ) -> AnywayPaymentContext {
+        
+        let otpWidget = context.payment.elements[id: .widgetID(.otp)]
+        
+        guard case let .widget(.otp(value, _)) = otpWidget
+        else { return context }
+        
+        var context = context
+        context.payment.elements[id: .widgetID(.otp)] = .widget(.otp(value, message))
+        
+        return context
     }
     
     private func validatePayment(
         context: AnywayPaymentContext
     ) -> Bool {
         
-        let parameterValidator = AnywayPaymentParameterValidator()
-        let validator = AnywayPaymentValidator(
-            isValidParameter: parameterValidator.isValid(_:)
-        )
+        let validator = AnywayPaymentContextValidator()
         
-        return validator.isValid(context.payment)
+        return validator.validate(context) == nil
     }
     
     typealias Effect = TransactionEffect<AnywayPaymentDigest, AnywayPaymentEffect>
@@ -112,7 +126,7 @@ private extension AnywayPayment {
     var otp: VerificationCode? {
         
         guard case let .widget(widget) = elements[id: .widgetID(.otp)],
-              case let .otp(otp) = widget
+              case let .otp(otp, _) = widget
         else { return nil }
         
         return otp.map { "\($0)" }

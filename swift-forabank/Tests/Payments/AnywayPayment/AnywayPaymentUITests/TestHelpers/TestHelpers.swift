@@ -24,7 +24,7 @@ func isEmpty(
 func makeTransaction(
     context: AnywayPaymentContext = makeAnywayPaymentContext(),
     isValid: Bool = true,
-    status: Status<DocumentStatus, Response>? = nil
+    status: AnywayStatus<DocumentStatus, Response>? = nil
 ) -> AnywayTransaction {
     
     return .init(
@@ -36,14 +36,54 @@ func makeTransaction(
 
 func makeTransaction(
     elements: [AnywayElement],
+    footer: Payment<AnywayElement>.Footer = .continue,
     isValid: Bool = true,
-    status: Status<DocumentStatus, Response>? = nil
+    status: AnywayStatus<DocumentStatus, Response>? = nil
 ) -> AnywayTransaction {
     
     return .init(
         context: makeAnywayPaymentContext(
             payment: makeAnywayPayment(
-                elements: elements
+                elements: elements,
+                footer: footer
+            )
+        ),
+        isValid: isValid,
+        status: status
+    )
+}
+
+func makeTransactionWithAmount(
+    elements: [AnywayElement] = [],
+    amount: Decimal,
+    isValid: Bool = true,
+    status: AnywayStatus<DocumentStatus, Response>? = nil
+) -> AnywayTransaction {
+    
+    return .init(
+        context: makeAnywayPaymentContext(
+            payment: makeAnywayPayment(
+                amount: amount,
+                elements: elements,
+                footer: .amount
+            )
+        ),
+        isValid: isValid,
+        status: status
+    )
+}
+
+func makeTransactionWithContinue(
+    elements: [AnywayElement] = [],
+    isValid: Bool = true,
+    status: AnywayStatus<DocumentStatus, Response>? = nil
+) -> AnywayTransaction {
+    
+    return .init(
+        context: makeAnywayPaymentContext(
+            payment: makeAnywayPayment(
+                elements: elements,
+                footer: .continue
             )
         ),
         isValid: isValid,
@@ -69,16 +109,16 @@ func makeAnywayPaymentContext(
 }
 
 func makeAnywayPayment(
+    amount: Decimal? = nil,
     elements: [AnywayElement] = [],
     footer: Payment<AnywayElement>.Footer = .continue,
-    infoMessage: String? = nil,
     isFinalStep: Bool = false
 ) -> AnywayPayment {
     
     return .init(
+        amount: amount,
         elements: elements,
         footer: footer,
-        infoMessage: infoMessage,
         isFinalStep: isFinalStep
     )
 }
@@ -118,10 +158,10 @@ func makeAnywayElementField(
     id: AnywayElement.Field.ID = anyMessage(),
     title: String = anyMessage(),
     value: AnywayElement.Field.Value = anyMessage(),
-    image: AnywayElement.Image? = nil
+    icon: AnywayElement.Icon? = nil
 ) -> AnywayElement.Field {
     
-    return .init(id: id, title: title, value: value, image: image)
+    return .init(id: id, title: title, value: value, icon: icon)
 }
 
 func makeParameterAnywayElement(
@@ -133,7 +173,7 @@ func makeParameterAnywayElement(
 
 func makeAnywayElementParameter(
     field: AnywayElement.Parameter.Field = makeAnywayElementParameterField(),
-    image: AnywayElement.Image? = nil,
+    icon: AnywayElement.Icon? = nil,
     masking: AnywayElement.Parameter.Masking = makeAnywayElementParameterMasking(),
     validation: AnywayElement.Parameter.Validation = makeAnywayElementParameterValidation(),
     uiAttributes: AnywayElement.Parameter.UIAttributes = makeAnywayElementParameterUIAttributes()
@@ -141,7 +181,7 @@ func makeAnywayElementParameter(
     
     return .init(
         field: field,
-        image: image,
+        icon: icon,
         masking: masking,
         validation: validation,
         uiAttributes: uiAttributes

@@ -7,7 +7,7 @@
 
 public enum TransactionEvent<TransactionReport, PaymentEvent, PaymentUpdate> {
     
-    case completePayment(TransactionReport?)
+    case completePayment(TransactionResult)
     case `continue`
     case dismissRecoverableError
     case fraud(FraudEvent)
@@ -19,6 +19,14 @@ public enum TransactionEvent<TransactionReport, PaymentEvent, PaymentUpdate> {
 }
 
 public extension TransactionEvent {
+    
+    enum TransactionFailure: Equatable, Error {
+        
+        case otpFailure(String)
+        case terminal
+    }
+    
+    typealias TransactionResult = Result<TransactionReport, TransactionFailure>
     
     typealias UpdatePaymentResult = Result<PaymentUpdate, ServiceFailure>
     

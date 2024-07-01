@@ -418,7 +418,14 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "AmountComponentTests",
+        "name" : "AmountComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "SVCardLimitAPITests",
         "name" : "SVCardLimitAPITests"
       }

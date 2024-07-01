@@ -34,7 +34,12 @@ extension AnywayTransactionEffectHandlerNanoServices {
     typealias GetDetailsCompletion = (GetDetailsResult) -> Void
     typealias GetDetails = (OperationDetailID, @escaping GetDetailsCompletion) -> Void
     
-    typealias MakeTransferResult = MakeTransferResponse?
+    enum MakeTransferFailure: Equatable, Error {
+        
+        case otpFailure(String)
+        case terminal
+    }
+    typealias MakeTransferResult = Result<MakeTransferResponse, MakeTransferFailure>
     typealias MakeTransferCompletion = (MakeTransferResult) -> Void
     typealias MakeTransfer = (VerificationCode, @escaping MakeTransferCompletion) -> Void
 }

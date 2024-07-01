@@ -21,9 +21,10 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
         )
         
         sut.event(.dismissRecoverableError)
+        sut.event(.dismissRecoverableError)
+        sut.event(.dismissRecoverableError)
         
         XCTAssertNoDiff(statusSpy.values, [
-            .result(.failure(.updatePaymentFailure)),
             .result(.failure(.updatePaymentFailure)),
         ])
     }
@@ -58,6 +59,7 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
     ) -> Composer {
         
         let sut = Composer(
+            getCurrencySymbol: { _ in "₽" },
             elementMapper: .init(
                 currencyOfProduct: { _ in "₽" },
                 getProducts: { [] },
@@ -136,18 +138,18 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
     }
     
     private func makeAnywayPayment(
+        amount: Decimal? = nil,
         elements: [AnywayElement] = [],
         footer: Payment<AnywayElement>.Footer = .continue,
-        infoMessage: String? = nil,
         isFinalStep: Bool = false,
         isFraudSuspected: Bool = false,
         puref: String = UUID().uuidString
     ) -> AnywayPayment {
         
         return .init(
+            amount: amount,
             elements: elements,
             footer: footer,
-            infoMessage: infoMessage,
             isFinalStep: isFinalStep
         )
     }

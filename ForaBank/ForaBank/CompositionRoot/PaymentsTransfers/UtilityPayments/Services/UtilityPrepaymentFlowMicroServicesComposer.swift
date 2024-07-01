@@ -220,27 +220,35 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         _ outline: AnywayPaymentOutline
     ) -> ProcessSelectionResult {
         
-        return result
-            .map {
-                switch $0 {
-                case let .services(services, for: `operator`):
-                    return .services(services, for: `operator`)
+        switch result {
+        case let .failure(failure):
+            return .failure(.init(failure))
+            
+        case let .success(success):
+            switch success {
+            case let .services(services, for: `operator`):
+                return .success(.services(services, for: `operator`))
+                
+            case let .startPayment(response):
+                let update = AnywayPaymentUpdate(response)
+                
+                switch update {
+                case .none:
+                    return .failure(.serviceFailure(.connectivityError))
                     
-                case let .startPayment(response):
-                    let state = initiateTransaction(from: response, with: outline)
+                case let .some(update):
+                    let state = initiateTransaction(from: update, with: outline)
                     
-                    return .startPayment(state)
+                    return .success(.startPayment(state))
                 }
             }
-            .mapError(PrepaymentEvent.ProcessSelectionFailure.init)
+        }
     }
     
     private func initiateTransaction(
-        from response: StartPaymentResponse,
+        from update: AnywayPaymentUpdate,
         with outline: AnywayPaymentOutline
     ) -> AnywayTransactionState.Transaction {
-        
-        let update = AnywayPaymentUpdate(response)
         
         let payment = AnywayPaymentDomain.AnywayPayment(
             update: update,
@@ -249,9 +257,9 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         
         let context = AnywayPaymentContext(
             initial: .init(
-                elements: [], 
+                amount: outline.core.amount,
+                elements: [],
                 footer: .continue,
-                infoMessage: nil,
                 isFinalStep: false
             ),
             payment: payment,
@@ -275,13 +283,11 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         _ context: AnywayPaymentContext
     ) -> Bool {
         
-        let parameterValidator = AnywayPaymentParameterValidator()
-        let validator = AnywayPaymentValidator(
-            isValidParameter: parameterValidator.isValid(_:)
-        )
+        let validator = AnywayPaymentContextValidator()
         
-        return validator.isValid(context.payment)
-    }}
+        return validator.validate(context) == nil
+    }
+}
 
 // MARK: - Adapters
 
@@ -318,9 +324,9 @@ private extension AnywayPaymentDomain.AnywayPayment {
         outline: AnywayPaymentOutline
     ) {
         let empty: Self = .init(
+            amount: nil,
             elements: [],
             footer: .continue,
-            infoMessage: nil,
             isFinalStep: false
         )
         self = empty.update(with: update, and: outline)

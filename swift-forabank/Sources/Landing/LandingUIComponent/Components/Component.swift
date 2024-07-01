@@ -53,7 +53,7 @@ extension UILanding.Component {
 
         case dropDownTexts(UILanding.List.DropDownTexts)
         case horizontalRectangleImage(UILanding.List.HorizontalRectangleImage)
-        case horizontalRectangleLimits(UILanding.List.HorizontalRectangleLimits)
+        case horizontalRectangleLimits(UILanding.List.HorizontalRectangleLimits, LimitsLoadingStatus)
         case horizontalRoundImage(UILanding.List.HorizontalRoundImage)
         case verticalRoundImage(UILanding.List.VerticalRoundImage)
         
@@ -63,7 +63,7 @@ extension UILanding.Component {
                 return value.id
             case let .horizontalRectangleImage(value):
                 return value.id
-            case let .horizontalRectangleLimits(value):
+            case let .horizontalRectangleLimits(value, _): // ??? need add limits id
                 return value.id
             case let .horizontalRoundImage(value):
                 return value.id
