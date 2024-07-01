@@ -30,10 +30,10 @@ extension AnywayPayment {
             condition: update.details.control.needOTP
         )
         
-        let footer = footer.update(with: update)
+        let footer = update.makeFooter()
         
         return .init(
-            amount: update.details.amounts.amount,
+            amount: update.details.amounts.amount ?? amount,
             elements: elements,
             footer: footer,
             isFinalStep: update.details.control.isFinalStep
@@ -41,15 +41,13 @@ extension AnywayPayment {
     }
 }
 
-private extension AnywayPayment.Footer {
+private extension AnywayPaymentUpdate {
     
-    func update(
-        with update: AnywayPaymentUpdate
-    ) -> Self {
+    func makeFooter() -> AnywayPayment.Footer {
         
-        guard !update.details.control.isFinalStep else { return .continue }
+        guard !details.control.isFinalStep else { return .continue }
         
-        return update.needSum && !update.isMultiSum ? .amount : .continue
+        return needSum && !isMultiSum ? .amount : .continue
     }
 }
 
