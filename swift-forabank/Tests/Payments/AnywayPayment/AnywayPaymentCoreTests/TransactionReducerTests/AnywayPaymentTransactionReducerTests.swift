@@ -62,7 +62,8 @@ class AnywayPaymentTransactionReducerTests: XCTestCase {
         XCTAssertNoDiff(state.context.payment.footer, .continue)
         XCTAssertFalse(state.context.payment.isFinalStep)
         
-        XCTAssertNotNil(state.context.outline.core)
+        XCTAssertNotNil(state.context.outline.amount)
+        XCTAssertNotNil(state.context.outline.product)
         XCTAssertNoDiff(state.context.outline.fields, [:])
         XCTAssertNotNil(state.context.outline.payload)
         

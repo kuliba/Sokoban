@@ -8,6 +8,7 @@
 import Combine
 @testable import ForaBank
 import OperatorsListComponents
+import RemoteServices
 import SberQR
 import XCTest
 
@@ -852,10 +853,12 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     }
     
     private func makeLatestPayment(
-        _ title: String = UUID().uuidString
+        date: Date = .init(),
+        _ title: String = UUID().uuidString,
+        additionalItems: [RemoteServices.ResponseMapper.LatestServicePayment.AdditionalItem] = []
     ) -> UtilityPaymentLastPayment {
         
-        .init(amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: UUID().uuidString, puref: UUID().uuidString)
+        return .init(date: date, amount: .init(Int.random(in: 0..<1_000)), name: title, md5Hash: UUID().uuidString, puref: UUID().uuidString, additionalItems: additionalItems)
     }
     
     private func makeService(

@@ -9,16 +9,19 @@ import Foundation
 
 public struct AnywayPaymentOutline: Equatable {
     
-    public let core: PaymentCore
+    public let amount: Decimal
+    public let product: Product?
     public let fields: Fields
     public let payload: Payload
     
     public init(
-        core: PaymentCore,
+        amount: Decimal,
+        product: Product?,
         fields: Fields,
         payload: Payload
     ) {
-        self.core = core
+        self.amount = amount
+        self.product = product
         self.fields = fields
         self.payload = payload
     }
@@ -26,23 +29,25 @@ public struct AnywayPaymentOutline: Equatable {
 
 extension AnywayPaymentOutline {
     
-    public struct PaymentCore: Equatable {
+    public struct Product: Equatable {
         
-        public let amount: Decimal
         public let currency: String
         public let productID: Int
         public let productType: ProductType
         
         public init(
-            amount: Decimal,
             currency: String,
             productID: Int,
             productType: ProductType
         ) {
-            self.amount = amount
             self.currency = currency
             self.productID = productID
             self.productType = productType
+        }
+        
+        public enum ProductType {
+            
+            case account, card
         }
     }
     
@@ -71,13 +76,5 @@ extension AnywayPaymentOutline {
         }
         
         public typealias Puref = String
-    }
-}
-
-extension AnywayPaymentOutline.PaymentCore {
-    
-    public enum ProductType {
-        
-        case account, card
     }
 }
