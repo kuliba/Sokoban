@@ -95,20 +95,23 @@ final class AnywayPaymentReducerTests: XCTestCase {
         assertMissingID(state, .product)
     }
     
-    func test_widget_amount_shouldChangeStateOnAmount() {
+    func test_widget_amount_shouldChangeStateWithProductOnAmount() {
         
         let amount = anyAmount()
-        let state = makeState(elements: [], footer: .amount(123.45))
+        let state = makeState(
+            amount: 123.45,
+            elements: [makeProductWidgetElement()]
+        )
         
         assertState(.widget(.amount(amount)), on: state) {
             
-            $0.footer = .amount(amount)
+            $0.amount = amount
         }
     }
     
     func test_widget_amount_shouldNotDeliverEffect() {
         
-        let state = makeState(elements: [], footer: .amount(123.45))
+        let state = makeState(amount: 123.45, elements: [])
         
         assert(.widget(.amount(anyAmount())), on: state, effect: nil)
     }
@@ -474,12 +477,14 @@ final class AnywayPaymentReducerTests: XCTestCase {
     }
     
     private func makeState(
+        amount: Decimal? = nil,
         elements: [AnywayElement],
         footer: AnywayPayment.Footer = .continue,
         isFinalStep: Bool = false
     ) -> State {
         
         return .init(
+            amount: amount,
             elements: elements,
             footer: footer,
             isFinalStep: isFinalStep

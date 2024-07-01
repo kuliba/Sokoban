@@ -20,14 +20,14 @@ final class CachedAnywayPaymentTests: XCTestCase {
         XCTAssertNoDiff(Payment(anywayPayment).footer, .continue)
     }
     
-    func test_init_shouldSetFooterToAmountWithoutCurrencyOnAmountWithoutProduct() {
+    func test_init_shouldSetFooterToContinueOnAmountWithoutProduct() {
         
-        let amount = anyAmount()
         let anywayPayment = makeAnywayPayment(
-            footer: .amount(amount)
+            amount: anyAmount(),
+            footer: .amount
         )
         
-        XCTAssertNoDiff(Payment(anywayPayment).footer, .amount(amount, nil))
+        XCTAssertNoDiff(Payment(anywayPayment).footer, .continue)
     }
     
     func test_init_shouldSetFooterToAmountWithCurrencyOnAmountWithProduct() {
@@ -35,11 +35,15 @@ final class CachedAnywayPaymentTests: XCTestCase {
         let (amount, currency) = (anyAmount(), anyMessage())
         let product = makeProductWidget(currency: currency)
         let anywayPayment = makeAnywayPayment(
+            amount: amount,
             elements: [.widget(.product(product))],
-            footer: .amount(amount)
+            footer: .amount
         )
         
-        XCTAssertNoDiff(Payment(anywayPayment).footer, .amount(amount, currency))
+        XCTAssertNoDiff(
+            Payment(anywayPayment).footer,
+            .amount(.init(amount: amount, currency: currency))
+        )
     }
     
     func test_init_shouldCreateInstanceWithIsFinalStepFalseFromAnywayPaymentWithIsFinalStepFalse() {
@@ -94,32 +98,36 @@ final class CachedAnywayPaymentTests: XCTestCase {
     
     // MARK: - updating
     
-    func test_updating_shouldNotChangeAmountFooterWithoutCurrencyOnSameAmount() {
+    func test_updating_shouldNotChangeFooterWithoutCurrencyOnSameAmount() {
         
         let amount = anyAmount()
-        let payment = Payment(makeAnywayPayment(footer: .amount(amount)))
-        XCTAssertNoDiff(payment.footer, .amount(amount, nil))
+        let payment = Payment(makeAnywayPayment(amount: amount))
+        XCTAssertNoDiff(payment.footer, .continue)
         
-        let updated = updating(payment, with: makeAnywayPayment(footer: .amount(amount)))
+        let updated = updating(payment, with: makeAnywayPayment(amount: amount))
         
-        XCTAssertNoDiff(updated.footer, .amount(amount, nil))
+        XCTAssertNoDiff(updated.footer, .continue)
     }
     
-    func test_updating_shouldSetAmountFooterWithCurrencyOnSameAmountWithProduct() {
+    func test_updating_shouldSetFooterWithCurrencyOnSameAmountWithProduct() {
         
         let (amount, currency) = (anyAmount(), anyMessage())
         let product = makeProductWidget(currency: currency)
         let payment = Payment(makeAnywayPayment(
-            footer: .amount(amount))
-        )
-        XCTAssertNoDiff(payment.footer, .amount(amount, nil))
+            amount: amount
+        ))
+        XCTAssertNoDiff(payment.footer, .continue)
         
         let updated = updating(payment, with: makeAnywayPayment(
+            amount: amount,
             elements: [.widget(.product(product))],
-            footer: .amount(amount))
-        )
+            footer: .amount
+        ))
         
-        XCTAssertNoDiff(updated.footer, .amount(amount, currency))
+        XCTAssertNoDiff(
+            updated.footer,
+            .amount(.init(amount: amount, currency: currency))
+        )
     }
     
     func test_updating_shouldNotChangeFooterOnSameContinue() {
@@ -135,26 +143,26 @@ final class CachedAnywayPaymentTests: XCTestCase {
     func test_updating_shouldSetFooterToContinueOnContinue() {
         
         let amount = anyAmount()
-        let payment = Payment(makeAnywayPayment(footer: .amount(amount)))
-        XCTAssertNoDiff(payment.footer, .amount(amount, nil))
+        let payment = Payment(makeAnywayPayment(amount: amount))
+        XCTAssertNoDiff(payment.footer, .continue)
         
         let updated = updating(payment, with: makeAnywayPayment(footer: .continue))
         
         XCTAssertNoDiff(updated.footer, .continue)
     }
     
-    func test_updating_shouldSetFooterToAmountWithoutCurrencyOnAmountWithoutProduct() {
+    func test_updating_shouldSetFooterToContinueOnUpdatedWithoutProduct() {
         
         let amount = anyAmount()
         let payment = Payment(makeAnywayPayment(footer: .continue))
         XCTAssertNoDiff(payment.footer, .continue)
         
-        let updated = updating(payment, with: makeAnywayPayment(footer: .amount(amount)))
+        let updated = updating(payment, with: makeAnywayPayment(amount: amount))
         
-        XCTAssertNoDiff(updated.footer, .amount(amount, nil))
+        XCTAssertNoDiff(updated.footer, .continue)
     }
     
-    func test_updating_shouldSetFooterToAmountWithCurrencyOnAmountWithProduct() {
+    func test_updating_shouldSetFooterToAmountWithCurrencyOnUpdatedWithProduct() {
         
         let (amount, currency) = (anyAmount(), anyMessage())
         let product = makeProductWidget(currency: currency)
@@ -162,11 +170,15 @@ final class CachedAnywayPaymentTests: XCTestCase {
         XCTAssertNoDiff(payment.footer, .continue)
         
         let updated = updating(payment, with: makeAnywayPayment(
+            amount: amount,
             elements: [.widget(.product(product))],
-            footer: .amount(amount))
-        )
+            footer: .amount
+        ))
         
-        XCTAssertNoDiff(updated.footer, .amount(amount, currency))
+        XCTAssertNoDiff(
+            updated.footer,
+                .amount(.init(amount: amount, currency: currency))
+        )
     }
     
     func test_updating_shouldUpdateWithIsFinalStepFalseFromAnywayPaymentWithIsFinalStepFalse() {

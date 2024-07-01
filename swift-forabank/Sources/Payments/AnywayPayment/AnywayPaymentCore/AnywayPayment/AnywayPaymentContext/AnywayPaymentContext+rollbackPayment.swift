@@ -64,6 +64,7 @@ private extension AnywayPayment {
     ) -> Self {
         
         return .init(
+            amount: amount,
             elements: elements,
             footer: footer,
             isFinalStep: isFinalStep

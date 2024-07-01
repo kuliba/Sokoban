@@ -63,8 +63,9 @@ func makeTransactionWithAmount(
     return .init(
         context: makeAnywayPaymentContext(
             payment: makeAnywayPayment(
+                amount: amount,
                 elements: elements,
-                footer: .amount(amount)
+                footer: .amount
             )
         ),
         isValid: isValid,
@@ -108,12 +109,14 @@ func makeAnywayPaymentContext(
 }
 
 func makeAnywayPayment(
+    amount: Decimal? = nil,
     elements: [AnywayElement] = [],
     footer: Payment<AnywayElement>.Footer = .continue,
     isFinalStep: Bool = false
 ) -> AnywayPayment {
     
     return .init(
+        amount: amount,
         elements: elements,
         footer: footer,
         isFinalStep: isFinalStep

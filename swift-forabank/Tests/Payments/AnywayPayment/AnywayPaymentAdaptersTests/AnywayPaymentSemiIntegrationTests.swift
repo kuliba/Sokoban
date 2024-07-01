@@ -90,11 +90,11 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 143", "Сумма пени"),
             .init("f: SumSTrs", "Сумма"),
             .init("w: core", "RUB, 1234567890, account"),
-            .init("footer", "amount 123.45")
+            .init("footer", "amount")
         ])
         
         let payment5 = try update(payment4, with: .step5Response)
-        XCTAssertNoDiff(payment4.elementsView, [
+        XCTAssertNoDiff(payment5.elementsView, [
             .init("p: 1", "Лицевой счет"),
             .init("p: 2", "Признак платежа"),
             .init("f: 4", "Адрес"),
@@ -118,7 +118,8 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 143", "Сумма пени"),
             .init("f: SumSTrs", "Сумма"),
             .init("w: core", "RUB, 1234567890, account"),
-            .init("footer", "amount 123.45")
+            .init("w: otp", "otp"),
+            .init("footer", "continue"),
         ])
     }
     
@@ -182,11 +183,8 @@ private extension AnywayPayment.Footer {
     var testView: TestView {
         
         switch self {
-        case let .amount(amount):
-            return .init("footer", "amount \(amount)")
-            
-        case .continue:
-            return .init("footer", "continue")
+        case .amount:   return .init("footer", "amount")
+        case .continue: return .init("footer", "continue")
         }
     }
 }
@@ -275,6 +273,7 @@ private func makeEmptyPayment(
 ) -> AnywayPayment {
     
     return .init(
+        amount: nil,
         elements: [],
         footer: .continue,
         isFinalStep: false
