@@ -1970,7 +1970,7 @@ private extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
-    struct HistoryState: Identifiable {
+    struct HistoryState: Identifiable, Equatable {
         
         var id: Int { buttonAction.hashValue }
         

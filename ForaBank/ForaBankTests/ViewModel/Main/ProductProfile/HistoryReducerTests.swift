@@ -13,57 +13,107 @@ final class HistoryReducerTests: XCTestCase {
     
     func test_history_reduce_button_calendarEvent_shouldReturnShowSheetTrue() {
         
-        let sut = makeSUT(
-            state: makeState(showSheet: false),
-            event: .button(.calendar)
+        let sut = makeSUT()
+        
+        assertState(
+            sut: sut,
+            .button(.calendar),
+            on: .init(buttonAction: .calendar, showSheet: true)
         )
-        XCTAssertNoDiff(sut.0?.showSheet, true)
-        XCTAssertNoDiff(sut.0?.buttonAction, .calendar)
     }
     
     func test_history_reduce_button_filterEvent_shouldReturnShowSheetTrue() {
         
-        let sut = makeSUT(
-            state: makeState(showSheet: false),
-            event: .button(.filter)
+        let sut = makeSUT()
+        
+        assertState(
+            sut: sut,
+            .button(.filter),
+            on: .init(buttonAction: .filter, showSheet: true)
         )
-        XCTAssertNoDiff(sut.0?.showSheet, true)
-        XCTAssertNoDiff(sut.0?.buttonAction, .filter)
     }
     
     func test_history_reduce_filter_shouldReturnShowSheetTrue() {
         
-        let sut = makeSUT(
-            state: makeState(showSheet: true),
-            event: .filter([.debit])
+        let sut = makeSUT()
+        
+        assertState(
+            sut: sut,
+            .filter([.debit]),
+            on: .init(filters: [.debit], buttonAction: .filter, showSheet: false)
         )
-        XCTAssertNoDiff(sut.0?.showSheet, false)
-        XCTAssertNoDiff(sut.0?.buttonAction, .filter)
-        XCTAssertNoDiff(sut.0?.filters, [.debit])
     }
     
     func test_history_reduce_calendar_shouldReturnShowSheetTrue() {
         
-        let sut = makeSUT(
-            state: makeState(showSheet: true),
-            event: .calendar(nil)
+        let sut = makeSUT()
+        
+        assertState(
+            sut: sut,
+            .calendar(nil),
+            on: .init(date: nil, buttonAction: .calendar, showSheet: false)
         )
-        XCTAssertNoDiff(sut.0?.showSheet, false)
-        XCTAssertNoDiff(sut.0?.buttonAction, .calendar)
-        XCTAssertNoDiff(sut.0?.date, nil)
     }
     
     //MARK: Helpers
     
+    typealias SUT = HistoryReducer
+    
+    typealias State = SUT.State
+    typealias Event = SUT.Event
+    typealias Effect = SUT.Effect
+    
     private func makeSUT(
-        state: HistoryReducer.State,
-        event: HistoryReducer.Event
-    ) -> (HistoryReducer.State, HistoryReducer.Effect?) {
+    ) -> HistoryReducer {
         
-        HistoryReducer().reduce(state, event)
+        .init()
     }
     
     private func makeState(showSheet: Bool) -> HistoryReducer.State {
         .init(buttonAction: .calendar, showSheet: showSheet)
+    }
+    
+    private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void
+    
+    private func assertState(
+        sut: SUT? = nil,
+        _ event: Event,
+        on state: State,
+        updateStateToExpected: UpdateStateToExpected<State>? = nil,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let sut = sut ?? makeSUT()
+        
+        var expectedState = state
+        updateStateToExpected?(&expectedState)
+        
+        let (receivedState, _) = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(
+            receivedState,
+            expectedState,
+            "\nExpected \(expectedState), but got \(receivedState) instead.",
+            file: file, line: line
+        )
+    }
+}
+
+extension ProductProfileFlowEffect {
+    
+    var effectTest: EffectTest {
+        
+        switch self {
+        case .delayAlert:
+            return .delayAlert
+        case .delayBottomSheet:
+            return .delayBottomSheet
+        }
+    }
+    
+    enum EffectTest: Equatable {
+        
+        case delayAlert
+        case delayBottomSheet
     }
 }
