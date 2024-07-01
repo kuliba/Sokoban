@@ -1002,6 +1002,8 @@
 		2A9006A02A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A90069F2A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift */; };
 		2A9049482C32690000313CB8 /* InMemoryValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9049472C32690000313CB8 /* InMemoryValueStore.swift */; };
 		2A90494B2C32698500313CB8 /* InMemoryValueStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A90494A2C32698500313CB8 /* InMemoryValueStoreTests.swift */; };
+		2A90494D2C326E3500313CB8 /* LoggingDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A90494C2C326E3500313CB8 /* LoggingDecorator.swift */; };
+		2A90494F2C326E5200313CB8 /* LoggingDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A90494E2C326E5200313CB8 /* LoggingDecoratorTests.swift */; };
 		2A91009C2A7C3E200022308F /* PublicServerSessionKeyMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A91009B2A7C3E200022308F /* PublicServerSessionKeyMapper.swift */; };
 		2A9338562A17C8BB00397C88 /* PhoneNumberKitWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */; };
 		2A93385A2A17C91100397C88 /* Transformers+phoneKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338592A17C91100397C88 /* Transformers+phoneKit.swift */; };
@@ -4064,6 +4066,8 @@
 		2A90069F2A3EF30E00CB81D5 /* Model+PaymentsTransportAvtodorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTransportAvtodorTests.swift"; sourceTree = "<group>"; };
 		2A9049472C32690000313CB8 /* InMemoryValueStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryValueStore.swift; sourceTree = "<group>"; };
 		2A90494A2C32698500313CB8 /* InMemoryValueStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryValueStoreTests.swift; sourceTree = "<group>"; };
+		2A90494C2C326E3500313CB8 /* LoggingDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDecorator.swift; sourceTree = "<group>"; };
+		2A90494E2C326E5200313CB8 /* LoggingDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDecoratorTests.swift; sourceTree = "<group>"; };
 		2A91009B2A7C3E200022308F /* PublicServerSessionKeyMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicServerSessionKeyMapper.swift; sourceTree = "<group>"; };
 		2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberKitWrapper.swift; sourceTree = "<group>"; };
 		2A9338592A17C91100397C88 /* Transformers+phoneKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Transformers+phoneKit.swift"; sourceTree = "<group>"; };
@@ -9243,6 +9247,7 @@
 			isa = PBXGroup;
 			children = (
 				2A90494A2C32698500313CB8 /* InMemoryValueStoreTests.swift */,
+				2A90494E2C326E5200313CB8 /* LoggingDecoratorTests.swift */,
 			);
 			path = ImageLoader;
 			sourceTree = "<group>";
@@ -9633,6 +9638,7 @@
 			isa = PBXGroup;
 			children = (
 				2AB03A122C31F0020085D79F /* ImageLoader.swift */,
+				2A90494C2C326E3500313CB8 /* LoggingDecorator.swift */,
 				2A9049472C32690000313CB8 /* InMemoryValueStore.swift */,
 			);
 			path = ImageLoader;
@@ -17707,6 +17713,7 @@
 				2ADFE59F2B0D0B950020B382 /* RequestFactory+createGetOperationDetailByPaymentIDRequest.swift in Sources */,
 				8357E3382B6BD20D0065E581 /* CardGuardianConfig.swift in Sources */,
 				0C2B55E5299C17B800F9074C /* ServerCommands+ProductTemplate.swift in Sources */,
+				2A90494D2C326E3500313CB8 /* LoggingDecorator.swift in Sources */,
 				0B8BE0972670D53600E96CAA /* DoRegistrationDecodebleModel.swift in Sources */,
 				774A8B632865FDAF00B81140 /* PaymentsSelectServiceViewComponent.swift in Sources */,
 				2AECBC3C2BEBAB2C000B0C0E /* UtilityPaymentFlowState.swift in Sources */,
@@ -19610,6 +19617,7 @@
 				77F15827281682D400CA5E4E /* ModelDictionaryAtmTests.swift in Sources */,
 				2AEDAD5629A6359D00017F73 /* DaDataPhoneDataHelpersTests.swift in Sources */,
 				D4A5A7A42BAA5A3E006EE7A5 /* ProductCardData_getProductListByTypeV5.swift in Sources */,
+				2A90494F2C326E5200313CB8 /* LoggingDecoratorTests.swift in Sources */,
 				2A2936C52A0E5F3F00D105B8 /* Unimplemented.swift in Sources */,
 				2AB823A72B8EF917000C5FAD /* EffectHandlerSpy.swift in Sources */,
 				2A58FAAB2AD7174E00BD1967 /* RequestFactory+makeChangePINRequestTests.swift in Sources */,
