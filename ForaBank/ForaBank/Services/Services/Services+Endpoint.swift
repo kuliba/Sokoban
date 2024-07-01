@@ -335,6 +335,12 @@ extension Services.Endpoint {
         serviceName: .makeTransfer
     )
     
+    static let makeTransferV2: Self = .init(
+        pathPrefix: .transfer,
+        version: .v2,
+        serviceName: .makeTransfer
+    )
+    
     static let prepareSetBankDefault: Self = .init(
         pathPrefix: .rest,
         version: .none,

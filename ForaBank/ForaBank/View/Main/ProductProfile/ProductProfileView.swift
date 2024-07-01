@@ -80,6 +80,8 @@ struct ProductProfileView: View {
                             
                             if let historyViewModel = viewModel.history {
                                 
+                                productProfileViewFactory.makeHistoryButton({ event in viewModel.event(.history(event))})
+                                
                                 ProductProfileHistoryView(viewModel: historyViewModel)
                             }
                         }
@@ -111,6 +113,8 @@ struct ProductProfileView: View {
             // workaround to fix mini-cards jumps when product name editing alert presents
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
+            
+            historySheet()
             
             viewModel.closeAccountSpinner.map(CloseAccountSpinnerView.init)
             
@@ -145,12 +149,48 @@ struct ProductProfileView: View {
         .sheet(item: $viewModel.sheet, content: sheetContent)
     }
     
+    private func historySheet() -> some View {
+        
+        Color.clear
+            .sheet(
+                modal: viewModel.historyState,
+                dismissModal: { self.viewModel.historyState = nil },
+                content: { historyState in
+                    
+                    switch historyState {
+                    case .calendar:
+                        Text("Calendar")
+                    case .filter:
+                        Text("Filter")
+                    }
+                }
+            )
+    }
+    
     @ViewBuilder
     private func navLinkDestination(
         link: ProductProfileViewModel.Link
     ) -> some View {
         
         switch link {
+        case let .controlPanel(items):
+            ControlPanelView(items: items, event: viewModel.event)
+                .edgesIgnoringSafeArea(.bottom)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        VStack {
+                            Text("Управление")
+                                .foregroundColor(.textSecondary)
+                                .font(.textH3M18240())
+
+                            Text(viewModel.navigationTitleForControlPanel)
+                                .foregroundColor(.textPlaceholder)
+                                .font(.textBodyMR14180())
+                        }
+                    }
+                }
+
         case let .productInfo(viewModel):
             InfoProductView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.bottom)
@@ -416,7 +456,11 @@ struct ProfileView_Previews: PreviewProvider {
             viewModel: viewModel,
             viewFactory: .preview,
             productProfileViewFactory: .init(
-                makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)
+                makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
+                makeHistoryButton: { event in
+                        
+                    HistoryButtonView(event: event)
+                }
             ),
             getUImage: { _ in nil }
         )

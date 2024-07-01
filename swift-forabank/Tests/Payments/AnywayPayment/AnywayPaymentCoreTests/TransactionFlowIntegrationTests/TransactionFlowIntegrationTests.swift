@@ -289,7 +289,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         paymentInitiator.complete(with: .success(makeUpdate()))
         
         sut.event(.continue)
-        paymentMaker.complete(with: .none)
+        paymentMaker.complete(with: .failure(.terminal))
         
         assert(stateSpy, initialState, {
             _ in
@@ -326,7 +326,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         paymentInitiator.complete(with: .success(makeUpdate()))
         
         sut.event(.continue)
-        paymentMaker.complete(with: report)
+        paymentMaker.complete(with: .success(report))
         
         assert(stateSpy, initialState, {
             _ in
@@ -363,7 +363,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         paymentInitiator.complete(with: .success(makeUpdate()))
         
         sut.event(.continue)
-        paymentMaker.complete(with: report)
+        paymentMaker.complete(with: .success(report))
         
         assert(stateSpy, initialState, {
             _ in
@@ -399,7 +399,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     private typealias EffectHandler = _TransactionEffectHandler
     private typealias GetVerificationCodeSpy = Spy<Void, Event.VerificationCode.GetVerificationCodeResult>
 
-    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, makeDigest: PaymentDigest, paymentReduce: (Context, PaymentEffect?), resetPayment: Context, restorePayment: Context, stagePayment: Context?, updatePayment: Context, validatePayment: Bool, wouldNeedRestart: Bool)
+    private typealias Stub = (checkFraud: Bool, getVerificationCode: VerificationCode?, handleOTPFailure: Context, makeDigest: PaymentDigest, paymentReduce: (Context, PaymentEffect?), resetPayment: Context, rollbackPayment: Context, stagePayment: Context?, updatePayment: Context, validatePayment: Bool, wouldNeedRestart: Bool)
     
     private typealias Inspector = PaymentInspector<Context, PaymentDigest, PaymentUpdate>
 
@@ -419,14 +419,15 @@ final class TransactionFlowIntegrationTests: XCTestCase {
         let stub = stub ?? makeStub()
         let reducer = Reducer(
             paymentReduce: { _,_ in stub.paymentReduce },
-            stagePayment: { stub.stagePayment ?? $0 },
-            updatePayment: { _,_ in stub.updatePayment },
             paymentInspector: .init(
                 checkFraud: { _ in stub.checkFraud },
                 getVerificationCode: { _ in stub.getVerificationCode },
+                handleOTPFailure: { _,_ in stub.handleOTPFailure },
                 makeDigest: { _ in stub.makeDigest },
                 resetPayment: { _ in stub.resetPayment },
-                restorePayment: { _ in stub.restorePayment },
+                rollbackPayment: { _ in stub.rollbackPayment },
+                stagePayment: { stub.stagePayment ?? $0 },
+                updatePayment: { _,_ in stub.updatePayment },
                 validatePayment: { _ in stub.validatePayment },
                 wouldNeedRestart: { _ in stub.wouldNeedRestart }
             )
@@ -468,22 +469,25 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     private func makeStub(
         checkFraud: Bool = false,
         getVerificationCode: VerificationCode? = nil,
+        handleOTPFailure: Context = makeContext(),
         makeDigest: PaymentDigest = makePaymentDigest(),
         paymentReduce: (Context, PaymentEffect?) = (makeContext(), nil),
         resetPayment: Context = makeContext(),
-        restorePayment: Context = makeContext(),
+        rollbackPayment: Context = makeContext(),
         stagePayment: Context? = nil,
         updatePayment: Context = makeContext(),
         validatePayment: Bool = true,
         wouldNeedRestart: Bool = true
     ) -> Stub {
-        (
+        
+        return (
             checkFraud: checkFraud,
             getVerificationCode: getVerificationCode,
+            handleOTPFailure: handleOTPFailure,
             makeDigest: makeDigest,
             paymentReduce: paymentReduce,
-            resetPayment: restorePayment,
-            restorePayment: restorePayment,
+            resetPayment: resetPayment,
+            rollbackPayment: rollbackPayment,
             stagePayment: stagePayment,
             updatePayment: updatePayment,
             validatePayment: validatePayment,
@@ -499,7 +503,7 @@ final class TransactionFlowIntegrationTests: XCTestCase {
     ) {
         let accStates = stateSpy.values
         
-        sut.event(.completePayment(.none))
+        sut.event(.completePayment(.failure(.terminal)))
         sut.event(.continue)
         sut.event(.continue)
         sut.event(.fraud(.cancel))

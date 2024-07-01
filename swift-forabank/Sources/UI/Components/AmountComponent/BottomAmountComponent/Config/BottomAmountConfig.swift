@@ -14,7 +14,7 @@ public struct BottomAmountConfig {
     public let amount: TextConfig
     public let amountFont: UIFont
     public let backgroundColor: Color
-    public let button: ButtonConfig
+    public let button: FooterButtonConfig
     public let buttonSize: CGSize
     public let dividerColor: Color
     public let title: String
@@ -24,7 +24,7 @@ public struct BottomAmountConfig {
         amount: TextConfig,
         amountFont: UIFont = .boldSystemFont(ofSize: 24),
         backgroundColor: Color,
-        button: ButtonConfig,
+        button: FooterButtonConfig,
         buttonSize: CGSize,
         dividerColor: Color,
         title: String,

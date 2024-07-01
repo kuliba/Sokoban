@@ -24,12 +24,18 @@ extension FeatureFlagsLoader {
     
     func load() -> FeatureFlags {
         
-        return .init(utilitiesPaymentsFlag: loadUtilitiesPaymentsFlag())
+        return .init(
+            historyFilterFlag: loadHistoryFilterFlag(),
+            changeSVCardLimitsFlag: loadChangeSVCardLimitsFlag(),
+            utilitiesPaymentsFlag: loadUtilitiesPaymentsFlag()
+        )
     }
 }
 
 enum FeatureFlagKey: String {
     
+    case historyFilterFlag = "history_filter"
+    case changeSVCardLimitsFlag = "changeSVCardLimits"
     case utilitiesPaymentsFlag = "sber_providers"
 }
 
@@ -41,6 +47,23 @@ private extension FeatureFlagsLoader {
         case "sber_providers_live": return .init(.active(.live))
         case "sber_providers_stub": return .init(.active(.stub))
         default:                    return .init(.inactive)
+        }
+    }
+    
+    func loadHistoryFilterFlag() -> HistoryFilterFlag {
+        
+        switch retrieve(.historyFilterFlag) {
+        case "history_filter_off": return false
+        case "history_filter_on":  return true
+        default:                   return false
+        }
+    }
+    
+    func loadChangeSVCardLimitsFlag() -> ChangeSVCardLimitsFlag {
+        
+        switch retrieve(.changeSVCardLimitsFlag) {
+        case "1":  return .init(.active)
+        default:   return .init(.inactive)
         }
     }
 }

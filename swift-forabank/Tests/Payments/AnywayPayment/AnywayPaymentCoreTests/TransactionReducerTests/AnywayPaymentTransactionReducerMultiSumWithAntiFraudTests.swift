@@ -53,7 +53,7 @@ final class AnywayPaymentTransactionReducerMultiSumWithAntiFraudTests: AnywayPay
         XCTAssertNoDiff(state.context, contextStep4)
         
         try msFraud_12_consent(&state, &states)
-        XCTAssertNoDiff(state.context.payment.elements.count, 23)
+        XCTAssertNoDiff(state.context.payment.elements.count, 24)
     }
     
     func test_multiSumWithAntiFraudFlow_staged() throws {
@@ -154,7 +154,7 @@ final class AnywayPaymentTransactionReducerMultiSumWithAntiFraudTests: AnywayPay
         try msFraud_11_continue(&state, &states)
         try msFraud_12_consent(&state, &states)
         
-        XCTAssertNoDiff(states.map(\.isValid), [true, false] + .init(repeating: true, count: 11))
+        XCTAssertNoDiff(states.map(\.isValid), [true, false] + .init(repeating: true, count: 10) + [false])
     }
     
     func test_multiSumWithAntiFraudFlow_consent_status() throws {

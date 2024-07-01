@@ -13,6 +13,7 @@ typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> Sber
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
+typealias MakeHistoryButtonView = () -> HistoryButtonView?
 
 struct RootViewFactory {
     
@@ -24,6 +25,7 @@ struct RootViewFactory {
     let makeUpdateInfoView: MakeUpdateInfoView
     let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
     let makePaymentCompleteView: MakePaymentCompleteView
+    let makeHistoryButtonView: MakeHistoryButtonView
 }
 
 extension RootViewFactory {
@@ -63,6 +65,7 @@ extension RootViewFactory {
 struct ProductProfileViewFactory {
     
     let makeActivateSliderView: MakeActivateSliderView
+    let makeHistoryButton: (@escaping (HistoryEvent) -> Void) -> HistoryButtonView
 }
 
 extension RootViewFactory {
@@ -70,7 +73,38 @@ extension RootViewFactory {
     var productProfileViewFactory: ProductProfileViewFactory {
  
         .init(
-            makeActivateSliderView: makeActivateSliderView
+            makeActivateSliderView: makeActivateSliderView,
+            makeHistoryButton: { event in
+                HistoryButtonView(event: event)
+            }
         )
+    }
+}
+
+struct HistoryButtonView: View {
+    
+    let event: (HistoryEvent) -> Void
+    
+    var body: some View {
+        
+        HStack {
+            Button(action: {
+                event(.button(.calendar))
+            }) {
+                
+                Text("Calendar")
+                    .font(.system(size: 16))
+                    .foregroundColor(.black)
+            }
+            
+            Button(action: {
+                event(.button(.filter))
+            }) {
+                
+                Text("Filter")
+                    .font(.system(size: 16))
+                    .foregroundColor(.black)
+            }
+        }
     }
 }

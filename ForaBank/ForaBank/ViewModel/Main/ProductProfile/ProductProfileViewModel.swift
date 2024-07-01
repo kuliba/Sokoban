@@ -34,6 +34,8 @@ class ProductProfileViewModel: ObservableObject {
     @Published var operationDetail: OperationDetailViewModel?
     @Published var accentColor: Color
     
+    @Published var historyState: HistoryState?
+    
     @Published var bottomSheet: BottomSheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
@@ -49,6 +51,7 @@ class ProductProfileViewModel: ObservableObject {
     var rootActions: RootViewModel.RootActions?
     var rootView: String
     var contactsAction: () -> Void = { }
+    var navigationTitleForControlPanel: String { productData?.navigationTitleForControlPanel ?? ""}
     
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
@@ -64,16 +67,17 @@ class ProductProfileViewModel: ObservableObject {
     private var cardAction: CardAction?
     private let productProfileViewModelFactory: ProductProfileViewModelFactory
     
-    private let productNavigationStateManager: ProductNavigationStateManager
+    private let productNavigationStateManager: ProductProfileFlowManager
 
     private var bindings = Set<AnyCancellable>()
     
     private var productData: ProductData? {
         model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
     }
-    
+        
     private let bottomSheetSubject = PassthroughSubject<BottomSheet?, Never>()
     private let alertSubject = PassthroughSubject<Alert.ViewModel?, Never>()
+    private let historySubject = PassthroughSubject<HistoryState?, Never>()
 
     init(navigationBar: NavigationBarView.ViewModel,
          product: ProductProfileCardView.ViewModel,
@@ -92,7 +96,7 @@ class ProductProfileViewModel: ObservableObject {
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
          operationDetailFactory: OperationDetailFactory,
-         productNavigationStateManager: ProductNavigationStateManager,
+         productNavigationStateManager: ProductProfileFlowManager,
          cvvPINServicesClient: CVVPINServicesClient,
          productProfileViewModelFactory: ProductProfileViewModelFactory,
          rootView: String,
@@ -130,6 +134,11 @@ class ProductProfileViewModel: ObservableObject {
             //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$alert)
+        
+        self.historySubject
+            //.removeDuplicates()
+            .receive(on: scheduler)
+            .assign(to: &$historyState)
 
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
     }
@@ -151,7 +160,7 @@ class ProductProfileViewModel: ObservableObject {
         operationDetailFactory: OperationDetailFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
-        productNavigationStateManager: ProductNavigationStateManager,
+        productNavigationStateManager: ProductProfileFlowManager,
         productProfileViewModelFactory: ProductProfileViewModelFactory,
         rootView: String,
         dismissAction: @escaping () -> Void,
@@ -210,16 +219,16 @@ class ProductProfileViewModel: ObservableObject {
                 
                 switch event {
                 case let .delayAlert(kind):
-                    self.event(.delayAlert(kind))
+                    self.event(.alert(.delayAlert(kind)))
                  
                 case let .delayAlertViewModel(alertViewModel):
-                    self.event(.delayAlertViewModel(alertViewModel))
+                    self.event(.alert(.delayAlertViewModel(alertViewModel)))
                     
                 case .closeAlert:
-                    self.event(.closeAlert)
+                    self.event(.alert(.closeAlert))
                     
                 case let .showAlert(alert):
-                    self.event(.showAlert(alert))
+                    self.event(.alert(.showAlert(alert)))
                 }
             }
         )!
@@ -1105,7 +1114,7 @@ private extension ProductProfileViewModel {
                             guard let card = productData?.asCard else { return }
                             
                             if card.cardType == .additionalOther {
-                                self.event(.delayAlert(.showTransferAdditionalOther))
+                                self.event(.alert(.delayAlert(.showTransferAdditionalOther)))
                             } else {
                                 self.action.send(ProductProfileViewModelAction.TransferButtonDidTapped())
                             }
@@ -1170,11 +1179,7 @@ private extension ProductProfileViewModel {
                         
                         switch product.productType {
                         case .card:
-                            
-                            guard let card = productData?.asCard else {
-                                return
-                            }
-                            createCardGuardianPanel(card)
+                            createCardGuardianPanel(productData)
                             
                         case .account:
                             
@@ -1325,8 +1330,10 @@ private extension ProductProfileViewModel {
                                             cardId: cardId,
                                             completion: completion)
                                     },
-                                    events: self.event(_:))
+                                    events: { event in self.event(.alert(event)) }
+                                )
                             )
+                            
                             self.link = .productInfo(productInfoViewModel)
                             self.bind(product: productInfoViewModel)
                             
@@ -1955,10 +1962,56 @@ private extension ProductProfileViewModel {
         )
     }
 }
+// MARK: - create panel
 
+extension ProductProfileViewModel {
+    
+    func createCardGuardianPanel(_ product: ProductData?) {
+        
+        guard let card = product?.asCard else {
+            return
+        }
+        let panel = productProfileViewModelFactory.makeCardGuardianPanel(card)
+        
+        switch panel {
+        case let .bottomSheet(buttons):
+            bottomSheet = .init(type: .optionsPanelNew(buttons))
+        case let .fullScreen(buttons):
+            link = .controlPanel(buttons)
+        }
+    }
+}
 //MARK: - Types
 
 extension ProductProfileViewModel {
+    
+    enum HistoryState: Identifiable {
+        
+        case calendar
+        case filter
+        
+        var id: ID {
+            switch self {
+            case .calendar:
+                return .calendar
+                
+            case .filter:
+                return .filter
+            }
+        }
+        
+        enum ID: Hashable {
+            
+            case calendar
+            case filter
+        }
+    }
+    
+    enum CardGuardianPanelKind {
+        
+        case bottomSheet([PanelButtonDetails])
+        case fullScreen([PanelButtonDetails])
+    }
     
     struct BottomSheet: BottomSheetCustomizable {
         
@@ -1978,7 +2031,7 @@ extension ProductProfileViewModel {
             
             case operationDetail(OperationDetailViewModel)
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
-            case optionsPanelNew([PanelButton.Details])
+            case optionsPanelNew([PanelButtonDetails])
             case meToMe(PaymentsMeToMeViewModel)
             case meToMeLegacy(MeToMeViewModel)
             case printForm(PrintFormView.ViewModel)
@@ -1994,6 +2047,7 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
+        case controlPanel([PanelButtonDetails])
     }
     
     struct Sheet: Identifiable {
@@ -2173,7 +2227,7 @@ extension ProductProfileViewModel {
         guard let card = productData?.asCard, let alertViewModel = alertBlockedCard(with: card) else {
             return
         }
-        event(.delayAlertViewModel(alertViewModel))
+        event(.alert(.delayAlertViewModel(alertViewModel)))
     }
     
     private func unblockCard(with productData: ProductData?) {
@@ -2207,7 +2261,7 @@ extension ProductProfileViewModel {
             
         case .changePin:
             if productCard.statusCard != .active {
-                event(.delayAlert(.showBlockAlert))
+                event(.alert(.delayAlert(.showBlockAlert)))
             } else {
                 checkCertificate(.init(productCard.id), certificate: self.cvvPINServicesClient, productCard)
             }
@@ -2443,7 +2497,7 @@ extension ProductProfileViewModel {
                 }
             }
         } else {
-            event(.delayAlert(.showBlockAlert))
+            event(.alert(.delayAlert(.showBlockAlert)))
         }
     }
     
@@ -2469,36 +2523,34 @@ extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
-    func handleEffect(_ effect: ProductNavigationStateManager.Effect) {
+    func handleEffect(_ effect: ProductProfileFlowManager.Effect) {
         
         productNavigationStateManager.handleEffect(effect) { [weak self] event in
             
             switch event {
                 
             case let .showAlert(alert):
-                self?.event(.showAlert(alert))
+                self?.event(.alert(.showAlert(alert)))
             case let .showBottomSheet(bottomSheet):
-                self?.event(.showBottomSheet(bottomSheet))
+                self?.event(.bottomSheet(.showBottomSheet(bottomSheet)))
             }
         }
     }
     
-    func event(_ event: AlertEvent) {
-
-        let (alert, effect) = productNavigationStateManager.alertReduce(alert, event)
-        alertSubject.send(alert)
-
-        if let effect {
-            
-            handleEffect(effect)
-        }
-    }
-    
-    func event(_ event: BottomSheetEvent) {
-
-        let (bottomSheet, effect) = productNavigationStateManager.bottomSheetReduce(bottomSheet, event)
-        bottomSheetSubject.send(bottomSheet)
-
+    func event(_ event: ProductProfileFlowEvent) {
+        
+        let state = ProductProfileFlowState(
+            alert: alert,
+            bottomSheet: bottomSheet,
+            history: historyState
+        )
+        
+        let (newState, effect) = productNavigationStateManager.reduce(state, event)
+        
+        alertSubject.send(newState.alert)
+        bottomSheetSubject.send(newState.bottomSheet)
+        historySubject.send(newState.history)
+        
         if let effect {
             
             handleEffect(effect)
@@ -2520,7 +2572,8 @@ extension ProductProfileViewModel {
                         cardId: cardId,
                         completion: completion)
                 },
-                events: self.event(_:))
+                events: { event in self.event(.alert(event)) }
+            )
         )
         self.link = .productInfo(productInfoViewModel)
         self.bind(product: productInfoViewModel)
@@ -2538,7 +2591,7 @@ extension ProductProfileViewModel {
     func showPaymentOurBank(_ productData: ProductCardData) {
         switch productData.cardType {
         case .additionalOther:
-            self.event(.delayAlert(.showServiceOnlyOwnerCard))
+            self.event(.alert(.delayAlert(.showServiceOnlyOwnerCard)))
             
         default:
             guard let viewModel = PaymentsMeToMeViewModel(
@@ -2548,14 +2601,14 @@ extension ProductProfileViewModel {
             
             self.bind(viewModel)
             
-            self.event(.delayBottomSheet(.init(type: .meToMe(viewModel))))
+            self.event(.bottomSheet(.delayBottomSheet(.init(type: .meToMe(viewModel)))))
         }
     }
     
     func showPaymentAnotherBank(_ productData: ProductCardData) {
         switch productData.cardType {
         case .additionalSelf, .additionalOther:
-            self.event(.delayAlert(.showServiceOnlyMainCard))
+            self.event(.alert(.delayAlert(.showServiceOnlyMainCard)))
             
         default:
             let meToMeExternalViewModel = MeToMeExternalViewModel(
@@ -2569,7 +2622,7 @@ extension ProductProfileViewModel {
         }
     }
     
-    func event(_ event: ProductNavigationStateManager.ButtonEvent) {
+    func event(_ event: ProductProfileFlowManager.ButtonEvent) {
         
         self.bottomSheet = nil
 

@@ -1,0 +1,10 @@
+//
+//  ListHorizontalRectangleLimitsEffect.swift
+//  
+//
+//  Created by Andryusina Nataly on 21.06.2024.
+//
+
+import Foundation
+
+public typealias ListHorizontalRectangleLimitsEffect = Never

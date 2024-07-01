@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PanelButton: View {
     
-    let details: Details
+    let details: PanelButtonDetails
     let event: () -> Void
     let config: PanelView.Config
     
@@ -51,58 +51,4 @@ struct PanelButton: View {
         .foregroundColor(config.colors.title)
         .frame(maxWidth: .infinity)
     }
-}
-
-extension PanelButton {
-    
-    struct Details {
-        
-        let ID: ProductData.ID
-        let title: String
-        let icon: Image?
-        let subtitle: String?
-        let kind: Kind
-    }
-}
-
-extension PanelButton {
-    
-    enum Kind {
-        
-        case accountDetails
-        case accountStatement
-        case accountOurBank
-        case accountAnotherBank
-        case cardGuardian
-        case changePin
-        case visibility
-    }
-}
-
-extension PanelButton.Details {
-    
-    func event() -> Event {
-    
-        switch kind {
-        case .accountDetails:
-            return .init(productID: ID, type: .accountDetails)
-        case .accountStatement:
-            return .init(productID: ID, type: .accountStatement)
-        case .accountOurBank:
-            return .init(productID: ID, type: .accountOurBank)
-        case .accountAnotherBank:
-            return .init(productID: ID, type: .accountAnotherBank)
-        case .cardGuardian:
-            return .init(productID: ID, type: .cardGuardian)
-        case .changePin:
-            return .init(productID: ID, type: .changePin)
-        case .visibility:
-            return .init(productID: ID, type: .visibility)
-        }
-    }
-}
-
-extension PanelButton.Details {
-    
-    typealias Event = ProductNavigationStateManager.ButtonEvent
 }

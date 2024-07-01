@@ -10,20 +10,29 @@ import Combine
 import CombineSchedulers
 import ForaTools
 import Foundation
+import PaymentComponents
 
-public final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: ObservableObject {
+public final class AnywayTransactionViewModel<Footer: FooterInterface, Model, DocumentStatus, Response>: ObservableObject
+where Model: Receiver,
+      Model.Message == AnywayMessage,
+      DocumentStatus: Equatable,
+      Response: Equatable {
     
     @Published public private(set) var state: State
     
     private let mapToModel: MapToModel
-    private let reduce: Reduce
+    private let reduce: TransactionReduce
     private let handleEffect: HandleEffect
+    
     private let stateSubject = PassthroughSubject<State, Never>()
+    private let scheduler: AnySchedulerOfDispatchQueue
+    private var cancellables = Set<AnyCancellable>()
     
     public init(
         transaction: State.Transaction,
         mapToModel: @escaping MapToModel,
-        reduce: @escaping Reduce,
+        footer: Footer,
+        reduce: @escaping TransactionReduce,
         handleEffect: @escaping HandleEffect,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
@@ -31,10 +40,16 @@ public final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: 
         // so initially state is initialised empty
         // after all properties are initialised
         // `updating` is called
-        self.state = .init(models: [:], transaction: transaction)
+        self.state = .init(
+            models: [:],
+            footer: footer,
+            transaction: transaction,
+            isAwaitingConfirmation: transaction.status == .awaitingPaymentRestartConfirmation
+        )
         self.mapToModel = mapToModel
         self.reduce = reduce
         self.handleEffect = handleEffect
+        self.scheduler = scheduler
         
         // Update state with the initial transaction when `self` is avail
         self.state = updating(state, with: transaction)
@@ -42,6 +57,8 @@ public final class AnywayTransactionViewModel<Model, DocumentStatus, Response>: 
         stateSubject
             .receive(on: scheduler)
             .assign(to: &$state)
+        
+        bind(footer)
     }
 }
 
@@ -50,9 +67,18 @@ public extension AnywayTransactionViewModel {
     func event(_ event: Event) {
         
         let (transaction, effect) = reduce(state.transaction, event)
-        let state = updating(state, with: transaction)
         
-        stateSubject.send(state)
+        if transaction != state.transaction {
+            
+            let state = updating(state, with: transaction)
+#if DEBUG || MOCK
+            print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: reduced transaction on event:", event, #file, #line)
+            print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: updated state for reduced transaction:", state, #file, #line)
+#endif
+            stateSubject.send(state)
+            
+            sendOTPWarning(state)
+        }
         
         if let effect {
             
@@ -63,7 +89,7 @@ public extension AnywayTransactionViewModel {
 
 public extension AnywayTransactionViewModel {
     
-    typealias State = CachedModelsTransaction<Model, DocumentStatus, Response>
+    typealias State = CachedModelsTransaction<Footer, Model, DocumentStatus, Response>
     typealias Event = AnywayTransactionEvent<DocumentStatus, Response>
     typealias Effect = AnywayTransactionEffect
     
@@ -75,15 +101,24 @@ public extension AnywayTransactionViewModel {
     typealias Notify = (NotifyEvent) -> Void
     typealias MapToModel = (@escaping Notify) -> (AnywayElement) -> Model
     
-    typealias Reduce = (State.Transaction, Event) -> (State.Transaction, Effect?)
+    typealias TransactionReduce = (State.Transaction, Event) -> (State.Transaction, Effect?)
     
     typealias Dispatch = (Event) -> Void
     typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
     
-    typealias TransactionStatus = Status<DocumentStatus, Response>
+    typealias TransactionStatus = AnywayStatus<DocumentStatus, Response>
 }
 
 private extension AnywayTransactionViewModel {
+    
+    func sendOTPWarning(
+        _ state: State
+    ) {
+        state.otpWarning.map {
+            
+            state.models[.widgetID(.otp)]?.receive(.otpWarning($0))
+        }
+    }
     
     func updating(
         _ state: State,
@@ -95,7 +130,8 @@ private extension AnywayTransactionViewModel {
             using: mapToModel { [weak self] event in
                 
                 // TODO: add tests
-                switch event{
+                
+                switch event {
                 case .getVerificationCode:
                     self?.event(.verificationCode(.request))
                     
@@ -104,5 +140,73 @@ private extension AnywayTransactionViewModel {
                 }
             }
         )
+    }
+}
+
+private extension AnywayTransactionViewModel {
+    
+    /// Does not use `.removeDuplicates()` in the pipelines due to different sources of change.
+    /// For example, button status `active`/`inactive` is set depending on transaction, but `tapped` is set reacting to UI event. Using `.removeDuplicates()` would drop changes.
+    func bind(_ footer: Footer) {
+        
+        // subscribe to footer state projection
+        /// - Note: looks like this pipeline needs `dropFirst` but if `dropFirst` is added the button does not gets active after first submit
+        footer.projectionPublisher
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.update(with: $0) }
+            .store(in: &cancellables)
+        
+        // update footer active/inactive and style
+        $state
+            .map(\.projection)
+            .sink { [weak footer] in footer?.project($0) }
+            .store(in: &cancellables)
+    }
+    
+    func update(
+        with projection: Projection
+    ) {
+        switch projection {
+        case let .amount(amount):
+            event(.payment(.widget(.amount(amount))))
+            
+        case .buttonTapped:
+            event(.continue)
+        }
+    }
+}
+
+private extension CachedModelsTransaction {
+    
+    var otpWarning: String? {
+        
+        guard case let .widget(.otp(_, warning)) = transaction.context.payment.elements[id: .widgetID(.otp)]
+        else { return nil }
+        
+        return warning
+    }
+    
+    var projection: FooterTransactionProjection {
+        
+        return .init(isEnabled: isEnabled, style: style)
+    }
+    
+    private var isEnabled: Bool {
+        
+        switch transaction.status {
+        case .inflight:
+            return false
+            
+        default:
+            return transaction.isValid
+        }
+    }
+    
+    private var style: AmountComponent.FooterState.Style {
+        
+        switch transaction.context.payment.footer {
+        case .amount:   return .amount
+        case .continue: return .button
+        }
     }
 }

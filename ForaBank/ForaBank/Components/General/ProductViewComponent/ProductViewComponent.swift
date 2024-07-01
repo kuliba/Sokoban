@@ -274,9 +274,14 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
         }
     }
     
-    static func name(product: ProductData, style: Appearance.Style, creditProductName: Appearance.NameOfCreditProduct) -> String {
-        
+    static func name(
+        product: ProductData,
+        style: Appearance.Style,
+        creditProductName: Appearance.NameOfCreditProduct
+    ) -> String {
+      
         switch product {
+            
         case let cardProduct as ProductCardData:
             switch style {
             case .main:
@@ -288,8 +293,11 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
                 case .cardTitle:
                     return cardProduct.isCreditCard ? "Кредитная\n\(cardProduct.displayName)" : cardProduct.displayName
                     
-                case .productView, .myProductsSectionItem: 
+                case .myProductsSectionItem:
                     return cardProduct.displayName
+                    
+                case .productView:
+                    return cardProduct.navigationBarName
                 }
             }
             

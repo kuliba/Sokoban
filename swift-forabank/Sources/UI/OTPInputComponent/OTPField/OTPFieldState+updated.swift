@@ -8,15 +8,15 @@
 public extension OTPFieldState {
     
     func updated(
-        text: String? = nil,
-        isInputComplete: Bool? = nil,
-        status: Status?? = nil
+        text: String,
+        isInputComplete: Bool,
+        status: Status?
     ) -> Self {
         
-        .init(
-            text: text ?? self.text,
-            isInputComplete: isInputComplete ?? self.isInputComplete,
-            status: status ?? self.status
+        return .init(
+            text: text,
+            isInputComplete: isInputComplete,
+            status: status
         )
     }
 }

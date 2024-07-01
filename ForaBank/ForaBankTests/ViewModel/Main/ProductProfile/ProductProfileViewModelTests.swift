@@ -693,6 +693,34 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNotNil(sut.fullScreenCoverState)
     }
     
+    //MARK: bottom sheet
+    
+    func test_show_calendarBottomSheet() throws {
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNil(sut.historyState)
+        
+        sut.event(.history(.button(.calendar)))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.historyState)
+    }
+    
+    func test_show_filterBottomSheet() throws {
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNil(sut.historyState)
+        
+        sut.event(.history(.button(.filter)))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertNotNil(sut.historyState)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
@@ -793,7 +821,7 @@ private extension ProductProfileViewModel {
         }
     }
     
-    var optionsPanelNew: [PanelButton.Details] {
+    var optionsPanelNew: [PanelButtonDetails] {
         
         switch bottomSheet?.type {
             
@@ -832,11 +860,13 @@ private extension ProductProfileViewModel {
             return viewModel
         case let .paymentsTransfers(viewModel):
             return viewModel
+        case let .controlPanel(viewModel):
+            return viewModel
         }
     }
 }
 
-private extension Array where Element == PanelButton.Details {
+private extension Array where Element == PanelButtonDetails {
     
     func containsTitle(_ title: String) -> Bool {
         return self.filter { $0.title == title }.first != nil

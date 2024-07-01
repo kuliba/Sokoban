@@ -9,6 +9,6 @@ import PaymentComponents
 
 struct AnywayPaymentFooterConfig {
     
-    let amountConfig: AmountConfig
+    let amountConfig: BottomAmountConfig
     let buttonConfig: ButtonConfig
 }

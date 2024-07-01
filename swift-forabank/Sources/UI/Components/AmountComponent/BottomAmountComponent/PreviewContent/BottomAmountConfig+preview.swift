@@ -48,7 +48,7 @@ extension ButtonStateConfig {
         backgroundColor: .orange.opacity(0.3),
         text: .init(
             textFont: .headline.weight(.light),
-            textColor: .white.opacity(0.7)
+            textColor: .black.opacity(0.7)
         )
     )
 }

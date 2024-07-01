@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PanelView: View {
     
-    let items: [PanelButton.Details]
+    let items: [PanelButtonDetails]
     let event: (Event) -> Void
     let config: Config = .default
     
@@ -23,7 +23,7 @@ struct PanelView: View {
         .padding(.trailing, config.paddings.trailing)
     }
     
-    private func view(details: PanelButton.Details) -> some View {
+    private func view(details: PanelButtonDetails) -> some View {
         
         PanelButton(
             details: details,
@@ -34,5 +34,5 @@ struct PanelView: View {
 
 extension PanelView {
     
-    typealias Event = ProductNavigationStateManager.ButtonEvent
+    typealias Event = ProductProfileFlowManager.ButtonEvent
 }

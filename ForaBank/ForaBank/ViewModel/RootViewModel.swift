@@ -28,7 +28,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     private let fastPaymentsFactory: FastPaymentsFactory
     private let navigationStateManager: UserAccountNavigationStateManager
-    private let productNavigationStateManager: ProductNavigationStateManager
+    private let productNavigationStateManager: ProductProfileFlowManager
 
     let model: Model
     private let infoDictionary: [String : Any]?
@@ -39,7 +39,7 @@ class RootViewModel: ObservableObject, Resetable {
     init(
         fastPaymentsFactory: FastPaymentsFactory,
         navigationStateManager: UserAccountNavigationStateManager,
-        productNavigationStateManager: ProductNavigationStateManager,
+        productNavigationStateManager: ProductProfileFlowManager,
         mainViewModel: MainViewModel,
         paymentsViewModel: PaymentsTransfersViewModel,
         chatViewModel: ChatViewModel,

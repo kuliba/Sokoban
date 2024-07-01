@@ -11,21 +11,18 @@ public final class TransactionReducer<Report, Payment, PaymentEvent, PaymentEffe
 where Payment: RestartablePayment {
     
     private let paymentReduce: PaymentReduce
-    private let stagePayment: StagePayment
-    private let updatePayment: UpdatePayment
     private let paymentInspector: Inspector
 
     public init(
         paymentReduce: @escaping PaymentReduce,
-        stagePayment: @escaping StagePayment,
-        updatePayment: @escaping UpdatePayment,
         paymentInspector: Inspector
     ) {
         self.paymentReduce = paymentReduce
-        self.stagePayment = stagePayment
-        self.updatePayment = updatePayment
         self.paymentInspector = paymentInspector
     }
+    
+    public typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, PaymentEffect?)
+    public typealias Inspector = PaymentInspector<Payment, PaymentDigest, PaymentUpdate>
 }
 
 public extension TransactionReducer {
@@ -37,7 +34,26 @@ public extension TransactionReducer {
         
         var state = state
         var effect: Effect?
+    
+        reduce(&state, &effect, with: event)
         
+        return (state, effect)
+    }
+    
+    typealias State = Transaction<Payment, Status>
+    typealias Event = TransactionEvent<Report, PaymentEvent, PaymentUpdate>
+    typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
+
+    typealias Status = TransactionStatus<Payment, PaymentUpdate, Report>
+}
+
+private extension TransactionReducer {
+    
+    func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with event: Event
+    ) {
         switch (state.status, event) {
         case let (.awaitingPaymentRestartConfirmation, .paymentRestartConfirmation(shouldRestartPayment)):
             reduce(&state, shouldRestartPayment: shouldRestartPayment)
@@ -57,8 +73,8 @@ public extension TransactionReducer {
         case let (_, .verificationCode(verificationCode)):
             reduce(&state, &effect, with: verificationCode)
             
-        case let (_, .completePayment(report)):
-            reduce(&state, with: report)
+        case let (_, .completePayment(result)):
+            reduce(&state, with: result)
             
         case (_, .continue):
             reduceContinue(&state, &effect)
@@ -75,25 +91,8 @@ public extension TransactionReducer {
         default:
             break
         }
-        
-        return (state, effect)
     }
-}
 
-public extension TransactionReducer {
-    
-    typealias PaymentReduce = (Payment, PaymentEvent) -> (Payment, PaymentEffect?)
-    typealias StagePayment = (Payment) -> Payment
-    typealias UpdatePayment = (Payment, PaymentUpdate) -> Payment
-    typealias Inspector = PaymentInspector<Payment, PaymentDigest, PaymentUpdate>
-    
-    typealias State = Transaction<Payment, TransactionStatus<Payment, PaymentUpdate, Report>>
-    typealias Event = TransactionEvent<Report, PaymentEvent, PaymentUpdate>
-    typealias Effect = TransactionEffect<PaymentDigest, PaymentEffect>
-}
-
-private extension TransactionReducer {
-    
     func reduce(
         _ state: inout State,
         shouldRestartPayment: Bool
@@ -104,10 +103,10 @@ private extension TransactionReducer {
         if shouldRestartPayment {
             state.context.shouldRestart = true
         } else {
-            state.context = paymentInspector.restorePayment(state.context)
-            state.isValid = paymentInspector.validatePayment(state.context)
+            state.context = paymentInspector.rollbackPayment(state.context)
         }
         
+        state.isValid = paymentInspector.validatePayment(state.context)
         state.status = nil
     }
     
@@ -140,13 +139,17 @@ private extension TransactionReducer {
     
     func reduce(
         _ state: inout State,
-        with report: Report?
+        with result: Event.TransactionResult
     ) {
-        switch report {
-        case .none:
+        switch result {
+        case let .failure(.otpFailure(message)):
+            state.context = paymentInspector.handleOTPFailure(state.context, message)
+            state.status = nil
+            
+        case .failure(.terminal):
             state.status = .result(.failure(.transactionFailure))
             
-        case let .some(report):
+        case let .success(report):
             state.status = .result(.success(report))
         }
     }
@@ -173,20 +176,20 @@ private extension TransactionReducer {
         _ effect: inout Effect?
     ) {
         guard state.status == nil else {
-#if DEBUG
-            print("\(String(describing: self)): can't continue with status \(String(describing: state.status))")
+#if DEBUG || MOCK
+            print("===>>> can't continue with non-nil status \(String(describing: state.status))", #file, #line)
 #endif
             return
         }
         
         guard state.isValid else {
-#if DEBUG
-            print("\(String(describing: self)): can't continue with invalid transaction")
+#if DEBUG || MOCK
+            print("===>>> can't continue with invalid transaction", #file, #line)
 #endif
             return
         }
         
-        state.context = stagePayment(state.context)
+        state.context = paymentInspector.stagePayment(state.context)
         
         if let verificationCode = paymentInspector.getVerificationCode(state.context) {
             
@@ -267,7 +270,7 @@ private extension TransactionReducer {
         _ state: inout State,
         with update: PaymentUpdate
     ) {
-        let updated = updatePayment(state.context, update)
+        let updated = paymentInspector.updatePayment(state.context, update)
         state.context = updated
         state.isValid = paymentInspector.validatePayment(updated)
         state.status = nil

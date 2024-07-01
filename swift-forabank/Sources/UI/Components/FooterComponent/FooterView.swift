@@ -61,7 +61,6 @@ private extension FooterView {
                         payByInstructionButton()
                     }
                     .frame(height: 56)
-                    .padding(.horizontal, 16)
                 }
                 
                 footer.subtitle.text(withConfig: config.subtitle)
@@ -78,6 +77,7 @@ private extension FooterView {
         VStack(spacing: 24) {
             
             Image.defaultIcon(
+                foregroundColor: .gray,
                 backgroundColor: config.background,
                 icon: failure.image
             )
@@ -85,7 +85,7 @@ private extension FooterView {
             descriptionView(failure.description)
                 .padding(.horizontal, 16)
             
-            addCompanyButton()
+            payByInstructionButton()
                 .frame(height: 56)
                 .padding(.horizontal, 16)
         }

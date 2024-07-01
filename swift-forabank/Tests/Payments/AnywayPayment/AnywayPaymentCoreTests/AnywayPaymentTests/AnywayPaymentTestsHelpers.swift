@@ -124,6 +124,7 @@ func makeAnywayPaymentPayload(
 }
 
 func makeAnywayPayment(
+    amount: Decimal? = nil,
     parameters: [AnywayElement.Parameter],
     footer: AnywayPayment.Footer = .continue,
     isFinalStep: Bool = false,
@@ -136,6 +137,7 @@ func makeAnywayPayment(
     }
     
     return makeAnywayPayment(
+        amount: amount,
         elements: elements,
         footer: footer,
         isFinalStep: isFinalStep
@@ -143,16 +145,16 @@ func makeAnywayPayment(
 }
 
 func makeAnywayPayment(
+    amount: Decimal? = nil,
     elements: [AnywayElement] = [],
     footer: AnywayPayment.Footer = .continue,
-    infoMessage: String? = nil,
     isFinalStep: Bool = false
 ) -> AnywayPayment {
     
     return .init(
+        amount: amount,
         elements: elements,
         footer: footer,
-        infoMessage: infoMessage,
         isFinalStep: isFinalStep
     )
 }
@@ -178,8 +180,9 @@ func makeAnywayPaymentWithAmount(
 ) -> AnywayPayment {
     
     let payment = makeAnywayPayment(
+        amount: amount,
         elements: elements,
-        footer: .amount(amount)
+        footer: .amount
     )
     XCTAssert(hasAmountFooter(payment), "Expected amount field.", file: file, line: line)
     return payment
@@ -218,11 +221,12 @@ func makeAnywayPaymentWithoutAmount(
 }
 
 func makeAnywayPaymentWithOTP(
+    _ value: Int? = nil,
     file: StaticString = #file,
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(elements: [.widget(makeOTPWidget())])
+    let payment = makeAnywayPayment(elements: [.widget(makeOTPWidget(value))])
     XCTAssert(hasOTPField(payment), "Expected to have OTP field.", file: file, line: line)
     return payment
 }
@@ -231,10 +235,10 @@ func makeAnywayPaymentField(
     _ id: AnywayElement.Field.ID = anyMessage(),
     value: String = anyMessage(),
     title: String = anyMessage(),
-    image: AnywayElement.Image? = nil
+    icon: AnywayElement.Icon? = nil
 ) -> AnywayElement.Field {
     
-    return .init(id: id, title: title, value: value, image: image)
+    return .init(id: id, title: title, value: value, icon: icon)
 }
 
 func makeAnywayPaymentField(
@@ -248,7 +252,7 @@ func makeAnywayPaymentField(
 
 func makeAnywayPaymentParameter(
     field: AnywayElement.Parameter.Field = makeAnywayPaymentElementParameterField(),
-    image: AnywayElement.Image? = nil,
+    icon: AnywayElement.Icon? = nil,
     masking: AnywayElement.Parameter.Masking = makeAnywayPaymentElementParameterMasking(),
     validation: AnywayElement.Parameter.Validation = makeAnywayPaymentElementParameterValidation(),
     uiAttributes: AnywayElement.Parameter.UIAttributes = makeAnywayPaymentElementParameterUIAttributes()
@@ -256,7 +260,7 @@ func makeAnywayPaymentParameter(
     
     return .init(
         field: field,
-        image: image,
+        icon: icon,
         masking: masking,
         validation: validation,
         uiAttributes: uiAttributes
@@ -439,10 +443,11 @@ func makeAnywayPaymentWidgetElement(
 }
 
 func makeOTPWidget(
-    _ value: Int? = nil
+    _ value: Int? = nil,
+    warning: String? = nil
 ) -> AnywayElement.Widget {
     
-    return .otp(value)
+    return .otp(value, warning)
 }
 
 func makeAnywayPaymentWithoutOTP(
@@ -456,21 +461,23 @@ func makeAnywayPaymentWithoutOTP(
 }
 
 func makeFinalStepAnywayPayment(
+    footer: AnywayPayment.Footer = .continue,
     file: StaticString = #file,
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(isFinalStep: true)
+    let payment = makeAnywayPayment(footer: footer, isFinalStep: true)
     XCTAssert(isFinalStep(payment), "Expected non final step payment.", file: file, line: line)
     return payment
 }
 
 func makeNonFinalStepAnywayPayment(
+    footer: AnywayPayment.Footer = .continue,
     file: StaticString = #file,
     line: UInt = #line
 ) -> AnywayPayment {
     
-    let payment = makeAnywayPayment(isFinalStep: false)
+    let payment = makeAnywayPayment(footer: footer, isFinalStep: false)
     XCTAssert(!isFinalStep(payment), "Expected non final step payment.", file: file, line: line)
     return payment
 }
@@ -499,6 +506,38 @@ func makeAnywayPaymentUpdate(
             )
         ),
         fields: fields
+    )
+}
+
+func makeAnywayPaymentUpdate(
+    amount: Decimal?,
+    fee: Decimal? = nil,
+    isFinalStep: Bool = false,
+    isFraudSuspected: Bool = false,
+    isMultiSum: Bool = false,
+    needOTP: Bool = false,
+    needSum: Bool = false,
+    fields: [AnywayPaymentUpdate.Field] = [],
+    parameters: [AnywayPaymentUpdate.Parameter] = []
+) -> AnywayPaymentUpdate {
+    
+    return .init(
+        details: .init(
+            amounts: makeAnywayPaymentUpdateDetailsAmounts(
+                amount: amount,
+                fee: fee
+            ),
+            control: makeAnywayPaymentUpdateDetailsControl(
+                isFinalStep: isFinalStep,
+                isFraudSuspected: isFraudSuspected,
+                isMultiSum: isMultiSum,
+                needOTP: needOTP,
+                needSum: needSum
+            ),
+            info: makeAnywayPaymentUpdateDetailsInfo()
+        ),
+        fields: fields,
+        parameters: parameters
     )
 }
 
@@ -555,7 +594,6 @@ private func makeAnywayPaymentUpdateDetailsControl(
     isFinalStep: Bool = false,
     isFraudSuspected: Bool = false,
     isMultiSum: Bool = false,
-    needMake: Bool = false,
     needOTP: Bool = false,
     needSum: Bool = false
 ) -> AnywayPaymentUpdate.Details.Control {
@@ -564,7 +602,6 @@ private func makeAnywayPaymentUpdateDetailsControl(
         isFinalStep: isFinalStep,
         isFraudSuspected: isFraudSuspected,
         isMultiSum: isMultiSum,
-        needMake: needMake,
         needOTP: needOTP,
         needSum: needSum
     )
@@ -591,10 +628,10 @@ func makeAnywayPaymentUpdateField(
     _ name: String = anyMessage(),
     title: String = anyMessage(),
     value: String = anyMessage(),
-    image: AnywayPaymentUpdate.Image? = nil
+    icon: AnywayPaymentUpdate.Icon? = nil
 ) -> AnywayPaymentUpdate.Field {
     
-    return .init(name: name, value: value, title: title, image: image)
+    return .init(name: name, value: value, title: title, icon: icon)
 }
 
 func makeAnywayPaymentAndUpdateFields(
@@ -620,7 +657,7 @@ func makeAnywayPaymentAndUpdateFields(
 
 func makeAnywayPaymentUpdateParameter(
     field: AnywayPaymentUpdate.Parameter.Field = makeAnywayPaymentUpdateParameterField(),
-    image: AnywayPaymentUpdate.Image? = nil,
+    icon: AnywayPaymentUpdate.Icon? = nil,
     masking: AnywayPaymentUpdate.Parameter.Masking = makeAnywayPaymentUpdateParameterMasking(),
     validation: AnywayPaymentUpdate.Parameter.Validation = makeAnywayPaymentUpdateParameterValidation(),
     uiAttributes: AnywayPaymentUpdate.Parameter.UIAttributes = makeAnywayPaymentUpdateParameterUIAttributes()
@@ -628,7 +665,7 @@ func makeAnywayPaymentUpdateParameter(
     
     return .init(
         field: field,
-        image: image,
+        icon: icon,
         masking: masking,
         validation: validation,
         uiAttributes: uiAttributes
@@ -966,6 +1003,17 @@ func makeProductWidget(
     )
 }
 
+func makeProductWidgetElement(
+    currency: String = anyMessage(),
+    productID: Int = makeIntID(),
+    productType: AnywayElement.Widget.Product.ProductType = .account
+) -> AnywayElement {
+    
+    return .widget(.product(makeProductWidget(
+        currency: currency, productID: productID, productType: productType
+    )))
+}
+
 func parameters(
     of payment: AnywayPayment
 ) -> [AnywayElement.Parameter] {
@@ -990,7 +1038,7 @@ extension AnywayElement.Parameter {
         
         return .init(
             field: .init(id: field.id, value: value.map { .init($0) }),
-            image: image,
+            icon: icon,
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes
@@ -1017,9 +1065,9 @@ extension AnywayPayment {
     func updating(elements: [AnywayElement]) -> Self {
         
         return .init(
+            amount: amount,
             elements: elements,
             footer: footer,
-            infoMessage: infoMessage,
             isFinalStep: isFinalStep
         )
     }

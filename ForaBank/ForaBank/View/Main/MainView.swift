@@ -418,7 +418,10 @@ struct MainView_Previews: PreviewProvider {
             navigationOperationView: EmptyView.init,
             viewFactory: .preview,
             paymentsTransfersViewFactory: .preview,
-            productProfileViewFactory: .init(makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:)),
+            productProfileViewFactory: .init(
+                makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
+                makeHistoryButton: { event in HistoryButtonView(event: { _ in })}
+            ),
             getUImage: { _ in nil }
         )
     }
@@ -459,6 +462,7 @@ extension MainViewModel {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
+            makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
@@ -483,6 +487,7 @@ extension MainViewModel {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
+            makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
@@ -507,6 +512,7 @@ extension MainViewModel {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
+            makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
