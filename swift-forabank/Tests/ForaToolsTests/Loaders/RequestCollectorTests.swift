@@ -19,6 +19,7 @@ where Request: Hashable {
     private let collectionPeriod: DispatchTimeInterval
     private let performRequests: PerformRequests
     private let scheduler: AnySchedulerOf<DispatchQueue>
+    private let lock = NSRecursiveLock()
     
     init(
         pendingRequests: Completions = .init(),
@@ -49,6 +50,9 @@ extension RequestCollector {
         _ request: Request,
         _ completion: @escaping Completion
     ) {
+        lock.lock()
+        defer { lock.unlock() }
+        
         if let handlers = inflightRequests[request] {
             inflightRequests[request] = handlers + [completion]
         } else if let handlers = pendingRequests[request] {
@@ -88,6 +92,9 @@ private extension RequestCollector {
     }
     
     func processRequests() {
+        
+        lock.lock()
+        defer { lock.unlock() }
         
         guard !pendingRequests.isEmpty
         else {
@@ -139,26 +146,28 @@ final class RequestCollectorTests: XCTestCase {
         
         let (_, spy, scheduler) = makeSUT()
         
-        scheduler.advance(to: .init(.now()))
+        scheduler.advance(to: .init(.distantFuture))
         
         XCTAssertEqual(spy.callCount, 0)
     }
     
-    func test_process_shouldCallCollaboratorOnceWithRequestAfterTimeInterval() {
+    func test_process_shouldCallCollaboratorOnceWithAllRequestAfterTimeInterval() {
         
-        let request = anyRequest()
+        let (request, request2) = (anyRequest(), anyRequest())
         let (sut, spy, scheduler) = makeSUT(collectionPeriod: .seconds(100))
         
         sut.process(request) { _ in }
         sut.process(request) { _ in }
         sut.process(request) { _ in }
+        sut.process(request2) { _ in }
+        sut.process(request2) { _ in }
         XCTAssertTrue(spy.payloads.isEmpty)
         
         scheduler.advance(to: .init(.now().advanced(by: .seconds(99))))
         XCTAssertTrue(spy.payloads.isEmpty)
         
         scheduler.advance(to: .init(.now().advanced(by: .seconds(100))))
-        XCTAssertNoDiff(spy.payloads, [[request]])
+        XCTAssertNoDiff(spy.payloads.map { Set($0) }, [[request, request2]])
     }
     
     func test_process_shouldNotCallCollaboratorAgainOnRequestAfterTimeIntervalBeforeCollaboratorCompletion() {
@@ -247,6 +256,60 @@ final class RequestCollectorTests: XCTestCase {
         XCTAssertNoDiff(responses, [request1: response1, request2: response2, request3: response3])
     }
     
+    func test_process_shouldHandleHighVolumeRequestLoad() {
+        
+        let count = 1_000
+        let (sut, spy, scheduler) = makeSUT(collectionPeriod: .seconds(1))
+        let exp = expectation(description: "High volume requests")
+        exp.expectedFulfillmentCount = count
+        
+        for i in 1...count {
+            
+            sut.process(i) { response in
+                
+                XCTAssertEqual(response, "Response\(i)")
+                exp.fulfill()
+            }
+        }
+        scheduler.advance(to: .init(.distantFuture))
+        spy.complete(with: makeResponses(count: count))
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    // TODO: fix test - now not working due to mix of scheduler and Dispatch
+    func _test_process_shouldHandleConcurrentRequests() {
+        
+        let count = 10
+        let (sut, spy, scheduler) = makeSUT(collectionPeriod: .seconds(1))
+        let exp = expectation(description: "Concurrent requests")
+        exp.expectedFulfillmentCount = count
+        
+        let group = DispatchGroup()
+        
+        for i in 1...10 {
+            
+            group.enter()
+            DispatchQueue.global().async {
+                
+                sut.process(i) { response in
+                    
+                    XCTAssertEqual(response, "Response\(i)")
+                    exp.fulfill()
+                    group.leave()
+                }
+            }
+        }
+        
+        group.notify(queue: .main) {
+            
+            scheduler.advance(to: .init(.distantFuture))
+            spy.complete(with: self.makeResponses(count: count))
+        }
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = RequestCollector<Request, Response>
@@ -292,5 +355,12 @@ final class RequestCollectorTests: XCTestCase {
     ) -> Response {
         
         return value
+    }
+    
+    private func makeResponses(
+        count: Int
+    ) -> [Request: Response] {
+        
+        return .init(uniqueKeysWithValues: (1...count).map { ($0, "Response\($0)") })
     }
 }
