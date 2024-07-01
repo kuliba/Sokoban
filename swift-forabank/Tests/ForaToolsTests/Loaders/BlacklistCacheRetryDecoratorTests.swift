@@ -1,5 +1,5 @@
 //
-//  ResourceLoaderComposerTests.swift
+//  BlacklistCacheRetryDecoratorTests.swift
 //
 //
 //  Created by Igor Malyarov on 24.06.2024.
@@ -9,41 +9,55 @@ import CombineSchedulers
 import ForaTools
 import XCTest
 
-@available(iOS 16.0.0, *)
-final class ResourceLoaderComposerTests: XCTestCase {
+final class BlacklistCacheRetryDecoratorTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (_, local, remote, cache, _) = makeSUT()
+        let (_, decoratee, cache, _) = makeSUT()
         
-        XCTAssertEqual(local.callCount, 0)
-        XCTAssertEqual(remote.callCount, 0)
+        XCTAssertEqual(decoratee.callCount, 0)
         XCTAssertEqual(cache.callCount, 0)
     }
     
-    func test_load_shouldDeliverResponseOnLocalLoadSuccess() {
+    func test_load_shouldCallCacheOnLoadSuccess() {
         
         let response = anyResponse()
-        let (sut, local, _,_,_) = makeSUT()
+        let (sut, decoratee, cache, _) = makeSUT()
         
         assert(sut, with: anyPayload(), toDeliver: .success(response)) {
             
-            local.complete(with: .success(response))
+            decoratee.complete(with: .success(response))
+            cache.complete(with: .success(()))
+            XCTAssertNoDiff(cache.payloads, [response])
+        }
+    }
+    
+    func test_load_shouldCallCacheOnSecondRemoteAttempt() {
+        
+        let response = anyResponse()
+        let (sut, decoratee, cache, scheduler) = makeSUT()
+        
+        assert(sut, with: anyPayload(), toDeliver: .success(response)) {
+            
+            decoratee.complete(with: .failure(anyLoadFailure()), at: 0)
+            scheduler.advance(to: .init(.now() + .seconds(1)))
+            decoratee.complete(with: .success(response), at: 1)
+            cache.complete(with: .failure(anyError()))
+            XCTAssertNoDiff(cache.payloads, [response])
         }
     }
     
     func test_load_shouldDeliverResponseOnSecondRemoteAttempt() {
         
         let response = anyResponse()
-        let (sut, local, remote, cache, scheduler) = makeSUT()
+        let (sut, decoratee, cache, scheduler) = makeSUT()
         
         assert(sut, with: anyPayload(), toDeliver: .success(response)) {
             
-            local.complete(with: .failure(anyError()))
-            remote.complete(with: .failure(anyLoadFailure()), at: 0)
+            decoratee.complete(with: .failure(anyLoadFailure()), at: 0)
             scheduler.advance(to: .init(.now() + .seconds(1)))
-            remote.complete(with: .success(response), at: 1)
-            cache.complete(with: .success(()))
+            decoratee.complete(with: .success(response), at: 1)
+            cache.complete(with: .failure(anyError()))
         }
     }
     
@@ -51,87 +65,89 @@ final class ResourceLoaderComposerTests: XCTestCase {
         
         let maxRetries = 2
         let failure = anyLoadFailure()
-        let (sut, local, remote, _, scheduler) = makeSUT(
+        let (sut, decoratee, _, scheduler) = makeSUT(
             isBlacklisted: { _, attempts in return attempts >= 5 },
             retryPolicy: equal(maxRetries: maxRetries, interval: .seconds(1))
         )
         
         assert(sut, with: anyPayload(), toDeliver: .failure(.loadFailure(failure))) {
             
-            local.complete(with: .failure(anyError()))
-            remote.complete(with: .failure(anyLoadFailure()), at: 0)
+            decoratee.complete(with: .failure(anyLoadFailure()), at: 0)
             scheduler.advance(to: .init(.now() + .seconds(1)))
-            remote.complete(with: .failure(anyLoadFailure()), at: 1)
+            decoratee.complete(with: .failure(anyLoadFailure()), at: 1)
             scheduler.advance(to: .init(.now() + .seconds(1)))
-            remote.complete(with: .failure(failure), at: 2)
+            decoratee.complete(with: .failure(failure), at: 2)
         }
-        XCTAssertEqual(remote.callCount, maxRetries + 1, "Remote call count should be is one plus retry attempts.")
+        XCTAssertEqual(decoratee.callCount, maxRetries + 1, "Remote call count is one plus retry attempts.")
     }
     
     func test_load_shouldNotDeliverResponseOnSecondAttemptAsBlacklisted() {
         
         let payload = anyPayload()
-        let (sut, local, remote, _, scheduler) = makeSUT(
+        let (sut, decoratee, _, scheduler) = makeSUT(
             isBlacklisted: { _, attempts in return attempts >= 2 },
             retryPolicy: equal(maxRetries: 1, interval: .seconds(1))
         )
         
         assert(sut, with: payload, toDeliver: .failure(.loadFailure(anyLoadFailure("1")))) {
             
-            local.complete(with: .failure(anyError()), at: 0)
-            remote.complete(with: .failure(anyLoadFailure("0")), at: 0)
+            decoratee.complete(with: .failure(anyLoadFailure("0")), at: 0)
             scheduler.advance(to: .init(.now() + .seconds(1)))
-            remote.complete(with: .failure(anyLoadFailure("1")), at: 1)
+            decoratee.complete(with: .failure(anyLoadFailure("1")), at: 1)
         }
-        XCTAssertEqual(remote.callCount, 2)
+        XCTAssertEqual(decoratee.callCount, 2)
         
-        assert(sut, with: payload, toDeliver: .failure(.blacklistedError)) {
+        assertNoCompletion(sut, with: payload) {
             
-            local.complete(with: .failure(anyError()), at: 1)
+            scheduler.advance(to: .init(.now() + .seconds(1)))
+            decoratee.complete(with: .failure(anyLoadFailure("2")), at: 2)
         }
-        XCTAssertEqual(remote.callCount, 2)
+        
+        assertNoCompletion(sut, with: payload) {
+            
+            scheduler.advance(to: .init(.now() + .seconds(1)))
+            decoratee.complete(with: .failure(anyLoadFailure("3")), at: 3)
+        }
     }
     
     func test_load_shouldNotDeliverResponseOnThirdAttemptAsBlacklisted() {
         
         let payload = anyPayload()
-        let (sut, local, remote, _,_) = makeSUT(
+        let (sut, decoratee, _, scheduler) = makeSUT(
             isBlacklisted: { _, attempts in return attempts >= 3 },
             retryPolicy: equal(maxRetries: 0, interval: .seconds(1))
         )
         
         assert(sut, with: payload, toDeliver: .failure(.loadFailure(anyLoadFailure("0")))) {
             
-            local.complete(with: .failure(anyError()), at: 0)
-            remote.complete(with: .failure(anyLoadFailure("0")), at: 0)
+            scheduler.advance(to: .init(.now() + .seconds(1)))
+            decoratee.complete(with: .failure(anyLoadFailure("0")), at: 0)
+            XCTAssertEqual(decoratee.callCount, 1)
         }
-        XCTAssertEqual(remote.callCount, 1)
         
         assert(sut, with: payload, toDeliver: .failure(.loadFailure(anyLoadFailure("1")))) {
             
-            local.complete(with: .failure(anyError()), at: 1)
-            remote.complete(with: .failure(anyLoadFailure("1")), at: 1)
+            scheduler.advance(to: .init(.now() + .seconds(1)))
+            decoratee.complete(with: .failure(anyLoadFailure("1")), at: 1)
+            XCTAssertEqual(decoratee.callCount, 2)
         }
-        XCTAssertEqual(remote.callCount, 2)
         
-        assert(sut, with: payload, toDeliver: .failure(.blacklistedError)) {
+        assert(sut, with: payload, toDeliver: .failure(.loadFailure(anyLoadFailure("2")))) {
             
-            local.complete(with: .failure(anyError()), at: 1)
+            scheduler.advance(to: .init(.now() + .seconds(1)))
+            decoratee.complete(with: .failure(anyLoadFailure("2")), at: 2)
+            XCTAssertEqual(decoratee.callCount, 3)
         }
-        XCTAssertEqual(remote.callCount, 2)
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = Composer.ComposedLoader
-    
-    private typealias Composer = ResourceLoaderComposer<Payload, Response, LoadFailure>
-    
-    private typealias Local = Spy<Payload, Result<Response, Error>>
-    private typealias Remote = Spy<Payload, LoadResult>
+    private typealias SUT = BlacklistCacheRetryDecorator<Payload, Response, LoadFailure>
     
     private typealias Cache = Spy<Response, CacheResult>
     private typealias CacheResult = Result<Void, Error>
+    
+    private typealias Decoratee = Spy<Payload, LoadResult>
     
     private typealias Payload = Int
     private typealias Response = String
@@ -143,32 +159,26 @@ final class ResourceLoaderComposerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
-        sut: any SUT,
-        local: Local,
-        remote: Remote,
+        sut: SUT,
+        decoratee: Decoratee,
         cache: Cache,
         scheduler: TestSchedulerOf<DispatchQueue>
     ) {
-        let local = Local()
-        let remote = Remote()
+        let decoratee = Decoratee()
         let cache = Cache()
         let scheduler = DispatchQueue.test
         
-        let composer = Composer(
+        let sut = SUT(
             cache: { response, completion in cache.process(response) { _ in completion() }},
-            localLoader: local,
-            remoteLoader: remote,
+            decoratee: decoratee,
+            isBlacklisted: isBlacklisted,
+            retryPolicy: retryPolicy,
             scheduler: scheduler.eraseToAnyScheduler()
         )
-        let sut = composer.compose(isBlacklisted: isBlacklisted, retryPolicy: retryPolicy)
         
-        trackForMemoryLeaks(composer, file: file, line: line)
-        trackForMemoryLeaks(local, file: file, line: line)
-        trackForMemoryLeaks(remote, file: file, line: line)
-        trackForMemoryLeaks(cache, file: file, line: line)
-        trackForMemoryLeaks(scheduler, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
         
-        return (sut, local, remote, cache, scheduler)
+        return (sut, decoratee, cache, scheduler)
     }
     
     private func anyPayload(
@@ -204,14 +214,14 @@ final class ResourceLoaderComposerTests: XCTestCase {
     }
     
     private func assert(
-        _ sut: any SUT,
+        _ sut: SUT,
         with payload: Payload,
-        toDeliver expected: Composer.BlacklistedResult,
+        toDeliver expected: SUT.BlacklistedResult,
         on action: () throws -> Void = {},
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        var result: Composer.BlacklistedResult?
+        var result: SUT.BlacklistedResult?
         let exp = expectation(description: "wait for completion")
         
         sut.load(payload) {
@@ -225,6 +235,23 @@ final class ResourceLoaderComposerTests: XCTestCase {
         wait(for: [exp], timeout: 1)
         
         XCTAssertNoDiff(result, expected, file: file, line: line)
+    }
+    
+    private func assertNoCompletion(
+        _ sut: SUT,
+        with payload: Payload,
+        on action: () throws -> Void = {},
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for completion")
+        exp.isInverted = true
+        
+        sut.load(payload) { _ in exp.fulfill() }
+        
+        try? action()
+        
+        wait(for: [exp], timeout: 1)
     }
     
     private struct LoadFailure: Error, Equatable {

@@ -9,6 +9,7 @@ import AnywayPaymentCore
 import AnywayPaymentDomain
 import AnywayPaymentUI
 import Combine
+import Foundation
 import PaymentComponents
 import RemoteServices
 import RxViewModel
@@ -45,5 +46,13 @@ extension FooterViewModel: FooterInterface {
     public func project(_ projection: FooterTransactionProjection) {
         
         self.event(.set(isActive: projection.isEnabled, projection.style))
+    }
+}
+
+extension FooterViewModel: Receiver {
+    
+    public func receive(_ amount: Decimal) {
+        
+        event(.edit(amount))
     }
 }

@@ -436,6 +436,13 @@
         "identifier" : "LatestPaymentsTests",
         "name" : "LatestPaymentsTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UIPrimitivesTests",
+        "name" : "UIPrimitivesTests"
+      }
     }
   ],
   "version" : 1

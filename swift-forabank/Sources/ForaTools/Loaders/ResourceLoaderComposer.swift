@@ -29,11 +29,11 @@ where Payload: Hashable,
         self.scheduler = scheduler
     }
     
+    public typealias Cache = (Response, @escaping () -> Void) -> Void
+    
     public typealias LocalLoader = Loader<Payload, Result<Response, Error>>
     public typealias RemoteLoader = Loader<Payload, LoadResult>
     public typealias LoadResult = Result<Response, Failure>
-    
-    public typealias Cache = (Response, @escaping () -> Void) -> Void
 }
 
 public extension ResourceLoaderComposer {
@@ -47,15 +47,17 @@ public extension ResourceLoaderComposer {
         retryPolicy: RetryPolicy
     ) -> any ComposedLoader {
         
+        let retryingRemoteLoader = RetryLoader(
+            performer: remoteLoader,
+            retryPolicy: retryPolicy,
+            scheduler: scheduler
+        )
+        
         let blacklistFilter = BlacklistFilter(isBlacklisted: isBlacklisted)
         
         let decoratedRemote = BlacklistDecorator(
             decoratee: CacheDecorator(
-                decoratee: RetryLoader(
-                    performer: remoteLoader,
-                    retryPolicy: retryPolicy,
-                    scheduler: scheduler
-                ),
+                decoratee: retryingRemoteLoader,
                 cache: cache
             ),
             isBlacklisted: blacklistFilter.isBlacklisted(_:)
