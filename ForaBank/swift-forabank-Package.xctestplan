@@ -417,6 +417,13 @@
         "identifier" : "AmountComponentTests",
         "name" : "AmountComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LatestPaymentsTests",
+        "name" : "LatestPaymentsTests"
+      }
     }
   ],
   "version" : 1
