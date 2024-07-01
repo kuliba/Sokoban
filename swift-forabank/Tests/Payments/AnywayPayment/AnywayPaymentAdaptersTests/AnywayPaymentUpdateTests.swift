@@ -13,6 +13,38 @@ import XCTest
 
 final class AnywayPaymentUpdateTests: XCTestCase {
     
+    func test_init_shouldFailOnFinalStepTrueNeedMakeFalse() throws {
+        
+        try XCTAssertNil(makeUpdate(from: .makeResponse(
+            finalStep: true, 
+            needMake: false
+        )))
+    }
+    
+    func test_init_shouldFailOnFinalStepTrueNeedMakeNil() throws {
+        
+        try XCTAssertNil(makeUpdate(from: .makeResponse(
+            finalStep: true, 
+            needMake: nil
+        )))
+    }
+    
+    func test_init_shouldFailOnFinalStepFalseNeedMakeTrue() throws {
+        
+        try XCTAssertNil(makeUpdate(from: .makeResponse(
+            finalStep: false, 
+            needMake: true
+        )))
+    }
+    
+    func test_init_shouldFailOnFinalStepNilNeedMakeTrue() throws {
+        
+        try XCTAssertNil(makeUpdate(from: .makeResponse(
+            finalStep: nil, 
+            needMake: true
+        )))
+    }
+    
     func test_init_validData() throws {
         
         try assert(.validData, mapsTo: .init(
@@ -28,7 +60,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     name: "3",
                     value: "Москва г., Донская ул., д.112 корп.211, кв.111",
                     title: "Адрес",
-                    image: .md5Hash("87f2fad4a6997e1d3ae634c551c50f14")
+                    icon: .md5Hash("87f2fad4a6997e1d3ae634c551c50f14")
                 ),
                 makeField(
                     name: "n1",
@@ -39,25 +71,25 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     name: "n2",
                     value: "v2",
                     title: "t2",
-                    image: .md5Hash("md5hash2")
+                    icon: .md5Hash("md5hash2")
                 ),
                 makeField(
                     name: "n3",
                     value: "v3",
                     title: "t3",
-                    image: .svg("svgImage3")
+                    icon: .svg("svgImage3")
                 ),
                 makeField(
                     name: "n4",
                     value: "v4",
                     title: "t4",
-                    image: .withFallback(md5Hash: "md5hash4", svg: "svgImage4")
+                    icon: .withFallback(md5Hash: "md5hash4", svg: "svgImage4")
                 ),
             ],
             parameters: [
                 .init(
                     field: makeParameterField(id: "1"),
-                    image: .svg("svgImage"),
+                    icon: .svg("svgImage"),
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(),
                     uiAttributes: makeParameterUIAttributes(
@@ -80,7 +112,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 control: makeDetailsControl(
                     isFinalStep: true,
                     isFraudSuspected: true,
-                    needMake: true,
                     needOTP: true,
                     needSum: true
                 ),
@@ -90,7 +121,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             parameters: [
                 .init(
                     field: makeParameterField(id: "1"),
-                    image: .svg("svgImage"),
+                    icon: .svg("svgImage"),
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(),
                     uiAttributes: makeParameterUIAttributes(
@@ -117,7 +148,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             parameters: [
                 .init(
                     field: makeParameterField(id: "1"),
-                    image: .md5Hash("6e17f502dae62b03d8bd4770606ee4b2"),
+                    icon: .md5Hash("6e17f502dae62b03d8bd4770606ee4b2"),
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(),
                     uiAttributes: makeParameterUIAttributes(
@@ -144,7 +175,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             parameters: [
                 .init(
                     field: makeParameterField(id: "1"),
-                    image: .svg(.svgSample6),
+                    icon: .svg(.svgSample6),
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(),
                     uiAttributes: makeParameterUIAttributes(
@@ -171,7 +202,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             parameters: [
                 .init(
                     field: makeParameterField(id: "2"),
-                    image: nil,
+                    icon: nil,
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         rawLength: 0,
@@ -216,7 +247,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 control: makeDetailsControl(
                     isFinalStep: false,
                     isFraudSuspected: false,
-                    needMake: false,
                     needOTP: false,
                     needSum: true
                 ),
@@ -235,7 +265,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         content: "022024",
                         id: "5"
                     ),
-                    image: nil,
+                    icon: nil,
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         isRequired: false
@@ -252,7 +282,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         content: " ",
                         id: "9"
                     ),
-                    image: nil,
+                    icon: nil,
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         isRequired: false
@@ -268,7 +298,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         content: " ",
                         id: "13"
                     ),
-                    image: nil,
+                    icon: nil,
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         isRequired: false
@@ -284,7 +314,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         content: " ",
                         id: "17"
                     ),
-                    image: nil,
+                    icon: nil,
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         isRequired: false
@@ -300,7 +330,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         content: " ",
                         id: "21"
                     ),
-                    image: nil,
+                    icon: nil,
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         isRequired: false
@@ -316,7 +346,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         content: " ",
                         id: "25"
                     ),
-                    image: nil,
+                    icon: nil,
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         isRequired: false
@@ -332,7 +362,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                         content: " ",
                         id: "29"
                     ),
-                    image: .svg(.svgSample7),
+                    icon: .svg(.svgSample7),
                     masking: makeParameterMasking(),
                     validation: makeParameterValidation(
                         isRequired: false
@@ -358,7 +388,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 control: makeDetailsControl(
                     isFinalStep: false,
                     isFraudSuspected: false,
-                    needMake: false,
                     needOTP: false,
                     needSum: true
                 ),
@@ -388,7 +417,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 control: makeDetailsControl(
                     isFinalStep: true,
                     isFraudSuspected: false,
-                    needMake: false,
                     needOTP: false,
                     needSum: true
                 ),
@@ -399,7 +427,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     name: "1",
                     value: "100611401082",
                     title: "Лицевой счет",
-                    image: .svg(.svgSample1)
+                    icon: .svg(.svgSample1)
                 ),
                 makeField(
                     name: "2",
@@ -410,7 +438,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     name: "4",
                     value: "МОСКВА,АМУРСКАЯ УЛ.,2А К2,108",
                     title: "Адрес",
-                    image: .svg(.svgSample2)
+                    icon: .svg(.svgSample2)
                 ),
                 makeField(
                     name: "5",
@@ -471,13 +499,13 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     name: "28",
                     value: "2.609",
                     title: "ПРЕД. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
-                    image: .svg(.svgSample3)
+                    icon: .svg(.svgSample3)
                 ),
                 makeField(
                     name: "29",
                     value: " ",
                     title: "ТЕК. ПОКАЗАНИЯ ОТОПЛЕНИЕ №7745213",
-                    image: .svg(.svgSample4)
+                    icon: .svg(.svgSample4)
                 ),
                 makeField(
                     name: "65",
@@ -493,7 +521,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                     name: "143",
                     value: "0.00",
                     title: "Сумма пени",
-                    image: .svg(.svgSample5)
+                    icon: .svg(.svgSample5)
                 ),
                 makeField(
                     name: "147",
@@ -554,7 +582,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         isFinalStep: Bool = false,
         isFraudSuspected: Bool = false,
         isMultiSum: Bool = false,
-        needMake: Bool = false,
         needOTP: Bool = false,
         needSum: Bool = false
     ) -> AnywayPaymentUpdate.Details.Control {
@@ -563,7 +590,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,
             isMultiSum: isMultiSum,
-            needMake: needMake,
             needOTP: needOTP,
             needSum: needSum
         )
@@ -590,14 +616,14 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         name: String,
         value: String,
         title: String,
-        image: AnywayPaymentUpdate.Image? = nil
+        icon: AnywayPaymentUpdate.Icon? = nil
     ) -> AnywayPaymentUpdate.Field {
         
         return .init(
             name: name,
             value: value,
             title: title,
-            image: image
+            icon: icon
         )
     }
     
@@ -679,9 +705,26 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         line: UInt = #line
     ) throws {
         
-        let response = try decode(string)
+        try XCTAssertNoDiff(
+            makeUpdate(from: string, file: file, line: line),
+            update,
+            file: file, line: line
+        )
+    }
+    
+    private func makeUpdate(
+        from string: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> AnywayPaymentUpdate? {
         
-        XCTAssertNoDiff(.init(response), update, file: file, line: line)
+        do {
+            let response = try decode(string)
+            return .init(response)
+        } catch {
+            XCTFail(error.localizedDescription, file: file, line: line)
+            throw error
+        }
     }
     
     private func decode(
@@ -698,6 +741,25 @@ final class AnywayPaymentUpdateTests: XCTestCase {
 private extension String {
     
     var json: Data { .init(self.utf8) }
+    
+    static func makeResponse(
+        finalStep: Bool?,
+        needMake: Bool?
+    ) -> String {
+        
+"""
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "amount": 4273.87,
+        "finalStep": \(finalStep?.description ?? "null"),
+        "needMake": \(needMake?.description ?? "null"),
+        "parameterListForNextStep": []
+    }
+}
+"""
+    }
     
     static let validData = """
 {
@@ -1256,7 +1318,7 @@ private extension String {
     "statusCode": 0,
     "errorMessage": null,
     "data": {
-        "needMake": null,
+        "needMake": true,
         "needOTP": null,
         "amount": 5888.10,
         "creditAmount": null,

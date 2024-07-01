@@ -63,10 +63,13 @@ private extension AnywayTransactionEffectHandlerMicroServicesComposer {
             guard let self else { return }
             
             switch $0 {
-            case .none:
-                completion(nil)
+            case let .failure(.otpFailure(message)):
+                completion(.failure(.otpFailure(message)))
                 
-            case let .some(response):
+            case .failure(.terminal):
+                completion(.failure(.terminal))
+                
+            case let .success(response):
                 getDetails(response, completion)
             }
         }
@@ -82,7 +85,7 @@ private extension AnywayTransactionEffectHandlerMicroServicesComposer {
             
             guard self != nil else { return }
             
-            completion(response.makeTransactionReport(with: $0))
+            completion(.success(response.makeTransactionReport(with: $0)))
         }
     }
     
@@ -118,12 +121,10 @@ private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferRespons
         case let .some(operationDetails):
             return .init(
                 status: status,
-                info: .details(
-                    .init(
-                        id: detailID,
-                        response: operationDetails
-                    )
-                )
+                info: .details(.init(
+                    id: detailID,
+                    response: operationDetails
+                ))
             )
         }
     }

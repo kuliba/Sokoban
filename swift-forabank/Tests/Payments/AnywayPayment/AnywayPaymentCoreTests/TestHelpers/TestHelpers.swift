@@ -63,7 +63,7 @@ typealias _TransactionEffectHandler = TransactionEffectHandler<Report, PaymentDi
 typealias PaymentEffectHandleSpy = EffectHandlerSpy<PaymentEvent, PaymentEffect>
 
 typealias PaymentInitiator = PaymentProcessing
-typealias PaymentMaker = Spy<VerificationCode, Report?>
+typealias PaymentMaker = Spy<VerificationCode, _TransactionEvent.TransactionResult>
 typealias PaymentProcessing = Spy<PaymentDigest, _TransactionEvent.UpdatePaymentResult>
 
 // MARK: - Factories
@@ -85,6 +85,20 @@ func isFraudSuspected(
     }
 }
 
+func completeWithReport(
+    _ report: Report = makeDetailIDTransactionReport()
+) -> _TransactionEvent {
+    
+    return .completePayment(.success(report))
+}
+
+func completeWithFailure(
+    _ failure: _TransactionEvent.TransactionFailure = .terminal
+) -> _TransactionEvent {
+    
+    return .completePayment(.failure(failure))
+}
+
 func makePaymentUpdate(
     _ value: String = anyMessage()
 ) -> PaymentUpdate {
@@ -93,16 +107,17 @@ func makePaymentUpdate(
 }
 
 func makeCompletePaymentFailureEvent(
+    _ failure: _TransactionEvent.TransactionFailure = .terminal
 ) -> _TransactionEvent {
     
-    .completePayment(nil)
+    return .completePayment(.failure(failure))
 }
 
 func makeCompletePaymentReportEvent(
-    _ report: TransactionReport<DocumentStatus, _OperationInfo>
+    _ report: Report
 ) -> _TransactionEvent {
     
-    .completePayment(report)
+    return .completePayment(.success(report))
 }
 
 func makeContinueTransactionEffect(
@@ -116,15 +131,15 @@ func makeDetailID(
     _ rawValue: Int = generateRandom11DigitNumber()
 ) -> Int {
     
-    .init(rawValue)
+    return .init(rawValue)
 }
 
 func makeDetailIDTransactionReport(
     status: DocumentStatus = .complete,
     _ id: Int = generateRandom11DigitNumber()
-) -> TransactionReport<DocumentStatus, _OperationInfo> {
+) -> Report {
     
-    .init(
+    return .init(
         status: status,
         info: .detailID(.init(id))
     )
@@ -133,19 +148,19 @@ func makeDetailIDTransactionReport(
 func makeFraudCancelTransactionEvent(
 ) -> _TransactionEvent {
     
-    .fraud(.cancel)
+    return .fraud(.cancel)
 }
 
 func makeFraudContinueTransactionEvent(
 ) -> _TransactionEvent {
     
-    .fraud(.consent)
+    return .fraud(.consent)
 }
 
 func makeFraudExpiredTransactionEvent(
 ) -> _TransactionEvent {
     
-    .fraud(.expired)
+    return .fraud(.expired)
 }
 
 func makeFraudSuspectedTransaction(
@@ -206,7 +221,7 @@ extension _Transaction {
 func makeOperationDetailsTransactionReport(
     status: DocumentStatus = .complete,
     _ value: String = UUID().uuidString
-) -> TransactionReport<DocumentStatus, _OperationInfo> {
+) -> Report {
     
     .init(
         status: status,
@@ -217,7 +232,7 @@ func makeOperationDetailsTransactionReport(
 func makeOperationDetailsTransactionReport(
     status: DocumentStatus = .complete,
     _ operationDetails: OperationDetails
-) -> TransactionReport<DocumentStatus, _OperationInfo> {
+) -> Report {
     
     .init(
         status: status,
@@ -315,7 +330,7 @@ func makeResultFailureTransaction(
 
 func makeResultSuccessTransaction(
     _ context: Context = makeContext(),
-    report: TransactionReport<DocumentStatus, _OperationInfo> = makeDetailIDTransactionReport()
+    report: Report = makeDetailIDTransactionReport()
 ) -> _Transaction {
     
     let state = makeTransaction(context, status: .result(.success(report)))

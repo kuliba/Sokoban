@@ -11,15 +11,15 @@ extension ProductProfileViewModel {
     
     func createAccountInfoPanel(_ card: ProductCardData) {
         
-        let buttons: [PanelButton.Details] = [
+        let buttons: [PanelButtonDetails] = [
             .init(
-                ID: card.id,
+                id: card.id,
                 title: .accountDetailsTitle(by: card.cardType),
                 icon: .ic24FileText,
                 subtitle: nil,
                 kind: .accountDetails),
             .init(
-                ID: card.id,
+                id: card.id,
                 title: .accountStatementTitle(),
                 icon: .ic24FileHash,
                 subtitle: .accountStatementSubtitle(by: card.cardType),

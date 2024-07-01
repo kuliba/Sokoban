@@ -35,6 +35,8 @@ public extension OTPFieldReducer {
         case let .failure(OTPFieldFailure):
             if state.isInputComplete {
                 state = state.updated(
+                    text: state.text,
+                    isInputComplete: state.isInputComplete,
                     status: .failure(OTPFieldFailure)
                 )
             }
@@ -42,6 +44,8 @@ public extension OTPFieldReducer {
         case .otpValidated:
             if state.isInputComplete {
                 state = state.updated(
+                    text: state.text,
+                    isInputComplete: state.isInputComplete,
                     status: .validOTP
                 )
             }
@@ -85,7 +89,8 @@ private extension OTPFieldReducer {
         
         return state.updated(
             text: .init(text),
-            isInputComplete: text.count >= length
+            isInputComplete: text.count >= length,
+            status: nil
         )
     }
 }
