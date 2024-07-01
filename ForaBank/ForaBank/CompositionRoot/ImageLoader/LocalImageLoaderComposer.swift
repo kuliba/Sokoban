@@ -70,23 +70,28 @@ private extension LocalImageLoaderComposer {
     typealias LoadResult = Result<(String, Image), Error>
     typealias LoadCompletion = (LoadResult) -> Void
     
+    // MARK: - InMemory
+    
     func inMemoryLoggingLoader() -> any ImageLoader {
         
         return LoggingDecorator(
-            decoratee: AnyLoader(loadFromMemory(_:_:)),
+            decoratee: inMemoryLoader(),
             log: log
         )
     }
     
-    private func loadFromMemory(
-        _ key: String,
-        _ completion: @escaping LoadCompletion
-    ) {
-        inMemoryStore.retrieve(key: key) {
+    func inMemoryLoader() -> any ImageLoader {
+        
+        return AnyLoader { key, completion in
             
-            completion($0.map { (key, $0) })
+            self.inMemoryStore.retrieve(key: key) {
+                
+                completion($0.map { (key, $0) })
+            }
         }
     }
+    
+    // MARK: - Local
     
     func localLoggingLoader() -> any ImageLoader {
         
@@ -99,16 +104,20 @@ private extension LocalImageLoaderComposer {
     private func cachingLoader() -> any ImageLoader {
         
         return CacheDecorator(
-            decoratee: AnyLoader(loadFromPersistent),
+            decoratee: persistentLoader(),
             cache: loggingCache
         )
     }
     
-    private func loadFromPersistent(
-        key: String,
-        completion: @escaping LoadCompletion
-    ) {
-        self.load(key) { completion($0.map { (key, $0) }) }
+    private func persistentLoader() -> any ImageLoader {
+        
+        return AnyLoader { key, completion in
+            
+            self.load(key) {
+                
+                completion($0.map { (key, $0) })
+            }
+        }
     }
     
     private func loggingCache(

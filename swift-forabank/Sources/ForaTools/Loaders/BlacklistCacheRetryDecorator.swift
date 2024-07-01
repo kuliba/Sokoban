@@ -37,7 +37,7 @@ where Payload: Hashable,
     public typealias Decoratee = Loader<Payload, LoadResult>
     public typealias LoadResult = Result<Response, Failure>
     
-    public typealias IsBlacklisted = (Payload, Int) -> Bool
+    public typealias IsBlacklisted = (Payload, Int) -> Bool?
 }
 
 extension BlacklistCacheRetryDecorator: Loader {

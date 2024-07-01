@@ -1006,6 +1006,7 @@
 		2A90494F2C326E5200313CB8 /* LoggingDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A90494E2C326E5200313CB8 /* LoggingDecoratorTests.swift */; };
 		2A9049532C32753C00313CB8 /* LocalImageLoaderComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9049522C32753C00313CB8 /* LocalImageLoaderComposerTests.swift */; };
 		2A9049542C3276BC00313CB8 /* LocalImageLoaderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9049502C3274D400313CB8 /* LocalImageLoaderComposer.swift */; };
+		2A9049562C32962200313CB8 /* RemoteImageLoaderComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9049552C32962200313CB8 /* RemoteImageLoaderComposer.swift */; };
 		2A91009C2A7C3E200022308F /* PublicServerSessionKeyMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A91009B2A7C3E200022308F /* PublicServerSessionKeyMapper.swift */; };
 		2A9338562A17C8BB00397C88 /* PhoneNumberKitWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */; };
 		2A93385A2A17C91100397C88 /* Transformers+phoneKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338592A17C91100397C88 /* Transformers+phoneKit.swift */; };
@@ -4072,6 +4073,7 @@
 		2A90494E2C326E5200313CB8 /* LoggingDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingDecoratorTests.swift; sourceTree = "<group>"; };
 		2A9049502C3274D400313CB8 /* LocalImageLoaderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalImageLoaderComposer.swift; sourceTree = "<group>"; };
 		2A9049522C32753C00313CB8 /* LocalImageLoaderComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalImageLoaderComposerTests.swift; sourceTree = "<group>"; };
+		2A9049552C32962200313CB8 /* RemoteImageLoaderComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageLoaderComposer.swift; sourceTree = "<group>"; };
 		2A91009B2A7C3E200022308F /* PublicServerSessionKeyMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicServerSessionKeyMapper.swift; sourceTree = "<group>"; };
 		2A9338532A17C85E00397C88 /* PhoneNumberKitWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberKitWrapper.swift; sourceTree = "<group>"; };
 		2A9338592A17C91100397C88 /* Transformers+phoneKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Transformers+phoneKit.swift"; sourceTree = "<group>"; };
@@ -9644,6 +9646,7 @@
 			children = (
 				2AB03A122C31F0020085D79F /* ImageLoader.swift */,
 				2A9049502C3274D400313CB8 /* LocalImageLoaderComposer.swift */,
+				2A9049552C32962200313CB8 /* RemoteImageLoaderComposer.swift */,
 				2A90494C2C326E3500313CB8 /* LoggingDecorator.swift */,
 				2A9049472C32690000313CB8 /* InMemoryValueStore.swift */,
 			);
@@ -18644,6 +18647,7 @@
 				2AB87C532C1346B40013EFFE /* ProductSelectWrapperView.swift in Sources */,
 				6820928527AB0E9D003DCAFD /* MobileData.swift in Sources */,
 				C1DE21132914158600ED0F8D /* PaymentsCodeViewComponent.swift in Sources */,
+				2A9049562C32962200313CB8 /* RemoteImageLoaderComposer.swift in Sources */,
 				C1F8F601294A53B600FE5703 /* HintViewModel.swift in Sources */,
 				774A8B292865FC6F00B81140 /* MyProductsMoneyViewModel.swift in Sources */,
 				5047486E2856630C0007128F /* ConfirmViewComponent.swift in Sources */,
