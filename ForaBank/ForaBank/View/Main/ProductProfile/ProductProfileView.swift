@@ -173,6 +173,24 @@ struct ProductProfileView: View {
     ) -> some View {
         
         switch link {
+        case let .controlPanel(items):
+            ControlPanelView(items: items, event: viewModel.event)
+                .edgesIgnoringSafeArea(.bottom)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        VStack {
+                            Text("Управление")
+                                .foregroundColor(.textSecondary)
+                                .font(.textH3M18240())
+
+                            Text(viewModel.navigationTitleForControlPanel)
+                                .foregroundColor(.textPlaceholder)
+                                .font(.textBodyMR14180())
+                        }
+                    }
+                }
+
         case let .productInfo(viewModel):
             InfoProductView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.bottom)

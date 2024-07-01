@@ -13,7 +13,9 @@ import Foundation
 import PaymentComponents
 
 public final class AnywayTransactionViewModel<Footer: FooterInterface, Model, DocumentStatus, Response>: ObservableObject
-where DocumentStatus: Equatable,
+where Model: Receiver,
+      Model.Message == AnywayMessage,
+      DocumentStatus: Equatable,
       Response: Equatable {
     
     @Published public private(set) var state: State
@@ -65,12 +67,18 @@ public extension AnywayTransactionViewModel {
     func event(_ event: Event) {
         
         let (transaction, effect) = reduce(state.transaction, event)
-        let state = updating(state, with: transaction)
+        
+        if transaction != state.transaction {
+            
+            let state = updating(state, with: transaction)
 #if DEBUG || MOCK
-        print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: reduced transaction on event:", event, #file, #line)
-        print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: updated state for reduced transaction:", state, #file, #line)
+            print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: reduced transaction on event:", event, #file, #line)
+            print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: updated state for reduced transaction:", state, #file, #line)
 #endif
-        stateSubject.send(state)
+            stateSubject.send(state)
+            
+            sendOTPWarning(state)
+        }
         
         if let effect {
             
@@ -102,6 +110,15 @@ public extension AnywayTransactionViewModel {
 }
 
 private extension AnywayTransactionViewModel {
+    
+    func sendOTPWarning(
+        _ state: State
+    ) {
+        state.otpWarning.map {
+            
+            state.models[.widgetID(.otp)]?.receive(.otpWarning($0))
+        }
+    }
     
     func updating(
         _ state: State,
@@ -160,6 +177,14 @@ private extension AnywayTransactionViewModel {
 }
 
 private extension CachedModelsTransaction {
+    
+    var otpWarning: String? {
+        
+        guard case let .widget(.otp(_, warning)) = transaction.context.payment.elements[id: .widgetID(.otp)]
+        else { return nil }
+        
+        return warning
+    }
     
     var projection: FooterTransactionProjection {
         

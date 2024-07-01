@@ -17,31 +17,27 @@ public final class FooterViewModel: ObservableObject {
     let textFieldModel: DecimalTextFieldViewModel
     
     private let reduce: Reduce
-    private let formatter: DecimalFormatter
+    private let format: Format
     private let stateSubject = PassthroughSubject<State, Never>()
     private var cancellables = Set<AnyCancellable>()
-    
+        
     public init(
         initialState: State,
         reduce: @escaping Reduce,
-        // replace with struct with 2 fields:
-        // let makeFormat: MakeFormat
-        // MakeFormat = (CurrencySymbol, Locale) -> (Decimal) -> String?
-        // let getDecimal: GetDecimal
-        // GetDecimal = (TextFieldState) -> Decimal
-        formatter: DecimalFormatter,
+        format: @escaping Format,
+        getDecimal: @escaping GetDecimal,
         textFieldModel: DecimalTextFieldViewModel,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.state = initialState
         self.textFieldModel = textFieldModel
         self.reduce = reduce
-        self.formatter = formatter
+        self.format = format
         
-        textFieldModel.setText(to: formatter.format(initialState.amount))
+        textFieldModel.setText(to: format(initialState.amount))
         
         textFieldModel.$state
-            .map(formatter.getDecimal)
+            .map(getDecimal)
             .removeDuplicates()
             .receive(on: scheduler)
             .sink { [weak self] in self?.state.amount = $0 }
@@ -61,6 +57,7 @@ public extension FooterViewModel {
     
     typealias Reduce = (State, Event) -> (State, FooterEffect?)
     typealias GetDecimal = (TextFieldState) -> Decimal
+    typealias Format = (Decimal) -> String?
 }
 
 public extension FooterViewModel {
@@ -81,7 +78,7 @@ private extension FooterViewModel {
             textFieldModel.finishEditing()
             
         case let .edit(amount):
-            textFieldModel.setText(to: formatter.format(amount))
+            textFieldModel.setText(to: format(amount))
             
         default:
             break

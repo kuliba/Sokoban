@@ -29,20 +29,21 @@ final class AnywayPaymentValidatorTests: XCTestCase {
         XCTAssertTrue(parameters(of: payment).isEmpty)
     }
     
-    func test_validate_shouldDeliverFooterValidationErrorOnInvalidFooterAndEmptyParameters() {
+    func test_validate_shouldDeliverFooterValidationErrorOnInvalidAmountFooterAndEmptyParameters() {
         
-        let payment = makeAnywayPayment(footer: .amount(-1))
+        let payment = makeAnywayPayment(amount: -1, footer: .amount)
         let sut = makeSUT(validateParameter: { _ in nil })
         
         XCTAssertNoDiff(sut.validate(payment), .footerValidationError)
         XCTAssertTrue(parameters(of: payment).isEmpty)
     }
     
-    func test_validate_shouldDeliverFooterValidationErrorOnInvalidFooterAndValidParameters() {
+    func test_validate_shouldDeliverFooterValidationErrorOnInvalidAmountFooterAndValidParameters() {
         
         let payment = makeAnywayPayment(
+            amount: -1,
             parameters: [makeAnywayPaymentParameter(), makeAnywayPaymentParameter()],
-            footer: .amount(-1)
+            footer: .amount
         )
         let sut = makeSUT(validateParameter: { _ in nil })
         
@@ -51,7 +52,7 @@ final class AnywayPaymentValidatorTests: XCTestCase {
     
     func test_validate_shouldNotDeliverErrorOnValidFooterAndEmptyParameters() {
         
-        let payment = makeAnywayPayment(footer: .amount(1))
+        let payment = makeAnywayPayment(amount: 1)
         let sut = makeSUT(validateParameter: { _ in nil })
         
         XCTAssertNil(sut.validate(payment))
@@ -61,8 +62,8 @@ final class AnywayPaymentValidatorTests: XCTestCase {
     func test_validate_shouldNotDeliverErrorOnValidFooterAndValidParameters() {
         
         let payment = makeAnywayPayment(
-            parameters: [makeAnywayPaymentParameter(), makeAnywayPaymentParameter()],
-            footer: .amount(1)
+            amount: 1,
+            parameters: [makeAnywayPaymentParameter(), makeAnywayPaymentParameter()]
         )
         let sut = makeSUT(validateParameter: { _ in nil })
         

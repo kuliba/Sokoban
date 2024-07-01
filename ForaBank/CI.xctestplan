@@ -418,28 +418,14 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "SVCardLimitAPITests",
-        "name" : "SVCardLimitAPITests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "AmountComponentTests",
         "name" : "AmountComponentTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "AmountComponentTests",
-        "name" : "AmountComponentTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "SVCardLimitAPITests",
         "name" : "SVCardLimitAPITests"
       }

@@ -33,7 +33,7 @@ class Model {
     
     //MARK: Sticker
     let stickerLanding: CurrentValueSubject<Result<UILanding?, Error>, Never>
-
+    
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
     let productsUpdating: CurrentValueSubject<[ProductType], Never>
@@ -1502,6 +1502,31 @@ private extension LocalAgentProtocol {
             return load(type: LocalAgentDomain.AbroadSticker.self)
                 .map(\.landing)
                 .map(UILanding.init)
+            
+        case .main:
+            return load(type: LocalAgentDomain.MainCard.self)
+                .map(\.landing)
+                .map(UILanding.init)
+
+        case .regular:
+            return load(type: LocalAgentDomain.RegularCard.self)
+                .map(\.landing)
+                .map(UILanding.init)
+            
+        case .additionalSelf:
+            return load(type: LocalAgentDomain.AdditionalSelfCard.self)
+                .map(\.landing)
+                .map(UILanding.init)
+            
+        case .additionalSelfAccOwn:
+            return load(type: LocalAgentDomain.AdditionalSelfAccOwnCard.self)
+                .map(\.landing)
+                .map(UILanding.init)
+
+        case .additionalOther:
+            return load(type: LocalAgentDomain.AdditionalOtherCard.self)
+                .map(\.landing)
+                .map(UILanding.init)
         }
     }
 }
@@ -1529,6 +1554,31 @@ extension LocalAgentDomain {
     }
     
     struct AbroadSticker: Codable {
+        
+        let landing: Landing
+    }
+
+    struct MainCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct RegularCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct AdditionalSelfCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct AdditionalSelfAccOwnCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct AdditionalOtherCard: Codable {
         
         let landing: Landing
     }

@@ -5,18 +5,21 @@
 //  Created by Igor Malyarov on 22.06.2024.
 //
 
+import Foundation
 import TextFieldComponent
 import TextFieldModel
 
 public extension FooterViewModel {
     
     convenience init(
-        currencySymbol: String,
         initialState: State,
+        currencySymbol: String,
+        locale: Locale = .autoupdatingCurrent,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         let formatter = DecimalFormatter(
-            currencySymbol: currencySymbol
+            currencySymbol: currencySymbol,
+            locale: locale
         )
         let textField = DecimalTextFieldViewModel.decimal(
             formatter: formatter,
@@ -27,7 +30,8 @@ public extension FooterViewModel {
         self.init(
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
-            formatter: formatter,
+            format: formatter.format(_:),
+            getDecimal: formatter.getDecimal(_:),
             textFieldModel: textField,
             scheduler: scheduler
         )

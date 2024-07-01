@@ -182,12 +182,12 @@ struct FooterStateWrapperView_Previews: PreviewProvider {
     ) -> some View {
         
         Demo(viewModel: .init(
-            currencySymbol: currency,
             initialState: .init(
                 amount: .init(amount),
                 button: .init(title: title, state: buttonState),
                 style: style
-            )
+            ),
+            currencySymbol: currency
         ))
     }
 }

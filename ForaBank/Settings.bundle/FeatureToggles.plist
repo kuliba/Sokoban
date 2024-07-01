@@ -50,23 +50,13 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>DefaultValue</key>
+			<false/>
 			<key>Title</key>
 			<string>Установка лимитов для карт</string>
 			<key>Key</key>
 			<string>changeSVCardLimits</string>
-			<key>DefaultValue</key>
-			<string>changeSVCardLimits_off</string>
-			<key>Values</key>
-			<array>
-				<string>changeSVCardLimits_off</string>
-				<string>changeSVCardLimits_on</string>
-			</array>
-			<key>Titles</key>
-			<array>
-				<string>выкл</string>
-				<string>вкл</string>
-			</array>
 		</dict>
 	</array>
 </dict>

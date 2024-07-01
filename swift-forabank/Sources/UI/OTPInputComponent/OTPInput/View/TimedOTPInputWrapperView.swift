@@ -7,21 +7,26 @@
 
 import SwiftUI
 
-public struct TimedOTPInputWrapperView<IconView: View>: View {
+public struct TimedOTPInputWrapperView<IconView, WarningView>: View
+where IconView: View,
+      WarningView: View {
     
     @ObservedObject private var viewModel: ViewModel
     
     private let config: Config
     private let iconView: () -> IconView
+    private let warningView: () -> WarningView
     
     public init(
         viewModel: ViewModel,
         config: Config,
-        iconView: @escaping () -> IconView
+        iconView: @escaping () -> IconView,
+        warningView: @escaping () -> WarningView
     ) {
         self.viewModel = viewModel
         self.config = config
         self.iconView = iconView
+        self.warningView = warningView
     }
     
     public var body: some View {
@@ -33,7 +38,8 @@ public struct TimedOTPInputWrapperView<IconView: View>: View {
                 state: $0,
                 event: event(_:),
                 config: config,
-                iconView: iconView
+                iconView: iconView,
+                warningView: warningView
             )
         }
     }

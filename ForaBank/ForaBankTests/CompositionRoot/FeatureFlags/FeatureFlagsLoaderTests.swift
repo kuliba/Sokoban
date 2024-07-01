@@ -69,7 +69,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
     
     func test_load_shouldDeliverActiveChangeSVCardLimitsFlagForActiveRetrieveResult() {
         
-        let sut = makeSUT { _ in "changeSVCardLimits_on" }
+        let sut = makeSUT { _ in "1" }
         
         let flags = sut.load()
         
@@ -80,7 +80,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
     
     func test_load_shouldDeliverInactiveChangeSVCardLimitsFlagForInactiveRetrieveResult() {
         
-        let sut = makeSUT { _ in "changeSVCardLimits_off" }
+        let sut = makeSUT { _ in "0" }
         
         let flags = sut.load()
         

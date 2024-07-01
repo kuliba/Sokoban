@@ -821,7 +821,7 @@ private extension ProductProfileViewModel {
         }
     }
     
-    var optionsPanelNew: [PanelButton.Details] {
+    var optionsPanelNew: [PanelButtonDetails] {
         
         switch bottomSheet?.type {
             
@@ -860,11 +860,13 @@ private extension ProductProfileViewModel {
             return viewModel
         case let .paymentsTransfers(viewModel):
             return viewModel
+        case let .controlPanel(viewModel):
+            return viewModel
         }
     }
 }
 
-private extension Array where Element == PanelButton.Details {
+private extension Array where Element == PanelButtonDetails {
     
     func containsTitle(_ title: String) -> Bool {
         return self.filter { $0.title == title }.first != nil

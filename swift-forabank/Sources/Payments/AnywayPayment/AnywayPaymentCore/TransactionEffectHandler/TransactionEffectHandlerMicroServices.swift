@@ -42,7 +42,8 @@ public extension TransactionEffectHandlerMicroServices {
     typealias ProcessCompletion = (ProcessResult) -> Void
     typealias ProcessPayment = (PaymentDigest, @escaping ProcessCompletion) -> Void
     
-    typealias MakePaymentCompletion = (TransactionReport?) -> Void
+    typealias MakePaymentResult = Event.TransactionResult
+    typealias MakePaymentCompletion = (MakePaymentResult) -> Void
     typealias MakePayment = (VerificationCode, @escaping MakePaymentCompletion) -> Void
     
     typealias PaymentDispatch = (PaymentEvent) -> Void

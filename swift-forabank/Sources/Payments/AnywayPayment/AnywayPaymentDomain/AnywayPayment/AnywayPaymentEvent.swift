@@ -21,6 +21,7 @@ public extension AnywayPaymentEvent {
         
         case amount(Decimal)
         case otp(String)
+        case otpWarning(String?)
         case product(ProductID, ProductType, Currency)
     }
 }

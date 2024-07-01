@@ -311,6 +311,8 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    // TODO: ad tests for model receive messages
+    
     // MARK: - Helpers
     
     private typealias SUT = AnywayTransactionViewModel<TestFooter, Model, DocumentStatus, Response>
@@ -386,13 +388,19 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         return .continue(makeAnywayPaymentDigest())
     }
     
-    private final class Model {
-        
-        var value: AnywayElement
+    private final class Model: Receiver {
+
+        private(set) var value: AnywayElement
+        private(set) var messages = [AnywayMessage]()
         
         init(value: AnywayElement) {
             
             self.value = value
+        }
+        
+        func receive(_ message: AnywayMessage) {
+            
+            messages.append(message)
         }
     }
     
