@@ -202,6 +202,7 @@ let package = Package(
         .topUpCardUITests,
         .uiKitHelpers,
         .uiPrimitives,
+        .uiPrimitivesTests,
         .userAccountNavigationComponent,
         .userAccountNavigationComponentTests,
         // UI Components
@@ -1850,6 +1851,16 @@ private extension Target {
         path: "Sources/UI/\(String.uiPrimitives)"
     )
     
+    static let uiPrimitivesTests = testTarget(
+        name: .uiPrimitivesTests,
+        dependencies: [
+            .foraTools,
+            .sharedConfigs,
+            .uiPrimitives,
+        ],
+        path: "Tests/UI/\(String.uiPrimitivesTests)"
+    )
+    
     static let userAccountNavigationComponent = target(
         name: .userAccountNavigationComponent,
         dependencies: [
@@ -2640,6 +2651,7 @@ private extension String {
     static let uiKitHelpers = "UIKitHelpers"
     
     static let uiPrimitives = "UIPrimitives"
+    static let uiPrimitivesTests = "UIPrimitivesTests"
     
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
