@@ -34,6 +34,8 @@ where LastPayment: Identifiable,
         
         if state.isError {
             factory.makeFooterView(false)
+                .padding(.horizontal, 16)
+                .frame(maxHeight: .infinity)
         } else {
             list()
         }
