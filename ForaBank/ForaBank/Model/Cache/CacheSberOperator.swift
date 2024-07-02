@@ -68,12 +68,12 @@ private extension CachingSberOperator {
 
 // MARK: - Sort
 
-// TODO: add tests
 extension SberOperator {
     
     func precedes(_ other: Self) -> Bool {
         
-        guard title != other.title else {
+        guard title == other.title
+        else {
             return title.customLexicographicallyPrecedes(other.title)
         }
         

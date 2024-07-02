@@ -753,6 +753,7 @@
 		2A61D0672BECB65A00802C95 /* UtilityPrepaymentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D0662BECB65A00802C95 /* UtilityPrepaymentViewModel.swift */; };
 		2A61D07B2BECCCFC00802C95 /* PaymentsTransfersFlowManager+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D07A2BECCCFC00802C95 /* PaymentsTransfersFlowManager+preview.swift */; };
 		2A61D07D2BECCD7300802C95 /* PaymentsTransfersFlowEffectHandler+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61D07C2BECCD7300802C95 /* PaymentsTransfersFlowEffectHandler+preview.swift */; };
+		2A624C042C345E6A002ABA24 /* SberOperator+precedesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A624C032C345E6A002ABA24 /* SberOperator+precedesTests.swift */; };
 		2A624C062C346247002ABA24 /* String+customLexicographicallyPrecedesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A624C052C346247002ABA24 /* String+customLexicographicallyPrecedesTests.swift */; };
 		2A625CDE2B9470610017237F /* PaymentsTransfersState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A625CD62B946FEC0017237F /* PaymentsTransfersState.swift */; };
 		2A625CDF2B9470610017237F /* PaymentsTransfersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A625CD42B946FD50017237F /* PaymentsTransfersViewModel.swift */; };
@@ -3827,6 +3828,7 @@
 		2A61D0782BECBCCA00802C95 /* UtilityPrepaymentCompletionEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentCompletionEvent.swift; sourceTree = "<group>"; };
 		2A61D07A2BECCCFC00802C95 /* PaymentsTransfersFlowManager+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersFlowManager+preview.swift"; sourceTree = "<group>"; };
 		2A61D07C2BECCD7300802C95 /* PaymentsTransfersFlowEffectHandler+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersFlowEffectHandler+preview.swift"; sourceTree = "<group>"; };
+		2A624C032C345E6A002ABA24 /* SberOperator+precedesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SberOperator+precedesTests.swift"; sourceTree = "<group>"; };
 		2A624C052C346247002ABA24 /* String+customLexicographicallyPrecedesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+customLexicographicallyPrecedesTests.swift"; sourceTree = "<group>"; };
 		2A625CD42B946FD50017237F /* PaymentsTransfersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModel.swift; sourceTree = "<group>"; };
 		2A625CD62B946FEC0017237F /* PaymentsTransfersState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersState.swift; sourceTree = "<group>"; };
@@ -8589,6 +8591,7 @@
 		2A624C022C345E47002ABA24 /* Cache */ = {
 			isa = PBXGroup;
 			children = (
+				2A624C032C345E6A002ABA24 /* SberOperator+precedesTests.swift */,
 				2A624C052C346247002ABA24 /* String+customLexicographicallyPrecedesTests.swift */,
 			);
 			path = Cache;
@@ -19493,6 +19496,7 @@
 				2AB1979F2B2469ED00F0F87B /* SberQRTestHelpers.swift in Sources */,
 				2AA5556A2A3E486700B13D47 /* XCTestCase+assertThrows.swift in Sources */,
 				2AB95DA02A0C097000044969 /* ContactsViewModelTests.swift in Sources */,
+				2A624C042C345E6A002ABA24 /* SberOperator+precedesTests.swift in Sources */,
 				2AF50A132B315A39009CB9E5 /* ImageCacheImagePublisherTests.swift in Sources */,
 				C130E3762A8FC184002F99BC /* C2BOperation.swift in Sources */,
 				2A2D4D372B6E8092006912EE /* RequestFactory+createMakeSetBankDefaultRequest.swift in Sources */,
