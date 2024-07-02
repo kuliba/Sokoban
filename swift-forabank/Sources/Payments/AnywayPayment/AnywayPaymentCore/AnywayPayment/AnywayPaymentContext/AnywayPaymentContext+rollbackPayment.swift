@@ -64,9 +64,9 @@ private extension AnywayPayment {
     ) -> Self {
         
         return .init(
+            amount: amount,
             elements: elements,
             footer: footer,
-            infoMessage: infoMessage,
             isFinalStep: isFinalStep
         )
     }
@@ -110,7 +110,7 @@ private extension AnywayElement.Parameter {
         
         return .init(
             field: .init(id: field.id, value: value),
-            image: image,
+            icon: icon,
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes

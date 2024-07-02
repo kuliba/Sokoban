@@ -90,11 +90,11 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 143", "Сумма пени"),
             .init("f: SumSTrs", "Сумма"),
             .init("w: core", "RUB, 1234567890, account"),
-            .init("footer", "amount 123.45")
+            .init("footer", "amount")
         ])
         
         let payment5 = try update(payment4, with: .step5Response)
-        XCTAssertNoDiff(payment4.elementsView, [
+        XCTAssertNoDiff(payment5.elementsView, [
             .init("p: 1", "Лицевой счет"),
             .init("p: 2", "Признак платежа"),
             .init("f: 4", "Адрес"),
@@ -118,7 +118,8 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 143", "Сумма пени"),
             .init("f: SumSTrs", "Сумма"),
             .init("w: core", "RUB, 1234567890, account"),
-            .init("footer", "amount 123.45")
+            .init("w: otp", "otp"),
+            .init("footer", "continue"),
         ])
     }
     
@@ -132,7 +133,7 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
         and outline: AnywayPaymentOutline = makeEmptyOutline()
     ) throws -> AnywayPayment {
         
-        let update = try AnywayPaymentUpdate(makeResponse(from: string))
+        let update = try XCTUnwrap(AnywayPaymentUpdate(makeResponse(from: string)))
         
         return payment.update(with: update, and: outline)
     }
@@ -182,11 +183,8 @@ private extension AnywayPayment.Footer {
     var testView: TestView {
         
         switch self {
-        case let .amount(amount):
-            return .init("footer", "amount \(amount)")
-            
-        case .continue:
-            return .init("footer", "continue")
+        case .amount:   return .init("footer", "amount")
+        case .continue: return .init("footer", "continue")
         }
     }
 }
@@ -238,23 +236,22 @@ private extension AnywayElement.Widget {
 }
 
 private func makeEmptyOutline(
-    core: AnywayPaymentOutline.PaymentCore = makePaymentCore(),
+    amount: Decimal = .init(Double.random(in: 1...1_000)),
+    product: AnywayPaymentOutline.Product = makeOutlineProduct(),
     fields: [AnywayPaymentOutline.ID: AnywayPaymentOutline.Value] = [:],
     payload: AnywayPaymentOutline.Payload = makeAnywayPaymentPayload()
 ) -> AnywayPaymentOutline {
     
-    return .init(core: core, fields: fields, payload: payload)
+    return .init(amount: amount, product: product, fields: fields, payload: payload)
 }
 
-private func makePaymentCore(
-    amount: Decimal = 123.45,
+private func makeOutlineProduct(
     currency: String = "RUB",
     productID: Int = 1234567890,
-    productType: AnywayPaymentOutline.PaymentCore.ProductType = .account
-) -> AnywayPaymentOutline.PaymentCore {
+    productType: AnywayPaymentOutline.Product.ProductType = .account
+) -> AnywayPaymentOutline.Product {
     
     return .init(
-        amount: amount,
         currency: currency,
         productID: productID,
         productType: productType
@@ -275,9 +272,9 @@ private func makeEmptyPayment(
 ) -> AnywayPayment {
     
     return .init(
+        amount: nil,
         elements: [],
         footer: .continue,
-        infoMessage: nil,
         isFinalStep: false
     )
 }

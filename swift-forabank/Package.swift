@@ -28,6 +28,7 @@ let package = Package(
         .keyChainStore,
         // Payments
         .anywayPayment,
+        .latestPayments,
         .utilityPayment,
         .utilityServicePrepayment,
         // Services
@@ -124,6 +125,8 @@ let package = Package(
         .anywayPaymentDomain,
         .anywayPaymentUI,
         .anywayPaymentUITests,
+        .latestPayments,
+        .latestPaymentsTests,
         .utilityPayment,
         .utilityPaymentTests,
         .utilityServicePrepaymentCore,
@@ -199,6 +202,7 @@ let package = Package(
         .topUpCardUITests,
         .uiKitHelpers,
         .uiPrimitives,
+        .uiPrimitivesTests,
         .userAccountNavigationComponent,
         .userAccountNavigationComponentTests,
         // UI Components
@@ -578,6 +582,13 @@ private extension Product {
             .anywayPaymentCore,
             .anywayPaymentDomain,
             .anywayPaymentUI,
+        ]
+    )
+
+    static let latestPayments = library(
+        name: .latestPayments,
+        targets: [
+            .latestPayments,
         ]
     )
 
@@ -1111,6 +1122,26 @@ private extension Target {
             .rxViewModel,
         ],
         path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentUITests)"
+    )
+    
+    static let latestPayments = target(
+        name: .latestPayments,
+        dependencies: [
+            // internal modules
+            .remoteServices,
+        ],
+        path: "Sources/Payments/\(String.latestPayments)"
+    )
+    static let latestPaymentsTests = testTarget(
+        name: .latestPaymentsTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .latestPayments,
+            .remoteServices,
+        ],
+        path: "Tests/Payments/\(String.latestPaymentsTests)"
     )
     
     static let utilityPayment = target(
@@ -1820,6 +1851,16 @@ private extension Target {
         path: "Sources/UI/\(String.uiPrimitives)"
     )
     
+    static let uiPrimitivesTests = testTarget(
+        name: .uiPrimitivesTests,
+        dependencies: [
+            .foraTools,
+            .sharedConfigs,
+            .uiPrimitives,
+        ],
+        path: "Tests/UI/\(String.uiPrimitivesTests)"
+    )
+    
     static let userAccountNavigationComponent = target(
         name: .userAccountNavigationComponent,
         dependencies: [
@@ -2428,6 +2469,10 @@ private extension Target.Dependency {
         name: .anywayPaymentUI
     )
 
+    static let latestPayments = byName(
+        name: .latestPayments
+    )
+
     static let utilityPayment = byName(
         name: .utilityPayment
     )
@@ -2606,6 +2651,7 @@ private extension String {
     static let uiKitHelpers = "UIKitHelpers"
     
     static let uiPrimitives = "UIPrimitives"
+    static let uiPrimitivesTests = "UIPrimitivesTests"
     
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
@@ -2675,6 +2721,9 @@ private extension String {
     static let anywayPaymentDomain = "AnywayPaymentDomain"
     static let anywayPaymentUI = "AnywayPaymentUI"
     static let anywayPaymentUITests = "AnywayPaymentUITests"
+
+    static let latestPayments = "LatestPayments"
+    static let latestPaymentsTests = "LatestPaymentsTests"
 
     static let utilityPayment = "UtilityPayment"
     static let utilityPaymentTests = "UtilityPaymentTests"

@@ -11,7 +11,7 @@ extension AnywayElement {
     
     public enum Widget: Equatable {
         
-        case otp(Int?)
+        case otp(Int?, String?)
         case product(Product)
     }
 }
@@ -21,7 +21,7 @@ extension AnywayElement.Widget {
     public var id: ID {
         
         switch self {
-        case .otp:  return .otp
+        case .otp:     return .otp
         case .product: return .product
         }
     }

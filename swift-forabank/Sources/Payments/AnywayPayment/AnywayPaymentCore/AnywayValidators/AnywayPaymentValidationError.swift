@@ -10,6 +10,7 @@ import AnywayPaymentDomain
 public enum AnywayPaymentValidationError: Equatable {
     
     case footerValidationError
+    case otpValidationError
     case parameterValidationErrors(Errors)
     
     public typealias Errors = [ID: AnywayPaymentParameterValidationError]

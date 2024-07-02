@@ -9,6 +9,7 @@ import AnywayPaymentAdapters
 import AnywayPaymentDomain
 import Fetcher
 import Foundation
+import LatestPayments
 import OperatorsListComponents
 import RemoteServices
 
@@ -105,13 +106,21 @@ private extension UtilityPaymentNanoServicesComposer {
     private func getAllLatestPaymentsLive(
         _ completion: @escaping ([LastPayment]) -> Void
     ) {
-        // TODO: add logging // NanoServices.adaptedLoggingFetch
-        // TODO: remake as ForaBank.NanoServices.startAnywayPayment
-        let service = Services.getAllLatestPayments(httpClient: httpClient)
-        service.process(.service) { [service] result in
+        struct MappingError: Error {}
+
+        let fetch = ForaBank.NanoServices.adaptedLoggingFetch(
+            createRequest: RequestFactory.createGetAllLatestPaymentsRequest(_:),
+            httpClient: httpClient,
+            mapResponse: RemoteServices.ResponseMapper.mapGetAllLatestServicePaymentsResponse(_:_:),
+            mapOutput: { $0 },
+            mapError: { _ in MappingError() },
+            log: infoNetworkLog
+        )
+        
+        fetch(.service) { [fetch] in
             
-            completion((try? result.get().map(LastPayment.init(with:))) ?? [])
-            _ = service
+            completion((try? $0.get()) ?? [])
+            _ = fetch
         }
     }
     
@@ -224,22 +233,29 @@ private extension UtilityPaymentNanoServicesComposer {
         and payload: AnywayPaymentOutline.Payload
     ) -> AnywayPaymentOutline {
         
+        if let lastPayment {
+            
+            return .init(latestServicePayment: lastPayment)
+        }
+        
 #warning("fix filtering according to https://shorturl.at/hIE5B")
         guard let product = model.paymentProducts().first,
-              let coreProductType = product.productType.coreProductType
+              let outlineProductType = product.productType.outlineProductType
         else {
             // TODO: unimplemented graceful failure for missing products
             fatalError("unimplemented graceful failure")
         }
         
-        let core = AnywayPaymentOutline.PaymentCore(
-            amount: 0,
-            currency: product.currency,
-            productID: product.id,
-            productType: coreProductType
+        return .init(
+            amount: 0, 
+            product: .init(
+                currency: product.currency,
+                productID: product.id,
+                productType: outlineProductType
+            ),
+            fields: .init(),
+            payload: payload
         )
-        
-        return .init(core: core, fields: .init(), payload: payload)
     }
 }
 
@@ -267,15 +283,26 @@ private extension UtilityPaymentNanoServicesComposer {
 
 // MARK: - Adapters
 
-private extension UtilityPaymentLastPayment {
+extension AnywayPaymentOutline {
     
-    init(with last: ResponseMapper.LatestServicePayment) {
+    init(latestServicePayment latest: RemoteServices.ResponseMapper.LatestServicePayment) {
+        
+        let pairs = latest.additionalItems.map {
+            
+            ($0.fieldName, $0.fieldValue)
+        }
+        let fields = Dictionary(uniqueKeysWithValues: pairs)
         
         self.init(
-            amount: last.amount,
-            name: last.title,
-            md5Hash: last.md5Hash,
-            puref: last.puref
+            amount: latest.amount,
+            product: nil,
+            fields: fields,
+            payload: .init(
+                puref: latest.puref,
+                title: latest.name,
+                subtitle: nil,
+                icon: latest.md5Hash
+            )
         )
     }
 }
@@ -346,7 +373,7 @@ private extension OperatorsListComponents.ResponseMapper.SberUtilityService {
 
 private extension ProductType {
     
-    var coreProductType: AnywayPaymentOutline.PaymentCore.ProductType? {
+    var outlineProductType: AnywayPaymentOutline.Product.ProductType? {
         
         switch self {
         case .card:    return .card
@@ -368,8 +395,8 @@ private extension Array where Element == UtilityPaymentLastPayment {
 
 private extension UtilityPaymentLastPayment {
     
-    static let failure: Self = .init(amount: 123.45, name: "failure", md5Hash: nil, puref: UUID().uuidString)
-    static let preview: Self = .init(amount: 567.89, name: UUID().uuidString, md5Hash: nil, puref: UUID().uuidString)
+    static let failure: Self = .init(date: .init(), amount: 123.45, name: "failure", md5Hash: nil, puref: UUID().uuidString, additionalItems: [])
+    static let preview: Self = .init(date: .init(), amount: 567.89, name: UUID().uuidString, md5Hash: nil, puref: UUID().uuidString, additionalItems: [])
 }
 
 private extension UtilityPaymentOperator {
@@ -446,7 +473,11 @@ extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
     
     static let step3: Self = .make(
         parametersForNextStep: [
-            .make(id: "SumSTrs", title: "Сумма (\"11\" = ok, \"22\" = fraud, другое = ошибка)")
+            .make(
+                dataType: .number,
+                id: "SumSTrs",
+                title: "Сумма (\"11\" = ok, \"22\" = fraud, другое = ошибка)"
+            )
         ]
     )
     

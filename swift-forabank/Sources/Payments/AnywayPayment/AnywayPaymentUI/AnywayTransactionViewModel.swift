@@ -12,7 +12,12 @@ import ForaTools
 import Foundation
 import PaymentComponents
 
-public final class AnywayTransactionViewModel<Footer: FooterInterface, Model, DocumentStatus, Response>: ObservableObject {
+public final class AnywayTransactionViewModel<Footer, Model, DocumentStatus, Response>: ObservableObject
+where Footer: FooterInterface & Receiver<Decimal>,
+      Model: Receiver,
+      Model.Message == AnywayMessage,
+      DocumentStatus: Equatable,
+      Response: Equatable {
     
     @Published public private(set) var state: State
     
@@ -39,7 +44,8 @@ public final class AnywayTransactionViewModel<Footer: FooterInterface, Model, Do
         self.state = .init(
             models: [:],
             footer: footer,
-            transaction: transaction
+            transaction: transaction,
+            isAwaitingConfirmation: transaction.status == .awaitingPaymentRestartConfirmation
         )
         self.mapToModel = mapToModel
         self.reduce = reduce
@@ -62,12 +68,18 @@ public extension AnywayTransactionViewModel {
     func event(_ event: Event) {
         
         let (transaction, effect) = reduce(state.transaction, event)
-        let state = updating(state, with: transaction)
-#if DEBUG
-        print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: reduced transaction on event:", event, #file, #line)
-        print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: updated state for reduced transaction:", state, #file, #line)
+        
+        if transaction != state.transaction {
+            
+            let state = updating(state, with: transaction)
+#if DEBUG || MOCK
+            print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: reduced transaction on event:", event, #file, #line)
+            print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: updated state for reduced transaction:", state, #file, #line)
 #endif
-        stateSubject.send(state)
+            stateSubject.send(state)
+            
+            sendOTPWarning(state)
+        }
         
         if let effect {
             
@@ -95,10 +107,19 @@ public extension AnywayTransactionViewModel {
     typealias Dispatch = (Event) -> Void
     typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
     
-    typealias TransactionStatus = Status<DocumentStatus, Response>
+    typealias TransactionStatus = AnywayStatus<DocumentStatus, Response>
 }
 
 private extension AnywayTransactionViewModel {
+    
+    func sendOTPWarning(
+        _ state: State
+    ) {
+        state.otpWarning.map {
+            
+            state.models[.widgetID(.otp)]?.receive(.otpWarning($0))
+        }
+    }
     
     func updating(
         _ state: State,
@@ -132,7 +153,6 @@ private extension AnywayTransactionViewModel {
         // subscribe to footer state projection
         /// - Note: looks like this pipeline needs `dropFirst` but if `dropFirst` is added the button does not gets active after first submit
         footer.projectionPublisher
-            .handleEvents(receiveOutput: { print("===>>> projectionPublisher:", $0) })
             .receive(on: scheduler)
             .sink { [weak self] in self?.update(with: $0) }
             .store(in: &cancellables)
@@ -140,7 +160,6 @@ private extension AnywayTransactionViewModel {
         // update footer active/inactive and style
         $state
             .map(\.projection)
-            .handleEvents(receiveOutput: { print("===>>> transaction projection:", $0) })
             .sink { [weak footer] in footer?.project($0) }
             .store(in: &cancellables)
     }
@@ -159,6 +178,14 @@ private extension AnywayTransactionViewModel {
 }
 
 private extension CachedModelsTransaction {
+    
+    var otpWarning: String? {
+        
+        guard case let .widget(.otp(_, warning)) = transaction.context.payment.elements[id: .widgetID(.otp)]
+        else { return nil }
+        
+        return warning
+    }
     
     var projection: FooterTransactionProjection {
         

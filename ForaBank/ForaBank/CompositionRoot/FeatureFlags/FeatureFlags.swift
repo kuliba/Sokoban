@@ -7,5 +7,7 @@
 
 struct FeatureFlags: Equatable {
     
+    let historyFilterFlag: HistoryFilterFlag
+    let changeSVCardLimitsFlag: ChangeSVCardLimitsFlag
     let utilitiesPaymentsFlag: UtilitiesPaymentsFlag
 }

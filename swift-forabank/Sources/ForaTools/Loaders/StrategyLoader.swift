@@ -25,7 +25,7 @@ where Failure: Error {
         self.secondary = secondary
     }
     
-    public typealias Primary = Loader<Payload, LoadResult>
+    public typealias Primary = Loader<Payload, Result<Response, Error>>
     public typealias Secondary = Loader<Payload, LoadResult>
     public typealias LoadResult = Result<Response, Failure>
 }

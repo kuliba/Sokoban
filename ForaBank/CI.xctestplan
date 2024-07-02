@@ -418,30 +418,30 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "SVCardLimitAPITests",
-        "name" : "SVCardLimitAPITests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-forabank",
         "identifier" : "AmountComponentTests",
         "name" : "AmountComponentTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "AmountComponentTests",
-        "name" : "AmountComponentTests"
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "SVCardLimitAPITests",
+        "name" : "SVCardLimitAPITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "LatestPaymentsTests",
+        "name" : "LatestPaymentsTests"
       }
     },
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "SVCardLimitAPITests",
-        "name" : "SVCardLimitAPITests"
+        "identifier" : "UIPrimitivesTests",
+        "name" : "UIPrimitivesTests"
       }
     }
   ],

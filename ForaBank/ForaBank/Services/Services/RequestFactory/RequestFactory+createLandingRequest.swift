@@ -36,9 +36,15 @@ extension AbroadType {
     var rawValue: String {
         
         switch self {
-        case .orderCard: return "abroadOrderCard"
-        case .transfer:  return "abroadTransfer"
-        case .sticker:   return "abroadSticker"
+        case .orderCard:            return "abroadOrderCard"
+        case .transfer:             return "abroadTransfer"
+        case .sticker:              return "abroadSticker"
+            
+        case .additionalOther:      return "CONTROL_ADDITIONAL_OTHER_CARD"
+        case .additionalSelf:       return "CONTROL_ADDITIONAL_SELF_CARD"
+        case .additionalSelfAccOwn: return "CONTROL_ADDITIONAL_SELF_ACC_OWN_CARD"
+        case .main:                 return "CONTROL_MAIN_CARD"
+        case .regular:              return "CONTROL_REGULAR_CARD"
         }
     }
 }

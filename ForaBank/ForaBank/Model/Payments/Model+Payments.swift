@@ -66,16 +66,16 @@ extension Model {
 
     func handlePaymentsProcessRequest(_ payload: ModelAction.Payment.Process.Request) async {
         
-            do {
-
-                let result = try await paymentsProcess(operation: payload.operation)
-                self.action.send(ModelAction.Payment.Process.Response(result: .init(result)))
-                
-            } catch {
-                
-                LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation: \(payload.operation) with error: \(error.localizedDescription)")
-                self.action.send(ModelAction.Payment.Process.Response(result: .failure(error)))
-            }
+        do {
+            
+            let result = try await paymentsProcess(operation: payload.operation)
+            self.action.send(ModelAction.Payment.Process.Response(result: .init(result)))
+            
+        } catch {
+            
+            LoggerAgent.shared.log(level: .error, category: .model, message: "Failed continue operation: \(payload.operation) with error: \(error.localizedDescription)")
+            self.action.send(ModelAction.Payment.Process.Response(result: .failure(error)))
+        }
     }
     
     func handlePaymentSubscriptionRequest(_ payload: ModelAction.Payment.Subscription.Request) async {

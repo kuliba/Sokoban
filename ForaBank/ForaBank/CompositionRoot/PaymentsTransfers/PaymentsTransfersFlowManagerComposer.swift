@@ -245,6 +245,7 @@ private extension PaymentsTransfersFlowManagerComposer {
                 .dropFirst()
                 .map(\.transaction.status)
                 .removeDuplicates()
+                .handleEvents(receiveOutput: { print("===>>>", ObjectIdentifier(viewModel), "notify: viewModel.$state.transaction.status:", $0 ?? "nil", #file, #line) })
                 .sink(receiveValue: notify)
             
             return .init(viewModel: viewModel, subscription: subscription)

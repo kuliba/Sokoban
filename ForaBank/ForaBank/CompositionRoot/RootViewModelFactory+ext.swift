@@ -24,6 +24,8 @@ extension RootViewModelFactory {
         qrResolverFeatureFlag: QRResolverFeatureFlag,
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
+        historyFilterFlag: HistoryFilterFlag,
+        changeSVCardLimitsFlag: ChangeSVCardLimitsFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
@@ -122,12 +124,12 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             log: infoNetworkLog
         )
-
-        let productNavigationStateManager = makeProductNavigationStateManager(
-            alertsReduce: AlertReducer(productAlertsViewModel: .default),
-            bottomSheetReduce: BottomSheetReducer(),
-            handleEffect: ProductNavigationStateEffectHandler()
+        
+        let productNavigationStateManager = ProductProfileFlowManager(
+            reduce: makeProductProfileFlowReducer().reduce(_:_:),
+            handleEffect: ProductNavigationStateEffectHandler().handleEffect
         )
+        
         let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
             
             .init(
@@ -147,6 +149,17 @@ extension RootViewModelFactory {
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
 
+        let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = { card in
+            
+            let buttons: [PanelButtonDetails] = .cardGuardian(card, changeSVCardLimitsFlag)
+
+            if changeSVCardLimitsFlag.isActive {
+                return .fullScreen(buttons)
+            } else {
+                return .bottomSheet(buttons)
+            }
+        }
+
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -159,6 +172,7 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
+            makeCardGuardianPanel: makeCardGuardianPanel,
             updateInfoStatusFlag: updateInfoStatusFlag
         )
         
@@ -329,7 +343,8 @@ extension ProductProfileViewModel {
         unblockCardServices: UnblockCardServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
-        productNavigationStateManager: ProductNavigationStateManager,
+        productNavigationStateManager: ProductProfileFlowManager,
+        makeCardGuardianPanel: @escaping ProductProfileViewModelFactory.MakeCardGuardianPanel,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> MakeProductProfileViewModel {
         
@@ -347,6 +362,7 @@ extension ProductProfileViewModel {
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager,
+                makeCardGuardianPanel: makeCardGuardianPanel,
                 updateInfoStatusFlag: updateInfoStatusFlag
             )
             
@@ -397,7 +413,8 @@ extension ProductProfileViewModel {
                 },
                 makeInformerDataUpdateFailure: {
                     updateInfoStatusFlag.isActive ? .updateFailureInfo : nil
-                }
+                }, 
+                makeCardGuardianPanel: makeCardGuardianPanel
             )
             
             return .init(
@@ -459,7 +476,7 @@ private extension RootViewModelFactory {
         makeUtilitiesViewModel: @escaping MakeUtilitiesViewModel,
         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
-        productNavigationStateManager: ProductNavigationStateManager,
+        productNavigationStateManager: ProductProfileFlowManager,
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,

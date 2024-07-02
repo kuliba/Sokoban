@@ -21,39 +21,49 @@ extension AnywayPayment {
         elements.appendComplementaryFields(from: update.fields)
         elements.appendParameters(from: update.parameters, with: outline)
         
-        elements.adjustWidget(.product(.init(outline.core)), on: update.details.control.needSum && !update.details.control.isMultiSum)
-        elements.adjustWidget(.otp(nil), on: update.details.control.needOTP)
+        if let product = outline.product {
+            
+            elements.addIfMissing(
+                widget: .product(.init(product)),
+                condition: update.details.control.needSum
+            )
+        }
         
-        let footer = footer.update(with: update, and: outline)
+        elements.addIfMissing(
+            widget: .otp(nil, nil),
+            condition: update.details.control.needOTP
+        )
+        
+        let footer = update.makeFooter()
         
         return .init(
+            amount: update.details.amounts.amount ?? amount,
             elements: elements,
             footer: footer,
-            infoMessage: update.details.info.infoMessage,
             isFinalStep: update.details.control.isFinalStep
         )
     }
 }
 
-private extension AnywayPayment.Footer {
+private extension AnywayPaymentUpdate {
     
-    func update(
-        with update: AnywayPaymentUpdate,
-        and outline: AnywayPaymentOutline
-    ) -> Self {
+    func makeFooter() -> AnywayPayment.Footer {
         
-        if update.details.control.needSum
-            && !update.details.control.isMultiSum {
-            return .amount(outline.core.amount)
-        } else {
-            return .continue
-        }
+        guard !details.control.isFinalStep else { return .continue }
+        
+        return needSum && !isMultiSum ? .amount : .continue
     }
+}
+
+private extension AnywayPaymentUpdate {
+    
+    var needSum: Bool { details.control.needSum }
+    var isMultiSum: Bool { details.control.isMultiSum }
 }
 
 private extension AnywayElement.Widget.Product {
     
-    init(_ core: AnywayPaymentOutline.PaymentCore) {
+    init(_ core: AnywayPaymentOutline.Product) {
         
         self.init(
             currency: core.currency,
@@ -63,7 +73,7 @@ private extension AnywayElement.Widget.Product {
     }
 }
 
-private extension AnywayPaymentOutline.PaymentCore {
+private extension AnywayPaymentOutline.Product {
     
     var _productType: AnywayElement.Widget.Product.ProductType {
         
@@ -116,18 +126,18 @@ private extension AnywayElement.Field {
     
     func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
         
-        .init(
+        return .init(
             id: id,
             title: fieldUpdate.title,
             value: fieldUpdate.value,
-            image: fieldUpdate.image.map { .init($0) }
+            icon: fieldUpdate.icon.map { .init($0) }
         )
     }
 }
 
-private extension AnywayElement.Image {
+private extension AnywayElement.Icon {
     
-    init(_ image: AnywayPaymentUpdate.Image) {
+    init(_ image: AnywayPaymentUpdate.Icon) {
         
         switch image {
             
@@ -152,7 +162,7 @@ private extension AnywayElement.Parameter {
                 id: field.id,
                 value: fieldUpdate.value
             ),
-            image: image,
+            icon: icon,
             masking: masking,
             validation: validation,
             uiAttributes: uiAttributes
@@ -162,44 +172,29 @@ private extension AnywayElement.Parameter {
 
 private extension Array where Element == AnywayElement {
     
-    mutating func adjustWidget(
-        _ widget: Element.Widget,
-        on condition: Bool
+    mutating func addIfMissing(
+        widget: Element.Widget,
+        condition: Bool
     ) {
-        update(widgetID: widget.id, with: condition ? widget : nil)
-    }
-    
-    private mutating func update(
-        widgetID: Element.Widget.ID,
-        with widget: Element.Widget?
-    ) {
-        if let index = firstIndex(matching: widgetID) {
-            if let widget {
-                if widget.id == widgetID {
-                    self[index] = .widget(widget)
-                } else {
-                    append(.widget(widget))
-                }
-            } else {
-                remove(at: index)
-            }
-        } else {
-            if let widget {
-                append(.widget(widget))
-            }
+        guard isMissing(widget) else { return }
+        
+        if condition {
+            append(.widget(widget))
         }
     }
     
-    private func firstIndex(
-        matching id: Element.Widget.ID
-    ) -> Self.Index? {
+    private func isMissing(
+        _ widget: Element.Widget
+    ) -> Bool {
         
-        firstIndex {
+        let first = first {
             
             guard let widgetID = $0.widgetID else { return false }
             
-            return widgetID == id
+            return widgetID == widget.id
         }
+        
+        return first == nil
     }
     
     mutating func updatePrimaryFields(
@@ -256,7 +251,7 @@ private extension AnywayElement.Field {
             id: field.name,
             title: field.title,
             value: field.value,
-            image: field.image.map { .init($0) }
+            icon: field.icon.map { .init($0) }
         )
     }
 }
@@ -273,7 +268,7 @@ private extension AnywayElement.Parameter {
                 // TODO: add tests
                 fallbackValue: parameter.selectedValue ?? fallbackValue
             ),
-            image: .init(parameter),
+            icon: .init(parameter),
             masking: .init(parameter.masking),
             validation: .init(parameter.validation),
             uiAttributes: .init(parameter.uiAttributes)
@@ -292,11 +287,11 @@ private extension AnywayPaymentUpdate.Parameter {
     }
 }
 
-private extension AnywayElement.Image {
+private extension AnywayElement.Icon {
     
     init?(_ parameter: AnywayPaymentUpdate.Parameter) {
         
-        switch parameter.image {
+        switch parameter.icon {
         case .none:
             return nil
             

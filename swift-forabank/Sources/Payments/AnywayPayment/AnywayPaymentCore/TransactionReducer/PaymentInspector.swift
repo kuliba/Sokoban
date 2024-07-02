@@ -12,6 +12,7 @@ where Payment: RestartablePayment {
     
     public let checkFraud: CheckFraud
     public let getVerificationCode: GetVerificationCode
+    public let handleOTPFailure: HandleOTPFailure
     public let makeDigest: MakeDigest
     public let resetPayment: ResetPayment
     public let rollbackPayment: RollbackPayment
@@ -23,6 +24,7 @@ where Payment: RestartablePayment {
     public init(
         checkFraud: @escaping CheckFraud,
         getVerificationCode: @escaping GetVerificationCode,
+        handleOTPFailure: @escaping HandleOTPFailure,
         makeDigest: @escaping MakeDigest,
         resetPayment: @escaping ResetPayment,
         rollbackPayment: @escaping RollbackPayment,
@@ -33,6 +35,7 @@ where Payment: RestartablePayment {
     ) {
         self.checkFraud = checkFraud
         self.getVerificationCode = getVerificationCode
+        self.handleOTPFailure = handleOTPFailure
         self.makeDigest = makeDigest
         self.resetPayment = resetPayment
         self.rollbackPayment = rollbackPayment
@@ -47,6 +50,7 @@ public extension PaymentInspector {
     
     typealias CheckFraud = (PaymentUpdate) -> Bool
     typealias GetVerificationCode = (Payment) -> VerificationCode?
+    typealias HandleOTPFailure = (Payment, String) -> Payment
     typealias MakeDigest = (Payment) -> PaymentDigest
     typealias ResetPayment = (Payment) -> Payment
     typealias RollbackPayment = (Payment) -> Payment
