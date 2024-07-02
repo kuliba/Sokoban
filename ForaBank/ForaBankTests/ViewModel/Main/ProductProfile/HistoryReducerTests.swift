@@ -13,10 +13,7 @@ final class HistoryReducerTests: XCTestCase {
     
     func test_history_reduce_button_calendarEvent_shouldReturnShowSheetTrue() {
         
-        let sut = makeSUT()
-        
         assertState(
-            sut: sut,
             .button(.calendar),
             on: .init(buttonAction: .calendar, showSheet: true)
         )
@@ -24,10 +21,7 @@ final class HistoryReducerTests: XCTestCase {
     
     func test_history_reduce_button_filterEvent_shouldReturnShowSheetTrue() {
         
-        let sut = makeSUT()
-        
         assertState(
-            sut: sut,
             .button(.filter),
             on: .init(buttonAction: .filter, showSheet: true)
         )
@@ -35,10 +29,7 @@ final class HistoryReducerTests: XCTestCase {
     
     func test_history_reduce_filter_shouldReturnShowSheetTrue() {
         
-        let sut = makeSUT()
-        
         assertState(
-            sut: sut,
             .filter([.debit]),
             on: .init(filters: [.debit], buttonAction: .filter, showSheet: false)
         )
@@ -46,10 +37,7 @@ final class HistoryReducerTests: XCTestCase {
     
     func test_history_reduce_calendar_shouldReturnShowSheetTrue() {
         
-        let sut = makeSUT()
-        
         assertState(
-            sut: sut,
             .calendar(nil),
             on: .init(date: nil, buttonAction: .calendar, showSheet: false)
         )
@@ -67,10 +55,6 @@ final class HistoryReducerTests: XCTestCase {
     ) -> HistoryReducer {
         
         .init()
-    }
-    
-    private func makeState(showSheet: Bool) -> HistoryReducer.State {
-        .init(buttonAction: .calendar, showSheet: showSheet)
     }
     
     private typealias UpdateStateToExpected<State> = (_ state: inout State) -> Void
