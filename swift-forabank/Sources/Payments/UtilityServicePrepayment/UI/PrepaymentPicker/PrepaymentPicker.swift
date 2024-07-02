@@ -32,12 +32,14 @@ where LastPayment: Identifiable,
     
     public var body: some View {
         
-        if state.isError {
-            factory.makeFooterView(false)
+        switch state {
+        case .failure:
+            factory.makeFooterView(true)
                 .padding(.horizontal, 16)
                 .frame(maxHeight: .infinity)
-        } else {
-            list()
+            
+        case let .success(success):
+            list(success)
         }
     }
 }
@@ -50,17 +52,13 @@ public extension PrepaymentPicker {
     typealias Factory = PrepaymentPickerFactory<LastPayment, Operator, SearchView, LastPaymentView, OperatorView, FooterView>
 }
 
-private extension PrepaymentPickerState {
-    
-    var isError: Bool {
-        
-        operators.isEmpty && searchText.isEmpty
-    }
-}
-
 private extension PrepaymentPicker {
     
-    func list() -> some View {
+    typealias PickerSuccess = PrepaymentPickerSuccess<LastPayment, Operator>
+    
+    func list(
+        _ success: PickerSuccess
+    ) -> some View {
         
         VStack(spacing: 16) {
             
@@ -73,9 +71,9 @@ private extension PrepaymentPicker {
                 
                 VStack(spacing: 16) {
                     
-                    _lastPaymentsView(state.lastPayments)
-                    _operatorsView(state.operators)
-                    factory.makeFooterView(state.operators.isEmpty)
+                    _lastPaymentsView(success.lastPayments)
+                    _operatorsView(success.operators)
+                    factory.makeFooterView(false)
                 }
             }
             .padding(.horizontal, 16)
@@ -128,10 +126,19 @@ struct ComposedOperatorsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PrepaymentPicker(
-            state: .preview,
-            event: { print($0) },
-            factory: .preview
-        )
+        Group {
+            
+            PrepaymentPicker(
+                state: .success(.preview),
+                event: { print($0) },
+                factory: .preview
+            )
+            
+            PrepaymentPicker(
+                state: PrepaymentPickerState<PreviewLastPayment, PreviewOperator>.failure(NSError(domain: "PrepaymentPicker", code: -1)),
+                event: { print($0) },
+                factory: .preview
+            )
+        }
     }
 }
