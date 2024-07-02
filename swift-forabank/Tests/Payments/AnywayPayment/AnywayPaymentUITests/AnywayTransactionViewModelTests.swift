@@ -311,6 +311,27 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         XCTAssertNotNil(sut)
     }
     
+    func test_transactionAmountChange_shouldCallFooterWithAmount() {
+        
+        let (sut, _,_, footer) = makeSUT([
+            makeTransactionWithContinue(),
+            makeTransactionWithAmount(amount: 10.01),
+            makeTransactionWithAmount(amount: 20.02),
+            makeTransactionWithAmount(amount: 30.03),
+        ])
+        
+        sut.event(.continue)
+        sut.event(.continue)
+        sut.event(.continue)
+        
+        XCTAssertNoDiff(footer.values, [
+            10.01,
+            20.02,
+            30.03,
+        ])
+        XCTAssertNotNil(sut)
+    }
+    
     // TODO: ad tests for model receive messages
     
     // MARK: - Helpers
@@ -436,11 +457,12 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         }
     }
     
-    private final class TestFooter: FooterInterface, ObservableObject {
+    private final class TestFooter: FooterInterface, Receiver, ObservableObject {
         
         @Published var state: Projection = .amount(0)
         
         private(set) var messages = [FooterTransactionProjection]()
+        private(set) var values = [Decimal]()
         
         var projectionPublisher: AnyPublisher<Projection, Never> {
             
@@ -450,6 +472,10 @@ final class AnywayTransactionViewModelTests: XCTestCase {
         func project(_ event: FooterTransactionProjection) {
             
             messages.append(event)
+        }
+        
+        func receive(_ value: Decimal) {
+            values.append(value)
         }
     }
     

@@ -236,23 +236,22 @@ private extension AnywayElement.Widget {
 }
 
 private func makeEmptyOutline(
-    core: AnywayPaymentOutline.PaymentCore = makePaymentCore(),
+    amount: Decimal = .init(Double.random(in: 1...1_000)),
+    product: AnywayPaymentOutline.Product = makeOutlineProduct(),
     fields: [AnywayPaymentOutline.ID: AnywayPaymentOutline.Value] = [:],
     payload: AnywayPaymentOutline.Payload = makeAnywayPaymentPayload()
 ) -> AnywayPaymentOutline {
     
-    return .init(core: core, fields: fields, payload: payload)
+    return .init(amount: amount, product: product, fields: fields, payload: payload)
 }
 
-private func makePaymentCore(
-    amount: Decimal = 123.45,
+private func makeOutlineProduct(
     currency: String = "RUB",
     productID: Int = 1234567890,
-    productType: AnywayPaymentOutline.PaymentCore.ProductType = .account
-) -> AnywayPaymentOutline.PaymentCore {
+    productType: AnywayPaymentOutline.Product.ProductType = .account
+) -> AnywayPaymentOutline.Product {
     
     return .init(
-        amount: amount,
         currency: currency,
         productID: productID,
         productType: productType

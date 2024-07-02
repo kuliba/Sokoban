@@ -9,6 +9,6 @@ import SwiftUI
 
 public enum Icon: Equatable {
     
-    case svg(String)
     case image(Image)
+    case svg(String)
 }
