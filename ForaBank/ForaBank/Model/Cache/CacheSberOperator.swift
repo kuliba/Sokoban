@@ -91,7 +91,7 @@ extension SberOperator {
     }
 }
 
-private extension String {
+extension String {
     
     /// Custom method to compare strings based on character priorities: Cyrillic, Latin, Numbers, other.
     /// - Warning: Method is quite expensive.
@@ -99,17 +99,19 @@ private extension String {
         _ other: String
     ) -> Bool {
         
-        // TODO: improve. Schwarzian transform?
+        // Precompute priorities for both strings
+        let selfPriorities = self.map { $0.characterSortPriority() }
+        let otherPriorities = other.map { $0.characterSortPriority() }
         
         let minLength = min(self.count, other.count)
         
         for i in 0..<minLength {
             
             let selfChar = self[index(startIndex, offsetBy: i)]
-            let otherChar = other[other.index(startIndex, offsetBy: i)]
+            let otherChar = other[other.index(other.startIndex, offsetBy: i)]
             
-            if selfChar.characterSortPriority() != otherChar.characterSortPriority() {
-                return selfChar.characterSortPriority() < otherChar.characterSortPriority()
+            if selfPriorities[i] != otherPriorities[i] {
+                return selfPriorities[i] < otherPriorities[i]
             } else if selfChar != otherChar {
                 return selfChar < otherChar
             }
@@ -124,16 +126,15 @@ private extension Character {
     /// Determine the custom priority of the character.
     func characterSortPriority() -> Int {
         
-        let s = String(self)
-        
-        if s.range(of: "\\p{InCyrillic}", options: .regularExpression) != nil {
+        switch self {
+        case "\u{0400}"..."\u{04FF}":
             return 1  // Priority 1 for Cyrillic characters
-        } else if s.range(of: "[A-Za-z]", options: .regularExpression) != nil {
+        case "A"..."Z", "a"..."z":
             return 2  // Priority 2 for Latin characters
-        } else if s.range(of: "[0-9]", options: .regularExpression) != nil {
+        case "0"..."9":
             return 3  // Priority 3 for numbers
+        default:
+            return 4  // Priority 4 for other characters
         }
-        
-        return 4
     }
 }
