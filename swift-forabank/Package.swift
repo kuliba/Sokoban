@@ -2090,6 +2090,7 @@ private extension Target {
             .paymentComponents,
             .productSelectComponent,
             .prePaymentPicker,
+            .remoteServices,
             .rxViewModel,
             .textFieldComponent,
             .searchBarComponent,

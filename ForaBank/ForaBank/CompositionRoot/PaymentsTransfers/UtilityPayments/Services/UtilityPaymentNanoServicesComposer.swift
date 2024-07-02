@@ -202,7 +202,7 @@ private extension UtilityPaymentNanoServicesComposer {
         let fetch = ForaBank.NanoServices.adaptedLoggingFetch(
             createRequest: RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest,
             httpClient: httpClient,
-            mapResponse: OperatorsListComponents.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyFalseResponse,
+            mapResponse: RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyFalseResponse,
             mapOutput: { $0.map(\.service) },
             mapError: { _ in NanoServices.GetServicesForError() },
             log: infoNetworkLog
@@ -370,7 +370,7 @@ typealias StartAnywayPaymentPayload = UtilityPaymentNanoServices.StartAnywayPaym
 typealias StartAnywayPaymentResult = UtilityPaymentNanoServices.StartAnywayPaymentResult
 typealias StartAnywayPaymentCompletion = UtilityPaymentNanoServices.StartAnywayPaymentCompletion
 
-private extension OperatorsListComponents.ResponseMapper.SberUtilityService {
+private extension RemoteServices.ResponseMapper.SberUtilityService {
     
     var service: UtilityService {
         

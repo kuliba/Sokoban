@@ -5,12 +5,13 @@
 //  Created by Дмитрий Савушкин on 13.05.2024.
 //
 
-import Foundation
 import OperatorsListComponents
+import Foundation
+import RemoteServices
 
 extension ResponseMapper {
     
-    typealias Mapper = OperatorsListComponents.ResponseMapper
+    typealias Mapper = RemoteServices.ResponseMapper
     
     static func mapGetAllLatestPaymentsResponse(
         _ data: Data,
