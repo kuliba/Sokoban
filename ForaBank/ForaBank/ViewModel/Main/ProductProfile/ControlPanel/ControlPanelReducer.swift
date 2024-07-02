@@ -10,13 +10,16 @@ import Foundation
 final class ControlPanelReducer {
     
     private let controlPanelLifespan: DispatchTimeInterval
+    private let controlPanelFlowManager: ControlPanelFlowManager
     private let productProfileServices: ProductProfileServices
 
     init(
         controlPanelLifespan: DispatchTimeInterval = .milliseconds(400),
+        controlPanelFlowManager: ControlPanelFlowManager,
         productProfileServices: ProductProfileServices
     ) {
         self.controlPanelLifespan = controlPanelLifespan
+        self.controlPanelFlowManager = controlPanelFlowManager
         self.productProfileServices = productProfileServices
     }
 }
@@ -39,6 +42,8 @@ extension ControlPanelReducer {
             if buttons != state.buttons {
                 state.buttons = buttons
             }
+        case let .alert(info):
+            break
         }
         return (state, effect)
     }

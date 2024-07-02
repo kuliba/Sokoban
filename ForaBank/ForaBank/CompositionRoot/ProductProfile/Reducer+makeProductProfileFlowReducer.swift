@@ -17,4 +17,11 @@ extension RootViewModelFactory {
             historyReduce: HistoryReducer().reduce
         )
     }
+    
+    static func makeControlPanelFlowReducer() -> ControlPanelFlowReducer {
+     
+        ControlPanelFlowReducer(
+            alertReduce: ControlPanelAlertReducer(productAlertsViewModel: .default).reduce
+        )
+    }
 }

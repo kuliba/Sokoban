@@ -70,6 +70,8 @@ class ProductProfileViewModel: ObservableObject {
     
     private let productNavigationStateManager: ProductProfileFlowManager
 
+    private let controlPanelNavigationStateManager: ControlPanelFlowManager
+
     private var bindings = Set<AnyCancellable>()
     
     private var productData: ProductData? {
@@ -98,6 +100,7 @@ class ProductProfileViewModel: ObservableObject {
          paymentsTransfersFactory: PaymentsTransfersFactory,
          operationDetailFactory: OperationDetailFactory,
          productNavigationStateManager: ProductProfileFlowManager,
+         controlPanelNavigationStateManager: ControlPanelFlowManager,
          cvvPINServicesClient: CVVPINServicesClient,
          productProfileViewModelFactory: ProductProfileViewModelFactory,
          rootView: String,
@@ -123,6 +126,7 @@ class ProductProfileViewModel: ObservableObject {
         self.cvvPINServicesClient = cvvPINServicesClient
         self.rootView = rootView
         self.productNavigationStateManager = productNavigationStateManager
+        self.controlPanelNavigationStateManager = controlPanelNavigationStateManager
         self.productProfileViewModelFactory = productProfileViewModelFactory
         self.cardAction = createCardAction(cvvPINServicesClient, model)
         // TODO: add removeDuplicates
@@ -162,6 +166,7 @@ class ProductProfileViewModel: ObservableObject {
         cvvPINServicesClient: CVVPINServicesClient,
         product: ProductData,
         productNavigationStateManager: ProductProfileFlowManager,
+        controlPanelNavigationStateManager: ControlPanelFlowManager,
         productProfileViewModelFactory: ProductProfileViewModelFactory,
         rootView: String,
         dismissAction: @escaping () -> Void,
@@ -196,6 +201,7 @@ class ProductProfileViewModel: ObservableObject {
             paymentsTransfersFactory: paymentsTransfersFactory,
             operationDetailFactory: operationDetailFactory,
             productNavigationStateManager: productNavigationStateManager,
+            controlPanelNavigationStateManager: controlPanelNavigationStateManager,
             cvvPINServicesClient: cvvPINServicesClient,
             productProfileViewModelFactory: productProfileViewModelFactory,
             rootView: rootView,
@@ -1636,6 +1642,7 @@ private extension ProductProfileViewModel {
             cvvPINServicesClient: cvvPINServicesClient,
             product: product, 
             productNavigationStateManager: productNavigationStateManager,
+            controlPanelNavigationStateManager: controlPanelNavigationStateManager,
             productProfileViewModelFactory: productProfileViewModelFactory,
             rootView: rootView,
             dismissAction: dismissAction
@@ -1986,7 +1993,10 @@ extension ProductProfileViewModel {
         case let .fullScreen(buttons):
             controlPanelViewModel = .init(
                 initialState: .init(buttons: buttons),
-                reduce: ControlPanelReducer(productProfileServices: productProfileServices).reduce(_:_:),
+                reduce: ControlPanelReducer(
+                    controlPanelFlowManager: controlPanelNavigationStateManager,
+                    productProfileServices: productProfileServices
+                ).reduce(_:_:),
                 handleEffect: { _,_  in })
             link = .controlPanel(buttons)
         }

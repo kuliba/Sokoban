@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 final class ProductProfileFlowReducer {
 
