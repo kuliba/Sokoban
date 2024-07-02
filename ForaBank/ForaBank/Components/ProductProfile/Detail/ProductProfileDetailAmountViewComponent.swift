@@ -89,7 +89,8 @@ extension ProductProfileDetailView {
             
             ZStack {
                 
-                RoundedRectangle(cornerRadius: 8).foregroundColor(viewModel.backgroundColor ?? .clear)
+                RoundedRectangle(cornerRadius: 8)
+                    .foregroundColor(viewModel.backgroundColor ?? .clear)
                     .padding(.horizontal, -8)
                 
                 HStack {
@@ -125,6 +126,7 @@ extension ProductProfileDetailView {
                                         .foregroundColor(.textPlaceholder)
                                     
                                 case .info(let color, let action):
+                                    
                                     Button(action: action) {
                                         ZStack {
                                             

@@ -14,7 +14,7 @@ public extension AnywayPaymentContext {
         
         return .init(
             additional: payment.additional(),
-            amount: payment.amount(),
+            amount: payment.amount,
             core: payment.core(),
             puref: outline.payload.puref
         )
@@ -32,14 +32,6 @@ private extension AnywayPayment {
                 .init(fieldID: index, fieldName: field.id, fieldValue: $0)
             }
         }
-    }
-    
-    func amount() -> Decimal? {
-        
-#warning("add tests")
-        guard case let .amount(amount) = footer else { return nil }
-        
-        return amount
     }
     
     func core() -> AnywayPaymentDigest.PaymentCore? {

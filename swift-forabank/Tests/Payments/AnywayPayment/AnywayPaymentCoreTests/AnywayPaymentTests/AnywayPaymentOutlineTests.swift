@@ -10,58 +10,86 @@ import XCTest
 
 final class AnywayPaymentOutlineTests: XCTestCase {
     
+    func test_updating_shouldUpdateAmount() {
+        
+        let amount = makeAmount()
+        let outline = makeAnywayPaymentOutline()
+        let payment = makeAnywayPayment(amount: amount, elements: [])
+        
+        XCTAssertNoDiff(outline.updating(with: payment).amount, amount)
+    }
+    
     func test_updating_shouldNotChangeAccountCoreOnEmptyElementsPayment() {
         
-        let core = makeOutlinePaymentCore(productType: .account)
-        let outline = makeAnywayPaymentOutline(core: core)
+        let amount = makeAmount()
+        let product = makeOutlineProduct(productType: .account)
+        let outline = makeAnywayPaymentOutline(amount: amount, product: product)
         let payment = makeAnywayPayment(elements: [])
         
-        XCTAssertNoDiff(outline.updating(with: payment).core, core)
+        XCTAssertNoDiff(outline.updating(with: payment).product, product)
     }
     
     func test_updating_shouldNotChangeCardCoreOnEmptyElementsPayment() {
         
-        let core = makeOutlinePaymentCore(productType: .card)
-        let outline = makeAnywayPaymentOutline(core: core)
+        let amount = makeAmount()
+        let product = makeOutlineProduct(productType: .card)
+        let outline = makeAnywayPaymentOutline(amount: amount, product: product)
         let payment = makeAnywayPayment(elements: [])
         
-        XCTAssertNoDiff(outline.updating(with: payment).core, core)
+        XCTAssertNoDiff(outline.updating(with: payment).product, product)
     }
     
     func test_updating_shouldNotChangeCoreOnNonEmptyElementsPayment() {
         
-        let core = makeOutlinePaymentCore(productType: .account)
-        let outline = makeAnywayPaymentOutline(core: core)
+        let amount = makeAmount()
+        let product = makeOutlineProduct(productType: .account)
+        let outline = makeAnywayPaymentOutline(amount: amount, product: product)
         let payment = makeAnywayPayment(parameters: [makeAnywayPaymentParameter()])
         
-        XCTAssertNoDiff(outline.updating(with: payment).core, core)
+        XCTAssertNoDiff(outline.updating(with: payment).product, product)
     }
     
     func test_updating_shouldDeliverEmptyFieldsOnEmptyElementsPayment() {
         
-        let core = makeOutlinePaymentCore(productType: .card)
-        let outline = makeAnywayPaymentOutline(core: core)
+        let amount = makeAmount()
+        let product = makeOutlineProduct(productType: .card)
+        let outline = makeAnywayPaymentOutline(amount: amount, product: product)
         let payment = makeAnywayPayment(parameters: [makeAnywayPaymentParameter()])
-
-        XCTAssertNoDiff(outline.updating(with: payment).core, core)
+        
+        XCTAssertNoDiff(outline.updating(with: payment).product, product)
     }
     
-    func test_updating_shouldNotChangeOnEmptyElementsPayment() {
+    func test_updating_shouldUpdateAmountOnEmptyElementsPayment() {
         
+        let amount = makeAmount()
         let outline = makeAnywayPaymentOutline(["a": "1"])
-        let payment = makeAnywayPayment(elements: [])
+        let payment = makeAnywayPayment(amount: amount, elements: [])
         
-        XCTAssertNoDiff(outline.updating(with: payment), outline)
+        let updated = outline.updating(with: payment)
+        
+        XCTAssertNoDiff(updated.amount, amount)
+        XCTAssertNotEqual(updated.amount, outline.amount)
+        XCTAssertNoDiff(updated.product, outline.product)
+        XCTAssertNoDiff(updated.fields, outline.fields)
+        XCTAssertNoDiff(updated.payload, outline.payload)
     }
     
-    func test_updating_shouldNotChangeOnEmptyParameters() {
+    func test_updating_shouldUpdateAmonutOnEmptyParameters() {
         
+        let amount = makeAmount()
         let outline = makeAnywayPaymentOutline(["a": "1"])
         let payment = makeAnywayPayment(
+            amount: amount,
             elements: [.field(makeAnywayPaymentField())]
         )
         
-        XCTAssertNoDiff(outline.updating(with: payment), outline)
+        let updated = outline.updating(with: payment)
+        
+        XCTAssertNoDiff(updated.amount, amount)
+        XCTAssertNotEqual(updated.amount, outline.amount)
+        XCTAssertNoDiff(updated.product, outline.product)
+        XCTAssertNoDiff(updated.fields, outline.fields)
+        XCTAssertNoDiff(updated.payload, outline.payload)
     }
     
     func test_updating_shouldAppendMissingInputFields() {
@@ -73,7 +101,7 @@ final class AnywayPaymentOutlineTests: XCTestCase {
         )
         
         let fields = outline.updating(with: payment).fields
-
+        
         XCTAssertNoDiff(fields, [
             "a": "1",
             "x": "X",
@@ -89,7 +117,7 @@ final class AnywayPaymentOutlineTests: XCTestCase {
         )
         
         let fields = outline.updating(with: payment).fields
-
+        
         XCTAssertNoDiff(fields, [
             "a": "1",
         ])
@@ -103,7 +131,7 @@ final class AnywayPaymentOutlineTests: XCTestCase {
         )
         
         let fields = outline.updating(with: payment).fields
-
+        
         XCTAssertNoDiff(fields, [
             "a": "1",
         ])
@@ -119,7 +147,7 @@ final class AnywayPaymentOutlineTests: XCTestCase {
         )
         
         let fields = outline.updating(with: payment).fields
-
+        
         XCTAssertNoDiff(fields, [
             "a": "1",
             "y": "Y",
@@ -137,7 +165,7 @@ final class AnywayPaymentOutlineTests: XCTestCase {
         let payment = makeAnywayPayment(elements: [.parameter(parameter)])
         
         let fields = outline.updating(with: payment).fields
-
+        
         XCTAssertNoDiff(fields, [
             "a": "1",
             "b": "222",
@@ -157,7 +185,7 @@ final class AnywayPaymentOutlineTests: XCTestCase {
         )
         
         let fields = outline.updating(with: payment).fields
-
+        
         XCTAssertNoDiff(fields, [
             "a": "1",
             "b": "222",

@@ -12,18 +12,18 @@ extension AnywayElement {
         public let id: ID
         public let title: String
         public let value: Value
-        public let image: Image?
+        public let icon: Icon?
         
         public init(
             id: ID,
             title: String,
             value: Value,
-            image: Image?
+            icon: Icon?
         ) {
             self.id = id
             self.title = title
             self.value = value
-            self.image = image
+            self.icon = icon
         }
         
         public typealias ID = String

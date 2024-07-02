@@ -13,11 +13,10 @@ public extension Icon {
     var image: Image? {
         
         switch self {
-        case let .svg(svg): return Image(svg: svg)
+        case let .svg(svg):     return Image(svg: svg)
         case let .image(image): return image
         }
     }
-    
 
     @ViewBuilder
     func image(orColor color: Color) -> some View {

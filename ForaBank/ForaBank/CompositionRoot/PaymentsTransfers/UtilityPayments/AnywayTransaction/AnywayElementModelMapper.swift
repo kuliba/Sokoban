@@ -131,13 +131,13 @@ private extension AnywayElementModelMapper {
         return .init(
             initialState: .init(
                 title: parameter.title,
-                image: parameter.image,
+                icon: parameter.icon,
                 selector: selector
             ),
             reduce: { state, event in
             
                 let (selector, effect) = reducer.reduce(state.selector, event)
-                return (.init(title: state.title, image: state.image, selector: selector), effect)
+                return (.init(title: state.title, icon: state.icon, selector: selector), effect)
             },
             handleEffect: { _,_ in },
             observe: { event(.setValue($0.selector.selected.key, for: parameter.id)) }

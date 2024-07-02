@@ -22,29 +22,38 @@ extension ProductProfileDetailView.ViewModel {
             self.progress = progress
         }
 
-        init(configuration: ProductProfileDetailView.ViewModel.Configuration, productCard: ProductCardData, loanData: ProductCardData.LoanBaseParamInfoData, amountFormatted: (Double, String?, Model.AmountFormatStyle) -> String?, action: @escaping () -> Void) {
+        init(
+            configuration: ProductProfileDetailView.ViewModel.Configuration,
+            productCard: ProductCardData,
+            loanData: ProductCardData.LoanBaseParamInfoData,
+            amountFormatted: (Double, String?, Model.AmountFormatStyle) -> String?,
+            action: @escaping () -> Void
+        ) {
             
             switch configuration {
             case .loanRepaidAndOwnFunds:
                 let progressValue = productCard.balanceValue > 0 ? loanData.ownFundsValue / productCard.balanceValue : 1
                 
                 let ownFunds = amountFormatted(loanData.ownFundsValue, loanData.currencyCode, .normal) ?? String(loanData.ownFundsValue)
-                let balance = amountFormatted(productCard.balanceValue, loanData.currencyCode, .normal) ?? String(productCard.balanceValue)
-                let totalAvailableAmount = productCard.loanBaseParam?.totalAvailableAmount
-                let available = amountFormatted(totalAvailableAmount ?? 0, loanData.currencyCode, .normal) ?? String(productCard.balanceValue)
+                let creditLimit = productCard.balanceValue - loanData.ownFundsValue
+                let balance = amountFormatted(creditLimit, loanData.currencyCode, .normal) ?? String(creditLimit)
+                let totalAvailableAmount = loanData.totalAvailableAmountValue
+                let available = amountFormatted(totalAvailableAmount, loanData.currencyCode, .normal) ?? String(productCard.balanceValue)
                 
                 self.items = [
                     .init(type: .ownFunds, value: ownFunds, prefix: .legend(.mainColorsWhite)),
                     .init(type: .loanLimit, value: balance, prefix: .legend(.mainColorsRed), postfix: .value(available))
                 ]
                 
-                self.progress = .init(progress: progressValue, primaryColor: .mainColorsRed, secondaryColor: .mainColorsWhite, action: action)
+                self.progress = .init(progress: progressValue, primaryColor: .mainColorsRed, secondaryColor: .mainColorsWhite , action: action)
                 
             default:
+                
                 let progressValue = loanData.totalAvailableAmountValue > 0 ? loanData.debtAmountValue / loanData.totalAvailableAmountValue : 1
                 
                 let debtAmount = amountFormatted(loanData.debtAmountValue, loanData.currencyCode, .normal) ?? String(loanData.debtAmountValue)
-                let availableAmount = amountFormatted(productCard.balanceValue, loanData.currencyCode, .normal) ?? String(productCard.balanceValue)
+                let creditLimit: Double = productCard.balanceValue - loanData.ownFundsValue
+                let availableAmount = amountFormatted(creditLimit, loanData.currencyCode, .normal) ?? String(creditLimit)
                 let totalAmount = amountFormatted(loanData.totalAvailableAmountValue,  loanData.currencyCode, .normal) ?? String(loanData.totalAvailableAmountValue)
       
                 self.items = [
@@ -52,7 +61,7 @@ extension ProductProfileDetailView.ViewModel {
                     .init(type: .available, value: availableAmount, prefix: .legend(.mainColorsRed), postfix: .value(totalAmount))
                 ]
                 
-                self.progress = .init(progress: progressValue, primaryColor: .mainColorsRed, secondaryColor: .textPlaceholder, action: action)
+                self.progress = .init(progress: progressValue, primaryColor: .mainColorsRed, secondaryColor: .bgIconBlack, action: action)
             }
         }
         
@@ -68,7 +77,7 @@ extension ProductProfileDetailView.ViewModel {
                 .init(type: .repaid, value: repaidAmount, prefix: .legend(.mainColorsRed))
             ]
             
-            self.progress = .init(progress: progressValue, primaryColor: .mainColorsRed, secondaryColor: .textPlaceholder, action: action)
+            self.progress = .init(progress: progressValue, primaryColor: .mainColorsRed, secondaryColor: .bgIconBlack, action: action)
         }
     }
 }

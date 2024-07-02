@@ -293,9 +293,20 @@ extension Payments {
         let isEditable: Bool
         let description: String?
         let group: Payments.Parameter.Group?
+        let validator: Payments.Validation.RulesSystem?
+        let keyboardType: KeyboardType
         
-        init(_ parameter: Parameter, icon: Icon? = nil, title: String, placeholder: String, options: [Option], isEditable: Bool = true, description: String? = nil, group: Payments.Parameter.Group? = nil) {
-            
+        init(_ parameter: Parameter,
+             icon: Icon? = nil,
+             title: String,
+             placeholder: String,
+             options: [Option],
+             isEditable: Bool = true,
+             description: String? = nil,
+             group: Payments.Parameter.Group? = nil,
+             validator: Payments.Validation.RulesSystem? = nil,
+             keyboardType: KeyboardType = .default
+        ) {
             self.parameter = parameter
             self.icon = icon
             self.title = title
@@ -304,11 +315,17 @@ extension Payments {
             self.isEditable = isEditable
             self.description = description
             self.group = group
+            self.validator = validator
+            self.keyboardType = keyboardType
         }
         
         func updated(value: Parameter.Value) -> PaymentsParameterRepresentable {
             
             ParameterSelect(.init(id: parameter.id, value: value), icon: icon, title: title, placeholder: placeholder, options: options, isEditable: isEditable, description: description, group: group)
+        }
+        
+        func updated(validator: Payments.Validation.RulesSystem, keyboardType: KeyboardType) -> PaymentsParameterRepresentable {
+            Payments.ParameterSelect(parameter, icon: icon, title: title, placeholder: placeholder, options: options, isEditable: isEditable, description: description, group: group, validator: validator, keyboardType: keyboardType)
         }
         
         enum Icon {
@@ -1359,6 +1376,15 @@ extension Payments {
         }
     }
 }
+extension Payments.ParameterSelect {
+    
+    enum KeyboardType {
+        
+        case `default`
+        case number
+    }
+}
+
 
 extension Payments.ParameterSelect.Option {
 
@@ -1869,4 +1895,9 @@ extension Payments.ParameterSelectBank.Option {
 extension Payments.ParameterHeader.Icon {
     
     static let sbpIcon: Self = .name("ic24Sbp")
+}
+
+extension Payments.ParameterSelect {
+    
+    static let kppTitle: String = "КПП получателя"
 }

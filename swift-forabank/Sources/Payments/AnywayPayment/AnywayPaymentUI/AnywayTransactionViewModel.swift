@@ -12,8 +12,9 @@ import ForaTools
 import Foundation
 import PaymentComponents
 
-public final class AnywayTransactionViewModel<Footer: FooterInterface, Model, DocumentStatus, Response>: ObservableObject
-where Model: Receiver,
+public final class AnywayTransactionViewModel<Footer, Model, DocumentStatus, Response>: ObservableObject
+where Footer: FooterInterface & Receiver<Decimal>,
+      Model: Receiver,
       Model.Message == AnywayMessage,
       DocumentStatus: Equatable,
       Response: Equatable {

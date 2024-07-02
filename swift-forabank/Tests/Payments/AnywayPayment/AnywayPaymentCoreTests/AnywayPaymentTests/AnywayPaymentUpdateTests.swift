@@ -68,8 +68,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         let payment = makeAnywayPaymentWithoutAmount()
         let update = makeAnywayPaymentUpdate(needSum: true)
         let (amount, currency, id) = (makeAmount(), anyMessage(), makeIntID())
-        let core = makeOutlinePaymentCore(amount: amount, currency: currency, productID: id, productType: .account)
-        let outline = makeAnywayPaymentOutline(core: core)
+        let product = makeOutlineProduct(currency: currency, productID: id, productType: .account)
+        let outline = makeAnywayPaymentOutline(amount: amount, product: product)
         
         let widgetProduct = makeProductWidget(updatePayment(payment, with: update, and: outline))
         
@@ -85,8 +85,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         let payment = makeAnywayPaymentWithoutAmount()
         let update = makeAnywayPaymentUpdate(needSum: true)
         let (amount, currency, id) = (makeAmount(), anyMessage(), makeIntID())
-        let core = makeOutlinePaymentCore(amount: amount, currency: currency, productID: id, productType: .card)
-        let outline = makeAnywayPaymentOutline(core: core)
+        let product = makeOutlineProduct(currency: currency, productID: id, productType: .card)
+        let outline = makeAnywayPaymentOutline(amount: amount, product: product)
         
         let widgetCore = makeProductWidget(updatePayment(payment, with: update, and: outline))
         
@@ -181,6 +181,78 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         }
     }
     
+    // MARK: - footer
+    
+    func test_update_shouldNotUpdateAmountOnNil() {
+        
+        let state = makeAnywayPayment(
+            amount: 123.45,
+            elements: [makeProductWidgetElement()],
+            footer: .amount
+        )
+        
+        assert(
+            state,
+            on: makeAnywayPaymentUpdate(needSum: true)
+        ) {
+            $0.amount = 123.45
+        }
+    }
+    
+    func test_update_shouldUpdateAmount() {
+        
+        let state = makeAnywayPayment(
+            amount: 123.45,
+            elements: [makeProductWidgetElement()],
+            footer: .amount
+        )
+        
+        assert(
+            state,
+            on: makeAnywayPaymentUpdate(amount: 567.89, needSum: true)
+        ) {
+            $0.amount = 567.89
+        }
+    }
+    
+    #warning("add test for fee & debitAmount")
+
+    func test_update_shouldNotAddProductOnExistingProduct() {
+        
+        let amount = Decimal(567.89)
+        let state = makeAnywayPayment(
+            amount: 123.45,
+            elements: [makeProductWidgetElement()],
+            footer: .amount
+        )
+        
+        assert(
+            state,
+            on: makeAnywayPaymentUpdate(amount: amount, needSum: true)
+        ) {
+            $0.amount = amount
+        }
+    }
+
+    func test_update_shouldFlipFooterToContinueOnNeedSumTrueOnFinalStep() {
+        
+        let amount = Decimal(567.89)
+        let state = makeAnywayPayment(
+            amount: amount,
+            elements: [makeProductWidgetElement()],
+            footer: .amount,
+            isFinalStep: false
+        )
+        
+        assert(
+            state,
+            on: makeAnywayPaymentUpdate(amount: amount, isFinalStep: true, needSum: true)
+        ) {
+            $0.footer = .continue
+            $0.isFinalStep = true
+        }
+    }
+    
     // MARK: - isFinalStep
     
     func test_update_shouldNotChangeIsFinalStepFlagOnIsFinalStepFalse() {
@@ -205,28 +277,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         let updated = updatePayment(makeFinalStepAnywayPayment(), with: update)
         
         XCTAssertFalse(isFinalStep(updated))
-    }
-    
-    // MARK: - infoMessage
-    
-    func test_update_shouldNotChangeInfoMessageOnNilInfoMessage() {
-        
-        assert(
-            makeAnywayPayment(),
-            on: makeAnywayPaymentUpdate(infoMessage: nil)
-        )
-    }
-    
-    func test_update_shouldChangeInfoMessageOnNonNilInfoMessage() {
-        
-        let message = anyMessage()
-        
-        assert(
-            makeAnywayPayment(),
-            on: makeAnywayPaymentUpdate(infoMessage: message)
-        ) {
-            $0.infoMessage = message
-        }
     }
     
     // MARK: - non-complimentary (primary) fields
@@ -292,6 +342,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         
         assert(payment, on: update) {
             
+            $0.amount = 4273.87
             let field = makeAnywayPaymentField("SumSTrs", value: "4273.87", title: "Сумма")
             $0.elements = [.field(field)]
         }
@@ -315,14 +366,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         XCTAssert(hasOTPField(updated))
     }
     
-    func test_update_shouldRemoveOTPFieldOnNeedOTPFalse() {
-        
-        let update = makeAnywayPaymentUpdate(needOTP: false)
-        let updated = updatePayment(makeAnywayPaymentWithOTP(), with: update)
-        
-        XCTAssertFalse(hasOTPField(updated))
-    }
-    
     func test_update_shouldAppendOTPFieldAfterEmptyComplementaryFieldsOnNeedOTPTrue() {
         
         let payment = makeAnywayPaymentWithoutOTP()
@@ -339,8 +382,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_update_shouldAppendOTPFieldAfterComplementaryFieldsOnNeedOTPTrue() {
         
         let payment = makeAnywayPaymentWithoutOTP()
-        let (fieldUpdate1, updatedField1) = makeAnywayPaymentAndUpdateFields()
-        let (fieldUpdate2, updatedField2) = makeAnywayPaymentAndUpdateFields()
+        let (fieldUpdate1, _) = makeAnywayPaymentAndUpdateFields()
+        let (fieldUpdate2, _) = makeAnywayPaymentAndUpdateFields()
         
         let update = makeAnywayPaymentUpdate(
             fields: [fieldUpdate1, fieldUpdate2],
@@ -917,7 +960,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         isFinalStep: Bool = false,
         isFraudSuspected: Bool = false,
         isMultiSum: Bool = false,
-        needMake: Bool = false,
         needOTP: Bool = false,
         needSum: Bool = false
     ) -> AnywayPaymentUpdate.Details.Control {
@@ -926,7 +968,6 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             isFinalStep: isFinalStep,
             isFraudSuspected: isFraudSuspected,
             isMultiSum: isMultiSum,
-            needMake: needMake,
             needOTP: needOTP,
             needSum: needSum
         )
@@ -953,14 +994,14 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         name: String,
         value: String,
         title: String,
-        image: AnywayPaymentUpdate.Image? = nil
+        icon: AnywayPaymentUpdate.Icon? = nil
     ) -> AnywayPaymentUpdate.Field {
         
         return .init(
             name: name,
             value: value,
             title: title,
-            image: image
+            icon: icon
         )
     }
 }

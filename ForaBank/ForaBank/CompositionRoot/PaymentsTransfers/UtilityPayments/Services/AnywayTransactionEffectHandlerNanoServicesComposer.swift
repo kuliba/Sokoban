@@ -356,10 +356,20 @@ private extension AnywayTransactionEffectHandlerNanoServices.MakeTransferFailure
 private extension NanoServices.CreateAnywayTransferResult {
     
     var result: Result<AnywayPaymentUpdate, AnywayPaymentDomain.ServiceFailure> {
-        // dump(self, name: "NanoServices.CreateAnywayTransferResult")
-        return self
-            .map(AnywayPaymentUpdate.init)
-            .mapError(ServiceFailure.init)
+        
+        switch self {
+        case let .failure(failure):
+            return .failure(ServiceFailure(failure))
+            
+        case let .success(response):
+            switch AnywayPaymentUpdate(response) {
+            case .none:
+                return .failure(.connectivityError)
+                
+            case let .some(update):
+                return .success(update)
+            }
+        }
     }
 }
 
@@ -448,12 +458,12 @@ private extension AnywayPaymentDigest {
     
     var processResultStub: ProcessResult {
         
-        if isStep4 { return .success(.init(.step4)) }
-        if isStep4Fraud { return .success(.init(.step4Fraud)) }
+        if isStep4 { return .success(.init(.step4)!) }
+        if isStep4Fraud { return .success(.init(.step4Fraud)!) }
         if isStep3Alert { return .failure(.connectivityError) }
-        if isStep3 { return .success(.init(.step3)) }
+        if isStep3 { return .success(.init(.step3)!) }
         if isStep2Alert { return .failure(.serverError("Неверный лицевой счет.")) }
-        if isStep2 { return .success(.init(.step2)) }
+        if isStep2 { return .success(.init(.step2)!) }
         
         return .failure(.connectivityError)
     }
@@ -723,7 +733,6 @@ private extension AnywayPaymentUpdate.Details.Control {
         isFinalStep: false,
         isFraudSuspected: false,
         isMultiSum: false,
-        needMake: false,
         needOTP: false,
         needSum: false
     )

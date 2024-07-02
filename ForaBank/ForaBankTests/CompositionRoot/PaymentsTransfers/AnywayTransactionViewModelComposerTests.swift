@@ -138,44 +138,44 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
     }
     
     private func makeAnywayPayment(
+        amount: Decimal? = nil,
         elements: [AnywayElement] = [],
         footer: Payment<AnywayElement>.Footer = .continue,
-        infoMessage: String? = nil,
         isFinalStep: Bool = false,
         isFraudSuspected: Bool = false,
         puref: String = UUID().uuidString
     ) -> AnywayPayment {
         
         return .init(
+            amount: amount,
             elements: elements,
             footer: footer,
-            infoMessage: infoMessage,
             isFinalStep: isFinalStep
         )
     }
     
     private func makeAnywayPaymentOutline(
-        core: AnywayPaymentOutline.PaymentCore? = nil,
+        amount: Decimal = .init(Double.random(in: 1...1_000)),
+        product: AnywayPaymentOutline.Product? = nil,
         fields: AnywayPaymentOutline.Fields = [:],
         payload: AnywayPaymentOutline.Payload? = nil
     ) -> AnywayPaymentOutline {
         
         return .init(
-            core: core ?? makePaymentCore(),
+            amount: amount,
+            product: product ?? makePaymentProduct(),
             fields: fields,
             payload: payload ?? makeAnywayPaymentPayload()
         )
     }
     
-    private func makePaymentCore(
-        amount: Decimal = .init(Double.random(in: 1...1_000)),
+    private func makePaymentProduct(
         currency: String = "₽",
         productID: Int = generateRandom11DigitNumber(),
-        productType: AnywayPaymentOutline.PaymentCore.ProductType = .account
-    ) -> AnywayPaymentOutline.PaymentCore {
+        productType: AnywayPaymentOutline.Product.ProductType = .account
+    ) -> AnywayPaymentOutline.Product {
         
         return .init(
-            amount: amount,
             currency: currency,
             productID: productID,
             productType: productType
