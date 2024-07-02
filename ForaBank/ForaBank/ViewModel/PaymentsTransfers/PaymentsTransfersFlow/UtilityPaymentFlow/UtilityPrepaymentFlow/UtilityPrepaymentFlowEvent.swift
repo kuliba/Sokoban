@@ -90,7 +90,7 @@ extension UtilityPrepaymentFlowEvent.Initiated {
     struct UtilityPrepaymentPayload {
         
         let lastPayments: [LastPayment]
-        let operators: [Operator]
+        let operators: [Operator]?
         let searchText: String
     }
 }
