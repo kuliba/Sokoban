@@ -36,14 +36,15 @@ private extension SberOperator {
     init?(
         _ `operator`: ResponseMapper.AnywayOperatorGroupData.Operator.OperatorData
     ) {
-        guard let title = `operator`.juridicalName else { return nil }
+        guard let id = `operator`.customerId,
+              !id.isEmpty,
+              let inn = `operator`.inn,
+              !inn.isEmpty,
+              let title = `operator`.juridicalName,
+              !title.isEmpty
+        else { return nil }
         
-        self.init(
-            id: `operator`.customerId,
-            inn: `operator`.inn,
-            md5Hash: `operator`.md5hash,
-            title: title
-        )
+        self.init(id: id, inn: inn, md5Hash: `operator`.md5hash, title: title)
     }
 }
 
@@ -63,7 +64,7 @@ private extension ResponseMapper {
             
                 let md5hash: String?
                 let juridicalName: String?
-                let customerId: String
+                let customerId: String?
                 let inn: String?
             }
             

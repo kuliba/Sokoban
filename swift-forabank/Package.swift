@@ -2104,7 +2104,10 @@ private extension Target {
             .customDump,
             .operatorsListComponents
         ],
-        path: "Tests/\(String.operatorsListComponentsTests)"
+        path: "Tests/\(String.operatorsListComponentsTests)",
+        resources: [
+            .copy("Resources/getOperatorsListByParam_prod.json"),
+        ]
     )
     
     static let productSelectComponent = target(
