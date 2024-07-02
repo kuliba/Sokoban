@@ -67,10 +67,14 @@ final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
     private typealias Outline = AnywayPaymentOutline
     
     private func makeOutline(
-        _ latestPayment: LatestPayment
+        _ latestPayment: LatestPayment,
+        product: Outline.Product? = nil
     ) -> Outline {
         
-        return .init(latestServicePayment: latestPayment)
+        return .init(
+            latestServicePayment: latestPayment, 
+            product: product
+        )
     }
     
     private func makeLatestPayment() throws -> LatestPayment {

@@ -21,7 +21,7 @@ struct Operator: Equatable & Identifiable {
     let id: String
 }
 
-typealias State = PrepaymentPickerState<LastPayment, Operator>
+typealias State = PrepaymentPickerSuccess<LastPayment, Operator>
 typealias Event = PrepaymentPickerEvent<Operator>
 typealias Effect = PrepaymentPickerEffect<Operator.ID>
 
