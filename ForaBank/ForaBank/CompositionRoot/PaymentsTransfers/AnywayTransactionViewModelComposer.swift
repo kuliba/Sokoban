@@ -88,8 +88,8 @@ extension AnywayTransactionViewModelComposer {
         )
         
         return .init(
-            currencySymbol: currencySymbol,
             initialState: footerState,
+            currencySymbol: currencySymbol,
             scheduler: scheduler
         )
     }

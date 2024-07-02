@@ -6,6 +6,7 @@
 //
 
 import OTPInputComponent
+import SwiftUI
 import UIPrimitives
 
 struct AnywayPaymentWidgetViewFactory {
@@ -17,6 +18,6 @@ extension AnywayPaymentWidgetViewFactory {
     
     typealias OTPViewModel = TimedOTPInputViewModel
     typealias IconView = UIPrimitives.AsyncImage
-    typealias OTPView = TimedOTPInputWrapperView<IconView>
+    typealias OTPView = TimedOTPInputWrapperView<IconView, OTPWarningView>
     typealias MakeOTPView = (OTPViewModel) -> OTPView
 }

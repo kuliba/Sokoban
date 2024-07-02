@@ -7,29 +7,24 @@
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import Foundation
 
 public struct CachedModelsTransaction<Footer, Model, DocumentStatus, Response> {
     
     public let models: Models
     public let footer: Footer
     public let transaction: Transaction
-    
-    internal init(
-        models: Models,
-        footer: Footer,
-        transaction: Transaction
-    ) {
-        self.models = models
-        self.footer = footer
-        self.transaction = transaction
-    }
+    internal let isAwaitingConfirmation: Bool
     
     public typealias ID = AnywayElement.ID
     public typealias Models = [ID: Model]
     public typealias Transaction = AnywayTransactionState<DocumentStatus, Response>
 }
 
-public extension CachedModelsTransaction {
+public extension CachedModelsTransaction 
+where Footer: Receiver<Decimal>,
+      DocumentStatus: Equatable,
+      Response: Equatable {
     
     init(
         with transaction: Transaction,
@@ -39,7 +34,8 @@ public extension CachedModelsTransaction {
         self.init(
             models: transaction.makeModels(using: map),
             footer: makeFooter(transaction),
-            transaction: transaction
+            transaction: transaction,
+            isAwaitingConfirmation: transaction.status == .awaitingPaymentRestartConfirmation
         )
     }
     
@@ -48,11 +44,32 @@ public extension CachedModelsTransaction {
         using map: @escaping Map
     ) -> Self {
         
+        transaction.context.payment.amount.map(footer.receive)
+        
         return .init(
-            models: transaction.updatingModels(models, using: map),
+            models: transaction.updatingModels(
+                models,
+                using: map,
+                shouldRecreateModels: shouldRecreateModels(transaction)
+            ),
             footer: footer,
-            transaction: transaction
+            transaction: transaction,
+            isAwaitingConfirmation: transaction.status == .awaitingPaymentRestartConfirmation
         )
+    }
+    
+    // should reset model if status was awaitingPaymentRestartConfirmation, i.e. isAwaitingConfirmation == true, and now is not awaitingPaymentRestartConfirmation
+    private func shouldRecreateModels(
+        _ transaction: Transaction
+    ) -> Bool {
+        
+        switch transaction.status {
+        case .awaitingPaymentRestartConfirmation:
+            return false
+            
+        default:
+            return isAwaitingConfirmation
+        }
     }
     
     typealias Map = (AnywayElement) -> Model
@@ -90,8 +107,11 @@ extension Transaction where Context == AnywayPaymentContext {
     
     func updatingModels<Model>(
         _ models: Models<Model>,
-        using map: @escaping (AnywayElement) -> Model
+        using map: @escaping (AnywayElement) -> Model,
+        shouldRecreateModels: Bool
     ) -> Models<Model> {
+        
+        guard !shouldRecreateModels else { return makeModels(using: map) }
         
         let existingIDs = Set(models.keys)
         let newModels = context.payment.elements

@@ -2199,7 +2199,7 @@ private extension ModelAction.Dictionary.DownloadImages.Request {
     /// - Returns: An optional `Request` instance with cleaned image IDs, or `nil` if the initial list is empty or all IDs were placeholders or empty.
     func cleaned() -> Self? {
         
-        let filtered = imagesIds.filter { !$0.isEmpty && $0 != "placeholder" }
+        let filtered = imagesIds.filter { !$0.isEmpty && $0 != "placeholder" && $0 != "sms" }
         return filtered.isEmpty ? nil : .init(imagesIds: filtered)
     }
 }

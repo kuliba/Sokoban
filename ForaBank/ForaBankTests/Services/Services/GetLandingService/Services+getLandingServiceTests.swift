@@ -63,6 +63,76 @@ final class Services_getLandingServiceTests: XCTestCase {
         )
     }
     
+    func test_perform_mainCard_shouldCallHTTPClientWithCorrectURLInRequest() {
+        
+        let abroadType: AbroadType = .main
+        let (sut, spy) = makeSUT()
+        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_MAIN_CARD"
+        
+        sut.process((serial: "1", abroadType: abroadType)) { _ in }
+        
+        XCTAssertNoDiff(
+            spy.requests,
+            [.init(url: .init(string: correctURLString)!)]
+        )
+    }
+    
+    func test_perform_regularCard_shouldCallHTTPClientWithCorrectURLInRequest() {
+        
+        let abroadType: AbroadType = .regular
+        let (sut, spy) = makeSUT()
+        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_REGULAR_CARD"
+        
+        sut.process((serial: "1", abroadType: abroadType)) { _ in }
+        
+        XCTAssertNoDiff(
+            spy.requests,
+            [.init(url: .init(string: correctURLString)!)]
+        )
+    }
+
+    func test_perform_additionalSelfCard_shouldCallHTTPClientWithCorrectURLInRequest() {
+        
+        let abroadType: AbroadType = .additionalSelf
+        let (sut, spy) = makeSUT()
+        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_SELF_CARD"
+        
+        sut.process((serial: "1", abroadType: abroadType)) { _ in }
+        
+        XCTAssertNoDiff(
+            spy.requests,
+            [.init(url: .init(string: correctURLString)!)]
+        )
+    }
+    
+    func test_perform_additionalSelfAccOwnCard_shouldCallHTTPClientWithCorrectURLInRequest() {
+        
+        let abroadType: AbroadType = .additionalSelfAccOwn
+        let (sut, spy) = makeSUT()
+        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_SELF_ACC_OWN_CARD"
+        
+        sut.process((serial: "1", abroadType: abroadType)) { _ in }
+        
+        XCTAssertNoDiff(
+            spy.requests,
+            [.init(url: .init(string: correctURLString)!)]
+        )
+    }
+    
+    func test_perform_additionalOtherCard_shouldCallHTTPClientWithCorrectURLInRequest() {
+        
+        let abroadType: AbroadType = .additionalOther
+        let (sut, spy) = makeSUT()
+        let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_OTHER_CARD"
+        
+        sut.process((serial: "1", abroadType: abroadType)) { _ in }
+        
+        XCTAssertNoDiff(
+            spy.requests,
+            [.init(url: .init(string: correctURLString)!)]
+        )
+    }
+
     // MARK: - Helpers
     private func makeSUT(
         file: StaticString = #file,

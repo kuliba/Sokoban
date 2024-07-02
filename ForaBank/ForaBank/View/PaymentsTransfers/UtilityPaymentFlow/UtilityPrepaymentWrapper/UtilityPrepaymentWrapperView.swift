@@ -44,6 +44,11 @@ extension UtilityPrepaymentWrapperView {
     typealias ViewModel = UtilityPrepaymentViewModel
 }
 
+extension UtilityPaymentLastPayment: Identifiable {
+    
+    public var id: String { puref }
+}
+
 private extension UtilityPrepaymentWrapperView {
     
     func makeFooterView(

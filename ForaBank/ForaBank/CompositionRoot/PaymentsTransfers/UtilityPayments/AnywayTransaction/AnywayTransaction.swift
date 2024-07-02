@@ -9,6 +9,7 @@ import AnywayPaymentCore
 import AnywayPaymentDomain
 import AnywayPaymentUI
 import Combine
+import Foundation
 import PaymentComponents
 import RemoteServices
 import RxViewModel
@@ -21,7 +22,7 @@ typealias AnywayTransactionEffect = AnywayPaymentUI.AnywayTransactionEffect
 
 typealias AnywayTransactionEffectHandlerMicroServices = TransactionEffectHandlerMicroServices<AnywayTransactionReport, AnywayPaymentDigest, AnywayPaymentEffect, AnywayPaymentEvent, AnywayPaymentUpdate>
 
-typealias AnywayTransactionStatus = AnywayPaymentUI.Status<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
+typealias AnywayTransactionStatus = AnywayPaymentUI.AnywayStatus<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 typealias AnywayTransactionReport = AnywayPaymentUI.Report<DocumentStatus, RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>
 typealias _OperationInfo = OperationInfo<OperationDetailID, OperationDetails<RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse>>
 enum DocumentStatus {
@@ -45,5 +46,13 @@ extension FooterViewModel: FooterInterface {
     public func project(_ projection: FooterTransactionProjection) {
         
         self.event(.set(isActive: projection.isEnabled, projection.style))
+    }
+}
+
+extension FooterViewModel: Receiver {
+    
+    public func receive(_ amount: Decimal) {
+        
+        event(.edit(amount))
     }
 }

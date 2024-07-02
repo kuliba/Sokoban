@@ -10,7 +10,7 @@ import OperatorsListComponents
 import XCTest
 
 private typealias SUT = Model
-
+// TODO: fix/restore tests
 //final class Model_loadOperatorsTests: XCTestCase {
 //    
 //    func test_loadOperators_shouldDeliverEmptyOnEmpty() throws {

@@ -73,8 +73,8 @@ private extension TransactionReducer {
         case let (_, .verificationCode(verificationCode)):
             reduce(&state, &effect, with: verificationCode)
             
-        case let (_, .completePayment(report)):
-            reduce(&state, with: report)
+        case let (_, .completePayment(result)):
+            reduce(&state, with: result)
             
         case (_, .continue):
             reduceContinue(&state, &effect)
@@ -139,13 +139,17 @@ private extension TransactionReducer {
     
     func reduce(
         _ state: inout State,
-        with report: Report?
+        with result: Event.TransactionResult
     ) {
-        switch report {
-        case .none:
+        switch result {
+        case let .failure(.otpFailure(message)):
+            state.context = paymentInspector.handleOTPFailure(state.context, message)
+            state.status = nil
+            
+        case .failure(.terminal):
             state.status = .result(.failure(.transactionFailure))
             
-        case let .some(report):
+        case let .success(report):
             state.status = .result(.success(report))
         }
     }
@@ -172,15 +176,15 @@ private extension TransactionReducer {
         _ effect: inout Effect?
     ) {
         guard state.status == nil else {
-#if DEBUG
-            print("===>>> \(String(describing: self)): can't continue with status \(String(describing: state.status))")
+#if DEBUG || MOCK
+            print("===>>> can't continue with non-nil status \(String(describing: state.status))", #file, #line)
 #endif
             return
         }
         
         guard state.isValid else {
-#if DEBUG
-            print("===>>> \(String(describing: self)): can't continue with invalid transaction")
+#if DEBUG || MOCK
+            print("===>>> can't continue with invalid transaction", #file, #line)
 #endif
             return
         }

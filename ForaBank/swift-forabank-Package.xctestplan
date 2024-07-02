@@ -417,6 +417,20 @@
         "identifier" : "AmountComponentTests",
         "name" : "AmountComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LatestPaymentsTests",
+        "name" : "LatestPaymentsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "UIPrimitivesTests",
+        "name" : "UIPrimitivesTests"
+      }
     }
   ],
   "version" : 1

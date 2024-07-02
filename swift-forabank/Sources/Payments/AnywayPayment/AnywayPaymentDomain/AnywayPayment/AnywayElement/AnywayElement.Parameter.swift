@@ -10,20 +10,20 @@ extension AnywayElement {
     public struct Parameter: Equatable {
         
         public let field: Field
-        public let image: Image?
+        public let icon: Icon?
         public let masking: Masking
         public let validation: Validation
         public let uiAttributes: UIAttributes
         
         public init(
             field: Field,
-            image: Image?,
+            icon: Icon?,
             masking: Masking,
             validation: Validation,
             uiAttributes: UIAttributes
         ) {
             self.field = field
-            self.image = image
+            self.icon = icon
             self.masking = masking
             self.validation = validation
             self.uiAttributes = uiAttributes

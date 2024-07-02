@@ -51,6 +51,7 @@ class ProductProfileViewModel: ObservableObject {
     var rootActions: RootViewModel.RootActions?
     var rootView: String
     var contactsAction: () -> Void = { }
+    var navigationTitleForControlPanel: String { productData?.navigationTitleForControlPanel ?? ""}
     
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
@@ -73,7 +74,7 @@ class ProductProfileViewModel: ObservableObject {
     private var productData: ProductData? {
         model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
     }
-    
+        
     private let bottomSheetSubject = PassthroughSubject<BottomSheet?, Never>()
     private let alertSubject = PassthroughSubject<Alert.ViewModel?, Never>()
     private let historySubject = PassthroughSubject<HistoryState?, Never>()
@@ -1178,11 +1179,7 @@ private extension ProductProfileViewModel {
                         
                         switch product.productType {
                         case .card:
-                            
-                            guard let card = productData?.asCard else {
-                                return
-                            }
-                            createCardGuardianPanel(card)
+                            createCardGuardianPanel(productData)
                             
                         case .account:
                             
@@ -1965,7 +1962,25 @@ private extension ProductProfileViewModel {
         )
     }
 }
+// MARK: - create panel
 
+extension ProductProfileViewModel {
+    
+    func createCardGuardianPanel(_ product: ProductData?) {
+        
+        guard let card = product?.asCard else {
+            return
+        }
+        let panel = productProfileViewModelFactory.makeCardGuardianPanel(card)
+        
+        switch panel {
+        case let .bottomSheet(buttons):
+            bottomSheet = .init(type: .optionsPanelNew(buttons))
+        case let .fullScreen(buttons):
+            link = .controlPanel(buttons)
+        }
+    }
+}
 //MARK: - Types
 
 extension ProductProfileViewModel {
@@ -2007,6 +2022,12 @@ extension ProductProfileViewModel {
         }
     }
     
+    enum CardGuardianPanelKind {
+        
+        case bottomSheet([PanelButtonDetails])
+        case fullScreen([PanelButtonDetails])
+    }
+    
     struct BottomSheet: BottomSheetCustomizable {
         
         let id = UUID()
@@ -2025,7 +2046,7 @@ extension ProductProfileViewModel {
             
             case operationDetail(OperationDetailViewModel)
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
-            case optionsPanelNew([PanelButton.Details])
+            case optionsPanelNew([PanelButtonDetails])
             case meToMe(PaymentsMeToMeViewModel)
             case meToMeLegacy(MeToMeViewModel)
             case printForm(PrintFormView.ViewModel)
@@ -2041,6 +2062,7 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
+        case controlPanel([PanelButtonDetails])
     }
     
     struct Sheet: Identifiable {

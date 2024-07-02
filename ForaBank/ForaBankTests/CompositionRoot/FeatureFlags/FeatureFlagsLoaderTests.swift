@@ -67,6 +67,28 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
+    func test_load_shouldDeliverActiveChangeSVCardLimitsFlagForActiveRetrieveResult() {
+        
+        let sut = makeSUT { _ in "1" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            changeSVCardLimitsFlag: .init(.active)
+        ))
+    }
+    
+    func test_load_shouldDeliverInactiveChangeSVCardLimitsFlagForInactiveRetrieveResult() {
+        
+        let sut = makeSUT { _ in "0" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            changeSVCardLimitsFlag: .init(.inactive)
+        ))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = FeatureFlagsLoader
@@ -86,11 +108,13 @@ final class FeatureFlagsLoaderTests: XCTestCase {
     
     private func makeFeatureFlags(
         historyFilterFlag: HistoryFilterFlag? = nil,
+        changeSVCardLimitsFlag: ChangeSVCardLimitsFlag? = nil,
         utilitiesPaymentsFlag: StubbedFeatureFlag? = nil
     ) -> FeatureFlags {
         
         return .init(
             historyFilterFlag: historyFilterFlag?.map { .init($0) } ?? .init(false),
+            changeSVCardLimitsFlag: changeSVCardLimitsFlag.map { .init($0.rawValue) } ?? .init(.inactive),
             utilitiesPaymentsFlag: utilitiesPaymentsFlag.map { .init($0) } ?? .init(.inactive)
         )
     }

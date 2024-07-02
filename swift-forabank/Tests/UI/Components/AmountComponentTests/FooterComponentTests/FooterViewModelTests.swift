@@ -48,8 +48,28 @@ final class FooterViewModelTests: XCTestCase {
         textField.setText(to: "abc")
         textField.setText(to: "abc123")
         textField.setText(to: "123")
+        textField.setText(to: "12345")
         
-        XCTAssertNoDiff(textFieldSpy.values, ["987 ₽", "", "0 ₽", "123 ₽"])
+        XCTAssertNoDiff(textFieldSpy.values, ["987 ₽", "", "0 ₽", "123 ₽", "12 345 ₽"])
+        XCTAssertNotNil(sut)
+    }
+    
+    func test_textFieldShouldEmitFormatted_en_US() {
+        
+        let initial = makeState(amount: 987)
+        let (sut, textField, _) = makeSUT(
+            initialState: initial,
+            locale: .init(identifier: "en_US")
+        )
+        let textFieldSpy = ValueSpy(textField.$state.map(\.text))
+        
+        textField.setText(to: nil)
+        textField.setText(to: "abc")
+        textField.setText(to: "abc123")
+        textField.setText(to: "123")
+        textField.setText(to: "12345")
+        
+        XCTAssertNoDiff(textFieldSpy.values, ["₽987", "", "₽0", "₽123", "₽12,345"])
         XCTAssertNotNil(sut)
     }
     
@@ -101,7 +121,8 @@ final class FooterViewModelTests: XCTestCase {
                 
                 payload.append(($0, $1))
                 return ($0, nil)
-            })
+            }
+        )
         
         sut.event(.button(.disable))
         
@@ -115,7 +136,8 @@ final class FooterViewModelTests: XCTestCase {
         let newState = makeState(amount: 123)
         let (sut, _, spy) = makeSUT(
             initialState: initial,
-            reduce: { _,_ in return (newState, nil) })
+            reduce: { _,_ in return (newState, nil) }
+        )
         
         sut.event(.button(.disable))
         
@@ -132,6 +154,7 @@ final class FooterViewModelTests: XCTestCase {
     private func makeSUT(
         initialState: SUT.State? = nil,
         currencySymbol: String = "₽",
+        locale: Locale = .init(identifier: "ru_RU"),
         reduce: @escaping Reduce = { state, _ in (state, nil) },
         file: StaticString = #file,
         line: UInt = #line
@@ -140,7 +163,10 @@ final class FooterViewModelTests: XCTestCase {
         textField: TextField,
         spy: Spy
     ) {
-        let formatter = DecimalFormatter(currencySymbol: currencySymbol)
+        let formatter = DecimalFormatter(
+            currencySymbol: currencySymbol,
+            locale: locale
+        )
         let textField = TextField.decimal(
             formatter: formatter,
             scheduler: .immediate
@@ -148,7 +174,8 @@ final class FooterViewModelTests: XCTestCase {
         let sut = SUT(
             initialState: initialState ?? makeState(),
             reduce: reduce,
-            formatter: formatter,
+            format: formatter.format(_:),
+            getDecimal: formatter.getDecimal(_:),
             textFieldModel: textField,
             scheduler: .immediate
         )

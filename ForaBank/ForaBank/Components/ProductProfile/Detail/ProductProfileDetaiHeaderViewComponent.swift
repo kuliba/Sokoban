@@ -46,9 +46,9 @@ extension ProductProfileDetailView {
                 
                 Image.ic24ChevronDown
                     .foregroundColor(.iconGray)
-                    .rotationEffect(Angle(degrees: viewModel.isCollapsed ? -90 : 0))
-                
-            }.onTapGesture {
+                    .rotationEffect(Angle(degrees: viewModel.isCollapsed ? 0 : -180))
+            }
+            .onTapGesture {
                 
                 viewModel.action()
             }

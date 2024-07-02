@@ -48,6 +48,16 @@
 				<string>вкл (стаб)</string>
 			</array>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>DefaultValue</key>
+			<false/>
+			<key>Title</key>
+			<string>Установка лимитов для карт</string>
+			<key>Key</key>
+			<string>changeSVCardLimits</string>
+		</dict>
 	</array>
 </dict>
 </plist>

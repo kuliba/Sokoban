@@ -12,37 +12,19 @@ extension ProductProfileViewModel {
     enum PanelButtonType {
         case block, unblock, changePin, visibility
     }
-    
-    func createCardGuardianPanel(_ card: ProductCardData) {
-        
-        let buttons: [PanelButton.Details] = {
-            
-            switch card.cardType {
-            case .additionalOther:
-                return [
-                    .createCardGuardianButton(by: card),
-                    .createVisibilityButton(by: card)
-                ]
-            default:
-                return [
-                    .createCardGuardianButton(by: card),
-                    .createChangePinButton(by: card),
-                    .createVisibilityButton(by: card)
-                ]
-            }
-        }()
-        bottomSheet = .init(type: .optionsPanelNew(buttons))
-    }
 }
 
 private extension String {
     
-    static func cardGuardianTitle(by status: ProductCardData.StatusCard?) -> String {
+    static func cardGuardianTitle(
+        by status: ProductCardData.StatusCard?,
+        _ flag: ChangeSVCardLimitsFlag
+    ) -> String {
         switch status {
         case .blockedUnlockAvailable, .blockedUnlockNotAvailable:
-            return "Разблокировать"
+            return  flag.isActive ? "Разблок. карту" : "Разблокировать"
         case .active:
-            return "Заблокировать"
+            return flag.isActive ? "Блокировать карту" : "Блокировать"
         default:
             return ""
         }
@@ -84,13 +66,13 @@ private extension Image {
     }
 }
 
-private extension PanelButton.Details {
+private extension PanelButtonDetails {
     
-    static func createCardGuardianButton(by card: ProductCardData) -> Self {
+    static func createCardGuardianButton(by card: ProductCardData, _ flag: ChangeSVCardLimitsFlag) -> Self {
         
         return .init(
-            ID: card.id,
-            title: .cardGuardianTitle(by: card.statusCard),
+            id: card.id,
+            title: .cardGuardianTitle(by: card.statusCard, flag),
             icon: .cardGuardian(by: card.statusCard),
             subtitle: nil,
             kind: .cardGuardian)
@@ -99,7 +81,7 @@ private extension PanelButton.Details {
     static func createVisibilityButton(by card: ProductCardData) -> Self {
         
         return .init(
-            ID: card.id,
+            id: card.id,
             title: .visibilityTitle(by: card.isVisible),
             icon: .visibility(by: card.isVisible),
             subtitle: .visibilitySubtitle(by: card.isVisible),
@@ -109,10 +91,33 @@ private extension PanelButton.Details {
     static func createChangePinButton(by card: ProductCardData) -> Self {
         
         return .init(
-            ID: card.id,
+            id: card.id,
             title: .changePinTitle(),
             icon: .ic24Pass,
             subtitle: nil,
             kind: .changePin)
+    }
+}
+
+extension Array where Element == PanelButtonDetails {
+    
+    static func cardGuardian(
+        _ card: ProductCardData,
+        _ flag: ChangeSVCardLimitsFlag
+    ) -> Self {
+        
+        switch card.cardType {
+        case .additionalOther:
+            return [
+                .createCardGuardianButton(by: card, flag),
+                .createVisibilityButton(by: card)
+            ]
+        default:
+            return [
+                .createCardGuardianButton(by: card, flag),
+                .createChangePinButton(by: card),
+                .createVisibilityButton(by: card)
+            ]
+        }
     }
 }

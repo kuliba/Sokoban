@@ -39,18 +39,18 @@ extension AnywayElement.UIComponent {
         public let name: String
         public let title: String
         public let value: String
-        public let image: Image?
+        public let icon: Icon?
         
         public init(
             name: String,
             title: String,
             value: String,
-            image: Image?
+            icon: Icon?
         ) {
             self.name = name
             self.title = title
             self.value = value
-            self.image = image
+            self.icon = icon
         }
     }
     
@@ -61,7 +61,7 @@ extension AnywayElement.UIComponent {
         public let title: String
         public let subtitle: String?
         public let value: Value?
-        public let image: Image?
+        public let icon: Icon?
         
         public init(
             id: ID,
@@ -69,20 +69,20 @@ extension AnywayElement.UIComponent {
             title: String,
             subtitle: String?,
             value: Value?,
-            image: Image?
+            icon: Icon?
         ) {
             self.id = id
             self.type = type
             self.title = title
             self.subtitle = subtitle
             self.value = value
-            self.image = image
+            self.icon = icon
         }
     }
     
     public enum Widget: Equatable {
         
-        case otp(Int?)
+        case otp(Int?, String?)
         case productPicker(ProductID, ProductType)
         
         public typealias ProductID = AnywayElement.Widget.Product.ProductID
@@ -92,7 +92,7 @@ extension AnywayElement.UIComponent {
 
 extension AnywayElement.UIComponent {
     
-    public enum Image: Equatable {
+    public enum Icon: Equatable {
         
         case md5Hash(String)
         case svg(String)
@@ -151,7 +151,7 @@ extension AnywayElement.Parameter {
             title: uiAttributes.title,
             subtitle: uiAttributes.subTitle,
             value: field.value.map { .init($0) },
-            image: image.map { .init($0) }
+            icon: icon.map { .init($0) }
         )
     }
 }
@@ -200,8 +200,8 @@ private extension AnywayElement.Widget {
         case let .product(core):
             return .widget(.productPicker(core.productID, core.productType))
             
-        case let .otp(otp):
-            return .widget(.otp(otp))
+        case let .otp(otp, warning):
+            return .widget(.otp(otp, warning))
         }
     }
 }
@@ -214,16 +214,16 @@ private extension AnywayElement.UIComponent.Field {
             name: field.id,
             title: field.title,
             value: field.value,
-            image: field.image.map { .init($0) }
+            icon: field.icon.map { .init($0) }
         )
     }
 }
 
-private extension AnywayElement.UIComponent.Image {
+private extension AnywayElement.UIComponent.Icon {
     
-    init(_ image: AnywayElement.Image) {
+    init(_ icon: AnywayElement.Icon) {
         
-        switch image {
+        switch icon {
             
         case let .md5Hash(md5Hash):
             self = .md5Hash(md5Hash)

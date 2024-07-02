@@ -229,7 +229,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         expect(
             toDeliver: makeCompletePaymentFailureEvent(),
             for: makeTransactionEffect(),
-            onMakePayment: nil
+            onMakePayment: .failure(.terminal)
         )
     }
     
@@ -238,9 +238,9 @@ final class TransactionEffectHandlerTests: XCTestCase {
         let transactionReport = makeDetailIDTransactionReport()
         
         expect(
-            toDeliver: transactionReportEvent(transactionReport),
+            toDeliver: completeWithReport(transactionReport),
             for: makeTransactionEffect(),
-            onMakePayment: transactionReport
+            onMakePayment: .success(transactionReport)
         )
     }
     
@@ -249,9 +249,9 @@ final class TransactionEffectHandlerTests: XCTestCase {
         let transactionReport = makeOperationDetailsTransactionReport()
         
         expect(
-            toDeliver: transactionReportEvent(transactionReport),
+            toDeliver: completeWithReport(transactionReport),
             for: makeTransactionEffect(),
-            onMakePayment: transactionReport
+            onMakePayment: .success(transactionReport)
         )
     }
     
@@ -264,7 +264,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         
         sut?.handleEffect(makeTransactionEffect()) { received.append($0) }
         sut = nil
-        paymentMaker.complete(with: nil)
+        paymentMaker.complete(with: .failure(.terminal))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssert(received.isEmpty)
@@ -279,7 +279,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
         
         sut?.handleEffect(makeTransactionEffect()) { received.append($0) }
         sut = nil
-        paymentMaker.complete(with: makeOperationDetailsTransactionReport())
+        paymentMaker.complete(with: .success(makeOperationDetailsTransactionReport()))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
         XCTAssert(received.isEmpty)
@@ -393,7 +393,7 @@ final class TransactionEffectHandlerTests: XCTestCase {
     private func expect(
         toDeliver expectedEvent: SUT.Event,
         for effect: SUT.Effect,
-        onMakePayment makePaymentResult: Report?,
+        onMakePayment makePaymentResult: SUT.Event.TransactionResult,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -421,11 +421,4 @@ final class TransactionEffectHandlerTests: XCTestCase {
         
         wait(for: [exp], timeout: 1)
     }
-}
-
-private func transactionReportEvent(
-    _ report: Report
-) -> _TransactionEvent {
-    
-    .completePayment(report)
 }

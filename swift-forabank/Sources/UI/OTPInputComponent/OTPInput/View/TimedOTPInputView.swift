@@ -8,18 +8,15 @@
 import SharedConfigs
 import SwiftUI
 
-enum InputViewEvent: Equatable {
-    
-    case resend
-    case edit(String)
-}
-
-struct TimedOTPInputView<IconView: View>: View {
+struct TimedOTPInputView<IconView, WarningView>: View
+where IconView: View,
+      WarningView: View {
     
     let state: State
     let event: (Event) -> Void
     let config: Config
     let iconView: () -> IconView
+    let warningView: () -> WarningView
     
     var body: some View {
         
@@ -28,7 +25,7 @@ struct TimedOTPInputView<IconView: View>: View {
             iconView()
                 .frame(width: 24, height: 24)
             
-            VStack(spacing: 4) {
+            VStack(alignment: .leading, spacing: 4) {
                 
                 config.title.text.text(withConfig: config.title.config)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -47,6 +44,8 @@ struct TimedOTPInputView<IconView: View>: View {
                     )
                     .frame(maxWidth: .infinity, alignment: .trailing)
                 }
+                
+                warningView()
             }
         }
     }
@@ -141,17 +140,30 @@ struct TimedOTPInputView_Previews: PreviewProvider {
         List {
             
             view(.completeOTP)
+            view(.completeOTP) {
+                
+                Text("This is a warning.")
+                    .font(.caption)
+                    .foregroundColor(.red)
+            }
             view(.incompleteOTP)
             view(.timerFailure)
             view(.timerRunning)
+            view(.timerRunning) {
+                
+                Text("This is a warning.")
+                    .font(.caption)
+                    .foregroundColor(.red)
+            }
             view(.timerStarting)
             view(.timerCompleted)
         }
         .listStyle(.plain)
     }
     
-    private static func view(
-        _ state: TimedOTPInputView.State
+    private static func view<WarningView: View>(
+        _ state: TimedOTPInputView.State,
+        warningView: @escaping () -> WarningView = EmptyView.init
     ) -> some View {
         
         TimedOTPInputView(
@@ -163,7 +175,8 @@ struct TimedOTPInputView_Previews: PreviewProvider {
                 Image(systemName: "square")
                     .resizable()
                     .background(Color.red.opacity(0.1))
-            }
+            },
+            warningView: warningView
         )
     }
 }
@@ -173,7 +186,7 @@ extension TimedOTPInputViewConfig {
     static let preview: Self = .init(
         otp: .init(
             textFont: .headline,
-            textColor: .red
+            textColor: .orange
         ),
         resend: .init(
             text: "Отправить повторно",

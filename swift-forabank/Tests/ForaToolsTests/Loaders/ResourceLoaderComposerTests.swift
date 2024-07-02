@@ -65,7 +65,7 @@ final class ResourceLoaderComposerTests: XCTestCase {
             scheduler.advance(to: .init(.now() + .seconds(1)))
             remote.complete(with: .failure(failure), at: 2)
         }
-        XCTAssertEqual(remote.callCount, maxRetries + 1, "Remote call count is one plus retry attempts.")
+        XCTAssertEqual(remote.callCount, maxRetries + 1, "Remote call count should be is one plus retry attempts.")
     }
     
     func test_load_shouldNotDeliverResponseOnSecondAttemptAsBlacklisted() {
@@ -76,12 +76,12 @@ final class ResourceLoaderComposerTests: XCTestCase {
             retryPolicy: equal(maxRetries: 1, interval: .seconds(1))
         )
         
-        assert(sut, with: payload, toDeliver: .failure(.loadFailure(anyLoadFailure("2")))) {
+        assert(sut, with: payload, toDeliver: .failure(.loadFailure(anyLoadFailure("1")))) {
             
             local.complete(with: .failure(anyError()), at: 0)
-            remote.complete(with: .failure(anyLoadFailure("1")), at: 0)
+            remote.complete(with: .failure(anyLoadFailure("0")), at: 0)
             scheduler.advance(to: .init(.now() + .seconds(1)))
-            remote.complete(with: .failure(anyLoadFailure("2")), at: 1)
+            remote.complete(with: .failure(anyLoadFailure("1")), at: 1)
         }
         XCTAssertEqual(remote.callCount, 2)
         
@@ -100,17 +100,17 @@ final class ResourceLoaderComposerTests: XCTestCase {
             retryPolicy: equal(maxRetries: 0, interval: .seconds(1))
         )
         
-        assert(sut, with: payload, toDeliver: .failure(.loadFailure(anyLoadFailure("1")))) {
+        assert(sut, with: payload, toDeliver: .failure(.loadFailure(anyLoadFailure("0")))) {
             
             local.complete(with: .failure(anyError()), at: 0)
-            remote.complete(with: .failure(anyLoadFailure("1")), at: 0)
+            remote.complete(with: .failure(anyLoadFailure("0")), at: 0)
         }
         XCTAssertEqual(remote.callCount, 1)
         
-        assert(sut, with: payload, toDeliver: .failure(.loadFailure(anyLoadFailure("2")))) {
+        assert(sut, with: payload, toDeliver: .failure(.loadFailure(anyLoadFailure("1")))) {
             
             local.complete(with: .failure(anyError()), at: 1)
-            remote.complete(with: .failure(anyLoadFailure("2")), at: 1)
+            remote.complete(with: .failure(anyLoadFailure("1")), at: 1)
         }
         XCTAssertEqual(remote.callCount, 2)
         
@@ -139,7 +139,7 @@ final class ResourceLoaderComposerTests: XCTestCase {
     
     private func makeSUT(
         isBlacklisted: @escaping (Payload, Int) -> Bool = { _,_ in false},
-        retryPolicy: RetryPolicy = .init(maxRetries: 1, strategy: .equal(interval: .seconds(1))),
+        retryPolicy: RetryPolicy = .onceForSecond,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (

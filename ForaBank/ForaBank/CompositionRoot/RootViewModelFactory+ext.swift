@@ -25,6 +25,7 @@ extension RootViewModelFactory {
         fastPaymentsSettingsFlag: FastPaymentsSettingsFlag,
         utilitiesPaymentsFlag: UtilitiesPaymentsFlag,
         historyFilterFlag: HistoryFilterFlag,
+        changeSVCardLimitsFlag: ChangeSVCardLimitsFlag,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         scheduler: AnySchedulerOfDispatchQueue = .main
     ) -> RootViewModel {
@@ -148,6 +149,17 @@ extension RootViewModelFactory {
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
 
+        let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = { card in
+            
+            let buttons: [PanelButtonDetails] = .cardGuardian(card, changeSVCardLimitsFlag)
+
+            if changeSVCardLimitsFlag.isActive {
+                return .fullScreen(buttons)
+            } else {
+                return .bottomSheet(buttons)
+            }
+        }
+
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -160,6 +172,7 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
+            makeCardGuardianPanel: makeCardGuardianPanel,
             updateInfoStatusFlag: updateInfoStatusFlag
         )
         
@@ -331,6 +344,7 @@ extension ProductProfileViewModel {
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         productNavigationStateManager: ProductProfileFlowManager,
+        makeCardGuardianPanel: @escaping ProductProfileViewModelFactory.MakeCardGuardianPanel,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> MakeProductProfileViewModel {
         
@@ -348,6 +362,7 @@ extension ProductProfileViewModel {
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager,
+                makeCardGuardianPanel: makeCardGuardianPanel,
                 updateInfoStatusFlag: updateInfoStatusFlag
             )
             
@@ -398,7 +413,8 @@ extension ProductProfileViewModel {
                 },
                 makeInformerDataUpdateFailure: {
                     updateInfoStatusFlag.isActive ? .updateFailureInfo : nil
-                }
+                }, 
+                makeCardGuardianPanel: makeCardGuardianPanel
             )
             
             return .init(
