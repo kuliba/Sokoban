@@ -19,7 +19,8 @@ enum _DocumentID {}
 extension RootViewModelFactory {
     
     static func makeDocumentButton(
-        httpClient: HTTPClient
+        httpClient: HTTPClient,
+        printFormType: RequestFactory.PrintFormType
     ) -> (DocumentID) -> some View {
         
         return makeButton
@@ -29,7 +30,7 @@ extension RootViewModelFactory {
             let buttonLabel = { makeSuccessButtonLabel(option: .document) }
             
             let getDetailService = RemoteService(
-                createRequest: RequestFactory.createGetPrintFormRequest,
+                createRequest: RequestFactory.createGetPrintFormRequest(printFormType: printFormType),
                 performRequest: httpClient.performRequest(_:completion:),
                 mapResponse: ResponseMapper.mapGetPrintFormResponse
             )

@@ -301,7 +301,8 @@ extension RootViewModelFactory {
         )
         
         let makeDocumentButton = makeDocumentButton(
-            httpClient: httpClient
+            httpClient: httpClient,
+            printFormType: .sticker
         )
         
         return make
