@@ -16,7 +16,9 @@ final class HistoryReducerTests: XCTestCase {
         assertState(
             .button(.calendar),
             on: .init(buttonAction: .calendar, showSheet: true)
-        )
+        ) {
+            $0?.showSheet = true
+        }
     }
     
     func test_history_reduce_button_filterEvent_shouldReturnShowSheetTrue() {
@@ -24,7 +26,9 @@ final class HistoryReducerTests: XCTestCase {
         assertState(
             .button(.filter),
             on: .init(buttonAction: .filter, showSheet: true)
-        )
+        ) {
+            $0?.showSheet = true
+        }
     }
     
     func test_history_reduce_filter_shouldReturnShowSheetTrue() {
@@ -32,7 +36,9 @@ final class HistoryReducerTests: XCTestCase {
         assertState(
             .filter([.debit]),
             on: .init(filters: [.debit], buttonAction: .filter, showSheet: false)
-        )
+        ) {
+            $0?.showSheet = false
+        }
     }
     
     func test_history_reduce_calendar_shouldReturnShowSheetTrue() {
@@ -40,7 +46,9 @@ final class HistoryReducerTests: XCTestCase {
         assertState(
             .calendar(nil),
             on: .init(date: nil, buttonAction: .calendar, showSheet: false)
-        )
+        ) {
+            $0?.showSheet = false
+        }
     }
     
     //MARK: Helpers
