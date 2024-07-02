@@ -34,7 +34,7 @@ extension Model {
 struct CachingSberOperator: Codable {
     
     let id: String
-    let inn: String?
+    let inn: String
     let md5Hash: String?
     let title: String
     let sortedOrder: Int
@@ -77,17 +77,7 @@ extension SberOperator {
             return title.customLexicographicallyPrecedes(other.title)
         }
         
-#warning("extract to helper")
-        switch (inn, other.inn) {
-        case let (.some(inn), .some(otherINN)):
-            return inn.customLexicographicallyPrecedes(otherINN)
-            
-        case (.none, _):
-            return false
-            
-        case (_, .none):
-            return true
-        }
+        return inn.customLexicographicallyPrecedes(other.inn)
     }
 }
 

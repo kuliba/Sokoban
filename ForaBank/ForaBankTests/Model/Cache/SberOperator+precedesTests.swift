@@ -31,7 +31,7 @@ final class SberOperator_precedesTests: XCTestCase {
     
     private func makeOperator(
         id: String = anyMessage(),
-        inn: String? = anyMessage(),
+        inn: String = anyMessage(),
         md5Hash: String? = nil,
         title: String = anyMessage()
     ) -> SberOperator {
