@@ -48,7 +48,7 @@ extension RootViewFactoryComposer {
             makeUpdateInfoView: UpdateInfoView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
             makePaymentCompleteView: makePaymentCompleteView, 
-            makeHistoryButtonView: { completion in self.makeHistoryButtonView(self.historyFeatureFlag, completion: completion) }
+            makeHistoryButtonView: { event in self.makeHistoryButtonView(self.historyFeatureFlag, event: event) }
         )
     }
 }
@@ -162,11 +162,11 @@ private extension RootViewFactoryComposer {
     
     func makeHistoryButtonView(
         _ historyFeatureFlag: HistoryFilterFlag,
-        completion: @escaping (HistoryEvent) -> Void
+        event: @escaping (HistoryEvent) -> Void
     ) -> HistoryButtonView? {
         
         if historyFeatureFlag.rawValue {
-            return HistoryButtonView(event: completion)
+            return HistoryButtonView(event: event)
         } else {
            return nil
         }

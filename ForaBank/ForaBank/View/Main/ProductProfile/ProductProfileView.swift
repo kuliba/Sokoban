@@ -170,7 +170,7 @@ struct ProductProfileView: View {
             .sheet(
                 modal: viewModel.historyState,
                 dismissModal: { viewModel.historyState?.showSheet = false },
-                content: { historyState in historySheetContent() }
+                content: { _ in historySheetContent() }
             )
     }
     
