@@ -12,6 +12,17 @@ public extension AnywayPaymentContext {
     
     func makeDigest() -> AnywayPaymentDigest {
         
+        guard !shouldRestart
+        else {
+            // TODO: add tests
+            return .init(
+                additional: [], 
+                amount: nil,
+                core: nil,
+                puref: outline.payload.puref
+            )
+        }
+        
         return .init(
             additional: payment.additional(),
             amount: payment.amount,
