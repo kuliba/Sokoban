@@ -68,8 +68,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         let payment = makeAnywayPaymentWithoutAmount()
         let update = makeAnywayPaymentUpdate(needSum: true)
         let (amount, currency, id) = (makeAmount(), anyMessage(), makeIntID())
-        let core = makeOutlinePaymentCore(amount: amount, currency: currency, productID: id, productType: .account)
-        let outline = makeAnywayPaymentOutline(core: core)
+        let product = makeOutlineProduct(currency: currency, productID: id, productType: .account)
+        let outline = makeAnywayPaymentOutline(amount: amount, product: product)
         
         let widgetProduct = makeProductWidget(updatePayment(payment, with: update, and: outline))
         
@@ -85,8 +85,8 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         let payment = makeAnywayPaymentWithoutAmount()
         let update = makeAnywayPaymentUpdate(needSum: true)
         let (amount, currency, id) = (makeAmount(), anyMessage(), makeIntID())
-        let core = makeOutlinePaymentCore(amount: amount, currency: currency, productID: id, productType: .card)
-        let outline = makeAnywayPaymentOutline(core: core)
+        let product = makeOutlineProduct(currency: currency, productID: id, productType: .card)
+        let outline = makeAnywayPaymentOutline(amount: amount, product: product)
         
         let widgetCore = makeProductWidget(updatePayment(payment, with: update, and: outline))
         
@@ -182,6 +182,22 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     }
     
     // MARK: - footer
+    
+    func test_update_shouldNotUpdateAmountOnNil() {
+        
+        let state = makeAnywayPayment(
+            amount: 123.45,
+            elements: [makeProductWidgetElement()],
+            footer: .amount
+        )
+        
+        assert(
+            state,
+            on: makeAnywayPaymentUpdate(needSum: true)
+        ) {
+            $0.amount = 123.45
+        }
+    }
     
     func test_update_shouldUpdateAmount() {
         

@@ -67,8 +67,7 @@ final class CachedPaymentContextTests: XCTestCase {
         
         let outline = makeAnywayPaymentOutline(
             ["321": "abc"],
-            core: makeOutlinePaymentCore(
-                amount: 123,
+            product: makeOutlineProduct(
                 currency: "RUB",
                 productID: 321,
                 productType: .account
@@ -77,8 +76,7 @@ final class CachedPaymentContextTests: XCTestCase {
         
         let newOutline = makeAnywayPaymentOutline(
             ["a": "aaa"],
-            core: makeOutlinePaymentCore(
-                amount: 321,
+            product: makeOutlineProduct(
                 currency: "USD",
                 productID: 987,
                 productType: .card

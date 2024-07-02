@@ -191,3 +191,9 @@ final class CachedModelsTransactionTests: XCTestCase {
         }
     }
 }
+
+#warning("replace with model")
+extension String: Receiver {
+    
+    public func receive(_ value: Decimal) { }
+}

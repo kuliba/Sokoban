@@ -7,6 +7,7 @@
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import Foundation
 
 public struct CachedModelsTransaction<Footer, Model, DocumentStatus, Response> {
     
@@ -20,7 +21,10 @@ public struct CachedModelsTransaction<Footer, Model, DocumentStatus, Response> {
     public typealias Transaction = AnywayTransactionState<DocumentStatus, Response>
 }
 
-public extension CachedModelsTransaction where DocumentStatus: Equatable, Response: Equatable {
+public extension CachedModelsTransaction 
+where Footer: Receiver<Decimal>,
+      DocumentStatus: Equatable,
+      Response: Equatable {
     
     init(
         with transaction: Transaction,
@@ -39,6 +43,8 @@ public extension CachedModelsTransaction where DocumentStatus: Equatable, Respon
         with transaction: Transaction,
         using map: @escaping Map
     ) -> Self {
+        
+        transaction.context.payment.amount.map(footer.receive)
         
         return .init(
             models: transaction.updatingModels(

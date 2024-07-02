@@ -95,7 +95,7 @@ extension ProductProfileDetailMainBlockViewModelTests {
         let sut = makeSut(configuration: .loanRepaidAndOwnFunds, balance: 100, ownFunds: 50)
         
         XCTAssertEqual(sut.ownFunds, "50.0")
-        XCTAssertEqual(sut.loanLimitCurrent, "100.0")
+        XCTAssertEqual(sut.loanLimitCurrent, "50.0")
         XCTAssertEqual(sut.loanLimitTotal, "100.0")
         XCTAssertEqual(sut.progress.progress, 0.5, accuracy: .ulpOfOne)
     }
@@ -105,7 +105,7 @@ extension ProductProfileDetailMainBlockViewModelTests {
         let sut = makeSut(configuration: .loanRepaidAndOwnFunds, balance: 50, ownFunds: 100)
         
         XCTAssertEqual(sut.ownFunds, "100.0")
-        XCTAssertEqual(sut.loanLimitCurrent, "50.0")
+        XCTAssertEqual(sut.loanLimitCurrent, "-50.0")
         XCTAssertEqual(sut.loanLimitTotal, "50.0")
         XCTAssertEqual(sut.progress.progress, 2.0, accuracy: .ulpOfOne)
     }
@@ -129,7 +129,7 @@ extension ProductProfileDetailMainBlockViewModelTests {
         ])
         XCTAssertNoDiff(sut.items.map(\.value), [
             "99,00 ₽",
-            "100,00 ₽"
+            "1,00 ₽"
         ])
         XCTAssertNoDiff(sut.items.map(\.testPostfix), [
             .none,
@@ -242,6 +242,54 @@ extension ProductProfileDetailMainBlockViewModelTests {
         XCTAssertEqual(sut.progress.progress, 1, accuracy: .ulpOfOne)
     }
     
+    // MARK: - TEST Balance/CreditLimit/ownFunds
+    
+    func test_init_loanRepaidAndOwnFunds_creditLimitCalculation() {
+        
+        let (balance, ownFunds) = (1000.0, 300.0)
+        
+        let sut = makeSut(configuration: .loanRepaidAndOwnFunds, balance: balance, ownFunds: ownFunds, totalAvailableAmount: balance)
+        
+        XCTAssertEqual(sut.items[0].type, .ownFunds)
+        XCTAssertEqual(sut.items[0].value, "300.0")
+        XCTAssertEqual(sut.items[1].type, .loanLimit)
+        XCTAssertEqual(sut.items[1].value, "700.0")
+        XCTAssertEqual(sut.items[1].testPostfix, .value("1000.0"))
+    }
+    
+    func test_init_loanRepaidAndOwnFunds_zeroBalance() {
+        let sut = makeSut(configuration: .loanRepaidAndOwnFunds, balance: 0, ownFunds: 0, totalAvailableAmount: 0)
+        
+        XCTAssertEqual(sut.items[0].type, .ownFunds)
+        XCTAssertEqual(sut.items[0].value, "0.0")
+        XCTAssertEqual(sut.items[1].type, .loanLimit)
+        XCTAssertEqual(sut.items[1].value, "0.0")
+        XCTAssertEqual(sut.items[1].testPostfix, .value("0.0"))
+        XCTAssertEqual(sut.progress.progress, 1, accuracy: .ulpOfOne)
+    }
+    
+    func test_init_loanRepaidAndOwnFunds_ownFundsGreaterThanBalance() {
+        
+        let (balance, ownFunds) = (1000.0, 1500.0)
+        let sut = makeSut(configuration: .loanRepaidAndOwnFunds, balance: balance, ownFunds: ownFunds, totalAvailableAmount: balance)
+        
+        XCTAssertEqual(sut.items[0].type, .ownFunds)
+        XCTAssertEqual(sut.items[0].value, "1500.0")
+        XCTAssertEqual(sut.items[1].type, .loanLimit)
+        XCTAssertEqual(sut.items[1].value, "-500.0")
+        XCTAssertEqual(sut.items[1].testPostfix, .value("1000.0"))
+    }
+    
+    func test_init_loanRepaidAndOwnFunds_progressCalculation() {
+        let balance = 1000.0
+        let ownFunds = 250.0
+        
+        let sut = makeSut(configuration: .loanRepaidAndOwnFunds, balance: balance, ownFunds: ownFunds, totalAvailableAmount: balance)
+        
+        XCTAssertEqual(sut.progress.progress, 0.25, accuracy: .ulpOfOne)
+        XCTAssertEqual(sut.progress.primaryColor, .mainColorsRed)
+        XCTAssertEqual(sut.progress.secondaryColor, .mainColorsWhite)
+    }
 }
 
 //MARK: - Helpers
@@ -427,5 +475,201 @@ private extension ProductProfileDetailView.ViewModel.AmountViewModel {
         case checkmark
         case info
         case value(String)
+    }
+}
+
+private extension ProductCardData {
+    
+    private static func makeProductCardData(
+        id: Int = 10000184510,
+        productType: ProductType = .card,
+        number: String = "4656260144018016",
+        numberMasked: String = "4656-XXXX-XXXX-8016",
+        accountNumber: String = "40817810952005000640",
+        balance: Double? = 50011,
+        balanceRub: Double? = 50011,
+        currency: String = "RUB",
+        mainField: String = "Gold",
+        additionalField: String = "Миг",
+        customName: String? = "reg0тесттесттесттестте",
+        productName: String = "VISA REWARDS R-5",
+        openDate: Date = Date.dateUTC(with: 1631048400000),
+        ownerId: Int = 10002053887,
+        branchId: Int = 2000,
+        allowCredit: Bool = true,
+        allowDebit: Bool = true,
+        extraLargeDesign: SVGImageData = SVGImageData(description: "e383a49e15aeec6d9c51ee6f4897ad16"),
+        largeDesign: SVGImageData = SVGImageData(description: "b7fd0a13ae9bb8b70b0dd92082ce91f6"),
+        mediumDesign: SVGImageData = SVGImageData(description: "98cbe7f6396bed6004dd01e2f7c37db2"),
+        smallDesign: SVGImageData = SVGImageData(description: "7e7beff3d0827be85b8259135643bf62"),
+        fontDesignColor: ColorData = ColorData(description: "FFFFFF"),
+        background: [ColorData] = [ColorData(description: "FFBB36")],
+        accountId: Int = 10004177075,
+        cardId: Int = 10000184510,
+        name: String = "ТП МИГ Visa Gold_",
+        validThru: Date = Date.dateUTC(with: 1790715600000),
+        status: Status = .active,
+        expireDate: String = "09/26",
+        holderName: String = "CHALIKYAN GEVORG",
+        product: String = "VISA REWARDS R-5",
+        branch: String = #"АКБ "ФОРА-БАНК" (АО)"#,
+        miniStatement: [PaymentDataItem]? = nil,
+        paymentSystemName: String = "VISA",
+        paymentSystemImage: SVGImageData = SVGImageData(description: "d7516b59941d5acd06df25a64ea32660"),
+        loanBaseParam: LoanBaseParamInfoData? = nil,
+        statusPc: StatusPC = .active,
+        isMain: Bool = false,
+        externalId: Int? = nil,
+        order: Int = 0,
+        visibility: Bool = true,
+        smallDesignMd5hash: String = "7e7beff3d0827be85b8259135643bf62",
+        smallBackgroundDesignHash: String = "b0c85ac844ee9758af64ad2c066d5191",
+        statusCard: StatusCard? = .active,
+        cardType: CardType? = .regular,
+        idParent: Int? = nil
+    ) -> ProductCardData {
+        
+        return ProductCardData(
+            id: id,
+            productType: productType,
+            number: number,
+            numberMasked: numberMasked,
+            accountNumber: accountNumber,
+            balance: balance,
+            balanceRub: balanceRub,
+            currency: currency,
+            mainField: mainField,
+            additionalField: additionalField,
+            customName: customName,
+            productName: productName,
+            openDate: openDate,
+            ownerId: ownerId,
+            branchId: branchId,
+            allowCredit: allowCredit,
+            allowDebit: allowDebit,
+            extraLargeDesign: extraLargeDesign,
+            largeDesign: largeDesign,
+            mediumDesign: mediumDesign,
+            smallDesign: smallDesign,
+            fontDesignColor: fontDesignColor,
+            background: background,
+            accountId: accountId,
+            cardId: cardId,
+            name: name,
+            validThru: validThru,
+            status: status,
+            expireDate: expireDate,
+            holderName: holderName,
+            product: product,
+            branch: branch,
+            miniStatement: miniStatement,
+            paymentSystemName: paymentSystemName,
+            paymentSystemImage: paymentSystemImage,
+            loanBaseParam: loanBaseParam,
+            statusPc: statusPc,
+            isMain: isMain,
+            externalId: externalId,
+            order: order,
+            visibility: visibility,
+            smallDesignMd5hash: smallDesignMd5hash,
+            smallBackgroundDesignHash: smallBackgroundDesignHash,
+            statusCard: statusCard,
+            cardType: cardType,
+            idParent: idParent
+        )
+    }
+    
+    static let cardStub1_default = makeProductCardData(productType: .loan)
+    
+    static let cardStub2_balance0 = makeProductCardData(
+        id: 10000184511,
+        number: "4656260144018008",
+        numberMasked: "4656-XXXX-XXXX-8008",
+        accountNumber: "40817810552005000639",
+        balance: 0,
+        balanceRub: 0,
+        customName: "reg1",
+        accountId: 10004176990,
+        cardId: 10000184511,
+        order: 1
+    )
+    
+    static let cardStub3_BalanceIsNegative = makeProductCardData(
+        id: 10000184511,
+        number: "4656260144018008",
+        numberMasked: "4656-XXXX-XXXX-8008",
+        accountNumber: "40817810552005000639",
+        balance: 160000,
+        balanceRub: 160000,
+        customName: "reg1",
+        accountId: 10004176990,
+        cardId: 10000184511,
+        order: 1
+    )
+    
+    static let cardStub4_balanceIsNil = makeProductCardData(
+        balance: nil,
+        balanceRub: nil
+    )
+}
+
+private extension ProductCardData.LoanBaseParamInfoData {
+    
+    static func makeLoanBaseParamInfoData(
+        loanId: Int = 20000058545,
+        clientId: Int = 10002266732,
+        number: String = "БК-231129/3500/2",
+        currencyId: Int = 2,
+        currencyNumber: Int = 810,
+        currencyCode: String = "RUB",
+        minimumPayment: Double = 0,
+        gracePeriodPayment: Double = 0,
+        overduePayment: Double = 0,
+        availableExceedLimit: Double = 50000.0,
+        ownFunds: Double = 0,
+        debtAmount: Double = 0,
+        totalAvailableAmount: Double = 50000.0,
+        totalDebtAmount: Double = 0
+    ) -> ProductCardData.LoanBaseParamInfoData {
+        
+        return .init(
+            loanId: loanId,
+            clientId: clientId,
+            number: number,
+            currencyId: currencyId,
+            currencyNumber: currencyNumber,
+            currencyCode: currencyCode,
+            minimumPayment: minimumPayment,
+            gracePeriodPayment: gracePeriodPayment,
+            overduePayment: overduePayment,
+            availableExceedLimit: availableExceedLimit,
+            ownFunds: ownFunds,
+            debtAmount: debtAmount,
+            totalAvailableAmount: totalAvailableAmount,
+            totalDebtAmount: totalDebtAmount
+        )
+    }
+    
+    static func makeLoanBaseParamInfoDataWithZeroBalanceAndDebt() -> ProductCardData.LoanBaseParamInfoData {
+        
+        return makeLoanBaseParamInfoData(
+            availableExceedLimit: 330000.0,
+            debtAmount: -50000,
+            totalAvailableAmount: 250000.0,
+            totalDebtAmount: -150000
+        )
+    }
+    
+    static func makeLoanBaseParamInfoData_MinPaymentMade_WithDebt() -> ProductCardData.LoanBaseParamInfoData {
+        
+        return makeLoanBaseParamInfoData(
+            minimumPayment: 4444,
+            gracePeriodPayment: 5555,
+            overduePayment: 6666,
+            availableExceedLimit: 330000.0,
+            debtAmount: 57000,
+            totalAvailableAmount: 250000.0,
+            totalDebtAmount: 65000
+        )
     }
 }

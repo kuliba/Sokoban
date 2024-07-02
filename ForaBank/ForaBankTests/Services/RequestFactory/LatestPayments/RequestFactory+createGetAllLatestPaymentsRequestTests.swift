@@ -13,33 +13,33 @@ final class RequestFactory_createGetAllLatestPaymentsRequestTests: XCTestCase {
     
     func test_createRequest_shouldSetRequestURL() throws {
         
-        let request = try createRequest()
-
+        let request = createRequest()
+        
         XCTAssertNoDiff(
             request.url?.absoluteString,
             "https://pl.forabank.ru/dbo/api/v3/rest/v2/getAllLatestPayments?isServicePayments=true"
         )
     }
     
-    func test_createRequest_shouldSetRequestMethodToPost() throws {
+    func test_createRequest_shouldSetHTTPMethodToGET() throws {
         
-        let request = try createRequest()
-        
-        XCTAssertEqual(request.httpMethod, "GET")
+        XCTAssertNoDiff(createRequest().httpMethod, "GET")
     }
     
-    func test_createRequest_shouldSetRequestBodyToNil() throws {
+    func test_createRequest_shouldSetCachePolicy() throws {
         
-        let request = try createRequest()
-        
-        XCTAssertNil(request.httpBody)
+        XCTAssertNoDiff(createRequest().cachePolicy, .reloadIgnoringLocalAndRemoteCacheData)
     }
-  
+    
+    func test_createRequest_shouldNotSetHTTPBody() throws {
+        
+        XCTAssertNil(createRequest().httpBody)
+    }
+    
     // MARK: - Helpers
     
-    private func createRequest() throws -> URLRequest {
+    private func createRequest() -> URLRequest {
         
-        try RequestFactory.getAllLatestPaymentsRequest(.service)
+        RequestFactory.createGetAllLatestPaymentsRequest(.service)
     }
-
 }
