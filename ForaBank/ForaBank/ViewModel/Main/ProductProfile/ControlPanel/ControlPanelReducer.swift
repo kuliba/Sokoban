@@ -46,8 +46,6 @@ extension ControlPanelReducer {
             if buttons != state.buttons {
                 state.buttons = buttons
             }
-        case let .alert(info):
-            break
         }
         return (state, effect)
     }
@@ -64,10 +62,18 @@ extension ControlPanelReducer {
         var effect: Effect?
         
         switch event {
+         
+        case let .delayAlert(card):
             
-        case let .showAlert(card):
+            guard let cardNumber = card.number, let statusCard = card.statusCard else {
+                return (state, effect)
+            }
+
+            effect = .delayAlert(alertBlockedCard(with: card.id, card.isBlocked, cardNumber, statusCard), controlPanelLifespan)
+
+        case let .showAlert(alertViewModel):
             
-            state.alert = alertBlockedCard(with: card)
+            state.alert = alertViewModel
             
         case let .blockCard(card):
             productProfileServices.createBlockCardService.createBlockCard(.init(cardId: .init(card.cardId), cardNumber: .init(card.number ?? ""))) { result in
@@ -100,12 +106,12 @@ extension ControlPanelReducer {
     }
     
     func alertBlockedCard(
-        with card: ProductCardData
-    ) -> Alert.ViewModel? {
+        with cardID: ProductCardData.ID,
+        _ isBlocked: Bool,
+        _ cardNumber: String,
+        _ statusCard: ProductCardData.StatusCard
         
-        guard let cardNumber = card.number, let statusCard = card.statusCard else {
-            return nil
-        }
+    ) -> Alert.ViewModel {
         
         let secondaryButton: Alert.ViewModel.ButtonViewModel = {
             switch statusCard {
@@ -120,13 +126,13 @@ extension ControlPanelReducer {
                     type: .default,
                     title: "Oк",
                     action: {
-                        if card.isBlocked {
+                        if isBlocked {
                             
-                            self.productProfileServices.createUnblockCardService.createUnblockCard(.init(cardId: .init(card.id), cardNumber: .init(cardNumber))) { result in
+                            self.productProfileServices.createUnblockCardService.createUnblockCard(.init(cardId: .init(cardID), cardNumber: .init(cardNumber))) { result in
                                 
                             }
                         } else {
-                            self.productProfileServices.createBlockCardService.createBlockCard(.init(cardId: .init(card.id), cardNumber: .init(cardNumber))) { result in
+                            self.productProfileServices.createBlockCardService.createBlockCard(.init(cardId: .init(cardID), cardNumber: .init(cardNumber))) { result in
                             }
                         }
                     })
@@ -145,8 +151,6 @@ extension ControlPanelReducer {
                 
         return alertViewModel
     }
-    
-
 }
 
 extension ControlPanelReducer {

@@ -11,5 +11,4 @@ enum ControlPanelEvent {
     
     case controlButtonEvent(ControlButtonEvent)
     case updateState([ControlPanelButtonDetails])
-    case alert(AlertEvent)
 }
