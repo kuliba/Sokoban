@@ -2010,7 +2010,7 @@ extension ProductProfileViewModel {
     enum CardGuardianPanelKind {
         
         case bottomSheet([PanelButtonDetails])
-        case fullScreen([PanelButtonDetails])
+        case fullScreen([ControlPanelButtonDetails])
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -2047,7 +2047,7 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
-        case controlPanel([PanelButtonDetails])
+        case controlPanel([ControlPanelButtonDetails])
     }
     
     struct Sheet: Identifiable {
