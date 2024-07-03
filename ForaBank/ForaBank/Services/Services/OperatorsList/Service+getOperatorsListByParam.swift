@@ -8,10 +8,11 @@
 import Foundation
 import GenericRemoteService
 import OperatorsListComponents
+import RemoteServices
 
 extension Services {
     
-    typealias GetOperatorListResult = Swift.Result<[OperatorsListComponents.SberOperator], OperatorsListComponents.ResponseMapper.MappingError>
+    typealias GetOperatorListResult = Swift.Result<[OperatorsListComponents.SberOperator], RemoteServices.ResponseMapper.MappingError>
     typealias GetOperatorListService = RemoteServiceOf<String, GetOperatorListResult>
     
     static func getOperatorsListByParam(
@@ -21,7 +22,7 @@ extension Services {
         return .init(
             createRequest: RequestFactory.getOperatorsListByParam,
             performRequest: httpClient.performRequest,
-            mapResponse: OperatorsListComponents.ResponseMapper.mapAnywayOperatorsListResponse
+            mapResponse: RemoteServices.ResponseMapper.mapAnywayOperatorsListResponse
         )
     }
 }

@@ -207,7 +207,7 @@ private extension RootViewFactoryComposer {
     ) -> TransactionDocumentButton.GetDocument {
         
         let getDetailService = RemoteService(
-            createRequest: RequestFactory.createGetPrintFormRequest,
+            createRequest: RequestFactory.createGetPrintFormRequest(printFormType: .service),
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapGetPrintFormResponse
         )
