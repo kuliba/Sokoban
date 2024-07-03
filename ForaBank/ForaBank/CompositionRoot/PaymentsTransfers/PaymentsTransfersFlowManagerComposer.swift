@@ -221,8 +221,9 @@ private extension PaymentsTransfersFlowManagerComposer {
     ) -> (AnywayTransactionState.Transaction, @escaping NotifyStatus) -> UtilityServicePaymentFlowState<AnywayTransactionViewModel> {
         
         let elementMapper = AnywayElementModelMapper(
-            currencyOfProduct: self.currencyOfProduct,
-            getProducts: self.model.productSelectProducts,
+            currencyOfProduct: currencyOfProduct,
+            format: format,
+            getProducts: model.productSelectProducts,
             flag: flag.optionOrStub
         )
         
@@ -254,6 +255,11 @@ private extension PaymentsTransfersFlowManagerComposer {
             
             return .init(viewModel: viewModel, subscription: subscription)
         }
+    }
+    
+    private func format(currency: String?, amount: Decimal) -> String {
+        
+        return model.formatted(amount, with: currency ?? "") ?? ""
     }
     
     private func composeMicroServices(

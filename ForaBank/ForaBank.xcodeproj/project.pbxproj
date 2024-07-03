@@ -969,6 +969,9 @@
 		2A7B5EE62AB068E6002F2D00 /* ComposedLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7B5EE52AB068E6002F2D00 /* ComposedLoginViewModel.swift */; };
 		2A7B5EEA2AB06EBE002F2D00 /* LandingButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7B5EE92AB06EBE002F2D00 /* LandingButtonsView.swift */; };
 		2A7B5EED2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7B5EEC2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift */; };
+		2A8050592C353DE50039557E /* AnywayInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8050582C353DE50039557E /* AnywayInfoView.swift */; };
+		2A80505B2C354A2E0039557E /* AnywayInfoViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80505A2C354A2E0039557E /* AnywayInfoViewConfig.swift */; };
+		2A80505D2C354A570039557E /* AnywayInfoViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80505C2C354A570039557E /* AnywayInfoViewConfig+iFora.swift */; };
 		2A80B5692AF4191B0009504C /* LiveCVVPINJSONMakerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80B5682AF4191B0009504C /* LiveCVVPINJSONMakerTests.swift */; };
 		2A80C6C42B6E209B00293FE5 /* MicroServices.Facade+live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80C6C32B6E209B00293FE5 /* MicroServices.Facade+live.swift */; };
 		2A80C6C62B6E216400293FE5 /* MicroServices.Facade+stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80C6C52B6E216400293FE5 /* MicroServices.Facade+stub.swift */; };
@@ -2442,6 +2445,10 @@
 		837F82E52A3B271C003544BB /* PickerWithPreviewComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 837F82E42A3B271C003544BB /* PickerWithPreviewComponent */; };
 		83808C412B8CEDCB00E9F7BF /* CVVButtonEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */; };
 		83808C472B8DB97C00E9F7BF /* AlertModelOf+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83808C462B8DB97C00E9F7BF /* AlertModelOf+ext.swift */; };
+		83815F9C2C3567CB00C97E60 /* ControlPanelEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83815F952C3567CA00C97E60 /* ControlPanelEvent.swift */; };
+		83815FA02C3567CB00C97E60 /* ControlPanelEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83815F992C3567CB00C97E60 /* ControlPanelEffect.swift */; };
+		83815FA32C35683500C97E60 /* ControlPanelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83815FA22C35683500C97E60 /* ControlPanelState.swift */; };
+		83815FA52C35693500C97E60 /* ControlButtonEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83815FA42C35693500C97E60 /* ControlButtonEvent.swift */; };
 		83943ECD2A8F790100042CB2 /* ProductsSwapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */; };
 		8394B2F32BBF2F5C0078CB10 /* AlertReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8394B2F22BBF2F5C0078CB10 /* AlertReducer.swift */; };
 		8394B2F52BBFD70E0078CB10 /* CvvInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8394B2F42BBFD70E0078CB10 /* CvvInfo.swift */; };
@@ -4058,6 +4065,9 @@
 		2A7B5EE52AB068E6002F2D00 /* ComposedLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedLoginViewModel.swift; sourceTree = "<group>"; };
 		2A7B5EE92AB06EBE002F2D00 /* LandingButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingButtonsView.swift; sourceTree = "<group>"; };
 		2A7B5EEC2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthLoginViewModel+preview.swift"; sourceTree = "<group>"; };
+		2A8050582C353DE50039557E /* AnywayInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayInfoView.swift; sourceTree = "<group>"; };
+		2A80505A2C354A2E0039557E /* AnywayInfoViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayInfoViewConfig.swift; sourceTree = "<group>"; };
+		2A80505C2C354A570039557E /* AnywayInfoViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayInfoViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A80B5682AF4191B0009504C /* LiveCVVPINJSONMakerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCVVPINJSONMakerTests.swift; sourceTree = "<group>"; };
 		2A80C6C32B6E209B00293FE5 /* MicroServices.Facade+live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MicroServices.Facade+live.swift"; sourceTree = "<group>"; };
 		2A80C6C52B6E216400293FE5 /* MicroServices.Facade+stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MicroServices.Facade+stub.swift"; sourceTree = "<group>"; };
@@ -5441,7 +5451,6 @@
 		833D3E542C352E89006626F2 /* BlockCardServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockCardServices.swift; sourceTree = "<group>"; };
 		833D3E562C352EC6006626F2 /* ProductProfileServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductProfileServices.swift; sourceTree = "<group>"; };
 		833D3E582C35417B006626F2 /* ControlPanelButtonDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlPanelButtonDetails.swift; sourceTree = "<group>"; };
-		833D3E5A2C35431E006626F2 /* ControlButtonEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlButtonEvent.swift; sourceTree = "<group>"; };
 		833E87222B920027009A01AB /* TopUpCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopUpCardView.swift; sourceTree = "<group>"; };
 		833E872A2B94CA07009A01AB /* ProductProfileComponents.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ProductProfileComponents.xctestplan; sourceTree = "<group>"; };
 		833EC1112BBEA56F0050ABE9 /* ProductAlertsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAlertsViewModel.swift; sourceTree = "<group>"; };
@@ -5491,6 +5500,11 @@
 		8376C1252C08CF0100B482FC /* MyProductsViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsViewFactory.swift; sourceTree = "<group>"; };
 		83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVButtonEvent.swift; sourceTree = "<group>"; };
 		83808C462B8DB97C00E9F7BF /* AlertModelOf+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlertModelOf+ext.swift"; sourceTree = "<group>"; };
+		83815F922C35660900C97E60 /* ControlPanelWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelWrapperView.swift; sourceTree = "<group>"; };
+		83815F952C3567CA00C97E60 /* ControlPanelEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlPanelEvent.swift; sourceTree = "<group>"; };
+		83815F992C3567CB00C97E60 /* ControlPanelEffect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlPanelEffect.swift; sourceTree = "<group>"; };
+		83815FA22C35683500C97E60 /* ControlPanelState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlPanelState.swift; sourceTree = "<group>"; };
+		83815FA42C35693500C97E60 /* ControlButtonEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlButtonEvent.swift; sourceTree = "<group>"; };
 		83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSwapViewTests.swift; sourceTree = "<group>"; };
 		8394B2F22BBF2F5C0078CB10 /* AlertReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertReducer.swift; sourceTree = "<group>"; };
 		8394B2F42BBFD70E0078CB10 /* CvvInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvInfo.swift; sourceTree = "<group>"; };
@@ -9457,6 +9471,8 @@
 			isa = PBXGroup;
 			children = (
 				2AA3A9432BFF8C3600AEBCC9 /* AnywayPaymentElementView.swift */,
+				2A8050582C353DE50039557E /* AnywayInfoView.swift */,
+				2A80505A2C354A2E0039557E /* AnywayInfoViewConfig.swift */,
 				2AB87C502C133FCB0013EFFE /* SimpleOTPWrapperView.swift */,
 				2AA3A93A2BFF8B1400AEBCC9 /* AnywayPaymentElementViewFactory.swift */,
 				2AA3A9382BFF8ADF00AEBCC9 /* AnywayPaymentElementConfig.swift */,
@@ -9538,6 +9554,7 @@
 				2A0EF2F12C1DB7AF003F094D /* SelectorViewConfig+iFora.swift */,
 				2A0EF2EB2C1DABB2003F094D /* ChevronViewConfig+iFora.swift */,
 				2AB109AE2C2C199500325D3A /* OTPWarningViewConfig+iFora.swift */,
+				2A80505C2C354A570039557E /* AnywayInfoViewConfig+iFora.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -13311,6 +13328,10 @@
 				833D3E4A2C34179D006626F2 /* ControlPanelFlowReducer.swift */,
 				833D3E4C2C341C08006626F2 /* ControlPanelNavigationStateEffectHandler.swift */,
 				833D3E4E2C341DF8006626F2 /* ControlPanelAlertReducer.swift */,
+				83815F992C3567CB00C97E60 /* ControlPanelEffect.swift */,
+				83815F952C3567CA00C97E60 /* ControlPanelEvent.swift */,
+				83815FA22C35683500C97E60 /* ControlPanelState.swift */,
+				83815FA42C35693500C97E60 /* ControlButtonEvent.swift */,
 			);
 			path = ControlPanel;
 			sourceTree = "<group>";
@@ -13421,7 +13442,7 @@
 		83815F902C355FAC00C97E60 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				833D3E5A2C35431E006626F2 /* ControlButtonEvent.swift */,
+				83815F922C35660900C97E60 /* ControlPanelWrapperView.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -17927,6 +17948,7 @@
 				0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */,
 				2A61D07D2BECCD7300802C95 /* PaymentsTransfersFlowEffectHandler+preview.swift in Sources */,
 				C18D25FA2A25B96100DF5643 /* TemplateButtonViewComponent.swift in Sources */,
+				83815FA02C3567CB00C97E60 /* ControlPanelEffect.swift in Sources */,
 				503566C3287D56470077BF8B /* Int+Extensions.swift in Sources */,
 				0BDCF00A2749A5A900AAA1C3 /* GKHInputModel.swift in Sources */,
 				C1D66EEA2B07AAA2009E50B1 /* RemoteService+Extension.swift in Sources */,
@@ -17987,6 +18009,7 @@
 				0CA1CDE12840720200021671 /* AddressBookContact.swift in Sources */,
 				0BBC55FE2943318600B95E6C /* QRAccessViewComponent.swift in Sources */,
 				77C3829827E1FEAD00B5246E /* PaymentsProductSelectorViewComponent+Legacy.swift in Sources */,
+				2A80505B2C354A2E0039557E /* AnywayInfoViewConfig.swift in Sources */,
 				2A35DDB62C0243AB00EFF0EB /* Model+currencyOf.swift in Sources */,
 				503F074B28252D3B00E84A77 /* DepositCapitalizationView.swift in Sources */,
 				0BB24A9726EFE66900DDA4F6 /* GetPaymentCountriesList.swift in Sources */,
@@ -18100,6 +18123,7 @@
 				ED684CD52760C75600AA7A33 /* MakeDepositDecodableModel.swift in Sources */,
 				2A7B5EED2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift in Sources */,
 				773E6839298B9FEC00B75482 /* Model+PaymentsC2B.swift in Sources */,
+				83815FA52C35693500C97E60 /* ControlButtonEvent.swift in Sources */,
 				503F073F28252CBA00E84A77 /* DepositTotalAmountViewModel.swift in Sources */,
 				774EECDA29A638A500CCE94A /* PaymentsInfoGroupView.swift in Sources */,
 				7768FBE4291C1B6F00908420 /* Model+PaymentsTransferSFP.swift in Sources */,
@@ -18721,6 +18745,7 @@
 				2A3E03262B74A1D200A4494D /* HTTPClientStub+fastPaymentsSettings.swift in Sources */,
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
 				ED353B6A26FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift in Sources */,
+				83815FA32C35683500C97E60 /* ControlPanelState.swift in Sources */,
 				50EFA47B29476EC100FE1938 /* TextFieldViewComponent.swift in Sources */,
 				8394B2F32BBF2F5C0078CB10 /* AlertReducer.swift in Sources */,
 				0BB24A9226EFC6AB00DDA4F6 /* GetProductTemplateList.swift in Sources */,
@@ -18802,6 +18827,7 @@
 				68FFA55F268BF2D2002DADFA /* TransferByRequisitesViewController.swift in Sources */,
 				2A2ECBBD2AE5242000F3C946 /* ResponseMapper.swift in Sources */,
 				2A3417802B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift in Sources */,
+				2A8050592C353DE50039557E /* AnywayInfoView.swift in Sources */,
 				77FF670B27BABCD9009FEA09 /* KeychainAgentProtocol.swift in Sources */,
 				ED08C70D28426FA900A49889 /* DocumentDelailCellViewComponent.swift in Sources */,
 				50239E9B2941253F00AA480B /* CheckBoxViewComponent.swift in Sources */,
@@ -18868,6 +18894,7 @@
 				0BA14E14270DD0BF0098E422 /* BackgroundTimerController.swift in Sources */,
 				C16157272C2A89A4000EFC3A /* Reducer+makeProductProfileFlowReducer.swift in Sources */,
 				0C5D7D9E298320C100BC0CCF /* NetworkMonitorAgentProtocol.swift in Sources */,
+				83815F9C2C3567CB00C97E60 /* ControlPanelEvent.swift in Sources */,
 				0B283FC32701016100B5E925 /* CreateMobileTransferDecodableModel.swift in Sources */,
 				834731E32A1388A6002590A3 /* Model+PaymentsTransfersServices.swift in Sources */,
 				77499C462773C0D100F6C079 /* ButtonStyles.swift in Sources */,
@@ -19119,6 +19146,7 @@
 				68D06F2426C3C0F300F9BE4C /* MainViewControllerLayout.swift in Sources */,
 				0CEA3203287618CE005B80BA /* CreateTransterResponseData.swift in Sources */,
 				ED733D5E2858960C00F22D42 /* CurrencyData+Legacy.swift in Sources */,
+				2A80505D2C354A570039557E /* AnywayInfoViewConfig+iFora.swift in Sources */,
 				770DCE9627BBFA6D004099C1 /* RootViewHostingViewController.swift in Sources */,
 				0B3FE8E12704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift in Sources */,
 				0BE0BE052910760B0064549E /* QRViewModel.swift in Sources */,

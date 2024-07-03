@@ -9,6 +9,7 @@ import ActivateSlider
 import ForaTools
 import InfoComponent
 import PinCodeUI
+import RxViewModel
 import SberQR
 import SwiftUI
 
