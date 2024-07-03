@@ -18,6 +18,6 @@ extension AnywayPaymentWidgetViewFactory {
     
     typealias OTPViewModel = TimedOTPInputViewModel
     typealias IconView = UIPrimitives.AsyncImage
-    typealias OTPView = TimedOTPInputWrapperView<IconView, OTPWarningView>
+    typealias OTPView = TimedOTPInputWrapperView<Image, OTPWarningView>
     typealias MakeOTPView = (OTPViewModel) -> OTPView
 }
