@@ -17,9 +17,9 @@ extension AnywayPayment {
     ) -> Self {
         
         var elements = elements
-        elements.updatePrimaryFields(from: update.fields)
-        elements.appendComplementaryFields(from: update.fields)
-        elements.appendParameters(from: update.parameters, with: outline)
+        elements.updateExistingElements(with: update.fields)
+        elements.appendNewFields(from: update.fields)
+        elements.appendNewParameters(from: update.parameters, with: outline)
         
         if let product = outline.product {
             
@@ -217,8 +217,8 @@ private extension Array where Element == AnywayElement {
         return first == nil
     }
     
-    mutating func updatePrimaryFields(
-        from updateFields: [AnywayPaymentUpdate.Field]
+    mutating func updateExistingElements(
+        with updateFields: [AnywayPaymentUpdate.Field]
     ) {
         let updateFields = Dictionary(
             uniqueKeysWithValues: updateFields.map { ($0.name, $0) }
@@ -234,19 +234,19 @@ private extension Array where Element == AnywayElement {
         }
     }
     
-    mutating func appendComplementaryFields(
+    mutating func appendNewFields(
         from updateFields: [AnywayPaymentUpdate.Field]
     ) {
         let existingIDs = compactMap(\.stringID)
-        let complimentary: [Element] = updateFields
+        let newFields: [Element] = updateFields
             .filter { !existingIDs.contains($0.name) }
             .map(Element.Field.init)
             .map(Element.field)
         
-        self.append(contentsOf: complimentary)
+        self.append(contentsOf: newFields)
     }
     
-    mutating func appendParameters(
+    mutating func appendNewParameters(
         from updateParameters: [AnywayPaymentUpdate.Parameter],
         with outline: AnywayPaymentOutline
     ) {
