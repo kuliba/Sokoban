@@ -66,6 +66,8 @@ private extension TimedOTPInputView {
     ) -> some View {
         
         TextField("", text: .init(get: getText, set: setText))
+            .textContentType(.oneTimeCode)
+            .keyboardType(.numberPad)
     }
     
     @ViewBuilder
