@@ -969,6 +969,9 @@
 		2A7B5EE62AB068E6002F2D00 /* ComposedLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7B5EE52AB068E6002F2D00 /* ComposedLoginViewModel.swift */; };
 		2A7B5EEA2AB06EBE002F2D00 /* LandingButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7B5EE92AB06EBE002F2D00 /* LandingButtonsView.swift */; };
 		2A7B5EED2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7B5EEC2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift */; };
+		2A8050592C353DE50039557E /* AnywayInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8050582C353DE50039557E /* AnywayInfoView.swift */; };
+		2A80505B2C354A2E0039557E /* AnywayInfoViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80505A2C354A2E0039557E /* AnywayInfoViewConfig.swift */; };
+		2A80505D2C354A570039557E /* AnywayInfoViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80505C2C354A570039557E /* AnywayInfoViewConfig+iFora.swift */; };
 		2A80B5692AF4191B0009504C /* LiveCVVPINJSONMakerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80B5682AF4191B0009504C /* LiveCVVPINJSONMakerTests.swift */; };
 		2A80C6C42B6E209B00293FE5 /* MicroServices.Facade+live.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80C6C32B6E209B00293FE5 /* MicroServices.Facade+live.swift */; };
 		2A80C6C62B6E216400293FE5 /* MicroServices.Facade+stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A80C6C52B6E216400293FE5 /* MicroServices.Facade+stub.swift */; };
@@ -4045,6 +4048,9 @@
 		2A7B5EE52AB068E6002F2D00 /* ComposedLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedLoginViewModel.swift; sourceTree = "<group>"; };
 		2A7B5EE92AB06EBE002F2D00 /* LandingButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingButtonsView.swift; sourceTree = "<group>"; };
 		2A7B5EEC2AB073E7002F2D00 /* AuthLoginViewModel+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthLoginViewModel+preview.swift"; sourceTree = "<group>"; };
+		2A8050582C353DE50039557E /* AnywayInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayInfoView.swift; sourceTree = "<group>"; };
+		2A80505A2C354A2E0039557E /* AnywayInfoViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayInfoViewConfig.swift; sourceTree = "<group>"; };
+		2A80505C2C354A570039557E /* AnywayInfoViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayInfoViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A80B5682AF4191B0009504C /* LiveCVVPINJSONMakerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCVVPINJSONMakerTests.swift; sourceTree = "<group>"; };
 		2A80C6C32B6E209B00293FE5 /* MicroServices.Facade+live.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MicroServices.Facade+live.swift"; sourceTree = "<group>"; };
 		2A80C6C52B6E216400293FE5 /* MicroServices.Facade+stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MicroServices.Facade+stub.swift"; sourceTree = "<group>"; };
@@ -9429,6 +9435,8 @@
 			isa = PBXGroup;
 			children = (
 				2AA3A9432BFF8C3600AEBCC9 /* AnywayPaymentElementView.swift */,
+				2A8050582C353DE50039557E /* AnywayInfoView.swift */,
+				2A80505A2C354A2E0039557E /* AnywayInfoViewConfig.swift */,
 				2AB87C502C133FCB0013EFFE /* SimpleOTPWrapperView.swift */,
 				2AA3A93A2BFF8B1400AEBCC9 /* AnywayPaymentElementViewFactory.swift */,
 				2AA3A9382BFF8ADF00AEBCC9 /* AnywayPaymentElementConfig.swift */,
@@ -9510,6 +9518,7 @@
 				2A0EF2F12C1DB7AF003F094D /* SelectorViewConfig+iFora.swift */,
 				2A0EF2EB2C1DABB2003F094D /* ChevronViewConfig+iFora.swift */,
 				2AB109AE2C2C199500325D3A /* OTPWarningViewConfig+iFora.swift */,
+				2A80505C2C354A570039557E /* AnywayInfoViewConfig+iFora.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -17928,6 +17937,7 @@
 				0CA1CDE12840720200021671 /* AddressBookContact.swift in Sources */,
 				0BBC55FE2943318600B95E6C /* QRAccessViewComponent.swift in Sources */,
 				77C3829827E1FEAD00B5246E /* PaymentsProductSelectorViewComponent+Legacy.swift in Sources */,
+				2A80505B2C354A2E0039557E /* AnywayInfoViewConfig.swift in Sources */,
 				2A35DDB62C0243AB00EFF0EB /* Model+currencyOf.swift in Sources */,
 				503F074B28252D3B00E84A77 /* DepositCapitalizationView.swift in Sources */,
 				0BB24A9726EFE66900DDA4F6 /* GetPaymentCountriesList.swift in Sources */,
@@ -18738,6 +18748,7 @@
 				68FFA55F268BF2D2002DADFA /* TransferByRequisitesViewController.swift in Sources */,
 				2A2ECBBD2AE5242000F3C946 /* ResponseMapper.swift in Sources */,
 				2A3417802B7B9158002FAAFC /* UserAccountNavigationOTPReducer.swift in Sources */,
+				2A8050592C353DE50039557E /* AnywayInfoView.swift in Sources */,
 				77FF670B27BABCD9009FEA09 /* KeychainAgentProtocol.swift in Sources */,
 				ED08C70D28426FA900A49889 /* DocumentDelailCellViewComponent.swift in Sources */,
 				50239E9B2941253F00AA480B /* CheckBoxViewComponent.swift in Sources */,
@@ -19051,6 +19062,7 @@
 				68D06F2426C3C0F300F9BE4C /* MainViewControllerLayout.swift in Sources */,
 				0CEA3203287618CE005B80BA /* CreateTransterResponseData.swift in Sources */,
 				ED733D5E2858960C00F22D42 /* CurrencyData+Legacy.swift in Sources */,
+				2A80505D2C354A570039557E /* AnywayInfoViewConfig+iFora.swift in Sources */,
 				770DCE9627BBFA6D004099C1 /* RootViewHostingViewController.swift in Sources */,
 				0B3FE8E12704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift in Sources */,
 				0BE0BE052910760B0064549E /* QRViewModel.swift in Sources */,

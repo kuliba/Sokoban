@@ -11,6 +11,7 @@ extension AnywayElement {
     
     public enum Widget: Equatable {
         
+        case info(Info)
         case otp(Int?, String?)
         case product(Product)
     }
@@ -21,6 +22,7 @@ extension AnywayElement.Widget {
     public var id: ID {
         
         switch self {
+        case .info:     return .info
         case .otp:     return .otp
         case .product: return .product
         }
@@ -28,7 +30,30 @@ extension AnywayElement.Widget {
     
     public enum ID {
         
-        case otp, product
+        case info, otp, product
+    }
+    
+    public struct Info: Equatable {
+        
+        public let currency: Currency?
+        public let fields: [Field]
+        
+        public init(
+            currency: Currency?,
+            fields: [Field]
+        ) {
+            self.currency = currency
+            self.fields = fields
+        }
+        
+        public typealias Currency = String
+        
+        public enum Field: Equatable {
+            
+            case amount(Decimal)
+            case fee(Decimal)
+            case total(Decimal)
+        }
     }
     
     public struct Product: Equatable {
