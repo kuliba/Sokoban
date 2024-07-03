@@ -125,6 +125,15 @@ extension RootViewModelFactory {
             log: infoNetworkLog
         )
         
+        let blockCardServices = Services.makeBlockCardServices(
+                    httpClient: httpClient,
+                    log: infoNetworkLog
+                )
+
+        let productProfileServices = ProductProfileServices(
+                    createBlockCardService: blockCardServices,
+                    createUnblockCardService: unblockCardServices)
+        
         let productNavigationStateManager = ProductProfileFlowManager(
             reduce: makeProductProfileFlowReducer().reduce(_:_:),
             handleEffect: ProductNavigationStateEffectHandler().handleEffect
@@ -168,7 +177,7 @@ extension RootViewModelFactory {
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
-            unblockCardServices: unblockCardServices,
+            productProfileServices: productProfileServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
@@ -341,7 +350,7 @@ extension ProductProfileViewModel {
         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
-        unblockCardServices: UnblockCardServices,
+        productProfileServices: ProductProfileServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         productNavigationStateManager: ProductProfileFlowManager,
@@ -359,7 +368,7 @@ extension ProductProfileViewModel {
                 makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
-                unblockCardServices: unblockCardServices,
+                productProfileServices: productProfileServices,
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager,
@@ -424,7 +433,7 @@ extension ProductProfileViewModel {
                 makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
-                unblockCardServices: unblockCardServices,
+                productProfileServices: productProfileServices,
                 qrViewModelFactory: qrViewModelFactory,
                 paymentsTransfersFactory: paymentsTransfersFactory,
                 operationDetailFactory: operationDetailFactory,
