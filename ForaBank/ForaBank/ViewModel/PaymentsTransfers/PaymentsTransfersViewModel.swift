@@ -299,18 +299,17 @@ private extension PaymentsTransfersViewModel {
     
     func handle(latestPayment: LatestPaymentData) {
         
-        switch (latestPayment.type, latestPayment) {
-            
-        case (.internet, let paymentData),
-            (.service, let paymentData),
-            (.mobile, let paymentData),
-            (.outside, let paymentData),
-            (.phone, let paymentData),
-            (.transport, let paymentData),
-            (.taxAndStateService, let paymentData):
+        switch latestPayment.type {
+        case .internet,
+                .service,
+                .mobile,
+                .outside,
+                .phone,
+                .transport,
+                .taxAndStateService:
             
             let paymentsViewModel = PaymentsViewModel(
-                source: .latestPayment(paymentData.id),
+                source: .latestPayment(latestPayment.id),
                 model: model
             ) { [weak self] in
                 
