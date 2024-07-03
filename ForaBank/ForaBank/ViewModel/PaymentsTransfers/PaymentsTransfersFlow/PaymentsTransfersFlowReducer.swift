@@ -279,7 +279,7 @@ private extension PaymentsTransfersFlowReducer {
             payByInstructions(&state)
             
         case .payByInstructionsFromError:
-            state.destination = .payments(factory.makePaymentsViewModel(closeAction))
+            state.destination = .payments(factory.makePayByInstructionsViewModel(closeAction))
             
         case let .select(select):
             effect = .select(select)
@@ -327,7 +327,7 @@ private extension PaymentsTransfersFlowReducer {
     private func payByInstructions(
         _ state: inout State
     ) {
-        let viewModel = factory.makePaymentsViewModel(closeAction)
+        let viewModel = factory.makePayByInstructionsViewModel(closeAction)
         
         switch state.utilityPrepaymentDestination {
         case .none:

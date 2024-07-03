@@ -13,7 +13,7 @@ struct PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Conte
     let makeFraud: MakeFraudNoticePayload
     let makeUtilityPrepaymentState: MakeUtilityPrepaymentState
     let makeUtilityPaymentState: MakeUtilityPaymentState
-    let makePaymentsViewModel: MakePaymentsViewModel
+    let makePayByInstructionsViewModel: MakePayByInstructionsViewModel
 }
 
 extension PaymentsTransfersFlowReducerFactory {
@@ -31,5 +31,5 @@ extension PaymentsTransfersFlowReducerFactory {
     typealias MakeUtilityPaymentState = (AnywayTransactionState.Transaction, @escaping Notify) -> UtilityServicePaymentFlowState<PaymentViewModel>
     
     typealias CloseAction = () -> Void
-    typealias MakePaymentsViewModel = (@escaping CloseAction) -> PaymentsViewModel
+    typealias MakePayByInstructionsViewModel = (@escaping CloseAction) -> PaymentsViewModel
 }

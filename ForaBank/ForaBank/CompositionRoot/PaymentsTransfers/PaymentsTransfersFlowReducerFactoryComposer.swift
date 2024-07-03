@@ -51,7 +51,7 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
             makeFraud: makeFraudNoticePayload,
             makeUtilityPrepaymentState: makeUtilityPrepaymentState,
             makeUtilityPaymentState: makeUtilityPaymentState,
-            makePaymentsViewModel: makePayByInstructionsViewModel
+            makePayByInstructionsViewModel: makePayByInstructionsViewModel
         )
     }
     
