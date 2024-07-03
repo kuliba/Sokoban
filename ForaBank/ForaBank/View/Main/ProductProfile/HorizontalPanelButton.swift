@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HorizontalPanelButton: View {
     
-    let details: PanelButtonDetails
+    let details: ControlPanelButtonDetails
     let event: () -> Void
     let config: ControlPanelView.Config
     
