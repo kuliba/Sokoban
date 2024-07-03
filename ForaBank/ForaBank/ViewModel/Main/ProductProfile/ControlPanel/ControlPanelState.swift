@@ -13,12 +13,12 @@ struct ControlPanelState {
     
     var buttons: [ControlPanelButtonDetails]
     var status: Status?
-    var alert: AlertModelOf<Event>?
+    var alert: Alert.ViewModel?
 
     init(
         buttons: [ControlPanelButtonDetails],
         status: Status? = nil,
-        alert: AlertModelOf<Event>? = nil
+        alert: Alert.ViewModel? = nil
     ) {
         self.buttons = buttons
         self.status = status

@@ -13,4 +13,5 @@ enum ControlButtonEvent: Equatable {
     case unblockCard(ProductCardData)
     case changePin(ProductCardData)
     case visibility(ProductCardData)
+    case showAlert(ProductCardData)
 }

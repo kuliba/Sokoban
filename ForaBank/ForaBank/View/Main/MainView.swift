@@ -462,7 +462,6 @@ extension MainViewModel {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
-            controlPanelNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             updateInfoStatusFlag: .init(.active)
         ),
@@ -488,7 +487,6 @@ extension MainViewModel {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
-            controlPanelNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             updateInfoStatusFlag: .init(.active)
         ),
@@ -514,7 +512,6 @@ extension MainViewModel {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
-            controlPanelNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             updateInfoStatusFlag: .init(.active)
         ),

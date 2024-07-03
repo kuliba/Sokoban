@@ -138,12 +138,7 @@ extension RootViewModelFactory {
             reduce: makeProductProfileFlowReducer().reduce(_:_:),
             handleEffect: ProductNavigationStateEffectHandler().handleEffect
         )
-        
-        let controlPanelNavigationStateManager = ControlPanelFlowManager(
-            reduce: makeControlPanelFlowReducer().reduce(_:_:),
-            handleEffect: ControlPanelNavigationStateEffectHandler().handleEffect
-        )
-        
+                
         let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
             
             .init(
@@ -183,7 +178,6 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
-            controlPanelNavigationStateManager: controlPanelNavigationStateManager,
             makeCardGuardianPanel: makeCardGuardianPanel,
             updateInfoStatusFlag: updateInfoStatusFlag
         )
@@ -357,7 +351,6 @@ extension ProductProfileViewModel {
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         productNavigationStateManager: ProductProfileFlowManager,
-        controlPanelNavigationStateManager: ControlPanelFlowManager,
         makeCardGuardianPanel: @escaping ProductProfileViewModelFactory.MakeCardGuardianPanel,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> MakeProductProfileViewModel {
@@ -376,7 +369,6 @@ extension ProductProfileViewModel {
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager,
-                controlPanelNavigationStateManager: controlPanelNavigationStateManager,
                 makeCardGuardianPanel: makeCardGuardianPanel,
                 updateInfoStatusFlag: updateInfoStatusFlag
             )
@@ -445,7 +437,6 @@ extension ProductProfileViewModel {
                 cvvPINServicesClient: cvvPINServicesClient,
                 product: product, 
                 productNavigationStateManager: productNavigationStateManager,
-                controlPanelNavigationStateManager: controlPanelNavigationStateManager,
                 productProfileViewModelFactory: makeProductProfileViewModelFactory,
                 rootView: rootView,
                 dismissAction: dismissAction

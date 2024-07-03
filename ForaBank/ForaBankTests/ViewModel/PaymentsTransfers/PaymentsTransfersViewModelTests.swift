@@ -797,7 +797,6 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient, 
             productNavigationStateManager: .preview,
-            controlPanelNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             updateInfoStatusFlag: updateInfoStatusFlag
         )

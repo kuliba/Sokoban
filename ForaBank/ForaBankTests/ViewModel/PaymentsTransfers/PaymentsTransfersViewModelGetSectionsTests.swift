@@ -89,7 +89,6 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             qrViewModelFactory: .preview(),
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: ProductProfileFlowManager.preview,
-            controlPanelNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             updateInfoStatusFlag: .init(.inactive)
         )

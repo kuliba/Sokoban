@@ -504,7 +504,6 @@ extension ProductProfileViewModel {
         paymentsTransfersFactory: .preview,
         operationDetailFactory: .preview,
         productNavigationStateManager: .preview,
-        controlPanelNavigationStateManager: .preview,
         cvvPINServicesClient: HappyCVVPINServicesClient(),
         productProfileViewModelFactory: .preview,
         rootView: ""
@@ -525,7 +524,6 @@ extension ProductProfileViewModel {
         paymentsTransfersFactory: .preview,
         operationDetailFactory: .preview,
         productNavigationStateManager: .preview,
-        controlPanelNavigationStateManager: .preview,
         cvvPINServicesClient: SadCVVPINServicesClient(),
         productProfileViewModelFactory: .preview,
         rootView: ""
