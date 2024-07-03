@@ -221,8 +221,9 @@ private extension PaymentsTransfersFlowManagerComposer {
     ) -> (AnywayTransactionState.Transaction, @escaping NotifyStatus) -> UtilityServicePaymentFlowState<AnywayTransactionViewModel> {
         
         let elementMapper = AnywayElementModelMapper(
-            currencyOfProduct: self.currencyOfProduct,
-            getProducts: self.model.productSelectProducts,
+            currencyOfProduct: currencyOfProduct,
+            format: format,
+            getProducts: model.productSelectProducts,
             flag: flag.optionOrStub
         )
         
@@ -245,11 +246,20 @@ private extension PaymentsTransfersFlowManagerComposer {
                 .dropFirst()
                 .map(\.transaction.status)
                 .removeDuplicates()
-                .handleEvents(receiveOutput: { print("===>>>", ObjectIdentifier(viewModel), "notify: viewModel.$state.transaction.status:", $0 ?? "nil", #file, #line) })
+                .handleEvents(receiveOutput: {
+#if DEBUG || MOCK
+                    print("===>>>", ObjectIdentifier(viewModel), "notify: viewModel.$state.transaction.status:", $0 ?? "nil", "\(#file):\(#line)")
+#endif
+                })
                 .sink(receiveValue: notify)
             
             return .init(viewModel: viewModel, subscription: subscription)
         }
+    }
+    
+    private func format(currency: String?, amount: Decimal) -> String {
+        
+        return model.formatted(amount, with: currency ?? "") ?? ""
     }
     
     private func composeMicroServices(

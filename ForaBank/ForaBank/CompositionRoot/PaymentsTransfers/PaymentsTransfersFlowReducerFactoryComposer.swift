@@ -149,20 +149,41 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         payload: UtilityPrepaymentPayload
     ) -> UtilityFlowState {
         
-        let reducer = UtilityPrepaymentReducer(
+        let successReducer = UtilityPrepaymentSuccessReducer(
             observeLast: settings.observeLast
+        )
+        let reducer = UtilityPrepaymentReducer(
+            successReduce: successReducer.reduce(_:_:)
         )
         
         let effectHandler = UtilityPrepaymentEffectHandler(
             microServices: microServices
         )
         
+        let initialState: UtilityPrepaymentReducer.State = {
+            
+            struct NoOperatorsError: Error {}
+            
+            switch payload.operators {
+            case .none:
+                return .failure(NoOperatorsError())
+                
+            case let .some(operators):
+                if operators.isEmpty {
+                    return .failure(NoOperatorsError())
+                } else {
+                    
+                    return .success(.init(
+                        lastPayments: payload.lastPayments,
+                        operators: operators,
+                        searchText: ""
+                    ))
+                }
+            }
+        }()
+        
         let viewModel = UtilityPrepaymentViewModel(
-            initialState: .init(
-                lastPayments: payload.lastPayments,
-                operators: payload.operators,
-                searchText: ""
-            ),
+            initialState: initialState,
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:)
         )
@@ -175,6 +196,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
     typealias UtilityPrepaymentPayload = UtilityPrepaymentEvent.Initiated.UtilityPrepaymentPayload
     
+    typealias UtilityPrepaymentSuccessReducer = PrepaymentSuccessPickerReducer<UtilityPaymentLastPayment, UtilityPaymentOperator>
     typealias UtilityPrepaymentReducer = PrepaymentPickerReducer<UtilityPaymentLastPayment, UtilityPaymentOperator>
     typealias UtilityPrepaymentEffectHandler = PrepaymentPickerEffectHandler<UtilityPaymentOperator>
 }

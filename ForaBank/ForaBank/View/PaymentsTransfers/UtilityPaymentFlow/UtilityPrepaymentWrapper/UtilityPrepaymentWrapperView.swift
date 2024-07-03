@@ -105,7 +105,7 @@ private extension UtilityPrepaymentWrapperView {
         TextField(
             "Наименование или ИНН",
             text: .init(
-                get: { viewModel.state.searchText },
+                get: { viewModel.state.searchText ?? "" },
                 set: { viewModel.event(.search($0)) }
             )
         )
@@ -120,6 +120,17 @@ private extension UtilityPrepaymentWrapperView {
 }
 
 // MARK: - Helpers
+
+private extension UtilityPrepaymentState {
+    
+    var searchText: String? {
+        
+        guard case let .success(success) = self
+        else { return nil }
+        
+        return success.searchText
+    }
+}
 
 private extension UtilityPaymentOperator {
     

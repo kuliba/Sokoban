@@ -30,6 +30,9 @@ public final class AnywayPaymentContextValidator {
         case (true, .footerValidationError):
             return nil
             
+        case (true, .otpValidationError):
+            return nil
+            
         default:
             return error
         }

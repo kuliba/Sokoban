@@ -59,7 +59,7 @@ class ProductProfileViewModel: ObservableObject {
     private let makePaymentsTransfersFlowManager: MakePTFlowManger
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
-    private let unblockCardServices: UnblockCardServices
+    private let productProfileServices: ProductProfileServices
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let operationDetailFactory: OperationDetailFactory
@@ -92,7 +92,7 @@ class ProductProfileViewModel: ObservableObject {
          makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
          userAccountNavigationStateManager: UserAccountNavigationStateManager,
          sberQRServices: SberQRServices,
-         unblockCardServices: UnblockCardServices,
+         productProfileServices: ProductProfileServices,
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
          operationDetailFactory: OperationDetailFactory,
@@ -115,7 +115,7 @@ class ProductProfileViewModel: ObservableObject {
         self.makePaymentsTransfersFlowManager = makePaymentsTransfersFlowManager
         self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
-        self.unblockCardServices = unblockCardServices
+        self.productProfileServices = productProfileServices
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.operationDetailFactory = operationDetailFactory
@@ -154,7 +154,7 @@ class ProductProfileViewModel: ObservableObject {
         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
-        unblockCardServices: UnblockCardServices,
+        productProfileServices: ProductProfileServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         operationDetailFactory: OperationDetailFactory,
@@ -190,7 +190,7 @@ class ProductProfileViewModel: ObservableObject {
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
-            unblockCardServices: unblockCardServices,
+            productProfileServices: productProfileServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
             operationDetailFactory: operationDetailFactory,
@@ -1622,7 +1622,7 @@ private extension ProductProfileViewModel {
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
-            unblockCardServices: unblockCardServices,
+            productProfileServices: productProfileServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory, 
             operationDetailFactory: operationDetailFactory,
@@ -2010,7 +2010,7 @@ extension ProductProfileViewModel {
     enum CardGuardianPanelKind {
         
         case bottomSheet([PanelButtonDetails])
-        case fullScreen([PanelButtonDetails])
+        case fullScreen([ControlPanelButtonDetails])
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -2047,7 +2047,7 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
-        case controlPanel([PanelButtonDetails])
+        case controlPanel([ControlPanelButtonDetails])
     }
     
     struct Sheet: Identifiable {
@@ -2690,7 +2690,7 @@ extension ProductProfileViewModel {
         
         let cardNumber: String = model.product(productId: cardID)?.asCard?.number ?? ""
         
-        unblockCardServices.createUnblockCard(.init(cardId: .init(cardID), cardNumber: .init(cardNumber))) { result in
+        productProfileServices.createUnblockCardService.createUnblockCard(.init(cardId: .init(cardID), cardNumber: .init(cardNumber))) { result in
             switch result {
             case .failure:
                 completion(.serverError("failure"))

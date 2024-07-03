@@ -33,6 +33,7 @@ extension AnywayElementModel {
     
     enum Widget {
         
+        case info(Info)
         case product(ObservingProductSelectViewModel)
         case otp(OTPViewModel)
         case simpleOTP(SimpleOTPViewModel)
@@ -40,6 +41,18 @@ extension AnywayElementModel {
 }
 
 extension AnywayElementModel.Widget {
+    
+    struct Info: Equatable {
+        
+        let fields: [Field]
+        
+        enum Field: Equatable {
+            
+            case amount(String)
+            case fee(String)
+            case total(String)
+        }
+    }
     
     typealias OTPViewModel = TimedOTPInputViewModel
     typealias SimpleOTPViewModel = RxObservingViewModel<OTPState, OTPEvent, OTPEffect>

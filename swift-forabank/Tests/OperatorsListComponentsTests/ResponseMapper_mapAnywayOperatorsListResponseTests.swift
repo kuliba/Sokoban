@@ -5,8 +5,9 @@
 //  Created by Дмитрий Савушкин on 19.02.2024.
 //
 
-import XCTest
 import OperatorsListComponents
+import RemoteServices
+import XCTest
 
 final class ResponseMapper_mapAnywayOperatorsListResponseTests: XCTestCase {
     
@@ -76,6 +77,18 @@ final class ResponseMapper_mapAnywayOperatorsListResponseTests: XCTestCase {
         let result = map(validData)
         
         assert(result, equals: .failure(.invalid(statusCode: 200, data: validData)))
+    }
+    
+    func test_prod_shouldDeliverOperators() throws {
+        
+        let bundle = Bundle.module
+        let getOperatorsListByParam_prodURL = bundle.url(forResource: "getOperatorsListByParam_prod", withExtension: "json")
+        let url = try XCTUnwrap(getOperatorsListByParam_prodURL)
+        let data = try Data(contentsOf: url)
+        
+        let list = try map(data).get()
+        
+        XCTAssertNoDiff(list.count, 20_848)
     }
     
     // MARK: - Helpers

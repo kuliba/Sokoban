@@ -63,6 +63,7 @@ extension Services {
         enum ServiceName: String {
             
             case bindPublicKeyWithEventId
+            case blockCard
             case changeClientConsentMe2MePull
             case changePIN
             case createAnywayTransfer
@@ -359,6 +360,12 @@ extension Services.Endpoint {
         serviceName: .showCVV
     )
     
+    static let blockCard: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .blockCard
+    )
+
     static let unblockCard: Self = .init(
         pathPrefix: .rest,
         version: .none,
