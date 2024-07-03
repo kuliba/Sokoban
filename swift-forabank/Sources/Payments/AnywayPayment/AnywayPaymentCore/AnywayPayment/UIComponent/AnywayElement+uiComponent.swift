@@ -82,6 +82,7 @@ extension AnywayElement.UIComponent {
     
     public enum Widget: Equatable {
         
+        case info(AnywayElement.Widget.Info)
         case otp(Int?, String?)
         case productPicker(ProductID, ProductType)
         
@@ -197,6 +198,9 @@ private extension AnywayElement.Widget {
     var uiComponent: AnywayElement.UIComponent {
         
         switch self {
+        case let .info(info):
+            return .widget(.info(info))
+            
         case let .product(core):
             return .widget(.productPicker(core.productID, core.productType))
             
