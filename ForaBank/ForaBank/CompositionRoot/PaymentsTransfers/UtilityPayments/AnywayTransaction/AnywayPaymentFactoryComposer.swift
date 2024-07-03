@@ -7,6 +7,8 @@
 
 import AnywayPaymentCore
 import AnywayPaymentDomain
+import Combine
+import ForaTools
 import OTPInputComponent
 import PaymentComponents
 import RxViewModel
@@ -64,7 +66,7 @@ extension AnywayPaymentFactoryComposer {
     
     typealias UIComponent = AnywayPaymentDomain.AnywayElement.UIComponent
     typealias IconView = UIPrimitives.AsyncImage
-    typealias MakeIconView = (String) -> IconView
+    typealias MakeIconView = (UIComponent.Icon?) -> IconView
     
     typealias Factory = AnywayPaymentFactory<IconView>
 }
@@ -102,7 +104,7 @@ private extension AnywayPaymentFactoryComposer {
                 makeOptionLabel: {
                     
                     SimpleLabel(
-                        text: $0.value, 
+                        text: $0.value,
                         makeIconView: { Image.ic24RadioDefolt }
                     )
                 },
@@ -112,20 +114,7 @@ private extension AnywayPaymentFactoryComposer {
             config: .iFora(title: title)
         )
     }
-    
-    private func makeIconView(
-        _  icon: AnywayElement.UIComponent.Icon?
-    ) -> IconView {
         
-        switch icon {
-        case let .md5Hash(md5Hash):
-            return makeIconView(md5Hash)
-            
-        default:
-            return makeIconView("placeholder")
-        }
-    }
-    
     typealias Option = UIComponent.Parameter.ParameterType.Option
     
     typealias Observe = (ProductID, Currency) -> Void
@@ -148,7 +137,7 @@ private extension AnywayPaymentFactoryComposer {
         return .init(
             viewModel: viewModel, 
             config: .iFora,
-            iconView: { self.makeIconView("sms") },
+            iconView: { Image("sms") },
             warningView: {
                 
                 OTPWarningView(text: viewModel.state.warning, config: .iFora)
