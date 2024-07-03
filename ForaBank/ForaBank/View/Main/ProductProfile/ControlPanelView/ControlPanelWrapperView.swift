@@ -2,7 +2,7 @@
 //  ControlPanelWrapperView.swift
 //  ForaBank
 //
-//  Created by Andryusina Nataly on 28.06.2024.
+//  Created by Andryusina Nataly on 03.07.2024.
 //
 
 import SwiftUI
