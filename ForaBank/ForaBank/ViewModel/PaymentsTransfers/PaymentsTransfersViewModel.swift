@@ -154,6 +154,8 @@ extension PaymentsTransfersViewModel {
         
         if let outside = route.outside {
             handleOutside(outside)
+        } else if let legacy = route.legacy {
+            handle(legacy)
         } else {
             routeSubject.send(route)
             effect.map(handleEffect(_:))
@@ -346,9 +348,13 @@ extension PaymentsTransfersViewModel {
         
         var destination: _Link<LastPayment, Operator, UtilityService, Content, PaymentViewModel>?
         var modal: Modal?
+        
         /// - Note: not ideal, but modelling `Route` as an enum to remove impossible states
         /// would lead to significant complications
         var outside: Outside?
+        
+        /// - Note: moving some of the existing code into the reducer is beyond trivial, so this field is used to get state changing mechanics back to view model
+        var legacy: PaymentTriggerState.Legacy?
         
         enum Outside { case chat, main }
         
@@ -688,6 +694,15 @@ private extension PaymentsTransfersViewModel {
         }
     }
     
+    private func handle(
+        _ legacy: PaymentTriggerState.Legacy
+    ) {
+        switch legacy {
+        case let .latestPayment(latestPayment):
+            handle(latestPayment: latestPayment)
+        }
+    }
+    
     private func delay(
         for timeout: DispatchTimeInterval,
         _ action: @escaping () -> Void
@@ -922,7 +937,7 @@ private extension PaymentsTransfersViewModel {
             switch action {
                 //LatestPayments Section Buttons
             case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
-                handle(latestPayment: payload.latestPayment)
+                event(.paymentTrigger(.latestPayment(payload.latestPayment)))
                 
                 //LatestPayment Section TemplateButton
             case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:

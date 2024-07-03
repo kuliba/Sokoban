@@ -182,10 +182,29 @@ private extension PaymentsTransfersFlowManagerComposer {
         
         let makeReducer = {
             
-            FlowReducer(factory: factory, closeAction: $0, notify: $1)
+            FlowReducer(
+                handlePaymentTriggerEvent: self.handlePaymentTriggerEvent,
+                factory: factory,
+                closeAction: $0,
+                notify: $1
+            )
         }
         
         return { makeReducer($0, $1).reduce(_:_:) }
+    }
+    
+    private func handlePaymentTriggerEvent(
+        event: PaymentTriggerEvent
+    ) -> (PaymentTriggerState) {
+        
+        switch event {
+        case let .latestPayment(latestPaymentData):
+            if flag.isActive {
+                return .v1
+            } else {
+                return .legacy(.latestPayment(latestPaymentData))
+            }
+        }
     }
     
     typealias ReducerFactory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Content, PaymentViewModel>

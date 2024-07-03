@@ -10,21 +10,25 @@ import Foundation
 
 final class PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel> {
     
+    private let handlePaymentTriggerEvent: HandlePaymentTriggerEvent
     private let factory: Factory
     private let notify: Factory.Notify
     private let closeAction: () -> Void
     
     init(
+        handlePaymentTriggerEvent: @escaping HandlePaymentTriggerEvent,
         factory: Factory,
         closeAction: @escaping () -> Void,
         notify: @escaping Factory.Notify
     ) {
+        self.handlePaymentTriggerEvent = handlePaymentTriggerEvent
         self.factory = factory
         self.closeAction = closeAction
         self.notify = notify
     }
     
     typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Content, PaymentViewModel>
+    typealias HandlePaymentTriggerEvent = (PaymentTriggerEvent) -> (PaymentTriggerState)
 }
 
 extension PaymentsTransfersFlowReducer {
@@ -46,6 +50,9 @@ extension PaymentsTransfersFlowReducer {
             
         case let .paymentButtonTapped(paymentButton):
             (state, effect) = reduce(state, paymentButton)
+         
+        case let .paymentTrigger(event):
+            reduce(&state, &effect, with: event)
             
         case let .setModal(to: modal):
             state.modal = modal
@@ -110,6 +117,20 @@ private extension PaymentsTransfersFlowReducer {
     
     private typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
     private typealias UtilityPrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
+    
+    private func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with event: PaymentTriggerEvent
+    ) {
+        switch handlePaymentTriggerEvent(event) {
+        case let .legacy(legacy):
+            state.legacy = legacy
+            
+        case .v1:
+            return
+        }
+    }
     
     private func reduce(
         _ state: State,
