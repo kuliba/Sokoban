@@ -71,6 +71,10 @@ private extension AnywayPaymentElementView {
     ) -> some View {
         
         switch widget {
+        case let .info(info):
+            AnywayInfoView(fields: info.fields, config: .iFora)
+                .paddedRoundedBackground()
+            
         case let .otp(viewModel):
             factory.widgetFactory.makeOTPView(viewModel)
                 .paddedRoundedBackground()

@@ -30,6 +30,11 @@ extension AnywayPayment {
         }
         
         elements.addIfMissing(
+            widget: .info(.init(update)),
+            condition: update.details.control.needOTP
+        )
+        
+        elements.addIfMissing(
             widget: .otp(nil, nil),
             condition: update.details.control.needOTP
         )
@@ -41,6 +46,21 @@ extension AnywayPayment {
             elements: elements,
             footer: footer,
             isFinalStep: update.details.control.isFinalStep
+        )
+    }
+}
+
+private extension AnywayElement.Widget.Info {
+    
+    init(_ update: AnywayPaymentUpdate) {
+        
+        self.init(
+            currency: update.details.amounts.currencyPayer,
+            fields: [
+                update.details.amounts.amount.map { .amount($0) },
+                update.details.amounts.fee.map { .fee($0) },
+                update.details.amounts.debitAmount.map { .total($0) }
+            ].compactMap { $0 }
         )
     }
 }
