@@ -2374,6 +2374,12 @@
 		83378ABF2AA0DFE20087F8B1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83378ABE2AA0DFE20087F8B1 /* Preview Assets.xcassets */; };
 		833AF9662A93922A00C3DF54 /* ProductSelectorViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */; };
 		833D3E212C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D3E202C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift */; };
+		833D3E512C352D57006626F2 /* RequestFactory+createBlockCardRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D3E502C352D57006626F2 /* RequestFactory+createBlockCardRequest.swift */; };
+		833D3E532C352D8E006626F2 /* Services+makeBlockCardServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D3E522C352D8E006626F2 /* Services+makeBlockCardServices.swift */; };
+		833D3E552C352E89006626F2 /* BlockCardServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D3E542C352E89006626F2 /* BlockCardServices.swift */; };
+		833D3E572C352EC6006626F2 /* ProductProfileServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D3E562C352EC6006626F2 /* ProductProfileServices.swift */; };
+		833D3E592C35417C006626F2 /* ControlPanelButtonDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D3E582C35417B006626F2 /* ControlPanelButtonDetails.swift */; };
+		833D3E632C35431E006626F2 /* ControlButtonEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D3E5A2C35431E006626F2 /* ControlButtonEvent.swift */; };
 		833E87232B920027009A01AB /* TopUpCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833E87222B920027009A01AB /* TopUpCardView.swift */; };
 		833E87292B94C60A009A01AB /* ProductProfileComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 833E87282B94C60A009A01AB /* ProductProfileComponents */; };
 		833EC1122BBEA56F0050ABE9 /* ProductAlertsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833EC1112BBEA56F0050ABE9 /* ProductAlertsViewModel.swift */; };
@@ -5409,6 +5415,12 @@
 		83378ABE2AA0DFE20087F8B1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		833AF9652A93922A00C3DF54 /* ProductSelectorViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectorViewTests.swift; sourceTree = "<group>"; };
 		833D3E202C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ControlPanelPanelViewConfig+ext.swift"; sourceTree = "<group>"; };
+		833D3E502C352D57006626F2 /* RequestFactory+createBlockCardRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createBlockCardRequest.swift"; sourceTree = "<group>"; };
+		833D3E522C352D8E006626F2 /* Services+makeBlockCardServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services+makeBlockCardServices.swift"; sourceTree = "<group>"; };
+		833D3E542C352E89006626F2 /* BlockCardServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockCardServices.swift; sourceTree = "<group>"; };
+		833D3E562C352EC6006626F2 /* ProductProfileServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductProfileServices.swift; sourceTree = "<group>"; };
+		833D3E582C35417B006626F2 /* ControlPanelButtonDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlPanelButtonDetails.swift; sourceTree = "<group>"; };
+		833D3E5A2C35431E006626F2 /* ControlButtonEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlButtonEvent.swift; sourceTree = "<group>"; };
 		833E87222B920027009A01AB /* TopUpCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopUpCardView.swift; sourceTree = "<group>"; };
 		833E872A2B94CA07009A01AB /* ProductProfileComponents.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ProductProfileComponents.xctestplan; sourceTree = "<group>"; };
 		833EC1112BBEA56F0050ABE9 /* ProductAlertsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAlertsViewModel.swift; sourceTree = "<group>"; };
@@ -8358,6 +8370,7 @@
 				2AEF68662AE58FDC00E0EBD7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift */,
 				2A2ECBBE2AE5251C00F3C946 /* RequestFactory+makeGetProcessingSessionCode.swift */,
 				2A5190332A7E108A0014B0B7 /* RequestFactory+makeSecretRequest.swift */,
+				833D3E502C352D57006626F2 /* RequestFactory+createBlockCardRequest.swift */,
 				2AEF68642AE575C900E0EBD7 /* RequestFactory+makeSecretRequest2.swift */,
 				2A58FAA82AD70D5C00BD1967 /* RequestFactory+makeGetPINConfirmationCodeRequest.swift */,
 				2A58FAAC2AD71DD600BD1967 /* RequestFactory+makeChangePINRequest.swift */,
@@ -11419,6 +11432,7 @@
 				83CE89F62BC40178008CA98C /* ProductProfileViewModel+AccountInfoPanel.swift */,
 				839E53062BC996EC007192C2 /* ProductProfileViewModel+createCardGuardianPanel.swift */,
 				832F2D4C2BC9205600221360 /* ProductProfileViewModel+createTopUpPanel.swift */,
+				833D3E622C35431E006626F2 /* ControlPanel */,
 				83CE89FA2BC417BA008CA98C /* ProductNavigationStateManager+ButtonEvent.swift */,
 				C16157242C2A894A000EFC3A /* ProductProfileFlowManager.swift */,
 				8394B2F22BBF2F5C0078CB10 /* AlertReducer.swift */,
@@ -11945,6 +11959,7 @@
 				508F5690285A45BF0017233A /* OpenAccountPrepareData.swift */,
 				506968DD285B14530018DEFD /* OpenAccountMakeData.swift */,
 				5A5ABF8927AAF53000D548AA /* OperationDetailData.swift */,
+				833D3E582C35417B006626F2 /* ControlPanelButtonDetails.swift */,
 				5A5ABFB227ABCA5100D548AA /* DepositInfoDataItem.swift */,
 				7772979E27C8EADF0099EF91 /* CatalogProductData.swift */,
 				6830A02127D37821003CA4F1 /* DepositProductData.swift */,
@@ -13179,6 +13194,8 @@
 			isa = PBXGroup;
 			children = (
 				831CCF3E2BEA400200DE7D64 /* UnblockCardServices.swift */,
+				833D3E542C352E89006626F2 /* BlockCardServices.swift */,
+				833D3E562C352EC6006626F2 /* ProductProfileServices.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -13261,6 +13278,14 @@
 				83378ABE2AA0DFE20087F8B1 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		833D3E622C35431E006626F2 /* ControlPanel */ = {
+			isa = PBXGroup;
+			children = (
+				833D3E5A2C35431E006626F2 /* ControlButtonEvent.swift */,
+			);
+			path = ControlPanel;
 			sourceTree = "<group>";
 		};
 		8343FE2B2BB2A07600D0C128 /* GetProductListByTypeService */ = {
@@ -13376,6 +13401,7 @@
 			children = (
 				C16157262C2A89A4000EFC3A /* Reducer+makeProductProfileFlowReducer.swift */,
 				835D0DF22BEA576300FFE90B /* Services+makeUnblockCardServices.swift */,
+				833D3E522C352D8E006626F2 /* Services+makeBlockCardServices.swift */,
 			);
 			path = ProductProfile;
 			sourceTree = "<group>";
@@ -17976,6 +18002,7 @@
 				774A8B3B2865FCDD00B81140 /* UserAccountSecurityView.swift in Sources */,
 				5A5ABF8A27AAF53000D548AA /* OperationDetailData.swift in Sources */,
 				0B8C1C62273DD0DF00BA5CAC /* PushHistoryCell.swift in Sources */,
+				833D3E512C352D57006626F2 /* RequestFactory+createBlockCardRequest.swift in Sources */,
 				77D2D9AE275AB90A0097234D /* RealmResults+Extension.swift in Sources */,
 				6863EF6B2716D095008FD522 /* MTSlideToOpenControl.swift in Sources */,
 				ED234CD2276BA08300B23985 /* JSONCodingKeyJSONAny.swift in Sources */,
@@ -18277,6 +18304,7 @@
 				68EACA5328909AF200B27B50 /* C2BDetailsViewController+Legacy.swift in Sources */,
 				2A218D10299C1583002C313D /* Sequence+Extension.swift in Sources */,
 				77F5CE1528060A9600611B66 /* AtmCityData.swift in Sources */,
+				833D3E572C352EC6006626F2 /* ProductProfileServices.swift in Sources */,
 				ED0AF88B286B3C2C00F86B68 /* ImagePicker.swift in Sources */,
 				C1A2CCE328DB7348009436D6 /* DepositCloseNotification.swift in Sources */,
 				503F073E28252CBA00E84A77 /* DepositBottomSheetViewModel.swift in Sources */,
@@ -18664,6 +18692,7 @@
 				832F2D4D2BC9205600221360 /* ProductProfileViewModel+createTopUpPanel.swift in Sources */,
 				77499C412773A40100F6C079 /* OperationDetailView.swift in Sources */,
 				840749972AE67C5E000A7352 /* ConfigSticker.swift in Sources */,
+				833D3E552C352E89006626F2 /* BlockCardServices.swift in Sources */,
 				ED84994B26A6FEE3005205C6 /* CountryListCell.swift in Sources */,
 				77D73EE42909481500A956A3 /* Model+PaymentsProcess.swift in Sources */,
 				77B6B3542850961A00E3001B /* Period.swift in Sources */,
@@ -18915,6 +18944,7 @@
 				0B37F97E267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift in Sources */,
 				503B164E2889853F009F4CE3 /* CurrencyListViewModelMock.swift in Sources */,
 				83B5DBF32A54B192006B0D6C /* ProductViewComponentPreviewContent.swift in Sources */,
+				833D3E532C352D8E006626F2 /* Services+makeBlockCardServices.swift in Sources */,
 				774A8B382865FCDD00B81140 /* UserAccountDocumentsView.swift in Sources */,
 				2AA3A96C2BFF91CB00AEBCC9 /* AnywayPaymentFooter.swift in Sources */,
 				ED8AB45526C116DB006F0D03 /* MeToMeViewController.swift in Sources */,
@@ -19005,6 +19035,7 @@
 				2AC2ADCA2B22FDF70049EE9B /* QRResolverFeatureFlag.swift in Sources */,
 				2AEF68652AE575C900E0EBD7 /* RequestFactory+makeSecretRequest2.swift in Sources */,
 				0B931B1E26DCD83B00CA8017 /* GKHAdditionalListModel.swift in Sources */,
+				833D3E632C35431E006626F2 /* ControlButtonEvent.swift in Sources */,
 				2AE2B9AE2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift in Sources */,
 				A5C7A1B1275BF0B9003BEF6D /* InternetTVApiRequests.swift in Sources */,
 				0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */,
@@ -19119,6 +19150,7 @@
 				68E76524278D5F1F005860FE /* AntifraudViewHostingController.swift in Sources */,
 				2A2AB2F82AF77E0E004023CD /* Services+cvvPINServicesClient.swift in Sources */,
 				83CE89FD2BC43074008CA98C /* PanelView.swift in Sources */,
+				833D3E592C35417C006626F2 /* ControlPanelButtonDetails.swift in Sources */,
 				0B7A18C526852EFC0007CC75 /* MakeTransferDecodableModel.swift in Sources */,
 				A5B55E9E27E2626B00C0B695 /* СreateFastPaymentContractRequest.swift in Sources */,
 				0CA1CDE52840726F00021671 /* ContactsAgentProtocol.swift in Sources */,

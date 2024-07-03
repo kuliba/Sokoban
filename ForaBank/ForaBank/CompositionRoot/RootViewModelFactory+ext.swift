@@ -125,6 +125,15 @@ extension RootViewModelFactory {
             log: infoNetworkLog
         )
         
+        let blockCardServices = Services.makeBlockCardServices(
+                    httpClient: httpClient,
+                    log: infoNetworkLog
+                )
+
+        let productProfileServices = ProductProfileServices(
+                    createBlockCardService: blockCardServices,
+                    createUnblockCardService: unblockCardServices)
+        
         let productNavigationStateManager = ProductProfileFlowManager(
             reduce: makeProductProfileFlowReducer().reduce(_:_:),
             handleEffect: ProductNavigationStateEffectHandler().handleEffect
@@ -149,14 +158,11 @@ extension RootViewModelFactory {
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
 
-        let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = { card in
-            
-            let buttons: [PanelButtonDetails] = .cardGuardian(card, changeSVCardLimitsFlag)
-
+        let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = {
             if changeSVCardLimitsFlag.isActive {
-                return .fullScreen(buttons)
+                return .fullScreen(.cardGuardian($0, changeSVCardLimitsFlag))
             } else {
-                return .bottomSheet(buttons)
+                return .bottomSheet(.cardGuardian($0, changeSVCardLimitsFlag))
             }
         }
 
@@ -168,7 +174,7 @@ extension RootViewModelFactory {
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
-            unblockCardServices: unblockCardServices,
+            productProfileServices: productProfileServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
@@ -341,7 +347,7 @@ extension ProductProfileViewModel {
         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
-        unblockCardServices: UnblockCardServices,
+        productProfileServices: ProductProfileServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         productNavigationStateManager: ProductProfileFlowManager,
@@ -359,7 +365,7 @@ extension ProductProfileViewModel {
                 makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
-                unblockCardServices: unblockCardServices,
+                productProfileServices: productProfileServices,
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager,
@@ -424,7 +430,7 @@ extension ProductProfileViewModel {
                 makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
-                unblockCardServices: unblockCardServices,
+                productProfileServices: productProfileServices,
                 qrViewModelFactory: qrViewModelFactory,
                 paymentsTransfersFactory: paymentsTransfersFactory,
                 operationDetailFactory: operationDetailFactory,
