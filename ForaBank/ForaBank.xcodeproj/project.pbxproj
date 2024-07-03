@@ -2496,6 +2496,7 @@
 		840749972AE67C5E000A7352 /* ConfigSticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840749962AE67C5E000A7352 /* ConfigSticker.swift */; };
 		841138992AE9B37300B79DC0 /* StickerBannerInProductListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841138982AE9B37300B79DC0 /* StickerBannerInProductListData.swift */; };
 		8431A2562AEBE76800E60CB8 /* UserAccountViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8431A2552AEBE76800E60CB8 /* UserAccountViewModelTests.swift */; };
+		843487E72C342C9800671784 /* DepositCalculateAmountViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843487E42C342C9800671784 /* DepositCalculateAmountViewModelTests.swift */; };
 		A50869DA2767F394004C5E17 /* InternetTVSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50869D82767F394004C5E17 /* InternetTVSuccessView.swift */; };
 		A50869DB2767F394004C5E17 /* InternetTVSuccess.xib in Resources */ = {isa = PBXBuildFile; fileRef = A50869D92767F394004C5E17 /* InternetTVSuccess.xib */; };
 		A50869DD2768CA4A004C5E17 /* InternetTVSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50869DC2768CA4A004C5E17 /* InternetTVSourceView.swift */; };
@@ -5517,6 +5518,7 @@
 		840749962AE67C5E000A7352 /* ConfigSticker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigSticker.swift; sourceTree = "<group>"; };
 		841138982AE9B37300B79DC0 /* StickerBannerInProductListData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerBannerInProductListData.swift; sourceTree = "<group>"; };
 		8431A2552AEBE76800E60CB8 /* UserAccountViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAccountViewModelTests.swift; sourceTree = "<group>"; };
+		843487E42C342C9800671784 /* DepositCalculateAmountViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositCalculateAmountViewModelTests.swift; sourceTree = "<group>"; };
 		A50869D82767F394004C5E17 /* InternetTVSuccessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVSuccessView.swift; sourceTree = "<group>"; };
 		A50869D92767F394004C5E17 /* InternetTVSuccess.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InternetTVSuccess.xib; sourceTree = "<group>"; };
 		A50869DC2768CA4A004C5E17 /* InternetTVSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVSourceView.swift; sourceTree = "<group>"; };
@@ -13097,6 +13099,7 @@
 			isa = PBXGroup;
 			children = (
 				C152489C2B83A67F0043F412 /* MyProducts */,
+				843487E62C342C9800671784 /* OpenDeposit */,
 				2AAA02802B3AFF300048A4EA /* UserAccount */,
 				77ED5FA92A2F78C0001BFA3D /* ProductProfile */,
 				2A9581682AB98FBE009698F5 /* MainViewModelTests.swift */,
@@ -13490,6 +13493,22 @@
 				8431A2552AEBE76800E60CB8 /* UserAccountViewModelTests.swift */,
 			);
 			path = UserAccount;
+			sourceTree = "<group>";
+		};
+		843487E52C342C9800671784 /* DepositCalculator */ = {
+			isa = PBXGroup;
+			children = (
+				843487E42C342C9800671784 /* DepositCalculateAmountViewModelTests.swift */,
+			);
+			path = DepositCalculator;
+			sourceTree = "<group>";
+		};
+		843487E62C342C9800671784 /* OpenDeposit */ = {
+			isa = PBXGroup;
+			children = (
+				843487E52C342C9800671784 /* DepositCalculator */,
+			);
+			path = OpenDeposit;
 			sourceTree = "<group>";
 		};
 		A50869DE27690CB0004C5E17 /* success */ = {
@@ -19562,6 +19581,7 @@
 				2AB95DA22A0C0D5800044969 /* ContactsViewModelModeTests.swift in Sources */,
 				2AEDAD4A29A4ECE400017F73 /* Model+PaymentsTransferMobileConnectionTests.swift in Sources */,
 				2A9338632A17CF1200397C88 /* PhoneValidatorTests.swift in Sources */,
+				843487E72C342C9800671784 /* DepositCalculateAmountViewModelTests.swift in Sources */,
 				2A6481FB2A1C97E5005CC17A /* UpdateMaskedTransformerTests.swift in Sources */,
 				684192DA279998F800B4E184 /* ProductStatementDataTests.swift in Sources */,
 				2A0D9B7B2B0E1A7800F1DFD1 /* RequestFactory+createGetPrintFormRequestTests.swift in Sources */,
