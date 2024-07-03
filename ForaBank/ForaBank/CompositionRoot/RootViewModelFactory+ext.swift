@@ -163,12 +163,11 @@ extension RootViewModelFactory {
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
 
-        let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = { card in
-            
+        let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = {
             if changeSVCardLimitsFlag.isActive {
-                return .fullScreen(.cardGuardian(card, changeSVCardLimitsFlag))
+                return .fullScreen(.cardGuardian($0, changeSVCardLimitsFlag))
             } else {
-                return .bottomSheet(.cardGuardian(card, changeSVCardLimitsFlag))
+                return .bottomSheet(.cardGuardian($0, changeSVCardLimitsFlag))
             }
         }
 

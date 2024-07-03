@@ -124,7 +124,10 @@ extension Array where Element == PanelButtonDetails {
 
 private extension ControlPanelButtonDetails {
     
-    static func createCardGuardianButton(by card: ProductCardData, _ flag: ChangeSVCardLimitsFlag) -> Self {
+    static func createCardGuardianButton(
+        by card: ProductCardData,
+        _ flag: ChangeSVCardLimitsFlag
+    ) -> Self {
         
         return .init(
             id: card.id,
