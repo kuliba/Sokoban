@@ -109,8 +109,8 @@ private extension AnywayElementModelMapper {
         event: @escaping (AnywayPaymentEvent) -> Void
     ) -> ObservingInputViewModel {
         
-        let inputState = InputState(parameter)
-        let reducer = InputReducer<String>()
+        let inputState = InputState.init(parameter)
+        let reducer = InputReducer<AnywayElement.UIComponent.Icon?>()
         
         return .init(
             initialState: inputState,
@@ -308,10 +308,9 @@ private extension TimedOTPInputViewModel {
     }
 }
 
-private extension InputState where Icon == String {
+private extension InputState where Icon == AnywayElement.UIComponent.Icon? {
     
-#warning("FIXME: replace stubbed with values from parameter")
-    init(_ parameter: AnywayPaymentDomain.AnywayElement.UIComponent.Parameter) {
+    init(_ parameter: Parameter) {
         
         self.init(
             dynamic: .init(
@@ -320,13 +319,15 @@ private extension InputState where Icon == String {
             ),
             settings: .init(
                 hint: nil,
-                icon: "",
+                icon: parameter.icon,
                 keyboard: .default,
                 title: parameter.title,
                 subtitle: parameter.subtitle
             )
         )
     }
+    
+    typealias Parameter = AnywayPaymentDomain.AnywayElement.UIComponent.Parameter
 }
 
 private extension Selector where T == AnywayElement.UIComponent.Parameter.ParameterType.Option {

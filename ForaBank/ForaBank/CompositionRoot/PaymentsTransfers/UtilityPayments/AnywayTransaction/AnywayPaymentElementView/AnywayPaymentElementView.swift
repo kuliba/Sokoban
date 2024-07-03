@@ -51,7 +51,7 @@ private extension AnywayPaymentElementView {
         PaymentComponents.InfoView(
             info: field.info,
             config: config,
-            icon: { makeIconView(field) }
+            icon: { factory.makeIconView(field.icon) }
         )
     }
     
@@ -63,14 +63,6 @@ private extension AnywayPaymentElementView {
             parameter: parameter,
             factory: factory.parameterFactory
         )
-    }
-    
-    func makeIconView(
-        _ field: AnywayPaymentDomain.AnywayElement.UIComponent.Field
-    ) -> some View {
-        
-#warning("FIX hardcoded value")
-        return factory.makeIconView("placeholder")
     }
     
     @ViewBuilder

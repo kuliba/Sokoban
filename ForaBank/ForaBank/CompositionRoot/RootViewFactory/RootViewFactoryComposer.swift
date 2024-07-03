@@ -138,6 +138,28 @@ private extension RootViewFactoryComposer {
     typealias IconView = UIPrimitives.AsyncImage
     
     private func makeIconView(
+        _  icon: AnywayElement.UIComponent.Icon?
+    ) -> IconView {
+        
+        switch icon {
+        case .none:
+            return makeIconView("placeholder")
+            
+        case let .md5Hash(md5Hash):
+            return makeIconView(md5Hash)
+            
+        case let .svg(svg):
+            return .init(
+                image: .init(svg: svg) ?? .init("placeholder"),
+                publisher: Empty().eraseToAnyPublisher()
+            )
+            
+        case let .withFallback(md5Hash: md5Hash, svg: _):
+            return makeIconView(md5Hash)
+        }
+    }
+
+    private func makeIconView(
         _ icon: String
     ) -> IconView {
         
