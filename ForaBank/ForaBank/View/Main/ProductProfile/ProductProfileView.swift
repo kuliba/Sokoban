@@ -9,6 +9,7 @@ import ActivateSlider
 import ForaTools
 import InfoComponent
 import PinCodeUI
+import RxViewModel
 import SberQR
 import SwiftUI
 
@@ -174,7 +175,13 @@ struct ProductProfileView: View {
         
         switch link {
         case let .controlPanel(items):
-            ControlPanelView(items: items, event: {_ in })
+            
+            ControlPanelWrapperView(
+                viewModel: .init(
+                    initialState: .init(buttons: items), 
+                    reduce: { state, _ in  (state, nil) },
+                    handleEffect: {_,_ in }),
+                config: .default)
                 .edgesIgnoringSafeArea(.bottom)
                 .navigationBarTitleDisplayMode(.inline)
                 .modifier(ToolbarModifier(info: viewModel.navigationTitleForControlPanel))
