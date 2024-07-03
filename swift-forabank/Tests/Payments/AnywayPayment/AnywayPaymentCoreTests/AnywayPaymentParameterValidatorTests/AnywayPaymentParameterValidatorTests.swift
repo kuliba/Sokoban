@@ -164,6 +164,26 @@ final class AnywayPaymentParameterValidatorTests: XCTestCase {
         assert(value: "abc-123", regExp: "^[a-zA-Z0-9]+$", validationError: .regExViolation)
     }
     
+    func test_isValid_withRealLifeRegEx() {
+        
+        // A number with 1 to 30 digits followed by a period and 1 to 4 digits.
+        // A whole number with 1 to 30 digits.
+        // A number with 1 to 30 digits followed by a comma and 1 to 4 digits.
+        // A single space character.
+        let pattern = "^((\\d{1,30}\\.\\d{1,4})|(\\d{1,30})|(\\d{1,30},\\d{1,4})|([ ]{1}))$"
+        
+        assert(value: "", regExp: pattern, validationError: .regExViolation)
+        
+        assert(value: "12.34", regExp: pattern, validationError: nil)
+        assert(value: "12.34567", regExp: pattern, validationError: .regExViolation)
+        assert(value: "1234", regExp: pattern, validationError: nil)
+        assert(value: "12,34", regExp: pattern, validationError: nil)
+        assert(value: "12,34567", regExp: pattern, validationError: .regExViolation)
+        assert(value: " ", regExp: pattern, validationError: nil)
+    }
+    
+    // MARK: - 
+    
     // MARK: - Helpers
     
     private typealias SUT = AnywayPaymentParameterValidator
