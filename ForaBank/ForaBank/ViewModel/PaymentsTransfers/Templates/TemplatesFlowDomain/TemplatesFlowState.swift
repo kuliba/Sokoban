@@ -7,5 +7,6 @@
 
 enum TemplatesFlowState: Equatable {
     
-    case legacy
+    case legacy(PaymentTemplateData)
+    case v1
 }

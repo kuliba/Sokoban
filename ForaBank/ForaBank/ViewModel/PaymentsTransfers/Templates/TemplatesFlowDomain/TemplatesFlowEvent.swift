@@ -7,8 +7,8 @@
 
 enum TemplatesFlowEvent: Equatable {
     
-    case paymentTemplateSelected(PaymentTemplateData)
     case paymentInitiationResult(PaymentInitiationResult)
+    case paymentTemplateSelected(PaymentTemplateData)
 }
 
 extension TemplatesFlowEvent {

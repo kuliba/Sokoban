@@ -138,6 +138,8 @@ extension RootViewModelFactory {
             reduce: makeProductProfileFlowReducer().reduce(_:_:),
             handleEffect: ProductNavigationStateEffectHandler().handleEffect
         )
+        
+        let templatesFlowManager = TemplatesFlowManagerComposer(flag: utilitiesPaymentsFlag).compose()
                 
         let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
             
@@ -146,7 +148,9 @@ extension RootViewModelFactory {
                 dismissAction: $0,
                 updateFastAll: {
                     model.action.send(ModelAction.Products.Update.Fast.All())
-                })
+                },
+                flowManager: templatesFlowManager
+            )
         }
         
         let ptfmComposer = PaymentsTransfersFlowManagerComposer(

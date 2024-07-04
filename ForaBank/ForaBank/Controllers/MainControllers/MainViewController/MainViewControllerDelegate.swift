@@ -79,7 +79,7 @@ extension MainViewController: UICollectionViewDelegate {
                 //FIXME: inject from parent view model after refactoring
                 let model = Model.shared
                 let templatesViewModel = TemplatesListViewModel(model, dismissAction: {},
-                                                                updateFastAll: {}
+                                                                updateFastAll: {}, flowManager: .preview
                 )
                 let templatesViewController = TemplatesListViewHostingViewController(with: templatesViewModel)
                 templatesViewController.delegate = self

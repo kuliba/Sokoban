@@ -41,6 +41,8 @@ class TemplatesListViewModel: ObservableObject {
     var isDeleteProcessing: Bool { !items.filter{$0.state.isDeleteProcessing}.isEmpty }
     var isExistDeleted: Bool { !items.filter{$0.state.isDeleting}.isEmpty }
     
+    private let flowManager: TemplatesFlowManager
+    
     internal init(
         state: State, style: Style,
         navBarState: NavBarState,
@@ -49,7 +51,8 @@ class TemplatesListViewModel: ObservableObject {
         deletePannel: DeletePannelViewModel?,
         dismissAction: @escaping () -> Void = {},
         updateFastAll: @escaping UpdateFastAll,
-        model: Model
+        model: Model,
+        flowManager: TemplatesFlowManager
     ) {
         self.state = state
         self.style = style
@@ -60,12 +63,14 @@ class TemplatesListViewModel: ObservableObject {
         self.dismissAction = dismissAction
         self.updateFastAll = updateFastAll
         self.model = model
+        self.flowManager = flowManager
     }
     
     convenience init(
         _ model: Model,
         dismissAction: @escaping () -> Void,
-        updateFastAll: @escaping UpdateFastAll
+        updateFastAll: @escaping UpdateFastAll,
+        flowManager: TemplatesFlowManager
     ) {
         model.action.send(ModelAction.PaymentTemplate.List.Requested())
         
@@ -89,7 +94,9 @@ class TemplatesListViewModel: ObservableObject {
             deletePannel: nil,
             dismissAction: dismissAction,
             updateFastAll: updateFastAll,
-            model: model)
+            model: model,
+            flowManager: flowManager
+        )
         
         updateNavBar(event: .setRegular)
         bind()

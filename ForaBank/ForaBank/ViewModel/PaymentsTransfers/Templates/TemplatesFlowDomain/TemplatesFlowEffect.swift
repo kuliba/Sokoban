@@ -7,5 +7,5 @@
 
 enum TemplatesFlowEffect: Equatable {
     
-    case initiatingPayment
+    case initiatingPayment(PaymentTemplateData)
 }
