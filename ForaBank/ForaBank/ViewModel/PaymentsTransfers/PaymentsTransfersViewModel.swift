@@ -931,7 +931,13 @@ private extension PaymentsTransfersViewModel {
             switch action {
                 //LatestPayments Section Buttons
             case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
-                event(.paymentTrigger(.latestPayment(payload.latestPayment)))
+                switch payload.latestPayment.type {
+                case .service:
+                    event(.paymentTrigger(.latestPayment(payload.latestPayment)))
+                
+                default:
+                    handle(latestPayment: payload.latestPayment)
+                }
                 
                 //LatestPayment Section TemplateButton
             case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
