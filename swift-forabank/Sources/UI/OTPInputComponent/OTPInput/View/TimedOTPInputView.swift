@@ -18,12 +18,13 @@ where IconView: View,
     let iconView: () -> IconView
     let warningView: () -> WarningView
 
-    private let codeObserver: NotificationObserver<String>
+    private let codeObserver: NotificationObserver<String>?
 
     init(
         state: State,
         event: @escaping (Event) -> Void,
         config: Config,
+        codeObserver: NotificationObserver<String>? = nil,
         iconView: @escaping () -> IconView,
         warningView: @escaping () -> WarningView
     ) {
@@ -32,14 +33,6 @@ where IconView: View,
         self.config = config
         self.iconView = iconView
         self.warningView = warningView
-        let codeObserver = NotificationObserver<String>(
-            notificationName: "otpCode",
-            userInfoKey: "otp",
-            onReceive: { code in
-                event(.edit(code))
-            }
-        )
-        
         self.codeObserver = codeObserver
     }
     
@@ -197,6 +190,11 @@ struct TimedOTPInputView_Previews: PreviewProvider {
             state: state,
             event: { print($0) },
             config: .preview,
+            codeObserver: NotificationObserver<String>(
+                notificationName: "otpCode",
+                userInfoKey: "otp",
+                onReceive: { code in print(code) }
+            ),
             iconView: {
                 
                 Image(systemName: "square")

@@ -38,6 +38,7 @@ where IconView: View,
                 state: $0,
                 event: event(_:),
                 config: config,
+                codeObserver: observer(),
                 iconView: iconView,
                 warningView: warningView
             )
@@ -49,6 +50,20 @@ public extension TimedOTPInputWrapperView {
     
     typealias ViewModel = TimedOTPInputViewModel
     typealias Config = TimedOTPInputViewConfig
+}
+
+private extension TimedOTPInputWrapperView {
+
+    func observer() -> NotificationObserver<String>? {
+        
+        NotificationObserver<String>(
+            notificationName: "otpCode",
+            userInfoKey: "otp",
+            onReceive: { code in
+                viewModel.event(.otpField(.edit(code)))
+            }
+        )
+    }
 }
 
 private extension TimedOTPInputWrapperView {
