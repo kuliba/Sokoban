@@ -17,6 +17,31 @@ where IconView: View,
     let config: Config
     let iconView: () -> IconView
     let warningView: () -> WarningView
+
+    private let codeObserver: NotificationObserver<String>
+
+    init(
+        state: State,
+        event: @escaping (Event) -> Void,
+        config: Config,
+        iconView: @escaping () -> IconView,
+        warningView: @escaping () -> WarningView
+    ) {
+        self.state = state
+        self.event = event
+        self.config = config
+        self.iconView = iconView
+        self.warningView = warningView
+        let codeObserver = NotificationObserver<String>(
+            notificationName: "otpCode",
+            userInfoKey: "otp",
+            onReceive: { code in
+                event(.edit(code))
+            }
+        )
+        
+        self.codeObserver = codeObserver
+    }
     
     var body: some View {
         
