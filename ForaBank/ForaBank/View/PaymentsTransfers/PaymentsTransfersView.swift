@@ -25,46 +25,85 @@ struct PaymentsTransfersView: View {
     
     var body: some View {
         
-        ZStack(alignment: .top) {
-            
-            content()
-            sheet()
-            fullScreenCover()
-        }
-        .onAppear {
-            viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
-        }
-        .alert(
-            item: .init(
-                get: { viewModel.route.modal?.alert },
-                set: { if $0 == nil { viewModel.event(.dismiss(.modal)) } }
-            ),
-            content: Alert.init(with:)
-        )
-        .bottomSheet(
-            item: .init(
-                get: { viewModel.route.modal?.bottomSheet },
-                set: { if $0 == nil { viewModel.event(.dismiss(.modal)) } }
-            ),
-            content: bottomSheetView
-        )
-        .navigationDestination(
-            item: .init(
-                get: { viewModel.route.destination },
-                set: { if $0 == nil { viewModel.event(.dismiss(.destination)) } }
-            ),
-            content: destinationView(link:)
-        )
-        .navigationBarTitle("", displayMode: .inline)
-        .navigationBarItems(
-            leading: leadingBarItems,
-            trailing: trailingBarItems
-        )
-        .tabBar(isHidden: .init(
-            get: { viewModel.route.destination != nil },
-            set: { if !$0 { viewModel.reset() } }
-        ))
+        content()
+            .onAppear {
+                viewModel.action.send(PaymentsTransfersViewModelAction.ViewDidApear())
+            }
+            .modal(
+                viewModel.route.modal,
+                dismiss: { viewModel.event(.dismiss(.modal)) },
+                bottomSheetContent: bottomSheetView,
+                fullScreenContent: { fullScreenCover in
+                    
+                    fullScreenCoverView(
+                        fullScreenCover: fullScreenCover,
+                        goToMain: { viewModel.event(.outside(.goToMain)) }
+                    )
+                },
+                sheetContent: sheetView
+            )
+            .navigationDestination(
+                item: .init(
+                    get: { viewModel.route.destination },
+                    set: { if $0 == nil { viewModel.event(.dismiss(.destination)) } }
+                ),
+                content: destinationView(link:)
+            )
+            .navigationBarTitle("", displayMode: .inline)
+            .navigationBarItems(
+                leading: leadingBarItems,
+                trailing: trailingBarItems
+            )
+            .tabBar(isHidden: .init(
+                get: { viewModel.route.destination != nil },
+                set: { if !$0 { viewModel.reset() } }
+            ))
     }
+}
+
+private extension View {
+    
+    @ViewBuilder
+    func modal(
+        _ modal: PaymentsTransfersViewModel.Modal?,
+        dismiss: @escaping () -> Void,
+        bottomSheetContent: @escaping (PaymentsTransfersViewModel.BottomSheet) -> some View,
+        fullScreenContent: @escaping (PaymentsTransfersViewModel.FullScreenSheet) -> some View,
+        sheetContent: @escaping (PaymentsTransfersViewModel.Sheet) -> some View
+    ) -> some View {
+        
+        switch modal {
+        case .none:
+            self
+            
+        case let .alert(viewModel):
+            alert(
+                item: viewModel,
+                content: Alert.init(with:)
+            )
+        case let .bottomSheet(bottom):
+            bottomSheet(
+                sheet: bottom,
+                dismiss: dismiss,
+                content: bottomSheetContent
+            )
+        case let .fullScreenSheet(cover):
+            fullScreenCover(
+                cover: cover,
+                dismissFullScreenCover: dismiss,
+                content: fullScreenContent
+            )
+        case let .sheet(modal):
+            sheet(
+                modal: modal,
+                dismissModal: dismiss,
+                content: sheetContent
+            )
+        }
+    }
+}
+
+extension PaymentsTransfersView {
     
     private func content() -> some View {
         
@@ -77,30 +116,31 @@ struct PaymentsTransfersView: View {
         }
     }
     
-    private func sheet() -> some View {
+    private func serviceFailureAlert(
+        _ alert: ServiceFailureAlert
+    ) -> Alert {
         
-        Color.clear
-            .sheet(
-                modal: viewModel.route.modal?.sheet,
-                dismissModal: { viewModel.event(.dismiss(.modal)) },
-                content: sheetView
-            )
-    }
-    
-    private func fullScreenCover() -> some View {
+        let title = "Ошибка"
+        let message: String = {
+            
+            switch alert.serviceFailure {
+            case .connectivityError:
+                return "Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."
+                
+            case let .serverError(message):
+                return message
+            }
+        }()
         
-        Color.clear
-            .fullScreenCover(
-                cover: viewModel.route.modal?.fullScreenSheet,
-                dismissFullScreenCover: { viewModel.event(.dismiss(.modal)) },
-                content: { fullScreenCover in
-                    
-                    fullScreenCoverView(
-                        fullScreenCover: fullScreenCover,
-                        goToMain: { viewModel.event(.outside(.goToMain)) }
-                    )
-                }
+        return Alert(with: .init(
+            title: title,
+            message: message,
+            primary: .init(
+                type: .default,
+                title: "OK",
+                action: { viewModel.event(.dismiss(.modal)) }
             )
+        ))
     }
     
     @ViewBuilder
