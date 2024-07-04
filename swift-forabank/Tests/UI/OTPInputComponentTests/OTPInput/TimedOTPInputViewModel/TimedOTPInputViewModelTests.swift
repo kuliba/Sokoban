@@ -6,6 +6,7 @@
 //
 
 import OTPInputComponent
+import Combine
 import XCTest
 
 final class TimedOTPInputViewModelTests: XCTestCase {
@@ -220,6 +221,7 @@ final class TimedOTPInputViewModelTests: XCTestCase {
         duration: Int = 5,
         length: Int = 6,
         initialState: OTPInputState? = nil,
+        codeObserver: AnyPublisher<String, Never> = Empty().eraseToAnyPublisher(),
         reducerStub: ReducerStub...,
         file: StaticString = #file,
         line: UInt = #line
@@ -243,6 +245,7 @@ final class TimedOTPInputViewModelTests: XCTestCase {
         let sut = SUT(
             viewModel: viewModel,
             timer: timerSpy,
+            codeObserver: codeObserver,
             scheduler: .immediate
         )
         let stateSpy = StateSpy(sut.$state)
