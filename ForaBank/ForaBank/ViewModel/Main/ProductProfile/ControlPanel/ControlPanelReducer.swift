@@ -91,6 +91,8 @@ extension ControlPanelReducer {
         return (state, effect)
     }
     
+    // TODO: move to other place
+    
     func alertBlockedCard(
         with cardID: ProductCardData.ID,
         _ isBlocked: Bool,
