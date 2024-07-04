@@ -48,6 +48,7 @@ class ProductProfileViewModel: ObservableObject {
     
     @Published var closeAccountSpinner: CloseAccountSpinnerView.ViewModel?
     
+    var controlPanelViewModel: ControlPanelViewModel?
     var rootActions: RootViewModel.RootActions?
     var rootView: String
     var contactsAction: () -> Void = { }
@@ -815,6 +816,12 @@ private extension ProductProfileViewModel {
                 
                 withAnimation {
                     buttons.update(with: productData, depositInfo: model.depositsInfo.value[productData.id])
+                    
+                    if let card = productData.asCard {
+                        
+                        let newButtons = productProfileViewModelFactory.makeCardGuardianPanel(card).controlPanelButtons
+                        controlPanelViewModel?.event(.updateState(newButtons))
+                    }
                 }
                 
             }.store(in: &bindings)
@@ -1966,6 +1973,25 @@ private extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
+    func createControlPanel(
+        _ card: ProductCardData,
+        _ buttons: ([ControlPanelButtonDetails])
+    ) -> ControlPanelViewModel {
+        let makeActions: ControlPanelReducer.MakeActions = .init(
+            contactsAction: contactsAction,
+            blockAction: { [weak self] in self?.controlPanelViewModel?.event(.controlButtonEvent(.blockCard(card)))},
+            unblockAction: {[weak self] in self?.controlPanelViewModel?.event(.controlButtonEvent(.unblockCard(card)))},
+            updateProducts: { [weak self] in self?.model.handleProductsUpdateTotalProduct(.init(productType: .card))}
+        )
+        return .init(
+            initialState: .init(buttons: buttons),
+            reduce: ControlPanelReducer(
+                makeAlert: productProfileViewModelFactory.makeAlert,
+                makeActions: makeActions
+            ).reduce(_:_:),
+            handleEffect: ControlPanelEffectHandler(productProfileServices: productProfileServices).handleEffect(_:_:))
+    }
+    
     func createCardGuardianPanel(_ product: ProductData?) {
         
         guard let card = product?.asCard else {
@@ -1976,8 +2002,12 @@ extension ProductProfileViewModel {
         switch panel {
         case let .bottomSheet(buttons):
             bottomSheet = .init(type: .optionsPanelNew(buttons))
+            
         case let .fullScreen(buttons):
-            link = .controlPanel(buttons)
+            controlPanelViewModel = createControlPanel(card, buttons)
+            if let controlPanelViewModel {
+                link = .controlPanel(controlPanelViewModel)
+            }
         }
     }
 }
@@ -2011,6 +2041,16 @@ extension ProductProfileViewModel {
         
         case bottomSheet([PanelButtonDetails])
         case fullScreen([ControlPanelButtonDetails])
+        
+        var controlPanelButtons: [ControlPanelButtonDetails] {
+            
+            switch self {
+            case .bottomSheet:
+                return []
+            case let .fullScreen(buttons):
+                return buttons
+            }
+        }
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -2047,7 +2087,7 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
-        case controlPanel([ControlPanelButtonDetails])
+        case controlPanel(ControlPanelViewModel)
     }
     
     struct Sheet: Identifiable {

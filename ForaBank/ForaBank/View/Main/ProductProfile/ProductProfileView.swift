@@ -174,17 +174,12 @@ struct ProductProfileView: View {
     ) -> some View {
         
         switch link {
-        case let .controlPanel(items):
-            
+        case let .controlPanel(controlPanelViewModel):
             ControlPanelWrapperView(
-                viewModel: .init(
-                    initialState: .init(buttons: items), 
-                    reduce: { state, _ in  (state, nil) },
-                    handleEffect: {_,_ in }),
+                viewModel: controlPanelViewModel,
                 config: .default)
-                .edgesIgnoringSafeArea(.bottom)
-                .navigationBarTitleDisplayMode(.inline)
-                .modifier(ToolbarModifier(info: viewModel.navigationTitleForControlPanel))
+            .edgesIgnoringSafeArea(.bottom)
+            .modifier(ToolbarModifier(info: viewModel.navigationTitleForControlPanel))
 
         case let .productInfo(viewModel):
             InfoProductView(viewModel: viewModel)
