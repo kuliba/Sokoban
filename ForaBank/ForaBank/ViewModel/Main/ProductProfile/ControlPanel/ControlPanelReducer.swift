@@ -11,20 +11,17 @@ import SwiftUI
 final class ControlPanelReducer {
     
     private let controlPanelLifespan: DispatchTimeInterval
-    private let productProfileServices: ProductProfileServices
     private let makeAlert: MakeAlert
-    private let makeContactsAction: MakeContactsAction
+    private let makeActions: MakeActions
 
     init(
         controlPanelLifespan: DispatchTimeInterval = .milliseconds(400),
         makeAlert: @escaping MakeAlert,
-        makeContactsAction: @escaping MakeContactsAction,
-        productProfileServices: ProductProfileServices
+        makeActions: MakeActions
     ) {
         self.controlPanelLifespan = controlPanelLifespan
         self.makeAlert = makeAlert
-        self.makeContactsAction = makeContactsAction
-        self.productProfileServices = productProfileServices
+        self.makeActions = makeActions
     }
 }
 
@@ -46,6 +43,9 @@ extension ControlPanelReducer {
             if buttons != state.buttons {
                 state.buttons = buttons
             }
+        case .updateProducts:
+            state.status = .none
+            makeActions.updateProducts()
         }
         return (state, effect)
     }
@@ -72,35 +72,21 @@ extension ControlPanelReducer {
             effect = .delayAlert(alertBlockedCard(with: card.id, card.isBlocked, cardNumber, statusCard), controlPanelLifespan)
 
         case let .showAlert(alertViewModel):
-            
             state.alert = alertViewModel
             
         case let .blockCard(card):
-            productProfileServices.createBlockCardService.createBlockCard(.init(cardId: .init(card.cardId), cardNumber: .init(card.number ?? ""))) { result in
-                switch result {
-                case .failure:
-                    break
-                case .success:
-                    break
-                }
-            }
+            state.status = .inflight(.block)
+            effect = .blockCard(card, controlPanelLifespan)
 
         case let .unblockCard(card):
-            productProfileServices.createUnblockCardService.createUnblockCard(.init(cardId: .init(card.cardId), cardNumber: .init(card.number ?? ""))) { result in
-                switch result {
-                case .failure:
-                    break
-                case .success:
-                    break
-                }
-            }
+            state.status = .inflight(.unblock)
+            effect = .unblockCard(card, controlPanelLifespan)
 
         case let .changePin(productId):
             print("changePin")
             
         case let .visibility(productId):
             print("visibility")
-            
         }
         return (state, effect)
     }
@@ -119,7 +105,7 @@ extension ControlPanelReducer {
                 return .init(
                     type: .default,
                     title: "Контакты",
-                    action: makeContactsAction)
+                    action: makeActions.contactsAction)
 
             default:
                 return .init(
@@ -127,13 +113,9 @@ extension ControlPanelReducer {
                     title: "Oк",
                     action: {
                         if isBlocked {
-                            
-                            self.productProfileServices.createUnblockCardService.createUnblockCard(.init(cardId: .init(cardID), cardNumber: .init(cardNumber))) { result in
-                                
-                            }
+                            self.makeActions.unblockAction()
                         } else {
-                            self.productProfileServices.createBlockCardService.createBlockCard(.init(cardId: .init(cardID), cardNumber: .init(cardNumber))) { result in
-                            }
+                            self.makeActions.blockAction()
                         }
                     })
             }
@@ -155,9 +137,19 @@ extension ControlPanelReducer {
 
 extension ControlPanelReducer {
     
+    struct MakeActions {
+        let contactsAction: MakeAction
+        let blockAction: MakeAction
+        let unblockAction: MakeAction
+        let updateProducts: MakeAction
+    }
+}
+
+extension ControlPanelReducer {
+    
     typealias Event = ControlPanelEvent
     typealias State = ControlPanelState
     typealias Effect = ControlPanelEffect
     typealias MakeAlert = (ProductProfileViewModelFactory.AlertParameters) -> Alert.ViewModel
-    typealias MakeContactsAction = () -> Void
+    typealias MakeAction = () -> Void
 }

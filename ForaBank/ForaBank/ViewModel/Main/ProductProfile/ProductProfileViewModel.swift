@@ -1973,6 +1973,25 @@ private extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
+    func createControlPanel(
+        _ card: ProductCardData,
+        _ buttons: ([ControlPanelButtonDetails])
+    ) -> ControlPanelViewModel {
+        let makeActions: ControlPanelReducer.MakeActions = .init(
+            contactsAction: contactsAction,
+            blockAction: { [weak self] in self?.controlPanelViewModel?.event(.controlButtonEvent(.blockCard(card)))},
+            unblockAction: {[weak self] in self?.controlPanelViewModel?.event(.controlButtonEvent(.unblockCard(card)))},
+            updateProducts: { [weak self] in self?.model.handleProductsUpdateTotalProduct(.init(productType: .card))}
+        )
+        return .init(
+            initialState: .init(buttons: buttons),
+            reduce: ControlPanelReducer(
+                makeAlert: productProfileViewModelFactory.makeAlert,
+                makeActions: makeActions
+            ).reduce(_:_:),
+            handleEffect: ControlPanelEffectHandler(productProfileServices: productProfileServices).handleEffect(_:_:))
+    }
+    
     func createCardGuardianPanel(_ product: ProductData?) {
         
         guard let card = product?.asCard else {
@@ -1983,16 +2002,12 @@ extension ProductProfileViewModel {
         switch panel {
         case let .bottomSheet(buttons):
             bottomSheet = .init(type: .optionsPanelNew(buttons))
+            
         case let .fullScreen(buttons):
-            controlPanelViewModel = .init(
-                initialState: .init(buttons: buttons),
-                reduce: ControlPanelReducer(
-                    makeAlert: productProfileViewModelFactory.makeAlert,
-                    makeContactsAction: contactsAction,
-                    productProfileServices: productProfileServices
-                ).reduce(_:_:),
-                handleEffect: { _,_  in })
-            link = .controlPanel(buttons)
+            controlPanelViewModel = createControlPanel(card, buttons)
+            if let controlPanelViewModel {
+                link = .controlPanel(controlPanelViewModel)
+            }
         }
     }
 }
@@ -2072,7 +2087,7 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
-        case controlPanel([ControlPanelButtonDetails])
+        case controlPanel(ControlPanelViewModel)
     }
     
     struct Sheet: Identifiable {
