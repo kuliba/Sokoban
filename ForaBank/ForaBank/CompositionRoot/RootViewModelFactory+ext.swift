@@ -198,12 +198,6 @@ extension RootViewModelFactory {
         )
     }
     
-    typealias LatestPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
-    
-    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
-    typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
-    
     static func makeNavigationOperationView(
         httpClient: HTTPClient,
         model: Model,
@@ -334,8 +328,7 @@ extension ProductProfileViewModel {
     typealias Operator = UtilityPaymentOperator
     
     typealias UtilityPaymentViewModel = AnywayTransactionViewModel
-    typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PTFlowManger
-    typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
+    typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
@@ -473,7 +466,7 @@ private extension RootViewModelFactory {
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     typealias OnRegister = () -> Void
-    typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PTFlowManger
+    typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
     static func make(
         model: Model,

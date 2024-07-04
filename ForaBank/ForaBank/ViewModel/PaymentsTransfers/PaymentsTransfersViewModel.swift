@@ -15,7 +15,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
-    typealias MakeFlowManger = (RootViewModel.RootActions.Spinner?) -> FlowManger
+    typealias MakeFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -119,12 +119,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 }
 
 extension PaymentsTransfersViewModel {
-    
-    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
-    typealias FlowManger = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
-    
-    typealias Route = _Route<Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
-    typealias Link = _Link<Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
     typealias State = PaymentsTransfersViewModel.Route
     typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service>
@@ -344,9 +338,9 @@ extension PaymentsTransfersViewModel {
         case link
     }
     
-    struct _Route<Operator, UtilityService, Content, PaymentViewModel> {
+    struct Route {
         
-        var destination: _Link<Operator, UtilityService, Content, PaymentViewModel>?
+        var destination: Link?
         var modal: Modal?
         
         /// - Note: not ideal, but modelling `Route` as an enum to remove impossible states
@@ -425,7 +419,7 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    enum _Link<Operator, UtilityService, Content, PaymentViewModel>: Identifiable {
+    enum Link: Identifiable {
         
         case exampleDetail(String)
         case userAccount(UserAccountViewModel)
@@ -453,7 +447,7 @@ extension PaymentsTransfersViewModel {
         case openDepositsList(OpenDepositListViewModel)
         case utilityPayment(UtilityFlowState)
         
-        typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
+        typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel, AnywayTransactionViewModel>
     }
     
     struct FullScreenSheet: Identifiable, Equatable {
@@ -507,7 +501,7 @@ extension PaymentsTransfersViewModel.Modal {
     }
 }
 
-extension PaymentsTransfersViewModel._Link {
+extension PaymentsTransfersViewModel.Link {
     
     var id: Case {
         

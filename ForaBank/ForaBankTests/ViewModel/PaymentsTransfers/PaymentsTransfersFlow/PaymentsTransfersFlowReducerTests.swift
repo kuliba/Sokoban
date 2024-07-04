@@ -48,8 +48,8 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel>
-    private typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Content, PaymentViewModel>
+    private typealias SUT = PaymentsTransfersFlowReducer
+    private typealias Factory = PaymentsTransfersFlowReducerFactory
     
     private typealias PaymentTriggerSpy = CallSpy<PaymentTriggerEvent, PaymentTriggerState>
     

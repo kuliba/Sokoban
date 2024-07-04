@@ -7,7 +7,7 @@
 
 import AnywayPaymentDomain
 
-struct PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Content, PaymentViewModel> {
+struct PaymentsTransfersFlowReducerFactory {
     
     let getFormattedAmount: GetFormattedAmount
     let makeFraud: MakeFraudNoticePayload
@@ -20,15 +20,15 @@ extension PaymentsTransfersFlowReducerFactory {
     
     typealias GetFormattedAmount = (ReducerState) -> String?
     
-    typealias ReducerState = PaymentsTransfersViewModel._Route<Operator, Service, Content, PaymentViewModel>
+    typealias ReducerState = PaymentsTransfersViewModel.Route
     typealias MakeFraudNoticePayload = (ReducerState) -> FraudNoticePayload?
     
-    typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
+    typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
     typealias Payload = UtilityPrepaymentEvent.Initiated.UtilityPrepaymentPayload
-    typealias MakeUtilityPrepaymentState = (Payload) -> UtilityPaymentFlowState<Operator, Service, Content, PaymentViewModel>
+    typealias MakeUtilityPrepaymentState = (Payload) -> UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel, AnywayTransactionViewModel>
     
     typealias Notify = (AnywayTransactionStatus?) -> Void
-    typealias MakeUtilityPaymentState = (AnywayTransactionState.Transaction, @escaping Notify) -> UtilityServicePaymentFlowState<PaymentViewModel>
+    typealias MakeUtilityPaymentState = (AnywayTransactionState.Transaction, @escaping Notify) -> UtilityServicePaymentFlowState<AnywayTransactionViewModel>
     
     typealias CloseAction = () -> Void
     typealias MakePayByInstructionsViewModel = (@escaping CloseAction) -> PaymentsViewModel

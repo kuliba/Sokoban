@@ -61,7 +61,7 @@ extension PaymentsTransfersFlowManagerComposer {
         )
     }
     
-    typealias FlowManager = PaymentsTransfersFlowManager<LastPayment, Operator, Service, Content, PaymentViewModel>
+    typealias FlowManager = PaymentsTransfersFlowManager
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
@@ -207,8 +207,8 @@ private extension PaymentsTransfersFlowManagerComposer {
         }
     }
     
-    typealias ReducerFactory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Content, PaymentViewModel>
-    typealias FlowReducer = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel>
+    typealias ReducerFactory = PaymentsTransfersFlowReducerFactory
+    typealias FlowReducer = PaymentsTransfersFlowReducer
     
     private func makeReducerFactoryComposer(
     ) -> PaymentsTransfersFlowReducerFactoryComposer {

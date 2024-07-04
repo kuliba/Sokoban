@@ -8,7 +8,7 @@
 import AnywayPaymentDomain
 import Foundation
 
-final class PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel> {
+final class PaymentsTransfersFlowReducer {
     
     private let handlePaymentTriggerEvent: HandlePaymentTriggerEvent
     private let factory: Factory
@@ -27,7 +27,7 @@ final class PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content
         self.notify = notify
     }
     
-    typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Content, PaymentViewModel>
+    typealias Factory = PaymentsTransfersFlowReducerFactory
     typealias HandlePaymentTriggerEvent = (PaymentTriggerEvent) -> (PaymentTriggerState)
 }
 
@@ -64,9 +64,9 @@ extension PaymentsTransfersFlowReducer {
         return (state, effect)
     }
     
-    typealias State = PaymentsTransfersViewModel._Route<Operator, Service, Content, PaymentViewModel>
-    typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service>
-    typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, Service>
+    typealias State = PaymentsTransfersViewModel.Route
+    typealias Event = PaymentsTransfersFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
+    typealias Effect = PaymentsTransfersFlowEffect<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
 }
 
 private extension PaymentsTransfersFlowReducer {
@@ -115,8 +115,8 @@ private extension PaymentsTransfersFlowReducer {
         return (state, effect)
     }
     
-    private typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
-    private typealias UtilityPrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
+    private typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
+    private typealias UtilityPrepaymentEffect = UtilityPrepaymentFlowEffect<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
     
     private func reduce(
         _ state: inout State,
@@ -276,7 +276,7 @@ private extension PaymentsTransfersFlowReducer {
         }
     }
     
-    private typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
+    private typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
     
     private func reduce(
         _ state: State,
@@ -480,9 +480,9 @@ private extension PaymentsTransfersFlowEffect {
     typealias Modal = PaymentsTransfersViewModel.Modal
 }
 
-private extension PaymentsTransfersViewModel._Route {
+private extension PaymentsTransfersViewModel.Route {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel, AnywayTransactionViewModel>
     
     var utilityPrepayment: UtilityFlowState? {
         
@@ -515,7 +515,7 @@ private extension PaymentsTransfersViewModel._Route {
         self.destination = .utilityPayment(utilityPrepayment)
     }
     
-    typealias OperatorFailure = SberOperatorFailureFlowState<Operator>
+    typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
     
     private var operatorFailure: OperatorFailure? {
         
@@ -534,7 +534,7 @@ private extension PaymentsTransfersViewModel._Route {
         self.setUtilityPrepaymentDestination(to: .operatorFailure(operatorFailure))
     }
     
-    typealias ServicePickerState = UtilityServicePickerFlowState<Operator, UtilityService, PaymentViewModel>
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, UtilityService, AnywayTransactionViewModel>
     
     private var servicePicker: ServicePickerState? {
         
@@ -562,7 +562,7 @@ private extension PaymentsTransfersViewModel._Route {
         self.setUtilityPrepaymentDestination(to: .servicePicker(servicePicker))
     }
     
-    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<PaymentViewModel>
+    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<AnywayTransactionViewModel>
     
     private var paymentFlowState: UtilityServiceFlowState? {
         
