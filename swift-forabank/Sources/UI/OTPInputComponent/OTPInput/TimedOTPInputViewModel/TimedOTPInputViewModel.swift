@@ -12,25 +12,6 @@ import RxViewModel
 
 public typealias OTPInputViewModel = RxViewModel<OTPInputState, OTPInputEvent, OTPInputEffect>
 
-extension TimedOTPInputViewModel {
-    
-    convenience init(
-        viewModel: OTPInputViewModel,
-        timer: TimerProtocol = RealTimer(),
-        observe: @escaping Observe = { _ in },
-        codeObserver: AnyPublisher<String, Never> = Empty().eraseToAnyPublisher(),
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
-    ) {
-        self.init(
-            viewModel: viewModel,
-            timer: timer,
-            observe: observe,
-            codeObserver: codeObserver,
-            scheduler: scheduler
-        )
-    }
-}
-
 public final class TimedOTPInputViewModel: ObservableObject {
     
     @Published public private(set) var state: State
@@ -42,6 +23,7 @@ public final class TimedOTPInputViewModel: ObservableObject {
         viewModel: OTPInputViewModel,
         timer: TimerProtocol = RealTimer(),
         observe: @escaping Observe = { _ in },
+        codeObserver: AnyPublisher<String, Never> = Empty().eraseToAnyPublisher(),
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.state = viewModel.state
