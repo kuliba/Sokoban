@@ -14,17 +14,17 @@ enum ControlPanelEffect: Equatable {
     }
     
     case delayAlert(Alert.ViewModel, DispatchTimeInterval)
-    case blockCard(ProductCardData, DispatchTimeInterval)
-    case unblockCard(ProductCardData, DispatchTimeInterval)
+    case blockCard(ProductCardData)
+    case unblockCard(ProductCardData)
 
     var id: String {
         
         switch self {
         case let .delayAlert(viewModel, _):
             return viewModel.id.uuidString 
-        case let .blockCard(card, _):
+        case let .blockCard(card):
             return "\(card.id)"
-        case let .unblockCard(card, _):
+        case let .unblockCard(card):
             return "\(card.id)"
         }
     }

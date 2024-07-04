@@ -29,7 +29,7 @@ extension ControlPanelEffectHandler {
                 dispatch(.controlButtonEvent(.showAlert(alert)))
             }
             
-        case let .blockCard(card, dispatchTimeInterval):
+        case let .blockCard(card):
             
             productProfileServices.createBlockCardService.createBlockCard(.init(cardId: .init(card.cardId), cardNumber: .init(card.number ?? ""))) { result in
                 switch result {
@@ -40,7 +40,7 @@ extension ControlPanelEffectHandler {
                 }
             }
             
-        case let .unblockCard(card, dispatchTimeInterval):
+        case let .unblockCard(card):
             
             productProfileServices.createUnblockCardService.createUnblockCard(.init(cardId: .init(card.cardId), cardNumber: .init(card.number ?? ""))) { result in
                 switch result {

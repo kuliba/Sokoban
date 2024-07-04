@@ -76,11 +76,11 @@ extension ControlPanelReducer {
             
         case let .blockCard(card):
             state.status = .inflight(.block)
-            effect = .blockCard(card, controlPanelLifespan)
+            effect = .blockCard(card)
 
         case let .unblockCard(card):
             state.status = .inflight(.unblock)
-            effect = .unblockCard(card, controlPanelLifespan)
+            effect = .unblockCard(card)
 
         case let .changePin(productId):
             print("changePin")
