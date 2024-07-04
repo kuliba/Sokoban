@@ -18,20 +18,6 @@ where IconView: View,
     let iconView: () -> IconView
     let warningView: () -> WarningView
 
-    init(
-        state: State,
-        event: @escaping (Event) -> Void,
-        config: Config,
-        iconView: @escaping () -> IconView,
-        warningView: @escaping () -> WarningView
-    ) {
-        self.state = state
-        self.event = event
-        self.config = config
-        self.iconView = iconView
-        self.warningView = warningView
-    }
-    
     var body: some View {
         
         HStack(spacing: 16) {
