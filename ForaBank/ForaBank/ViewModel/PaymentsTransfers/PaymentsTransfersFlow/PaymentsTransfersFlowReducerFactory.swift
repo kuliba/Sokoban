@@ -20,7 +20,7 @@ extension PaymentsTransfersFlowReducerFactory {
     
     typealias GetFormattedAmount = (ReducerState) -> String?
     
-    typealias ReducerState = PaymentsTransfersViewModel._Route<LastPayment, Operator, Service, Content, PaymentViewModel>
+    typealias ReducerState = PaymentsTransfersViewModel._Route<Operator, Service, Content, PaymentViewModel>
     typealias MakeFraudNoticePayload = (ReducerState) -> FraudNoticePayload?
     
     typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>

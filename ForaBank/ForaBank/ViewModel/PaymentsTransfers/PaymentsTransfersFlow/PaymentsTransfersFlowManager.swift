@@ -22,7 +22,7 @@ extension PaymentsTransfersFlowManager {
     typealias Notify = (AnywayTransactionStatus?) -> Void
     typealias MakeReduce = (@escaping CloseAction, @escaping Notify) -> Reduce
     
-    typealias State = PaymentsTransfersViewModel._Route<LastPayment, Operator, Service, Content, PaymentViewModel>
+    typealias State = PaymentsTransfersViewModel._Route<Operator, Service, Content, PaymentViewModel>
     typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service>
     typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, Service>
 }

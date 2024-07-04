@@ -123,8 +123,8 @@ extension PaymentsTransfersViewModel {
     typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     typealias FlowManger = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
-    typealias Route = _Route<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
-    typealias Link = _Link<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
+    typealias Route = _Route<Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
+    typealias Link = _Link<Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
     typealias State = PaymentsTransfersViewModel.Route
     typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service>
@@ -344,9 +344,9 @@ extension PaymentsTransfersViewModel {
         case link
     }
     
-    struct _Route<LastPayment, Operator, UtilityService, Content, PaymentViewModel> {
+    struct _Route<Operator, UtilityService, Content, PaymentViewModel> {
         
-        var destination: _Link<LastPayment, Operator, UtilityService, Content, PaymentViewModel>?
+        var destination: _Link<Operator, UtilityService, Content, PaymentViewModel>?
         var modal: Modal?
         
         /// - Note: not ideal, but modelling `Route` as an enum to remove impossible states
@@ -425,7 +425,7 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    enum _Link<LastPayment, Operator, UtilityService, Content, PaymentViewModel>: Identifiable {
+    enum _Link<Operator, UtilityService, Content, PaymentViewModel>: Identifiable {
         
         case exampleDetail(String)
         case userAccount(UserAccountViewModel)
