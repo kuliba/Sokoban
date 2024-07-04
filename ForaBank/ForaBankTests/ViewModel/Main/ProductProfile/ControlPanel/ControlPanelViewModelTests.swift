@@ -21,7 +21,7 @@ final class ControlPanelViewModelTests: XCTestCase {
                     icon: .checkImage,
                     event: .blockCard(.cardStub1))
             ],
-            makeAlert: { _ in .alert},
+            makeAlert: { _ in .testAlert},
             makeActions: .emptyActions)
         
         XCTAssertNoDiff(sut.state.buttons.count, 1)
@@ -53,12 +53,12 @@ final class ControlPanelViewModelTests: XCTestCase {
     }
 }
 
-private extension Alert.ViewModel {
+extension Alert.ViewModel {
     
-    static let alert: Self = .init(title: "", message: nil, primary: .init(type: .cancel, title: "", action: {}))
+    static let testAlert: Self = .init(title: "", message: nil, primary: .init(type: .cancel, title: "", action: {}))
 }
 
-private extension ControlPanelReducer.MakeActions {
+extension ControlPanelReducer.MakeActions {
     
     static let emptyActions: Self = .init(
         contactsAction: {},

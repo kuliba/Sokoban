@@ -36,13 +36,14 @@ extension ControlPanelReducer {
         var effect: Effect?
         
         switch event {
-            
         case let .controlButtonEvent(buttonEvent):
             (state, effect) = reduce(state, buttonEvent)
+            
         case let .updateState(buttons):
             if buttons != state.buttons {
                 state.buttons = buttons
             }
+            
         case .updateProducts:
             state.status = .none
             makeActions.updateProducts()

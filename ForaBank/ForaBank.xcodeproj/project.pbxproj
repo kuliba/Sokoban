@@ -2496,6 +2496,7 @@
 		83D962B12B63C3570092C61C /* GetProductDynamicParamsListFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D962B02B63C3570092C61C /* GetProductDynamicParamsListFactory.swift */; };
 		83DB5BF729A4B8D5005CBD87 /* VerifyCodeResponseError.json in Resources */ = {isa = PBXBuildFile; fileRef = 83DB5BF629A4B8D5005CBD87 /* VerifyCodeResponseError.json */; };
 		83DB5BF929A4D3C4005CBD87 /* VerifyOTPData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DB5BF829A4D3C4005CBD87 /* VerifyOTPData.swift */; };
+		83DBC7AC2C36CE3E00DEF441 /* ControlPanelReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DBC7AB2C36CE3E00DEF441 /* ControlPanelReducerTests.swift */; };
 		83E2F6112A40A342000B64CF /* GetProductDetailsResponseGenericFull.json in Resources */ = {isa = PBXBuildFile; fileRef = 83E2F6102A40A342000B64CF /* GetProductDetailsResponseGenericFull.json */; };
 		83E2F6132A40D246000B64CF /* InfoProductViewModel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E2F6122A40D246000B64CF /* InfoProductViewModel+Extensions.swift */; };
 		83E2F6162A41A4A0000B64CF /* InfoProductViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E2F6152A41A4A0000B64CF /* InfoProductViewModelTests.swift */; };
@@ -5542,6 +5543,7 @@
 		83D962B02B63C3570092C61C /* GetProductDynamicParamsListFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetProductDynamicParamsListFactory.swift; sourceTree = "<group>"; };
 		83DB5BF629A4B8D5005CBD87 /* VerifyCodeResponseError.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VerifyCodeResponseError.json; sourceTree = "<group>"; };
 		83DB5BF829A4D3C4005CBD87 /* VerifyOTPData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyOTPData.swift; sourceTree = "<group>"; };
+		83DBC7AB2C36CE3E00DEF441 /* ControlPanelReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelReducerTests.swift; sourceTree = "<group>"; };
 		83E2F6102A40A342000B64CF /* GetProductDetailsResponseGenericFull.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetProductDetailsResponseGenericFull.json; sourceTree = "<group>"; };
 		83E2F6122A40D246000B64CF /* InfoProductViewModel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InfoProductViewModel+Extensions.swift"; sourceTree = "<group>"; };
 		83E2F6152A41A4A0000B64CF /* InfoProductViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoProductViewModelTests.swift; sourceTree = "<group>"; };
@@ -13428,6 +13430,7 @@
 			isa = PBXGroup;
 			children = (
 				8377ED032C36B52E00493D17 /* ControlPanelViewModelTests.swift */,
+				83DBC7AB2C36CE3E00DEF441 /* ControlPanelReducerTests.swift */,
 			);
 			path = ControlPanel;
 			sourceTree = "<group>";
@@ -19544,6 +19547,7 @@
 				2A9581692AB98FBE009698F5 /* MainViewModelTests.swift in Sources */,
 				77517FF227A9949D005CFB77 /* ServerCommandsRatesTests.swift in Sources */,
 				2A235F7F2AFA677D00E42E36 /* GetProcessingSessionCodeService+FetcherTests.swift in Sources */,
+				83DBC7AC2C36CE3E00DEF441 /* ControlPanelReducerTests.swift in Sources */,
 				2A3B3F632A28D43200244131 /* ArrayExtensionsTests.swift in Sources */,
 				2A5D17912B243F8700597159 /* Model+SberQRProductTests.swift in Sources */,
 				774A82CB27BAEB6100E5A5E9 /* UserDefaultsSettingsAgentTests.swift in Sources */,
