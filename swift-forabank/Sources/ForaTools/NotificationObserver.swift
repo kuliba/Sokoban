@@ -8,14 +8,14 @@
 import Foundation
 import Combine
 
-public class NotificationObserver<T>: ObservableObject {
+public class NotificationObserver: ObservableObject {
 
     private var bindings = Set<AnyCancellable>()
 
     public init(
         notificationName: String,
         userInfoKey: String,
-        onReceive: @escaping (T) -> Void
+        onReceive: @escaping (String) -> Void
     ) {
         NotificationCenter.default
             .observe(

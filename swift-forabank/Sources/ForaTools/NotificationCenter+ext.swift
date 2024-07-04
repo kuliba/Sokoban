@@ -10,14 +10,14 @@ import Combine
 
 public extension NotificationCenter {
     
-    func observe<T>(
+    func observe(
         notificationName: String,
         userInfoKey: String
-    ) -> AnyPublisher<T, Never> {
+    ) -> AnyPublisher<String, Never> {
         
         NotificationCenter.default
             .publisher(for: Notification.Name(rawValue: notificationName))
-            .compactMap { $0.userInfo?[userInfoKey] as? T }
+            .compactMap { $0.userInfo?[userInfoKey] as? String }
             .eraseToAnyPublisher()
     }
 }
