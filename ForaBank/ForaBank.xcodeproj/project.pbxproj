@@ -2439,6 +2439,7 @@
 		8376C1242C08950200B482FC /* Model+makeSectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8376C1232C08950200B482FC /* Model+makeSectionsTests.swift */; };
 		8376C1262C08CF0100B482FC /* MyProductsViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8376C1252C08CF0100B482FC /* MyProductsViewFactory.swift */; };
 		8376CE542AA7395000DCDE63 /* LandingUIComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 8376CE532AA7395000DCDE63 /* LandingUIComponent */; };
+		8377ED042C36B52E00493D17 /* ControlPanelViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8377ED032C36B52E00493D17 /* ControlPanelViewModelTests.swift */; };
 		837F82E52A3B271C003544BB /* PickerWithPreviewComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 837F82E42A3B271C003544BB /* PickerWithPreviewComponent */; };
 		83808C412B8CEDCB00E9F7BF /* CVVButtonEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */; };
 		83808C472B8DB97C00E9F7BF /* AlertModelOf+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83808C462B8DB97C00E9F7BF /* AlertModelOf+ext.swift */; };
@@ -5489,6 +5490,7 @@
 		8375C01D2C0851D900E4498E /* PaymentsTransfersViewModelGetSectionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModelGetSectionsTests.swift; sourceTree = "<group>"; };
 		8376C1232C08950200B482FC /* Model+makeSectionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+makeSectionsTests.swift"; sourceTree = "<group>"; };
 		8376C1252C08CF0100B482FC /* MyProductsViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsViewFactory.swift; sourceTree = "<group>"; };
+		8377ED032C36B52E00493D17 /* ControlPanelViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelViewModelTests.swift; sourceTree = "<group>"; };
 		83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVButtonEvent.swift; sourceTree = "<group>"; };
 		83808C462B8DB97C00E9F7BF /* AlertModelOf+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlertModelOf+ext.swift"; sourceTree = "<group>"; };
 		83815F922C35660900C97E60 /* ControlPanelWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelWrapperView.swift; sourceTree = "<group>"; };
@@ -13168,6 +13170,7 @@
 		77ED5FA92A2F78C0001BFA3D /* ProductProfile */ = {
 			isa = PBXGroup;
 			children = (
+				8377ED022C36B51100493D17 /* ControlPanel */,
 				83E2F6142A41A46C000B64CF /* InfoProduct */,
 				C14093F72A43D2E600B82E1F /* OperationDetail */,
 				77ED5FAA2A2F78DD001BFA3D /* ProductProfileViewModelTests.swift */,
@@ -13419,6 +13422,14 @@
 				83B6F3D52AB1EF0C00A4C427 /* LandingToCodable.swift */,
 			);
 			path = LandingsAdapters;
+			sourceTree = "<group>";
+		};
+		8377ED022C36B51100493D17 /* ControlPanel */ = {
+			isa = PBXGroup;
+			children = (
+				8377ED032C36B52E00493D17 /* ControlPanelViewModelTests.swift */,
+			);
+			path = ControlPanel;
 			sourceTree = "<group>";
 		};
 		83815F902C355FAC00C97E60 /* Recovered References */ = {
@@ -19417,6 +19428,7 @@
 				2A21E3612AC2069800DB6456 /* PaymentTemplateDataTests.swift in Sources */,
 				2A8B173B2A7B705E002EBC2E /* ServicesEndpointServiceNameBaseURLTests.swift in Sources */,
 				2A65D8A92A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift in Sources */,
+				8377ED042C36B52E00493D17 /* ControlPanelViewModelTests.swift in Sources */,
 				2A21E3612AC2069800DB6456 /* PaymentTemplateDataTests.swift in Sources */,
 				2A8B173B2A7B705E002EBC2E /* ServicesEndpointServiceNameBaseURLTests.swift in Sources */,
 				2A65D8A92A330D34003B3FEA /* PaymentsTransfersViewModelAvtodorTests.swift in Sources */,
