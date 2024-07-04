@@ -419,7 +419,6 @@ private extension LatestPaymentData {
     var lastPayment: UtilityPaymentLastPayment? {
         
         guard let data  = self as? PaymentServiceData
-             // let name = data.lastPaymentName
         else { return nil }
         
         return .init(

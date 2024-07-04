@@ -64,8 +64,6 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         XCTAssertNil(reduced.1)
     }
     
-    // MARK: - 
-    
     // MARK: - Helpers
     
     private typealias SUT = PaymentsTransfersFlowReducer
