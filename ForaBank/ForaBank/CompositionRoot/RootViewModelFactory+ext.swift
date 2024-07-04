@@ -126,19 +126,19 @@ extension RootViewModelFactory {
         )
         
         let blockCardServices = Services.makeBlockCardServices(
-                    httpClient: httpClient,
-                    log: infoNetworkLog
-                )
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
 
         let productProfileServices = ProductProfileServices(
-                    createBlockCardService: blockCardServices,
-                    createUnblockCardService: unblockCardServices)
+            createBlockCardService: blockCardServices,
+            createUnblockCardService: unblockCardServices)
         
         let productNavigationStateManager = ProductProfileFlowManager(
             reduce: makeProductProfileFlowReducer().reduce(_:_:),
             handleEffect: ProductNavigationStateEffectHandler().handleEffect
         )
-        
+                
         let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
             
             .init(

@@ -27,6 +27,10 @@ struct ControlPanelWrapperView: View {
             items: viewModel.state.buttons,
             event: { viewModel.event(.controlButtonEvent($0)) }
             )
+        .alert(
+            item: viewModel.state.alert,
+            content: Alert.init(with:)
+        )
     }
 }
 

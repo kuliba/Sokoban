@@ -5,6 +5,11 @@
 //  Created by Andryusina Nataly on 28.06.2024.
 //
 
-import Foundation
+import SwiftUI
 
-enum ControlPanelEffect: Equatable {}
+enum ControlPanelEffect {
+        
+    case delayAlert(Alert.ViewModel, DispatchTimeInterval)
+    case blockCard(ProductCardData)
+    case unblockCard(ProductCardData)
+}
