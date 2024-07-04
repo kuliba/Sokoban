@@ -7,6 +7,7 @@
 
 import AnywayPaymentDomain
 import Foundation
+import UIKit
 
 final class PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel> {
     
@@ -300,6 +301,7 @@ private extension PaymentsTransfersFlowReducer {
             state.setUtilityPrepaymentAlert(to: nil)
             
         case .destination:
+            dismissKeyboard()
             state.setUtilityPrepaymentDestination(to: nil)
             
         case .operatorFailureDestination:
@@ -648,5 +650,13 @@ private extension PaymentsTransfersViewModel._Route {
         servicePicker.destination = .payment(paymentFlowState)
         utilityPrepayment.destination = .servicePicker(servicePicker)
         destination = .utilityPayment(utilityPrepayment)
+    }
+}
+
+extension PaymentsTransfersFlowReducer {
+    
+    func dismissKeyboard() {
+        
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
