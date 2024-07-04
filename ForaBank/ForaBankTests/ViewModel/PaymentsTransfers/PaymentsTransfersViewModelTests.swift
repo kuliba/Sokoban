@@ -1154,6 +1154,8 @@ extension PaymentsTransfersViewModel.Modal {
             return .bottomSheet
         case .fullScreenSheet:
             return .fullScreenSheet
+        case .serviceAlert:
+            return .serviceAlert
         case .sheet:
             return .sheet
         }
@@ -1164,6 +1166,7 @@ extension PaymentsTransfersViewModel.Modal {
         case alert
         case bottomSheet
         case fullScreenSheet
+        case serviceAlert
         case sheet
     }
 }

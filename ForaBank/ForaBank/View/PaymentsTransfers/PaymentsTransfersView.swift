@@ -32,6 +32,7 @@ struct PaymentsTransfersView: View {
             .modal(
                 viewModel.route.modal,
                 dismiss: { viewModel.event(.dismiss(.modal)) },
+                serviceFailureAlert: serviceFailureAlert,
                 bottomSheetContent: bottomSheetView,
                 fullScreenContent: { fullScreenCover in
                     
@@ -67,6 +68,7 @@ private extension View {
     func modal(
         _ modal: PaymentsTransfersViewModel.Modal?,
         dismiss: @escaping () -> Void,
+        serviceFailureAlert: @escaping (ServiceFailureAlert) -> Alert,
         bottomSheetContent: @escaping (PaymentsTransfersViewModel.BottomSheet) -> some View,
         fullScreenContent: @escaping (PaymentsTransfersViewModel.FullScreenSheet) -> some View,
         sheetContent: @escaping (PaymentsTransfersViewModel.Sheet) -> some View
@@ -80,6 +82,11 @@ private extension View {
             alert(
                 item: viewModel,
                 content: Alert.init(with:)
+            )
+        case let .serviceAlert(serviceAlert):
+            alert(
+                item: serviceAlert,
+                content: serviceFailureAlert
             )
         case let .bottomSheet(bottom):
             bottomSheet(
@@ -297,8 +304,22 @@ extension PaymentsTransfersView {
                     rightItem: .barcodeScanner(action: viewModel.openScanner)
                 )
             
-        case let .servicePayment:
-            Text("TBD: New Service Payments")
+        case let .servicePayment(state):
+            let payload = state.viewModel.state.transaction.context.outline.payload
+            let operatorIconView = viewFactory.makeIconView(
+                payload.icon.map { .md5Hash(.init($0)) }
+            )
+            paymentFlowView(
+                state: state,
+                event: { viewModel.event(.utilityFlow(.payment($0)))}
+            )
+            .navigationBarWithAsyncIcon(
+                title: payload.title,
+                subtitle: payload.subtitle,
+                dismiss: { viewModel.event(.dismiss(.destination)) },
+                icon: operatorIconView,
+                style: .large
+            )
         }
     }
     
@@ -769,17 +790,16 @@ private extension PaymentsTransfersView {
     typealias Service = UtilityService
     
     typealias Content = UtilityPrepaymentViewModel
-    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content, UtilityPaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content, AnywayTransactionViewModel>
     
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
     
     typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
     
-    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, Service, UtilityPaymentViewModel>
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, Service, AnywayTransactionViewModel>
     
-    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<UtilityPaymentViewModel>
+    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<AnywayTransactionViewModel>
 }
 
 extension UtilityServicePaymentFlowState.Modal: BottomSheetCustomizable {}

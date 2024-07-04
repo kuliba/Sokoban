@@ -124,12 +124,38 @@ private extension PaymentsTransfersFlowReducer {
     private func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        with paymentFlow: Event.PaymentFlow
+        with paymentFlow: PaymentFlow
     ) {
         switch paymentFlow {
-        case .service:
-            state.destination = .servicePayment
+        case let .service(result):
+            switch result {
+            case let .failure(serviceFailure):
+                reduce(&state, with: serviceFailure)
+                
+            case let .success(transaction):
+                let utilityPaymentState = factory.makeUtilityPaymentState(transaction, notify)
+                state.destination = .servicePayment(utilityPaymentState)
+            }
         }
+    }
+    
+    private func reduce(
+        _ state: inout State,
+        with serviceFailure: PaymentFlow.ServiceFailure
+    ) {
+        guard state.destination == nil else  { return }
+        
+        let alert: ServiceFailureAlert = {
+            switch serviceFailure {
+            case .connectivityError:
+                return .init(serviceFailure: .connectivityError)
+                
+            case let .serverError(message):
+                return .init(serviceFailure: .serverError(message))
+            }
+        }()
+        
+        state.modal = .serviceAlert(alert)
     }
     
     private func reduce(
@@ -597,6 +623,8 @@ private extension PaymentsTransfersViewModel.Route {
         setPrepaymentPaymentAlert(to: alert)
         // or in servicePicker destination
         setServicePickerPaymentAlert(to: alert)
+        // or in destination
+        setDestinationPaymentAlert(to: alert)
     }
     
     mutating func setPaymentFullScreenCover(
@@ -607,6 +635,8 @@ private extension PaymentsTransfersViewModel.Route {
         setPrepaymentPaymentFullScreenCover(to: fullScreenCover)
         // or in servicePicker destination
         setServicePickerPaymentFullScreenCover(to: fullScreenCover)
+        // or in destination
+        setDestinationPaymentFullScreenCover(to: fullScreenCover)
     }
     
     mutating func setPaymentModal(
@@ -617,6 +647,8 @@ private extension PaymentsTransfersViewModel.Route {
         setPrepaymentPaymentModal(to: modal)
         // or in servicePicker destination
         setServicePickerPaymentModal(to: modal)
+        // or in destination
+        setDestinationPaymentModal(to: modal)
     }
     
     private mutating func setPrepaymentPaymentAlert(
@@ -686,5 +718,35 @@ private extension PaymentsTransfersViewModel.Route {
         servicePicker.destination = .payment(paymentFlowState)
         utilityPrepayment.destination = .servicePicker(servicePicker)
         destination = .utilityPayment(utilityPrepayment)
+    }
+    
+    private mutating func setDestinationPaymentAlert(
+        to alert: UtilityServiceFlowState.Alert?
+    ) {
+        guard case var .servicePayment(paymentFlowState) = destination
+        else { return }
+        
+        paymentFlowState.alert = alert
+        self.destination = .servicePayment(paymentFlowState)
+    }
+    
+    private mutating func setDestinationPaymentFullScreenCover(
+        to fullScreenCover: UtilityServiceFlowState.FullScreenCover?
+    ) {
+        guard case var .servicePayment(paymentFlowState) = destination
+        else { return }
+        
+        paymentFlowState.fullScreenCover = fullScreenCover
+        self.destination = .servicePayment(paymentFlowState)
+    }
+    
+    private mutating func setDestinationPaymentModal(
+        to modal: UtilityServiceFlowState.Modal?
+    ) {
+        guard case var .servicePayment(paymentFlowState) = destination
+        else { return }
+        
+        paymentFlowState.modal = modal
+        self.destination = .servicePayment(paymentFlowState)
     }
 }

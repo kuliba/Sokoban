@@ -358,6 +358,7 @@ extension PaymentsTransfersViewModel {
     enum Modal {
         
         case alert(Alert.ViewModel)
+        case serviceAlert(ServiceFailureAlert)
         case bottomSheet(BottomSheet)
         case fullScreenSheet(FullScreenSheet)
         case sheet(Sheet)
@@ -446,9 +447,11 @@ extension PaymentsTransfersViewModel {
         case sberQRPayment(SberQRConfirmPaymentViewModel)
         case openDepositsList(OpenDepositListViewModel)
         case utilityPayment(UtilityFlowState)
-        case servicePayment
+        case servicePayment(ServicePaymentState)
         
         typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel, AnywayTransactionViewModel>
+        
+       typealias ServicePaymentState = UtilityServicePaymentFlowState<AnywayTransactionViewModel>
     }
     
     struct FullScreenSheet: Identifiable, Equatable {
@@ -478,6 +481,13 @@ extension PaymentsTransfersViewModel.Modal {
         else { return nil }
         
         return alert
+    }
+    
+    var serviceAlert: ServiceFailureAlert? {
+        guard case let .serviceAlert(serviceAlert) = self
+        else { return nil }
+        
+        return serviceAlert
     }
     
     var bottomSheet: PaymentsTransfersViewModel.BottomSheet? {

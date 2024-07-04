@@ -9,11 +9,15 @@ import Foundation
 
 final class PaymentsTransfersFlowEffectHandler<LastPayment, Operator, Service> {
     
+    private let microServices: MicroServices
+#warning("move to microServices")
     private let utilityEffectHandle: UtilityFlowEffectHandle
     
     init(
+        microServices: MicroServices,
         utilityEffectHandle: @escaping UtilityFlowEffectHandle
     ) {
+        self.microServices = microServices
         self.utilityEffectHandle = utilityEffectHandle
     }
 }
@@ -26,7 +30,7 @@ extension PaymentsTransfersFlowEffectHandler {
     ) {
         switch effect {
         case let .delay(event, for: interval):
-            #warning("replace with scheduler!!")
+#warning("replace with scheduler!!")
             DispatchQueue.main.delay(for: interval) { dispatch(event) }
             
         case let .initiatePayment(initiatePayment):
@@ -40,11 +44,13 @@ extension PaymentsTransfersFlowEffectHandler {
 
 extension PaymentsTransfersFlowEffectHandler {
     
+    typealias MicroServices = PaymentsTransfersFlowEffectHandlerMicroServices
+    
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
     typealias UtilityFlowEffect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
     typealias UtilityFlowDispatch = (UtilityFlowEvent) -> Void
     typealias UtilityFlowEffectHandle = (UtilityFlowEffect, @escaping UtilityFlowDispatch) -> Void
-
+    
     typealias Dispatch = (Event) -> Void
     
     typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service>
@@ -57,9 +63,13 @@ private extension PaymentsTransfersFlowEffectHandler {
         with initiatePayment: Effect.InitiatePayment,
         _ dispatch: @escaping Dispatch
     ) {
-        DispatchQueue.main.delay(for: .seconds(2)) {
+        switch initiatePayment {
+        case let .service(.latestPayment(latestPayment)):
             
-            dispatch(.paymentFlow(.service))
+            self.microServices.initiatePayment(latestPayment) {
+                
+                dispatch(.paymentFlow(.service($0)))
+            }
         }
     }
 }

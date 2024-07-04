@@ -54,12 +54,21 @@ extension PaymentsTransfersFlowEvent {
         case utilityService(LegacyPaymentPayload)
     }
     
-    enum PaymentFlow {
-        
-        case service
-    }
-    
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
+}
+
+enum PaymentFlow {
+    
+    case service(TransactionResult)
+    
+    typealias TransactionResult = Result<Transaction, ServiceFailure>
+    typealias Transaction = AnywayTransactionState.Transaction
+    
+    enum ServiceFailure: Error, Hashable {
+        
+        case connectivityError
+        case serverError(String)
+    }
 }
 
 extension PaymentsTransfersFlowEvent.PaymentButton {
