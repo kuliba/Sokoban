@@ -237,19 +237,33 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
                     return .failure(.serviceFailure(.connectivityError))
                     
                 case let .some(update):
-                    let state = initiateTransaction(from: update, with: outline)
-                    
-                    return .success(.startPayment(state))
+                    return .success(.startPayment(.init(from: update, with: outline)))
                 }
             }
         }
     }
     
-    private func initiateTransaction(
+    typealias StartPaymentResponse = NanoServices.StartAnywayPaymentSuccess.StartPaymentResponse
+    typealias StartPaymentSuccess = PrepaymentEvent.ProcessSelectionSuccess
+    
+    private func validatePayment(
+        _ context: AnywayPaymentContext
+    ) -> Bool {
+        
+        let validator = AnywayPaymentContextValidator()
+        
+        return validator.validate(context) == nil
+    }
+}
+
+// MARK: - Helpers
+
+extension AnywayTransactionState.Transaction {
+    
+    init(
         from update: AnywayPaymentUpdate,
         with outline: AnywayPaymentOutline
-    ) -> AnywayTransactionState.Transaction {
-        
+    ) {
         let payment = AnywayPaymentDomain.AnywayPayment(
             update: update,
             outline: outline
@@ -268,26 +282,15 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
             shouldRestart: false
         )
         
-        let transaction = AnywayTransactionState.Transaction(
-            context: context,
-            isValid: validatePayment(context)
-        )
-        
-        return transaction
-    }
-    
-    typealias StartPaymentResponse = NanoServices.StartAnywayPaymentSuccess.StartPaymentResponse
-    typealias StartPaymentSuccess = PrepaymentEvent.ProcessSelectionSuccess
-    
-    private func validatePayment(
-        _ context: AnywayPaymentContext
-    ) -> Bool {
-        
         let validator = AnywayPaymentContextValidator()
         
-        return validator.validate(context) == nil
+        self.init(
+            context: context,
+            isValid: validator.validate(context) == nil
+        )
     }
 }
+
 
 // MARK: - Adapters
 

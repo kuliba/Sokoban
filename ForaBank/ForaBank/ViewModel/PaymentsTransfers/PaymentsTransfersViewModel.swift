@@ -15,7 +15,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
-    typealias MakeFlowManger = (RootViewModel.RootActions.Spinner?) -> FlowManger
+    typealias MakeFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -120,12 +120,6 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
 
 extension PaymentsTransfersViewModel {
     
-    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
-    typealias FlowManger = PaymentsTransfersFlowManager<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
-    
-    typealias Route = _Route<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
-    typealias Link = _Link<LastPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
-    
     typealias State = PaymentsTransfersViewModel.Route
     typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service>
     typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, Service>
@@ -154,6 +148,8 @@ extension PaymentsTransfersViewModel {
         
         if let outside = route.outside {
             handleOutside(outside)
+        } else if let legacy = route.legacy {
+            handle(legacy)
         } else {
             routeSubject.send(route)
             effect.map(handleEffect(_:))
@@ -299,18 +295,17 @@ private extension PaymentsTransfersViewModel {
     
     func handle(latestPayment: LatestPaymentData) {
         
-        switch (latestPayment.type, latestPayment) {
-            
-        case (.internet, let paymentData),
-            (.service, let paymentData),
-            (.mobile, let paymentData),
-            (.outside, let paymentData),
-            (.phone, let paymentData),
-            (.transport, let paymentData),
-            (.taxAndStateService, let paymentData):
+        switch latestPayment.type {
+        case .internet,
+                .service,
+                .mobile,
+                .outside,
+                .phone,
+                .transport,
+                .taxAndStateService:
             
             let paymentsViewModel = PaymentsViewModel(
-                source: .latestPayment(paymentData.id),
+                source: .latestPayment(latestPayment.id),
                 model: model
             ) { [weak self] in
                 
@@ -343,13 +338,17 @@ extension PaymentsTransfersViewModel {
         case link
     }
     
-    struct _Route<LastPayment, Operator, UtilityService, Content, PaymentViewModel> {
+    struct Route {
         
-        var destination: _Link<LastPayment, Operator, UtilityService, Content, PaymentViewModel>?
+        var destination: Link?
         var modal: Modal?
+        
         /// - Note: not ideal, but modelling `Route` as an enum to remove impossible states
         /// would lead to significant complications
         var outside: Outside?
+        
+        /// - Note: moving some of the existing code into the reducer is beyond trivial, so this field is used to get state changing mechanics back to view model
+        var legacy: PaymentTriggerState.Legacy?
         
         enum Outside { case chat, main }
         
@@ -359,6 +358,7 @@ extension PaymentsTransfersViewModel {
     enum Modal {
         
         case alert(Alert.ViewModel)
+        case serviceAlert(ServiceFailureAlert)
         case bottomSheet(BottomSheet)
         case fullScreenSheet(FullScreenSheet)
         case sheet(Sheet)
@@ -420,7 +420,7 @@ extension PaymentsTransfersViewModel {
         }
     }
     
-    enum _Link<LastPayment, Operator, UtilityService, Content, PaymentViewModel>: Identifiable {
+    enum Link: Identifiable {
         
         case exampleDetail(String)
         case userAccount(UserAccountViewModel)
@@ -447,8 +447,11 @@ extension PaymentsTransfersViewModel {
         case sberQRPayment(SberQRConfirmPaymentViewModel)
         case openDepositsList(OpenDepositListViewModel)
         case utilityPayment(UtilityFlowState)
+        case servicePayment(ServicePaymentState)
         
-        typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
+        typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel, AnywayTransactionViewModel>
+        
+       typealias ServicePaymentState = UtilityServicePaymentFlowState<AnywayTransactionViewModel>
     }
     
     struct FullScreenSheet: Identifiable, Equatable {
@@ -480,6 +483,13 @@ extension PaymentsTransfersViewModel.Modal {
         return alert
     }
     
+    var serviceAlert: ServiceFailureAlert? {
+        guard case let .serviceAlert(serviceAlert) = self
+        else { return nil }
+        
+        return serviceAlert
+    }
+    
     var bottomSheet: PaymentsTransfersViewModel.BottomSheet? {
         guard case let .bottomSheet(bottomSheet) = self
         else { return nil }
@@ -502,7 +512,7 @@ extension PaymentsTransfersViewModel.Modal {
     }
 }
 
-extension PaymentsTransfersViewModel._Link {
+extension PaymentsTransfersViewModel.Link {
     
     var id: Case {
         
@@ -557,6 +567,8 @@ extension PaymentsTransfersViewModel._Link {
             return .sberQRPayment
         case .utilityPayment:
             return .utilityPayment
+        case .servicePayment:
+            return .servicePayment
         }
     }
     
@@ -586,6 +598,7 @@ extension PaymentsTransfersViewModel._Link {
         case openDepositsList
         case sberQRPayment
         case utilityPayment
+        case servicePayment
     }
 }
 
@@ -686,6 +699,15 @@ private extension PaymentsTransfersViewModel {
             }
             
             self?.rootActions?.spinner.hide()
+        }
+    }
+    
+    private func handle(
+        _ legacy: PaymentTriggerState.Legacy
+    ) {
+        switch legacy {
+        case let .latestPayment(latestPayment):
+            handle(latestPayment: latestPayment)
         }
     }
     
@@ -923,7 +945,13 @@ private extension PaymentsTransfersViewModel {
             switch action {
                 //LatestPayments Section Buttons
             case let payload as LatestPaymentsViewModelAction.ButtonTapped.LatestPayment:
-                handle(latestPayment: payload.latestPayment)
+                switch payload.latestPayment.type {
+                case .service:
+                    event(.paymentTrigger(.latestPayment(payload.latestPayment)))
+                
+                default:
+                    handle(latestPayment: payload.latestPayment)
+                }
                 
                 //LatestPayment Section TemplateButton
             case _ as LatestPaymentsViewModelAction.ButtonTapped.Templates:
