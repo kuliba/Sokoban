@@ -137,7 +137,7 @@ private extension AnywayPaymentFactoryComposer {
         return .init(
             viewModel: viewModel, 
             config: .iFora,
-            iconView: { Image("sms") },
+            iconView: { self.makeIconView(.md5Hash("sms")) },
             warningView: {
                 
                 OTPWarningView(text: viewModel.state.warning, config: .iFora)
