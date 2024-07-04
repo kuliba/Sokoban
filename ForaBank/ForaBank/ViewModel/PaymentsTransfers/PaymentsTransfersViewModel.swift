@@ -163,6 +163,7 @@ extension PaymentsTransfersViewModel {
     func reset() {
         
         routeSubject.send(.empty)
+        fullCover = nil
     }
     
     func dismiss() {
@@ -657,17 +658,6 @@ private extension PaymentsTransfersViewModel {
         )))
     }
     
-    private func handleOutside(
-        _ outside: Route.Outside
-    ) {
-        routeSubject.send(.empty)
-        
-        switch outside {
-        case .chat: switchToChat()
-        case .main: switchToMain()
-        }
-    }
-    
     private func handleEffect(
         _ effect: Effect
     ) {
@@ -682,23 +672,20 @@ private extension PaymentsTransfersViewModel {
         }
     }
     
-    private func switchToChat() {
-        
+    private func handleOutside(
+        _ outside: Route.Outside
+    ) {
         rootActions?.spinner.show()
+        reset()
         
         delay(for: .milliseconds(300)) { [weak self] in
             
-            self?.rootActions?.spinner.hide()
-            self?.rootActions?.switchTab(.chat)
-        }
-    }
-    
-    private func switchToMain() {
-        
-        withAnimation { [weak self] in
+            switch outside {
+            case .chat: self?.rootActions?.switchTab(.chat)
+            case .main: self?.rootActions?.switchTab(.main)
+            }
             
-            self?.event(.dismiss(.destination))
-            self?.rootActions?.switchTab(.main)
+            self?.rootActions?.spinner.hide()
         }
     }
     

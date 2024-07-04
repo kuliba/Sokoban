@@ -17,9 +17,9 @@ extension AnywayPayment {
     ) -> Self {
         
         var elements = elements
-        elements.updatePrimaryFields(from: update.fields)
-        elements.appendComplementaryFields(from: update.fields)
-        elements.appendParameters(from: update.parameters, with: outline)
+        elements.updateExistingElements(with: update.fields, and: outline)
+        elements.appendNewFields(from: update.fields)
+        elements.appendNewParameters(from: update.parameters, with: outline)
         
         if let product = outline.product {
             
@@ -127,14 +127,17 @@ private extension AnywayElement {
         return widget.id
     }
     
-    func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
+    func updating(
+        with fieldUpdate: AnywayPaymentUpdate.Field,
+        and outline: AnywayPaymentOutline
+    ) -> Self {
         
         switch self {
         case let .field(field):
             return .field(field.updating(with: fieldUpdate))
             
         case let .parameter(parameter):
-            return .parameter(parameter.updating(with: fieldUpdate))
+            return .parameter(parameter.updating(with: fieldUpdate, and: outline))
             
         case .widget:
             return self
@@ -144,7 +147,9 @@ private extension AnywayElement {
 
 private extension AnywayElement.Field {
     
-    func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
+    func updating(
+        with fieldUpdate: AnywayPaymentUpdate.Field
+    ) -> Self {
         
         return .init(
             id: id,
@@ -175,12 +180,15 @@ private extension AnywayElement.Icon {
 
 private extension AnywayElement.Parameter {
     
-    func updating(with fieldUpdate: AnywayPaymentUpdate.Field) -> Self {
+    func updating(
+        with fieldUpdate: AnywayPaymentUpdate.Field,
+        and outline: AnywayPaymentOutline
+    ) -> Self {
         
         return .init(
             field: .init(
                 id: field.id,
-                value: fieldUpdate.value
+                value: outline.fields[field.id] ?? fieldUpdate.value
             ),
             icon: icon,
             masking: masking,
@@ -217,8 +225,9 @@ private extension Array where Element == AnywayElement {
         return first == nil
     }
     
-    mutating func updatePrimaryFields(
-        from updateFields: [AnywayPaymentUpdate.Field]
+    mutating func updateExistingElements(
+        with updateFields: [AnywayPaymentUpdate.Field],
+        and outline: AnywayPaymentOutline
     ) {
         let updateFields = Dictionary(
             uniqueKeysWithValues: updateFields.map { ($0.name, $0) }
@@ -230,31 +239,31 @@ private extension Array where Element == AnywayElement {
                   let matching = updateFields[id]
             else { return $0 }
             
-            return $0.updating(with: matching)
+            return $0.updating(with: matching, and: outline)
         }
     }
     
-    mutating func appendComplementaryFields(
+    mutating func appendNewFields(
         from updateFields: [AnywayPaymentUpdate.Field]
     ) {
         let existingIDs = compactMap(\.stringID)
-        let complimentary: [Element] = updateFields
+        let newFields: [Element] = updateFields
             .filter { !existingIDs.contains($0.name) }
             .map(Element.Field.init)
             .map(Element.field)
         
-        self.append(contentsOf: complimentary)
+        self.append(contentsOf: newFields)
     }
     
-    mutating func appendParameters(
-        from updateParameters: [AnywayPaymentUpdate.Parameter],
+    mutating func appendNewParameters(
+        from parameters: [AnywayPaymentUpdate.Parameter],
         with outline: AnywayPaymentOutline
     ) {
-        let parameters = updateParameters.map {
+        let parameters = parameters.map {
             
             AnywayElement.Parameter(
                 parameter: $0,
-                fallbackValue: outline.fields[$0.field.id]
+                outlinedValue: outline.fields[$0.field.id]
             )
         }
         append(contentsOf: parameters.map(Element.parameter))
@@ -280,13 +289,13 @@ private extension AnywayElement.Parameter {
     
     init(
         parameter: AnywayPaymentUpdate.Parameter,
-        fallbackValue: AnywayPaymentOutline.Value?
+        outlinedValue: AnywayPaymentOutline.Value?
     ) {
         self.init(
             field: .init(
                 parameter.field,
                 // TODO: add tests
-                fallbackValue: parameter.selectedValue ?? fallbackValue
+                outlinedValue: outlinedValue ?? parameter.selectedValue
             ),
             icon: .init(parameter),
             masking: .init(parameter.masking),
@@ -331,11 +340,12 @@ private extension AnywayElement.Parameter.Field {
     
     init(
         _ field: AnywayPaymentUpdate.Parameter.Field,
-        fallbackValue: AnywayPaymentOutline.Value?
+        outlinedValue: AnywayPaymentOutline.Value?
     ) {
         self.init(
             id: .init(field.id),
-            value: field.content ?? fallbackValue.map { $0 }
+//            value: field.content ?? fallbackValue.map { $0 }
+            value: outlinedValue ?? field.content
         )
     }
 }
