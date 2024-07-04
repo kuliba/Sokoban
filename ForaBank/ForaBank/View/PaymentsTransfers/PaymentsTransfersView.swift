@@ -599,6 +599,8 @@ private extension PaymentsTransfersView {
             
             AnywayTransactionView(state: state, event: transactionEvent, factory: factory)
         }
+        .padding(.bottom)
+        .edgesIgnoringSafeArea(.bottom)
         .alert(
             item: state.alert,
             content: paymentFlowAlert(
