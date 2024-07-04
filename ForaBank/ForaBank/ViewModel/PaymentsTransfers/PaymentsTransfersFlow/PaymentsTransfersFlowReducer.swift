@@ -51,6 +51,9 @@ extension PaymentsTransfersFlowReducer {
         case let .paymentButtonTapped(paymentButton):
             (state, effect) = reduce(state, paymentButton)
          
+        case let .paymentFlow(paymentFlow):
+            reduce(&state, &effect, with: paymentFlow)
+            
         case let .paymentTrigger(event):
             reduce(&state, &effect, with: event)
             
@@ -121,6 +124,17 @@ private extension PaymentsTransfersFlowReducer {
     private func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
+        with paymentFlow: Event.PaymentFlow
+    ) {
+        switch paymentFlow {
+        case .service:
+            state.destination = .servicePayment
+        }
+    }
+    
+    private func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
         with event: PaymentTriggerEvent
     ) {
         switch handlePaymentTriggerEvent(event) {
@@ -128,7 +142,10 @@ private extension PaymentsTransfersFlowReducer {
             state.legacy = legacy
             
         case .v1:
-            return
+            switch event {
+            case let .latestPayment(latestPayment):
+                effect = .initiatePayment(.service(.latestPayment(latestPayment)))
+            }
         }
     }
     

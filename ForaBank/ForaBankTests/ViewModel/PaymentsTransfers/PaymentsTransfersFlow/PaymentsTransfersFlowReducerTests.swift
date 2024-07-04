@@ -10,6 +10,8 @@ import XCTest
 
 final class PaymentsTransfersFlowReducerTests: XCTestCase {
     
+    // MARK: - PaymentTriggerEvent
+    
     func test_reduce_shouldCallPaymentTriggerReduceOnPaymentTriggerEvent() {
         
         let latestPayment = makeLatestPayment()
@@ -27,10 +29,26 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         let event = PaymentTriggerEvent.latestPayment(latestPayment)
         let (sut, _) = makeSUT(stubs: [.v1])
         
-        let reduced = sut.reduce(makeState(), .paymentTrigger(event))
+        let (state, _) = sut.reduce(makeState(), .paymentTrigger(event))
         
-        XCTAssertNoDiff(reduced.0.legacy, nil)
-        XCTAssertNil(reduced.1)
+        XCTAssertNoDiff(state.legacy, nil)
+    }
+    
+    func test_reduce_shouldDeliverInitiateServicePaymentEffectWithPayloadOnV1() {
+        
+        let latestPayment = makeLatestPayment()
+        let event = PaymentTriggerEvent.latestPayment(latestPayment)
+        let (sut, _) = makeSUT(stubs: [.v1])
+        
+        let (_, effect) = sut.reduce(makeState(), .paymentTrigger(event))
+        
+        switch effect {
+        case .initiatePayment(.service(.latestPayment(latestPayment))):
+            break
+            
+        default:
+            XCTFail("Expected Initiate Service Payment Effect with Payload, but got \(String(describing: effect)) instead.")
+        }
     }
     
     func test_reduce_shouldSetLegacyStateOnLegacy() {
@@ -45,6 +63,8 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
         XCTAssertNoDiff(reduced.0.legacy, .latestPayment(latestPayment))
         XCTAssertNil(reduced.1)
     }
+    
+    // MARK: - 
     
     // MARK: - Helpers
     

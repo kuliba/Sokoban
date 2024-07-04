@@ -446,6 +446,7 @@ extension PaymentsTransfersViewModel {
         case sberQRPayment(SberQRConfirmPaymentViewModel)
         case openDepositsList(OpenDepositListViewModel)
         case utilityPayment(UtilityFlowState)
+        case servicePayment
         
         typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel, AnywayTransactionViewModel>
     }
@@ -556,6 +557,8 @@ extension PaymentsTransfersViewModel.Link {
             return .sberQRPayment
         case .utilityPayment:
             return .utilityPayment
+        case .servicePayment:
+            return .servicePayment
         }
     }
     
@@ -585,6 +588,7 @@ extension PaymentsTransfersViewModel.Link {
         case openDepositsList
         case sberQRPayment
         case utilityPayment
+        case servicePayment
     }
 }
 

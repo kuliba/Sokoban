@@ -29,6 +29,9 @@ extension PaymentsTransfersFlowEffectHandler {
             #warning("replace with scheduler!!")
             DispatchQueue.main.delay(for: interval) { dispatch(event) }
             
+        case let .initiatePayment(initiatePayment):
+            self.initiatePayment(with: initiatePayment, dispatch)
+            
         case let .utilityFlow(effect):
             utilityEffectHandle(effect) { dispatch(.utilityFlow($0)) }
         }
@@ -46,4 +49,17 @@ extension PaymentsTransfersFlowEffectHandler {
     
     typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service>
     typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, Service>
+}
+
+private extension PaymentsTransfersFlowEffectHandler {
+    
+    func initiatePayment(
+        with initiatePayment: Effect.InitiatePayment,
+        _ dispatch: @escaping Dispatch
+    ) {
+        DispatchQueue.main.delay(for: .seconds(2)) {
+            
+            dispatch(.paymentFlow(.service))
+        }
+    }
 }

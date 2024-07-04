@@ -256,6 +256,9 @@ struct PaymentsTransfersView: View {
                     dismiss: dismissDestination,
                     rightItem: .barcodeScanner(action: viewModel.openScanner)
                 )
+            
+        case let .servicePayment:
+            Text("TBD: New Service Payments")
         }
     }
     

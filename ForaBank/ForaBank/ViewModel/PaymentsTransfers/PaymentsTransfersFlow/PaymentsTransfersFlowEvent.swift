@@ -10,6 +10,7 @@ enum PaymentsTransfersFlowEvent<LastPayment, Operator, Service> {
     case dismiss(Dismiss)
     case outside(Outside)
     case paymentButtonTapped(PaymentButton)
+    case paymentFlow(PaymentFlow)
     case paymentTrigger(PaymentTriggerEvent)
     case setModal(to: Modal)
     case utilityFlow(UtilityFlowEvent)
@@ -51,6 +52,11 @@ extension PaymentsTransfersFlowEvent {
     enum PaymentButton {
         
         case utilityService(LegacyPaymentPayload)
+    }
+    
+    enum PaymentFlow {
+        
+        case service
     }
     
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
