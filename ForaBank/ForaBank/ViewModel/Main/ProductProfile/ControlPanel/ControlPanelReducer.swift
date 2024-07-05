@@ -40,12 +40,15 @@ extension ControlPanelReducer {
             (state, effect) = reduce(state, buttonEvent)
             
         case let .updateState(buttons):
+            if state.status == .inflight(.updateProducts) {
+                state.spinner = nil
+            }
             if buttons != state.buttons {
                 state.buttons = buttons
             }
             
         case .updateProducts:
-            state.status = .none
+            state.status = .inflight(.updateProducts)
             makeActions.updateProducts()
         }
         return (state, effect)
@@ -77,10 +80,12 @@ extension ControlPanelReducer {
             
         case let .blockCard(card):
             state.status = .inflight(.block)
+            state.spinner = .init()
             effect = .blockCard(card)
 
         case let .unblockCard(card):
             state.status = .inflight(.unblock)
+            state.spinner = .init()
             effect = .unblockCard(card)
 
         case let .changePin(productId):
