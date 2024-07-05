@@ -154,10 +154,39 @@ struct TemplatesListView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar(content: toolbar)
-        .bottomSheet(item: $viewModel.sheet, content: bottomSheetContent)
+        .modal(
+            modal: viewModel.modal,
+            dismiss: { viewModel.modal = nil },
+            bottomSheetContent: bottomSheetContent
+        )
     }
 }
  
+private extension View {
+    
+    @ViewBuilder
+    func modal(
+        modal: TemplatesListViewModel.Modal?,
+        dismiss: @escaping () -> Void,
+        bottomSheetContent: @escaping (TemplatesListViewModel.Sheet) -> some View
+    ) -> some View {
+        
+        switch modal {
+        case .none:
+            self
+            
+        case let .sheet(sheet):
+            bottomSheet(
+                item: .init(
+                    get: { sheet },
+                    set: { if $0 == nil { dismiss() }}
+                ),
+                content: bottomSheetContent
+            )
+        }
+    }
+}
+
 private extension TemplatesListView {
     
     @ToolbarContentBuilder
