@@ -41,6 +41,7 @@ final class ControlPanelReducerTests: XCTestCase {
             on: .init(buttons: .buttons(card))) {
                 
                 $0.status = .inflight(.block)
+                $0.spinner = .init()
             }
     }
     
@@ -53,6 +54,7 @@ final class ControlPanelReducerTests: XCTestCase {
             on: .init(buttons: .buttons(card))) {
                 
                 $0.status = .inflight(.unblock)
+                $0.spinner = .init()
             }
     }
     
@@ -122,6 +124,13 @@ final class ControlPanelReducerTests: XCTestCase {
             receivedState.alert?.id,
             expectedState.alert?.id,
             "\nExpected \(String(describing: expectedState.alert)), but got \(String(describing: receivedState.alert)) instead.",
+            file: file, line: line
+        )
+        
+        XCTAssertNoDiff(
+            receivedState.spinner?.icon,
+            expectedState.spinner?.icon,
+            "\nExpected \(String(describing: expectedState.spinner)), but got \(String(describing: receivedState.spinner)) instead.",
             file: file, line: line
         )
         

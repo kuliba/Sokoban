@@ -23,14 +23,21 @@ struct ControlPanelWrapperView: View {
     
     var body: some View {
         
-        ControlPanelView(
-            items: viewModel.state.buttons,
-            event: { viewModel.event(.controlButtonEvent($0)) }
+        ZStack {
+            ControlPanelView(
+                items: viewModel.state.buttons,
+                event: { viewModel.event(.controlButtonEvent($0)) }
             )
-        .alert(
-            item: viewModel.state.alert,
-            content: Alert.init(with:)
-        )
+            .alert(
+                item: viewModel.state.alert,
+                content: Alert.init(with:)
+            )
+            viewModel.state.spinner.map { spinner in
+                
+                SpinnerView(viewModel: spinner)
+                    .zIndex(.greatestFiniteMagnitude)
+            }
+        }
     }
 }
 
