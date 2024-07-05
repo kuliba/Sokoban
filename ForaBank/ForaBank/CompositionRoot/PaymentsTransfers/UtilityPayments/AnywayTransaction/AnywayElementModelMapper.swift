@@ -87,8 +87,7 @@ private extension AnywayElementModelMapper {
             return .parameter(.nonEditable(parameter))
             
         case .numberInput:
-#warning("how to add differentiation for numeric input")
-            return .parameter(.numberInput(makeInputViewModel(with: parameter, event: event)))
+            return .parameter(.numberInput(makeNumberInputViewModel(with: parameter, event: event)))
             
         case let .select(option, options):
             if let selector = try? Selector(option: option, options: options) {
@@ -107,6 +106,32 @@ private extension AnywayElementModelMapper {
 }
 
 private extension AnywayElementModelMapper {
+    
+#warning("extract?")
+    func makeNumberInputViewModel(
+        with parameter: AnywayElement.UIComponent.Parameter,
+        event: @escaping (AnywayPaymentEvent) -> Void
+    ) -> ObservingInputViewModel {
+        
+        let inputState = InputState.init(parameter)
+        let reducer = InputReducer<AnywayElement.UIComponent.Icon?>()
+        let converterFormatter = ConverterFormatter(
+            locale: .autoupdatingCurrent
+        )
+        
+        return .init(
+            initialState: inputState,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: { _,_ in },
+            observe: {
+                
+                // format for SBER-provider (IOS-112)
+                let value = converterFormatter.convertAndFormat($0.dynamic.value, delimiter: ".")
+                
+                event(.setValue(value ?? "", for: parameter.id))
+            }
+        )
+    }
     
 #warning("extract?")
     func makeInputViewModel(
