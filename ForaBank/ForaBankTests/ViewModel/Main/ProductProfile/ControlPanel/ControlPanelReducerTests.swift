@@ -67,7 +67,6 @@ final class ControlPanelReducerTests: XCTestCase {
             on: .init(buttons: .buttons(card))){
                 
                 $0.status = .inflight(.updateProducts)
-                $0.spinner = .init()
             }
     }
 
