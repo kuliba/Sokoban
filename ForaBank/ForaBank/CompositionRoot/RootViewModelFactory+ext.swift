@@ -130,9 +130,16 @@ extension RootViewModelFactory {
             log: infoNetworkLog
         )
 
+        let userVisibilityProductsSettingsServices = Services.makeUserVisibilityProductsSettingsServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
-            createUnblockCardService: unblockCardServices)
+            createUnblockCardService: unblockCardServices,
+            createUserVisibilityProductsSettingsService: userVisibilityProductsSettingsServices
+        )
         
         let productNavigationStateManager = ProductProfileFlowManager(
             reduce: makeProductProfileFlowReducer().reduce(_:_:),

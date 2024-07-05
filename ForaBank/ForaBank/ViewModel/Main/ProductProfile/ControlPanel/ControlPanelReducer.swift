@@ -91,8 +91,10 @@ extension ControlPanelReducer {
         case let .changePin(productId):
             print("changePin")
             
-        case let .visibility(productId):
-            print("visibility")
+        case let .visibility(card):
+            state.status = .inflight(.visibility)
+            state.spinner = .init()
+            effect = .visibility(card)
         }
         return (state, effect)
     }
