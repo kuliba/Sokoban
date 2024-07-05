@@ -771,10 +771,14 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let unblockCardServices = UnblockCardServices.preview(createUnblockCardStub: createUnblockCardStub)
 
         let blockCardServices = BlockCardServices.preview(createBlockCardStub: createBlockCardStub)
+        
+        let userVisibilityServices = UserVisibilityProductsSettingsServices.preview()
 
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
-            createUnblockCardService: unblockCardServices)
+            createUnblockCardService: unblockCardServices,
+            createUserVisibilityProductsSettingsService: userVisibilityServices
+        )
 
         let qrViewModelFactory = QRViewModelFactory.preview()
         

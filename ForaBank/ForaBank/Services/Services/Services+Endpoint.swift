@@ -100,6 +100,7 @@ extension Services {
             case showCVV
             case updateFastPaymentContract
             case unblockCard
+            case userVisibilityProductsSettings
         }
     }
 }
@@ -370,6 +371,12 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .none,
         serviceName: .unblockCard
+    )
+
+    static let userVisibilityProductsSettings: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .userVisibilityProductsSettings
     )
 
     static let updateFastPaymentContract: Self = .init(
