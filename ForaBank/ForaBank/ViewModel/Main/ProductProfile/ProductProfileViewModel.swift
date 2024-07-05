@@ -1978,8 +1978,11 @@ extension ProductProfileViewModel {
         _ buttons: ([ControlPanelButtonDetails])
     ) -> ControlPanelViewModel {
         let makeActions: ControlPanelReducer.MakeActions = .init(
+            blockAction: { [weak self] in self?.controlPanelViewModel?.event(.controlButtonEvent(.blockCard(card)))}, 
+            changePin: { [weak self] in
+                self?.changePin($0)
+            },
             contactsAction: contactsAction,
-            blockAction: { [weak self] in self?.controlPanelViewModel?.event(.controlButtonEvent(.blockCard(card)))},
             unblockAction: {[weak self] in self?.controlPanelViewModel?.event(.controlButtonEvent(.unblockCard(card)))},
             updateProducts: { [weak self] in self?.model.handleProductsUpdateTotalProduct(.init(productType: .card))}
         )
@@ -2288,6 +2291,14 @@ extension ProductProfileViewModel {
         }
     }
     
+    func changePin(_ productCard: ProductCardData) {
+        if productCard.statusCard != .active {
+            event(.alert(.delayAlert(.showBlockAlert)))
+        } else {
+            checkCertificate(.init(productCard.id), certificate: cvvPINServicesClient, productCard)
+        }
+    }
+    
     func handlePanelButtonType(
         _ type: PanelButtonType,
         _ productCard: ProductCardData
@@ -2300,11 +2311,7 @@ extension ProductProfileViewModel {
             self.action.send(ProductProfileViewModelAction.Product.Unblock(productId: productCard.id))
             
         case .changePin:
-            if productCard.statusCard != .active {
-                event(.alert(.delayAlert(.showBlockAlert)))
-            } else {
-                checkCertificate(.init(productCard.id), certificate: self.cvvPINServicesClient, productCard)
-            }
+            changePin(productCard)
             
         case .visibility:
             self.model.action.send(ModelAction.Products.UpdateVisibility(productId: productCard.id, visibility: !productCard.isVisible))

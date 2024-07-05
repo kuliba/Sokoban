@@ -95,6 +95,15 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_controlButtonEvent_changePin_shouldNotChanged() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assertState(
+            .controlButtonEvent(.changePin(card)),
+            on: .init(buttons: .buttons(card)))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ControlPanelReducer
