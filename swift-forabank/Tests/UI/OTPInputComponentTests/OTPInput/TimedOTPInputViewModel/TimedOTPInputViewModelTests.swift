@@ -203,6 +203,25 @@ final class TimedOTPInputViewModelTests: XCTestCase {
         ])
     }
     
+    func test_otpInput_codeObserver_shouldSendEventEdit() {
+        
+        let subject = PassthroughSubject<String, Never>()
+        
+        let (_,_,_, reducerSpy, _) = makeSUT(
+                duration: 4,
+                codeObserver: subject.eraseToAnyPublisher(),
+                reducerStub:
+                    (makeState(countdown: .starting(duration: 4)), nil)
+            )
+        
+        subject.send("123456")
+
+        XCTAssertNoDiff(
+            reducerSpy.messages.map({ $0.event }),
+            [.otpField(.edit("123456"))]
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = TimedOTPInputViewModel
