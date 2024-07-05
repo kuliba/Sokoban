@@ -5,8 +5,10 @@
 //  Created by Mikhail on 18.01.2022.
 //
 
-import SwiftUI
 import Combine
+import CombineSchedulers
+import Foundation
+import SwiftUI
 
 class TemplatesListViewModel: ObservableObject {
     
@@ -41,6 +43,7 @@ class TemplatesListViewModel: ObservableObject {
     var isExistDeleted: Bool { !items.filter{$0.state.isDeleting}.isEmpty }
     
     private let flowManager: TemplatesFlowManager
+    private let scheduler: AnySchedulerOf<DispatchQueue>
     
     internal init(
         route: Route = .init(),
@@ -53,7 +56,8 @@ class TemplatesListViewModel: ObservableObject {
         dismissAction: @escaping () -> Void = {},
         updateFastAll: @escaping UpdateFastAll,
         model: Model,
-        flowManager: TemplatesFlowManager
+        flowManager: TemplatesFlowManager,
+        scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.route = route
         self.state = state
@@ -66,6 +70,7 @@ class TemplatesListViewModel: ObservableObject {
         self.updateFastAll = updateFastAll
         self.model = model
         self.flowManager = flowManager
+        self.scheduler = scheduler
     }
     
     convenience init(
@@ -73,7 +78,8 @@ class TemplatesListViewModel: ObservableObject {
         _ model: Model,
         dismissAction: @escaping () -> Void,
         updateFastAll: @escaping UpdateFastAll,
-        flowManager: TemplatesFlowManager
+        flowManager: TemplatesFlowManager,
+        scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         model.action.send(ModelAction.PaymentTemplate.List.Requested())
         
@@ -99,7 +105,8 @@ class TemplatesListViewModel: ObservableObject {
             dismissAction: dismissAction,
             updateFastAll: updateFastAll,
             model: model,
-            flowManager: flowManager
+            flowManager: flowManager,
+            scheduler: scheduler
         )
         
         updateNavBar(event: .setRegular)
@@ -117,7 +124,7 @@ private extension TemplatesListViewModel {
     func bind() {
         
         model.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
 
                 switch action {
@@ -182,7 +189,7 @@ private extension TemplatesListViewModel {
         
     
         model.paymentTemplates
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] templates in
                     
                 if templates.isEmpty {
@@ -218,7 +225,7 @@ private extension TemplatesListViewModel {
             }.store(in: &bindings)
         
         model.images
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] images in
                 
                 itemsRaw.value.filter { $0.avatar.isPlaceholder }
@@ -241,7 +248,7 @@ private extension TemplatesListViewModel {
         }.store(in: &bindings)
         
         $items
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] items in
                 
                 switch navBarState {
@@ -267,7 +274,7 @@ private extension TemplatesListViewModel {
         
     // actions handlers
         action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
                 
                 switch action {
@@ -560,7 +567,7 @@ private extension TemplatesListViewModel {
                     self.idList = UUID() //focus on first item in list
                     
                     itemVM.timer?.timerPublisher
-                        .receive(on: DispatchQueue.main)
+                        .receive(on: scheduler)
                         .map({ [unowned timer] output in
                             return Int(output.timeIntervalSince(timer.startDate))
                         })
@@ -624,7 +631,7 @@ private extension TemplatesListViewModel {
                     itemModel.state = .deleting(deletingViewModel)
                     
                     itemModel.timer?.timerPublisher
-                        .receive(on: DispatchQueue.main)
+                        .receive(on: scheduler)
                         .map({ [unowned timer] output in
                             return Int(output.timeIntervalSince(timer.startDate))
                         })
@@ -657,7 +664,7 @@ private extension TemplatesListViewModel {
         
         // selected items updates
         selectedItemsIds
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] selected in
                 
                 if case .select = self.state {
@@ -669,7 +676,7 @@ private extension TemplatesListViewModel {
          
         $editModeState
             .dropFirst()
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] state in
                 
                 switch state {
@@ -696,7 +703,7 @@ private extension TemplatesListViewModel {
     func bindCategorySelector(_ viewModel: OptionSelectorView.ViewModel) {
         
         viewModel.$selected
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink{ [unowned self]  selectedCategoryIndex in
                 
                 withAnimation {
@@ -714,7 +721,7 @@ private extension TemplatesListViewModel {
             
         viewModel.action
             .compactMap { $0 as? TemplatesListViewModelAction.RenameSheetAction.SaveNewName }
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] payload in
                 
                 viewModel.isFocused = false
@@ -736,7 +743,7 @@ private extension TemplatesListViewModel {
         for section in viewModel.sections {
             
             section.action
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [unowned self]  action in
                     
                     switch action {
@@ -755,7 +762,7 @@ private extension TemplatesListViewModel {
             }.store(in: &bindings)
             
             section.$isCollapsed
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [unowned viewModel] isCollapsed in
                     
                     viewModel.containerHeight = viewModel.calcHeight
@@ -768,7 +775,7 @@ private extension TemplatesListViewModel {
     func bind(_ viewModel: PaymentsSuccessViewModel) {
         
         viewModel.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
                 
                 switch action {
@@ -789,7 +796,7 @@ private extension TemplatesListViewModel {
     private func bind(_ viewModel: PaymentsMeToMeViewModel) {
         
         viewModel.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self, weak viewModel] action in
                 
                 switch action {
