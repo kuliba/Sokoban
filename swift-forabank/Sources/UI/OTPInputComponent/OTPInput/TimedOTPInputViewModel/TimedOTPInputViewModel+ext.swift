@@ -6,6 +6,8 @@
 //
 
 import ForaTools
+import Combine
+import Foundation
 
 public extension TimedOTPInputViewModel {
     
@@ -67,6 +69,10 @@ public extension TimedOTPInputViewModel {
             ),
             timer: timer,
             observe: observe,
+            codeObserver: NotificationCenter.default.observe(
+                    notificationName: "otpCode",
+                    userInfoKey: "otp"
+                ),
             scheduler: scheduler
         )
     }
