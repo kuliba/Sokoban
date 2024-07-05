@@ -58,6 +58,19 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_controlButtonEvent_visibility_shouldStatusInflightSpinnerNotNil() {
+        
+        let card = makeCardProduct(statusCard: .blockedUnlockAvailable)
+        
+        assertState(
+            .controlButtonEvent(.visibility(card)),
+            on: .init(buttons: .buttons(card))) {
+                
+                $0.status = .inflight(.visibility)
+                $0.spinner = .init()
+            }
+    }
+    
     func test_reduce_updateProducts_shouldStatusInflight() {
         
         let card = makeCardProduct(statusCard: .active)
