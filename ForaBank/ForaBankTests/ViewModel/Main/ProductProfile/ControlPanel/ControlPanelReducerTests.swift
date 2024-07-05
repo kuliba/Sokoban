@@ -32,7 +32,7 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
-    func test_reduce_controlButtonEvent_blockCard_shouldButtonsNotChangedAlertNilStatusInflight() {
+    func test_reduce_controlButtonEvent_blockCard_shouldStatusInflightSpinnerNotNil() {
         
         let card = makeCardProduct(statusCard: .active)
         
@@ -45,7 +45,7 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
-    func test_reduce_controlButtonEvent_unblockCard_shouldButtonsNotChangedAlertNilStatusInflight() {
+    func test_reduce_controlButtonEvent_unblockCard_shouldStatusInflightSpinnerNotNil() {
         
         let card = makeCardProduct(statusCard: .blockedUnlockAvailable)
         
@@ -58,6 +58,19 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_updateProducts_shouldStatusInflightSpinnerNotNil() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assertState(
+            .updateProducts,
+            on: .init(buttons: .buttons(card))){
+                
+                $0.status = .inflight(.updateProducts)
+                $0.spinner = .init()
+            }
+    }
+
     func test_reduce_update_shouldButtonsUpdatedAlertNilStatusNil() {
         
         let card = makeCardProduct(statusCard: .blockedUnlockAvailable)
