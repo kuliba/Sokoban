@@ -50,6 +50,17 @@ extension ControlPanelEffectHandler {
                     dispatch(.updateProducts)
                 }
             }
+            
+        case let .visibility(card):
+            
+            productProfileServices.createUserVisibilityProductsSettingsService.createUserVisibilityProductsSettings(.init(category: .card, products: [.init(productID: .init(card.id), visibility: .init(!card.isVisible))])) { result in
+                switch result {
+                case .failure:
+                    break
+                case .success:
+                    dispatch(.updateProducts)
+                }
+            }
         }
     }
 }

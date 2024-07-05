@@ -12,4 +12,5 @@ enum ControlPanelEffect {
     case delayAlert(Alert.ViewModel, DispatchTimeInterval)
     case blockCard(ProductCardData)
     case unblockCard(ProductCardData)
+    case visibility(ProductCardData)
 }

@@ -620,8 +620,6 @@ private extension PaymentsTransfersView {
             
             AnywayTransactionView(state: state, event: transactionEvent, factory: factory)
         }
-        .padding(.bottom)
-        .edgesIgnoringSafeArea(.bottom)
         .alert(
             item: state.alert,
             content: paymentFlowAlert(
@@ -641,6 +639,8 @@ private extension PaymentsTransfersView {
                 event: { transactionEvent(.fraud($0)) }
             )
         )
+        .padding(.bottom)
+        .ignoresSafeArea(.container, edges: .bottom)
         .navigationTitle("Payment: \(state.viewModel.state.transaction.isValid ? "valid" : "invalid")")
         .navigationBarTitleDisplayMode(.inline)
     }
