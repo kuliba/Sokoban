@@ -88,8 +88,8 @@ extension ControlPanelReducer {
             state.spinner = .init()
             effect = .unblockCard(card)
 
-        case let .changePin(productId):
-            print("changePin")
+        case let .changePin(card):
+            makeActions.changePin(card)
             
         case let .visibility(card):
             state.status = .inflight(.visibility)
@@ -148,8 +148,10 @@ extension ControlPanelReducer {
 extension ControlPanelReducer {
     
     struct MakeActions {
-        let contactsAction: MakeAction
+        
         let blockAction: MakeAction
+        let changePin: (ProductCardData) -> Void
+        let contactsAction: MakeAction
         let unblockAction: MakeAction
         let updateProducts: MakeAction
     }

@@ -15,6 +15,7 @@ import RemoteServices
 import Tagged
 import UIPrimitives
 import UserAccountNavigationComponent
+import ForaTools
 
 extension RootViewModelFactory {
     
@@ -31,6 +32,12 @@ extension RootViewModelFactory {
         
         let fpsReducer = ForaBank.UserAccountNavigationFPSReducer()
         let otpReducer = ForaBank.UserAccountNavigationOTPReducer()
+        
+        let codeObserver = NotificationCenter.default
+            .observe(
+                notificationName: "otpCode",
+                userInfoKey: "otp"
+            )
         
         let userAccountReducer = UserAccountReducer(
             fpsReduce: fpsReducer.reduce(_:_:),
@@ -52,6 +59,7 @@ extension RootViewModelFactory {
                         submitOTP: otpServices.submitOTP,
                         scheduler: $1
                     ),
+                    codeObserver: codeObserver,
                     scheduler: $1
                 )
             },

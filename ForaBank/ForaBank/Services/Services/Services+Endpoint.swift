@@ -91,6 +91,7 @@ extension Services {
             case getScenarioQRData
             case getSberQRData
             case getStickerPayment
+            case getSVCardLimits
             case getSvgImageList
             case getVerificationCode
             case makeSetBankDefault
@@ -319,6 +320,12 @@ extension Services.Endpoint {
         serviceName: .getJsonAbroad
     )
     
+    static let getSVCardLimits: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .getSVCardLimits
+    )
+
     static let getVerificationCode: Self = .init(
         pathPrefix: .transfer,
         version: .v2,

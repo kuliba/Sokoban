@@ -82,7 +82,7 @@ final class AnywayPaymentMakeDigestTests: XCTestCase {
         ])
     }
     
-    func test_shouldReplaceDecimalSymbolInNumericParameters() {
+    func test_shouldReplaceDecimalSymbolInNumericParameters_ru_RU() {
         
         let (id0, id1) = (anyMessage(), anyMessage())
         let parameter1 = makeAnywayPaymentParameter(
@@ -105,9 +105,48 @@ final class AnywayPaymentMakeDigestTests: XCTestCase {
             payment: makeAnywayPayment(parameters: [parameter1, parameter2])
         )
         
-        XCTAssertNoDiff(context.makeDigest(targetDecimalSymbol: "-").additional, [
+        let digest = context.makeDigest(
+            locale: .init(identifier: "ru_RU"),
+            targetDecimalSymbol: "-"
+        )
+        
+        XCTAssertNoDiff(digest.additional, [
             .init(fieldID: 0, fieldName: id0, fieldValue: "12-345"),
             .init(fieldID: 1, fieldName: id1, fieldValue: "123,45"),
+        ])
+    }
+    
+    func test_shouldReplaceDecimalSymbolInNumericParameters_en_US() {
+        
+        let (id0, id1) = (anyMessage(), anyMessage())
+        let parameter1 = makeAnywayPaymentParameter(
+            field: makeAnywayPaymentElementParameterField(
+                id: id0, value: "12.345"
+            ),
+            uiAttributes: makeAnywayPaymentElementParameterUIAttributes(
+                dataType: .number
+            )
+        )
+        let parameter2 = makeAnywayPaymentParameter(
+            field: makeAnywayPaymentElementParameterField(
+                id: id1, value: "123.45"
+            ),
+            uiAttributes: makeAnywayPaymentElementParameterUIAttributes(
+                dataType: .string
+            )
+        )
+        let context = makeAnywayPaymentContext(
+            payment: makeAnywayPayment(parameters: [parameter1, parameter2])
+        )
+        
+        let digest = context.makeDigest(
+            locale: .init(identifier: "en_US"),
+            targetDecimalSymbol: "-"
+        )
+        
+        XCTAssertNoDiff(digest.additional, [
+            .init(fieldID: 0, fieldName: id0, fieldValue: "12-345"),
+            .init(fieldID: 1, fieldName: id1, fieldValue: "123.45"),
         ])
     }
     

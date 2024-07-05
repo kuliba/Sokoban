@@ -17,7 +17,7 @@ where IconView: View,
     let config: Config
     let iconView: () -> IconView
     let warningView: () -> WarningView
-    
+
     var body: some View {
         
         HStack(spacing: 16) {
