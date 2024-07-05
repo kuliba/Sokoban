@@ -141,13 +141,7 @@ struct TemplatesListView: View {
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                if let link = viewModel.link  {
-                    
-                    switch link {
-                    case let .payment(paymentViewModel):
-                        PaymentsView(viewModel: paymentViewModel)
-                    }
-                }
+                viewModel.link.map(destination)
             }
         } //mainVStack
         .ignoresSafeArea(.container, edges: .bottom)
@@ -191,6 +185,20 @@ private extension View {
 }
 
 private extension TemplatesListView {
+    
+    @ViewBuilder
+    func destination(
+        link: TemplatesListViewModel.Link?
+    ) -> some View {
+        
+        switch link {
+        case nil:
+            EmptyView()
+            
+        case let .payment(paymentsViewModel):
+            PaymentsView(viewModel: paymentsViewModel)
+        }
+    }
     
     @ToolbarContentBuilder
     func toolbar() -> some ToolbarContent {
