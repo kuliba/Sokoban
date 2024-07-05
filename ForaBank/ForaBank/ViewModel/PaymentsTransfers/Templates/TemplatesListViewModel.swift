@@ -23,10 +23,9 @@ class TemplatesListViewModel: ObservableObject {
     
     @Published var items: [ItemViewModel]
 
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var route: Route { didSet { isLinkActive = route.link != nil }}
     @Published var success: PaymentsSuccessViewModel?
     @Published var isLinkActive: Bool = false
-    @Published var modal: Modal?
     
     private let model: Model
     var bindings = Set<AnyCancellable>()
@@ -44,7 +43,9 @@ class TemplatesListViewModel: ObservableObject {
     private let flowManager: TemplatesFlowManager
     
     internal init(
-        state: State, style: Style,
+        route: Route = .init(),
+        state: State,
+        style: Style,
         navBarState: NavBarState,
         categorySelector: OptionSelectorView.ViewModel?,
         items: [ItemViewModel],
@@ -54,6 +55,7 @@ class TemplatesListViewModel: ObservableObject {
         model: Model,
         flowManager: TemplatesFlowManager
     ) {
+        self.route = route
         self.state = state
         self.style = style
         self.navBarState = navBarState
@@ -67,6 +69,7 @@ class TemplatesListViewModel: ObservableObject {
     }
     
     convenience init(
+        route: Route = .init(),
         _ model: Model,
         dismissAction: @escaping () -> Void,
         updateFastAll: @escaping UpdateFastAll,
@@ -75,6 +78,7 @@ class TemplatesListViewModel: ObservableObject {
         model.action.send(ModelAction.PaymentTemplate.List.Requested())
         
         self.init(
+            route: route,
             state: model.paymentTemplates.value.isEmpty ? .placeholder : .normal,
             style: model.settingsPaymentTemplates.style,
             navBarState: .regular(
@@ -828,33 +832,45 @@ extension TemplatesListViewModel {
     
     typealias UpdateFastAll = () -> Void
     
+    struct Route {
+        
+        var link: Link?
+        var modal: Modal?
+    }
+    
     enum Modal {
         
         case alert(Alert.ViewModel)
         case sheet(Sheet)
     }
     
+    var link: Link? {
+        
+        get { route.link }
+        set { route.link = newValue }
+    }
+    
     var alert: Alert.ViewModel? {
         
         get {
-            guard case let .alert(alert) = modal else { return nil }
+            guard case let .alert(alert) = route.modal else { return nil }
             return alert
         }
         
         set {
-            modal = newValue.map(Modal.alert)
+            route.modal = newValue.map(Modal.alert)
         }
     }
     
     var sheet: Sheet? {
         
         get {
-            guard case let .sheet(sheet) = modal else { return nil }
+            guard case let .sheet(sheet) = route.modal else { return nil }
             return sheet
         }
         
         set {
-            modal = newValue.map(Modal.sheet)
+            route.modal = newValue.map(Modal.sheet)
         }
     }
     

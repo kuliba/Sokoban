@@ -149,8 +149,8 @@ struct TemplatesListView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar(content: toolbar)
         .modal(
-            modal: viewModel.modal,
-            dismiss: { viewModel.modal = nil },
+            modal: viewModel.route.modal,
+            dismiss: { viewModel.route.modal = nil },
             bottomSheetContent: bottomSheetContent
         )
     }
