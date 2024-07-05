@@ -6,6 +6,7 @@
 //
 
 import OTPInputComponent
+import Combine
 import XCTest
 
 final class TimedOTPInputViewModelTests: XCTestCase {
@@ -202,6 +203,38 @@ final class TimedOTPInputViewModelTests: XCTestCase {
         ])
     }
     
+    func test_otpInput_codeObserver_shouldObserveCode() {
+        
+        let subject = PassthroughSubject<String, Never>()
+        let (sut, stateSpy,_, reducerSpy,_) = makeSUT(
+            duration: 4,
+            codeObserver: subject.eraseToAnyPublisher(),
+            reducerStub:
+                (makeState(
+                    countdown: .running(remaining: 4),
+                    otpField: .init(text: "654321")
+                ), nil)
+        )
+        
+        XCTAssertNoDiff(
+            stateSpy.events.map(\.value?.status),
+            [ .input(.init(countdown: .completed, otpField: .init(text: "")))]
+        )
+        
+        subject.send("123456")
+        
+        XCTAssertNoDiff(reducerSpy.messages.map(\.event), [.otpField(.edit("123456"))])
+        XCTAssertNoDiff(
+            stateSpy.events.map(\.value?.status),
+            [
+                .input(.init(countdown: .completed, otpField: .init(text: ""))),
+                .input(.init(countdown: .running(remaining: 4), otpField: .init(text: "654321")))
+            ]
+        )
+        
+        XCTAssertNotNil(sut)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = TimedOTPInputViewModel
@@ -220,6 +253,7 @@ final class TimedOTPInputViewModelTests: XCTestCase {
         duration: Int = 5,
         length: Int = 6,
         initialState: OTPInputState? = nil,
+        codeObserver: AnyPublisher<String, Never> = Empty().eraseToAnyPublisher(),
         reducerStub: ReducerStub...,
         file: StaticString = #file,
         line: UInt = #line
@@ -243,6 +277,7 @@ final class TimedOTPInputViewModelTests: XCTestCase {
         let sut = SUT(
             viewModel: viewModel,
             timer: timerSpy,
+            codeObserver: codeObserver,
             scheduler: .immediate
         )
         let stateSpy = StateSpy(sut.$state)
