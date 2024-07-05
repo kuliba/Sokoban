@@ -26,7 +26,7 @@ class TemplatesListViewModel: ObservableObject {
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var success: PaymentsSuccessViewModel?
     @Published var isLinkActive: Bool = false
-    @Published var sheet: Sheet?
+    @Published var modal: Modal?
     
     private let model: Model
     var bindings = Set<AnyCancellable>()
@@ -827,6 +827,23 @@ private extension TemplatesListViewModel {
 extension TemplatesListViewModel {
     
     typealias UpdateFastAll = () -> Void
+    
+    enum Modal {
+        
+        case sheet(Sheet)
+    }
+    
+    var sheet: Sheet? {
+        
+        get {
+            guard case let .sheet(sheet) = modal else { return nil }
+            return sheet
+        }
+        
+        set {
+            modal = newValue.map(Modal.sheet)
+        }
+    }
     
     struct Sheet: BottomSheetCustomizable {
         
