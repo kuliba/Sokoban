@@ -10,7 +10,10 @@ import Foundation
 
 public extension AnywayPaymentContext {
     
-    func makeDigest() -> AnywayPaymentDigest {
+    func makeDigest(
+        locale: Locale = .autoupdatingCurrent,
+        targetDecimalSymbol: Character = "."
+    ) -> AnywayPaymentDigest {
         
         guard !shouldRestart
         else {
@@ -23,8 +26,14 @@ public extension AnywayPaymentContext {
             )
         }
         
+        let existingDecimalSymbol = locale.decimalSeparator?.first ?? targetDecimalSymbol
+        let additional = payment.additional(
+            replacingExistingDecimalSymbol: existingDecimalSymbol,
+            withTargetDecimalSymbol: targetDecimalSymbol
+        )
+        
         return .init(
-            additional: payment.additional(),
+            additional: additional,
             amount: payment.amount,
             core: payment.core(),
             puref: outline.payload.puref
@@ -34,13 +43,28 @@ public extension AnywayPaymentContext {
 
 private extension AnywayPayment {
     
-    func additional() -> [AnywayPaymentDigest.Additional] {
+    func additional(
+        replacingExistingDecimalSymbol existingDecimalSymbol: Character,
+        withTargetDecimalSymbol targetDecimalSymbol: Character
+    ) -> [AnywayPaymentDigest.Additional] {
         
-        fields.enumerated().compactMap { index, field in
+        parameters.enumerated().compactMap { index, parameter in
             
-            field.value.map {
+            parameter.field.value.map { value in
                 
-                .init(fieldID: index, fieldName: field.id, fieldValue: $0)
+                let value = {
+                    if parameter.uiAttributes.dataType == .number {
+                        return value.replacingOccurrences(of: String(existingDecimalSymbol), with: String(targetDecimalSymbol))
+                    } else {
+                        return value
+                    }
+                }()
+                
+                return .init(
+                    fieldID: index, 
+                    fieldName: parameter.field.id,
+                    fieldValue: value
+                )
             }
         }
     }
@@ -57,9 +81,9 @@ private extension AnywayPayment {
         )
     }
     
-    var fields: [AnywayElement.Parameter.Field] {
+    var parameters: [AnywayElement.Parameter] {
         
-        elements.compactMap(\.parameter?.field)
+        elements.compactMap(\.parameter)
     }
 }
 

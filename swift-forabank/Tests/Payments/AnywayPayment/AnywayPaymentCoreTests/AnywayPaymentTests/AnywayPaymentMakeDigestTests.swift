@@ -82,6 +82,35 @@ final class AnywayPaymentMakeDigestTests: XCTestCase {
         ])
     }
     
+    func test_shouldReplaceDecimalSymbolInNumericParameters() {
+        
+        let (id0, id1) = (anyMessage(), anyMessage())
+        let parameter1 = makeAnywayPaymentParameter(
+            field: makeAnywayPaymentElementParameterField(
+                id: id0, value: "12,345"
+            ),
+            uiAttributes: makeAnywayPaymentElementParameterUIAttributes(
+                dataType: .number
+            )
+        )
+        let parameter2 = makeAnywayPaymentParameter(
+            field: makeAnywayPaymentElementParameterField(
+                id: id1, value: "123,45"
+            ),
+            uiAttributes: makeAnywayPaymentElementParameterUIAttributes(
+                dataType: .string
+            )
+        )
+        let context = makeAnywayPaymentContext(
+            payment: makeAnywayPayment(parameters: [parameter1, parameter2])
+        )
+        
+        XCTAssertNoDiff(context.makeDigest(targetDecimalSymbol: "-").additional, [
+            .init(fieldID: 0, fieldName: id0, fieldValue: "12-345"),
+            .init(fieldID: 1, fieldName: id1, fieldValue: "123,45"),
+        ])
+    }
+    
     func test_shouldSetCoreToNilOnPaymentWithoutAmount() {
         
         let context = makeAnywayPaymentContext(
