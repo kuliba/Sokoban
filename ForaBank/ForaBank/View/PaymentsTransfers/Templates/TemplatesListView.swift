@@ -172,29 +172,37 @@ struct TemplatesListView: View {
                 }
             }
         }
-        .bottomSheet(item: $viewModel.sheet) { sheet in
+        .bottomSheet(item: $viewModel.sheet, content: bottomSheetContent)
+    }
+}
+ 
+private extension TemplatesListView {
+    
+    @ViewBuilder
+    func bottomSheetContent(
+        sheet: TemplatesListViewModel.Sheet
+    ) -> some View {
+        
+        switch sheet.type {
+        case let .meToMe(viewModel):
             
-            switch sheet.type {
-            case let .meToMe(viewModel):
-                
-                PaymentsMeToMeView(viewModel: viewModel)
-                    .fullScreenCover(item: $viewModel.success) { successViewModel in
-                
-                        PaymentsSuccessView(viewModel: successViewModel)
-                    }
-                    .transaction { transaction in
-
-                        transaction.disablesAnimations = false
-                    }
-                
-            case let .renameItem(renameViewModel):
-                
-                RenameTemplateItemView(viewModel: renameViewModel)
+            PaymentsMeToMeView(viewModel: viewModel)
+                .fullScreenCover(item: $viewModel.success) { successViewModel in
+                    
+                    PaymentsSuccessView(viewModel: successViewModel)
+                }
+                .transaction { transaction in
+                    
+                    transaction.disablesAnimations = false
+                }
             
-            case let .productList(productListViewModel):
+        case let .renameItem(renameViewModel):
             
-                ProductListView(viewModel: productListViewModel)
-            }
+            RenameTemplateItemView(viewModel: renameViewModel)
+            
+        case let .productList(productListViewModel):
+            
+            ProductListView(viewModel: productListViewModel)
         }
     }
 }
