@@ -2455,6 +2455,7 @@
 		839109262C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839109252C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift */; };
 		839109282C381D86007F5257 /* GetSVCardLimitsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839109272C381D86007F5257 /* GetSVCardLimitsServices.swift */; };
 		8391092A2C38204F007F5257 /* RequestFactory+createGetSVCardLimitsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839109292C38204F007F5257 /* RequestFactory+createGetSVCardLimitsRequest.swift */; };
+		8391092C2C382A6F007F5257 /* RequestFactory+createGetSVCardLimitsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8391092B2C382A6F007F5257 /* RequestFactory+createGetSVCardLimitsTests.swift */; };
 		83943ECD2A8F790100042CB2 /* ProductsSwapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */; };
 		8394B2F32BBF2F5C0078CB10 /* AlertReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8394B2F22BBF2F5C0078CB10 /* AlertReducer.swift */; };
 		8394B2F52BBFD70E0078CB10 /* CvvInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8394B2F42BBFD70E0078CB10 /* CvvInfo.swift */; };
@@ -5521,6 +5522,7 @@
 		839109252C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeGetSVCardLimitsServices.swift"; sourceTree = "<group>"; };
 		839109272C381D86007F5257 /* GetSVCardLimitsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSVCardLimitsServices.swift; sourceTree = "<group>"; };
 		839109292C38204F007F5257 /* RequestFactory+createGetSVCardLimitsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetSVCardLimitsRequest.swift"; sourceTree = "<group>"; };
+		8391092B2C382A6F007F5257 /* RequestFactory+createGetSVCardLimitsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetSVCardLimitsTests.swift"; sourceTree = "<group>"; };
 		83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSwapViewTests.swift; sourceTree = "<group>"; };
 		8394B2F22BBF2F5C0078CB10 /* AlertReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertReducer.swift; sourceTree = "<group>"; };
 		8394B2F42BBFD70E0078CB10 /* CvvInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvInfo.swift; sourceTree = "<group>"; };
@@ -7773,6 +7775,7 @@
 				2A72920B2C2028F00077B139 /* RequestFactory+createGetVerificationCodeRequestTests.swift */,
 				2A2E3FC02BB2C73500730D37 /* RequestFactory+createMakeTransferRequestTests.swift */,
 				2AE1487A2C2AB02B00597DB7 /* RequestFactory_createMakeTransferV2RequestTests.swift */,
+				8391092B2C382A6F007F5257 /* RequestFactory+createGetSVCardLimitsTests.swift */,
 			);
 			path = AnywayPayment;
 			sourceTree = "<group>";
@@ -19889,6 +19892,7 @@
 				C155ABD92A28F33300BE66AE /* TranferData+Stubs.swift in Sources */,
 				2AB5FEA629E681750055BE57 /* PaymentsCodeViewComponentTests.swift in Sources */,
 				50841596283CFBD50028CEB0 /* ProductModelActivateTests.swift in Sources */,
+				8391092C2C382A6F007F5257 /* RequestFactory+createGetSVCardLimitsTests.swift in Sources */,
 				6845336E27984B2800104A8B /* ServerCommandsUtilityTests.swift in Sources */,
 				7788096B2A3B749B0004EA73 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				2AA429052AC1D54E00919C4A /* PaymentsProductViewModelTests.swift in Sources */,
