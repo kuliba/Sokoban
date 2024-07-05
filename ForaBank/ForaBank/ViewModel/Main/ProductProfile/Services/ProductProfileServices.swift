@@ -12,6 +12,7 @@ struct ProductProfileServices {
     let createBlockCardService: BlockCardServices
     let createUnblockCardService: UnblockCardServices
     let createUserVisibilityProductsSettingsService: UserVisibilityProductsSettingsServices
+    let createCreateGetSVCardLimits: GetSVCardLimitsServices
 }
 
 // MARK: - Preview Content
@@ -21,6 +22,7 @@ extension ProductProfileServices {
     static let preview: Self = .init(
         createBlockCardService: .preview(),
         createUnblockCardService: .preview(),
-        createUserVisibilityProductsSettingsService: .preview()
+        createUserVisibilityProductsSettingsService: .preview(),
+        createCreateGetSVCardLimits: .preview()
     )
 }

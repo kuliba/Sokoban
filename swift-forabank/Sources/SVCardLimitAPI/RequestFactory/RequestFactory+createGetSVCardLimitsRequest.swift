@@ -1,5 +1,5 @@
 //
-//  RequestFactory+createGetSVCardLimitRequest.swift
+//  RequestFactory+createGetSVCardLimitsRequest.swift
 //
 //
 //  Created by Andryusina Nataly on 18.06.2024.
@@ -10,9 +10,9 @@ import RemoteServices
 
 public extension RequestFactory {
     
-    static func createGetSVCardLimitRequest(
+    static func createGetSVCardLimitsRequest(
         url: URL,
-        payload: GetSVCardLimitPayload
+        payload: GetSVCardLimitsPayload
     ) throws -> URLRequest {
                 
         var request = createEmptyRequest(.post, with: url)
@@ -21,7 +21,7 @@ public extension RequestFactory {
     }
 }
 
-private extension GetSVCardLimitPayload {
+private extension GetSVCardLimitsPayload {
     
     var httpBody: Data {
         
