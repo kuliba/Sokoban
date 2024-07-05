@@ -153,30 +153,33 @@ struct TemplatesListView: View {
         .ignoresSafeArea(.container, edges: .bottom)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-        .toolbar {
-
-            ToolbarItem(placement: .principal) {
-                    
-                switch viewModel.navBarState {
-                case let .regular(regViewModel):
-                    RegularNavBarView(viewModel: regViewModel)
-                   
-                case let .search(searchViewModel):
-                    SearchNavBarView(viewModel: searchViewModel)
-                
-                case let .delete(deleteViewModel):
-                    TwoButtonsNavBarView(viewModel: deleteViewModel)
-                
-                case let .reorder(reorderViewModel):
-                    TwoButtonsNavBarView(viewModel: reorderViewModel)
-                }
-            }
-        }
+        .toolbar(content: toolbar)
         .bottomSheet(item: $viewModel.sheet, content: bottomSheetContent)
     }
 }
  
 private extension TemplatesListView {
+    
+    @ToolbarContentBuilder
+    func toolbar() -> some ToolbarContent {
+        
+        ToolbarItem(placement: .principal) {
+                
+            switch viewModel.navBarState {
+            case let .regular(regViewModel):
+                RegularNavBarView(viewModel: regViewModel)
+               
+            case let .search(searchViewModel):
+                SearchNavBarView(viewModel: searchViewModel)
+            
+            case let .delete(deleteViewModel):
+                TwoButtonsNavBarView(viewModel: deleteViewModel)
+            
+            case let .reorder(reorderViewModel):
+                TwoButtonsNavBarView(viewModel: reorderViewModel)
+            }
+        }
+    }
     
     @ViewBuilder
     func bottomSheetContent(
