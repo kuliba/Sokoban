@@ -134,11 +134,17 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             log: infoNetworkLog
         )
+        
+        let getSVCardLimitsServices = Services.makeGetSVCardLimitsServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
 
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
             createUnblockCardService: unblockCardServices,
-            createUserVisibilityProductsSettingsService: userVisibilityProductsSettingsServices
+            createUserVisibilityProductsSettingsService: userVisibilityProductsSettingsServices,
+            createCreateGetSVCardLimits: getSVCardLimitsServices
         )
         
         let productNavigationStateManager = ProductProfileFlowManager(
