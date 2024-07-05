@@ -2293,12 +2293,9 @@ extension ProductProfileViewModel {
     
     func changePin(_ productCard: ProductCardData) {
         if productCard.statusCard != .active {
-            if let controlPanelViewModel {
-                controlPanelViewModel.event(.hideSpinner)
-            }
             event(.alert(.delayAlert(.showBlockAlert)))
         } else {
-            checkCertificate(.init(productCard.id), certificate: self.cvvPINServicesClient, productCard)
+            checkCertificate(.init(productCard.id), certificate: cvvPINServicesClient, productCard)
         }
     }
     
@@ -2338,10 +2335,6 @@ extension ProductProfileViewModel {
                 model: self.createPinCodeViewModel(displayNumber: displayNumber),
                 request: self.resendOtpForPin
             ))
-        }
-        
-        if let controlPanelViewModel {
-            controlPanelViewModel.event(.hideSpinner)
         }
     }
     

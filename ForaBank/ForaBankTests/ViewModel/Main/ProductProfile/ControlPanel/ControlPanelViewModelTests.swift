@@ -61,9 +61,10 @@ extension Alert.ViewModel {
 extension ControlPanelReducer.MakeActions {
     
     static let emptyActions: Self = .init(
-        contactsAction: {},
         blockAction: {},
-        unblockAction: {},
+        changePin: {_ in },
+        contactsAction: {},
+        unblockAction: {}, 
         updateProducts: {}
     )
 }
