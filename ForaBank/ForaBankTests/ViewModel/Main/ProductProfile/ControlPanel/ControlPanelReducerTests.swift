@@ -58,7 +58,7 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
-    func test_reduce_updateProducts_shouldStatusInflightSpinnerNotNil() {
+    func test_reduce_updateProducts_shouldStatusInflight() {
         
         let card = makeCardProduct(statusCard: .active)
         
