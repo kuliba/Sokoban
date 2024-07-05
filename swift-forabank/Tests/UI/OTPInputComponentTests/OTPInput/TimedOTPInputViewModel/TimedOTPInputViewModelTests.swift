@@ -203,10 +203,10 @@ final class TimedOTPInputViewModelTests: XCTestCase {
         ])
     }
     
-    func test_otpInput_codeObserver_shouldSendEventEdit() {
+    func test_otpInput_codeObserver_shouldObserveCode() {
         
         let subject = PassthroughSubject<String, Never>()
-        let (_, stateSpy,_, reducerSpy,_) = makeSUT(
+        let (sut, stateSpy,_, reducerSpy,_) = makeSUT(
             duration: 4,
             codeObserver: subject.eraseToAnyPublisher(),
             reducerStub:
@@ -231,6 +231,8 @@ final class TimedOTPInputViewModelTests: XCTestCase {
                 .input(.init(countdown: .running(remaining: 4), otpField: .init(text: "654321")))
             ]
         )
+        
+        XCTAssertNotNil(sut)
     }
     
     // MARK: - Helpers
