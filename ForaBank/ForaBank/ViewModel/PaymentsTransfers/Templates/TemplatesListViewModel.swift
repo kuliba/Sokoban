@@ -43,6 +43,7 @@ class TemplatesListViewModel: ObservableObject {
     var isExistDeleted: Bool { !items.filter{$0.state.isDeleting}.isEmpty }
     
     private let flowManager: TemplatesFlowManager
+    private let routeSubject = PassthroughSubject<Route, Never>()
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     internal init(
@@ -71,6 +72,10 @@ class TemplatesListViewModel: ObservableObject {
         self.model = model
         self.flowManager = flowManager
         self.scheduler = scheduler
+        
+        routeSubject
+            .receive(on: scheduler)
+            .assign(to: &$route)
     }
     
     convenience init(
