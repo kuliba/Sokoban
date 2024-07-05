@@ -206,19 +206,30 @@ final class TimedOTPInputViewModelTests: XCTestCase {
     func test_otpInput_codeObserver_shouldSendEventEdit() {
         
         let subject = PassthroughSubject<String, Never>()
+        let (_, stateSpy,_, reducerSpy,_) = makeSUT(
+            duration: 4,
+            codeObserver: subject.eraseToAnyPublisher(),
+            reducerStub:
+                (makeState(
+                    countdown: .running(remaining: 4),
+                    otpField: .init(text: "654321")
+                ), nil)
+        )
         
-        let (_,_,_, reducerSpy, _) = makeSUT(
-                duration: 4,
-                codeObserver: subject.eraseToAnyPublisher(),
-                reducerStub:
-                    (makeState(countdown: .starting(duration: 4)), nil)
-            )
+        XCTAssertNoDiff(
+            stateSpy.events.map(\.value?.status),
+            [ .input(.init(countdown: .completed, otpField: .init(text: "")))]
+        )
         
         subject.send("123456")
-
+        
+        XCTAssertNoDiff(reducerSpy.messages.map(\.event), [.otpField(.edit("123456"))])
         XCTAssertNoDiff(
-            reducerSpy.messages.map({ $0.event }),
-            [.otpField(.edit("123456"))]
+            stateSpy.events.map(\.value?.status),
+            [
+                .input(.init(countdown: .completed, otpField: .init(text: ""))),
+                .input(.init(countdown: .running(remaining: 4), otpField: .init(text: "654321")))
+            ]
         )
     }
     

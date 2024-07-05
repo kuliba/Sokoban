@@ -78,7 +78,6 @@ public final class TimedOTPInputViewModel: ObservableObject {
                 self?.event(.otpField(.edit(code)))
             }
             .store(in: &cancellables)
-        
     }
 }
 
