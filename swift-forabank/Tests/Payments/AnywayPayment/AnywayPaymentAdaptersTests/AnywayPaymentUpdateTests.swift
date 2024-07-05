@@ -16,7 +16,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_init_shouldFailOnFinalStepTrueNeedMakeFalse() throws {
         
         try XCTAssertNil(makeUpdate(from: .makeResponse(
-            finalStep: true, 
+            finalStep: true,
             needMake: false
         )))
     }
@@ -24,7 +24,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_init_shouldFailOnFinalStepTrueNeedMakeNil() throws {
         
         try XCTAssertNil(makeUpdate(from: .makeResponse(
-            finalStep: true, 
+            finalStep: true,
             needMake: nil
         )))
     }
@@ -32,7 +32,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_init_shouldFailOnFinalStepFalseNeedMakeTrue() throws {
         
         try XCTAssertNil(makeUpdate(from: .makeResponse(
-            finalStep: false, 
+            finalStep: false,
             needMake: true
         )))
     }
@@ -40,10 +40,28 @@ final class AnywayPaymentUpdateTests: XCTestCase {
     func test_init_shouldFailOnFinalStepNilNeedMakeTrue() throws {
         
         try XCTAssertNil(makeUpdate(from: .makeResponse(
-            finalStep: nil, 
+            finalStep: nil,
             needMake: true
         )))
     }
+    
+    func test_init_shouldTrimWhitespaces() {
+        
+        let response = makeResponse(
+            params: [
+                makeResponseParameter(content: " "),
+                makeResponseParameter(content: "  "),
+                makeResponseParameter(content: " a"),
+                makeResponseParameter(content: "a "),
+                makeResponseParameter(content: " a "),
+                makeResponseParameter(content: "  a  "),
+            ])
+        let update = AnywayPaymentUpdate(response)
+        
+        XCTAssertNoDiff(update?.parameters.map(\.field.content), ["", "", "a", "a", "a", "a"])
+    }
+    
+#warning("move below to Helperrs")
     
     func test_init_validData() throws {
         
@@ -279,7 +297,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 ),
                 .init(
                     field: makeParameterField(
-                        content: " ",
+                        content: "",
                         id: "9"
                     ),
                     icon: nil,
@@ -295,7 +313,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 ),
                 .init(
                     field: makeParameterField(
-                        content: " ",
+                        content: "",
                         id: "13"
                     ),
                     icon: nil,
@@ -311,7 +329,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 ),
                 .init(
                     field: makeParameterField(
-                        content: " ",
+                        content: "",
                         id: "17"
                     ),
                     icon: nil,
@@ -327,7 +345,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 ),
                 .init(
                     field: makeParameterField(
-                        content: " ",
+                        content: "",
                         id: "21"
                     ),
                     icon: nil,
@@ -343,7 +361,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 ),
                 .init(
                     field: makeParameterField(
-                        content: " ",
+                        content: "",
                         id: "25"
                     ),
                     icon: nil,
@@ -359,7 +377,7 @@ final class AnywayPaymentUpdateTests: XCTestCase {
                 ),
                 .init(
                     field: makeParameterField(
-                        content: " ",
+                        content: "",
                         id: "29"
                     ),
                     icon: .svg(.svgSample7),
@@ -735,6 +753,45 @@ final class AnywayPaymentUpdateTests: XCTestCase {
             string.json,
             anyHTTPURLResponse()
         ).get()
+    }
+    
+    private func makeResponse(
+        params: [ResponseMapper.CreateAnywayTransferResponse.Parameter]
+    ) -> ResponseMapper.CreateAnywayTransferResponse {
+        
+        return .init(
+            additional: [],
+            finalStep: false,
+            needMake: false,
+            needOTP: false,
+            needSum: false,
+            parametersForNextStep: params,
+            options: []
+        )
+    }
+    
+    private func makeResponseParameter(
+        content: String?
+    ) -> ResponseMapper.CreateAnywayTransferResponse.Parameter {
+        
+        return .init(
+            content: content,
+            dataType: .number,
+            id: UUID().uuidString,
+            inputFieldType: .none,
+            isPrint: true,
+            isRequired: true,
+            phoneBook: false,
+            rawLength: 0,
+            isReadOnly: false,
+            regExp: "",
+            md5hash: nil,
+            svgImage: nil,
+            title: "title",
+            type: .input,
+            viewType: .input,
+            visible: true
+        )
     }
 }
 
