@@ -830,7 +830,20 @@ extension TemplatesListViewModel {
     
     enum Modal {
         
+        case alert(Alert.ViewModel)
         case sheet(Sheet)
+    }
+    
+    var alert: Alert.ViewModel? {
+        
+        get {
+            guard case let .alert(alert) = modal else { return nil }
+            return alert
+        }
+        
+        set {
+            modal = newValue.map(Modal.alert)
+        }
     }
     
     var sheet: Sheet? {

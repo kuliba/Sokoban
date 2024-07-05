@@ -175,6 +175,9 @@ private extension View {
         case .none:
             self
             
+        case let .alert(alertViewModel):
+            alert(item: alertViewModel, content: Alert.init(with:))
+            
         case let .sheet(sheet):
             bottomSheet(
                 item: .init(
