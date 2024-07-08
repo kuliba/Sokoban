@@ -15,17 +15,20 @@ struct ControlPanelState {
     var status: Status?
     var alert: Alert.ViewModel?
     var spinner: SpinnerView.ViewModel?
+    var navigationBarViewModel: NavigationBarView.ViewModel
 
     init(
         buttons: [ControlPanelButtonDetails],
         status: Status? = nil,
         alert: Alert.ViewModel? = nil,
-        spinner: SpinnerView.ViewModel? = nil
+        spinner: SpinnerView.ViewModel? = nil,
+        navigationBarViewModel: NavigationBarView.ViewModel
     ) {
         self.buttons = buttons
         self.status = status
         self.alert = alert
         self.spinner = spinner
+        self.navigationBarViewModel = navigationBarViewModel
     }
 }
 

@@ -50,6 +50,9 @@ extension ControlPanelReducer {
         case .updateProducts:
             state.status = .inflight(.updateProducts)
             makeActions.updateProducts()
+            
+        case let .updateTitle(newTitle):
+            state.navigationBarViewModel.title = newTitle
         }
         return (state, effect)
     }
