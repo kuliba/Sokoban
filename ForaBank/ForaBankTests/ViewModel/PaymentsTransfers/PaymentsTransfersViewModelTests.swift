@@ -776,12 +776,14 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         
         let getSVCardLimitsServices = GetSVCardLimitsServices.preview()
 
+        let changeSVCardLimitServices = ChangeSVCardLimitServices.preview()
 
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
             createUnblockCardService: unblockCardServices,
             createUserVisibilityProductsSettingsService: userVisibilityServices,
-            createCreateGetSVCardLimits: getSVCardLimitsServices
+            createCreateGetSVCardLimits: getSVCardLimitsServices,
+            createChangeSVCardLimit: changeSVCardLimitServices
         )
 
         let qrViewModelFactory = QRViewModelFactory.preview()

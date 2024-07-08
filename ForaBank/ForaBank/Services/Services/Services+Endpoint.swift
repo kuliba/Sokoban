@@ -66,6 +66,7 @@ extension Services {
             case blockCard
             case changeClientConsentMe2MePull
             case changePIN
+            case changeSVCardLimit
             case createAnywayTransfer
             case createCommissionProductTransfer
             case createFastPaymentContract
@@ -177,6 +178,12 @@ extension Services.Endpoint {
         serviceName: .changePIN
     )
     
+    static let changeSVCardLimit: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .changeSVCardLimit
+    )
+
     static func createAnywayTransfer(
         version: Services.Endpoint.Version? = nil
     ) -> Self {

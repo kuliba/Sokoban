@@ -2361,6 +2361,10 @@
 		83247C302BC69F36000AF914 /* ProductProfileViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83247C2F2BC69F36000AF914 /* ProductProfileViewModelFactory.swift */; };
 		832481A02BC5175200D20A2F /* PanelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8324819F2BC5175200D20A2F /* PanelButton.swift */; };
 		832721402C122C4B00259785 /* MyProductsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8327213F2C122C4B00259785 /* MyProductsViewModelTests.swift */; };
+		8328ABF52C3BFF4900AD05E0 /* Services+makeChangeSVCardLimitServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8328ABF42C3BFF4900AD05E0 /* Services+makeChangeSVCardLimitServices.swift */; };
+		8328ABF72C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8328ABF62C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift */; };
+		8328ABF92C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8328ABF82C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift */; };
+		8328ABFB2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8328ABFA2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift */; };
 		832F2D4D2BC9205600221360 /* ProductProfileViewModel+createTopUpPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F2D4C2BC9205600221360 /* ProductProfileViewModel+createTopUpPanel.swift */; };
 		832F2D4F2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F2D4E2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift */; };
 		832F2D532BC9570200221360 /* BottomSheetReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F2D522BC9570200221360 /* BottomSheetReducer.swift */; };
@@ -5432,6 +5436,10 @@
 		83247C2F2BC69F36000AF914 /* ProductProfileViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileViewModelFactory.swift; sourceTree = "<group>"; };
 		8324819F2BC5175200D20A2F /* PanelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelButton.swift; sourceTree = "<group>"; };
 		8327213F2C122C4B00259785 /* MyProductsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsViewModelTests.swift; sourceTree = "<group>"; };
+		8328ABF42C3BFF4900AD05E0 /* Services+makeChangeSVCardLimitServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeChangeSVCardLimitServices.swift"; sourceTree = "<group>"; };
+		8328ABF62C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeSVCardLimitServices.swift; sourceTree = "<group>"; };
+		8328ABF82C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createChangeSVCardLimitRequest.swift"; sourceTree = "<group>"; };
+		8328ABFA2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "RequestFactory+createChangeSVCardLimitTests.swift"; path = "ForaBankTests/Services/RequestFactory/RequestFactory+createChangeSVCardLimitTests.swift"; sourceTree = SOURCE_ROOT; };
 		832F2D4C2BC9205600221360 /* ProductProfileViewModel+createTopUpPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductProfileViewModel+createTopUpPanel.swift"; sourceTree = "<group>"; };
 		832F2D4E2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductNavigationStateEffectHandler.swift; sourceTree = "<group>"; };
 		832F2D522BC9570200221360 /* BottomSheetReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetReducer.swift; sourceTree = "<group>"; };
@@ -7759,6 +7767,8 @@
 		2A2E3FBE2BB2C6D500730D37 /* RequestFactory */ = {
 			isa = PBXGroup;
 			children = (
+				8391092B2C382A6F007F5257 /* RequestFactory+createGetSVCardLimitsTests.swift */,
+				8328ABFA2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift */,
 				C17F3C932BF2631800AE1EB4 /* LatestPayments */,
 				2A2E3FBF2BB2C6DF00730D37 /* AnywayPayment */,
 			);
@@ -7775,7 +7785,6 @@
 				2A72920B2C2028F00077B139 /* RequestFactory+createGetVerificationCodeRequestTests.swift */,
 				2A2E3FC02BB2C73500730D37 /* RequestFactory+createMakeTransferRequestTests.swift */,
 				2AE1487A2C2AB02B00597DB7 /* RequestFactory_createMakeTransferV2RequestTests.swift */,
-				8391092B2C382A6F007F5257 /* RequestFactory+createGetSVCardLimitsTests.swift */,
 			);
 			path = AnywayPayment;
 			sourceTree = "<group>";
@@ -8462,6 +8471,7 @@
 				C1F1BECE2BF244820022C59B /* RequestFactory+getAllLatestPayments.swift */,
 				833D3E462C2F11C3006626F2 /* RequestFactory+createBlockCardRequest.swift */,
 				839109292C38204F007F5257 /* RequestFactory+createGetSVCardLimitsRequest.swift */,
+				8328ABF82C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift */,
 			);
 			path = RequestFactory;
 			sourceTree = "<group>";
@@ -13308,6 +13318,7 @@
 				833D3E482C3048B1006626F2 /* ProductProfileServices.swift */,
 				83DBC7B52C37E0C900DEF441 /* UserVisibilityProductsSettingsServices.swift */,
 				839109272C381D86007F5257 /* GetSVCardLimitsServices.swift */,
+				8328ABF62C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -13550,6 +13561,7 @@
 				833D3E522C352D8E006626F2 /* Services+makeBlockCardServices.swift */,
 				83DBC7B12C37DCCD00DEF441 /* Services+makeUserVisibilityProductsSettingsServices.swift */,
 				839109252C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift */,
+				8328ABF42C3BFF4900AD05E0 /* Services+makeChangeSVCardLimitServices.swift */,
 			);
 			path = ProductProfile;
 			sourceTree = "<group>";
@@ -18711,6 +18723,7 @@
 				2A9CB0882BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift in Sources */,
 				7769F5C627D8B19300F80607 /* ProductDynamicParams.swift in Sources */,
 				8306C12F2B63A4A4007FDA89 /* RequestFactory+getProductDynamicParamsList.swift in Sources */,
+				8328ABF72C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift in Sources */,
 				2A65D8AB2A333123003B3FEA /* TaxCodes.swift in Sources */,
 				2A65D8AB2A333123003B3FEA /* TaxCodes.swift in Sources */,
 				774A8B422865FD1800B81140 /* MessagesHistoryView.swift in Sources */,
@@ -18913,6 +18926,7 @@
 				77FF670B27BABCD9009FEA09 /* KeychainAgentProtocol.swift in Sources */,
 				ED08C70D28426FA900A49889 /* DocumentDelailCellViewComponent.swift in Sources */,
 				50239E9B2941253F00AA480B /* CheckBoxViewComponent.swift in Sources */,
+				8328ABF92C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift in Sources */,
 				2A840BFE2C36C5AB00BA6887 /* PaymentsTransfersFlowEffectHandlerMicroServices.swift in Sources */,
 				ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */,
 				C1F8F5FE294A50B800FE5703 /* HintView.swift in Sources */,
@@ -19380,6 +19394,7 @@
 				68FFA561268DD2CF002DADFA /* CountriesCodeButton.swift in Sources */,
 				0B71D7A428FD837300AA1970 /* QRParameter.swift in Sources */,
 				EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */,
+				8328ABF52C3BFF4900AD05E0 /* Services+makeChangeSVCardLimitServices.swift in Sources */,
 				0B01073827CD4D4B006462E6 /* ButtonSimpleViewComponent.swift in Sources */,
 				0BF3485D26931254005138A8 /* SuggestBankDecodableModel.swift in Sources */,
 				0BAD4D3B274417E700FDF9B6 /*  ExtensionPushHistoryNav.swift in Sources */,
@@ -19616,6 +19631,7 @@
 				2A6DC7332AF3E4FA00688401 /* LoggingStoreDecoratorTests.swift in Sources */,
 				2A6DC72A2AF3CA0000688401 /* LoggingLoaderDecoratorWithStoreTests.swift in Sources */,
 				2A7688DA2AF3A76C00045293 /* LoggingLoaderDecoratorWithInMemoryStoreTests.swift in Sources */,
+				8328ABFB2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift in Sources */,
 				2A8A283E2A4088DE000D3807 /* ServerAgentSpy.swift in Sources */,
 				2A21E3642AC20C5D00DB6456 /* Model+PaymensSFPTests.swift in Sources */,
 				2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */,
