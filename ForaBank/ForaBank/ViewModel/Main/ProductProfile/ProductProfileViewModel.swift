@@ -1986,8 +1986,13 @@ extension ProductProfileViewModel {
             unblockAction: {[weak self] in self?.controlPanelViewModel?.event(.controlButtonEvent(.unblockCard(card)))},
             updateProducts: { [weak self] in self?.model.handleProductsUpdateTotalProduct(.init(productType: .card))}
         )
+        
+        let backButton: NavigationBarView.ViewModel.BackButtonItemViewModel = .init(icon: .ic24ChevronLeft, action: { [weak self] in self?.link = nil })
+
+        let navigationBarViewModel = NavigationBarView.ViewModel(title: "Управление", subtitle: navigationTitleForControlPanel, leftItems: [backButton])
+        
         return .init(
-            initialState: .init(buttons: buttons),
+            initialState: .init(buttons: buttons, navigationBarViewModel: navigationBarViewModel),
             reduce: ControlPanelReducer(
                 makeAlert: productProfileViewModelFactory.makeAlert,
                 makeActions: makeActions

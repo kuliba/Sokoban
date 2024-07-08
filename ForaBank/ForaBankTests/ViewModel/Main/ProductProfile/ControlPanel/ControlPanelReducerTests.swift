@@ -17,7 +17,7 @@ final class ControlPanelReducerTests: XCTestCase {
         
         assertState(
             .controlButtonEvent(.delayAlert(card)),
-            on: .init(buttons: .buttons(card)))
+            on: initialState(buttons: .buttons(card)))
     }
     
     func test_reduce_controlButtonEvent_showAlert_shouldButtonsNotChangedAlertNotNilStatusNil() {
@@ -26,7 +26,7 @@ final class ControlPanelReducerTests: XCTestCase {
         
         assertState(
             .controlButtonEvent(.showAlert(.testAlert)),
-            on: .init(buttons: .buttons(card))) {
+            on: initialState(buttons: .buttons(card))) {
                 
                 $0.alert = .testAlert
             }
@@ -38,7 +38,7 @@ final class ControlPanelReducerTests: XCTestCase {
         
         assertState(
             .controlButtonEvent(.blockCard(card)),
-            on: .init(buttons: .buttons(card))) {
+            on: initialState(buttons: .buttons(card))) {
                 
                 $0.status = .inflight(.block)
                 $0.spinner = .init()
@@ -51,7 +51,7 @@ final class ControlPanelReducerTests: XCTestCase {
         
         assertState(
             .controlButtonEvent(.unblockCard(card)),
-            on: .init(buttons: .buttons(card))) {
+            on: initialState(buttons: .buttons(card))) {
                 
                 $0.status = .inflight(.unblock)
                 $0.spinner = .init()
@@ -64,7 +64,7 @@ final class ControlPanelReducerTests: XCTestCase {
         
         assertState(
             .controlButtonEvent(.visibility(card)),
-            on: .init(buttons: .buttons(card))) {
+            on: initialState(buttons: .buttons(card))) {
                 
                 $0.status = .inflight(.visibility)
                 $0.spinner = .init()
@@ -77,7 +77,7 @@ final class ControlPanelReducerTests: XCTestCase {
         
         assertState(
             .updateProducts,
-            on: .init(buttons: .buttons(card))){
+            on: initialState(buttons: .buttons(card))){
                 
                 $0.status = .inflight(.updateProducts)
             }
@@ -89,7 +89,7 @@ final class ControlPanelReducerTests: XCTestCase {
         
         assertState(
             .updateState([]),
-            on: .init(buttons: .buttons(card))) {
+            on: initialState(buttons: .buttons(card))) {
                 
                 $0.buttons = []
             }
@@ -101,7 +101,19 @@ final class ControlPanelReducerTests: XCTestCase {
         
         assertState(
             .controlButtonEvent(.changePin(card)),
-            on: .init(buttons: .buttons(card)))
+            on: initialState(buttons: .buttons(card)))
+    }
+    
+    func test_reduce_updateTitle_shouldTitleChanged() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assertState(
+            .updateTitle("new title"),
+            on: initialState(buttons: .buttons(card))){
+                
+                $0.navigationBarViewModel.title = "new title"
+            }
     }
     
     // MARK: - Helpers
@@ -174,6 +186,21 @@ final class ControlPanelReducerTests: XCTestCase {
             "\nExpected \(String(describing: expectedState.status)), but got \(String(describing: receivedState.status)) instead.",
             file: file, line: line
         )
+        
+        XCTAssertNoDiff(
+            receivedState.navigationBarViewModel.title,
+            expectedState.navigationBarViewModel.title,
+            "\nExpected \(expectedState.navigationBarViewModel.title), but got \(receivedState.navigationBarViewModel.title) instead.",
+            file: file, line: line
+        )
+    }
+    
+    private func initialState(
+        buttons: [ControlPanelButtonDetails],
+        navBarViewModel: NavigationBarView.ViewModel = .sample
+    ) -> State {
+        
+        .init(buttons: buttons, navigationBarViewModel: navBarViewModel)
     }
     
     private func makeCardProduct(

@@ -32,6 +32,8 @@ struct ControlPanelWrapperView: View {
                 item: viewModel.state.alert,
                 content: Alert.init(with:)
             )
+            .navigationBar(with: viewModel.state.navigationBarViewModel)
+            
             viewModel.state.spinner.map { spinner in
                 
                 SpinnerView(viewModel: spinner)

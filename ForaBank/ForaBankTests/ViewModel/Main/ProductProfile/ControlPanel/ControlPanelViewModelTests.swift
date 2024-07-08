@@ -40,6 +40,7 @@ final class ControlPanelViewModelTests: XCTestCase {
 
     private func makeSUT(
         buttons: [ControlPanelButtonDetails] = [],
+        navigationBarViewModel: NavigationBarView.ViewModel = .sample,
         makeAlert: @escaping MakeAlert,
         makeActions: MakeActions,
         file: StaticString = #file,
@@ -47,7 +48,7 @@ final class ControlPanelViewModelTests: XCTestCase {
     ) -> SUT {
         
         .init(
-            initialState: .init(buttons: buttons),
+            initialState: .init(buttons: buttons, navigationBarViewModel: navigationBarViewModel),
             reduce: ControlPanelReducer(makeAlert: makeAlert, makeActions: makeActions).reduce(_:_:),
             handleEffect: {_,_  in })
     }
