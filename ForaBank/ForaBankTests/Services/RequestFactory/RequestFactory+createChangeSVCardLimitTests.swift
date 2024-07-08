@@ -38,6 +38,8 @@ final class RequestFactory_createChangeSVCardLimitTests: XCTestCase {
         )
         
         XCTAssertNoDiff(decodedRequest.cardId, 1)
+        XCTAssertNoDiff(decodedRequest.limit.name, "limit")
+        XCTAssertNoDiff(decodedRequest.limit.value, 10)
     }
 
     // MARK: - Helpers
