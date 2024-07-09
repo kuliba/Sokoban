@@ -74,7 +74,6 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            historyFilterFlag: true,
             changeSVCardLimitsFlag: .init(.active)
         ))
     }
@@ -86,10 +85,33 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            historyFilterFlag: false,
             changeSVCardLimitsFlag: .init(.inactive)
         ))
     }
+    
+    func test_load_shouldSetupHistoryFeatureFlagFalse() {
+        
+        let sut = makeSUT { _ in "0" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            historyFilterFlag: false
+        ))
+    }
+    
+    func test_load_shouldSetupHistoryFeatureFlagTrue() {
+        
+        let sut = makeSUT { _ in "1" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            historyFilterFlag: true,
+            changeSVCardLimitsFlag: .init(.active)
+        ))
+    }
+    
     
     // MARK: - Helpers
     
