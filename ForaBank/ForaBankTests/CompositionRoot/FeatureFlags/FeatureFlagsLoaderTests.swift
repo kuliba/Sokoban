@@ -89,7 +89,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
-    func test_load_shouldSetupHistoryFeatureFlagFalse() {
+    func test_load_shouldDeliverActiveHistoryFilterFlagForInactiveRetrieveResult() {
         
         let sut = makeSUT { _ in "0" }
         
@@ -100,15 +100,18 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
-    func test_load_shouldSetupHistoryFeatureFlagTrue() {
+    func test_load_shouldDeliverActiveHistoryFilterFlagForActiveRetrieveResult() {
         
-        let sut = makeSUT { _ in "1" }
+        let sut = makeSUT {
+            
+            if case .historyFilterFlag = $0 { return "1"}
+            return nil
+        }
         
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            historyFilterFlag: true,
-            changeSVCardLimitsFlag: .init(.active)
+            historyFilterFlag: true
         ))
     }
     
