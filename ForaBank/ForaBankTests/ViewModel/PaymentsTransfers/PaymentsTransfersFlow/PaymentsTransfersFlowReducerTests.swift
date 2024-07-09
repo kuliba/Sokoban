@@ -97,7 +97,8 @@ final class PaymentsTransfersFlowReducerTests: XCTestCase {
                 makePayByInstructionsViewModel: { _ in unimplemented() }
             ),
             closeAction: {},
-            notify: { _ in }
+            notify: { _ in },
+            hideKeyboard: {}
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
