@@ -250,13 +250,16 @@ private extension PaymentsTransfersFlowManagerComposer {
                 factory: factory,
                 closeAction: $0,
                 notify: $1,
-                hideKeyboard: {
-                
-                UIApplication.shared.endEditing()
-            })
+                hideKeyboard: self.hideKeyboard
+            )
         }
         
         return { makeReducer($0, $1).reduce(_:_:) }
+    }
+    
+    private func hideKeyboard() {
+     
+        UIApplication.shared.endEditing()
     }
     
     private func handlePaymentTriggerEvent(
