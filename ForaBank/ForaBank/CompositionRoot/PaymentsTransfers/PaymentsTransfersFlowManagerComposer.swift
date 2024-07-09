@@ -245,7 +245,12 @@ private extension PaymentsTransfersFlowManagerComposer {
         
         let makeReducer = {
             
-            FlowReducer(factory: factory, closeAction: $0, notify: $1, hideKeyboard: {
+            FlowReducer(
+                handlePaymentTriggerEvent: self.handlePaymentTriggerEvent,
+                factory: factory,
+                closeAction: $0,
+                notify: $1,
+                hideKeyboard: {
                 
                 UIApplication.shared.endEditing()
             })
