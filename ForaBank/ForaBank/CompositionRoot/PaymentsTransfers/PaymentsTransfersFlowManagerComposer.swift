@@ -17,6 +17,7 @@ import PaymentComponents
 import RemoteServices
 import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
+import UIKit
 
 final class PaymentsTransfersFlowManagerComposer {
     
@@ -182,7 +183,10 @@ private extension PaymentsTransfersFlowManagerComposer {
         
         let makeReducer = {
             
-            FlowReducer(factory: factory, closeAction: $0, notify: $1)
+            FlowReducer(factory: factory, closeAction: $0, notify: $1, hideKeyboard: {
+                
+                UIApplication.shared.endEditing()
+            })
         }
         
         return { makeReducer($0, $1).reduce(_:_:) }

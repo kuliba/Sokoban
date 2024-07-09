@@ -14,15 +14,18 @@ final class PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content
     private let factory: Factory
     private let notify: Factory.Notify
     private let closeAction: () -> Void
+    private let hideKeyboard: () -> Void
     
     init(
         factory: Factory,
         closeAction: @escaping () -> Void,
-        notify: @escaping Factory.Notify
+        notify: @escaping Factory.Notify,
+        hideKeyboard: @escaping () -> Void
     ) {
         self.factory = factory
         self.closeAction = closeAction
         self.notify = notify
+        self.hideKeyboard = hideKeyboard
     }
     
     typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Content, PaymentViewModel>
@@ -301,8 +304,8 @@ private extension PaymentsTransfersFlowReducer {
             state.setUtilityPrepaymentAlert(to: nil)
             
         case .destination:
-            dismissKeyboard()
-            state.setUtilityPrepaymentDestination(to: nil)
+            hideKeyboard()
+            state.setUtilityPrepaymentDestination(to: nil) 
             
         case .operatorFailureDestination:
             state.setUtilityServiceOperatorFailureDestination(to: nil)
@@ -650,13 +653,5 @@ private extension PaymentsTransfersViewModel._Route {
         servicePicker.destination = .payment(paymentFlowState)
         utilityPrepayment.destination = .servicePicker(servicePicker)
         destination = .utilityPayment(utilityPrepayment)
-    }
-}
-
-extension PaymentsTransfersFlowReducer {
-    
-    func dismissKeyboard() {
-        
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
