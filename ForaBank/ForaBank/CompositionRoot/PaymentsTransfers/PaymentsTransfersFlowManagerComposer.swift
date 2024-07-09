@@ -18,6 +18,7 @@ import PaymentComponents
 import RemoteServices
 import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
+import UIKit
 
 final class PaymentsTransfersFlowManagerComposer {
     
@@ -248,11 +249,17 @@ private extension PaymentsTransfersFlowManagerComposer {
                 handlePaymentTriggerEvent: self.handlePaymentTriggerEvent,
                 factory: factory,
                 closeAction: $0,
-                notify: $1
+                notify: $1,
+                hideKeyboard: self.hideKeyboard
             )
         }
         
         return { makeReducer($0, $1).reduce(_:_:) }
+    }
+    
+    private func hideKeyboard() {
+     
+        UIApplication.shared.endEditing()
     }
     
     private func handlePaymentTriggerEvent(

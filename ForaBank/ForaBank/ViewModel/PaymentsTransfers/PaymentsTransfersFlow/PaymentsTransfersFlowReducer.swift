@@ -14,17 +14,20 @@ final class PaymentsTransfersFlowReducer {
     private let factory: Factory
     private let notify: Factory.Notify
     private let closeAction: () -> Void
+    private let hideKeyboard: () -> Void
     
     init(
         handlePaymentTriggerEvent: @escaping HandlePaymentTriggerEvent,
         factory: Factory,
         closeAction: @escaping () -> Void,
-        notify: @escaping Factory.Notify
+        notify: @escaping Factory.Notify,
+        hideKeyboard: @escaping () -> Void
     ) {
         self.handlePaymentTriggerEvent = handlePaymentTriggerEvent
         self.factory = factory
         self.closeAction = closeAction
         self.notify = notify
+        self.hideKeyboard = hideKeyboard
     }
     
     typealias Factory = PaymentsTransfersFlowReducerFactory
@@ -364,7 +367,8 @@ private extension PaymentsTransfersFlowReducer {
             state.setUtilityPrepaymentAlert(to: nil)
             
         case .destination:
-            state.setUtilityPrepaymentDestination(to: nil)
+            hideKeyboard()
+            state.setUtilityPrepaymentDestination(to: nil) 
             
         case .operatorFailureDestination:
             state.setUtilityServiceOperatorFailureDestination(to: nil)
