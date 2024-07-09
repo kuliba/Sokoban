@@ -53,9 +53,8 @@ private extension FeatureFlagsLoader {
     func loadHistoryFilterFlag() -> HistoryFilterFlag {
         
         switch retrieve(.historyFilterFlag) {
-        case "history_filter_off": return false
-        case "history_filter_on":  return true
-        default:                   return false
+        case "1":  return true
+        default:   return false
         }
     }
     
