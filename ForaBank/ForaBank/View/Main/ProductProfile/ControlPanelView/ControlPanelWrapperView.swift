@@ -26,6 +26,7 @@ struct ControlPanelWrapperView: View {
         ZStack {
             ControlPanelView(
                 items: viewModel.state.buttons,
+                landingViewModel: viewModel.state.landingWrapperViewModel,
                 event: { viewModel.event(.controlButtonEvent($0)) }
             )
             .alert(

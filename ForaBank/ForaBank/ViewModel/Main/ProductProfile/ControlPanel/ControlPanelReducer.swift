@@ -53,6 +53,14 @@ extension ControlPanelReducer {
             
         case let .updateTitle(newTitle):
             state.navigationBarViewModel.title = newTitle
+            
+        case let .loadSVCardLanding(card):
+            effect = .loadSVCardLanding(card.cardType ?? .regular)
+            
+        case let .loadedSVCardLanding(viewModel):
+            if let viewModel {
+                state.landingWrapperViewModel = viewModel
+            }
         }
         return (state, effect)
     }
