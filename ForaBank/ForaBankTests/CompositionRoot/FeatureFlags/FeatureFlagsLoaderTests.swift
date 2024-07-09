@@ -69,7 +69,11 @@ final class FeatureFlagsLoaderTests: XCTestCase {
     
     func test_load_shouldDeliverActiveChangeSVCardLimitsFlagForActiveRetrieveResult() {
         
-        let sut = makeSUT { _ in "1" }
+        let sut = makeSUT {
+            
+            if case .changeSVCardLimitsFlag = $0 { return "1"}
+            return nil
+        }
         
         let flags = sut.load()
         
@@ -114,7 +118,6 @@ final class FeatureFlagsLoaderTests: XCTestCase {
             historyFilterFlag: true
         ))
     }
-    
     
     // MARK: - Helpers
     
