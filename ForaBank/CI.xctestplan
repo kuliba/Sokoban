@@ -443,6 +443,13 @@
         "identifier" : "UIPrimitivesTests",
         "name" : "UIPrimitivesTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-forabank",
+        "identifier" : "UIPrimitivesTests",
+        "name" : "UIPrimitivesTests"
+      }
     }
   ],
   "version" : 1

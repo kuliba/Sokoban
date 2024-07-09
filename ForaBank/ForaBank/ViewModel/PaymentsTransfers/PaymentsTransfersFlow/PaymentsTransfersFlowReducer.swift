@@ -9,26 +9,30 @@ import AnywayPaymentDomain
 import Foundation
 import UIKit
 
-final class PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel> {
+final class PaymentsTransfersFlowReducer {
     
+    private let handlePaymentTriggerEvent: HandlePaymentTriggerEvent
     private let factory: Factory
     private let notify: Factory.Notify
     private let closeAction: () -> Void
     private let hideKeyboard: () -> Void
     
     init(
+        handlePaymentTriggerEvent: @escaping HandlePaymentTriggerEvent,
         factory: Factory,
         closeAction: @escaping () -> Void,
         notify: @escaping Factory.Notify,
         hideKeyboard: @escaping () -> Void
     ) {
+        self.handlePaymentTriggerEvent = handlePaymentTriggerEvent
         self.factory = factory
         self.closeAction = closeAction
         self.notify = notify
         self.hideKeyboard = hideKeyboard
     }
     
-    typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Content, PaymentViewModel>
+    typealias Factory = PaymentsTransfersFlowReducerFactory
+    typealias HandlePaymentTriggerEvent = (PaymentTriggerEvent) -> (PaymentTriggerState)
 }
 
 extension PaymentsTransfersFlowReducer {
@@ -50,6 +54,12 @@ extension PaymentsTransfersFlowReducer {
             
         case let .paymentButtonTapped(paymentButton):
             (state, effect) = reduce(state, paymentButton)
+         
+        case let .paymentFlow(paymentFlow):
+            reduce(&state, &effect, with: paymentFlow)
+            
+        case let .paymentTrigger(event):
+            reduce(&state, &effect, with: event)
             
         case let .setModal(to: modal):
             state.modal = modal
@@ -61,9 +71,9 @@ extension PaymentsTransfersFlowReducer {
         return (state, effect)
     }
     
-    typealias State = PaymentsTransfersViewModel._Route<LastPayment, Operator, Service, Content, PaymentViewModel>
-    typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service>
-    typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, Service>
+    typealias State = PaymentsTransfersViewModel.Route
+    typealias Event = PaymentsTransfersFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
+    typealias Effect = PaymentsTransfersFlowEffect<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
 }
 
 private extension PaymentsTransfersFlowReducer {
@@ -112,8 +122,62 @@ private extension PaymentsTransfersFlowReducer {
         return (state, effect)
     }
     
-    private typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
-    private typealias UtilityPrepaymentEffect = UtilityPrepaymentFlowEffect<LastPayment, Operator, Service>
+    private typealias UtilityPaymentEvent = UtilityPaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
+    private typealias UtilityPrepaymentEffect = UtilityPrepaymentFlowEffect<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
+    
+    private func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with paymentFlow: PaymentFlow
+    ) {
+        switch paymentFlow {
+        case let .service(result):
+            switch result {
+            case let .failure(serviceFailure):
+                reduce(&state, with: serviceFailure)
+                
+            case let .success(transaction):
+                let utilityPaymentState = factory.makeUtilityPaymentState(transaction, notify)
+                state.destination = .servicePayment(utilityPaymentState)
+            }
+        }
+    }
+    
+    private func reduce(
+        _ state: inout State,
+        with serviceFailure: PaymentFlow.ServiceFailure
+    ) {
+        guard state.destination == nil else  { return }
+        
+        let alert: ServiceFailureAlert = {
+            switch serviceFailure {
+            case .connectivityError:
+                return .init(serviceFailure: .connectivityError)
+                
+            case let .serverError(message):
+                return .init(serviceFailure: .serverError(message))
+            }
+        }()
+        
+        state.modal = .serviceAlert(alert)
+    }
+    
+    private func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with event: PaymentTriggerEvent
+    ) {
+        switch handlePaymentTriggerEvent(event) {
+        case let .legacy(legacy):
+            state.legacy = legacy
+            
+        case .v1:
+            switch event {
+            case let .latestPayment(latestPayment):
+                effect = .initiatePayment(.service(.latestPayment(latestPayment)))
+            }
+        }
+    }
     
     private func reduce(
         _ state: State,
@@ -259,7 +323,7 @@ private extension PaymentsTransfersFlowReducer {
         }
     }
     
-    private typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
+    private typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<UtilityPaymentLastPayment, UtilityPaymentOperator, UtilityService>
     
     private func reduce(
         _ state: State,
@@ -283,7 +347,7 @@ private extension PaymentsTransfersFlowReducer {
             payByInstructions(&state)
             
         case .payByInstructionsFromError:
-            state.destination = .payments(factory.makePaymentsViewModel(closeAction))
+            state.destination = .payments(factory.makePayByInstructionsViewModel(closeAction))
             
         case let .select(select):
             effect = .select(select)
@@ -332,7 +396,7 @@ private extension PaymentsTransfersFlowReducer {
     private func payByInstructions(
         _ state: inout State
     ) {
-        let viewModel = factory.makePaymentsViewModel(closeAction)
+        let viewModel = factory.makePayByInstructionsViewModel(closeAction)
         
         switch state.utilityPrepaymentDestination {
         case .none:
@@ -464,9 +528,9 @@ private extension PaymentsTransfersFlowEffect {
     typealias Modal = PaymentsTransfersViewModel.Modal
 }
 
-private extension PaymentsTransfersViewModel._Route {
+private extension PaymentsTransfersViewModel.Route {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel, AnywayTransactionViewModel>
     
     var utilityPrepayment: UtilityFlowState? {
         
@@ -499,7 +563,7 @@ private extension PaymentsTransfersViewModel._Route {
         self.destination = .utilityPayment(utilityPrepayment)
     }
     
-    typealias OperatorFailure = SberOperatorFailureFlowState<Operator>
+    typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
     
     private var operatorFailure: OperatorFailure? {
         
@@ -518,7 +582,7 @@ private extension PaymentsTransfersViewModel._Route {
         self.setUtilityPrepaymentDestination(to: .operatorFailure(operatorFailure))
     }
     
-    typealias ServicePickerState = UtilityServicePickerFlowState<Operator, UtilityService, PaymentViewModel>
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, UtilityService, AnywayTransactionViewModel>
     
     private var servicePicker: ServicePickerState? {
         
@@ -546,7 +610,7 @@ private extension PaymentsTransfersViewModel._Route {
         self.setUtilityPrepaymentDestination(to: .servicePicker(servicePicker))
     }
     
-    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<PaymentViewModel>
+    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<AnywayTransactionViewModel>
     
     private var paymentFlowState: UtilityServiceFlowState? {
         
@@ -564,6 +628,8 @@ private extension PaymentsTransfersViewModel._Route {
         setPrepaymentPaymentAlert(to: alert)
         // or in servicePicker destination
         setServicePickerPaymentAlert(to: alert)
+        // or in destination
+        setDestinationPaymentAlert(to: alert)
     }
     
     mutating func setPaymentFullScreenCover(
@@ -574,6 +640,8 @@ private extension PaymentsTransfersViewModel._Route {
         setPrepaymentPaymentFullScreenCover(to: fullScreenCover)
         // or in servicePicker destination
         setServicePickerPaymentFullScreenCover(to: fullScreenCover)
+        // or in destination
+        setDestinationPaymentFullScreenCover(to: fullScreenCover)
     }
     
     mutating func setPaymentModal(
@@ -584,6 +652,8 @@ private extension PaymentsTransfersViewModel._Route {
         setPrepaymentPaymentModal(to: modal)
         // or in servicePicker destination
         setServicePickerPaymentModal(to: modal)
+        // or in destination
+        setDestinationPaymentModal(to: modal)
     }
     
     private mutating func setPrepaymentPaymentAlert(
@@ -653,5 +723,35 @@ private extension PaymentsTransfersViewModel._Route {
         servicePicker.destination = .payment(paymentFlowState)
         utilityPrepayment.destination = .servicePicker(servicePicker)
         destination = .utilityPayment(utilityPrepayment)
+    }
+    
+    private mutating func setDestinationPaymentAlert(
+        to alert: UtilityServiceFlowState.Alert?
+    ) {
+        guard case var .servicePayment(paymentFlowState) = destination
+        else { return }
+        
+        paymentFlowState.alert = alert
+        self.destination = .servicePayment(paymentFlowState)
+    }
+    
+    private mutating func setDestinationPaymentFullScreenCover(
+        to fullScreenCover: UtilityServiceFlowState.FullScreenCover?
+    ) {
+        guard case var .servicePayment(paymentFlowState) = destination
+        else { return }
+        
+        paymentFlowState.fullScreenCover = fullScreenCover
+        self.destination = .servicePayment(paymentFlowState)
+    }
+    
+    private mutating func setDestinationPaymentModal(
+        to modal: UtilityServiceFlowState.Modal?
+    ) {
+        guard case var .servicePayment(paymentFlowState) = destination
+        else { return }
+        
+        paymentFlowState.modal = modal
+        self.destination = .servicePayment(paymentFlowState)
     }
 }

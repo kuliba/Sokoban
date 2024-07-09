@@ -17,7 +17,7 @@ where IconView: View,
     let config: Config
     let iconView: () -> IconView
     let warningView: () -> WarningView
-    
+
     var body: some View {
         
         HStack(spacing: 16) {
@@ -66,6 +66,8 @@ private extension TimedOTPInputView {
     ) -> some View {
         
         TextField("", text: .init(get: getText, set: setText))
+            .textContentType(.oneTimeCode)
+            .keyboardType(.numberPad)
     }
     
     @ViewBuilder

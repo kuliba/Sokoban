@@ -1,5 +1,5 @@
 //
-//  GetSVCardLimitResponse.swift
+//  GetSVCardLimitsResponse.swift
 //
 //
 //  Created by Andryusina Nataly on 18.06.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct GetSVCardLimitResponse: Equatable {
+public struct GetSVCardLimitsResponse: Equatable {
     
     public let limitsList: [LimitItem]
     public let serial: String?

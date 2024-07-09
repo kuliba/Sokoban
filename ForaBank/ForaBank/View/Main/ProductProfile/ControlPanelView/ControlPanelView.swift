@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ControlPanelView: View {
     
-    let items: [PanelButtonDetails]
+    let items: [ControlPanelButtonDetails]
     let event: (Event) -> Void
     let config: ControlPanelView.Config = .default
     
@@ -28,16 +28,16 @@ struct ControlPanelView: View {
         .padding(.top, config.paddings.top)
     }
     
-    private func view(details: PanelButtonDetails) -> some View {
+    private func view(details: ControlPanelButtonDetails) -> some View {
         
         HorizontalPanelButton(
             details: details,
-            event: { event(details.event()) },
+            event: { event(details.event) },
             config: config)
     }
 }
 
 extension ControlPanelView {
     
-    typealias Event = ProductProfileFlowManager.ButtonEvent
+    typealias Event = ControlButtonEvent
 }

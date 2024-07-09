@@ -6,6 +6,7 @@
 //
 
 import OTPInputComponent
+import Combine
 import XCTest
 
 final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
@@ -145,6 +146,7 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
     private typealias SubmitOTPSpy = Spy<OTPFieldEffectHandler.SubmitOTPPayload, OTPFieldEffectHandler.SubmitOTPResult>
 
     private func makeSUT(
+        codeObserver: AnyPublisher<String, Never> = Empty().eraseToAnyPublisher(),
         duration: Int = 5,
         initialState: OTPInputState? = nil,
         file: StaticString = #file,
@@ -171,6 +173,7 @@ final class TimedOTPInputViewModelIntegrationTests: XCTestCase {
         let sut = SUT(
             viewModel: otpInputViewModel,
             timer: timerSpy,
+            codeObserver: codeObserver,
             scheduler: .immediate
         )
         let stateSpy = StateSpy(sut.$state)

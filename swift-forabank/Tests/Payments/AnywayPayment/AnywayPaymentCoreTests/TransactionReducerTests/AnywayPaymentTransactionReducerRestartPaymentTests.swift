@@ -22,11 +22,13 @@ final class AnywayPaymentTransactionReducerRestartPaymentTests: AnywayPaymentTra
         
         try msFraud_2_setValue(&state, &states)
         assertValue("009", forParameterID: "1", in: state)
+        XCTAssertNoDiff(state.parameterIDs, ["1"])
         XCTAssertTrue(state.isValid)
         
         try restart_3_continue(&state, &states)
         XCTAssertNoDiff(state.context.staged, ["1"])
         XCTAssertNoDiff(state.context.outline.fields, ["1": "009"])
+        XCTAssertNoDiff(state.parameterIDs, ["1"])
         XCTAssertTrue(state.isValid)
         
         try restart_4_update(&state, &states)
@@ -38,12 +40,14 @@ final class AnywayPaymentTransactionReducerRestartPaymentTests: AnywayPaymentTra
             .inflight,
             .none
         ])
+        XCTAssertNoDiff(state.parameterIDs, ["1", "4", "6", "8"])
         XCTAssertTrue(state.isValid)
         
         try restart_5_setValue(&state, &states)
         assertValue("00", forParameterID: "1", in: state)
         XCTAssertNoDiff(state.status, .awaitingPaymentRestartConfirmation)
         XCTAssertTrue(states.map(\.context.shouldRestart).allSatisfy({ !$0 }))
+        XCTAssertNoDiff(state.parameterIDs, ["1", "4", "6", "8"])
         XCTAssertTrue(state.isValid)
         
         try restart_6_confirm(&state, &states)
@@ -53,6 +57,7 @@ final class AnywayPaymentTransactionReducerRestartPaymentTests: AnywayPaymentTra
         XCTAssertTrue(state.context.shouldRestart)
         XCTAssertNoDiff(state.context.staged, ["1"])
         XCTAssertNoDiff(state.context.outline.fields, ["1": "009"], "Outline should be updated after `continue`")
+        XCTAssertNoDiff(state.parameterIDs, ["1", "4", "6", "8"])
         
         try restart_7_continue(&state, &states)
         XCTAssertNoDiff(state.elementIDs, []) // OR WHAT IS IN PAYMENT_RESET
@@ -66,6 +71,7 @@ final class AnywayPaymentTransactionReducerRestartPaymentTests: AnywayPaymentTra
             "6": "1000.15",
             "8": "200.15",
         ], "Outline should be updated after `continue`")
+        XCTAssertNoDiff(state.parameterIDs, [])
         
         try restart_8_confirm_update(&state, &states)
         XCTAssertNoDiff(state.parameterIDs, ["1"])
@@ -80,6 +86,7 @@ final class AnywayPaymentTransactionReducerRestartPaymentTests: AnywayPaymentTra
             "6": "1000.15",
             "8": "200.15",
         ], "Outline should be updated after `continue`")
+        XCTAssertNoDiff(state.parameterIDs, ["1"])
     }
     
     func test_restartFlow_deny() throws {

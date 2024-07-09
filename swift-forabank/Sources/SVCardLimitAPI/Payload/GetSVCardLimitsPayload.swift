@@ -1,5 +1,5 @@
 //
-//  GetSVCardLimitPayload.swift
+//  GetSVCardLimitsPayload.swift
 //
 //
 //  Created by Andryusina Nataly on 18.06.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct GetSVCardLimitPayload: Equatable {
+public struct GetSVCardLimitsPayload: Equatable {
 
     public let cardId: Int
     
