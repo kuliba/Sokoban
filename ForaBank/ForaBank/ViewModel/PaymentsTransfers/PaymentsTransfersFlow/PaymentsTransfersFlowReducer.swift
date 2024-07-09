@@ -7,7 +7,6 @@
 
 import AnywayPaymentDomain
 import Foundation
-import UIKit
 
 final class PaymentsTransfersFlowReducer {
     
