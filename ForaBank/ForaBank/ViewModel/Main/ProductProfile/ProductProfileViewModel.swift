@@ -2014,6 +2014,7 @@ extension ProductProfileViewModel {
         case let .fullScreen(buttons):
             controlPanelViewModel = createControlPanel(card, buttons)
             if let controlPanelViewModel {
+                controlPanelViewModel.event(.loadSVCardLanding(card))
                 link = .controlPanel(controlPanelViewModel)
             }
         }

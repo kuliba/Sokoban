@@ -145,12 +145,20 @@ extension RootViewModelFactory {
             log: infoNetworkLog
         )
 
+        let makeSVCardLandig = model.landingSVCardViewModelFactory
+        
+        let landingService = Services.makeSVCardLandingServices(
+            httpClient: httpClient,
+            log: infoNetworkLog)
+
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
             createUnblockCardService: unblockCardServices,
             createUserVisibilityProductsSettingsService: userVisibilityProductsSettingsServices,
             createCreateGetSVCardLimits: getSVCardLimitsServices,
-            createChangeSVCardLimit: changeSVCardLimitServices
+            createChangeSVCardLimit: changeSVCardLimitServices, 
+            createSVCardLanding: landingService,
+            makeSVCardLandingViewModel: makeSVCardLandig
         )
         
         let productNavigationStateManager = ProductProfileFlowManager(

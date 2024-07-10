@@ -2354,6 +2354,8 @@
 		830D974D2BBC4F0F00899832 /* UserAllCardsModel+clover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830D974C2BBC4F0F00899832 /* UserAllCardsModel+clover.swift */; };
 		830D974F2BBC5E8800899832 /* CardType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830D974E2BBC5E8800899832 /* CardType.swift */; };
 		830DC3792BCFE1370095AB39 /* Model+allProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830DC3782BCFE1370095AB39 /* Model+allProductTests.swift */; };
+		8317CA492C3D641D0076DC7A /* SVCardLandingServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8317CA482C3D641D0076DC7A /* SVCardLandingServices.swift */; };
+		8317CA4B2C3D677C0076DC7A /* Services+makeSVCardLandingServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8317CA4A2C3D677C0076DC7A /* Services+makeSVCardLandingServices.swift */; };
 		831AB0E429CB22670091B6FD /* Model+PaymentsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831AB0E329CB22670091B6FD /* Model+PaymentsServices.swift */; };
 		831B40412A715E6300548EEE /* ConfirmCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831B40402A715E6300548EEE /* ConfirmCodeView.swift */; };
 		831CCF3F2BEA400200DE7D64 /* UnblockCardServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831CCF3E2BEA400200DE7D64 /* UnblockCardServices.swift */; };
@@ -5429,6 +5431,8 @@
 		830D974C2BBC4F0F00899832 /* UserAllCardsModel+clover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAllCardsModel+clover.swift"; sourceTree = "<group>"; };
 		830D974E2BBC5E8800899832 /* CardType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardType.swift; sourceTree = "<group>"; };
 		830DC3782BCFE1370095AB39 /* Model+allProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+allProductTests.swift"; sourceTree = "<group>"; };
+		8317CA482C3D641D0076DC7A /* SVCardLandingServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SVCardLandingServices.swift; sourceTree = "<group>"; };
+		8317CA4A2C3D677C0076DC7A /* Services+makeSVCardLandingServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeSVCardLandingServices.swift"; sourceTree = "<group>"; };
 		831AB0E329CB22670091B6FD /* Model+PaymentsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsServices.swift"; sourceTree = "<group>"; };
 		831B40402A715E6300548EEE /* ConfirmCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCodeView.swift; sourceTree = "<group>"; };
 		831CCF3E2BEA400200DE7D64 /* UnblockCardServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnblockCardServices.swift; sourceTree = "<group>"; };
@@ -13316,6 +13320,7 @@
 				831CCF3E2BEA400200DE7D64 /* UnblockCardServices.swift */,
 				833D3E442C2F10DE006626F2 /* BlockCardServices.swift */,
 				833D3E482C3048B1006626F2 /* ProductProfileServices.swift */,
+				8317CA482C3D641D0076DC7A /* SVCardLandingServices.swift */,
 				83DBC7B52C37E0C900DEF441 /* UserVisibilityProductsSettingsServices.swift */,
 				839109272C381D86007F5257 /* GetSVCardLimitsServices.swift */,
 				8328ABF62C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift */,
@@ -13562,6 +13567,7 @@
 				83DBC7B12C37DCCD00DEF441 /* Services+makeUserVisibilityProductsSettingsServices.swift */,
 				839109252C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift */,
 				8328ABF42C3BFF4900AD05E0 /* Services+makeChangeSVCardLimitServices.swift */,
+				8317CA4A2C3D677C0076DC7A /* Services+makeSVCardLandingServices.swift */,
 			);
 			path = ProductProfile;
 			sourceTree = "<group>";
@@ -19392,6 +19398,7 @@
 				77A76A7C27FAFDCB00A271B3 /* AtmMetroStationData.swift in Sources */,
 				0B931B2226DCDA1800CA8017 /* GetLatestServicePaymentsDecodableModel.swift in Sources */,
 				68FFA561268DD2CF002DADFA /* CountriesCodeButton.swift in Sources */,
+				8317CA4B2C3D677C0076DC7A /* Services+makeSVCardLandingServices.swift in Sources */,
 				0B71D7A428FD837300AA1970 /* QRParameter.swift in Sources */,
 				EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */,
 				8328ABF52C3BFF4900AD05E0 /* Services+makeChangeSVCardLimitServices.swift in Sources */,
@@ -19422,6 +19429,7 @@
 				5066506B28577C260039A745 /* DateComponentsFormatter+Ext.swift in Sources */,
 				83E455E42AC2E0DB0045BEC1 /* C2BFactory.swift in Sources */,
 				2A9BD5132B853AEF00B88395 /* HTTPClientStub+utilityPayments.swift in Sources */,
+				8317CA492C3D641D0076DC7A /* SVCardLandingServices.swift in Sources */,
 				0BB24A9426EFCC5800DDA4F6 /* GetProductTemplateListSaved.swift in Sources */,
 				83815FA72C36859000C97E60 /* ControlPanelEffectHandler.swift in Sources */,
 				0BF34854268B2699005138A8 /* PrepareExternalDecodableModel.swift in Sources */,
