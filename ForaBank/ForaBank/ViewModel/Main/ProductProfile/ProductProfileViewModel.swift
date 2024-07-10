@@ -2038,9 +2038,7 @@ extension ProductProfileViewModel {
                 }
 
             case let .openUrl(link):
-                if let url = URL(string: link), UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url)
-                }
+                openLinkURL(link)
 
             case .order:
                 break
