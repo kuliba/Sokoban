@@ -514,6 +514,48 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
         XCTAssertEqual(detail.transferEnum, .transport)
     }
     
+    // MARK: - makeItems with HousingAndCommunalService
+    
+    func test_housingAndCommunalService_defaultIconType() throws {
+        
+        let (sut, _) = makeSUT(transferEnum: .housingAndCommunalService)
+        let operation = makeOperationDetail(
+            transferEnum: .housingAndCommunalService,
+            payeeFullName: "ООО ЖКХ Сервис"
+        )
+        let items = sut.makeItems(operation: operation)
+        let firstItem = try XCTUnwrap(items.first as? OperationDetailInfoViewModel.PropertyCellViewModel, "First item should be PropertyCellViewModel")
+        
+        XCTAssertEqual(firstItem.title, "Наименование получателя")
+        XCTAssertEqual(firstItem.iconType, .ic40ZkxServices)
+    }
+
+    func test_housingAndCommunalService_withPayeeFullName() throws {
+        
+        let (sut, _) = makeSUT(transferEnum: .housingAndCommunalService)
+        let operation = makeOperationDetail(
+            transferEnum: .housingAndCommunalService,
+            payeeFullName: "ИП Иванов"
+        )
+        let items = sut.makeItems(operation: operation)
+        let firstItem = try XCTUnwrap(items.first, "Items should not be empty")
+        
+        XCTAssertEqual(firstItem.title, "Наименование получателя")
+    }
+
+    func test_housingAndCommunalService_withAccount() throws {
+        
+        let (sut, _) = makeSUT(transferEnum: .housingAndCommunalService)
+        let operation = makeOperationDetail(
+            transferEnum: .housingAndCommunalService,
+            account: "1122334455"
+        )
+        let items = sut.makeItems(operation: operation)
+        let firstItem = try XCTUnwrap(items.first, "Items should not be empty")
+        
+        XCTAssertEqual(firstItem.title, "Лицевой счет")
+    }
+    
     // MARK: - makeItemsForHistoryExternal
         
     func test_makeItemsForHistoryExternal_entity_shouldReturnEmpty_onNil() {
