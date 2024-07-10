@@ -184,6 +184,6 @@ extension TransactionCompleteViewConfig {
             textFont: .textH3Sb18240(),
             textColor: .textSecondary
         ), 
-        logoSize: 40
+        logoHeight: 40
     )
 }
