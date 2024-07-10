@@ -122,7 +122,10 @@ private extension PaymentCompleteView {
             
             config.message.text(withConfig: config.messageConfig)
 //            report.formattedAmount.text(withConfig: config.amountConfig)
-            report.details?.logo
+            report.details?.logo?
+                .renderingMode(.original)
+                .resizable()
+                .frame(width: config.logoSize, height: config.logoSize)
         }
     }
 }
@@ -177,6 +180,7 @@ extension TransactionCompleteViewConfig {
         messageConfig: .init(
             textFont: .textH3Sb18240(),
             textColor: .textSecondary
-        )
+        ), 
+        logoSize: 40
     )
 }
