@@ -137,7 +137,10 @@ public struct LandingView: View {
             action: action,
             orderCard: orderCard,
             makeIconView: makeIconView,
-            makeLimit: makeLimit
+            makeLimit: makeLimit,
+            canOpenDetail: {
+                return viewModel.landing.components(g: $0.groupID.rawValue, v: $0.viewID.rawValue) != []
+            }
         )
         
         switch component {
@@ -194,6 +197,7 @@ extension LandingView {
         let orderCard: (Int, Int) -> Void
         let makeIconView: MakeIconView
         let makeLimit: MakeLimit
+        let canOpenDetail: UILanding.CanOpenDetail
 
         var body: some View {
             
@@ -271,7 +275,8 @@ extension LandingView {
                         data: model,
                         images: images,
                         action: action,
-                        selectDetail: selectDetail
+                        selectDetail: selectDetail,
+                        canOpenDetail: canOpenDetail
                     ),
                     config: config.listHorizontalRectangleImage
                 )

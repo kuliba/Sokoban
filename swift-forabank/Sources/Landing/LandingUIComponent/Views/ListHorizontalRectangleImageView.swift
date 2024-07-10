@@ -107,6 +107,7 @@ struct ListHorizontalRectangleImageView_Previews: PreviewProvider {
         ]), 
         images: .defaultValue,
         action: { _ in },
-        selectDetail: { _ in }
+        selectDetail: { _ in }, 
+        canOpenDetail: { _ in true }
     )
 }

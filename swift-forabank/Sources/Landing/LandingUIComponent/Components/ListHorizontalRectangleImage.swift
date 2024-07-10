@@ -57,17 +57,20 @@ extension ListHorizontalRectangleImageView {
         
         private let action: (LandingEvent) -> Void
         private let selectDetail: SelectDetail
+        private let canOpenDetail: UILanding.CanOpenDetail
 
         init(
             data: HorizontalList,
             images: [String: Image],
             action: @escaping (LandingEvent) -> Void,
-            selectDetail: @escaping SelectDetail
+            selectDetail: @escaping SelectDetail,
+            canOpenDetail: @escaping UILanding.CanOpenDetail
         ) {
             self.data = data
             self.images = images
             self.action = action
             self.selectDetail = selectDetail
+            self.canOpenDetail = canOpenDetail
         }
         
         func image(byImageLink: String) -> Image? {
@@ -75,12 +78,13 @@ extension ListHorizontalRectangleImageView {
             return images[byImageLink]
         }
         
-        static func itemAction(
+        func itemAction(
             item: HorizontalList.Item,
             selectDetail: SelectDetail,
             action: (LandingEvent) -> Void
         ) {
-            if let detailDestination = item.detailDestination {
+            if let detailDestination = item.detailDestination,
+               canOpenDetail(detailDestination) {
                 selectDetail(detailDestination)
             } else if !item.link.isEmpty {
                 action(.card(.openUrl(item.link)))
@@ -91,7 +95,7 @@ extension ListHorizontalRectangleImageView {
             item: HorizontalList.Item
         ) {
             
-           Self.itemAction(
+        itemAction(
                 item: item,
                 selectDetail: selectDetail,
                 action: action
