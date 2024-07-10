@@ -2031,8 +2031,12 @@ extension ProductProfileViewModel {
             switch cardEvent {
                 
             case .goToMain:
-                break
-                
+                self.link = nil
+                self.action.send(DelayWrappedAction(delayMS: 10, action: ProductProfileViewModelAction.Close.SelfView()))
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                    self.rootActions?.switchTab(.main)
+                }
+
             case let .openUrl(link):
                 if let url = URL(string: link), UIApplication.shared.canOpenURL(url) {
                     UIApplication.shared.open(url)
@@ -2043,6 +2047,7 @@ extension ProductProfileViewModel {
             }
         case .sticker:
             break
+            
         case let .bannerAction(action):
             switch action {
             case .contact:
