@@ -78,10 +78,11 @@ extension ListHorizontalRectangleImageView {
             return images[byImageLink]
         }
         
-        func itemAction(
+        static func itemAction(
             item: HorizontalList.Item,
             selectDetail: SelectDetail,
-            action: (LandingEvent) -> Void
+            action: (LandingEvent) -> Void,
+            canOpenDetail: UILanding.CanOpenDetail
         ) {
             if let detailDestination = item.detailDestination,
                canOpenDetail(detailDestination) {
@@ -95,10 +96,11 @@ extension ListHorizontalRectangleImageView {
             item: HorizontalList.Item
         ) {
             
-        itemAction(
+           Self.itemAction(
                 item: item,
                 selectDetail: selectDetail,
-                action: action
+                action: action, 
+                canOpenDetail: canOpenDetail
             )
         }
     }
