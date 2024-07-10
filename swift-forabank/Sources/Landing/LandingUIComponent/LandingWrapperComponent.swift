@@ -71,7 +71,7 @@ public final class LandingWrapperViewModel: ObservableObject {
     }
     
     public init(
-        result: State,
+        initialState: State,
         imagePublisher: ImagePublisher,
         imageLoader: @escaping ImageLoader,
         makeIconView: @escaping LandingView.MakeIconView,
@@ -79,12 +79,12 @@ public final class LandingWrapperViewModel: ObservableObject {
         config: UILanding.Component.Config,
         landingActions: @escaping (LandingEvent) -> Void
     ) {
-        self.state = result
+        self.state = initialState
         self.landingActions = landingActions
         self.config = config
         self.makeIconView = makeIconView
         
-        let landing = try? result.get()
+        let landing = try? initialState.get()
         
         requests = landing?.imageRequests() ?? []
         
@@ -96,7 +96,7 @@ public final class LandingWrapperViewModel: ObservableObject {
             }
             .store(in: &bindings)
         
-        if case let .success(.some(landing)) = result {
+        if case let .success(.some(landing)) = initialState {
             requests = landing.imageRequests()
             imageLoader(requests)
         }

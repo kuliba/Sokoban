@@ -84,7 +84,7 @@ extension Model {
     ) -> LandingWrapperViewModel {
         
         return LandingWrapperViewModel(
-            result: .success(.init(result)),
+            initialState: .success(.init(result)),
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
             makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
