@@ -8,6 +8,7 @@
 import SwiftUI
 import LandingUIComponent
 import Combine
+import LandingMapping
 
 extension Model {
     
@@ -71,6 +72,30 @@ extension Model {
                 case .card: break
                 case let .sticker(sticker):
                     landingActions(sticker)()
+                }
+            }
+        )
+    }
+    
+    func landingSVCardViewModelFactory(
+        result: Landing,
+        config: UILanding.Component.Config,
+        landingActions: @escaping (LandingEvent.Card) -> () -> Void
+    ) -> LandingWrapperViewModel {
+        
+        return LandingWrapperViewModel(
+            initialState: .success(.init(result)),
+            imagePublisher: imagePublisher(),
+            imageLoader: imageLoader,
+            makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
+            scheduler: .main,
+            config: config,
+            landingActions: { event in
+                switch event {
+                case let .card(card):
+                    return landingActions(card)()
+                    
+                case .sticker: break
                 }
             }
         )

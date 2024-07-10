@@ -70,6 +70,38 @@ public final class LandingWrapperViewModel: ObservableObject {
             .store(in: &bindings)
     }
     
+    public init(
+        initialState: State,
+        imagePublisher: ImagePublisher,
+        imageLoader: @escaping ImageLoader,
+        makeIconView: @escaping LandingView.MakeIconView,
+        scheduler: AnySchedulerOf<DispatchQueue> = .main,
+        config: UILanding.Component.Config,
+        landingActions: @escaping (LandingEvent) -> Void
+    ) {
+        self.state = initialState
+        self.landingActions = landingActions
+        self.config = config
+        self.makeIconView = makeIconView
+        
+        let landing = try? initialState.get()
+        
+        requests = landing?.imageRequests() ?? []
+        
+        imagePublisher
+            .receive(on: scheduler)
+            .sink { [weak self] in
+                
+                self?.images = $0
+            }
+            .store(in: &bindings)
+        
+        if case let .success(.some(landing)) = initialState {
+            requests = landing.imageRequests()
+            imageLoader(requests)
+        }
+    }
+
     public func action(_ action: LandingEvent) {
         
         switch action {

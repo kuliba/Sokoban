@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import LandingUIComponent
 
 enum ControlPanelEvent {
     
@@ -13,4 +14,6 @@ enum ControlPanelEvent {
     case updateState([ControlPanelButtonDetails])
     case updateProducts
     case updateTitle(String)
+    case loadSVCardLanding(ProductCardData)
+    case loadedSVCardLanding(LandingWrapperViewModel?)
 }

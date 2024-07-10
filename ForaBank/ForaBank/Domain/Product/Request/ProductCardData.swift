@@ -351,6 +351,21 @@ extension ProductCardData {
             self == .main ||
             self == .additionalSelfAccOwn
         }
+        
+        var abroadType: AbroadType {
+            switch self {
+            case .main:
+                return .main
+            case .regular:
+                return .regular
+            case .additionalSelf:
+                return.additionalSelf
+            case .additionalSelfAccOwn:
+                return .additionalSelfAccOwn
+            case .additionalOther:
+                return .additionalOther
+            }
+        }
     }
 }
 

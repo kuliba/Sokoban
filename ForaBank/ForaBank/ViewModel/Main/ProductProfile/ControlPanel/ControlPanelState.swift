@@ -8,6 +8,7 @@
 import Foundation
 import UIPrimitives
 import SwiftUI
+import LandingUIComponent
 
 struct ControlPanelState {
     
@@ -16,19 +17,22 @@ struct ControlPanelState {
     var alert: Alert.ViewModel?
     var spinner: SpinnerView.ViewModel?
     var navigationBarViewModel: NavigationBarView.ViewModel
+    var landingWrapperViewModel: LandingWrapperViewModel?
 
     init(
         buttons: [ControlPanelButtonDetails],
         status: Status? = nil,
         alert: Alert.ViewModel? = nil,
         spinner: SpinnerView.ViewModel? = nil,
-        navigationBarViewModel: NavigationBarView.ViewModel
+        navigationBarViewModel: NavigationBarView.ViewModel,
+        landingWrapperViewModel: LandingWrapperViewModel? = nil
     ) {
         self.buttons = buttons
         self.status = status
         self.alert = alert
         self.spinner = spinner
         self.navigationBarViewModel = navigationBarViewModel
+        self.landingWrapperViewModel = landingWrapperViewModel
     }
 }
 

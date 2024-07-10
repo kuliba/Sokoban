@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import LandingUIComponent
 
 final class ControlPanelEffectHandler {
     
@@ -59,6 +60,33 @@ extension ControlPanelEffectHandler {
                     break
                 case .success:
                     dispatch(.updateProducts)
+                }
+            }
+            
+        case let .loadSVCardLanding(cardType):
+            // TODO: move actions to fabric
+            productProfileServices.createSVCardLanding.createSVCardLanding((serial: "", abroadType: cardType.abroadType)){
+                
+                result in
+                switch result {
+                case .failure:
+                    dispatch(.loadedSVCardLanding(nil))
+                case let .success(landing):
+                    dispatch(.loadedSVCardLanding(self.productProfileServices.makeSVCardLandingViewModel(
+                        landing,
+                        .default,
+                        {
+                            switch $0 {
+                            case let .openUrl(link): // actions
+                                return {
+                                    if let url = URL(string: link), UIApplication.shared.canOpenURL(url) {
+                                        UIApplication.shared.open(url)
+                                    }
+                                }
+                            default:
+                                return {}
+                            }
+                        })))
                 }
             }
         }
