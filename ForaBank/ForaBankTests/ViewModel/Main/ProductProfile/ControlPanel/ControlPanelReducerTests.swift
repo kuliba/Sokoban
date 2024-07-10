@@ -8,6 +8,8 @@
 @testable import ForaBank
 import XCTest
 import RxViewModel
+import LandingUIComponent
+import Combine
 
 final class ControlPanelReducerTests: XCTestCase {
     
@@ -82,7 +84,7 @@ final class ControlPanelReducerTests: XCTestCase {
                 $0.status = .inflight(.updateProducts)
             }
     }
-
+    
     func test_reduce_update_shouldButtonsUpdatedAlertNilStatusNil() {
         
         let card = makeCardProduct(statusCard: .blockedUnlockAvailable)
@@ -116,6 +118,28 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_loadSVCardLanding_shouldNotChanged() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assertState(
+            .loadSVCardLanding(card),
+            on: initialState(buttons: .buttons(card)))
+    }
+    
+    func test_reduce_loadedSVCardLanding_shouldLandingWrapperViewModelChanged() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let viewModel = createLandingWrapperViewModel()
+        
+        assertState(
+            .loadedSVCardLanding(viewModel),
+            on: initialState(buttons: .buttons(card))){
+                
+                $0.landingWrapperViewModel = viewModel
+            }
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ControlPanelReducer
@@ -124,6 +148,24 @@ final class ControlPanelReducerTests: XCTestCase {
     
     private typealias MakeAlert = ControlPanelReducer.MakeAlert
     typealias MakeActions = ControlPanelReducer.MakeActions
+    
+    
+    let makeIconView: LandingView.MakeIconView = { _ in .init(
+        image: .cardPlaceholder,
+        publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
+    )}
+    
+    private func createLandingWrapperViewModel() -> LandingWrapperViewModel {
+        .init(initialState: .success(.preview),
+              imagePublisher: .imagePublisher,
+              imageLoader: { _ in },
+              makeIconView: makeIconView,
+              config: .default,
+              landingActions: { _ in
+            return {}()
+        }
+        )
+    }
     
     private func makeSUT(
         makeAlert: @escaping MakeAlert = { _ in .testAlert },
@@ -255,9 +297,19 @@ final class ControlPanelReducerTests: XCTestCase {
         )
     }
 }
+
 private extension Array where Element == ControlPanelButtonDetails {
     
     static func buttons(_ card: ProductCardData) -> Self {
         .cardGuardian(card, .init(.active))
     }
+}
+
+private extension LandingWrapperViewModel.ImagePublisher {
+    
+    static let imagePublisher: Self = {
+        
+        return Just(["1": .ic16Tv])
+            .eraseToAnyPublisher()
+    }()
 }
