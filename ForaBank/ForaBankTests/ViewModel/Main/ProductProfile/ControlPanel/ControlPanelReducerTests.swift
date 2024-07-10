@@ -127,7 +127,7 @@ final class ControlPanelReducerTests: XCTestCase {
             on: initialState(buttons: .buttons(card)))
     }
     
-    func test_reduce_loadedSVCardLanding_shouldLandingWrapperViewModelChanged() {
+    func test_reduce_loadedSVCardLanding_success_shouldLandingWrapperViewModelChanged() {
         
         let card = makeCardProduct(statusCard: .active)
         let viewModel = createLandingWrapperViewModel()
@@ -138,6 +138,15 @@ final class ControlPanelReducerTests: XCTestCase {
                 
                 $0.landingWrapperViewModel = viewModel
             }
+    }
+    
+    func test_reduce_loadedSVCardLanding_failure_shouldNoChanged() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assertState(
+            .loadedSVCardLanding(nil),
+            on: initialState(buttons: .buttons(card)))
     }
     
     // MARK: - Helpers

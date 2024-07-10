@@ -60,6 +60,8 @@ extension ControlPanelReducer {
         case let .loadedSVCardLanding(viewModel):
             if let viewModel {
                 state.landingWrapperViewModel = viewModel
+            } else {
+                state.landingWrapperViewModel = nil
             }
         }
         return (state, effect)
