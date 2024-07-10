@@ -18,7 +18,7 @@ struct ProductProfileServices {
     let createChangeSVCardLimit: ChangeSVCardLimitServices
     let createSVCardLanding: SVCardLandingServices
 
-    let makeSVCardLandingViewModel: (Landing, UILanding.Component.Config, @escaping (LandingEvent.Card) -> () -> Void
+    let makeSVCardLandingViewModel: (Landing, UILanding.Component.Config, @escaping (LandingEvent) -> Void
     ) -> LandingWrapperViewModel?
 }
 
