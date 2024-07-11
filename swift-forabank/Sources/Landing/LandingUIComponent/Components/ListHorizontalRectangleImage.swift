@@ -84,23 +84,18 @@ extension ListHorizontalRectangleImageView {
             action: (LandingEvent) -> Void,
             canOpenDetail: UILanding.CanOpenDetail
         ) {
-            
             let detailDestination = item.detailDestination
             let linkIsEmpty = item.link.isEmpty
             
             switch detailDestination {
-                
             case .none:
-                if !linkIsEmpty {
-                    action(.card(.openUrl(item.link)))
-                }
+                if !linkIsEmpty { action(.card(.openUrl(item.link))) }
                 
             case let .some(destination):
                 let canOpen = canOpenDetail(destination)
                 let bannerAction = destination.groupID.bannerAction
                 
                 switch (canOpen, bannerAction) {
-                    
                 case (true, _):
                     selectDetail(destination)
                     
@@ -108,9 +103,7 @@ extension ListHorizontalRectangleImageView {
                     action(.bannerAction(bannerAction))
                     
                 default:
-                    if !linkIsEmpty {
-                        action(.card(.openUrl(item.link)))
-                    }
+                    if !linkIsEmpty { action(.card(.openUrl(item.link))) }
                 }
             }
         }
