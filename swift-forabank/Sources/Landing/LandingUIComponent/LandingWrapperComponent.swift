@@ -126,6 +126,30 @@ public final class LandingWrapperViewModel: ObservableObject {
             case .order:
                 self.landingActions(.sticker(.order))
             }
+            
+        case let .bannerAction(bannerAction):
+            switch bannerAction {
+            case .contact:
+                self.landingActions(.bannerAction(.contact))
+                
+            case .depositsList:
+                self.landingActions(.bannerAction(.depositsList))
+                
+            case .depositTransfer:
+                self.landingActions(.bannerAction(.migTransfer))
+                
+            case .landing:
+                self.landingActions(.bannerAction(.landing))
+                
+            case .migAuthTransfer:
+                self.landingActions(.bannerAction(.migAuthTransfer))
+                
+            case .migTransfer:
+                self.landingActions(.bannerAction(.migTransfer))
+                
+            case .openDeposit:
+                self.landingActions(.bannerAction(.openDeposit))
+            }
         }
     }
     

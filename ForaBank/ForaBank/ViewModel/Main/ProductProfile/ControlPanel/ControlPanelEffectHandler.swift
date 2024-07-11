@@ -11,9 +11,14 @@ import LandingUIComponent
 final class ControlPanelEffectHandler {
     
     private let productProfileServices: ProductProfileServices
+    private let landingEvent: (LandingEvent) -> Void
     
-    init(productProfileServices: ProductProfileServices) {
+    init(
+        productProfileServices: ProductProfileServices,
+        landingEvent: @escaping (LandingEvent) -> Void
+    ) {
         self.productProfileServices = productProfileServices
+        self.landingEvent = landingEvent
     }
 }
 
@@ -64,7 +69,6 @@ extension ControlPanelEffectHandler {
             }
             
         case let .loadSVCardLanding(cardType):
-            // TODO: move actions to fabric
             productProfileServices.createSVCardLanding.createSVCardLanding((serial: "", abroadType: cardType.abroadType)){
                 
                 result in
@@ -75,18 +79,8 @@ extension ControlPanelEffectHandler {
                     dispatch(.loadedSVCardLanding(self.productProfileServices.makeSVCardLandingViewModel(
                         landing,
                         .default,
-                        {
-                            switch $0 {
-                            case let .openUrl(link): // actions
-                                return {
-                                    if let url = URL(string: link), UIApplication.shared.canOpenURL(url) {
-                                        UIApplication.shared.open(url)
-                                    }
-                                }
-                            default:
-                                return {}
-                            }
-                        })))
+                        self.landingEvent
+                        )))
                 }
             }
         }

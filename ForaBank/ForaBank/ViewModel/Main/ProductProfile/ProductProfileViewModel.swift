@@ -16,6 +16,7 @@ import PinCodeUI
 import SwiftUI
 import Tagged
 import RxViewModel
+import LandingUIComponent
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -1997,7 +1998,7 @@ extension ProductProfileViewModel {
                 makeAlert: productProfileViewModelFactory.makeAlert,
                 makeActions: makeActions
             ).reduce(_:_:),
-            handleEffect: ControlPanelEffectHandler(productProfileServices: productProfileServices).handleEffect(_:_:))
+            handleEffect: ControlPanelEffectHandler(productProfileServices: productProfileServices, landingEvent: landingEvent).handleEffect(_:_:))
     }
     
     func createCardGuardianPanel(_ product: ProductData?) {
@@ -2020,6 +2021,58 @@ extension ProductProfileViewModel {
         }
     }
 }
+
+extension ProductProfileViewModel {
+    // TODO: add real actions
+    func landingEvent(_ event: LandingEvent) {
+        
+        switch event {
+        case let .card(cardEvent):
+            switch cardEvent {
+                
+            case .goToMain:
+                self.link = nil
+                self.action.send(DelayWrappedAction(delayMS: 10, action: ProductProfileViewModelAction.Close.SelfView()))
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                    self.rootActions?.switchTab(.main)
+                }
+
+            case let .openUrl(link):
+                openLinkURL(link)
+
+            case .order:
+                break
+            }
+        case .sticker:
+            break
+            
+        case let .bannerAction(action):
+            switch action {
+            case .contact:
+                print("contact")
+                
+            case .depositsList:
+                print("depositsList")
+                
+            case .depositTransfer:
+                print("depositTransfer")
+                
+            case .landing:
+                print("landing")
+                
+            case .migAuthTransfer:
+                print("migAuthTransfer")
+                
+            case .migTransfer:
+                print("migTransfer")
+                
+            case .openDeposit:
+                print("openDeposit")
+            }
+        }
+    }
+}
+
 //MARK: - Types
 
 extension ProductProfileViewModel {

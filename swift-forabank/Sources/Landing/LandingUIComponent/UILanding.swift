@@ -35,6 +35,11 @@ public extension UILanding {
 
 extension UILanding {
     
+   typealias CanOpenDetail = (DetailDestination) -> Bool
+}
+
+extension UILanding {
+    
     func components(
         g: String,
         v: String
