@@ -84,16 +84,34 @@ extension ListHorizontalRectangleImageView {
             action: (LandingEvent) -> Void,
             canOpenDetail: UILanding.CanOpenDetail
         ) {
-            if let detailDestination = item.detailDestination {
-                if canOpenDetail(detailDestination) {
-                    selectDetail(detailDestination)
-                } else if let bannerAction = detailDestination.groupID.bannerAction {
-                    action(.bannerAction(bannerAction))
-                } else if !item.link.isEmpty {
+            
+            let detailDestination = item.detailDestination
+            let linkIsEmpty = item.link.isEmpty
+            
+            switch detailDestination {
+                
+            case .none:
+                if !linkIsEmpty {
                     action(.card(.openUrl(item.link)))
                 }
-            } else if !item.link.isEmpty {
-                action(.card(.openUrl(item.link)))
+                
+            case let .some(destination):
+                let canOpen = canOpenDetail(destination)
+                let bannerAction = destination.groupID.bannerAction
+                
+                switch (canOpen, bannerAction) {
+                    
+                case (true, _):
+                    selectDetail(destination)
+                    
+                case let (false, .some(bannerAction)):
+                    action(.bannerAction(bannerAction))
+                    
+                default:
+                    if !linkIsEmpty {
+                        action(.card(.openUrl(item.link)))
+                    }
+                }
             }
         }
         
