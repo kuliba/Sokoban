@@ -7,6 +7,7 @@
 
 @testable import ForaBank
 import XCTest
+import SwiftUI
 
 final class OperationDetailInfoViewModelTests: XCTestCase {
     
@@ -516,44 +517,31 @@ final class OperationDetailInfoViewModelTests: XCTestCase {
     
     // MARK: - makeItems with HousingAndCommunalService
     
-    func test_housingAndCommunalService_defaultIconType() throws {
-        
-        let (sut, _) = makeSUT(transferEnum: .housingAndCommunalService)
-        let operation = makeOperationDetail(
-            transferEnum: .housingAndCommunalService,
-            payeeFullName: "ООО ЖКХ Сервис"
-        )
-        let items = sut.makeItems(operation: operation)
-        let firstItem = try XCTUnwrap(items.first as? OperationDetailInfoViewModel.PropertyCellViewModel, "First item should be PropertyCellViewModel")
-        
-        XCTAssertEqual(firstItem.title, "Наименование получателя")
-        XCTAssertEqual(firstItem.iconType, .ic40ZkxServices)
-    }
-
     func test_housingAndCommunalService_withPayeeFullName() throws {
         
-        let (sut, _) = makeSUT(transferEnum: .housingAndCommunalService)
-        let operation = makeOperationDetail(
+        let firstItem = try makeFirstItem(
             transferEnum: .housingAndCommunalService,
             payeeFullName: "ИП Иванов"
         )
-        let items = sut.makeItems(operation: operation)
-        let firstItem = try XCTUnwrap(items.first, "Items should not be empty")
-        
-        XCTAssertEqual(firstItem.title, "Наименование получателя")
+        try assertPropertyCell(firstItem, title: "Наименование получателя", iconType: .ic40ZkxServices)
     }
-
+    
     func test_housingAndCommunalService_withAccount() throws {
         
-        let (sut, _) = makeSUT(transferEnum: .housingAndCommunalService)
-        let operation = makeOperationDetail(
+        let firstItem = try makeFirstItem(
             transferEnum: .housingAndCommunalService,
             account: "1122334455"
         )
-        let items = sut.makeItems(operation: operation)
-        let firstItem = try XCTUnwrap(items.first, "Items should not be empty")
+        try assertPropertyCell(firstItem, title: "Лицевой счет")
+    }
+    
+    func test_housingAndCommunalService_defaultIconType() throws {
         
-        XCTAssertEqual(firstItem.title, "Лицевой счет")
+        let firstItem = try makeFirstItem(
+            transferEnum: .housingAndCommunalService,
+            payeeFullName: "ООО ЖКХ Сервис"
+        )
+        try assertPropertyCell(firstItem, title: "Наименование получателя", iconType: .ic40ZkxServices)
     }
     
     // MARK: - makeItemsForHistoryExternal
@@ -2102,3 +2090,47 @@ private extension ProductStatementData.FastPayment {
 
 static let test: Self = .init(documentComment: "string", foreignBankBIC: "044525491", foreignBankID: "10000001153", foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"", foreignName: "Петров Петр Петрович", foreignPhoneNumber: "70115110217", opkcid: "A1355084612564010000057CAFC75755", operTypeFP: "string", tradeName: "string", guid: "string")
 }
+
+private extension OperationDetailInfoViewModel.DefaultCellViewModel {
+    
+    var asPropertyCell: OperationDetailInfoViewModel.PropertyCellViewModel? {
+        return self as? OperationDetailInfoViewModel.PropertyCellViewModel
+    }
+}
+
+extension OperationDetailInfoViewModelTests {
+    
+    func makeFirstItem(
+        transferEnum: OperationDetailData.TransferEnum,
+        payeeFullName: String? = nil,
+        account: String? = nil
+    ) throws -> OperationDetailInfoViewModel.DefaultCellViewModel {
+        
+        let (sut, _) = makeSUT(transferEnum: transferEnum)
+        let operation = makeOperationDetail(
+            transferEnum: transferEnum,
+            account: account,
+            payeeFullName: payeeFullName
+        )
+        let items = sut.makeItems(operation: operation)
+        
+        return try XCTUnwrap(items.first, "Items should not be empty")
+    }
+    
+    func assertPropertyCell(
+        _ cell: OperationDetailInfoViewModel.DefaultCellViewModel,
+        title: String,
+        iconType: Image? = nil
+    ) throws {
+        
+        XCTAssertEqual(cell.title, title)
+        
+        if let iconType = iconType {
+            
+            let propertyCell = try XCTUnwrap(cell.asPropertyCell, "Cell should be PropertyCellViewModel")
+            
+            XCTAssertEqual(propertyCell.iconType, iconType)
+        }
+    }
+}
+
