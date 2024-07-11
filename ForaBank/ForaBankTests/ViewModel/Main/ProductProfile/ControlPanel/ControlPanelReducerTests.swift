@@ -10,6 +10,7 @@ import XCTest
 import RxViewModel
 import LandingUIComponent
 import Combine
+import SwiftUI
 
 final class ControlPanelReducerTests: XCTestCase {
     
@@ -149,6 +150,44 @@ final class ControlPanelReducerTests: XCTestCase {
             on: initialState(buttons: .buttons(card)))
     }
     
+    func test_reduce_stickerEvent_openCard_shouldDestinationChanged() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let authProductsViewModel: AuthProductsViewModel = .mockData
+        
+        assertState(
+            .stickerEvent(.openCard(authProductsViewModel)),
+            on: initialState(buttons: .buttons(card))) {
+                
+                $0.destination = .landing(authProductsViewModel)
+            }
+    }
+
+    func test_reduce_stickerEvent_orderSticker_shouldDestinationChanged() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let orderStickerView = Text("orderSticker")
+        
+        assertState(
+            .stickerEvent(.orderSticker(orderStickerView)),
+            on: initialState(buttons: .buttons(card))) {
+                
+                $0.destination = .orderSticker(orderStickerView)
+            }
+    }
+    
+    func test_reduce_dismissDestination_shouldDestinationNil() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assertState(
+            .dismissDestination,
+            on: initialState(buttons: .buttons(card), destination: .landing(.mockData))) {
+                
+                $0.destination = nil
+            }
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ControlPanelReducer
@@ -156,8 +195,8 @@ final class ControlPanelReducerTests: XCTestCase {
     private typealias Event = SUT.Event
     
     private typealias MakeAlert = ControlPanelReducer.MakeAlert
-    typealias MakeActions = ControlPanelReducer.MakeActions
-    
+    private typealias MakeActions = ControlPanelReducer.MakeActions
+    private typealias MakeViewModels = ControlPanelReducer.MakeViewModels
     
     let makeIconView: LandingView.MakeIconView = { _ in .init(
         image: .cardPlaceholder,
@@ -179,6 +218,7 @@ final class ControlPanelReducerTests: XCTestCase {
     private func makeSUT(
         makeAlert: @escaping MakeAlert = { _ in .testAlert },
         makeActions: MakeActions = .emptyActions,
+        makeViewModels: MakeViewModels = .emptyViewModels,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
@@ -186,7 +226,8 @@ final class ControlPanelReducerTests: XCTestCase {
         let sut = SUT(
             controlPanelLifespan: .never,
             makeAlert: makeAlert,
-            makeActions: makeActions
+            makeActions: makeActions,
+            makeViewModels: makeViewModels
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -248,10 +289,15 @@ final class ControlPanelReducerTests: XCTestCase {
     
     private func initialState(
         buttons: [ControlPanelButtonDetails],
-        navBarViewModel: NavigationBarView.ViewModel = .sample
+        navBarViewModel: NavigationBarView.ViewModel = .sample,
+        destination: ControlPanelState.Destination? = nil
     ) -> State {
         
-        .init(buttons: buttons, navigationBarViewModel: navBarViewModel)
+        .init(
+            buttons: buttons,
+            navigationBarViewModel: navBarViewModel,
+            destination: destination
+        )
     }
     
     private func makeCardProduct(
@@ -307,14 +353,14 @@ final class ControlPanelReducerTests: XCTestCase {
     }
 }
 
-private extension Array where Element == ControlPanelButtonDetails {
+extension Array where Element == ControlPanelButtonDetails {
     
     static func buttons(_ card: ProductCardData) -> Self {
         .cardGuardian(card, .init(.active))
     }
 }
 
-private extension LandingWrapperViewModel.ImagePublisher {
+extension LandingWrapperViewModel.ImagePublisher {
     
     static let imagePublisher: Self = {
         

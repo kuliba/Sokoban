@@ -18,6 +18,7 @@ struct ControlPanelState {
     var spinner: SpinnerView.ViewModel?
     var navigationBarViewModel: NavigationBarView.ViewModel
     var landingWrapperViewModel: LandingWrapperViewModel?
+    var destination: Destination?
 
     init(
         buttons: [ControlPanelButtonDetails],
@@ -25,7 +26,8 @@ struct ControlPanelState {
         alert: Alert.ViewModel? = nil,
         spinner: SpinnerView.ViewModel? = nil,
         navigationBarViewModel: NavigationBarView.ViewModel,
-        landingWrapperViewModel: LandingWrapperViewModel? = nil
+        landingWrapperViewModel: LandingWrapperViewModel? = nil,
+        destination: Destination? = nil
     ) {
         self.buttons = buttons
         self.status = status
@@ -33,6 +35,7 @@ struct ControlPanelState {
         self.spinner = spinner
         self.navigationBarViewModel = navigationBarViewModel
         self.landingWrapperViewModel = landingWrapperViewModel
+        self.destination = destination
     }
 }
 
@@ -47,6 +50,30 @@ extension ControlPanelState {
         case block, unblock
         case visibility
         case updateProducts
+    }
+}
+
+extension ControlPanelState {
+    
+    enum Destination: Identifiable {
+        
+        case landing(AuthProductsViewModel)
+        case orderSticker(any View)
+
+        var id: _Case { _case }
+        
+        var _case: _Case {
+            
+            switch self {
+            case .landing: return .landing
+            case .orderSticker: return .orderSticker
+            }
+        }
+        
+        enum _Case {
+            
+            case landing, orderSticker
+        }
     }
 }
 

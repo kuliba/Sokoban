@@ -445,7 +445,8 @@ extension ProductProfileViewModel {
                 makeInformerDataUpdateFailure: {
                     updateInfoStatusFlag.isActive ? .updateFailureInfo : nil
                 }, 
-                makeCardGuardianPanel: makeCardGuardianPanel
+                makeCardGuardianPanel: makeCardGuardianPanel,
+                model: model
             )
             
             return .init(
