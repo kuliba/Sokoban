@@ -12,9 +12,8 @@ struct ControlPanelView<DestinationView>: View
 where DestinationView: View {
     
     let state: State
-    let landingViewModel: LandingWrapperViewModel?
     let event: (Event) -> Void
-    let config: ControlPanelViewConfig = .default
+    let config: ControlPanelViewConfig
     let destinationView: (Destination) -> DestinationView
 
     var body: some View {
@@ -26,7 +25,7 @@ where DestinationView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, config.paddings.horizontal)
 
-            landingViewModel.map {
+            state.landingWrapperViewModel.map {
                 LandingWrapperView(viewModel: $0)
             }
             .padding(.top, config.paddings.top)
