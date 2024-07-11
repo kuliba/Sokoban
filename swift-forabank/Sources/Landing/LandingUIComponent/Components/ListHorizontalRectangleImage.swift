@@ -57,17 +57,20 @@ extension ListHorizontalRectangleImageView {
         
         private let action: (LandingEvent) -> Void
         private let selectDetail: SelectDetail
+        private let canOpenDetail: UILanding.CanOpenDetail
 
         init(
             data: HorizontalList,
             images: [String: Image],
             action: @escaping (LandingEvent) -> Void,
-            selectDetail: @escaping SelectDetail
+            selectDetail: @escaping SelectDetail,
+            canOpenDetail: @escaping UILanding.CanOpenDetail
         ) {
             self.data = data
             self.images = images
             self.action = action
             self.selectDetail = selectDetail
+            self.canOpenDetail = canOpenDetail
         }
         
         func image(byImageLink: String) -> Image? {
@@ -78,12 +81,30 @@ extension ListHorizontalRectangleImageView {
         static func itemAction(
             item: HorizontalList.Item,
             selectDetail: SelectDetail,
-            action: (LandingEvent) -> Void
+            action: (LandingEvent) -> Void,
+            canOpenDetail: UILanding.CanOpenDetail
         ) {
-            if let detailDestination = item.detailDestination {
-                selectDetail(detailDestination)
-            } else if !item.link.isEmpty {
-                action(.card(.openUrl(item.link)))
+            let detailDestination = item.detailDestination
+            let linkIsEmpty = item.link.isEmpty
+            
+            switch detailDestination {
+            case .none:
+                if !linkIsEmpty { action(.card(.openUrl(item.link))) }
+                
+            case let .some(destination):
+                let canOpen = canOpenDetail(destination)
+                let bannerAction = destination.groupID.bannerAction
+                
+                switch (canOpen, bannerAction) {
+                case (true, _):
+                    selectDetail(destination)
+                    
+                case let (false, .some(bannerAction)):
+                    action(.bannerAction(bannerAction))
+                    
+                default:
+                    if !linkIsEmpty { action(.card(.openUrl(item.link))) }
+                }
             }
         }
         
@@ -94,7 +115,8 @@ extension ListHorizontalRectangleImageView {
            Self.itemAction(
                 item: item,
                 selectDetail: selectDetail,
-                action: action
+                action: action, 
+                canOpenDetail: canOpenDetail
             )
         }
     }
@@ -105,5 +127,31 @@ extension UILanding.List.HorizontalRectangleImage {
     func imageRequests() -> [ImageRequest] {
         
         return self.list.map(\.imageLink).map(ImageRequest.url)
+    }
+}
+
+private extension String {
+    
+    var bannerAction: LandingEvent.BannerAction? {
+        
+        switch self {
+            
+        case "DEPOSIT_OPEN":
+            return .openDeposit
+        case "DEPOSITS":
+            return .depositsList
+        case "MIG_TRANSFER":
+            return .migTransfer
+        case "MIG_AUTH_TRANSFER":
+            return .migAuthTransfer
+        case "CONTACT_TRANSFER":
+            return .contact
+        case "DEPOSIT_TRANSFER":
+            return .depositTransfer
+        case "LANDING":
+            return .landing
+        default:
+            return nil
+        }
     }
 }

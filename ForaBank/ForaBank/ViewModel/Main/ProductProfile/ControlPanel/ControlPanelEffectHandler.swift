@@ -6,13 +6,19 @@
 //
 
 import SwiftUI
+import LandingUIComponent
 
 final class ControlPanelEffectHandler {
     
     private let productProfileServices: ProductProfileServices
+    private let landingEvent: (LandingEvent) -> Void
     
-    init(productProfileServices: ProductProfileServices) {
+    init(
+        productProfileServices: ProductProfileServices,
+        landingEvent: @escaping (LandingEvent) -> Void
+    ) {
         self.productProfileServices = productProfileServices
+        self.landingEvent = landingEvent
     }
 }
 
@@ -59,6 +65,22 @@ extension ControlPanelEffectHandler {
                     break
                 case .success:
                     dispatch(.updateProducts)
+                }
+            }
+            
+        case let .loadSVCardLanding(cardType):
+            productProfileServices.createSVCardLanding.createSVCardLanding((serial: "", abroadType: cardType.abroadType)){
+                
+                result in
+                switch result {
+                case .failure:
+                    dispatch(.loadedSVCardLanding(nil))
+                case let .success(landing):
+                    dispatch(.loadedSVCardLanding(self.productProfileServices.makeSVCardLandingViewModel(
+                        landing,
+                        .default,
+                        self.landingEvent
+                        )))
                 }
             }
         }

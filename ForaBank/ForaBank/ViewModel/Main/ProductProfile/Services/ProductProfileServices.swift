@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import LandingUIComponent
+import LandingMapping
 
 struct ProductProfileServices {
     
@@ -14,6 +16,10 @@ struct ProductProfileServices {
     let createUserVisibilityProductsSettingsService: UserVisibilityProductsSettingsServices
     let createCreateGetSVCardLimits: GetSVCardLimitsServices
     let createChangeSVCardLimit: ChangeSVCardLimitServices
+    let createSVCardLanding: SVCardLandingServices
+
+    let makeSVCardLandingViewModel: (Landing, UILanding.Component.Config, @escaping (LandingEvent) -> Void
+    ) -> LandingWrapperViewModel?
 }
 
 // MARK: - Preview Content
@@ -25,6 +31,8 @@ extension ProductProfileServices {
         createUnblockCardService: .preview(),
         createUserVisibilityProductsSettingsService: .preview(),
         createCreateGetSVCardLimits: .preview(),
-        createChangeSVCardLimit: .preview()
+        createChangeSVCardLimit: .preview(),
+        createSVCardLanding: .preview(),
+        makeSVCardLandingViewModel: { _,_,_ in nil }
     )
 }

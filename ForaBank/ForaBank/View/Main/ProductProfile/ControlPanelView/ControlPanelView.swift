@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import LandingUIComponent
 
 struct ControlPanelView: View {
     
     let items: [ControlPanelButtonDetails]
+    let landingViewModel: LandingWrapperViewModel?
     let event: (Event) -> Void
     let config: ControlPanelView.Config = .default
     
@@ -20,11 +22,13 @@ struct ControlPanelView: View {
                 ForEach(items, id: \.title, content: view)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            
-            Text("Просмотр и изменение лимитов")
-                .frame(maxHeight: .infinity)
+            .padding(.horizontal, config.paddings.horizontal)
+
+            landingViewModel.map {
+                LandingWrapperView(viewModel: $0)
+            }
+            .padding(.top, config.paddings.top)
         }
-        .padding(.horizontal, config.paddings.horizontal)
         .padding(.top, config.paddings.top)
     }
     
