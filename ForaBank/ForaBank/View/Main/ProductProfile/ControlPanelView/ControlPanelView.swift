@@ -8,27 +8,33 @@
 import SwiftUI
 import LandingUIComponent
 
-struct ControlPanelView: View {
+struct ControlPanelView<DestinationView>: View 
+where DestinationView: View {
     
-    let items: [ControlPanelButtonDetails]
-    let landingViewModel: LandingWrapperViewModel?
+    let state: State
     let event: (Event) -> Void
-    let config: ControlPanelView.Config = .default
-    
+    let config: ControlPanelViewConfig
+    let destinationView: (Destination) -> DestinationView
+
     var body: some View {
         
         VStack(alignment: .leading) {
             HStack {
-                ForEach(items, id: \.title, content: view)
+                ForEach(state.buttons, id: \.title, content: view)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, config.paddings.horizontal)
 
-            landingViewModel.map {
+            state.landingWrapperViewModel.map {
                 LandingWrapperView(viewModel: $0)
             }
             .padding(.top, config.paddings.top)
         }
+        .navigationDestination(
+            destination: state.destination,
+            dismissDestination: { event(.dismissDestination) },
+            content: destinationView
+        )
         .padding(.top, config.paddings.top)
     }
     
@@ -36,12 +42,15 @@ struct ControlPanelView: View {
         
         HorizontalPanelButton(
             details: details,
-            event: { event(details.event) },
+            event: { event(.controlButtonEvent(details.event)) },
             config: config)
     }
 }
 
 extension ControlPanelView {
     
-    typealias Event = ControlButtonEvent
+    typealias Event = ControlPanelEvent
+    typealias State = ControlPanelState
+    typealias Destination = ControlPanelState.Destination
 }
+

@@ -11,7 +11,7 @@ struct HorizontalPanelButton: View {
     
     let details: ControlPanelButtonDetails
     let event: () -> Void
-    let config: ControlPanelView.Config
+    let config: ControlPanelViewConfig
     
     var body: some View {
         

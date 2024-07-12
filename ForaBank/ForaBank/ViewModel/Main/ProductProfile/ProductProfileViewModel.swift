@@ -1988,6 +1988,14 @@ extension ProductProfileViewModel {
             updateProducts: { [weak self] in self?.model.handleProductsUpdateTotalProduct(.init(productType: .card))}
         )
         
+        let makeViewModels: ControlPanelReducer.MakeViewModels = .init(
+            stickerLanding: productProfileViewModelFactory.makeStickerLandingViewModel(
+                .sticker, 
+                config: .stickerDefault,
+                landingActions: landingAction
+            )
+        )
+        
         let backButton: NavigationBarView.ViewModel.BackButtonItemViewModel = .init(icon: .ic24ChevronLeft, action: { [weak self] in self?.link = nil })
 
         let navigationBarViewModel = NavigationBarView.ViewModel(title: "Управление", subtitle: navigationTitleForControlPanel, leftItems: [backButton])
@@ -1996,11 +2004,79 @@ extension ProductProfileViewModel {
             initialState: .init(buttons: buttons, navigationBarViewModel: navigationBarViewModel),
             reduce: ControlPanelReducer(
                 makeAlert: productProfileViewModelFactory.makeAlert,
-                makeActions: makeActions
+                makeActions: makeActions,
+                makeViewModels: makeViewModels
             ).reduce(_:_:),
             handleEffect: ControlPanelEffectHandler(productProfileServices: productProfileServices, landingEvent: landingEvent).handleEffect(_:_:))
     }
     
+    private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {
+        
+        switch event {
+        case .goToMain:
+            return handleCloseLinkAction
+        case .order:
+            return orderSticker
+        }
+    }
+
+    func handleCloseLinkAction() {
+        self.link = nil
+        self.action.send(DelayWrappedAction(delayMS: 10, action: ProductProfileViewModelAction.Close.SelfView()))
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+            self.rootActions?.switchTab(.main)
+        }
+    }
+    
+    func orderSticker() {
+        
+        if let controlPanelViewModel {
+            
+            let productsCard = model.products(.card)
+            
+            if productsCard == nil ||
+                productsCard?.contains(where: {
+                    ($0 as? ProductCardData)?.isMain == true }) == false
+            {
+            let alertViewModel = Alert.ViewModel(
+                title: "Нет карты",
+                message: "Сначала нужно заказать карту.",
+                primary: .init(
+                    type: .default,
+                    title: "Отмена",
+                    action: {}),
+                secondary: .init(
+                    type: .default, title: "Продолжить", action: {
+                        
+                        DispatchQueue.main.async { [weak self] in
+                            
+                            guard let self else { return }
+                            
+                            let authProductsViewModel = AuthProductsViewModel(
+                                model,
+                                products: model.catalogProducts.value,
+                                dismissAction: { })
+                            
+                            controlPanelViewModel.event(.stickerEvent(.openCard(authProductsViewModel)))
+                        }
+                    }
+                ))
+                controlPanelViewModel.event(.controlButtonEvent(.showAlert(alertViewModel)))
+            } else {
+                
+                if let rootActions {
+                    let view: any View =                     RootViewModelFactory.makeNavigationOperationView(
+                        httpClient: model.authenticatedHTTPClient(),
+                        model: model,
+                        dismissAll: rootActions.dismissAll
+                    )()
+
+                    controlPanelViewModel.event(.stickerEvent(.orderSticker(view)))
+                }
+            }
+        }
+    }
+
     func createCardGuardianPanel(_ product: ProductData?) {
         
         guard let card = product?.asCard else {
@@ -2031,12 +2107,7 @@ extension ProductProfileViewModel {
             switch cardEvent {
                 
             case .goToMain:
-                self.link = nil
-                self.action.send(DelayWrappedAction(delayMS: 10, action: ProductProfileViewModelAction.Close.SelfView()))
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
-                    self.rootActions?.switchTab(.main)
-                }
-
+                handleCloseLinkAction()
             case let .openUrl(link):
                 openLinkURL(link)
 
@@ -2054,14 +2125,14 @@ extension ProductProfileViewModel {
             case .depositsList:
                 print("depositsList")
                 
-            case .depositTransfer:
-                print("depositTransfer")
+            case .depositTransfer: // см https://shorturl.at/BpUzf
+                break
                 
             case .landing:
-                print("landing")
+               orderSticker()
                 
-            case .migAuthTransfer:
-                print("migAuthTransfer")
+            case .migAuthTransfer: // см https://shorturl.at/BpUzf
+                break
                 
             case .migTransfer:
                 print("migTransfer")

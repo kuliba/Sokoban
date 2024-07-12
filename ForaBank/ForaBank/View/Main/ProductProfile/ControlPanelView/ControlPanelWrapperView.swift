@@ -25,9 +25,10 @@ struct ControlPanelWrapperView: View {
         
         ZStack {
             ControlPanelView(
-                items: viewModel.state.buttons,
-                landingViewModel: viewModel.state.landingWrapperViewModel,
-                event: { viewModel.event(.controlButtonEvent($0)) }
+                state: viewModel.state,
+                event: { viewModel.event($0) },
+                config: config,
+                destinationView: destinationView
             )
             .alert(
                 item: viewModel.state.alert,
@@ -42,10 +43,26 @@ struct ControlPanelWrapperView: View {
             }
         }
     }
+    
+    private func destinationView(_ destination: ControlPanelState.Destination) -> some View {
+        
+        switch destination {
+        case let .landing(viewModel):
+            return AnyView(AuthProductsView(viewModel: viewModel))
+            
+        case let .orderSticker(view):
+            
+            let newView = view
+                .navigationBarTitle("Оформление заявки", displayMode: .inline)
+                .edgesIgnoringSafeArea(.bottom)
+
+            return AnyView(newView)
+        }
+    }
 }
 
 extension ControlPanelWrapperView {
     
     typealias ViewModel = ControlPanelViewModel
-    typealias Config = ControlPanelView.Config
+    typealias Config = ControlPanelViewConfig
 }

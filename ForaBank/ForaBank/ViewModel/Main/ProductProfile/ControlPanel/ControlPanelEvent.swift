@@ -16,4 +16,6 @@ enum ControlPanelEvent {
     case updateTitle(String)
     case loadSVCardLanding(ProductCardData)
     case loadedSVCardLanding(LandingWrapperViewModel?)
+    case stickerEvent(StickerEvent)
+    case dismissDestination
 }

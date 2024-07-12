@@ -7,21 +7,25 @@
 
 import Foundation
 import SwiftUI
+import LandingUIComponent
 
 final class ControlPanelReducer {
     
     private let controlPanelLifespan: DispatchTimeInterval
     private let makeAlert: MakeAlert
     private let makeActions: MakeActions
+    private let makeViewModels: MakeViewModels
 
     init(
         controlPanelLifespan: DispatchTimeInterval = .milliseconds(400),
         makeAlert: @escaping MakeAlert,
-        makeActions: MakeActions
+        makeActions: MakeActions,
+        makeViewModels: MakeViewModels
     ) {
         self.controlPanelLifespan = controlPanelLifespan
         self.makeAlert = makeAlert
         self.makeActions = makeActions
+        self.makeViewModels = makeViewModels
     }
 }
 
@@ -63,6 +67,15 @@ extension ControlPanelReducer {
             } else {
                 state.landingWrapperViewModel = nil
             }
+        case let .stickerEvent(stickerEvent):
+            switch stickerEvent {
+            case let .openCard(viewModel):
+                state.destination = .landing(viewModel)
+            case let .orderSticker(view):
+                state.destination = .orderSticker(view)
+            }
+        case .dismissDestination:
+            state.destination = nil
         }
         return (state, effect)
     }
@@ -167,6 +180,14 @@ extension ControlPanelReducer {
         let contactsAction: MakeAction
         let unblockAction: MakeAction
         let updateProducts: MakeAction
+    }
+}
+
+extension ControlPanelReducer {
+    
+    struct MakeViewModels {
+        
+        let stickerLanding: LandingWrapperViewModel
     }
 }
 
