@@ -2105,15 +2105,16 @@ extension ProductProfileViewModel {
         switch event {
         case let .card(cardEvent):
             switch cardEvent {
-                
             case .goToMain:
                 handleCloseLinkAction()
+                
             case let .openUrl(link):
                 openLinkURL(link)
 
             case .order:
-                break
+                orderSticker()
             }
+            
         case .sticker:
             break
             
