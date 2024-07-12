@@ -40,6 +40,9 @@ extension ControlPanelReducer {
         var effect: Effect?
         
         switch event {
+        case let .contactTransfer(viewModel):
+            state.destination = .contactTransfer(viewModel)
+            
         case let .controlButtonEvent(buttonEvent):
             (state, effect) = reduce(state, buttonEvent)
             
@@ -67,6 +70,7 @@ extension ControlPanelReducer {
             } else {
                 state.landingWrapperViewModel = nil
             }
+            
         case let .stickerEvent(stickerEvent):
             switch stickerEvent {
             case let .openCard(viewModel):
@@ -74,6 +78,7 @@ extension ControlPanelReducer {
             case let .orderSticker(view):
                 state.destination = .orderSticker(view)
             }
+            
         case .dismissDestination:
             state.destination = nil
         }

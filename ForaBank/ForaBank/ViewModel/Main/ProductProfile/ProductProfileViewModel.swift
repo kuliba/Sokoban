@@ -2028,6 +2028,21 @@ extension ProductProfileViewModel {
         }
     }
     
+    func contactTransfer(_ countryID: String) {
+        if let controlPanelViewModel {
+            
+            let paymentsViewModel = PaymentsViewModel(
+                source: .direct(
+                    phone: nil,
+                    countryId: countryID
+                ),
+                model: model) {
+                    controlPanelViewModel.event(.dismissDestination)
+                }
+            controlPanelViewModel.event(.contactTransfer(paymentsViewModel))
+        }
+    }
+    
     func orderSticker() {
         
         if let controlPanelViewModel {
@@ -2128,8 +2143,8 @@ extension ProductProfileViewModel {
             
         case let .bannerAction(action):
             switch action {
-            case .contact:
-                print("contact")
+            case let .contact(country):
+                contactTransfer(country.countryID)
                 
             case .depositsList:
                 print("depositsList")

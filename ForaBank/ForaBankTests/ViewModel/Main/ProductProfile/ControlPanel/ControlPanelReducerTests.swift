@@ -176,6 +176,19 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_contactTransfer_shouldDestinationChanged() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let paymentsViewModel: PaymentsViewModel = .sample
+        
+        assertState(
+            .contactTransfer(paymentsViewModel),
+            on: initialState(buttons: .buttons(card), destination: .landing(.mockData))) {
+                
+                $0.destination = .contactTransfer(paymentsViewModel)
+            }
+    }
+    
     func test_reduce_dismissDestination_shouldDestinationNil() {
         
         let card = makeCardProduct(statusCard: .active)
