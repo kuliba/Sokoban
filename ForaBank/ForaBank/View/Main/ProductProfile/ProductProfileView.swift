@@ -177,7 +177,8 @@ struct ProductProfileView: View {
         case let .controlPanel(controlPanelViewModel):
             ControlPanelWrapperView(
                 viewModel: controlPanelViewModel,
-                config: .default)
+                config: .default, 
+                getUImage: getUImage)
             .edgesIgnoringSafeArea(.bottom)
 
         case let .productInfo(viewModel):

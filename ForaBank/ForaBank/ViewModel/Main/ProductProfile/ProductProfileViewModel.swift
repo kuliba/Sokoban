@@ -2028,6 +2028,44 @@ extension ProductProfileViewModel {
         }
     }
     
+    func contactTransfer(_ countryID: String) {
+        if let controlPanelViewModel {
+            
+            let paymentsViewModel = PaymentsViewModel(
+                source: .direct(
+                    phone: nil,
+                    countryId: countryID
+                ),
+                model: model) {
+                    controlPanelViewModel.event(.dismissDestination)
+                }
+            controlPanelViewModel.event(.bannerEvent(.contactTransfer(paymentsViewModel)))
+        }
+    }
+    
+    func openDepositList() {
+        
+        if let controlPanelViewModel {
+            
+            let openDepositViewModel = OpenDepositListViewModel(
+                model,
+                catalogType: .deposit,
+                dismissAction: {
+                    controlPanelViewModel.event(.dismissDestination)
+                })
+
+            controlPanelViewModel.event(.bannerEvent(.openDepositsList(openDepositViewModel)))
+        }
+    }
+    
+    func openDeposit(_ depositId: Int ) {
+        
+        if let controlPanelViewModel, let openDepositViewModel = OpenDepositDetailViewModel(depositId: depositId, model: model) {
+
+            controlPanelViewModel.event(.bannerEvent(.openDeposit(openDepositViewModel)))
+        }
+    }
+
     func orderSticker() {
         
         if let controlPanelViewModel {
@@ -2046,7 +2084,9 @@ extension ProductProfileViewModel {
                     title: "Отмена",
                     action: {}),
                 secondary: .init(
-                    type: .default, title: "Продолжить", action: {
+                    type: .default, 
+                    title: "Продолжить",
+                    action: {
                         
                         DispatchQueue.main.async { [weak self] in
                             
@@ -2057,7 +2097,7 @@ extension ProductProfileViewModel {
                                 products: model.catalogProducts.value,
                                 dismissAction: { })
                             
-                            controlPanelViewModel.event(.stickerEvent(.openCard(authProductsViewModel)))
+                            controlPanelViewModel.event(.bannerEvent(.stickerEvent(.openCard(authProductsViewModel))))
                         }
                     }
                 ))
@@ -2071,7 +2111,7 @@ extension ProductProfileViewModel {
                         dismissAll: rootActions.dismissAll
                     )()
 
-                    controlPanelViewModel.event(.stickerEvent(.orderSticker(view)))
+                    controlPanelViewModel.event(.bannerEvent(.stickerEvent(.orderSticker(view))))
                 }
             }
         }
@@ -2105,25 +2145,32 @@ extension ProductProfileViewModel {
         switch event {
         case let .card(cardEvent):
             switch cardEvent {
-                
             case .goToMain:
                 handleCloseLinkAction()
+                
             case let .openUrl(link):
                 openLinkURL(link)
 
             case .order:
-                break
+                orderSticker()
             }
-        case .sticker:
-            break
+            
+        case let .sticker(action):
+            switch action {
+            case .goToMain:
+                handleCloseLinkAction()
+
+            case .order:
+                orderSticker()
+            }
             
         case let .bannerAction(action):
             switch action {
-            case .contact:
-                print("contact")
+            case let .contact(country):
+                contactTransfer(country.countryID)
                 
             case .depositsList:
-                print("depositsList")
+                openDepositList()
                 
             case .depositTransfer: // см https://shorturl.at/BpUzf
                 break
@@ -2137,8 +2184,8 @@ extension ProductProfileViewModel {
             case .migTransfer:
                 print("migTransfer")
                 
-            case .openDeposit:
-                print("openDeposit")
+            case let .openDeposit(deposit):
+                openDeposit(deposit.depositID)
             }
         }
     }

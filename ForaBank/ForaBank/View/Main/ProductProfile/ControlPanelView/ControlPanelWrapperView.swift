@@ -15,10 +15,16 @@ struct ControlPanelWrapperView: View {
     @ObservedObject private var viewModel: ViewModel
     
     private let config: Config
-    
-    init(viewModel: ViewModel, config: Config) {
+    private let getUImage: (Md5hash) -> UIImage?
+
+    init(
+        viewModel: ViewModel,
+        config: Config,
+        getUImage: @escaping (Md5hash) -> UIImage?
+    ) {
         self.viewModel = viewModel
         self.config = config
+        self.getUImage = getUImage
     }
     
     var body: some View {
@@ -47,6 +53,9 @@ struct ControlPanelWrapperView: View {
     private func destinationView(_ destination: ControlPanelState.Destination) -> some View {
         
         switch destination {
+        case let .contactTransfer(viewModel):
+            return AnyView(PaymentsView(viewModel: viewModel))
+            
         case let .landing(viewModel):
             return AnyView(AuthProductsView(viewModel: viewModel))
             
@@ -57,6 +66,12 @@ struct ControlPanelWrapperView: View {
                 .edgesIgnoringSafeArea(.bottom)
 
             return AnyView(newView)
+            
+        case let .openDeposit(viewModel):
+            return AnyView(OpenDepositDetailView(viewModel: viewModel, getUImage: getUImage))
+
+        case let .openDepositsList(viewModel):
+            return AnyView(OpenDepositListView(viewModel: viewModel, getUImage: getUImage))
         }
     }
 }

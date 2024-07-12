@@ -40,6 +40,10 @@ extension ControlPanelReducer {
         var effect: Effect?
         
         switch event {
+            
+        case let .bannerEvent(bannerEvent):
+            (state, effect) = reduce(state, bannerEvent)
+
         case let .controlButtonEvent(buttonEvent):
             (state, effect) = reduce(state, buttonEvent)
             
@@ -67,15 +71,42 @@ extension ControlPanelReducer {
             } else {
                 state.landingWrapperViewModel = nil
             }
+            
+        case .dismissDestination:
+            state.destination = nil
+        }
+        return (state, effect)
+    }
+}
+
+extension ControlPanelReducer {
+    
+    func reduce(
+        _ state: State,
+        _ event: BannerActionEvent
+    ) -> (State, Effect?) {
+        
+        var state = state
+        var effect: Effect?
+        
+        switch event {
+        case let .contactTransfer(viewModel):
+            state.destination = .contactTransfer(viewModel)
+            
         case let .stickerEvent(stickerEvent):
             switch stickerEvent {
             case let .openCard(viewModel):
                 state.destination = .landing(viewModel)
+                
             case let .orderSticker(view):
                 state.destination = .orderSticker(view)
             }
-        case .dismissDestination:
-            state.destination = nil
+            
+        case let .openDeposit(viewModel):
+            state.destination = .openDeposit(viewModel)
+            
+        case let .openDepositsList(viewModel):
+            state.destination = .openDepositsList(viewModel)
         }
         return (state, effect)
     }

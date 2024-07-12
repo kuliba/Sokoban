@@ -93,7 +93,7 @@ extension ListHorizontalRectangleImageView {
                 
             case let .some(destination):
                 let canOpen = canOpenDetail(destination)
-                let bannerAction = destination.groupID.bannerAction
+                let bannerAction = destination.bannerAction
                 
                 switch (canOpen, bannerAction) {
                 case (true, _):
@@ -130,14 +130,13 @@ extension UILanding.List.HorizontalRectangleImage {
     }
 }
 
-private extension String {
+private extension DetailDestination {
     
     var bannerAction: LandingEvent.BannerAction? {
         
-        switch self {
-            
+        switch self.groupID {
         case "DEPOSIT_OPEN":
-            return .openDeposit
+            return .openDeposit(.init(depositID: Int(viewID.rawValue) ?? -1))
         case "DEPOSITS":
             return .depositsList
         case "MIG_TRANSFER":
@@ -145,7 +144,7 @@ private extension String {
         case "MIG_AUTH_TRANSFER":
             return .migAuthTransfer
         case "CONTACT_TRANSFER":
-            return .contact
+            return .contact(.init(countryID: viewID.rawValue))
         case "DEPOSIT_TRANSFER":
             return .depositTransfer
         case "LANDING":
