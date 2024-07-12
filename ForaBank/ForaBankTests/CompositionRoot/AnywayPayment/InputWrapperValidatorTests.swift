@@ -10,7 +10,7 @@ import XCTest
 @testable import ForaBank
 import SwiftUI
 
-final class InputWrapperViewValidatorTests: XCTestCase {
+final class StringValidatorTests: XCTestCase {
 
     func test_isValid_shouldNotDeliverErrorForMatchingRegex() {
 
@@ -35,7 +35,7 @@ final class InputWrapperViewValidatorTests: XCTestCase {
         line: UInt = #line
     ) {
         XCTAssertNoDiff(
-            InputWrapperView<EmptyView>.isValidate(value, regExp: pattern),
+            value.isValidate(regExp: pattern),
             isMatching,
             file: file, line: line
         )
