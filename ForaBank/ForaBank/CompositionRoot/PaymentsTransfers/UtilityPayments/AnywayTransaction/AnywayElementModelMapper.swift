@@ -344,7 +344,7 @@ private extension InputState where Icon == AnywayElement.UIComponent.Icon? {
                 title: parameter.uiComponent.title,
                 subtitle: parameter.uiComponent.subtitle,
                 regExp: parameter.validation.regExp,
-                limit: parameter.validation.maxLength ?? 120
+                limit: parameter.validation.maxLength ?? 255
             )
         )
     }
