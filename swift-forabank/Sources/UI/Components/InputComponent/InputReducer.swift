@@ -23,7 +23,8 @@ public extension InputReducer {
         
         switch event {
         case let .edit(text):
-            state = .init(dynamic: .init(value: text),
+            state = .init(
+                dynamic: .init(value: text),
                 settings: state.settings
             )
         }
