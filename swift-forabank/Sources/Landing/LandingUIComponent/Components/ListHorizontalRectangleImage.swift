@@ -140,7 +140,7 @@ private extension DetailDestination {
         case "DEPOSITS":
             return .depositsList
         case "MIG_TRANSFER":
-            return .migTransfer
+            return .migTransfer(.init(countryID: viewID.rawValue))
         case "MIG_AUTH_TRANSFER":
             return .migAuthTransfer
         case "CONTACT_TRANSFER":

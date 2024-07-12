@@ -56,6 +56,9 @@ struct ControlPanelWrapperView: View {
         case let .contactTransfer(viewModel):
             return AnyView(PaymentsView(viewModel: viewModel))
             
+        case let .migTransfer(viewModel):
+            return AnyView(PaymentsView(viewModel: viewModel))
+
         case let .landing(viewModel):
             return AnyView(AuthProductsView(viewModel: viewModel))
             

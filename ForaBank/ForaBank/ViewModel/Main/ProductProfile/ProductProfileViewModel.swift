@@ -2043,6 +2043,21 @@ extension ProductProfileViewModel {
         }
     }
     
+    func migTransfer(_ countryID: String) {
+        if let controlPanelViewModel {
+            
+            let paymentsViewModel = PaymentsViewModel(
+                source: .direct(
+                    phone: nil,
+                    countryId: countryID
+                ),
+                model: model) {
+                    controlPanelViewModel.event(.dismissDestination)
+                }
+            controlPanelViewModel.event(.bannerEvent(.migTransfer(paymentsViewModel)))
+        }
+    }
+
     func openDepositList() {
         
         if let controlPanelViewModel {
@@ -2181,8 +2196,8 @@ extension ProductProfileViewModel {
             case .migAuthTransfer: // см https://shorturl.at/BpUzf
                 break
                 
-            case .migTransfer:
-                print("migTransfer")
+            case let .migTransfer(country):
+                migTransfer(country.countryID)
                 
             case let .openDeposit(deposit):
                 openDeposit(deposit.depositID)

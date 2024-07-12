@@ -58,6 +58,7 @@ extension ControlPanelState {
     enum Destination: Identifiable {
         
         case contactTransfer(PaymentsViewModel)
+        case migTransfer(PaymentsViewModel)
         case landing(AuthProductsViewModel)
         case orderSticker(any View)
         case openDeposit(OpenDepositDetailViewModel)
@@ -69,6 +70,7 @@ extension ControlPanelState {
             
             switch self {
             case .contactTransfer: return .contactTransfer
+            case .migTransfer: return .migTransfer
             case .landing: return .landing
             case .orderSticker: return .orderSticker
             case .openDeposit: return .openDeposit
@@ -78,7 +80,8 @@ extension ControlPanelState {
         
         enum _Case {
             
-            case contactTransfer, landing, orderSticker
+            case contactTransfer, migTransfer
+            case landing, orderSticker
             case openDeposit, openDepositsList
         }
     }
