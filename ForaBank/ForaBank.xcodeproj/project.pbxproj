@@ -527,8 +527,6 @@
 		2A3039362A17D48C0008701D /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3039352A17D48B0008701D /* CustomDump */; };
 		2A30393E2A17D5C80008701D /* TextFieldStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A30393D2A17D5C80008701D /* TextFieldStateTests.swift */; };
 		2A3039422A17D6440008701D /* TransformingReducer+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3039412A17D6440008701D /* TransformingReducer+ext.swift */; };
-		2A3039452A17D6970008701D /* TextFieldState+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3039442A17D6970008701D /* TextFieldState+ext.swift */; };
-		2A3039482A17D7790008701D /* ReducerTextFieldViewModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3039472A17D7790008701D /* ReducerTextFieldViewModel+ext.swift */; };
 		2A30394A2A17D8B50008701D /* ReducerTextFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3039492A17D8B50008701D /* ReducerTextFieldViewModelTests.swift */; };
 		2A3086C229FCE47E00966B1A /* ContactsBanksSectionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3086C129FCE47E00966B1A /* ContactsBanksSectionViewModelTests.swift */; };
 		2A31446E29FA46E500AB062D /* OrderProductViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A31446D29FA46E500AB062D /* OrderProductViewComponentTests.swift */; };
@@ -1071,7 +1069,6 @@
 		2AA3A9442BFF8C3600AEBCC9 /* AnywayPaymentElementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A9432BFF8C3600AEBCC9 /* AnywayPaymentElementView.swift */; };
 		2AA3A9462BFF8C6300AEBCC9 /* AnywayPaymentParameterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A9452BFF8C6300AEBCC9 /* AnywayPaymentParameterView.swift */; };
 		2AA3A9482BFF8C7C00AEBCC9 /* AnywayPaymentParameterViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A9472BFF8C7C00AEBCC9 /* AnywayPaymentParameterViewFactory.swift */; };
-		2AA3A9512BFF8D2000AEBCC9 /* InputStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A9502BFF8D2000AEBCC9 /* InputStateWrapperView.swift */; };
 		2AA3A9552BFF8D5D00AEBCC9 /* ProductSelectStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A9542BFF8D5D00AEBCC9 /* ProductSelectStateWrapperView.swift */; };
 		2AA3A95A2BFF8E0100AEBCC9 /* SelectorWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A9592BFF8E0100AEBCC9 /* SelectorWrapperView.swift */; };
 		2AA3A95C2BFF8E1500AEBCC9 /* SimpleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3A95B2BFF8E1500AEBCC9 /* SimpleLabel.swift */; };
@@ -2719,6 +2716,7 @@
 		C1DE211D2919377000ED0F8D /* VerificationCodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */; };
 		C1DE211F2919531500ED0F8D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE211E2919531500ED0F8D /* AppSettings.swift */; };
 		C1DFF16D2A872AC40044B7A6 /* Model+SuccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */; };
+		C1E181522C415CDA00006B8F /* InputWrapperValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E181512C415CDA00006B8F /* InputWrapperValidatorTests.swift */; };
 		C1E8A0552B84D50E000DA998 /* ViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E8A0542B84D50E000DA998 /* ViewModel+Preview.swift */; };
 		C1E8A0572B84D628000DA998 /* LastPayments+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E8A0562B84D628000DA998 /* LastPayments+Preview.swift */; };
 		C1EA35CB2A316D7A00403E51 /* OperationDetailDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */; };
@@ -3635,8 +3633,6 @@
 		2A3039302A17D2AC0008701D /* TestSchedulerOfDispatchQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSchedulerOfDispatchQueue.swift; sourceTree = "<group>"; };
 		2A30393D2A17D5C80008701D /* TextFieldStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldStateTests.swift; sourceTree = "<group>"; };
 		2A3039412A17D6440008701D /* TransformingReducer+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransformingReducer+ext.swift"; sourceTree = "<group>"; };
-		2A3039442A17D6970008701D /* TextFieldState+ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TextFieldState+ext.swift"; sourceTree = "<group>"; };
-		2A3039472A17D7790008701D /* ReducerTextFieldViewModel+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReducerTextFieldViewModel+ext.swift"; sourceTree = "<group>"; };
 		2A3039492A17D8B50008701D /* ReducerTextFieldViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducerTextFieldViewModelTests.swift; sourceTree = "<group>"; };
 		2A3086C129FCE47E00966B1A /* ContactsBanksSectionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsBanksSectionViewModelTests.swift; sourceTree = "<group>"; };
 		2A31446D29FA46E500AB062D /* OrderProductViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderProductViewComponentTests.swift; sourceTree = "<group>"; };
@@ -4183,7 +4179,6 @@
 		2AA3A9432BFF8C3600AEBCC9 /* AnywayPaymentElementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentElementView.swift; sourceTree = "<group>"; };
 		2AA3A9452BFF8C6300AEBCC9 /* AnywayPaymentParameterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentParameterView.swift; sourceTree = "<group>"; };
 		2AA3A9472BFF8C7C00AEBCC9 /* AnywayPaymentParameterViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayPaymentParameterViewFactory.swift; sourceTree = "<group>"; };
-		2AA3A9502BFF8D2000AEBCC9 /* InputStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputStateWrapperView.swift; sourceTree = "<group>"; };
 		2AA3A9542BFF8D5D00AEBCC9 /* ProductSelectStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSelectStateWrapperView.swift; sourceTree = "<group>"; };
 		2AA3A9592BFF8E0100AEBCC9 /* SelectorWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorWrapperView.swift; sourceTree = "<group>"; };
 		2AA3A95B2BFF8E1500AEBCC9 /* SimpleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleLabel.swift; sourceTree = "<group>"; };
@@ -5772,6 +5767,7 @@
 		C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeData.swift; sourceTree = "<group>"; };
 		C1DE211E2919531500ED0F8D /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SuccessTests.swift"; sourceTree = "<group>"; };
+		C1E181512C415CDA00006B8F /* InputWrapperValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputWrapperValidatorTests.swift; sourceTree = "<group>"; };
 		C1E8A0542B84D50E000DA998 /* ViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModel+Preview.swift"; sourceTree = "<group>"; };
 		C1E8A0562B84D628000DA998 /* LastPayments+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LastPayments+Preview.swift"; sourceTree = "<group>"; };
 		C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailDataTests.swift; sourceTree = "<group>"; };
@@ -7303,6 +7299,7 @@
 			isa = PBXGroup;
 			children = (
 				2A0439C52BB405FD0063B7AB /* NanoServices */,
+				C1E181512C415CDA00006B8F /* InputWrapperValidatorTests.swift */,
 			);
 			path = AnywayPayment;
 			sourceTree = "<group>";
@@ -7914,14 +7911,6 @@
 			path = TextFieldState;
 			sourceTree = "<group>";
 		};
-		2A3039432A17D68A0008701D /* TextFieldState */ = {
-			isa = PBXGroup;
-			children = (
-				2A3039442A17D6970008701D /* TextFieldState+ext.swift */,
-			);
-			path = TextFieldState;
-			sourceTree = "<group>";
-		};
 		2A3039462A17D6A50008701D /* TextFieldComponent */ = {
 			isa = PBXGroup;
 			children = (
@@ -7931,8 +7920,6 @@
 				2A6481FC2A1CA047005CC17A /* Reducer */,
 				2A6481F52A1BC617005CC17A /* TextFieldFactory */,
 				2A53F2782A1B99B9001131EF /* TextFieldView */,
-				2A3039432A17D68A0008701D /* TextFieldState */,
-				2A93385F2A17CB1000397C88 /* ReducerTextFieldViewModel */,
 				2A9338522A17C83F00397C88 /* PhoneKit */,
 				2AA68E812A179C200063BBB0 /* CountryCodes.swift */,
 			);
@@ -9440,14 +9427,6 @@
 			path = PhoneKit;
 			sourceTree = "<group>";
 		};
-		2A93385F2A17CB1000397C88 /* ReducerTextFieldViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				2A3039472A17D7790008701D /* ReducerTextFieldViewModel+ext.swift */,
-			);
-			path = ReducerTextFieldViewModel;
-			sourceTree = "<group>";
-		};
 		2A9338642A17D05800397C88 /* ReducerTextFieldViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -9623,7 +9602,6 @@
 			isa = PBXGroup;
 			children = (
 				2AB87C562C135FF90013EFFE /* ObservingInputViewModel.swift */,
-				2AA3A9502BFF8D2000AEBCC9 /* InputStateWrapperView.swift */,
 				2AB87C582C1360280013EFFE /* InputWrapperView.swift */,
 			);
 			path = Input;
@@ -18026,7 +18004,6 @@
 				7763A690279DAFD10064B037 /* EncryptionProtocols.swift in Sources */,
 				7798848A285C983A0023CA65 /* ProductProfileDetailCircleProgressViewComponent.swift in Sources */,
 				2A2D4D312B6E7EDC006912EE /* RequestFactory+createPrepareSetBankDefaultRequest.swift in Sources */,
-				2AA3A9512BFF8D2000AEBCC9 /* InputStateWrapperView.swift in Sources */,
 				0B931B4926DE2E3300CA8017 /* GKHHistoryCaruselCell.swift in Sources */,
 				50A19943280F1AF80094CFA5 /* SwipeSidesModifier.swift in Sources */,
 				0C6508D228299DAF0058916A /* PaymentsTransfersViewModel.swift in Sources */,
@@ -19139,7 +19116,6 @@
 				774A8B382865FCDD00B81140 /* UserAccountDocumentsView.swift in Sources */,
 				2AA3A96C2BFF91CB00AEBCC9 /* AnywayPaymentFooter.swift in Sources */,
 				ED8AB45526C116DB006F0D03 /* MeToMeViewController.swift in Sources */,
-				2A3039452A17D6970008701D /* TextFieldState+ext.swift in Sources */,
 				C1F1BED32BF247120022C59B /* ResponseMapper+GetAllLatestPaymentsResponse.swift in Sources */,
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
 				684192EA2799B1B100B4E184 /* ServerCommands+Consent.swift in Sources */,
@@ -19456,7 +19432,6 @@
 				F63D43A404CF8AA69942CCFF /* InternetTVSuccessViewController.swift in Sources */,
 				2A1F08702A7A31C000C5B11B /* PublicTransportKeyDomain.swift in Sources */,
 				830D974D2BBC4F0F00899832 /* UserAllCardsModel+clover.swift in Sources */,
-				2A3039482A17D7790008701D /* ReducerTextFieldViewModel+ext.swift in Sources */,
 				77A411EB27EC624000D36E46 /* Model+Deposits.swift in Sources */,
 				2AB109AD2C2C193200325D3A /* OTPWarningViewConfig.swift in Sources */,
 				C1CCFC3A29828EF30059212C /* Model+Abroad.swift in Sources */,
@@ -19701,6 +19676,7 @@
 				2A72B2682C05F16B00454F22 /* RequestFactory+createCreateAnywayTransferV2RequestTests.swift in Sources */,
 				684533752798532300104A8B /* CsrfDataTests.swift in Sources */,
 				7758DFD229EB1DE200060761 /* PaymentsSelectViewComponentTests.swift in Sources */,
+				C1E181522C415CDA00006B8F /* InputWrapperValidatorTests.swift in Sources */,
 				0BCFBE032817F77D003F2F36 /* ModelNotificationsTests.swift in Sources */,
 				77EC58BB27712AF50054D75C /* TransferAnywayDataTests.swift in Sources */,
 				2A3011DD2A6A85FB00560B98 /* ServerAgentSessionCodeAPIClientAdapterTests.swift in Sources */,
@@ -22085,7 +22061,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 43;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -22591,7 +22567,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 43;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -23430,7 +23406,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 43;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -23466,7 +23442,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 43;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
