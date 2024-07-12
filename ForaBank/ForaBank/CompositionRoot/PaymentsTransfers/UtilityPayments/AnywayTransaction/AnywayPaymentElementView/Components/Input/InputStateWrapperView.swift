@@ -19,8 +19,10 @@ struct InputStateWrapperView<IconView: View>: View {
         InputView(
             state: viewModel.state,
             event: viewModel.event(_:),
-            config: .iFora,
-            iconView: makeIconView
+            config: .iFora(keyboard: .default, limit: viewModel.state.settings.limit, regExp: viewModel.state.settings.regExp ?? ""),
+            iconView: makeIconView, 
+            commit: { viewModel.event(.edit($0)) },
+            isValid: { text in isValidate(text) }
         )
     }
 }
@@ -28,4 +30,17 @@ struct InputStateWrapperView<IconView: View>: View {
 extension InputStateWrapperView {
     
     typealias ViewModel = ObservingInputViewModel
+    
+    fileprivate func isValidate(_ text: String) -> Bool {
+        if let pattern = viewModel.state.settings.regExp {
+            
+            let value = text
+            let isMatching = NSPredicate(format: "SELF MATCHES %@", pattern).evaluate(with: value)
+            return isMatching ? true : false
+            
+        } else {
+            
+            return true
+        }
+    }
 }
