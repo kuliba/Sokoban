@@ -57,7 +57,7 @@ extension AnywayElementModelMapper {
             
         case let (_, .parameter(parameter)):
             return makeParameterViewModel(
-                with: parameter, 
+                with: parameter,
                 event: { event(.payment($0)) }
             )
             
@@ -75,16 +75,16 @@ extension AnywayElementModelMapper {
 private extension AnywayElementModelMapper {
     
     func makeParameterViewModel(
-        with parameter: AnywayElement.UIComponent.Parameter,
+        with parameter: AnywayElement.Parameter,
         event: @escaping (AnywayPaymentEvent) -> Void
     ) -> AnywayElementModel {
         
-        switch parameter.type {
+        switch parameter.uiComponent.type {
         case .hidden:
-            return .parameter(.hidden(parameter))
+            return .parameter(.hidden(parameter.uiComponent))
             
         case .nonEditable:
-            return .parameter(.nonEditable(parameter))
+            return .parameter(.nonEditable(parameter.uiComponent))
             
         case .numberInput:
 #warning("how to add differentiation for numeric input")
@@ -92,16 +92,16 @@ private extension AnywayElementModelMapper {
             
         case let .select(option, options):
             if let selector = try? Selector(option: option, options: options) {
-                return .parameter(.select(makeSelectorViewModel(with: selector, and: parameter, event: event)))
+                return .parameter(.select(makeSelectorViewModel(with: selector, and: parameter.uiComponent, event: event)))
             } else {
-                return .parameter(.unknown(parameter))
+                return .parameter(.unknown(parameter.uiComponent))
             }
             
         case .textInput:
             return .parameter(.textInput(makeInputViewModel(with: parameter, event: event)))
             
         case .unknown:
-            return .parameter(.unknown(parameter))
+            return .parameter(.unknown(parameter.uiComponent))
         }
     }
 }
@@ -110,7 +110,7 @@ private extension AnywayElementModelMapper {
     
 #warning("extract?")
     func makeInputViewModel(
-        with parameter: AnywayElement.UIComponent.Parameter,
+        with parameter: AnywayElement.Parameter,
         event: @escaping (AnywayPaymentEvent) -> Void
     ) -> ObservingInputViewModel {
         
@@ -121,7 +121,7 @@ private extension AnywayElementModelMapper {
             initialState: inputState,
             reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in },
-            observe: { event(.setValue($0.dynamic.value, for: parameter.id)) }
+            observe: { event(.setValue($0.dynamic.value, for: parameter.uiComponent.id)) }
         )
     }
     
@@ -334,20 +334,22 @@ private extension InputState where Icon == AnywayElement.UIComponent.Icon? {
         
         self.init(
             dynamic: .init(
-                value: parameter.value ?? "",
+                value: parameter.uiComponent.value ?? "",
                 warning: nil
             ),
             settings: .init(
-                hint: nil,
-                icon: parameter.icon,
+                hint: parameter.uiComponent.subtitle,
+                icon: parameter.uiComponent.icon,
                 keyboard: .default,
-                title: parameter.title,
-                subtitle: parameter.subtitle
+                title: parameter.uiComponent.title,
+                subtitle: parameter.uiComponent.subtitle,
+                regExp: parameter.validation.regExp,
+                limit: parameter.validation.maxLength ?? 120
             )
         )
     }
     
-    typealias Parameter = AnywayPaymentDomain.AnywayElement.UIComponent.Parameter
+    typealias Parameter = AnywayPaymentDomain.AnywayElement.Parameter
 }
 
 private extension Selector where T == AnywayElement.UIComponent.Parameter.ParameterType.Option {
