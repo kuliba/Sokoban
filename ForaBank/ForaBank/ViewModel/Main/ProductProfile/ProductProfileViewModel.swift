@@ -2046,7 +2046,9 @@ extension ProductProfileViewModel {
                     title: "Отмена",
                     action: {}),
                 secondary: .init(
-                    type: .default, title: "Продолжить", action: {
+                    type: .default, 
+                    title: "Продолжить",
+                    action: {
                         
                         DispatchQueue.main.async { [weak self] in
                             
@@ -2115,8 +2117,14 @@ extension ProductProfileViewModel {
                 orderSticker()
             }
             
-        case .sticker:
-            break
+        case let .sticker(action):
+            switch action {
+            case .goToMain:
+                handleCloseLinkAction()
+
+            case .order:
+                orderSticker()
+            }
             
         case let .bannerAction(action):
             switch action {
