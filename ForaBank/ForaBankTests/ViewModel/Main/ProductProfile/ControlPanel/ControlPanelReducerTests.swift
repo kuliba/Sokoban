@@ -156,7 +156,7 @@ final class ControlPanelReducerTests: XCTestCase {
         let authProductsViewModel: AuthProductsViewModel = .mockData
         
         assertState(
-            .stickerEvent(.openCard(authProductsViewModel)),
+            .bannerEvent(.stickerEvent(.openCard(authProductsViewModel))),
             on: initialState(buttons: .buttons(card))) {
                 
                 $0.destination = .landing(authProductsViewModel)
@@ -169,7 +169,7 @@ final class ControlPanelReducerTests: XCTestCase {
         let orderStickerView = Text("orderSticker")
         
         assertState(
-            .stickerEvent(.orderSticker(orderStickerView)),
+            .bannerEvent(.stickerEvent(.orderSticker(orderStickerView))),
             on: initialState(buttons: .buttons(card))) {
                 
                 $0.destination = .orderSticker(orderStickerView)
@@ -182,10 +182,36 @@ final class ControlPanelReducerTests: XCTestCase {
         let paymentsViewModel: PaymentsViewModel = .sample
         
         assertState(
-            .contactTransfer(paymentsViewModel),
+            .bannerEvent(.contactTransfer(paymentsViewModel)),
             on: initialState(buttons: .buttons(card), destination: .landing(.mockData))) {
                 
                 $0.destination = .contactTransfer(paymentsViewModel)
+            }
+    }
+    
+    func test_reduce_openDepositList_shouldDestinationChanged() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let openDepositListViewModel: OpenDepositListViewModel = .init(.mockWithEmptyExcept(), catalogType: .deposit, dismissAction: {})
+        
+        assertState(
+            .bannerEvent(.openDepositsList(openDepositListViewModel)),
+            on: initialState(buttons: .buttons(card), destination: .landing(.mockData))) {
+                
+                $0.destination = .openDepositsList(openDepositListViewModel)
+            }
+    }
+    
+    func test_reduce_openDeposit_shouldDestinationChanged() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let openDepositDetailViewModel: OpenDepositDetailViewModel = .sample
+        
+        assertState(
+            .bannerEvent(.openDeposit(openDepositDetailViewModel)),
+            on: initialState(buttons: .buttons(card), destination: .landing(.mockData))) {
+                
+                $0.destination = .openDeposit(openDepositDetailViewModel)
             }
     }
     

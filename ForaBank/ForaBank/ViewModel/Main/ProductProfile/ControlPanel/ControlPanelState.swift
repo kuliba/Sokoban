@@ -60,6 +60,8 @@ extension ControlPanelState {
         case contactTransfer(PaymentsViewModel)
         case landing(AuthProductsViewModel)
         case orderSticker(any View)
+        case openDeposit(OpenDepositDetailViewModel)
+        case openDepositsList(OpenDepositListViewModel)
 
         var id: _Case { _case }
         
@@ -69,12 +71,15 @@ extension ControlPanelState {
             case .contactTransfer: return .contactTransfer
             case .landing: return .landing
             case .orderSticker: return .orderSticker
+            case .openDeposit: return .openDeposit
+            case .openDepositsList: return .openDepositsList
             }
         }
         
         enum _Case {
             
             case contactTransfer, landing, orderSticker
+            case openDeposit, openDepositsList
         }
     }
 }

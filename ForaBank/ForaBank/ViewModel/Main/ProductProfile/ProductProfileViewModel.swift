@@ -2039,10 +2039,33 @@ extension ProductProfileViewModel {
                 model: model) {
                     controlPanelViewModel.event(.dismissDestination)
                 }
-            controlPanelViewModel.event(.contactTransfer(paymentsViewModel))
+            controlPanelViewModel.event(.bannerEvent(.contactTransfer(paymentsViewModel)))
         }
     }
     
+    func openDepositList() {
+        
+        if let controlPanelViewModel {
+            
+            let openDepositViewModel = OpenDepositListViewModel(
+                model,
+                catalogType: .deposit,
+                dismissAction: {
+                    controlPanelViewModel.event(.dismissDestination)
+                })
+
+            controlPanelViewModel.event(.bannerEvent(.openDepositsList(openDepositViewModel)))
+        }
+    }
+    
+    func openDeposit(_ depositId: Int ) {
+        
+        if let controlPanelViewModel, let openDepositViewModel = OpenDepositDetailViewModel(depositId: depositId, model: model) {
+
+            controlPanelViewModel.event(.bannerEvent(.openDeposit(openDepositViewModel)))
+        }
+    }
+
     func orderSticker() {
         
         if let controlPanelViewModel {
@@ -2074,7 +2097,7 @@ extension ProductProfileViewModel {
                                 products: model.catalogProducts.value,
                                 dismissAction: { })
                             
-                            controlPanelViewModel.event(.stickerEvent(.openCard(authProductsViewModel)))
+                            controlPanelViewModel.event(.bannerEvent(.stickerEvent(.openCard(authProductsViewModel))))
                         }
                     }
                 ))
@@ -2088,7 +2111,7 @@ extension ProductProfileViewModel {
                         dismissAll: rootActions.dismissAll
                     )()
 
-                    controlPanelViewModel.event(.stickerEvent(.orderSticker(view)))
+                    controlPanelViewModel.event(.bannerEvent(.stickerEvent(.orderSticker(view))))
                 }
             }
         }
@@ -2147,7 +2170,7 @@ extension ProductProfileViewModel {
                 contactTransfer(country.countryID)
                 
             case .depositsList:
-                print("depositsList")
+                openDepositList()
                 
             case .depositTransfer: // см https://shorturl.at/BpUzf
                 break
@@ -2161,8 +2184,8 @@ extension ProductProfileViewModel {
             case .migTransfer:
                 print("migTransfer")
                 
-            case .openDeposit:
-                print("openDeposit")
+            case let .openDeposit(deposit):
+                openDeposit(deposit.depositID)
             }
         }
     }
