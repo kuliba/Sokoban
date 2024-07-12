@@ -68,8 +68,7 @@ public struct InputView<Icon, IconView: View>: View {
                             tintColor: .black,
                             backgroundColor: .clear,
                             placeholderColor: .gray.opacity(0.3)
-                        ),
-                        isFirstResponder: false
+                        )
                     )
                     .onChange(of: regularFieldViewModel.text ?? "", perform: commit)
                     
@@ -146,7 +145,7 @@ struct InputView_Previews: PreviewProvider {
                 config: .preview,
                 iconView: { Text("Icon view") },
                 commit: { _ in },
-                isValid: { _ in true}
+                isValid: { _ in true }
             )
         }
         .padding(20)
@@ -157,8 +156,7 @@ extension InputState where Icon == String {
     
     static var preview: Self = .init(
         dynamic: .preview,
-        settings: .preview,
-        validate: { true }
+        settings: .preview
     )
 }
 
@@ -166,7 +164,6 @@ private extension InputState.Dynamic where Icon == String {
     
     static var preview: Self = .init(
         value: "some value",
-        state: .collapse,
         warning: nil
     )
 }

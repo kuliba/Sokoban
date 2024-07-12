@@ -86,11 +86,16 @@ public struct NameView<Icon, IconView: View>: View {
                         icon: Image.init(systemName: ""),
                         keyboard: .default,
                         title: title,
-                        subtitle: nil
-                    )),
+                        subtitle: nil,
+                        regExp: "",
+                        limit: 120
+                    )
+                ),
                 event: {_ in },
                 config: config,
-                iconView: iconView
+                iconView: iconView,
+                commit: { _ in },
+                isValid: { _ in true }
             )
             
             if collapseButton {
@@ -135,7 +140,10 @@ private extension InputConfig {
         placeholder: "placeholder",
         hintConfig: .init(textFont: .system(size: 10), textColor: .gray.opacity(0.7)),
         backgroundColor: .clear,
-        imageSize: 16
+        imageSize: 16,
+        keyboardType: .decimal,
+        limit: 10,
+        regExp: ""
     )
 }
 
