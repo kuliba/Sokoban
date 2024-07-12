@@ -142,8 +142,7 @@ private extension InputConfig {
         backgroundColor: .clear,
         imageSize: 16,
         keyboardType: .decimal,
-        limit: 10,
-        regExp: ""
+        limit: 10
     )
 }
 

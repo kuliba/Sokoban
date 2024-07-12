@@ -20,7 +20,7 @@ struct InputWrapperView<IconView: View>: View {
         InputView(
             state: viewModel.state,
             event: viewModel.event(_:),
-            config: .iFora(keyboard: .default, limit: viewModel.state.settings.limit, regExp: viewModel.state.settings.regExp ?? ""),
+            config: .iFora(keyboard: .default, limit: viewModel.state.settings.limit),
             iconView: makeIconView,
             commit: { viewModel.event(.edit($0)) },
             isValid: { text in isValidate(text) }

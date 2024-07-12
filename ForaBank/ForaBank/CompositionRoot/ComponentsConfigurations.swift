@@ -56,7 +56,7 @@ extension PaymentComponents.InputPhoneConfig {
 
 extension PaymentComponents.InputConfig {
     
-    static func iFora(keyboard: KeyboardType, limit: Int, regExp: String) -> Self {
+    static func iFora(keyboard: KeyboardType, limit: Int) -> Self {
         .init(
             titleConfig: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder),
             textFieldFont: .init(textFont: .textBodyMR14180(), textColor: .textSecondary),
@@ -65,8 +65,7 @@ extension PaymentComponents.InputConfig {
             backgroundColor: .clear,
             imageSize: 24.0,
             keyboardType: keyboard,
-            limit: limit,
-            regExp: regExp
+            limit: limit
         )
     }
 }

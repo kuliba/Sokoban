@@ -39,8 +39,7 @@ public struct InputView<Icon, IconView: View>: View {
             keyboardType: .init(keyboardType: config.keyboardType),
             text: state.dynamic.value,
             placeholderText: config.placeholder,
-            limit: config.limit,
-            regExp: config.regExp
+            limit: config.limit
         )
         
         self._regularFieldViewModel = .init(
@@ -129,8 +128,7 @@ public extension InputConfig {
         backgroundColor: .gray.opacity(0.1),
         imageSize: 16,
         keyboardType: .decimal,
-        limit: 4,
-        regExp: ""
+        limit: 4
     )
 }
 

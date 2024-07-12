@@ -19,7 +19,6 @@ public struct InputConfig {
     let imageSize: CGFloat
     let keyboardType: KeyboardType
     let limit: Int
-    let regExp: String
     
     public init(
         titleConfig: TextConfig,
@@ -29,8 +28,7 @@ public struct InputConfig {
         backgroundColor: Color,
         imageSize: CGFloat,
         keyboardType: KeyboardType,
-        limit: Int,
-        regExp: String
+        limit: Int
     ) {
         self.titleConfig = titleConfig
         self.textFieldFont = textFieldFont
@@ -40,7 +38,6 @@ public struct InputConfig {
         self.imageSize = imageSize
         self.keyboardType = keyboardType
         self.limit = limit
-        self.regExp = regExp
     }
     
     public enum KeyboardType: Equatable {

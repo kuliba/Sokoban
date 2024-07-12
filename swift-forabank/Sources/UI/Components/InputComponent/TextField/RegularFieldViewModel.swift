@@ -17,8 +17,7 @@ extension RegularFieldViewModel {
         keyboardType: Keyboard,
         text: String?,
         placeholderText: String,
-        limit: Int,
-        regExp: String
+        limit: Int
     ) -> RegularFieldViewModel {
         
         let transformer = Transform(build: {
