@@ -16,7 +16,13 @@ enum ControlPanelEvent {
     case updateTitle(String)
     case loadSVCardLanding(ProductCardData)
     case loadedSVCardLanding(LandingWrapperViewModel?)
+    case bannerEvent(BannerActionEvent)
+    case dismissDestination
+}
+
+enum BannerActionEvent {
     case stickerEvent(StickerEvent)
     case contactTransfer(PaymentsViewModel)
-    case dismissDestination
+    case openDeposit(OpenDepositDetailViewModel)
+    case openDepositsList(OpenDepositListViewModel)
 }

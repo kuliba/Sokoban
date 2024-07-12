@@ -136,7 +136,7 @@ private extension DetailDestination {
         
         switch self.groupID {
         case "DEPOSIT_OPEN":
-            return .openDeposit
+            return .openDeposit(.init(depositID: Int(viewID.rawValue) ?? -1))
         case "DEPOSITS":
             return .depositsList
         case "MIG_TRANSFER":
