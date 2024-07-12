@@ -17,12 +17,18 @@ extension RegularFieldViewModel {
         keyboardType: Keyboard,
         text: String?,
         placeholderText: String,
-        limit: Int
+        limit: Int,
+        regExp: String
     ) -> RegularFieldViewModel {
+        
+        let transformer = Transform(build: {
+            
+            Transformers.limiting(limit)
+        })
         
         let reducer = TransformingReducer(
             placeholderText: placeholderText,
-            transform: Transformers.limiting(limit).transform(_:)
+            transform: transformer.transform(_:)
         )
         
         let toolbar = ToolbarFactory.makeToolbarViewModel(
