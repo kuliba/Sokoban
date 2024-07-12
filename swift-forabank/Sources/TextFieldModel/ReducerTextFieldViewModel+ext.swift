@@ -1,16 +1,15 @@
 //
-//  ReducerTextFieldViewModel.swift
-//  
+//  ReducerTextFieldViewModel+ext.swift
 //
-//  Created by Дмитрий Савушкин on 10.07.2024.
+//
+//  Created by Дмитрий Савушкин on 12.07.2024.
 //
 
 import Foundation
 import TextFieldDomain
-import TextFieldComponent
 import Combine
 
-extension ReducerTextFieldViewModel {
+public extension ReducerTextFieldViewModel {
     
     var text: String? { state.text }
     
@@ -37,7 +36,7 @@ extension ReducerTextFieldViewModel {
     var hasValue: Bool { text != "" && text != nil }
 }
 
-extension TextFieldState {
+public extension TextFieldState {
     
     var isEditing: Bool {
         

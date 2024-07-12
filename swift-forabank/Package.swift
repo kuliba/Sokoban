@@ -524,6 +524,7 @@ private extension Product {
             .selectComponent,
 //            .selectorComponent,
             .sharedConfigs,
+            .textFieldComponent
         ]
     )
     
@@ -2016,6 +2017,7 @@ private extension Target {
     static let inputComponent = target(
         name: .inputComponent,
         dependencies: [
+            .textFieldComponent,
             .sharedConfigs
         ],
         path: "Sources/UI/Components/\(String.inputComponent)"
@@ -2042,6 +2044,7 @@ private extension Target {
             .selectComponent,
             .selectorComponent,
             .sharedConfigs,
+            .textFieldComponent
         ],
         path: "Sources/UI/Components/\(String.paymentComponents)"
     )
