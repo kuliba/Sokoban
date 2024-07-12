@@ -1,17 +1,17 @@
 //
-//  RegularFieldViewModel+ext.swift
-//  
+//  RegularFieldViewModel.swift
 //
-//  Created by Дмитрий Савушкин on 09.07.2024.
+//
+//  Created by Дмитрий Савушкин on 12.07.2024.
 //
 
 import Foundation
-import TextFieldComponent
+import TextFieldUI
 import UIKit
 
-typealias RegularFieldViewModel = ReducerTextFieldViewModel<TextFieldUI.ToolbarViewModel, KeyboardType>
+public typealias RegularFieldViewModel = ReducerTextFieldViewModel<TextFieldUI.ToolbarViewModel, KeyboardType>
 
-extension RegularFieldViewModel {
+public extension RegularFieldViewModel {
     
     static func make(
         keyboardType: Keyboard,
