@@ -14,10 +14,7 @@ extension XCTestCase {
         in file: StaticString = #file,
         line: UInt = #line
     ) {
-        print("TTTTTT \(thrownError)")
 
-        print("EEEEEEE \(error)")
-        
         XCTAssertTrue(
             thrownError is E,
             "Unexpected error type: \(type(of: thrownError))",
