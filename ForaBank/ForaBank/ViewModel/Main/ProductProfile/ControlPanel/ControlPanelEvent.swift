@@ -23,6 +23,7 @@ enum ControlPanelEvent {
 enum BannerActionEvent {
     case stickerEvent(StickerEvent)
     case contactTransfer(PaymentsViewModel)
+    case migTransfer(PaymentsViewModel)
     case openDeposit(OpenDepositDetailViewModel)
     case openDepositsList(OpenDepositListViewModel)
 }

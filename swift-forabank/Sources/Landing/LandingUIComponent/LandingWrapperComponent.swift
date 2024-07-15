@@ -136,7 +136,7 @@ public final class LandingWrapperViewModel: ObservableObject {
                 self.landingActions(.bannerAction(.depositsList))
                 
             case .depositTransfer:
-                self.landingActions(.bannerAction(.migTransfer))
+                self.landingActions(.bannerAction(.depositTransfer))
                 
             case .landing:
                 self.landingActions(.bannerAction(.landing))
@@ -144,8 +144,8 @@ public final class LandingWrapperViewModel: ObservableObject {
             case .migAuthTransfer:
                 self.landingActions(.bannerAction(.migAuthTransfer))
                 
-            case .migTransfer:
-                self.landingActions(.bannerAction(.migTransfer))
+            case let .migTransfer(country):
+                self.landingActions(.bannerAction(.migTransfer(country)))
                 
             case let .openDeposit(deposit):
                 self.landingActions(.bannerAction(.openDeposit(deposit)))

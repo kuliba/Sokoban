@@ -28,16 +28,16 @@ public enum LandingEvent: Equatable {
     
     public enum BannerAction: Equatable {
         
-        case contact(Contact)
+        case contact(Country)
         case depositsList
         case depositTransfer
         case landing
         case migAuthTransfer
-        case migTransfer
+        case migTransfer(Country)
         case openDeposit(Deposit)
     }
     
-    public struct Contact: Equatable {
+    public struct Country: Equatable {
         public let countryID: String
     }
     

@@ -92,7 +92,10 @@ extension ControlPanelReducer {
         switch event {
         case let .contactTransfer(viewModel):
             state.destination = .contactTransfer(viewModel)
-            
+         
+        case let .migTransfer(viewModel):
+            state.destination = .migTransfer(viewModel)
+
         case let .stickerEvent(stickerEvent):
             switch stickerEvent {
             case let .openCard(viewModel):

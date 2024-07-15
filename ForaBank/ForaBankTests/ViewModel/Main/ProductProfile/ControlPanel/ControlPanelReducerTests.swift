@@ -189,6 +189,19 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_migTransfer_shouldDestinationChanged() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let paymentsViewModel: PaymentsViewModel = .sample
+        
+        assertState(
+            .bannerEvent(.migTransfer(paymentsViewModel)),
+            on: initialState(buttons: .buttons(card), destination: .landing(.mockData))) {
+                
+                $0.destination = .migTransfer(paymentsViewModel)
+            }
+    }
+    
     func test_reduce_openDepositList_shouldDestinationChanged() {
         
         let card = makeCardProduct(statusCard: .active)
