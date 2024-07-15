@@ -51,6 +51,29 @@ final class Model_AbroadTests: XCTestCase {
         }
     }
     
+    func test_paymentsStepDirectZeroStep_shouldDeliverPaymentsErrorOnMissingCountry() async throws {
+        
+        let operation = Payments.Operation(
+            service: .abroad,
+            source: .direct(
+                phone: nil,
+                countryId: "GE",
+                serviceData: nil),
+            steps: [],
+            visible: [])
+        
+        let model: Model = .mockWithEmptyExcept()
+        
+        do {
+            let _  = try await model.paymentsStepDirect(operation, for: 0)
+        }
+        catch {
+            assert(
+                error,
+                throws: Payments.Error.missingValueCountryForParameter(Payments.Parameter.Identifier.operator.rawValue))
+        }
+    }
+    
     func test_paymentsProcessRemoteStepAbroad_shouldDeliverCountryPayeeOnPayeeNameInResponseForSelectedOperators() async throws {
         
         for paymentsOperator in abroadPaymentsOperators {
