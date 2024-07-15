@@ -254,7 +254,7 @@ private extension ProductAccountData {
         
         .init(
             id: .account(.init(id)),
-            title: "Счет списания и зачисления",
+            title: "Счет списания",
             name: displayName,
             number: displayNumber ?? "",
             icon: .image(getImage(smallDesignMd5hash) ?? .cardPlaceholder),
@@ -291,7 +291,7 @@ private extension ProductCardData {
         
         .init(
             id: .card(.init(id)),
-            title: "Счет списания и зачисления",
+            title: "Счет списания",
             name: displayName,
             number: displayNumber ?? "",
             icon: .image(getImage(smallDesignMd5hash) ?? .cardPlaceholder),
