@@ -44,7 +44,7 @@ extension Model {
             
             guard let defaultService = optionID ?? options.first?.id,
                   let operatorParameterValue: Payments.Operator = .init(rawValue: defaultService) else {
-                throw Payments.Error.missingValueForParameter(Payments.Parameter.Identifier.operator.rawValue)
+                throw Payments.Error.missingValueCountryForParameter(Payments.Parameter.Identifier.operator.rawValue)
             }
             
             let operatorParameter = Payments.ParameterOperator(operatorType: operatorParameterValue)

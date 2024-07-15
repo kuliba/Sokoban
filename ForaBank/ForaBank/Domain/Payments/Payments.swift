@@ -454,6 +454,8 @@ extension Payments {
         case missingParameter(Payments.Parameter.ID)
         case missingOptions(ParameterData)
         case missingValueForParameter(Payments.Parameter.ID)
+        case missingValueCountryForParameter(Payments.Parameter.ID)
+
         case missingValue(ParameterData)
         case missingSource(Service)
         
@@ -513,6 +515,9 @@ extension Payments {
             
             case let .missingValueForParameter(parameterId):
                 return "Missing value for parameter: \(parameterId)"
+                
+            case .missingValueCountryForParameter:
+                return "К сожалению, переводы в эту страну сейчас невозможны. Попробуйте позже."
 
             case let .missingOperator(forCode: code):
                 return "Missing operator for code: \(code)"
