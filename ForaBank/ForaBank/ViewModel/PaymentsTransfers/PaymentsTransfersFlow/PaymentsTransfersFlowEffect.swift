@@ -10,12 +10,24 @@ import Foundation
 enum PaymentsTransfersFlowEffect<LastPayment, Operator, Service> {
     
     case delay(Event, for: DispatchTimeInterval)
+    case initiatePayment(InitiatePayment)
     case utilityFlow(UtilityFlowEffect)
 }
 
 extension PaymentsTransfersFlowEffect {
     
     typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service>
+    
+    enum InitiatePayment: Equatable {
+        
+        case service(ServicePaymentPayload)
+        
+        enum ServicePaymentPayload: Equatable {
+            
+            case latestPayment(LatestPaymentData)
+        }
+    }
+    
     typealias UtilityFlowEffect = UtilityPaymentFlowEffect<LastPayment, Operator, Service>
 }
 

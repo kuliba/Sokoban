@@ -10,12 +10,12 @@ import UtilityServicePrepaymentDomain
 public final class PrepaymentPickerReducer<LastPayment, Operator>
 where Operator: Identifiable {
     
-    private let observeLast: Int
+    private let successReduce: SuccessReduce
     
     public init(
-        observeLast: Int
+        successReduce: @escaping SuccessReduce
     ) {
-        self.observeLast = observeLast
+        self.successReduce = successReduce
     }
 }
 
@@ -29,73 +29,23 @@ public extension PrepaymentPickerReducer {
         var state = state
         var effect: Effect?
         
-        switch event {
-        case let .didScrollTo(operatorID):
-            reduce(&state, &effect, with: operatorID)
-            
-        case let .load(operators):
-            state.replace(operators)
-            
-        case let .page(operators):
-            state.append(operators)
-            
-        case let .search(text):
-            reduce(&state, &effect, with: text)
-        }
+        guard case let .success(success) = state
+        else { return (state, effect) }
         
+        let (newSuccess, successEffect) = successReduce(success, event)
+        state = .success(newSuccess)
+        effect = successEffect
+
         return (state, effect)
     }
 }
 
 public extension PrepaymentPickerReducer {
     
+    typealias Success = PrepaymentPickerSuccess<LastPayment, Operator>
+    typealias SuccessReduce = (Success, Event) -> (Success, Effect?)
+    
     typealias State = PrepaymentPickerState<LastPayment, Operator>
     typealias Event = PrepaymentPickerEvent<Operator>
     typealias Effect = PrepaymentPickerEffect<Operator.ID>
-}
-
-private extension PrepaymentPickerState where Operator: Identifiable {
-    
-    mutating func append(
-        _ operators: [Operator]
-    ) {
-        let existingIDs = Set(self.operators.map(\.id))
-        let operators = operators.filter { !existingIDs.contains($0.id) }
-        self.operators += operators
-    }
-    
-    mutating func replace(
-        _ operators: [Operator]
-    ) {
-        self.operators = operators
-    }
-}
-
-private extension PrepaymentPickerReducer {
-    
-    func reduce(
-        _ state: inout State,
-        _ effect: inout Effect?,
-        with operatorID: Operator.ID
-    ) {
-        let lastObserved = state.operators.map(\.id).suffix(observeLast)
-        
-        guard Set(lastObserved).contains(operatorID),
-              let last = state.operators.last
-        else { return }
-        
-        effect = .paginate(.init(
-            operatorID: last.id,
-            searchText: state.searchText
-        ))
-    }
-    
-    func reduce(
-        _ state: inout State,
-        _ effect: inout Effect?,
-        with text: String
-    ) {
-        state.searchText = text
-        effect = .search(text)
-    }
 }

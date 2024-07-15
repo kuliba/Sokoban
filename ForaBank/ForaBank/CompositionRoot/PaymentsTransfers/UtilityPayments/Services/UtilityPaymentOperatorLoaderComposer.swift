@@ -165,7 +165,7 @@ extension CachingSberOperator {
         guard !searchText.isEmpty else { return true }
         
         return title.localizedCaseInsensitiveContains(searchText)
-        || (inn?.localizedCaseInsensitiveContains(searchText) ?? false)
+        || inn.localizedCaseInsensitiveContains(searchText)
     }
 }
 

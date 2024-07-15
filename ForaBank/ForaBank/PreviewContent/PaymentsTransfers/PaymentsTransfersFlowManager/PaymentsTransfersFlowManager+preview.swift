@@ -7,12 +7,7 @@
 
 import OperatorsListComponents
 
-extension PaymentsTransfersFlowManager
-where LastPayment == UtilityPaymentLastPayment,
-      Operator == UtilityPaymentOperator,
-      Service == UtilityService,
-      Content == UtilityPrepaymentViewModel,
-      PaymentViewModel == AnywayTransactionViewModel {
+extension PaymentsTransfersFlowManager {
     
     static var preview: Self {
         

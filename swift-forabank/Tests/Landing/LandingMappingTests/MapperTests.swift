@@ -377,7 +377,7 @@ final class MapperTests: XCTestCase {
                 .init(
                     imageLink: "dict/getProductCatalogImage?image=/products/banners/ordering_additional_card.png",
                     link: "https://www.forabank.ru/private/cards/",
-                    detail: nil
+                    detail: .init(groupId: "QR_SCANNER", viewId: "")
                 ),
                 .init(
                     imageLink: "dict/getBannerCatalogImage?image=/products/banners/Georgia_12_12_2023.png",
@@ -2806,7 +2806,11 @@ private extension String {
               "list": [
                 {
                   "imageLink": "dict/getProductCatalogImage?image=/products/banners/ordering_additional_card.png",
-                  "link": "https://www.forabank.ru/private/cards/"
+                  "link": "https://www.forabank.ru/private/cards/",
+                  "details": {
+                    "detailsGroupId": "QR_SCANNER",
+                    "detailViewId": null
+                  }
                 },
                 {
                   "imageLink": "dict/getBannerCatalogImage?image=/products/banners/Georgia_12_12_2023.png",

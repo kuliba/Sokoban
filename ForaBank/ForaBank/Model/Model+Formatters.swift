@@ -78,20 +78,20 @@ extension Model {
             
             let lowerBound: Double = 1_000_000
             let upperBound: Double = 1_000_000_000
-
+            
             if amount < lowerBound {
-
+                
                 return formatter.string(from: NSNumber(value: amount))
                 
             } else if lowerBound...upperBound ~= amount {
-
+                
                 formatter.currencySymbol = "Млн. \(currencySymbol)"
                 formatter.maximumFractionDigits = 2
                 
                 return formatter.string(from: NSNumber(value: amount / lowerBound))
-
+                
             } else {
-
+                
                 formatter.currencySymbol = "Млрд. \(currencySymbol)"
                 formatter.maximumFractionDigits = 2
                 
@@ -99,5 +99,16 @@ extension Model {
             }
         }
     }
+    
+    func formatted(_ amount: Decimal, with currencyCode: String) -> String? {
+        
+        guard let currencyData = dictionaryCurrency(for: currencyCode),
+              let currencySymbol = currencyData.currencySymbol
+        else { return nil }
+        
+        let formatter: NumberFormatter = .currency(with: currencySymbol)
+        let amount = NSDecimalNumber(decimal: amount)
+        
+        return formatter.string(from: amount)
+    }
 }
-

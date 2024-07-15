@@ -8,23 +8,13 @@
 	<array>
 		<dict>
 			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
+			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string> Фильтр Истории Операций</string>
+			<string>Фильтр Истории Операций</string>
 			<key>Key</key>
 			<string>history_filter</string>
 			<key>DefaultValue</key>
-			<string>history_filter_off</string>
-			<key>Values</key>
-			<array>
-				<string>history_filter_off</string>
-				<string>history_filter_on</string>
-			</array>
-			<key>Titles</key>
-			<array>
-				<string>выкл</string>
-				<string>вкл</string>
-			</array>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Type</key>

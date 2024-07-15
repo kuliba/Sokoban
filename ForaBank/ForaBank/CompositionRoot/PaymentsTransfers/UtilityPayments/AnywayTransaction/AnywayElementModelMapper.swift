@@ -13,19 +13,24 @@ import SwiftUI
 final class AnywayElementModelMapper {
     
     private let currencyOfProduct: CurrencyOfProduct
+    private let format: Format
     private let getProducts: GetProducts
     private let settings: Settings
     
     init(
         currencyOfProduct: @escaping CurrencyOfProduct,
+        format: @escaping Format,
         getProducts: @escaping GetProducts,
         flag: StubbedFeatureFlag.Option
     ) {
         self.currencyOfProduct = currencyOfProduct
+        self.format = format
         self.getProducts = getProducts
         self.settings = flag == .stub ? .test : .default
     }
     
+    typealias Currency = String
+    typealias Format = (Currency?, Decimal) -> String
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
     typealias GetProducts = () -> [ProductSelect.Product]
     
@@ -52,7 +57,7 @@ extension AnywayElementModelMapper {
             
         case let (_, .parameter(parameter)):
             return makeParameterViewModel(
-                with: parameter, 
+                with: parameter,
                 event: { event(.payment($0)) }
             )
             
@@ -70,16 +75,16 @@ extension AnywayElementModelMapper {
 private extension AnywayElementModelMapper {
     
     func makeParameterViewModel(
-        with parameter: AnywayElement.UIComponent.Parameter,
+        with parameter: AnywayElement.Parameter,
         event: @escaping (AnywayPaymentEvent) -> Void
     ) -> AnywayElementModel {
         
-        switch parameter.type {
+        switch parameter.uiComponent.type {
         case .hidden:
-            return .parameter(.hidden(parameter))
+            return .parameter(.hidden(parameter.uiComponent))
             
         case .nonEditable:
-            return .parameter(.nonEditable(parameter))
+            return .parameter(.nonEditable(parameter.uiComponent))
             
         case .numberInput:
 #warning("how to add differentiation for numeric input")
@@ -87,16 +92,16 @@ private extension AnywayElementModelMapper {
             
         case let .select(option, options):
             if let selector = try? Selector(option: option, options: options) {
-                return .parameter(.select(makeSelectorViewModel(with: selector, and: parameter, event: event)))
+                return .parameter(.select(makeSelectorViewModel(with: selector, and: parameter.uiComponent, event: event)))
             } else {
-                return .parameter(.unknown(parameter))
+                return .parameter(.unknown(parameter.uiComponent))
             }
             
         case .textInput:
             return .parameter(.textInput(makeInputViewModel(with: parameter, event: event)))
             
         case .unknown:
-            return .parameter(.unknown(parameter))
+            return .parameter(.unknown(parameter.uiComponent))
         }
     }
 }
@@ -105,18 +110,18 @@ private extension AnywayElementModelMapper {
     
 #warning("extract?")
     func makeInputViewModel(
-        with parameter: AnywayElement.UIComponent.Parameter,
+        with parameter: AnywayElement.Parameter,
         event: @escaping (AnywayPaymentEvent) -> Void
     ) -> ObservingInputViewModel {
         
-        let inputState = InputState(parameter)
-        let reducer = InputReducer<String>()
+        let inputState = InputState.init(parameter)
+        let reducer = InputReducer<AnywayElement.UIComponent.Icon?>()
         
         return .init(
             initialState: inputState,
             reduce: reducer.reduce(_:_:),
             handleEffect: { _,_ in },
-            observe: { event(.setValue($0.dynamic.value, for: parameter.id)) }
+            observe: { event(.setValue($0.dynamic.value, for: parameter.uiComponent.id)) }
         )
     }
     
@@ -183,6 +188,9 @@ private extension AnywayElementModelMapper {
     ) -> AnywayElementModel {
         
         switch widget {
+        case let .info(info):
+            return .widget(.info(makeInfoViewModel(info)))
+            
             // initially there could be no OTP warning, so it's safe to ignore it
         case let .otp(otp, _):
             return .widget(.otp(makeOTPViewModel(otp: otp, event: event)))
@@ -218,6 +226,18 @@ private extension AnywayElementModelMapper {
                 else { return }
                 
                 event(.widget(.product(productID, productType, currency)))
+            }
+        )
+    }
+    
+    private func makeInfoViewModel(
+        _ info: AnywayElement.Widget.Info
+    ) -> AnywayElementModel.Widget.Info {
+        
+        return .init(
+            fields: info.fields.map {
+                
+                return .init($0, currencySymbol: info.currency, format: format)
             }
         )
     }
@@ -308,25 +328,28 @@ private extension TimedOTPInputViewModel {
     }
 }
 
-private extension InputState where Icon == String {
+private extension InputState where Icon == AnywayElement.UIComponent.Icon? {
     
-#warning("FIXME: replace stubbed with values from parameter")
-    init(_ parameter: AnywayPaymentDomain.AnywayElement.UIComponent.Parameter) {
+    init(_ parameter: Parameter) {
         
         self.init(
             dynamic: .init(
-                value: parameter.value ?? "",
+                value: parameter.uiComponent.value ?? "",
                 warning: nil
             ),
             settings: .init(
-                hint: nil,
-                icon: "",
+                hint: parameter.uiComponent.subtitle,
+                icon: parameter.uiComponent.icon,
                 keyboard: .default,
-                title: parameter.title,
-                subtitle: parameter.subtitle
+                title: parameter.uiComponent.title,
+                subtitle: parameter.uiComponent.subtitle,
+                regExp: parameter.validation.regExp,
+                limit: parameter.validation.maxLength ?? 255
             )
         )
     }
+    
+    typealias Parameter = AnywayPaymentDomain.AnywayElement.Parameter
 }
 
 private extension Selector where T == AnywayElement.UIComponent.Parameter.ParameterType.Option {
@@ -399,8 +422,6 @@ private extension Selector<AnywayElement.UIComponent.Parameter.ParameterType.Opt
     }
 }
 
-// MARK: - Helpers
-
 private extension ProductSelect {
     
     var _productType: AnywayPaymentEvent.Widget.ProductType? {
@@ -412,6 +433,31 @@ private extension ProductSelect {
         }
     }
 }
+
+private extension AnywayElementModel.Widget.Info.Field {
+    
+    init(
+        _ field: AnywayElement.Widget.Info.Field,
+        currencySymbol: CurrencySymbol?,
+        format: @escaping (CurrencySymbol?, Decimal) -> String
+    ) {
+        switch field {
+        case let .amount(amount):
+            self = .amount(format(currencySymbol, amount))
+            
+        case let .fee(fee):
+            self = .fee(format(currencySymbol, fee))
+            
+        case let .total(total):
+            self = .total(format(currencySymbol, total))
+            
+        }
+    }
+    
+    typealias CurrencySymbol = String
+}
+
+// MARK: - Helpers
 
 private extension ProductSelect.Product {
     

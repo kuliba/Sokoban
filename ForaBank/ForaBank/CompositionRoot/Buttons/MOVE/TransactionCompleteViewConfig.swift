@@ -14,6 +14,7 @@ struct TransactionCompleteViewConfig: Equatable {
     let icons: Icons
     let message: String
     let messageConfig: TextConfig
+    let logoHeight: CGFloat
 
     struct Icons: Equatable {
         

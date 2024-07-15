@@ -48,9 +48,8 @@ final class RequestFactory_createGetPrintFormRequestTests: XCTestCase {
         _ documentID: DocumentID? = nil
     ) throws -> URLRequest {
         
-        try RequestFactory.createGetPrintFormRequest(
-            documentID: documentID ?? makeDocumentID()
-        )
+        let createRequest = RequestFactory.createGetPrintFormRequest(printFormType: .sticker)
+        return try createRequest(documentID ?? makeDocumentID())
     }
     
     private func makeDocumentID(

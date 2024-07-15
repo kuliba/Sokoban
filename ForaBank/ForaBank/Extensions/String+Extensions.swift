@@ -297,3 +297,14 @@ extension String {
         return resultString
     }
 }
+
+extension String {
+    
+    func isValidate(regExp: String?) -> Bool {
+        
+        guard let pattern = regExp, !pattern.isEmpty else { return true }
+        
+        let isMatching = NSPredicate(format: "SELF MATCHES %@", pattern).evaluate(with: self)
+        return isMatching
+    }
+}
