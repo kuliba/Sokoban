@@ -1,5 +1,5 @@
 //
-//  ControlPanelView+Config.swift
+//  ControlPanelViewConfig.swift
 //  ForaBank
 //
 //  Created by Andryusina Nataly on 27.06.2024.
@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-extension ControlPanelView {
-    
-    struct Config {
+struct ControlPanelViewConfig {
         
         let colors: Colors
         let height: CGFloat
@@ -17,6 +15,8 @@ extension ControlPanelView {
         let spacings: Spacings
         let fonts: Fonts
     }
+ 
+extension ControlPanelViewConfig {
     
     struct Paddings {
         

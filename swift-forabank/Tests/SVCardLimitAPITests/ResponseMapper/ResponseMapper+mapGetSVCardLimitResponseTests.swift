@@ -158,8 +158,8 @@ final class ResponseMapper_mapGetSVCardLimitResponseTests: XCTestCase {
     private func map(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse = anyHTTPURLResponse()
-    ) -> ResponseMapper.GetProductDynamicParamsListResult {
+    ) -> ResponseMapper.GetSVCardLimitsResult {
         
-        ResponseMapper.mapGetSVCardLimitResponse(data, httpURLResponse)
+        ResponseMapper.mapGetSVCardLimitsResponse(data, httpURLResponse)
     }
 }

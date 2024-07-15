@@ -5,8 +5,10 @@
 //  Created by Mikhail on 18.01.2022.
 //
 
-import SwiftUI
 import Combine
+import CombineSchedulers
+import Foundation
+import SwiftUI
 
 class TemplatesListViewModel: ObservableObject {
     
@@ -23,10 +25,9 @@ class TemplatesListViewModel: ObservableObject {
     
     @Published var items: [ItemViewModel]
 
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var route: Route { didSet { isLinkActive = route.link != nil }}
     @Published var success: PaymentsSuccessViewModel?
     @Published var isLinkActive: Bool = false
-    @Published var sheet: Sheet?
     
     private let model: Model
     var bindings = Set<AnyCancellable>()
@@ -41,16 +42,25 @@ class TemplatesListViewModel: ObservableObject {
     var isDeleteProcessing: Bool { !items.filter{$0.state.isDeleteProcessing}.isEmpty }
     var isExistDeleted: Bool { !items.filter{$0.state.isDeleting}.isEmpty }
     
+    private let flowManager: TemplatesFlowManager
+    private let routeSubject = PassthroughSubject<Route, Never>()
+    private let scheduler: AnySchedulerOf<DispatchQueue>
+    
     internal init(
-        state: State, style: Style,
+        route: Route = .init(),
+        state: State,
+        style: Style,
         navBarState: NavBarState,
         categorySelector: OptionSelectorView.ViewModel?,
         items: [ItemViewModel],
         deletePannel: DeletePannelViewModel?,
         dismissAction: @escaping () -> Void = {},
         updateFastAll: @escaping UpdateFastAll,
-        model: Model
+        model: Model,
+        flowManager: TemplatesFlowManager,
+        scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
+        self.route = route
         self.state = state
         self.style = style
         self.navBarState = navBarState
@@ -60,16 +70,26 @@ class TemplatesListViewModel: ObservableObject {
         self.dismissAction = dismissAction
         self.updateFastAll = updateFastAll
         self.model = model
+        self.flowManager = flowManager
+        self.scheduler = scheduler
+        
+        routeSubject
+            .receive(on: scheduler)
+            .assign(to: &$route)
     }
     
     convenience init(
+        route: Route = .init(),
         _ model: Model,
         dismissAction: @escaping () -> Void,
-        updateFastAll: @escaping UpdateFastAll
+        updateFastAll: @escaping UpdateFastAll,
+        flowManager: TemplatesFlowManager,
+        scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         model.action.send(ModelAction.PaymentTemplate.List.Requested())
         
         self.init(
+            route: route,
             state: model.paymentTemplates.value.isEmpty ? .placeholder : .normal,
             style: model.settingsPaymentTemplates.style,
             navBarState: .regular(
@@ -89,7 +109,10 @@ class TemplatesListViewModel: ObservableObject {
             deletePannel: nil,
             dismissAction: dismissAction,
             updateFastAll: updateFastAll,
-            model: model)
+            model: model,
+            flowManager: flowManager,
+            scheduler: scheduler
+        )
         
         updateNavBar(event: .setRegular)
         bind()
@@ -106,7 +129,7 @@ private extension TemplatesListViewModel {
     func bind() {
         
         model.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
 
                 switch action {
@@ -171,7 +194,7 @@ private extension TemplatesListViewModel {
         
     
         model.paymentTemplates
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] templates in
                     
                 if templates.isEmpty {
@@ -207,7 +230,7 @@ private extension TemplatesListViewModel {
             }.store(in: &bindings)
         
         model.images
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] images in
                 
                 itemsRaw.value.filter { $0.avatar.isPlaceholder }
@@ -230,7 +253,7 @@ private extension TemplatesListViewModel {
         }.store(in: &bindings)
         
         $items
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] items in
                 
                 switch navBarState {
@@ -256,7 +279,7 @@ private extension TemplatesListViewModel {
         
     // actions handlers
         action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
                 
                 switch action {
@@ -314,10 +337,7 @@ private extension TemplatesListViewModel {
                         sheet = .init(type: .meToMe(paymentsMeToMeViewModel))
                         
                     default:
-                        link = .payment(.init(source: .template(template.id), model: model, closeAction: {[weak self] in
-                            
-                            self?.action.send(TemplatesListViewModelAction.CloseAction())
-                        }))
+                        openDefaultPayment(template)
                     }
             //MARK: Search
                 case let payload as TemplatesListViewModelAction.Search:
@@ -552,7 +572,7 @@ private extension TemplatesListViewModel {
                     self.idList = UUID() //focus on first item in list
                     
                     itemVM.timer?.timerPublisher
-                        .receive(on: DispatchQueue.main)
+                        .receive(on: scheduler)
                         .map({ [unowned timer] output in
                             return Int(output.timeIntervalSince(timer.startDate))
                         })
@@ -616,7 +636,7 @@ private extension TemplatesListViewModel {
                     itemModel.state = .deleting(deletingViewModel)
                     
                     itemModel.timer?.timerPublisher
-                        .receive(on: DispatchQueue.main)
+                        .receive(on: scheduler)
                         .map({ [unowned timer] output in
                             return Int(output.timeIntervalSince(timer.startDate))
                         })
@@ -649,7 +669,7 @@ private extension TemplatesListViewModel {
         
         // selected items updates
         selectedItemsIds
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] selected in
                 
                 if case .select = self.state {
@@ -661,7 +681,7 @@ private extension TemplatesListViewModel {
          
         $editModeState
             .dropFirst()
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] state in
                 
                 switch state {
@@ -672,10 +692,23 @@ private extension TemplatesListViewModel {
             }.store(in: &bindings)
     }
     
+    private func openDefaultPayment(
+        _ template: PaymentTemplateData
+    ) {
+        link = .payment(.init(
+            source: .template(template.id),
+            model: model,
+            closeAction: { [weak self] in
+                
+                self?.action.send(TemplatesListViewModelAction.CloseAction())
+            }
+        ))
+    }
+    
     func bindCategorySelector(_ viewModel: OptionSelectorView.ViewModel) {
         
         viewModel.$selected
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink{ [unowned self]  selectedCategoryIndex in
                 
                 withAnimation {
@@ -693,7 +726,7 @@ private extension TemplatesListViewModel {
             
         viewModel.action
             .compactMap { $0 as? TemplatesListViewModelAction.RenameSheetAction.SaveNewName }
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] payload in
                 
                 viewModel.isFocused = false
@@ -715,7 +748,7 @@ private extension TemplatesListViewModel {
         for section in viewModel.sections {
             
             section.action
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [unowned self]  action in
                     
                     switch action {
@@ -734,7 +767,7 @@ private extension TemplatesListViewModel {
             }.store(in: &bindings)
             
             section.$isCollapsed
-                .receive(on: DispatchQueue.main)
+                .receive(on: scheduler)
                 .sink { [unowned viewModel] isCollapsed in
                     
                     viewModel.containerHeight = viewModel.calcHeight
@@ -747,7 +780,7 @@ private extension TemplatesListViewModel {
     func bind(_ viewModel: PaymentsSuccessViewModel) {
         
         viewModel.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self] action in
                 
                 switch action {
@@ -768,7 +801,7 @@ private extension TemplatesListViewModel {
     private func bind(_ viewModel: PaymentsMeToMeViewModel) {
         
         viewModel.action
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink { [unowned self, weak viewModel] action in
                 
                 switch action {
@@ -810,6 +843,48 @@ private extension TemplatesListViewModel {
 extension TemplatesListViewModel {
     
     typealias UpdateFastAll = () -> Void
+    
+    struct Route {
+        
+        var link: Link?
+        var modal: Modal?
+    }
+    
+    enum Modal {
+        
+        case alert(Alert.ViewModel)
+        case sheet(Sheet)
+    }
+    
+    var link: Link? {
+        
+        get { route.link }
+        set { route.link = newValue }
+    }
+    
+    var alert: Alert.ViewModel? {
+        
+        get {
+            guard case let .alert(alert) = route.modal else { return nil }
+            return alert
+        }
+        
+        set {
+            route.modal = newValue.map(Modal.alert)
+        }
+    }
+    
+    var sheet: Sheet? {
+        
+        get {
+            guard case let .sheet(sheet) = route.modal else { return nil }
+            return sheet
+        }
+        
+        set {
+            route.modal = newValue.map(Modal.sheet)
+        }
+    }
     
     struct Sheet: BottomSheetCustomizable {
         

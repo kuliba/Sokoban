@@ -11,7 +11,8 @@ public enum LandingEvent: Equatable {
     
     case card(Card)
     case sticker(Sticker)
-    
+    case bannerAction(BannerAction)
+
     public enum Card: Equatable {
         
         case goToMain
@@ -23,5 +24,24 @@ public enum LandingEvent: Equatable {
         
         case goToMain
         case order
+    }
+    
+    public enum BannerAction: Equatable {
+        
+        case contact(Contact)
+        case depositsList
+        case depositTransfer
+        case landing
+        case migAuthTransfer
+        case migTransfer
+        case openDeposit(Deposit)
+    }
+    
+    public struct Contact: Equatable {
+        public let countryID: String
+    }
+    
+    public struct Deposit: Equatable {
+        public let depositID: Int
     }
 }

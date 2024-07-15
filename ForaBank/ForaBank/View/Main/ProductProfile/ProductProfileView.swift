@@ -9,6 +9,7 @@ import ActivateSlider
 import ForaTools
 import InfoComponent
 import PinCodeUI
+import RxViewModel
 import SberQR
 import SwiftUI
 
@@ -173,11 +174,12 @@ struct ProductProfileView: View {
     ) -> some View {
         
         switch link {
-        case let .controlPanel(items):
-            ControlPanelView(items: items, event: {_ in })
-                .edgesIgnoringSafeArea(.bottom)
-                .navigationBarTitleDisplayMode(.inline)
-                .modifier(ToolbarModifier(info: viewModel.navigationTitleForControlPanel))
+        case let .controlPanel(controlPanelViewModel):
+            ControlPanelWrapperView(
+                viewModel: controlPanelViewModel,
+                config: .default, 
+                getUImage: getUImage)
+            .edgesIgnoringSafeArea(.bottom)
 
         case let .productInfo(viewModel):
             InfoProductView(viewModel: viewModel)
@@ -406,30 +408,6 @@ struct ProductProfileView: View {
         case let .placesMap(viewModel):
             PlacesView(viewModel: viewModel)
         }
-    }
-}
-
-private struct ToolbarModifier: ViewModifier {
-    
-    let info: String
-    
-    func body(content: Content) -> some View {
-        
-        content
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    VStack {
-                        Text("Управление")
-                            .foregroundColor(.textSecondary)
-                            .font(.textH3M18240())
-                        
-                        Text(info)
-                            .foregroundColor(.textPlaceholder)
-                            .font(.textBodyMR14180())
-                    }
-                }
-            }
     }
 }
 

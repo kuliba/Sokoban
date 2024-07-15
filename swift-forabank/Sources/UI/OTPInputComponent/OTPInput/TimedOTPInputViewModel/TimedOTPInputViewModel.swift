@@ -23,6 +23,7 @@ public final class TimedOTPInputViewModel: ObservableObject {
         viewModel: OTPInputViewModel,
         timer: TimerProtocol = RealTimer(),
         observe: @escaping Observe = { _ in },
+        codeObserver: AnyPublisher<String, Never>,
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
         self.state = viewModel.state
@@ -68,6 +69,14 @@ public final class TimedOTPInputViewModel: ObservableObject {
             }
             .removeDuplicates()
             .sink(receiveValue: observe)
+            .store(in: &cancellables)
+        
+        codeObserver
+            .receive(on: scheduler)
+            .sink { [weak self] code in
+            
+                self?.event(.otpField(.edit(code)))
+            }
             .store(in: &cancellables)
     }
 }

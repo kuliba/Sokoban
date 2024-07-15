@@ -435,6 +435,27 @@ final class AnywayPaymentUpdateTests: XCTestCase {
         XCTAssertNil(parameterUpdate.field.content, "Expected value to be nil.")
     }
     
+    func test_update_shouldSetParameterValueToOutlinedOnDifferentUpdateValue() throws {
+        
+        let (parameterID, outlinedValue, updatedValue) = (anyMessage(), anyMessage("outlined"), anyMessage("updated"))
+        XCTAssertNotEqual(outlinedValue, updatedValue)
+        
+        let payment = makeAnywayPayment()
+        let (parameterUpdate, _) = makeAnywayPaymentAndUpdateParameters(
+            id: parameterID,
+            value: updatedValue
+        )
+        let update = makeAnywayPaymentUpdate(parameters: [parameterUpdate])
+        let outline = makeAnywayPaymentOutline([parameterID: outlinedValue])
+        
+        let updated = updatePayment(payment, with: update, and: outline)
+        let parameter = try XCTUnwrap(updated[parameterID: parameterID], "Expected parameter with id \(parameterID), but got nil instead.")
+        
+        XCTAssertNoDiff(parameter.field.value, .init(outlinedValue), "Expected parameter value set to outlined.")
+        XCTAssertNoDiff(outline.fields[.init(parameterID)], .init(outlinedValue), "Expected outlined value \(outlinedValue) for parameterID \(parameterID).")
+        XCTAssertNotNil(parameterUpdate.field.content, "Expected value to be nil.")
+    }
+    
     func test_update_shouldAppendParameterToEmpty() {
         
         let payment = makeAnywayPayment(parameters: [])

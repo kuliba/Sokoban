@@ -1,5 +1,5 @@
 //
-//  ResponseMapper+mapGetSVCardLimitResponse.swift
+//  ResponseMapper+mapGetSVCardLimitsResponse.swift
 //
 //
 //  Created by Andryusina Nataly on 18.06.2024.
@@ -10,26 +10,26 @@ import RemoteServices
 
 public extension ResponseMapper {
     
-    typealias GetProductDynamicParamsListResult = MappingResult<GetSVCardLimitResponse>
+    typealias GetSVCardLimitsResult = MappingResult<GetSVCardLimitsResponse>
 
-    static func mapGetSVCardLimitResponse(
+    static func mapGetSVCardLimitsResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> GetProductDynamicParamsListResult {
+    ) -> GetSVCardLimitsResult {
         
         map(data, httpURLResponse, mapOrThrow: map)
     }
     
     private static func map(
         _ data: _DTO
-    ) throws -> GetSVCardLimitResponse {
+    ) throws -> GetSVCardLimitsResponse {
         return data.data
     }
 }
 
 private extension ResponseMapper._DTO {
     
-    var data: GetSVCardLimitResponse {
+    var data: GetSVCardLimitsResponse {
         
         guard let limitsList else {
             return .init(limitsList: [], serial: serial)
@@ -63,7 +63,7 @@ private extension ResponseMapper {
 
 private extension ResponseMapper._DTO._LimitItem {
     
-    var dto: GetSVCardLimitResponse.LimitItem {
+    var dto: GetSVCardLimitsResponse.LimitItem {
         
         .init(
             type: self.limitType,
@@ -73,7 +73,7 @@ private extension ResponseMapper._DTO._LimitItem {
 
 private extension ResponseMapper._DTO._LimitItem._Limit {
     
-    var dto: GetSVCardLimitResponse.LimitItem.Limit {
+    var dto: GetSVCardLimitsResponse.LimitItem.Limit {
         
         .init(
             currency: self.currency,

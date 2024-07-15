@@ -742,7 +742,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
     }
     
     private func makeSUT(
-        flowManager: SUT.FlowManger = .preview,
+        flowManager: PaymentsTransfersFlowManager = .preview,
         createSberQRPaymentResultStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         createUnblockCardStub: UnblockCardServices.UnblockCardResult = .success(.init(statusBrief: "", statusDescription: "")),
@@ -771,10 +771,24 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         let unblockCardServices = UnblockCardServices.preview(createUnblockCardStub: createUnblockCardStub)
 
         let blockCardServices = BlockCardServices.preview(createBlockCardStub: createBlockCardStub)
+        
+        let userVisibilityServices = UserVisibilityProductsSettingsServices.preview()
+        
+        let getSVCardLimitsServices = GetSVCardLimitsServices.preview()
+
+        let changeSVCardLimitServices = ChangeSVCardLimitServices.preview()
+
+        let svCardLandingServices = SVCardLandingServices.preview()
 
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
-            createUnblockCardService: unblockCardServices)
+            createUnblockCardService: unblockCardServices,
+            createUserVisibilityProductsSettingsService: userVisibilityServices,
+            createCreateGetSVCardLimits: getSVCardLimitsServices,
+            createChangeSVCardLimit: changeSVCardLimitServices,
+            createSVCardLanding: svCardLandingServices,
+            makeSVCardLandingViewModel: {_,_,_ in nil}
+        )
 
         let qrViewModelFactory = QRViewModelFactory.preview()
         
@@ -830,7 +844,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         return (sut, model, effectSpy)
     }
     
-    private func makeFlowManagerOnlyModalAlert() -> SUT.FlowManger {
+    private func makeFlowManagerOnlyModalAlert(
+    ) -> PaymentsTransfersFlowManager {
         
         return .init(
             handleEffect: { _,_ in },
@@ -1153,6 +1168,8 @@ extension PaymentsTransfersViewModel.Modal {
             return .bottomSheet
         case .fullScreenSheet:
             return .fullScreenSheet
+        case .serviceAlert:
+            return .serviceAlert
         case .sheet:
             return .sheet
         }
@@ -1163,6 +1180,7 @@ extension PaymentsTransfersViewModel.Modal {
         case alert
         case bottomSheet
         case fullScreenSheet
+        case serviceAlert
         case sheet
     }
 }

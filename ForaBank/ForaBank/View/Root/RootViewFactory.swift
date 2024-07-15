@@ -13,7 +13,7 @@ typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> Sber
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
-typealias MakeHistoryButtonView = () -> HistoryButtonView?
+typealias MakeHistoryButtonView = (@escaping (HistoryEvent) -> Void) -> HistoryButtonView?
 
 struct RootViewFactory {
     
@@ -65,7 +65,7 @@ extension RootViewFactory {
 struct ProductProfileViewFactory {
     
     let makeActivateSliderView: MakeActivateSliderView
-    let makeHistoryButton: (@escaping (HistoryEvent) -> Void) -> HistoryButtonView
+    let makeHistoryButton: (@escaping (HistoryEvent) -> Void) -> HistoryButtonView?
 }
 
 extension RootViewFactory {
@@ -74,9 +74,7 @@ extension RootViewFactory {
  
         .init(
             makeActivateSliderView: makeActivateSliderView,
-            makeHistoryButton: { event in
-                HistoryButtonView(event: event)
-            }
+            makeHistoryButton: makeHistoryButtonView
         )
     }
 }

@@ -13,10 +13,12 @@ import OperatorsListComponents
 import ForaTools
 import Foundation
 import GenericRemoteService
+import LatestPayments
 import PaymentComponents
 import RemoteServices
 import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
+import UIKit
 
 final class PaymentsTransfersFlowManagerComposer {
     
@@ -61,7 +63,7 @@ extension PaymentsTransfersFlowManagerComposer {
         )
     }
     
-    typealias FlowManager = PaymentsTransfersFlowManager<LastPayment, Operator, Service, Content, PaymentViewModel>
+    typealias FlowManager = PaymentsTransfersFlowManager
     
     typealias LastPayment = UtilityPaymentLastPayment
     typealias Operator = UtilityPaymentOperator
@@ -94,29 +96,89 @@ private extension PaymentsTransfersFlowManagerComposer {
     
     func makeHandleEffect() -> FlowManager.HandleEffect {
         
-        let paymentFlowEffectHandler = composePaymentFlowEffectHandler()
+        let microServices = composeUtilityPaymentMicroServices()
+        let prepaymentEffectHandler = PrepaymentFlowEffectHandler(
+            microServices: microServices
+        )
+        let paymentFlowEffectHandler = PaymentFlowEffectHandler(
+            utilityPrepaymentEffectHandle: prepaymentEffectHandler.handleEffect(_:_:)
+        )
         
         let effectHandler = PaymentsTransfersFlowEffectHandler(
+            microServices: .init(
+                initiatePayment: initiatePayment(microServices: microServices)
+            ),
             utilityEffectHandle: paymentFlowEffectHandler.handleEffect(_:_:)
         )
         
         return effectHandler.handleEffect(_:_:)
     }
     
-    private func composePaymentFlowEffectHandler(
-    ) -> PaymentFlowEffectHandler {
-        
-        let prepaymentEffectHandler = composePrepaymentFlowEffectHandler()
-        
-        return .init(
-            utilityPrepaymentEffectHandle: prepaymentEffectHandler.handleEffect(_:_:)
-        )
-    }
-    
     typealias PaymentFlowEffectHandler = UtilityPaymentFlowEffectHandler<LastPayment, Operator, Service>
     
-    private func composePrepaymentFlowEffectHandler(
-    ) -> PrepaymentFlowEffectHandler {
+    private func initiatePayment(
+        microServices: PrepaymentFlowEffectHandler.MicroServices
+    ) -> PaymentsTransfersFlowEffectHandlerMicroServices.InitiatePayment {
+        
+        switch flag.optionOrStub {
+        case .live: return initiatePaymentLive(microServices)
+        case .stub: return initiatePaymentStub(microServices)
+        }
+    }
+    
+    private func initiatePaymentLive(
+        _ microServices: PrepaymentFlowEffectHandler.MicroServices
+    ) -> PaymentsTransfersFlowEffectHandlerMicroServices.InitiatePayment {
+        
+        return { payload, completion in
+            
+            guard let lastPayment = payload.lastPayment
+            else {
+                completion(.failure(.connectivityError))
+                self.log(.error, .payments, "LastPayment creation failure.", #file, #line)
+                return
+            }
+            
+            microServices.processSelection(.lastPayment(lastPayment)) {
+                
+                switch $0 {
+                case let .failure(failure):
+                    switch failure {
+                    case .operatorFailure, .serviceFailure(.connectivityError):
+                        completion(.failure(.connectivityError))
+                        
+                    case let .serviceFailure(.serverError(message)):
+                        completion(.failure(.serverError(message)))
+                    }
+                    
+                case let .success(success):
+                    switch success {
+                    case .services:
+                        completion(.failure(.connectivityError))
+                        
+                    case let .startPayment(transaction):
+                        completion(.success(transaction))
+                    }
+                }
+            }
+        }
+    }
+
+    private func initiatePaymentStub(
+        _ microServices: PrepaymentFlowEffectHandler.MicroServices
+    ) -> PaymentsTransfersFlowEffectHandlerMicroServices.InitiatePayment {
+        
+        return { payload, completion in
+            
+            DispatchQueue.global().delay(for: .seconds(2)) {
+                
+                completion(.failure(.connectivityError))
+            }
+        }
+    }
+        
+    private func composeUtilityPaymentMicroServices(
+    ) -> PrepaymentFlowEffectHandler.MicroServices {
         
         let nanoComposer = UtilityPaymentNanoServicesComposer(
             flag: flag,
@@ -125,13 +187,14 @@ private extension PaymentsTransfersFlowManagerComposer {
             log: log,
             loadOperators: loadOperators
         )
+
         let microComposer = UtilityPrepaymentFlowMicroServicesComposer(
             flag: flag.rawValue,
             nanoServices: nanoComposer.compose(),
             makeLegacyPaymentsServicesViewModel: makeLegacyViewModel
         )
         
-        return .init(microServices: microComposer.compose())
+        return microComposer.compose()
     }
     
     typealias PrepaymentFlowEffectHandler = UtilityPrepaymentFlowEffectHandler<LastPayment, Operator, Service>
@@ -182,14 +245,39 @@ private extension PaymentsTransfersFlowManagerComposer {
         
         let makeReducer = {
             
-            FlowReducer(factory: factory, closeAction: $0, notify: $1)
+            FlowReducer(
+                handlePaymentTriggerEvent: self.handlePaymentTriggerEvent,
+                factory: factory,
+                closeAction: $0,
+                notify: $1,
+                hideKeyboard: self.hideKeyboard
+            )
         }
         
         return { makeReducer($0, $1).reduce(_:_:) }
     }
     
-    typealias ReducerFactory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, Service, Content, PaymentViewModel>
-    typealias FlowReducer = PaymentsTransfersFlowReducer<LastPayment, Operator, Service, Content, PaymentViewModel>
+    private func hideKeyboard() {
+     
+        UIApplication.shared.endEditing()
+    }
+    
+    private func handlePaymentTriggerEvent(
+        event: PaymentTriggerEvent
+    ) -> (PaymentTriggerState) {
+        
+        switch event {
+        case let .latestPayment(latestPaymentData):
+            if flag.isActive {
+                return .v1
+            } else {
+                return .legacy(.latestPayment(latestPaymentData))
+            }
+        }
+    }
+    
+    typealias ReducerFactory = PaymentsTransfersFlowReducerFactory
+    typealias FlowReducer = PaymentsTransfersFlowReducer
     
     private func makeReducerFactoryComposer(
     ) -> PaymentsTransfersFlowReducerFactoryComposer {
@@ -328,5 +416,33 @@ private extension PaymentsTransfersFlowManagerComposer {
         )
         
         return loaderComposer.compose()
+    }
+}
+
+// MARK: - Adapters
+
+private extension LatestPaymentData {
+    
+    var lastPayment: UtilityPaymentLastPayment? {
+        
+        guard let data  = self as? PaymentServiceData
+        else { return nil }
+        
+        return .init(
+            date: data.date,
+            amount: .init(data.amount),
+            name: data.lastPaymentName ?? "",
+            md5Hash: nil,
+            puref: data.puref,
+            additionalItems: data.additionalList.map { .init(data: $0) }
+        )
+    }
+}
+
+private extension UtilityPaymentLastPayment.AdditionalItem {
+    
+    init(data: PaymentServiceData.AdditionalListData) {
+        
+        self.init(fieldName: data.fieldName, fieldValue: data.fieldValue, fieldTitle: data.fieldTitle, svgImage: data.svgImage)
     }
 }

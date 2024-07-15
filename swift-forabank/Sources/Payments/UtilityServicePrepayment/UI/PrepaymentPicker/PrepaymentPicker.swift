@@ -71,7 +71,11 @@ private extension PrepaymentPicker {
                 
                 VStack(spacing: 16) {
                     
-                    _lastPaymentsView(success.lastPayments)
+                    if success.searchText.isEmpty {
+                     
+                        _lastPaymentsView(success.lastPayments)
+                    }
+                    
                     _operatorsView(success.operators)
                     factory.makeFooterView(false)
                 }

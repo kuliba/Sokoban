@@ -51,11 +51,11 @@ extension PaymentsTransfersFlowReducerFactoryComposer {
             makeFraud: makeFraudNoticePayload,
             makeUtilityPrepaymentState: makeUtilityPrepaymentState,
             makeUtilityPaymentState: makeUtilityPaymentState,
-            makePaymentsViewModel: makePayByInstructionsViewModel
+            makePayByInstructionsViewModel: makePayByInstructionsViewModel
         )
     }
     
-    typealias Factory = PaymentsTransfersFlowReducerFactory<LastPayment, Operator, UtilityService, Content, UtilityPaymentViewModel>
+    typealias Factory = PaymentsTransfersFlowReducerFactory
     typealias MakeUtilityPaymentState = Factory.MakeUtilityPaymentState
     
     typealias LastPayment = UtilityPaymentLastPayment
@@ -113,17 +113,17 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
     }
 }
 
-private extension PaymentsTransfersViewModel._Route {
+private extension PaymentsTransfersViewModel.Route {
     
     // UtilityPaymentFlowState could be nested in two destinations:
     // - utilityPrepayment.destination, or
     // - servicePicker.destination
-    var paymentFlowState: UtilityServicePaymentFlowState<PaymentViewModel>? {
+    var paymentFlowState: UtilityServicePaymentFlowState<AnywayTransactionViewModel>? {
         
         paymentFlowStateInPrepaymentDestination ?? paymentFlowStateInServicePickerDestination
     }
     
-    private var paymentFlowStateInPrepaymentDestination: UtilityServicePaymentFlowState<PaymentViewModel>? {
+    private var paymentFlowStateInPrepaymentDestination: UtilityServicePaymentFlowState<AnywayTransactionViewModel>? {
         
         guard case let .utilityPayment(utilityPrepayment) = destination,
               case let .payment(paymentFlowState) = utilityPrepayment.destination
@@ -132,7 +132,7 @@ private extension PaymentsTransfersViewModel._Route {
         return paymentFlowState
     }
     
-    private var paymentFlowStateInServicePickerDestination: UtilityServicePaymentFlowState<PaymentViewModel>? {
+    private var paymentFlowStateInServicePickerDestination: UtilityServicePaymentFlowState<AnywayTransactionViewModel>? {
         
         guard case let .utilityPayment(utilityPrepayment) = destination,
               case let .servicePicker(servicePicker) = utilityPrepayment.destination,

@@ -44,19 +44,25 @@ extension InputState {
         public let keyboard: Keyboard
         public let title: String
         public let subtitle: String?
+        public let regExp: String?
+        public let limit: Int
         
         public init(
             hint: String? = nil,
             icon: Icon,
             keyboard: Keyboard,
             title: String,
-            subtitle: String?
+            subtitle: String?,
+            regExp: String?,
+            limit: Int
         ) {
             self.hint = hint
             self.icon = icon
             self.keyboard = keyboard
             self.title = title
             self.subtitle = subtitle
+            self.regExp = regExp
+            self.limit = limit
         }
     }
 }
@@ -69,5 +75,4 @@ public extension InputState.Settings {
     }
 }
 
-extension InputState: Equatable where Icon: Equatable {}
 extension InputState.Settings: Equatable where Icon: Equatable {}
