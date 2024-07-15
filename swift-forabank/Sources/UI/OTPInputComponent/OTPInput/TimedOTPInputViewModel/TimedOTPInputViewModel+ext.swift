@@ -6,6 +6,8 @@
 //
 
 import ForaTools
+import Combine
+import Foundation
 
 public extension TimedOTPInputViewModel {
     
@@ -58,6 +60,11 @@ public extension TimedOTPInputViewModel {
         observe: @escaping Observe = { _ in },
         scheduler: AnySchedulerOfDispatchQueue = .makeMain()
     ) {
+        let codeObserver = NotificationCenter.default.observe(
+            notificationName: "otpCode",
+            userInfoKey: "otp"
+        )
+        
         self.init(
             viewModel: .init(
                 initialState: initialState,
@@ -67,6 +74,7 @@ public extension TimedOTPInputViewModel {
             ),
             timer: timer,
             observe: observe,
+            codeObserver: codeObserver,
             scheduler: scheduler
         )
     }

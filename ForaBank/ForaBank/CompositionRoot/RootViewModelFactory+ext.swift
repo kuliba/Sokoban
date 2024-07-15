@@ -125,11 +125,49 @@ extension RootViewModelFactory {
             log: infoNetworkLog
         )
         
+        let blockCardServices = Services.makeBlockCardServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+
+        let userVisibilityProductsSettingsServices = Services.makeUserVisibilityProductsSettingsServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+        
+        let getSVCardLimitsServices = Services.makeGetSVCardLimitsServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+        
+        let changeSVCardLimitServices = Services.makeChangeSVCardLimitServices(
+            httpClient: httpClient,
+            log: infoNetworkLog
+        )
+
+        let makeSVCardLandig = model.landingSVCardViewModelFactory
+        
+        let landingService = Services.makeSVCardLandingServices(
+            httpClient: httpClient,
+            log: infoNetworkLog)
+
+        let productProfileServices = ProductProfileServices(
+            createBlockCardService: blockCardServices,
+            createUnblockCardService: unblockCardServices,
+            createUserVisibilityProductsSettingsService: userVisibilityProductsSettingsServices,
+            createCreateGetSVCardLimits: getSVCardLimitsServices,
+            createChangeSVCardLimit: changeSVCardLimitServices, 
+            createSVCardLanding: landingService,
+            makeSVCardLandingViewModel: makeSVCardLandig
+        )
+        
         let productNavigationStateManager = ProductProfileFlowManager(
             reduce: makeProductProfileFlowReducer().reduce(_:_:),
             handleEffect: ProductNavigationStateEffectHandler().handleEffect
         )
         
+        let templatesFlowManager = TemplatesFlowManagerComposer(flag: utilitiesPaymentsFlag).compose()
+                
         let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
             
             .init(
@@ -137,7 +175,9 @@ extension RootViewModelFactory {
                 dismissAction: $0,
                 updateFastAll: {
                     model.action.send(ModelAction.Products.Update.Fast.All())
-                })
+                },
+                flowManager: templatesFlowManager
+            )
         }
         
         let ptfmComposer = PaymentsTransfersFlowManagerComposer(
@@ -149,14 +189,11 @@ extension RootViewModelFactory {
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
 
-        let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = { card in
-            
-            let buttons: [PanelButtonDetails] = .cardGuardian(card, changeSVCardLimitsFlag)
-
+        let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = {
             if changeSVCardLimitsFlag.isActive {
-                return .fullScreen(buttons)
+                return .fullScreen(.cardGuardian($0, changeSVCardLimitsFlag))
             } else {
-                return .bottomSheet(buttons)
+                return .bottomSheet(.cardGuardian($0, changeSVCardLimitsFlag))
             }
         }
 
@@ -168,7 +205,7 @@ extension RootViewModelFactory {
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
-            unblockCardServices: unblockCardServices,
+            productProfileServices: productProfileServices,
             qrViewModelFactory: qrViewModelFactory,
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
@@ -191,12 +228,6 @@ extension RootViewModelFactory {
             onRegister: resetCVVPINActivation
         )
     }
-    
-    typealias LatestPayment = UtilityPaymentLastPayment
-    typealias Operator = UtilityPaymentOperator
-    
-    typealias UtilityPaymentViewModel = AnywayTransactionViewModel
-    typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
     
     static func makeNavigationOperationView(
         httpClient: HTTPClient,
@@ -301,7 +332,8 @@ extension RootViewModelFactory {
         )
         
         let makeDocumentButton = makeDocumentButton(
-            httpClient: httpClient
+            httpClient: httpClient,
+            printFormType: .sticker
         )
         
         return make
@@ -327,8 +359,7 @@ extension ProductProfileViewModel {
     typealias Operator = UtilityPaymentOperator
     
     typealias UtilityPaymentViewModel = AnywayTransactionViewModel
-    typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PTFlowManger
-    typealias PTFlowManger = PaymentsTransfersFlowManager<LatestPayment, Operator, UtilityService, UtilityPrepaymentViewModel, UtilityPaymentViewModel>
+    typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     
@@ -340,7 +371,7 @@ extension ProductProfileViewModel {
         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
-        unblockCardServices: UnblockCardServices,
+        productProfileServices: ProductProfileServices,
         qrViewModelFactory: QRViewModelFactory,
         cvvPINServicesClient: CVVPINServicesClient,
         productNavigationStateManager: ProductProfileFlowManager,
@@ -358,7 +389,7 @@ extension ProductProfileViewModel {
                 makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
-                unblockCardServices: unblockCardServices,
+                productProfileServices: productProfileServices,
                 qrViewModelFactory: qrViewModelFactory,
                 cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager,
@@ -414,7 +445,8 @@ extension ProductProfileViewModel {
                 makeInformerDataUpdateFailure: {
                     updateInfoStatusFlag.isActive ? .updateFailureInfo : nil
                 }, 
-                makeCardGuardianPanel: makeCardGuardianPanel
+                makeCardGuardianPanel: makeCardGuardianPanel,
+                model: model
             )
             
             return .init(
@@ -423,7 +455,7 @@ extension ProductProfileViewModel {
                 makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
                 userAccountNavigationStateManager: userAccountNavigationStateManager,
                 sberQRServices: sberQRServices,
-                unblockCardServices: unblockCardServices,
+                productProfileServices: productProfileServices,
                 qrViewModelFactory: qrViewModelFactory,
                 paymentsTransfersFactory: paymentsTransfersFactory,
                 operationDetailFactory: operationDetailFactory,
@@ -466,7 +498,7 @@ private extension RootViewModelFactory {
     
     typealias MakeProductProfileViewModel = (ProductData, String, @escaping () -> Void) -> ProductProfileViewModel?
     typealias OnRegister = () -> Void
-    typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PTFlowManger
+    typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
     static func make(
         model: Model,

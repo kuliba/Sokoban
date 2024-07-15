@@ -15,212 +15,174 @@ final class AnywayPaymentParameterValidatorTests: XCTestCase {
     
     func test_isValid_shouldNotDeliverErrorOnEmptyValueOfNonRequiredParameter() {
         
-        let nonRequired = makeAnywayPaymentParameter(value: nil, isRequired: false)
-        
-        XCTAssertNil(validate(nonRequired))
+        assert(value: nil, isRequired: false, validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorOnNonEmptyValueOfNonRequiredParameter() {
         
-        let nonRequired = makeAnywayPaymentParameter(isRequired: false)
-        
-        XCTAssertNil(validate(nonRequired))
+        assert(isRequired: false, validationError: nil)
     }
     
     func test_isValid_shouldDeliverErrorOnEmptyValueOfRequiredParameter() {
         
-        let required = makeAnywayPaymentParameter(value: nil, isRequired: true)
-        
-        XCTAssertNoDiff(validate(required), .emptyRequired)
+        assert(value: nil, isRequired: true, validationError: .emptyRequired)
     }
     
     func test_isValid_shouldNotDeliverErrorOnNonEmptyValueOfRequiredParameter() {
         
-        let required = makeAnywayPaymentParameter(isRequired: true)
-        
-        XCTAssertNil(validate(required))
+        assert(isRequired: true, validationError: nil)
     }
     
     // MARK: - min length
     
     func test_isValid_shouldNotDeliverErrorOnNilValueOnEmptyMinLength() {
         
-        let none = makeAnywayPaymentParameter(value: .none, minLength: nil)
-        
-        XCTAssertNil(validate(none))
+        assert(value: .none, minLength: nil, validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorOnEmptyValueOnEmptyMinLength() {
         
-        let empty = makeAnywayPaymentParameter(value: "", minLength: nil)
-        
-        XCTAssertNil(validate(empty))
+        assert(value: "", minLength: nil, validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorOnNonEmptyValueOnEmptyMinLength() {
         
-        let nonEmpty = makeAnywayPaymentParameter(value: "abc", minLength: nil)
-        
-        XCTAssertNil(validate(nonEmpty))
+        assert(value: "abc", minLength: nil, validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorOnNilValueOnZeroMinLength() {
         
-        let none = makeAnywayPaymentParameter(value: .none, minLength: 0)
-        
-        XCTAssertNil(validate(none))
+        assert(value: .none, minLength: 0, validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorOnEmptyValueOnZeroMinLength() {
         
-        let empty = makeAnywayPaymentParameter(value: "", minLength: 0)
-        
-        XCTAssertNil(validate(empty))
+        assert(value: "", minLength: 0, validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorOnNonEmptyValueOnZeroMinLength() {
         
-        let nonEmpty = makeAnywayPaymentParameter(value: "abc", minLength: 0)
-        
-        XCTAssertNil(validate(nonEmpty))
+        assert(value: "abc", minLength: 0, validationError: nil)
     }
     
     func test_isValid_shouldDeliverErrorOnNilValueOnMinLength() {
         
-        let none = makeAnywayPaymentParameter(value: .none, minLength: 1)
-        
-        XCTAssertNoDiff(validate(none), .tooShort)
+        assert(value: .none, minLength: 1, validationError: .tooShort)
     }
     
     func test_isValid_shouldDeliverErrorOnEmptyValueOnMinLength() {
         
-        let empty = makeAnywayPaymentParameter(value: "", minLength: 1)
-        
-        XCTAssertNoDiff(validate(empty), .tooShort)
+        assert(value: "", minLength: 1, validationError: .tooShort)
     }
     
     func test_isValid_shouldNotDeliverErrorOnSameLengthValueOnMinLength() {
         
-        let nonEmpty = makeAnywayPaymentParameter(value: "a", minLength: 1)
-        
-        XCTAssertNil(validate(nonEmpty))
+        assert(value: "a", minLength: 1, validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorOnLongerValueOnMinLength() {
         
-        let nonEmpty = makeAnywayPaymentParameter(value: "abc", minLength: 1)
-        
-        XCTAssertNil(validate(nonEmpty))
+        assert(value: "abc", minLength: 1, validationError: nil)
     }
     
     // MARK: - min length
     
     func test_isValid_shouldNotDeliverErrorOnNilValueOnEmptyMaxLength() {
         
-        let none = makeAnywayPaymentParameter(value: .none, maxLength: nil)
-        
-        XCTAssertNil(validate(none))
+        assert(value: .none, maxLength: nil, validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorOnEmptyValueOnEmptyMaxLength() {
         
-        let empty = makeAnywayPaymentParameter(value: "", maxLength: nil)
-        
-        XCTAssertNil(validate(empty))
+        assert(value: "", maxLength: nil, validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorOnNonEmptyValueOnEmptyMaxLength() {
         
-        let nonEmpty = makeAnywayPaymentParameter(value: "abc", maxLength: nil)
-        
-        XCTAssertNil(validate(nonEmpty))
+        assert(value: "abc", maxLength: nil, validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorOnNilValueOnZeroMaxLength() {
         
-        let none = makeAnywayPaymentParameter(value: .none, maxLength: 0)
-        
-        XCTAssertNil(validate(none))
+        assert(value: .none, maxLength: 0, validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorOnEmptyValueOnZeroMaxLength() {
         
-        let empty = makeAnywayPaymentParameter(value: "", maxLength: 0)
-        
-        XCTAssertNil(validate(empty))
+        assert(value: "", maxLength: 0, validationError: nil)
     }
     
     func test_isValid_shouldDeliverErrorOnNonEmptyValueOnZeroMaxLength() {
         
-        let nonEmpty = makeAnywayPaymentParameter(value: "abc", maxLength: 0)
-        
-        XCTAssertNoDiff(validate(nonEmpty), .tooLong)
+        assert(value: "abc", maxLength: 0, validationError: .tooLong)
     }
     
     func test_isValid_shouldNotDeliverErrorOnNilValueOnMaxLength() {
         
-        let none = makeAnywayPaymentParameter(value: .none, maxLength: 1)
-        
-        XCTAssertNil(validate(none))
+        assert(value: .none, maxLength: 1, validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorOnEmptyValueOnMaxLength() {
         
-        let empty = makeAnywayPaymentParameter(value: "", maxLength: 1)
-        
-        XCTAssertNil(validate(empty))
+        assert(value: "", maxLength: 1, validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorOnSameLengthValueOnMaxLength() {
         
-        let nonEmpty = makeAnywayPaymentParameter(value: "a", maxLength: 1)
-        
-        XCTAssertNil(validate(nonEmpty))
+        assert(value: "a", maxLength: 1, validationError: nil)
     }
     
     func test_isValid_shouldDeliverErrorOnLongerValueOnMaxLength() {
         
-        let nonEmpty = makeAnywayPaymentParameter(value: "abc", maxLength: 1)
-        
-        XCTAssertNoDiff(validate(nonEmpty), .tooLong)
+        assert(value: "abc", maxLength: 1, validationError: .tooLong)
     }
     
     // MARK: - regExp
     
     func test_isValid_shouldNotDeliverErrorForNilValueOnEmptyRegex() {
         
-        let parameter = makeAnywayPaymentParameter(value: nil, regExp: "")
-        
-        XCTAssertNil(validate(parameter))
+        assert(value: nil, regExp: "", validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorForEmptyValueOnEmptyRegex() {
         
-        let parameter = makeAnywayPaymentParameter(value: "", regExp: "")
-        
-        XCTAssertNil(validate(parameter))
+        assert(value: "", regExp: "", validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorForNonEmptyValueOnEmptyRegex() {
         
-        let parameter = makeAnywayPaymentParameter(value: "abc", regExp: "")
-        
-        XCTAssertNil(validate(parameter))
+        assert(value: "abc", regExp: "", validationError: nil)
     }
     
     func test_isValid_shouldNotDeliverErrorForMatchingRegex() {
         
-        let parameter = makeAnywayPaymentParameter(value: "abc123", regExp: "^[a-zA-Z0-9]+$")
-        
-        XCTAssertNil(validate(parameter))
+        assert(value: "abc123", regExp: "^[a-zA-Z0-9]+$", validationError: nil)
     }
     
     func test_isValid_shouldDeliverErrorForNonMatchingRegex() {
         
-        let parameter = makeAnywayPaymentParameter(value: "abc-123", regExp: "^[a-zA-Z0-9]+$")
-        
-        XCTAssertNoDiff(validate(parameter), .regExViolation)
+        assert(value: "abc-123", regExp: "^[a-zA-Z0-9]+$", validationError: .regExViolation)
     }
+    
+    func test_isValid_withRealLifeRegEx() {
+        
+        // A number with 1 to 30 digits followed by a period and 1 to 4 digits.
+        // A whole number with 1 to 30 digits.
+        // A number with 1 to 30 digits followed by a comma and 1 to 4 digits.
+        // A single space character.
+        let pattern = "^((\\d{1,30}\\.\\d{1,4})|(\\d{1,30})|(\\d{1,30},\\d{1,4})|([ ]{1}))$"
+        
+        assert(value: "", regExp: pattern, validationError: .regExViolation)
+        
+        assert(value: "12.34", regExp: pattern, validationError: nil)
+        assert(value: "12.34567", regExp: pattern, validationError: .regExViolation)
+        assert(value: "1234", regExp: pattern, validationError: nil)
+        assert(value: "12,34", regExp: pattern, validationError: nil)
+        assert(value: "12,34567", regExp: pattern, validationError: .regExViolation)
+        assert(value: " ", regExp: pattern, validationError: nil)
+    }
+    
+    // MARK: - 
     
     // MARK: - Helpers
     
@@ -237,6 +199,74 @@ final class AnywayPaymentParameterValidatorTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func assert(
+        value: String? = anyMessage(),
+        isRequired: Bool,
+        validationError: AnywayPaymentParameterValidationError?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        XCTAssertNoDiff(
+            validate(
+                makeAnywayPaymentParameter(value: value, isRequired: isRequired),
+                file: file, line: line
+            ),
+            validationError,
+            file: file, line: line
+        )
+    }
+    
+    private func assert(
+        value: String?,
+        maxLength: Int?,
+        validationError: AnywayPaymentParameterValidationError?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        XCTAssertNoDiff(
+            validate(
+                makeAnywayPaymentParameter(value: value, maxLength: maxLength),
+                file: file, line: line
+            ),
+            validationError,
+            file: file, line: line
+        )
+    }
+    
+    private func assert(
+        value: String?,
+        minLength: Int?,
+        validationError: AnywayPaymentParameterValidationError?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        XCTAssertNoDiff(
+            validate(
+                makeAnywayPaymentParameter(value: value, minLength: minLength),
+                file: file, line: line
+            ),
+            validationError,
+            file: file, line: line
+        )
+    }
+    
+    private func assert(
+        value: String?,
+        regExp pattern: String,
+        validationError: AnywayPaymentParameterValidationError?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        XCTAssertNoDiff(
+            validate(
+                makeAnywayPaymentParameter(value: value, regExp: pattern),
+                file: file, line: line
+            ),
+            validationError,
+            file: file, line: line
+        )
     }
     
     private func validate(

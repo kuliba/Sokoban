@@ -296,17 +296,27 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             viewType: .input
         )
         let element = makeAnywayPaymentParameterElement(
-            makeAnywayPaymentParameter(field: field, uiAttributes: uiAttributes)
+            makeAnywayPaymentParameter(field: field, validation: .init(isRequired: true, maxLength: nil, minLength: nil, regExp: "regExp"), uiAttributes: uiAttributes)
         )
         
         XCTAssertNoDiff(element.uiComponent, .parameter(.init(
-            id: "123",
-            type: .textInput,
-            title: "abcde",
-            subtitle: "defg",
-            value: "ABC",
-            icon: nil
-        )))
+            field: .init(id: "123", value: "ABC"),
+            icon: nil,
+            masking: .init(inputMask: nil, mask: nil),
+            validation: .init(isRequired: true, maxLength: nil, minLength: nil, regExp: "regExp"),
+            uiAttributes: .init(
+                dataType: .string,
+                group: nil,
+                isPrint: true,
+                phoneBook: false,
+                isReadOnly: false,
+                subGroup: nil,
+                subTitle: "defg",
+                title: "abcde",
+                type: .input,
+                viewType: .input
+            ))
+        ))
     }
     
     func test_uiComponent_shouldDeliverNilValueSelectForSelectAndPair() {
@@ -320,16 +330,26 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             viewType: .input
         )
         let element = makeAnywayPaymentParameterElement(
-            makeAnywayPaymentParameter(field: field, uiAttributes: uiAttributes)
+            makeAnywayPaymentParameter(field: field, validation: .init(isRequired: true, maxLength: nil, minLength: nil, regExp: "regExp"), uiAttributes: uiAttributes)
         )
         
-        XCTAssertNoDiff(element.uiComponent, .parameter(.init(
-            id: "123",
-            type: .select(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
-            title: "abcde",
-            subtitle: "defg",
-            value: nil,
-            icon: nil
+        XCTAssertNoDiff(element.uiComponent, .parameter((.init(
+            field: .init(id: "123", value: nil),
+            icon: nil,
+            masking: .init(inputMask: nil, mask: nil),
+            validation: .init(isRequired: true, maxLength: nil, minLength: nil, regExp: "regExp"),
+            uiAttributes: .init(
+                dataType: .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
+                group: nil,
+                isPrint: true,
+                phoneBook: false,
+                isReadOnly: false,
+                subGroup: nil,
+                subTitle: "defg",
+                title: "abcde",
+                type: .select,
+                viewType: .input
+            ))
         )))
     }
     
@@ -344,17 +364,26 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             viewType: .input
         )
         let element = makeAnywayPaymentParameterElement(
-            makeAnywayPaymentParameter(field: field, uiAttributes: uiAttributes)
+            makeAnywayPaymentParameter(field: field, validation: .init(isRequired: true, maxLength: nil, minLength: nil, regExp: "regExp"), uiAttributes: uiAttributes)
         )
         
-        XCTAssertNoDiff(element.uiComponent, .parameter(.init(
-            id: "123",
-            type: .select(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
-            title: "abcde",
-            subtitle: "defg",
-            value: "ABC",
-            icon: nil
-        )))
+        XCTAssertNoDiff(element.uiComponent, .parameter((.init(
+            field: .init(id: "123", value: "ABC"),
+            icon: nil,
+            masking: .init(inputMask: nil, mask: nil),
+            validation: .init(isRequired: true, maxLength: nil, minLength: nil, regExp: "regExp"),
+            uiAttributes: .init(
+                dataType: .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1")]),
+                group: nil,
+                isPrint: true,
+                phoneBook: false,
+                isReadOnly: false,
+                subGroup: nil,
+                subTitle: "defg",
+                title: "abcde",
+                type: .select,
+                viewType: .input
+            )))))
     }
     
     func test_uiComponent_shouldDeliverSelectForSelectAndPairs() {
@@ -368,21 +397,26 @@ final class AnywayPaymentElementUIComponentTests: XCTestCase {
             viewType: .input
         )
         let element = makeAnywayPaymentParameterElement(
-            makeAnywayPaymentParameter(field: field, uiAttributes: uiAttributes)
+            makeAnywayPaymentParameter(field: field, validation: .init(isRequired: true, maxLength: nil, minLength: nil, regExp: "regExp"), uiAttributes: uiAttributes)
         )
         
-        XCTAssertNoDiff(element.uiComponent, .parameter(.init(
-            id: "123",
-            type: .select(
-                .init(key: "a", value: "1"), [
-                    .init(key: "a", value: "1"),
-                    .init(key: "bb", value: "22"),
-                ]),
-            title: "abcde",
-            subtitle: "defg",
-            value: "ABC",
-            icon: nil
-        )))
+        XCTAssertNoDiff(element.uiComponent, .parameter((.init(
+            field: .init(id: "123", value: "ABC"),
+            icon: nil,
+            masking: .init(inputMask: nil, mask: nil),
+            validation: .init(isRequired: true, maxLength: nil, minLength: nil, regExp: "regExp"),
+            uiAttributes: .init(
+                dataType: .pairs(.init(key: "a", value: "1"), [.init(key: "a", value: "1"), .init(key: "bb", value: "22")]),
+                group: nil,
+                isPrint: true,
+                phoneBook: false,
+                isReadOnly: false,
+                subGroup: nil,
+                subTitle: "defg",
+                title: "abcde",
+                type: .select,
+                viewType: .input
+            )))))
     }
     
     // MARK: - widget

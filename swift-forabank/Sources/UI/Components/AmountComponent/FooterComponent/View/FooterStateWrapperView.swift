@@ -110,6 +110,7 @@ private extension FooterStateWrapperView {
                 .clipShape(RoundedRectangle(cornerRadius: 6))
             
             viewModel.state.button.title.text(withConfig: buttonStateConfig.text)
+                .padding(.horizontal)
         }
     }
     

@@ -26,7 +26,7 @@ extension DecodableLanding.Data {
 
             struct Detail: Decodable, Equatable {
                 let groupId: String
-                let viewId: String
+                let viewId: String?
                 
                 enum CodingKeys: String, CodingKey {
                     case groupId = "detailsGroupId"

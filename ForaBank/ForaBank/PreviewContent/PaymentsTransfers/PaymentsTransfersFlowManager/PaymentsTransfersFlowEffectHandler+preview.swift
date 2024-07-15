@@ -30,6 +30,7 @@ where LastPayment == UtilityPaymentLastPayment,
         )
         
         return .init(
+            microServices: .init(initiatePayment: { _,_ in }),
             utilityEffectHandle: effectHandler.handleEffect(_:_:)
         )
     }

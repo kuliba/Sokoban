@@ -121,8 +121,14 @@ private extension PaymentCompleteView {
         VStack(spacing: 24) {
             
             config.message.text(withConfig: config.messageConfig)
-//            report.formattedAmount.text(withConfig: config.amountConfig)
-            report.details?.logo
+            
+            report.details?.logo.map {
+                $0
+                    .renderingMode(.original)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: config.logoHeight, height: config.logoHeight)
+            }
         }
     }
 }
@@ -177,6 +183,7 @@ extension TransactionCompleteViewConfig {
         messageConfig: .init(
             textFont: .textH3Sb18240(),
             textColor: .textSecondary
-        )
+        ), 
+        logoHeight: 40
     )
 }

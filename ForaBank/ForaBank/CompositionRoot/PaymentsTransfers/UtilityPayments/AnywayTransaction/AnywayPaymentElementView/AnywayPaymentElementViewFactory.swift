@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 23.05.2024.
 //
 
+import AnywayPaymentDomain
 import UIPrimitives
 
 struct AnywayPaymentElementViewFactory {
@@ -16,5 +17,6 @@ struct AnywayPaymentElementViewFactory {
 
 extension AnywayPaymentElementViewFactory {
         
-    typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
+    typealias Icon = AnywayPaymentDomain.AnywayElement.UIComponent.Icon
+    typealias MakeIconView = (Icon?) -> UIPrimitives.AsyncImage
 }

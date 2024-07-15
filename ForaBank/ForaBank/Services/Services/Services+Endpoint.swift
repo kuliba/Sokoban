@@ -63,8 +63,10 @@ extension Services {
         enum ServiceName: String {
             
             case bindPublicKeyWithEventId
+            case blockCard
             case changeClientConsentMe2MePull
             case changePIN
+            case changeSVCardLimit
             case createAnywayTransfer
             case createCommissionProductTransfer
             case createFastPaymentContract
@@ -90,6 +92,7 @@ extension Services {
             case getScenarioQRData
             case getSberQRData
             case getStickerPayment
+            case getSVCardLimits
             case getSvgImageList
             case getVerificationCode
             case makeSetBankDefault
@@ -99,6 +102,7 @@ extension Services {
             case showCVV
             case updateFastPaymentContract
             case unblockCard
+            case userVisibilityProductsSettings
         }
     }
 }
@@ -174,6 +178,12 @@ extension Services.Endpoint {
         serviceName: .changePIN
     )
     
+    static let changeSVCardLimit: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .changeSVCardLimit
+    )
+
     static func createAnywayTransfer(
         version: Services.Endpoint.Version? = nil
     ) -> Self {
@@ -317,6 +327,12 @@ extension Services.Endpoint {
         serviceName: .getJsonAbroad
     )
     
+    static let getSVCardLimits: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .getSVCardLimits
+    )
+
     static let getVerificationCode: Self = .init(
         pathPrefix: .transfer,
         version: .v2,
@@ -359,10 +375,22 @@ extension Services.Endpoint {
         serviceName: .showCVV
     )
     
+    static let blockCard: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .blockCard
+    )
+
     static let unblockCard: Self = .init(
         pathPrefix: .rest,
         version: .none,
         serviceName: .unblockCard
+    )
+
+    static let userVisibilityProductsSettings: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .userVisibilityProductsSettings
     )
 
     static let updateFastPaymentContract: Self = .init(

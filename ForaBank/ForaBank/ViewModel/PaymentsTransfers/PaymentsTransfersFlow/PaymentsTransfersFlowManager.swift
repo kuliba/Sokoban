@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct PaymentsTransfersFlowManager<LastPayment, Operator, Service, Content, PaymentViewModel> {
+struct PaymentsTransfersFlowManager {
     
     let handleEffect: HandleEffect
     let makeReduce: MakeReduce
@@ -22,7 +22,11 @@ extension PaymentsTransfersFlowManager {
     typealias Notify = (AnywayTransactionStatus?) -> Void
     typealias MakeReduce = (@escaping CloseAction, @escaping Notify) -> Reduce
     
-    typealias State = PaymentsTransfersViewModel._Route<LastPayment, Operator, Service, Content, PaymentViewModel>
+    typealias State = PaymentsTransfersViewModel.Route
     typealias Event = PaymentsTransfersFlowEvent<LastPayment, Operator, Service>
     typealias Effect = PaymentsTransfersFlowEffect<LastPayment, Operator, Service>
+    
+    typealias LastPayment = UtilityPaymentLastPayment
+    typealias Operator = UtilityPaymentOperator
+    typealias Service = UtilityService
 }

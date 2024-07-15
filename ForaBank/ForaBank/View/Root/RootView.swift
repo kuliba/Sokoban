@@ -237,7 +237,7 @@ private extension RootViewFactory {
             makeUpdateInfoView: UpdateInfoView.init(text:),
             makeAnywayPaymentFactory: { _ in fatalError() },
             makePaymentCompleteView: { _,_ in fatalError() }, 
-            makeHistoryButtonView: { HistoryButtonView(event: { event in })}
+            makeHistoryButtonView: { _ in HistoryButtonView(event: { event in })}
         )
     }
 }

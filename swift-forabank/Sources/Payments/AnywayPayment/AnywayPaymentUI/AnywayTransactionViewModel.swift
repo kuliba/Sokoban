@@ -73,8 +73,8 @@ public extension AnywayTransactionViewModel {
             
             let state = updating(state, with: transaction)
 #if DEBUG || MOCK
-            print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: reduced transaction on event:", event, #file, #line)
-            print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: updated state for reduced transaction:", state, #file, #line)
+//    print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: reduced transaction on event:", event, "\(#file):\(#line)")
+//    print("===>>>", ObjectIdentifier(self), "AnywayTransactionViewModel: updated state for reduced transaction:", state, "\(#file):\(#line)")
 #endif
             stateSubject.send(state)
             
@@ -154,6 +154,7 @@ private extension AnywayTransactionViewModel {
         /// - Note: looks like this pipeline needs `dropFirst` but if `dropFirst` is added the button does not gets active after first submit
         footer.projectionPublisher
             .receive(on: scheduler)
+            .print("===== footer.projectionPublisher")
             .sink { [weak self] in self?.update(with: $0) }
             .store(in: &cancellables)
         

@@ -138,6 +138,8 @@ final class MultiButtonsTests: XCTestCase {
                     }
                 case .sticker(_):
                     break
+                case .bannerAction:
+                    break
                 }
             }
         )

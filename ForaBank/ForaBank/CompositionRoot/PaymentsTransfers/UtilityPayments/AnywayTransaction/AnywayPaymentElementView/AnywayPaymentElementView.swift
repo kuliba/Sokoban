@@ -51,7 +51,7 @@ private extension AnywayPaymentElementView {
         PaymentComponents.InfoView(
             info: field.info,
             config: config,
-            icon: { makeIconView(field) }
+            icon: { factory.makeIconView(field.icon) }
         )
     }
     
@@ -65,20 +65,16 @@ private extension AnywayPaymentElementView {
         )
     }
     
-    func makeIconView(
-        _ field: AnywayPaymentDomain.AnywayElement.UIComponent.Field
-    ) -> some View {
-        
-#warning("FIX hardcoded value")
-        return factory.makeIconView("placeholder")
-    }
-    
     @ViewBuilder
     func widgetView(
         _ widget: AnywayElementModel.Widget
     ) -> some View {
         
         switch widget {
+        case let .info(info):
+            AnywayInfoView(fields: info.fields, config: .iFora)
+                .paddedRoundedBackground()
+            
         case let .otp(viewModel):
             factory.widgetFactory.makeOTPView(viewModel)
                 .paddedRoundedBackground()
