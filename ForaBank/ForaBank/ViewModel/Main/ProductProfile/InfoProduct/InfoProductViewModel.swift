@@ -258,28 +258,30 @@ class InfoProductViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
+                    
                 case let payload as ModelAction.Deposits.Info.Single.Response:
                     switch payload {
-                    case .success(let data):
-                        
+                    case let .success(data):
+                       
                         guard data.id == product.id else {
                             return
                         }
                         
                         var list: [ItemViewModel] = []
                         
-                        let moscowTimeZone = TimeZone(identifier: "Europe/Moscow") ?? TimeZone.current
-                        let dateFormatter = DateFormatter.depositsFormatter()
+                        let dateFormatter = DateFormatter.moscowTimeRuFormatter
                         
                         if let initialAmount = model.amountFormatted(amount: data.initialAmount, currencyCode: product.currency, style: .clipped) {
                             
                             list.append(.init(title: "Сумма первоначального размещения", subtitle: initialAmount))
                         }
                         
-                        list.append(.init(title: "Дата открытия", subtitle: dateFormatter.string(from: data.dateOpen.converted(to: moscowTimeZone))))
+                        let dateOpen = dateFormatter.string(from: data.dateOpen)
+                        list.append(.init(title: "Дата открытия", subtitle: dateOpen))
                         
                         if let dateEnd = data.dateEnd {
-                            let dateEndMoscow = dateFormatter.string(from: dateEnd.converted(to: moscowTimeZone))
+                            
+                            let dateEndMoscow = dateFormatter.string(from: dateEnd)
                             list.append(.init(title: "Дата закрытия", subtitle: dateEndMoscow))
                         }
                         

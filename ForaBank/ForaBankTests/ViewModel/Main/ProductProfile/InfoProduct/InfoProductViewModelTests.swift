@@ -880,32 +880,33 @@ final class InfoProductViewModelTests: XCTestCase {
     
     // MARK: - Test Data
     
-    func test_moscowTime_sameTimeZone_returnsSelf() {
+    func testMoscowTimeRuFormatter() {
         
-        let moscowTimeZone = TimeZone(identifier: "Europe/Moscow")!
-        let moscowDate = Calendar.current.date(bySettingHour: 12, minute: 0, second: 0, of: Date())
-
-        let moscowTime = moscowDate?.converted(to: moscowTimeZone)
-
-        XCTAssertEqual(moscowTime, moscowDate)
+        let dateFormatter = DateFormatter.moscowTimeRuFormatter
+        
+        XCTAssertEqual(dateFormatter.timeZone, TimeZone(identifier: "Europe/Moscow"))
+        XCTAssertEqual(dateFormatter.locale, Locale(identifier: "ru_RU"))
+        
+        let formattedDate = dateFormatter.string(from: Date.testDateInMoscowTimezone)
+        XCTAssertEqual(formattedDate, "20 марта 2023")
     }
     
-    func test_convertedToReturnsOriginalDate_forInvalidTimezoneIdentifier() {
+    func test_modelAction_shouldFormatDatesCorrectly() {
         
-        let invalidTimezoneIdentifier = "Invalid/Timezone"
-        let originalDate = Date()
-
-        let invalidTimeZone = TimeZone(identifier: invalidTimezoneIdentifier) ?? TimeZone.current
-        let invalidTimezoneDate = originalDate.converted(to: invalidTimeZone)
-        XCTAssertEqual(invalidTimezoneDate, originalDate, "converted(to:) should return the original date if the timezone identifier is invalid")
+        let (sut, model) = makeSUT1(product: .firstValue())
+        let spy = ValueSpy(sut.$list)
+        
+        let response = ResponseDeposits.success(data: .data)
+        model.action.send(response)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        let dateOpenString = "29 марта 2022"
+        XCTAssertTrue(spy.values.contains { $0.contains(where: { $0.title == "Дата открытия" && $0.subtitle == dateOpenString }) })
+        
+        let dateEndString = "29 марта 2022"
+        XCTAssertTrue(spy.values.contains { $0.contains(where: { $0.title == "Дата закрытия" && $0.subtitle == dateEndString }) })
     }
-    
-    func test_convertedToReturnsExpectedDate_ForMoscowTimezone() {
-       
-        let moscowTime = Date.testDateInMoscowTimezone.converted(to: TimeZone(identifier: "Europe/Moscow")!)
-        XCTAssertEqual(moscowTime, Date.expectedMoscowTime, "converted(to:) should be equal to the expected value for a date in the Moscow timezone")
-    }
-
     
     // MARK: - Helpers
     
@@ -1388,5 +1389,4 @@ extension Array where Element == String {
 private extension Date {
     
     static let testDateInMoscowTimezone = Date(timeIntervalSince1970: 1679272800) // 2023-03-20 00:00:00 +0300
-    static let expectedMoscowTime = Date(timeIntervalSince1970: 1679272800) // 2023-03-20 00:00:00 +0300
 }
