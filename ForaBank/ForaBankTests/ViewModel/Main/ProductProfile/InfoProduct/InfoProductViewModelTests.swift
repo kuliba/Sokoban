@@ -880,14 +880,19 @@ final class InfoProductViewModelTests: XCTestCase {
     
     // MARK: - Test Data
     
-    func testMoscowTimeRuFormatter() {
+    func test_moscowTimeRuFormatter_shouldHaveCorrectTimeZoneAndLocale() {
         
         let dateFormatter = DateFormatter.moscowTimeRuFormatter
         
         XCTAssertEqual(dateFormatter.timeZone, TimeZone(identifier: "Europe/Moscow"))
         XCTAssertEqual(dateFormatter.locale, Locale(identifier: "ru_RU"))
+    }
+    
+    func test_moscowTimeRuFormatter_shouldFormatDateCorrectly() {
         
+        let dateFormatter = DateFormatter.moscowTimeRuFormatter
         let formattedDate = dateFormatter.string(from: Date.testDateInMoscowTimezone)
+        
         XCTAssertEqual(formattedDate, "20 марта 2023")
     }
     
