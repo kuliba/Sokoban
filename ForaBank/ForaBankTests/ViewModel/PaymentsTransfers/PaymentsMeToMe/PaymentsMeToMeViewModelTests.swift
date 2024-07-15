@@ -197,6 +197,102 @@ final class PaymentsMeToMeViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(text, "9,42 currencySymbolTo   |   1 currencySymbolTo  -  1,06 currencySymbolFrom")
     }
+    
+    // MARK: - createAlertData / makeAlert Tests
+    
+    func test_createAlertData_withEmptyDataError_shouldReturnCorrectData() {
+        
+        let sut = makeSUT(model: modelWithNecessaryData(), mode: .general)
+        let error = ModelError.emptyData(message: "Test error message")
+        
+        let alertData = sut?.createAlertData(error)
+        
+        XCTAssertEqual(alertData?.title, "Ошибка")
+        XCTAssertEqual(alertData?.message, "Test error message")
+    }
+    
+    func test_createAlertData_withStatusError_shouldReturnCorrectData() {
+        
+        let sut = makeSUT(model: modelWithNecessaryData(), mode: .general)
+        let error = ModelError.statusError(status: .error(123), message: "Test status error")
+        
+        let alertData = sut?.createAlertData(error)
+        
+        XCTAssertEqual(alertData?.title, "Ошибка")
+        XCTAssertEqual(alertData?.message, "Test status error")
+    }
+    
+    func test_createAlertData_withServerCommandError_shouldReturnCorrectData() {
+        
+        let sut = makeSUT(model: modelWithNecessaryData(), mode: .general)
+        let error = ModelError.serverCommandError(error: "Test server error")
+        
+        let alertData = sut?.createAlertData(error)
+        
+        XCTAssertEqual(alertData?.title, "Ошибка")
+        XCTAssertEqual(alertData?.message, "Test server error")
+    }
+    
+    func test_createAlertData_withUnauthorizedCommandAttempt_shouldReturnTitleWithNilMessage() {
+        
+        let sut = makeSUT(model: modelWithNecessaryData(), mode: .general)
+        let error = ModelError.unauthorizedCommandAttempt
+        
+        let alertData = sut?.createAlertData(error)
+        
+        XCTAssertEqual(alertData?.title, "Ошибка")
+        XCTAssertNil(alertData?.message)
+    }
+    
+    func test_createAlertData_withMeToMeCreateTransferAndSpecificError_shouldReturnSpecialData() {
+        
+        let sut = makeSUT(model: modelWithNecessaryData(), mode: .general)
+        let error = ModelError.serverCommandError(error: "Превышен лимит времени на запрос.")
+        
+        let alertData = sut?.createAlertData(error, isFromMeToMeCreateTransfer: true)
+        
+        XCTAssertEqual(alertData?.title, "Операция в обработке")
+        XCTAssertEqual(alertData?.message, "Проверьте её статус позже в истории операций.")
+    }
+    
+    func test_createAlertData_withMeToMeCreateTransferAndOtherError_shouldReturnNormalData() {
+        
+        let sut = makeSUT(model: modelWithNecessaryData(), mode: .general)
+        let error = ModelError.serverCommandError(error: "Some other error")
+        
+        let alertData = sut?.createAlertData(error, isFromMeToMeCreateTransfer: true)
+        
+        XCTAssertEqual(alertData?.title, "Ошибка")
+        XCTAssertEqual(alertData?.message, "Some other error")
+    }
+    
+    func test_createAlertData_withoutMeToMeCreateTransferAndSpecificError_shouldReturnNormalData() {
+        
+        let sut = makeSUT(model: modelWithNecessaryData(), mode: .general)
+        let error = ModelError.serverCommandError(error: "Превышен лимит времени на запрос.")
+        
+        let alertData = sut?.createAlertData(error, isFromMeToMeCreateTransfer: false)
+        
+        XCTAssertEqual(alertData?.title, "Ошибка")
+        XCTAssertEqual(alertData?.message, "Превышен лимит времени на запрос.")
+    }
+    
+    func test_bind_withMeToMeCreateTransferFailure_shouldSetSpecialAlertProperties() {
+        
+        let model = makeModelWithServerAgentStub()
+        let sut = PaymentsMeToMeViewModel(model, mode: .general)
+        let spy = ValueSpy(model.action.compactMap { $0 as? ModelAction.Payment.MeToMe.CreateTransfer.Response })
+        
+        let error = ModelError.serverCommandError(error: "Превышен лимит времени на запрос.")
+        let failureResponse = ModelAction.Payment.MeToMe.CreateTransfer.Response(result: .failure(error))
+        
+        model.action.send(failureResponse)
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        
+        XCTAssertEqual(sut?.alert?.title, "Операция в обработке")
+        XCTAssertEqual(sut?.alert?.message, "Проверьте её статус позже в истории операций.")
+    }
 
     // MARK: - PaymentsMeToMeViewModel Helpers Tests
 
