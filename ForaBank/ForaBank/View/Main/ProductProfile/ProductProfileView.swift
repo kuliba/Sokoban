@@ -9,6 +9,7 @@ import ActivateSlider
 import ForaTools
 import InfoComponent
 import PinCodeUI
+import RxViewModel
 import SberQR
 import SwiftUI
 
@@ -223,23 +224,12 @@ struct ProductProfileView: View {
     ) -> some View {
         
         switch link {
-        case let .controlPanel(items):
-            ControlPanelView(items: items, event: viewModel.event)
-                .edgesIgnoringSafeArea(.bottom)
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .principal) {
-                        VStack {
-                            Text("Управление")
-                                .foregroundColor(.textSecondary)
-                                .font(.textH3M18240())
-
-                            Text(viewModel.navigationTitleForControlPanel)
-                                .foregroundColor(.textPlaceholder)
-                                .font(.textBodyMR14180())
-                        }
-                    }
-                }
+        case let .controlPanel(controlPanelViewModel):
+            ControlPanelWrapperView(
+                viewModel: controlPanelViewModel,
+                config: .default, 
+                getUImage: getUImage)
+            .edgesIgnoringSafeArea(.bottom)
 
         case let .productInfo(viewModel):
             InfoProductView(viewModel: viewModel)
@@ -531,7 +521,7 @@ extension ProductProfileViewModel {
         makePaymentsTransfersFlowManager: { _ in .preview },
         userAccountNavigationStateManager: .preview,
         sberQRServices: .empty(),
-        unblockCardServices: .preview(),
+        productProfileServices: .preview,
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         operationDetailFactory: .preview,
@@ -551,7 +541,7 @@ extension ProductProfileViewModel {
         makePaymentsTransfersFlowManager: { _ in .preview },
         userAccountNavigationStateManager: .preview,
         sberQRServices: .empty(),
-        unblockCardServices: .preview(),
+        productProfileServices: .preview,
         qrViewModelFactory: .preview(),
         paymentsTransfersFactory: .preview,
         operationDetailFactory: .preview,

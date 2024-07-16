@@ -17,7 +17,7 @@ extension AnywayElement {
             return .field(.init(field))
             
         case let .parameter(parameter):
-            return .parameter(parameter.uiComponent)
+            return .parameter(parameter)
             
         case let .widget(widget):
             return widget.uiComponent
@@ -27,7 +27,7 @@ extension AnywayElement {
     public enum UIComponent: Equatable {
         
         case field(Field)
-        case parameter(Parameter)
+        case parameter(AnywayElement.Parameter)
         case widget(Widget)
     }
 }
@@ -82,6 +82,7 @@ extension AnywayElement.UIComponent {
     
     public enum Widget: Equatable {
         
+        case info(AnywayElement.Widget.Info)
         case otp(Int?, String?)
         case productPicker(ProductID, ProductType)
         
@@ -197,6 +198,9 @@ private extension AnywayElement.Widget {
     var uiComponent: AnywayElement.UIComponent {
         
         switch self {
+        case let .info(info):
+            return .widget(.info(info))
+            
         case let .product(core):
             return .widget(.productPicker(core.productID, core.productType))
             

@@ -377,7 +377,7 @@ final class MapperTests: XCTestCase {
                 .init(
                     imageLink: "dict/getProductCatalogImage?image=/products/banners/ordering_additional_card.png",
                     link: "https://www.forabank.ru/private/cards/",
-                    detail: nil
+                    detail: .init(groupId: "QR_SCANNER", viewId: "")
                 ),
                 .init(
                     imageLink: "dict/getBannerCatalogImage?image=/products/banners/Georgia_12_12_2023.png",
@@ -420,6 +420,58 @@ final class MapperTests: XCTestCase {
         ])
     }
 
+    func test_map_limitsWithErrors_deliversListHorizontalRectangleImagesWithDefaultValuesInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limitsWithErrorsInMain.utf8)))
+
+        XCTAssertNoDiff(landing.main.listHorizontalRectangleImages, [
+            .init(list: [
+                .init(
+                    imageLink: "",
+                    link: "https://www.forabank.ru/private/cards/",
+                    detail: .init(groupId: "QR_SCANNER", viewId: "")
+                ),
+                .init(
+                    imageLink: "dict/getBannerCatalogImage?image=/products/banners/Georgia_12_12_2023.png",
+                    link: "",
+                    detail: .init(groupId: "", viewId: "GE")
+                ),
+                .init(
+                    imageLink: "dict/getProductCatalogImage?image=/products/banners/payWithSticker.png",
+                    link: "",
+                    detail: .init(groupId: "LANDING", viewId: "")
+                )
+
+            ])
+        ])
+    }
+
+    func test_map_limitsWithListHorizontalRectangleImagesError_deliversListVerticalRoundImagesInMain() throws {
+        
+        let landing = try XCTUnwrap(map(data: Data(String.limitsWithErrorsInMain.utf8)))
+        
+        XCTAssertNoDiff(landing.main.listVerticalRoundImages, [
+            .init(
+                title: "Прочее",
+                displayedCount: nil,
+                dropButtonOpenTitle: nil,
+                dropButtonCloseTitle: nil,
+                list: [
+                    .init(
+                        md5hash: "fdcc2b1f146ed76ce73629f4a35d9b7d",
+                        title: "Управление подписками",
+                        subInfo: nil,
+                        link: nil,
+                        appStore: nil,
+                        googlePlay: nil,
+                        detail: nil,
+                        action: .init(type: "subscriptionControl")
+                    )
+                ]
+            )
+        ])
+    }
+    
     func test_map_limitSettings_deliversHeader() throws {
         
         let landing = try XCTUnwrap(map(data: Data(String.limitSettings.utf8)))
@@ -2806,7 +2858,11 @@ private extension String {
               "list": [
                 {
                   "imageLink": "dict/getProductCatalogImage?image=/products/banners/ordering_additional_card.png",
-                  "link": "https://www.forabank.ru/private/cards/"
+                  "link": "https://www.forabank.ru/private/cards/",
+                  "details": {
+                    "detailsGroupId": "QR_SCANNER",
+                    "detailViewId": null
+                  }
                 },
                 {
                   "imageLink": "dict/getBannerCatalogImage?image=/products/banners/Georgia_12_12_2023.png",
@@ -2847,7 +2903,125 @@ private extension String {
       },
     }
     """
-    
+   
+    static let limitsWithErrorsInMain: Self = """
+    {
+      "statusCode": 0,
+      "errorMessage": null,
+      "data": {
+        "header": [
+          {
+            "type": "PAGE_TITLE",
+            "data": {
+              "title": "Управление",
+              "transparency": false
+            }
+          }
+        ],
+        "main": [
+          {
+            "type": "NAILED_CARD_ACTIONS",
+            "data": {}
+          },
+          {
+            "type": "LIST_HORIZONTAL_RECTANGLE_LIMITS",
+            "data": {
+              "list": [
+                {
+                  "md5hash": "7cc9921ddb97efc14a7de912106ea0d4",
+                  "title": "Платежи и переводы",
+                  "limitType": "DEBIT_OPERATIONS",
+                  "limit": [
+                    {
+                      "id": "LMTTZ01",
+                      "colorHEX": "#1C1C1C",
+                      "title": "Осталось сегодня"
+                    },
+                    {
+                      "id": "LMTTZ02",
+                      "colorHEX": "#FF3636",
+                      "title": "Осталось в этом месяце"
+                    }
+                  ],
+                  "action": {
+                    "actionType": "changeLimit"
+                  }
+                },
+                {
+                  "md5hash": "bec5d6f65faaea15f56cd46b86a78897",
+                  "title": "Снятие наличных",
+                  "limitType": "WITHDRAWAL",
+                  "limit": [
+                    {
+                      "id": "LMTTZ03",
+                      "colorHEX": "#1C1C1C",
+                      "title": "Осталось сегодня"
+                    },
+                    {
+                      "id": "LMTTZ04",
+                      "colorHEX": "#FF3636",
+                      "title": "Осталось в этом месяце"
+                    }
+                  ],
+                  "action": {
+                    "actionType": "changeLimit"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "LIST_HORIZONTAL_RECTANGLE_IMAGE",
+            "data": {
+              "list": [
+                {
+                  "image": "dict/getProductCatalogImage?image=/products/banners/ordering_additional_card.png",
+                  "link": "https://www.forabank.ru/private/cards/",
+                  "details": {
+                    "detailsGroupId": "QR_SCANNER",
+                    "detailViewId": null
+                  }
+                },
+                {
+                  "imageLink": "dict/getBannerCatalogImage?image=/products/banners/Georgia_12_12_2023.png",
+                  "link": "",
+                  "details": {
+                    "details": "CONTACT_TRANSFER",
+                    "detailViewId": "GE"
+                  }
+                },
+                {
+                  "imageLink": "dict/getProductCatalogImage?image=/products/banners/payWithSticker.png",
+                  "link": "",
+                  "details": {
+                    "detailsGroupId": "LANDING",
+                    "detai": "abroadSticker"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "LIST_VERTICAL_ROUND_IMAGE",
+            "data": {
+              "title": "Прочее",
+              "list": [
+                {
+                  "md5hash": "fdcc2b1f146ed76ce73629f4a35d9b7d",
+                  "title": "Управление подписками",
+                  "action": {
+                    "actionType": "subscriptionControl"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+      "serial": "d706714ec041828eadf4b46af8cdb662"
+      },
+    }
+    """
+
     static let limitSettings: Self = """
     {
       "statusCode": 0,

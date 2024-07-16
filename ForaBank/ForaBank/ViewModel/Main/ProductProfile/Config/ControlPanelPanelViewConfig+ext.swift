@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension ControlPanelView.Config {
+extension ControlPanelViewConfig {
     
     static let `default`: Self = .init(
         colors: .init(

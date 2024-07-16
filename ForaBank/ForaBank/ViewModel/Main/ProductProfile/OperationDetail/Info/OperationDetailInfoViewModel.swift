@@ -1795,7 +1795,7 @@ extension OperationDetailInfoViewModel {
                 
                 let operatorViewModel = PropertyCellViewModel(
                     title: "Наименование получателя",
-                    iconType: operatorValue?.iconImageData?.image ?? .ic40TvInternet,
+                    iconType: operatorValue?.iconImageData?.image ?? .ic40ZkxServices,
                     value: payeeFullName
                 )
                 cells.insert(operatorViewModel, at: 0)

@@ -52,7 +52,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 
                 //FIXME: inject from parent view model after refactoring
                 let model = Model.shared
-                let templatesViewModel = TemplatesListViewModel(model, dismissAction: {}, updateFastAll: {})
+                let templatesViewModel = TemplatesListViewModel(model, dismissAction: {}, updateFastAll: {}, flowManager: .preview)
                 let templatesViewController = TemplatesListViewHostingViewController(with: templatesViewModel)
                 templatesViewController.delegate = self
                 let navigationViewController = UINavigationController(rootViewController: templatesViewController)

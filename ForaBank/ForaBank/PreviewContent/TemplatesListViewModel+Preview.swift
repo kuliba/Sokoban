@@ -201,7 +201,9 @@ extension TemplatesListViewModel {
               items: TemplatesListViewModel.sampleItems,
               deletePannel: TemplatesListViewModel.sampleDeletePanel,
               updateFastAll: {},
-              model: .emptyMock)
+              model: .emptyMock,
+              flowManager: .preview
+        )
     }()
     
     static let sampleTiles: TemplatesListViewModel = {
@@ -213,7 +215,9 @@ extension TemplatesListViewModel {
               items: TemplatesListViewModel.sampleItems2,
               deletePannel: nil,
               updateFastAll: {},
-              model: .emptyMock)
+              model: .emptyMock,
+              flowManager: .preview
+        )
     }()
     
     static let sampleDeleting: TemplatesListViewModel = {
@@ -225,7 +229,9 @@ extension TemplatesListViewModel {
               items: TemplatesListViewModel.sampleItems3,
               deletePannel: TemplatesListViewModel.sampleDeletePanel,
               updateFastAll: {},
-              model: .emptyMock)
+              model: .emptyMock,
+              flowManager: .preview
+        )
     }()
 }
 

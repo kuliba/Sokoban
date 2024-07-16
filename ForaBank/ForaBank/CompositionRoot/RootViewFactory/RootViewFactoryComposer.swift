@@ -79,9 +79,7 @@ private extension RootViewFactoryComposer {
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
-                makeHistoryButton: { event in
-                    HistoryButtonView(event: event)
-                }
+                makeHistoryButton: { _ in self.makeHistoryButtonView(self.historyFeatureFlag) }
             ),
             getUImage: getUImage
         )
@@ -137,6 +135,28 @@ private extension RootViewFactoryComposer {
     
     typealias IconView = UIPrimitives.AsyncImage
     
+    private func makeIconView(
+        _  icon: AnywayElement.UIComponent.Icon?
+    ) -> IconView {
+        
+        switch icon {
+        case .none:
+            return makeIconView("placeholder")
+            
+        case let .md5Hash(md5Hash):
+            return makeIconView(md5Hash)
+            
+        case let .svg(svg):
+            return .init(
+                image: .init(svg: svg) ?? .init("placeholder"),
+                publisher: Empty().eraseToAnyPublisher()
+            )
+            
+        case let .withFallback(md5Hash: md5Hash, svg: _):
+            return makeIconView(md5Hash)
+        }
+    }
+
     private func makeIconView(
         _ icon: String
     ) -> IconView {
@@ -208,7 +228,7 @@ private extension RootViewFactoryComposer {
     ) -> TransactionDocumentButton.GetDocument {
         
         let getDetailService = RemoteService(
-            createRequest: RequestFactory.createGetPrintFormRequest,
+            createRequest: RequestFactory.createGetPrintFormRequest(printFormType: .service),
             performRequest: httpClient.performRequest(_:completion:),
             mapResponse: ResponseMapper.mapGetPrintFormResponse
         )

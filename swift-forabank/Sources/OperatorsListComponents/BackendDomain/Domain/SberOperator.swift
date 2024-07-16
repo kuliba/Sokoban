@@ -10,13 +10,13 @@ import Foundation
 public struct SberOperator: Identifiable, Equatable {
     
     public let id: String
-    public let inn: String?
+    public let inn: String
     public let md5Hash: String?
     public let title: String
     
     public init(
         id: String,
-        inn: String?,
+        inn: String,
         md5Hash: String?,
         title: String
     ) {

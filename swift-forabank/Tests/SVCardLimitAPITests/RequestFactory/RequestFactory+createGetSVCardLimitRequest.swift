@@ -46,10 +46,10 @@ final class RequestFactory_createGetSVCardLimitRequestTests: XCTestCase {
     
     private func createRequest(
         url: URL = anyURL(),
-        payload: GetSVCardLimitPayload = .init(cardId: 111)
+        payload: GetSVCardLimitsPayload = .init(cardId: 111)
     ) throws -> URLRequest {
         
-        try RequestFactory.createGetSVCardLimitRequest(
+        try RequestFactory.createGetSVCardLimitsRequest(
             url: url,
             payload: payload
         )
@@ -57,7 +57,7 @@ final class RequestFactory_createGetSVCardLimitRequestTests: XCTestCase {
     
     private func anyPayload(
         cardId: Int = 111
-    ) -> GetSVCardLimitPayload {
+    ) -> GetSVCardLimitsPayload {
         
         .init(cardId: cardId)
     }

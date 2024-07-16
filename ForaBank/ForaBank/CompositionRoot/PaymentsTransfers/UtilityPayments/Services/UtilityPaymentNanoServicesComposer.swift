@@ -202,7 +202,7 @@ private extension UtilityPaymentNanoServicesComposer {
         let fetch = ForaBank.NanoServices.adaptedLoggingFetch(
             createRequest: RequestFactory.createGetOperatorsListByParamOperatorOnlyFalseRequest,
             httpClient: httpClient,
-            mapResponse: OperatorsListComponents.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyFalseResponse,
+            mapResponse: RemoteServices.ResponseMapper.mapGetOperatorsListByParamOperatorOnlyFalseResponse,
             mapOutput: { $0.map(\.service) },
             mapError: { _ in NanoServices.GetServicesForError() },
             log: infoNetworkLog
@@ -233,11 +233,6 @@ private extension UtilityPaymentNanoServicesComposer {
         and payload: AnywayPaymentOutline.Payload
     ) -> AnywayPaymentOutline {
         
-        if let lastPayment {
-            
-            return .init(latestServicePayment: lastPayment)
-        }
-        
 #warning("fix filtering according to https://shorturl.at/hIE5B")
         guard let product = model.paymentProducts().first,
               let outlineProductType = product.productType.outlineProductType
@@ -246,13 +241,23 @@ private extension UtilityPaymentNanoServicesComposer {
             fatalError("unimplemented graceful failure")
         }
         
+        let outlineProduct = AnywayPaymentOutline.Product(
+            currency: product.currency,
+            productID: product.id,
+            productType: outlineProductType
+        )
+        
+        if let lastPayment {
+            
+            return .init(
+                latestServicePayment: lastPayment,
+                product: outlineProduct
+            )
+        }
+        
         return .init(
             amount: 0, 
-            product: .init(
-                currency: product.currency,
-                productID: product.id,
-                productType: outlineProductType
-            ),
+            product: outlineProduct,
             fields: .init(),
             payload: payload
         )
@@ -285,8 +290,10 @@ private extension UtilityPaymentNanoServicesComposer {
 
 extension AnywayPaymentOutline {
     
-    init(latestServicePayment latest: RemoteServices.ResponseMapper.LatestServicePayment) {
-        
+    init(
+        latestServicePayment latest: RemoteServices.ResponseMapper.LatestServicePayment,
+        product: AnywayPaymentOutline.Product?
+    ) {
         let pairs = latest.additionalItems.map {
             
             ($0.fieldName, $0.fieldValue)
@@ -295,7 +302,7 @@ extension AnywayPaymentOutline {
         
         self.init(
             amount: latest.amount,
-            product: nil,
+            product: product,
             fields: fields,
             payload: .init(
                 puref: latest.puref,
@@ -363,7 +370,7 @@ typealias StartAnywayPaymentPayload = UtilityPaymentNanoServices.StartAnywayPaym
 typealias StartAnywayPaymentResult = UtilityPaymentNanoServices.StartAnywayPaymentResult
 typealias StartAnywayPaymentCompletion = UtilityPaymentNanoServices.StartAnywayPaymentCompletion
 
-private extension OperatorsListComponents.ResponseMapper.SberUtilityService {
+private extension RemoteServices.ResponseMapper.SberUtilityService {
     
     var service: UtilityService {
         

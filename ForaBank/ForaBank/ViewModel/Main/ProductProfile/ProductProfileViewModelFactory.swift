@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import LandingUIComponent
 
 struct ProductProfileViewModelFactory {
     
@@ -13,7 +14,22 @@ struct ProductProfileViewModelFactory {
     let makeAlert: (AlertParameters) -> Alert.ViewModel
     let makeInformerDataUpdateFailure: MakeInformerDataUpdateFailure
     let makeCardGuardianPanel: MakeCardGuardianPanel
+    private let model: Model
     
+    init(
+        makeInfoProductViewModel: @escaping (Parameters) -> InfoProductViewModel,
+        makeAlert: @escaping (AlertParameters) -> Alert.ViewModel,
+        makeInformerDataUpdateFailure: @escaping MakeInformerDataUpdateFailure,
+        makeCardGuardianPanel: @escaping MakeCardGuardianPanel, 
+        model: Model
+    ) {
+        self.makeInfoProductViewModel = makeInfoProductViewModel
+        self.makeAlert = makeAlert
+        self.makeInformerDataUpdateFailure = makeInformerDataUpdateFailure
+        self.makeCardGuardianPanel = makeCardGuardianPanel
+        self.model = model
+    }
+
     struct Parameters {
         let model: Model
         let productData: ProductData
@@ -54,6 +70,19 @@ struct ProductProfileViewModelFactory {
             self.secondaryButton = secondaryButton
         }
     }
+        
+    func makeStickerLandingViewModel(
+        _ type: AbroadType,
+        config: LandingUIComponent.UILanding.Component.Config,
+        landingActions: @escaping (LandingUIComponent.LandingEvent.Sticker) -> () -> Void
+    ) -> LandingUIComponent.LandingWrapperViewModel {
+            
+            self.model.landingStickerViewModelFactory(
+                abroadType: type,
+                config: config,
+                landingActions: landingActions
+            )
+        }
 }
 
 extension ProductProfileViewModelFactory {
@@ -62,6 +91,7 @@ extension ProductProfileViewModelFactory {
     typealias Events = (Event) -> Void
 
     typealias MakeCardGuardianPanel = (ProductCardData) -> ProductProfileViewModel.CardGuardianPanelKind
+    typealias MakeNavigationOperationView = () -> any View
 }
 
 extension ProductProfileViewModelFactory {
@@ -77,7 +107,8 @@ extension ProductProfileViewModelFactory {
             secondary: $0.secondaryButton)
         },
         makeInformerDataUpdateFailure: { nil }, 
-        makeCardGuardianPanel: { .bottomSheet(.cardGuardian($0, .init(.inactive)))}
+        makeCardGuardianPanel: { .bottomSheet(.cardGuardian($0, .init(.inactive)))},
+        model: .emptyMock
     )
 }
 

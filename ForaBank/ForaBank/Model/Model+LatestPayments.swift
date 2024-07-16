@@ -54,11 +54,12 @@ extension Model {
         
         latestPaymentsUpdating.value = true
         
+        // TODO: change isServicePayments to true after fix
         let command = ServerCommands
                         .PaymentOperationDetailContoller
                         .GetAllLatestPayments(token: token,
                                               isPhonePayments: true,
-                                              isServicePayments: true,
+                                              isServicePayments: false,
                                               isMobilePayments: true,
                                               isInternetPayments: true,
                                               isTransportPayments: true,

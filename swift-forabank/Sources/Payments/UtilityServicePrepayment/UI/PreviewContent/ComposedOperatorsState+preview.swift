@@ -7,7 +7,7 @@
 
 import UtilityServicePrepaymentDomain
 
-extension PrepaymentPickerState
+extension PrepaymentPickerSuccess
 where LastPayment == PreviewLastPayment,
       Operator == PreviewOperator {
     
@@ -28,7 +28,9 @@ struct PreviewLastPayment: Identifiable {
 
 extension Array where Element == PreviewLastPayment {
     
-    static let preview: Self = .init()
+    static let preview: Self = [
+        .init(id: "1")
+    ]
 }
 
 struct PreviewOperator: Identifiable {
@@ -38,5 +40,7 @@ struct PreviewOperator: Identifiable {
 
 extension Array where Element == PreviewOperator {
     
-    static let preview: Self = .init()
+    static let preview: Self = [
+        .init(id: "1")
+    ]
 }

@@ -430,7 +430,7 @@ private extension Landing.DataView.List.HorizontalRectangleImage.Item {
             if let details = data.detail {
                 return .init(
                     groupId: details.groupId,
-                    viewId: details.viewId)
+                    viewId: details.viewId ?? "")
             }
             return nil
         }()
@@ -447,7 +447,7 @@ private extension Landing.DataView.List.HorizontalRectangleImage.Item.Detail {
         
         self.init(
             groupId: data.groupId,
-            viewId: data.viewId)
+            viewId: data.viewId ?? "")
     }
 }
 

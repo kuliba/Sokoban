@@ -179,7 +179,7 @@ private extension AnywayPaymentUpdate.Parameter.Field {
     init(_ parameter: ResponseMapper.CreateAnywayTransferResponse.Parameter) {
         
         self.init(
-            content: parameter.content,
+            content: parameter.content?.trimmingCharacters(in: .whitespaces),
             dataDictionary: parameter.dataDictionary,
             dataDictionaryРarent: parameter.dataDictionaryРarent,
             id: parameter.id

@@ -56,14 +56,18 @@ extension PaymentComponents.InputPhoneConfig {
 
 extension PaymentComponents.InputConfig {
     
-    static let iFora: Self = .init(
-        titleConfig: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder),
-        textFieldFont: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder),
-        placeholder: "Введите значение",
-        hintConfig: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder),
-        backgroundColor: .clear,
-        imageSize: 24.0
-    )
+    static func iFora(keyboard: KeyboardType, limit: Int) -> Self {
+        .init(
+            titleConfig: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder),
+            textFieldFont: .init(textFont: .textBodyMR14180(), textColor: .textSecondary),
+            placeholder: "Введите значение",
+            hintConfig: .init(textFont: .textBodySR12160(), textColor: .systemColorError),
+            backgroundColor: .clear,
+            imageSize: 24.0,
+            keyboardType: keyboard,
+            limit: limit
+        )
+    }
 }
 
 extension PaymentComponents.FooterConfig {

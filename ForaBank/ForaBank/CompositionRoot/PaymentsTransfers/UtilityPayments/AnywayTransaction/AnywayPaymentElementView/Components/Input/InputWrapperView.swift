@@ -19,8 +19,10 @@ struct InputWrapperView<IconView: View>: View {
         InputView(
             state: viewModel.state,
             event: viewModel.event(_:),
-            config: .iFora,
-            iconView: makeIconView
+            config: .iFora(keyboard: .default, limit: viewModel.state.settings.limit),
+            iconView: makeIconView,
+            commit: { viewModel.event(.edit($0)) },
+            isValid: { $0.isValidate(regExp: viewModel.state.settings.regExp) }
         )
     }
 }
@@ -29,3 +31,4 @@ extension InputWrapperView {
     
     typealias ViewModel = ObservingInputViewModel
 }
+

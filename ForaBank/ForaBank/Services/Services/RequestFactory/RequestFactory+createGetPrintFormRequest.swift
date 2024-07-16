@@ -11,21 +11,30 @@ import Tagged
 extension RequestFactory {
     
     static func createGetPrintFormRequest(
-        documentID: DocumentID
-    ) throws -> URLRequest {
+        printFormType: PrintFormType
+    ) -> (DocumentID) throws -> URLRequest {
         
-        let endpoint = Services.Endpoint.getPrintForm
-        let url = try! endpoint.url(
-            withBase: Config.serverAgentEnvironment.baseURL
-        )
+        return { documentID in
+            
+            let endpoint = Services.Endpoint.getPrintForm
+            let url = try! endpoint.url(
+                withBase: Config.serverAgentEnvironment.baseURL
+            )
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.httpBody = try JSONSerialization.data(withJSONObject: [
+                "paymentOperationDetailId": "\(documentID.rawValue)",
+                "printFormType": "\(printFormType.rawValue)"
+            ] as [String: String])
+            
+            return request
+        }
+    }
+    
+    enum PrintFormType: String {
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.httpBody = try JSONSerialization.data(withJSONObject: [
-            "paymentOperationDetailId": "\(documentID.rawValue)",
-            "printFormType": "sticker"
-        ] as [String: String])
-        
-        return request
+        case sticker = "sticker"
+        case service = "housingAndCommunalService"
     }
 }

@@ -80,7 +80,8 @@ private extension AnywayPaymentParameterValidator {
         
         let value = parameter.field.value ?? ""
         let pattern = parameter.validation.regExp
+        let isMatching = NSPredicate(format: "SELF MATCHES %@", pattern).evaluate(with: value)
         
-        return NSPredicate(format: "SELF MATCHES %@", pattern).evaluate(with: value) ? nil : .regExViolation
+        return isMatching ? nil : .regExViolation
     }
 }

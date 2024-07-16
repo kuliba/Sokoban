@@ -16,6 +16,7 @@ import PinCodeUI
 import SwiftUI
 import Tagged
 import RxViewModel
+import LandingUIComponent
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -48,6 +49,7 @@ class ProductProfileViewModel: ObservableObject {
     
     @Published var closeAccountSpinner: CloseAccountSpinnerView.ViewModel?
     
+    var controlPanelViewModel: ControlPanelViewModel?
     var rootActions: RootViewModel.RootActions?
     var rootView: String
     var contactsAction: () -> Void = { }
@@ -59,7 +61,7 @@ class ProductProfileViewModel: ObservableObject {
     private let makePaymentsTransfersFlowManager: MakePTFlowManger
     private let userAccountNavigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
-    private let unblockCardServices: UnblockCardServices
+    private let productProfileServices: ProductProfileServices
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let operationDetailFactory: OperationDetailFactory
@@ -92,7 +94,7 @@ class ProductProfileViewModel: ObservableObject {
          makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
          userAccountNavigationStateManager: UserAccountNavigationStateManager,
          sberQRServices: SberQRServices,
-         unblockCardServices: UnblockCardServices,
+         productProfileServices: ProductProfileServices,
          qrViewModelFactory: QRViewModelFactory,
          paymentsTransfersFactory: PaymentsTransfersFactory,
          operationDetailFactory: OperationDetailFactory,
@@ -115,7 +117,7 @@ class ProductProfileViewModel: ObservableObject {
         self.makePaymentsTransfersFlowManager = makePaymentsTransfersFlowManager
         self.userAccountNavigationStateManager = userAccountNavigationStateManager
         self.sberQRServices = sberQRServices
-        self.unblockCardServices = unblockCardServices
+        self.productProfileServices = productProfileServices
         self.qrViewModelFactory = qrViewModelFactory
         self.paymentsTransfersFactory = paymentsTransfersFactory
         self.operationDetailFactory = operationDetailFactory
@@ -154,7 +156,7 @@ class ProductProfileViewModel: ObservableObject {
         makePaymentsTransfersFlowManager: @escaping MakePTFlowManger,
         userAccountNavigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
-        unblockCardServices: UnblockCardServices,
+        productProfileServices: ProductProfileServices,
         qrViewModelFactory: QRViewModelFactory,
         paymentsTransfersFactory: PaymentsTransfersFactory,
         operationDetailFactory: OperationDetailFactory,
@@ -190,7 +192,7 @@ class ProductProfileViewModel: ObservableObject {
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
-            unblockCardServices: unblockCardServices,
+            productProfileServices: productProfileServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory,
             operationDetailFactory: operationDetailFactory,
@@ -815,6 +817,12 @@ private extension ProductProfileViewModel {
                 
                 withAnimation {
                     buttons.update(with: productData, depositInfo: model.depositsInfo.value[productData.id])
+                    
+                    if let card = productData.asCard {
+                        
+                        let newButtons = productProfileViewModelFactory.makeCardGuardianPanel(card).controlPanelButtons
+                        controlPanelViewModel?.event(.updateState(newButtons))
+                    }
                 }
                 
             }.store(in: &bindings)
@@ -1622,7 +1630,7 @@ private extension ProductProfileViewModel {
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
-            unblockCardServices: unblockCardServices,
+            productProfileServices: productProfileServices,
             qrViewModelFactory: qrViewModelFactory,
             paymentsTransfersFactory: paymentsTransfersFactory, 
             operationDetailFactory: operationDetailFactory,
@@ -1966,6 +1974,164 @@ private extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
+    func createControlPanel(
+        _ card: ProductCardData,
+        _ buttons: ([ControlPanelButtonDetails])
+    ) -> ControlPanelViewModel {
+        let makeActions: ControlPanelReducer.MakeActions = .init(
+            blockAction: { [weak self] in self?.controlPanelViewModel?.event(.controlButtonEvent(.blockCard(card)))}, 
+            changePin: { [weak self] in
+                self?.changePin($0)
+            },
+            contactsAction: contactsAction,
+            unblockAction: {[weak self] in self?.controlPanelViewModel?.event(.controlButtonEvent(.unblockCard(card)))},
+            updateProducts: { [weak self] in self?.model.handleProductsUpdateTotalProduct(.init(productType: .card))}
+        )
+        
+        let makeViewModels: ControlPanelReducer.MakeViewModels = .init(
+            stickerLanding: productProfileViewModelFactory.makeStickerLandingViewModel(
+                .sticker, 
+                config: .stickerDefault,
+                landingActions: landingAction
+            )
+        )
+        
+        let backButton: NavigationBarView.ViewModel.BackButtonItemViewModel = .init(icon: .ic24ChevronLeft, action: { [weak self] in self?.link = nil })
+
+        let navigationBarViewModel = NavigationBarView.ViewModel(title: "Управление", subtitle: navigationTitleForControlPanel, leftItems: [backButton])
+        
+        return .init(
+            initialState: .init(buttons: buttons, navigationBarViewModel: navigationBarViewModel),
+            reduce: ControlPanelReducer(
+                makeAlert: productProfileViewModelFactory.makeAlert,
+                makeActions: makeActions,
+                makeViewModels: makeViewModels
+            ).reduce(_:_:),
+            handleEffect: ControlPanelEffectHandler(productProfileServices: productProfileServices, landingEvent: landingEvent).handleEffect(_:_:))
+    }
+    
+    private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {
+        
+        switch event {
+        case .goToMain:
+            return handleCloseLinkAction
+        case .order:
+            return orderSticker
+        }
+    }
+
+    func handleCloseLinkAction() {
+        self.link = nil
+        self.action.send(DelayWrappedAction(delayMS: 10, action: ProductProfileViewModelAction.Close.SelfView()))
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+            self.rootActions?.switchTab(.main)
+        }
+    }
+    
+    func contactTransfer(_ countryID: String) {
+        if let controlPanelViewModel {
+            
+            let paymentsViewModel = PaymentsViewModel(
+                source: .direct(
+                    phone: nil,
+                    countryId: countryID
+                ),
+                model: model) {
+                    controlPanelViewModel.event(.dismissDestination)
+                }
+            controlPanelViewModel.event(.bannerEvent(.contactTransfer(paymentsViewModel)))
+        }
+    }
+    
+    func migTransfer(_ countryID: String) {
+        if let controlPanelViewModel {
+            
+            let paymentsViewModel = PaymentsViewModel(
+                source: .direct(
+                    phone: nil,
+                    countryId: countryID
+                ),
+                model: model) {
+                    controlPanelViewModel.event(.dismissDestination)
+                }
+            controlPanelViewModel.event(.bannerEvent(.migTransfer(paymentsViewModel)))
+        }
+    }
+
+    func openDepositList() {
+        
+        if let controlPanelViewModel {
+            
+            let openDepositViewModel = OpenDepositListViewModel(
+                model,
+                catalogType: .deposit,
+                dismissAction: {
+                    controlPanelViewModel.event(.dismissDestination)
+                })
+
+            controlPanelViewModel.event(.bannerEvent(.openDepositsList(openDepositViewModel)))
+        }
+    }
+    
+    func openDeposit(_ depositId: Int ) {
+        
+        if let controlPanelViewModel, let openDepositViewModel = OpenDepositDetailViewModel(depositId: depositId, model: model) {
+
+            controlPanelViewModel.event(.bannerEvent(.openDeposit(openDepositViewModel)))
+        }
+    }
+
+    func orderSticker() {
+        
+        if let controlPanelViewModel {
+            
+            let productsCard = model.products(.card)
+            
+            if productsCard == nil ||
+                productsCard?.contains(where: {
+                    ($0 as? ProductCardData)?.isMain == true }) == false
+            {
+            let alertViewModel = Alert.ViewModel(
+                title: "Нет карты",
+                message: "Сначала нужно заказать карту.",
+                primary: .init(
+                    type: .default,
+                    title: "Отмена",
+                    action: {}),
+                secondary: .init(
+                    type: .default, 
+                    title: "Продолжить",
+                    action: {
+                        
+                        DispatchQueue.main.async { [weak self] in
+                            
+                            guard let self else { return }
+                            
+                            let authProductsViewModel = AuthProductsViewModel(
+                                model,
+                                products: model.catalogProducts.value,
+                                dismissAction: { })
+                            
+                            controlPanelViewModel.event(.bannerEvent(.stickerEvent(.openCard(authProductsViewModel))))
+                        }
+                    }
+                ))
+                controlPanelViewModel.event(.controlButtonEvent(.showAlert(alertViewModel)))
+            } else {
+                
+                if let rootActions {
+                    let view: any View =                     RootViewModelFactory.makeNavigationOperationView(
+                        httpClient: model.authenticatedHTTPClient(),
+                        model: model,
+                        dismissAll: rootActions.dismissAll
+                    )()
+
+                    controlPanelViewModel.event(.bannerEvent(.stickerEvent(.orderSticker(view))))
+                }
+            }
+        }
+    }
+
     func createCardGuardianPanel(_ product: ProductData?) {
         
         guard let card = product?.asCard else {
@@ -1976,11 +2142,70 @@ extension ProductProfileViewModel {
         switch panel {
         case let .bottomSheet(buttons):
             bottomSheet = .init(type: .optionsPanelNew(buttons))
+            
         case let .fullScreen(buttons):
-            link = .controlPanel(buttons)
+            controlPanelViewModel = createControlPanel(card, buttons)
+            if let controlPanelViewModel {
+                controlPanelViewModel.event(.loadSVCardLanding(card))
+                link = .controlPanel(controlPanelViewModel)
+            }
         }
     }
 }
+
+extension ProductProfileViewModel {
+    // TODO: add real actions
+    func landingEvent(_ event: LandingEvent) {
+        
+        switch event {
+        case let .card(cardEvent):
+            switch cardEvent {
+            case .goToMain:
+                handleCloseLinkAction()
+                
+            case let .openUrl(link):
+                openLinkURL(link)
+
+            case .order:
+                orderSticker()
+            }
+            
+        case let .sticker(action):
+            switch action {
+            case .goToMain:
+                handleCloseLinkAction()
+
+            case .order:
+                orderSticker()
+            }
+            
+        case let .bannerAction(action):
+            switch action {
+            case let .contact(country):
+                contactTransfer(country.countryID)
+                
+            case .depositsList:
+                openDepositList()
+                
+            case .depositTransfer: // см https://shorturl.at/BpUzf
+                break
+                
+            case .landing:
+               orderSticker()
+                
+            case .migAuthTransfer: // см https://shorturl.at/BpUzf
+                break
+                
+            case let .migTransfer(country):
+                migTransfer(country.countryID)
+                
+            case let .openDeposit(deposit):
+                openDeposit(deposit.depositID)
+            }
+        }
+    }
+}
+
 //MARK: - Types
 
 extension ProductProfileViewModel {
@@ -2025,7 +2250,17 @@ extension ProductProfileViewModel {
     enum CardGuardianPanelKind {
         
         case bottomSheet([PanelButtonDetails])
-        case fullScreen([PanelButtonDetails])
+        case fullScreen([ControlPanelButtonDetails])
+        
+        var controlPanelButtons: [ControlPanelButtonDetails] {
+            
+            switch self {
+            case .bottomSheet:
+                return []
+            case let .fullScreen(buttons):
+                return buttons
+            }
+        }
     }
     
     struct BottomSheet: BottomSheetCustomizable {
@@ -2062,7 +2297,7 @@ extension ProductProfileViewModel {
         case meToMeExternal(MeToMeExternalViewModel)
         case myProducts(MyProductsViewModel)
         case paymentsTransfers(PaymentsTransfersViewModel)
-        case controlPanel([PanelButtonDetails])
+        case controlPanel(ControlPanelViewModel)
     }
     
     struct Sheet: Identifiable {
@@ -2263,6 +2498,14 @@ extension ProductProfileViewModel {
         }
     }
     
+    func changePin(_ productCard: ProductCardData) {
+        if productCard.statusCard != .active {
+            event(.alert(.delayAlert(.showBlockAlert)))
+        } else {
+            checkCertificate(.init(productCard.id), certificate: cvvPINServicesClient, productCard)
+        }
+    }
+    
     func handlePanelButtonType(
         _ type: PanelButtonType,
         _ productCard: ProductCardData
@@ -2275,11 +2518,7 @@ extension ProductProfileViewModel {
             self.action.send(ProductProfileViewModelAction.Product.Unblock(productId: productCard.id))
             
         case .changePin:
-            if productCard.statusCard != .active {
-                event(.alert(.delayAlert(.showBlockAlert)))
-            } else {
-                checkCertificate(.init(productCard.id), certificate: self.cvvPINServicesClient, productCard)
-            }
+            changePin(productCard)
             
         case .visibility:
             self.model.action.send(ModelAction.Products.UpdateVisibility(productId: productCard.id, visibility: !productCard.isVisible))
@@ -2705,7 +2944,7 @@ extension ProductProfileViewModel {
         
         let cardNumber: String = model.product(productId: cardID)?.asCard?.number ?? ""
         
-        unblockCardServices.createUnblockCard(.init(cardId: .init(cardID), cardNumber: .init(cardNumber))) { result in
+        productProfileServices.createUnblockCardService.createUnblockCard(.init(cardId: .init(cardID), cardNumber: .init(cardNumber))) { result in
             switch result {
             case .failure:
                 completion(.serverError("failure"))

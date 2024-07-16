@@ -118,6 +118,7 @@ final class AnywayPaymentSemiIntegrationTests: XCTestCase {
             .init("p: 143", "Сумма пени"),
             .init("f: SumSTrs", "Сумма"),
             .init("w: core", "RUB, 1234567890, account"),
+            .init("w: info", "info"),
             .init("w: otp", "otp"),
             .init("footer", "continue"),
         ])
@@ -227,8 +228,12 @@ private extension AnywayElement.Widget {
     var testView: TestView {
         
         switch self {
+        case let .info(info):
+            return .init("w: info", "info")
+            
         case let .product(product):
             return .init("w: core", "\(product.currency), \(product.productID), \(product.productType)")
+            
         case .otp:
             return .init("w: otp", "otp")
         }

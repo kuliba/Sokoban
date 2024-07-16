@@ -49,6 +49,7 @@ let package = Package(
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
+        .calendarUI,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
@@ -2090,6 +2091,7 @@ private extension Target {
             .paymentComponents,
             .productSelectComponent,
             .prePaymentPicker,
+            .remoteServices,
             .rxViewModel,
             .textFieldComponent,
             .searchBarComponent,
@@ -2103,7 +2105,10 @@ private extension Target {
             .customDump,
             .operatorsListComponents
         ],
-        path: "Tests/\(String.operatorsListComponentsTests)"
+        path: "Tests/\(String.operatorsListComponentsTests)",
+        resources: [
+            .copy("Resources/getOperatorsListByParam_prod.json"),
+        ]
     )
     
     static let productSelectComponent = target(
