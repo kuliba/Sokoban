@@ -79,7 +79,7 @@ private extension RootViewFactoryComposer {
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
-                makeHistoryButton: { _ in self.makeHistoryButtonView(self.historyFeatureFlag) }
+                makeHistoryButton: { event in self.makeHistoryButtonView(self.historyFeatureFlag, event: event) }
             ),
             getUImage: getUImage
         )

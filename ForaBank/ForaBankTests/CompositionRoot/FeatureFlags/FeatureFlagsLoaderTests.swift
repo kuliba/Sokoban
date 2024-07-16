@@ -78,7 +78,6 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            historyFilterFlag: true,
             changeSVCardLimitsFlag: .init(.active)
         ))
     }
