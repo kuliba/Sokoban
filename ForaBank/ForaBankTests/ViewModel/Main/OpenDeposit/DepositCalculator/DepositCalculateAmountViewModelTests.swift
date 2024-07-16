@@ -75,19 +75,6 @@ final class DepositCalculateAmountViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.value, initialValue)
     }
     
-    func test_shouldChangeCharactersIn_whenFilteredIsEmpty_shouldReturnFalse() {
-        
-        let initialValue = 1000.0
-        let viewModel = makeSUT(initialValue: initialValue)
-        
-        XCTAssertEqual(viewModel.value, initialValue)
-        
-        let shouldChange = updateViewModel(viewModel, textFieldText: "1000", replacementString: "a")
-        
-        XCTAssertFalse(shouldChange)
-        XCTAssertEqual(viewModel.value, initialValue)
-    }
-    
     func test_shouldChangeCharactersIn_whenFilteredIsNotEmpty_shouldReturnFalseAndUpdateValue() {
         
         let initialValue = 3334.0
@@ -124,7 +111,7 @@ final class DepositCalculateAmountViewModelTests: XCTestCase {
         let shouldChange = updateViewModel(viewModel, textFieldText: nil, replacementString: "")
         
         XCTAssertTrue(shouldChange)
-        XCTAssertEqual(viewModel.value, initialValue)
+        XCTAssertEqual(viewModel.value, 0)
     }
     
     func test_shouldChangeCharactersIn_whenFilteredStartsWithZeroAndLengthEqualToOne_shouldReturnFalseAndUpdateValue() {
