@@ -884,8 +884,8 @@ final class InfoProductViewModelTests: XCTestCase {
         
         let dateFormatter = DateFormatter.moscowTimeRuFormatter
         
-        XCTAssertEqual(dateFormatter.timeZone, TimeZone(identifier: "Europe/Moscow"))
-        XCTAssertEqual(dateFormatter.locale, Locale(identifier: "ru_RU"))
+        XCTAssertEqual(dateFormatter.timeZone, .init(identifier: "Europe/Moscow"))
+        XCTAssertEqual(dateFormatter.locale, .init(identifier: "ru_RU"))
     }
     
     func test_moscowTimeRuFormatter_shouldFormatDateCorrectly() {
@@ -901,17 +901,14 @@ final class InfoProductViewModelTests: XCTestCase {
         let (sut, model) = makeSUT1(product: .firstValue())
         let spy = ValueSpy(sut.$list)
         
-        let response = ResponseDeposits.success(data: .data)
-        model.action.send(response)
+        model.action.send(ResponseDeposits.success(data: .data))
         
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
-        let dateOpenString = "29 марта 2022"
-        XCTAssertTrue(spy.values.contains { $0.contains(where: { $0.title == "Дата открытия" && $0.subtitle == dateOpenString }) })
-        
-        let dateEndString = "29 марта 2022"
-        XCTAssertTrue(spy.values.contains { $0.contains(where: { $0.title == "Дата закрытия" && $0.subtitle == dateEndString }) })
+        XCTAssertTrue(spy.values.contains { $0.contains(.init(title: "Дата открытия", subtitle: "29 марта 2022"))})
+        XCTAssertTrue(spy.values.contains { $0.contains(.init(title: "Дата закрытия", subtitle: "29 марта 2022"))})
     }
+
     
     // MARK: - Helpers
     
