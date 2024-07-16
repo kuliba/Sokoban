@@ -153,6 +153,80 @@ final class DepositCalculateAmountViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.value, 10000)
     }
     
+    func test_shouldChangeCharactersIn_whenInputStartsWithZero_shouldRemoveLeadingZero() {
+        
+        let viewModel = makeSUT(initialValue: 0)
+        let shouldChange = updateViewModel(viewModel, textFieldText: "0", replacementString: "100")
+        
+        XCTAssertFalse(shouldChange)
+        XCTAssertEqual(viewModel.value, 100)
+    }
+
+    func test_shouldChangeCharactersIn_whenInputHasMultipleLeadingZeros_shouldRemoveAllLeadingZeros() {
+        
+        let viewModel = makeSUT(initialValue: 0)
+        let shouldChange = updateViewModel(viewModel, textFieldText: "0", replacementString: "00100")
+        
+        XCTAssertFalse(shouldChange)
+        XCTAssertEqual(viewModel.value, 100)
+    }
+
+    func test_shouldChangeCharactersIn_whenInputIsOnlyZero_shouldKeepZero() {
+        
+        let viewModel = makeSUT(initialValue: 0)
+        let shouldChange = updateViewModel(viewModel, textFieldText: "", replacementString: "0")
+        
+        XCTAssertFalse(shouldChange)
+        XCTAssertEqual(viewModel.value, 0)
+    }
+    
+    // MARK: Tests for TF DidEndEditing
+    
+    func test_textFieldDidEndEditing_whenValueIsLessThanLowerBound_shouldSetValueToLowerBound() {
+        
+        let (sut, textField) = makeSUTAndTextField(textFieldText: "5500")
+        sut.textFieldDidEndEditing(textField)
+        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertEqual(sut.value, 10000.0)
+    }
+
+    func test_textFieldDidEndEditing_whenValueIsWithinBounds_shouldSetValueToGivenValue() {
+        
+        let (sut, textField) = makeSUTAndTextField(textFieldText: "25000")
+        sut.textFieldDidEndEditing(textField)
+        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertEqual(sut.value, 25000.0)
+    }
+
+    func test_textFieldDidEndEditing_whenValueIsGreaterThanUpperBound_shouldSetValueToUpperBound() {
+        
+        let (sut, textField) = makeSUTAndTextField(textFieldText: "6000000")
+        sut.textFieldDidEndEditing(textField)
+        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertEqual(sut.value, 5000000.0)
+    }
+
+    func test_textFieldDidEndEditing_whenTFContainsInvalidValue_shouldSetTFTextToFormattedValueWithTrailingSpace() {
+        
+        let (sut, textField) = makeSUTAndTextField(textFieldText: "invalid")
+        sut.textFieldDidEndEditing(textField)
+        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertEqual(textField.text, "1 500 000 ")
+    }
+
+    func test_textFieldDidEndEditing_whenTFContainsInvalidValue_shouldSetTFTextToFormattedValueFromViewModel() {
+        
+        let (sut, textField) = makeSUTAndTextField(textFieldText: "invalid")
+        sut.textFieldDidEndEditing(textField)
+        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertEqual(textField.text, sut.valueCurrency)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
@@ -182,6 +256,40 @@ final class DepositCalculateAmountViewModelTests: XCTestCase {
             isShowBottomSheet: isShowBottomSheet,
             bounds: bounds
         )
+    }
+    
+    private func makeSUTAndTextField(
+        depositTerm: String = "Срок вклада",
+        interestRate: String = "Процентная ставка",
+        interestRateValue: Double = 5.0,
+        depositAmount: String = "Сумма депозита",
+        initialValue: Double = 1500000.0,
+        isFirstResponder: Bool = false,
+        depositValue: String = "1 500 000 ₽",
+        minSum: Double = 10000.0,
+        isShowBottomSheet: Bool = false,
+        bounds: ClosedRange<Double> = 10000...5000000,
+        textFieldText: String? = nil,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (sut: DepositCalculateAmountViewModel, textField: UITextField) {
+        
+        let sut = DepositCalculateAmountViewModel(
+            depositTerm: depositTerm,
+            interestRate: interestRate,
+            interestRateValue: interestRateValue,
+            depositAmount: depositAmount,
+            value: initialValue,
+            isFirstResponder: isFirstResponder,
+            depositValue: depositValue,
+            minSum: minSum,
+            isShowBottomSheet: isShowBottomSheet,
+            bounds: bounds
+        )
+        let textField = UITextField()
+        textField.text = textFieldText
+        
+        return (sut, textField)
     }
     
     private func updateViewModel(

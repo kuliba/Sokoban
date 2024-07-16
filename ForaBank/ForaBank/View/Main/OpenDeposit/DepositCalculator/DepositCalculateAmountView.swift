@@ -161,11 +161,9 @@ extension DepositCalculateAmountView {
             uiView.text = viewModel.valueCurrencySymbol
             uiView.updateCursorPosition()
             
-            if viewModel.isFirstResponder {
-                uiView.becomeFirstResponder()
-                
-            } else {
-                uiView.resignFirstResponder()
+            switch viewModel.isFirstResponder {
+            case true: uiView.becomeFirstResponder()
+            case false: uiView.resignFirstResponder()
             }
         }
         
