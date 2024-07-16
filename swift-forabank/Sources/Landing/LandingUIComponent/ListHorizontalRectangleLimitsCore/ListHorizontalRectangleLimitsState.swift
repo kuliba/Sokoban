@@ -11,15 +11,12 @@ public struct ListHorizontalRectangleLimitsState: Equatable {
     
     let list: UILanding.List.HorizontalRectangleLimits
     var limitsLoadingStatus: LimitsLoadingStatus
-    var event: ListHorizontalRectangleLimitsEvent?
     
     public init(
         list: UILanding.List.HorizontalRectangleLimits,
-        limitsLoadingStatus: LimitsLoadingStatus,
-        event: ListHorizontalRectangleLimitsEvent? = nil
+        limitsLoadingStatus: LimitsLoadingStatus
     ) {
         self.list = list
-        self.event = event
         self.limitsLoadingStatus = limitsLoadingStatus
     }
 }

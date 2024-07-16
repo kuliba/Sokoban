@@ -68,7 +68,9 @@ extension ControlPanelEffectHandler {
                 }
             }
             
-        case let .loadSVCardLanding(cardType):
+        case let .loadSVCardLanding(card):
+            let cardType = card.cardType ?? .regular
+            
             productProfileServices.createSVCardLanding.createSVCardLanding((serial: "", abroadType: cardType.abroadType)){
                 
                 result in
@@ -81,6 +83,17 @@ extension ControlPanelEffectHandler {
                         .default,
                         self.landingEvent
                         )))
+                }
+            }
+            
+            productProfileServices.createCreateGetSVCardLimits.createGetSVCardLimits(.init(cardId: card.cardId)){
+                
+                result in
+                switch result {
+                case .failure:
+                    dispatch(.loadedSVCardLimits(nil))
+                case let .success(limitsResponse):
+                    dispatch(.loadedSVCardLimits(.some(limitsResponse.limitsList)))
                 }
             }
         }

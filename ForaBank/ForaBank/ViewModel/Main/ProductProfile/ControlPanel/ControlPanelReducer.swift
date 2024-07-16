@@ -63,7 +63,7 @@ extension ControlPanelReducer {
             state.navigationBarViewModel.title = newTitle
             
         case let .loadSVCardLanding(card):
-            effect = .loadSVCardLanding(card.cardType ?? .regular)
+            effect = .loadSVCardLanding(card)
             
         case let .loadedSVCardLanding(viewModel):
             if let viewModel {
@@ -71,6 +71,9 @@ extension ControlPanelReducer {
             } else {
                 state.landingWrapperViewModel = nil
             }
+            
+        case let .loadedSVCardLimits(limits):
+            print("limits \(String(describing: limits))")
             
         case .dismissDestination:
             state.destination = nil

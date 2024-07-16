@@ -281,10 +281,14 @@ extension LandingView {
                     config: config.listHorizontalRectangleImage
                 )
                 
-            case let .list(.horizontalRectangleLimits(list, limitsLoadingStatus)):
+            case let .list(.horizontalRectangleLimits(state)):
                 
                 ListHorizontalRectangleLimitsWrappedView(
-                    model: .init(initialState: .init(list: list, limitsLoadingStatus: limitsLoadingStatus), reduce: {state,_ in (state, .none)}, handleEffect: {_,_ in }),
+                    model: .init(
+                        initialState: state,
+                        reduce: {state,_ in (state, .none)},
+                        handleEffect: {_,_ in }
+                    ),
                     factory: .init(makeIconView: makeIconView),
                     config: config.listHorizontalRectangleLimits)
                 
