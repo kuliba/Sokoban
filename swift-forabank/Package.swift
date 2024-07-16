@@ -49,6 +49,7 @@ let package = Package(
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
+        .calendarUI,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,

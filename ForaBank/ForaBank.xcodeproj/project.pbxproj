@@ -2718,6 +2718,10 @@
 		C1DE211F2919531500ED0F8D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE211E2919531500ED0F8D /* AppSettings.swift */; };
 		C1DFF16D2A872AC40044B7A6 /* Model+SuccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */; };
 		C1E181522C415CDA00006B8F /* InputWrapperValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E181512C415CDA00006B8F /* InputWrapperValidatorTests.swift */; };
+		C1E07D982BFE2D2F00D07180 /* CalendarPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E07D972BFE2D2F00D07180 /* CalendarPreviewApp.swift */; };
+		C1E07D9A2BFE2D2F00D07180 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E07D992BFE2D2F00D07180 /* ContentView.swift */; };
+		C1E07D9C2BFE2D3100D07180 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E07D9B2BFE2D3100D07180 /* Assets.xcassets */; };
+		C1E07D9F2BFE2D3100D07180 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E07D9E2BFE2D3100D07180 /* Preview Assets.xcassets */; };
 		C1E8A0552B84D50E000DA998 /* ViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E8A0542B84D50E000DA998 /* ViewModel+Preview.swift */; };
 		C1E8A0572B84D628000DA998 /* LastPayments+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E8A0562B84D628000DA998 /* LastPayments+Preview.swift */; };
 		C1EA35CB2A316D7A00403E51 /* OperationDetailDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */; };
@@ -2740,6 +2744,7 @@
 		C1F8315129DF0D6900D2C40E /* PaymentsTemplateListGenericResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = C1F8315029DF0D6900D2C40E /* PaymentsTemplateListGenericResponse.json */; };
 		C1F8F5FE294A50B800FE5703 /* HintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F8F5FD294A50B800FE5703 /* HintView.swift */; };
 		C1F8F601294A53B600FE5703 /* HintViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F8F600294A53B600FE5703 /* HintViewModel.swift */; };
+		C1FB087E2C0FC1B400137907 /* CalendarUI in Frameworks */ = {isa = PBXBuildFile; productRef = C1FB087D2C0FC1B400137907 /* CalendarUI */; };
 		D41D73FA2BA25C47002C0688 /* GetProductListByTypeService in Frameworks */ = {isa = PBXBuildFile; productRef = D41D73F92BA25C47002C0688 /* GetProductListByTypeService */; };
 		D45C68A92BAC6685008F8B35 /* GetProductListByType_Account_Response.json in Resources */ = {isa = PBXBuildFile; fileRef = D45C68A52BAC6684008F8B35 /* GetProductListByType_Account_Response.json */; };
 		D45C68AA2BAC6685008F8B35 /* GetProductListByType_Card_Response.json in Resources */ = {isa = PBXBuildFile; fileRef = D45C68A62BAC6685008F8B35 /* GetProductListByType_Card_Response.json */; };
@@ -3104,6 +3109,16 @@
 			dstSubfolderSpec = 16;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1E07D8B2BFE2B2100D07180 /* Embed ExtensionKit Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed ExtensionKit Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -5770,6 +5785,11 @@
 		C1DE211E2919531500ED0F8D /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SuccessTests.swift"; sourceTree = "<group>"; };
 		C1E181512C415CDA00006B8F /* InputWrapperValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputWrapperValidatorTests.swift; sourceTree = "<group>"; };
+		C1E07D952BFE2D2F00D07180 /* CalendarPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CalendarPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1E07D972BFE2D2F00D07180 /* CalendarPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPreviewApp.swift; sourceTree = "<group>"; };
+		C1E07D992BFE2D2F00D07180 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		C1E07D9B2BFE2D3100D07180 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C1E07D9E2BFE2D3100D07180 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C1E8A0542B84D50E000DA998 /* ViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModel+Preview.swift"; sourceTree = "<group>"; };
 		C1E8A0562B84D628000DA998 /* LastPayments+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LastPayments+Preview.swift"; sourceTree = "<group>"; };
 		C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailDataTests.swift; sourceTree = "<group>"; };
@@ -6305,6 +6325,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1E07D922BFE2D2F00D07180 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1FB087E2C0FC1B400137907 /* CalendarUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10345,6 +10373,7 @@
 			isa = PBXGroup;
 			children = (
 				2A2F88282BC942220097119C /* AnywayPaymentPreview */,
+				C1E07D962BFE2D2F00D07180 /* CalendarPreview */,
 				2A0F1E2A2C06E144006E1231 /* AutoScrollingListPreview */,
 				2AFED9662C0F929A008F2F95 /* CachedModelsStatePreview */,
 				D47C7ED02B9715F700A35A25 /* CarouselPreview */,
@@ -14086,6 +14115,25 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		C1E07D962BFE2D2F00D07180 /* CalendarPreview */ = {
+			isa = PBXGroup;
+			children = (
+				C1E07D972BFE2D2F00D07180 /* CalendarPreviewApp.swift */,
+				C1E07D992BFE2D2F00D07180 /* ContentView.swift */,
+				C1E07D9B2BFE2D3100D07180 /* Assets.xcassets */,
+				C1E07D9D2BFE2D3100D07180 /* Preview Content */,
+			);
+			path = CalendarPreview;
+			sourceTree = "<group>";
+		};
+		C1E07D9D2BFE2D3100D07180 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				C1E07D9E2BFE2D3100D07180 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		C1F346D42AE25C6000EE1E87 /* StickerPreview */ = {
 			isa = PBXGroup;
 			children = (
@@ -14969,6 +15017,7 @@
 				2AD87D892BD77859004D06C0 /* NavStackPreview.app */,
 				2A62E9602BD94F870044EB39 /* FactoryBasedPreview.app */,
 				2A69C1AA2BE4E3AF00FE91B0 /* UtilityServicePaymentFlowPreview.app */,
+				C1E07D952BFE2D2F00D07180 /* CalendarPreview.app */,
 				2AD0928E2BFA30A100777EE4 /* TransactionPreview.app */,
 				2A0F1E292C06E143006E1231 /* AutoScrollingListPreview.app */,
 				2AFED9652C0F929A008F2F95 /* CachedModelsStatePreview.app */,
@@ -16242,6 +16291,26 @@
 			productReference = C1D6BB9D2AD613730006B151 /* libPaymentsViewModelMapper.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		C1E07D942BFE2D2F00D07180 /* CalendarPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1E07DA02BFE2D3100D07180 /* Build configuration list for PBXNativeTarget "CalendarPreview" */;
+			buildPhases = (
+				C1E07D912BFE2D2F00D07180 /* Sources */,
+				C1E07D922BFE2D2F00D07180 /* Frameworks */,
+				C1E07D932BFE2D2F00D07180 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CalendarPreview;
+			packageProductDependencies = (
+				C1FB087D2C0FC1B400137907 /* CalendarUI */,
+			);
+			productName = CalendarPreview;
+			productReference = C1E07D952BFE2D2F00D07180 /* CalendarPreview.app */;
+			productType = "com.apple.product-type.application";
+		};
 		C1F346D22AE25C6000EE1E87 /* StickerPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C1F346DE2AE25C6100EE1E87 /* Build configuration list for PBXNativeTarget "StickerPreview" */;
@@ -16298,6 +16367,7 @@
 				0B5F3DB7277CD16F003CC723 /* Embed Frameworks */,
 				A51568342821B927000D4455 /* Embed App Extensions */,
 				68FE3989286B36EF0026CBD7 /* ShellScript */,
+				C1E07D8B2BFE2B2100D07180 /* Embed ExtensionKit Extensions */,
 				2AFED9902C1070E3008F2F95 /* Run Script: Add App Settings */,
 			);
 			buildRules = (
@@ -16497,6 +16567,9 @@
 					C1D6BB9C2AD613730006B151 = {
 						CreatedOnToolsVersion = 14.3.1;
 					};
+					C1E07D942BFE2D2F00D07180 = {
+						CreatedOnToolsVersion = 15.3;
+					};
 					C1F346D22AE25C6000EE1E87 = {
 						CreatedOnToolsVersion = 14.3.1;
 					};
@@ -16574,6 +16647,7 @@
 				2AD87D882BD77859004D06C0 /* NavStackPreview */,
 				2A62E95F2BD94F870044EB39 /* FactoryBasedPreview */,
 				2A69C1A92BE4E3AF00FE91B0 /* UtilityServicePaymentFlowPreview */,
+				C1E07D942BFE2D2F00D07180 /* CalendarPreview */,
 				2A2F88262BC942220097119C /* AnywayPaymentPreview */,
 				2AD0928D2BFA30A100777EE4 /* TransactionPreview */,
 				2A0F1E282C06E143006E1231 /* AutoScrollingListPreview */,
@@ -16758,6 +16832,15 @@
 			files = (
 				C1C6F1D02B83642500237C07 /* Preview Assets.xcassets in Resources */,
 				C1C6F1CD2B83642500237C07 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1E07D932BFE2D2F00D07180 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1E07D9F2BFE2D3100D07180 /* Preview Assets.xcassets in Resources */,
+				C1E07D9C2BFE2D3100D07180 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -17741,6 +17824,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1E07D912BFE2D2F00D07180 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1E07D9A2BFE2D2F00D07180 /* ContentView.swift in Sources */,
+				C1E07D982BFE2D2F00D07180 /* CalendarPreviewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -22994,6 +23086,147 @@
 			};
 			name = Preprod;
 		};
+		C1E07DA12BFE2D3100D07180 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CalendarPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.CalendarPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C1E07DA22BFE2D3100D07180 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CalendarPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.CalendarPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		C1E07DA32BFE2D3100D07180 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CalendarPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.CalendarPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C1E07DA42BFE2D3100D07180 /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/CalendarPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = CK7QF6SQ3W;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.CalendarPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
+		};
 		C1F346DF2AE25C6100EE1E87 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -23795,6 +24028,17 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		C1E07DA02BFE2D3100D07180 /* Build configuration list for PBXNativeTarget "CalendarPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1E07DA12BFE2D3100D07180 /* Debug */,
+				C1E07DA22BFE2D3100D07180 /* Mock */,
+				C1E07DA32BFE2D3100D07180 /* Release */,
+				C1E07DA42BFE2D3100D07180 /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		C1F346DE2AE25C6100EE1E87 /* Build configuration list for PBXNativeTarget "StickerPreview" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -24536,6 +24780,10 @@
 		C1BC73E42AE277CE0022D849 /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TextFieldComponent;
+		};
+		C1FB087D2C0FC1B400137907 /* CalendarUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CalendarUI;
 		};
 		D41D73F92BA25C47002C0688 /* GetProductListByTypeService */ = {
 			isa = XCSwiftPackageProductDependency;
