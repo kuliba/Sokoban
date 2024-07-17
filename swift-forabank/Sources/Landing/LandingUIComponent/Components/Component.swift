@@ -25,7 +25,12 @@ extension UILanding {
         var id: String {
             switch self {
             case let .list(list):
-                return list.id.uuidString
+                switch list {
+                case let .horizontalRectangleLimits(limitsState):
+                    return limitsState.id.uuidString
+                default:
+                    return list.id.uuidString
+                }
             case let .multi(multi):
                 return multi.id.uuidString
             case let .pageTitle(pageTitle):
@@ -45,7 +50,7 @@ extension UILanding {
             }
         }
         
-        var listHorizontalLimitsState: ListHorizontalRectangleLimitsState? {
+        public var listHorizontalLimitsState: ListHorizontalRectangleLimitsState? {
             
             switch self {
             case let .list(list):
@@ -80,7 +85,7 @@ extension UILanding.Component {
             case let .horizontalRectangleImage(value):
                 return value.id
             case let .horizontalRectangleLimits(value): // ??? need add limits id
-                return value.list.id
+                return value.id
             case let .horizontalRoundImage(value):
                 return value.id
             case let .verticalRoundImage(value):

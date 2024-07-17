@@ -76,16 +76,17 @@ extension ControlPanelEffectHandler {
                 result in
                 switch result {
                 case .failure:
-                    dispatch(.loadedSVCardLanding(nil))
+                    dispatch(.loadedSVCardLanding(nil, card))
                 case let .success(landing):
                     dispatch(.loadedSVCardLanding(self.productProfileServices.makeSVCardLandingViewModel(
                         landing,
                         .default,
                         self.landingEvent
-                        )))
+                        ), card))
                 }
             }
             
+        case let .loadSVCardLimits(card):
             productProfileServices.createCreateGetSVCardLimits.createGetSVCardLimits(.init(cardId: card.cardId)){
                 
                 result in

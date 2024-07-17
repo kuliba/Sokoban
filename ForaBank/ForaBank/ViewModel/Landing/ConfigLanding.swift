@@ -389,7 +389,7 @@ extension UILanding.List.HorizontalRectangleLimits.Config {
             arc: .mainColorsGray,
             background: .mainColorsGrayLightest,
             divider: .blurMediumGray30,
-            title: .secondary,
+            title: .textSecondary,
             subtitle: .textPlaceholder
         ),
         cornerRadius: 12,

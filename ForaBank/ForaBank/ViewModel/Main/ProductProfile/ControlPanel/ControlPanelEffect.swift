@@ -14,4 +14,5 @@ enum ControlPanelEffect {
     case unblockCard(ProductCardData)
     case visibility(ProductCardData)
     case loadSVCardLanding(ProductCardData)
+    case loadSVCardLimits(ProductCardData)
 }

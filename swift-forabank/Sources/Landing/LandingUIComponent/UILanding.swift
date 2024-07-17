@@ -10,7 +10,7 @@ import Foundation
 public struct UILanding: Equatable { 
     
     let header: [Component]
-    let main: [Component]
+    public var main: [Component]
     let footer: [Component]
     let details: [Detail]
     
@@ -112,13 +112,4 @@ extension UILanding {
       }
       return false
   }
-}
-
-public extension UILanding {
-    
-    func updateListHorizontal(_ newValue: List.HorizontalRectangleLimits) {
-        
-      /*  let limits = main.first(where: { $0.listHorizontalLimitsState != nil })*/
-        
-    }
 }

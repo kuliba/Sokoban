@@ -19,7 +19,7 @@ where DestinationView: View {
     var body: some View {
         
         VStack(alignment: .leading) {
-            HStack {
+            HStack(spacing: 4) {
                 ForEach(state.buttons, id: \.title, content: view)
             }
             .frame(maxWidth: .infinity, alignment: .leading)

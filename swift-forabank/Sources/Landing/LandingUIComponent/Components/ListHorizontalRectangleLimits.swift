@@ -15,7 +15,7 @@ extension UILanding.List {
         
         public let id: UUID
 
-        let list: [Item]
+        public let list: [Item]
         
         public init(id: UUID = UUID(), list: [Item]) {
             self.id = id

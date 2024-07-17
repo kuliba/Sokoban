@@ -55,7 +55,8 @@ final class ControlPanelViewModelTests: XCTestCase {
             reduce: ControlPanelReducer(
                 makeAlert: makeAlert,
                 makeActions: makeActions,
-                makeViewModels: makeViewModels
+                makeViewModels: makeViewModels, 
+                getCurrencySymbol: { _ in nil }
             ).reduce(_:_:),
             handleEffect: {_,_  in })
     }

@@ -16,7 +16,7 @@ enum ControlPanelEvent {
     case updateProducts
     case updateTitle(String)
     case loadSVCardLanding(ProductCardData)
-    case loadedSVCardLanding(LandingWrapperViewModel?)
+    case loadedSVCardLanding(LandingWrapperViewModel?, ProductCardData)
     case loadedSVCardLimits([GetSVCardLimitsResponse.LimitItem]?)
 
     case bannerEvent(BannerActionEvent)

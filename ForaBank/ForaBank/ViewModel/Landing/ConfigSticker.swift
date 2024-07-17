@@ -397,7 +397,7 @@ extension UILanding.BlockHorizontalRectangular.Config {
         colors: .init(
             background: .mainColorsGrayLightest,
             divider: .blurMediumGray30,
-            title: .secondary,
+            title: .textSecondary,
             subtitle: .textPlaceholder,
             warning: .mainColorsRed
         ),

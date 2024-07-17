@@ -9,13 +9,16 @@ import Foundation
 
 public struct ListHorizontalRectangleLimitsState: Equatable {
     
-    let list: UILanding.List.HorizontalRectangleLimits
+    let id: UUID
+    public let list: UILanding.List.HorizontalRectangleLimits
     var limitsLoadingStatus: LimitsLoadingStatus
     
     public init(
+        id: UUID = UUID(),
         list: UILanding.List.HorizontalRectangleLimits,
         limitsLoadingStatus: LimitsLoadingStatus
     ) {
+        self.id = id
         self.list = list
         self.limitsLoadingStatus = limitsLoadingStatus
     }

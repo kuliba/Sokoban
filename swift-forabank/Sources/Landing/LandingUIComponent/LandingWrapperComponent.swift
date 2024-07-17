@@ -161,6 +161,37 @@ public final class LandingWrapperViewModel: ObservableObject {
             self.message = message
         }
     }
+    
+    public func updateLimits(_ newValue: SVCardLimits) {
+        
+        switch state {
+            
+        case var .success(.some(landing)):
+            
+            if let index = landing.main.firstIndex(where: { $0.listHorizontalLimitsState != nil }) {
+                let limits = landing.main[index]
+                
+                switch limits {
+                    
+                case let .list(.horizontalRectangleLimits(limitsState)):
+                    let newState: ListHorizontalRectangleLimitsState = .init(list: .init(list: limitsState.list.list), limitsLoadingStatus: .limits(newValue))
+                    landing.main[index] = .list(.horizontalRectangleLimits(newState))
+                    // TODO: переделать!!!
+                    DispatchQueue.main.async { [weak self] in
+                        self?.state = .failure(.init(message: ""))
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(600)) { [weak self] in
+                        self?.state = .success(landing)
+                    }
+
+                default:
+                    break
+                }
+            }
+        default:
+            break
+        }
+    }
 }
 
 public struct LandingWrapperView: View {
@@ -278,6 +309,7 @@ private extension LandingWrapperViewModel.Error {
 public extension UILanding {
     
     static let preview: Self = .defaultLanding
+    static let previewWithLimits: Self = .defaultLandingWithLimits
 }
 
 extension UILanding {
