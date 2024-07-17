@@ -721,6 +721,36 @@ final class ProductProfileViewModelTests: XCTestCase {
         XCTAssertNotNil(sut.historyState)
     }
     
+    func test_show_calendarButtonBottomSheet() throws {
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNil(sut.historyState)
+        
+        sut.event(.history(.calendar(nil)))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        let state = try XCTUnwrap(sut.historyState)
+
+        XCTAssertNil(state.date)
+        XCTAssertFalse(state.showSheet)
+    }
+    
+    func test_show_filterButtonBottomSheet() throws {
+        
+        let (sut, _, _) = try makeSUT()
+        
+        XCTAssertNil(sut.historyState)
+        
+        sut.event(.history(.filter([.debit])))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        let state = try XCTUnwrap(sut.historyState)
+
+        XCTAssertNoDiff(state.filters, [.debit])
+        XCTAssertFalse(state.showSheet)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(

@@ -81,7 +81,19 @@ struct ProductProfileView: View {
                             
                             if let historyViewModel = viewModel.history {
                                 
-                                productProfileViewFactory.makeHistoryButton({ event in viewModel.event(.history(event))})
+                                productProfileViewFactory.makeHistoryButton {
+                                    viewModel.event(.history($0))
+                                }
+                                
+                                if let selectedDate = viewModel.historyState?.date?.description {
+                                    
+                                    Text(selectedDate)
+                                }
+                                
+                                if let filters = viewModel.historyState?.filters.map({ $0.description }) {
+                                    
+                                    Text(filters)
+                                }
                                 
                                 ProductProfileHistoryView(viewModel: historyViewModel)
                             }
@@ -114,8 +126,11 @@ struct ProductProfileView: View {
             // workaround to fix mini-cards jumps when product name editing alert presents
             Color.clear
                 .textfieldAlert(alert: $viewModel.textFieldAlert)
-            
-            historySheet()
+               
+            if viewModel.historyState?.showSheet == true {
+                
+                historySheet()
+            }
             
             viewModel.closeAccountSpinner.map(CloseAccountSpinnerView.init)
             
@@ -155,17 +170,52 @@ struct ProductProfileView: View {
         Color.clear
             .sheet(
                 modal: viewModel.historyState,
-                dismissModal: { self.viewModel.historyState = nil },
-                content: { historyState in
-                    
-                    switch historyState {
-                    case .calendar:
-                        Text("Calendar")
-                    case .filter:
-                        Text("Filter")
-                    }
-                }
+                dismissModal: { viewModel.historyState?.showSheet = false },
+                content: { _ in historySheetContent() }
             )
+    }
+    
+    private func historySheetContent() -> some View {
+        
+        VStack(spacing: 15) {
+            
+            if let state = viewModel.historyState {
+                
+                switch state.buttonAction {
+                case .calendar:
+                    
+                    calendarView()
+                    
+                case .filter:
+                    
+                    Text("Filter")
+                    
+                    Button(action: { viewModel.event(.history(.filter([.debit]))) }) {
+                        Text("setup debit filter")
+                    }
+                    
+                    Button(action: { viewModel.event(.history(.filter(nil))) }, label: {
+                        Text("clear filters")
+                    })
+                }
+            }
+        }
+    }
+    
+    private func calendarView() -> some View {
+        
+        VStack {
+            
+            Text("Calendar")
+            
+            Button(action: { viewModel.event(.history(.calendar(Date()))) }, label: {
+                Text("setup date")
+            })
+            
+            Button(action: { viewModel.event(.history(.calendar(nil))) }, label: {
+                Text("clear date")
+            })
+        }
     }
     
     @ViewBuilder
@@ -447,10 +497,7 @@ struct ProfileView_Previews: PreviewProvider {
             viewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                makeHistoryButton: { event in
-                        
-                    HistoryButtonView(event: event)
-                }
+                makeHistoryButton: HistoryButtonView.init(event:)
             ),
             getUImage: { _ in nil }
         )
