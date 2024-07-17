@@ -81,8 +81,8 @@ struct ProductProfileView: View {
                             
                             if let historyViewModel = viewModel.history {
                                 
-                                productProfileViewFactory.makeHistoryButton { event in
-                                    viewModel.event(.history(event))
+                                productProfileViewFactory.makeHistoryButton {
+                                    viewModel.event(.history($0))
                                 }
                                 
                                 if let selectedDate = viewModel.historyState?.date?.description {
@@ -497,10 +497,7 @@ struct ProfileView_Previews: PreviewProvider {
             viewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                makeHistoryButton: { event in
-                        
-                    HistoryButtonView(event: event)
-                }
+                makeHistoryButton: HistoryButtonView.init(event:)
             ),
             getUImage: { _ in nil }
         )
