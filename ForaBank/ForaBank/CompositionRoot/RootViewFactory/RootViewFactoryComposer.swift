@@ -48,7 +48,7 @@ extension RootViewFactoryComposer {
             makeUpdateInfoView: UpdateInfoView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,
             makePaymentCompleteView: makePaymentCompleteView, 
-            makeHistoryButtonView: { event in self.makeHistoryButtonView(self.historyFeatureFlag, event: event) }
+            makeHistoryButtonView: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) }
         )
     }
 }
@@ -79,7 +79,7 @@ private extension RootViewFactoryComposer {
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
-                makeHistoryButton: { event in self.makeHistoryButtonView(self.historyFeatureFlag, event: event) }
+                makeHistoryButton: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) }
             ),
             getUImage: getUImage
         )

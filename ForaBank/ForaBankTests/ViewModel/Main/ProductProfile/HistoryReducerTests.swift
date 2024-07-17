@@ -90,22 +90,3 @@ final class HistoryReducerTests: XCTestCase {
         )
     }
 }
-
-extension ProductProfileFlowEffect {
-    
-    var effectTest: EffectTest {
-        
-        switch self {
-        case .delayAlert:
-            return .delayAlert
-        case .delayBottomSheet:
-            return .delayBottomSheet
-        }
-    }
-    
-    enum EffectTest: Equatable {
-        
-        case delayAlert
-        case delayBottomSheet
-    }
-}

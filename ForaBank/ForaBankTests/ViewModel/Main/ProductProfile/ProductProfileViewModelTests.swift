@@ -732,7 +732,7 @@ final class ProductProfileViewModelTests: XCTestCase {
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         let state = try XCTUnwrap(sut.historyState)
 
-        XCTAssertNoDiff(state.date, nil)
+        XCTAssertNil(state.date)
         XCTAssertFalse(state.showSheet)
     }
     
