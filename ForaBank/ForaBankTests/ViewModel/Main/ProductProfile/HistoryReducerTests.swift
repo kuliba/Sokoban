@@ -15,7 +15,7 @@ final class HistoryReducerTests: XCTestCase {
         
         assertState(
             .button(.calendar),
-            on: .init(buttonAction: .calendar, showSheet: true)
+            on: .init(buttonAction: .calendar, showSheet: false)
         ) {
             $0?.showSheet = true
         }
@@ -25,7 +25,7 @@ final class HistoryReducerTests: XCTestCase {
         
         assertState(
             .button(.filter),
-            on: .init(buttonAction: .filter, showSheet: true)
+            on: .init(buttonAction: .filter, showSheet: false)
         ) {
             $0?.showSheet = true
         }
@@ -35,7 +35,7 @@ final class HistoryReducerTests: XCTestCase {
         
         assertState(
             .filter([.debit]),
-            on: .init(filters: [.debit], buttonAction: .filter, showSheet: false)
+            on: .init(filters: [.debit], buttonAction: .filter, showSheet: true)
         ) {
             $0?.showSheet = false
         }
@@ -45,7 +45,7 @@ final class HistoryReducerTests: XCTestCase {
         
         assertState(
             .calendar(nil),
-            on: .init(date: nil, buttonAction: .calendar, showSheet: false)
+            on: .init(date: nil, buttonAction: .calendar, showSheet: true)
         ) {
             $0?.showSheet = false
         }
