@@ -31,7 +31,7 @@ final class HistoryReducerTests: XCTestCase {
         }
     }
     
-    func test_history_reduce_filter_shouldReturnShowSheetTrue() {
+    func test_history_reduce_filter_shouldReturnShowSheetFalse() {
         
         assertState(
             .filter([.debit]),
@@ -41,7 +41,7 @@ final class HistoryReducerTests: XCTestCase {
         }
     }
     
-    func test_history_reduce_calendar_shouldReturnShowSheetTrue() {
+    func test_history_reduce_calendar_shouldReturnShowSheetFalse() {
         
         assertState(
             .calendar(nil),
