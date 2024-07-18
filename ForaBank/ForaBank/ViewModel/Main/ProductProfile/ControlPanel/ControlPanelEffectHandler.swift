@@ -7,6 +7,9 @@
 
 import SwiftUI
 import LandingUIComponent
+import SVCardLimitAPI
+import CodableLanding
+import LandingMapping
 
 final class ControlPanelEffectHandler {
     
@@ -77,12 +80,27 @@ extension ControlPanelEffectHandler {
                 switch result {
                 case .failure:
                     dispatch(.loadedSVCardLanding(nil, card))
+                    
                 case let .success(landing):
+                    
+                    let limitsVM: ListHorizontalRectangleLimitsViewModel? = {
+                        
+                        if let limits = landing.horizontalRectangleLimits {
+                            
+                            return .init(
+                                initialState: .init(list: .init(limits), limitsLoadingStatus: .inflight),
+                                reduce: ListHorizontalRectangleLimitsReducer.init().reduce(_:_:),
+                                handleEffect: {_,_ in })
+                        }
+                        return nil
+                    }()
+                    
                     dispatch(.loadedSVCardLanding(self.productProfileServices.makeSVCardLandingViewModel(
                         landing,
+                        limitsVM,
                         .default,
                         self.landingEvent
-                        ), card))
+                    ), card))
                 }
             }
             
@@ -106,4 +124,33 @@ extension ControlPanelEffectHandler {
     typealias Event = ControlPanelEvent
     typealias Effect = ControlPanelEffect
     typealias Dispatch = (Event) -> Void
+}
+
+private extension UILanding.List.HorizontalRectangleLimits {
+    
+    init(
+        _ data: Landing.DataView.List.HorizontalRectangleLimits
+    ) {
+        self.init(list: data.list.map { .init($0) })
+    }
+}
+
+private extension UILanding.List.HorizontalRectangleLimits.Item {
+    
+    init(
+        _ data: Landing.DataView.List.HorizontalRectangleLimits.Item
+    ) {
+        
+        self.init(action: .init(type: data.action.type), limitType: data.limitType, md5hash: data.md5hash, title: data.title, limits: data.limits.map { .init($0) })
+    }
+}
+
+private extension UILanding.List.HorizontalRectangleLimits.Item.Limit {
+    
+    init(
+        _ data: Landing.DataView.List.HorizontalRectangleLimits.Item.Limit
+    ) {
+        
+        self.init(id: data.id, title: data.title, color: .init(hex: data.colorHEX))
+    }
 }

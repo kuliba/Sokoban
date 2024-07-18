@@ -23,6 +23,8 @@ public final class LandingWrapperViewModel: ObservableObject {
     @Published private(set) var images: Images = .init()
     @Published var requests: [ImageRequest] = .init()
     
+    public var limitsViewModel: ListHorizontalRectangleLimitsViewModel?
+    
     private var bindings = Set<AnyCancellable>()
     private var landingActions: (LandingEvent) -> Void
     let makeIconView: LandingView.MakeIconView
@@ -75,6 +77,7 @@ public final class LandingWrapperViewModel: ObservableObject {
         imagePublisher: ImagePublisher,
         imageLoader: @escaping ImageLoader,
         makeIconView: @escaping LandingView.MakeIconView,
+        limitsViewModel: ListHorizontalRectangleLimitsViewModel?,
         scheduler: AnySchedulerOf<DispatchQueue> = .main,
         config: UILanding.Component.Config,
         landingActions: @escaping (LandingEvent) -> Void
@@ -83,6 +86,7 @@ public final class LandingWrapperViewModel: ObservableObject {
         self.landingActions = landingActions
         self.config = config
         self.makeIconView = makeIconView
+        self.limitsViewModel = limitsViewModel
         
         let landing = try? initialState.get()
         
@@ -161,37 +165,6 @@ public final class LandingWrapperViewModel: ObservableObject {
             self.message = message
         }
     }
-    
-    public func updateLimits(_ newValue: SVCardLimits) {
-        
-        switch state {
-            
-        case var .success(.some(landing)):
-            
-            if let index = landing.main.firstIndex(where: { $0.listHorizontalLimitsState != nil }) {
-                let limits = landing.main[index]
-                
-                switch limits {
-                    
-                case let .list(.horizontalRectangleLimits(limitsState)):
-                    let newState: ListHorizontalRectangleLimitsState = .init(list: .init(list: limitsState.list.list), limitsLoadingStatus: .limits(newValue))
-                    landing.main[index] = .list(.horizontalRectangleLimits(newState))
-                    // TODO: переделать!!!
-                    DispatchQueue.main.async { [weak self] in
-                        self?.state = .failure(.init(message: ""))
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(600)) { [weak self] in
-                        self?.state = .success(landing)
-                    }
-
-                default:
-                    break
-                }
-            }
-        default:
-            break
-        }
-    }
 }
 
 public struct LandingWrapperView: View {
@@ -232,7 +205,8 @@ public struct LandingWrapperView: View {
             viewModel: .init(landing: landing, config: config),
             images: images,
             action: viewModel.action,
-            makeIconView: viewModel.makeIconView
+            makeIconView: viewModel.makeIconView, 
+            limitsViewModel: viewModel.limitsViewModel
         )
     }
 }

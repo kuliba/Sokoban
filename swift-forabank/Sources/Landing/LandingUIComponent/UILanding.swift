@@ -10,7 +10,7 @@ import Foundation
 public struct UILanding: Equatable { 
     
     let header: [Component]
-    public var main: [Component]
+    let main: [Component]
     let footer: [Component]
     let details: [Detail]
     

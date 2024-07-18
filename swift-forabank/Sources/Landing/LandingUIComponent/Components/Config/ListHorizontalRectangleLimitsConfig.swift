@@ -14,6 +14,7 @@ public extension UILanding.List.HorizontalRectangleLimits {
         
         let colors: Colors
         let cornerRadius: CGFloat
+        let fonts: Fonts
         let paddings: Paddings
         let sizes: Sizes
         let spacing: CGFloat
@@ -38,6 +39,19 @@ public extension UILanding.List.HorizontalRectangleLimits {
                 self.divider = divider
                 self.title = title
                 self.subtitle = subtitle
+            }
+        }
+        
+        public struct Fonts {
+            
+            let title: Font
+            let subTitle: Font
+            let limit: Font
+            
+            public init(title: Font, subTitle: Font, limit: Font) {
+                self.title = title
+                self.subTitle = subTitle
+                self.limit = limit
             }
         }
         
@@ -68,12 +82,14 @@ public extension UILanding.List.HorizontalRectangleLimits {
         public init(
             colors: Colors,
             cornerRadius: CGFloat,
+            fonts: Fonts,
             paddings: Paddings,
             sizes: Sizes,
             spacing: CGFloat
         ) {
             self.colors = colors
             self.cornerRadius = cornerRadius
+            self.fonts = fonts
             self.paddings = paddings
             self.sizes = sizes
             self.spacing = spacing

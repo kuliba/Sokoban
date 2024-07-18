@@ -114,6 +114,7 @@ extension ListHorizontalRectangleLimitsView {
                         }
                         
                         Text(item.title)
+                            .font(config.fonts.title)
                             .lineLimit(2)
                             .foregroundColor(config.colors.title)
                     }
@@ -141,7 +142,7 @@ extension ListHorizontalRectangleLimitsView {
             VStack(alignment: .leading) {
                 
                 Text(limit.title)
-                    .font(.caption)
+                    .font(config.fonts.subTitle)
                     .foregroundColor(config.colors.subtitle)
                 
                 limitView(limitType: limitType, limit: limit, limitsLoadingStatus: limitsLoadingStatus, color: limit.color)
@@ -166,6 +167,7 @@ extension ListHorizontalRectangleLimitsView {
                 
             case .failure:
                 Text("Попробуйте позже")
+                    .font(config.fonts.limit)
                 
             case let .limits(limits):
                 
@@ -174,7 +176,7 @@ extension ListHorizontalRectangleLimitsView {
                     switch limit.value {
                     case 999999999...:
                         Text("Без ограничений")
-                            .font(.subheadline)
+                            .font(config.fonts.limit)
                             .foregroundColor(config.colors.title)
                             .frame(height: 24)
 
@@ -183,10 +185,10 @@ extension ListHorizontalRectangleLimitsView {
                             
                             HStack {
                                 Text(value(limit.value - limit.currentValue))
-                                    .font(.subheadline)
+                                    .font(config.fonts.limit)
                                     .foregroundColor(config.colors.title)
                                 Text(limit.currency)
-                                    .font(.subheadline)
+                                    .font(config.fonts.limit)
                                     .foregroundColor(config.colors.title)
                                 circleLimit(
                                     limit: limit,
@@ -205,7 +207,7 @@ extension ListHorizontalRectangleLimitsView {
                     }
                 } else {
                     Text("Не установлен")
-                        .font(.subheadline)
+                        .font(config.fonts.limit)
                         .foregroundColor(config.colors.title)
                 }
             }

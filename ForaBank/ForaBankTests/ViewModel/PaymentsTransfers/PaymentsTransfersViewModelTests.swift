@@ -787,7 +787,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
             createSVCardLanding: svCardLandingServices,
-            makeSVCardLandingViewModel: {_,_,_ in nil}
+            makeSVCardLandingViewModel: {_,_,_,_  in nil}
         )
 
         let qrViewModelFactory = QRViewModelFactory.preview()

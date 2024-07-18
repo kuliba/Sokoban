@@ -150,24 +150,7 @@ final class ControlPanelReducerTests: XCTestCase {
             .loadedSVCardLanding(nil, card),
             on: initialState(buttons: .buttons(card)))
     }
-    
-    /*
-     // TODO: update tests
-     
-     func test_reduce_loadedSVCardLimits_success_shouldLandingWrapperViewModelChanged() {
-        
-        let card = makeCardProduct(statusCard: .active)
-        let viewModel = createLandingWrapperViewModel(.previewWithLimits)
-        let limit = GetSVCardLimitsResponse.LimitItem.Limit(currency: 810, currentValue: 10, name: "Limit", value: 100)
-        
-        assertState(
-            .loadedSVCardLimits([.init(type: "Debit", limits: [limit])]),
-            on: initialState(buttons: .buttons(card), landingWrapperViewModel: viewModel)){
-                
-                $0.landingWrapperViewModel? = viewModel
-            }
-    }*/
-
+         
     func test_reduce_stickerEvent_openCard_shouldDestinationChanged() {
         
         let card = makeCardProduct(statusCard: .active)
@@ -278,6 +261,7 @@ final class ControlPanelReducerTests: XCTestCase {
               imagePublisher: .imagePublisher,
               imageLoader: { _ in },
               makeIconView: makeIconView,
+              limitsViewModel: nil,
               config: .default,
               landingActions: { _ in
             return {}()
@@ -357,7 +341,13 @@ final class ControlPanelReducerTests: XCTestCase {
             file: file, line: line
         )
 
-        
+        XCTAssertNoDiff(
+            receivedState.landingWrapperViewModel?.limitsViewModel?.state,
+            expectedState.landingWrapperViewModel?.limitsViewModel?.state,
+            "\nExpected \(String(describing: expectedState.landingWrapperViewModel?.limitsViewModel?.state)), but got \(String(describing: receivedState.landingWrapperViewModel?.limitsViewModel?.state)) instead.",
+            file: file, line: line
+        )
+
         XCTAssertNoDiff(
             receivedState.navigationBarViewModel.title,
             expectedState.navigationBarViewModel.title,

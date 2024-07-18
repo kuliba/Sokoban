@@ -22,13 +22,21 @@ public extension ListHorizontalRectangleLimitsReducer {
         
         var state = state
         var effect: Effect?
-
-        //TODO: add case, add tests
-//        switch event {
-//
-//        case let .buttonTapped(info):
-//            
-//        }
+        
+        switch event {
+            
+        case let .updateLimits(result):
+            switch result {
+            case .failure:
+                state.limitsLoadingStatus = .failure
+            case let .success(limits):
+                state.limitsLoadingStatus = .limits(limits)
+            }
+            
+        case let .buttonTapped(info):
+            break
+        }
+        
         return (state, effect)
     }
 }

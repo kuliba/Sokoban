@@ -78,8 +78,10 @@ extension ControlPanelReducer {
             }
             
         case let .loadedSVCardLimits(limits):
-            if let limits, let landingWrapperViewModel = state.landingWrapperViewModel {
-                state.landingWrapperViewModel?.updateLimits(.init(limits, getCurrencySymbol))
+            if let limits {
+                state.landingWrapperViewModel?.limitsViewModel?.event(.updateLimits(.success(.init(limits, getCurrencySymbol))))
+            } else {
+                state.landingWrapperViewModel?.limitsViewModel?.event(.updateLimits(.failure))
             }
             
         case .dismissDestination:
