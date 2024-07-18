@@ -114,13 +114,14 @@ extension ListHorizontalRectangleLimitsView {
                         }
                         
                         Text(item.title)
+                            .font(config.fonts.title)
                             .lineLimit(2)
                             .foregroundColor(config.colors.title)
                     }
                     .padding(.horizontal, config.paddings.horizontal)
                     
                     ForEach(item.limits, id: \.id) {
-                        itemView(limit: $0)
+                        itemView(limitType:item.limitType, limit: $0)
                         if $0 != item.limits.last {
                             
                             HorizontalDivider(color: config.colors.divider)
@@ -134,21 +135,23 @@ extension ListHorizontalRectangleLimitsView {
         }
         
         private func itemView(
+            limitType: String,
             limit: UILanding.List.HorizontalRectangleLimits.Item.Limit
         ) -> some View {
             
             VStack(alignment: .leading) {
                 
                 Text(limit.title)
-                    .font(.caption)
+                    .font(config.fonts.subTitle)
                     .foregroundColor(config.colors.subtitle)
                 
-                limitView(limit: limit, limitsLoadingStatus: limitsLoadingStatus, color: limit.color)
+                limitView(limitType: limitType, limit: limit, limitsLoadingStatus: limitsLoadingStatus, color: limit.color)
             }
         }
         
         @ViewBuilder
         private func limitView(
+            limitType: String,
             limit: UILanding.List.HorizontalRectangleLimits.Item.Limit,
             limitsLoadingStatus: LimitsLoadingStatus,
             color: Color
@@ -164,24 +167,28 @@ extension ListHorizontalRectangleLimitsView {
                 
             case .failure:
                 Text("Попробуйте позже")
+                    .font(config.fonts.limit)
                 
             case let .limits(limits):
                 
-                if let limit = limits.first(where: { $0.name == limit.id }) {
+                if let limitsByType = limits.limitsList.first(where: { $0.type == limitType }), let limit = limitsByType.limits.first(where: { $0.name == limit.id }) {
                     
                     switch limit.value {
-                    case 999999999:
+                    case 999999999...:
                         Text("Без ограничений")
-                        
+                            .font(config.fonts.limit)
+                            .foregroundColor(config.colors.title)
+                            .frame(height: 24)
+
                     default:
                         VStack(alignment: .leading) {
                             
                             HStack {
                                 Text(value(limit.value - limit.currentValue))
-                                    .font(.subheadline)
+                                    .font(config.fonts.limit)
                                     .foregroundColor(config.colors.title)
                                 Text(limit.currency)
-                                    .font(.subheadline)
+                                    .font(config.fonts.limit)
                                     .foregroundColor(config.colors.title)
                                 circleLimit(
                                     limit: limit,
@@ -194,11 +201,14 @@ extension ListHorizontalRectangleLimitsView {
                                 )
                                 .frame(widthAndHeight: config.sizes.icon)
                             }
+                            .frame(height: 24)
                         }
                         
                     }
                 } else {
                     Text("Не установлен")
+                        .font(config.fonts.limit)
+                        .foregroundColor(config.colors.title)
                 }
             }
         }
@@ -309,13 +319,15 @@ struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
             preview(.failure)
                 .previewDisplayName("failure")
             
-            preview(.limits(.default))
+            preview(.limits(.init(limitsList: [
+                .init(type: "Debit", limits: .default),
+                .init(type: "Credit", limits: .default)])))
                 .previewDisplayName("limits")
             
-            preview(.limits([]))
+            preview(.limits(.init(limitsList: [])))
                 .previewDisplayName("noLimits")
             
-            preview(.limits(.withoutValue))
+            preview(.limits(.init(limitsList: [.init(type: "", limits: .withoutValue)])))
                 .previewDisplayName("withoutValueLimits")
         }
     }

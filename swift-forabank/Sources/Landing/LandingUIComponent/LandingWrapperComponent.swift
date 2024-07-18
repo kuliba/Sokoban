@@ -23,6 +23,8 @@ public final class LandingWrapperViewModel: ObservableObject {
     @Published private(set) var images: Images = .init()
     @Published var requests: [ImageRequest] = .init()
     
+    public var limitsViewModel: ListHorizontalRectangleLimitsViewModel?
+    
     private var bindings = Set<AnyCancellable>()
     private var landingActions: (LandingEvent) -> Void
     let makeIconView: LandingView.MakeIconView
@@ -75,6 +77,7 @@ public final class LandingWrapperViewModel: ObservableObject {
         imagePublisher: ImagePublisher,
         imageLoader: @escaping ImageLoader,
         makeIconView: @escaping LandingView.MakeIconView,
+        limitsViewModel: ListHorizontalRectangleLimitsViewModel?,
         scheduler: AnySchedulerOf<DispatchQueue> = .main,
         config: UILanding.Component.Config,
         landingActions: @escaping (LandingEvent) -> Void
@@ -83,6 +86,7 @@ public final class LandingWrapperViewModel: ObservableObject {
         self.landingActions = landingActions
         self.config = config
         self.makeIconView = makeIconView
+        self.limitsViewModel = limitsViewModel
         
         let landing = try? initialState.get()
         
@@ -201,7 +205,8 @@ public struct LandingWrapperView: View {
             viewModel: .init(landing: landing, config: config),
             images: images,
             action: viewModel.action,
-            makeIconView: viewModel.makeIconView
+            makeIconView: viewModel.makeIconView, 
+            limitsViewModel: viewModel.limitsViewModel
         )
     }
 }

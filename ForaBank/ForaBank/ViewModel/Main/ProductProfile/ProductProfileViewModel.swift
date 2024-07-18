@@ -2005,7 +2005,8 @@ extension ProductProfileViewModel {
             reduce: ControlPanelReducer(
                 makeAlert: productProfileViewModelFactory.makeAlert,
                 makeActions: makeActions,
-                makeViewModels: makeViewModels
+                makeViewModels: makeViewModels, 
+                getCurrencySymbol: model.dictionaryCurrency(for:)
             ).reduce(_:_:),
             handleEffect: ControlPanelEffectHandler(productProfileServices: productProfileServices, landingEvent: landingEvent).handleEffect(_:_:))
     }

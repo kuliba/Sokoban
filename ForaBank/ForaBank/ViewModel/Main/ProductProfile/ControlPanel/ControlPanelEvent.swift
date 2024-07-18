@@ -7,6 +7,7 @@
 
 import Foundation
 import LandingUIComponent
+import SVCardLimitAPI
 
 enum ControlPanelEvent {
     
@@ -15,7 +16,9 @@ enum ControlPanelEvent {
     case updateProducts
     case updateTitle(String)
     case loadSVCardLanding(ProductCardData)
-    case loadedSVCardLanding(LandingWrapperViewModel?)
+    case loadedSVCardLanding(LandingWrapperViewModel?, ProductCardData)
+    case loadedSVCardLimits([GetSVCardLimitsResponse.LimitItem]?)
+
     case bannerEvent(BannerActionEvent)
     case dismissDestination
 }

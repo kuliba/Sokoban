@@ -11,6 +11,7 @@ import RxViewModel
 import LandingUIComponent
 import Combine
 import SwiftUI
+import SVCardLimitAPI
 
 final class ControlPanelReducerTests: XCTestCase {
     
@@ -134,7 +135,7 @@ final class ControlPanelReducerTests: XCTestCase {
         let viewModel = createLandingWrapperViewModel()
         
         assertState(
-            .loadedSVCardLanding(viewModel),
+            .loadedSVCardLanding(viewModel, card),
             on: initialState(buttons: .buttons(card))){
                 
                 $0.landingWrapperViewModel = viewModel
@@ -146,10 +147,10 @@ final class ControlPanelReducerTests: XCTestCase {
         let card = makeCardProduct(statusCard: .active)
         
         assertState(
-            .loadedSVCardLanding(nil),
+            .loadedSVCardLanding(nil, card),
             on: initialState(buttons: .buttons(card)))
     }
-    
+         
     func test_reduce_stickerEvent_openCard_shouldDestinationChanged() {
         
         let card = makeCardProduct(statusCard: .active)
@@ -255,11 +256,12 @@ final class ControlPanelReducerTests: XCTestCase {
         publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
     )}
     
-    private func createLandingWrapperViewModel() -> LandingWrapperViewModel {
-        .init(initialState: .success(.preview),
+    private func createLandingWrapperViewModel(_ landing: UILanding = .preview) -> LandingWrapperViewModel {
+        .init(initialState: .success(landing),
               imagePublisher: .imagePublisher,
               imageLoader: { _ in },
               makeIconView: makeIconView,
+              limitsViewModel: nil,
               config: .default,
               landingActions: { _ in
             return {}()
@@ -279,7 +281,8 @@ final class ControlPanelReducerTests: XCTestCase {
             controlPanelLifespan: .never,
             makeAlert: makeAlert,
             makeActions: makeActions,
-            makeViewModels: makeViewModels
+            makeViewModels: makeViewModels, 
+            getCurrencySymbol: { _ in nil }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -332,6 +335,20 @@ final class ControlPanelReducerTests: XCTestCase {
         )
         
         XCTAssertNoDiff(
+            receivedState.landingWrapperViewModel?.state,
+            expectedState.landingWrapperViewModel?.state,
+            "\nExpected \(String(describing: expectedState.landingWrapperViewModel?.state)), but got \(String(describing: receivedState.landingWrapperViewModel?.state)) instead.",
+            file: file, line: line
+        )
+
+        XCTAssertNoDiff(
+            receivedState.landingWrapperViewModel?.limitsViewModel?.state,
+            expectedState.landingWrapperViewModel?.limitsViewModel?.state,
+            "\nExpected \(String(describing: expectedState.landingWrapperViewModel?.limitsViewModel?.state)), but got \(String(describing: receivedState.landingWrapperViewModel?.limitsViewModel?.state)) instead.",
+            file: file, line: line
+        )
+
+        XCTAssertNoDiff(
             receivedState.navigationBarViewModel.title,
             expectedState.navigationBarViewModel.title,
             "\nExpected \(expectedState.navigationBarViewModel.title), but got \(receivedState.navigationBarViewModel.title) instead.",
@@ -342,12 +359,14 @@ final class ControlPanelReducerTests: XCTestCase {
     private func initialState(
         buttons: [ControlPanelButtonDetails],
         navBarViewModel: NavigationBarView.ViewModel = .sample,
+        landingWrapperViewModel: LandingWrapperViewModel? = nil,
         destination: ControlPanelState.Destination? = nil
     ) -> State {
         
         .init(
             buttons: buttons,
             navigationBarViewModel: navBarViewModel,
+            landingWrapperViewModel: landingWrapperViewModel,
             destination: destination
         )
     }

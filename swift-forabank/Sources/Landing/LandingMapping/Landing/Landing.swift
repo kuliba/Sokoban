@@ -65,3 +65,16 @@ public extension Landing.DataView {
         case typeButtons(TypeButtons)
     }
 }
+
+public extension Landing {
+    
+    var horizontalRectangleLimits: Landing.DataView.List.HorizontalRectangleLimits? {
+        
+        for dataView in main {
+            if case let .list(.horizontalRectangleLimits(limits)) = dataView {
+                return limits
+            }
+        }
+        return nil
+    }
+}

@@ -81,6 +81,7 @@ extension Model {
     
     func landingSVCardViewModelFactory(
         result: Landing,
+        limitsViewModel: ListHorizontalRectangleLimitsViewModel?,
         config: UILanding.Component.Config,
         landingActions: @escaping (LandingEvent) -> Void
     ) -> LandingWrapperViewModel {
@@ -90,6 +91,7 @@ extension Model {
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
             makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
+            limitsViewModel: limitsViewModel,
             scheduler: .main,
             config: config,
             landingActions: landingActions

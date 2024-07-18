@@ -10,6 +10,7 @@ import Foundation
 public enum ListHorizontalRectangleLimitsEvent: Equatable {
     
     case buttonTapped(Info)
+    case updateLimits(SVCardLimitsResult)
     
     public struct Info: Equatable {
         let limitType: String
@@ -19,5 +20,10 @@ public enum ListHorizontalRectangleLimitsEvent: Equatable {
             self.limitType = limitType
             self.action = action
         }
+    }
+    
+    public enum SVCardLimitsResult: Equatable {
+        case failure
+        case success(SVCardLimits)
     }
 }

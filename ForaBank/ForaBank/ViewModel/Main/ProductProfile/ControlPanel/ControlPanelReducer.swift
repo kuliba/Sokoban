@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import LandingUIComponent
+import SVCardLimitAPI
 
 final class ControlPanelReducer {
     
@@ -15,17 +16,20 @@ final class ControlPanelReducer {
     private let makeAlert: MakeAlert
     private let makeActions: MakeActions
     private let makeViewModels: MakeViewModels
+    private let getCurrencySymbol: GetCurrencySymbol
 
     init(
         controlPanelLifespan: DispatchTimeInterval = .milliseconds(400),
         makeAlert: @escaping MakeAlert,
         makeActions: MakeActions,
-        makeViewModels: MakeViewModels
+        makeViewModels: MakeViewModels,
+        getCurrencySymbol: @escaping GetCurrencySymbol
     ) {
         self.controlPanelLifespan = controlPanelLifespan
         self.makeAlert = makeAlert
         self.makeActions = makeActions
         self.makeViewModels = makeViewModels
+        self.getCurrencySymbol = getCurrencySymbol
     }
 }
 
@@ -63,13 +67,21 @@ extension ControlPanelReducer {
             state.navigationBarViewModel.title = newTitle
             
         case let .loadSVCardLanding(card):
-            effect = .loadSVCardLanding(card.cardType ?? .regular)
+            effect = .loadSVCardLanding(card)
             
-        case let .loadedSVCardLanding(viewModel):
+        case let .loadedSVCardLanding(viewModel, card):
             if let viewModel {
                 state.landingWrapperViewModel = viewModel
+                effect = .loadSVCardLimits(card)
             } else {
                 state.landingWrapperViewModel = nil
+            }
+            
+        case let .loadedSVCardLimits(limits):
+            if let limits {
+                state.landingWrapperViewModel?.limitsViewModel?.event(.updateLimits(.success(.init(limits, getCurrencySymbol))))
+            } else {
+                state.landingWrapperViewModel?.limitsViewModel?.event(.updateLimits(.failure))
             }
             
         case .dismissDestination:
@@ -232,4 +244,43 @@ extension ControlPanelReducer {
     typealias Effect = ControlPanelEffect
     typealias MakeAlert = (ProductProfileViewModelFactory.AlertParameters) -> Alert.ViewModel
     typealias MakeAction = () -> Void
+    typealias GetCurrencySymbol = (Int) -> CurrencyData?
 }
+
+private extension SVCardLimits {
+    
+    init(
+        _ data: [GetSVCardLimitsResponse.LimitItem],
+        _ getCurrencySymbol: ControlPanelReducer.GetCurrencySymbol
+    ) {
+        self.init(limitsList: data.map { .init($0, getCurrencySymbol) })
+    }
+}
+
+private extension SVCardLimits.LimitItem {
+    
+    init(
+        _ data: GetSVCardLimitsResponse.LimitItem,
+        _ getCurrencySymbol: ControlPanelReducer.GetCurrencySymbol
+    ) {
+        
+        self.init(type: data.type, limits: data.limits.map { .init($0, getCurrencySymbol) })
+    }
+}
+
+private extension LimitValues {
+    
+    init(
+        _ data: GetSVCardLimitsResponse.LimitItem.Limit,
+        _ getCurrencySymbol: ControlPanelReducer.GetCurrencySymbol
+    ) {
+        
+        self.init(
+            currency: getCurrencySymbol(data.currency)?.currencySymbol ?? "",
+            currentValue: data.currentValue,
+            name: data.name,
+            value: data.value
+        )
+    }
+}
+
