@@ -35,6 +35,9 @@ public extension ListHorizontalRectangleLimitsReducer {
             
         case let .buttonTapped(info):
             break
+            
+        case .dismissDestination:
+            state.destination = nil
         }
         
         return (state, effect)

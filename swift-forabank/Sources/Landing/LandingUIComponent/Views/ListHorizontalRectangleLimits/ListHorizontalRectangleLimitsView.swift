@@ -15,7 +15,7 @@ struct ListHorizontalRectangleLimitsView: View {
     let event: (ListHorizontalRectangleLimitsEvent) -> Void
     let factory: Factory
     let config: Config
-    
+
     var body: some View {
         
         ScrollView(.horizontal, showsIndicators: false) {
@@ -24,10 +24,28 @@ struct ListHorizontalRectangleLimitsView: View {
                 ForEach(state.list.list, content: itemView)
             }
         }
+        .navigationDestination(
+            item: .init(
+                get: { state.destination },
+                set: { if $0 == nil { event(.dismissDestination) }}
+            ),
+            content: destinationView
+        )
         .padding(.horizontal, config.paddings.horizontal)
         .padding(.vertical, config.paddings.vertical)
     }
     
+    @ViewBuilder
+    private func destinationView(
+        destination: ListHorizontalRectangleLimitsState.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .settingsView(viewModel):
+            LandingWrapperView(viewModel: viewModel)
+        }
+    }
+        
     private func itemView (
         item: Item
     ) -> some View {
