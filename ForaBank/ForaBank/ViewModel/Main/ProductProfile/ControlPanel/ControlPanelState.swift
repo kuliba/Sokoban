@@ -89,18 +89,6 @@ extension ControlPanelState {
 
 extension ControlPanelState {
     
-    /*var svCardLimits: UILanding.List.HorizontalRectangleLimits? {
-        
-        switch landingWrapperViewModel?.state {
-            
-        case let .success(.some(landing)):
-            landing.
-        }
-    }*/
-}
-
-extension ControlPanelState {
-    
     typealias Event = ControlPanelNavigationEvent
 }
 
