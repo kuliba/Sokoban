@@ -168,7 +168,8 @@ extension ListHorizontalRectangleLimitsView {
             case .failure:
                 Text("Попробуйте позже")
                     .font(config.fonts.limit)
-                
+                    .foregroundColor(config.colors.limitNotSet)
+
             case let .limits(limits):
                 
                 if let limitsByType = limits.limitsList.first(where: { $0.type == limitType }), let limit = limitsByType.limits.first(where: { $0.name == limit.id }) {
@@ -177,7 +178,7 @@ extension ListHorizontalRectangleLimitsView {
                     case 999999999...:
                         Text("Без ограничений")
                             .font(config.fonts.limit)
-                            .foregroundColor(config.colors.title)
+                            .foregroundColor(config.colors.limitNotSet)
                             .frame(height: 24)
 
                     default:
@@ -208,7 +209,7 @@ extension ListHorizontalRectangleLimitsView {
                 } else {
                     Text("Не установлен")
                         .font(config.fonts.limit)
-                        .foregroundColor(config.colors.title)
+                        .foregroundColor(config.colors.limitNotSet)
                 }
             }
         }
