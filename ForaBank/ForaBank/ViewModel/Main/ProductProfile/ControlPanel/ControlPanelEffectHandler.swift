@@ -7,8 +7,6 @@
 
 import SwiftUI
 import LandingUIComponent
-import SVCardLimitAPI
-import CodableLanding
 import LandingMapping
 
 final class ControlPanelEffectHandler {
