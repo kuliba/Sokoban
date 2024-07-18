@@ -283,7 +283,6 @@ private extension LandingWrapperViewModel.Error {
 public extension UILanding {
     
     static let preview: Self = .defaultLanding
-    static let previewWithLimits: Self = .defaultLandingWithLimits
 }
 
 extension UILanding {

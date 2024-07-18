@@ -218,13 +218,6 @@ extension UILanding {
         footer: .empty,
         details: .empty
     )
-    
-    static let defaultLandingWithLimits: Self = .init(
-        header: .header,
-        main: .mainWithLimitsStatusInflight,
-        footer: .empty,
-        details: .empty
-    )
 }
 
 extension Array where Element == UILanding.Component {
@@ -240,10 +233,6 @@ extension Array where Element == UILanding.Component {
         .list(.horizontalRoundImage(.defaultValue))
     ]
     
-    static let mainWithLimitsStatusInflight: Self = [
-        .list(.horizontalRectangleLimits(.init(list: .default, limitsLoadingStatus: .inflight)))
-    ]
-
     static let footer: Self = [
         .pageTitle(.defaultValue2)
     ]
