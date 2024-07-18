@@ -75,7 +75,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
             self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: title, mode: mode, state: .normal)
             
         default:
-            self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: "2Между своими", mode: mode, state: .normal)
+            self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: "Между своими", mode: mode, state: .normal)
         }
         
         bind()
@@ -178,8 +178,15 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         }
                         
                     case let .failure(error):
-                       
-                        makeAlert(error, isFromMeToMeCreateTransfer: true)
+                      
+                        switch error {
+                           
+                        case let .statusError(status, _):
+                            makeAlert(error, isFromMeToMeCreateTransfer: status == .timeout)
+                            
+                        default:
+                            makeAlert(error)
+                        }
                     }
                     
                 case let payload as ModelAction.Payment.MeToMe.MakeTransfer.Response:
@@ -962,11 +969,13 @@ class PaymentsMeToMeViewModel: ObservableObject {
         isFromMeToMeCreateTransfer: Bool = false
     ) {
         
-        let alertData = createAlertData(error, isFromMeToMeCreateTransfer: isFromMeToMeCreateTransfer)
+        guard let alertData = createAlertData(error, isFromMeToMeCreateTransfer: isFromMeToMeCreateTransfer) else {
+            return
+        }
         
         alert = .init(
             title: alertData.title,
-            message: alertData.message,
+            message: alertData.messageError,
             primary: .init(type: .default, title: "Ok") { [weak self] in
                 self?.alert = nil
             })
@@ -975,27 +984,30 @@ class PaymentsMeToMeViewModel: ObservableObject {
     func createAlertData(
         _ error: ModelError,
         isFromMeToMeCreateTransfer: Bool = false
-    ) -> (title: String, message: String?) {
+    ) -> (title: String, messageError: String)? {
         
-        let title = "Ошибка"
-        var message: String?
+        var messageError: String?
         
         switch error {
         case let .emptyData(errorMessage):
-            message = errorMessage
+            messageError = errorMessage
         case let .statusError(_, errorMessage):
-            message = errorMessage
+            messageError = errorMessage
         case let .serverCommandError(errorMessage):
-            message = errorMessage
+            messageError = errorMessage
         case .unauthorizedCommandAttempt:
-            message = nil
+            messageError = nil
+        }
+        
+        guard let messageError = messageError else {
+            return nil
+        }
+        
+        if isFromMeToMeCreateTransfer {
+            return (title: "Операция в обработке", messageError: "Проверьте её статус позже в истории операций.")
         }
 
-        if isFromMeToMeCreateTransfer && message == "Превышен лимит времени на запрос." {
-            return (title: "Операция в обработке", message: "Проверьте её статус позже в истории операций.")
-        }
-
-        return (title: title, message: message)
+        return (title: "Ошибка", messageError: messageError)
     }
 }
 

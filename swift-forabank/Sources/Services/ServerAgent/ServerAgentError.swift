@@ -56,3 +56,28 @@ public enum ServerAgentError: LocalizedError {
         }
     }
 }
+
+public extension Error {
+    
+    func isTimeoutError() -> Bool {
+        
+        let nsError = self as NSError
+        
+        return nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorTimedOut
+    }
+}
+
+public extension ServerAgentError {
+    
+    func isTimeoutSAError() -> Bool {
+        
+        switch self {
+            
+        case .sessionError(let error):
+            return error.isTimeoutError ()
+            
+        default:
+            return false
+        }
+    }
+}

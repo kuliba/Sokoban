@@ -208,7 +208,7 @@ final class PaymentsMeToMeViewModelTests: XCTestCase {
         let alertData = sut?.createAlertData(error)
         
         XCTAssertEqual(alertData?.title, "Ошибка")
-        XCTAssertEqual(alertData?.message, "Test error message")
+        XCTAssertEqual(alertData?.messageError, "Test error message")
     }
     
     func test_createAlertData_withStatusError_shouldReturnCorrectData() {
@@ -219,7 +219,7 @@ final class PaymentsMeToMeViewModelTests: XCTestCase {
         let alertData = sut?.createAlertData(error)
         
         XCTAssertEqual(alertData?.title, "Ошибка")
-        XCTAssertEqual(alertData?.message, "Test status error")
+        XCTAssertEqual(alertData?.messageError, "Test status error")
     }
     
     func test_createAlertData_withServerCommandError_shouldReturnCorrectData() {
@@ -230,18 +230,17 @@ final class PaymentsMeToMeViewModelTests: XCTestCase {
         let alertData = sut?.createAlertData(error)
         
         XCTAssertEqual(alertData?.title, "Ошибка")
-        XCTAssertEqual(alertData?.message, "Test server error")
+        XCTAssertEqual(alertData?.messageError, "Test server error")
     }
-    
-    func test_createAlertData_withUnauthorizedCommandAttempt_shouldReturnTitleWithNilMessage() {
+
+    func test_createAlertData_withUnauthorizedCommandAttempt_shouldReturnNil() {
         
         let sut = makeSUT(model: modelWithNecessaryData(), mode: .general)
         let error = ModelError.unauthorizedCommandAttempt
         
         let alertData = sut?.createAlertData(error)
         
-        XCTAssertEqual(alertData?.title, "Ошибка")
-        XCTAssertNil(alertData?.message)
+        XCTAssertNil(alertData)
     }
     
     func test_createAlertData_withMeToMeCreateTransferAndSpecificError_shouldReturnSpecialData() {
@@ -252,18 +251,18 @@ final class PaymentsMeToMeViewModelTests: XCTestCase {
         let alertData = sut?.createAlertData(error, isFromMeToMeCreateTransfer: true)
         
         XCTAssertEqual(alertData?.title, "Операция в обработке")
-        XCTAssertEqual(alertData?.message, "Проверьте её статус позже в истории операций.")
+        XCTAssertEqual(alertData?.messageError, "Проверьте её статус позже в истории операций.")
     }
-    
+
     func test_createAlertData_withMeToMeCreateTransferAndOtherError_shouldReturnNormalData() {
         
         let sut = makeSUT(model: modelWithNecessaryData(), mode: .general)
         let error = ModelError.serverCommandError(error: "Some other error")
         
-        let alertData = sut?.createAlertData(error, isFromMeToMeCreateTransfer: true)
+        let alertData = sut?.createAlertData(error)
         
         XCTAssertEqual(alertData?.title, "Ошибка")
-        XCTAssertEqual(alertData?.message, "Some other error")
+        XCTAssertEqual(alertData?.messageError, "Some other error")
     }
     
     func test_createAlertData_withoutMeToMeCreateTransferAndSpecificError_shouldReturnNormalData() {
@@ -271,29 +270,48 @@ final class PaymentsMeToMeViewModelTests: XCTestCase {
         let sut = makeSUT(model: modelWithNecessaryData(), mode: .general)
         let error = ModelError.serverCommandError(error: "Превышен лимит времени на запрос.")
         
-        let alertData = sut?.createAlertData(error, isFromMeToMeCreateTransfer: false)
+        let alertData = sut?.createAlertData(error)
         
         XCTAssertEqual(alertData?.title, "Ошибка")
-        XCTAssertEqual(alertData?.message, "Превышен лимит времени на запрос.")
+        XCTAssertEqual(alertData?.messageError, "Превышен лимит времени на запрос.")
     }
     
-    func test_bind_withMeToMeCreateTransferFailure_shouldSetSpecialAlertProperties() {
+    func test_createTransferFailure_shouldSetProcessingAlert() {
         
-        let model = makeModelWithServerAgentStub()
-        let sut = PaymentsMeToMeViewModel(model, mode: .general)
-        let spy = ValueSpy(model.action.compactMap { $0 as? ModelAction.Payment.MeToMe.CreateTransfer.Response })
-        
-        let error = ModelError.serverCommandError(error: "Превышен лимит времени на запрос.")
-        let failureResponse = ModelAction.Payment.MeToMe.CreateTransfer.Response(result: .failure(error))
-        
-        model.action.send(failureResponse)
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.5)
+        let failureResponse = ModelAction.Payment.MeToMe.CreateTransfer.Response(result: .failure(.statusError(status: .timeout, message: "Превышен лимит времени на запрос.")))
+        let sut = makeSUTWithAction(failureResponse: failureResponse)
         
         XCTAssertEqual(sut?.alert?.title, "Операция в обработке")
         XCTAssertEqual(sut?.alert?.message, "Проверьте её статус позже в истории операций.")
     }
 
+    func test_createTransferFailure_shouldSetErrorAlert() {
+        
+        let failureResponse = ModelAction.Payment.MeToMe.CreateTransfer.Response(result: .failure(.statusError(status: .serverError, message: "Все плохо")))
+        let sut = makeSUTWithAction(failureResponse: failureResponse)
+        
+        XCTAssertEqual(sut?.alert?.title, "Ошибка")
+        XCTAssertEqual(sut?.alert?.message, "Все плохо")
+    }
+
+    func test_createTransferFailure_shouldSetNilAlert() {
+        
+        let failureResponse = ModelAction.Payment.MeToMe.CreateTransfer.Response(result: .failure(.statusError(status: .serverError, message: nil)))
+        let sut = makeSUTWithAction(failureResponse: failureResponse)
+        
+        XCTAssertNil(sut?.alert?.title)
+        XCTAssertNil(sut?.alert?.message)
+    }
+
+    func test_createTransferFailure_shouldSetServerCommandErrorAlert() {
+        
+        let failureResponse = ModelAction.Payment.MeToMe.CreateTransfer.Response(result: .failure(.serverCommandError(error: "serverCommandError")))
+        let sut = makeSUTWithAction(failureResponse: failureResponse)
+        
+        XCTAssertEqual(sut?.alert?.title, "Ошибка")
+        XCTAssertEqual(sut?.alert?.message, "serverCommandError")
+    }
+    
     // MARK: - PaymentsMeToMeViewModel Helpers Tests
 
     func test_getTemplateId_withPaymentMeToMeModeTemplatePayment() throws {
@@ -454,6 +472,28 @@ extension PaymentsMeToMeViewModelTests {
             
             trackForMemoryLeaks(sut, file: file, line: line)
         }
+        
+        return sut
+    }
+    
+    func makeSUTWithAction(
+        mode: PaymentsMeToMeViewModel.Mode = .general,
+        failureResponse: ModelAction.Payment.MeToMe.CreateTransfer.Response,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> PaymentsMeToMeViewModel? {
+        
+        let model = makeModelWithServerAgentStub()
+        let sut = PaymentsMeToMeViewModel(model, mode: mode)
+        
+        if let sut {
+            trackForMemoryLeaks(sut, file: file, line: line)
+        }
+        
+        _ = ValueSpy(model.action.compactMap { $0 as? ModelAction.Payment.MeToMe.CreateTransfer.Response })
+        
+        model.action.send(failureResponse)
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
         
         return sut
     }
