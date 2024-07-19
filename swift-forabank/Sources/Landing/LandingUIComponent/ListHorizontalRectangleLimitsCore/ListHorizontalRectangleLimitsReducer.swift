@@ -7,6 +7,8 @@
 
 import Foundation
 import UIPrimitives
+import SwiftUI
+import Combine
 
 public final class ListHorizontalRectangleLimitsReducer {
     
@@ -34,8 +36,48 @@ public extension ListHorizontalRectangleLimitsReducer {
             }
             
         case let .buttonTapped(info):
-            break
-            
+            switch info.action {
+            case "changeLimit":
+                state.limitsLoadingStatus = .inflight(.loadingSettingsLimits)
+                
+                let landing: UILanding = .init(
+                    header: [.pageTitle(.defaultValue1)],
+                    main: [
+                        .blockHorizontalRectangular(.defaultValue)
+                    ],
+                    footer: [],
+                    details: [])
+                
+                state.destination = .settingsView(
+                    .init(initialState: .success(landing),
+                          imagePublisher: { Just(["1": Image.bolt])
+                              .eraseToAnyPublisher() }(),
+                          imageLoader: { _ in },
+                          makeIconView: { _ in .init(
+                              image: .flag,
+                              publisher: Just(.percent).eraseToAnyPublisher()
+                          )},
+                          limitsViewModel: nil,
+                          config: .defaultValue,
+                          landingActions: {_ in }))
+
+            default:
+                break
+            }
+         
+        case let .loadedLimits(landing):
+            state.destination = .settingsView(
+                .init(initialState: .success(landing),
+                      imagePublisher: { Just(["1": Image.bolt])
+                          .eraseToAnyPublisher() }(),
+                      imageLoader: { _ in },
+                      makeIconView: { _ in .init(
+                          image: .flag,
+                          publisher: Just(.percent).eraseToAnyPublisher()
+                      )},
+                      limitsViewModel: nil,
+                      config: .defaultValue,
+                      landingActions: {_ in }))
         case .dismissDestination:
             state.destination = nil
         }

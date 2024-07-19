@@ -333,7 +333,7 @@ struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            preview(.inflight)
+            preview(.inflight(.loadingSVCardLimits))
                 .previewDisplayName("inflight")
             
             preview(.failure)

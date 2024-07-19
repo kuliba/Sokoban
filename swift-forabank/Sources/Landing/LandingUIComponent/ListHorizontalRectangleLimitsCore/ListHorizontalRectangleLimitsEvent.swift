@@ -11,6 +11,7 @@ public enum ListHorizontalRectangleLimitsEvent: Equatable {
     
     case buttonTapped(Info)
     case dismissDestination
+    case loadedLimits(UILanding)
     case updateLimits(SVCardLimitsResult)
     
     public struct Info: Equatable {

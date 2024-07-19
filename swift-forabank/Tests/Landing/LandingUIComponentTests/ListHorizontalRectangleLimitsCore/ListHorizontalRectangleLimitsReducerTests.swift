@@ -34,7 +34,7 @@ final class ListHorizontalRectangleLimitsReducerTests: XCTestCase {
 
     private func initialState(
         _ list: UILanding.List.HorizontalRectangleLimits = .default,
-        _ status: LimitsLoadingStatus = .inflight
+        _ status: LimitsLoadingStatus = .inflight(.loadingSVCardLimits)
     ) -> ListHorizontalRectangleLimitsState {
         .init(list: list, limitsLoadingStatus: status)
     }
