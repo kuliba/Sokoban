@@ -203,10 +203,7 @@ extension ListHorizontalRectangleLimitsView {
                         VStack(alignment: .leading) {
                             
                             HStack {
-                                Text(value(limit.value - limit.currentValue))
-                                    .font(config.fonts.limit)
-                                    .foregroundColor(config.colors.title)
-                                Text(limit.currency)
+                                Text(value(limit.value - limit.currentValue) + " " + limit.currency)
                                     .font(config.fonts.limit)
                                     .foregroundColor(config.colors.title)
                                 circleLimit(
@@ -307,10 +304,11 @@ extension ListHorizontalRectangleLimitsView {
         }
                 
         private func value(_ value: Decimal) -> String {
-            value > 0 ? "\(value)" : "0"
+            value > 0 ? value.formattedValue : "0"
         }
     }
 }
+
 
 struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
     
@@ -376,5 +374,19 @@ extension View {
             width: config.sizes.width,
             height: config.sizes.height
         )
+    }
+}
+
+private extension Decimal {
+    
+    var formattedValue: String {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        formatter.locale = Locale.current
+        
+        return formatter.string(for: self) ?? ""
     }
 }
