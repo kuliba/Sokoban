@@ -179,7 +179,7 @@ extension ListHorizontalRectangleLimitsView {
             case .inflight:
                 Rectangle()
                     .fill(config.colors.divider)
-                    .frame(height: 20)
+                    .frame(height: 24)
                     .frame(maxWidth: .infinity)
                     .shimmering()
                 
@@ -228,6 +228,7 @@ extension ListHorizontalRectangleLimitsView {
                     Text("Не установлен")
                         .font(config.fonts.limit)
                         .foregroundColor(config.colors.limitNotSet)
+                        .frame(height: 24)
                 }
             }
         }
