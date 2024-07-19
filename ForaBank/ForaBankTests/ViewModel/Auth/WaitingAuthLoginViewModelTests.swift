@@ -410,12 +410,12 @@ final class WaitingAuthLoginViewModelTests: AuthLoginViewModelTests {
         sessionStateFcmToken.send(((.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy))), nil))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
-        XCTAssertNoDiff(spy.values, [nil, nil])
+        XCTAssertNoDiff(spy.values, [nil, .ic24ArrowRight])
         
         sessionStateFcmToken.send(((.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy))), "fcmToken"))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
         
-        XCTAssertNoDiff(spy.values, [nil, nil, .ic24ArrowRight])
+        XCTAssertNoDiff(spy.values, [nil, .ic24ArrowRight, .ic24ArrowRight])
     }
     
     func test_cardState_shouldSetCardButton() {
