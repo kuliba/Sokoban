@@ -103,6 +103,8 @@ extension ListHorizontalRectangleLimitsView {
     
     struct ItemView: View {
         
+        let halfScreenWidth: CGFloat = UIScreen.main.bounds.width/2
+
         let item: UILanding.List.HorizontalRectangleLimits.Item
         let factory: Factory
         let limitsLoadingStatus: LimitsLoadingStatus
@@ -149,7 +151,7 @@ extension ListHorizontalRectangleLimitsView {
                     .padding(.horizontal, config.paddings.horizontal)
                 }
             }
-            .frame(config)
+            .frame(width: halfScreenWidth - 1.5 * config.paddings.horizontal, height: config.sizes.height)
         }
         
         private func itemView(
