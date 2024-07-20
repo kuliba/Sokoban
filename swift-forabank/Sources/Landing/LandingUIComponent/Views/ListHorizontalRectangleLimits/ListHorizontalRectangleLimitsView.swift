@@ -54,10 +54,10 @@ struct ListHorizontalRectangleLimitsView: View {
                     }
                 }
                 .foregroundColor(.white)
-                .cornerRadius(9)
+                .cornerRadius(config.cornerRadius)
                 .frame(height: 56)
                 .padding(.horizontal, 16)
-                .padding(.vertical, 8)
+                .padding(.vertical, config.paddings.vertical)
             }
             .padding(.bottom)
             .ignoresSafeArea(.container, edges: .bottom)
