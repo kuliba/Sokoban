@@ -812,6 +812,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             cvvPINServicesClient: cvvPINServicesClient, 
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeSubscriptionsViewModel: { _,_  in .preview},
             updateInfoStatusFlag: updateInfoStatusFlag
         )
         
