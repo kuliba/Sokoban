@@ -106,7 +106,7 @@ extension BlockHorizontalRectangularView {
                                 TextField(
                                     "",
                                     text: .init(
-                                        get: { inputState.value.formattedValue("R") },
+                                        get: { inputState.value.formattedValue("₽") },
                                         set: { event(.change(.init(id: limit.id, value: $0))) }
                                     )
                                 )

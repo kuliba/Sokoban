@@ -42,7 +42,25 @@ struct ListHorizontalRectangleLimitsView: View {
         
         switch destination {
         case let .settingsView(viewModel):
-            LandingWrapperView(viewModel: viewModel)
+            
+            VStack {
+                LandingWrapperView(viewModel: viewModel)
+                    .frame(maxHeight: .infinity)
+                Button(action: { /* TODO: add save action */ }) {
+                    ZStack {
+                        Color(red: 255/255, green: 54/255, blue: 54/255)
+                        Text("Сохранить")
+                            .padding()
+                    }
+                }
+                .foregroundColor(.white)
+                .cornerRadius(9)
+                .frame(height: 56)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+            }
+            .padding(.bottom)
+            .ignoresSafeArea(.container, edges: .bottom)
         }
     }
         

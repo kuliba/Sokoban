@@ -1502,31 +1502,62 @@ private extension LocalAgentProtocol {
             return load(type: LocalAgentDomain.AbroadSticker.self)
                 .map(\.landing)
                 .map(UILanding.init)
+       
+        case let .control(cardType):
+            switch cardType {
+            case .main:
+                return load(type: LocalAgentDomain.MainCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .regular:
+                return load(type: LocalAgentDomain.RegularCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .additionalSelf:
+                return load(type: LocalAgentDomain.AdditionalSelfCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .additionalSelfAccOwn:
+                return load(type: LocalAgentDomain.AdditionalSelfAccOwnCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .additionalOther:
+                return load(type: LocalAgentDomain.AdditionalOtherCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+            }
             
-        case .main:
-            return load(type: LocalAgentDomain.MainCard.self)
-                .map(\.landing)
-                .map(UILanding.init)
+        case let .limit(cardType):
+            switch cardType {
+            case .main:
+                return load(type: LocalAgentDomain.LimitMainCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
 
-        case .regular:
-            return load(type: LocalAgentDomain.RegularCard.self)
-                .map(\.landing)
-                .map(UILanding.init)
-            
-        case .additionalSelf:
-            return load(type: LocalAgentDomain.AdditionalSelfCard.self)
-                .map(\.landing)
-                .map(UILanding.init)
-            
-        case .additionalSelfAccOwn:
-            return load(type: LocalAgentDomain.AdditionalSelfAccOwnCard.self)
-                .map(\.landing)
-                .map(UILanding.init)
+            case .regular:
+                return load(type: LocalAgentDomain.LimitRegularCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .additionalSelf:
+                return load(type: LocalAgentDomain.LimitAdditionalSelfCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+                
+            case .additionalSelfAccOwn:
+                return load(type: LocalAgentDomain.LimitAdditionalSelfAccOwnCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
 
-        case .additionalOther:
-            return load(type: LocalAgentDomain.AdditionalOtherCard.self)
-                .map(\.landing)
-                .map(UILanding.init)
+            case .additionalOther:
+                return load(type: LocalAgentDomain.LimitAdditionalOtherCard.self)
+                    .map(\.landing)
+                    .map(UILanding.init)
+            }
         }
     }
 }
@@ -1579,6 +1610,31 @@ extension LocalAgentDomain {
     }
 
     struct AdditionalOtherCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct LimitMainCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct LimitRegularCard: Codable {
+        
+        let landing: Landing
+    }
+    
+    struct LimitAdditionalSelfCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct LimitAdditionalSelfAccOwnCard: Codable {
+        
+        let landing: Landing
+    }
+
+    struct LimitAdditionalOtherCard: Codable {
         
         let landing: Landing
     }

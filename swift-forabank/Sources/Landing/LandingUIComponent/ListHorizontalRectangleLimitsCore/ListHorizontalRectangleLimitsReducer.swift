@@ -38,46 +38,19 @@ public extension ListHorizontalRectangleLimitsReducer {
         case let .buttonTapped(info):
             switch info.action {
             case "changeLimit":
-                state.limitsLoadingStatus = .inflight(.loadingSettingsLimits)
+               // state.limitsLoadingStatus = .inflight(.loadingSettingsLimits)
+                effect = .loadSVCardLanding
                 
-                let landing: UILanding = .init(
-                    header: [.pageTitle(.defaultValue1)],
-                    main: [
-                        .blockHorizontalRectangular(.defaultValue)
-                    ],
-                    footer: [],
-                    details: [])
-                
-                state.destination = .settingsView(
-                    .init(initialState: .success(landing),
-                          imagePublisher: { Just(["1": Image.bolt])
-                              .eraseToAnyPublisher() }(),
-                          imageLoader: { _ in },
-                          makeIconView: { _ in .init(
-                              image: .flag,
-                              publisher: Just(.percent).eraseToAnyPublisher()
-                          )},
-                          limitsViewModel: nil,
-                          config: .defaultValue,
-                          landingActions: {_ in }))
-
             default:
                 break
             }
-         
-        case let .loadedLimits(landing):
-            state.destination = .settingsView(
-                .init(initialState: .success(landing),
-                      imagePublisher: { Just(["1": Image.bolt])
-                          .eraseToAnyPublisher() }(),
-                      imageLoader: { _ in },
-                      makeIconView: { _ in .init(
-                          image: .flag,
-                          publisher: Just(.percent).eraseToAnyPublisher()
-                      )},
-                      limitsViewModel: nil,
-                      config: .defaultValue,
-                      landingActions: {_ in }))
+            
+        case let .loadedLimits(landingViewModel):
+            
+            if let landingViewModel {
+                state.destination = .settingsView(landingViewModel)
+            }
+            
         case .dismissDestination:
             state.destination = nil
         }
