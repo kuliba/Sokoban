@@ -136,22 +136,24 @@ extension ListVerticalRoundImageView {
                         
             let detailDestination = item.detailDestination
             let url = item.urlForOpen
-            
+            let actionType = item.action?.listVerticalRoundImageAction
+
             switch detailDestination {
             case .none:
                 if let url { UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                } else if let actionType {
+                    action(.listVerticalRoundImageAction(actionType))
                 }
                 
             case let .some(destination):
                 let canOpen = canOpenDetail(destination)
-                let actionType = item.action?.listVerticalRoundImageAction
                 
                 switch (canOpen, actionType) {
                 case (true, _):
                     selectDetail(destination)
                     
                 case let (false, .some(actionType)):
-                        action(.listVerticalRoundImageAction(actionType))
+                    action(.listVerticalRoundImageAction(actionType))
                     
                 default:
                     if let url { UIApplication.shared.open(url, options: [:], completionHandler: nil)
