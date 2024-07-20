@@ -75,6 +75,20 @@ struct ControlPanelWrapperView: View {
 
         case let .openDepositsList(viewModel):
             return AnyView(OpenDepositListView(viewModel: viewModel, getUImage: getUImage))
+            
+        case let .openSubscriptions(subscriptionViewModel):
+            return AnyView(ManagingSubscriptionView(
+                subscriptionViewModel: subscriptionViewModel,
+                configurator: .init(
+                    titleFont: .textBodyMR14180(),
+                    titleColor: .textPlaceholder,
+                    nameFont: .textH4M16240(),
+                    nameColor: .mainColorsBlack,
+                    descriptionFont: .textBodyMR14180()
+                ),
+                footerImage: Image.ic72Sbp,
+                searchCancelAction: subscriptionViewModel.searchViewModel.dismissKeyboard)
+            )
         }
     }
 }

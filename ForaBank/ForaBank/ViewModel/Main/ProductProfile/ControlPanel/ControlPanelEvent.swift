@@ -21,6 +21,7 @@ enum ControlPanelEvent {
 
     case bannerEvent(BannerActionEvent)
     case dismissDestination
+    case openSubscriptions(SubscriptionsViewModel)
 }
 
 enum BannerActionEvent {

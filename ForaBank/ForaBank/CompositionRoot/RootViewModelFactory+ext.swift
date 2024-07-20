@@ -210,6 +210,11 @@ extension RootViewModelFactory {
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
             makeCardGuardianPanel: makeCardGuardianPanel,
+            makeSubscriptionsViewModel: makeSubscriptionsViewModel(
+                getProducts: getSubscriptionProducts(model: model),
+                c2bSubscription: model.subscriptions.value,
+                scheduler: scheduler
+            ),
             updateInfoStatusFlag: updateInfoStatusFlag
         )
         
@@ -376,6 +381,7 @@ extension ProductProfileViewModel {
         cvvPINServicesClient: CVVPINServicesClient,
         productNavigationStateManager: ProductProfileFlowManager,
         makeCardGuardianPanel: @escaping ProductProfileViewModelFactory.MakeCardGuardianPanel,
+        makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> MakeProductProfileViewModel {
         
@@ -394,6 +400,7 @@ extension ProductProfileViewModel {
                 cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager,
                 makeCardGuardianPanel: makeCardGuardianPanel,
+                makeSubscriptionsViewModel: makeSubscriptionsViewModel,
                 updateInfoStatusFlag: updateInfoStatusFlag
             )
             
@@ -446,6 +453,7 @@ extension ProductProfileViewModel {
                     updateInfoStatusFlag.isActive ? .updateFailureInfo : nil
                 }, 
                 makeCardGuardianPanel: makeCardGuardianPanel,
+                makeSubscriptionsViewModel: makeSubscriptionsViewModel,
                 model: model
             )
             

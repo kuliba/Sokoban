@@ -86,6 +86,9 @@ extension ControlPanelReducer {
             
         case .dismissDestination:
             state.destination = nil
+            
+        case let .openSubscriptions(viewModel):
+            state.destination = .openSubscriptions(viewModel)
         }
         return (state, effect)
     }

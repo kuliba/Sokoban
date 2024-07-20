@@ -104,16 +104,22 @@ extension ListVerticalRoundImageView {
         @Published private(set) var data: VerticalRoundImageList
         @Published private(set) var images: [String: Image] = [:]
         
+        private let action: (LandingEvent) -> Void
         private let selectDetail: SelectDetail
+        private let canOpenDetail: UILanding.CanOpenDetail
 
         init(
             data: VerticalRoundImageList,
             images: [String: Image],
-            selectDetail: @escaping SelectDetail
+            action: @escaping (LandingEvent) -> Void,
+            selectDetail: @escaping SelectDetail,
+            canOpenDetail: @escaping UILanding.CanOpenDetail
         ) {
             self.data = data
             self.images = images
+            self.action = action
             self.selectDetail = selectDetail
+            self.canOpenDetail = canOpenDetail
         }
         
         func image(byMd5Hash: String) -> Image? {
@@ -123,20 +129,47 @@ extension ListVerticalRoundImageView {
         
         static func action(
             item: UILanding.List.VerticalRoundImage.ListItem,
-            selectDetail: SelectDetail
+            selectDetail: SelectDetail,
+            action: (LandingEvent) -> Void,
+            canOpenDetail: UILanding.CanOpenDetail
         ) {
+                        
+            let detailDestination = item.detailDestination
+            let url = item.urlForOpen
             
-            if let detailDestination = item.detailDestination {
-                selectDetail(detailDestination)
-            } else if let url = item.urlForOpen {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil) }
+            switch detailDestination {
+            case .none:
+                if let url { UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+                
+            case let .some(destination):
+                let canOpen = canOpenDetail(destination)
+                let actionType = item.action?.listVerticalRoundImageAction
+                
+                switch (canOpen, actionType) {
+                case (true, _):
+                    selectDetail(destination)
+                    
+                case let (false, .some(actionType)):
+                        action(.listVerticalRoundImageAction(actionType))
+                    
+                default:
+                    if let url { UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    }
+                }
+            }
         }
 
         func action(
             for item: VerticalRoundImageList.ListItem
         ) {
             
-            Self.action(item: item, selectDetail: selectDetail)
+            Self.action(
+                item: item,
+                selectDetail: selectDetail,
+                action: action,
+                canOpenDetail: canOpenDetail
+            )
         }
         
         func list(
@@ -198,6 +231,7 @@ extension UILanding.List.VerticalRoundImage.ListItem {
         && self.appStore.isNilOrEmpty
         && self.googlePlay.isNilOrEmpty
         && self.link.isNilOrEmpty
+        && self.action == nil
     }
 }
 
@@ -208,3 +242,18 @@ extension Optional where Wrapped == String {
         return true
     }
 }
+
+private extension UILanding.List.VerticalRoundImage.ListItem.Action {
+    
+    var listVerticalRoundImageAction: LandingEvent.ListVerticalRoundImageAction? {
+        
+        switch type {
+        case "subscriptionControl":
+            return .openSubscriptions
+        default:
+            return nil
+        }
+    }
+}
+
+

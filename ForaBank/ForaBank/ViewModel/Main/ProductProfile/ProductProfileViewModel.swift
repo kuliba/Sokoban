@@ -2138,6 +2138,27 @@ extension ProductProfileViewModel {
         }
     }
 
+    func openSubscriptions() {
+        
+        if let controlPanelViewModel {
+            
+            let viewModel = productProfileViewModelFactory.makeSubscriptionsViewModel(
+                { [weak self] token, title in
+                    
+                    /*self?.event(.navigate(.alert(.cancelC2BSub(
+                        title: title,
+                        event: .cancelC2BSub(token)
+                    ))))*/
+                },
+                { [weak self] token in
+                    
+                    self?.model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
+                })
+
+            controlPanelViewModel.event(.openSubscriptions(viewModel))
+        }
+    }
+
     func createCardGuardianPanel(_ product: ProductData?) {
         
         guard let card = product?.asCard else {
@@ -2207,6 +2228,11 @@ extension ProductProfileViewModel {
                 
             case let .openDeposit(deposit):
                 openDeposit(deposit.depositID)
+            }
+        case let .listVerticalRoundImageAction(action):
+            switch action {
+            case .openSubscriptions:
+                openSubscriptions()
             }
         }
     }
