@@ -234,7 +234,7 @@ final class ControlPanelReducerTests: XCTestCase {
         let card = makeCardProduct(statusCard: .active)
         
         assertState(
-            .dismissDestination,
+            .dismiss(.destination),
             on: initialState(buttons: .buttons(card), destination: .landing(.mockData))) {
                 
                 $0.destination = nil

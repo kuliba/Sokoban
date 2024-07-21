@@ -39,6 +39,13 @@ extension ControlPanelEffectHandler {
                 dispatch(.controlButtonEvent(.showAlert(alert)))
             }
             
+        case let .delayAlertModelOf(alert, dispatchTimeInterval):
+            DispatchQueue.main.asyncAfter(deadline: .now() + dispatchTimeInterval) {
+                
+                dispatch(.controlButtonEvent(.showAlertModelOf(alert)))
+            }
+
+            
         case let .blockCard(card):
             
             productProfileServices.createBlockCardService.createBlockCard(.init(cardId: .init(card.cardId), cardNumber: .init(card.number ?? ""))) { result in

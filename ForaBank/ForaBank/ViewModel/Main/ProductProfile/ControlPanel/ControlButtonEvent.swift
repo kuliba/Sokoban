@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 enum ControlButtonEvent: Equatable {
     
@@ -18,6 +19,8 @@ enum ControlButtonEvent: Equatable {
     case changePin(ProductCardData)
     case visibility(ProductCardData)
     case showAlert(Alert.ViewModel)
+    case showAlertModelOf(AlertModelOf<ControlPanelEvent>)
+
     case delayAlert(ProductCardData)
     
     var id: String {
@@ -33,6 +36,9 @@ enum ControlButtonEvent: Equatable {
             return "\(card.id)"
         case let .delayAlert(card):
             return "\(card.id)"
+        case let .showAlertModelOf(alertModel):
+            return "\(alertModel.id)"
+
         case let .showAlert(viewModel):
             return viewModel.id.uuidString
         }

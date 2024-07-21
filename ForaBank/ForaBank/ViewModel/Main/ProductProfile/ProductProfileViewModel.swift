@@ -17,6 +17,7 @@ import SwiftUI
 import Tagged
 import RxViewModel
 import LandingUIComponent
+import UIPrimitives
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -2043,7 +2044,7 @@ extension ProductProfileViewModel {
                     countryId: countryID
                 ),
                 model: model) {
-                    controlPanelViewModel.event(.dismissDestination)
+                    controlPanelViewModel.event(.dismiss(.destination))
                 }
             controlPanelViewModel.event(.bannerEvent(.contactTransfer(paymentsViewModel)))
         }
@@ -2058,7 +2059,7 @@ extension ProductProfileViewModel {
                     countryId: countryID
                 ),
                 model: model) {
-                    controlPanelViewModel.event(.dismissDestination)
+                    controlPanelViewModel.event(.dismiss(.destination))
                 }
             controlPanelViewModel.event(.bannerEvent(.migTransfer(paymentsViewModel)))
         }
@@ -2072,7 +2073,7 @@ extension ProductProfileViewModel {
                 model,
                 catalogType: .deposit,
                 dismissAction: {
-                    controlPanelViewModel.event(.dismissDestination)
+                    controlPanelViewModel.event(.dismiss(.destination))
                 })
 
             controlPanelViewModel.event(.bannerEvent(.openDepositsList(openDepositViewModel)))
@@ -2145,10 +2146,20 @@ extension ProductProfileViewModel {
             let viewModel = productProfileViewModelFactory.makeSubscriptionsViewModel(
                 { [weak self] token, title in
                     
+                    controlPanelViewModel.event(.alert(.cancelC2BSub(
+                        title: title,
+                        event: .cancelC2BSub(token)
+                    )))
                     /*self?.event(.navigate(.alert(.cancelC2BSub(
                         title: title,
                         event: .cancelC2BSub(token)
-                    ))))*/
+                    ))))
+                     { (token: SubscriptionViewModel.Token) in
+                         
+                         let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
+                         model.action.send(action)
+                     }
+                     */
                 },
                 { [weak self] token in
                     
@@ -2177,6 +2188,30 @@ extension ProductProfileViewModel {
                 link = .controlPanel(controlPanelViewModel)
             }
         }
+    }
+}
+
+private extension AlertModelOf<ControlPanelEvent> {
+    
+    static func cancelC2BSub(
+        title: String,
+        event: ControlPanelEvent
+    ) -> Self {
+        
+        .init(
+            title: title,
+            message: nil,
+            primaryButton: .init(
+                type: .cancel,
+                title: "Отмена",
+                event: .dismiss(.alert)
+            ),
+            secondaryButton: .init(
+                type: .default,
+                title: "Отключить",
+                event: event
+            )
+        )
     }
 }
 

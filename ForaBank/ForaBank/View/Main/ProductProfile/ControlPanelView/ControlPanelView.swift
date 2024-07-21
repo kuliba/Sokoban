@@ -32,7 +32,7 @@ where DestinationView: View {
         }
         .navigationDestination(
             destination: state.destination,
-            dismissDestination: { event(.dismissDestination) },
+            dismissDestination: { event(.dismiss(.destination)) },
             content: destinationView
         )
         .padding(.top, config.paddings.top)

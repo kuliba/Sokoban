@@ -8,8 +8,10 @@
 import Foundation
 import LandingUIComponent
 import SVCardLimitAPI
+import ManageSubscriptionsUI
+import UIPrimitives
 
-enum ControlPanelEvent {
+indirect enum ControlPanelEvent {
     
     case controlButtonEvent(ControlButtonEvent)
     case updateState([ControlPanelButtonDetails])
@@ -20,10 +22,22 @@ enum ControlPanelEvent {
     case loadedSVCardLimits([GetSVCardLimitsResponse.LimitItem]?)
 
     case bannerEvent(BannerActionEvent)
-    case dismissDestination
+    case dismiss(DismissEvent)
+
+    case alert(AlertModelOf<ControlPanelEvent>)
+
     case openSubscriptions(SubscriptionsViewModel)
+    case cancelC2BSub(SubscriptionViewModel.Token)
 }
 
+extension ControlPanelEvent {
+    
+    enum DismissEvent {
+        
+        case alert
+        case destination
+    }
+}
 enum BannerActionEvent {
     case stickerEvent(StickerEvent)
     case contactTransfer(PaymentsViewModel)
