@@ -1457,13 +1457,22 @@ private extension PaymentsTransfersViewModel {
         
         qrViewModel.action
             .compactMap { $0 as? QRViewModelAction.Result }
+            .map(\.result)
             .receive(on: scheduler)
-            .sink { [unowned self] payload in
+            .sink { [unowned self] in
                 
-                switch payload.result {
-                case let .qrCode(qr):
-                    
-                    if let qrMapping = model.qrMapping.value {
+                self.handleQRViewModelActionResult($0)
+            }
+            .store(in: &bindings)
+    }
+    
+    private func handleQRViewModelActionResult(
+        _ result: QRViewModel.ScanResult
+    ) {
+        switch result {
+        case let .qrCode(qr):
+            
+            if let qrMapping = model.qrMapping.value {
                         handleQRMapping(qr, qrMapping)
                     } else {
                         handleFailure(qr: qr)
@@ -1481,11 +1490,9 @@ private extension PaymentsTransfersViewModel {
                 case .url:
                     handleURL()
                     
-                case .unknown:
-                    handleUnknownQR()
-                }
-            }
-            .store(in: &bindings)
+        case .unknown:
+            handleUnknownQR()
+        }
     }
     
     private func handleQRMapping(
