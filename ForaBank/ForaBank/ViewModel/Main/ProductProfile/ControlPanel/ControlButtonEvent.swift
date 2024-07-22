@@ -33,7 +33,6 @@ enum ControlButtonEvent: Equatable {
             return "\(card.id)"
         case let .delayAlert(card):
             return "\(card.id)"
-
         case let .showAlert(viewModel):
             return viewModel.id.uuidString
         }
