@@ -9,11 +9,11 @@ extension PaymentProviderSegmentsViewConfig {
     
     static let iFora: Self = .init(
         background: .mainColorsGrayLightest,
-        cornerRadius: 16,
+        cornerRadius: 12,
         dividerColor: .bordersDivider,
         title: .init(
-            textFont: .textBodyMR14180(),
-            textColor: .textPlaceholder
+            textFont: .textH3Sb18240(),
+            textColor: .textSecondary
         )
     )
 }
