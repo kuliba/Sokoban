@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import SharedConfigs
 
 struct FilterOptionButtonView: View {
     
-    let title: String
     @State var isSelected: Bool
     let tappedAction: () -> Void
+    let config: Config
     
     var body: some View {
         
@@ -22,31 +23,51 @@ struct FilterOptionButtonView: View {
             
         } label: {
             
-            Text(title)
-                .foregroundColor(isSelected ? Color.white : Color.black)
+            config.title.text(withConfig: config.titleConfig)
                 .padding(.vertical, 7.5)
                 .padding(.horizontal, 8)
-                .background(isSelected ? Color.black : Color.gray.opacity(0.2))
+                .background(Color.gray.opacity(0.2))
                 .cornerRadius(20)
-                .frame(alignment: .leading)
+                .active(if: isSelected)
+            
+            config.title.text(withConfig: config.selectedConfig)
+                .padding(.vertical, 7.5)
+                .padding(.horizontal, 8)
+                .background(Color.black)
+                .cornerRadius(20)
+                .active(if: !isSelected)
         }
+    }
+}
+
+extension FilterOptionButtonView {
+    
+    struct Config {
+        
+        let title: String
+        let titleConfig: TextConfig
+        let selectedConfig: TextConfig
+        
     }
 }
 
 #Preview {
     
     Group {
-
+        
         FilterOptionButtonView(
-            title: "Списание",
             isSelected: true,
-            tappedAction: {}
-        )
-
-        FilterOptionButtonView(
-            title: "Пополнение",
-            isSelected: false,
-            tappedAction: {}
+            tappedAction: {},
+            config: .init(
+                title: "Списание",
+                titleConfig: .init(
+                    textFont: .body,
+                    textColor: .black
+                ),
+                selectedConfig: .init(
+                    textFont: .body,
+                    textColor: .white
+                ))
         )
     }
 }
