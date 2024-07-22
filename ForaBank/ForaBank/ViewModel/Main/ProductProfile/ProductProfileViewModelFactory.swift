@@ -95,7 +95,6 @@ extension ProductProfileViewModelFactory {
     typealias Events = (Event) -> Void
 
     typealias MakeCardGuardianPanel = (ProductCardData) -> ProductProfileViewModel.CardGuardianPanelKind
-    typealias MakeNavigationOperationView = () -> any View
 }
 
 extension ProductProfileViewModelFactory {
