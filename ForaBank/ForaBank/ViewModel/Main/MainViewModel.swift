@@ -913,46 +913,76 @@ extension MainViewModel {
         qr: QRCode,
         qrMapping: QRMapping
     ) {
-        let isServicesOperator = Payments.paymentsServicesOperators.map(\.rawValue).contains(`operator`.parentCode)
+        let isServicesOperator = Payments
+            .paymentsServicesOperators
+            .map(\.rawValue)
+            .contains(`operator`.parentCode)
         
         if isServicesOperator {
-            
-            let puref = `operator`.code
-            let additionalList = self.model.additionalList(for: `operator`, qrCode: qr)
-            let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
-            let paymentsViewModel = PaymentsViewModel(
-                source: .servicePayment(
-                    puref: puref,
-                    additionalList: additionalList,
-                    amount: amount/100
-                ),
-                model: self.model,
-                closeAction: { [weak self] in
-                    
-                    self?.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                }
-            )
-            self.bind(paymentsViewModel)
-            
-            DispatchQueue.main.async { [weak self] in
-                
-                self?.route.destination = .payments(paymentsViewModel)
-            }
+            servicePayment(operator: `operator`, qr: qr)
         } else {
-            
-            DispatchQueue.main.delay(for: .milliseconds(700)) { [self] in
-                
-                let viewModel = InternetTVDetailsViewModel(
-                    model: model,
-                    qrCode: qr,
-                    mapping: qrMapping
-                )
-                
-                self.route.destination = .operatorView(viewModel)
-            }
+            operatorView(operator: `operator`, qr: qr, qrMapping: qrMapping)
         }
     }
     
+    private func servicePayment(
+        `operator`: OperatorGroupData.OperatorData,
+        qr: QRCode
+    ) {
+        let paymentsViewModel = makeServicePaymentViewModel(
+            operator: `operator`,
+            qr: qr
+        )
+        bind(paymentsViewModel)
+        
+        DispatchQueue.main.async { [weak self] in
+            
+            self?.route.destination = .payments(paymentsViewModel)
+        }
+    }
+    
+    private func makeServicePaymentViewModel(
+        `operator`: OperatorGroupData.OperatorData,
+        qr: QRCode
+    ) -> PaymentsViewModel {
+        
+        let puref = `operator`.code
+        let additionalList = self.model.additionalList(for: `operator`, qrCode: qr)
+        let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
+        
+        return PaymentsViewModel(
+            source: .servicePayment(
+                puref: puref,
+                additionalList: additionalList,
+                amount: amount/100
+            ),
+            model: self.model,
+            closeAction: { [weak self] in
+                
+                self?.model.action.send(PaymentsTransfersViewModelAction.Close.Link())
+            }
+        )
+    }
+    
+    private func operatorView(
+        `operator`: OperatorGroupData.OperatorData,
+        qr: QRCode,
+        qrMapping: QRMapping
+    ) {
+        DispatchQueue.main.delay(for: .milliseconds(700)) { [weak self] in
+            
+            guard let self else { return }
+            
+            let viewModel = InternetTVDetailsViewModel(
+                model: model,
+                qrCode: qr,
+                mapping: qrMapping
+            )
+            
+            self.route.destination = .operatorView(viewModel)
+        }
+    }
+
     private func searchOperators(
         _ operators: MultiElementArray<OperatorGroupData.OperatorData>,
         with qr: QRCode
