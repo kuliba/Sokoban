@@ -10,7 +10,7 @@ import Foundation
 public struct ListHorizontalRectangleLimitsState: Equatable {
     
     let id: UUID
-    public let list: UILanding.List.HorizontalRectangleLimits
+    let list: UILanding.List.HorizontalRectangleLimits
     var limitsLoadingStatus: LimitsLoadingStatus
     
     public init(

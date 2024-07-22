@@ -86,7 +86,7 @@ extension ControlPanelEffectHandler {
                         if let limits = landing.horizontalRectangleLimits {
                             
                             return .init(
-                                initialState: .init(list: .init(limits), limitsLoadingStatus: .inflight),
+                                initialState: .init(list: .init(limits), limitsLoadingStatus: .inflight(.loadingSVCardLimits)),
                                 reduce: ListHorizontalRectangleLimitsReducer.init().reduce(_:_:),
                                 handleEffect: {_,_ in })
                         }

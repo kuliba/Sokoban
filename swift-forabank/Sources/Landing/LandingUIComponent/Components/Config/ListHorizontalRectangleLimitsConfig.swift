@@ -26,19 +26,22 @@ public extension UILanding.List.HorizontalRectangleLimits {
             let divider: Color
             let title: Color
             let subtitle: Color
-            
+            let limitNotSet: Color
+
             public init(
                 arc: Color,
                 background: Color,
                 divider: Color,
                 title: Color,
-                subtitle: Color
+                subtitle: Color,
+                limitNotSet: Color
             ) {
                 self.arc = arc
                 self.background = background
                 self.divider = divider
                 self.title = title
                 self.subtitle = subtitle
+                self.limitNotSet = limitNotSet
             }
         }
         

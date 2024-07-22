@@ -85,6 +85,8 @@ extension ListHorizontalRectangleLimitsView {
     
     struct ItemView: View {
         
+        let halfScreenWidth: CGFloat = UIScreen.main.bounds.width/2
+
         let item: UILanding.List.HorizontalRectangleLimits.Item
         let factory: Factory
         let limitsLoadingStatus: LimitsLoadingStatus
@@ -131,7 +133,7 @@ extension ListHorizontalRectangleLimitsView {
                     .padding(.horizontal, config.paddings.horizontal)
                 }
             }
-            .frame(config)
+            .frame(width: halfScreenWidth - 1.5 * config.paddings.horizontal, height: config.sizes.height)
         }
         
         private func itemView(
@@ -161,14 +163,15 @@ extension ListHorizontalRectangleLimitsView {
             case .inflight:
                 Rectangle()
                     .fill(config.colors.divider)
-                    .frame(height: 20)
+                    .frame(height: 24)
                     .frame(maxWidth: .infinity)
                     .shimmering()
                 
             case .failure:
                 Text("Попробуйте позже")
                     .font(config.fonts.limit)
-                
+                    .foregroundColor(config.colors.limitNotSet)
+
             case let .limits(limits):
                 
                 if let limitsByType = limits.limitsList.first(where: { $0.type == limitType }), let limit = limitsByType.limits.first(where: { $0.name == limit.id }) {
@@ -177,17 +180,14 @@ extension ListHorizontalRectangleLimitsView {
                     case 999999999...:
                         Text("Без ограничений")
                             .font(config.fonts.limit)
-                            .foregroundColor(config.colors.title)
+                            .foregroundColor(config.colors.limitNotSet)
                             .frame(height: 24)
 
                     default:
                         VStack(alignment: .leading) {
                             
                             HStack {
-                                Text(value(limit.value - limit.currentValue))
-                                    .font(config.fonts.limit)
-                                    .foregroundColor(config.colors.title)
-                                Text(limit.currency)
+                                Text(value(limit.value - limit.currentValue) + " " + limit.currency)
                                     .font(config.fonts.limit)
                                     .foregroundColor(config.colors.title)
                                 circleLimit(
@@ -208,7 +208,8 @@ extension ListHorizontalRectangleLimitsView {
                 } else {
                     Text("Не установлен")
                         .font(config.fonts.limit)
-                        .foregroundColor(config.colors.title)
+                        .foregroundColor(config.colors.limitNotSet)
+                        .frame(height: 24)
                 }
             }
         }
@@ -287,7 +288,7 @@ extension ListHorizontalRectangleLimitsView {
         }
                 
         private func value(_ value: Decimal) -> String {
-            value > 0 ? "\(value)" : "0"
+            value > 0 ? value.formattedValue : "0"
         }
     }
 }
@@ -313,7 +314,7 @@ struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            preview(.inflight)
+            preview(.inflight(.loadingSVCardLimits))
                 .previewDisplayName("inflight")
             
             preview(.failure)
@@ -356,5 +357,19 @@ extension View {
             width: config.sizes.width,
             height: config.sizes.height
         )
+    }
+}
+
+private extension Decimal {
+    
+    var formattedValue: String {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        formatter.locale = Locale.current
+        
+        return formatter.string(for: self) ?? ""
     }
 }
