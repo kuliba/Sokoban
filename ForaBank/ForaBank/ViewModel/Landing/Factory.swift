@@ -44,6 +44,7 @@ extension Model {
                     
                 case .sticker: break
                 case .bannerAction: break
+                case .listVerticalRoundImageAction: break
                 }
             }
         )
@@ -74,6 +75,7 @@ extension Model {
                 case .bannerAction: break
                 case let .sticker(sticker):
                     landingActions(sticker)()
+                case .listVerticalRoundImageAction: break
                 }
             }
         )

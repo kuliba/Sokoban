@@ -463,6 +463,7 @@ extension MainViewModel {
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
@@ -488,6 +489,7 @@ extension MainViewModel {
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
@@ -513,6 +515,7 @@ extension MainViewModel {
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,

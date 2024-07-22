@@ -31,6 +31,7 @@ struct ListHorizontalRectangleLimitsView: View {
             ),
             content: destinationView
         )
+        
         .padding(.horizontal, config.paddings.horizontal)
         .padding(.vertical, config.paddings.vertical)
     }

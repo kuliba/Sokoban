@@ -84,9 +84,24 @@ extension ControlPanelReducer {
                 state.landingWrapperViewModel?.limitsViewModel?.event(.updateLimits(.failure))
             }
             
-        case .dismissDestination:
-            state.destination = nil
+        case let .dismiss(type):
+            switch type {
+            case .destination:
+                state.destination = nil
+            case .alert:
+                state.alert = nil
+            }
+            
+        case let .alert(alertModel):
+            effect = .delayAlert(alertModel, controlPanelLifespan)
+            
+        case let .cancelC2BSub(token):
+            effect = .model(.cancelC2BSub(token))
+            
+        case let .destination(destination):
+            state.destination = destination
         }
+        
         return (state, effect)
     }
 }
@@ -149,6 +164,7 @@ extension ControlPanelReducer {
 
         case let .showAlert(alertViewModel):
             state.alert = alertViewModel
+            
             
         case let .blockCard(card):
             state.status = .inflight(.block)

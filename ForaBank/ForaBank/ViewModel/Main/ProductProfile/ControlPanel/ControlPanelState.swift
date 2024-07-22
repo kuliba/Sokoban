@@ -63,6 +63,8 @@ extension ControlPanelState {
         case orderSticker(any View)
         case openDeposit(OpenDepositDetailViewModel)
         case openDepositsList(OpenDepositListViewModel)
+        case openSubscriptions(SubscriptionsViewModel)
+        case successView(PaymentsSuccessViewModel)
 
         var id: _Case { _case }
         
@@ -75,6 +77,8 @@ extension ControlPanelState {
             case .orderSticker: return .orderSticker
             case .openDeposit: return .openDeposit
             case .openDepositsList: return .openDepositsList
+            case .openSubscriptions: return .openSubscriptions
+            case .successView: return .successView
             }
         }
         
@@ -83,6 +87,7 @@ extension ControlPanelState {
             case contactTransfer, migTransfer
             case landing, orderSticker
             case openDeposit, openDepositsList
+            case openSubscriptions, successView
         }
     }
 }

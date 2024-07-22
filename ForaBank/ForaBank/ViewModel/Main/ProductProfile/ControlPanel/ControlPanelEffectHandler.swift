@@ -11,6 +11,7 @@ import LandingMapping
 
 final class ControlPanelEffectHandler {
     
+    private let handleModelEffect: HandleModelEffect
     private let productProfileServices: ProductProfileServices
     private let landingEvent: (LandingEvent) -> Void
     private let card: ProductCardData
@@ -18,11 +19,13 @@ final class ControlPanelEffectHandler {
     init(
         card: ProductCardData,
         productProfileServices: ProductProfileServices,
-        landingEvent: @escaping (LandingEvent) -> Void
+        landingEvent: @escaping (LandingEvent) -> Void,
+        handleModelEffect: @escaping HandleModelEffect
     ) {
         self.card = card
         self.productProfileServices = productProfileServices
         self.landingEvent = landingEvent
+        self.handleModelEffect = handleModelEffect
     }
 }
 
@@ -33,6 +36,10 @@ extension ControlPanelEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
+            
+        case let .model(modelEffect):
+            handleModelEffect(modelEffect, dispatch)
+
         case let .delayAlert(alert, dispatchTimeInterval):
             DispatchQueue.main.asyncAfter(deadline: .now() + dispatchTimeInterval) {
                 
@@ -125,6 +132,9 @@ extension ControlPanelEffectHandler {
     typealias Event = ControlPanelEvent
     typealias Effect = ControlPanelEffect
     typealias Dispatch = (Event) -> Void
+    
+    typealias HandleModelEffect = (Effect.ModelEffect, @escaping Dispatch) -> Void
+
 }
 
 private extension ControlPanelEffectHandler {

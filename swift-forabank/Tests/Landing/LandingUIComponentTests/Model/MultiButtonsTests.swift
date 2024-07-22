@@ -140,6 +140,8 @@ final class MultiButtonsTests: XCTestCase {
                     break
                 case .bannerAction:
                     break
+                case .listVerticalRoundImageAction:
+                    break
                 }
             }
         )
