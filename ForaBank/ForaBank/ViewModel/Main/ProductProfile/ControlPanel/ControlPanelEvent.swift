@@ -11,7 +11,7 @@ import SVCardLimitAPI
 import ManageSubscriptionsUI
 import SwiftUI
 
-indirect enum ControlPanelEvent {
+enum ControlPanelEvent {
     
     case controlButtonEvent(ControlButtonEvent)
     case updateState([ControlPanelButtonDetails])
@@ -39,6 +39,7 @@ extension ControlPanelEvent {
         case destination
     }
 }
+
 enum BannerActionEvent {
     case stickerEvent(StickerEvent)
     case contactTransfer(PaymentsViewModel)
