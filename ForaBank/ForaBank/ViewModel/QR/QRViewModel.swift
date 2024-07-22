@@ -79,40 +79,7 @@ class QRViewModel: ObservableObject {
         
         action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case _ as QRViewModelAction.OpenDocument:
-                    self.openDocument()
-                    
-                case _ as QRViewModelAction.Info:
-                    self.openInfo()
-                    
-                case _ as QRViewModelAction.AccessCamera:
-                    DispatchQueue.main.delay(for: .milliseconds(700)) {
-                        
-                        self.accessCamera()
-                    }
-                    
-                case _ as QRViewModelAction.AccessPhotoGallery:
-                    self.accessPhotoGallery()
-                    
-                case _ as QRViewModelAction.Flashlight:
-                    self.flashLightTorch(on: self.flashLight.result.0)
-                    
-                case _ as QRViewModelAction.CloseLink:
-                    link = nil
-                    
-                case _ as QRViewModelAction.CloseBottomSheet:
-                    self.bottomSheet = nil
-                    
-                case _ as QRViewModelAction.CloseSheet:
-                    sheet = nil
-                    
-                default:
-                    break
-                }
-            }
+            .sink { [unowned self] in handleAction($0) }
             .store(in: &bindings)
         
         model.action
@@ -137,6 +104,42 @@ class QRViewModel: ObservableObject {
 
 private extension QRViewModel {
     
+    func handleAction(
+        _ action: any Action
+    ) {
+        switch action {
+        case _ as QRViewModelAction.OpenDocument:
+            self.openDocument()
+            
+        case _ as QRViewModelAction.Info:
+            self.openInfo()
+            
+        case _ as QRViewModelAction.AccessCamera:
+            DispatchQueue.main.delay(for: .milliseconds(700)) {
+                
+                self.accessCamera()
+            }
+            
+        case _ as QRViewModelAction.AccessPhotoGallery:
+            self.accessPhotoGallery()
+            
+        case _ as QRViewModelAction.Flashlight:
+            self.flashLightTorch(on: self.flashLight.result.0)
+            
+        case _ as QRViewModelAction.CloseLink:
+            link = nil
+            
+        case _ as QRViewModelAction.CloseBottomSheet:
+            self.bottomSheet = nil
+            
+        case _ as QRViewModelAction.CloseSheet:
+            sheet = nil
+            
+        default:
+            break
+        }
+    }
+
     func openDocument() {
         
         bottomSheet = .init(
