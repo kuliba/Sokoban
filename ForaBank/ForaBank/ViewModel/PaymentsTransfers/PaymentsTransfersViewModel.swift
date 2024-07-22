@@ -1501,6 +1501,8 @@ extension PaymentsTransfersViewModel {
     private func handleQRViewModelActionResult(
         _ result: QRViewModel.ScanResult
     ) {
+        event(.dismiss(.modal))
+
         switch result {
         case let .qrCode(qr):
             
@@ -1535,13 +1537,11 @@ extension PaymentsTransfersViewModel {
             
             guard operators.count > 0 else {
                 
-                self.event(.dismiss(.modal))
                 self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
                 return
             }
             
             if operators.count == 1 {
-                self.event(.dismiss(.modal))
                 
                 if let operatorValue = operators.first, Payments.paymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
                     
@@ -1561,14 +1561,12 @@ extension PaymentsTransfersViewModel {
                     }
                 }
             } else {
-                event(.dismiss(.modal))
                 delay(for: .milliseconds(700)) { [weak self] in
                     
                     self?.handleQRMappingWithMultipleOperators(qr, operators)
                 }
             }
         } else {
-            event(.dismiss(.modal))
             action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
         }
     }
@@ -1639,7 +1637,6 @@ extension PaymentsTransfersViewModel {
     
     private func handleUnknownQR() {
         
-        event(.dismiss(.modal))
         delay(for: .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
@@ -1653,7 +1650,6 @@ extension PaymentsTransfersViewModel {
 
     private func handleFailure(qr: QRCode) {
         
-        event(.dismiss(.modal))
         delay(for: .milliseconds(700)) { [weak self] in
             
             guard let self else { return }
@@ -1674,7 +1670,6 @@ extension PaymentsTransfersViewModel {
     
     private func handleC2bURL(_ url: URL) {
         
-        event(.dismiss(.modal))
         let paymentsViewModel = PaymentsViewModel(
             source: .c2b(url),
             model: model,
@@ -1690,7 +1685,6 @@ extension PaymentsTransfersViewModel {
     
     private func handleC2bSubscribeURL(_ url: URL) {
         
-        self.event(.dismiss(.modal))
         let paymentsViewModel = PaymentsViewModel(
             source: .c2bSubscribe(url),
             model: model,
@@ -1706,7 +1700,6 @@ extension PaymentsTransfersViewModel {
     
     private func handleSberQRURL(_ url: URL) {
         
-        event(.dismiss(.modal))
         rootActions?.spinner.show()
         
         sberQRServices.getSberQRData(url) { [weak self] result in
@@ -1786,7 +1779,6 @@ extension PaymentsTransfersViewModel {
     
     private func handleURL() {
         
-        event(.dismiss(.modal))
         delay(for: .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
