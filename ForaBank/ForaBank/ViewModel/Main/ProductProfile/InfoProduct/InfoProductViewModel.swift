@@ -258,26 +258,33 @@ class InfoProductViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
+                    
                 case let payload as ModelAction.Deposits.Info.Single.Response:
                     switch payload {
-                    case .success(let data):
-                        
+                    case let .success(data):
+                       
                         guard data.id == product.id else {
                             return
                         }
                         
                         var list: [ItemViewModel] = []
                         
-                        let dateFormatter = DateFormatter.detailFormatter
+                        let dateFormatter = DateFormatter.moscowTimeRuFormatter
                         
                         if let initialAmount = model.amountFormatted(amount: data.initialAmount, currencyCode: product.currency, style: .clipped) {
                             
                             list.append(.init(title: "Сумма первоначального размещения", subtitle: initialAmount))
                         }
-                        list.append(.init(title: "Дата открытия", subtitle: dateFormatter.string(from: data.dateOpen)))
+                        
+                        let dateOpen = dateFormatter.string(from: data.dateOpen)
+                        list.append(.init(title: "Дата открытия", subtitle: dateOpen))
+                        
                         if let dateEnd = data.dateEnd {
-                            list.append(.init(title: "Дата закрытия", subtitle: dateFormatter.string(from: dateEnd)))
+                            
+                            let dateEndMoscow = dateFormatter.string(from: dateEnd)
+                            list.append(.init(title: "Дата закрытия", subtitle: dateEndMoscow))
                         }
+                        
                         if let termDay = data.termDay {
                             list.append(.init(title: "Срок вклада", subtitle: termDay))
                         }

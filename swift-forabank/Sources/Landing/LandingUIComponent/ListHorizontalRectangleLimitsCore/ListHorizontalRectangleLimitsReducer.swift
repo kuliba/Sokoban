@@ -7,8 +7,6 @@
 
 import Foundation
 import UIPrimitives
-import SwiftUI
-import Combine
 
 public final class ListHorizontalRectangleLimitsReducer {
     

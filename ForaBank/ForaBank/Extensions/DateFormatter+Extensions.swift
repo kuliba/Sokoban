@@ -118,6 +118,16 @@ extension DateFormatter {
         return formatter
     }()
     
+    static let moscowTimeRuFormatter: DateFormatter = {
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMMM yyyy"
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.timeZone = TimeZone(identifier: "Europe/Moscow")!
+        
+        return formatter
+    }()
+    
     static let loanProductPeriod: DateFormatter = {
         
         let formatter = DateFormatter()

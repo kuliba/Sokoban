@@ -135,9 +135,7 @@ extension DepositCalculateAmountView {
         @ObservedObject var viewModel: DepositCalculateAmountViewModel
         
         init(viewModel: DepositCalculateAmountViewModel) {
-            
             self.viewModel = viewModel
-            
         }
         
         func makeUIView(context: Context) -> UITextField {
@@ -150,6 +148,10 @@ extension DepositCalculateAmountView {
             textField.font = UIFont(name: "Inter-SemiBold", size: 24)
             textField.keyboardType = .numberPad
             
+            textField.autocorrectionType = .no
+            textField.autocapitalizationType = .none
+            textField.spellCheckingType = .no
+            
             return textField
         }
         
@@ -158,7 +160,7 @@ extension DepositCalculateAmountView {
             uiView.isUserInteractionEnabled = viewModel.isFirstResponder
             uiView.text = viewModel.valueCurrencySymbol
             uiView.updateCursorPosition()
-
+            
             switch viewModel.isFirstResponder {
             case true: uiView.becomeFirstResponder()
             case false: uiView.resignFirstResponder()
@@ -166,7 +168,6 @@ extension DepositCalculateAmountView {
         }
         
         func makeCoordinator() -> Coordinator {
-            
             Coordinator(viewModel: viewModel)
         }
         
@@ -178,7 +179,7 @@ extension DepositCalculateAmountView {
                 self.viewModel = viewModel
                 super.init()
             }
-    
+            
             func textFieldDidBeginEditing(_ textField: UITextField) {
                 textField.updateCursorPosition()
             }
@@ -187,39 +188,57 @@ extension DepositCalculateAmountView {
                 viewModel.textFieldDidEndEditing(textField)
             }
             
-            func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            func textField(
+                _ textField: UITextField,
+                shouldChangeCharactersIn range: NSRange,
+                replacementString string: String
+            ) -> Bool {
                 
-                guard let text = textField.text else {
-                    return false
-                }
-                
-                var temporary = text.filtered()
-                
-                if string.isEmpty && temporary.count > 0 {
-                    
-                    guard let stringRange = Range(range, in: text) else { return false }
-                    temporary = text.replacingCharacters(in: stringRange, with: string)
-                }
-                
-                let filtered = "\(temporary)\(string)".filtered()
-                
-                if filtered.isEmpty == true {
-                    return true
-                }
-                
-                if filtered.count > 1 && filtered.first == "0" {
-                    return false
-                }
-                
-                guard let value = Double(filtered), value <= viewModel.bounds.upperBound else {
-                    return false
-                }
-                
-                viewModel.value = value
-                
-                return false
+                textField.shouldChangeCharacters(
+                    in: range,
+                    replacementString: string,
+                    viewModel: viewModel
+                )
             }
         }
+    }
+}
+extension UITextField {
+    
+    func shouldChangeCharacters(
+        in range: NSRange,
+        replacementString string: String,
+        viewModel: DepositCalculateAmountViewModel
+    ) -> Bool {
+        
+        guard let text = self.text else {
+            return false
+        }
+        
+        var temporary = text.filtered()
+        
+        if string.isEmpty {
+            if temporary.count > 0 {
+                temporary.removeLast()
+            }
+            viewModel.value = Double(temporary) ?? 0
+            return true
+        }
+        
+        var filtered = "\(temporary)\(string)".filtered()
+        
+        if filtered.count > 1 && filtered.first == "0" {
+            filtered.removeFirst()
+            viewModel.value = Double(filtered) ?? 0
+            return false
+        }
+        
+        guard let value = Double(filtered), value <= viewModel.bounds.upperBound else {
+            return false
+        }
+        
+        viewModel.value = value
+        return false
     }
 }
 
