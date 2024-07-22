@@ -89,6 +89,9 @@ struct ControlPanelWrapperView: View {
                 footerImage: Image.ic72Sbp,
                 searchCancelAction: subscriptionViewModel.searchViewModel.dismissKeyboard)
             )
+            
+        case let .successView(successViewModel):
+            return AnyView(PaymentsSuccessView(viewModel: successViewModel))
         }
     }
 }

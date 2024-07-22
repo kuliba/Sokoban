@@ -97,11 +97,13 @@ extension ControlPanelReducer {
             state.destination = .openSubscriptions(viewModel)
             
         case let .alert(alertModel):
-            effect = .delayAlert(alertModel, controlPanelLifespan
-            )
+            effect = .delayAlert(alertModel, controlPanelLifespan)
             
         case let .cancelC2BSub(token):
-            print("cancelC2BSub")
+            effect = .model(.cancelC2BSub(token))
+            
+        case let .destination(destination):
+            state.destination = destination
         }
         
         return (state, effect)

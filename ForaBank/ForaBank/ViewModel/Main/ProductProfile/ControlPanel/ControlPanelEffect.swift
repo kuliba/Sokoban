@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import UIPrimitives
+import ManageSubscriptionsUI
 
 enum ControlPanelEffect {
         
@@ -17,4 +17,14 @@ enum ControlPanelEffect {
     case visibility(ProductCardData)
     case loadSVCardLanding(ProductCardData)
     case loadSVCardLimits(ProductCardData)
+    
+    case model(ModelEffect)
+}
+
+extension ControlPanelEffect {
+    
+    enum ModelEffect {
+        
+        case cancelC2BSub(SubscriptionViewModel.Token)
+    }
 }

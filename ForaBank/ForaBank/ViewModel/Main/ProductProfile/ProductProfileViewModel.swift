@@ -644,6 +644,29 @@ private extension ProductProfileViewModel {
             .sink { [unowned self] action in
                 
                 switch action {
+                 
+                case let payload as ModelAction.C2B.CancelC2BSub.Response:
+                    let paymentSuccessViewModel = PaymentsSuccessViewModel(paymentSuccess: .init(with: payload.data), model)
+                    if let controlPanelViewModel {
+                        
+                        controlPanelViewModel.event(.destination(
+                            .successView(paymentSuccessViewModel)
+                        ))
+                    }
+                    
+                case let payload as ModelAction.C2B.GetC2BDetail.Response:
+                    
+                    if let controlPanelViewModel {
+                        
+                        controlPanelViewModel.event(.destination(
+                            .successView(.init(
+                                paymentSuccess: .init(
+                                    operation: nil,
+                                    parameters: payload.params),
+                                model
+                            ))
+                        ))
+                    }
                     
                 case let payload as ModelAction.Products.UpdateCustomName.Response:
                     
@@ -2015,7 +2038,13 @@ extension ProductProfileViewModel {
             handleEffect: ControlPanelEffectHandler(
                 card: card,
                 productProfileServices: productProfileServices,
-                landingEvent: landingEvent).handleEffect(_:_:))
+                landingEvent: landingEvent, 
+                handleModelEffect: ControlPanelModelEffectHandler(            cancelC2BSub: { (token: SubscriptionViewModel.Token) in
+                    
+                    let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
+                    self.model.action.send(action)
+                }).handleEffect(_:_:)
+                    ).handleEffect(_:_:))
     }
     
     private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {

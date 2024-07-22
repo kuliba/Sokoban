@@ -2340,6 +2340,7 @@
 		8300FB6A2B71581200BE62E5 /* ProductProfile in Frameworks */ = {isa = PBXBuildFile; productRef = 8300FB692B71581200BE62E5 /* ProductProfile */; };
 		8300FB6E2B725E0800BE62E5 /* PreviewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8300FB6D2B725E0800BE62E5 /* PreviewContent.swift */; };
 		8302824029C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 8302823F29C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json */; };
+		8305F0572C4E55C700C6A0B5 /* ControlPanelModelEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8305F0562C4E55C700C6A0B5 /* ControlPanelModelEffectHandler.swift */; };
 		8306C12A2B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8306C1292B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift */; };
 		8306C12D2B63A2E2007FDA89 /* Services+getProductDynamicParamsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8306C12C2B63A2E1007FDA89 /* Services+getProductDynamicParamsList.swift */; };
 		8306C12F2B63A4A4007FDA89 /* RequestFactory+getProductDynamicParamsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8306C12E2B63A4A4007FDA89 /* RequestFactory+getProductDynamicParamsList.swift */; };
@@ -5435,6 +5436,7 @@
 		77FF670C27BABFD3009FEA09 /* ValetKeychainAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValetKeychainAgent.swift; sourceTree = "<group>"; };
 		8300FB6D2B725E0800BE62E5 /* PreviewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewContent.swift; sourceTree = "<group>"; };
 		8302823F29C46FE0009FFBE1 /* CloseDepositResponseUnknowStatusGeneric.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CloseDepositResponseUnknowStatusGeneric.json; sourceTree = "<group>"; };
+		8305F0562C4E55C700C6A0B5 /* ControlPanelModelEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelModelEffectHandler.swift; sourceTree = "<group>"; };
 		8306C1292B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getCardStatementForPeriod.swift"; sourceTree = "<group>"; };
 		8306C12C2B63A2E1007FDA89 /* Services+getProductDynamicParamsList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services+getProductDynamicParamsList.swift"; sourceTree = "<group>"; };
 		8306C12E2B63A4A4007FDA89 /* RequestFactory+getProductDynamicParamsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+getProductDynamicParamsList.swift"; sourceTree = "<group>"; };
@@ -13431,6 +13433,7 @@
 			children = (
 				833D3E372C2EDE31006626F2 /* ControlButtonEvent.swift */,
 				833D3E362C2EDE31006626F2 /* ControlPanelEffect.swift */,
+				8305F0562C4E55C700C6A0B5 /* ControlPanelModelEffectHandler.swift */,
 				833D3E352C2EDE30006626F2 /* ControlPanelEvent.swift */,
 				83F6565A2C3FF4570052B7E1 /* StickerEvents.swift */,
 				833D3E332C2EDE2F006626F2 /* ControlPanelReducer.swift */,
@@ -19526,6 +19529,7 @@
 				5066506B28577C260039A745 /* DateComponentsFormatter+Ext.swift in Sources */,
 				83E455E42AC2E0DB0045BEC1 /* C2BFactory.swift in Sources */,
 				2A9BD5132B853AEF00B88395 /* HTTPClientStub+utilityPayments.swift in Sources */,
+				8305F0572C4E55C700C6A0B5 /* ControlPanelModelEffectHandler.swift in Sources */,
 				8317CA492C3D641D0076DC7A /* SVCardLandingServices.swift in Sources */,
 				0BB24A9426EFCC5800DDA4F6 /* GetProductTemplateListSaved.swift in Sources */,
 				83815FA72C36859000C97E60 /* ControlPanelEffectHandler.swift in Sources */,
