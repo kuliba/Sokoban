@@ -91,13 +91,9 @@ class QRViewModel: ObservableObject {
                     
                 case _ as QRViewModelAction.AccessCamera:
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+                    DispatchQueue.main.delay(for: .milliseconds(700)) {
                         
-                        self.bottomSheet = .init(sheetType: .qRAccessViewComponent(
-                            .init(viewModel: .init(
-                                input: .camera,
-                                closeAction: { [weak self] in self?.sheet = nil }
-                            ))))
+                        self.accessCamera()
                     }
                     
                 case _ as QRViewModelAction.AccessPhotoGallery:
@@ -223,45 +219,53 @@ private extension QRViewModel {
     func openDocument() {
         
         bottomSheet = .init(
-            sheetType: .choiseDocument(
-                .init(
-                    buttons: [
-                        .init(
-                            icon: .init(image: .ic24Image, background: .circle),
-                            title: .init(text: "Из фото", style: .bold),
-                            orientation: .horizontal, action: { [weak self] in
-                                
-                                self?.bottomSheet = nil
-                                self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
-                            }
-                        ),
-                        .init(
-                            icon: .init(image: .ic24FileText, background: .circle),
-                            title: .init(text: "Из Документов", style: .bold),
-                            orientation: .horizontal,
-                            action: { [weak self] in
-                                
-                                self?.model.action.send(ModelAction.Media.DocumentPermission.Request())
-                            }
-                        )
-                    ]
-                )
-            )
+            sheetType: .choiseDocument(.init(
+                buttons: [
+                    .init(
+                        icon: .init(image: .ic24Image, background: .circle),
+                        title: .init(text: "Из фото", style: .bold),
+                        orientation: .horizontal, action: { [weak self] in
+                            
+                            self?.bottomSheet = nil
+                            self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
+                        }
+                    ),
+                    .init(
+                        icon: .init(image: .ic24FileText, background: .circle),
+                        title: .init(text: "Из Документов", style: .bold),
+                        orientation: .horizontal,
+                        action: { [weak self] in
+                            
+                            self?.model.action.send(ModelAction.Media.DocumentPermission.Request())
+                        }
+                    )
+                ]
+            ))
         )
     }
     
     func openInfo() {
         
         bottomSheet = .init(
-            sheetType: .info(
-                .init(
-                    icon: .ic48Info,
-                    title: "Сканировать QR-код",
-                    content: ["\tНаведите камеру телефона на QR-код,\n и приложение автоматически его считает.",
-                              "\tПеред оплатой проверьте, что все поля заполнены правильно.",
-                              "\tЧтобы оплатить квитанцию, сохраненную в телефоне, откройте ее с помощью кнопки \"Из файла\" и отсканируйте QR-код."]
+            sheetType: .info(.init(
+                icon: .ic48Info,
+                title: "Сканировать QR-код",
+                content: ["\tНаведите камеру телефона на QR-код,\n и приложение автоматически его считает.",
+                          "\tПеред оплатой проверьте, что все поля заполнены правильно.",
+                          "\tЧтобы оплатить квитанцию, сохраненную в телефоне, откройте ее с помощью кнопки \"Из файла\" и отсканируйте QR-код."]
+            ))
+        )
+    }
+    
+    func accessCamera() {
+        
+        bottomSheet = .init(
+            sheetType: .qRAccessViewComponent(.init(
+                viewModel: .init(
+                    input: .camera,
+                    closeAction: { [weak self] in self?.sheet = nil }
                 )
-            )
+            ))
         )
     }
 }
