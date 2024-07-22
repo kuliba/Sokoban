@@ -858,6 +858,8 @@ extension MainViewModel {
     private func handleQRViewModelActionResult(
         _ result: QRViewModel.ScanResult
     ) {
+        resetModal()
+
         switch result {
         case let .qrCode(qr):
             
@@ -888,8 +890,6 @@ extension MainViewModel {
         _ qr: QRCode,
         _ qrMapping: QRMapping
     ) {
-        self.resetModal()
-        
         let operators = model.operatorsFromQR(qr, qrMapping) ?? []
         let multipleOperators = MultiElementArray(operators)
         
@@ -998,9 +998,9 @@ extension MainViewModel {
         route.destination = .searchOperators(operatorsViewModel)
     }
     
-    private func handleFailure(qr: QRCode) {
-        
-        resetModal()
+    private func handleFailure(
+        qr: QRCode
+    ) {
         DispatchQueue.main.delay(for:.milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
@@ -1023,9 +1023,9 @@ extension MainViewModel {
         }
     }
     
-    private func handleC2bURL(_ url: URL) {
-        
-        resetModal()
+    private func handleC2bURL(
+        _ url: URL
+    ) {
         Task.detached(priority: .high) { [self] in
             
             do {
@@ -1051,9 +1051,9 @@ extension MainViewModel {
         }
     }
     
-    private func handleC2bSubscribeURL(_ url: URL) {
-        
-        resetModal()
+    private func handleC2bSubscribeURL(
+        _ url: URL
+    ) {
         let paymentsViewModel = PaymentsViewModel(
             source: .c2bSubscribe(url),
             model: model,
@@ -1070,9 +1070,9 @@ extension MainViewModel {
         )
     }
     
-    private func handleSberQRURL(_ url: URL) {
-        
-        resetModal()
+    private func handleSberQRURL(
+        _ url: URL
+    ) {
         rootActions?.spinner.show()
         
         sberQRServices.getSberQRData(url) { [weak self] result in
@@ -1151,8 +1151,9 @@ extension MainViewModel {
     
     private func handleURL() {
         
-        resetModal()
-        DispatchQueue.main.delay(for: .milliseconds(700)) {
+        DispatchQueue.main.delay(for: .milliseconds(700)) { [weak self] in
+            
+            guard let self else { return }
             
             let failedView = QRFailedViewModel(
                 model: self.model,
@@ -1180,14 +1181,16 @@ extension MainViewModel {
                     )
                 }
             )
+            
             self.route.destination = .failedView(failedView)
         }
     }
     
     private func handleUnknownQR() {
         
-        resetModal()
-        DispatchQueue.main.delay(for: .milliseconds(700)) {
+        DispatchQueue.main.delay(for: .milliseconds(700)) { [weak self] in
+            
+            guard let self else { return }
             
             let failedView = QRFailedViewModel(
                 model: self.model,
@@ -1215,6 +1218,7 @@ extension MainViewModel {
                     )
                 }
             )
+            
             self.route.destination = .failedView(failedView)
         }
     }
