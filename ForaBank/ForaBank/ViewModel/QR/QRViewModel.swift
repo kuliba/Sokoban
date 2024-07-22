@@ -119,19 +119,7 @@ class QRViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
-                switch action {
-                case let payload as ModelAction.Media.GalleryPermission.Response:
-                    self.handleGalleryPermission(
-                        response: payload,
-                        qrResolve: qrResolve
-                    )
-                    
-                case _ as ModelAction.Media.DocumentPermission.Response:
-                    self.handleDocumentPermission(qrResolve: qrResolve)
-                    
-                default:
-                    break
-                }
+                handleModelAction(action, qrResolve: qrResolve )
             }
             .store(in: &bindings)
         
@@ -212,6 +200,26 @@ private extension QRViewModel {
                 )
             ))
         )
+    }
+    
+    func handleModelAction(
+        _ action: any Action,
+        qrResolve: @escaping QRResolve
+    ) {
+        switch action {
+        case let payload as ModelAction.Media.GalleryPermission.Response:
+            self.handleGalleryPermission(
+                response: payload,
+                qrResolve: qrResolve
+            )
+            
+        case _ as ModelAction.Media.DocumentPermission.Response:
+            self.handleDocumentPermission(qrResolve: qrResolve)
+            
+        default:
+            break
+        }
+
     }
     
     func handleGalleryPermission(
