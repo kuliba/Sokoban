@@ -27,7 +27,6 @@ enum ControlPanelEvent {
     case alert(Alert.ViewModel)
     case destination(ControlPanelState.Destination)
 
-    case openSubscriptions(SubscriptionsViewModel)
     case cancelC2BSub(SubscriptionViewModel.Token)
 }
 

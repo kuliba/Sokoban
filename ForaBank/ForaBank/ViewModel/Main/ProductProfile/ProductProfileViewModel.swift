@@ -2187,7 +2187,7 @@ extension ProductProfileViewModel {
                     self?.model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
                 })
 
-            controlPanelViewModel.event(.openSubscriptions(viewModel))
+            controlPanelViewModel.event(.destination(.openSubscriptions(viewModel)))
         }
     }
 

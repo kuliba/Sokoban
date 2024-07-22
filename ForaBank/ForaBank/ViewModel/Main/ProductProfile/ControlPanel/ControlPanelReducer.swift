@@ -93,9 +93,6 @@ extension ControlPanelReducer {
                 state.alert = nil
             }
             
-        case let .openSubscriptions(viewModel):
-            state.destination = .openSubscriptions(viewModel)
-            
         case let .alert(alertModel):
             effect = .delayAlert(alertModel, controlPanelLifespan)
             
