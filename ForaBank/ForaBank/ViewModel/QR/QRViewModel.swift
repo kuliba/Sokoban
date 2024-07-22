@@ -125,39 +125,15 @@ class QRViewModel: ObservableObject {
                         response: payload,
                         qrResolve: qrResolve
                     )
-
+                    
                 case _ as ModelAction.Media.DocumentPermission.Response:
-                    
-                    self.action.send(QRViewModelAction.CloseBottomSheet())
-                    
-                    let documentPicker = DocumentPickerViewModel { [weak self] url in
-                        
-                        if let image = self?.qrFromPDF(path: url),
-                           let qrData = self?.string(from: image) {
-                            
-                            let result = qrResolve(qrData)
-                            
-                            self?.action.send(QRViewModelAction.Result(result: result))
-                            
-                        } else {
-                            
-                            self?.action.send(QRViewModelAction.Result(result: .unknown))
-                            
-                        }
-                        
-                        self?.action.send(QRViewModelAction.CloseSheet())
-                        
-                    } closeAction: { [weak self] in
-                        
-                        self?.action.send(QRViewModelAction.CloseSheet())
-                    }
-                    
-                    self.sheet = .init(sheetType: .documentPicker(documentPicker))
+                    self.handleDocumentPermission(qrResolve: qrResolve)
                     
                 default:
                     break
                 }
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         scanner.action
             .compactMap { $0 as? QRScannerViewAction.Scanned }
@@ -281,6 +257,36 @@ private extension QRViewModel {
             
             self.action.send(QRViewModelAction.AccessPhotoGallery())
         }
+    }
+    
+    func handleDocumentPermission(
+        qrResolve: @escaping QRResolve
+    ) {
+        action.send(QRViewModelAction.CloseBottomSheet())
+        
+        let documentPicker = DocumentPickerViewModel { [weak self] url in
+            
+            if let image = self?.qrFromPDF(path: url),
+               let qrData = self?.string(from: image) {
+                
+                let result = qrResolve(qrData)
+                
+                self?.action.send(QRViewModelAction.Result(result: result))
+                
+            } else {
+                
+                self?.action.send(QRViewModelAction.Result(result: .unknown))
+                
+            }
+            
+            self?.action.send(QRViewModelAction.CloseSheet())
+            
+        } closeAction: { [weak self] in
+            
+            self?.action.send(QRViewModelAction.CloseSheet())
+        }
+        
+        self.sheet = .init(sheetType: .documentPicker(documentPicker))
     }
 }
 
