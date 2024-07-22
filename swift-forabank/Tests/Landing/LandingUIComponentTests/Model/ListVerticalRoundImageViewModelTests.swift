@@ -82,7 +82,7 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
         XCTAssertEqual(startValue, .initinalValue)
     }
     
-    func test_itemAction_detailsNotNil_shouldCallDetails() {
+    func test_itemAction_detailsNotNilCanOpenTrue_shouldCallDetails() {
         
         var startValue: ActionType = .initinalValue
         

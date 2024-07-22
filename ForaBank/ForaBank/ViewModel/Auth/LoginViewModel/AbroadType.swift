@@ -7,7 +7,8 @@
 
 import Foundation
 
-enum AbroadType {
+enum AbroadType: Equatable {
     case orderCard, transfer, sticker
-    case main, regular, additionalSelf, additionalSelfAccOwn, additionalOther
+    case control(CardType)
+    case limit(CardType)
 }

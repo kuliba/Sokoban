@@ -2719,11 +2719,11 @@
 		C1DE211D2919377000ED0F8D /* VerificationCodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */; };
 		C1DE211F2919531500ED0F8D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE211E2919531500ED0F8D /* AppSettings.swift */; };
 		C1DFF16D2A872AC40044B7A6 /* Model+SuccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */; };
-		C1E181522C415CDA00006B8F /* InputWrapperValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E181512C415CDA00006B8F /* InputWrapperValidatorTests.swift */; };
 		C1E07D982BFE2D2F00D07180 /* CalendarPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E07D972BFE2D2F00D07180 /* CalendarPreviewApp.swift */; };
 		C1E07D9A2BFE2D2F00D07180 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E07D992BFE2D2F00D07180 /* ContentView.swift */; };
 		C1E07D9C2BFE2D3100D07180 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E07D9B2BFE2D3100D07180 /* Assets.xcassets */; };
 		C1E07D9F2BFE2D3100D07180 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E07D9E2BFE2D3100D07180 /* Preview Assets.xcassets */; };
+		C1E181522C415CDA00006B8F /* InputWrapperValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E181512C415CDA00006B8F /* InputWrapperValidatorTests.swift */; };
 		C1E8A0552B84D50E000DA998 /* ViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E8A0542B84D50E000DA998 /* ViewModel+Preview.swift */; };
 		C1E8A0572B84D628000DA998 /* LastPayments+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E8A0562B84D628000DA998 /* LastPayments+Preview.swift */; };
 		C1EA35CB2A316D7A00403E51 /* OperationDetailDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */; };
@@ -5788,12 +5788,12 @@
 		C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeData.swift; sourceTree = "<group>"; };
 		C1DE211E2919531500ED0F8D /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SuccessTests.swift"; sourceTree = "<group>"; };
-		C1E181512C415CDA00006B8F /* InputWrapperValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputWrapperValidatorTests.swift; sourceTree = "<group>"; };
 		C1E07D952BFE2D2F00D07180 /* CalendarPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CalendarPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1E07D972BFE2D2F00D07180 /* CalendarPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPreviewApp.swift; sourceTree = "<group>"; };
 		C1E07D992BFE2D2F00D07180 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C1E07D9B2BFE2D3100D07180 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C1E07D9E2BFE2D3100D07180 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C1E181512C415CDA00006B8F /* InputWrapperValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputWrapperValidatorTests.swift; sourceTree = "<group>"; };
 		C1E8A0542B84D50E000DA998 /* ViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModel+Preview.swift"; sourceTree = "<group>"; };
 		C1E8A0562B84D628000DA998 /* LastPayments+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LastPayments+Preview.swift"; sourceTree = "<group>"; };
 		C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailDataTests.swift; sourceTree = "<group>"; };

@@ -13,11 +13,14 @@ final class ControlPanelEffectHandler {
     
     private let productProfileServices: ProductProfileServices
     private let landingEvent: (LandingEvent) -> Void
+    private let card: ProductCardData
     
     init(
+        card: ProductCardData,
         productProfileServices: ProductProfileServices,
         landingEvent: @escaping (LandingEvent) -> Void
     ) {
+        self.card = card
         self.productProfileServices = productProfileServices
         self.landingEvent = landingEvent
     }
@@ -72,7 +75,7 @@ extension ControlPanelEffectHandler {
         case let .loadSVCardLanding(card):
             let cardType = card.cardType ?? .regular
             
-            productProfileServices.createSVCardLanding.createSVCardLanding((serial: "", abroadType: cardType.abroadType)){
+            productProfileServices.createSVCardLanding.createSVCardLanding((serial: "", abroadType: cardType.controlAbroadType)){
                 
                 result in
                 switch result {
@@ -88,7 +91,7 @@ extension ControlPanelEffectHandler {
                             return .init(
                                 initialState: .init(list: .init(limits), limitsLoadingStatus: .inflight(.loadingSVCardLimits)),
                                 reduce: ListHorizontalRectangleLimitsReducer.init().reduce(_:_:),
-                                handleEffect: {_,_ in })
+                                handleEffect: self.handleEffect(_:_:))
                         }
                         return nil
                     }()
@@ -122,6 +125,42 @@ extension ControlPanelEffectHandler {
     typealias Event = ControlPanelEvent
     typealias Effect = ControlPanelEffect
     typealias Dispatch = (Event) -> Void
+}
+
+private extension ControlPanelEffectHandler {
+    
+    func handleEffect(
+        _ effect: LimitsEffect,
+        _ dispatch: @escaping LimitsDispatch
+    ) {
+        switch effect {
+        case .loadSVCardLanding:
+            
+            let cardType = card.cardType ?? .regular
+            
+            productProfileServices.createSVCardLanding.createSVCardLanding((serial: "", abroadType: cardType.limitAbroadType)){
+                
+                result in
+                switch result {
+                case .failure:
+                    dispatch(.loadedLimits(nil))
+                    
+                case let .success(landing):
+                                        
+                    dispatch(.loadedLimits(self.productProfileServices.makeSVCardLandingViewModel(
+                        landing,
+                        nil,
+                        .default,
+                        self.landingEvent
+                    )))
+                }
+            }
+        }
+    }
+
+    typealias LimitsEvent = ListHorizontalRectangleLimitsEvent
+    typealias LimitsEffect = ListHorizontalRectangleLimitsEffect
+    typealias LimitsDispatch = (LimitsEvent) -> Void
 }
 
 private extension UILanding.List.HorizontalRectangleLimits {

@@ -34,7 +34,23 @@ public extension ListHorizontalRectangleLimitsReducer {
             }
             
         case let .buttonTapped(info):
-            break
+            switch info.action {
+            case "changeLimit":
+               // state.limitsLoadingStatus = .inflight(.loadingSettingsLimits)
+                effect = .loadSVCardLanding
+                
+            default:
+                break
+            }
+            
+        case let .loadedLimits(landingViewModel):
+            
+            if let landingViewModel {
+                state.destination = .settingsView(landingViewModel)
+            }
+            
+        case .dismissDestination:
+            state.destination = nil
         }
         
         return (state, effect)

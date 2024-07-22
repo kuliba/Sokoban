@@ -65,7 +65,7 @@ final class Services_getLandingServiceTests: XCTestCase {
     
     func test_perform_mainCard_shouldCallHTTPClientWithCorrectURLInRequest() {
         
-        let abroadType: AbroadType = .main
+        let abroadType: AbroadType = .control(.main)
         let (sut, spy) = makeSUT()
         let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_MAIN_CARD"
         
@@ -79,7 +79,7 @@ final class Services_getLandingServiceTests: XCTestCase {
     
     func test_perform_regularCard_shouldCallHTTPClientWithCorrectURLInRequest() {
         
-        let abroadType: AbroadType = .regular
+        let abroadType: AbroadType = .control(.regular)
         let (sut, spy) = makeSUT()
         let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_REGULAR_CARD"
         
@@ -93,7 +93,7 @@ final class Services_getLandingServiceTests: XCTestCase {
 
     func test_perform_additionalSelfCard_shouldCallHTTPClientWithCorrectURLInRequest() {
         
-        let abroadType: AbroadType = .additionalSelf
+        let abroadType: AbroadType = .control(.additionalSelf)
         let (sut, spy) = makeSUT()
         let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_SELF_CARD"
         
@@ -107,7 +107,7 @@ final class Services_getLandingServiceTests: XCTestCase {
     
     func test_perform_additionalSelfAccOwnCard_shouldCallHTTPClientWithCorrectURLInRequest() {
         
-        let abroadType: AbroadType = .additionalSelfAccOwn
+        let abroadType: AbroadType = .control(.additionalSelfAccOwn)
         let (sut, spy) = makeSUT()
         let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_SELF_ACC_OWN_CARD"
         
@@ -121,7 +121,7 @@ final class Services_getLandingServiceTests: XCTestCase {
     
     func test_perform_additionalOtherCard_shouldCallHTTPClientWithCorrectURLInRequest() {
         
-        let abroadType: AbroadType = .additionalOther
+        let abroadType: AbroadType = .control(.additionalOther)
         let (sut, spy) = makeSUT()
         let correctURLString = "https://pl.forabank.ru/dbo/api/v3/dict/v2/getJsonAbroad?serial=1&type=CONTROL_ADDITIONAL_OTHER_CARD"
         

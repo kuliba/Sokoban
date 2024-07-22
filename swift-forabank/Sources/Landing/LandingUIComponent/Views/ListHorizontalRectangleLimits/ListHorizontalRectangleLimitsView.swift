@@ -15,7 +15,7 @@ struct ListHorizontalRectangleLimitsView: View {
     let event: (ListHorizontalRectangleLimitsEvent) -> Void
     let factory: Factory
     let config: Config
-    
+
     var body: some View {
         
         ScrollView(.horizontal, showsIndicators: false) {
@@ -24,10 +24,46 @@ struct ListHorizontalRectangleLimitsView: View {
                 ForEach(state.list.list, content: itemView)
             }
         }
+        .navigationDestination(
+            item: .init(
+                get: { state.destination },
+                set: { if $0 == nil { event(.dismissDestination) }}
+            ),
+            content: destinationView
+        )
         .padding(.horizontal, config.paddings.horizontal)
         .padding(.vertical, config.paddings.vertical)
     }
     
+    @ViewBuilder
+    private func destinationView(
+        destination: ListHorizontalRectangleLimitsState.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .settingsView(viewModel):
+            
+            VStack {
+                LandingWrapperView(viewModel: viewModel)
+                    .frame(maxHeight: .infinity)
+                Button(action: { /* TODO: add save action */ }) {
+                    ZStack {
+                        Color(red: 255/255, green: 54/255, blue: 54/255)
+                        Text("Сохранить")
+                            .padding()
+                    }
+                }
+                .foregroundColor(.white)
+                .cornerRadius(config.cornerRadius)
+                .frame(height: 56)
+                .padding(.horizontal, 16)
+                .padding(.vertical, config.paddings.vertical)
+            }
+            .padding(.bottom)
+            .ignoresSafeArea(.container, edges: .bottom)
+        }
+    }
+        
     private func itemView (
         item: Item
     ) -> some View {
@@ -292,6 +328,7 @@ extension ListHorizontalRectangleLimitsView {
         }
     }
 }
+
 
 struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
     

@@ -2001,14 +2001,19 @@ extension ProductProfileViewModel {
         let navigationBarViewModel = NavigationBarView.ViewModel(title: "Управление", subtitle: navigationTitleForControlPanel, leftItems: [backButton])
         
         return .init(
-            initialState: .init(buttons: buttons, navigationBarViewModel: navigationBarViewModel),
+            initialState: .init(
+                buttons: buttons,
+                navigationBarViewModel: navigationBarViewModel),
             reduce: ControlPanelReducer(
                 makeAlert: productProfileViewModelFactory.makeAlert,
                 makeActions: makeActions,
                 makeViewModels: makeViewModels, 
                 getCurrencySymbol: model.dictionaryCurrency(for:)
             ).reduce(_:_:),
-            handleEffect: ControlPanelEffectHandler(productProfileServices: productProfileServices, landingEvent: landingEvent).handleEffect(_:_:))
+            handleEffect: ControlPanelEffectHandler(
+                card: card,
+                productProfileServices: productProfileServices,
+                landingEvent: landingEvent).handleEffect(_:_:))
     }
     
     private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {
