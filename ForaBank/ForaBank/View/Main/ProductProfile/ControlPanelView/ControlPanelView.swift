@@ -101,7 +101,6 @@ where DestinationView: View {
             }
         }
     }
-
 }
 
 extension ControlPanelView {
