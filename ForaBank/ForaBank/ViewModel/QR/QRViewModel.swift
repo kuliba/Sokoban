@@ -120,37 +120,12 @@ class QRViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
-                    
                 case let payload as ModelAction.Media.GalleryPermission.Response:
-                    
-                    self.action.send(QRViewModelAction.CloseBottomSheet())
-                    
-                    if payload.result {
-                        
-                        let imagePicker = ImagePickerControllerViewModel { [weak self] image in
-                            
-                            if let qrData = self?.string(from: image) {
-                                
-                                let result = qrResolve(qrData)
-                                
-                                self?.action.send(QRViewModelAction.Result(result: result))
-                            }
-                            
-                            self?.action.send(QRViewModelAction.CloseSheet())
-                            
-                        } closeAction: { [weak self] in
-                            
-                            self?.action.send(QRViewModelAction.CloseSheet())
-                        }
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
-                            
-                            self.sheet = .init(sheetType: .imagePicker(imagePicker))
-                        }
-                    } else {
-                        self.action.send(QRViewModelAction.AccessPhotoGallery())
-                    }
-                    
+                    self.handleGalleryPermission(
+                        response: payload,
+                        qrResolve: qrResolve
+                    )
+
                 case _ as ModelAction.Media.DocumentPermission.Response:
                     
                     self.action.send(QRViewModelAction.CloseBottomSheet())
@@ -271,6 +246,41 @@ private extension QRViewModel {
                 )
             ))
         )
+    }
+    
+    func handleGalleryPermission(
+        response: ModelAction.Media.GalleryPermission.Response,
+        qrResolve: @escaping QRResolve
+    ) {
+        action.send(QRViewModelAction.CloseBottomSheet())
+        
+        if response.result {
+            
+            let imagePicker = ImagePickerControllerViewModel { [weak self] image in
+                
+                if let qrData = self?.string(from: image) {
+                    
+                    let result = qrResolve(qrData)
+                    
+                    self?.action.send(QRViewModelAction.Result(result: result))
+                }
+                
+                self?.action.send(QRViewModelAction.CloseSheet())
+                
+            } closeAction: { [weak self] in
+                
+                self?.action.send(QRViewModelAction.CloseSheet())
+            }
+            
+            DispatchQueue.main.delay(for: .milliseconds(400)) { [weak self] in
+                
+                self?.sheet = .init(sheetType: .imagePicker(imagePicker))
+            }
+            
+        } else {
+            
+            self.action.send(QRViewModelAction.AccessPhotoGallery())
+        }
     }
 }
 
