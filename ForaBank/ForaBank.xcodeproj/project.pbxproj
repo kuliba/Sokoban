@@ -5546,7 +5546,6 @@
 		837E7D8A2C45213A007F7732 /* XCTestCase+assertError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+assertError.swift"; sourceTree = "<group>"; };
 		83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVButtonEvent.swift; sourceTree = "<group>"; };
 		83808C462B8DB97C00E9F7BF /* AlertModelOf+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlertModelOf+ext.swift"; sourceTree = "<group>"; };
-		83815F922C35660900C97E60 /* ControlPanelWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelWrapperView.swift; sourceTree = "<group>"; };
 		83815FA62C36859000C97E60 /* ControlPanelEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelEffectHandler.swift; sourceTree = "<group>"; };
 		839109252C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeGetSVCardLimitsServices.swift"; sourceTree = "<group>"; };
 		839109272C381D86007F5257 /* GetSVCardLimitsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSVCardLimitsServices.swift; sourceTree = "<group>"; };
@@ -13555,14 +13554,6 @@
 			path = ControlPanel;
 			sourceTree = "<group>";
 		};
-		83815F902C355FAC00C97E60 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				83815F922C35660900C97E60 /* ControlPanelWrapperView.swift */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		83943ECA2A8F789400042CB2 /* ProductsSelector */ = {
 			isa = PBXGroup;
 			children = (
@@ -15012,7 +15003,6 @@
 				2AE5972529F9182B0083F138 /* PreviewApps */,
 				EDB1437E265FDA410028EF5A /* Products */,
 				ED147D4D26BC1237002F66C8 /* Frameworks */,
-				83815F902C355FAC00C97E60 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
