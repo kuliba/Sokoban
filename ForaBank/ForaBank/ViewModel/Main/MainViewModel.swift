@@ -890,10 +890,10 @@ extension MainViewModel {
         _ qr: QRCode,
         _ qrMapping: QRMapping
     ) {
-        let operators = model.operatorsFromQR(qr, qrMapping) ?? []
-        let multipleOperators = MultiElementArray(operators)
+        let operators = model.operatorsFromQR(qr, qrMapping)
+        let multipleOperators = MultiElementArray(operators ?? [])
         
-        switch (multipleOperators, operators.first) {
+        switch (multipleOperators, operators?.first) {
         case let (_, .some(`operator`)):
             payWith(operator: `operator`, qr: qr, qrMapping: qrMapping)
             
