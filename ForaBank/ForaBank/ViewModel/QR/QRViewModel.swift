@@ -80,30 +80,22 @@ class QRViewModel: ObservableObject {
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
+                
                 switch action {
-                    
                 case _ as QRViewModelAction.OpenDocument:
-                    
                     self.openDocument()
                     
                 case _ as QRViewModelAction.Info:
                     self.openInfo()
                     
                 case _ as QRViewModelAction.AccessCamera:
-                    
                     DispatchQueue.main.delay(for: .milliseconds(700)) {
                         
                         self.accessCamera()
                     }
                     
                 case _ as QRViewModelAction.AccessPhotoGallery:
-                    
-                    self.bottomSheet = .init(sheetType: .photoAccessViewComponent(
-                        .init(viewModel: .init(
-                            input: .photo,
-                            closeAction: { [weak self] in
-                                self?.sheet = nil
-                            }))))
+                    self.accessPhotoGallery()
                     
                 case _ as QRViewModelAction.Flashlight:
                     self.flashLightTorch(on: self.flashLight.result.0)
@@ -120,8 +112,8 @@ class QRViewModel: ObservableObject {
                 default:
                     break
                 }
-                
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
         
         model.action
             .receive(on: DispatchQueue.main)
@@ -263,6 +255,18 @@ private extension QRViewModel {
             sheetType: .qRAccessViewComponent(.init(
                 viewModel: .init(
                     input: .camera,
+                    closeAction: { [weak self] in self?.sheet = nil }
+                )
+            ))
+        )
+    }
+    
+    func accessPhotoGallery() {
+        
+        bottomSheet = .init(
+            sheetType: .photoAccessViewComponent(.init(
+                viewModel: .init(
+                    input: .photo,
                     closeAction: { [weak self] in self?.sheet = nil }
                 )
             ))
