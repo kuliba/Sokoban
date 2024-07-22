@@ -1466,6 +1466,38 @@ private extension PaymentsTransfersViewModel {
             .store(in: &bindings)
     }
     
+    private func payByInstructions() {
+        
+        event(.dismiss(.modal))
+        
+        let paymentsViewModel = makeByInstructionsPaymentsViewModel()
+        
+        action.send(DelayWrappedAction(
+            delayMS: 800,
+            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+        )
+    }
+    
+    private func makeAlert(_ message: String) {
+        
+        let alertViewModel = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "ОК") { [weak self] in
+            self?.action.send(ProductProfileViewModelAction.Close.Alert())
+        })
+        
+        route.modal = .alert(alertViewModel)
+    }
+    
+    private func createNavButtonsRight(
+    ) -> [NavigationBarButtonViewModel] {
+        
+        [.barcodeScanner(action: { [weak self] in self?.openScanner() })]
+    }
+}
+
+// MARK: - Helpers
+
+extension PaymentsTransfersViewModel {
+    
     private func handleQRViewModelActionResult(
         _ result: QRViewModel.ScanResult
     ) {
@@ -1473,23 +1505,23 @@ private extension PaymentsTransfersViewModel {
         case let .qrCode(qr):
             
             if let qrMapping = model.qrMapping.value {
-                        handleQRMapping(qr, qrMapping)
-                    } else {
-                        handleFailure(qr: qr)
-                    }
-                    
-                case let .c2bURL(url):
-                    handleC2bURL(url)
-                    
-                case let .c2bSubscribeURL(url):
-                    handleC2bSubscribeURL(url)
-                    
-                case let .sberQR(url):
-                    handleSberQRURL(url)
-                    
-                case .url:
-                    handleURL()
-                    
+                handleQRMapping(qr, qrMapping)
+            } else {
+                handleFailure(qr: qr)
+            }
+            
+        case let .c2bURL(url):
+            handleC2bURL(url)
+            
+        case let .c2bSubscribeURL(url):
+            handleC2bSubscribeURL(url)
+            
+        case let .sberQR(url):
+            handleSberQRURL(url)
+            
+        case .url:
+            handleURL()
+            
         case .unknown:
             handleUnknownQR()
         }
@@ -1618,19 +1650,7 @@ private extension PaymentsTransfersViewModel {
             self.route.destination = .failedView(failedView)
         }
     }
-    
-    private func payByInstructions() {
-        
-        event(.dismiss(.modal))
-        
-        let paymentsViewModel = makeByInstructionsPaymentsViewModel()
-        
-        action.send(DelayWrappedAction(
-            delayMS: 800,
-            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-        )
-    }
-    
+
     private func handleFailure(qr: QRCode) {
         
         event(.dismiss(.modal))
@@ -1777,21 +1797,6 @@ private extension PaymentsTransfersViewModel {
             
             self.route.destination = .failedView(failedView)
         }
-    }
-    
-    private func makeAlert(_ message: String) {
-        
-        let alertViewModel = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "ОК") { [weak self] in
-            self?.action.send(ProductProfileViewModelAction.Close.Alert())
-        })
-        
-        route.modal = .alert(alertViewModel)
-    }
-    
-    private func createNavButtonsRight(
-    ) -> [NavigationBarButtonViewModel] {
-        
-        [.barcodeScanner(action: { [weak self] in self?.openScanner() })]
     }
 }
 
