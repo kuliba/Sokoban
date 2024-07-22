@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 import LandingUIComponent
 import SVCardLimitAPI
-import UIPrimitives
 
 final class ControlPanelReducer {
     

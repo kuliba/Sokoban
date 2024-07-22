@@ -241,6 +241,39 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_dismissAlert_shouldAlertNil() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assertState(
+            .dismiss(.alert),
+            on: initialState(buttons: .buttons(card), alert: .testAlert)) {
+                
+                $0.alert = nil
+            }
+    }
+    
+    func test_reduce_destination_shouldDestinationChanged() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let destination: ControlPanelState.Destination = .successView(.sample1)
+        
+        assertState(
+            .destination(destination),
+            on: initialState(buttons: .buttons(card), destination: .landing(.mockData))) {
+                
+                $0.destination = destination
+            }
+    }
+
+    func test_reduce_cancelC2BSub_shouldNoChanged() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assertState( .cancelC2BSub("Token"),
+            on: initialState(buttons: .buttons(card), destination: .landing(.mockData)))
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = ControlPanelReducer
@@ -358,6 +391,7 @@ final class ControlPanelReducerTests: XCTestCase {
     
     private func initialState(
         buttons: [ControlPanelButtonDetails],
+        alert: Alert.ViewModel? = nil,
         navBarViewModel: NavigationBarView.ViewModel = .sample,
         landingWrapperViewModel: LandingWrapperViewModel? = nil,
         destination: ControlPanelState.Destination? = nil
@@ -365,6 +399,7 @@ final class ControlPanelReducerTests: XCTestCase {
         
         .init(
             buttons: buttons,
+            alert: alert,
             navigationBarViewModel: navBarViewModel,
             landingWrapperViewModel: landingWrapperViewModel,
             destination: destination
