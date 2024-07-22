@@ -24,6 +24,17 @@ final class ControlPanelReducerTests: XCTestCase {
             on: initialState(buttons: .buttons(card)))
     }
     
+    func test_reduce_controlButtonEvent_delayAlert_shouldDeliverDelayAlertEffect
+    () {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assert(
+            .controlButtonEvent(.delayAlert(card)),
+            on: initialState(buttons: .buttons(card)), 
+            effect: .delayAlert)
+    }
+
     func test_reduce_controlButtonEvent_showAlert_shouldButtonsNotChangedAlertNotNilStatusNil() {
         
         let card = makeCardProduct(statusCard: .active)
@@ -34,6 +45,17 @@ final class ControlPanelReducerTests: XCTestCase {
                 
                 $0.alert = .testAlert
             }
+    }
+    
+    func test_reduce_controlButtonEvent_showAlert_shouldDeliverNoEffect
+    () {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assert(
+            .controlButtonEvent(.showAlert(.testAlert)),
+            on: initialState(buttons: .buttons(card)),
+            effect: nil)
     }
     
     func test_reduce_controlButtonEvent_blockCard_shouldStatusInflightSpinnerNotNil() {
@@ -49,6 +71,17 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_controlButtonEvent_blockCard_shouldDeliverBlockCardEffect
+    () {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assert(
+            .controlButtonEvent(.blockCard(card)),
+            on: initialState(buttons: .buttons(card)),
+            effect: .blockCard(card.cardId))
+    }
+    
     func test_reduce_controlButtonEvent_unblockCard_shouldStatusInflightSpinnerNotNil() {
         
         let card = makeCardProduct(statusCard: .blockedUnlockAvailable)
@@ -62,6 +95,17 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_controlButtonEvent_unblockCard_shouldDeliverUnBlockCardEffect() {
+        
+        let card = makeCardProduct(statusCard: .blockedUnlockAvailable)
+        
+        assert(
+            .controlButtonEvent(.unblockCard(card)),
+            on: initialState(buttons: .buttons(card)),
+            effect: .unblockCard(card.cardId)
+        )
+    }
+
     func test_reduce_controlButtonEvent_visibility_shouldStatusInflightSpinnerNotNil() {
         
         let card = makeCardProduct(statusCard: .blockedUnlockAvailable)
@@ -73,6 +117,17 @@ final class ControlPanelReducerTests: XCTestCase {
                 $0.status = .inflight(.visibility)
                 $0.spinner = .init()
             }
+    }
+    
+    func test_reduce_controlButtonEvent_visibility_shouldDeliverVisibilityEffect() {
+        
+        let card = makeCardProduct(statusCard: .blockedUnlockAvailable)
+        
+        assert(
+            .controlButtonEvent(.visibility(card)),
+            on: initialState(buttons: .buttons(card)),
+            effect: .visibility(card.cardId)
+        )
     }
     
     func test_reduce_updateProducts_shouldStatusInflight() {
@@ -87,6 +142,17 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_updateProducts_shouldDeliverNoEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assert(
+            .updateProducts,
+            on: initialState(buttons: .buttons(card)),
+            effect: nil
+        )
+    }
+    
     func test_reduce_update_shouldButtonsUpdatedAlertNilStatusNil() {
         
         let card = makeCardProduct(statusCard: .blockedUnlockAvailable)
@@ -99,6 +165,17 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_update_shouldDeliverNoEffect() {
+        
+        let card = makeCardProduct(statusCard: .blockedUnlockAvailable)
+        
+        assert(
+            .updateState([]),
+            on: initialState(buttons: .buttons(card)),
+            effect: nil
+        )
+    }
+    
     func test_reduce_controlButtonEvent_changePin_shouldNotChanged() {
         
         let card = makeCardProduct(statusCard: .active)
@@ -108,6 +185,17 @@ final class ControlPanelReducerTests: XCTestCase {
             on: initialState(buttons: .buttons(card)))
     }
     
+    func test_reduce_controlButtonEvent_changePin_shouldDeliverNoEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assert(
+            .controlButtonEvent(.changePin(card)),
+            on: initialState(buttons: .buttons(card)),
+            effect: nil
+        )
+    }
+
     func test_reduce_updateTitle_shouldTitleChanged() {
         
         let card = makeCardProduct(statusCard: .active)
@@ -120,6 +208,17 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_updateTitle_shouldDeliverNoEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assert(
+            .updateTitle("new title"),
+            on: initialState(buttons: .buttons(card)),
+            effect: nil
+        )
+    }
+    
     func test_reduce_loadSVCardLanding_shouldNotChanged() {
         
         let card = makeCardProduct(statusCard: .active)
@@ -127,6 +226,16 @@ final class ControlPanelReducerTests: XCTestCase {
         assertState(
             .loadSVCardLanding(card),
             on: initialState(buttons: .buttons(card)))
+    }
+    
+    func test_reduce_loadSVCardLanding_shouldDeliverLoadSVCardLandingEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assert(
+            .loadSVCardLanding(card),
+            on: initialState(buttons: .buttons(card)),
+            effect: .loadSVCardLanding(card.cardId))
     }
     
     func test_reduce_loadedSVCardLanding_success_shouldLandingWrapperViewModelChanged() {
@@ -142,6 +251,18 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_loadedSVCardLanding_success_shouldDeliverLoadSVCardLimitsEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let viewModel = createLandingWrapperViewModel()
+        
+        assert(
+            .loadedSVCardLanding(viewModel, card),
+            on: initialState(buttons: .buttons(card)),
+            effect: .loadSVCardLimits(card.cardId)
+        )
+    }
+
     func test_reduce_loadedSVCardLanding_failure_shouldNoChanged() {
         
         let card = makeCardProduct(statusCard: .active)
@@ -149,6 +270,17 @@ final class ControlPanelReducerTests: XCTestCase {
         assertState(
             .loadedSVCardLanding(nil, card),
             on: initialState(buttons: .buttons(card)))
+    }
+    
+    func test_reduce_loadedSVCardLanding_failure_shouldDeliverNoEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assert(
+            .loadedSVCardLanding(nil, card),
+            on: initialState(buttons: .buttons(card)),
+            effect: nil
+        )
     }
          
     func test_reduce_stickerEvent_openCard_shouldDestinationChanged() {
@@ -164,6 +296,18 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
 
+    func test_reduce_stickerEvent_openCard_shouldDeliverNoEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let authProductsViewModel: AuthProductsViewModel = .mockData
+        
+        assert(
+            .bannerEvent(.stickerEvent(.openCard(authProductsViewModel))),
+            on: initialState(buttons: .buttons(card)),
+            effect: nil
+        )
+    }
+
     func test_reduce_stickerEvent_orderSticker_shouldDestinationChanged() {
         
         let card = makeCardProduct(statusCard: .active)
@@ -175,6 +319,18 @@ final class ControlPanelReducerTests: XCTestCase {
                 
                 $0.destination = .orderSticker(orderStickerView)
             }
+    }
+    
+    func test_reduce_stickerEvent_orderSticker_shouldDeliverNoEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let orderStickerView = Text("orderSticker")
+        
+        assert(
+            .bannerEvent(.stickerEvent(.orderSticker(orderStickerView))),
+            on: initialState(buttons: .buttons(card)),
+            effect: nil
+        )
     }
     
     func test_reduce_contactTransfer_shouldDestinationChanged() {
@@ -190,6 +346,18 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_contactTransfer_shouldDeliverNoEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let paymentsViewModel: PaymentsViewModel = .sample
+        
+        assert(
+            .bannerEvent(.contactTransfer(paymentsViewModel)),
+            on: initialState(buttons: .buttons(card), destination: .landing(.mockData)),
+            effect: nil
+        )
+    }
+
     func test_reduce_migTransfer_shouldDestinationChanged() {
         
         let card = makeCardProduct(statusCard: .active)
@@ -201,6 +369,18 @@ final class ControlPanelReducerTests: XCTestCase {
                 
                 $0.destination = .migTransfer(paymentsViewModel)
             }
+    }
+    
+    func test_reduce_migTransfer_shouldDeliverNoEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let paymentsViewModel: PaymentsViewModel = .sample
+        
+        assert(
+            .bannerEvent(.migTransfer(paymentsViewModel)),
+            on: initialState(buttons: .buttons(card), destination: .landing(.mockData)),
+            effect: nil
+        )
     }
     
     func test_reduce_openDepositList_shouldDestinationChanged() {
@@ -216,6 +396,18 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_openDepositList_shouldDeliverNoEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let openDepositListViewModel: OpenDepositListViewModel = .init(.mockWithEmptyExcept(), catalogType: .deposit, dismissAction: {})
+        
+        assert(
+            .bannerEvent(.openDepositsList(openDepositListViewModel)),
+            on: initialState(buttons: .buttons(card), destination: .landing(.mockData)),
+            effect: nil
+        )
+    }
+
     func test_reduce_openDeposit_shouldDestinationChanged() {
         
         let card = makeCardProduct(statusCard: .active)
@@ -229,6 +421,18 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_openDeposit_shouldDeliverNoEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let openDepositDetailViewModel: OpenDepositDetailViewModel = .sample
+        
+        assert(
+            .bannerEvent(.openDeposit(openDepositDetailViewModel)),
+            on: initialState(buttons: .buttons(card), destination: .landing(.mockData)),
+            effect: nil
+        )
+    }
+
     func test_reduce_dismissDestination_shouldDestinationNil() {
         
         let card = makeCardProduct(statusCard: .active)
@@ -239,6 +443,17 @@ final class ControlPanelReducerTests: XCTestCase {
                 
                 $0.destination = nil
             }
+    }
+    
+    func test_reduce_dismissDestination_shouldDeliverNoEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assert(
+            .dismiss(.destination),
+            on: initialState(buttons: .buttons(card), destination: .landing(.mockData)),
+            effect: nil
+        )
     }
     
     func test_reduce_dismissAlert_shouldAlertNil() {
@@ -253,6 +468,17 @@ final class ControlPanelReducerTests: XCTestCase {
             }
     }
     
+    func test_reduce_dismissAlert_shouldDeliverNoEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assert(
+            .dismiss(.alert),
+            on: initialState(buttons: .buttons(card), alert: .testAlert),
+            effect: nil
+        )
+    }
+    
     func test_reduce_destination_shouldDestinationChanged() {
         
         let card = makeCardProduct(statusCard: .active)
@@ -265,13 +491,37 @@ final class ControlPanelReducerTests: XCTestCase {
                 $0.destination = destination
             }
     }
+    
+    func test_reduce_destination_shouldDeliverNoEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        let destination: ControlPanelState.Destination = .successView(.sample1)
+        
+        assert(
+            .destination(destination),
+            on: initialState(buttons: .buttons(card), destination: .landing(.mockData)),
+            effect: nil
+        )
+    }
 
     func test_reduce_cancelC2BSub_shouldNoChanged() {
         
         let card = makeCardProduct(statusCard: .active)
         
-        assertState( .cancelC2BSub("Token"),
+        assertState( 
+            .cancelC2BSub("Token"),
             on: initialState(buttons: .buttons(card), destination: .landing(.mockData)))
+    }
+    
+    func test_reduce_cancelC2BSub_shouldDeliverCancelC2BSubEffect() {
+        
+        let card = makeCardProduct(statusCard: .active)
+        
+        assert(
+            .cancelC2BSub("Token"),
+            on: initialState(buttons: .buttons(card), destination: .landing(.mockData)),
+            effect: .cancelC2BSub("Token")
+        )
     }
     
     // MARK: - Helpers
@@ -279,7 +529,8 @@ final class ControlPanelReducerTests: XCTestCase {
     private typealias SUT = ControlPanelReducer
     private typealias State = SUT.State
     private typealias Event = SUT.Event
-    
+    private typealias Effect = SUT.Effect
+
     private typealias MakeAlert = ControlPanelReducer.MakeAlert
     private typealias MakeActions = ControlPanelReducer.MakeActions
     private typealias MakeViewModels = ControlPanelReducer.MakeViewModels
@@ -389,6 +640,26 @@ final class ControlPanelReducerTests: XCTestCase {
         )
     }
     
+    private func assert(
+        sut: SUT? = nil,
+        _ event: Event,
+        on state: State,
+        effect expectedEffect: Effect.EquatableEffect?,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let sut = sut ?? makeSUT()
+        
+        let (_, receivedEffect) = sut.reduce(state, event)
+        
+        XCTAssertNoDiff(
+            receivedEffect?.equatableEffect,
+            expectedEffect,
+            "\nExpected \(String(describing: expectedEffect)), but got \(String(describing: receivedEffect)) instead.",
+            file: file, line: line
+        )
+    }
+
     private func initialState(
         buttons: [ControlPanelButtonDetails],
         alert: Alert.ViewModel? = nil,
@@ -473,4 +744,42 @@ extension LandingWrapperViewModel.ImagePublisher {
         return Just(["1": .ic16Tv])
             .eraseToAnyPublisher()
     }()
+}
+
+private extension ControlPanelEffect {
+    
+    enum EquatableEffect: Equatable {
+        
+        case delayAlert
+        case blockCard(ProductCardData.ID)
+        case unblockCard(ProductCardData.ID)
+        case visibility(ProductCardData.ID)
+        case loadSVCardLanding(ProductCardData.ID)
+        case loadSVCardLimits(ProductCardData.ID)
+        case cancelC2BSub(String)
+    }
+    
+    var equatableEffect: EquatableEffect {
+        
+        switch self {
+            
+        case .delayAlert:
+            return .delayAlert
+        case let .blockCard(card):
+            return .blockCard(card.cardId)
+        case let .unblockCard(card):
+            return .unblockCard(card.cardId)
+        case let .visibility(card):
+            return .visibility(card.cardId)
+        case let .loadSVCardLanding(card):
+            return .loadSVCardLanding(card.cardId)
+        case let .loadSVCardLimits(card):
+            return .loadSVCardLimits(card.cardId)
+        case let .model(effect):
+            switch effect {
+            case let .cancelC2BSub(token):
+                return .cancelC2BSub(token)
+            }
+        }
+    }
 }

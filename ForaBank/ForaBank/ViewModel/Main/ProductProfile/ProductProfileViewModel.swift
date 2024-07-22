@@ -2039,11 +2039,7 @@ extension ProductProfileViewModel {
                 card: card,
                 productProfileServices: productProfileServices,
                 landingEvent: landingEvent, 
-                handleModelEffect: ControlPanelModelEffectHandler(            cancelC2BSub: { (token: SubscriptionViewModel.Token) in
-                    
-                    let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
-                    self.model.action.send(action)
-                }).handleEffect(_:_:)
+                handleModelEffect: productNavigationStateManager.handleModelEffect
                     ).handleEffect(_:_:))
     }
     

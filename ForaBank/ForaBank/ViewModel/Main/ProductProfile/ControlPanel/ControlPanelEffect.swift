@@ -9,7 +9,7 @@ import SwiftUI
 import ManageSubscriptionsUI
 
 enum ControlPanelEffect {
-        
+    
     case delayAlert(Alert.ViewModel, DispatchTimeInterval)
 
     case blockCard(ProductCardData)
@@ -23,7 +23,7 @@ enum ControlPanelEffect {
 
 extension ControlPanelEffect {
     
-    enum ModelEffect {
+    enum ModelEffect: Equatable {
         
         case cancelC2BSub(SubscriptionViewModel.Token)
     }

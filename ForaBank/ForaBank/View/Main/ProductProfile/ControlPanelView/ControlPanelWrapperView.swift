@@ -7,6 +7,7 @@
 
 import SwiftUI
 import RxViewModel
+import ManageSubscriptionsUI
 
 typealias ControlPanelViewModel = RxViewModel<ControlPanelState, ControlPanelEvent, ControlPanelEffect>
 
@@ -79,14 +80,8 @@ struct ControlPanelWrapperView: View {
         case let .openSubscriptions(subscriptionViewModel):
             return AnyView(ManagingSubscriptionView(
                 subscriptionViewModel: subscriptionViewModel,
-                configurator: .init(
-                    titleFont: .textBodyMR14180(),
-                    titleColor: .textPlaceholder,
-                    nameFont: .textH4M16240(),
-                    nameColor: .mainColorsBlack,
-                    descriptionFont: .textBodyMR14180()
-                ),
-                footerImage: Image.ic72Sbp,
+                configurator: .config,
+                footerImage: .ic72Sbp,
                 searchCancelAction: subscriptionViewModel.searchViewModel.dismissKeyboard)
             )
             
@@ -100,4 +95,15 @@ extension ControlPanelWrapperView {
     
     typealias ViewModel = ControlPanelViewModel
     typealias Config = ControlPanelViewConfig
+}
+
+private extension ManageSubscriptionsUI.ProductViewConfig {
+    
+    static let config: Self = .init(
+        titleFont: .textBodyMR14180(),
+        titleColor: .textPlaceholder,
+        nameFont: .textH4M16240(),
+        nameColor: .mainColorsBlack,
+        descriptionFont: .textBodyMR14180()
+    )
 }

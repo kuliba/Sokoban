@@ -161,9 +161,16 @@ extension RootViewModelFactory {
             makeSVCardLandingViewModel: makeSVCardLandig
         )
         
+        let controlPanelModelEffectHandler = ControlPanelModelEffectHandler(            cancelC2BSub: { (token: SubscriptionViewModel.Token) in
+            
+            let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
+            model.action.send(action)
+        })
+        
         let productNavigationStateManager = ProductProfileFlowManager(
             reduce: makeProductProfileFlowReducer().reduce(_:_:),
-            handleEffect: ProductNavigationStateEffectHandler().handleEffect
+            handleEffect: ProductNavigationStateEffectHandler().handleEffect,
+            handleModelEffect: controlPanelModelEffectHandler.handleEffect
         )
         
         let templatesFlowManager = TemplatesFlowManagerComposer(flag: utilitiesPaymentsFlag).compose()
