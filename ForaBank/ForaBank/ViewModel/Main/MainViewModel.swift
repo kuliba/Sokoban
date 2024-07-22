@@ -1000,7 +1000,7 @@ extension MainViewModel {
     
     private func handleFailure(qr: QRCode) {
         
-        self.action.send(MainViewModelAction.Close.FullScreenSheet())
+        resetModal()
         DispatchQueue.main.delay(for:.milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
@@ -1025,7 +1025,7 @@ extension MainViewModel {
     
     private func handleC2bURL(_ url: URL) {
         
-        self.action.send(MainViewModelAction.Close.FullScreenSheet())
+        resetModal()
         Task.detached(priority: .high) { [self] in
             
             do {
@@ -1053,7 +1053,7 @@ extension MainViewModel {
     
     private func handleC2bSubscribeURL(_ url: URL) {
         
-        self.action.send(MainViewModelAction.Close.FullScreenSheet())
+        resetModal()
         let paymentsViewModel = PaymentsViewModel(
             source: .c2bSubscribe(url),
             model: model,
@@ -1072,7 +1072,7 @@ extension MainViewModel {
     
     private func handleSberQRURL(_ url: URL) {
         
-        action.send(MainViewModelAction.Close.FullScreenSheet())
+        resetModal()
         rootActions?.spinner.show()
         
         sberQRServices.getSberQRData(url) { [weak self] result in
@@ -1151,7 +1151,7 @@ extension MainViewModel {
     
     private func handleURL() {
         
-        self.action.send(MainViewModelAction.Close.FullScreenSheet())
+        resetModal()
         DispatchQueue.main.delay(for: .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
@@ -1186,7 +1186,7 @@ extension MainViewModel {
     
     private func handleUnknownQR() {
         
-        self.action.send(MainViewModelAction.Close.FullScreenSheet())
+        resetModal()
         DispatchQueue.main.delay(for: .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
