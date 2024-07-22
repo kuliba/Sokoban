@@ -18,6 +18,7 @@ import Tagged
 import RxViewModel
 import LandingUIComponent
 import UIPrimitives
+import ManageSubscriptionsUI
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -2144,22 +2145,13 @@ extension ProductProfileViewModel {
         if let controlPanelViewModel {
             
             let viewModel = productProfileViewModelFactory.makeSubscriptionsViewModel(
-                { [weak self] token, title in
+                { token, message in
                     
                     controlPanelViewModel.event(.alert(.cancelC2BSub(
-                        title: title,
-                        event: .cancelC2BSub(token)
+                        message: message,
+                        token: token, 
+                        event: controlPanelViewModel.event
                     )))
-                    /*self?.event(.navigate(.alert(.cancelC2BSub(
-                        title: title,
-                        event: .cancelC2BSub(token)
-                    ))))
-                     { (token: SubscriptionViewModel.Token) in
-                         
-                         let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
-                         model.action.send(action)
-                     }
-                     */
                 },
                 { [weak self] token in
                     
@@ -2191,26 +2183,19 @@ extension ProductProfileViewModel {
     }
 }
 
-private extension AlertModelOf<ControlPanelEvent> {
+private extension Alert.ViewModel {
     
     static func cancelC2BSub(
-        title: String,
-        event: ControlPanelEvent
+        message: String,
+        token: SubscriptionViewModel.Token,
+        event: @escaping (ControlPanelEvent) -> Void
     ) -> Self {
         
         .init(
-            title: title,
-            message: nil,
-            primaryButton: .init(
-                type: .cancel,
-                title: "Отмена",
-                event: .dismiss(.alert)
-            ),
-            secondaryButton: .init(
-                type: .default,
-                title: "Отключить",
-                event: event
-            )
+            title: "",
+            message: message,
+            primary: .init(type: .cancel, title: "Отмена", action: { event(.dismiss(.alert)) }),
+            secondary: .init(type: .default, title: "Отключить", action: { event(.cancelC2BSub(token))})
         )
     }
 }

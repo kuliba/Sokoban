@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import LandingUIComponent
 import SVCardLimitAPI
+import UIPrimitives
 
 final class ControlPanelReducer {
     
@@ -96,11 +97,13 @@ extension ControlPanelReducer {
             state.destination = .openSubscriptions(viewModel)
             
         case let .alert(alertModel):
-            effect = .delayAlertModelOf(alertModel, controlPanelLifespan
+            effect = .delayAlert(alertModel, controlPanelLifespan
             )
+            
         case let .cancelC2BSub(token):
             print("cancelC2BSub")
         }
+        
         return (state, effect)
     }
 }
@@ -164,21 +167,6 @@ extension ControlPanelReducer {
         case let .showAlert(alertViewModel):
             state.alert = alertViewModel
             
-        case let .showAlertModelOf(alertViewModel):
-            
-            if let secondaryButton = alertViewModel.secondaryButton {
-                
-                state.alert = .init(
-                    title: alertViewModel.title,
-                    message: alertViewModel.message,
-                    primary: .init(type: .cancel, title: alertViewModel.primaryButton.title, action: { alertViewModel.primaryButton.event }),
-                    secondary: .init(type: .default, title: secondaryButton.title, action: { secondaryButton.event }))
-            } else {
-                state.alert = .init(
-                    title: alertViewModel.title,
-                    message: alertViewModel.message,
-                    primary: .init(type: .cancel, title: alertViewModel.primaryButton.title, action: { alertViewModel.primaryButton.event }))
-            }
             
         case let .blockCard(card):
             state.status = .inflight(.block)

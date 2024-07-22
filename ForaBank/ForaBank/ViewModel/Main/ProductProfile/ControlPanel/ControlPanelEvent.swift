@@ -9,7 +9,7 @@ import Foundation
 import LandingUIComponent
 import SVCardLimitAPI
 import ManageSubscriptionsUI
-import UIPrimitives
+import SwiftUI
 
 indirect enum ControlPanelEvent {
     
@@ -24,7 +24,7 @@ indirect enum ControlPanelEvent {
     case bannerEvent(BannerActionEvent)
     case dismiss(DismissEvent)
 
-    case alert(AlertModelOf<ControlPanelEvent>)
+    case alert(Alert.ViewModel)
 
     case openSubscriptions(SubscriptionsViewModel)
     case cancelC2BSub(SubscriptionViewModel.Token)
