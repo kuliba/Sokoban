@@ -140,17 +140,7 @@ class QRViewModel: ObservableObject {
             .map(\.value)
             .map(qrResolve)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] result in
-                
-                self.action.send(QRViewModelAction.Result(result: result))
-                
-                if case let .qrCode(qrCode) = result,
-                   let mapping = model.qrMapping.value,
-                   let failData = qrCode.check(mapping: mapping) {
-                    
-                    self.model.action.send(ModelAction.QRAction.SendFailData.Request(failData: failData))
-                }
-            }
+            .sink { [unowned self] in self.handleScanResult($0) }
             .store(in: &bindings)
     }
 }
@@ -287,6 +277,19 @@ private extension QRViewModel {
         }
         
         self.sheet = .init(sheetType: .documentPicker(documentPicker))
+    }
+    
+    func handleScanResult(
+        _ result: QRViewModel.ScanResult
+    ) {
+        action.send(QRViewModelAction.Result(result: result))
+        
+        if case let .qrCode(qrCode) = result,
+           let mapping = model.qrMapping.value,
+           let failData = qrCode.check(mapping: mapping) {
+            
+            model.action.send(ModelAction.QRAction.SendFailData.Request(failData: failData))
+        }
     }
 }
 
