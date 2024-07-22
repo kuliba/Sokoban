@@ -84,26 +84,7 @@ class QRViewModel: ObservableObject {
                     
                 case _ as QRViewModelAction.OpenDocument:
                     
-                    self.bottomSheet = .init(sheetType: .choiseDocument(
-                        .init(buttons: [
-                            .init(
-                                icon: .init(image: .ic24Image, background: .circle),
-                                title: .init(text: "Из фото", style: .bold),
-                                orientation: .horizontal, action: { [weak self] in
-                                    
-                                    self?.bottomSheet = nil
-                                    self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
-                                }),
-                            .init(
-                                icon: .init(image: .ic24FileText, background: .circle),
-                                title: .init(text: "Из Документов", style: .bold),
-                                orientation: .horizontal,
-                                action: { [weak self] in
-                                    
-                                    self?.model.action.send(ModelAction.Media.DocumentPermission.Request())
-                                })
-                        ])
-                    ))
+                    self.openDocument()
                     
                 case _ as QRViewModelAction.Info:
                     self.bottomSheet = .init(sheetType: .info(
@@ -239,6 +220,41 @@ class QRViewModel: ObservableObject {
                 }
             }
             .store(in: &bindings)
+    }
+}
+
+// MARK: - Helpers
+
+private extension QRViewModel {
+    
+    func openDocument() {
+        
+        bottomSheet = .init(
+            sheetType: .choiseDocument(
+                .init(
+                    buttons: [
+                        .init(
+                            icon: .init(image: .ic24Image, background: .circle),
+                            title: .init(text: "Из фото", style: .bold),
+                            orientation: .horizontal, action: { [weak self] in
+                                
+                                self?.bottomSheet = nil
+                                self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
+                            }
+                        ),
+                        .init(
+                            icon: .init(image: .ic24FileText, background: .circle),
+                            title: .init(text: "Из Документов", style: .bold),
+                            orientation: .horizontal,
+                            action: { [weak self] in
+                                
+                                self?.model.action.send(ModelAction.Media.DocumentPermission.Request())
+                            }
+                        )
+                    ]
+                )
+            )
+        )
     }
 }
 
