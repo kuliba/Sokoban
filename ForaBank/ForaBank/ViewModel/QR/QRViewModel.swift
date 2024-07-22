@@ -87,14 +87,7 @@ class QRViewModel: ObservableObject {
                     self.openDocument()
                     
                 case _ as QRViewModelAction.Info:
-                    self.bottomSheet = .init(sheetType: .info(
-                        .init(icon: .ic48Info,
-                              title: "Сканировать QR-код",
-                              content: ["\tНаведите камеру телефона на QR-код,\n и приложение автоматически его считает.",
-                                        "\tПеред оплатой проверьте, что все поля заполнены правильно.",
-                                        "\tЧтобы оплатить квитанцию, сохраненную в телефоне, откройте ее с помощью кнопки \"Из файла\" и отсканируйте QR-код."]
-                             )
-                    ))
+                    self.openInfo()
                     
                 case _ as QRViewModelAction.AccessCamera:
                     
@@ -252,6 +245,21 @@ private extension QRViewModel {
                             }
                         )
                     ]
+                )
+            )
+        )
+    }
+    
+    func openInfo() {
+        
+        bottomSheet = .init(
+            sheetType: .info(
+                .init(
+                    icon: .ic48Info,
+                    title: "Сканировать QR-код",
+                    content: ["\tНаведите камеру телефона на QR-код,\n и приложение автоматически его считает.",
+                              "\tПеред оплатой проверьте, что все поля заполнены правильно.",
+                              "\tЧтобы оплатить квитанцию, сохраненную в телефоне, откройте ее с помощью кнопки \"Из файла\" и отсканируйте QR-код."]
                 )
             )
         )
