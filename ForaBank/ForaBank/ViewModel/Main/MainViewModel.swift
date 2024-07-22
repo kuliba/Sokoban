@@ -662,6 +662,198 @@ private extension MainViewModel {
             .store(in: &bindings)
     }
     
+    private func bind(_ paymentsViewModel: PaymentsViewModel) {
+        
+        paymentsViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                    
+                case _ as PaymentsViewModelAction.ScanQrCode:
+                    self.openScanner()
+                    
+                default: break
+                }
+            }
+            .store(in: &bindings)
+    }
+    
+    func bind(_ productProfile: ProductProfileViewModel) {
+        
+        productProfile.action
+            .compactMap { $0 as? ProductProfileViewModelAction.MyProductsTapped.OpenDeposit }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in self.openDeposit() }
+            .store(in: &bindings)
+    }
+    
+    func bind(_ templatesListViewModel: TemplatesListViewModel) {
+        
+        templatesListViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as TemplatesListViewModelAction.OpenProductProfile:
+                    
+                    self.action.send(MainViewModelAction.Close.Link())
+                    
+                    DispatchQueue.main.delay(for: .milliseconds(800)) {
+                        self.action.send(MainViewModelAction.Show.ProductProfile
+                            .init(productId: payload.productId))
+                    }
+                    
+                default:
+                    break
+                }
+            }
+            .store(in: &bindings)
+    }
+    
+    func bind(_ viewModel: ContactsViewModel) {
+        
+        viewModel.action
+            .compactMap({ $0 as? ContactsViewModelAction.PaymentRequested })
+            .map(\.source)
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] payloadSource in
+                
+                self.action.send(MainViewModelAction.Close.Sheet())
+                
+                let source: Payments.Operation.Source? = {
+                    
+                    //TODO: move all this logic to payments with source side
+                    switch payloadSource {
+                    case let .latestPayment(latestPaymentId):
+                        guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData else {
+                            return nil
+                        }
+                        return .sfp(phone: latestPayment.phoneNumber, bankId: latestPayment.bankId)
+                        
+                        
+                    default:
+                        return payloadSource
+                    }
+                    
+                }()
+                
+                guard let source else { return }
+                
+                let paymentsViewModel = PaymentsViewModel(source: source, model: model) { [weak self] in
+                    
+                    guard let self else { return }
+                    
+                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    self.action.send(DelayWrappedAction(
+                        delayMS: 300,
+                        action: MainViewModelAction.Show.Contacts())
+                    )
+                }
+                bind(paymentsViewModel)
+                
+                self.action.send(DelayWrappedAction(
+                    delayMS: 300,
+                    action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
+                )
+            }
+            .store(in: &bindings)
+    }
+    
+    func update(_ sections: [MainSectionViewModel], with settings: MainSectionsSettings) {
+        
+        for section in sections {
+            
+            guard let collapsableSection = section as? MainSectionCollapsableViewModel else {
+                continue
+            }
+            
+            if let isCollapsed = settings.collapsed[section.type] {
+                
+                collapsableSection.isCollapsed = isCollapsed
+                
+            } else {
+                
+                collapsableSection.isCollapsed = false
+            }
+        }
+    }
+    
+    func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
+        
+        [.init(
+            icon: .ic24Bell,
+            action: { [weak self] in
+                
+                self?.action.send(MainViewModelAction.ButtonTapped.Messages())
+            }
+        )]
+    }
+    
+    private func openDeposit() {
+        
+        let openDepositViewModel = OpenDepositListViewModel(
+            model,
+            catalogType: .deposit,
+            dismissAction: { [weak self] in
+                
+                self?.action.send(MainViewModelAction.Close.Link())
+            })
+        
+        route.destination = .openDepositsList(openDepositViewModel)
+    }
+    
+    private typealias DepositeID = Int
+    private func returnFirstExpiredDepositID(
+        previousData: (expired: Date?, DepositeID?),
+        newData: (Date?, DepositeID)
+    ) -> (Date?, DepositeID) {
+        
+        if previousData.1 == nil {
+            return (newData.0, newData.1)
+        }
+        
+        if let previousDate = previousData.0,
+           let newDate = newData.0,
+           let newID = previousData.1,
+           newDate < previousDate {
+            
+            return (newDate, newID)
+        } else {
+            
+            return (previousData.0, previousData.1 ?? 0)
+        }
+    }
+    
+    private func showContacts() {
+        
+        self.resetDestination()
+        
+        DispatchQueue.main.delay(for: .milliseconds(300)) { [weak self] in
+            
+            self?.rootActions?.switchTab(.chat)
+        }
+    }
+    
+    func updateSections(_ updateInfo: UpdateInfo) {
+        
+        let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateInfo }) is UpdateInfoViewModel
+        switch (updateInfo.areProductsUpdated, containUpdateInfoSection) {
+            
+        case (true, true):
+            sections.removeFirst()
+        case (false, false):
+            sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
+        default:
+            break
+        }
+    }
+}
+
+// MARK: Helpers
+
+extension MainViewModel {
+    
     private func handleQRViewModelActionResult(
         _ result: QRViewModel.ScanResult
     ) {
@@ -1020,194 +1212,6 @@ private extension MainViewModel {
                 }
             )
             self.route.destination = .failedView(failedView)
-        }
-    }
-    
-    
-    private func bind(_ paymentsViewModel: PaymentsViewModel) {
-        
-        paymentsViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                    
-                case _ as PaymentsViewModelAction.ScanQrCode:
-                    self.openScanner()
-                    
-                default: break
-                }
-            }
-            .store(in: &bindings)
-    }
-    
-    func bind(_ productProfile: ProductProfileViewModel) {
-        
-        productProfile.action
-            .compactMap { $0 as? ProductProfileViewModelAction.MyProductsTapped.OpenDeposit }
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] _ in self.openDeposit() }
-            .store(in: &bindings)
-    }
-    
-    func bind(_ templatesListViewModel: TemplatesListViewModel) {
-        
-        templatesListViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as TemplatesListViewModelAction.OpenProductProfile:
-                    
-                    self.action.send(MainViewModelAction.Close.Link())
-                    
-                    DispatchQueue.main.delay(for: .milliseconds(800)) {
-                        self.action.send(MainViewModelAction.Show.ProductProfile
-                            .init(productId: payload.productId))
-                    }
-                    
-                default:
-                    break
-                }
-            }
-            .store(in: &bindings)
-    }
-    
-    func bind(_ viewModel: ContactsViewModel) {
-        
-        viewModel.action
-            .compactMap({ $0 as? ContactsViewModelAction.PaymentRequested })
-            .map(\.source)
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] payloadSource in
-                
-                self.action.send(MainViewModelAction.Close.Sheet())
-                
-                let source: Payments.Operation.Source? = {
-                    
-                    //TODO: move all this logic to payments with source side
-                    switch payloadSource {
-                    case let .latestPayment(latestPaymentId):
-                        guard let latestPayment = model.latestPayments.value.first(where: { $0.id == latestPaymentId }) as? PaymentGeneralData else {
-                            return nil
-                        }
-                        return .sfp(phone: latestPayment.phoneNumber, bankId: latestPayment.bankId)
-                        
-                        
-                    default:
-                        return payloadSource
-                    }
-                    
-                }()
-                
-                guard let source else { return }
-                
-                let paymentsViewModel = PaymentsViewModel(source: source, model: model) { [weak self] in
-                    
-                    guard let self else { return }
-                    
-                    self.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                    self.action.send(DelayWrappedAction(
-                        delayMS: 300,
-                        action: MainViewModelAction.Show.Contacts())
-                    )
-                }
-                bind(paymentsViewModel)
-                
-                self.action.send(DelayWrappedAction(
-                    delayMS: 300,
-                    action: MainViewModelAction.Show.Payments(paymentsViewModel: paymentsViewModel))
-                )
-            }
-            .store(in: &bindings)
-    }
-    
-    func update(_ sections: [MainSectionViewModel], with settings: MainSectionsSettings) {
-        
-        for section in sections {
-            
-            guard let collapsableSection = section as? MainSectionCollapsableViewModel else {
-                continue
-            }
-            
-            if let isCollapsed = settings.collapsed[section.type] {
-                
-                collapsableSection.isCollapsed = isCollapsed
-                
-            } else {
-                
-                collapsableSection.isCollapsed = false
-            }
-        }
-    }
-    
-    func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
-        
-        [.init(
-            icon: .ic24Bell,
-            action: { [weak self] in
-                
-                self?.action.send(MainViewModelAction.ButtonTapped.Messages())
-            }
-        )]
-    }
-    
-    private func openDeposit() {
-        
-        let openDepositViewModel = OpenDepositListViewModel(
-            model,
-            catalogType: .deposit,
-            dismissAction: { [weak self] in
-                
-                self?.action.send(MainViewModelAction.Close.Link())
-            })
-        
-        route.destination = .openDepositsList(openDepositViewModel)
-    }
-    
-    private typealias DepositeID = Int
-    private func returnFirstExpiredDepositID(
-        previousData: (expired: Date?, DepositeID?),
-        newData: (Date?, DepositeID)
-    ) -> (Date?, DepositeID) {
-        
-        if previousData.1 == nil {
-            return (newData.0, newData.1)
-        }
-        
-        if let previousDate = previousData.0,
-           let newDate = newData.0,
-           let newID = previousData.1,
-           newDate < previousDate {
-            
-            return (newDate, newID)
-        } else {
-            
-            return (previousData.0, previousData.1 ?? 0)
-        }
-    }
-    
-    private func showContacts() {
-        
-        self.resetDestination()
-        
-        DispatchQueue.main.delay(for: .milliseconds(300)) { [weak self] in
-            
-            self?.rootActions?.switchTab(.chat)
-        }
-    }
-    
-    func updateSections(_ updateInfo: UpdateInfo) {
-        
-        let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateInfo }) is UpdateInfoViewModel
-        switch (updateInfo.areProductsUpdated, containUpdateInfoSection) {
-            
-        case (true, true):
-            sections.removeFirst()
-        case (false, false):
-            sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
-        default:
-            break
         }
     }
 }
