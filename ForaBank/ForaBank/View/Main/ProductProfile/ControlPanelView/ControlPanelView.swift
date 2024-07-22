@@ -80,19 +80,28 @@ where DestinationView: View {
         .frame(height: config.placeHolder.height)
     }
     
-    @ViewBuilder
     private func placeHolderItem(width: CGFloat = -1) -> some View {
-        if width > 0 {
-            RoundedRectangle(cornerRadius: config.placeHolder.cornerRadius)
-                .foregroundColor(.bgIconGrayLightest)
-                .shimmering()
-                .frame(width: width)
-        } else {
-            RoundedRectangle(cornerRadius: config.placeHolder.cornerRadius)
-                .foregroundColor(.bgIconGrayLightest)
-                .shimmering()
+        
+        RoundedRectangle(cornerRadius: config.placeHolder.cornerRadius)
+            .foregroundColor(.bgIconGrayLightest)
+            .shimmering()
+            .modifier(WidthModifier(width: width))
+    }
+    
+    private struct WidthModifier : ViewModifier {
+        
+        let width : CGFloat
+        
+        @ViewBuilder 
+        func body(content: Content) -> some View {
+            if width > 0 {
+                content.frame(width: width)
+            } else {
+                content
+            }
         }
     }
+
 }
 
 extension ControlPanelView {
