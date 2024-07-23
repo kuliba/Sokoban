@@ -2024,7 +2024,7 @@ extension ProductProfileViewModel {
         let navigationBarInfo = ControlPanelState.NavigationBarInfo(
             title: "Управление",
             subtitle: navigationTitleForControlPanel,
-            action: { /*[weak self] in self?.link = nil*/ }
+            action: { [weak self] in self?.link = nil }
         )
         
         return .init(
