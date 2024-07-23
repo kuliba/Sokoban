@@ -36,6 +36,7 @@ extension Model {
         
         let cached = loadCached(matching: code, mapping: mapping)
         let anyway = operatorsFromQR(code, mapping)?
+            .filter(\.isGroup)
             .map(SegmentedPaymentProvider.init)
         
         switch (cached, anyway) {
