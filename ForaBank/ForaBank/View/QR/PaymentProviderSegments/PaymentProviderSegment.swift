@@ -13,9 +13,9 @@ struct PaymentProviderSegment: Equatable, Identifiable {
     struct Provider: Equatable, Identifiable {
         
         let id: String
-        let icon: String
-        let title: String
+        let icon: String?
         let inn: String?
+        let title: String
     }
     
     var id: String { title }
