@@ -7,6 +7,7 @@
 
 import LandingUIComponent
 import SwiftUI
+import UIPrimitives
 
 extension UILanding.Component.Config {
     
@@ -397,7 +398,19 @@ extension UILanding.List.HorizontalRectangleLimits.Config {
         fonts: .init(title: .textBodyMR14180(), subTitle: .textBodySR12160(), limit: .textH4R16240()),
         paddings: .init(horizontal: 12, vertical: 8),
         sizes: .init(height: 176, icon: 20, width: 180),
-        spacing: 8)
+        spacing: 8,
+        navigationBarConfig: .default
+    )
+}
+
+extension NavigationBarConfig {
+    
+    static let `default`: Self = .init(
+        title: .init(textFont: .textH3M18240(), textColor: .textSecondary),
+        subTitle: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder),
+        colors: .init(foreground: .textSecondary, background: .white),
+        sizes: .init(heightBar: 45, padding: 16, widthBackButton: 24)
+    )
 }
 
 extension UILanding.BlockHorizontalRectangular.Config {

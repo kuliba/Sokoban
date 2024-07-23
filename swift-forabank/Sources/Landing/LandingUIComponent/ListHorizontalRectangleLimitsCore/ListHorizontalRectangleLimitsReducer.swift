@@ -43,10 +43,10 @@ public extension ListHorizontalRectangleLimitsReducer {
                 break
             }
             
-        case let .loadedLimits(landingViewModel):
+        case let .loadedLimits(landingViewModel, subTitle):
             
             if let landingViewModel {
-                state.destination = .settingsView(landingViewModel)
+                state.destination = .settingsView(landingViewModel, subTitle)
             }
             
         case .dismissDestination:
