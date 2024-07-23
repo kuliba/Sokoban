@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import CalendarUI
 
-struct CalendarViewWrapper: View {
+struct CalendarWrapperView: View {
     
     @State private var selectedRange: MDateRange? = .init()
     let closeAction: () -> Void
@@ -50,7 +50,7 @@ struct CalendarViewWrapper: View {
     }
 }
 
-private extension CalendarViewWrapper {
+private extension CalendarWrapperView {
     
     func selectedRangeView() -> some View {
         SelectedRangeView(selectedRange: $selectedRange)
@@ -84,7 +84,7 @@ private extension CalendarViewWrapper {
     }
 }
 
-private extension CalendarViewWrapper {
+private extension CalendarWrapperView {
     
     func configureCalendar(_ config: CalendarConfig) -> CalendarConfig {
        

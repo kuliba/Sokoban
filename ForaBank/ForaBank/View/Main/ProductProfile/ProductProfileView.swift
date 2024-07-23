@@ -184,7 +184,7 @@ struct ProductProfileView: View {
                 
                 switch state.buttonAction {
                 case .calendar:
-                    CalendarViewWrapper(closeAction: {  })
+                    CalendarWrapperView(closeAction: {  })
                         .navigationTitle("Выберите даты или период")
                         .navigationBarTitleDisplayMode(.inline)
                 
