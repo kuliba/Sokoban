@@ -35,7 +35,7 @@ public extension ListHorizontalRectangleLimitsState {
             return lhs.id == rhs.id
         }
         
-        case settingsView(LandingWrapperViewModel)
+        case settingsView(LandingWrapperViewModel, String)
 
         public var id: _Case { _case }
         
@@ -53,7 +53,7 @@ public extension ListHorizontalRectangleLimitsState {
         
         var viewModel: LandingWrapperViewModel {
             switch self {
-            case let .settingsView(landingWrapperViewModel):
+            case let .settingsView(landingWrapperViewModel, _):
                 return landingWrapperViewModel
             }
         }

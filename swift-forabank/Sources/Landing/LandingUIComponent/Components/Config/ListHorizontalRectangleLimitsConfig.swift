@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import UIPrimitives
 
 public extension UILanding.List.HorizontalRectangleLimits {
     
@@ -18,6 +19,7 @@ public extension UILanding.List.HorizontalRectangleLimits {
         let paddings: Paddings
         let sizes: Sizes
         let spacing: CGFloat
+        let navigationBarConfig: NavigationBarConfig
         
         public struct Colors {
             
@@ -88,7 +90,8 @@ public extension UILanding.List.HorizontalRectangleLimits {
             fonts: Fonts,
             paddings: Paddings,
             sizes: Sizes,
-            spacing: CGFloat
+            spacing: CGFloat,
+            navigationBarConfig: NavigationBarConfig
         ) {
             self.colors = colors
             self.cornerRadius = cornerRadius
@@ -96,6 +99,7 @@ public extension UILanding.List.HorizontalRectangleLimits {
             self.paddings = paddings
             self.sizes = sizes
             self.spacing = spacing
+            self.navigationBarConfig = navigationBarConfig
         }
     }
 }
