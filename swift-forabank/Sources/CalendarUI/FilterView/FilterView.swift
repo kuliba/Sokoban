@@ -7,19 +7,37 @@
 
 
 import SwiftUI
+import SharedConfigs
 
-typealias Event = FilterEvent
-typealias Config = FilterConfig
+public typealias Event = FilterEvent
+public  typealias Config = FilterConfig
 
-struct FilterView: View {
-
-    typealias State = FilterState
-
+public struct FilterView: View {
+    
+    public typealias State = FilterState
+    
     var state: State
     let event: (Event) -> Void
     let config: Config
     
-    var body: some View {
+    let clearOptionsAction: () -> Void
+    let dismissAction: () -> Void
+    
+    public init(
+        state: State,
+        event: @escaping (Event) -> Void,
+        config: Config,
+        clearOptionsAction: @escaping () -> Void,
+        dismissAction: @escaping () -> Void
+    ) {
+        self.state = state
+        self.event = event
+        self.config = config
+        self.clearOptionsAction = clearOptionsAction
+        self.dismissAction = dismissAction
+    }
+    
+    public var body: some View {
         
         VStack(alignment: .leading) {
             
@@ -27,17 +45,17 @@ struct FilterView: View {
                 .font(.system(size: 18))
                 .padding(.bottom, 10)
             
-            TitleView(title: "Период")
+            TitleView(config: config.periodTitle)
             
             HStack {
                 
                 ForEach(state.periods, id: \.self) { period in
                     
-                    Button(action: { event(.selectedPeriod) }) {
+                    Button(action: { event(.selectedPeriod(period)) }) {
                         
                         Text(period)
                             .padding()
-                            .background(state.selectedPeriod == period ? Color.black : Color.gray.opacity(0.2))
+                            .background(state.selectedPeriod == period ? Color.black : .gray.opacity(0.2))
                             .foregroundColor(state.selectedPeriod == period ? Color.white : Color.black)
                             .frame(height: 32)
                             .cornerRadius(90)
@@ -48,13 +66,13 @@ struct FilterView: View {
             
             if !state.services.isEmpty {
                 
-                TitleView(title: "Движение средств")
+                TitleView(config: config.transferTitle)
                 
                 HStack {
                     
                     ForEach(state.transactions, id: \.self) { transaction in
                         
-                        Button(action: { event(.selectedTransaction) }) {
+                        Button(action: { event(.selectedTransaction(transaction)) }) {
                             
                             Text(transaction)
                                 .padding()
@@ -68,51 +86,76 @@ struct FilterView: View {
                 }
                 .padding(.bottom, 20)
                 
-                TitleView(title: "Категории")
+                TitleView(config: config.categoriesTitle)
                 
                 WrapView(
                     data: state.services,
-                    selectedItems: state.selectedServices
+                    selectedItems: state.selectedServices,
+                    serviceButtonTapped: {},
+                    config: .init(title: "", titleConfig: .init(textFont: .callout, textColor: .red))
                 )
-                
-            } else {
-            
-                ErrorView()
             }
             
             Spacer()
             
             ButtonsContainer(
-                dismissAction: {
-                    state.selectedPeriod = "Месяц"
-                    state.selectedServices.removeAll()
-                },
-                clearOptionsAction: {}
+                dismissAction: dismissAction,
+                clearOptionsAction: clearOptionsAction,
+                config: config.buttonsContainerConfig
             )
         }
         .padding()
     }
 }
 
-struct ButtonsContainer: View {
-
+public struct ButtonsContainer: View {
+    
     let dismissAction: () -> Void
     let clearOptionsAction: () -> Void
     
-    var body: some View {
+    let config: Config
+    
+    public var body: some View {
         
         HStack(spacing: 8) {
-
-            BottomButton(title: "Очистить", action: clearOptionsAction, config: .init(background: Color.gray.opacity(0.2), foreground: .black))
-
-            BottomButton(title: "Применить", action: dismissAction, config: .init(background: Color.red, foreground: .white))
-
+            
+            BottomButton(
+                title: config.clearButtonTitle,
+                action: clearOptionsAction,
+                config: .init(
+                    background: .gray.opacity(0.2),
+                    foreground: .black
+                ))
+            
+            BottomButton(
+                title: config.applyButtonTitle,
+                action: dismissAction,
+                config: .init(
+                    background: .red,
+                    foreground: .white
+                ))
+            
         }
+    }
+    
+    public struct Config {
+        
+        let clearButtonTitle: String
+        let applyButtonTitle: String
+        
+        public init(
+            clearButtonTitle: String,
+            applyButtonTitle: String
+        ) {
+            self.clearButtonTitle = clearButtonTitle
+            self.applyButtonTitle = applyButtonTitle
+        }
+        
     }
 }
 
 struct BottomButton: View {
-
+    
     typealias Config = ButtonConfig
     
     let title: String
@@ -144,11 +187,10 @@ struct WrapView: View {
     
     let data: [String]
     var selectedItems: Set<String>
+    let serviceButtonTapped: () -> Void
+    let config: ServiceButton.Config
     
     var body: some View {
-        
-        var width = CGFloat.zero
-        var height = CGFloat.zero
         
         return GeometryReader { geometry in
             
@@ -156,74 +198,102 @@ struct WrapView: View {
                 
                 ForEach(data, id: \.self) { service in
                     
-                    ServiceButton(service: service, isSelected: selectedItems.contains(service)) {
-                        if selectedItems.contains(service) {
-//                            selectedItems.remove(service)
-                        } else {
-//                            selectedItems.insert(service)
-                        }
-                    }
+                    ServiceButton(
+                        state: .init(isSelected: selectedItems.contains(service)),
+                        action: serviceButtonTapped,
+                        config: config
+                    )
                     .padding([.horizontal, .vertical], 4)
-                    .alignmentGuide(.leading, computeValue: { dimension in
-                        if abs(width - dimension.width) > geometry.size.width {
-                            width = 0
-                            height -= dimension.height
-                        }
-                        
-                        let result = width
-                        if service == data.last! {
-                            width = 0
-                        } else {
-                            width -= dimension.width
-                        }
-                        return result
-                    })
-                    .alignmentGuide(.top, computeValue: { _ in
-                        let result = height
-                        if service == data.last! {
-                            height = 0
-                        }
-                        return result
-                    })
+                    .serviceButtonAlignmentGuide(data: data, service: service, geometry: geometry)
                 }
             }
         }
     }
 }
 
+extension View {
+    
+    @ViewBuilder func serviceButtonAlignmentGuide(
+        data: [String],
+        service: String,
+        geometry: GeometryProxy
+    ) -> some View {
+        
+        var width = CGFloat.zero
+        var height = CGFloat.zero
+        
+        self
+            .alignmentGuide(.leading, computeValue: { dimension in
+                if abs(width - dimension.width) > geometry.size.width {
+                    width = 0
+                    height -= dimension.height
+                }
+                
+                let result = width
+                if service == data.last! {
+                    width = 0
+                } else {
+                    width -= dimension.width
+                }
+                return result
+            })
+            .alignmentGuide(.top, computeValue: { _ in
+                let result = height
+                if service == data.last! {
+                    height = 0
+                }
+                return result
+            })
+    }
+}
+
 struct ServiceButton: View {
     
-    let service: String
-    let isSelected: Bool
+    let state: State
     let action: () -> Void
+    let config: Config
     
     var body: some View {
-        Button(action: {
-            action()
-        }) {
-            Text(service)
+        
+        Button(action: action) {
+            
+            config.title.text(withConfig: config.titleConfig)
                 .padding()
-                .background(isSelected ? Color.black : Color.gray.opacity(0.2))
-                .foregroundColor(isSelected ? Color.white : Color.black)
+                .background(state.isSelected ? Color.black : .gray.opacity(0.2))
+                .foregroundColor(state.isSelected ? .white : .black)
                 .frame(height: 32)
                 .cornerRadius(90)
         }
     }
-}
-
-extension FilterView {
- 
-    struct TitleView: View {
+    
+    struct State {
+        
+        let isSelected: Bool
+    }
+    
+    struct Config {
         
         let title: String
+        let titleConfig: TextConfig
+    }
+}
+
+public extension FilterView {
+    
+    struct TitleView: View {
         
-        var body: some View {
+        let config: Config
+        
+        public var body: some View {
             
-            Text(title)
-                .font(.system(size: 14))
-                .foregroundColor(.gray)
-                .fontWeight(.medium)
+            config.title.text(withConfig: config.titleConfig)
                 .padding(.bottom, 5)
+        }
+        
+        public struct Config {
+            
+            let title: String
+            let titleConfig: TextConfig
         }
     }
 }
@@ -242,20 +312,25 @@ struct FilterView_Previews: PreviewProvider {
                     services: []
                 ),
                 event: { _ in },
-                config: .init(button: .init(
-                    selectBackgroundColor: Color.black,
-                    notSelectedBackgroundColor: Color.gray.opacity(0.2),
-                    selectForegroundColor: Color.white,
-                    notSelectForegroundColor: Color.black
-                ))
+                config: .init(
+                    periodTitle: .init(title: "Период", titleConfig: .init(textFont: .body, textColor: .black)),
+                    transferTitle: .init(title: "Движение средств", titleConfig: .init(textFont: .body, textColor: .black)),
+                    categoriesTitle:.init(title: "Категории", titleConfig: .init(textFont: .body, textColor: .black)),
+                    button: .init(
+                        selectBackgroundColor: Color.black,
+                        notSelectedBackgroundColor: Color.gray.opacity(0.2),
+                        selectForegroundColor: Color.white,
+                        notSelectForegroundColor: Color.black
+                    ), buttonsContainerConfig: .init(
+                        clearButtonTitle: "Очистить",
+                        applyButtonTitle: "Применить"
+                    ), errorConfig: .init(
+                        title: "Нет подходящих операций. \n Попробуйте изменить параметры фильтра",
+                        titleConfig: .init(textFont: .system(size: 16), textColor: .gray)
+                    )),
+                clearOptionsAction: {},
+                dismissAction: {}
             )
-            
-//            FilterView(
-//                title: "Фильтры",
-//                periods: ["Неделя", "Месяц", "Выбрать период"],
-//                transactions: ["Списание", "Пополнение"],
-//                services: ["В другой банк", "Между своими", "ЖКХ", "Входящие СБП", "Выплата процентов", "Гос. услуги", "Дом, ремонт", "Ж/д билеты", "Закрытие вклада", "Закрытие счета", "Интернет, ТВ", "Заработная плата", "Потребительские кредиты"]
-//            )
         }
     }
     
