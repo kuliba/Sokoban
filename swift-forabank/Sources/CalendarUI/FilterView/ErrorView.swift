@@ -6,13 +6,16 @@
 //
 
 import Foundation
+import SwiftUI
+import SharedConfigs
 
-struct ErrorView: View {
+public struct ErrorView: View {
     
     let icon: () -> Image
     let title: String
+    let config: Config
     
-    var body: some View {
+    public var body: some View {
         
         HStack {
             
@@ -22,23 +25,31 @@ struct ErrorView: View {
                 
                 Spacer()
                 
-                Image(systemName: "magnifyingglass")
-                    .resizable()
-                    .frame(width: 32, height: 32)
-                    .foregroundColor(.gray)
-                    .padding(20)
-                    .background(Color.gray.opacity(0.2))
-                    .clipShape(Circle())
+                icon()
                 
-                Text("Нет подходящих операций. \n Попробуйте изменить параметры фильтра")
-                    .foregroundColor(Color.gray)
-                    .font(.system(size: 16))
-                    .multilineTextAlignment(.center)
+                config.title.text(withConfig: config.titleConfig)
                 
                 Spacer()
             }
             
             Spacer()
+        }
+    }
+}
+
+public extension ErrorView {
+    
+    struct Config {
+        
+        let title: String
+        public let titleConfig: TextConfig
+        
+        public init(
+            title: String,
+            titleConfig: TextConfig
+        ) {
+            self.title = title
+            self.titleConfig = titleConfig
         }
     }
 }
