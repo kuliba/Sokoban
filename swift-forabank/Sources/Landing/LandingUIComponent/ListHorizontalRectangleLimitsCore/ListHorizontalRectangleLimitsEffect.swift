@@ -7,4 +7,7 @@
 
 import Foundation
 
-public typealias ListHorizontalRectangleLimitsEffect = Never
+public enum ListHorizontalRectangleLimitsEffect: Equatable {
+    
+    case loadSVCardLanding
+}

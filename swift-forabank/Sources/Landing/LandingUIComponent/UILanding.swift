@@ -112,5 +112,4 @@ extension UILanding {
       }
       return false
   }
-
 }

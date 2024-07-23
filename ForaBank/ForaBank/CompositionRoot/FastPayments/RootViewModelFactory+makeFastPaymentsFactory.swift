@@ -238,7 +238,7 @@ private extension ProductAccountData {
         .init(
             id: .account(.init(id)),
             isAdditional: false,
-            header: "Счет списания",
+            header: "Счет списания и зачисления",
             title: displayName,
             number: displayNumber ?? "",
             amountFormatted: formatBalance(self),
@@ -274,7 +274,7 @@ private extension ProductCardData {
         .init(
             id: .card(.init(id), accountID: .init(accountID)),
             isAdditional: isAdditional,
-            header: "Счет списания",
+            header: "Счет списания и зачисления",
             title: displayName,
             number: displayNumber ?? "",
             amountFormatted: formatBalance(self),

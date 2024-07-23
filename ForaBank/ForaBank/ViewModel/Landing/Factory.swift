@@ -44,6 +44,7 @@ extension Model {
                     
                 case .sticker: break
                 case .bannerAction: break
+                case .listVerticalRoundImageAction: break
                 }
             }
         )
@@ -74,6 +75,7 @@ extension Model {
                 case .bannerAction: break
                 case let .sticker(sticker):
                     landingActions(sticker)()
+                case .listVerticalRoundImageAction: break
                 }
             }
         )
@@ -81,6 +83,7 @@ extension Model {
     
     func landingSVCardViewModelFactory(
         result: Landing,
+        limitsViewModel: ListHorizontalRectangleLimitsViewModel?,
         config: UILanding.Component.Config,
         landingActions: @escaping (LandingEvent) -> Void
     ) -> LandingWrapperViewModel {
@@ -90,6 +93,7 @@ extension Model {
             imagePublisher: imagePublisher(),
             imageLoader: imageLoader,
             makeIconView: { self.imageCache().makeIconView(for: .md5Hash(.init($0))) },
+            limitsViewModel: limitsViewModel,
             scheduler: .main,
             config: config,
             landingActions: landingActions
@@ -219,17 +223,35 @@ private extension Model {
                     return LocalAgentDomain.AbroadOrderCard(landing: codableLanding)
                 case .sticker:
                     return LocalAgentDomain.AbroadSticker(landing: codableLanding)
-
-                case .additionalOther:
-                    return LocalAgentDomain.AdditionalOtherCard(landing: codableLanding)
-                case .additionalSelf:
-                    return LocalAgentDomain.AdditionalSelfCard(landing: codableLanding)
-                case .additionalSelfAccOwn:
-                    return LocalAgentDomain.AdditionalSelfAccOwnCard(landing: codableLanding)
-                case .main:
-                    return LocalAgentDomain.MainCard(landing: codableLanding)
-                case .regular:
-                    return LocalAgentDomain.RegularCard(landing: codableLanding)
+                    
+                case let .control(cardType):
+                    switch cardType {
+                        
+                    case .additionalOther:
+                        return LocalAgentDomain.AdditionalOtherCard(landing: codableLanding)
+                    case .additionalSelf:
+                        return LocalAgentDomain.AdditionalSelfCard(landing: codableLanding)
+                    case .additionalSelfAccOwn:
+                        return LocalAgentDomain.AdditionalSelfAccOwnCard(landing: codableLanding)
+                    case .main:
+                        return LocalAgentDomain.MainCard(landing: codableLanding)
+                    case .regular:
+                        return LocalAgentDomain.RegularCard(landing: codableLanding)
+                    }
+                    
+                case let .limit(cardType):
+                    switch cardType {
+                    case .additionalOther:
+                        return LocalAgentDomain.LimitAdditionalOtherCard(landing: codableLanding)
+                    case .additionalSelf:
+                        return LocalAgentDomain.LimitAdditionalSelfCard(landing: codableLanding)
+                    case .additionalSelfAccOwn:
+                        return LocalAgentDomain.LimitAdditionalSelfAccOwnCard(landing: codableLanding)
+                    case .main:
+                        return LocalAgentDomain.LimitMainCard(landing: codableLanding)
+                    case .regular:
+                        return LocalAgentDomain.LimitRegularCard(landing: codableLanding)
+                    }
                 }
             }()
             

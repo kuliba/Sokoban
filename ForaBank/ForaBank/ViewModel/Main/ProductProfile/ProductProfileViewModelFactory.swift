@@ -14,19 +14,23 @@ struct ProductProfileViewModelFactory {
     let makeAlert: (AlertParameters) -> Alert.ViewModel
     let makeInformerDataUpdateFailure: MakeInformerDataUpdateFailure
     let makeCardGuardianPanel: MakeCardGuardianPanel
+    let makeSubscriptionsViewModel: UserAccountNavigationStateManager.MakeSubscriptionsViewModel
+
     private let model: Model
     
     init(
         makeInfoProductViewModel: @escaping (Parameters) -> InfoProductViewModel,
         makeAlert: @escaping (AlertParameters) -> Alert.ViewModel,
         makeInformerDataUpdateFailure: @escaping MakeInformerDataUpdateFailure,
-        makeCardGuardianPanel: @escaping MakeCardGuardianPanel, 
+        makeCardGuardianPanel: @escaping MakeCardGuardianPanel,
+        makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         model: Model
     ) {
         self.makeInfoProductViewModel = makeInfoProductViewModel
         self.makeAlert = makeAlert
         self.makeInformerDataUpdateFailure = makeInformerDataUpdateFailure
         self.makeCardGuardianPanel = makeCardGuardianPanel
+        self.makeSubscriptionsViewModel = makeSubscriptionsViewModel
         self.model = model
     }
 
@@ -91,7 +95,6 @@ extension ProductProfileViewModelFactory {
     typealias Events = (Event) -> Void
 
     typealias MakeCardGuardianPanel = (ProductCardData) -> ProductProfileViewModel.CardGuardianPanelKind
-    typealias MakeNavigationOperationView = () -> any View
 }
 
 extension ProductProfileViewModelFactory {
@@ -108,6 +111,7 @@ extension ProductProfileViewModelFactory {
         },
         makeInformerDataUpdateFailure: { nil }, 
         makeCardGuardianPanel: { .bottomSheet(.cardGuardian($0, .init(.inactive)))},
+        makeSubscriptionsViewModel: { _,_ in .preview },
         model: .emptyMock
     )
 }

@@ -17,5 +17,10 @@ extension ControlPanelViewConfig {
         height: 56,
         paddings: .init(horizontal: 16, top: 30),
         spacings: .init(vstack: 24, hstack: 8),
-        fonts: .init(title: .textBodySR12160()))
+        fonts: .init(title: .textBodySR12160()), placeHolder: .init(
+            cornerRadius: 12,
+            padding: 16,
+            height: 176,
+            bannerWidth: 288
+        ))
 }

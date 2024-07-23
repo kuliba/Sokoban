@@ -617,36 +617,30 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
     }
 
     // MARK: - Events: cardState & sessionState & fcmToken
-
+    
     func test_cardState_sessionState_fcmToken_shouldChangeCardButton() {
-
         let (sut, model, _) = makeSUT()
         let spy = ValueSpy(sut.card.$nextButton.map(\.?.icon))
 
         sut.card.state = .editing
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
         XCTAssertNoDiff(spy.values, [nil, nil, nil])
 
         sut.card.state = .ready("1234")
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
-        XCTAssertNoDiff(spy.values, [nil, nil, nil, nil])
+        XCTAssertNoDiff(spy.values, [nil, nil, nil, .ic24ArrowRight])
 
         model.sessionAgent.sessionState.send(.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy)))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
-        XCTAssertNoDiff(spy.values, [nil, nil, nil, nil, nil])
+        XCTAssertNoDiff(spy.values, [nil, nil, nil, .ic24ArrowRight, .ic24ArrowRight])
 
         model.fcmToken.send(nil)
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
-        XCTAssertNoDiff(spy.values, [nil, nil, nil, nil, nil, nil])
+        XCTAssertNoDiff(spy.values, [nil, nil, nil, .ic24ArrowRight, .ic24ArrowRight, .ic24ArrowRight])
 
         model.fcmToken.send("fcmToken")
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
-        XCTAssertNoDiff(spy.values, [nil, nil, nil, nil, nil, nil, .ic24ArrowRight])
+        XCTAssertNoDiff(spy.values, [nil, nil, nil, .ic24ArrowRight, .ic24ArrowRight, .ic24ArrowRight, .ic24ArrowRight])
     }
 
     func test_cardState_shouldSetCardButton() {
@@ -659,7 +653,7 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         model.sessionAgent.sessionState.send(.active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy)))
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
-        XCTAssertNoDiff(spy.values, [nil, nil, nil, nil, .ic24ArrowRight])
+        XCTAssertNoDiff(spy.values, [nil, nil, nil, .ic24ArrowRight, .ic24ArrowRight])
     }
 
     func test_cardState_shouldSendRegisterCardNumberOnCardNextButtonAction() {
@@ -680,6 +674,82 @@ final class ModelAuthLoginViewModelTests: AuthLoginViewModelTests {
         _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
 
         XCTAssertNoDiff(spy.values, ["1234"])
+    }
+    
+    func test_cardStateEditing_shouldSetCardButtonCorrectly() {
+        
+        let scenarios: [(cardState: AuthLoginViewModel.CardViewModel.State, sessionState: SessionState, fcmToken: String?)] = [
+            (.editing, .active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy)), nil),
+            (.editing, .active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy)), "fcmToken"),
+            (.editing, .activating, nil),
+            (.editing, .activating, "fcmToken"),
+            (.editing, .expired, nil),
+            (.editing, .expired, "fcmToken"),
+            (.editing, .inactive, nil),
+            (.editing, .inactive, "fcmToken"),
+            (.editing, .failed(NSError(domain: "test", code: 0)), nil),
+            (.editing, .failed(NSError(domain: "test", code: 0)), "fcmToken")
+        ]
+        
+        checkScenarios(scenarios)
+    }
+
+    func test_cardStateReady_shouldSetCardButtonCorrectly() {
+        let scenarios: [(cardState: AuthLoginViewModel.CardViewModel.State, sessionState: SessionState, fcmToken: String?)] = [
+            (.ready("1234"), .active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy)), nil),
+            (.ready("1234"), .active(start: 0, credentials: .init(token: "abc", csrfAgent: CSRFAgentDummy.dummy)), "fcmToken"),
+            (.ready("1234"), .activating, nil),
+            (.ready("1234"), .activating, "fcmToken"),
+            (.ready("1234"), .expired, nil),
+            (.ready("1234"), .expired, "fcmToken"),
+            (.ready("1234"), .inactive, nil),
+            (.ready("1234"), .inactive, "fcmToken"),
+            (.ready("1234"), .failed(NSError(domain: "test", code: 0)), nil),
+            (.ready("1234"), .failed(NSError(domain: "test", code: 0)), "fcmToken")
+        ]
+        
+        checkScenarios(scenarios)
+    }
+
+    private func checkScenarios(
+        _ scenarios: [
+            (cardState: AuthLoginViewModel.CardViewModel.State,
+             sessionState: SessionState, 
+             fcmToken: String?)
+        ]) {
+            
+        for scenario in scenarios {
+            let (sut, model, _) = makeSUT()
+            let spy = ValueSpy(sut.card.$nextButton.map(\.?.icon))
+            
+            sut.card.state = scenario.cardState
+            model.sessionAgent.sessionState.send(scenario.sessionState)
+            model.fcmToken.send(scenario.fcmToken)
+            
+            _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
+            
+            let expectedIcon: Image? = {
+                switch (scenario.cardState, scenario.sessionState, scenario.fcmToken) {
+                case (.ready(let cardNumber), .active, .some),
+                     (.ready(let cardNumber), .active, .none),
+                     (.ready(let cardNumber), .activating, .some),
+                     (.ready(let cardNumber), .activating, .none),
+                     (.ready(let cardNumber), .expired, .some),
+                     (.ready(let cardNumber), .expired, .none),
+                     (.ready(let cardNumber), .inactive, .some),
+                     (.ready(let cardNumber), .inactive, .none),
+                     (.ready(let cardNumber), .failed(_), .some),
+                     (.ready(let cardNumber), .failed(_), .none):
+                    
+                    return .ic24ArrowRight
+                    
+                default:
+                    return nil
+                }
+            }()
+            
+            XCTAssertEqual(spy.values.last, expectedIcon)
+        }
     }
 
     // MARK: - Confirm

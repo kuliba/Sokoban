@@ -161,9 +161,17 @@ extension RootViewModelFactory {
             makeSVCardLandingViewModel: makeSVCardLandig
         )
         
+        let controlPanelModelEffectHandler = ControlPanelModelEffectHandler(
+            cancelC2BSub: { (token: SubscriptionViewModel.Token) in
+                
+                let action = ModelAction.C2B.CancelC2BSub.Request(token: token)
+                model.action.send(action)
+            })
+        
         let productNavigationStateManager = ProductProfileFlowManager(
             reduce: makeProductProfileFlowReducer().reduce(_:_:),
-            handleEffect: ProductNavigationStateEffectHandler().handleEffect
+            handleEffect: ProductNavigationStateEffectHandler().handleEffect,
+            handleModelEffect: controlPanelModelEffectHandler.handleEffect
         )
         
         let templatesFlowManager = TemplatesFlowManagerComposer(flag: utilitiesPaymentsFlag).compose()
@@ -210,6 +218,11 @@ extension RootViewModelFactory {
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
             makeCardGuardianPanel: makeCardGuardianPanel,
+            makeSubscriptionsViewModel: makeSubscriptionsViewModel(
+                getProducts: getSubscriptionProducts(model: model),
+                c2bSubscription: model.subscriptions.value,
+                scheduler: scheduler
+            ),
             updateInfoStatusFlag: updateInfoStatusFlag
         )
         
@@ -376,6 +389,7 @@ extension ProductProfileViewModel {
         cvvPINServicesClient: CVVPINServicesClient,
         productNavigationStateManager: ProductProfileFlowManager,
         makeCardGuardianPanel: @escaping ProductProfileViewModelFactory.MakeCardGuardianPanel,
+        makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
     ) -> MakeProductProfileViewModel {
         
@@ -394,6 +408,7 @@ extension ProductProfileViewModel {
                 cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager,
                 makeCardGuardianPanel: makeCardGuardianPanel,
+                makeSubscriptionsViewModel: makeSubscriptionsViewModel,
                 updateInfoStatusFlag: updateInfoStatusFlag
             )
             
@@ -446,6 +461,7 @@ extension ProductProfileViewModel {
                     updateInfoStatusFlag.isActive ? .updateFailureInfo : nil
                 }, 
                 makeCardGuardianPanel: makeCardGuardianPanel,
+                makeSubscriptionsViewModel: makeSubscriptionsViewModel,
                 model: model
             )
             

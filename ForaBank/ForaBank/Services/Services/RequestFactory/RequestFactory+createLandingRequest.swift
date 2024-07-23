@@ -40,11 +40,24 @@ extension AbroadType {
         case .transfer:             return "abroadTransfer"
         case .sticker:              return "abroadSticker"
             
-        case .additionalOther:      return "CONTROL_ADDITIONAL_OTHER_CARD"
-        case .additionalSelf:       return "CONTROL_ADDITIONAL_SELF_CARD"
-        case .additionalSelfAccOwn: return "CONTROL_ADDITIONAL_SELF_ACC_OWN_CARD"
-        case .main:                 return "CONTROL_MAIN_CARD"
-        case .regular:              return "CONTROL_REGULAR_CARD"
+        case let .control(cardType):
+            switch cardType {
+            case .additionalOther:      return "CONTROL_ADDITIONAL_OTHER_CARD"
+            case .additionalSelf:       return "CONTROL_ADDITIONAL_SELF_CARD"
+            case .additionalSelfAccOwn: return "CONTROL_ADDITIONAL_SELF_ACC_OWN_CARD"
+            case .main:                 return "CONTROL_MAIN_CARD"
+            case .regular:              return "CONTROL_REGULAR_CARD"
+                
+            }
+            
+        case let .limit(cardType):
+            switch cardType {
+            case .additionalOther:      return "LIMIT_ADDITIONAL_OTHER_CARD"
+            case .additionalSelf:       return "LIMIT_ADDITIONAL_SELF_CARD"
+            case .additionalSelfAccOwn: return "LIMIT_ADDITIONAL_SELF_ACC_OWN_CARD"
+            case .main:                 return "LIMIT_MAIN_CARD"
+            case .regular:              return "LIMIT_REGULAR_CARD"
+            }
         }
     }
 }

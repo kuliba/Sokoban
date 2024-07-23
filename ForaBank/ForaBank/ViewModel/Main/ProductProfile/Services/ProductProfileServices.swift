@@ -18,7 +18,7 @@ struct ProductProfileServices {
     let createChangeSVCardLimit: ChangeSVCardLimitServices
     let createSVCardLanding: SVCardLandingServices
 
-    let makeSVCardLandingViewModel: (Landing, UILanding.Component.Config, @escaping (LandingEvent) -> Void
+    let makeSVCardLandingViewModel: (Landing, ListHorizontalRectangleLimitsViewModel?, UILanding.Component.Config, @escaping (LandingEvent) -> Void
     ) -> LandingWrapperViewModel?
 }
 
@@ -33,6 +33,6 @@ extension ProductProfileServices {
         createCreateGetSVCardLimits: .preview(),
         createChangeSVCardLimit: .preview(),
         createSVCardLanding: .preview(),
-        makeSVCardLandingViewModel: { _,_,_ in nil }
+        makeSVCardLandingViewModel: { _,_,_,_  in nil }
     )
 }

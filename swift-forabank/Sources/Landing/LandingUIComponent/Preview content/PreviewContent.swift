@@ -488,8 +488,11 @@ extension UILanding.List.HorizontalRectangleLimits.Config {
             background: .init(red: 246/255, green: 246/255, blue: 247/255),
             divider: .init(red: 211/255, green: 211/255, blue: 211/255, opacity: 0.3),
             title: .init(red: 28/255, green: 28/255, blue: 1/255),
-            subtitle: .init(red: 153/255, green: 153/255, blue: 153/255)),
+            subtitle: .init(red: 153/255, green: 153/255, blue: 153/255),
+            limitNotSet: .init(red: 211/255, green: 211/255, blue: 211/255)
+        ),
         cornerRadius: 12,
+        fonts: .init(title: .caption, subTitle: .caption, limit: .subheadline),
         paddings: .init(horizontal: 12, vertical: 8),
         sizes: .init(height: 176, icon: 20, width: 180),
         spacing: 8)

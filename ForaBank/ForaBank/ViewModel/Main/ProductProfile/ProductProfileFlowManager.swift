@@ -68,13 +68,16 @@ struct ProductProfileFlowManager {
     
     let reduce: Reduce
     let handleEffect: HandleEffect
+    let handleModelEffect: HandleModelEffect
     
     internal init(
         reduce: @escaping ProductProfileFlowManager.Reduce,
-        handleEffect: @escaping ProductProfileFlowManager.HandleEffect
+        handleEffect: @escaping HandleEffect,
+        handleModelEffect: @escaping HandleModelEffect
     ) {
         self.reduce = reduce
         self.handleEffect = handleEffect
+        self.handleModelEffect = handleModelEffect
     }
 }
 
@@ -87,6 +90,7 @@ extension ProductProfileFlowManager {
 
     typealias Dispatch = (Event) -> Void
     typealias HandleEffect = (Effect, @escaping Dispatch) -> Void
+    typealias HandleModelEffect = ControlPanelEffectHandler.HandleModelEffect
 }
 
 enum AlertEvent {
@@ -125,7 +129,8 @@ extension ProductProfileFlowManager {
             bottomSheetReduce: BottomSheetReducer(bottomSheetLifespan: .microseconds(0)).reduce,
             historyReduce: HistoryReducer().reduce
         ).reduce,
-        handleEffect: ProductNavigationStateEffectHandler().handleEffect
+        handleEffect: ProductNavigationStateEffectHandler().handleEffect,
+        handleModelEffect: {_,_ in }
     )
 }
 

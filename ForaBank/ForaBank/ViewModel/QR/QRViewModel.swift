@@ -79,166 +79,228 @@ class QRViewModel: ObservableObject {
         
         action
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                switch action {
-                    
-                case _ as QRViewModelAction.OpenDocument:
-                    
-                    self.bottomSheet = .init(sheetType: .choiseDocument(
-                        .init(buttons: [
-                            .init(
-                                icon: .init(image: .ic24Image, background: .circle),
-                                title: .init(text: "Из фото", style: .bold),
-                                orientation: .horizontal, action: { [weak self] in
-                                    
-                                    self?.bottomSheet = nil
-                                    self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
-                                }),
-                            .init(
-                                icon: .init(image: .ic24FileText, background: .circle),
-                                title: .init(text: "Из Документов", style: .bold),
-                                orientation: .horizontal,
-                                action: { [weak self] in
-                                    
-                                    self?.model.action.send(ModelAction.Media.DocumentPermission.Request())
-                                })
-                        ])
-                    ))
-                    
-                case _ as QRViewModelAction.Info:
-                    self.bottomSheet = .init(sheetType: .info(
-                        .init(icon: .ic48Info,
-                              title: "Сканировать QR-код",
-                              content: ["\tНаведите камеру телефона на QR-код,\n и приложение автоматически его считает.",
-                                        "\tПеред оплатой проверьте, что все поля заполнены правильно.",
-                                        "\tЧтобы оплатить квитанцию, сохраненную в телефоне, откройте ее с помощью кнопки \"Из файла\" и отсканируйте QR-код."]
-                             )
-                    ))
-                    
-                case _ as QRViewModelAction.AccessCamera:
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                        
-                        self.bottomSheet = .init(sheetType: .qRAccessViewComponent(
-                            .init(viewModel: .init(
-                                input: .camera,
-                                closeAction: { [weak self] in self?.sheet = nil }
-                            ))))
-                    }
-                    
-                case _ as QRViewModelAction.AccessPhotoGallery:
-                    
-                    self.bottomSheet = .init(sheetType: .photoAccessViewComponent(
-                        .init(viewModel: .init(
-                            input: .photo,
-                            closeAction: { [weak self] in
-                                self?.sheet = nil
-                            }))))
-                    
-                case _ as QRViewModelAction.Flashlight:
-                    self.flashLightTorch(on: self.flashLight.result.0)
-                    
-                case _ as QRViewModelAction.CloseLink:
-                    link = nil
-                    
-                case _ as QRViewModelAction.CloseBottomSheet:
-                    self.bottomSheet = nil
-                    
-                case _ as QRViewModelAction.CloseSheet:
-                    sheet = nil
-                    
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
+            .sink { [unowned self] in handleAction($0) }
+            .store(in: &bindings)
         
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
-                switch action {
-                    
-                case let payload as ModelAction.Media.GalleryPermission.Response:
-                    
-                    self.action.send(QRViewModelAction.CloseBottomSheet())
-                    
-                    if payload.result {
-                        
-                        let imagePicker = ImagePickerControllerViewModel { [weak self] image in
-                            
-                            if let qrData = self?.string(from: image) {
-                                
-                                let result = qrResolve(qrData)
-                                
-                                self?.action.send(QRViewModelAction.Result(result: result))
-                            }
-                            
-                            self?.action.send(QRViewModelAction.CloseSheet())
-                            
-                        } closeAction: { [weak self] in
-                            
-                            self?.action.send(QRViewModelAction.CloseSheet())
-                        }
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
-                            
-                            self.sheet = .init(sheetType: .imagePicker(imagePicker))
-                        }
-                    } else {
-                        self.action.send(QRViewModelAction.AccessPhotoGallery())
-                    }
-                    
-                case _ as ModelAction.Media.DocumentPermission.Response:
-                    
-                    self.action.send(QRViewModelAction.CloseBottomSheet())
-                    
-                    let documentPicker = DocumentPickerViewModel { [weak self] url in
-                        
-                        if let image = self?.qrFromPDF(path: url),
-                           let qrData = self?.string(from: image) {
-                            
-                            let result = qrResolve(qrData)
-                            
-                            self?.action.send(QRViewModelAction.Result(result: result))
-                            
-                        } else {
-                            
-                            self?.action.send(QRViewModelAction.Result(result: .unknown))
-                            
-                        }
-                        
-                        self?.action.send(QRViewModelAction.CloseSheet())
-                        
-                    } closeAction: { [weak self] in
-                        
-                        self?.action.send(QRViewModelAction.CloseSheet())
-                    }
-                    
-                    self.sheet = .init(sheetType: .documentPicker(documentPicker))
-                    
-                default:
-                    break
-                }
-            }.store(in: &bindings)
+                handleModelAction(action, qrResolve: qrResolve )
+            }
+            .store(in: &bindings)
         
         scanner.action
             .compactMap { $0 as? QRScannerViewAction.Scanned }
             .map(\.value)
             .map(qrResolve)
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] result in
-                
-                self.action.send(QRViewModelAction.Result(result: result))
-                
-                if case let .qrCode(qrCode) = result,
-                   let mapping = model.qrMapping.value,
-                   let failData = qrCode.check(mapping: mapping) {
-                    
-                    self.model.action.send(ModelAction.QRAction.SendFailData.Request(failData: failData))
-                }
-            }
+            .sink { [unowned self] in self.handleScanResult($0) }
             .store(in: &bindings)
+    }
+}
+
+// MARK: - Helpers
+
+private extension QRViewModel {
+    
+    func handleAction(
+        _ action: any Action
+    ) {
+        switch action {
+        case _ as QRViewModelAction.OpenDocument:
+            self.openDocument()
+            
+        case _ as QRViewModelAction.Info:
+            self.openInfo()
+            
+        case _ as QRViewModelAction.AccessCamera:
+            DispatchQueue.main.delay(for: .milliseconds(700)) {
+                
+                self.accessCamera()
+            }
+            
+        case _ as QRViewModelAction.AccessPhotoGallery:
+            self.accessPhotoGallery()
+            
+        case _ as QRViewModelAction.Flashlight:
+            self.flashLightTorch(on: self.flashLight.result.0)
+            
+        case _ as QRViewModelAction.CloseLink:
+            link = nil
+            
+        case _ as QRViewModelAction.CloseBottomSheet:
+            self.bottomSheet = nil
+            
+        case _ as QRViewModelAction.CloseSheet:
+            sheet = nil
+            
+        default:
+            break
+        }
+    }
+
+    func openDocument() {
+        
+        bottomSheet = .init(
+            sheetType: .choiseDocument(.init(
+                buttons: [
+                    .init(
+                        icon: .init(image: .ic24Image, background: .circle),
+                        title: .init(text: "Из фото", style: .bold),
+                        orientation: .horizontal, action: { [weak self] in
+                            
+                            self?.bottomSheet = nil
+                            self?.model.action.send(ModelAction.Media.GalleryPermission.Request())
+                        }
+                    ),
+                    .init(
+                        icon: .init(image: .ic24FileText, background: .circle),
+                        title: .init(text: "Из Документов", style: .bold),
+                        orientation: .horizontal,
+                        action: { [weak self] in
+                            
+                            self?.model.action.send(ModelAction.Media.DocumentPermission.Request())
+                        }
+                    )
+                ]
+            ))
+        )
+    }
+    
+    func openInfo() {
+        
+        bottomSheet = .init(
+            sheetType: .info(.init(
+                icon: .ic48Info,
+                title: "Сканировать QR-код",
+                content: ["\tНаведите камеру телефона на QR-код,\n и приложение автоматически его считает.",
+                          "\tПеред оплатой проверьте, что все поля заполнены правильно.",
+                          "\tЧтобы оплатить квитанцию, сохраненную в телефоне, откройте ее с помощью кнопки \"Из файла\" и отсканируйте QR-код."]
+            ))
+        )
+    }
+    
+    func accessCamera() {
+        
+        bottomSheet = .init(
+            sheetType: .qRAccessViewComponent(.init(
+                viewModel: .init(
+                    input: .camera,
+                    closeAction: { [weak self] in self?.sheet = nil }
+                )
+            ))
+        )
+    }
+    
+    func accessPhotoGallery() {
+        
+        bottomSheet = .init(
+            sheetType: .photoAccessViewComponent(.init(
+                viewModel: .init(
+                    input: .photo,
+                    closeAction: { [weak self] in self?.sheet = nil }
+                )
+            ))
+        )
+    }
+    
+    func handleModelAction(
+        _ action: any Action,
+        qrResolve: @escaping QRResolve
+    ) {
+        switch action {
+        case let payload as ModelAction.Media.GalleryPermission.Response:
+            self.handleGalleryPermission(
+                response: payload,
+                qrResolve: qrResolve
+            )
+            
+        case _ as ModelAction.Media.DocumentPermission.Response:
+            self.handleDocumentPermission(qrResolve: qrResolve)
+            
+        default:
+            break
+        }
+
+    }
+    
+    func handleGalleryPermission(
+        response: ModelAction.Media.GalleryPermission.Response,
+        qrResolve: @escaping QRResolve
+    ) {
+        action.send(QRViewModelAction.CloseBottomSheet())
+        
+        if response.result {
+            
+            let imagePicker = ImagePickerControllerViewModel { [weak self] image in
+                
+                if let qrData = self?.string(from: image) {
+                    
+                    let result = qrResolve(qrData)
+                    
+                    self?.action.send(QRViewModelAction.Result(result: result))
+                }
+                
+                self?.action.send(QRViewModelAction.CloseSheet())
+                
+            } closeAction: { [weak self] in
+                
+                self?.action.send(QRViewModelAction.CloseSheet())
+            }
+            
+            DispatchQueue.main.delay(for: .milliseconds(400)) { [weak self] in
+                
+                self?.sheet = .init(sheetType: .imagePicker(imagePicker))
+            }
+            
+        } else {
+            
+            self.action.send(QRViewModelAction.AccessPhotoGallery())
+        }
+    }
+    
+    func handleDocumentPermission(
+        qrResolve: @escaping QRResolve
+    ) {
+        action.send(QRViewModelAction.CloseBottomSheet())
+        
+        let documentPicker = DocumentPickerViewModel { [weak self] url in
+            
+            if let image = self?.qrFromPDF(path: url),
+               let qrData = self?.string(from: image) {
+                
+                let result = qrResolve(qrData)
+                
+                self?.action.send(QRViewModelAction.Result(result: result))
+                
+            } else {
+                
+                self?.action.send(QRViewModelAction.Result(result: .unknown))
+                
+            }
+            
+            self?.action.send(QRViewModelAction.CloseSheet())
+            
+        } closeAction: { [weak self] in
+            
+            self?.action.send(QRViewModelAction.CloseSheet())
+        }
+        
+        self.sheet = .init(sheetType: .documentPicker(documentPicker))
+    }
+    
+    func handleScanResult(
+        _ result: QRViewModel.ScanResult
+    ) {
+        action.send(QRViewModelAction.Result(result: result))
+        
+        if case let .qrCode(qrCode) = result,
+           let mapping = model.qrMapping.value,
+           let failData = qrCode.check(mapping: mapping) {
+            
+            model.action.send(ModelAction.QRAction.SendFailData.Request(failData: failData))
+        }
     }
 }
 
