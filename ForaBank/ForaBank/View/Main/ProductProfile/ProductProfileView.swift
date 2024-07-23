@@ -200,15 +200,24 @@ struct ProductProfileView: View {
                             services: []
                         ),
                         event: { _ in },
-                        config: .init(button: .init(
+                        config: .init(
+                            periodTitle: .init(title: "Период", titleConfig: .init(textFont: .body, textColor: .black)),
+                            transferTitle: .init(title: "Движение средств", titleConfig: .init(textFont: .body, textColor: .black)),
+                            categoriesTitle:.init(title: "Категории", titleConfig: .init(textFont: .body, textColor: .black)),
+                            button: .init(
                             selectBackgroundColor: Color.black,
                             notSelectedBackgroundColor: Color.gray.opacity(0.2),
                             selectForegroundColor: Color.white,
                             notSelectForegroundColor: Color.black
-                        ), errorConfig: .init(
+                            ), buttonsContainerConfig: .init(
+                                clearButtonTitle: "Очистить",
+                                applyButtonTitle: "Применить"
+                            ), errorConfig: .init(
                             title: "Нет подходящих операций. \n Попробуйте изменить параметры фильтра",
                             titleConfig: .init(textFont: .system(size: 16), textColor: .gray))
-                        )
+                        ),
+                        clearOptionsAction: {},
+                        dismissAction: { self.viewModel.sheet = nil}
                     )
                 }
             }

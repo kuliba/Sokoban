@@ -294,6 +294,14 @@ public extension FilterView {
             
             let title: String
             let titleConfig: TextConfig
+            
+            public init(
+                title: String,
+                titleConfig: TextConfig
+            ) {
+                self.title = title
+                self.titleConfig = titleConfig
+            }
         }
     }
 }
