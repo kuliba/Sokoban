@@ -7,9 +7,9 @@
 
 import Foundation
 
-enum FilterEvent {
+public enum FilterEvent {
     
-    case selectedPeriod //state.selectedPeriod = period
-    case selectedTransaction //state.selectedTransaction = transaction
+    case selectedPeriod(String)
+    case selectedTransaction(String)
 
 }
