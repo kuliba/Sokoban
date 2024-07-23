@@ -90,45 +90,21 @@ extension BlockHorizontalRectangularView {
                         .foregroundColor(config.colors.title)
 
                     VStack(alignment: .leading, spacing: 4) {
-                        
-                        HStack(alignment: .center, spacing: 16) {
-                            
-                            factory.makeIconView(limit.md5hash)
-                                .aspectRatio(contentMode: .fit)
-                                .frame(widthAndHeight: config.sizes.iconWidth)
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                
-                                Text(limit.text)
-                                    .font(.caption)
-                                    .foregroundColor(config.colors.subtitle)
 
-                                TextField(
-                                    "",
-                                    text: .init(
-                                        get: { inputState.value.formattedValue("₽") },
-                                        set: { event(.change(.init(id: limit.id, value: $0))) }
-                                    )
-                                )
-                                .font(.caption)
-                                .foregroundColor(config.colors.title)
-                            }
-                        }
-                        
-                        if let warning = inputState.warning {
-                            
-                            HStack(alignment: .center, spacing: 16) {
-                                
-                                Color.clear
-                                    .frame(widthAndHeight: config.sizes.iconWidth)
-                                
-                                Text(warning)
-                                    .font(.caption)
-                                    .lineLimit(2)
-                                    .fixedSize()
-                                    .foregroundColor(config.colors.warning)
-                            }
-                        }
+                        LimitView(
+                            limit: .init(
+                                title: limit.text,
+                                value: limit.maxSum,
+                                md5Hash: limit.md5hash
+                            ),
+                            event: {_ in },
+                            currencySymbol: "₽",
+                            config: .preview,
+                            infoView: {
+                                Text("Сумма лимита не может быть больше \(limit.maxSum) ₽")
+                                    .fixedSize(horizontal: false, vertical: true)
+                            },
+                            makeIconView: factory.makeIconView)
                         
                         if limit != item.limits.last {
                             

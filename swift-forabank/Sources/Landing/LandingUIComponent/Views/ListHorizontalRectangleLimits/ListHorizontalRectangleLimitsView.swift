@@ -60,12 +60,12 @@ struct ListHorizontalRectangleLimitsView: View {
                         Text("Сохранить")
                             .padding()
                     }
+                    .foregroundColor(.white)
+                    .cornerRadius(config.cornerRadius)
+                    .frame(height: 56)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, config.paddings.vertical)
                 }
-                .foregroundColor(.white)
-                .cornerRadius(config.cornerRadius)
-                .frame(height: 56)
-                .padding(.horizontal, 16)
-                .padding(.vertical, config.paddings.vertical)
             }
             .navigationBarTitle("")
             .navigationBarHidden(true)
