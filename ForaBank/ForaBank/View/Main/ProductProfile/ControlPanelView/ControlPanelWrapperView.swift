@@ -33,11 +33,7 @@ struct ControlPanelWrapperView: View {
         
         ZStack {
             VStack {
-                NavigationBar(
-                    backAction: viewModel.state.navigationBarInfo.action,
-                    title: viewModel.state.navigationBarInfo.title,
-                    subtitle: viewModel.state.navigationBarInfo.subtitle,
-                    config: .default)
+                NavigationBar(viewModel.state.navigationBarInfo)
                 ControlPanelView(
                     state: viewModel.state,
                     event: { viewModel.event($0) },
@@ -115,4 +111,18 @@ private extension ManageSubscriptionsUI.ProductViewConfig {
         nameColor: .mainColorsBlack,
         descriptionFont: .textBodyMR14180()
     )
+}
+
+private extension NavigationBar {
+    
+    init(
+        _ info: ControlPanelState.NavigationBarInfo,
+        _ config: NavigationBarConfig = .default
+    ) {
+        self.init(
+            backAction: info.action,
+            title: info.title,
+            subtitle: info.subtitle,
+            config: config)
+    }
 }
