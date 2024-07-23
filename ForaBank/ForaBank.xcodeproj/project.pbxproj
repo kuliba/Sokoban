@@ -2610,6 +2610,7 @@
 		C113225E28D2169300F90072 /* BankClientInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C113225D28D2169300F90072 /* BankClientInfo.swift */; };
 		C11389AB2A429595001E3021 /* PaymentsMeToMeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11389AA2A429595001E3021 /* PaymentsMeToMeViewModelTests.swift */; };
 		C115BEF82C231ED100DDD0CB /* HistoryFilterFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = C115BEF72C231ED100DDD0CB /* HistoryFilterFlag.swift */; };
+		C123110C2C4E0960002871A8 /* CalendarWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C123110B2C4E0960002871A8 /* CalendarWrapperView.swift */; };
 		C12ACF282B0228C0006C6B2E /* ResponseMapper+GetImageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12ACF272B0228C0006C6B2E /* ResponseMapper+GetImageList.swift */; };
 		C12B11B32ABAB78C003AECEC /* PaymentsSuccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12B11B22ABAB78C003AECEC /* PaymentsSuccessTests.swift */; };
 		C12C18CD2924AC7E00A9C4F1 /* InfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */; };
@@ -2718,11 +2719,11 @@
 		C1DE211D2919377000ED0F8D /* VerificationCodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */; };
 		C1DE211F2919531500ED0F8D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DE211E2919531500ED0F8D /* AppSettings.swift */; };
 		C1DFF16D2A872AC40044B7A6 /* Model+SuccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */; };
-		C1E181522C415CDA00006B8F /* InputWrapperValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E181512C415CDA00006B8F /* InputWrapperValidatorTests.swift */; };
 		C1E07D982BFE2D2F00D07180 /* CalendarPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E07D972BFE2D2F00D07180 /* CalendarPreviewApp.swift */; };
 		C1E07D9A2BFE2D2F00D07180 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E07D992BFE2D2F00D07180 /* ContentView.swift */; };
 		C1E07D9C2BFE2D3100D07180 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E07D9B2BFE2D3100D07180 /* Assets.xcassets */; };
 		C1E07D9F2BFE2D3100D07180 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1E07D9E2BFE2D3100D07180 /* Preview Assets.xcassets */; };
+		C1E181522C415CDA00006B8F /* InputWrapperValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E181512C415CDA00006B8F /* InputWrapperValidatorTests.swift */; };
 		C1E8A0552B84D50E000DA998 /* ViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E8A0542B84D50E000DA998 /* ViewModel+Preview.swift */; };
 		C1E8A0572B84D628000DA998 /* LastPayments+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E8A0562B84D628000DA998 /* LastPayments+Preview.swift */; };
 		C1EA35CB2A316D7A00403E51 /* OperationDetailDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */; };
@@ -5686,6 +5687,7 @@
 		C113225D28D2169300F90072 /* BankClientInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankClientInfo.swift; sourceTree = "<group>"; };
 		C11389AA2A429595001E3021 /* PaymentsMeToMeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsMeToMeViewModelTests.swift; sourceTree = "<group>"; };
 		C115BEF72C231ED100DDD0CB /* HistoryFilterFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryFilterFlag.swift; sourceTree = "<group>"; };
+		C123110B2C4E0960002871A8 /* CalendarWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWrapperView.swift; sourceTree = "<group>"; };
 		C12ACF272B0228C0006C6B2E /* ResponseMapper+GetImageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+GetImageList.swift"; sourceTree = "<group>"; };
 		C12B11B22ABAB78C003AECEC /* PaymentsSuccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessTests.swift; sourceTree = "<group>"; };
 		C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewComponent.swift; sourceTree = "<group>"; };
@@ -5786,12 +5788,12 @@
 		C1DE211C2919377000ED0F8D /* VerificationCodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeData.swift; sourceTree = "<group>"; };
 		C1DE211E2919531500ED0F8D /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		C1DFF16C2A872AC40044B7A6 /* Model+SuccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SuccessTests.swift"; sourceTree = "<group>"; };
-		C1E181512C415CDA00006B8F /* InputWrapperValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputWrapperValidatorTests.swift; sourceTree = "<group>"; };
 		C1E07D952BFE2D2F00D07180 /* CalendarPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CalendarPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1E07D972BFE2D2F00D07180 /* CalendarPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPreviewApp.swift; sourceTree = "<group>"; };
 		C1E07D992BFE2D2F00D07180 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C1E07D9B2BFE2D3100D07180 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C1E07D9E2BFE2D3100D07180 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C1E181512C415CDA00006B8F /* InputWrapperValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputWrapperValidatorTests.swift; sourceTree = "<group>"; };
 		C1E8A0542B84D50E000DA998 /* ViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewModel+Preview.swift"; sourceTree = "<group>"; };
 		C1E8A0562B84D628000DA998 /* LastPayments+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LastPayments+Preview.swift"; sourceTree = "<group>"; };
 		C1EA35CA2A316D7A00403E51 /* OperationDetailDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailDataTests.swift; sourceTree = "<group>"; };
@@ -10541,6 +10543,7 @@
 		2AF1774D2AC476B600D100DD /* CompositionRoot */ = {
 			isa = PBXGroup;
 			children = (
+				C123110A2C4E0954002871A8 /* Calendar */,
 				2A0A3F652C2A0AA400029854 /* HTTPClientFactory.swift */,
 				8394B2ED2BBF09410078CB10 /* ProductProfile */,
 				2AF50A142B315CB2009CB9E5 /* RootViewFactory */,
@@ -13931,6 +13934,14 @@
 				C11389AA2A429595001E3021 /* PaymentsMeToMeViewModelTests.swift */,
 			);
 			path = PaymentsMeToMe;
+			sourceTree = "<group>";
+		};
+		C123110A2C4E0954002871A8 /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				C123110B2C4E0960002871A8 /* CalendarWrapperView.swift */,
+			);
+			path = Calendar;
 			sourceTree = "<group>";
 		};
 		C130E3722A8FBDF0002F99BC /* PaymentsTests */ = {
@@ -18814,6 +18825,7 @@
 				0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */,
 				EDF68210266F9EC800FD5C07 /* LoginDoCodableModel.swift in Sources */,
 				0B283FC52703722900B5E925 /* GetSessionTimeoutDecodableModel.swift in Sources */,
+				C123110C2C4E0960002871A8 /* CalendarWrapperView.swift in Sources */,
 				6830A02427D37E87003CA4F1 /* BannerCatalogListData.swift in Sources */,
 				0BBAFAAA277CB748006D9323 /* PhoneNumberKitHelper.swift in Sources */,
 				EDFFCAFB2683C135004EE095 /* PaymentType.swift in Sources */,
@@ -22161,7 +22173,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 43;
+				CURRENT_PROJECT_VERSION = 51;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -22667,7 +22679,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 43;
+				CURRENT_PROJECT_VERSION = 51;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -23647,7 +23659,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 43;
+				CURRENT_PROJECT_VERSION = 51;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -23683,7 +23695,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 43;
+				CURRENT_PROJECT_VERSION = 51;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
