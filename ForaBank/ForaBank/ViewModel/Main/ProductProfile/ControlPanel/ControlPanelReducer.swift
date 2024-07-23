@@ -68,6 +68,7 @@ extension ControlPanelReducer {
             
         case let .loadSVCardLanding(card):
             effect = .loadSVCardLanding(card)
+            state.status = .inflight(.limits)
             
         case let .loadedSVCardLanding(viewModel, card):
             if let viewModel {
@@ -75,6 +76,7 @@ extension ControlPanelReducer {
                 effect = .loadSVCardLimits(card)
             } else {
                 state.landingWrapperViewModel = nil
+                state.status = .failure
             }
             
         case let .loadedSVCardLimits(limits):

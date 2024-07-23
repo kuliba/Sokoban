@@ -44,12 +44,14 @@ extension ControlPanelState {
     enum Status: Equatable {
         
         case inflight(RequestType)
+        case failure
     }
     
     enum RequestType {
         case block, unblock
         case visibility
         case updateProducts
+        case limits
     }
 }
 

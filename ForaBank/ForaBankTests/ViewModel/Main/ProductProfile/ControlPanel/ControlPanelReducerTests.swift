@@ -219,13 +219,15 @@ final class ControlPanelReducerTests: XCTestCase {
         )
     }
     
-    func test_reduce_loadSVCardLanding_shouldNotChanged() {
+    func test_reduce_loadSVCardLanding_shouldStatusChanged() {
         
         let card = makeCardProduct(statusCard: .active)
         
         assertState(
             .loadSVCardLanding(card),
-            on: initialState(buttons: .buttons(card)))
+            on: initialState(buttons: .buttons(card))) {
+                $0.status = .inflight(.limits)
+            }
     }
     
     func test_reduce_loadSVCardLanding_shouldDeliverLoadSVCardLandingEffect() {
@@ -263,13 +265,15 @@ final class ControlPanelReducerTests: XCTestCase {
         )
     }
 
-    func test_reduce_loadedSVCardLanding_failure_shouldNoChanged() {
+    func test_reduce_loadedSVCardLanding_failure_shouldStatusChanged() {
         
         let card = makeCardProduct(statusCard: .active)
         
         assertState(
             .loadedSVCardLanding(nil, card),
-            on: initialState(buttons: .buttons(card)))
+            on: initialState(buttons: .buttons(card))) {
+                $0.status = .failure
+            }
     }
     
     func test_reduce_loadedSVCardLanding_failure_shouldDeliverNoEffect() {
