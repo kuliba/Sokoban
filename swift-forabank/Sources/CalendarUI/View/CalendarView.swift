@@ -55,7 +55,7 @@ public struct CalendarView: View {
         _ selectedRange: Binding<MDateRange?>?,
         _ configBuilder: (CalendarConfig) -> CalendarConfig)
     {
-        self._selectedData = .init(wrappedValue: .init(selectedDate, selectedRange))
+        self._selectedData = .init(wrappedValue: .init(.now, .init(nil, nil)))
         self.configData = configBuilder(.init())
         self.monthsData = .generate()
     }

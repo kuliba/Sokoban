@@ -12,6 +12,7 @@ import PinCodeUI
 import RxViewModel
 import SberQR
 import SwiftUI
+import CalendarUI
 
 struct ProductProfileView: View {
     
@@ -183,38 +184,34 @@ struct ProductProfileView: View {
                 
                 switch state.buttonAction {
                 case .calendar:
-                    
-                    calendarView()
+                    CalendarViewWrapper(closeAction: {  })
+                        .navigationTitle("Выберите даты или период")
+                        .navigationBarTitleDisplayMode(.inline)
+                
                     
                 case .filter:
-                    
-                    Text("Filter")
-                    
-                    Button(action: { viewModel.event(.history(.filter([.debit]))) }) {
-                        Text("setup debit filter")
-                    }
-                    
-                    Button(action: { viewModel.event(.history(.filter(nil))) }, label: {
-                        Text("clear filters")
-                    })
+                        
+                    FilterView(
+                        state: .init(
+                            title: "Фильтры",
+                            selectedServices: [],
+                            periods: ["Неделя", "Месяц", "Выбрать период"],
+                            transactions: ["Списание", "Пополнение"],
+                            services: []
+                        ),
+                        event: { _ in },
+                        config: .init(button: .init(
+                            selectBackgroundColor: Color.black,
+                            notSelectedBackgroundColor: Color.gray.opacity(0.2),
+                            selectForegroundColor: Color.white,
+                            notSelectForegroundColor: Color.black
+                        ), errorConfig: .init(
+                            title: "Нет подходящих операций. \n Попробуйте изменить параметры фильтра",
+                            titleConfig: .init(textFont: .system(size: 16), textColor: .gray))
+                        )
+                    )
                 }
             }
-        }
-    }
-    
-    private func calendarView() -> some View {
-        
-        VStack {
-            
-            Text("Calendar")
-            
-            Button(action: { viewModel.event(.history(.calendar(Date()))) }, label: {
-                Text("setup date")
-            })
-            
-            Button(action: { viewModel.event(.history(.calendar(nil))) }, label: {
-                Text("clear date")
-            })
         }
     }
     
