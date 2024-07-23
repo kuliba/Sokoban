@@ -10,7 +10,7 @@ import SharedConfigs
 
 struct FilterOptionButtonView: View {
     
-    @State var isSelected: Bool
+    @State var state: FilterOptionState
     let tappedAction: () -> Void
     let config: Config
     
@@ -19,7 +19,6 @@ struct FilterOptionButtonView: View {
         Button {
             
             tappedAction()
-            isSelected.toggle()
             
         } label: {
             
@@ -28,20 +27,25 @@ struct FilterOptionButtonView: View {
                 .padding(.horizontal, 8)
                 .background(Color.gray.opacity(0.2))
                 .cornerRadius(20)
-                .active(if: isSelected)
+                .active(if: state.isSelected)
             
             config.title.text(withConfig: config.selectedConfig)
                 .padding(.vertical, 7.5)
                 .padding(.horizontal, 8)
                 .background(Color.black)
                 .cornerRadius(20)
-                .active(if: !isSelected)
+                .active(if: !state.isSelected)
         }
     }
 }
 
 extension FilterOptionButtonView {
     
+    struct FilterOptionState: Equatable {
+      
+      let isSelected: Bool
+    }
+
     struct Config {
         
         let title: String
@@ -56,7 +60,7 @@ extension FilterOptionButtonView {
     Group {
         
         FilterOptionButtonView(
-            isSelected: true,
+            state: .init(isSelected: true),
             tappedAction: {},
             config: .init(
                 title: "Списание",
