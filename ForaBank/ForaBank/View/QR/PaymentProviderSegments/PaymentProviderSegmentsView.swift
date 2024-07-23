@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct PaymentProviderSegmentsView<ProviderView, Footer>: View
 where ProviderView: View,
       Footer: View {
