@@ -91,20 +91,28 @@ struct HistoryButtonView: View {
                 event(.button(.calendar))
             }) {
                 
-                Text("Calendar")
-                    .font(.system(size: 16))
-                    .foregroundColor(.black)
-                
+                ZStack {
+                    
+                    Color.buttonSecondary
+                        .frame(width: 32, height: 32, alignment: .center)
+                        .cornerRadius(90)
+                    
+                    Image.ic16Calendar
+                }
             }
             
             Button(action: {
                 event(.button(.filter))
             }) {
                 
-                Text("Filter")
-                    .font(.system(size: 16))
-                    .foregroundColor(.black)
-                
+                ZStack {
+                    
+                    Color.buttonSecondary
+                        .frame(width: 32, height: 32, alignment: .center)
+                        .cornerRadius(90)
+                    
+                    Image.ic16Filter
+                }
             }
         }
     }
