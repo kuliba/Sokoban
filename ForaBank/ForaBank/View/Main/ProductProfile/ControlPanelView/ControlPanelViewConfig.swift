@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct ControlPanelViewConfig {
-        
-        let colors: Colors
-        let height: CGFloat
-        let paddings: Paddings
-        let spacings: Spacings
-        let fonts: Fonts
-    }
- 
+    
+    let colors: Colors
+    let height: CGFloat
+    let paddings: Paddings
+    let spacings: Spacings
+    let fonts: Fonts
+    let placeHolder: PlaceHolder
+}
+
 extension ControlPanelViewConfig {
     
     struct Paddings {
@@ -40,5 +41,13 @@ extension ControlPanelViewConfig {
         
         let vstack: CGFloat
         let hstack: CGFloat
+    }
+    
+    struct PlaceHolder {
+        
+        let cornerRadius: CGFloat
+        let padding: CGFloat
+        let height: CGFloat
+        let bannerWidth: CGFloat
     }
 }

@@ -252,7 +252,9 @@ extension LandingView {
                     model: .init(
                         data: model,
                         images: images,
-                        selectDetail: selectDetail
+                        action: action,
+                        selectDetail: selectDetail,
+                        canOpenDetail: canOpenDetail
                     ),
                     config: config.listVerticalRoundImage)
                 
