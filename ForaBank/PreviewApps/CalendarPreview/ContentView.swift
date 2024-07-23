@@ -196,7 +196,7 @@ extension DV {
 
 extension DV.RangeSelector {
     
-    func createDayLabel() -> AnyView {
+    func dayLabel() -> AnyView {
         
         Text(getStringFromDay(format: "d"))
             .font(.system(size: 15))

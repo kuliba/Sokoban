@@ -20,7 +20,7 @@ struct CalendarViewWrapper: View {
             
             ZStack {
                 
-                createCalendarView()
+                calendarView()
                     .padding(10)
                 
                 VStack {
@@ -29,12 +29,12 @@ struct CalendarViewWrapper: View {
                     
                     HStack {
                         
-                        createSimpleButtonView(
+                        simpleButtonView(
                             title: "Закрыть",
                             action: closeAction
                         )
                         
-                        createSimpleButtonView(
+                        simpleButtonView(
                             title: selectedRange?.rangeSelected == true ? "Показать" : "Выбрать",
                             action: closeAction
                         )
@@ -52,21 +52,21 @@ struct CalendarViewWrapper: View {
 
 private extension CalendarViewWrapper {
     
-    func createSelectedRangeView() -> some View {
+    func selectedRangeView() -> some View {
         SelectedRangeView(selectedRange: $selectedRange)
     }
     
-    func createCalendarView() -> some View {
+    func calendarView() -> some View {
         CalendarView(selectedDate: nil, selectedRange: $selectedRange, configBuilder: configureCalendar)
     }
     
-    func createBottomView() -> some View {
+    func bottomView() -> some View {
         Button("Continue", action: closeAction)
             .padding(.top, 12)
             .padding(.horizontal, margins)
     }
     
-    func createSimpleButtonView(
+    func simpleButtonView(
         title: String,
         action: @escaping () -> Void
     ) -> some View {
@@ -101,9 +101,9 @@ fileprivate struct SelectedRangeView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            createDateText(startDateText)
-            createArrowIcon()
-            createDateText(endDateText)
+            dateText(startDateText)
+            arrowIcon()
+            dateText(endDateText)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, margins)
@@ -112,14 +112,14 @@ fileprivate struct SelectedRangeView: View {
 }
 
 private extension SelectedRangeView {
-    func createDateText(_ text: String) -> some View {
+    func dateText(_ text: String) -> some View {
         Text(text)
             .font(.system(size: 24))
             .foregroundColor(.black)
             .lineLimit(1)
 //            .contentTransition(.numericText(countsDown: true))
     }
-    func createArrowIcon() -> some View {
+    func arrowIcon() -> some View {
         Image("arrow-right")
             .resizable()
             .frame(width: 28)
@@ -169,7 +169,7 @@ extension DV {
 
 extension DV.RangeSelector {
     
-    func createDayLabel() -> AnyView {
+    func dayLabel() -> AnyView {
         
         Text(getStringFromDay(format: "d"))
             .font(.system(size: 15))

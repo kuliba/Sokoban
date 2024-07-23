@@ -34,10 +34,10 @@ public protocol DayView: View {
     var selectedRange: Binding<MDateRange?>? { get }
 
     // MARK: View Customisation
-    func createContent() -> AnyView
-    func createDayLabel() -> AnyView
-    func createSelectionView() -> AnyView
-    func createRangeSelectionView() -> AnyView
+    func content() -> AnyView
+    func dayLabel() -> AnyView
+    func selectionView() -> AnyView
+    func rangeSelectionView() -> AnyView
 
     // MARK: Logic
     func onAppear()
@@ -47,48 +47,48 @@ public protocol DayView: View {
 // MARK: - Default View Implementation
 public extension DayView {
     
-    func createContent() -> AnyView {
+    func content() -> AnyView {
         
-        createDefaultContent().erased()
+        defaultContent().erased()
     }
     
-    func createDayLabel() -> AnyView {
+    func dayLabel() -> AnyView {
         
-        createDefaultDayLabel().erased()
+        defaultDayLabel().erased()
     }
     
-    func createSelectionView() -> AnyView {
+    func selectionView() -> AnyView {
         
         if isToday() {
 
-            return createTodayView().erased()
+            return todayView().erased()
 
         } else{
          
-            return createDefaultSelectionView().erased()
+            return defaultSelectionView().erased()
         }
         
     }
     
-    func createRangeSelectionView() -> AnyView {    createDefaultRangeSelectionView().erased() }
+    func rangeSelectionView() -> AnyView {    defaultRangeSelectionView().erased() }
 }
 private extension DayView {
     
-    func createDefaultContent() -> some View {
+    func defaultContent() -> some View {
      
         ZStack {
             
-            createSelectionView()
+            selectionView()
             
-            createRangeSelectionView()
+            rangeSelectionView()
             
-            createDayLabel()
+            dayLabel()
             
             
         }
     }
     
-    func createDefaultDayLabel() -> some View {
+    func defaultDayLabel() -> some View {
         
         if isToday() {
             
@@ -104,7 +104,7 @@ private extension DayView {
         }
     }
     
-    func createDefaultSelectionView() -> some View {
+    func defaultSelectionView() -> some View {
         
         Circle()
             .fill(Color.onBackgroundPrimary)
@@ -113,7 +113,7 @@ private extension DayView {
             .active(if: isSelected())
     }
     
-    func createTodayView() -> some View {
+    func todayView() -> some View {
         
         Circle()
             .fill(isSelected() ? Color.black : Color.gray.opacity(0.4))
@@ -122,7 +122,7 @@ private extension DayView {
         
     }
     
-    func createDefaultRangeSelectionView() -> some View {
+    func defaultRangeSelectionView() -> some View {
         
         RoundedRectangle(corners: rangeSelectionViewCorners)
             .fill(Color.gray.opacity(0.1))
@@ -204,22 +204,22 @@ public extension DayView {
 // MARK: - Others
 public extension DayView {
     var body: some View { Group {
-        if isCurrentMonth { createBodyForCurrentMonth() }
-        else { createBodyForOtherMonth() }
+        if isCurrentMonth { bodyForCurrentMonth() }
+        else { bodyForOtherMonth() }
     }}
 }
 private extension DayView {
     
-    func createBodyForCurrentMonth() -> some View {
+    func bodyForCurrentMonth() -> some View {
       
-        createContent()
+        content()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .aspectRatio(1.0, contentMode: .fit)
             .onAppear(perform: onAppear)
             .onTapGesture(perform: onSelection)
     }
     
-    func createBodyForOtherMonth() -> some View {
+    func bodyForOtherMonth() -> some View {
         Rectangle().fill(Color.clear)
     }
 }
