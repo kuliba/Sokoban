@@ -204,7 +204,7 @@ final class ControlPanelReducerTests: XCTestCase {
             .updateTitle("new title"),
             on: initialState(buttons: .buttons(card))){
                 
-                $0.navigationBarViewModel.title = "new title"
+                $0.navigationBarInfo.title = "new title"
             }
     }
     
@@ -637,9 +637,9 @@ final class ControlPanelReducerTests: XCTestCase {
         )
 
         XCTAssertNoDiff(
-            receivedState.navigationBarViewModel.title,
-            expectedState.navigationBarViewModel.title,
-            "\nExpected \(expectedState.navigationBarViewModel.title), but got \(receivedState.navigationBarViewModel.title) instead.",
+            receivedState.navigationBarInfo.title,
+            expectedState.navigationBarInfo.title,
+            "\nExpected \(expectedState.navigationBarInfo.title), but got \(receivedState.navigationBarInfo.title) instead.",
             file: file, line: line
         )
     }
@@ -667,7 +667,7 @@ final class ControlPanelReducerTests: XCTestCase {
     private func initialState(
         buttons: [ControlPanelButtonDetails],
         alert: Alert.ViewModel? = nil,
-        navBarViewModel: NavigationBarView.ViewModel = .sample,
+        navigationBarInfo: SUT.State.NavigationBarInfo = .default,
         landingWrapperViewModel: LandingWrapperViewModel? = nil,
         destination: ControlPanelState.Destination? = nil
     ) -> State {
@@ -675,7 +675,7 @@ final class ControlPanelReducerTests: XCTestCase {
         .init(
             buttons: buttons,
             alert: alert,
-            navigationBarViewModel: navBarViewModel,
+            navigationBarInfo: navigationBarInfo,
             landingWrapperViewModel: landingWrapperViewModel,
             destination: destination
         )
