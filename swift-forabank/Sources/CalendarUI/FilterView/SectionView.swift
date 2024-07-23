@@ -12,6 +12,7 @@ struct SectionView: View {
     let title: String
     let items: [Item]
     let tapAction: (Item) -> Void
+    let config: FilterOptionButtonView.Config
     
     var body: some View {
         
@@ -24,11 +25,15 @@ struct SectionView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
             
-            ContentView(items: items, tapAction: tapAction)
+            ContentView(
+                items: items,
+                tapAction: tapAction,
+                config: config
+            )
         }
     }
     
-    struct Item: Identifiable, Hashable {
+    struct Item: Identifiable {
         
         var id: String { title }
         let title: String
@@ -41,18 +46,24 @@ struct SectionView: View {
         private let padding: CGFloat = 8
         @State var items: [Item]
         let tapAction: (Item) -> Void
+        let config: FilterOptionButtonView.Config
         
         var body: some View {
             
             LazyVGrid(columns: [
                 GridItem(.adaptive(minimum: 100, maximum: 260))
             ]) {
-                ForEach(items, id: \.self) { item in
+                
+                ForEach(items, id: \.id) { item in
                     
                     FilterOptionButtonView(
-                        title: item.title,
-                        isSelected: item.isSelected,
-                        tappedAction: { tapAction(item) }
+                        state: .init(isSelected: item.isSelected),
+                        tappedAction: {},
+                        config: .init(
+                            title: item.title,
+                            titleConfig: config.titleConfig,
+                            selectedConfig: config.selectedConfig
+                        )
                     )
                 }
             }
@@ -69,11 +80,13 @@ struct SectionView: View {
             items: [
                 .init(title: "Списание", isSelected: true),
                 .init(title: "Пополнение", isSelected: false)
-            ]
-        ) { item in
-            
-            print(item)
-        }
+            ],
+            tapAction: { item in
+                
+                print(item)
+            },
+            config: .init(title: "", titleConfig: .init(textFont: .body, textColor: .red), selectedConfig: .init(textFont: .body, textColor: .yellow))
+        )
         
         SectionView(
             title: "Категории",
@@ -91,10 +104,12 @@ struct SectionView: View {
                 .init(title: "Интернет, ТВ", isSelected: false),
                 .init(title: "Заработная плата", isSelected: false),
                 .init(title: "Потребительские кредиты", isSelected: false)
-            ]
-        ) { item in
-            
-            print(item)
-        }
+            ],
+            tapAction: { item in
+                
+                print(item)
+            },
+            config: .init(title: "", titleConfig: .init(textFont: .body, textColor: .red), selectedConfig: .init(textFont: .body, textColor: .yellow))
+        )
     }
 }
