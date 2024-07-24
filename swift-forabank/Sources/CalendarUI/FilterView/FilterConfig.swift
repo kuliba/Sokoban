@@ -15,7 +15,7 @@ public struct FilterConfig {
     let categoriesTitle: FilterView.TitleView.Config
     let button: ButtonConfig
     let buttonsContainerConfig: ButtonsContainer.Config
-    let errorConfig: ErrorView.Config
+    let errorConfig: ErrorConfig
     
     public init(
         periodTitle: FilterView.TitleView.Config,
@@ -23,7 +23,7 @@ public struct FilterConfig {
         categoriesTitle: FilterView.TitleView.Config,
         button: ButtonConfig,
         buttonsContainerConfig: ButtonsContainer.Config,
-        errorConfig: ErrorView.Config
+        errorConfig: ErrorConfig
     ) {
         self.periodTitle = periodTitle
         self.transferTitle = transferTitle
