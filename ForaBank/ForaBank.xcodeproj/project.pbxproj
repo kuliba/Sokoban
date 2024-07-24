@@ -429,6 +429,8 @@
 		2A1C3F862A4EE82900EE1FD1 /* OperationDetailInfoViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1C3F852A4EE82900EE1FD1 /* OperationDetailInfoViewModelTests.swift */; };
 		2A1D7F5D2A0FF00C0066BC02 /* SearchFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1D7F5C2A0FF00C0066BC02 /* SearchFactory.swift */; };
 		2A1D7F5F2A0FF0680066BC02 /* SearchFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1D7F5E2A0FF0680066BC02 /* SearchFactoryTests.swift */; };
+		2A1DE2C62C5115110091B99C /* PaymentProviderServicePickerFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1DE2C52C5115110091B99C /* PaymentProviderServicePickerFlowView.swift */; };
+		2A1DE2C82C511EDD0091B99C /* PaymentProviderServicePickerWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1DE2C72C511EDC0091B99C /* PaymentProviderServicePickerWrapperView.swift */; };
 		2A1E52762C4FB69100619E2B /* Model+QRHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E52752C4FB69100619E2B /* Model+QRHelpersTests.swift */; };
 		2A1E76B22AEE995200B33AF7 /* ComposedCVVPINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E76B12AEE995200B33AF7 /* ComposedCVVPINService.swift */; };
 		2A1E76B62AEE9B2500B33AF7 /* CVVPINJSONMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E76B52AEE9B2500B33AF7 /* CVVPINJSONMaker.swift */; };
@@ -3570,6 +3572,8 @@
 		2A1C3F852A4EE82900EE1FD1 /* OperationDetailInfoViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailInfoViewModelTests.swift; sourceTree = "<group>"; };
 		2A1D7F5C2A0FF00C0066BC02 /* SearchFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFactory.swift; sourceTree = "<group>"; };
 		2A1D7F5E2A0FF0680066BC02 /* SearchFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFactoryTests.swift; sourceTree = "<group>"; };
+		2A1DE2C52C5115110091B99C /* PaymentProviderServicePickerFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderServicePickerFlowView.swift; sourceTree = "<group>"; };
+		2A1DE2C72C511EDC0091B99C /* PaymentProviderServicePickerWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderServicePickerWrapperView.swift; sourceTree = "<group>"; };
 		2A1E52752C4FB69100619E2B /* Model+QRHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+QRHelpersTests.swift"; sourceTree = "<group>"; };
 		2A1E76B12AEE995200B33AF7 /* ComposedCVVPINService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposedCVVPINService.swift; sourceTree = "<group>"; };
 		2A1E76B52AEE9B2500B33AF7 /* CVVPINJSONMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINJSONMaker.swift; sourceTree = "<group>"; };
@@ -7617,6 +7621,15 @@
 			path = Info;
 			sourceTree = "<group>";
 		};
+		2A1DE2C42C5114F70091B99C /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				2AC2FB0D2C50EAB1001972CB /* PaymentProviderServicePickerFlowModel.swift */,
+				2A1DE2C52C5115110091B99C /* PaymentProviderServicePickerFlowView.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		2A1F083A2A7901C900C5B11B /* HTTP */ = {
 			isa = PBXGroup;
 			children = (
@@ -10111,6 +10124,7 @@
 			isa = PBXGroup;
 			children = (
 				2AC2FB0A2C50D4CE001972CB /* PaymentProviderServicePickerModel.swift */,
+				2A1DE2C72C511EDC0091B99C /* PaymentProviderServicePickerWrapperView.swift */,
 			);
 			path = PaymentProviderServicePicker;
 			sourceTree = "<group>";
@@ -10120,7 +10134,7 @@
 			children = (
 				2AC2FB112C510404001972CB /* Domain */,
 				2AC2FB1A2C51047B001972CB /* Logic */,
-				2AC2FB0D2C50EAB1001972CB /* PaymentProviderServicePickerFlowModel.swift */,
+				2A1DE2C42C5114F70091B99C /* UI */,
 			);
 			name = PaymentProviderServicePickerFlow;
 			path = ../View/PaymentsTransfers/UtilityPaymentFlow/PaymentProviderServicePickerFlow;
@@ -12981,8 +12995,8 @@
 				83FAD89029CDB3A700474B06 /* InternetTV */,
 				0BE0BDF42905CE2C0064549E /* QR */,
 				68A07C44281ADEBB00797A54 /* OfferProductViewComponent.swift */,
-				2AC2FB092C50D4C1001972CB /* PaymentProviderServicePicker */,
 				2AC2FB0C2C50EA9C001972CB /* PaymentProviderServicePickerFlow */,
+				2AC2FB092C50D4C1001972CB /* PaymentProviderServicePicker */,
 				7709C77B2833E56800C1A8B6 /* General */,
 				0C534CAE296E24B000967FE8 /* ViewModel */,
 				7709C77A2833ACF700C1A8B6 /* View */,
@@ -18298,6 +18312,7 @@
 				687FB23026E8D41A004A479F /* OfferCard.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
 				0CA1CDE12840720200021671 /* AddressBookContact.swift in Sources */,
+				2A1DE2C82C511EDD0091B99C /* PaymentProviderServicePickerWrapperView.swift in Sources */,
 				0BBC55FE2943318600B95E6C /* QRAccessViewComponent.swift in Sources */,
 				77C3829827E1FEAD00B5246E /* PaymentsProductSelectorViewComponent+Legacy.swift in Sources */,
 				2A80505B2C354A2E0039557E /* AnywayInfoViewConfig.swift in Sources */,
@@ -18644,6 +18659,7 @@
 				EDF4F24D277249B90030F087 /* ReturnPaymentContactDecodableModel.swift in Sources */,
 				5008781E2853453A0033DDD5 /* PagerContentViewComponent.swift in Sources */,
 				2A9049542C3276BC00313CB8 /* LocalImageLoaderComposer.swift in Sources */,
+				2A1DE2C62C5115110091B99C /* PaymentProviderServicePickerFlowView.swift in Sources */,
 				77517F9427A800C6005CFB77 /* ServerCommands+Transfer.swift in Sources */,
 				2A0EF2EC2C1DABB2003F094D /* ChevronViewConfig+iFora.swift in Sources */,
 				2AA3A9702BFF91F800AEBCC9 /* AnywayPaymentFooterView.swift in Sources */,
