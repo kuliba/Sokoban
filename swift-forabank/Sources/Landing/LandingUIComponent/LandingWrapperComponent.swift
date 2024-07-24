@@ -170,6 +170,19 @@ public final class LandingWrapperViewModel: ObservableObject {
     }
 }
 
+public extension LandingWrapperViewModel {
+    
+    func navigationTitle() -> String {
+        
+        if case let .success(landing) = state {
+            if let landing {
+                return landing.headerTitle()
+            }
+        }
+        return ""
+    }
+}
+
 public struct LandingWrapperView: View {
         
     @ObservedObject private var viewModel: LandingWrapperViewModel

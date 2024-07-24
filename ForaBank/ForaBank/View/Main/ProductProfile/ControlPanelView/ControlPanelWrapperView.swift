@@ -8,6 +8,7 @@
 import SwiftUI
 import RxViewModel
 import ManageSubscriptionsUI
+import UIPrimitives
 
 typealias ControlPanelViewModel = RxViewModel<ControlPanelState, ControlPanelEvent, ControlPanelEffect>
 
@@ -31,24 +32,28 @@ struct ControlPanelWrapperView: View {
     var body: some View {
         
         ZStack {
-            ControlPanelView(
-                state: viewModel.state,
-                event: { viewModel.event($0) },
-                config: config,
-                destinationView: destinationView
-            )
-            .alert(
-                item: viewModel.state.alert,
-                content: Alert.init(with:)
-            )
-            .navigationBar(with: viewModel.state.navigationBarViewModel)
-            
+            VStack {
+                NavigationBar(viewModel.state.navigationBarInfo)
+                ControlPanelView(
+                    state: viewModel.state,
+                    event: { viewModel.event($0) },
+                    config: config,
+                    destinationView: destinationView
+                )
+                .alert(
+                    item: viewModel.state.alert,
+                    content: Alert.init(with:)
+                )
+            }
+
             viewModel.state.spinner.map { spinner in
                 
                 SpinnerView(viewModel: spinner)
                     .zIndex(.greatestFiniteMagnitude)
             }
         }
+        .navigationBarTitle("")
+        .navigationBarHidden(true)
     }
     
     private func destinationView(_ destination: ControlPanelState.Destination) -> some View {
@@ -106,4 +111,18 @@ private extension ManageSubscriptionsUI.ProductViewConfig {
         nameColor: .mainColorsBlack,
         descriptionFont: .textBodyMR14180()
     )
+}
+
+private extension NavigationBar {
+    
+    init(
+        _ info: ControlPanelState.NavigationBarInfo,
+        _ config: NavigationBarConfig = .default
+    ) {
+        self.init(
+            backAction: info.action,
+            title: info.title,
+            subtitle: info.subtitle,
+            config: config)
+    }
 }

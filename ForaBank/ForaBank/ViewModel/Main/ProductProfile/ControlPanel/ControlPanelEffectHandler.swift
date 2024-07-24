@@ -153,7 +153,7 @@ private extension ControlPanelEffectHandler {
                 result in
                 switch result {
                 case .failure:
-                    dispatch(.loadedLimits(nil))
+                    dispatch(.loadedLimits(nil, ""))
                     
                 case let .success(landing):
                                         
@@ -162,7 +162,7 @@ private extension ControlPanelEffectHandler {
                         nil,
                         .default,
                         self.landingEvent
-                    )))
+                    ),  self.card.navigationTitleForControlPanel))
                 }
             }
         }

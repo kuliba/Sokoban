@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import UIPrimitives
 
 extension UILanding.Multi.LineHeader {
     
@@ -495,7 +496,13 @@ extension UILanding.List.HorizontalRectangleLimits.Config {
         fonts: .init(title: .caption, subTitle: .caption, limit: .subheadline),
         paddings: .init(horizontal: 12, vertical: 8),
         sizes: .init(height: 176, icon: 20, width: 180),
-        spacing: 8)
+        spacing: 8,
+        navigationBarConfig: .init(
+            title: .init(textFont: .title, textColor: .black),
+            subTitle: .init(textFont: .body, textColor: .gray),
+            colors: .init(foreground: .black, background: .white),
+            sizes: .init(heightBar: 45, padding: 16, widthBackButton: 24)
+        ))
     }
 
 extension UILanding.Multi.Buttons.Config {
