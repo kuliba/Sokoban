@@ -10,8 +10,9 @@ import SharedConfigs
 
 struct FilterOptionButtonView: View {
     
-    typealias State = FilterOptionState
-    typealias Event = FilterEvent
+    typealias State = FilterOptionButtonState
+    typealias Event = FilterOptionButtonEvent
+    typealias Config = FilterOptionButtonConfig
     
     var state: State
     let event: (Event) -> Void
@@ -19,7 +20,7 @@ struct FilterOptionButtonView: View {
     
     var body: some View {
         
-        Button(action: { event(.selectedPeriod("")) }) {
+        Button(action: { event(.onTap) }) {
             
             config.title.text(withConfig: config.titleConfig)
                 .padding(.vertical, 7.5)
@@ -35,22 +36,6 @@ struct FilterOptionButtonView: View {
                 .cornerRadius(20)
                 .active(if: !state.isSelected)
         }
-    }
-}
-
-extension FilterOptionButtonView {
-    
-    struct FilterOptionState: Equatable {
-        
-        let isSelected: Bool
-    }
-    
-    struct Config {
-        
-        let title: String
-        let titleConfig: TextConfig
-        let selectedConfig: TextConfig
-        
     }
 }
 

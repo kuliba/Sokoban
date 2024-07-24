@@ -58,7 +58,7 @@ struct SectionView: View {
                     
                     FilterOptionButtonView(
                         state: .init(isSelected: item.isSelected),
-                        tappedAction: {},
+                        event: { event in },
                         config: .init(
                             title: item.title,
                             titleConfig: config.titleConfig,
