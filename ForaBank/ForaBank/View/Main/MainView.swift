@@ -5,12 +5,14 @@
 //  Created by Max Gribov on 05.03.2022.
 //
 
+import ActivateSlider
+import Combine
+import ForaTools
 import InfoComponent
 import LandingUIComponent
 import PaymentSticker
 import SberQR
 import ScrollViewProxy
-import ActivateSlider
 import SwiftUI
 
 struct MainView<NavigationOperationView: View>: View {
@@ -243,7 +245,76 @@ struct MainView<NavigationOperationView: View>: View {
             navigationOperationView()
                 .navigationBarTitle("Оформление заявки", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
+            
+        case let .providerServicePicker(provider):
+            servicePicker(for: provider)
+            
+        case let .paymentProviderPicker(providers, destination):
+            paymentProviderPicker(for: providers, with: destination)
         }
+    }
+    
+    private func servicePicker(
+        for provider: PaymentProviderSegment.Provider
+    ) -> some View {
+        
+        Text("providerServicePicker for \(provider)")
+    }
+    
+#warning("fix nav bar below")
+    private func paymentProviderPicker(
+        for providers: MultiElementArray<SegmentedPaymentProvider>,
+        with destination: PaymentProviderSegment.Provider?
+    ) -> some View {
+        
+        PaymentProviderSegmentsView(
+            segments: .init(with: providers.elements),
+            providerView: paymentProviderView,
+            footer: paymentProviderPickerFooter,
+            config: .iFora
+        )
+        .navigationDestination(
+            destination: destination,
+            dismissDestination: viewModel.dismissPaymentProviderPickerDestination,
+            content: servicePicker(for:)
+        )
+        .navigationBarWithAsyncIcon(
+            title: "state.content.operator.title",
+            subtitle: "state.content.operator.subtitle",
+            dismiss: viewModel.dismissProviderServicePicker,
+            icon: .init(
+                image: .ic24Hash,
+                publisher: Empty().eraseToAnyPublisher()
+            ),
+            style: .large
+        )
+    }
+    
+    private func paymentProviderView(
+        provider: PaymentProviderSegment.Provider
+    ) -> some View {
+        
+        Button {
+            
+            viewModel.select(provider: provider)
+            
+        } label: {
+            
+            Text("icon")
+            
+            VStack(alignment: .leading) {
+                
+                Text(provider.title)
+                provider.inn.map(Text.init)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+    
+    #warning("FIX footer")
+    private func paymentProviderPickerFooter() -> some View {
+        
+        Text("TBD: Footer with buttons")
     }
     
     @ViewBuilder
