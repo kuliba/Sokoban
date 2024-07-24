@@ -94,7 +94,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
 
 // MARK: - startPayment
 
-private extension UtilityPrepaymentFlowMicroServicesComposer {
+/*private*/ extension UtilityPrepaymentFlowMicroServicesComposer {
     
     func processSelection(
         _ payload: ProcessSelectionPayload,
@@ -184,7 +184,7 @@ private extension UtilityPrepaymentFlowMicroServicesComposer {
         return makeStartPaymentResult(result, outline)
     }
     
-    private func makeStartPaymentResult(
+    /*private*/ func makeStartPaymentResult(
         from result: NanoServices.StartAnywayPaymentResult,
         _ service: UtilityService,
         _ `operator`: Operator

@@ -246,25 +246,81 @@ struct MainView<NavigationOperationView: View>: View {
                 .navigationBarTitle("Оформление заявки", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
             
-        case let .providerServicePicker(provider):
-            servicePicker(for: provider)
+        case let .providerServicePicker(model):
+            servicePicker(model: model)
             
         case let .paymentProviderPicker(providers, destination):
             paymentProviderPicker(for: providers, with: destination)
         }
     }
     
+#warning("fixme")
     private func servicePicker(
-        for provider: PaymentProviderSegment.Provider
+        model: PaymentProviderServicePickerFlowModel
     ) -> some View {
         
-        Text("providerServicePicker for \(provider)")
+        PaymentProviderServicePickerFlowView(
+            model: model,
+            contentView: { content in
+                
+                PaymentProviderServicePickerWrapperView(
+                    model: model.state.content,
+                    failureView: {
+                        Text(" Failure view with pay by instructions button")
+                    },
+                    itemView: { service in
+                        
+                        Button {
+                            model.state.content.event(.select(service))
+                        } label: {
+#warning("fixme")
+                            UtilityServiceLabel(
+                                service: service,
+                                iconView: Text("icon")
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                )
+            },
+            alertContent: { alert in
+                
+                return .init(with: .init(
+                    title: "Error",
+                    message: {
+                        
+                        switch alert.serviceFailure {
+                        case .connectivityError:
+                            return "Some Error"
+                            
+                        case let .serverError(errorMessage):
+                            return errorMessage
+                        }
+                    }(),
+                    primary: .init(
+                        type: .default,
+                        title: "OK",
+                        action: { print("dismiss alert") }
+                    )
+                ))
+            },
+            destinationContent: {
+                
+                switch $0 {
+                case .payment:
+                    Text("DestinationView: payment")
+                    
+                case .paymentByInstruction:
+                    Text("DestinationView: paymentByInstruction")
+                }
+            }
+        )
     }
     
 #warning("fix nav bar below")
     private func paymentProviderPicker(
         for providers: MultiElementArray<SegmentedPaymentProvider>,
-        with destination: PaymentProviderSegment.Provider?
+        with destination: PaymentProviderServicePickerFlowModel?
     ) -> some View {
         
         PaymentProviderSegmentsView(
@@ -276,7 +332,7 @@ struct MainView<NavigationOperationView: View>: View {
         .navigationDestination(
             destination: destination,
             dismissDestination: viewModel.dismissPaymentProviderPickerDestination,
-            content: servicePicker(for:)
+            content: servicePicker(model:)
         )
         .navigationBarWithAsyncIcon(
             title: "state.content.operator.title",
@@ -376,6 +432,11 @@ struct MainView<NavigationOperationView: View>: View {
                 .edgesIgnoringSafeArea(.all)
         }
     }
+}
+
+extension PaymentProviderServicePickerFlowModel: Identifiable {
+    
+    var id: String { state.content.state.payload.id }
 }
 
 private extension MainViewModel.Route {
@@ -535,7 +596,8 @@ extension MainViewModel {
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active)
+            updateInfoStatusFlag: .init(.active),
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
@@ -561,7 +623,8 @@ extension MainViewModel {
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active)
+            updateInfoStatusFlag: .init(.active),
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
@@ -587,7 +650,8 @@ extension MainViewModel {
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active)
+            updateInfoStatusFlag: .init(.active),
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct PaymentProviderServicePickerWrapperView<FailureView, ServiceView>: View
 where FailureView: View,
@@ -18,16 +19,20 @@ where FailureView: View,
     
     var body: some View {
         
-        switch model.state.items {
-        case .none:
-            EmptyView()
-                
-        case .some([]):
-            failureView()
+        Group {
             
-        case let .some(items):
-            ServicePickerView(state: items, serviceView: itemView)
+            switch model.state.items {
+            case .none:
+                Color.clear.opacity(0.01)
+                
+            case .some([]):
+                failureView()
+                
+            case let .some(items):
+                ServicePickerView(state: items, serviceView: itemView)
+            }
         }
+        .onFirstAppear { model.event(.load) }
     }
 }
 

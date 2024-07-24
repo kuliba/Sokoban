@@ -91,14 +91,16 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             productNavigationStateManager: ProductProfileFlowManager.preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_  in .preview},
-            updateInfoStatusFlag: .init(.inactive)
+            updateInfoStatusFlag: .init(.inactive),
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
         )
         return .init(
             makeUtilitiesViewModel: { _,_ in },
             makeProductProfileViewModel: productProfileViewModel,
             makeTemplatesListViewModel: { _ in .sampleComplete },
             makeSections: { sections }, 
-            makeAlertDataUpdateFailureViewModel: { _ in nil }
+            makeAlertDataUpdateFailureViewModel: { _ in nil },
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
         )
     }
     
