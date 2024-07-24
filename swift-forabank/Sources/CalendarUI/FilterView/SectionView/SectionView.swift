@@ -9,16 +9,19 @@ import SwiftUI
 
 struct SectionView: View {
     
-    let title: String
-    let items: [Item]
-    let tapAction: (Item) -> Void
-    let config: FilterOptionButtonView.Config
+    typealias State = SectionState
+    typealias Config = FilterOptionButtonView.Config
+    typealias Event = SectionEvent
+    
+    let state: State
+    let event: (Event) -> Void
+    let config: Config
     
     var body: some View {
         
         VStack(spacing: 16) {
             
-            Text(title)
+            Text(config.title)
                 .font(.system(size: 14))
                 .foregroundColor(.gray)
                 .fontWeight(.medium)
@@ -26,26 +29,19 @@ struct SectionView: View {
                 .padding(.horizontal)
             
             ContentView(
-                items: items,
-                tapAction: tapAction,
+                items: state.items,
+                event: event,
                 config: config
             )
         }
-    }
-    
-    struct Item: Identifiable {
-        
-        var id: String { title }
-        let title: String
-        let isSelected: Bool
     }
     
     struct ContentView: View {
         
         private let size: CGFloat = 150
         private let padding: CGFloat = 8
-        @State var items: [Item]
-        let tapAction: (Item) -> Void
+        let items: [SectionState.Item]
+        let event: (Event) -> Void
         let config: FilterOptionButtonView.Config
         
         var body: some View {
@@ -74,23 +70,21 @@ struct SectionView: View {
 #Preview {
     
     VStack(spacing: 24) {
-      
+        
         SectionView(
-            title: "Движение средств",
-            items: [
+            state: .init(items: [
                 .init(title: "Списание", isSelected: true),
                 .init(title: "Пополнение", isSelected: false)
-            ],
-            tapAction: { item in
+            ]),
+            event: { item in
                 
                 print(item)
             },
-            config: .init(title: "", titleConfig: .init(textFont: .body, textColor: .red), selectedConfig: .init(textFont: .body, textColor: .yellow))
+            config: .init(title: "Движение средств", titleConfig: .init(textFont: .body, textColor: .red), selectedConfig: .init(textFont: .body, textColor: .yellow))
         )
         
         SectionView(
-            title: "Категории",
-            items: [
+            state: .init(items: [
                 .init(title: "В другой банк", isSelected: false),
                 .init(title: "Между своими", isSelected: false),
                 .init(title: "ЖКХ", isSelected: false),
@@ -104,12 +98,12 @@ struct SectionView: View {
                 .init(title: "Интернет, ТВ", isSelected: false),
                 .init(title: "Заработная плата", isSelected: false),
                 .init(title: "Потребительские кредиты", isSelected: false)
-            ],
-            tapAction: { item in
+            ]),
+            event: { item in
                 
                 print(item)
             },
-            config: .init(title: "", titleConfig: .init(textFont: .body, textColor: .red), selectedConfig: .init(textFont: .body, textColor: .yellow))
+            config: .init(title: "Категории", titleConfig: .init(textFont: .body, textColor: .red), selectedConfig: .init(textFont: .body, textColor: .yellow))
         )
     }
 }
