@@ -11,6 +11,7 @@ public struct BlockHorizontalRectangularState: Equatable {
     
     let block: UILanding.BlockHorizontalRectangular
     var inputStates: [InputState] = []
+    var newValues: [BlockHorizontalRectangularEvent.Limit] = []
     
     public init(
         block: UILanding.BlockHorizontalRectangular

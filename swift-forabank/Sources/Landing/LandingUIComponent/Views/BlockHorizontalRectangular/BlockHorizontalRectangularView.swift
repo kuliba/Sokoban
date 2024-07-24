@@ -15,14 +15,14 @@ struct BlockHorizontalRectangularView: View {
     let event: (Event) -> Void
     let factory: Factory
     let config: Config
-
+    
     var body: some View {
         
-        ScrollView(.vertical, showsIndicators: false) {
-            
-            VStack(spacing: config.spacing) {
-                ForEach(state.block.list, content: itemView)
-            }
+        VStack(spacing: config.spacing) {
+            ForEach(state.block.list, content: itemView)
+        }
+        .onTapGesture {
+            UIApplication.shared.endEditing()
         }
         .padding(.horizontal, config.paddings.horizontal)
         .padding(.vertical, config.paddings.vertical)
@@ -103,6 +103,8 @@ extension BlockHorizontalRectangularView {
                             infoView: {
                                 Text("Сумма лимита не может быть больше \(limit.maxSum) ₽")
                                     .fixedSize(horizontal: false, vertical: true)
+                                    .foregroundColor(.init(red: 227/255, green: 1/255, blue: 27/255))
+                                    .font(.system(size: 12))
                             },
                             makeIconView: factory.makeIconView)
                         
