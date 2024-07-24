@@ -118,12 +118,12 @@ private extension PaymentsTransfersViewModel.Route {
     // UtilityPaymentFlowState could be nested in two destinations:
     // - utilityPrepayment.destination, or
     // - servicePicker.destination
-    var paymentFlowState: UtilityServicePaymentFlowState<AnywayTransactionViewModel>? {
+    var paymentFlowState: UtilityServicePaymentFlowState? {
         
         paymentFlowStateInPrepaymentDestination ?? paymentFlowStateInServicePickerDestination
     }
     
-    private var paymentFlowStateInPrepaymentDestination: UtilityServicePaymentFlowState<AnywayTransactionViewModel>? {
+    private var paymentFlowStateInPrepaymentDestination: UtilityServicePaymentFlowState? {
         
         guard case let .utilityPayment(utilityPrepayment) = destination,
               case let .payment(paymentFlowState) = utilityPrepayment.destination
@@ -132,7 +132,7 @@ private extension PaymentsTransfersViewModel.Route {
         return paymentFlowState
     }
     
-    private var paymentFlowStateInServicePickerDestination: UtilityServicePaymentFlowState<AnywayTransactionViewModel>? {
+    private var paymentFlowStateInServicePickerDestination: UtilityServicePaymentFlowState? {
         
         guard case let .utilityPayment(utilityPrepayment) = destination,
               case let .servicePicker(servicePicker) = utilityPrepayment.destination,
@@ -191,7 +191,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         return .init(content: viewModel, navTitle: settings.navTitle)
     }
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content, UtilityPaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, UtilityService, Content>
     
     typealias UtilityPrepaymentEvent = UtilityPrepaymentFlowEvent<LastPayment, Operator, Service>
     typealias UtilityPrepaymentPayload = UtilityPrepaymentEvent.Initiated.UtilityPrepaymentPayload

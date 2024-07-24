@@ -42,7 +42,7 @@ extension UtilityPaymentStateComposer {
     func makeUtilityPaymentState(
         transaction: AnywayTransactionState.Transaction,
         notify: @escaping NotifyStatus
-    ) -> UtilityServicePaymentFlowState<AnywayTransactionViewModel> {
+    ) -> UtilityServicePaymentFlowState {
         
         let composer = makeComposer()
         

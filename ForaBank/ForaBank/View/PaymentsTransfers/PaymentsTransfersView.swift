@@ -605,7 +605,7 @@ private extension PaymentsTransfersView {
     
     @ViewBuilder
     func paymentFlowView(
-        state: UtilityServiceFlowState,
+        state: UtilityServicePaymentFlowState,
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
@@ -648,7 +648,7 @@ private extension PaymentsTransfersView {
     func paymentFlowAlert(
         transactionEvent: @escaping (AnywayTransactionEvent) -> Void,
         flowEvent: @escaping (UtilityServicePaymentFlowEvent) -> Void
-    ) -> (UtilityServiceFlowState.Alert) -> Alert {
+    ) -> (UtilityServicePaymentFlowState.Alert) -> Alert {
         
         return { alert in
             
@@ -676,7 +676,7 @@ private extension PaymentsTransfersView {
     
     @ViewBuilder
     func paymentFlowFullScreenCoverView(
-        fullScreenCover: UtilityServiceFlowState.FullScreenCover
+        fullScreenCover: UtilityServicePaymentFlowState.FullScreenCover
     ) -> some View {
         
         switch fullScreenCover {
@@ -687,7 +687,7 @@ private extension PaymentsTransfersView {
     
     func paymentFlowModalView(
         event: @escaping (FraudEvent) -> Void
-    ) -> (UtilityServiceFlowState.Modal) -> PaymentFlowModalView {
+    ) -> (UtilityServicePaymentFlowState.Modal) -> PaymentFlowModalView {
         
         return { PaymentFlowModalView(state: $0, event: event) }
     }
@@ -791,15 +791,13 @@ private extension PaymentsTransfersView {
     
     typealias Content = UtilityPrepaymentViewModel
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content, AnywayTransactionViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content>
     
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
     
     typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
     
-    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, Service, AnywayTransactionViewModel>
-    
-    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<AnywayTransactionViewModel>
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, Service>
 }
 
 extension UtilityServicePaymentFlowState.Modal: BottomSheetCustomizable {}

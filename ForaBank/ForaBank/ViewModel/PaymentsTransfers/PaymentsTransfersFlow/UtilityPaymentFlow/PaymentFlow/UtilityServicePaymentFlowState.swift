@@ -7,16 +7,16 @@
 
 import Combine
 
-struct UtilityServicePaymentFlowState<ViewModel> {
+struct UtilityServicePaymentFlowState {
     
-    let content: ViewModel
+    let content: Content
     private let subscription: AnyCancellable
     var alert: Alert?
     var fullScreenCover: FullScreenCover?
     var modal: Modal?
     
     init(
-        content: ViewModel,
+        content: Content,
         subscription: AnyCancellable,
         alert: Alert? = nil,
         fullScreenCover: FullScreenCover? = nil,

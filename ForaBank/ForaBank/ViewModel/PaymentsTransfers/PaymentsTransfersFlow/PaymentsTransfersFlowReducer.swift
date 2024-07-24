@@ -529,7 +529,7 @@ private extension PaymentsTransfersFlowEffect {
 
 private extension PaymentsTransfersViewModel.Route {
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel, AnywayTransactionViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel>
     
     var utilityPrepayment: UtilityFlowState? {
         
@@ -581,7 +581,7 @@ private extension PaymentsTransfersViewModel.Route {
         self.setUtilityPrepaymentDestination(to: .operatorFailure(operatorFailure))
     }
     
-    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, UtilityService, AnywayTransactionViewModel>
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, UtilityService>
     
     private var servicePicker: ServicePickerState? {
         
@@ -609,9 +609,7 @@ private extension PaymentsTransfersViewModel.Route {
         self.setUtilityPrepaymentDestination(to: .servicePicker(servicePicker))
     }
     
-    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<AnywayTransactionViewModel>
-    
-    private var paymentFlowState: UtilityServiceFlowState? {
+    private var paymentFlowState: UtilityServicePaymentFlowState? {
         
         guard case let .payment(paymentFlowState) = utilityPrepaymentDestination
         else { return nil }
@@ -620,7 +618,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     mutating func setPaymentAlert(
-        to alert: UtilityServiceFlowState.Alert?
+        to alert: UtilityServicePaymentFlowState.Alert?
     ) {
         // try to change payment node in the tree if found
         // in prepayment destination
@@ -632,7 +630,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     mutating func setPaymentFullScreenCover(
-        to fullScreenCover: UtilityServiceFlowState.FullScreenCover?
+        to fullScreenCover: UtilityServicePaymentFlowState.FullScreenCover?
     ) {
         // try to change payment node in the tree if found
         // in prepayment destination
@@ -644,7 +642,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     mutating func setPaymentModal(
-        to modal: UtilityServiceFlowState.Modal?
+        to modal: UtilityServicePaymentFlowState.Modal?
     ) {
         // try to change payment node in the tree if found
         // in prepayment destination
@@ -656,7 +654,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setPrepaymentPaymentAlert(
-        to alert: UtilityServiceFlowState.Alert?
+        to alert: UtilityServicePaymentFlowState.Alert?
     ) {
         guard var paymentFlowState else { return }
         
@@ -665,7 +663,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setPrepaymentPaymentFullScreenCover(
-        to fullScreenCover: UtilityServiceFlowState.FullScreenCover?
+        to fullScreenCover: UtilityServicePaymentFlowState.FullScreenCover?
     ) {
         guard var paymentFlowState else { return }
         
@@ -674,7 +672,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setPrepaymentPaymentModal(
-        to modal: UtilityServiceFlowState.Modal?
+        to modal: UtilityServicePaymentFlowState.Modal?
     ) {
         guard var paymentFlowState else { return }
         
@@ -683,7 +681,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setServicePickerPaymentAlert(
-        to alert: UtilityServiceFlowState.Alert?
+        to alert: UtilityServicePaymentFlowState.Alert?
     ) {
         guard case var .utilityPayment(utilityPrepayment) = destination,
               case var .servicePicker(servicePicker) = utilityPrepayment.destination,
@@ -697,7 +695,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setServicePickerPaymentFullScreenCover(
-        to fullScreenCover: UtilityServiceFlowState.FullScreenCover?
+        to fullScreenCover: UtilityServicePaymentFlowState.FullScreenCover?
     ) {
         guard case var .utilityPayment(utilityPrepayment) = destination,
               case var .servicePicker(servicePicker) = utilityPrepayment.destination,
@@ -711,7 +709,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setServicePickerPaymentModal(
-        to modal: UtilityServiceFlowState.Modal?
+        to modal: UtilityServicePaymentFlowState.Modal?
     ) {
         guard case var .utilityPayment(utilityPrepayment) = destination,
               case var .servicePicker(servicePicker) = utilityPrepayment.destination,
@@ -725,7 +723,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setDestinationPaymentAlert(
-        to alert: UtilityServiceFlowState.Alert?
+        to alert: UtilityServicePaymentFlowState.Alert?
     ) {
         guard case var .servicePayment(paymentFlowState) = destination
         else { return }
@@ -735,7 +733,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setDestinationPaymentFullScreenCover(
-        to fullScreenCover: UtilityServiceFlowState.FullScreenCover?
+        to fullScreenCover: UtilityServicePaymentFlowState.FullScreenCover?
     ) {
         guard case var .servicePayment(paymentFlowState) = destination
         else { return }
@@ -745,7 +743,7 @@ private extension PaymentsTransfersViewModel.Route {
     }
     
     private mutating func setDestinationPaymentModal(
-        to modal: UtilityServiceFlowState.Modal?
+        to modal: UtilityServicePaymentFlowState.Modal?
     ) {
         guard case var .servicePayment(paymentFlowState) = destination
         else { return }
