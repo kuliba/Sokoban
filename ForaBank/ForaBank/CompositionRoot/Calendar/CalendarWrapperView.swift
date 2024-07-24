@@ -89,7 +89,7 @@ private extension CalendarWrapperView {
     func configureCalendar(_ config: CalendarConfig) -> CalendarConfig {
        
         config
-            .dayView(DV.RangeSelector.init)
+            .dayView(RangeSelector.init)
 //            .scrollTo(date: .now)
     }
 }
@@ -150,24 +150,17 @@ private extension SelectedRangeView {
 // MARK: - Modifiers
 fileprivate let margins: CGFloat = 24
 
-enum DV {}
-
-extension DV {
     
-    struct RangeSelector: DayView {
-        
-        let date: Date
-        let isCurrentMonth: Bool
-        let selectedDate: Binding<Date?>?
-        var selectedRange: Binding<MDateRange?>? {
-            didSet {
-                print("print")
-            }
+struct RangeSelector: DayView {
+    
+    let date: Date
+    let isCurrentMonth: Bool
+    let selectedDate: Binding<Date?>?
+    var selectedRange: Binding<MDateRange?>? {
+        didSet {
+            print("print")
         }
     }
-}
-
-extension DV.RangeSelector {
     
     func dayLabel() -> AnyView {
         
@@ -177,11 +170,10 @@ extension DV.RangeSelector {
             .opacity(isFuture() ? 0.2 : 1)
             .erased()
     }
-}
-
-// MARK: - On Selection Logic
-extension DV.RangeSelector {
-    func onSelection() { if !isFuture() {
-        selectedRange?.wrappedValue?.addToRange(date)
-    }}
+    
+    func onSelection() {
+        if !isFuture() {
+            selectedRange?.wrappedValue?.addToRange(date)
+        }
+    }
 }
