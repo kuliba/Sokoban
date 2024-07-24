@@ -668,6 +668,7 @@
 		2A40AF2D2B5912B2003B7D8A /* FlowStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A40AF2C2B5912B2003B7D8A /* FlowStub.swift */; };
 		2A40AF2F2B591530003B7D8A /* FlowStubSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A40AF2E2B591530003B7D8A /* FlowStubSettingsView.swift */; };
 		2A4111F12B07F5B80060449F /* TextFieldFactory+makeTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4111F02B07F5B80060449F /* TextFieldFactory+makeTextFieldTests.swift */; };
+		2A4300772C518BE3002FF8C7 /* UtilityPaymentStateComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4300762C518BE3002FF8C7 /* UtilityPaymentStateComposer.swift */; };
 		2A44B6782AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44B6772AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift */; };
 		2A44CBD22B68EB2100158D42 /* UserAccountEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44CBD12B68EB2100158D42 /* UserAccountEvent.swift */; };
 		2A44CBD62B68F01700158D42 /* UserAccountRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44CBD52B68F01700158D42 /* UserAccountRoute.swift */; };
@@ -3802,6 +3803,7 @@
 		2A40AF2C2B5912B2003B7D8A /* FlowStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowStub.swift; sourceTree = "<group>"; };
 		2A40AF2E2B591530003B7D8A /* FlowStubSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowStubSettingsView.swift; sourceTree = "<group>"; };
 		2A4111F02B07F5B80060449F /* TextFieldFactory+makeTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldFactory+makeTextFieldTests.swift"; sourceTree = "<group>"; };
+		2A4300762C518BE3002FF8C7 /* UtilityPaymentStateComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentStateComposer.swift; sourceTree = "<group>"; };
 		2A44B6772AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeAuthWithPublicKeyServiceTests.swift"; sourceTree = "<group>"; };
 		2A44CBD12B68EB2100158D42 /* UserAccountEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountEvent.swift; sourceTree = "<group>"; };
 		2A44CBD52B68F01700158D42 /* UserAccountRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountRoute.swift; sourceTree = "<group>"; };
@@ -10724,6 +10726,7 @@
 				2AC067DF2BECEBF1004CBC0B /* PaymentsTransfersFlowManagerComposer.swift */,
 				2AC067E52BED206D004CBC0B /* PaymentsTransfersFactoryComposer.swift */,
 				2AA3A0F42BF3E7C100B1D104 /* PaymentsTransfersFlowReducerFactoryComposer.swift */,
+				2A4300762C518BE3002FF8C7 /* UtilityPaymentStateComposer.swift */,
 				2AA619522C16BD8000043997 /* AnywayTransactionViewModelComposer.swift */,
 				2A1DE2CA2C5135550091B99C /* PaymentProviderServicePickerFlowModelComposer.swift */,
 				2A840C0C2C37437B00BA6887 /* Templates */,
@@ -19116,6 +19119,7 @@
 				EDF68213266F9EC800FD5C07 /* URLHost.swift in Sources */,
 				6841932127A28A4C00B4E184 /* ChoosePhoneNumber.swift in Sources */,
 				0CEEFB1728E213B10040A023 /* MyProductsOpenProductComponent.swift in Sources */,
+				2A4300772C518BE3002FF8C7 /* UtilityPaymentStateComposer.swift in Sources */,
 				7757DB582A712FA700745EFF /* LocalAgentOldSymmetricKeyCleaner.swift in Sources */,
 				A5ECD4C327ECB3B6008FBEEC /* C2BSuccessViewModel.swift in Sources */,
 				681142E227C90B35008D3D67 /* CardActivateSliderViewComponent.swift in Sources */,

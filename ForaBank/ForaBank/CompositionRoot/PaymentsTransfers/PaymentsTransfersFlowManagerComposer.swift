@@ -50,11 +50,17 @@ extension PaymentsTransfersFlowManagerComposer {
         _ spinnerActions: RootViewModel.RootActions.Spinner?
     ) -> FlowManager {
         
+        let utilityComposer = UtilityPaymentStateComposer(
+            flag: flag,
+            model: model,
+            httpClient: httpClient,
+            log: log,
+            spinnerActions: spinnerActions
+        )
+        
         let composer = makeReducerFactoryComposer()
         let factory = composer.compose(
-            makeUtilityPaymentState: makeUtilityPaymentState(
-                with: spinnerActions
-            )
+            makeUtilityPaymentState: utilityComposer.makeUtilityPaymentState
         )
         
         return .init(
@@ -299,90 +305,6 @@ private extension PaymentsTransfersFlowManagerComposer {
             ),
             microServices: microComposer.compose()
         )
-    }
-    
-    typealias MakeTransactionViewModel = (AnywayTransactionState, @escaping Observe) -> AnywayTransactionViewModel
-    typealias Observe = (AnywayTransactionState, AnywayTransactionState) -> Void
-    
-    func makeUtilityPaymentState(
-        with spinnerActions: RootViewModel.RootActions.Spinner?
-    ) -> (AnywayTransactionState.Transaction, @escaping NotifyStatus) -> UtilityServicePaymentFlowState<AnywayTransactionViewModel> {
-        
-        let elementMapper = AnywayElementModelMapper(
-            currencyOfProduct: currencyOfProduct,
-            format: format,
-            getProducts: model.productSelectProducts,
-            flag: flag.optionOrStub
-        )
-        
-        let microServices = composeMicroServices()
-        
-        let composer = AnywayTransactionViewModelComposer(
-            getCurrencySymbol: getCurrencySymbol,
-            elementMapper: elementMapper,
-            microServices: microServices,
-            spinnerActions: spinnerActions
-        )
-        
-        return { transaction, notify in
-            
-            let viewModel = composer.makeAnywayTransactionViewModel(
-                transaction: transaction
-            )
-            
-            let subscription = viewModel.$state
-                .dropFirst()
-                .map(\.transaction.status)
-                .removeDuplicates()
-                .handleEvents(receiveOutput: {
-#if DEBUG || MOCK
-                    print("===>>>", ObjectIdentifier(viewModel), "notify: viewModel.$state.transaction.status:", $0 ?? "nil", "\(#file):\(#line)")
-#endif
-                })
-                .sink(receiveValue: notify)
-            
-            return .init(viewModel: viewModel, subscription: subscription)
-        }
-    }
-    
-    private func format(currency: String?, amount: Decimal) -> String {
-        
-        return model.formatted(amount, with: currency ?? "") ?? ""
-    }
-    
-    private func composeMicroServices(
-    ) -> AnywayTransactionEffectHandlerMicroServices {
-        
-        typealias NanoServicesComposer = AnywayTransactionEffectHandlerNanoServicesComposer
-        typealias MicroServicesComposer = AnywayTransactionEffectHandlerMicroServicesComposer
-        
-        let nanoServicesComposer = NanoServicesComposer(
-            flag: flag.optionOrStub,
-            httpClient: httpClient,
-            log: log
-        )
-        
-        let microServicesComposer = MicroServicesComposer(
-            nanoServices: nanoServicesComposer.compose()
-        )
-        
-        return microServicesComposer.compose()
-    }
-    
-    private func getCurrencySymbol(
-        for currency: String
-    ) -> String {
-        
-        model.dictionaryCurrencySymbol(for: currency) ?? ""
-    }
-    
-    typealias NotifyStatus = (AnywayTransactionStatus?) -> Void
-    
-    private func currencyOfProduct(
-        product: ProductSelect.Product
-    ) -> String {
-        
-        model.currencyOf(product: product) ?? ""
     }
     
     private func loadOperators(
