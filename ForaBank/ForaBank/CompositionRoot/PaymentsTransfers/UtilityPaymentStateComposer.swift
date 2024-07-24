@@ -61,7 +61,7 @@ extension UtilityPaymentStateComposer {
             })
             .sink(receiveValue: notify)
         
-        return .init(viewModel: viewModel, subscription: subscription)
+        return .init(content: viewModel, subscription: subscription)
     }
     
     private func makeComposer(

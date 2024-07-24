@@ -9,20 +9,20 @@ import Combine
 
 struct UtilityServicePaymentFlowState<ViewModel> {
     
-    let viewModel: ViewModel
+    let content: ViewModel
     private let subscription: AnyCancellable
     var alert: Alert?
     var fullScreenCover: FullScreenCover?
     var modal: Modal?
     
     init(
-        viewModel: ViewModel,
+        content: ViewModel,
         subscription: AnyCancellable,
         alert: Alert? = nil,
         fullScreenCover: FullScreenCover? = nil,
         modal: Modal? = nil
     ) {
-        self.viewModel = viewModel
+        self.content = content
         self.subscription = subscription
         self.alert = alert
         self.fullScreenCover = fullScreenCover
@@ -31,6 +31,8 @@ struct UtilityServicePaymentFlowState<ViewModel> {
 }
 
 extension UtilityServicePaymentFlowState {
+    
+    typealias Content = AnywayTransactionViewModel
     
     enum Alert {
         

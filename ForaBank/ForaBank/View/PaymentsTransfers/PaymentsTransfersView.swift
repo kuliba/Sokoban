@@ -305,7 +305,7 @@ extension PaymentsTransfersView {
                 )
             
         case let .servicePayment(state):
-            let payload = state.viewModel.state.transaction.context.outline.payload
+            let payload = state.content.state.transaction.context.outline.payload
             let operatorIconView = viewFactory.makeIconView(
                 payload.icon.map { .md5Hash(.init($0)) }
             )
@@ -534,7 +534,7 @@ private extension PaymentsTransfersView {
             payByInstructionsView(paymentsViewModel)
             
         case let .payment(state):
-            let payload = state.viewModel.state.transaction.context.outline.payload
+            let payload = state.content.state.transaction.context.outline.payload
             let operatorIconView = viewFactory.makeIconView(
                 payload.icon.map { .md5Hash(.init($0)) }
             )
@@ -609,14 +609,14 @@ private extension PaymentsTransfersView {
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
-        let transactionEvent = { state.viewModel.event($0) }
+        let transactionEvent = { state.content.event($0) }
         
         let factory = viewFactory.makeAnywayPaymentFactory {
             
             transactionEvent(.payment($0))
         }
         
-        AnywayTransactionStateWrapperView(viewModel: state.viewModel) { state, event in
+        AnywayTransactionStateWrapperView(viewModel: state.content) { state, event in
             
             AnywayTransactionView(state: state, event: transactionEvent, factory: factory)
         }
@@ -641,7 +641,7 @@ private extension PaymentsTransfersView {
         )
         .padding(.bottom)
         .ignoresSafeArea(.container, edges: .bottom)
-        .navigationTitle("Payment: \(state.viewModel.state.transaction.isValid ? "valid" : "invalid")")
+        .navigationTitle("Payment: \(state.content.state.transaction.isValid ? "valid" : "invalid")")
         .navigationBarTitleDisplayMode(.inline)
     }
     

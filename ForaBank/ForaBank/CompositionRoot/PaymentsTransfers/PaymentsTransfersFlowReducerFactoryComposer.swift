@@ -72,7 +72,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
         state: Factory.ReducerState
     ) -> String? {
         
-        guard let state = state.paymentFlowState?.viewModel.state
+        guard let state = state.paymentFlowState?.content.state
         else { return nil }
         
         let context = state.transaction.context
@@ -101,7 +101,7 @@ private extension PaymentsTransfersFlowReducerFactoryComposer {
             return .init(title: "", subtitle: "", formattedAmount: "", delay: settings.fraudDelay)
         }
         
-        let context = paymentFlowState.viewModel.state.transaction.context
+        let context = paymentFlowState.content.state.transaction.context
         let payload = context.outline.payload
         
         return .init(
