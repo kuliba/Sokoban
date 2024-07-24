@@ -15,7 +15,7 @@ public enum ListHorizontalRectangleLimitsEvent: Equatable {
         
     case buttonTapped(Info)
     case dismissDestination
-    case loadedLimits(LandingWrapperViewModel?)
+    case loadedLimits(LandingWrapperViewModel?, String)
     case updateLimits(SVCardLimitsResult)
     
     public var id: Case {

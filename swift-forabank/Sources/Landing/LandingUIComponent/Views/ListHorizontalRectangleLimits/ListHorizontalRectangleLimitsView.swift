@@ -42,9 +42,16 @@ struct ListHorizontalRectangleLimitsView: View {
     ) -> some View {
         
         switch destination {
-        case let .settingsView(viewModel):
+        case let .settingsView(viewModel, subtitle):
             
             VStack {
+                NavigationBar(
+                    backAction: { event(.dismissDestination) },
+                    title: viewModel.navigationTitle(),
+                    subtitle: subtitle,
+                    config: config.navigationBarConfig
+                )
+
                 LandingWrapperView(viewModel: viewModel)
                     .frame(maxHeight: .infinity)
                 Button(action: { /* TODO: add save action */ }) {
@@ -60,6 +67,8 @@ struct ListHorizontalRectangleLimitsView: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, config.paddings.vertical)
             }
+            .navigationBarTitle("")
+            .navigationBarHidden(true)
             .padding(.bottom)
             .ignoresSafeArea(.container, edges: .bottom)
         }

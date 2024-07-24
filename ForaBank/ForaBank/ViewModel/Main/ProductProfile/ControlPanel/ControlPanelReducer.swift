@@ -64,7 +64,7 @@ extension ControlPanelReducer {
             makeActions.updateProducts()
             
         case let .updateTitle(newTitle):
-            state.navigationBarViewModel.title = newTitle
+            state.navigationBarInfo.title = newTitle
             
         case let .loadSVCardLanding(card):
             effect = .loadSVCardLanding(card)
