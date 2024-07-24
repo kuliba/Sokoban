@@ -55,8 +55,8 @@ private extension PaymentProviderSegment.Provider {
         self.init(
             id: provider.id,
             icon: provider.icon,
-            title: provider.title,
-            inn: provider.inn
+            inn: provider.inn,
+            title: provider.title
         )
     }
 }

@@ -74,7 +74,7 @@ private extension PaymentProviderSegmentsView {
             
             VStack(alignment: .leading) {
              
-                Text(provider.icon + " " + provider.title)
+                Text((provider.icon ?? "?") + " " + provider.title)
                 provider.inn.map(Text.init)
                     .foregroundColor(.secondary)
                     .font(.footnote)
@@ -89,10 +89,10 @@ private extension PaymentProviderSegmentsView {
 private extension Array where Element == SegmentedPaymentProvider {
     
     static let preview: Self = [
-        .init(id: "1", icon: "i", title: "Service A", inn: nil, segment: "Services"),
-        .init(id: "2", icon: "i", title: "Service B", inn: "123567890", segment: "Services"),
-        .init(id: "3", icon: "i", title: "FastNet", inn: nil, segment: "Internet"),
-        .init(id: "4", icon: "i", title: "TV-D", inn: "234", segment: "TV"),
-        .init(id: "5", icon: "i", title: "TV-F", inn: "3456", segment: "TV"),
+        .init(id: "1", icon: "i", inn: nil, title: "Service A", segment: "Services"),
+        .init(id: "2", icon: "i", inn: "123567890", title: "Service B", segment: "Services"),
+        .init(id: "3", icon: "i", inn: nil, title: "FastNet", segment: "Internet"),
+        .init(id: "4", icon: "i", inn: "234", title: "TV-D", segment: "TV"),
+        .init(id: "5", icon: "i", inn: "3456", title: "TV-F", segment: "TV"),
     ]
 }
