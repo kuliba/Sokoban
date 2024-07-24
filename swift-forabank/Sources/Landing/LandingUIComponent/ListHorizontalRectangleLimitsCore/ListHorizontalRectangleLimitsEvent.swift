@@ -19,6 +19,7 @@ public enum ListHorizontalRectangleLimitsEvent: Equatable {
     case updateLimits(SVCardLimitsResult)
     case saveLimits([BlockHorizontalRectangularEvent.Limit])
     case delayAlert(String)
+    case showAlert(String)
     case informer(String)
     
     public var id: Case {
@@ -37,6 +38,8 @@ public enum ListHorizontalRectangleLimitsEvent: Equatable {
             return .saveLimits
         case .delayAlert:
             return .delayAlert
+        case .showAlert:
+            return .showAlert
         case .informer:
             return .informer
         }
@@ -44,7 +47,7 @@ public enum ListHorizontalRectangleLimitsEvent: Equatable {
     
     public enum Case {
         
-        case buttonTapped, dismissDestination, loadedLimits, updateLimits, saveLimits, delayAlert, informer
+        case buttonTapped, dismissDestination, loadedLimits, updateLimits, saveLimits, delayAlert, showAlert, informer
     }
 
     public struct Info: Equatable {

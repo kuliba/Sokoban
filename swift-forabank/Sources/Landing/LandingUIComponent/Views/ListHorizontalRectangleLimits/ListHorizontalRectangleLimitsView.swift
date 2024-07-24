@@ -59,9 +59,7 @@ struct ListHorizontalRectangleLimitsView: View {
                             get: { state.alert?.text },
                             set: { _ in }
                         ),
-                        content: {
-                                Alert.init(title: Text($0))
-                            }                        
+                        content: alertContent
                     )
 
                 Button(action: { event(.saveLimits([])) }) {
@@ -84,6 +82,14 @@ struct ListHorizontalRectangleLimitsView: View {
         }
     }
         
+    private func alertContent(_ message: String) -> Alert {
+        
+        return .init(
+            title: Text("Ошибка"),
+            message: Text(message)
+        )
+    }
+
     private func itemView (
         item: Item
     ) -> some View {

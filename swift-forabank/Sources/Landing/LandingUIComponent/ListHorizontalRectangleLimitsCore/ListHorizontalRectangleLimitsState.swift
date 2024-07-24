@@ -14,7 +14,7 @@ public struct ListHorizontalRectangleLimitsState: Equatable {
     let list: UILanding.List.HorizontalRectangleLimits
     var limitsLoadingStatus: LimitsLoadingStatus
     var destination: Destination?
-    var alert: Alert?
+    var alert: ErrorAlert?
     
     public init(
         id: UUID = UUID(),
@@ -31,8 +31,16 @@ public struct ListHorizontalRectangleLimitsState: Equatable {
 
 public extension ListHorizontalRectangleLimitsState {
     
-    enum Alert: Equatable {
+    enum ErrorAlert: Equatable, Identifiable {
         
+        public var id: Case {
+            
+            switch self {
+            case .updateLimitsError:
+                return .updateLimitsError
+            }
+        }
+                
         case updateLimitsError(String)
         
         var text: String {
@@ -41,6 +49,10 @@ public extension ListHorizontalRectangleLimitsState {
             case let .updateLimitsError(error):
                 return error
             }
+        }
+        
+        public enum Case {
+            case updateLimitsError
         }
     }
 }

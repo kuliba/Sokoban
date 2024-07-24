@@ -11,4 +11,5 @@ public enum ListHorizontalRectangleLimitsEffect: Equatable {
     
     case loadSVCardLanding
     case saveLimits([BlockHorizontalRectangularEvent.Limit])
+    case showAlert(String, DispatchTimeInterval)
 }

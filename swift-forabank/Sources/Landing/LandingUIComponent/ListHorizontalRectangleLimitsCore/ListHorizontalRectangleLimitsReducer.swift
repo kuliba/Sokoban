@@ -11,11 +11,15 @@ import UIPrimitives
 public final class ListHorizontalRectangleLimitsReducer {
     
     let makeInformer: (String) -> Void
-    
+    private let alertLifespan: DispatchTimeInterval
+
     public init(
-        makeInformer: @escaping (String) -> Void
+        makeInformer: @escaping (String) -> Void,
+        alertLifespan: DispatchTimeInterval = .milliseconds(400)
+
     ) {
         self.makeInformer = makeInformer
+        self.alertLifespan = alertLifespan
     }
 }
 
@@ -61,8 +65,11 @@ public extension ListHorizontalRectangleLimitsReducer {
         case .dismissDestination:
             state.destination = nil
             
-        case let .delayAlert(message):
+        case let .showAlert(message):
             state.alert = .updateLimitsError(message)
+            
+        case let .delayAlert(message):
+            effect = .showAlert(message, alertLifespan)
             
         case let .informer(message):
             makeInformer(message)
