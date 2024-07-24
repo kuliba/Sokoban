@@ -14,10 +14,11 @@ struct PaymentsTransfersFactory {
     let makeTemplatesListViewModel: MakeTemplatesListViewModel
     let makeSections: MakePaymentsTransfersSections
     let makeAlertDataUpdateFailureViewModel: MakeAlertDataUpdateFailureViewModel
+    let makePaymentProviderServicePickerFlowModel: MakePaymentProviderServicePickerFlowModel
 }
 
 extension PaymentsTransfersFactory {
-    #warning("move to PaymentsTransfersFlowReducerFactory")
+#warning("move to PaymentsTransfersFlowReducerFactory")
     struct MakeUtilitiesPayload {
         
         let type: PTSectionPaymentsView.ViewModel.PaymentsType
@@ -42,6 +43,8 @@ extension PaymentsTransfersFactory {
     
     typealias MakePaymentsTransfersSections = () -> [PaymentsTransfersSectionViewModel]
     typealias MakeAlertDataUpdateFailureViewModel = (@escaping DismissAction) -> Alert.ViewModel?
+    
+    typealias MakePaymentProviderServicePickerFlowModel = (PaymentProviderSegment.Provider) -> PaymentProviderServicePickerFlowModel
 }
 
 extension PaymentsTransfersFactory {
@@ -51,7 +54,7 @@ extension PaymentsTransfersFactory {
         let productProfileViewModel = ProductProfileViewModel.make(
             with: .emptyMock,
             fastPaymentsFactory: .legacy,
-            makeUtilitiesViewModel: { _,_ in }, 
+            makeUtilitiesViewModel: { _,_ in },
             makeTemplatesListViewModel: { _ in .sampleComplete },
             makePaymentsTransfersFlowManager: { _ in .preview },
             userAccountNavigationStateManager: .preview,
@@ -62,14 +65,36 @@ extension PaymentsTransfersFactory {
             productNavigationStateManager: ProductProfileFlowManager.preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.inactive)
+            updateInfoStatusFlag: .init(.inactive),
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
         )
         return .init(
             makeUtilitiesViewModel: { _,_ in },
             makeProductProfileViewModel: productProfileViewModel,
             makeTemplatesListViewModel: { _ in .sampleComplete },
             makeSections: { Model.emptyMock.makeSections(flag: .init(.inactive)) },
-            makeAlertDataUpdateFailureViewModel: { _ in nil }
+            makeAlertDataUpdateFailureViewModel: { _ in nil },
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
         )
     }()
+}
+
+extension PaymentProviderServicePickerFlowModel {
+    
+    static func preview(
+        provider: PaymentProviderSegment.Provider
+    ) -> Self {
+        
+        return .init(
+            initialState: .init(
+                content: .init(
+                    initialState: .init(payload: provider),
+                    reduce: { state, _ in (state, nil) },
+                    handleEffect: { _,_ in }
+                )
+            ),
+            reduce: { state, _ in (state, nil) },
+            handleEffect: { _,_ in }
+        )
+    }
 }

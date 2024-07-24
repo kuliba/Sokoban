@@ -204,6 +204,37 @@ extension RootViewModelFactory {
                 return .bottomSheet(.cardGuardian($0, changeSVCardLimitsFlag))
             }
         }
+        
+        let utilityNanoServicesComposer = UtilityPaymentNanoServicesComposer(
+            flag: utilitiesPaymentsFlag,
+            model: model,
+            httpClient: httpClient,
+            log: logger.log,
+            loadOperators: { $0([]) } // not used for servicePickerComposer
+        )
+        let utilityNanoServices = utilityNanoServicesComposer.compose()
+        let servicePickerComposer = PaymentProviderServicePickerFlowModelComposer(
+            composer: .init(
+                flag: utilitiesPaymentsFlag.rawValue,
+                nanoServices: utilityNanoServices,
+                makeLegacyPaymentsServicesViewModel: { _ in
+                    
+                    // not used for servicePickerComposer
+                    return .init(
+                        searchBar: .searchBar(for: .abroad),
+                        navigationBar: .sample,
+                        model: model,
+                        latestPayments: .init(model: model, including: []),
+                        allOperators: [],
+                        addCompanyAction: {},
+                        requisitesAction: {}
+                    )
+                }
+            ),
+            nanoServices: utilityNanoServices,
+            scheduler: scheduler
+        )
+        let makePaymentProviderServicePickerFlowModel = servicePickerComposer.makeFlowModel
 
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
@@ -223,7 +254,8 @@ extension RootViewModelFactory {
                 c2bSubscription: model.subscriptions.value,
                 scheduler: scheduler
             ),
-            updateInfoStatusFlag: updateInfoStatusFlag
+            updateInfoStatusFlag: updateInfoStatusFlag,
+            makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel
         )
         
         return make(
@@ -238,7 +270,8 @@ extension RootViewModelFactory {
             sberQRServices: sberQRServices,
             qrViewModelFactory: qrViewModelFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
-            onRegister: resetCVVPINActivation
+            onRegister: resetCVVPINActivation,
+            makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel
         )
     }
     
@@ -390,7 +423,8 @@ extension ProductProfileViewModel {
         productNavigationStateManager: ProductProfileFlowManager,
         makeCardGuardianPanel: @escaping ProductProfileViewModelFactory.MakeCardGuardianPanel,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
-        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
+        updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
+        makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, dismissAction in
@@ -409,7 +443,8 @@ extension ProductProfileViewModel {
                 productNavigationStateManager: productNavigationStateManager,
                 makeCardGuardianPanel: makeCardGuardianPanel,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
-                updateInfoStatusFlag: updateInfoStatusFlag
+                updateInfoStatusFlag: updateInfoStatusFlag,
+                makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel
             )
             
             let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -419,7 +454,8 @@ extension ProductProfileViewModel {
                 makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
                 makeAlertDataUpdateFailureViewModel: { 
                     updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
-                }
+                },
+                makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel
             )
             
             let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData, model in
@@ -528,7 +564,8 @@ private extension RootViewModelFactory {
         sberQRServices: SberQRServices,
         qrViewModelFactory: QRViewModelFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
-        onRegister: @escaping OnRegister
+        onRegister: @escaping OnRegister,
+        makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel
     ) -> RootViewModel {
                 
         let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -538,7 +575,8 @@ private extension RootViewModelFactory {
             makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
             makeAlertDataUpdateFailureViewModel: {
                 updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
-            }
+            },
+            makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel
         )
         
         let mainViewModel = MainViewModel(

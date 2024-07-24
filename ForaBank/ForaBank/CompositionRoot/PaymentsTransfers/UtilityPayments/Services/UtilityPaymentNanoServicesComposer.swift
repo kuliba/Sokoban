@@ -370,7 +370,7 @@ typealias StartAnywayPaymentPayload = UtilityPaymentNanoServices.StartAnywayPaym
 typealias StartAnywayPaymentResult = UtilityPaymentNanoServices.StartAnywayPaymentResult
 typealias StartAnywayPaymentCompletion = UtilityPaymentNanoServices.StartAnywayPaymentCompletion
 
-private extension RemoteServices.ResponseMapper.SberUtilityService {
+/*private*/ extension RemoteServices.ResponseMapper.SberUtilityService {
     
     var service: UtilityService {
         

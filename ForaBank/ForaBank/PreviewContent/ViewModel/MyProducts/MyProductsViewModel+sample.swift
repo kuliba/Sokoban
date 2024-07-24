@@ -33,7 +33,8 @@ extension MyProductsViewModel {
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active)
+            updateInfoStatusFlag: .init(.active),
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
         ),
         refreshingIndicator: .init(isActive: true),
         openOrderSticker: {},
@@ -64,7 +65,8 @@ extension MyProductsViewModel {
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
-            updateInfoStatusFlag: .init(.active)
+            updateInfoStatusFlag: .init(.active),
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
         ),
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false],

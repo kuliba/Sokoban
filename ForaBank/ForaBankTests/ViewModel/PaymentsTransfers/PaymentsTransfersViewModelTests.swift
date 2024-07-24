@@ -813,7 +813,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_  in .preview},
-            updateInfoStatusFlag: updateInfoStatusFlag
+            updateInfoStatusFlag: updateInfoStatusFlag,
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -824,7 +825,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             makeProductProfileViewModel: productProfileViewModel,
             makeTemplatesListViewModel: { _ in .sampleComplete },
             makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
-            makeAlertDataUpdateFailureViewModel: makeAlertDataUpdateFailureViewModel
+            makeAlertDataUpdateFailureViewModel: makeAlertDataUpdateFailureViewModel,
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
         )
         
         let sut = SUT(

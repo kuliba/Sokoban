@@ -15,7 +15,7 @@ struct PaymentProviderServicePickerFlowState {
 
 extension PaymentProviderServicePickerFlowState {
     
-    typealias Content = PaymentProviderServicePickerModel<Any>
+    typealias Content = PaymentProviderServicePickerModel
     
     typealias Alert = ServiceFailureAlert
     

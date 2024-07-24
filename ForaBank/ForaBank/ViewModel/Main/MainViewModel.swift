@@ -232,7 +232,8 @@ extension MainViewModel {
         guard case let .paymentProviderPicker(providers, _) = route.destination
         else { return }
         
-        route.destination = .paymentProviderPicker(providers, destination: provider)
+        let pickerModel = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel(provider)
+        route.destination = .paymentProviderPicker(providers, destination: pickerModel)
     }
 }
 
@@ -923,7 +924,8 @@ extension MainViewModel {
             handleUnknownQR()
             
         case let (.none, .some(provider)):
-            route.destination = .providerServicePicker(.init(provider))
+            let pickerModel = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel(.init(provider))
+            route.destination = .providerServicePicker(pickerModel)
             
         case let (.some(providers), _):
             route.destination = .paymentProviderPicker(providers, destination: nil)
@@ -1402,8 +1404,8 @@ extension MainViewModel {
         case landing(LandingWrapperViewModel)
         case orderSticker(LandingWrapperViewModel)
         case paymentSticker
-        case providerServicePicker(PaymentProviderSegment.Provider)
-        case paymentProviderPicker(MultiElementArray<SegmentedPaymentProvider>, destination: PaymentProviderSegment.Provider?)
+        case providerServicePicker(PaymentProviderServicePickerFlowModel)
+        case paymentProviderPicker(MultiElementArray<SegmentedPaymentProvider>, destination: PaymentProviderServicePickerFlowModel?)
         
         var id: Case {
             
