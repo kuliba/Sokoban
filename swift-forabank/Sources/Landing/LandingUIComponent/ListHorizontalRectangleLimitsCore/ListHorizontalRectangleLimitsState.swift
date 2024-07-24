@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 public struct ListHorizontalRectangleLimitsState: Equatable {
     
@@ -13,7 +14,8 @@ public struct ListHorizontalRectangleLimitsState: Equatable {
     let list: UILanding.List.HorizontalRectangleLimits
     var limitsLoadingStatus: LimitsLoadingStatus
     var destination: Destination?
-
+    var alert: Alert?
+    
     public init(
         id: UUID = UUID(),
         list: UILanding.List.HorizontalRectangleLimits,
@@ -24,6 +26,22 @@ public struct ListHorizontalRectangleLimitsState: Equatable {
         self.list = list
         self.limitsLoadingStatus = limitsLoadingStatus
         self.destination = destination
+    }
+}
+
+public extension ListHorizontalRectangleLimitsState {
+    
+    enum Alert: Equatable {
+        
+        case updateLimitsError(String)
+        
+        var text: String {
+            
+            switch self {
+            case let .updateLimitsError(error):
+                return error
+            }
+        }
     }
 }
 

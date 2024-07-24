@@ -14,8 +14,8 @@ public enum BlockHorizontalRectangularEvent: Equatable {
     
     public struct Limit: Equatable {
         
-        let id: String
-        let value: Decimal
+        public let id: String
+        public let value: Decimal
         
         public init(id: String, value: Decimal) {
             self.id = id

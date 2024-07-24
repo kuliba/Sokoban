@@ -8,6 +8,8 @@
 import SwiftUI
 import LandingUIComponent
 import LandingMapping
+import SVCardLimitAPI
+import RemoteServices
 
 final class ControlPanelEffectHandler {
     
@@ -97,7 +99,7 @@ extension ControlPanelEffectHandler {
                             
                             return .init(
                                 initialState: .init(list: .init(limits), limitsLoadingStatus: .inflight(.loadingSVCardLimits)),
-                                reduce: ListHorizontalRectangleLimitsReducer.init().reduce(_:_:),
+                                reduce: ListHorizontalRectangleLimitsReducer.init(makeInformer: self.productProfileServices.makeInformer).reduce(_:_:),
                                 handleEffect: self.handleEffect(_:_:))
                         }
                         return nil
@@ -165,12 +167,43 @@ private extension ControlPanelEffectHandler {
                     ),  self.card.navigationTitleForControlPanel))
                 }
             }
+            
+        case let .saveLimits(limits):
+            
+            productProfileServices.createChangeSVCardLimit.сhangeSVCardLimits(payloads: limits.payloads(card.cardId)) {
+                
+                if case let .some(text) = $0 {
+                    dispatch(.delayAlert(text))
+                } else {
+                    dispatch(.informer("Лимиты установлены"))
+                }
+            }
         }
     }
 
     typealias LimitsEvent = ListHorizontalRectangleLimitsEvent
     typealias LimitsEffect = ListHorizontalRectangleLimitsEffect
     typealias LimitsDispatch = (LimitsEvent) -> Void
+}
+
+private extension ChangeSVCardLimitPayload {
+    
+    init(
+        _ cardId: Int,
+        _ data: BlockHorizontalRectangularEvent.Limit
+    ) {
+        self.init(cardId: cardId, limit: .init(name: data.id, value: data.value))
+    }
+}
+
+private extension Array where Element ==  BlockHorizontalRectangularEvent.Limit {
+    
+    func payloads(_ cardId: ProductData.ID) -> [ChangeSVCardLimitPayload] {
+        
+        map {
+            .init(cardId, $0)
+        }
+    }
 }
 
 private extension UILanding.List.HorizontalRectangleLimits {

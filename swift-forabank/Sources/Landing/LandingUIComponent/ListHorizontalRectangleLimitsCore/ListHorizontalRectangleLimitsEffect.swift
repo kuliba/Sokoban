@@ -10,4 +10,5 @@ import Foundation
 public enum ListHorizontalRectangleLimitsEffect: Equatable {
     
     case loadSVCardLanding
+    case saveLimits([BlockHorizontalRectangularEvent.Limit])
 }

@@ -10,7 +10,13 @@ import UIPrimitives
 
 public final class ListHorizontalRectangleLimitsReducer {
     
-    public init() {}
+    let makeInformer: (String) -> Void
+    
+    public init(
+        makeInformer: @escaping (String) -> Void
+    ) {
+        self.makeInformer = makeInformer
+    }
 }
 
 public extension ListHorizontalRectangleLimitsReducer {
@@ -48,9 +54,18 @@ public extension ListHorizontalRectangleLimitsReducer {
             if let landingViewModel {
                 state.destination = .settingsView(landingViewModel, subTitle)
             }
+        
+        case let .saveLimits(limits):
+            effect = .saveLimits(limits)
             
         case .dismissDestination:
             state.destination = nil
+            
+        case let .delayAlert(message):
+            state.alert = .updateLimitsError(message)
+            
+        case let .informer(message):
+            makeInformer(message)
         }
         
         return (state, effect)

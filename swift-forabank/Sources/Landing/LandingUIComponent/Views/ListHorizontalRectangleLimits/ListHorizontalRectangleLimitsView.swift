@@ -54,7 +54,17 @@ struct ListHorizontalRectangleLimitsView: View {
 
                 LandingWrapperView(viewModel: viewModel)
                     .frame(maxHeight: .infinity)
-                Button(action: { /* TODO: add save action */ }) {
+                    .alert(
+                        item: .init(
+                            get: { state.alert?.text },
+                            set: { _ in }
+                        ),
+                        content: {
+                                Alert.init(title: Text($0))
+                            }                        
+                    )
+
+                Button(action: { event(.saveLimits([])) }) {
                     ZStack {
                         Color(red: 255/255, green: 54/255, blue: 54/255)
                         Text("Сохранить")
