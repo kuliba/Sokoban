@@ -266,7 +266,7 @@ extension View {
                 }
                 
                 let result = width
-                if service == data.last! {
+                if service == data.last {
                     width = 0
                 } else {
                     width -= dimension.width
@@ -275,7 +275,7 @@ extension View {
             })
             .alignmentGuide(.top, computeValue: { _ in
                 let result = height
-                if service == data.last! {
+                if service == data.last {
                     height = 0
                 }
                 return result
