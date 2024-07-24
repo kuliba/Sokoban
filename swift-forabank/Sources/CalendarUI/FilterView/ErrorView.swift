@@ -12,27 +12,15 @@ import SharedConfigs
 public struct ErrorView: View {
     
     let icon: () -> Image
-    let title: String
     let config: Config
     
     public var body: some View {
         
-        HStack {
+        VStack(spacing: 24) {
             
-            Spacer()
+            icon()
             
-            VStack(spacing: 24) {
-                
-                Spacer()
-                
-                icon()
-                
-                config.title.text(withConfig: config.titleConfig)
-                
-                Spacer()
-            }
-            
-            Spacer()
+            config.title.text(withConfig: config.titleConfig)
         }
     }
 }
@@ -52,4 +40,20 @@ public extension ErrorView {
             self.titleConfig = titleConfig
         }
     }
+}
+
+#Preview {
+    
+    ErrorView(
+        icon: {
+            return .init(systemName: "slider.horizontal.2.square")
+        },
+        config: .init(
+            title: "Ошибка",
+            titleConfig: .init(
+                textFont: .body,
+                textColor: .red
+            )
+        )
+    )
 }
