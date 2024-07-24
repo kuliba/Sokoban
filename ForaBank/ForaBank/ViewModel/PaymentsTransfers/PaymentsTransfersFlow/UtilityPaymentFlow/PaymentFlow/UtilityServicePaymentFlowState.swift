@@ -10,7 +10,7 @@ import Combine
 struct UtilityServicePaymentFlowState<ViewModel> {
     
     let viewModel: ViewModel
-    let subscription: AnyCancellable
+    private let subscription: AnyCancellable
     var alert: Alert?
     var fullScreenCover: FullScreenCover?
     var modal: Modal?
