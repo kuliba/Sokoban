@@ -48,7 +48,7 @@ extension Array where Element == PaymentProviderSegment {
     }
 }
 
-private extension PaymentProviderSegment.Provider {
+extension PaymentProviderSegment.Provider {
     
     init(_ provider: SegmentedPaymentProvider) {
         

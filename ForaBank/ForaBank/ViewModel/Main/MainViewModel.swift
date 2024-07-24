@@ -208,7 +208,32 @@ extension MainViewModel {
         bind(qrScannerModel)
         self.route.modal = .fullScreenSheet(.init(type: .qrScanner(qrScannerModel)))
     }
+    
+    func dismissProviderServicePicker() {
+        
+        guard case .paymentProviderPicker = route.destination
+        else { return }
+        
+        route.destination = nil
+        openScanner()
+    }
 
+    func dismissPaymentProviderPickerDestination() {
+        
+        guard case let .paymentProviderPicker(providers, _) = route.destination
+        else { return }
+        
+        route.destination = .paymentProviderPicker(providers, destination: nil)
+    }
+    
+    func select(
+        provider: PaymentProviderSegment.Provider
+    ) {
+        guard case let .paymentProviderPicker(providers, _) = route.destination
+        else { return }
+        
+        route.destination = .paymentProviderPicker(providers, destination: provider)
+    }
 }
 
 private extension MainViewModel {
@@ -890,21 +915,18 @@ extension MainViewModel {
         _ qr: QRCode,
         _ qrMapping: QRMapping
     ) {
-        let operators = model.operatorsFromQR(qr, qrMapping)
-        let multipleOperators = MultiElementArray(operators ?? [])
+        let providers = model.segmentedPaymentProviders(matching: qr, mapping: qrMapping)
+        let multipleProviders = MultiElementArray(providers ?? [])
         
-        switch (multipleOperators, operators?.first) {
-        case let (_, .some(`operator`)):
-            payWith(operator: `operator`, qr: qr, qrMapping: qrMapping)
+        switch (multipleProviders, providers?.first) {
+        case (_, .none):
+            handleUnknownQR()
             
-        case let (.some(multipleOperators), _):
-            DispatchQueue.main.delay(for:.milliseconds(700)) { [weak self] in
-                
-                self?.searchOperators(multipleOperators, with: qr)
-            }
+        case let (.none, .some(provider)):
+            route.destination = .providerServicePicker(.init(provider))
             
-        default:
-            self.action.send(MainViewModelAction.Show.Requisites(qrCode: qr))
+        case let (.some(providers), _):
+            route.destination = .paymentProviderPicker(providers, destination: nil)
         }
     }
     
@@ -1380,6 +1402,8 @@ extension MainViewModel {
         case landing(LandingWrapperViewModel)
         case orderSticker(LandingWrapperViewModel)
         case paymentSticker
+        case providerServicePicker(PaymentProviderSegment.Provider)
+        case paymentProviderPicker(MultiElementArray<SegmentedPaymentProvider>, destination: PaymentProviderSegment.Provider?)
         
         var id: Case {
             
@@ -1424,6 +1448,10 @@ extension MainViewModel {
                 return .paymentSticker
             case .sberQRPayment:
                 return .sberQRPayment
+            case .providerServicePicker:
+                return .providerServicePicker
+            case .paymentProviderPicker:
+                return .providerPicker
             }
         }
         
@@ -1449,6 +1477,8 @@ extension MainViewModel {
             case landing
             case orderSticker
             case sberQRPayment
+            case providerServicePicker
+            case providerPicker
         }
     }
     
