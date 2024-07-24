@@ -10,17 +10,17 @@ import SwiftUI
 
 public struct FilterConfig {
     
-    let periodTitle: FilterView.TitleView.Config
-    let transferTitle: FilterView.TitleView.Config
-    let categoriesTitle: FilterView.TitleView.Config
+    let periodTitle: TitleConfig
+    let transferTitle: TitleConfig
+    let categoriesTitle: TitleConfig
     let button: ButtonConfig
     let buttonsContainerConfig: ButtonsContainer.Config
     let errorConfig: ErrorConfig
     
     public init(
-        periodTitle: FilterView.TitleView.Config,
-        transferTitle: FilterView.TitleView.Config,
-        categoriesTitle: FilterView.TitleView.Config,
+        periodTitle: TitleConfig,
+        transferTitle: TitleConfig,
+        categoriesTitle: TitleConfig,
         button: ButtonConfig,
         buttonsContainerConfig: ButtonsContainer.Config,
         errorConfig: ErrorConfig

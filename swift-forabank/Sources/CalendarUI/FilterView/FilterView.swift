@@ -47,7 +47,8 @@ public struct FilterView: View {
                 .font(.system(size: 18))
                 .padding(.bottom, 10)
             
-            TitleView(config: config.periodTitle)
+            config.periodTitle.title.text(withConfig: config.periodTitle.titleConfig)
+                .padding(.bottom, 5)
             
             PeriodContainer(
                 periods: state.periods,
@@ -56,7 +57,8 @@ public struct FilterView: View {
             
             if !state.services.isEmpty {
                 
-                TitleView(config: config.transferTitle)
+                config.transferTitle.title.text(withConfig: config.transferTitle.titleConfig)
+                    .padding(.bottom, 5)
                 
                 TransactionContainer(
                     transactions: state.transactions,
@@ -64,7 +66,8 @@ public struct FilterView: View {
                     config: config
                 )
                 
-                TitleView(config: config.categoriesTitle)
+                config.categoriesTitle.title.text(withConfig: config.categoriesTitle.titleConfig)
+                    .padding(.bottom, 5)
                 
                 FlexibleContainerButtons(
                     data: state.services,
@@ -323,31 +326,17 @@ struct ServiceButton: View {
     }
 }
 
-public extension FilterView {
+public struct TitleConfig {
     
-    struct TitleView: View {
-        
-        let config: Config
-        
-        public var body: some View {
-            
-            config.title.text(withConfig: config.titleConfig)
-                .padding(.bottom, 5)
-        }
-        
-        public struct Config {
-            
-            let title: String
-            let titleConfig: TextConfig
-            
-            public init(
-                title: String,
-                titleConfig: TextConfig
-            ) {
-                self.title = title
-                self.titleConfig = titleConfig
-            }
-        }
+    let title: String
+    let titleConfig: TextConfig
+    
+    public init(
+        title: String,
+        titleConfig: TextConfig
+    ) {
+        self.title = title
+        self.titleConfig = titleConfig
     }
 }
 
