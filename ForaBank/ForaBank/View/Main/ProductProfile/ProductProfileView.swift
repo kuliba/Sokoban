@@ -216,6 +216,16 @@ struct ProductProfileView: View {
                             title: "Нет подходящих операций. \n Попробуйте изменить параметры фильтра",
                             titleConfig: .init(textFont: .system(size: 16), textColor: .gray))
                         ),
+                        makeButtonsContainer: {
+                            .init(
+                                dismissAction: { self.viewModel.historyState = nil },
+                                clearOptionsAction: { print(self.viewModel.historyState) },
+                                config: .init(
+                                    clearButtonTitle: "Очистить",
+                                    applyButtonTitle: "Применить"
+                                )
+                            )
+                        },
                         clearOptionsAction: {},
                         dismissAction: { self.viewModel.sheet = nil}
                     )

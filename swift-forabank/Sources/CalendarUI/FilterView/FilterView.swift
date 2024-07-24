@@ -19,6 +19,7 @@ public struct FilterView: View {
     let event: (Event) -> Void
     let config: Config
     
+    let makeButtonsContainer: () -> ButtonsContainer
     let clearOptionsAction: () -> Void
     let dismissAction: () -> Void
     
@@ -26,12 +27,14 @@ public struct FilterView: View {
         state: State,
         event: @escaping (Event) -> Void,
         config: Config,
+        makeButtonsContainer: @escaping () -> ButtonsContainer,
         clearOptionsAction: @escaping () -> Void,
         dismissAction: @escaping () -> Void
     ) {
         self.state = state
         self.event = event
         self.config = config
+        self.makeButtonsContainer = makeButtonsContainer
         self.clearOptionsAction = clearOptionsAction
         self.dismissAction = dismissAction
     }
@@ -78,11 +81,7 @@ public struct FilterView: View {
             
             Spacer()
             
-            ButtonsContainer(
-                dismissAction: dismissAction,
-                clearOptionsAction: clearOptionsAction,
-                config: config.buttonsContainerConfig
-            )
+            makeButtonsContainer()
         }
         .padding()
     }
@@ -152,6 +151,16 @@ public struct ButtonsContainer: View {
     let clearOptionsAction: () -> Void
     
     let config: Config
+    
+    public init(
+        dismissAction: @escaping () -> Void,
+        clearOptionsAction: @escaping () -> Void,
+        config: Config
+    ) {
+        self.dismissAction = dismissAction
+        self.clearOptionsAction = clearOptionsAction
+        self.config = config
+    }
     
     public var body: some View {
         
@@ -372,6 +381,16 @@ struct FilterView_Previews: PreviewProvider {
                         title: "Нет подходящих операций. \n Попробуйте изменить параметры фильтра",
                         titleConfig: .init(textFont: .system(size: 16), textColor: .gray)
                     )),
+                makeButtonsContainer: {
+                    .init(
+                        dismissAction: {},
+                        clearOptionsAction: {},
+                        config: .init(
+                            clearButtonTitle: "Очистить",
+                            applyButtonTitle: "Применить"
+                        )
+                    )
+                },
                 clearOptionsAction: {},
                 dismissAction: {}
             )
