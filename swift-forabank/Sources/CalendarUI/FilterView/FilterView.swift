@@ -172,7 +172,6 @@ public struct ButtonsContainer: View {
                     background: .red,
                     foreground: .white
                 ))
-            
         }
     }
     
@@ -188,7 +187,6 @@ public struct ButtonsContainer: View {
             self.clearButtonTitle = clearButtonTitle
             self.applyButtonTitle = applyButtonTitle
         }
-        
     }
 }
 
@@ -230,7 +228,7 @@ struct FlexibleContainerButtons: View {
     
     var body: some View {
         
-        return GeometryReader { geometry in
+        GeometryReader { geometry in
             
             ZStack(alignment: .topLeading) {
                 
