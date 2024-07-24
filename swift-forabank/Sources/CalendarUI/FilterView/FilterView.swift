@@ -9,12 +9,11 @@
 import SwiftUI
 import SharedConfigs
 
-public typealias Event = FilterEvent
-public  typealias Config = FilterConfig
-
 public struct FilterView: View {
     
     public typealias State = FilterState
+    public typealias Event = FilterEvent
+    public  typealias Config = FilterConfig
     
     var state: State
     let event: (Event) -> Void
@@ -47,52 +46,33 @@ public struct FilterView: View {
             
             TitleView(config: config.periodTitle)
             
-            HStack {
-                
-                ForEach(state.periods, id: \.self) { period in
-                    
-                    Button(action: { event(.selectedPeriod(period)) }) {
-                        
-                        Text(period)
-                            .padding()
-                            .background(state.selectedPeriod == period ? Color.black : .gray.opacity(0.2))
-                            .foregroundColor(state.selectedPeriod == period ? Color.white : Color.black)
-                            .frame(height: 32)
-                            .cornerRadius(90)
-                    }
-                }
-            }
-            .padding(.bottom, 20)
+            PeriodContainer(
+                periods: state.periods,
+                event: { event in  }
+            )
             
             if !state.services.isEmpty {
                 
                 TitleView(config: config.transferTitle)
                 
-                HStack {
-                    
-                    ForEach(state.transactions, id: \.self) { transaction in
-                        
-                        Button(action: { event(.selectedTransaction(transaction)) }) {
-                            
-                            Text(transaction)
-                                .padding()
-                                .background(state.selectedTransaction == transaction ? config.button.selectBackgroundColor : config.button.notSelectedBackgroundColor)
-                                .foregroundColor(state.selectedTransaction == transaction ? config.button.notSelectedBackgroundColor : config.button.selectForegroundColor)
-                            
-                                .frame(height: 32)
-                                .cornerRadius(90)
-                        }
-                    }
-                }
-                .padding(.bottom, 20)
+                TransactionContainer(
+                    transactions: state.transactions,
+                    event: { event in },
+                    config: config
+                )
                 
                 TitleView(config: config.categoriesTitle)
                 
-                WrapView(
+                FlexibleContainerButtons(
                     data: state.services,
                     selectedItems: state.selectedServices,
                     serviceButtonTapped: {},
-                    config: .init(title: "", titleConfig: .init(textFont: .callout, textColor: .red))
+                    config: .init(
+                        title: "",
+                        titleConfig: .init(
+                            textFont: .callout,
+                            textColor: .red
+                        ))
                 )
             }
             
@@ -105,6 +85,64 @@ public struct FilterView: View {
             )
         }
         .padding()
+    }
+}
+
+extension FilterView {
+    
+    struct PeriodContainer: View {
+        
+        let periods: [String]
+        var selectedPeriod = "Месяц"
+        let event: (Event) -> Void
+        
+        var body: some View {
+            HStack {
+                
+                ForEach(periods, id: \.self) { period in
+                    
+                    Button(action: { event(.selectedPeriod(period)) }) {
+                        
+                        Text(period)
+                            .padding()
+                            .background(selectedPeriod == period ? Color.black : .gray.opacity(0.2))
+                            .foregroundColor(selectedPeriod == period ? Color.white : Color.black)
+                            .frame(height: 32)
+                            .cornerRadius(90)
+                    }
+                }
+            }
+            .padding(.bottom, 20)
+        }
+    }
+    
+    struct TransactionContainer: View {
+        
+        let transactions: [String]
+        var selectedTransaction = ""
+        let event: (Event) -> Void
+        let config: Config
+        
+        var body: some View {
+            
+            HStack {
+                
+                ForEach(transactions, id: \.self) { transaction in
+                    
+                    Button(action: { event(.selectedTransaction(transaction)) }) {
+                        
+                        Text(transaction)
+                            .padding()
+                            .background(selectedTransaction == transaction ? config.button.selectBackgroundColor : config.button.notSelectedBackgroundColor)
+                            .foregroundColor(selectedTransaction == transaction ? config.button.notSelectedBackgroundColor : config.button.selectForegroundColor)
+                        
+                            .frame(height: 32)
+                            .cornerRadius(90)
+                    }
+                }
+            }
+            .padding(.bottom, 20)
+        }
     }
 }
 
@@ -183,7 +221,7 @@ struct BottomButton: View {
     }
 }
 
-struct WrapView: View {
+struct FlexibleContainerButtons: View {
     
     let data: [String]
     var selectedItems: Set<String>
