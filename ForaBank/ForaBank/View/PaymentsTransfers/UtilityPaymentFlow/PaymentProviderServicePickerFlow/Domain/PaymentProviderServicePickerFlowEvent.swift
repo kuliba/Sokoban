@@ -7,7 +7,7 @@
 
 enum PaymentProviderServicePickerFlowEvent {
     
-    case dismissPaymentByInstruction
+    case dismissDestination
     case payByInstructionTap
     case payByInstruction(PaymentsViewModel)
 }

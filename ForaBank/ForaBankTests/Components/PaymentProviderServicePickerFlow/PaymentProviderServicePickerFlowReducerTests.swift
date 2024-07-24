@@ -10,24 +10,24 @@ import XCTest
 
 final class PaymentProviderServicePickerFlowReducerTests: XCTestCase {
     
-    // MARK: - dismissPaymentByInstruction
+    // MARK: - dismissDestination
     
-    func test_dismissPaymentByInstruction_shouldNotChangePaymentDestination() {
+    func test_dismissDestination_shouldResetPaymentDestination() {
         
         let (state, effect) = makeSUT().reduce(
             makeState(destination: .payment(makeTransaction())),
-            .dismissPaymentByInstruction
+            .dismissDestination
         )
         
-        XCTAssertNotNil(state.destination)
+        XCTAssertNil(state.destination)
         XCTAssertNil(effect)
     }
     
-    func test_dismissPaymentByInstruction_shouldResetDestination() {
+    func test_dismissDestination_shouldResetPaymentByInstructionDestination() {
         
         let (state, effect) = makeSUT().reduce(
             makeState(destination: .paymentByInstruction(makePaymentsViewModel())),
-            .dismissPaymentByInstruction
+            .dismissDestination
         )
         
         XCTAssertNil(state.destination)

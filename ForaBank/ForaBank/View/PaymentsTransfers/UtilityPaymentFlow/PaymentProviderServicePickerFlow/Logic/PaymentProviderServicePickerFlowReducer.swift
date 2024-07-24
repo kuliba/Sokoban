@@ -18,10 +18,7 @@ extension PaymentProviderServicePickerFlowReducer {
         var effect: Effect?
         
         switch event {
-        case .dismissPaymentByInstruction:
-            guard case .paymentByInstruction = state.destination
-            else { break }
-            
+        case .dismissDestination:
             state.destination = nil
             
         case .payByInstructionTap:
