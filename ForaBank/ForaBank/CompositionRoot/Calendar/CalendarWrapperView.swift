@@ -57,7 +57,17 @@ private extension CalendarWrapperView {
     }
     
     func calendarView() -> some View {
-        CalendarView(selectedDate: nil, selectedRange: $selectedRange, configBuilder: configureCalendar)
+        
+        CalendarView(
+            selectedDate: nil,
+            selectedRange: $selectedRange,
+            configBuilder: { config in
+                
+                config
+                     .dayView(RangeSelector.init)
+         //            .scrollTo(date: .now)
+            }
+        )
     }
     
     func bottomView() -> some View {
@@ -81,16 +91,6 @@ private extension CalendarWrapperView {
                 .font(.system(size: 18))
                 .clipShape(.rect(cornerRadius: 12))
         }
-    }
-}
-
-private extension CalendarWrapperView {
-    
-    func configureCalendar(_ config: CalendarConfig) -> CalendarConfig {
-       
-        config
-            .dayView(RangeSelector.init)
-//            .scrollTo(date: .now)
     }
 }
 
