@@ -679,6 +679,8 @@
 		2A4300902C521FCE002FF8C7 /* ServicePaymentFlowReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A43008F2C521FCE002FF8C7 /* ServicePaymentFlowReducerTests.swift */; };
 		2A4300922C5229AF002FF8C7 /* ServicePaymentFlowEffectHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4300912C5229AF002FF8C7 /* ServicePaymentFlowEffectHandlerTests.swift */; };
 		2A4300942C522A45002FF8C7 /* ServicePaymentFlowEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4300932C522A45002FF8C7 /* ServicePaymentFlowEffectHandler.swift */; };
+		2A43009D2C524CA1002FF8C7 /* _AnywayTransactionViewModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A43009C2C524CA1002FF8C7 /* _AnywayTransactionViewModelComposer.swift */; };
+		2A43009F2C524F72002FF8C7 /* AnywayElementModelMapperComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A43009E2C524F72002FF8C7 /* AnywayElementModelMapperComposer.swift */; };
 		2A44B6782AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44B6772AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift */; };
 		2A44CBD22B68EB2100158D42 /* UserAccountEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44CBD12B68EB2100158D42 /* UserAccountEvent.swift */; };
 		2A44CBD62B68F01700158D42 /* UserAccountRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44CBD52B68F01700158D42 /* UserAccountRoute.swift */; };
@@ -3824,6 +3826,8 @@
 		2A43008F2C521FCE002FF8C7 /* ServicePaymentFlowReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePaymentFlowReducerTests.swift; sourceTree = "<group>"; };
 		2A4300912C5229AF002FF8C7 /* ServicePaymentFlowEffectHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePaymentFlowEffectHandlerTests.swift; sourceTree = "<group>"; };
 		2A4300932C522A45002FF8C7 /* ServicePaymentFlowEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePaymentFlowEffectHandler.swift; sourceTree = "<group>"; };
+		2A43009C2C524CA1002FF8C7 /* _AnywayTransactionViewModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _AnywayTransactionViewModelComposer.swift; sourceTree = "<group>"; };
+		2A43009E2C524F72002FF8C7 /* AnywayElementModelMapperComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayElementModelMapperComposer.swift; sourceTree = "<group>"; };
 		2A44B6772AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeAuthWithPublicKeyServiceTests.swift"; sourceTree = "<group>"; };
 		2A44CBD12B68EB2100158D42 /* UserAccountEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountEvent.swift; sourceTree = "<group>"; };
 		2A44CBD52B68F01700158D42 /* UserAccountRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountRoute.swift; sourceTree = "<group>"; };
@@ -10806,6 +10810,8 @@
 				2AA3A0F42BF3E7C100B1D104 /* PaymentsTransfersFlowReducerFactoryComposer.swift */,
 				2A4300762C518BE3002FF8C7 /* UtilityPaymentStateComposer.swift */,
 				2AA619522C16BD8000043997 /* AnywayTransactionViewModelComposer.swift */,
+				2A43009C2C524CA1002FF8C7 /* _AnywayTransactionViewModelComposer.swift */,
+				2A43009E2C524F72002FF8C7 /* AnywayElementModelMapperComposer.swift */,
 				2A1DE2CA2C5135550091B99C /* PaymentProviderServicePickerFlowModelComposer.swift */,
 				2A840C0C2C37437B00BA6887 /* Templates */,
 				2A9BD5142B85F04100B88395 /* UtilityPayments */,
@@ -19076,6 +19082,7 @@
 				2A5B23152BEE05E300270D50 /* UtilityPaymentFlowView.swift in Sources */,
 				774A8B2D2865FC6F00B81140 /* MyProductsSectionViewModel.swift in Sources */,
 				2AB197AA2B24A93E00F0F87B /* RequestFactory+createCreateSberQRPaymentRequest.swift in Sources */,
+				2A43009F2C524F72002FF8C7 /* AnywayElementModelMapperComposer.swift in Sources */,
 				770DCE9827BC0475004099C1 /* AuthPinCodeViewModel+Preview.swift in Sources */,
 				ED84995926A8831E005205C6 /* EPContactCell.swift in Sources */,
 				2AECBC442BEBACF9000B0C0E /* PaymentsTransfersFlowReducer.swift in Sources */,
@@ -19099,6 +19106,7 @@
 				2A0D9B862B0E2C6100F1DFD1 /* RootViewModelFactory+makeDocumentButton.swift in Sources */,
 				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
 				68FB358B2760C1C80097AECE /* AntifraudView.swift in Sources */,
+				2A43009D2C524CA1002FF8C7 /* _AnywayTransactionViewModelComposer.swift in Sources */,
 				777460F32922C5BA00D3FF46 /* ContactsLatestPaymentsSectionViewModel.swift in Sources */,
 				68ECC2BE285C693500A95CE8 /* CountryPaymentView+Legacy.swift in Sources */,
 				0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */,
