@@ -12,12 +12,29 @@ enum ServicePaymentFlowState: Equatable {
     case fraud(FraudNoticePayload)
     case fullScreenCover(FullScreenCover)
     case terminated
-    
-    typealias Alert = UtilityServicePaymentFlowState.Alert
-    typealias FullScreenCover = UtilityServicePaymentFlowState.FullScreenCover
 }
 
 extension ServicePaymentFlowState {
+
+    enum Alert: Equatable {
+        
+        case paymentRestartConfirmation
+        case serverError(String)
+        case terminalError(String)
+    }
+    
+    enum FullScreenCover: Equatable {
+        
+        case completed(TransactionResult)
+        
+        typealias TransactionResult = Result<AnywayTransactionReport, Fraud>
+        
+        struct Fraud: Equatable, Error {
+            
+            let formattedAmount: String
+            let hasExpired: Bool
+        }
+    }
     
     var alert: Alert? {
         
