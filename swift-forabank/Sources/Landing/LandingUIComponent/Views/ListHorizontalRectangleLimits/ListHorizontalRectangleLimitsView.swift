@@ -42,7 +42,7 @@ struct ListHorizontalRectangleLimitsView: View {
     ) -> some View {
         
         switch destination {
-        case let .settingsView(viewModel, subtitle, type, limits):
+        case let .settingsView(viewModel, subtitle, limitType):
             
             VStack {
                 NavigationBar(
@@ -61,19 +61,21 @@ struct ListHorizontalRectangleLimitsView: View {
                         ),
                         content: alertContent
                     )
-
-                Button(action: { event(.saveLimits([])) }) {
-                    ZStack {
-                        Color(red: 255/255, green: 54/255, blue: 54/255)
-                        Text("Сохранить")
-                            .padding()
+                
+                if state.editEnableFor(limitType) {
+                    Button(action: { event(.saveLimits([])) }) { // TODO: add real values for save
+                        ZStack {
+                            Color(red: 255/255, green: 54/255, blue: 54/255)
+                            Text("Сохранить")
+                                .padding()
+                        }
                     }
+                    .foregroundColor(.white)
+                    .cornerRadius(config.cornerRadius)
+                    .frame(height: 56)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, config.paddings.vertical)
                 }
-                .foregroundColor(.white)
-                .cornerRadius(config.cornerRadius)
-                .frame(height: 56)
-                .padding(.horizontal, 16)
-                .padding(.vertical, config.paddings.vertical)
             }
             .navigationBarTitle("")
             .navigationBarHidden(true)

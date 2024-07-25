@@ -45,7 +45,7 @@ public extension ListHorizontalRectangleLimitsReducer {
             
         case let .buttonTapped(info):
             switch info.action {
-            case "changeLimit":
+            case "changeLimit", "viewLimit":
                // state.limitsLoadingStatus = .inflight(.loadingSettingsLimits)
                 effect = .loadSVCardLanding(info.limitType)
                 
@@ -59,7 +59,7 @@ public extension ListHorizontalRectangleLimitsReducer {
                 
                 landingViewModel.updateCardLimitsInfo(.init(type: limitType, svCardLimits: state.limitsInfo))
                 
-                state.destination = .settingsView(landingViewModel, subTitle, limitType, state.limitsInfo)
+                state.destination = .settingsView(landingViewModel, subTitle, limitType)
             }
         
         case let .saveLimits(limits):
