@@ -566,13 +566,17 @@ private extension ProductStatementData {
 struct ProductProfileHistoryView: View {
     
     @ObservedObject var viewModel: ProductProfileHistoryView.ViewModel
+    let makeHistoryButton: () -> HistoryButtonView?
     
     var body: some View {
         
         VStack {
             
-            HeaderView(viewModel: viewModel.header)
-                .padding(.bottom, 15)
+            HeaderView(
+                viewModel: viewModel.header,
+                makeHistoryButton: makeHistoryButton
+            )
+            .padding(.bottom, 15)
             
             switch viewModel.content {
             case .empty(let emptyListViewModel):
@@ -605,15 +609,18 @@ extension ProductProfileHistoryView {
     struct HeaderView: View {
         
         let viewModel: ProductProfileHistoryView.ViewModel.HeaderViewModel
-        
+        let makeHistoryButton: () -> HistoryButtonView?
+
         var body: some View {
             
             HStack(alignment: .center) {
                 
                 Text(viewModel.title)
                     .font(Font.system(size: 22, weight: .bold))
-                
+                                
                 Spacer()
+                
+                makeHistoryButton()
                 
                 // temporally off
                 /*
@@ -901,28 +908,32 @@ struct HistoryViewComponent_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            
-            ProductProfileHistoryView(viewModel: .sample)
-                .previewLayout(.fixed(width: 375, height: 500))
-            
-            ProductProfileHistoryView(viewModel: .sampleSecond)
-                .previewLayout(.fixed(width: 375, height: 400))
-            
-            ProductProfileHistoryView.EmptyListView(viewModel: .init())
-                .previewLayout(.fixed(width: 375, height: 300))
-            
-            ProductProfileHistoryView.LoadingView()
-                .padding(.horizontal, 20)
-                .previewLayout(.fixed(width: 375, height: 400))
-            
-            ProductProfileHistoryView.EldestUpdateFailView(viewModel: .sample)
-                .padding(.horizontal, 20)
-                .previewLayout(.fixed(width: 375, height: 80))
-            
-            ProductProfileHistoryView.LoadingItemView()
-                .padding(.horizontal, 20)
-                .previewLayout(.fixed(width: 375, height: 120))
-            
+//            
+//            ProductProfileHistoryView(viewModel: .sample, makeHistoryButton: { event in
+//            
+//                    .init(event: { event in })
+//                
+//            })
+//            .previewLayout(.fixed(width: 375, height: 500))
+//            
+//            ProductProfileHistoryView(viewModel: .sampleSecond)
+//                .previewLayout(.fixed(width: 375, height: 400))
+//            
+//            ProductProfileHistoryView.EmptyListView(viewModel: .init())
+//                .previewLayout(.fixed(width: 375, height: 300))
+//            
+//            ProductProfileHistoryView.LoadingView()
+//                .padding(.horizontal, 20)
+//                .previewLayout(.fixed(width: 375, height: 400))
+//            
+//            ProductProfileHistoryView.EldestUpdateFailView(viewModel: .sample)
+//                .padding(.horizontal, 20)
+//                .previewLayout(.fixed(width: 375, height: 80))
+//            
+//            ProductProfileHistoryView.LoadingItemView()
+//                .padding(.horizontal, 20)
+//                .previewLayout(.fixed(width: 375, height: 120))
+//            
         }
     }
 }

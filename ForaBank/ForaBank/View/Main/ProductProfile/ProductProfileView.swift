@@ -82,21 +82,12 @@ struct ProductProfileView: View {
                             
                             if let historyViewModel = viewModel.history {
                                 
-                                productProfileViewFactory.makeHistoryButton {
-                                    viewModel.event(.history($0))
-                                }
-                                
-                                if let selectedDate = viewModel.historyState?.date?.description {
-                                    
-                                    Text(selectedDate)
-                                }
-                                
-                                if let filters = viewModel.historyState?.filters.map({ $0.description }) {
-                                    
-                                    Text(filters)
-                                }
-                                
-                                ProductProfileHistoryView(viewModel: historyViewModel)
+                                ProductProfileHistoryView(
+                                    viewModel: historyViewModel,
+                                    makeHistoryButton: {  productProfileViewFactory.makeHistoryButton {
+                                        viewModel.event(.history($0))
+                                    }}
+                                )
                             }
                         }
                     }
@@ -199,7 +190,7 @@ struct ProductProfileView: View {
                             transactions: ["Списание", "Пополнение"],
                             services: []
                         ),
-                        event: { _ in },
+                        event: { event in  },
                         config: .init(
                             periodTitle: .init(title: "Период", titleConfig: .init(textFont: .body, textColor: .black)),
                             transferTitle: .init(title: "Движение средств", titleConfig: .init(textFont: .body, textColor: .black)),
