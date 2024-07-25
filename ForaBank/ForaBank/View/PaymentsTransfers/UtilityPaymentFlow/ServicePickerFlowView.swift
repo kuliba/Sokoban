@@ -53,9 +53,8 @@ extension ServicePickerFlowView {
     
     typealias Destination = State.Destination
     
-    typealias PaymentViewModel = AnywayTransactionViewModel
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, UtilityPrepaymentViewModel, PaymentViewModel>
-    typealias State = UtilityServicePickerFlowState<Operator, Service, PaymentViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, UtilityPrepaymentViewModel>
+    typealias State = UtilityServicePickerFlowState<Operator, Service>
 
     typealias Event = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
 }

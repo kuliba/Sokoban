@@ -448,11 +448,9 @@ extension PaymentsTransfersViewModel {
         case sberQRPayment(SberQRConfirmPaymentViewModel)
         case openDepositsList(OpenDepositListViewModel)
         case utilityPayment(UtilityFlowState)
-        case servicePayment(ServicePaymentState)
+        case servicePayment(UtilityServicePaymentFlowState)
         
-        typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel, AnywayTransactionViewModel>
-        
-       typealias ServicePaymentState = UtilityServicePaymentFlowState<AnywayTransactionViewModel>
+        typealias UtilityFlowState = UtilityPaymentFlowState<UtilityPaymentOperator, UtilityService, UtilityPrepaymentViewModel>
     }
     
     struct FullScreenSheet: Identifiable, Equatable {

@@ -232,8 +232,31 @@ extension MainViewModel {
         guard case let .paymentProviderPicker(providers, _) = route.destination
         else { return }
         
-        let pickerModel = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel(provider)
+        let pickerModel = makeServicePicker(with: provider)
         route.destination = .paymentProviderPicker(providers, destination: pickerModel)
+    }
+    
+    private func makeServicePicker(
+        with provider: PaymentProviderSegment.Provider
+    ) -> PaymentProviderServicePickerFlowModel {
+        
+        let pickerModel = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel(provider)
+
+        pickerModel.$state
+            .map(\.isContentLoading)
+            .debounce(for: 0.3, scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isContentLoading in
+                
+                if isContentLoading {
+                    self?.rootActions?.spinner.show()
+                } else {
+                    self?.rootActions?.spinner.hide()
+                }
+            }
+            .store(in: &bindings)
+        
+        return pickerModel
     }
 }
 
@@ -924,7 +947,7 @@ extension MainViewModel {
             handleUnknownQR()
             
         case let (.none, .some(provider)):
-            let pickerModel = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel(.init(provider))
+            let pickerModel = makeServicePicker(with: .init(provider))
             route.destination = .providerServicePicker(pickerModel)
             
         case let (.some(providers), _):

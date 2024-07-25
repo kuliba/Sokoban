@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 08.05.2024.
 //
 
-struct UtilityPaymentFlowState<Operator, UtilityService, Content, PaymentViewModel> {
+struct UtilityPaymentFlowState<Operator, UtilityService, Content> {
     
     var alert: Alert?
     let content: Content
@@ -31,6 +31,6 @@ extension UtilityPaymentFlowState.Destination {
     
     typealias OperatorFailure = SberOperatorFailureFlowState<Operator>
     typealias PayByInstructionsViewModel = PaymentsViewModel
-    typealias Payment = UtilityServicePaymentFlowState<PaymentViewModel>
-    typealias ServicePickerState = UtilityServicePickerFlowState<Operator, UtilityService, PaymentViewModel>
+    typealias Payment = UtilityServicePaymentFlowState
+    typealias ServicePickerState = UtilityServicePickerFlowState<Operator, UtilityService>
 }

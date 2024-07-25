@@ -305,7 +305,7 @@ extension PaymentsTransfersView {
                 )
             
         case let .servicePayment(state):
-            let payload = state.viewModel.state.transaction.context.outline.payload
+            let payload = state.content.state.transaction.context.outline.payload
             let operatorIconView = viewFactory.makeIconView(
                 payload.icon.map { .md5Hash(.init($0)) }
             )
@@ -534,7 +534,7 @@ private extension PaymentsTransfersView {
             payByInstructionsView(paymentsViewModel)
             
         case let .payment(state):
-            let payload = state.viewModel.state.transaction.context.outline.payload
+            let payload = state.content.state.transaction.context.outline.payload
             let operatorIconView = viewFactory.makeIconView(
                 payload.icon.map { .md5Hash(.init($0)) }
             )
@@ -605,18 +605,18 @@ private extension PaymentsTransfersView {
     
     @ViewBuilder
     func paymentFlowView(
-        state: UtilityServiceFlowState,
+        state: UtilityServicePaymentFlowState,
         event: @escaping (UtilityServicePaymentFlowEvent) -> Void
     ) -> some View {
         
-        let transactionEvent = { state.viewModel.event($0) }
+        let transactionEvent = { state.content.event($0) }
         
         let factory = viewFactory.makeAnywayPaymentFactory {
             
             transactionEvent(.payment($0))
         }
         
-        AnywayTransactionStateWrapperView(viewModel: state.viewModel) { state, event in
+        AnywayTransactionStateWrapperView(viewModel: state.content) { state, event in
             
             AnywayTransactionView(state: state, event: transactionEvent, factory: factory)
         }
@@ -641,14 +641,14 @@ private extension PaymentsTransfersView {
         )
         .padding(.bottom)
         .ignoresSafeArea(.container, edges: .bottom)
-        .navigationTitle("Payment: \(state.viewModel.state.transaction.isValid ? "valid" : "invalid")")
+        .navigationTitle("Payment: \(state.content.state.transaction.isValid ? "valid" : "invalid")")
         .navigationBarTitleDisplayMode(.inline)
     }
     
     func paymentFlowAlert(
         transactionEvent: @escaping (AnywayTransactionEvent) -> Void,
         flowEvent: @escaping (UtilityServicePaymentFlowEvent) -> Void
-    ) -> (UtilityServiceFlowState.Alert) -> Alert {
+    ) -> (UtilityServicePaymentFlowState.Alert) -> Alert {
         
         return { alert in
             
@@ -676,7 +676,7 @@ private extension PaymentsTransfersView {
     
     @ViewBuilder
     func paymentFlowFullScreenCoverView(
-        fullScreenCover: UtilityServiceFlowState.FullScreenCover
+        fullScreenCover: UtilityServicePaymentFlowState.FullScreenCover
     ) -> some View {
         
         switch fullScreenCover {
@@ -687,7 +687,7 @@ private extension PaymentsTransfersView {
     
     func paymentFlowModalView(
         event: @escaping (FraudEvent) -> Void
-    ) -> (UtilityServiceFlowState.Modal) -> PaymentFlowModalView {
+    ) -> (UtilityServicePaymentFlowState.Modal) -> PaymentFlowModalView {
         
         return { PaymentFlowModalView(state: $0, event: event) }
     }
@@ -791,15 +791,13 @@ private extension PaymentsTransfersView {
     
     typealias Content = UtilityPrepaymentViewModel
     
-    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content, AnywayTransactionViewModel>
+    typealias UtilityFlowState = UtilityPaymentFlowState<Operator, Service, Content>
     
     typealias UtilityFlowEvent = UtilityPaymentFlowEvent<LastPayment, Operator, Service>
     
     typealias OperatorFailure = SberOperatorFailureFlowState<UtilityPaymentOperator>
     
-    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, Service, AnywayTransactionViewModel>
-    
-    typealias UtilityServiceFlowState = UtilityServicePaymentFlowState<AnywayTransactionViewModel>
+    typealias ServicePickerState = UtilityServicePickerFlowState<UtilityPaymentOperator, Service>
 }
 
 extension UtilityServicePaymentFlowState.Modal: BottomSheetCustomizable {}
