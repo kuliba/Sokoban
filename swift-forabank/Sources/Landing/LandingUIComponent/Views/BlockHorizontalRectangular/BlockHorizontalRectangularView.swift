@@ -116,7 +116,7 @@ extension BlockHorizontalRectangularView {
                                 handleEffect: {_,_ in }),
                             config: .preview,
                             infoView: {
-                                Text("Сумма лимита не может быть больше \(limit.maxSum) ₽")
+                                Text("Сумма лимита не может быть больше \(limit.maxSum.formattedValue("₽"))")
                                     .fixedSize(horizontal: false, vertical: true)
                                     .foregroundColor(.init(red: 227/255, green: 1/255, blue: 27/255))
                                     .font(.system(size: 12))
@@ -147,5 +147,17 @@ struct BlockHorizontalRectangularView_Previews: PreviewProvider {
             event: { _ in },
             factory: .default,
             config: .default)
+    }
+}
+
+private extension Decimal {
+        
+    func formattedValue(_ currency: String) -> String {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 2
+        
+        return "\(formatter.string(for: self) ?? "") \(currency)"
     }
 }
