@@ -36,7 +36,7 @@ struct ChangeSVCardLimitServices {
         for payload in payloads {
             dispatchGroup.enter()
             
-            DispatchQueue.global().sync {
+            DispatchQueue.global(qos: .background).sync {
                 
                 createChangeSVCardLimit(payload) {
                     if case let .failure(err) = $0 {
