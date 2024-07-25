@@ -48,12 +48,7 @@ where InfoView: View {
     }
         
     var body: some View {
-        
-        limitView()
-    }
-    
-    private func limitView() -> some View {
-        
+                
         VStack(alignment: .leading, spacing: 4) {
             
             state.limit.title.text(withConfig: config.title)
