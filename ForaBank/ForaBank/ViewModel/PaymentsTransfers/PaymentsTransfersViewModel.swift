@@ -6,6 +6,7 @@
 //
 
 import Combine
+import ForaTools
 import PickerWithPreviewComponent
 import SberQR
 import SwiftUI
@@ -59,7 +60,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         isTabBarHidden: Bool = false,
         mode: Mode = .normal,
         route: Route = .empty,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+        scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.navButtonsRight = []
         self.sections = paymentsTransfersFactory.makeSections()
@@ -95,7 +96,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         navButtonsRight: [NavigationBarButtonViewModel],
         mode: Mode = .normal,
         route: Route = .empty,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+        scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.sections = sections
         self.mode = mode
@@ -1457,88 +1458,129 @@ private extension PaymentsTransfersViewModel {
         
         qrViewModel.action
             .compactMap { $0 as? QRViewModelAction.Result }
+            .map(\.result)
             .receive(on: scheduler)
-            .sink { [unowned self] payload in
+            .sink { [unowned self] in
                 
-                switch payload.result {
-                case let .qrCode(qr):
-                    
-                    if let qrMapping = model.qrMapping.value {
-                        handleQRMapping(qr, qrMapping)
-                    } else {
-                        handleFailure(qr: qr)
-                    }
-                    
-                case let .c2bURL(url):
-                    handleC2bURL(url)
-                    
-                case let .c2bSubscribeURL(url):
-                    handleC2bSubscribeURL(url)
-                    
-                case let .sberQR(url):
-                    handleSberQRURL(url)
-                    
-                case .url:
-                    handleURL()
-                    
-                case .unknown:
-                    handleUnknownQR()
-                }
+                self.handleQRViewModelActionResult($0)
             }
             .store(in: &bindings)
+    }
+    
+    private func payByInstructions() {
+        
+        event(.dismiss(.modal))
+        
+        let paymentsViewModel = makeByInstructionsPaymentsViewModel()
+        
+        action.send(DelayWrappedAction(
+            delayMS: 800,
+            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
+        )
+    }
+    
+    private func makeAlert(_ message: String) {
+        
+        let alertViewModel = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "ОК") { [weak self] in
+            self?.action.send(ProductProfileViewModelAction.Close.Alert())
+        })
+        
+        route.modal = .alert(alertViewModel)
+    }
+    
+    private func createNavButtonsRight(
+    ) -> [NavigationBarButtonViewModel] {
+        
+        [.barcodeScanner(action: { [weak self] in self?.openScanner() })]
+    }
+}
+
+// MARK: - Helpers
+
+extension PaymentsTransfersViewModel {
+    
+    private func handleQRViewModelActionResult(
+        _ result: QRViewModel.ScanResult
+    ) {
+        event(.dismiss(.modal))
+
+        switch result {
+        case let .qrCode(qr):
+            
+            if let qrMapping = model.qrMapping.value {
+                handleQRMapping(qr, qrMapping)
+            } else {
+                handleFailure(qr: qr)
+            }
+            
+        case let .c2bURL(url):
+            handleC2bURL(url)
+            
+        case let .c2bSubscribeURL(url):
+            handleC2bSubscribeURL(url)
+            
+        case let .sberQR(url):
+            handleSberQRURL(url)
+            
+        case .url:
+            handleURL()
+            
+        case .unknown:
+            handleUnknownQR()
+        }
     }
     
     private func handleQRMapping(
         _ qr: QRCode,
         _ qrMapping: QRMapping
     ) {
-        if let operators = model.operatorsFromQR(qr, qrMapping) {
+        let operators = model.operatorsFromQR(qr, qrMapping)
+        let multipleOperators = MultiElementArray(operators ?? [])
+        
+        switch (multipleOperators, operators?.first) {
+        case let (_, .some(`operator`)):
+            payWith(operator: `operator`, qr: qr, qrMapping: qrMapping)
             
-            guard operators.count > 0 else {
+        case let (.some(multipleOperators), _):
+            scheduler.delay(for:.milliseconds(700)) { [weak self] in
                 
-                self.event(.dismiss(.modal))
-                self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
-                return
+                self?.handleQRMappingWithMultipleOperators(qr, multipleOperators.elements)
             }
             
-            if operators.count == 1 {
-                self.event(.dismiss(.modal))
-                
-                if let operatorValue = operators.first, Payments.paymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
-                    
-                    Task { [weak self] in
-                        
-                        await self?.handleQRMappingWithSingleOperator(qr, operatorValue)
-                    }
-                } else {
-                    self.delay(for: .milliseconds(700)) { [self] in
-                        
-                        let viewModel = InternetTVDetailsViewModel(
-                            model: model,
-                            qrCode: qr,
-                            mapping: qrMapping
-                        )
-                        self.route.destination = .operatorView(viewModel)
-                    }
-                }
-            } else {
-                event(.dismiss(.modal))
-                delay(for: .milliseconds(700)) { [weak self] in
-                    
-                    self?.handleQRMappingWithMultipleOperators(qr, operators)
-                }
-            }
+        default:
+            self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
+        }
+    }
+    
+    private func payWith(
+        operator: OperatorGroupData.OperatorData,
+        qr: QRCode,
+        qrMapping: QRMapping
+    ) {
+        let isServicePayment = Payments
+            .paymentsServicesOperators
+            .map(\.rawValue)
+            .contains(`operator`.parentCode)
+        
+        if isServicePayment {
+            handleQRMappingWithSingleOperator(qr, `operator`)
         } else {
-            event(.dismiss(.modal))
-            action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
+            delay(for: .milliseconds(700)) { [self] in
+                
+                let viewModel = InternetTVDetailsViewModel(
+                    model: model,
+                    qrCode: qr,
+                    mapping: qrMapping
+                )
+                self.route.destination = .operatorView(viewModel)
+            }
         }
     }
     
     private func handleQRMappingWithSingleOperator(
         _ qr: QRCode,
         _ operatorValue: OperatorGroupData.OperatorData
-    ) async {
-        
+    ) {
         let puref = operatorValue.code
         let additionalList = model.additionalList(for: operatorValue, qrCode: qr)
         let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
@@ -1556,7 +1598,7 @@ private extension PaymentsTransfersViewModel {
         )
         bind(paymentsViewModel)
         
-        await MainActor.run { [weak self] in
+        scheduler.schedule { [weak self] in
             
             self?.route.destination = .init(.payments(paymentsViewModel))
         }
@@ -1600,7 +1642,6 @@ private extension PaymentsTransfersViewModel {
     
     private func handleUnknownQR() {
         
-        event(.dismiss(.modal))
         delay(for: .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
@@ -1611,22 +1652,9 @@ private extension PaymentsTransfersViewModel {
             self.route.destination = .failedView(failedView)
         }
     }
-    
-    private func payByInstructions() {
-        
-        event(.dismiss(.modal))
-        
-        let paymentsViewModel = makeByInstructionsPaymentsViewModel()
-        
-        action.send(DelayWrappedAction(
-            delayMS: 800,
-            action: PaymentsTransfersViewModelAction.Show.Payment(viewModel: paymentsViewModel))
-        )
-    }
-    
+
     private func handleFailure(qr: QRCode) {
         
-        event(.dismiss(.modal))
         delay(for: .milliseconds(700)) { [weak self] in
             
             guard let self else { return }
@@ -1647,7 +1675,6 @@ private extension PaymentsTransfersViewModel {
     
     private func handleC2bURL(_ url: URL) {
         
-        event(.dismiss(.modal))
         let paymentsViewModel = PaymentsViewModel(
             source: .c2b(url),
             model: model,
@@ -1663,7 +1690,6 @@ private extension PaymentsTransfersViewModel {
     
     private func handleC2bSubscribeURL(_ url: URL) {
         
-        self.event(.dismiss(.modal))
         let paymentsViewModel = PaymentsViewModel(
             source: .c2bSubscribe(url),
             model: model,
@@ -1679,7 +1705,6 @@ private extension PaymentsTransfersViewModel {
     
     private func handleSberQRURL(_ url: URL) {
         
-        event(.dismiss(.modal))
         rootActions?.spinner.show()
         
         sberQRServices.getSberQRData(url) { [weak self] result in
@@ -1759,7 +1784,6 @@ private extension PaymentsTransfersViewModel {
     
     private func handleURL() {
         
-        event(.dismiss(.modal))
         delay(for: .milliseconds(700)) {
             
             let failedView = QRFailedViewModel(
@@ -1770,21 +1794,6 @@ private extension PaymentsTransfersViewModel {
             
             self.route.destination = .failedView(failedView)
         }
-    }
-    
-    private func makeAlert(_ message: String) {
-        
-        let alertViewModel = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "ОК") { [weak self] in
-            self?.action.send(ProductProfileViewModelAction.Close.Alert())
-        })
-        
-        route.modal = .alert(alertViewModel)
-    }
-    
-    private func createNavButtonsRight(
-    ) -> [NavigationBarButtonViewModel] {
-        
-        [.barcodeScanner(action: { [weak self] in self?.openScanner() })]
     }
 }
 

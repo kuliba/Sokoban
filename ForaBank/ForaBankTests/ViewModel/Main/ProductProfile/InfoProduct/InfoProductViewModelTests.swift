@@ -877,7 +877,39 @@ final class InfoProductViewModelTests: XCTestCase {
         
         XCTAssertNoDiff(result.count, 1)
     }
+    
+    // MARK: - Test Data
+    
+    func test_moscowTimeRuFormatter_shouldHaveCorrectTimeZoneAndLocale() {
+        
+        let dateFormatter = DateFormatter.moscowTimeRuFormatter
+        
+        XCTAssertEqual(dateFormatter.timeZone, .init(identifier: "Europe/Moscow"))
+        XCTAssertEqual(dateFormatter.locale, .init(identifier: "ru_RU"))
+    }
+    
+    func test_moscowTimeRuFormatter_shouldFormatDateCorrectly() {
+        
+        let dateFormatter = DateFormatter.moscowTimeRuFormatter
+        let formattedDate = dateFormatter.string(from: Date.testDateInMoscowTimezone)
+        
+        XCTAssertEqual(formattedDate, "20 марта 2023")
+    }
+    
+    func test_modelAction_shouldFormatDatesCorrectly() {
+        
+        let (sut, model) = makeSUT1(product: .firstValue())
+        let spy = ValueSpy(sut.$list)
+        
+        model.action.send(ResponseDeposits.success(data: .data))
+        
+        _ = XCTWaiter().wait(for: [.init()], timeout: 0.1)
+        
+        XCTAssertTrue(spy.values.contains { $0.contains(.init(title: "Дата открытия", subtitle: "29 марта 2022"))})
+        XCTAssertTrue(spy.values.contains { $0.contains(.init(title: "Дата закрытия", subtitle: "29 марта 2022"))})
+    }
 
+    
     // MARK: - Helpers
     
     typealias ResponseDeposits = ModelAction.Deposits.Info.Single.Response
@@ -1354,4 +1386,9 @@ extension Array where Element == String {
         "Корреспондентский счет: corrAccount",
         "ИНН: inn\nКПП: kpp"
     ]
+}
+
+private extension Date {
+    
+    static let testDateInMoscowTimezone = Date(timeIntervalSince1970: 1679272800) // 2023-03-20 00:00:00 +0300
 }

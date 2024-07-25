@@ -189,7 +189,10 @@ struct ListVerticalRoundImageView_Previews: PreviewProvider {
             model: .init(
                 data: .defaultValue,
                 images: [:],
-                selectDetail: { _ in }),
+                action: { _ in },
+                selectDetail: { _ in },
+                canOpenDetail: { _ in true }
+            ),
             config: .default)
     }
 }

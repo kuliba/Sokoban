@@ -16,7 +16,7 @@ struct ControlPanelState {
     var status: Status?
     var alert: Alert.ViewModel?
     var spinner: SpinnerView.ViewModel?
-    var navigationBarViewModel: NavigationBarView.ViewModel
+    var navigationBarInfo: NavigationBarInfo
     var landingWrapperViewModel: LandingWrapperViewModel?
     var destination: Destination?
 
@@ -25,7 +25,7 @@ struct ControlPanelState {
         status: Status? = nil,
         alert: Alert.ViewModel? = nil,
         spinner: SpinnerView.ViewModel? = nil,
-        navigationBarViewModel: NavigationBarView.ViewModel,
+        navigationBarInfo: NavigationBarInfo,
         landingWrapperViewModel: LandingWrapperViewModel? = nil,
         destination: Destination? = nil
     ) {
@@ -33,7 +33,7 @@ struct ControlPanelState {
         self.status = status
         self.alert = alert
         self.spinner = spinner
-        self.navigationBarViewModel = navigationBarViewModel
+        self.navigationBarInfo = navigationBarInfo
         self.landingWrapperViewModel = landingWrapperViewModel
         self.destination = destination
     }
@@ -44,12 +44,14 @@ extension ControlPanelState {
     enum Status: Equatable {
         
         case inflight(RequestType)
+        case failure
     }
     
     enum RequestType {
         case block, unblock
         case visibility
         case updateProducts
+        case limits
     }
 }
 
@@ -63,6 +65,8 @@ extension ControlPanelState {
         case orderSticker(any View)
         case openDeposit(OpenDepositDetailViewModel)
         case openDepositsList(OpenDepositListViewModel)
+        case openSubscriptions(SubscriptionsViewModel)
+        case successView(PaymentsSuccessViewModel)
 
         var id: _Case { _case }
         
@@ -75,6 +79,8 @@ extension ControlPanelState {
             case .orderSticker: return .orderSticker
             case .openDeposit: return .openDeposit
             case .openDepositsList: return .openDepositsList
+            case .openSubscriptions: return .openSubscriptions
+            case .successView: return .successView
             }
         }
         
@@ -83,7 +89,18 @@ extension ControlPanelState {
             case contactTransfer, migTransfer
             case landing, orderSticker
             case openDeposit, openDepositsList
+            case openSubscriptions, successView
         }
+    }
+}
+
+extension ControlPanelState {
+    
+    struct NavigationBarInfo {
+        
+        var title: String
+        let subtitle: String?
+        let action: () -> Void
     }
 }
 

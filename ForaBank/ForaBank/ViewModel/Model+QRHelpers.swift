@@ -9,6 +9,7 @@
 
 extension Model {
     
+    @_disfavoredOverload
     func operatorsFromQR(
         _ qr: QRCode,
         _ qrMapping: QRMapping

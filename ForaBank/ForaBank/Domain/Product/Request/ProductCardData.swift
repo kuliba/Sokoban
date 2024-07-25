@@ -352,18 +352,33 @@ extension ProductCardData {
             self == .additionalSelfAccOwn
         }
         
-        var abroadType: AbroadType {
+        var controlAbroadType: AbroadType {
             switch self {
             case .main:
-                return .main
+                return .control(.main)
             case .regular:
-                return .regular
+                return .control(.regular)
             case .additionalSelf:
-                return.additionalSelf
+                return .control(.additionalSelf)
             case .additionalSelfAccOwn:
-                return .additionalSelfAccOwn
+                return .control(.additionalSelfAccOwn)
             case .additionalOther:
-                return .additionalOther
+                return .control(.additionalOther)
+            }
+        }
+        
+        var limitAbroadType: AbroadType {
+            switch self {
+            case .main:
+                return .limit(.main)
+            case .regular:
+                return .limit(.regular)
+            case .additionalSelf:
+                return .limit(.additionalSelf)
+            case .additionalSelfAccOwn:
+                return .limit(.additionalSelfAccOwn)
+            case .additionalOther:
+                return .limit(.additionalOther)
             }
         }
     }

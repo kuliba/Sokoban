@@ -22,13 +22,37 @@ public extension ListHorizontalRectangleLimitsReducer {
         
         var state = state
         var effect: Effect?
-
-        //TODO: add case, add tests
-//        switch event {
-//
-//        case let .buttonTapped(info):
-//            
-//        }
+        
+        switch event {
+            
+        case let .updateLimits(result):
+            switch result {
+            case .failure:
+                state.limitsLoadingStatus = .failure
+            case let .success(limits):
+                state.limitsLoadingStatus = .limits(limits)
+            }
+            
+        case let .buttonTapped(info):
+            switch info.action {
+            case "changeLimit":
+               // state.limitsLoadingStatus = .inflight(.loadingSettingsLimits)
+                effect = .loadSVCardLanding
+                
+            default:
+                break
+            }
+            
+        case let .loadedLimits(landingViewModel, subTitle):
+            
+            if let landingViewModel {
+                state.destination = .settingsView(landingViewModel, subTitle)
+            }
+            
+        case .dismissDestination:
+            state.destination = nil
+        }
+        
         return (state, effect)
     }
 }

@@ -181,7 +181,7 @@ struct ManagingSubscriptionView: View {
 
 //MARK: - Preview Content
 
-private extension SubscriptionsViewModel {
+extension SubscriptionsViewModel {
     
     static let preview: SubscriptionsViewModel = .init(
         products: [

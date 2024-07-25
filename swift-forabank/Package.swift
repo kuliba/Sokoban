@@ -49,6 +49,7 @@ let package = Package(
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
+        .calendarUI,
         .linkableText,
         .manageSubscriptionsUI,
         .otpInputComponent,
@@ -967,6 +968,8 @@ private extension Target {
     static let landingUIComponentTests = testTarget(
         name: .landingUIComponentTests,
         dependencies: [
+            // external packages
+            .customDump,
             // internal modules
             .landingUIComponent,
         ],

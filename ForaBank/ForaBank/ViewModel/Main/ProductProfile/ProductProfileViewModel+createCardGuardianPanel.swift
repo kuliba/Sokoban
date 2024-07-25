@@ -34,8 +34,11 @@ private extension String {
         return "Изменить PIN-код"
     }
     
-    static func visibilityTitle(by visibility: Bool) -> String {
-        return visibility ? "Скрыть с главного" : "Вернуть на главный"
+    static func visibilityTitle(
+        by visibility: Bool,
+        _ flag: ChangeSVCardLimitsFlag = .init(.inactive)
+    ) -> String {
+        return visibility ? (flag.isActive ? "Скрыть\nс главного" : "Скрыть с главного") : "Вернуть на главный"
     }
     
     static func visibilitySubtitle(by visibility: Bool) -> String {
@@ -136,11 +139,14 @@ private extension ControlPanelButtonDetails {
             event: .delayAlert(card))
     }
     
-    static func createVisibilityButton(by card: ProductCardData) -> Self {
+    static func createVisibilityButton(
+        by card: ProductCardData,
+        _ flag: ChangeSVCardLimitsFlag
+    ) -> Self {
         
         return .init(
             id: card.id,
-            title: .visibilityTitle(by: card.isVisible),
+            title: .visibilityTitle(by: card.isVisible, flag),
             icon: .visibility(by: card.isVisible),
             event: .visibility(card))
     }
@@ -166,12 +172,12 @@ extension Array where Element == ControlPanelButtonDetails {
         case .additionalOther:
             return [
                 .createCardGuardianButton(by: card, flag),
-                .createVisibilityButton(by: card)
+                .createVisibilityButton(by: card, flag)
             ]
         default:
             return [
                 .createCardGuardianButton(by: card, flag),
-                .createVisibilityButton(by: card),
+                .createVisibilityButton(by: card, flag),
                 .createChangePinButton(by: card)
             ]
         }

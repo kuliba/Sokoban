@@ -42,7 +42,7 @@ final class ControlPanelViewModelTests: XCTestCase {
 
     private func makeSUT(
         buttons: [ControlPanelButtonDetails] = [],
-        navigationBarViewModel: NavigationBarView.ViewModel = .sample,
+        navigationBarInfo: ControlPanelState.NavigationBarInfo = .default,
         makeAlert: @escaping MakeAlert,
         makeActions: MakeActions,
         makeViewModels: MakeViewModels = .emptyViewModels,
@@ -51,11 +51,12 @@ final class ControlPanelViewModelTests: XCTestCase {
     ) -> SUT {
         
         .init(
-            initialState: .init(buttons: buttons, navigationBarViewModel: navigationBarViewModel),
+            initialState: .init(buttons: buttons, navigationBarInfo: navigationBarInfo),
             reduce: ControlPanelReducer(
                 makeAlert: makeAlert,
                 makeActions: makeActions,
-                makeViewModels: makeViewModels
+                makeViewModels: makeViewModels, 
+                getCurrencySymbol: { _ in nil }
             ).reduce(_:_:),
             handleEffect: {_,_  in })
     }
@@ -88,7 +89,13 @@ extension ControlPanelReducer.MakeViewModels {
             image: .cardPlaceholder,
             publisher: Just(.cardPlaceholder).eraseToAnyPublisher()
         )},
+            limitsViewModel: nil,
             config: .stickerDefault,
             landingActions: {_ in })
     )
+}
+
+extension ControlPanelState.NavigationBarInfo {
+    
+    static let `default`: Self = .init(title: "Title", subtitle: "Subtitle", action: {})
 }

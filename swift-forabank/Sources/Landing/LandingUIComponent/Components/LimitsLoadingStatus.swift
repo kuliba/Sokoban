@@ -9,5 +9,10 @@ import Foundation
 
 public enum LimitsLoadingStatus: Equatable {
     
-    case inflight, failure, limits([LimitValues])
+    case inflight(RequestType), failure, limits(SVCardLimits)
+    
+    public enum RequestType: Equatable {
+        case loadingSVCardLimits
+        case loadingSettingsLimits
+    }
 }

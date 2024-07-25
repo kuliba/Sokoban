@@ -123,7 +123,8 @@ class AuthLoginViewModelTests: XCTestCase {
         private(set) var goToMainCount = 0
         private(set) var openUrl = 0
         private(set) var bannerAction = 0
-        
+        private(set) var listAction = 0
+
         func makeCardLandingViewModel(
             _ type: ForaBank.AbroadType,
             config: LandingUIComponent.UILanding.Component.Config,
@@ -173,6 +174,9 @@ class AuthLoginViewModelTests: XCTestCase {
                         
                     case .bannerAction:
                         self?.bannerAction += 1
+                        
+                    case .listVerticalRoundImageAction:
+                        self?.listAction += 1
                     }
                 }
         }

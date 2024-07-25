@@ -15,7 +15,7 @@ struct ListHorizontalRectangleLimitsView: View {
     let event: (ListHorizontalRectangleLimitsEvent) -> Void
     let factory: Factory
     let config: Config
-    
+
     var body: some View {
         
         ScrollView(.horizontal, showsIndicators: false) {
@@ -24,10 +24,56 @@ struct ListHorizontalRectangleLimitsView: View {
                 ForEach(state.list.list, content: itemView)
             }
         }
+        .navigationDestination(
+            item: .init(
+                get: { state.destination },
+                set: { if $0 == nil { event(.dismissDestination) }}
+            ),
+            content: destinationView
+        )
+        
         .padding(.horizontal, config.paddings.horizontal)
         .padding(.vertical, config.paddings.vertical)
     }
     
+    @ViewBuilder
+    private func destinationView(
+        destination: ListHorizontalRectangleLimitsState.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .settingsView(viewModel, subtitle):
+            
+            VStack {
+                NavigationBar(
+                    backAction: { event(.dismissDestination) },
+                    title: viewModel.navigationTitle(),
+                    subtitle: subtitle,
+                    config: config.navigationBarConfig
+                )
+
+                LandingWrapperView(viewModel: viewModel)
+                    .frame(maxHeight: .infinity)
+                Button(action: { /* TODO: add save action */ }) {
+                    ZStack {
+                        Color(red: 255/255, green: 54/255, blue: 54/255)
+                        Text("Сохранить")
+                            .padding()
+                    }
+                }
+                .foregroundColor(.white)
+                .cornerRadius(config.cornerRadius)
+                .frame(height: 56)
+                .padding(.horizontal, 16)
+                .padding(.vertical, config.paddings.vertical)
+            }
+            .navigationBarTitle("")
+            .navigationBarHidden(true)
+            .padding(.bottom)
+            .ignoresSafeArea(.container, edges: .bottom)
+        }
+    }
+        
     private func itemView (
         item: Item
     ) -> some View {
@@ -85,6 +131,8 @@ extension ListHorizontalRectangleLimitsView {
     
     struct ItemView: View {
         
+        let halfScreenWidth: CGFloat = UIScreen.main.bounds.width/2
+
         let item: UILanding.List.HorizontalRectangleLimits.Item
         let factory: Factory
         let limitsLoadingStatus: LimitsLoadingStatus
@@ -114,13 +162,14 @@ extension ListHorizontalRectangleLimitsView {
                         }
                         
                         Text(item.title)
+                            .font(config.fonts.title)
                             .lineLimit(2)
                             .foregroundColor(config.colors.title)
                     }
                     .padding(.horizontal, config.paddings.horizontal)
                     
                     ForEach(item.limits, id: \.id) {
-                        itemView(limit: $0)
+                        itemView(limitType:item.limitType, limit: $0)
                         if $0 != item.limits.last {
                             
                             HorizontalDivider(color: config.colors.divider)
@@ -130,25 +179,27 @@ extension ListHorizontalRectangleLimitsView {
                     .padding(.horizontal, config.paddings.horizontal)
                 }
             }
-            .frame(config)
+            .frame(width: halfScreenWidth - 1.5 * config.paddings.horizontal, height: config.sizes.height)
         }
         
         private func itemView(
+            limitType: String,
             limit: UILanding.List.HorizontalRectangleLimits.Item.Limit
         ) -> some View {
             
             VStack(alignment: .leading) {
                 
                 Text(limit.title)
-                    .font(.caption)
+                    .font(config.fonts.subTitle)
                     .foregroundColor(config.colors.subtitle)
                 
-                limitView(limit: limit, limitsLoadingStatus: limitsLoadingStatus, color: limit.color)
+                limitView(limitType: limitType, limit: limit, limitsLoadingStatus: limitsLoadingStatus, color: limit.color)
             }
         }
         
         @ViewBuilder
         private func limitView(
+            limitType: String,
             limit: UILanding.List.HorizontalRectangleLimits.Item.Limit,
             limitsLoadingStatus: LimitsLoadingStatus,
             color: Color
@@ -158,30 +209,32 @@ extension ListHorizontalRectangleLimitsView {
             case .inflight:
                 Rectangle()
                     .fill(config.colors.divider)
-                    .frame(height: 20)
+                    .frame(height: 24)
                     .frame(maxWidth: .infinity)
                     .shimmering()
                 
             case .failure:
                 Text("Попробуйте позже")
-                
+                    .font(config.fonts.limit)
+                    .foregroundColor(config.colors.limitNotSet)
+
             case let .limits(limits):
                 
-                if let limit = limits.first(where: { $0.name == limit.id }) {
+                if let limitsByType = limits.limitsList.first(where: { $0.type == limitType }), let limit = limitsByType.limits.first(where: { $0.name == limit.id }) {
                     
                     switch limit.value {
-                    case 999999999:
+                    case 999999999...:
                         Text("Без ограничений")
-                        
+                            .font(config.fonts.limit)
+                            .foregroundColor(config.colors.limitNotSet)
+                            .frame(height: 24)
+
                     default:
                         VStack(alignment: .leading) {
                             
                             HStack {
-                                Text(value(limit.value - limit.currentValue))
-                                    .font(.subheadline)
-                                    .foregroundColor(config.colors.title)
-                                Text(limit.currency)
-                                    .font(.subheadline)
+                                Text(value(limit.value - limit.currentValue) + " " + limit.currency)
+                                    .font(config.fonts.limit)
                                     .foregroundColor(config.colors.title)
                                 circleLimit(
                                     limit: limit,
@@ -194,11 +247,15 @@ extension ListHorizontalRectangleLimitsView {
                                 )
                                 .frame(widthAndHeight: config.sizes.icon)
                             }
+                            .frame(height: 24)
                         }
                         
                     }
                 } else {
                     Text("Не установлен")
+                        .font(config.fonts.limit)
+                        .foregroundColor(config.colors.limitNotSet)
+                        .frame(height: 24)
                 }
             }
         }
@@ -277,10 +334,11 @@ extension ListHorizontalRectangleLimitsView {
         }
                 
         private func value(_ value: Decimal) -> String {
-            value > 0 ? "\(value)" : "0"
+            value > 0 ? value.formattedValue : "0"
         }
     }
 }
+
 
 struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
     
@@ -303,19 +361,21 @@ struct ListHorizontalRectangleLimitsView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            preview(.inflight)
+            preview(.inflight(.loadingSVCardLimits))
                 .previewDisplayName("inflight")
             
             preview(.failure)
                 .previewDisplayName("failure")
             
-            preview(.limits(.default))
+            preview(.limits(.init(limitsList: [
+                .init(type: "Debit", limits: .default),
+                .init(type: "Credit", limits: .default)])))
                 .previewDisplayName("limits")
             
-            preview(.limits([]))
+            preview(.limits(.init(limitsList: [])))
                 .previewDisplayName("noLimits")
             
-            preview(.limits(.withoutValue))
+            preview(.limits(.init(limitsList: [.init(type: "", limits: .withoutValue)])))
                 .previewDisplayName("withoutValueLimits")
         }
     }
@@ -344,5 +404,19 @@ extension View {
             width: config.sizes.width,
             height: config.sizes.height
         )
+    }
+}
+
+private extension Decimal {
+    
+    var formattedValue: String {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        formatter.locale = Locale.current
+        
+        return formatter.string(for: self) ?? ""
     }
 }

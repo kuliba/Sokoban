@@ -97,6 +97,9 @@ final class ListHorizontalRectangleImageViewModelTests: XCTestCase {
 
                 case .bannerAction:
                     received.append(.bannerAction)
+                    
+                case .listVerticalRoundImageAction:
+                    received.append(.listVerticalRoundImageAction)
                 }
             }, 
             canOpenDetail: canOpenDetail
@@ -113,6 +116,7 @@ final class ListHorizontalRectangleImageViewModelTests: XCTestCase {
         case selectDetail
         case sticker
         case bannerAction
+        case listVerticalRoundImageAction
     }
 
 }

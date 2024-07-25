@@ -82,16 +82,32 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
         XCTAssertEqual(startValue, .initinalValue)
     }
     
-    func test_itemAction_detailsNotNil_shouldCallDetails() {
+    func test_itemAction_detailsNotNilCanOpenTrue_shouldCallDetails() {
         
         var startValue: ActionType = .initinalValue
         
         ViewModel.action(
             item: createItem(detail: .init(groupId: "1", viewId: "2")),
-            selectDetail: { _ in startValue = .selectDetail }
+            selectDetail: { _ in startValue = .selectDetail }, 
+            action: { _ in },
+            canOpenDetail: { _ in true }
         )
         
         XCTAssertEqual(startValue, .selectDetail)
+    }
+    
+    func test_itemAction_detailsNotNilCanOpenFalse_shouldCallNothing() {
+        
+        var startValue: ActionType = .initinalValue
+        
+        ViewModel.action(
+            item: createItem(detail: .init(groupId: "1", viewId: "2")),
+            selectDetail: { _ in startValue = .selectDetail },
+            action: { _ in },
+            canOpenDetail: { _ in false }
+        )
+        
+        XCTAssertEqual(startValue, .initinalValue)
     }
     
     func test_itemAction_detailsNilLinkNotNil_shouldCallLink() {
@@ -100,7 +116,9 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
         
         ViewModel.action(
             item: createItem(link: "aaa"),
-            selectDetail: { _ in startValue = .selectDetail }
+            selectDetail: { _ in startValue = .selectDetail },
+            action: { _ in },
+            canOpenDetail: { _ in false }
         )
         
         XCTAssertEqual(startValue, .initinalValue)
@@ -280,7 +298,9 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
         dropButtonCloseTitle: String? = "dropButtonCloseTitle",
         items: [Item] = [.default],
         images: [String : Image] = [:],
-        selectDetail: @escaping SelectDetail = { _ in }
+        action: @escaping (LandingEvent) -> Void = {_ in },
+        selectDetail: @escaping SelectDetail = { _ in },
+        canOpenDetail: @escaping UILanding.CanOpenDetail = {_ in false }
     ) -> ListVerticalRoundImageView.ViewModel {
         
         return .init(
@@ -291,7 +311,10 @@ final class ListVerticalRoundImageViewModelTests: XCTestCase {
                 dropButtonCloseTitle: dropButtonCloseTitle,
                 list: items),
             images: images,
-            selectDetail: selectDetail)
+            action: action,
+            selectDetail: selectDetail,
+            canOpenDetail: canOpenDetail
+        )
     }
     
     private enum ActionType {

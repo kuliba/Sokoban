@@ -12,6 +12,7 @@ public enum LandingEvent: Equatable {
     case card(Card)
     case sticker(Sticker)
     case bannerAction(BannerAction)
+    case listVerticalRoundImageAction(ListVerticalRoundImageAction)
 
     public enum Card: Equatable {
         
@@ -43,5 +44,10 @@ public enum LandingEvent: Equatable {
     
     public struct Deposit: Equatable {
         public let depositID: Int
+    }
+    
+    public enum ListVerticalRoundImageAction: Equatable {
+        
+        case openSubscriptions
     }
 }

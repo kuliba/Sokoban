@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import UIPrimitives
 
 public extension UILanding.List.HorizontalRectangleLimits {
     
@@ -14,9 +15,11 @@ public extension UILanding.List.HorizontalRectangleLimits {
         
         let colors: Colors
         let cornerRadius: CGFloat
+        let fonts: Fonts
         let paddings: Paddings
         let sizes: Sizes
         let spacing: CGFloat
+        let navigationBarConfig: NavigationBarConfig
         
         public struct Colors {
             
@@ -25,19 +28,35 @@ public extension UILanding.List.HorizontalRectangleLimits {
             let divider: Color
             let title: Color
             let subtitle: Color
-            
+            let limitNotSet: Color
+
             public init(
                 arc: Color,
                 background: Color,
                 divider: Color,
                 title: Color,
-                subtitle: Color
+                subtitle: Color,
+                limitNotSet: Color
             ) {
                 self.arc = arc
                 self.background = background
                 self.divider = divider
                 self.title = title
                 self.subtitle = subtitle
+                self.limitNotSet = limitNotSet
+            }
+        }
+        
+        public struct Fonts {
+            
+            let title: Font
+            let subTitle: Font
+            let limit: Font
+            
+            public init(title: Font, subTitle: Font, limit: Font) {
+                self.title = title
+                self.subTitle = subTitle
+                self.limit = limit
             }
         }
         
@@ -68,15 +87,19 @@ public extension UILanding.List.HorizontalRectangleLimits {
         public init(
             colors: Colors,
             cornerRadius: CGFloat,
+            fonts: Fonts,
             paddings: Paddings,
             sizes: Sizes,
-            spacing: CGFloat
+            spacing: CGFloat,
+            navigationBarConfig: NavigationBarConfig
         ) {
             self.colors = colors
             self.cornerRadius = cornerRadius
+            self.fonts = fonts
             self.paddings = paddings
             self.sizes = sizes
             self.spacing = spacing
+            self.navigationBarConfig = navigationBarConfig
         }
     }
 }

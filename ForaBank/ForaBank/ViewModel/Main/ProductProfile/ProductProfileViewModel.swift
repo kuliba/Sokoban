@@ -17,6 +17,8 @@ import SwiftUI
 import Tagged
 import RxViewModel
 import LandingUIComponent
+import UIPrimitives
+import ManageSubscriptionsUI
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -642,6 +644,29 @@ private extension ProductProfileViewModel {
             .sink { [unowned self] action in
                 
                 switch action {
+                 
+                case let payload as ModelAction.C2B.CancelC2BSub.Response:
+                    let paymentSuccessViewModel = PaymentsSuccessViewModel(paymentSuccess: .init(with: payload.data), model)
+                    if let controlPanelViewModel {
+                        
+                        controlPanelViewModel.event(.destination(
+                            .successView(paymentSuccessViewModel)
+                        ))
+                    }
+                    
+                case let payload as ModelAction.C2B.GetC2BDetail.Response:
+                    
+                    if let controlPanelViewModel {
+                        
+                        controlPanelViewModel.event(.destination(
+                            .successView(.init(
+                                paymentSuccess: .init(
+                                    operation: nil,
+                                    parameters: payload.params),
+                                model
+                            ))
+                        ))
+                    }
                     
                 case let payload as ModelAction.Products.UpdateCustomName.Response:
                     
@@ -1996,18 +2021,28 @@ extension ProductProfileViewModel {
             )
         )
         
-        let backButton: NavigationBarView.ViewModel.BackButtonItemViewModel = .init(icon: .ic24ChevronLeft, action: { [weak self] in self?.link = nil })
-
-        let navigationBarViewModel = NavigationBarView.ViewModel(title: "Управление", subtitle: navigationTitleForControlPanel, leftItems: [backButton])
+        let navigationBarInfo = ControlPanelState.NavigationBarInfo(
+            title: "Управление",
+            subtitle: navigationTitleForControlPanel,
+            action: { [weak self] in self?.link = nil }
+        )
         
         return .init(
-            initialState: .init(buttons: buttons, navigationBarViewModel: navigationBarViewModel),
+            initialState: .init(
+                buttons: buttons,
+                navigationBarInfo: navigationBarInfo),
             reduce: ControlPanelReducer(
                 makeAlert: productProfileViewModelFactory.makeAlert,
                 makeActions: makeActions,
-                makeViewModels: makeViewModels
+                makeViewModels: makeViewModels, 
+                getCurrencySymbol: model.dictionaryCurrency(for:)
             ).reduce(_:_:),
-            handleEffect: ControlPanelEffectHandler(productProfileServices: productProfileServices, landingEvent: landingEvent).handleEffect(_:_:))
+            handleEffect: ControlPanelEffectHandler(
+                card: card,
+                productProfileServices: productProfileServices,
+                landingEvent: landingEvent, 
+                handleModelEffect: productNavigationStateManager.handleModelEffect
+                    ).handleEffect(_:_:))
     }
     
     private func landingAction(for event: LandingEvent.Sticker) -> () -> Void {
@@ -2037,7 +2072,7 @@ extension ProductProfileViewModel {
                     countryId: countryID
                 ),
                 model: model) {
-                    controlPanelViewModel.event(.dismissDestination)
+                    controlPanelViewModel.event(.dismiss(.destination))
                 }
             controlPanelViewModel.event(.bannerEvent(.contactTransfer(paymentsViewModel)))
         }
@@ -2052,7 +2087,7 @@ extension ProductProfileViewModel {
                     countryId: countryID
                 ),
                 model: model) {
-                    controlPanelViewModel.event(.dismissDestination)
+                    controlPanelViewModel.event(.dismiss(.destination))
                 }
             controlPanelViewModel.event(.bannerEvent(.migTransfer(paymentsViewModel)))
         }
@@ -2066,7 +2101,7 @@ extension ProductProfileViewModel {
                 model,
                 catalogType: .deposit,
                 dismissAction: {
-                    controlPanelViewModel.event(.dismissDestination)
+                    controlPanelViewModel.event(.dismiss(.destination))
                 })
 
             controlPanelViewModel.event(.bannerEvent(.openDepositsList(openDepositViewModel)))
@@ -2120,7 +2155,7 @@ extension ProductProfileViewModel {
             } else {
                 
                 if let rootActions {
-                    let view: any View =                     RootViewModelFactory.makeNavigationOperationView(
+                    let view: any View = RootViewModelFactory.makeNavigationOperationView(
                         httpClient: model.authenticatedHTTPClient(),
                         model: model,
                         dismissAll: rootActions.dismissAll
@@ -2129,6 +2164,28 @@ extension ProductProfileViewModel {
                     controlPanelViewModel.event(.bannerEvent(.stickerEvent(.orderSticker(view))))
                 }
             }
+        }
+    }
+
+    func openSubscriptions() {
+        
+        if let controlPanelViewModel {
+            
+            let viewModel = productProfileViewModelFactory.makeSubscriptionsViewModel(
+                { token, message in
+                    
+                    controlPanelViewModel.event(.alert(.cancelC2BSub(
+                        message: message,
+                        token: token, 
+                        event: controlPanelViewModel.event
+                    )))
+                },
+                { [weak self] token in
+                    
+                    self?.model.action.send(ModelAction.C2B.GetC2BDetail.Request(token: token))
+                })
+
+            controlPanelViewModel.event(.destination(.openSubscriptions(viewModel)))
         }
     }
 
@@ -2150,6 +2207,23 @@ extension ProductProfileViewModel {
                 link = .controlPanel(controlPanelViewModel)
             }
         }
+    }
+}
+
+private extension Alert.ViewModel {
+    
+    static func cancelC2BSub(
+        message: String,
+        token: SubscriptionViewModel.Token,
+        event: @escaping (ControlPanelEvent) -> Void
+    ) -> Self {
+        
+        .init(
+            title: "",
+            message: message,
+            primary: .init(type: .cancel, title: "Отмена", action: { event(.dismiss(.alert)) }),
+            secondary: .init(type: .default, title: "Отключить", action: { event(.cancelC2BSub(token))})
+        )
     }
 }
 
@@ -2202,6 +2276,11 @@ extension ProductProfileViewModel {
             case let .openDeposit(deposit):
                 openDeposit(deposit.depositID)
             }
+        case let .listVerticalRoundImageAction(action):
+            switch action {
+            case .openSubscriptions:
+                openSubscriptions()
+            }
         }
     }
 }
@@ -2210,25 +2289,40 @@ extension ProductProfileViewModel {
 
 extension ProductProfileViewModel {
     
-    enum HistoryState: Identifiable {
+    struct HistoryState: Identifiable, Equatable {
         
-        case calendar
-        case filter
+        var id: Int { buttonAction.hashValue }
         
-        var id: ID {
-            switch self {
-            case .calendar:
-                return .calendar
-                
-            case .filter:
-                return .filter
-            }
+        var date: Date?
+        var filters: [Filter]?
+        var buttonAction: ButtonAction
+        var showSheet: Bool
+        
+        enum Filter {
+        
+            case debit
+            case credit
         }
         
-        enum ID: Hashable {
-            
+        enum ButtonAction: Identifiable {
             case calendar
             case filter
+            
+            var id: ID {
+                switch self {
+                case .calendar:
+                    return .calendar
+                    
+                case .filter:
+                    return .filter
+                }
+            }
+            
+            enum ID: Hashable {
+                
+                case calendar
+                case filter
+            }
         }
     }
     

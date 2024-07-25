@@ -420,7 +420,7 @@ struct MainView_Previews: PreviewProvider {
             paymentsTransfersViewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
-                makeHistoryButton: { event in HistoryButtonView(event: { _ in })}
+                makeHistoryButton: HistoryButtonView.init(event:)
             ),
             getUImage: { _ in nil }
         )
@@ -463,6 +463,7 @@ extension MainViewModel {
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
@@ -488,6 +489,7 @@ extension MainViewModel {
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
@@ -513,6 +515,7 @@ extension MainViewModel {
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: .preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active)
         ),
         navigationStateManager: .preview,
