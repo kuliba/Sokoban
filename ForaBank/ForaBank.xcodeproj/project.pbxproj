@@ -8431,9 +8431,8 @@
 			isa = PBXGroup;
 			children = (
 				2A4300812C521802002FF8C7 /* Domain */,
-				2A4300822C52181B002FF8C7 /* ServicePaymentFlowModel.swift */,
-				2A4300842C521835002FF8C7 /* ServicePaymentBinder.swift */,
 				2A4300882C521C61002FF8C7 /* Logic */,
+				2A550C572C52875D00B3F72A /* UI */,
 			);
 			path = ServicePaymentFlow;
 			sourceTree = "<group>";
@@ -8715,6 +8714,15 @@
 				2A53F2792A1B99D1001131EF /* TextFieldView+ext.swift */,
 			);
 			path = TextFieldView;
+			sourceTree = "<group>";
+		};
+		2A550C572C52875D00B3F72A /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				2A4300822C52181B002FF8C7 /* ServicePaymentFlowModel.swift */,
+				2A4300842C521835002FF8C7 /* ServicePaymentBinder.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
