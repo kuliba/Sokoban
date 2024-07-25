@@ -214,7 +214,15 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
 
                     case let .failure(error):
-                        makeAlert(error)
+                        
+                        switch error {
+                           
+                        case let .statusError(status, _):
+                            makeAlert(error, isFromMeToMeCreateTransfer: status == .timeout)
+                            
+                        default:
+                            makeAlert(error)
+                        }
                     }
                     
 
@@ -976,8 +984,10 @@ class PaymentsMeToMeViewModel: ObservableObject {
         alert = .init(
             title: alertData.title,
             message: alertData.messageError,
-            primary: .init(type: .default, title: "Ok") { [weak self] in
+            primary: .init(type: .default, title: "ОК") { [weak self] in
+                
                 self?.alert = nil
+                self?.action.send(PaymentsMeToMeAction.Close.BottomSheet())
             })
     }
     
