@@ -12,6 +12,7 @@ enum ServicePaymentFlowEvent: Equatable {
     
     case notify(TransactionProjection)
     case showResult(TransactionResult)
+    case terminate
 }
 
 extension ServicePaymentFlowEvent {

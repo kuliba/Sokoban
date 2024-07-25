@@ -30,6 +30,9 @@ extension ServicePaymentFlowReducer {
         var effect: Effect?
         
         switch event {
+        case .terminate:
+            state = .terminated
+            
         case let .notify(projection):
             reduce(&state, &effect, with: projection)
             
@@ -58,21 +61,21 @@ private extension ServicePaymentFlowReducer {
     ) {
         switch projection.status {
         case .none:
-            state.modal = nil
+            state = .none
             
         case .awaitingPaymentRestartConfirmation:
-            state.modal = .alert(.paymentRestartConfirmation)
+            state = .alert(.paymentRestartConfirmation)
             
         case .fraudSuspected:
             if let fraud = factory.makeFraudNoticePayload(projection.context) {
-                state.modal = .fraud(fraud)
+                state = .fraud(fraud)
             }
             
         case .inflight:
             break
             
         case let .serverError(errorMessage):
-            state.modal = .alert(.serverError(errorMessage))
+            state = .alert(.serverError(errorMessage))
             
         case let .result(transactionResult):
             reduce(&state, &effect, with: projection.context, and: transactionResult)
@@ -91,7 +94,7 @@ private extension ServicePaymentFlowReducer {
         case let .failure(terminated):
             switch terminated {
             case let .fraud(fraud):
-                state.modal = nil
+                state = .none
                 effect = .delay(
                     .showResult(.failure(.init(
                         formattedAmount: formattedAmount,
@@ -102,15 +105,15 @@ private extension ServicePaymentFlowReducer {
                 
                 // TODO: the case should have associated string
             case .transactionFailure:
-                state.modal = .alert(.terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
+                state = .alert(.terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
                 
                 // TODO: the case should have associated string
             case .updatePaymentFailure:
-                state.modal = .alert(.serverError("Error"))
+                state = .alert(.serverError("Error"))
             }
             
         case let .success(report):
-            state.modal = nil
+            state = .none
             effect = .delay(
                 .showResult(.success(report)),
                 for: .milliseconds(300)
@@ -125,7 +128,7 @@ private extension ServicePaymentFlowReducer {
     ) {
         switch result {
         case let .failure(fraud):
-            state.modal = .fullScreenCover(
+            state = .fullScreenCover(
                 .completed(.failure(.init(
                     formattedAmount: fraud.formattedAmount,
                     hasExpired: fraud.hasExpired
@@ -133,7 +136,7 @@ private extension ServicePaymentFlowReducer {
             )
             
         case let .success(report):
-            state.modal = .fullScreenCover(
+            state = .fullScreenCover(
                 .completed(.success(report))
             )
         }

@@ -12,13 +12,27 @@ import XCTest
 class ServicePaymentFlowTests: XCTestCase {
     
     func makeState(
-        modal: ServicePaymentFlowState.Modal?
+        alert: ServicePaymentFlowState.Alert
     ) -> ServicePaymentFlowState {
         
-        return .init(modal: modal)
+        return .alert(alert)
     }
     
-    func makeFraud(
+    func makeState(
+        fraud: FraudNoticePayload
+    ) -> ServicePaymentFlowState {
+        
+        return .fraud(fraud)
+    }
+    
+    func makeState(
+        fullScreenCover: ServicePaymentFlowState.FullScreenCover
+    ) -> ServicePaymentFlowState {
+        
+        return .fullScreenCover(fullScreenCover)
+    }
+    
+    func makeFraudPayload(
         title: String = anyMessage(),
         subtitle: String? = anyMessage(),
         formattedAmount: String = anyMessage(),
@@ -26,6 +40,14 @@ class ServicePaymentFlowTests: XCTestCase {
     ) -> FraudNoticePayload {
         
         return .init(title: title, subtitle: subtitle, formattedAmount: formattedAmount, delay: delay)
+    }
+    
+    func makeFraud(
+        formattedAmount: String = anyMessage(),
+        hasExpired: Bool
+    ) -> ServicePaymentFlowEvent.Fraud {
+        
+        return .init(formattedAmount: formattedAmount, hasExpired: hasExpired)
     }
     
     func makePaymentUpdate() -> AnywayPaymentUpdate {
