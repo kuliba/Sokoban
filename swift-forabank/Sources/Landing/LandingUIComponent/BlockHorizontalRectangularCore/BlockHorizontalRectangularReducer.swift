@@ -24,7 +24,7 @@ public extension BlockHorizontalRectangularReducer {
         
         switch event {
         case let .edit(limit):
-            state.newValues.updateLimitOrAdd(limit)
+            state.newValues.updateOrAddLimit(limit)
             
         case let .save(limits):
             effect = .saveLimit(limits)
@@ -47,7 +47,7 @@ extension Array where Element == BlockHorizontalRectangularEvent.Limit {
         firstIndex(where: { $0.id == id} )
     }
     
-    mutating func updateLimitOrAdd(_ newValue: BlockHorizontalRectangularEvent.Limit) {
+    mutating func updateOrAddLimit(_ newValue: BlockHorizontalRectangularEvent.Limit) {
         
         if let index = firstIndex(matching: newValue.id) {
             
