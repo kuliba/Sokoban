@@ -181,7 +181,7 @@ private extension ControlPanelEffectHandler {
             
         case let .showAlert(message, interval):
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + interval) {
+            DispatchQueue.main.delay(for: interval) {
                 
                 dispatch(.showAlert(message))
             }
