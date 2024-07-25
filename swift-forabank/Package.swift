@@ -965,6 +965,7 @@ private extension Target {
             .foraTools,
             .textFieldComponent,
             .sharedConfigs,
+            .svCardLimitAPI
         ],
         path: "Sources/Landing/\(String.landingUIComponent)"
     )

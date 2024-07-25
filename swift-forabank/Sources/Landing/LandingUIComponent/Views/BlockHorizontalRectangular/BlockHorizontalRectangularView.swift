@@ -96,7 +96,7 @@ extension BlockHorizontalRectangularView {
 
                     VStack(alignment: .leading, spacing: 4) {
 
-                        limitsSettingsView(limit)
+                        limitsSettingsView(limit, inputState.value, event)
                                                 
                         if limit != item.limits.last {
                             
@@ -109,7 +109,12 @@ extension BlockHorizontalRectangularView {
             else { return AnyView(EmptyView()) }
         }
         
-        private func limitsSettingsView(_ limit: Item.Limit) -> some View {
+        private func limitsSettingsView(
+            _ limit: Item.Limit,
+            _ value: Decimal,
+            _ mainEvent: @escaping (Event) -> Void
+
+        ) -> some View {
             
             return LimitSettingsWrapperView(
                 viewModel: .init(
@@ -117,7 +122,7 @@ extension BlockHorizontalRectangularView {
                         hiddenInfo: true,
                         limit: .init(
                             title: limit.text,
-                            value: limit.maxSum,
+                            value: value,
                             md5Hash: limit.md5hash
                         ), currencySymbol: "₽"),
                     reduce: {
@@ -127,6 +132,7 @@ extension BlockHorizontalRectangularView {
                         case let .edit(value):
                             state.hiddenInfo = state.limit.value >= value
                             state.newValue = value
+                            mainEvent(.edit(.init(id: limit.id, value: value)))
                         }
                         return (state, .none)
                     },

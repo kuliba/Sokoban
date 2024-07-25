@@ -74,8 +74,9 @@ public extension ListHorizontalRectangleLimitsReducer {
         case let .delayAlert(message):
             effect = .showAlert(message, alertLifespan)
             
-        case let .informer(message):
+        case let .informerWithLimits(message, limits):
             makeInformer(message)
+            // TODO: update limits
         }
         
         return (state, effect)

@@ -15,6 +15,7 @@ public struct ListHorizontalRectangleLimitsState: Equatable {
     var limitsLoadingStatus: LimitsLoadingStatus
     var destination: Destination?
     var alert: ErrorAlert?
+    var saveButtonEnable: Bool
     
     public init(
         id: UUID = UUID(),
@@ -26,6 +27,7 @@ public struct ListHorizontalRectangleLimitsState: Equatable {
         self.list = list
         self.limitsLoadingStatus = limitsLoadingStatus
         self.destination = destination
+        self.saveButtonEnable = true
     }
 }
 
