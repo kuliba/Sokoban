@@ -49,7 +49,8 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias Composer = AnywayTransactionViewModelComposer
+    // TODO: replace with `AnywayTransactionViewModelComposer`
+    private typealias Composer = __AnywayTransactionViewModelComposer
     private typealias SUT = AnywayTransactionViewModel
     private typealias StatusSpy = ValueSpy<AnywayTransactionStatus?>
     

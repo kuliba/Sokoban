@@ -63,7 +63,7 @@ extension UtilityPaymentStateComposer {
     }
     
     private func makeComposer(
-    ) -> _AnywayTransactionViewModelComposer {
+    ) -> AnywayTransactionViewModelComposer {
         
         return .init(
             flag: flag, model: model, httpClient: httpClient, log: log, scheduler: .main)
