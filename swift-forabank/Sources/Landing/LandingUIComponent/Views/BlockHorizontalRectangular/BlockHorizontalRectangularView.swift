@@ -84,7 +84,7 @@ extension BlockHorizontalRectangularView {
                 .padding()
             }
         }
-        
+                
         private func limit(_ limit: Item.Limit) -> some View {
             
             if let inputState = inputStates.first(where: { $0.id == limit.id }) {
@@ -96,35 +96,7 @@ extension BlockHorizontalRectangularView {
 
                     VStack(alignment: .leading, spacing: 4) {
 
-                        LimitSettingsWrapperView(
-                            viewModel: .init(
-                                initialState: .init(
-                                    hiddenInfo: true,
-                                    limit: .init(
-                                        title: limit.text,
-                                        value: limit.maxSum,
-                                        md5Hash: limit.md5hash
-                                    ), currencySymbol: "₽"),
-                                reduce: {
-                                    state, event in
-                                    var state = state
-                                    switch event {
-                                    case let .edit(value):
-                                        state.hiddenInfo = state.limit.value >= value
-                                        state.newValue = value
-                                    }
-                                    return (state, .none)
-                                },
-                                handleEffect: {_,_ in }),
-                            config: .preview,
-                            infoView: {
-                                Text("Сумма лимита не может быть больше \(limit.maxSum.formattedValue("₽"))")
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .foregroundColor(.init(red: 227/255, green: 1/255, blue: 27/255))
-                                    .font(.system(size: 12))
-                            },
-                            makeIconView: factory.makeIconView)
-                        .disabled(!enableEdit)
+                        limitsSettingsView(limit)
                                                 
                         if limit != item.limits.last {
                             
@@ -135,6 +107,39 @@ extension BlockHorizontalRectangularView {
                 })
             }
             else { return AnyView(EmptyView()) }
+        }
+        
+        private func limitsSettingsView(_ limit: Item.Limit) -> some View {
+            
+            return LimitSettingsWrapperView(
+                viewModel: .init(
+                    initialState: .init(
+                        hiddenInfo: true,
+                        limit: .init(
+                            title: limit.text,
+                            value: limit.maxSum,
+                            md5Hash: limit.md5hash
+                        ), currencySymbol: "₽"),
+                    reduce: {
+                        state, event in
+                        var state = state
+                        switch event {
+                        case let .edit(value):
+                            state.hiddenInfo = state.limit.value >= value
+                            state.newValue = value
+                        }
+                        return (state, .none)
+                    },
+                    handleEffect: {_,_ in }),
+                config: .preview,
+                infoView: {
+                    Text("Сумма лимита не может быть больше \(limit.maxSum.formattedValue("₽"))")
+                        .fixedSize(horizontal: false, vertical: true)
+                        .foregroundColor(.init(red: 227/255, green: 1/255, blue: 27/255))
+                        .font(.system(size: 12))
+                },
+                makeIconView: factory.makeIconView)
+            .disabled(!enableEdit)
         }
     }
 }
