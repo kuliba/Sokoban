@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 25.07.2024.
 //
 
+import AnywayPaymentDomain
+
 final class ServicePaymentFlowReducer {
     
     private let factory: Factory
@@ -28,8 +30,8 @@ extension ServicePaymentFlowReducer {
         var effect: Effect?
         
         switch event {
-        case let .notify(status):
-            reduce(&state, &effect, with: status)
+        case let .notify(projection):
+            reduce(&state, &effect, with: projection)
             
         case let .showResult(result):
             reduce(&state, &effect, with: result)
@@ -52,9 +54,9 @@ private extension ServicePaymentFlowReducer {
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        with status: AnywayTransactionStatus?
+        with projection: Event.TransactionProjection
     ) {
-        switch status {
+        switch projection.status {
         case .none:
             state.modal = nil
             
@@ -62,7 +64,7 @@ private extension ServicePaymentFlowReducer {
             state.modal = .alert(.paymentRestartConfirmation)
             
         case .fraudSuspected:
-            if let fraud = factory.makeFraud(state) {
+            if let fraud = factory.makeFraudNoticePayload(projection.context) {
                 state.modal = .fraud(fraud)
             }
             
@@ -73,16 +75,17 @@ private extension ServicePaymentFlowReducer {
             state.modal = .alert(.serverError(errorMessage))
             
         case let .result(transactionResult):
-            reduce(&state, &effect, with: transactionResult)
+            reduce(&state, &effect, with: projection.context, and: transactionResult)
         }
     }
     
     private func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        with result: AnywayTransactionStatus.TransactionResult
+        with context: AnywayPaymentContext,
+        and result: AnywayTransactionStatus.TransactionResult
     ) {
-        let formattedAmount = factory.getFormattedAmount(state)
+        let formattedAmount = factory.getFormattedAmount(context)
         
         switch result {
         case let .failure(terminated):

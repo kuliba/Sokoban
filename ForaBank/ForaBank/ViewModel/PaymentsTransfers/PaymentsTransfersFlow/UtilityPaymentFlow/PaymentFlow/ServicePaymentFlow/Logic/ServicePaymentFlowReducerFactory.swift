@@ -5,16 +5,16 @@
 //  Created by Igor Malyarov on 25.07.2024.
 //
 
+import AnywayPaymentDomain
+
 struct ServicePaymentFlowReducerFactory {
     
     let getFormattedAmount: GetFormattedAmount
-    let makeFraud: MakeFraudNoticePayload
+    let makeFraudNoticePayload: MakeFraudNoticePayload
 }
 
 extension ServicePaymentFlowReducerFactory {
     
-    typealias GetFormattedAmount = (State) -> String
-    typealias MakeFraudNoticePayload = (State) -> FraudNoticePayload?
-    
-    typealias State = ServicePaymentFlowState
+    typealias GetFormattedAmount = (AnywayPaymentContext) -> String
+    typealias MakeFraudNoticePayload = (AnywayPaymentContext) -> FraudNoticePayload?
 }

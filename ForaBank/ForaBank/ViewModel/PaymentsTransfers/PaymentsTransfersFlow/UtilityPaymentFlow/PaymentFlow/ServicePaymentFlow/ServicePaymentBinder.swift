@@ -35,11 +35,19 @@ extension ServicePaymentBinder {
     func bind(on scheduler: AnySchedulerOf<DispatchQueue>) {
         
         content.$state
-            .map(\.transaction.status)
+            .map(\.transaction.projection)
             .removeDuplicates()
             .debounce(for: 0.1, scheduler: scheduler)
             .receive(on: scheduler)
             .sink { [weak self] in self?.flow.event(.notify($0)) }
             .store(in: &cancellables)
+    }
+}
+
+private extension AnywayTransactionState.Transaction {
+    
+    var projection: ServicePaymentFlowEvent.TransactionProjection {
+        
+        return .init(context: context, status: status)
     }
 }
