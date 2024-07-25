@@ -89,7 +89,9 @@ where InfoView: View {
             )
         )
         .onReceive(textFieldPublisher) {
-            event(.edit($0))
+            if state.newValue.rounded(toDecimalPlace: 2) != $0.rounded(toDecimalPlace: 2) {
+                event(.edit($0))
+            }
         }
     }
 }
@@ -153,4 +155,14 @@ extension View {
         case false: self
         }
     }
+}
+
+private extension Decimal {
+    
+ func rounded(toDecimalPlace digit: Int = 2) -> Decimal {
+    var initialDecimal = self
+    var roundedDecimal = Decimal()
+    NSDecimalRound(&roundedDecimal, &initialDecimal, digit, .plain)
+    return roundedDecimal
+  }
 }

@@ -97,7 +97,7 @@ extension BlockHorizontalRectangularView {
                         LimitSettingsWrapperView(
                             viewModel: .init(
                                 initialState: .init(
-                                    hiddenInfo: false,
+                                    hiddenInfo: true,
                                     limit: .init(
                                         title: limit.text,
                                         value: limit.maxSum,
