@@ -34,14 +34,14 @@ extension UtilityServicePaymentFlowState {
     
     typealias Content = AnywayTransactionViewModel
     
-    enum Alert {
+    enum Alert: Equatable {
         
         case paymentRestartConfirmation
         case serverError(String)
         case terminalError(String)
     }
     
-    enum FullScreenCover {
+    enum FullScreenCover: Equatable {
         
         case completed(TransactionResult)
         
@@ -54,7 +54,7 @@ extension UtilityServicePaymentFlowState {
         }
     }
     
-    enum Modal {
+    enum Modal: Equatable {
         
         case fraud(FraudNoticePayload)
     }
