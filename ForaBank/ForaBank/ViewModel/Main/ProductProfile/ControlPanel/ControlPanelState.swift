@@ -19,6 +19,7 @@ struct ControlPanelState {
     var navigationBarInfo: NavigationBarInfo
     var landingWrapperViewModel: LandingWrapperViewModel?
     var destination: Destination?
+    var svCardLimits: SVCardLimits?
 
     init(
         buttons: [ControlPanelButtonDetails],
@@ -27,6 +28,7 @@ struct ControlPanelState {
         spinner: SpinnerView.ViewModel? = nil,
         navigationBarInfo: NavigationBarInfo,
         landingWrapperViewModel: LandingWrapperViewModel? = nil,
+        svCardLimits: SVCardLimits? = nil,
         destination: Destination? = nil
     ) {
         self.buttons = buttons
@@ -35,6 +37,7 @@ struct ControlPanelState {
         self.spinner = spinner
         self.navigationBarInfo = navigationBarInfo
         self.landingWrapperViewModel = landingWrapperViewModel
+        self.svCardLimits = svCardLimits
         self.destination = destination
     }
 }
