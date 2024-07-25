@@ -372,7 +372,7 @@ struct LandingUIView_Previews: PreviewProvider {
             )}, 
             makeLimit: { _ in nil }, 
             limitsViewModel: nil, 
-            cardLimitsInfo: .init(type: "", svCardLimits: nil)
+            cardLimitsInfo: .init(type: "", svCardLimits: nil, editEnable: true)
         )
     }
 }

@@ -57,7 +57,7 @@ public extension ListHorizontalRectangleLimitsReducer {
             
             if let landingViewModel {
                 
-                landingViewModel.updateCardLimitsInfo(.init(type: limitType, svCardLimits: state.limitsInfo))
+                landingViewModel.updateCardLimitsInfo(.init(type: limitType, svCardLimits: state.limitsInfo, editEnable: state.editEnableFor(limitType)))
                 
                 state.destination = .settingsView(landingViewModel, subTitle, limitType)
             }

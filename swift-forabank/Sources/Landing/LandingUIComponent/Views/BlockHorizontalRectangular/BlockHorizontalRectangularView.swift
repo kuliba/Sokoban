@@ -37,7 +37,8 @@ struct BlockHorizontalRectangularView: View {
                 inputStates: state.inputStates,
                 config: config,
                 factory: factory,
-                event: event
+                event: event,
+                enableEdit: state.enableEdit
             )
         }
     }
@@ -60,6 +61,7 @@ extension BlockHorizontalRectangularView {
         let config: Config
         let factory: Factory
         let event: (Event) -> Void
+        let enableEdit: Bool
         
         var body: some View {
             
@@ -122,6 +124,7 @@ extension BlockHorizontalRectangularView {
                                     .font(.system(size: 12))
                             },
                             makeIconView: factory.makeIconView)
+                        .disabled(!enableEdit)
                                                 
                         if limit != item.limits.last {
                             
@@ -142,7 +145,7 @@ struct BlockHorizontalRectangularView_Previews: PreviewProvider {
         BlockHorizontalRectangularView(
             state: .init(
                 block: .defaultValue,
-                initialLimitsInfo: .init(type: "DEBIT_OPERATIONS", svCardLimits: nil)
+                initialLimitsInfo: .init(type: "DEBIT_OPERATIONS", svCardLimits: nil, editEnable: true)
             ),
             event: { _ in },
             factory: .default,

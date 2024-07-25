@@ -13,6 +13,7 @@ public struct BlockHorizontalRectangularState: Equatable {
     var inputStates: [InputState] = []
     var newValues: [BlockHorizontalRectangularEvent.Limit] = []
     let limitType: String
+    let enableEdit: Bool
     
     public init(
         block: UILanding.BlockHorizontalRectangular,
@@ -20,6 +21,7 @@ public struct BlockHorizontalRectangularState: Equatable {
     ) {
         self.block = block
         self.limitType = initialLimitsInfo?.type ?? ""
+        self.enableEdit = initialLimitsInfo?.editEnable ?? true
         inputStates = initialLimitsInfo?.svCardLimits?.inputStates(maxValues: block.maxValues) ?? []
     }
 }
