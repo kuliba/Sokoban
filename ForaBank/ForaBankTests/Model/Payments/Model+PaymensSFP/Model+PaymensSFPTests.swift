@@ -359,7 +359,90 @@ final class Model_PaymensSFPTests: XCTestCase {
         
         XCTAssertNoDiff(sut.value, nil)
     }
+    
+    // MARK: - payments Process Dependency Reducer SFP
+    
+    func test_paymentsProcessDependencyReducerSFP_amountCase_roundsTo13Cents() throws {
         
+        let result = try getAmountParameter(makeSUT(), operation: .sfpOperation(), parameters: [Payments.ParameterAmount.makePPAmount(maxAmount: 60000.129)])
+        
+        XCTAssertEqual(result.validator.maxAmount, 60000.13)
+        XCTAssertEqual(result.currencySymbol, "₽")
+    }
+    
+    func test_paymentsProcessDependencyReducerSFP_amountCase_roundsTo12Cents() throws {
+        
+        let result = try getAmountParameter(makeSUT(), operation: .sfpOperation(), parameters: [Payments.ParameterAmount.makePPAmount(maxAmount: 60000.119)])
+        
+        XCTAssertEqual(result.validator.maxAmount, 60000.12)
+        XCTAssertEqual(result.currencySymbol, "₽")
+    }
+    
+    func test_paymentsProcessDependencyReducerSFP_amountCase_roundsTo46Cents() throws {
+        
+        let result = try getAmountParameter(makeSUT(), operation: .sfpOperation(), parameters: [Payments.ParameterAmount.makePPAmount(maxAmount: 60000.459)])
+        
+        XCTAssertEqual(result.validator.maxAmount, 60000.46)
+        XCTAssertEqual(result.currencySymbol, "₽")
+    }
+    
+    func test_paymentsProcessDependencyReducerSFP_amountCase_roundsTo30Cents() throws {
+        
+        let result = try getAmountParameter(makeSUT(), operation: .sfpOperation(), parameters: [Payments.ParameterAmount.makePPAmount(maxAmount: 60000.2999)])
+        
+        XCTAssertEqual(result.validator.maxAmount, 60000.3)
+        XCTAssertEqual(result.currencySymbol, "₽")
+    }
+    
+    func test_paymentsProcessDependencyReducerSFP_amountCase_roundsTo23CentsInDollars() throws {
+        
+        let result = try getAmountParameter(
+            makeSUT(),
+            operation: .sfpOperation(),
+            parameters: [Payments.ParameterAmount.makePPAmount(currencySymbol: "$", maxAmount: 60000.229)])
+        
+        XCTAssertEqual(result.validator.maxAmount, 60000.23)
+        XCTAssertEqual(result.currencySymbol, "$")
+    }
+    
+    func test_paymentsProcessDependencyReducerSFP_amountCase_roundsToWholeNumberInDollars() throws {
+        
+        let result = try getAmountParameter(
+            makeSUT(),
+            operation: .sfpOperation(),
+            parameters: [Payments.ParameterAmount.makePPAmount(currencySymbol: "$", maxAmount: 59000.999999998)])
+        
+        XCTAssertEqual(result.validator.maxAmount, 59001.0)
+        XCTAssertEqual(result.currencySymbol, "$")
+    }
+    
+    func test_paymentsProcessDependencyReducerSFP_amountCase_withProductParameter_returnsUpdatedAmountParameter() throws {
+        
+        let result = try getAmountParameter(
+            makeSUT(),
+            operation: .sfpOperation(), parameters: [
+                Payments.ParameterAmount.makePPAmount(),
+                Payments.ParameterProduct(value: "productId", filter: .meToMeFrom, isEditable: true)
+            ])
+        
+        XCTAssertEqual(result.validator.maxAmount, 60000.13)
+        XCTAssertEqual(result.currencySymbol, "₽")
+    }
+    
+    func test_paymentsProcessDependencyReducerSFP_amountCase_withForaBank_returnsUpdatedAmountParameter() throws {
+        
+        let result = try getAmountParameter(
+            makeSUT(),
+            operation: .sfpOperation(),
+            parameters: [
+                Payments.ParameterAmount.makePPAmount(),
+                Payments.ParameterSelectBank.getTestParametersWithFora()
+            ])
+        
+        XCTAssertEqual(result.validator.maxAmount, 60000.13)
+        XCTAssertEqual(result.currencySymbol, "₽")
+    }
+    
     // MARK: payments Process Dependency Reducer SFP
     
     func test_paymentsProcessDependencyReducerSFP_headerCase_returnsExpectedParameterHeader() {
@@ -635,7 +718,7 @@ private extension Payments.Operation {
     
     static func sfpOperation(
         phone: String = "123",
-        bankId: String,
+        bankId: String = "someBankID",
         steps: [Step] = [.init(parameters: [], front: .empty(), back: .empty(stage: .remote(.start)))],
         visible: [String] = [],
         parameters: [PaymentsParameterRepresentable] = []
@@ -713,7 +796,7 @@ extension Model {
     static func templateSFPStub(
         _ transferData: [TransferData]
     ) -> PaymentTemplateData {
-    
+        
         return .init(
             groupName: "groupName",
             name: "name",
@@ -735,5 +818,40 @@ private extension Payments.ParameterInput {
     ) -> Self {
         
         .init(.init(id: id, value: value), title: "title", validator: .init(rules: []))
+    }
+}
+
+private extension Model_PaymensSFPTests {
+    
+    func getAmountParameter(
+        _ sut: Model,
+        operation: Payments.Operation,
+        parameters: [PaymentsParameterRepresentable]
+    ) throws -> Payments.ParameterAmount {
+        
+        try XCTUnwrap(sut.paymentsProcessDependencyReducerSFP(
+            operation: operation,
+            parameterId: Payments.Parameter.Identifier.amount.rawValue,
+            parameters: parameters
+        ) as? Payments.ParameterAmount, "Результат должен быть типа Payments.ParameterAmount")
+    }
+}
+
+private extension Payments.ParameterAmount {
+    
+    static func makePPAmount(
+        value: String? = nil,
+        title: String = "Сумма перевода",
+        currencySymbol: String = "₽",
+        minAmount: Double = 0.01,
+        maxAmount: Double = 60000.12999999998
+    ) -> Payments.ParameterAmount {
+        
+        return Payments.ParameterAmount(
+            value: value ?? Payments.Parameter.Identifier.amount.rawValue,
+            title: title,
+            currencySymbol: currencySymbol,
+            validator: .init(minAmount: minAmount, maxAmount: maxAmount)
+        )
     }
 }
