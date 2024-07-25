@@ -26,13 +26,12 @@ where InfoView: View {
     init(
         state: State,
         event: @escaping (LimitEvent) -> Void,
-        currencySymbol: String,
         config: LimitConfig,
         infoView: @escaping () -> InfoView,
         makeIconView: @escaping ViewFactory.MakeIconView
     ) {
         let formatter = DecimalFormatter(
-            currencySymbol: currencySymbol
+            currencySymbol: state.currencySymbol
         )
         let textField = DecimalTextFieldWithValueViewModel.decimal(
             formatter: formatter,
@@ -91,7 +90,6 @@ where InfoView: View {
         )
         .onReceive(textFieldPublisher) {
             event(.edit($0))
-            /*state.hiddenInfo = limit.value >= $0 // TODO: remove, only test*/
         }
     }
 }
@@ -124,9 +122,11 @@ struct LimitView_Previews: PreviewProvider {
         VStack(spacing: 32) {
                         
             LimitView(
-                state: .init(hiddenInfo: false, limit: .preview),
+                state: .init(
+                    hiddenInfo: false,
+                    limit: .preview,
+                    currencySymbol: "₽"),
                 event: { print($0) },
-                currencySymbol: "₽",
                 config: .preview,
                 infoView: {
                     

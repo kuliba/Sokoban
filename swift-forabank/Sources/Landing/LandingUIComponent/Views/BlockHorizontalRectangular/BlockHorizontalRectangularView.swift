@@ -91,14 +91,25 @@ extension BlockHorizontalRectangularView {
 
                     VStack(alignment: .leading, spacing: 4) {
 
-                        LimitView(
-                            limit: .init(
-                                title: limit.text,
-                                value: limit.maxSum,
-                                md5Hash: limit.md5hash
-                            ),
-                            event: {_ in },
-                            currencySymbol: "₽",
+                        LimitSettingsWrapperView(
+                            viewModel: .init(
+                                initialState: .init(
+                                    hiddenInfo: false,
+                                    limit: .init(
+                                        title: limit.text,
+                                        value: limit.maxSum,
+                                        md5Hash: limit.md5hash
+                                    ), currencySymbol: "₽"),
+                                reduce: {
+                                    state, event in
+                                    var state = state
+                                    switch event {
+                                    case let .edit(value):
+                                        state.hiddenInfo = state.limit.value >= value
+                                    }
+                                    return (state, .none)
+                                },
+                                handleEffect: {_,_ in }),
                             config: .preview,
                             infoView: {
                                 Text("Сумма лимита не может быть больше \(limit.maxSum) ₽")
@@ -107,7 +118,7 @@ extension BlockHorizontalRectangularView {
                                     .font(.system(size: 12))
                             },
                             makeIconView: factory.makeIconView)
-                        
+                                                
                         if limit != item.limits.last {
                             
                             HorizontalDivider(color: config.colors.divider)

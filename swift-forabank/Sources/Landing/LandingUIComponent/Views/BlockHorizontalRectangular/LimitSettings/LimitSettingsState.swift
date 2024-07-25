@@ -10,5 +10,6 @@ import Foundation
 struct LimitSettingsState {
     
     var hiddenInfo: Bool
-    let limit: Limit
+    var limit: Limit
+    let currencySymbol: String
 }
