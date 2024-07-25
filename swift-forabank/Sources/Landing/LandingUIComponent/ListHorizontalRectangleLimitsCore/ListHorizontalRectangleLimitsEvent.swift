@@ -15,7 +15,7 @@ public enum ListHorizontalRectangleLimitsEvent: Equatable {
         
     case buttonTapped(Info)
     case dismissDestination
-    case loadedLimits(LandingWrapperViewModel?, String)
+    case loadedLimits(LandingWrapperViewModel?, String, String)
     case updateLimits(SVCardLimitsResult)
     case saveLimits([BlockHorizontalRectangularEvent.Limit])
     case delayAlert(String)

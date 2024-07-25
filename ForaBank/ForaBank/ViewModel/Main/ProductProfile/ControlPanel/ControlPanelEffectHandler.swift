@@ -146,7 +146,7 @@ private extension ControlPanelEffectHandler {
         _ dispatch: @escaping LimitsDispatch
     ) {
         switch effect {
-        case .loadSVCardLanding:
+        case let .loadSVCardLanding(limitType):
             
             let cardType = card.cardType ?? .regular
             
@@ -155,7 +155,7 @@ private extension ControlPanelEffectHandler {
                 result in
                 switch result {
                 case .failure:
-                    dispatch(.loadedLimits(nil, ""))
+                    dispatch(.loadedLimits(nil, "", limitType))
                     
                 case let .success(landing):
                                         
@@ -164,7 +164,7 @@ private extension ControlPanelEffectHandler {
                         nil,
                         .default,
                         self.landingEvent
-                    ),  self.card.navigationTitleForControlPanel))
+                    ),  self.card.navigationTitleForControlPanel, limitType))
                 }
             }
             

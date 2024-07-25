@@ -26,3 +26,17 @@ public struct SVCardLimits: Equatable {
         }
     }
 }
+
+public struct CardLimitsInfo: Equatable {
+    
+    let type: String
+    let svCardLimits: SVCardLimits?
+    
+    public init(
+        type: String,
+        svCardLimits: SVCardLimits?
+    ) {
+        self.type = type
+        self.svCardLimits = svCardLimits
+    }
+}

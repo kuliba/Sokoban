@@ -31,6 +31,17 @@ public struct ListHorizontalRectangleLimitsState: Equatable {
 
 public extension ListHorizontalRectangleLimitsState {
     
+    var limitsInfo: SVCardLimits? {
+        
+        if case let .limits(limits) = limitsLoadingStatus {
+            return limits
+        }
+        return nil
+    }
+}
+
+public extension ListHorizontalRectangleLimitsState {
+    
     enum ErrorAlert: Equatable, Identifiable {
         
         public var id: Case {
@@ -65,7 +76,7 @@ public extension ListHorizontalRectangleLimitsState {
             return lhs.id == rhs.id
         }
         
-        case settingsView(LandingWrapperViewModel, String)
+        case settingsView(LandingWrapperViewModel, String, String, SVCardLimits?)
 
         public var id: _Case { _case }
         
@@ -83,7 +94,7 @@ public extension ListHorizontalRectangleLimitsState {
         
         var viewModel: LandingWrapperViewModel {
             switch self {
-            case let .settingsView(landingWrapperViewModel, _):
+            case let .settingsView(landingWrapperViewModel, _, _, _):
                 return landingWrapperViewModel
             }
         }

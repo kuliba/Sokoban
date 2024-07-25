@@ -28,15 +28,18 @@ struct BlockHorizontalRectangularView: View {
         .padding(.vertical, config.paddings.vertical)
     }
     
+    @ViewBuilder
     private func itemView (item: Item) -> some View {
-        
-        ItemView(
-            item: item,
-            inputStates: state.inputStates,
-            config: config,
-            factory: factory, 
-            event: event
-        )
+        if item.limitType == state.limitType {
+            
+            ItemView(
+                item: item,
+                inputStates: state.inputStates,
+                config: config,
+                factory: factory,
+                event: event
+            )
+        }
     }
 }
 
@@ -137,7 +140,10 @@ struct BlockHorizontalRectangularView_Previews: PreviewProvider {
     static var previews: some View {
         
         BlockHorizontalRectangularView(
-            state: .init(block: .defaultValue),
+            state: .init(
+                block: .defaultValue,
+                initialLimitsInfo: .init(type: "DEBIT_OPERATIONS", svCardLimits: nil)
+            ),
             event: { _ in },
             factory: .default,
             config: .default)

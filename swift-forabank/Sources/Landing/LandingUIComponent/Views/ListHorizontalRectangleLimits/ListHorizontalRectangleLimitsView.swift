@@ -42,7 +42,7 @@ struct ListHorizontalRectangleLimitsView: View {
     ) -> some View {
         
         switch destination {
-        case let .settingsView(viewModel, subtitle):
+        case let .settingsView(viewModel, subtitle, type, limits):
             
             VStack {
                 NavigationBar(

@@ -22,6 +22,8 @@ struct ProductProfileServices {
     ) -> LandingWrapperViewModel?
     
     let makeInformer: (String) -> Void
+    
+    typealias LimitType = String
 }
 
 // MARK: - Preview Content
