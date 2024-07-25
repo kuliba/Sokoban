@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 24.07.2024.
 //
 
+import CombineSchedulers
 import Foundation
 import ProductSelectComponent
 
@@ -45,10 +46,7 @@ extension UtilityPaymentStateComposer {
     ) -> UtilityServicePaymentFlowState {
         
         let composer = makeComposer()
-        
-        let viewModel = composer.makeAnywayTransactionViewModel(
-            transaction: transaction
-        )
+        let viewModel = composer.compose(transaction: transaction)
         
         let subscription = viewModel.$state
             .dropFirst()
@@ -65,23 +63,10 @@ extension UtilityPaymentStateComposer {
     }
     
     private func makeComposer(
-    ) -> AnywayTransactionViewModelComposer {
-        
-        let elementMapper = AnywayElementModelMapper(
-            currencyOfProduct: currencyOfProduct,
-            format: format,
-            getProducts: model.productSelectProducts,
-            flag: flag.optionOrStub
-        )
-        
-        let microServices = composeMicroServices()
+    ) -> _AnywayTransactionViewModelComposer {
         
         return .init(
-            getCurrencySymbol: getCurrencySymbol,
-            elementMapper: elementMapper,
-            microServices: microServices,
-            spinnerActions: spinnerActions
-        )
+            flag: flag, model: model, httpClient: httpClient, log: log, scheduler: .main)
     }
     
     private func format(currency: String?, amount: Decimal) -> String {
