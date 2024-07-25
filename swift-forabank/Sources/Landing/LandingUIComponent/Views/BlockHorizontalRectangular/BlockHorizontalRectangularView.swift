@@ -106,6 +106,7 @@ extension BlockHorizontalRectangularView {
                                     switch event {
                                     case let .edit(value):
                                         state.hiddenInfo = state.limit.value >= value
+                                        state.newValue = value
                                     }
                                     return (state, .none)
                                 },
