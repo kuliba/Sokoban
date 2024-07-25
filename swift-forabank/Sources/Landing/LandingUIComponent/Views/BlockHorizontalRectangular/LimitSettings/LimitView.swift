@@ -13,10 +13,8 @@ struct LimitView<InfoView>: View
 where InfoView: View {
     
     @StateObject private var textFieldModel: DecimalTextFieldWithValueViewModel
-    
-    @State private var infoHidden = true
-    
-    let limit: Limit
+        
+    let state: State
     let event: (LimitEvent) -> Void
     let infoView: () -> InfoView
     let makeIconView: ViewFactory.MakeIconView
@@ -26,7 +24,7 @@ where InfoView: View {
     private let getDecimal: (TextFieldState) -> Decimal
     
     init(
-        limit: Limit,
+        state: State,
         event: @escaping (LimitEvent) -> Void,
         currencySymbol: String,
         config: LimitConfig,
@@ -38,12 +36,12 @@ where InfoView: View {
         )
         let textField = DecimalTextFieldWithValueViewModel.decimal(
             formatter: formatter,
-            maxValue: limit.value
+            maxValue: state.limit.value
         )
         
         self._textFieldModel = .init(wrappedValue: textField)
         self.getDecimal = formatter.getDecimal
-        self.limit = limit
+        self.state = state
         self.event = event
         self.config = config
         self.infoView = infoView
@@ -59,10 +57,10 @@ where InfoView: View {
         
         VStack(alignment: .leading, spacing: 4) {
             
-            limit.title.text(withConfig: config.title)
+            state.limit.title.text(withConfig: config.title)
                 .frame(height: 24)
             HStack {
-                makeIconView(limit.md5Hash)
+                makeIconView(state.limit.md5Hash)
                     .aspectRatio(contentMode: .fit)
                     .frame(widthAndHeight: config.widthAndHeight)
                 
@@ -70,7 +68,7 @@ where InfoView: View {
             }
             .frame(height: 46)
             infoView()
-                .hidden(infoHidden)
+                .hidden(state.hiddenInfo)
         }
     }
 
@@ -93,9 +91,15 @@ where InfoView: View {
         )
         .onReceive(textFieldPublisher) {
             event(.edit($0))
-            infoHidden = limit.value >= $0 // TODO: remove, only test
+            /*state.hiddenInfo = limit.value >= $0 // TODO: remove, only test*/
         }
     }
+}
+
+extension LimitView {
+    
+    typealias State = LimitSettingsState
+    typealias Event = LimitEvent
 }
 
 // MARK: - Helpers
@@ -120,7 +124,7 @@ struct LimitView_Previews: PreviewProvider {
         VStack(spacing: 32) {
                         
             LimitView(
-                limit: .preview,
+                state: .init(hiddenInfo: false, limit: .preview),
                 event: { print($0) },
                 currencySymbol: "₽",
                 config: .preview,
