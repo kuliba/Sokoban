@@ -18,7 +18,7 @@ struct ServicePaymentFlowFactory {
 
 extension ServicePaymentFlowFactory {
 
-    typealias BottomSheetContent = (FraudNoticePayload) -> PaymentFlowModalView
+    typealias BottomSheetContent = (FraudNoticePayload) -> FraudNoticeView
 
     typealias TransactionResult = ServicePaymentFlowState.TransactionResult
     typealias FullScreenCoverContent = (TransactionResult) -> PaymentCompleteView
