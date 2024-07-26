@@ -205,6 +205,20 @@ extension RootViewModelFactory {
             }
         }
         
+        let servicePaymentBinderComposer = ServicePaymentBinderComposer(
+            fraudDelay: 120, // TODO: move `fraudDelay` to some Settings
+            flag: utilitiesPaymentsFlag,
+            model: model,
+            httpClient: httpClient,
+            log: logger.log,
+            scheduler: scheduler
+        )
+        let makeServicePaymentBinder = servicePaymentBinderComposer.makeBinder
+        
+        let servicePickerFlowModelFactory = PaymentProviderServicePickerFlowModelFactory(
+            makeServicePaymentBinder: { makeServicePaymentBinder($0, .none) }
+        )
+        
         let utilityNanoServicesComposer = UtilityPaymentNanoServicesComposer(
             flag: utilitiesPaymentsFlag,
             model: model,
@@ -231,17 +245,11 @@ extension RootViewModelFactory {
                     )
                 }
             ),
+            factory: servicePickerFlowModelFactory,
             nanoServices: utilityNanoServices,
             scheduler: scheduler
         )
         let makePaymentProviderServicePickerFlowModel = servicePickerComposer.makeFlowModel
-        
-        let servicePaymentBinderComposer = ServicePaymentBinderComposer(
-            fraudDelay: 120, // TODO: move `fraudDelay` to some Settings
-            model: model,
-            scheduler: scheduler
-        )
-        let makeServicePaymentBinder = servicePaymentBinderComposer.makeBinder
         
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,

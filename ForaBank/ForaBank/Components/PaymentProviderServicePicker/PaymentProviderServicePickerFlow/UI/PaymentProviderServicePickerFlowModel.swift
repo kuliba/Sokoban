@@ -13,21 +13,26 @@ final class PaymentProviderServicePickerFlowModel: ObservableObject {
     
     @Published private(set) var state: State
     
+    private let factory: Factory
     private let reduce: Reduce
     private let handleEffect: HandleEffect
     
     private let stateSubject = PassthroughSubject<State, Never>()
+    private let scheduler: AnySchedulerOf<DispatchQueue>
     private var cancellables = Set<AnyCancellable>()
     
     init(
         initialState: State,
+        factory: Factory,
         reduce: @escaping Reduce,
         handleEffect: @escaping HandleEffect,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.state = initialState
+        self.factory = factory
         self.reduce = reduce
         self.handleEffect = handleEffect
+        self.scheduler = scheduler
         
         bind(on: scheduler)
     }
@@ -35,9 +40,11 @@ final class PaymentProviderServicePickerFlowModel: ObservableObject {
 
 extension PaymentProviderServicePickerFlowModel {
     
+    typealias Factory = PaymentProviderServicePickerFlowModelFactory
+    
     typealias Reduce = (State, Event) -> (State, Effect?)
     typealias HandleEffect = (Effect, @escaping (Event) -> Void) -> Void
-
+    
     typealias State = PaymentProviderServicePickerFlowState
     typealias Event = PaymentProviderServicePickerFlowEvent
     typealias Effect = PaymentProviderServicePickerFlowEffect
@@ -62,23 +69,22 @@ extension PaymentProviderServicePickerFlowModel {
 
 private extension PaymentProviderServicePickerFlowModel {
     
-    func bind(
-        on scheduler: AnySchedulerOf<DispatchQueue>
-    ) {
+    func bind(on scheduler: AnySchedulerOf<DispatchQueue>) {
+        
         stateSubject
             .receive(on: scheduler)
             .assign(to: &$state)
         
-        let statePublisher = state.content.$state
+        let contentStatePublisher = state.content.$state
             .receive(on: scheduler)
             .share()
         
-        statePublisher
+        contentStatePublisher
             .map(\.isLoading)
             .sink { [weak self] in self?.state.isContentLoading = $0 }
             .store(in: &cancellables)
         
-        statePublisher
+        contentStatePublisher
             .map(\.response)
             .sink { [weak self] in self?.handleResponse($0) }
             .store(in: &cancellables)
@@ -95,8 +101,18 @@ private extension PaymentProviderServicePickerFlowModel {
         case let .failure(failure):
             state.alert = .init(serviceFailure: failure)
             
-        case let .success(success):
-            state.destination = .payment(success)
+        case let .success(transaction):
+            let binder = factory.makeServicePaymentBinder(transaction)
+            bind(binder)
+            state.destination = .payment(binder)
         }
+    }
+    
+    func bind(_ binder: ServicePaymentBinder) {
+        
+#warning("fix subscription")
+        binder.flow.$state
+            .sink { [weak self] _ in _ = self }
+            .store(in: &cancellables)
     }
 }

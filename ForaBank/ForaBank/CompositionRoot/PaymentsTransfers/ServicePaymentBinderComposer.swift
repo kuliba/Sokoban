@@ -13,18 +13,30 @@ import RxViewModel
 final class ServicePaymentBinderComposer {
     
     private let fraudDelay: Double
+    private let flag: Flag
     private let model: Model
+    private let httpClient: HTTPClient
+    private let log: Log
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         fraudDelay: Double,
+        flag: Flag,
         model: Model,
+        httpClient: HTTPClient,
+        log: @escaping Log,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.fraudDelay = fraudDelay
+        self.flag = flag
         self.model = model
+        self.httpClient = httpClient
+        self.log = log
         self.scheduler = scheduler
     }
+    
+    typealias Flag = UtilitiesPaymentsFlag
+    typealias Log = (LoggerAgentLevel, LoggerAgentCategory, String, StaticString, UInt) -> Void
 }
 
 extension ServicePaymentBinderComposer {
@@ -48,8 +60,15 @@ private extension ServicePaymentBinderComposer {
         transaction: AnywayTransactionState.Transaction
     ) -> AnywayTransactionViewModel {
         
-        // let composer = AnywayTransactionViewModelComposer()
-        fatalError()
+        let composer = AnywayTransactionViewModelComposer(
+            flag: flag,
+            model: model,
+            httpClient: httpClient,
+            log: log,
+            scheduler: scheduler
+        )
+        
+        return composer.compose(transaction: transaction)
     }
     
     func makeFlowModel(

@@ -376,6 +376,7 @@ private extension MainView {
     }
     
 #warning("fixme")
+#warning("extract helpers")
     func servicePicker(
         model: PaymentProviderServicePickerFlowModel
     ) -> some View {
@@ -383,7 +384,8 @@ private extension MainView {
         PaymentProviderServicePickerFlowView(
             model: model,
             contentView: { content in
-                
+#warning("extract helper") 
+                return
                 PaymentProviderServicePickerWrapperView(
                     model: model.state.content,
                     failureView: {
@@ -405,7 +407,7 @@ private extension MainView {
                 )
             },
             alertContent: { alert in
-                
+#warning("extract helper")
                 return .init(with: .init(
                     title: "Error",
                     message: {
@@ -425,17 +427,22 @@ private extension MainView {
                     )
                 ))
             },
-            destinationContent: {
-                
-                switch $0 {
-                case .payment:
-                    Text("DestinationView: payment")
-                    
-                case .paymentByInstruction:
-                    Text("DestinationView: paymentByInstruction")
-                }
-            }
+            destinationContent: servicePickerDestinationContent
         )
+    }
+    
+    @ViewBuilder
+    private func servicePickerDestinationContent(
+        destination: PaymentProviderServicePickerFlowState.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .payment(binder):
+            paymentFlow(binder: binder)
+            
+        case .paymentByInstruction:
+            Text("DestinationView: paymentByInstruction")
+        }
     }
 }
 
