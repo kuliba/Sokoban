@@ -152,6 +152,8 @@ enum HistoryEvent: Equatable {
     case button(ButtonEvent)
     case filter([ProductProfileViewModel.HistoryState.Filter]?)
     case calendar(Date?)
+    case clearOptions
+    case dismiss
     
     enum ButtonEvent: Equatable {
         

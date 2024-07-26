@@ -58,6 +58,18 @@ extension HistoryReducer {
                 showSheet: false,
                 categories: state?.categories ?? []
             )
+        
+        case .clearOptions:
+            state = .init(
+                date: nil,
+                filters: nil,
+                buttonAction: .calendar,
+                showSheet: false,
+                categories: state?.categories ?? []
+            )
+            
+        case .dismiss:
+            state = nil
         }
         
         return (state, effect)

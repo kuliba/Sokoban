@@ -210,16 +210,16 @@ struct ProductProfileView: View {
                         ),
                         makeButtonsContainer: {
                             .init(
-                                dismissAction: { self.viewModel.historyState = nil },
-                                clearOptionsAction: { print(self.viewModel.historyState) },
+                                dismissAction: { self.viewModel.event(.history(.dismiss)) },
+                                clearOptionsAction: { self.viewModel.event(.history(.clearOptions)) },
                                 config: .init(
                                     clearButtonTitle: "Очистить",
                                     applyButtonTitle: "Применить"
                                 )
                             )
                         },
-                        clearOptionsAction: {},
-                        dismissAction: { self.viewModel.sheet = nil}
+                        clearOptionsAction: { self.viewModel.event(.history(.clearOptions)) },
+                        dismissAction: { self.viewModel.event(.history(.dismiss)) }
                     )
                 }
             }
