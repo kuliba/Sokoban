@@ -858,7 +858,7 @@ extension UtilityServicePaymentFlowState.Modal: Identifiable {
 
 // MARK: - Alerts
 
-private extension AlertModel
+extension AlertModel
 where PrimaryEvent == AnywayTransactionEvent,
       SecondaryEvent == AnywayTransactionEvent {
     
