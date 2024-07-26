@@ -54,7 +54,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
     
     func test_terminate_shouldSetFullScreenCoverStateToTerminated() {
         
-        assert(.fullScreenCover(.completed(.success(makeReport()))), event: .terminate) {
+        assert(.fullScreenCover(.success(makeReport())), event: .terminate) {
             
             $0 = .terminated
         }
@@ -62,7 +62,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
     
     func test_dismissModal_shouldNotDeliverEffectOnFullScreenCoverState() {
         
-        assert(.fullScreenCover(.completed(.success(makeReport()))), event: .terminate, delivers: nil)
+        assert(.fullScreenCover(.success(makeReport())), event: .terminate, delivers: nil)
     }
     
     // MARK: - notify
@@ -323,10 +323,10 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         assert(.none, event: .showResult(.failure(nonExpiredFraud))) {
             
-            $0 = .fullScreenCover(.completed(.failure(.init(
+            $0 = .fullScreenCover(.failure(.init(
                 formattedAmount: nonExpiredFraud.formattedAmount,
                 hasExpired: nonExpiredFraud.hasExpired
-            ))))
+            )))
         }
     }
     
@@ -343,10 +343,10 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         assert(.none, event: .showResult(.failure(expiredFraud))) {
             
-            $0 = .fullScreenCover(.completed(.failure(.init(
+            $0 = .fullScreenCover(.failure(.init(
                 formattedAmount: expiredFraud.formattedAmount,
                 hasExpired: expiredFraud.hasExpired
-            ))))
+            )))
         }
     }
     
@@ -363,7 +363,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         assert(.none, event: .showResult(.success(report))) {
             
-            $0 = .fullScreenCover(.completed(.success(report)))
+            $0 = .fullScreenCover(.success(report))
         }
     }
     

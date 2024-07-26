@@ -128,17 +128,13 @@ private extension ServicePaymentFlowReducer {
     ) {
         switch result {
         case let .failure(fraud):
-            state = .fullScreenCover(
-                .completed(.failure(.init(
-                    formattedAmount: fraud.formattedAmount,
-                    hasExpired: fraud.hasExpired
-                )))
-            )
+            state = .fullScreenCover(.failure(.init(
+                formattedAmount: fraud.formattedAmount,
+                hasExpired: fraud.hasExpired
+            )))
             
         case let .success(report):
-            state = .fullScreenCover(
-                .completed(.success(report))
-            )
+            state = .fullScreenCover(.success(report))
         }
     }
 }
