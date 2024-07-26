@@ -15,28 +15,32 @@ struct BlockHorizontalRectangularView: View {
     let event: (Event) -> Void
     let factory: Factory
     let config: Config
-
+    
     var body: some View {
         
-        ScrollView(.vertical, showsIndicators: false) {
-            
-            VStack(spacing: config.spacing) {
-                ForEach(state.block.list, content: itemView)
-            }
+        VStack(spacing: config.spacing) {
+            ForEach(state.block.list, content: itemView)
+        }
+        .onTapGesture {
+            UIApplication.shared.endEditing()
         }
         .padding(.horizontal, config.paddings.horizontal)
         .padding(.vertical, config.paddings.vertical)
     }
     
+    @ViewBuilder
     private func itemView (item: Item) -> some View {
-        
-        ItemView(
-            item: item,
-            inputStates: state.inputStates,
-            config: config,
-            factory: factory, 
-            event: event
-        )
+        if item.limitType == state.limitType {
+            
+            ItemView(
+                item: item,
+                inputStates: state.inputStates,
+                config: config,
+                factory: factory,
+                event: event,
+                enableEdit: state.enableEdit
+            )
+        }
     }
 }
 
@@ -57,6 +61,7 @@ extension BlockHorizontalRectangularView {
         let config: Config
         let factory: Factory
         let event: (Event) -> Void
+        let enableEdit: Bool
         
         var body: some View {
             
@@ -79,7 +84,7 @@ extension BlockHorizontalRectangularView {
                 .padding()
             }
         }
-        
+                
         private func limit(_ limit: Item.Limit) -> some View {
             
             if let inputState = inputStates.first(where: { $0.id == limit.id }) {
@@ -90,46 +95,9 @@ extension BlockHorizontalRectangularView {
                         .foregroundColor(config.colors.title)
 
                     VStack(alignment: .leading, spacing: 4) {
-                        
-                        HStack(alignment: .center, spacing: 16) {
-                            
-                            factory.makeIconView(limit.md5hash)
-                                .aspectRatio(contentMode: .fit)
-                                .frame(widthAndHeight: config.sizes.iconWidth)
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                
-                                Text(limit.text)
-                                    .font(.caption)
-                                    .foregroundColor(config.colors.subtitle)
 
-                                TextField(
-                                    "",
-                                    text: .init(
-                                        get: { inputState.value.formattedValue("₽") },
-                                        set: { event(.change(.init(id: limit.id, value: $0))) }
-                                    )
-                                )
-                                .font(.caption)
-                                .foregroundColor(config.colors.title)
-                            }
-                        }
-                        
-                        if let warning = inputState.warning {
-                            
-                            HStack(alignment: .center, spacing: 16) {
-                                
-                                Color.clear
-                                    .frame(widthAndHeight: config.sizes.iconWidth)
-                                
-                                Text(warning)
-                                    .font(.caption)
-                                    .lineLimit(2)
-                                    .fixedSize()
-                                    .foregroundColor(config.colors.warning)
-                            }
-                        }
-                        
+                        limitsSettingsView(limit)
+                                                
                         if limit != item.limits.last {
                             
                             HorizontalDivider(color: config.colors.divider)
@@ -140,6 +108,39 @@ extension BlockHorizontalRectangularView {
             }
             else { return AnyView(EmptyView()) }
         }
+        
+        private func limitsSettingsView(_ limit: Item.Limit) -> some View {
+            
+            return LimitSettingsWrapperView(
+                viewModel: .init(
+                    initialState: .init(
+                        hiddenInfo: true,
+                        limit: .init(
+                            title: limit.text,
+                            value: limit.maxSum,
+                            md5Hash: limit.md5hash
+                        ), currencySymbol: "₽"),
+                    reduce: {
+                        state, event in
+                        var state = state
+                        switch event {
+                        case let .edit(value):
+                            state.hiddenInfo = state.limit.value >= value
+                            state.newValue = value
+                        }
+                        return (state, .none)
+                    },
+                    handleEffect: {_,_ in }),
+                config: .preview,
+                infoView: {
+                    Text("Сумма лимита не может быть больше \(limit.maxSum.formattedValue("₽"))")
+                        .fixedSize(horizontal: false, vertical: true)
+                        .foregroundColor(.init(red: 227/255, green: 1/255, blue: 27/255))
+                        .font(.system(size: 12))
+                },
+                makeIconView: factory.makeIconView)
+            .disabled(!enableEdit)
+        }
     }
 }
 
@@ -147,9 +148,24 @@ struct BlockHorizontalRectangularView_Previews: PreviewProvider {
     static var previews: some View {
         
         BlockHorizontalRectangularView(
-            state: .init(block: .defaultValue),
+            state: .init(
+                block: .defaultValue,
+                initialLimitsInfo: .init(type: "DEBIT_OPERATIONS", svCardLimits: nil, editEnable: true)
+            ),
             event: { _ in },
             factory: .default,
             config: .default)
+    }
+}
+
+private extension Decimal {
+        
+    func formattedValue(_ currency: String) -> String {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 2
+        
+        return "\(formatter.string(for: self) ?? "") \(currency)"
     }
 }

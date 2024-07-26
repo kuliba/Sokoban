@@ -10,7 +10,17 @@ import UIPrimitives
 
 public final class ListHorizontalRectangleLimitsReducer {
     
-    public init() {}
+    let makeInformer: (String) -> Void
+    private let alertLifespan: DispatchTimeInterval
+
+    public init(
+        makeInformer: @escaping (String) -> Void,
+        alertLifespan: DispatchTimeInterval = .milliseconds(400)
+
+    ) {
+        self.makeInformer = makeInformer
+        self.alertLifespan = alertLifespan
+    }
 }
 
 public extension ListHorizontalRectangleLimitsReducer {
@@ -35,22 +45,37 @@ public extension ListHorizontalRectangleLimitsReducer {
             
         case let .buttonTapped(info):
             switch info.action {
-            case "changeLimit":
+            case "changeLimit", "viewLimit":
                // state.limitsLoadingStatus = .inflight(.loadingSettingsLimits)
-                effect = .loadSVCardLanding
+                effect = .loadSVCardLanding(info.limitType)
                 
             default:
                 break
             }
             
-        case let .loadedLimits(landingViewModel, subTitle):
+        case let .loadedLimits(landingViewModel, subTitle, limitType):
             
             if let landingViewModel {
-                state.destination = .settingsView(landingViewModel, subTitle)
+                
+                landingViewModel.updateCardLimitsInfo(.init(type: limitType, svCardLimits: state.limitsInfo, editEnable: state.editEnableFor(limitType)))
+                
+                state.destination = .settingsView(landingViewModel, subTitle, limitType)
             }
+        
+        case let .saveLimits(limits):
+            effect = .saveLimits(limits)
             
         case .dismissDestination:
             state.destination = nil
+            
+        case let .showAlert(message):
+            state.alert = .updateLimitsError(message)
+            
+        case let .delayAlert(message):
+            effect = .showAlert(message, alertLifespan)
+            
+        case let .informer(message):
+            makeInformer(message)
         }
         
         return (state, effect)
