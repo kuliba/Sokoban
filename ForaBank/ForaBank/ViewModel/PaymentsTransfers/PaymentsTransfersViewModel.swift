@@ -6,6 +6,7 @@
 //
 
 import Combine
+import ForaTools
 import PickerWithPreviewComponent
 import SberQR
 import SwiftUI
@@ -59,7 +60,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         isTabBarHidden: Bool = false,
         mode: Mode = .normal,
         route: Route = .empty,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+        scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.navButtonsRight = []
         self.sections = paymentsTransfersFactory.makeSections()
@@ -95,7 +96,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
         navButtonsRight: [NavigationBarButtonViewModel],
         mode: Mode = .normal,
         route: Route = .empty,
-        scheduler: AnySchedulerOfDispatchQueue = .makeMain()
+        scheduler: AnySchedulerOfDispatchQueue = .main
     ) {
         self.sections = sections
         self.mode = mode
@@ -1533,49 +1534,53 @@ extension PaymentsTransfersViewModel {
         _ qr: QRCode,
         _ qrMapping: QRMapping
     ) {
-        if let operators = model.operatorsFromQR(qr, qrMapping) {
+        let operators = model.operatorsFromQR(qr, qrMapping)
+        let multipleOperators = MultiElementArray(operators ?? [])
+        
+        switch (multipleOperators, operators?.first) {
+        case let (_, .some(`operator`)):
+            payWith(operator: `operator`, qr: qr, qrMapping: qrMapping)
             
-            guard operators.count > 0 else {
+        case let (.some(multipleOperators), _):
+            scheduler.delay(for:.milliseconds(700)) { [weak self] in
                 
-                self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
-                return
+                self?.handleQRMappingWithMultipleOperators(qr, multipleOperators.elements)
             }
             
-            if operators.count == 1 {
-                
-                if let operatorValue = operators.first, Payments.paymentsServicesOperators.map(\.rawValue).contains(operatorValue.parentCode) {
-                    
-                    Task { [weak self] in
-                        
-                        await self?.handleQRMappingWithSingleOperator(qr, operatorValue)
-                    }
-                } else {
-                    self.delay(for: .milliseconds(700)) { [self] in
-                        
-                        let viewModel = InternetTVDetailsViewModel(
-                            model: model,
-                            qrCode: qr,
-                            mapping: qrMapping
-                        )
-                        self.route.destination = .operatorView(viewModel)
-                    }
-                }
-            } else {
-                delay(for: .milliseconds(700)) { [weak self] in
-                    
-                    self?.handleQRMappingWithMultipleOperators(qr, operators)
-                }
-            }
+        default:
+            self.action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
+        }
+    }
+    
+    private func payWith(
+        operator: OperatorGroupData.OperatorData,
+        qr: QRCode,
+        qrMapping: QRMapping
+    ) {
+        let isServicePayment = Payments
+            .paymentsServicesOperators
+            .map(\.rawValue)
+            .contains(`operator`.parentCode)
+        
+        if isServicePayment {
+            handleQRMappingWithSingleOperator(qr, `operator`)
         } else {
-            action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qr))
+            delay(for: .milliseconds(700)) { [self] in
+                
+                let viewModel = InternetTVDetailsViewModel(
+                    model: model,
+                    qrCode: qr,
+                    mapping: qrMapping
+                )
+                self.route.destination = .operatorView(viewModel)
+            }
         }
     }
     
     private func handleQRMappingWithSingleOperator(
         _ qr: QRCode,
         _ operatorValue: OperatorGroupData.OperatorData
-    ) async {
-        
+    ) {
         let puref = operatorValue.code
         let additionalList = model.additionalList(for: operatorValue, qrCode: qr)
         let amount: Double = qr.rawData["sum"]?.toDouble() ?? 0
@@ -1593,7 +1598,7 @@ extension PaymentsTransfersViewModel {
         )
         bind(paymentsViewModel)
         
-        await MainActor.run { [weak self] in
+        scheduler.schedule { [weak self] in
             
             self?.route.destination = .init(.payments(paymentsViewModel))
         }

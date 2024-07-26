@@ -13,16 +13,16 @@ public typealias BlockHorizontalRectangularViewModel = RxViewModel<BlockHorizont
 
 struct BlockHorizontalRectangularWrappedView: View {
     
-    @ObservedObject var model: BlockHorizontalRectangularViewModel
+    @ObservedObject var viewModel: BlockHorizontalRectangularViewModel
     let factory: ViewFactory
     let config: UILanding.BlockHorizontalRectangular.Config
     
     public init(
-        model: BlockHorizontalRectangularViewModel,
+        viewModel: BlockHorizontalRectangularViewModel,
         factory: ViewFactory,
         config: UILanding.BlockHorizontalRectangular.Config
     ) {
-        self.model = model
+        self.viewModel = viewModel
         self.factory = factory
         self.config = config
     }
@@ -30,8 +30,8 @@ struct BlockHorizontalRectangularWrappedView: View {
     public var body: some View {
         
         BlockHorizontalRectangularView(
-            state: model.state,
-            event: model.event(_:),
+            state: viewModel.state,
+            event: viewModel.event(_:),
             factory: factory,
             config: config)
     }

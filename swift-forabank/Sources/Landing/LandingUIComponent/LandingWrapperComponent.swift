@@ -28,6 +28,7 @@ public final class LandingWrapperViewModel: ObservableObject {
     private var bindings = Set<AnyCancellable>()
     private var landingActions: (LandingEvent) -> Void
     let makeIconView: LandingView.MakeIconView
+    var cardLimitsInfo: CardLimitsInfo?
 
     let config: UILanding.Component.Config
     
@@ -168,6 +169,25 @@ public final class LandingWrapperViewModel: ObservableObject {
             self.message = message
         }
     }
+    
+    // TODO: change after refactoring
+    
+    public func updateCardLimitsInfo(_ newValue: CardLimitsInfo?) {
+        cardLimitsInfo = newValue
+    }
+}
+
+public extension LandingWrapperViewModel {
+    
+    func navigationTitle() -> String {
+        
+        if case let .success(landing) = state {
+            if let landing {
+                return landing.headerTitle()
+            }
+        }
+        return ""
+    }
 }
 
 public struct LandingWrapperView: View {
@@ -194,7 +214,8 @@ public struct LandingWrapperView: View {
             landingUIView(
                 landing,
                 viewModel.images,
-                viewModel.config
+                viewModel.config,
+                viewModel.cardLimitsInfo
             )
         }
     }
@@ -202,14 +223,16 @@ public struct LandingWrapperView: View {
     private func landingUIView(
         _ landing: UILanding,
         _ images: [String: Image],
-        _ config: UILanding.Component.Config
+        _ config: UILanding.Component.Config,
+        _ cardLimitsInfo: CardLimitsInfo?
     ) -> LandingView {
         .init(
             viewModel: .init(landing: landing, config: config),
             images: images,
             action: viewModel.action,
             makeIconView: viewModel.makeIconView, 
-            limitsViewModel: viewModel.limitsViewModel
+            limitsViewModel: viewModel.limitsViewModel,
+            cardLimitsInfo: cardLimitsInfo
         )
     }
 }
