@@ -246,11 +246,11 @@ struct MainView<NavigationOperationView: View>: View {
                 .navigationBarTitle("Оформление заявки", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
             
-        case let .providerServicePicker(model):
-            servicePicker(model: model)
-            
         case let .paymentProviderPicker(providers, destination):
             paymentProviderPicker(for: providers, with: destination)
+            
+        case let .providerServicePicker(model):
+            servicePicker(model: model)
         }
     }
     
@@ -315,9 +315,65 @@ struct MainView<NavigationOperationView: View>: View {
     }
 }
 
-// MARK: - payment
+// MARK: - payment provider & service pickers
 
 private extension MainView {
+    
+#warning("fix nav bar below")
+    func paymentProviderPicker(
+        for providers: MultiElementArray<SegmentedPaymentProvider>,
+        with destination: PaymentProviderServicePickerFlowModel?
+    ) -> some View {
+        
+        PaymentProviderSegmentsView(
+            segments: .init(with: providers.elements),
+            providerView: paymentProviderView,
+            footer: paymentProviderPickerFooter,
+            config: .iFora
+        )
+        .navigationDestination(
+            destination: destination,
+            dismissDestination: viewModel.dismissPaymentProviderPickerDestination,
+            content: servicePicker(model:)
+        )
+        .navigationBarWithAsyncIcon(
+            title: "state.content.operator.title",
+            subtitle: "state.content.operator.subtitle",
+            dismiss: viewModel.dismissProviderServicePicker,
+            icon: .init(
+                image: .ic24Hash,
+                publisher: Empty().eraseToAnyPublisher()
+            ),
+            style: .large
+        )
+    }
+    
+    func paymentProviderView(
+        provider: PaymentProviderSegment.Provider
+    ) -> some View {
+        
+        Button {
+            
+            viewModel.select(provider: provider)
+            
+        } label: {
+            
+            Text("icon")
+            
+            VStack(alignment: .leading) {
+                
+                Text(provider.title)
+                provider.inn.map(Text.init)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+    
+#warning("FIX footer")
+    func paymentProviderPickerFooter() -> some View {
+        
+        Text("TBD: Footer with buttons")
+    }
     
 #warning("fixme")
     func servicePicker(
@@ -380,62 +436,6 @@ private extension MainView {
                 }
             }
         )
-    }
-    
-#warning("fix nav bar below")
-    func paymentProviderPicker(
-        for providers: MultiElementArray<SegmentedPaymentProvider>,
-        with destination: PaymentProviderServicePickerFlowModel?
-    ) -> some View {
-        
-        PaymentProviderSegmentsView(
-            segments: .init(with: providers.elements),
-            providerView: paymentProviderView,
-            footer: paymentProviderPickerFooter,
-            config: .iFora
-        )
-        .navigationDestination(
-            destination: destination,
-            dismissDestination: viewModel.dismissPaymentProviderPickerDestination,
-            content: servicePicker(model:)
-        )
-        .navigationBarWithAsyncIcon(
-            title: "state.content.operator.title",
-            subtitle: "state.content.operator.subtitle",
-            dismiss: viewModel.dismissProviderServicePicker,
-            icon: .init(
-                image: .ic24Hash,
-                publisher: Empty().eraseToAnyPublisher()
-            ),
-            style: .large
-        )
-    }
-    
-    func paymentProviderView(
-        provider: PaymentProviderSegment.Provider
-    ) -> some View {
-        
-        Button {
-            
-            viewModel.select(provider: provider)
-            
-        } label: {
-            
-            Text("icon")
-            
-            VStack(alignment: .leading) {
-                
-                Text(provider.title)
-                provider.inn.map(Text.init)
-            }
-        }
-        .buttonStyle(.plain)
-    }
-    
-#warning("FIX footer")
-    func paymentProviderPickerFooter() -> some View {
-        
-        Text("TBD: Footer with buttons")
     }
 }
 

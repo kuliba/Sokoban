@@ -48,15 +48,15 @@ struct ServicePaymentFlowStateWrapperView: View {
                 contentEvent: contentModel.event(_:)
             )
         )
-        .fullScreenCover(
-            cover: flowModel.state.fullScreenCover,
-            dismissFullScreenCover: { flowModel.event(.terminate) },
-            content: { factory.fullScreenCoverContent($0.result) }
-        )
         .bottomSheet(
             sheet: flowModel.state.bottomSheet,
             dismiss: { contentModel.event(.fraud(.cancel)) },
             content: { factory.bottomSheetContent($0.fraudPayload) }
+        )
+        .fullScreenCover(
+            cover: flowModel.state.fullScreenCover,
+            dismissFullScreenCover: { flowModel.event(.terminate) },
+            content: { factory.fullScreenCoverContent($0.result) }
         )
         .padding(.bottom)
         .ignoresSafeArea(.container, edges: .bottom)
