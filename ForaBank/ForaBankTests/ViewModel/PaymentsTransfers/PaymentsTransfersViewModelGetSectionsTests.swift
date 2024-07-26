@@ -95,12 +95,12 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
         )
         return .init(
-            makeUtilitiesViewModel: { _,_ in },
-            makeProductProfileViewModel: productProfileViewModel,
-            makeTemplatesListViewModel: { _ in .sampleComplete },
-            makeSections: { sections }, 
             makeAlertDataUpdateFailureViewModel: { _ in nil },
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            makeProductProfileViewModel: productProfileViewModel,
+            makeSections: { sections },
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeUtilitiesViewModel: { _,_ in }
         )
     }
     

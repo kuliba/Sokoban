@@ -818,15 +818,15 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
+            makeAlertDataUpdateFailureViewModel: makeAlertDataUpdateFailureViewModel,
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            makeProductProfileViewModel: productProfileViewModel,
+            makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+            makeTemplatesListViewModel: { _ in .sampleComplete },
             makeUtilitiesViewModel: { _, completion in
                 
                 completion(.utilities)
-            },
-            makeProductProfileViewModel: productProfileViewModel,
-            makeTemplatesListViewModel: { _ in .sampleComplete },
-            makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
-            makeAlertDataUpdateFailureViewModel: makeAlertDataUpdateFailureViewModel,
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
+            }
         )
         
         let sut = SUT(

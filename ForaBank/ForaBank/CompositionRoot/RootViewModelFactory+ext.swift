@@ -448,14 +448,14 @@ extension ProductProfileViewModel {
             )
             
             let paymentsTransfersFactory = PaymentsTransfersFactory(
-                makeUtilitiesViewModel: makeUtilitiesViewModel,
-                makeProductProfileViewModel: makeProductProfileViewModel,
-                makeTemplatesListViewModel: makeTemplatesListViewModel,
-                makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
-                makeAlertDataUpdateFailureViewModel: { 
+                makeAlertDataUpdateFailureViewModel: {
                     updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
                 },
-                makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel
+                makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
+                makeProductProfileViewModel: makeProductProfileViewModel,
+                makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+                makeTemplatesListViewModel: makeTemplatesListViewModel,
+                makeUtilitiesViewModel: makeUtilitiesViewModel
             )
             
             let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData, model in
@@ -569,14 +569,14 @@ private extension RootViewModelFactory {
     ) -> RootViewModel {
                 
         let paymentsTransfersFactory = PaymentsTransfersFactory(
-            makeUtilitiesViewModel: makeUtilitiesViewModel,
-            makeProductProfileViewModel: makeProductProfileViewModel,
-            makeTemplatesListViewModel: makeTemplatesListViewModel, 
-            makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
             makeAlertDataUpdateFailureViewModel: {
                 updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
             },
-            makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel
+            makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
+            makeProductProfileViewModel: makeProductProfileViewModel,
+            makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+            makeTemplatesListViewModel: makeTemplatesListViewModel,
+            makeUtilitiesViewModel: makeUtilitiesViewModel
         )
         
         let mainViewModel = MainViewModel(

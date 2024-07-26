@@ -9,12 +9,12 @@ import SwiftUI
 
 struct PaymentsTransfersFactory {
     
-    let makeUtilitiesViewModel: MakeUtilitiesViewModel
-    let makeProductProfileViewModel: MakeProductProfileViewModel
-    let makeTemplatesListViewModel: MakeTemplatesListViewModel
-    let makeSections: MakePaymentsTransfersSections
     let makeAlertDataUpdateFailureViewModel: MakeAlertDataUpdateFailureViewModel
     let makePaymentProviderServicePickerFlowModel: MakePaymentProviderServicePickerFlowModel
+    let makeProductProfileViewModel: MakeProductProfileViewModel
+    let makeSections: MakePaymentsTransfersSections
+    let makeTemplatesListViewModel: MakeTemplatesListViewModel
+    let makeUtilitiesViewModel: MakeUtilitiesViewModel
 }
 
 extension PaymentsTransfersFactory {
@@ -69,12 +69,12 @@ extension PaymentsTransfersFactory {
             makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
         )
         return .init(
-            makeUtilitiesViewModel: { _,_ in },
-            makeProductProfileViewModel: productProfileViewModel,
-            makeTemplatesListViewModel: { _ in .sampleComplete },
-            makeSections: { Model.emptyMock.makeSections(flag: .init(.inactive)) },
             makeAlertDataUpdateFailureViewModel: { _ in nil },
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            makeProductProfileViewModel: productProfileViewModel,
+            makeSections: { Model.emptyMock.makeSections(flag: .init(.inactive)) },
+            makeTemplatesListViewModel: { _ in .sampleComplete },
+            makeUtilitiesViewModel: { _,_ in }
         )
     }()
 }
