@@ -439,6 +439,52 @@ private extension MainView {
     }
 }
 
+// MARK: - payment flow
+
+private extension MainView {
+    
+    func paymentFlow(
+        binder: ServicePaymentBinder
+    ) -> some View {
+        
+        let anywayPaymentFactory = viewFactory.makeAnywayPaymentFactory {
+            
+            binder.content.event(.payment($0))
+        }
+        
+        let flowFactory = ServicePaymentFlowFactory(
+            bottomSheetContent: { payload in
+                
+                return .init(
+                    state: payload,
+                    event: { binder.content.event(.fraud($0)) }
+                )
+            },
+            fullScreenCoverContent: { result in
+                
+                viewFactory.makePaymentCompleteView(
+                    result
+                        .mapError {
+                            
+                            return .init(
+                                formattedAmount: $0.formattedAmount,
+                                hasExpired: $0.hasExpired
+                            )
+                        },
+                    { binder.flow.event(.terminate) }
+                )
+            },
+            makeElementView: anywayPaymentFactory.makeElementView,
+            makeFooterView: anywayPaymentFactory.makeFooterView
+        )
+        
+        return ServicePaymentFlowStateWrapperView(
+            binder: binder,
+            factory: flowFactory
+        )
+    }
+}
+
 extension PaymentProviderServicePickerFlowModel: Identifiable {
     
     var id: String { state.content.state.payload.id }
