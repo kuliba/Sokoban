@@ -211,17 +211,22 @@ private extension RootViewFactory {
         }
         
         return .init(
+            makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
+            makeAnywayPaymentFactory: { _ in fatalError() },
+            makeHistoryButtonView: { _ in .init { event in }},
+            makeIconView: IconDomain.preview,
+            makePaymentCompleteView: { _,_ in fatalError() },
             makePaymentsTransfersView: {
                 
                 .init(
                     viewModel: $0,
                     viewFactory: .init(
-                        makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                        makeUserAccountView: UserAccountView.init(viewModel:),
-                        makeIconView: IconDomain.preview,
-                        makeUpdateInfoView: UpdateInfoView.init(text:),
                         makeAnywayPaymentFactory: { _ in fatalError() },
-                        makePaymentCompleteView: { _,_ in fatalError() }
+                        makeIconView: IconDomain.preview,
+                        makePaymentCompleteView: { _,_ in fatalError() },
+                        makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+                        makeUpdateInfoView: UpdateInfoView.init(text:),
+                        makeUserAccountView: UserAccountView.init(viewModel:)
                     ),
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
@@ -231,13 +236,8 @@ private extension RootViewFactory {
                 )
             },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: UserAccountView.init(viewModel:),
-            makeIconView: IconDomain.preview,
-            makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
             makeUpdateInfoView: UpdateInfoView.init(text:),
-            makeAnywayPaymentFactory: { _ in fatalError() },
-            makePaymentCompleteView: { _,_ in fatalError() }, 
-            makeHistoryButtonView: { _ in HistoryButtonView(event: { event in })}
+            makeUserAccountView: UserAccountView.init(viewModel:)
         )
     }
 }

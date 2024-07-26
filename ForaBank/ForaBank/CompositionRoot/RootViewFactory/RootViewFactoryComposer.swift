@@ -40,15 +40,15 @@ extension RootViewFactoryComposer {
         let imageCache = model.imageCache()
 
         return .init(
+            makeActivateSliderView: ActivateSliderStateWrapperView.init,
+            makeAnywayPaymentFactory: makeAnywayPaymentFactory,
+            makeHistoryButtonView: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) },
+            makeIconView: imageCache.makeIconView(for:),
+            makePaymentCompleteView: makePaymentCompleteView,
             makePaymentsTransfersView: makePaymentsTransfersView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: makeUserAccountView,
-            makeIconView: imageCache.makeIconView(for:), 
-            makeActivateSliderView: ActivateSliderStateWrapperView.init, 
             makeUpdateInfoView: UpdateInfoView.init,
-            makeAnywayPaymentFactory: makeAnywayPaymentFactory,
-            makePaymentCompleteView: makePaymentCompleteView, 
-            makeHistoryButtonView: { self.makeHistoryButtonView(self.historyFeatureFlag, event: $0) }
+            makeUserAccountView: makeUserAccountView
         )
     }
 }
@@ -70,12 +70,12 @@ private extension RootViewFactoryComposer {
         return .init(
             viewModel: viewModel,
             viewFactory: .init(
-                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-                makeUserAccountView: makeUserAccountView,
-                makeIconView: imageCache.makeIconView(for:),
-                makeUpdateInfoView: UpdateInfoView.init(text:),
                 makeAnywayPaymentFactory: makeAnywayPaymentFactory,
-                makePaymentCompleteView: makePaymentCompleteView
+                makeIconView: imageCache.makeIconView(for:),
+                makePaymentCompleteView: makePaymentCompleteView,
+                makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+                makeUpdateInfoView: UpdateInfoView.init(text:),
+                makeUserAccountView: makeUserAccountView
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,

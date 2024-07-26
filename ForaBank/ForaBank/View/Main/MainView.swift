@@ -569,6 +569,9 @@ extension MainViewFactory {
     static var preview: Self {
         
         return .init(
+            makeAnywayPaymentFactory: { _ in fatalError() },
+            makeIconView: IconDomain.preview,
+            makePaymentCompleteView: { _,_ in fatalError() },
             makeSberQRConfirmPaymentView: {
                 
                 .init(
@@ -577,8 +580,8 @@ extension MainViewFactory {
                     config: .iFora
                 )
             },
-            makeUserAccountView: UserAccountView.init(viewModel:),
-            makeUpdateInfoView: UpdateInfoView.init(text:)
+            makeUpdateInfoView: UpdateInfoView.init(text:),
+            makeUserAccountView: UserAccountView.init(viewModel:)
         )
     }
 }
