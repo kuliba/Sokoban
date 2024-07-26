@@ -104,7 +104,7 @@ extension FilterView {
                 
                 ForEach(periods, id: \.self) { period in
                     
-                    Button(action: { event() }) {
+                    Button(action: { event(.selectedPeriod(period)) }) {
                         
                         Text(period)
                             .padding()
