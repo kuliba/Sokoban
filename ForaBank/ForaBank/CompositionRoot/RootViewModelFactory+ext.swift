@@ -129,7 +129,7 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             log: infoNetworkLog
         )
-
+        
         let userVisibilityProductsSettingsServices = Services.makeUserVisibilityProductsSettingsServices(
             httpClient: httpClient,
             log: infoNetworkLog
@@ -144,19 +144,19 @@ extension RootViewModelFactory {
             httpClient: httpClient,
             log: infoNetworkLog
         )
-
+        
         let makeSVCardLandig = model.landingSVCardViewModelFactory
         
         let landingService = Services.makeSVCardLandingServices(
             httpClient: httpClient,
             log: infoNetworkLog)
-
+        
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
             createUnblockCardService: unblockCardServices,
             createUserVisibilityProductsSettingsService: userVisibilityProductsSettingsServices,
             createCreateGetSVCardLimits: getSVCardLimitsServices,
-            createChangeSVCardLimit: changeSVCardLimitServices, 
+            createChangeSVCardLimit: changeSVCardLimitServices,
             createSVCardLanding: landingService,
             makeSVCardLandingViewModel: makeSVCardLandig
         )
@@ -175,7 +175,7 @@ extension RootViewModelFactory {
         )
         
         let templatesFlowManager = TemplatesFlowManagerComposer(flag: utilitiesPaymentsFlag).compose()
-                
+        
         let makeTemplatesListViewModel: PaymentsTransfersFactory.MakeTemplatesListViewModel = {
             
             .init(
@@ -196,7 +196,7 @@ extension RootViewModelFactory {
         )
         
         let makePaymentsTransfersFlowManager = ptfmComposer.compose
-
+        
         let makeCardGuardianPanel: ProductProfileViewModelFactory.MakeCardGuardianPanel = {
             if changeSVCardLimitsFlag.isActive {
                 return .fullScreen(.cardGuardian($0, changeSVCardLimitsFlag))
@@ -235,7 +235,14 @@ extension RootViewModelFactory {
             scheduler: scheduler
         )
         let makePaymentProviderServicePickerFlowModel = servicePickerComposer.makeFlowModel
-
+        
+        let servicePaymentBinderComposer = ServicePaymentBinderComposer(
+            fraudDelay: 120, // TODO: move `fraudDelay` to some Settings
+            model: model,
+            scheduler: scheduler
+        )
+        let makeServicePaymentBinder = servicePaymentBinderComposer.makeBinder
+        
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -255,7 +262,8 @@ extension RootViewModelFactory {
                 scheduler: scheduler
             ),
             updateInfoStatusFlag: updateInfoStatusFlag,
-            makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel
+            makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
+            makeServicePaymentBinder: makeServicePaymentBinder
         )
         
         return make(
@@ -271,7 +279,8 @@ extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             updateInfoStatusFlag: updateInfoStatusFlag,
             onRegister: resetCVVPINActivation,
-            makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel
+            makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
+            makeServicePaymentBinder: makeServicePaymentBinder
         )
     }
     
@@ -424,7 +433,8 @@ extension ProductProfileViewModel {
         makeCardGuardianPanel: @escaping ProductProfileViewModelFactory.MakeCardGuardianPanel,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
-        makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel
+        makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
+        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, dismissAction in
@@ -444,7 +454,8 @@ extension ProductProfileViewModel {
                 makeCardGuardianPanel: makeCardGuardianPanel,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
                 updateInfoStatusFlag: updateInfoStatusFlag,
-                makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel
+                makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
+                makeServicePaymentBinder: makeServicePaymentBinder
             )
             
             let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -454,6 +465,7 @@ extension ProductProfileViewModel {
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
                 makeProductProfileViewModel: makeProductProfileViewModel,
                 makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+                makeServicePaymentBinder: makeServicePaymentBinder,
                 makeTemplatesListViewModel: makeTemplatesListViewModel,
                 makeUtilitiesViewModel: makeUtilitiesViewModel
             )
@@ -565,7 +577,8 @@ private extension RootViewModelFactory {
         qrViewModelFactory: QRViewModelFactory,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
         onRegister: @escaping OnRegister,
-        makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel
+        makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
+        makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder
     ) -> RootViewModel {
                 
         let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -575,6 +588,7 @@ private extension RootViewModelFactory {
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+            makeServicePaymentBinder: makeServicePaymentBinder,
             makeTemplatesListViewModel: makeTemplatesListViewModel,
             makeUtilitiesViewModel: makeUtilitiesViewModel
         )

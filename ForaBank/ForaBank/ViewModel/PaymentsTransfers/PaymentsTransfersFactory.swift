@@ -13,6 +13,7 @@ struct PaymentsTransfersFactory {
     let makePaymentProviderServicePickerFlowModel: MakePaymentProviderServicePickerFlowModel
     let makeProductProfileViewModel: MakeProductProfileViewModel
     let makeSections: MakePaymentsTransfersSections
+    let makeServicePaymentBinder: MakeServicePaymentBinder
     let makeTemplatesListViewModel: MakeTemplatesListViewModel
     let makeUtilitiesViewModel: MakeUtilitiesViewModel
 }
@@ -45,6 +46,8 @@ extension PaymentsTransfersFactory {
     typealias MakeAlertDataUpdateFailureViewModel = (@escaping DismissAction) -> Alert.ViewModel?
     
     typealias MakePaymentProviderServicePickerFlowModel = (PaymentProviderSegment.Provider) -> PaymentProviderServicePickerFlowModel
+    
+    typealias MakeServicePaymentBinder = (AnywayTransactionState.Transaction, ServicePaymentFlowState) -> ServicePaymentBinder
 }
 
 extension PaymentsTransfersFactory {
@@ -66,13 +69,16 @@ extension PaymentsTransfersFactory {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.inactive),
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            makeServicePaymentBinder: ServicePaymentBinder.preview
         )
+        
         return .init(
             makeAlertDataUpdateFailureViewModel: { _ in nil },
             makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
             makeProductProfileViewModel: productProfileViewModel,
             makeSections: { Model.emptyMock.makeSections(flag: .init(.inactive)) },
+            makeServicePaymentBinder: ServicePaymentBinder.preview,
             makeTemplatesListViewModel: { _ in .sampleComplete },
             makeUtilitiesViewModel: { _,_ in }
         )
@@ -95,6 +101,41 @@ extension PaymentProviderServicePickerFlowModel {
             ),
             reduce: { state, _ in (state, nil) },
             handleEffect: { _,_ in }
+        )
+    }
+}
+
+extension ServicePaymentBinder {
+    
+    static func preview(
+        transaction: AnywayTransactionState.Transaction,
+        initialFlowState: ServicePaymentFlowState = .none
+    ) -> Self {
+        
+        return .init(
+            content: .init(
+                transaction: transaction,
+                mapToModel: { _ in fatalError() },
+                footer: .init(
+                    initialState: .init(
+                        amount: 0,
+                        button: .init(
+                            title: "Button Title",
+                            state: .active
+                        ),
+                        style: .amount
+                    ),
+                    currencySymbol: "₽"
+                ),
+                reduce: { state, _ in (state, nil) },
+                handleEffect: { _,_ in }
+            ),
+            flow: .init(
+                initialState: initialFlowState,
+                reduce: { state, _ in (state, nil) },
+                handleEffect: { _,_ in }
+            ),
+            scheduler: .main
         )
     }
 }

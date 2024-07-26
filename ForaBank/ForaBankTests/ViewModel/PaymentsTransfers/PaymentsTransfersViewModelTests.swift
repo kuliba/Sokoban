@@ -814,7 +814,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_  in .preview},
             updateInfoStatusFlag: updateInfoStatusFlag,
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            makeServicePaymentBinder: ServicePaymentBinder.preview
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -822,6 +823,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
             makeProductProfileViewModel: productProfileViewModel,
             makeSections: { model.makeSections(flag: updateInfoStatusFlag) },
+            makeServicePaymentBinder: ServicePaymentBinder.preview,
             makeTemplatesListViewModel: { _ in .sampleComplete },
             makeUtilitiesViewModel: { _, completion in
                 
