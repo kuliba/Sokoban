@@ -9,11 +9,11 @@ import CombineSchedulers
 @testable import ForaBank
 import XCTest
 
-final class ServicePaymentFlowEffectHandlerTests: XCTestCase {
+final class ServicePaymentFlowEffectHandlerTests: ServicePaymentFlowTests {
     
     func test_delay_shouldDelayEventForInterval() {
         
-        let delayedEvent: SUT.Event = .notify(.awaitingPaymentRestartConfirmation)
+        let delayedEvent: SUT.Event = notify(.awaitingPaymentRestartConfirmation)
         let interval = DispatchTimeInterval.milliseconds(100)
         let (sut, scheduler) = makeSUT()
         var receivedEvent: SUT.Event?

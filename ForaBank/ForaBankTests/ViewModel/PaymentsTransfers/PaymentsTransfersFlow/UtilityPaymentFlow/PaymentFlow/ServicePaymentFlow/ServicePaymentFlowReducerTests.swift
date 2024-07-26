@@ -5,91 +5,203 @@
 //  Created by Igor Malyarov on 25.07.2024.
 //
 
-@testable import AnywayPaymentDomain
+import AnywayPaymentDomain
 @testable import ForaBank
 import XCTest
 
-final class ServicePaymentFlowReducerTests: XCTestCase {
+final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
+    
+    // MARK: - terminate
+    
+    func test_terminate_shouldSetNoneStateToTerminated() {
+        
+        assert(.none, event: .terminate) {
+            
+            $0 = .terminated
+        }
+    }
+    
+    func test_dismissModal_shouldNotDeliverEffectOnNoneState() {
+        
+        assert(.none, event: .terminate, delivers: nil)
+    }
+    
+    func test_terminate_shouldSetAlertStateToTerminated() {
+        
+        assert(.alert(.paymentRestartConfirmation), event: .terminate) {
+            
+            $0 = .terminated
+        }
+    }
+    
+    func test_dismissModal_shouldNotDeliverEffectOnAlertState() {
+        
+        assert(.alert(.paymentRestartConfirmation), event: .terminate, delivers: nil)
+    }
+    
+    func test_terminate_shouldSetFraudStateToTerminated() {
+        
+        assert(.fraud(makeFraudPayload()), event: .terminate) {
+            
+            $0 = .terminated
+        }
+    }
+    
+    func test_dismissModal_shouldNotDeliverEffectOnFraudState() {
+        
+        assert(.fraud(makeFraudPayload()), event: .terminate, delivers: nil)
+    }
+    
+    func test_terminate_shouldSetFullScreenCoverStateToTerminated() {
+        
+        assert(.fullScreenCover(.completed(.success(makeReport()))), event: .terminate) {
+            
+            $0 = .terminated
+        }
+    }
+    
+    func test_dismissModal_shouldNotDeliverEffectOnFullScreenCoverState() {
+        
+        assert(.fullScreenCover(.completed(.success(makeReport()))), event: .terminate, delivers: nil)
+    }
     
     // MARK: - notify
     
     func test_notify_shouldSetModalToNilOnNilStatus() {
         
         assert(
-            makeState(modal: .alert(.paymentRestartConfirmation)),
-            event: .notify(nil)
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(nil)
         ) {
-            $0.modal = nil
+            $0 = .none
         }
     }
-#warning("add effect assertion test")
+    
+    func test_notify_shouldNotDeliverEffectOnNilStatus() {
+        
+        assert(
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(nil),
+            delivers: nil
+        )
+    }
     
     func test_notify_shouldSetAlertOnAwaitingPaymentRestartConfirmation() {
         
         assert(
-            makeState(modal: nil),
-            event: .notify(.awaitingPaymentRestartConfirmation)
+            .none,
+            event: notify(.awaitingPaymentRestartConfirmation)
         ) {
-            $0.modal = .alert(.paymentRestartConfirmation)
+            $0 = .alert(.paymentRestartConfirmation)
         }
     }
-#warning("add effect assertion test")
+    
+    func test_notify_shouldNotDeliverEffectOnAwaitingPaymentRestartConfirmation() {
+        
+        assert(
+            .none,
+            event: notify(.awaitingPaymentRestartConfirmation),
+            delivers: nil
+        )
+    }
+    
     func test_notify_shouldNotChangeStateOnMakeFraudFailure() {
         
         let sut = makeSUT(fraud: nil)
         
         assert(
             sut: sut,
-            makeState(modal: .alert(.paymentRestartConfirmation)),
-            event: .notify(.fraudSuspected(makePaymentUpdate()))
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(.fraudSuspected(makePaymentUpdate()))
         )
     }
-#warning("add effect assertion test")
+    
+    func test_notify_shouldNotDeliverEffectOnMakeFraudFailure() {
+        
+        let sut = makeSUT(fraud: nil)
+        
+        assert(
+            sut: sut,
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(.fraudSuspected(makePaymentUpdate())),
+            delivers: nil
+        )
+    }
     
     func test_notify_shouldSetFraudOnMakeFraud() {
         
-        let fraud = makeFraud()
+        let fraud = makeFraudPayload()
         let sut = makeSUT(fraud: fraud)
         
         assert(
             sut: sut,
-            makeState(modal: nil),
-            event: .notify(.fraudSuspected(makePaymentUpdate()))
+            .none,
+            event: notify(.fraudSuspected(makePaymentUpdate()))
         ) {
-            $0.modal = .fraud(fraud)
+            $0 = .fraud(fraud)
         }
     }
-#warning("add effect assertion test")
+    
+    func test_notify_shouldNotDeliverEffectOnMakeFraud() {
+        
+        let fraud = makeFraudPayload()
+        let sut = makeSUT(fraud: fraud)
+        
+        assert(
+            sut: sut,
+            .none,
+            event: notify(.fraudSuspected(makePaymentUpdate())),
+            delivers: nil
+        )
+    }
     
     func test_notify_shouldNotChangeStateOnOInflight() {
         
         assert(
-            makeState(modal: .alert(.paymentRestartConfirmation)),
-            event: .notify(.inflight)
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(.inflight)
         )
     }
-#warning("add effect assertion test")
+    
+    func test_notify_shouldNotDeliverEffectOnOInflight() {
+        
+        assert(
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(.inflight),
+            delivers: nil
+        )
+    }
     
     func test_notify_shouldSetAlertOnServerError() {
         
         let errorMessage = anyMessage()
         
         assert(
-            makeState(modal: nil),
-            event: .notify(.serverError(errorMessage))
+            .none,
+            event: notify(.serverError(errorMessage))
         ) {
-            $0.modal = .alert(.serverError(errorMessage))
+            $0 = .alert(.serverError(errorMessage))
         }
     }
-#warning("add effect assertion test")
+    
+    func test_notify_shouldNotDeliverEffectOnServerError() {
+        
+        let errorMessage = anyMessage()
+        
+        assert(
+            .none,
+            event: notify(.serverError(errorMessage)),
+            delivers: nil
+        )
+    }
     
     func test_notify_shouldResetModalOnFraudCancelledTerminated() {
         
         assert(
-            makeState(modal: .alert(.paymentRestartConfirmation)),
-            event: .notify(.result(.failure(.fraud(.cancelled))))
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(.result(.failure(.fraud(.cancelled))))
         ) {
-            $0.modal = nil
+            $0 = .none
         }
     }
     
@@ -100,8 +212,8 @@ final class ServicePaymentFlowReducerTests: XCTestCase {
         
         assert(
             sut: sut,
-            makeState(modal: .alert(.paymentRestartConfirmation)),
-            event: .notify(.result(.failure(.fraud(.cancelled)))),
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(.result(.failure(.fraud(.cancelled)))),
             delivers: .delay(
                 .showResult(.failure(.init(
                     formattedAmount: formattedAmount,
@@ -115,10 +227,10 @@ final class ServicePaymentFlowReducerTests: XCTestCase {
     func test_notify_shouldResetModalOnFraudExpiredTerminated() {
         
         assert(
-            makeState(modal: .alert(.paymentRestartConfirmation)),
-            event: .notify(.result(.failure(.fraud(.expired))))
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(.result(.failure(.fraud(.expired))))
         ) {
-            $0.modal = nil
+            $0 = .none
         }
     }
     
@@ -129,8 +241,8 @@ final class ServicePaymentFlowReducerTests: XCTestCase {
         
         assert(
             sut: sut,
-            makeState(modal: .alert(.paymentRestartConfirmation)),
-            event: .notify(.result(.failure(.fraud(.expired)))),
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(.result(.failure(.fraud(.expired)))),
             delivers: .delay(
                 .showResult(.failure(.init(
                     formattedAmount: formattedAmount,
@@ -144,18 +256,18 @@ final class ServicePaymentFlowReducerTests: XCTestCase {
     func test_notify_shouldSetAlertOnTransactionFailure() {
         
         assert(
-            makeState(modal: .alert(.paymentRestartConfirmation)),
-            event: .notify(.result(.failure(.transactionFailure)))
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(.result(.failure(.transactionFailure)))
         ) {
-            $0.modal = .alert(.terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
+            $0 = .alert(.terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
         }
     }
     
     func test_notify_shouldNotDeliverEffectOnTransactionFailure() {
         
         assert(
-            makeState(modal: .alert(.paymentRestartConfirmation)),
-            event: .notify(.result(.failure(.transactionFailure))),
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(.result(.failure(.transactionFailure))),
             delivers: nil
         )
     }
@@ -163,18 +275,18 @@ final class ServicePaymentFlowReducerTests: XCTestCase {
     func test_notify_shouldSetAlertOnUpdatePaymentFailure() {
         
         assert(
-            makeState(modal: .alert(.paymentRestartConfirmation)),
-            event: .notify(.result(.failure(.updatePaymentFailure)))
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(.result(.failure(.updatePaymentFailure)))
         ) {
-            $0.modal = .alert(.serverError("Error"))
+            $0 = .alert(.serverError("Error"))
         }
     }
     
     func test_notify_shouldNotDeliverEffectOnUpdatePaymentFailure() {
         
         assert(
-            makeState(modal: .alert(.paymentRestartConfirmation)),
-            event: .notify(.result(.failure(.updatePaymentFailure))),
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(.result(.failure(.updatePaymentFailure))),
             delivers: nil
         )
     }
@@ -182,10 +294,10 @@ final class ServicePaymentFlowReducerTests: XCTestCase {
     func test_notify_shouldResetModalOnSuccess() {
         
         assert(
-            makeState(modal: .alert(.paymentRestartConfirmation)),
-            event: .notify(.result(.success(makeReport())))
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(.result(.success(makeReport())))
         ) {
-            $0.modal = nil
+            $0 = .none
         }
     }
     
@@ -194,13 +306,72 @@ final class ServicePaymentFlowReducerTests: XCTestCase {
         let report = makeReport()
         
         assert(
-            makeState(modal: .alert(.paymentRestartConfirmation)),
-            event: .notify(.result(.success(report))),
+            makeState(alert: .paymentRestartConfirmation),
+            event: notify(.result(.success(report))),
             delivers: .delay(
                 .showResult(.success(report)),
                 for: .milliseconds(300)
             )
         )
+    }
+    
+    // MARK: - showResult
+    
+    func test_showResult_shouldSetStateToFullScreenCoverFailureOnNonExpiredFraud() {
+        
+        let nonExpiredFraud = makeFraud(hasExpired: true)
+        
+        assert(.none, event: .showResult(.failure(nonExpiredFraud))) {
+            
+            $0 = .fullScreenCover(.completed(.failure(.init(
+                formattedAmount: nonExpiredFraud.formattedAmount,
+                hasExpired: nonExpiredFraud.hasExpired
+            ))))
+        }
+    }
+    
+    func test_showResult_shouldNOtDeliverEffectOnNonExpiredFraud() {
+        
+        let nonExpiredFraud = makeFraud(hasExpired: true)
+        
+        assert(.none, event: .showResult(.failure(nonExpiredFraud)), delivers: nil)
+    }
+    
+    func test_showResult_shouldSetStateToFullScreenCoverFailureOnExpiredFraud() {
+        
+        let expiredFraud = makeFraud(hasExpired: false)
+        
+        assert(.none, event: .showResult(.failure(expiredFraud))) {
+            
+            $0 = .fullScreenCover(.completed(.failure(.init(
+                formattedAmount: expiredFraud.formattedAmount,
+                hasExpired: expiredFraud.hasExpired
+            ))))
+        }
+    }
+    
+    func test_showResult_shouldNOtDeliverEffectOnExpiredFraud() {
+        
+        let expiredFraud = makeFraud(hasExpired: false)
+        
+        assert(.none, event: .showResult(.failure(expiredFraud)), delivers: nil)
+    }
+    
+    func test_showResult_shouldSetStateToFullScreenCoverSuccessOnSuccess() {
+        
+        let report = makeReport()
+        
+        assert(.none, event: .showResult(.success(report))) {
+            
+            $0 = .fullScreenCover(.completed(.success(report)))
+        }
+    }
+    
+    func test_showResult_shouldNOtDeliverEffectOnSuccess() {
+        
+        let report = makeReport()
+        
+        assert(.none, event: .showResult(.success(report)), delivers: nil)
     }
     
     // MARK: - Helpers
@@ -217,51 +388,13 @@ final class ServicePaymentFlowReducerTests: XCTestCase {
         let sut = SUT(
             factory: .init(
                 getFormattedAmount: { _ in formattedAmount },
-                makeFraud: { _ in fraud }
+                makeFraudNoticePayload: { _ in fraud }
             )
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
-    }
-    
-    private func makeState(
-        modal: SUT.State.Modal?
-    ) -> SUT.State {
-        
-        return .init(modal: modal)
-    }
-    
-    private func makeFraud(
-        title: String = anyMessage(),
-        subtitle: String? = anyMessage(),
-        formattedAmount: String = anyMessage(),
-        delay: Double = .random(in: 1...100)
-    ) -> FraudNoticePayload {
-        
-        return .init(title: title, subtitle: subtitle, formattedAmount: formattedAmount, delay: delay)
-    }
-    
-    private func makePaymentUpdate() -> AnywayPaymentUpdate {
-        
-        return .init(
-            details: .init(
-                amounts: .init(amount: nil, creditAmount: nil, currencyAmount: nil, currencyPayee: nil, currencyPayer: nil, currencyRate: nil, debitAmount: nil, fee: nil),
-                control: .init(isFinalStep: false, isFraudSuspected: false, isMultiSum: false, needOTP: false, needSum: false),
-                info: .init(documentStatus: nil, infoMessage: nil, payeeName: nil, paymentOperationDetailID: nil, printFormType: nil)
-            ),
-            fields: [],
-            parameters: []
-        )
-    }
-    
-    private func makeReport(
-        status: DocumentStatus = .completed,
-        info: _OperationInfo = .detailID(.random(in: 1...100))
-    ) -> AnywayTransactionReport {
-        
-        return .init(status: status, info: info)
     }
     
     @discardableResult

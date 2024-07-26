@@ -5,29 +5,23 @@
 //  Created by Igor Malyarov on 25.07.2024.
 //
 
-struct ServicePaymentFlowState: Equatable {
+enum ServicePaymentFlowState: Equatable {
     
-    var modal: Modal? = nil
+    case none
+    case alert(Alert)
+    case fraud(FraudNoticePayload)
+    case fullScreenCover(FullScreenCover)
+    case terminated
+    
+    typealias Alert = UtilityServicePaymentFlowState.Alert
+    typealias FullScreenCover = UtilityServicePaymentFlowState.FullScreenCover
 }
 
 extension ServicePaymentFlowState {
     
-    enum Modal: Equatable {
+    var alert: Alert? {
         
-        case alert(Alert)
-        case fraud(FraudNoticePayload)
-        case fullScreenCover(FullScreenCover)
-        
-        typealias Alert = UtilityServicePaymentFlowState.Alert
-        typealias FullScreenCover = UtilityServicePaymentFlowState.FullScreenCover
-    }
-}
-
-extension ServicePaymentFlowState {
-    
-    var alert: Modal.Alert? {
-        
-        guard case let .alert(alert) = modal
+        guard case let .alert(alert) = self
         else { return nil }
         
         return alert
@@ -35,15 +29,15 @@ extension ServicePaymentFlowState {
     
     var fraud: FraudNoticePayload? {
         
-        guard case let .fraud(fraud) = modal
+        guard case let .fraud(fraud) = self
         else { return nil }
         
         return fraud
     }
     
-    var fullScreenCover: Modal.FullScreenCover? {
+    var fullScreenCover: FullScreenCover? {
         
-        guard case let .fullScreenCover(fullScreenCover) = modal
+        guard case let .fullScreenCover(fullScreenCover) = self
         else { return nil }
         
         return fullScreenCover

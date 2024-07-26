@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 25.07.2024.
 //
 
+import AnywayPaymentDomain
+
 final class ServicePaymentFlowReducer {
     
     private let factory: Factory
@@ -28,8 +30,11 @@ extension ServicePaymentFlowReducer {
         var effect: Effect?
         
         switch event {
-        case let .notify(status):
-            reduce(&state, &effect, with: status)
+        case .terminate:
+            state = .terminated
+            
+        case let .notify(projection):
+            reduce(&state, &effect, with: projection)
             
         case let .showResult(result):
             reduce(&state, &effect, with: result)
@@ -52,43 +57,44 @@ private extension ServicePaymentFlowReducer {
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        with status: AnywayTransactionStatus?
+        with projection: Event.TransactionProjection
     ) {
-        switch status {
+        switch projection.status {
         case .none:
-            state.modal = nil
+            state = .none
             
         case .awaitingPaymentRestartConfirmation:
-            state.modal = .alert(.paymentRestartConfirmation)
+            state = .alert(.paymentRestartConfirmation)
             
         case .fraudSuspected:
-            if let fraud = factory.makeFraud(state) {
-                state.modal = .fraud(fraud)
+            if let fraud = factory.makeFraudNoticePayload(projection.context) {
+                state = .fraud(fraud)
             }
             
         case .inflight:
             break
             
         case let .serverError(errorMessage):
-            state.modal = .alert(.serverError(errorMessage))
+            state = .alert(.serverError(errorMessage))
             
         case let .result(transactionResult):
-            reduce(&state, &effect, with: transactionResult)
+            reduce(&state, &effect, with: projection.context, and: transactionResult)
         }
     }
     
     private func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        with result: AnywayTransactionStatus.TransactionResult
+        with context: AnywayPaymentContext,
+        and result: AnywayTransactionStatus.TransactionResult
     ) {
-        let formattedAmount = factory.getFormattedAmount(state)
+        let formattedAmount = factory.getFormattedAmount(context)
         
         switch result {
         case let .failure(terminated):
             switch terminated {
             case let .fraud(fraud):
-                state.modal = nil
+                state = .none
                 effect = .delay(
                     .showResult(.failure(.init(
                         formattedAmount: formattedAmount,
@@ -99,15 +105,15 @@ private extension ServicePaymentFlowReducer {
                 
                 // TODO: the case should have associated string
             case .transactionFailure:
-                state.modal = .alert(.terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
+                state = .alert(.terminalError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
                 
                 // TODO: the case should have associated string
             case .updatePaymentFailure:
-                state.modal = .alert(.serverError("Error"))
+                state = .alert(.serverError("Error"))
             }
             
         case let .success(report):
-            state.modal = nil
+            state = .none
             effect = .delay(
                 .showResult(.success(report)),
                 for: .milliseconds(300)
@@ -122,7 +128,7 @@ private extension ServicePaymentFlowReducer {
     ) {
         switch result {
         case let .failure(fraud):
-            state.modal = .fullScreenCover(
+            state = .fullScreenCover(
                 .completed(.failure(.init(
                     formattedAmount: fraud.formattedAmount,
                     hasExpired: fraud.hasExpired
@@ -130,7 +136,7 @@ private extension ServicePaymentFlowReducer {
             )
             
         case let .success(report):
-            state.modal = .fullScreenCover(
+            state = .fullScreenCover(
                 .completed(.success(report))
             )
         }
