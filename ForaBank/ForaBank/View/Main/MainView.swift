@@ -254,8 +254,73 @@ struct MainView<NavigationOperationView: View>: View {
         }
     }
     
+    @ViewBuilder
+    private func sheetView(
+        _ sheet: MainViewModel.Sheet
+    ) -> some View {
+        
+        switch sheet.type {
+        case let .productProfile(productProfileViewModel):
+            ProductProfileView(
+                viewModel: productProfileViewModel,
+                viewFactory: paymentsTransfersViewFactory, 
+                productProfileViewFactory: productProfileViewFactory,
+                getUImage: getUImage
+            )
+            
+        case let .messages(messagesHistoryViewModel):
+            MessagesHistoryView(viewModel: messagesHistoryViewModel)
+            
+        case let .places(placesViewModel):
+            PlacesView(viewModel: placesViewModel)
+            
+        case let .byPhone(viewModel):
+            ContactsView(viewModel: viewModel)
+        }
+    }
+    
+    @ViewBuilder
+    private func bottomSheetView(
+        bottomSheet: MainViewModel.BottomSheet
+    ) -> some View {
+        
+        switch bottomSheet.type {
+        case let .openAccount(openAccountViewModel):
+            OpenAccountView(viewModel: openAccountViewModel)
+            
+        case let .clientInform(clientInformViewModel):
+            ClientInformView(viewModel: clientInformViewModel)
+        }
+    }
+    
+    @ViewBuilder
+    private func fullScreenSheetView(
+        fullScreenSheet: MainViewModel.FullScreenSheet
+    ) -> some View {
+        
+        switch fullScreenSheet.type {
+        case let .qrScanner(viewModel):
+            NavigationView {
+                
+                QRView(viewModel: viewModel)
+                    .navigationBarHidden(true)
+                    .navigationBarBackButtonHidden(true)
+                    .edgesIgnoringSafeArea(.all)
+            }
+            
+        case let .success(viewModel):
+            PaymentsSuccessView(viewModel: viewModel)
+                .edgesIgnoringSafeArea(.all)
+        }
+    }
+}
+
+// MARK: - payment
+
+private extension MainView {
+    
 #warning("fixme")
-    private func servicePicker(
+    func servicePicker(
         model: PaymentProviderServicePickerFlowModel
     ) -> some View {
         
@@ -318,7 +383,7 @@ struct MainView<NavigationOperationView: View>: View {
     }
     
 #warning("fix nav bar below")
-    private func paymentProviderPicker(
+    func paymentProviderPicker(
         for providers: MultiElementArray<SegmentedPaymentProvider>,
         with destination: PaymentProviderServicePickerFlowModel?
     ) -> some View {
@@ -346,7 +411,7 @@ struct MainView<NavigationOperationView: View>: View {
         )
     }
     
-    private func paymentProviderView(
+    func paymentProviderView(
         provider: PaymentProviderSegment.Provider
     ) -> some View {
         
@@ -367,70 +432,10 @@ struct MainView<NavigationOperationView: View>: View {
         .buttonStyle(.plain)
     }
     
-    #warning("FIX footer")
-    private func paymentProviderPickerFooter() -> some View {
+#warning("FIX footer")
+    func paymentProviderPickerFooter() -> some View {
         
         Text("TBD: Footer with buttons")
-    }
-    
-    @ViewBuilder
-    private func sheetView(
-        _ sheet: MainViewModel.Sheet
-    ) -> some View {
-        
-        switch sheet.type {
-        case let .productProfile(productProfileViewModel):
-            ProductProfileView(
-                viewModel: productProfileViewModel,
-                viewFactory: paymentsTransfersViewFactory, 
-                productProfileViewFactory: productProfileViewFactory,
-                getUImage: getUImage
-            )
-            
-        case let .messages(messagesHistoryViewModel):
-            MessagesHistoryView(viewModel: messagesHistoryViewModel)
-            
-        case let .places(placesViewModel):
-            PlacesView(viewModel: placesViewModel)
-            
-        case let .byPhone(viewModel):
-            ContactsView(viewModel: viewModel)
-        }
-    }
-    
-    @ViewBuilder
-    private func bottomSheetView(
-        bottomSheet: MainViewModel.BottomSheet
-    ) -> some View {
-        
-        switch bottomSheet.type {
-        case let .openAccount(openAccountViewModel):
-            OpenAccountView(viewModel: openAccountViewModel)
-            
-        case let .clientInform(clientInformViewModel):
-            ClientInformView(viewModel: clientInformViewModel)
-        }
-    }
-    
-    @ViewBuilder
-    private func fullScreenSheetView(
-        fullScreenSheet: MainViewModel.FullScreenSheet
-    ) -> some View {
-        
-        switch fullScreenSheet.type {
-        case let .qrScanner(viewModel):
-            NavigationView {
-                
-                QRView(viewModel: viewModel)
-                    .navigationBarHidden(true)
-                    .navigationBarBackButtonHidden(true)
-                    .edgesIgnoringSafeArea(.all)
-            }
-            
-        case let .success(viewModel):
-            PaymentsSuccessView(viewModel: viewModel)
-                .edgesIgnoringSafeArea(.all)
-        }
     }
 }
 
