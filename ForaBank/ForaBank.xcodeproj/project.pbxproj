@@ -1408,7 +1408,7 @@
 		2AECBC482BEBAD24000B0C0E /* PaymentsTransfersFlowEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECBC472BEBAD24000B0C0E /* PaymentsTransfersFlowEffectHandler.swift */; };
 		2AECBC4A2BEBAD55000B0C0E /* UtilityPaymentFlowEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECBC492BEBAD55000B0C0E /* UtilityPaymentFlowEffectHandler.swift */; };
 		2AECBC4C2BEBAD68000B0C0E /* UtilityPrepaymentFlowEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECBC4B2BEBAD68000B0C0E /* UtilityPrepaymentFlowEffectHandler.swift */; };
-		2AECBC502BEBADD9000B0C0E /* PaymentFlowModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECBC4F2BEBADD9000B0C0E /* PaymentFlowModalView.swift */; };
+		2AECBC502BEBADD9000B0C0E /* FraudNoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECBC4F2BEBADD9000B0C0E /* FraudNoticeView.swift */; };
 		2AECBC532BEBAE4D000B0C0E /* PaymentsTransfersFlowReducerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECBC452BEBAD11000B0C0E /* PaymentsTransfersFlowReducerFactory.swift */; };
 		2AECBC552BEBB1B3000B0C0E /* DispatchQueue+delay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECBC542BEBB1B3000B0C0E /* DispatchQueue+delay.swift */; };
 		2AECD58D29FC519800FC0E81 /* SearchBarComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AECD58C29FC519800FC0E81 /* SearchBarComponentTests.swift */; };
@@ -4561,7 +4561,7 @@
 		2AECBC472BEBAD24000B0C0E /* PaymentsTransfersFlowEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFlowEffectHandler.swift; sourceTree = "<group>"; };
 		2AECBC492BEBAD55000B0C0E /* UtilityPaymentFlowEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentFlowEffectHandler.swift; sourceTree = "<group>"; };
 		2AECBC4B2BEBAD68000B0C0E /* UtilityPrepaymentFlowEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowEffectHandler.swift; sourceTree = "<group>"; };
-		2AECBC4F2BEBADD9000B0C0E /* PaymentFlowModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFlowModalView.swift; sourceTree = "<group>"; };
+		2AECBC4F2BEBADD9000B0C0E /* FraudNoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FraudNoticeView.swift; sourceTree = "<group>"; };
 		2AECBC542BEBB1B3000B0C0E /* DispatchQueue+delay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+delay.swift"; sourceTree = "<group>"; };
 		2AECD58C29FC519800FC0E81 /* SearchBarComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarComponentTests.swift; sourceTree = "<group>"; };
 		2AED64292A40AF5000A52C35 /* Payments+ParameterMosParkingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Payments+ParameterMosParkingTests.swift"; sourceTree = "<group>"; };
@@ -10747,7 +10747,7 @@
 				2AECBC362BEBAAAD000B0C0E /* UtilityServicePaymentFlowState.swift */,
 				2AD15D182C19FFCA003329C7 /* FraudNoticePayload.swift */,
 				2AECBC2E2BEBA9E5000B0C0E /* UtilityServicePaymentFlowEvent.swift */,
-				2AECBC4F2BEBADD9000B0C0E /* PaymentFlowModalView.swift */,
+				2AECBC4F2BEBADD9000B0C0E /* FraudNoticeView.swift */,
 				2A43007A2C5217AA002FF8C7 /* ServicePaymentFlow */,
 			);
 			path = PaymentFlow;
@@ -19454,7 +19454,7 @@
 				0C27658E290683770007D31D /* OnboardingPlayerView.swift in Sources */,
 				0B7A18C326852D6B0007CC75 /* CreatTransferDecodableModel.swift in Sources */,
 				77A76A7327FAF4E800A271B3 /* ServerCommands+Atm.swift in Sources */,
-				2AECBC502BEBADD9000B0C0E /* PaymentFlowModalView.swift in Sources */,
+				2AECBC502BEBADD9000B0C0E /* FraudNoticeView.swift in Sources */,
 				77517F9B27A858F8005CFB77 /* TransferAnywayResponseData.swift in Sources */,
 				681142E027C7D805008D3D67 /* ProductProfileCardViewComponent.swift in Sources */,
 				ED0B48A5267E72130037EA06 /* CSRFToken.swift in Sources */,
