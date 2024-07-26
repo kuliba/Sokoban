@@ -10,30 +10,34 @@ import SwiftUI
 
 public struct FilterConfig {
     
+    let title: TitleConfig
     let periodTitle: TitleConfig
-    let transferTitle: TitleConfig
-    let categoriesTitle: TitleConfig
-    let button: ButtonConfig
+    let transactionTitle: TitleConfig
+    let categoryTitle: TitleConfig
+
+    let optionConfig: OptionConfig
     let buttonsContainerConfig: ButtonsContainer.Config
     let errorConfig: ErrorConfig
     
     public init(
+        title: TitleConfig,
         periodTitle: TitleConfig,
-        transferTitle: TitleConfig,
-        categoriesTitle: TitleConfig,
-        button: ButtonConfig,
+        transactionTitle: TitleConfig,
+        categoryTitle: TitleConfig,
+        optionConfig: FilterConfig.OptionConfig,
         buttonsContainerConfig: ButtonsContainer.Config,
         errorConfig: ErrorConfig
     ) {
+        self.title = title
         self.periodTitle = periodTitle
-        self.transferTitle = transferTitle
-        self.categoriesTitle = categoriesTitle
-        self.button = button
+        self.transactionTitle = transactionTitle
+        self.categoryTitle = categoryTitle
+        self.optionConfig = optionConfig
         self.buttonsContainerConfig = buttonsContainerConfig
         self.errorConfig = errorConfig
     }
     
-    public struct ButtonConfig {
+    public struct OptionConfig {
         
         let selectBackgroundColor: Color
         let notSelectedBackgroundColor: Color

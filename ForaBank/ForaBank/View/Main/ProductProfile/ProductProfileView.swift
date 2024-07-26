@@ -179,35 +179,17 @@ struct ProductProfileView: View {
                         .navigationTitle("Выберите даты или период")
                         .navigationBarTitleDisplayMode(.inline)
                 
-                    
                 case .filter:
-                        
                     FilterView(
                         state: .init(
                             title: "Фильтры",
                             selectedServices: [],
                             periods: ["Неделя", "Месяц", "Выбрать период"],
                             transactions: ["Списание", "Пополнение"],
-                            services: []
+                            services: self.viewModel.historyCategories() 
                         ),
                         event: { event in  },
-                        config: .init(
-                            periodTitle: .init(title: "Период", titleConfig: .init(textFont: .body, textColor: .black)),
-                            transferTitle: .init(title: "Движение средств", titleConfig: .init(textFont: .body, textColor: .black)),
-                            categoriesTitle:.init(title: "Категории", titleConfig: .init(textFont: .body, textColor: .black)),
-                            button: .init(
-                            selectBackgroundColor: Color.black,
-                            notSelectedBackgroundColor: Color.gray.opacity(0.2),
-                            selectForegroundColor: Color.white,
-                            notSelectForegroundColor: Color.black
-                            ),
-                            buttonsContainerConfig: .init(
-                                clearButtonTitle: "Очистить",
-                                applyButtonTitle: "Применить"
-                            ), errorConfig: .init(
-                            title: "Нет подходящих операций. \n Попробуйте изменить параметры фильтра",
-                            titleConfig: .init(textFont: .system(size: 16), textColor: .gray))
-                        ),
+                        config: .iFora,
                         makeButtonsContainer: {
                             .init(
                                 dismissAction: { self.viewModel.event(.history(.dismiss)) },
@@ -218,8 +200,11 @@ struct ProductProfileView: View {
                                 )
                             )
                         },
-                        clearOptionsAction: { self.viewModel.event(.history(.clearOptions)) },
-                        dismissAction: { self.viewModel.event(.history(.dismiss)) }
+                        clearOptionsAction: { self.viewModel.event(.history(.clearOptions))
+                        },
+                        dismissAction: {
+                            self.viewModel.event(.history(.dismiss))
+                        }
                     )
                 }
             }

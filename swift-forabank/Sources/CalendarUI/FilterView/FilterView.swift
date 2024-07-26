@@ -13,7 +13,7 @@ public struct FilterView: View {
     
     public typealias State = FilterState
     public typealias Event = FilterEvent
-    public  typealias Config = FilterConfig
+    public typealias Config = FilterConfig
     
     var state: State
     let event: (Event) -> Void
@@ -57,7 +57,7 @@ public struct FilterView: View {
             
             if !state.services.isEmpty {
                 
-                config.transferTitle.title.text(withConfig: config.transferTitle.titleConfig)
+                config.transactionTitle.title.text(withConfig: config.transactionTitle.titleConfig)
                     .padding(.bottom, 5)
                 
                 TransactionContainer(
@@ -66,7 +66,7 @@ public struct FilterView: View {
                     config: config
                 )
                 
-                config.categoriesTitle.title.text(withConfig: config.categoriesTitle.titleConfig)
+                config.categoryTitle.title.text(withConfig: config.categoryTitle.titleConfig)
                     .padding(.bottom, 5)
                 
                 FlexibleContainerButtons(
@@ -136,8 +136,8 @@ extension FilterView {
                         
                         Text(transaction)
                             .padding()
-                            .background(selectedTransaction == transaction ? config.button.selectBackgroundColor : config.button.notSelectedBackgroundColor)
-                            .foregroundColor(selectedTransaction == transaction ? config.button.selectForegroundColor : config.button.notSelectForegroundColor)
+                            .background(selectedTransaction == transaction ? config.optionConfig.selectBackgroundColor : config.optionConfig.notSelectedBackgroundColor)
+                            .foregroundColor(selectedTransaction == transaction ? config.optionConfig.selectForegroundColor : config.optionConfig.notSelectForegroundColor)
                             .frame(height: 32)
                             .cornerRadius(90)
                     }
@@ -382,21 +382,49 @@ struct FilterView_Previews: PreviewProvider {
                 ),
                 event: { _ in },
                 config: .init(
-                    periodTitle: .init(title: "Период", titleConfig: .init(textFont: .body, textColor: .black)),
-                    transferTitle: .init(title: "Движение средств", titleConfig: .init(textFont: .body, textColor: .black)),
-                    categoriesTitle:.init(title: "Категории", titleConfig: .init(textFont: .body, textColor: .black)),
-                    button: .init(
+                    title: .init(
+                        title: "Фильтры",
+                        titleConfig: .init(
+                            textFont: .body,
+                            textColor: .orange
+                        )
+                    ),
+                    periodTitle: .init(
+                        title: "Период",
+                        titleConfig: .init(
+                            textFont: .body,
+                            textColor: .red
+                        )
+                    ),
+                    transactionTitle: .init(
+                        title: "Движение средств",
+                        titleConfig: .init(
+                            textFont: .body,
+                            textColor: .red
+                        )
+                    ),
+                    categoryTitle: .init(
+                        title: "Категории",
+                        titleConfig: .init(
+                            textFont: .body,
+                            textColor: .red
+                        )
+                    ),
+                    optionConfig: .init(
                         selectBackgroundColor: Color.black,
                         notSelectedBackgroundColor: Color.gray.opacity(0.2),
                         selectForegroundColor: Color.white,
                         notSelectForegroundColor: Color.black
-                    ), buttonsContainerConfig: .init(
+                    ),
+                    buttonsContainerConfig: .init(
                         clearButtonTitle: "Очистить",
                         applyButtonTitle: "Применить"
-                    ), errorConfig: .init(
+                    ),
+                    errorConfig: .init(
                         title: "Нет подходящих операций. \n Попробуйте изменить параметры фильтра",
                         titleConfig: .init(textFont: .system(size: 16), textColor: .gray)
-                    )),
+                    )
+                ),
                 makeButtonsContainer: {
                     .init(
                         dismissAction: {},
