@@ -43,8 +43,9 @@ class MainViewModel: ObservableObject, Resetable {
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let onRegister: () -> Void
-    private let factory: ModelAuthLoginViewModelFactory
+    private let authFactory: ModelAuthLoginViewModelFactory
     private let updateInfoStatusFlag: UpdateInfoStatusFeatureFlag
+    
     private var bindings = Set<AnyCancellable>()
     
     init(
@@ -63,7 +64,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.navButtonsRight = []
         self.sections = Self.getSections(model, updateInfoStatusFlag: updateInfoStatusFlag, stickerViewModel: nil)
         
-        self.factory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
+        self.authFactory = ModelAuthLoginViewModelFactory(model: model, rootActions: .emptyMock)
         self.makeProductProfileViewModel = makeProductProfileViewModel
         self.navigationStateManager = navigationStateManager
         self.sberQRServices = sberQRServices
@@ -1540,7 +1541,7 @@ extension MainViewModel {
     
     func handleLandingAction(_ abroadType: AbroadType) {
         
-        let viewModel = factory.makeStickerLandingViewModel(
+        let viewModel = authFactory.makeStickerLandingViewModel(
             abroadType,
             config: .stickerDefault,
             landingActions: landingAction
