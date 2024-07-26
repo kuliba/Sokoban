@@ -200,7 +200,8 @@ struct ProductProfileView: View {
                             notSelectedBackgroundColor: Color.gray.opacity(0.2),
                             selectForegroundColor: Color.white,
                             notSelectForegroundColor: Color.black
-                            ), buttonsContainerConfig: .init(
+                            ),
+                            buttonsContainerConfig: .init(
                                 clearButtonTitle: "Очистить",
                                 applyButtonTitle: "Применить"
                             ), errorConfig: .init(

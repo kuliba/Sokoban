@@ -99,11 +99,12 @@ extension FilterView {
         let event: (Event) -> Void
         
         var body: some View {
+            
             HStack {
                 
                 ForEach(periods, id: \.self) { period in
                     
-                    Button(action: { event(.selectedPeriod(period)) }) {
+                    Button(action: { event() }) {
                         
                         Text(period)
                             .padding()
@@ -136,8 +137,7 @@ extension FilterView {
                         Text(transaction)
                             .padding()
                             .background(selectedTransaction == transaction ? config.button.selectBackgroundColor : config.button.notSelectedBackgroundColor)
-                            .foregroundColor(selectedTransaction == transaction ? config.button.notSelectedBackgroundColor : config.button.selectForegroundColor)
-                        
+                            .foregroundColor(selectedTransaction == transaction ? config.button.selectForegroundColor : config.button.notSelectForegroundColor)
                             .frame(height: 32)
                             .cornerRadius(90)
                     }
@@ -221,7 +221,6 @@ struct BottomButton: View {
                 .cornerRadius(12)
                 .font(.system(size: 18))
         }
-        
     }
     
     struct ButtonConfig {
@@ -240,6 +239,9 @@ struct FlexibleContainerButtons: View {
     
     var body: some View {
         
+        var width = CGFloat.zero
+        var height = CGFloat.zero
+        
         GeometryReader { geometry in
             
             ZStack(alignment: .topLeading) {
@@ -249,10 +251,35 @@ struct FlexibleContainerButtons: View {
                     ServiceButton(
                         state: .init(isSelected: selectedItems.contains(service)),
                         action: serviceButtonTapped,
-                        config: config
+                        config: .init(
+                            title: service,
+                            titleConfig: .init(
+                                textFont: .system(size: 16),
+                                textColor: .black
+                            ))
                     )
                     .padding([.horizontal, .vertical], 4)
-                    .serviceButtonAlignmentGuide(data: data, service: service, geometry: geometry)
+                    .alignmentGuide(.leading, computeValue: { dimension in
+                        if abs(width - dimension.width) > geometry.size.width {
+                            width = 0
+                            height -= dimension.height
+                        }
+                        
+                        let result = width
+                        if service == data.last! {
+                            width = 0
+                        } else {
+                            width -= dimension.width
+                        }
+                        return result
+                    })
+                    .alignmentGuide(.top, computeValue: { _ in
+                        let result = height
+                        if service == data.last! {
+                            height = 0
+                        }
+                        return result
+                    })
                 }
             }
         }
@@ -351,7 +378,7 @@ struct FilterView_Previews: PreviewProvider {
                     selectedServices: [],
                     periods: ["Неделя", "Месяц", "Выбрать период"],
                     transactions: ["Списание", "Пополнение"],
-                    services: []
+                    services: ["Неделя", "Месяц", "Выбрать период"]
                 ),
                 event: { _ in },
                 config: .init(

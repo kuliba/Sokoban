@@ -27,7 +27,8 @@ extension HistoryReducer {
                     date: state?.date,
                     filters: state?.filters,
                     buttonAction: .calendar,
-                    showSheet: true
+                    showSheet: true,
+                    categories: state?.categories ?? []
                 )
                 
             case .filter:
@@ -35,7 +36,8 @@ extension HistoryReducer {
                     date: state?.date,
                     filters: state?.filters,
                     buttonAction: .filter,
-                    showSheet: true
+                    showSheet: true,
+                    categories: state?.categories ?? []
                 )
             }
         case let .filter(filter):
@@ -43,7 +45,9 @@ extension HistoryReducer {
                 date: state?.date,
                 filters: filter,
                 buttonAction: .filter,
-                showSheet: false
+                showSheet: false,
+                categories: state?.categories ?? []
+
             )
             
         case let .calendar(date):
@@ -51,7 +55,8 @@ extension HistoryReducer {
                 date: date,
                 filters: state?.filters,
                 buttonAction: .calendar,
-                showSheet: false
+                showSheet: false,
+                categories: state?.categories ?? []
             )
         }
         
