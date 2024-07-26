@@ -86,6 +86,59 @@ extension ProductSelectComponent.ProductSelectConfig {
     )
 }
 
+import CalendarUI
+
+public extension FilterConfig {
+
+    static let iFora: Self = .init(
+        title: .init(
+            title: "Фильтры",
+            titleConfig: .init(
+                textFont: .textH3M18240(),
+                textColor: .textSecondary
+            )
+        ),
+        periodTitle: .init(
+            title: "Период",
+            titleConfig: .init(
+                textFont: .textBodyMSb14200(),
+                textColor: .mainColorsGray
+            )
+        ),
+        transactionTitle: .init(
+            title: "Движение средств",
+            titleConfig: .init(
+                textFont: .textBodyMSb14200(),
+                textColor: .mainColorsGray
+            )
+        ),
+        categoryTitle: .init(
+            title: "Категории",
+            titleConfig: .init(
+                textFont: .textBodyMSb14200(),
+                textColor: .mainColorsGray
+            )
+        ),
+        optionConfig: .init(
+            selectBackgroundColor: .mainColorsBlackMedium,
+            notSelectedBackgroundColor: .mainColorsGrayLightest,
+            selectForegroundColor: .textWhite,
+            notSelectForegroundColor: .textSecondary
+        ),
+        buttonsContainerConfig: .init(
+            clearButtonTitle: "Очистить",
+            applyButtonTitle: "Применить"
+        ),
+        errorConfig: .init(
+            title: "Мы не смогли загрузить ваши продукты.\nПопробуйте позже.",
+            titleConfig: .init(
+                textFont: .textH4R16240(),
+                textColor: .textPlaceholder
+            )
+        )
+    )
+}
+
 import SwiftUI
 
 // MARK: - Previews
