@@ -42,7 +42,7 @@ struct ListHorizontalRectangleLimitsView: View {
     ) -> some View {
         
         switch destination {
-        case let .settingsView(viewModel, subtitle):
+        case let .settingsView(viewModel, subtitle, limitType):
             
             VStack {
                 NavigationBar(
@@ -54,18 +54,28 @@ struct ListHorizontalRectangleLimitsView: View {
 
                 LandingWrapperView(viewModel: viewModel)
                     .frame(maxHeight: .infinity)
-                Button(action: { /* TODO: add save action */ }) {
-                    ZStack {
-                        Color(red: 255/255, green: 54/255, blue: 54/255)
-                        Text("Сохранить")
-                            .padding()
+                    .alert(
+                        item: .init(
+                            get: { state.alert?.text },
+                            set: { _ in }
+                        ),
+                        content: alertContent
+                    )
+                
+                if state.editEnableFor(limitType) {
+                    Button(action: { event(.saveLimits([])) }) { // TODO: add real values for save
+                        ZStack {
+                            Color(red: 255/255, green: 54/255, blue: 54/255)
+                            Text("Сохранить")
+                                .padding()
+                        }
                     }
+                    .foregroundColor(.white)
+                    .cornerRadius(config.cornerRadius)
+                    .frame(height: 56)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, config.paddings.vertical)
                 }
-                .foregroundColor(.white)
-                .cornerRadius(config.cornerRadius)
-                .frame(height: 56)
-                .padding(.horizontal, 16)
-                .padding(.vertical, config.paddings.vertical)
             }
             .navigationBarTitle("")
             .navigationBarHidden(true)
@@ -74,6 +84,14 @@ struct ListHorizontalRectangleLimitsView: View {
         }
     }
         
+    private func alertContent(_ message: String) -> Alert {
+        
+        return .init(
+            title: Text("Ошибка"),
+            message: Text(message)
+        )
+    }
+
     private func itemView (
         item: Item
     ) -> some View {

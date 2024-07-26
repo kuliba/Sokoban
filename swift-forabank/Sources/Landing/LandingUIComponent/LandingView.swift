@@ -22,14 +22,16 @@ public struct LandingView: View {
     private let makeIconView: MakeIconView
     private let makeLimit: MakeLimit
     private var limitsViewModel: ListHorizontalRectangleLimitsViewModel?
-
+    private let cardLimitsInfo: CardLimitsInfo?
+    
     public init(
         viewModel: LandingViewModel,
         images: [String: Image],
         action: @escaping (LandingEvent) -> Void,
         makeIconView: @escaping MakeIconView,
         makeLimit: @escaping MakeLimit = { _ in nil },
-        limitsViewModel: ListHorizontalRectangleLimitsViewModel?
+        limitsViewModel: ListHorizontalRectangleLimitsViewModel?,
+        cardLimitsInfo: CardLimitsInfo?
     ) {
         self._viewModel = .init(wrappedValue: viewModel)
         self.images = images
@@ -37,6 +39,7 @@ public struct LandingView: View {
         self.makeIconView = makeIconView
         self.makeLimit = makeLimit
         self.limitsViewModel = limitsViewModel
+        self.cardLimitsInfo = cardLimitsInfo
     }
     
     struct ViewOffsetKey: PreferenceKey {
@@ -133,6 +136,7 @@ public struct LandingView: View {
     ) -> some View {
         
         let landingView = LandingComponentView(
+            cardLimitsInfo: cardLimitsInfo, 
             component: component,
             images: images,
             config: viewModel.config,
@@ -193,6 +197,7 @@ extension LandingView {
     
     struct LandingComponentView: View {
         
+        let cardLimitsInfo: CardLimitsInfo?
         let component: UILanding.Component
         let images: [String: Image]
         let config: UILanding.Component.Config
@@ -324,8 +329,8 @@ extension LandingView {
             case let .blockHorizontalRectangular(block):
                 // TODO: add reduce, handleEffect
                 BlockHorizontalRectangularWrappedView(
-                    model: .init(
-                        initialState: .init(block: block),
+                    viewModel: .init(
+                        initialState: .init(block: block, initialLimitsInfo: cardLimitsInfo),
                         reduce: {state,_ in (state, .none)},
                         handleEffect: {_,_ in }),
                     factory: .init(makeIconView: makeIconView),
@@ -366,7 +371,8 @@ struct LandingUIView_Previews: PreviewProvider {
                 publisher: Just(.percent).eraseToAnyPublisher()
             )}, 
             makeLimit: { _ in nil }, 
-            limitsViewModel: nil
+            limitsViewModel: nil, 
+            cardLimitsInfo: .init(type: "", svCardLimits: nil, editEnable: true)
         )
     }
 }
