@@ -5,41 +5,31 @@
 //  Created by Igor Malyarov on 25.07.2024.
 //
 
+import Foundation
+
 enum ServicePaymentFlowState: Equatable {
     
     case none
     case alert(Alert)
     case fraud(FraudNoticePayload)
-    case fullScreenCover(FullScreenCover)
+    case fullScreenCover(TransactionResult)
     case terminated
-    
-    typealias Alert = UtilityServicePaymentFlowState.Alert
-    typealias FullScreenCover = UtilityServicePaymentFlowState.FullScreenCover
 }
 
 extension ServicePaymentFlowState {
     
-    var alert: Alert? {
+    enum Alert: Equatable {
         
-        guard case let .alert(alert) = self
-        else { return nil }
-        
-        return alert
+        case paymentRestartConfirmation
+        case serverError(String)
+        case terminalError(String)
     }
     
-    var fraud: FraudNoticePayload? {
-        
-        guard case let .fraud(fraud) = self
-        else { return nil }
-        
-        return fraud
-    }
+    typealias TransactionResult = Result<AnywayTransactionReport, Fraud>
     
-    var fullScreenCover: FullScreenCover? {
+    struct Fraud: Equatable, Error {
         
-        guard case let .fullScreenCover(fullScreenCover) = self
-        else { return nil }
-        
-        return fullScreenCover
+        let formattedAmount: String
+        let hasExpired: Bool
     }
 }

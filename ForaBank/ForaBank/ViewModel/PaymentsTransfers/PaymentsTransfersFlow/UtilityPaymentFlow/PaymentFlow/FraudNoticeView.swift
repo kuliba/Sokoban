@@ -1,5 +1,5 @@
 //
-//  PaymentFlowModalView.swift
+//  FraudNoticeView.swift
 //  ForaBank
 //
 //  Created by Igor Malyarov on 08.05.2024.
@@ -8,27 +8,15 @@
 import AnywayPaymentDomain
 import SwiftUI
 
-struct PaymentFlowModalView: View {
+struct FraudNoticeView: View {
     
-    let state: State
-    let event: (Event) -> Void
+    let state: FraudNoticePayload
+    let event: (FraudEvent) -> Void
     
     var body: some View {
         
-        switch state {
-        case let .fraud(fraud):
-            PaymentsAntifraudView(
-                viewModel: .iFora(from: fraud, event: event)
-            )
-        }
+        PaymentsAntifraudView(viewModel: .iFora(from: state, event: event))
     }
-}
-
-extension PaymentFlowModalView {
-    
-    typealias State = UtilityServicePaymentFlowState.Modal
-    typealias Event = ModalEvent
-    typealias ModalEvent = FraudEvent // while only one Modal
 }
 
 private extension PaymentsAntifraudViewModel {
@@ -38,7 +26,7 @@ private extension PaymentsAntifraudViewModel {
         event: @escaping (FraudEvent) -> Void
     ) -> PaymentsAntifraudViewModel {
         
-       return .init(
+        return .init(
             header: .init(),
             main: .init(
                 name: fraud.title,
@@ -66,10 +54,11 @@ private extension PaymentsAntifraudViewModel {
     }
 }
 
-struct PaymentFlowModalView_Previews: PreviewProvider {
+struct FraudNoticeView_Previews: PreviewProvider {
     
     static var previews: some View {
-        PaymentFlowModalView(state: .fraud(.preview), event: { print($0) })
+        
+        FraudNoticeView(state: .preview, event: { print($0) })
     }
 }
 

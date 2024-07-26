@@ -26,10 +26,10 @@ class ServicePaymentFlowTests: XCTestCase {
     }
     
     func makeState(
-        fullScreenCover: ServicePaymentFlowState.FullScreenCover
+        result: ServicePaymentFlowState.TransactionResult
     ) -> ServicePaymentFlowState {
         
-        return .fullScreenCover(fullScreenCover)
+        return .fullScreenCover(result)
     }
     
     func makeFraudPayload(

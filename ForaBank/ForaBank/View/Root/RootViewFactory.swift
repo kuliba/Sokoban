@@ -5,34 +5,38 @@
 //  Created by Igor Malyarov on 13.12.2023.
 //
 
-import SberQR
 import ActivateSlider
+import AnywayPaymentDomain
+import SberQR
 import SwiftUI
 
-typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
-typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
-typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
+typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
 typealias MakeHistoryButtonView = (@escaping (HistoryEvent) -> Void) -> HistoryButtonView?
+typealias MakeIconView = IconDomain.MakeIconView
+typealias MakePaymentCompleteView = (TransactionResult, @escaping () -> Void) -> PaymentCompleteView
+typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
+typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
+typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
+
+typealias TransactionResult = UtilityServicePaymentFlowState.FullScreenCover.TransactionResult
 
 struct RootViewFactory {
     
+    let makeActivateSliderView: MakeActivateSliderView
+    let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
+    let makeHistoryButtonView: MakeHistoryButtonView
+    let makeIconView: MakeIconView
+    let makePaymentCompleteView: MakePaymentCompleteView
     let makePaymentsTransfersView: MakePaymentsTransfersView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
-    let makeUserAccountView: MakeUserAccountView
-    let makeIconView: MakeIconView
-    let makeActivateSliderView: MakeActivateSliderView
     let makeUpdateInfoView: MakeUpdateInfoView
-    let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
-    let makePaymentCompleteView: MakePaymentCompleteView
-    let makeHistoryButtonView: MakeHistoryButtonView
+    let makeUserAccountView: MakeUserAccountView
 }
 
 extension RootViewFactory {
     
     typealias MakeIconView = IconDomain.MakeIconView
-    typealias MakeAnywayPaymentFactory = PaymentsTransfersViewFactory.MakeAnywayPaymentFactory
-    typealias MakePaymentCompleteView = PaymentsTransfersViewFactory.MakePaymentCompleteView
 }
 
 extension RootViewFactory {
@@ -40,9 +44,12 @@ extension RootViewFactory {
     var mainViewFactory: MainViewFactory {
         
         return .init(
+            makeAnywayPaymentFactory: makeAnywayPaymentFactory,
+            makeIconView: makeIconView,
+            makePaymentCompleteView: makePaymentCompleteView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: makeUserAccountView,
-            makeUpdateInfoView: makeUpdateInfoView
+            makeUpdateInfoView: makeUpdateInfoView,
+            makeUserAccountView: makeUserAccountView
         )
     }
 }
@@ -51,14 +58,7 @@ extension RootViewFactory {
     
     var paymentsTransfersViewFactory: PaymentsTransfersViewFactory {
         
-        return .init(
-            makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: makeUserAccountView,
-            makeIconView: makeIconView,
-            makeUpdateInfoView: makeUpdateInfoView,
-            makeAnywayPaymentFactory: makeAnywayPaymentFactory,
-            makePaymentCompleteView: makePaymentCompleteView
-        )
+        return mainViewFactory
     }
 }
 
@@ -71,8 +71,8 @@ struct ProductProfileViewFactory {
 extension RootViewFactory {
     
     var productProfileViewFactory: ProductProfileViewFactory {
- 
-        .init(
+        
+        return .init(
             makeActivateSliderView: makeActivateSliderView,
             makeHistoryButton: makeHistoryButtonView
         )

@@ -246,131 +246,12 @@ struct MainView<NavigationOperationView: View>: View {
                 .navigationBarTitle("Оформление заявки", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
             
-        case let .providerServicePicker(model):
-            servicePicker(model: model)
-            
         case let .paymentProviderPicker(providers, destination):
             paymentProviderPicker(for: providers, with: destination)
+            
+        case let .providerServicePicker(model):
+            servicePicker(model: model)
         }
-    }
-    
-#warning("fixme")
-    private func servicePicker(
-        model: PaymentProviderServicePickerFlowModel
-    ) -> some View {
-        
-        PaymentProviderServicePickerFlowView(
-            model: model,
-            contentView: { content in
-                
-                PaymentProviderServicePickerWrapperView(
-                    model: model.state.content,
-                    failureView: {
-                        Text(" Failure view with pay by instructions button")
-                    },
-                    itemView: { service in
-                        
-                        Button {
-                            model.state.content.event(.select(service))
-                        } label: {
-#warning("fixme")
-                            UtilityServiceLabel(
-                                service: service,
-                                iconView: Text("icon")
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
-                )
-            },
-            alertContent: { alert in
-                
-                return .init(with: .init(
-                    title: "Error",
-                    message: {
-                        
-                        switch alert.serviceFailure {
-                        case .connectivityError:
-                            return "Some Error"
-                            
-                        case let .serverError(errorMessage):
-                            return errorMessage
-                        }
-                    }(),
-                    primary: .init(
-                        type: .default,
-                        title: "OK",
-                        action: { print("dismiss alert") }
-                    )
-                ))
-            },
-            destinationContent: {
-                
-                switch $0 {
-                case .payment:
-                    Text("DestinationView: payment")
-                    
-                case .paymentByInstruction:
-                    Text("DestinationView: paymentByInstruction")
-                }
-            }
-        )
-    }
-    
-#warning("fix nav bar below")
-    private func paymentProviderPicker(
-        for providers: MultiElementArray<SegmentedPaymentProvider>,
-        with destination: PaymentProviderServicePickerFlowModel?
-    ) -> some View {
-        
-        PaymentProviderSegmentsView(
-            segments: .init(with: providers.elements),
-            providerView: paymentProviderView,
-            footer: paymentProviderPickerFooter,
-            config: .iFora
-        )
-        .navigationDestination(
-            destination: destination,
-            dismissDestination: viewModel.dismissPaymentProviderPickerDestination,
-            content: servicePicker(model:)
-        )
-        .navigationBarWithAsyncIcon(
-            title: "state.content.operator.title",
-            subtitle: "state.content.operator.subtitle",
-            dismiss: viewModel.dismissProviderServicePicker,
-            icon: .init(
-                image: .ic24Hash,
-                publisher: Empty().eraseToAnyPublisher()
-            ),
-            style: .large
-        )
-    }
-    
-    private func paymentProviderView(
-        provider: PaymentProviderSegment.Provider
-    ) -> some View {
-        
-        Button {
-            
-            viewModel.select(provider: provider)
-            
-        } label: {
-            
-            Text("icon")
-            
-            VStack(alignment: .leading) {
-                
-                Text(provider.title)
-                provider.inn.map(Text.init)
-            }
-        }
-        .buttonStyle(.plain)
-    }
-    
-    #warning("FIX footer")
-    private func paymentProviderPickerFooter() -> some View {
-        
-        Text("TBD: Footer with buttons")
     }
     
     @ViewBuilder
@@ -431,6 +312,130 @@ struct MainView<NavigationOperationView: View>: View {
             PaymentsSuccessView(viewModel: viewModel)
                 .edgesIgnoringSafeArea(.all)
         }
+    }
+}
+
+// MARK: - payment provider & service pickers
+
+private extension MainView {
+    
+#warning("fix nav bar below")
+    func paymentProviderPicker(
+        for providers: MultiElementArray<SegmentedPaymentProvider>,
+        with destination: PaymentProviderServicePickerFlowModel?
+    ) -> some View {
+        
+        PaymentProviderSegmentsView(
+            segments: .init(with: providers.elements),
+            providerView: paymentProviderView,
+            footer: paymentProviderPickerFooter,
+            config: .iFora
+        )
+        .navigationDestination(
+            destination: destination,
+            dismissDestination: viewModel.dismissPaymentProviderPickerDestination,
+            content: servicePicker(model:)
+        )
+        .navigationBarWithAsyncIcon(
+            title: "state.content.operator.title",
+            subtitle: "state.content.operator.subtitle",
+            dismiss: viewModel.dismissProviderServicePicker,
+            icon: .init(
+                image: .ic24Hash,
+                publisher: Empty().eraseToAnyPublisher()
+            ),
+            style: .large
+        )
+    }
+    
+    func paymentProviderView(
+        provider: PaymentProviderSegment.Provider
+    ) -> some View {
+        
+        Button {
+            
+            viewModel.select(provider: provider)
+            
+        } label: {
+            
+            Text("icon")
+            
+            VStack(alignment: .leading) {
+                
+                Text(provider.title)
+                provider.inn.map(Text.init)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+    
+#warning("FIX footer")
+    func paymentProviderPickerFooter() -> some View {
+        
+        Text("TBD: Footer with buttons")
+    }
+    
+#warning("fixme")
+    func servicePicker(
+        model: PaymentProviderServicePickerFlowModel
+    ) -> some View {
+        
+        PaymentProviderServicePickerFlowView(
+            model: model,
+            contentView: { content in
+                
+                PaymentProviderServicePickerWrapperView(
+                    model: model.state.content,
+                    failureView: {
+                        Text(" Failure view with pay by instructions button")
+                    },
+                    itemView: { service in
+                        
+                        Button {
+                            model.state.content.event(.select(service))
+                        } label: {
+#warning("fixme")
+                            UtilityServiceLabel(
+                                service: service,
+                                iconView: Text("icon")
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                )
+            },
+            alertContent: { alert in
+                
+                return .init(with: .init(
+                    title: "Error",
+                    message: {
+                        
+                        switch alert.serviceFailure {
+                        case .connectivityError:
+                            return "Some Error"
+                            
+                        case let .serverError(errorMessage):
+                            return errorMessage
+                        }
+                    }(),
+                    primary: .init(
+                        type: .default,
+                        title: "OK",
+                        action: { print("dismiss alert") }
+                    )
+                ))
+            },
+            destinationContent: {
+                
+                switch $0 {
+                case .payment:
+                    Text("DestinationView: payment")
+                    
+                case .paymentByInstruction:
+                    Text("DestinationView: paymentByInstruction")
+                }
+            }
+        )
     }
 }
 
@@ -564,6 +569,9 @@ extension MainViewFactory {
     static var preview: Self {
         
         return .init(
+            makeAnywayPaymentFactory: { _ in fatalError() },
+            makeIconView: IconDomain.preview,
+            makePaymentCompleteView: { _,_ in fatalError() },
             makeSberQRConfirmPaymentView: {
                 
                 .init(
@@ -572,8 +580,8 @@ extension MainViewFactory {
                     config: .iFora
                 )
             },
-            makeUserAccountView: UserAccountView.init(viewModel:),
-            makeUpdateInfoView: UpdateInfoView.init(text:)
+            makeUpdateInfoView: UpdateInfoView.init(text:),
+            makeUserAccountView: UserAccountView.init(viewModel:)
         )
     }
 }

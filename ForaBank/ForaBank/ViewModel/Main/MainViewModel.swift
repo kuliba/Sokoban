@@ -1427,8 +1427,8 @@ extension MainViewModel {
         case landing(LandingWrapperViewModel)
         case orderSticker(LandingWrapperViewModel)
         case paymentSticker
-        case providerServicePicker(PaymentProviderServicePickerFlowModel)
         case paymentProviderPicker(MultiElementArray<SegmentedPaymentProvider>, destination: PaymentProviderServicePickerFlowModel?)
+        case providerServicePicker(PaymentProviderServicePickerFlowModel)
         
         var id: Case {
             
@@ -1473,10 +1473,10 @@ extension MainViewModel {
                 return .paymentSticker
             case .sberQRPayment:
                 return .sberQRPayment
-            case .providerServicePicker:
-                return .providerServicePicker
             case .paymentProviderPicker:
                 return .providerPicker
+            case .providerServicePicker:
+                return .providerServicePicker
             }
         }
         
@@ -1502,8 +1502,8 @@ extension MainViewModel {
             case landing
             case orderSticker
             case sberQRPayment
-            case providerServicePicker
             case providerPicker
+            case providerServicePicker
         }
     }
     

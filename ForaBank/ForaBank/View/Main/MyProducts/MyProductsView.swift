@@ -194,25 +194,3 @@ struct MyProductsView_Previews: PreviewProvider {
         )
     }
 }
-
-extension PaymentsTransfersViewFactory {
-    
-    static var preview: Self {
-        
-        return .init(
-            makeSberQRConfirmPaymentView: {
-                
-                .init(
-                    viewModel: $0,
-                    map: PublishingInfo.preview(info:),
-                    config: .iFora
-                )
-            },
-            makeUserAccountView: UserAccountView.init(viewModel:),
-            makeIconView: IconDomain.preview,
-            makeUpdateInfoView: UpdateInfoView.init(text:),
-            makeAnywayPaymentFactory: { _ in fatalError() },
-            makePaymentCompleteView: { _,_ in fatalError() }
-        )
-    }
-}

@@ -7,7 +7,10 @@
 
 struct MainViewFactory {
     
+    let makeAnywayPaymentFactory: MakeAnywayPaymentFactory
+    let makeIconView: MakeIconView
+    let makePaymentCompleteView: MakePaymentCompleteView
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
-    let makeUserAccountView: MakeUserAccountView
     let makeUpdateInfoView: MakeUpdateInfoView
+    let makeUserAccountView: MakeUserAccountView
 }

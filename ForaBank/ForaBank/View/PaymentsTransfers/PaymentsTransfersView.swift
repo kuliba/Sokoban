@@ -687,9 +687,14 @@ private extension PaymentsTransfersView {
     
     func paymentFlowModalView(
         event: @escaping (FraudEvent) -> Void
-    ) -> (UtilityServicePaymentFlowState.Modal) -> PaymentFlowModalView {
+    ) -> (UtilityServicePaymentFlowState.Modal) -> FraudNoticeView {
         
-        return { PaymentFlowModalView(state: $0, event: event) }
+        return { 
+            
+            switch $0 {
+            case let .fraud(fraud):
+                FraudNoticeView(state: fraud, event: event) }
+            }
     }
     
     @ViewBuilder
@@ -858,7 +863,7 @@ extension UtilityServicePaymentFlowState.Modal: Identifiable {
 
 // MARK: - Alerts
 
-private extension AlertModel
+extension AlertModel
 where PrimaryEvent == AnywayTransactionEvent,
       SecondaryEvent == AnywayTransactionEvent {
     
