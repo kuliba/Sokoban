@@ -7,4 +7,7 @@
 
 import Foundation
 
-public enum BlockHorizontalRectangularEffect: Equatable {}
+public enum BlockHorizontalRectangularEffect: Equatable {
+    
+    case saveLimit([BlockHorizontalRectangularEvent.Limit])
+}

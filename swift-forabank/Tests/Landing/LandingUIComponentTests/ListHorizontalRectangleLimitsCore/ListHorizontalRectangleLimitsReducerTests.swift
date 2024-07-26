@@ -39,11 +39,12 @@ final class ListHorizontalRectangleLimitsReducerTests: XCTestCase {
         .init(list: list, limitsLoadingStatus: status)
     }
     private func makeSUT(
+        makeInformer: @escaping (String) -> Void = { _ in },
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT()
+        let sut = SUT(makeInformer: makeInformer)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         

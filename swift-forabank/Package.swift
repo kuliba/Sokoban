@@ -961,7 +961,10 @@ private extension Target {
             .tagged,
             .shimmer,
             .uiPrimitives,
-            .rxViewModel
+            .rxViewModel,
+            .foraTools,
+            .textFieldComponent,
+            .sharedConfigs,
         ],
         path: "Sources/Landing/\(String.landingUIComponent)"
     )

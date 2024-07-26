@@ -158,7 +158,10 @@ extension RootViewModelFactory {
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices, 
             createSVCardLanding: landingService,
-            makeSVCardLandingViewModel: makeSVCardLandig
+            makeSVCardLandingViewModel: makeSVCardLandig,
+            makeInformer: {                
+                model.action.send(ModelAction.Informer.Show(informer: .init(message: $0, icon: .check)))
+            }
         )
         
         let controlPanelModelEffectHandler = ControlPanelModelEffectHandler(
