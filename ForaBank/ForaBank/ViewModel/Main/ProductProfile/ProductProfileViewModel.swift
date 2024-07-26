@@ -2304,6 +2304,20 @@ extension ProductProfileViewModel {
         var showSheet: Bool
         var categories: [String]
         
+        public init(
+            date: Date? = nil,
+            filters: [Filter]? = nil,
+            buttonAction: ButtonAction,
+            showSheet: Bool,
+            categories: [String] = []
+        ) {
+            self.date = date
+            self.filters = filters
+            self.buttonAction = buttonAction
+            self.showSheet = showSheet
+            self.categories = categories
+        }
+        
         enum Filter {
         
             case debit
