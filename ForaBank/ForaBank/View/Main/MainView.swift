@@ -322,7 +322,7 @@ private extension MainView {
     
     func iconView(
         _ icon: String?
-    ) -> some View {
+    ) -> IconDomain.IconView {
      
         viewFactory.makeIconView(icon.map { .md5Hash(.init($0)) })
     }
@@ -418,10 +418,12 @@ private extension MainView {
         }
     }
     
-#warning("fixme")
+    @ViewBuilder
     func servicePicker(
         model: PaymentProviderServicePickerFlowModel
     ) -> some View {
+        
+        let provider = model.state.content.state.payload.provider
         
         PaymentProviderServicePickerFlowView(
             model: model,
@@ -448,6 +450,13 @@ private extension MainView {
                 ))
             },
             destinationContent: servicePickerDestinationContent
+        )
+        .navigationBarWithAsyncIcon(
+            title: provider.title,
+            subtitle: provider.inn,
+            dismiss: viewModel.dismissProviderServicePicker,
+            icon: iconView(provider.icon),
+            style: .large
         )
     }
     
