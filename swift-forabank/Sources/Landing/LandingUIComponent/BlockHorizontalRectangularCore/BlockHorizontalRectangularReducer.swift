@@ -9,7 +9,13 @@ import Foundation
 
 public final class BlockHorizontalRectangularReducer {
     
-    public init() {}
+    let limitIsChanged: (BlockHorizontalRectangularEvent.Limit) -> Void
+
+    public init(
+        limitIsChanged: @escaping (BlockHorizontalRectangularEvent.Limit) -> Void
+    ) {
+        self.limitIsChanged = limitIsChanged
+    }
 }
 
 public extension BlockHorizontalRectangularReducer {
@@ -25,9 +31,7 @@ public extension BlockHorizontalRectangularReducer {
         switch event {
         case let .edit(limit):
             state.newValues.updateOrAddLimit(limit)
-            
-        case let .save(limits):
-            effect = .saveLimit(limits)
+            limitIsChanged(limit)
         }
         return (state, effect)
     }
