@@ -498,7 +498,15 @@ private extension MainView {
         
         switch destination {
         case let .payment(binder):
+            let payload  = binder.content.state.transaction.context.outline.payload
+            
             paymentFlow(binder: binder)
+                .navigationBarWithAsyncIcon(
+                    title: payload.title,
+                    subtitle: payload.subtitle,
+                    dismiss: { binder.flow.event(.terminate) },
+                    icon: iconView(payload.icon)
+                )
             
         case .paymentByInstruction:
             Text("DestinationView: paymentByInstruction")
