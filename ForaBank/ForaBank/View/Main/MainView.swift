@@ -345,7 +345,6 @@ private extension MainView {
 
 private extension MainView {
     
-#warning("fix nav bar below")
     func paymentProviderPicker(
         for providers: MultiElementArray<SegmentedPaymentProvider>,
         with destination: PaymentProviderServicePickerFlowModel?
@@ -362,15 +361,12 @@ private extension MainView {
             dismissDestination: viewModel.dismissPaymentProviderPickerDestination,
             content: servicePicker(model:)
         )
-        .navigationBarWithAsyncIcon(
-            title: "state.content.operator.title",
-            subtitle: "state.content.operator.subtitle",
+        .navigationBarWithBack(
+            title: PaymentsTransfersSectionType.payments.name,
             dismiss: viewModel.dismissProviderServicePicker,
-            icon: .init(
-                image: .ic24Hash,
-                publisher: Empty().eraseToAnyPublisher()
-            ),
-            style: .large
+            rightItem: .barcodeScanner(
+                action: viewModel.dismissProviderServicePicker
+            )
         )
     }
     
