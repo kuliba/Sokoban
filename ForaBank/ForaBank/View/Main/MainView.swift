@@ -358,15 +358,21 @@ private extension MainView {
             
         } label: {
             
-            Text("icon")
-            
-            VStack(alignment: .leading) {
-                
-                Text(provider.title)
-                provider.inn.map(Text.init)
-            }
+            LabelWithIcon(
+                title: provider.title,
+                subtitle: provider.inn,
+                config: .iFora,
+                iconView: iconView(provider.icon)
+            )
         }
         .buttonStyle(.plain)
+    }
+    
+    private func iconView(
+        _ icon: String?
+    ) -> some View {
+     
+        viewFactory.makeIconView(icon.map { .md5Hash(.init($0)) })
     }
     
 #warning("FIX footer")

@@ -683,6 +683,7 @@
 		2A43009D2C524CA1002FF8C7 /* AnywayTransactionViewModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A43009C2C524CA1002FF8C7 /* AnywayTransactionViewModelComposer.swift */; };
 		2A43009F2C524F72002FF8C7 /* AnywayElementModelMapperComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A43009E2C524F72002FF8C7 /* AnywayElementModelMapperComposer.swift */; };
 		2A4300A22C52603C002FF8C7 /* ServicePaymentFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4300A12C52603C002FF8C7 /* ServicePaymentFlowTests.swift */; };
+		2A438C3C2C57674E002FC79F /* LabelWithIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A438C3B2C57674E002FC79F /* LabelWithIcon.swift */; };
 		2A44B6782AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44B6772AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift */; };
 		2A44CBD22B68EB2100158D42 /* UserAccountEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44CBD12B68EB2100158D42 /* UserAccountEvent.swift */; };
 		2A44CBD62B68F01700158D42 /* UserAccountRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44CBD52B68F01700158D42 /* UserAccountRoute.swift */; };
@@ -3835,6 +3836,7 @@
 		2A43009C2C524CA1002FF8C7 /* AnywayTransactionViewModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayTransactionViewModelComposer.swift; sourceTree = "<group>"; };
 		2A43009E2C524F72002FF8C7 /* AnywayElementModelMapperComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnywayElementModelMapperComposer.swift; sourceTree = "<group>"; };
 		2A4300A12C52603C002FF8C7 /* ServicePaymentFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicePaymentFlowTests.swift; sourceTree = "<group>"; };
+		2A438C3B2C57674E002FC79F /* LabelWithIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelWithIcon.swift; sourceTree = "<group>"; };
 		2A44B6772AFD722600E269EC /* Services+makeAuthWithPublicKeyServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeAuthWithPublicKeyServiceTests.swift"; sourceTree = "<group>"; };
 		2A44CBD12B68EB2100158D42 /* UserAccountEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountEvent.swift; sourceTree = "<group>"; };
 		2A44CBD52B68F01700158D42 /* UserAccountRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccountRoute.swift; sourceTree = "<group>"; };
@@ -8500,6 +8502,22 @@
 			path = Deprecated;
 			sourceTree = "<group>";
 		};
+		2A438C3A2C576735002FC79F /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				2A438C3D2C5767B8002FC79F /* Labels */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		2A438C3D2C5767B8002FC79F /* Labels */ = {
+			isa = PBXGroup;
+			children = (
+				2A438C3B2C57674E002FC79F /* LabelWithIcon.swift */,
+			);
+			path = Labels;
+			sourceTree = "<group>";
+		};
 		2A4593C22A7CC654008593A3 /* GetProcessingSessionCode */ = {
 			isa = PBXGroup;
 			children = (
@@ -13121,6 +13139,7 @@
 		77EA0DB92779B04A00C6ED12 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				2A438C3A2C576735002FC79F /* DesignSystem */,
 				83FAD89029CDB3A700474B06 /* InternetTV */,
 				0BE0BDF42905CE2C0064549E /* QR */,
 				68A07C44281ADEBB00797A54 /* OfferProductViewComponent.swift */,
@@ -19000,6 +19019,7 @@
 				0BDE453526E5385900B64A0A /* GetPaymentSystemList.swift in Sources */,
 				2AC9D7922992250A003CBACD /* ProductCarouselViewComponent.swift in Sources */,
 				0B11A7882922A71E00C9BDD0 /* QRFailedViewModel.swift in Sources */,
+				2A438C3C2C57674E002FC79F /* LabelWithIcon.swift in Sources */,
 				779CF7AF2A6EA2A500011812 /* EncryptionLocalAgent.swift in Sources */,
 				2A3BD61A2B6D254A009B16F7 /* RequestFactory+createCreateFastPaymentContractRequest.swift in Sources */,
 				0C5D7DA02983294600BC0CCF /* NetworkMonitorAgentMock.swift in Sources */,
