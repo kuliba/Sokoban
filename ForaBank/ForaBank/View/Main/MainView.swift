@@ -428,27 +428,7 @@ private extension MainView {
         PaymentProviderServicePickerFlowView(
             model: model,
             contentView: servicePickerContentView,
-            alertContent: { alert in
-#warning("extract helper")
-                return .init(with: .init(
-                    title: "Error",
-                    message: {
-                        
-                        switch alert.serviceFailure {
-                        case .connectivityError:
-                            return "Ошибка"
-                            
-                        case let .serverError(errorMessage):
-                            return errorMessage
-                        }
-                    }(),
-                    primary: .init(
-                        type: .default,
-                        title: "OK",
-                        action: { print("dismiss alert") }
-                    )
-                ))
-            },
+            alertContent: servicePickerAlertContent,
             destinationContent: servicePickerDestinationContent
         )
         .navigationBarWithAsyncIcon(
@@ -484,6 +464,30 @@ private extension MainView {
                 .buttonStyle(.plain)
             }
         )
+    }
+    
+    private func servicePickerAlertContent(
+        alert: ServiceFailureAlert
+    ) -> Alert {
+        
+        return .init(with: .init(
+            title: "Ошибка",
+            message: {
+                
+                switch alert.serviceFailure {
+                case .connectivityError:
+                    return "Ошибка"
+                    
+                case let .serverError(errorMessage):
+                    return errorMessage
+                }
+            }(),
+            primary: .init(
+                type: .default,
+                title: "OK",
+                action: { print("dismiss alert") }
+            )
+        ))
     }
     
     @ViewBuilder
