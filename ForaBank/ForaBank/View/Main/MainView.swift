@@ -315,6 +315,32 @@ struct MainView<NavigationOperationView: View>: View {
     }
 }
 
+// MARK: - Helpers
+
+private extension MainView {
+    
+    func iconView(
+        _ icon: String?
+    ) -> some View {
+     
+        viewFactory.makeIconView(icon.map { .md5Hash(.init($0)) })
+    }
+    
+    func label(
+        title: String,
+        subtitle: String? = nil,
+        icon: String?
+    ) -> some View {
+        
+        LabelWithIcon(
+            title: title,
+            subtitle: subtitle,
+            config: .iFora,
+            iconView: iconView(icon)
+        )
+    }
+}
+
 // MARK: - payment provider & service pickers
 
 private extension MainView {
@@ -358,21 +384,13 @@ private extension MainView {
             
         } label: {
             
-            LabelWithIcon(
+            label(
                 title: provider.title,
                 subtitle: provider.inn,
-                config: .iFora,
-                iconView: iconView(provider.icon)
+                icon: provider.icon
             )
         }
         .buttonStyle(.plain)
-    }
-    
-    private func iconView(
-        _ icon: String?
-    ) -> some View {
-     
-        viewFactory.makeIconView(icon.map { .md5Hash(.init($0)) })
     }
     
 #warning("FIX footer")
