@@ -21,7 +21,7 @@ extension PaymentProviderServicePickerFlowState {
     
     enum Destination {
         
-        case payment(Transaction)
+        case payment(ServicePaymentBinder)
         case paymentByInstruction(PaymentsViewModel)
         
         typealias Transaction = AnywayTransactionState.Transaction

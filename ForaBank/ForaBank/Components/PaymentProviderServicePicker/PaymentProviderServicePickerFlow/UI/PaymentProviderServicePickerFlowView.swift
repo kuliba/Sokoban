@@ -77,6 +77,9 @@ extension PaymentProviderServicePickerFlowState.Destination: Identifiable {
                     handleEffect: { _,_ in }
                 )
             ),
+            factory: .init(
+                makeServicePaymentBinder: { .preview(transaction: $0) }
+            ),
             reduce: { state, _ in (state, nil) },
             handleEffect: { _,_ in }
         ),

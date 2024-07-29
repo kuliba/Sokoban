@@ -14,20 +14,24 @@ final class PaymentProviderServicePickerFlowModelComposer {
     // TODO: suboptimal, need to rethink how to inject what needed
     // (and that is `AsyncPickerEffectHandlerMicroServices`)
     private let composer: Composer
+    private let factory: Factory
     private let nanoServices: NanoServices
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         composer: Composer,
+        factory: Factory,
         nanoServices: NanoServices,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.composer = composer
+        self.factory = factory
         self.nanoServices = nanoServices
         self.scheduler = scheduler
     }
     
     typealias Composer = UtilityPrepaymentFlowMicroServicesComposer
+    typealias Factory = PaymentProviderServicePickerFlowModelFactory
     typealias NanoServices = UtilityPaymentNanoServices
 }
 
@@ -37,6 +41,7 @@ extension PaymentProviderServicePickerFlowModelComposer {
         provider: PaymentProviderSegment.Provider
     ) -> PaymentProviderServicePickerFlowModel {
         
+        #warning("implement instead of fatalError()")
         let content = makePaymentProviderServicePickerModel(provider: provider)
         let flowReducer = PaymentProviderServicePickerFlowReducer()
         let flowEffectHandler = PaymentProviderServicePickerFlowEffectHandler(
@@ -45,6 +50,7 @@ extension PaymentProviderServicePickerFlowModelComposer {
         
         return .init(
             initialState: .init(content: content),
+            factory: factory,
             reduce: flowReducer.reduce(_:_:),
             handleEffect: flowEffectHandler.handleEffect(_:_:),
             scheduler: scheduler

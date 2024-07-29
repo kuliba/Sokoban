@@ -376,6 +376,7 @@ private extension MainView {
     }
     
 #warning("fixme")
+#warning("extract helpers")
     func servicePicker(
         model: PaymentProviderServicePickerFlowModel
     ) -> some View {
@@ -383,7 +384,8 @@ private extension MainView {
         PaymentProviderServicePickerFlowView(
             model: model,
             contentView: { content in
-                
+#warning("extract helper") 
+                return
                 PaymentProviderServicePickerWrapperView(
                     model: model.state.content,
                     failureView: {
@@ -405,7 +407,7 @@ private extension MainView {
                 )
             },
             alertContent: { alert in
-                
+#warning("extract helper")
                 return .init(with: .init(
                     title: "Error",
                     message: {
@@ -425,16 +427,67 @@ private extension MainView {
                     )
                 ))
             },
-            destinationContent: {
+            destinationContent: servicePickerDestinationContent
+        )
+    }
+    
+    @ViewBuilder
+    private func servicePickerDestinationContent(
+        destination: PaymentProviderServicePickerFlowState.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .payment(binder):
+            paymentFlow(binder: binder)
+            
+        case .paymentByInstruction:
+            Text("DestinationView: paymentByInstruction")
+        }
+    }
+}
+
+// MARK: - payment flow
+
+private extension MainView {
+    
+    func paymentFlow(
+        binder: ServicePaymentBinder
+    ) -> some View {
+        
+        let anywayPaymentFactory = viewFactory.makeAnywayPaymentFactory {
+            
+            binder.content.event(.payment($0))
+        }
+        
+        let flowFactory = ServicePaymentFlowFactory(
+            bottomSheetContent: { payload in
                 
-                switch $0 {
-                case .payment:
-                    Text("DestinationView: payment")
-                    
-                case .paymentByInstruction:
-                    Text("DestinationView: paymentByInstruction")
-                }
-            }
+                return .init(
+                    state: payload,
+                    event: { binder.content.event(.fraud($0)) }
+                )
+            },
+            fullScreenCoverContent: { result in
+                
+                viewFactory.makePaymentCompleteView(
+                    result
+                        .mapError {
+                            
+                            return .init(
+                                formattedAmount: $0.formattedAmount,
+                                hasExpired: $0.hasExpired
+                            )
+                        },
+                    { binder.flow.event(.terminate) }
+                )
+            },
+            makeElementView: anywayPaymentFactory.makeElementView,
+            makeFooterView: anywayPaymentFactory.makeFooterView
+        )
+        
+        return ServicePaymentFlowStateWrapperView(
+            binder: binder,
+            factory: flowFactory
         )
     }
 }
@@ -605,7 +658,8 @@ extension MainViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active),
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
@@ -632,7 +686,8 @@ extension MainViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active),
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
@@ -659,7 +714,8 @@ extension MainViewModel {
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
             makeSubscriptionsViewModel: { _,_ in .preview },
             updateInfoStatusFlag: .init(.active),
-            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview
+            makePaymentProviderServicePickerFlowModel: PaymentProviderServicePickerFlowModel.preview,
+            makeServicePaymentBinder: ServicePaymentBinder.preview
         ),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
