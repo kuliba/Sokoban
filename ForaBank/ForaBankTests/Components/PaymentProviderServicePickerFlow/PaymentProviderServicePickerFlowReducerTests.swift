@@ -15,7 +15,7 @@ final class PaymentProviderServicePickerFlowReducerTests: XCTestCase {
     func test_dismissDestination_shouldResetPaymentDestination() {
         
         let (state, effect) = makeSUT().reduce(
-            makeState(destination: .payment(makeTransaction())),
+            makeState(destination: .payment(.preview(transaction: makeTransaction()))),
             .dismissDestination
         )
         

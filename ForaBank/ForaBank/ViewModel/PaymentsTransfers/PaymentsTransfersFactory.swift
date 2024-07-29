@@ -118,7 +118,7 @@ extension ServicePaymentBinder {
         return .init(
             content: .init(
                 transaction: transaction,
-                mapToModel: { _ in fatalError() },
+                mapToModel: { _ in { .field(.init(name: "\($0)", title: "Field Title", value: "FieldValue", icon: nil)) }},
                 footer: .init(
                     initialState: .init(
                         amount: 0,
