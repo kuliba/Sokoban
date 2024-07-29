@@ -63,9 +63,14 @@ struct ListHorizontalRectangleLimitsView: View {
                     )
                 
                 if state.editEnableFor(limitType) {
-                    Button(action: { event(.saveLimits([])) }) { // TODO: add real values for save
+                    Button(action: { event(.saveLimits(viewModel.newLimitsValue)) }) {
                         ZStack {
-                            Color(red: 255/255, green: 54/255, blue: 54/255)
+                            if state.saveButtonEnable {
+                                Color(red: 255/255, green: 54/255, blue: 54/255)
+
+                            } else {
+                                Color(red: 211/255, green: 211/255, blue: 211/255)
+                            }
                             Text("Сохранить")
                                 .padding()
                         }
@@ -75,6 +80,7 @@ struct ListHorizontalRectangleLimitsView: View {
                     .frame(height: 56)
                     .padding(.horizontal, 16)
                     .padding(.vertical, config.paddings.vertical)
+                    .disabled(!state.saveButtonEnable)
                 }
             }
             .navigationBarTitle("")

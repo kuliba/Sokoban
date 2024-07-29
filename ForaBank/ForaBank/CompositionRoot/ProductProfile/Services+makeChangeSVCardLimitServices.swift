@@ -23,8 +23,17 @@ extension Services {
             log: log
         ).remoteService
         
+        let createGetSVCardLimitsService = LoggingRemoteServiceDecorator(
+            createRequest: RequestFactory.createGetSVCardLimitsRequest(payload:),
+            performRequest: httpClient.performRequest(_:completion:),
+            mapResponse: RemoteServices.ResponseMapper.mapGetSVCardLimitsResponse,
+            log: log
+        ).remoteService
+
+        
         return .init(
-            createChangeSVCardLimit: createChangeSVCardLimitService.process(_:completion:)
+            createChangeSVCardLimit: createChangeSVCardLimitService.process(_:completion:),
+            createGetSVCardLimits: createGetSVCardLimitsService.process(_:completion:)
         )
     }
 }
