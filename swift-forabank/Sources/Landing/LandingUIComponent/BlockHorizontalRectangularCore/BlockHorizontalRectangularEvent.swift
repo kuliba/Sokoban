@@ -10,7 +10,6 @@ import Foundation
 public enum BlockHorizontalRectangularEvent: Equatable {
     
     case edit(Limit)
-    case save([Limit])
     
     public struct Limit: Equatable {
         

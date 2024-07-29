@@ -170,12 +170,18 @@ private extension ControlPanelEffectHandler {
             
         case let .saveLimits(limits):
             
-            productProfileServices.createChangeSVCardLimit.сhangeSVCardLimits(payloads: limits.payloads(card.cardId)) {
+            productProfileServices.createChangeSVCardLimit.сhangeSVCardLimits(card: card, payloads: limits.payloads(card.cardId)) {
                 
-                if case let .some(text) = $0 {
+                switch ($0, $1) {
+                    
+                case let (.some(text), nil):
                     dispatch(.delayAlert(text))
-                } else {
-                    dispatch(.informer("Лимиты установлены"))
+                    
+                case let (.none, .some(limits)):
+                    
+                    dispatch(.informerWithLimits("Лимиты установлены", limits))
+                default:
+                    break
                 }
             }
             
