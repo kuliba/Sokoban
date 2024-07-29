@@ -129,7 +129,6 @@ class MainViewModel: ObservableObject, Resetable {
         _ model: Model,
         stickerViewModel: ProductCarouselView.StickerViewModel
     ) {
-        
         if let index = sections.indexProductsSection,
             let section = sections[index] as? MainSectionProductsView.ViewModel,
            section.productCarouselViewModel.stickerViewModel?.backgroundImage != stickerViewModel.backgroundImage {
@@ -218,23 +217,23 @@ extension MainViewModel {
         route.destination = nil
         openScanner()
     }
-
+    
     func dismissPaymentProviderPickerDestination() {
         
-        guard case let .paymentProviderPicker(providers, _) = route.destination
+        guard case let .paymentProviderPicker(qrCode, providers, _) = route.destination
         else { return }
         
-        route.destination = .paymentProviderPicker(providers, destination: nil)
+        route.destination = .paymentProviderPicker(qrCode, providers, destination: nil)
     }
     
     func select(
         provider: PaymentProviderSegment.Provider
     ) {
-        guard case let .paymentProviderPicker(providers, _) = route.destination
+        guard case let .paymentProviderPicker(qrCode, providers, _) = route.destination
         else { return }
         
         let pickerModel = makeServicePicker(with: provider)
-        route.destination = .paymentProviderPicker(providers, destination: pickerModel)
+        route.destination = .paymentProviderPicker(qrCode, providers, destination: pickerModel)
     }
     
     private func makeServicePicker(
@@ -242,7 +241,7 @@ extension MainViewModel {
     ) -> PaymentProviderServicePickerFlowModel {
         
         let pickerModel = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel(provider)
-
+        
         pickerModel.$state
             .map(\.isContentLoading)
             .debounce(for: 0.3, scheduler: DispatchQueue.main)
@@ -258,6 +257,23 @@ extension MainViewModel {
             .store(in: &bindings)
         
         return pickerModel
+    }
+    
+    func goToChat() {
+        
+        resetDestination()
+        resetModal()
+        
+        DispatchQueue.main.delay(for: .milliseconds(400)) { [weak self] in
+            
+            self?.rootActions?.switchTab(.chat)
+        }
+    }
+    
+    func payByInstructions(
+        withQR qrCode: QRCode
+    ) {
+        self.action.send(MainViewModelAction.Show.Requisites(qrCode: qrCode))
     }
 }
 
@@ -952,7 +968,7 @@ extension MainViewModel {
             route.destination = .providerServicePicker(pickerModel)
             
         case let (.some(providers), _):
-            route.destination = .paymentProviderPicker(providers, destination: nil)
+            route.destination = .paymentProviderPicker(qr, providers, destination: nil)
         }
     }
     
@@ -1428,7 +1444,7 @@ extension MainViewModel {
         case landing(LandingWrapperViewModel)
         case orderSticker(LandingWrapperViewModel)
         case paymentSticker
-        case paymentProviderPicker(MultiElementArray<SegmentedPaymentProvider>, destination: PaymentProviderServicePickerFlowModel?)
+        case paymentProviderPicker(QRCode, MultiElementArray<SegmentedPaymentProvider>, destination: PaymentProviderServicePickerFlowModel?)
         case providerServicePicker(PaymentProviderServicePickerFlowModel)
         
         var id: Case {

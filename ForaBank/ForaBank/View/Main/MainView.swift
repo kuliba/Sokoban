@@ -7,6 +7,7 @@
 
 import ActivateSlider
 import Combine
+import FooterComponent
 import ForaTools
 import InfoComponent
 import LandingUIComponent
@@ -246,8 +247,8 @@ struct MainView<NavigationOperationView: View>: View {
                 .navigationBarTitle("Оформление заявки", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
             
-        case let .paymentProviderPicker(providers, destination):
-            paymentProviderPicker(for: providers, with: destination)
+        case let .paymentProviderPicker(qrCode, providers, destination):
+            paymentProviderPicker(qrCode: qrCode, providers: providers, with: destination)
             
         case let .providerServicePicker(model):
             servicePicker(model: model)
@@ -346,14 +347,15 @@ private extension MainView {
 private extension MainView {
     
     func paymentProviderPicker(
-        for providers: MultiElementArray<SegmentedPaymentProvider>,
+        qrCode: QRCode,
+        providers: MultiElementArray<SegmentedPaymentProvider>,
         with destination: PaymentProviderServicePickerFlowModel?
     ) -> some View {
         
         PaymentProviderSegmentsView(
             segments: .init(with: providers.elements),
             providerView: paymentProviderView,
-            footer: paymentProviderPickerFooter,
+            footer: { paymentProviderPickerFooter(qrCode: qrCode) },
             config: .iFora
         )
         .navigationDestination(
@@ -389,10 +391,22 @@ private extension MainView {
         .buttonStyle(.plain)
     }
     
-#warning("FIX footer")
-    func paymentProviderPickerFooter() -> some View {
+    func paymentProviderPickerFooter(qrCode: QRCode) -> some View {
         
-        Text("TBD: Footer with buttons")
+        FooterView(
+            state: .footer(.iFora),
+            event: {
+                
+                switch $0 {
+                case .addCompany:
+                    viewModel.goToChat()
+                    
+                case .payByInstruction:
+                    viewModel.payByInstructions(withQR: qrCode)
+                }
+            },
+            config: .iFora
+        )
     }
     
 #warning("fixme")
