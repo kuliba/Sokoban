@@ -391,26 +391,34 @@ private extension MainView {
         .buttonStyle(.plain)
     }
     
-    func paymentProviderPickerFooter(qrCode: QRCode) -> some View {
+    func paymentProviderPickerFooter(
+        qrCode: QRCode
+    ) -> some View {
         
         FooterView(
             state: .footer(.iFora),
-            event: {
-                
-                switch $0 {
-                case .addCompany:
-                    viewModel.goToChat()
-                    
-                case .payByInstruction:
-                    viewModel.payByInstructions(withQR: qrCode)
-                }
-            },
+            event: event(qrCode: qrCode),
             config: .iFora
         )
     }
     
+    private func event(
+        qrCode: QRCode
+    ) -> (FooterEvent) -> Void {
+        
+        return { event in
+    
+            switch event {
+            case .addCompany:
+                viewModel.goToChat()
+                
+            case .payByInstruction:
+                viewModel.payByInstructions(withQR: qrCode)
+            }
+        }
+    }
+    
 #warning("fixme")
-#warning("extract helpers")
     func servicePicker(
         model: PaymentProviderServicePickerFlowModel
     ) -> some View {
@@ -418,23 +426,23 @@ private extension MainView {
         PaymentProviderServicePickerFlowView(
             model: model,
             contentView: { content in
-#warning("extract helper") 
-                return
+                
                 PaymentProviderServicePickerWrapperView(
                     model: model.state.content,
                     failureView: {
-                        Text(" Failure view with pay by instructions button")
+                        
+                        FooterView(
+                            state: .failure(.iFora),
+                            event: event(qrCode: content.state.payload.qrCode),
+                            config: .iFora
+                        )
                     },
                     itemView: { service in
                         
                         Button {
-                            model.state.content.event(.select(service))
+                            content.event(.select(service))
                         } label: {
-#warning("fixme")
-                            UtilityServiceLabel(
-                                service: service,
-                                iconView: Text("icon")
-                            )
+                            label(title: service.name, icon: nil)
                         }
                         .buttonStyle(.plain)
                     }
@@ -448,7 +456,7 @@ private extension MainView {
                         
                         switch alert.serviceFailure {
                         case .connectivityError:
-                            return "Some Error"
+                            return "Ошибка"
                             
                         case let .serverError(errorMessage):
                             return errorMessage
@@ -528,7 +536,7 @@ private extension MainView {
 
 extension PaymentProviderServicePickerFlowModel: Identifiable {
     
-    var id: String { state.content.state.payload.id }
+    var id: String { state.content.state.payload.provider.id }
 }
 
 private extension MainViewModel.Route {

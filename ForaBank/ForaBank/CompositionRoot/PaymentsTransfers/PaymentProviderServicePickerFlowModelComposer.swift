@@ -38,11 +38,10 @@ final class PaymentProviderServicePickerFlowModelComposer {
 extension PaymentProviderServicePickerFlowModelComposer {
     
     func makeFlowModel(
-        provider: PaymentProviderSegment.Provider
+        payload: PaymentProviderServicePickerPayload
     ) -> PaymentProviderServicePickerFlowModel {
         
-        #warning("implement instead of fatalError()")
-        let content = makePaymentProviderServicePickerModel(provider: provider)
+        let content = makePaymentProviderServicePickerModel(payload: payload)
         let flowReducer = PaymentProviderServicePickerFlowReducer()
         let flowEffectHandler = PaymentProviderServicePickerFlowEffectHandler(
             makePayByInstructionModel: { _ in fatalError() }
@@ -61,7 +60,7 @@ extension PaymentProviderServicePickerFlowModelComposer {
 extension PaymentProviderServicePickerFlowModelComposer {
     
     func makePaymentProviderServicePickerModel(
-        provider: PaymentProviderSegment.Provider
+        payload: PaymentProviderServicePickerPayload
     ) -> PaymentProviderServicePickerModel {
         
         let reducer = PickerReducer()
@@ -72,10 +71,10 @@ extension PaymentProviderServicePickerFlowModelComposer {
                     
                     // TODO: needs simplification and decoupling from `nanoServices.startAnywayPayment` which much more complex than is needed in this case
                     self.nanoServices.startAnywayPayment(
-                        .service(service, for: provider.operator)
+                        .service(service, for: payload.provider.operator)
                     ) {
                         // TODO: get rid of this dependency
-                        let result = self.composer.makeStartPaymentResult(from: $0, service, provider.operator)
+                        let result = self.composer.makeStartPaymentResult(from: $0, service, payload.provider.operator)
                         
                         switch result {
                         case let .failure(.serviceFailure(.serverError(errorMessage))):
@@ -93,17 +92,17 @@ extension PaymentProviderServicePickerFlowModelComposer {
         )
         
         return .init(
-            initialState: .init(payload: provider),
+            initialState: .init(payload: payload),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: scheduler
         )
     }
     
-    typealias PickerReducer = AsyncPickerReducer<Provider, UtilityService, Result>
-    typealias PickerEffectHandler = AsyncPickerEffectHandler<Provider, UtilityService, Result>
+    typealias PickerReducer = AsyncPickerReducer<PaymentProviderServicePickerPayload, UtilityService, Result>
+    typealias PickerEffectHandler = AsyncPickerEffectHandler<PaymentProviderServicePickerPayload, UtilityService, Result>
     
-    typealias MicroServices = AsyncPickerEffectHandlerMicroServices<Provider, UtilityService, Result>
+    typealias MicroServices = AsyncPickerEffectHandlerMicroServices<PaymentProviderServicePickerPayload, UtilityService, Result>
     
     typealias Provider = PaymentProviderSegment.Provider
     typealias Result = PaymentProviderServicePickerResult
@@ -112,10 +111,10 @@ extension PaymentProviderServicePickerFlowModelComposer {
 private extension PaymentProviderServicePickerFlowModelComposer {
     
     func load(
-        provider: PaymentProviderSegment.Provider,
+        payload: PaymentProviderServicePickerPayload,
         completion: @escaping ([UtilityService]) -> Void
     ) {
-        nanoServices.getServicesFor(provider.operator) {
+        nanoServices.getServicesFor(payload.provider.operator) {
             
             completion((try? $0.get()) ?? [])
             _ = self.nanoServices

@@ -232,15 +232,18 @@ extension MainViewModel {
         guard case let .paymentProviderPicker(qrCode, providers, _) = route.destination
         else { return }
         
-        let pickerModel = makeServicePicker(with: provider)
+        let pickerModel = makeServicePicker(with: .init(
+            provider: provider,
+            qrCode: qrCode
+        ))
         route.destination = .paymentProviderPicker(qrCode, providers, destination: pickerModel)
     }
     
     private func makeServicePicker(
-        with provider: PaymentProviderSegment.Provider
+        with payload: PaymentProviderServicePickerPayload
     ) -> PaymentProviderServicePickerFlowModel {
         
-        let pickerModel = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel(provider)
+        let pickerModel = paymentsTransfersFactory.makePaymentProviderServicePickerFlowModel(payload)
         
         pickerModel.$state
             .map(\.isContentLoading)
@@ -964,7 +967,10 @@ extension MainViewModel {
             handleUnknownQR()
             
         case let (.none, .some(provider)):
-            let pickerModel = makeServicePicker(with: .init(provider))
+            let pickerModel = makeServicePicker(with: .init(
+                provider: .init(provider),
+                qrCode: qr
+            ))
             route.destination = .providerServicePicker(pickerModel)
             
         case let (.some(providers), _):

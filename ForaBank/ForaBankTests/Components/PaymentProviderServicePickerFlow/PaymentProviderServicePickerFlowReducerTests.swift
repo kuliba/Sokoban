@@ -90,7 +90,7 @@ final class PaymentProviderServicePickerFlowReducerTests: XCTestCase {
     }
     
     private func makeContent(
-        payload: PaymentProviderSegment.Provider? = nil
+        payload: PaymentProviderServicePickerPayload? = nil
     ) -> SUT.State.Content {
         
         return .init(
@@ -106,10 +106,14 @@ final class PaymentProviderServicePickerFlowReducerTests: XCTestCase {
         id: String = anyMessage(),
         icon: String? = anyMessage(),
         inn: String? = anyMessage(),
-        title: String = anyMessage()
-    ) -> PaymentProviderSegment.Provider {
+        title: String = anyMessage(),
+        qrCode: QRCode = .init(original: "", rawData: [:])
+    ) -> PaymentProviderServicePickerPayload {
         
-        return .init(id: id, icon: icon, inn: inn, title: title)
+        return .init(
+            provider: .init(id: id, icon: icon, inn: inn, title: title),
+            qrCode: qrCode
+        )
     }
     
     private func makeTransaction(

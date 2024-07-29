@@ -65,14 +65,7 @@ extension PaymentProviderServicePickerFlowState.Destination: Identifiable {
         model: .init(
             initialState: .init(
                 content: .init(
-                    initialState: .init(
-                        payload: .init(
-                            id: UUID().uuidString,
-                            icon: nil,
-                            inn: nil,
-                            title: "Some Provider"
-                        )
-                    ),
+                    initialState: .init(payload: .preview),
                     reduce: { state, _ in (state, nil) },
                     handleEffect: { _,_ in }
                 )
