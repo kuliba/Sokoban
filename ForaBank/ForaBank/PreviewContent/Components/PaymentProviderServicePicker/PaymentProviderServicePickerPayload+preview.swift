@@ -7,7 +7,7 @@
 
 import Foundation
 
-#if DEBUG
+#if DEBUG || MOCK
 extension PaymentProviderServicePickerPayload {
     
     static let preview: Self = .init(
