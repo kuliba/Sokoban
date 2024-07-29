@@ -425,29 +425,7 @@ private extension MainView {
         
         PaymentProviderServicePickerFlowView(
             model: model,
-            contentView: { content in
-                
-                PaymentProviderServicePickerWrapperView(
-                    model: model.state.content,
-                    failureView: {
-                        
-                        FooterView(
-                            state: .failure(.iFora),
-                            event: event(qrCode: content.state.payload.qrCode),
-                            config: .iFora
-                        )
-                    },
-                    itemView: { service in
-                        
-                        Button {
-                            content.event(.select(service))
-                        } label: {
-                            label(title: service.name, icon: nil)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                )
-            },
+            contentView: servicePickerContentView,
             alertContent: { alert in
 #warning("extract helper")
                 return .init(with: .init(
@@ -470,6 +448,32 @@ private extension MainView {
                 ))
             },
             destinationContent: servicePickerDestinationContent
+        )
+    }
+    
+    private func servicePickerContentView(
+        model: PaymentProviderServicePickerModel
+    ) -> some View {
+        
+        PaymentProviderServicePickerWrapperView(
+            model: model,
+            failureView: {
+                
+                FooterView(
+                    state: .failure(.iFora),
+                    event: event(qrCode: model.state.payload.qrCode),
+                    config: .iFora
+                )
+            },
+            itemView: { service in
+                
+                Button {
+                    model.event(.select(service))
+                } label: {
+                    label(title: service.name, icon: nil)
+                }
+                .buttonStyle(.plain)
+            }
         )
     }
     
