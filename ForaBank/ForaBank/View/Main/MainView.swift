@@ -462,7 +462,8 @@ private extension MainView {
                     label(title: service.name, icon: nil)
                 }
                 .buttonStyle(.plain)
-            }
+            },
+            config: .iFora
         )
     }
     
