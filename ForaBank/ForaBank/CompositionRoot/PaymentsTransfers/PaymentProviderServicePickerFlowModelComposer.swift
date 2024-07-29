@@ -15,17 +15,20 @@ final class PaymentProviderServicePickerFlowModelComposer {
     // (and that is `AsyncPickerEffectHandlerMicroServices`)
     private let composer: Composer
     private let factory: Factory
+    private let model: Model
     private let nanoServices: NanoServices
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         composer: Composer,
         factory: Factory,
+        model: Model,
         nanoServices: NanoServices,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.composer = composer
         self.factory = factory
+        self.model = model
         self.nanoServices = nanoServices
         self.scheduler = scheduler
     }
@@ -44,7 +47,15 @@ extension PaymentProviderServicePickerFlowModelComposer {
         let content = makePaymentProviderServicePickerModel(payload: payload)
         let flowReducer = PaymentProviderServicePickerFlowReducer()
         let flowEffectHandler = PaymentProviderServicePickerFlowEffectHandler(
-            makePayByInstructionModel: { _ in fatalError() }
+            makePayByInstructionModel: { completion in
+                
+                let viewModel = PaymentsViewModel(
+                    self.model,
+                    service: .requisites,
+                    closeAction: {}
+                )
+                completion(viewModel)
+            }
         )
         
         return .init(
