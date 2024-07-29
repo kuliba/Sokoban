@@ -70,7 +70,7 @@ private extension PaymentProviderServicePickerWrapperView {
             Button {
                 print(item)
             } label: {
-                Text("\(item)")
+                Text(item.name)
             }
         },
         config: .iFora
