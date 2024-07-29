@@ -86,7 +86,7 @@ private extension SegmentedPaymentProvider {
             icon: data.logotypeList.first?.svgImage?.description,
             inn: data.synonymList.first,
             title: data.title,
-            segment: segment.rawValue
+            segment: segment.apearance.title
         )
     }
     
@@ -99,7 +99,7 @@ private extension SegmentedPaymentProvider {
             icon: `operator`.md5Hash,
             inn: `operator`.inn,
             title: `operator`.title,
-            segment: segment.rawValue
+            segment: segment.apearance.title
         )
     }
 }
