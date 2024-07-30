@@ -12,7 +12,7 @@ struct PaymentCompleteView: View {
     let state: State
     let goToMain: () -> Void
     let factory: Factory
-
+    
     var body: some View {
         
         switch state {
@@ -28,7 +28,7 @@ struct PaymentCompleteView: View {
 extension PaymentCompleteView {
     
     typealias State = Result<Report, Fraud>
-
+    
     struct Report {
         
         let status: DocumentStatus
@@ -132,3 +132,71 @@ private extension PaymentCompleteView {
         }
     }
 }
+
+#if DEBUG
+struct PaymentCompleteView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        Group {
+            
+            paymentCompleteView(state: .fraudCancelled)
+            paymentCompleteView(state: .fraudExpired)
+        }
+    }
+    
+    private static func paymentCompleteView(
+        state: PaymentCompleteView.State
+    ) -> some View {
+        
+        PaymentCompleteView(
+            state: state,
+            goToMain: {},
+            factory: .preview
+        )
+    }
+}
+
+extension PaymentCompleteView.State {
+    
+    static let fraudCancelled: Self = .failure(.init(
+        formattedAmount: "1,000 ₽",
+        hasExpired: false
+    ))
+    
+    static let fraudExpired: Self = .failure(.init(
+        formattedAmount: "1,000 ₽",
+        hasExpired: true
+    ))
+    
+    static let completed: Self = .success(.completed)
+    static let inflight: Self = .success(.inflight)
+    static let rejected: Self = .success(.rejected)
+}
+
+extension PaymentCompleteView.Report {
+    
+    static let completed: Self = .preview(.completed)
+    static let inflight: Self = .preview(.inflight)
+    static let rejected: Self = .preview(.rejected)
+    
+    private static func preview(
+        _ status: DocumentStatus,
+        detailID: Int = 1,
+        details: Details? = nil
+    ) -> Self {
+        
+        return .init(status: status, detailID: detailID, details: details)
+    }
+}
+
+extension PaymentCompleteViewFactory {
+    
+    static let preview: Self = .init(
+        makeDetailButton: { _ in .init(details: .init(logo: nil, cells: [])) },
+        makeDocumentButton: { _ in .init(getDocument: { _ in }) },
+        makeTemplateButton: { return .init(viewModel: .init(model: .emptyMock, operation: nil, operationDetail: .stub()))
+        }
+    )
+}
+#endif
