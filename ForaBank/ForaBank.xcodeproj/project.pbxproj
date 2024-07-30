@@ -8965,6 +8965,8 @@
 				2AE266272C1869CA0054C274 /* PaymentCompleteView.swift */,
 				2A6679E22C58B0DD003ACA31 /* PaymentCompleteViewConfig.swift */,
 				2AD15D1A2C1A02E7003329C7 /* PaymentCompleteViewFactory.swift */,
+				2AE266312C1975760054C274 /* TransactionCompleteView.swift */,
+				2AEA3D6E2C19B14800718AA7 /* TransactionCompleteViewConfig.swift */,
 			);
 			path = PaymentComplete;
 			sourceTree = "<group>";
@@ -10409,8 +10411,6 @@
 		2AE266302C1975680054C274 /* MOVE */ = {
 			isa = PBXGroup;
 			children = (
-				2AE266312C1975760054C274 /* TransactionCompleteView.swift */,
-				2AEA3D6E2C19B14800718AA7 /* TransactionCompleteViewConfig.swift */,
 				2AEA3D6C2C19B11600718AA7 /* PaymentComponents.ButtonView+goToMain.swift */,
 			);
 			path = MOVE;
