@@ -34,24 +34,7 @@ struct PaymentCompleteView: View {
 
 extension PaymentCompleteView {
     
-    typealias State = Result<Report, Fraud>
-    
-    struct Report {
-        
-        let detailID: Int
-        let details: Details?
-        let formattedAmount: String
-        let status: DocumentStatus
-        
-        typealias Details = TransactionCompleteState.Details
-    }
-    
-    struct Fraud: Equatable, Error {
-        
-        let formattedAmount: String
-        let hasExpired: Bool
-    }
-    
+    typealias State = PaymentCompleteState
     typealias Factory = PaymentCompleteViewFactory
     typealias Config = PaymentCompletionConfig
 }
@@ -60,7 +43,7 @@ private extension PaymentCompleteView {
     
     var transactionCompleteState: TransactionCompleteState {
         
-        switch state {
+        switch state.result {
         case .failure:
             return .init(details: nil, documentID: nil, status: .fraud)
             
@@ -83,26 +66,15 @@ private extension PaymentCompleteView {
     var paymentCompletionState: PaymentCompletion {
         
         return .init(
-            formattedAmount: formattedAmount,
+            formattedAmount: state.formattedAmount,
             merchantIcon: nil,
             status: paymentCompletionStatus
         )
     }
     
-    private var formattedAmount: String {
-        
-        switch state {
-        case let .failure(fraud):
-            return fraud.formattedAmount
-            
-        case let .success(report):
-            return report.formattedAmount
-        }
-    }
-    
     private var paymentCompletionStatus: PaymentCompletion.Status {
         
-        switch state {
+        switch state.result {
         case let .failure(fraud):
             return .fraud(fraud.hasExpired ? .expired : .cancelled)
             
@@ -150,24 +122,27 @@ struct PaymentCompleteView_Previews: PreviewProvider {
     }
 }
 
-extension PaymentCompleteView.State {
+extension PaymentCompleteState {
     
-    static let fraudCancelled: Self = .failure(.init(
-        formattedAmount: "1,000 ₽",
-        hasExpired: false
-    ))
+    static let fraudCancelled: Self = .preview(.failure(.init(hasExpired: false)))
     
-    static let fraudExpired: Self = .failure(.init(
-        formattedAmount: "1,000 ₽",
-        hasExpired: true
-    ))
+    static let fraudExpired: Self = .preview(.failure(.init(hasExpired: true)))
     
-    static let completed: Self = .success(.completed)
-    static let inflight: Self = .success(.inflight)
-    static let rejected: Self = .success(.rejected)
+    static let completed: Self = .preview(.success(.completed))
+    
+    static let inflight: Self = .preview(.success(.inflight))
+    
+    static let rejected: Self = .preview(.success(.rejected))
+    
+    private static func preview(
+        _ result: Result<Report, Fraud>
+    ) -> Self {
+        
+        return .init(formattedAmount: "1,000 ₽", result: result)
+    }
 }
 
-extension PaymentCompleteView.Report {
+extension PaymentCompleteState.Report {
     
     static let completed: Self = .preview(.completed)
     static let inflight: Self = .preview(.inflight)
@@ -176,14 +151,12 @@ extension PaymentCompleteView.Report {
     private static func preview(
         detailID: Int = 1,
         details: Details? = nil,
-        formattedAmount: String = "1 000 ₽",
         _ status: DocumentStatus
     ) -> Self {
         
         return .init(
             detailID: detailID,
             details: details,
-            formattedAmount: formattedAmount,
             status: status
         )
     }

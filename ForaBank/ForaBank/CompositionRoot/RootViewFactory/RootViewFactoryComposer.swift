@@ -200,23 +200,22 @@ private extension RootViewFactoryComposer {
         _ completed: Completed
     ) -> PaymentCompleteView.State {
         
-        return completed.result
-            .map {
-                
-                return .init(
-                    detailID: $0.detailID,
-                    details: model.makeTransactionDetailButtonDetail(with: $0.info),
-                    formattedAmount: completed.formattedAmount,
-                    status: $0.status
-                )
-            }
-            .mapError {
-                
-                return .init(
-                    formattedAmount: completed.formattedAmount,
-                    hasExpired: $0.hasExpired
-                )
-            }
+        return .init(
+            formattedAmount: completed.formattedAmount,
+            result: completed.result
+                .map {
+                    
+                    return .init(
+                        detailID: $0.detailID,
+                        details: model.makeTransactionDetailButtonDetail(with: $0.info),
+                        status: $0.status
+                    )
+                }
+                .mapError {
+                    
+                    return .init(hasExpired: $0.hasExpired)
+                }
+        )
     }
     
     private func makeDocumentButton(
