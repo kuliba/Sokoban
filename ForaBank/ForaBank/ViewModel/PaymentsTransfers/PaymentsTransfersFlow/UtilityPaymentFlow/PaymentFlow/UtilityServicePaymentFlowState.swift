@@ -52,7 +52,6 @@ extension UtilityServicePaymentFlowState {
             
             struct Fraud: Equatable, Error {
                 
-                let formattedAmount: String
                 let hasExpired: Bool
             }
         }

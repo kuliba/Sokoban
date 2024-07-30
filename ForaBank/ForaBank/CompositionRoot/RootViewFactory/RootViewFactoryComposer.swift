@@ -213,7 +213,7 @@ private extension RootViewFactoryComposer {
             .mapError {
                 
                 return .init(
-                    formattedAmount: $0.formattedAmount,
+                    formattedAmount: completed.formattedAmount,
                     hasExpired: $0.hasExpired
                 )
             }
