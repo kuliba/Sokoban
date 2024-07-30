@@ -19,7 +19,14 @@ final class CreateAnywayTransferResponseStubTests: XCTestCase {
         XCTAssertNotNil(update)
     }
 
+    func test_step4Fraud_shouldMapToAnywayPaymentUpdate() {
+        
+        let update = AnywayPaymentUpdate(step4Fraud)
+        XCTAssertNotNil(update)
+    }
+
     // MARK: - Helpers
     
     private let step4 = RemoteServices.ResponseMapper.CreateAnywayTransferResponse.step4
+    private let step4Fraud = RemoteServices.ResponseMapper.CreateAnywayTransferResponse.step4Fraud
 }
