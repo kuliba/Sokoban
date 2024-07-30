@@ -852,6 +852,8 @@
 		2A6679E62C58B32A003ACA31 /* FraudPaymentCompleteViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6679E02C58AD0F003ACA31 /* FraudPaymentCompleteViewConfig+iFora.swift */; };
 		2A6679E72C58B32A003ACA31 /* TransactionCompleteViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6679DE2C58ACF3003ACA31 /* TransactionCompleteViewConfig+iFora.swift */; };
 		2A6679E82C58B32A003ACA31 /* PaymentCompleteViewConfig+iFora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6679E42C58B0FD003ACA31 /* PaymentCompleteViewConfig+iFora.swift */; };
+		2A6679EA2C58BFE7003ACA31 /* TemplateButtonStateWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6679E92C58BFE7003ACA31 /* TemplateButtonStateWrapperView.swift */; };
+		2A6679EC2C58C00C003ACA31 /* TransactionCompleteState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6679EB2C58C00C003ACA31 /* TransactionCompleteState.swift */; };
 		2A669EAC2AE50674009A2F12 /* CVVPIN_Services in Frameworks */ = {isa = PBXBuildFile; productRef = 2A669EAB2AE50674009A2F12 /* CVVPIN_Services */; };
 		2A6724102ADADA2A00FAD522 /* Crypto+anySecKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A67240F2ADADA2A00FAD522 /* Crypto+anySecKey.swift */; };
 		2A6724122ADB30D000FAD522 /* KeyChainStore+Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6724112ADB30D000FAD522 /* KeyChainStore+Store.swift */; };
@@ -3996,6 +3998,8 @@
 		2A6679E02C58AD0F003ACA31 /* FraudPaymentCompleteViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FraudPaymentCompleteViewConfig+iFora.swift"; sourceTree = "<group>"; };
 		2A6679E22C58B0DD003ACA31 /* PaymentCompleteViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCompleteViewConfig.swift; sourceTree = "<group>"; };
 		2A6679E42C58B0FD003ACA31 /* PaymentCompleteViewConfig+iFora.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentCompleteViewConfig+iFora.swift"; sourceTree = "<group>"; };
+		2A6679E92C58BFE7003ACA31 /* TemplateButtonStateWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateButtonStateWrapperView.swift; sourceTree = "<group>"; };
+		2A6679EB2C58C00C003ACA31 /* TransactionCompleteState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCompleteState.swift; sourceTree = "<group>"; };
 		2A67240F2ADADA2A00FAD522 /* Crypto+anySecKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Crypto+anySecKey.swift"; sourceTree = "<group>"; };
 		2A6724112ADB30D000FAD522 /* KeyChainStore+Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyChainStore+Store.swift"; sourceTree = "<group>"; };
 		2A6724132ADB313A00FAD522 /* KeyTagKeyChainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyTagKeyChainStore.swift; sourceTree = "<group>"; };
@@ -8966,6 +8970,8 @@
 				2A6679E22C58B0DD003ACA31 /* PaymentCompleteViewConfig.swift */,
 				2AD15D1A2C1A02E7003329C7 /* PaymentCompleteViewFactory.swift */,
 				2AE266312C1975760054C274 /* TransactionCompleteView.swift */,
+				2A6679EB2C58C00C003ACA31 /* TransactionCompleteState.swift */,
+				2A6679E92C58BFE7003ACA31 /* TemplateButtonStateWrapperView.swift */,
 				2AEA3D6E2C19B14800718AA7 /* TransactionCompleteViewConfig.swift */,
 			);
 			path = PaymentComplete;
@@ -18547,6 +18553,7 @@
 				509EE0E4285F8599002281BF /* Publishers+Extension.swift in Sources */,
 				77499C432773A96500F6C079 /* Color+Extensions.swift in Sources */,
 				774A8B5D2865FDAF00B81140 /* PaymentsSwitchViewComponent.swift in Sources */,
+				2A6679EA2C58BFE7003ACA31 /* TemplateButtonStateWrapperView.swift in Sources */,
 				0BAC674126D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift in Sources */,
 				839109282C381D86007F5257 /* GetSVCardLimitsServices.swift in Sources */,
 				770DCE9327BBF93B004099C1 /* RootView.swift in Sources */,
@@ -18582,6 +18589,7 @@
 				0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */,
 				68D06F2D26C405FB00F9BE4C /* ProductCell.swift in Sources */,
 				2AE2662B2C18994E0054C274 /* FraudPaymentCompleteView.swift in Sources */,
+				2A6679EC2C58C00C003ACA31 /* TransactionCompleteState.swift in Sources */,
 				832F2D4F2BC93E8E00221360 /* ProductNavigationStateEffectHandler.swift in Sources */,
 				0CC8FCA928315F3500F0E9BD /* Model+LatestPayments.swift in Sources */,
 				0B931B1826DCD62200CA8017 /* AddOperatorsList.swift in Sources */,

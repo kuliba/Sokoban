@@ -12,28 +12,51 @@ extension TransactionCompleteViewConfig {
             textFont: .textH1Sb24322(),
             textColor: .textSecondary
         ),
-        icons: .init(
+        statuses: .init(
             completed: .init(
-                image: .init("OkOperators"),
-                color: .systemColorActive
+                icon: .init(
+                    image: .init("OkOperators"),
+                    color: .systemColorActive
+                ),
+                message: "Успешный перевод",
+                messageConfig: .init(
+                    textFont: .textH3Sb18240(),
+                    textColor: .textSecondary
+                )
             ),
             inflight: .init(
-                image: .init("waiting"),
-                color: .systemColorWarning
+                icon: .init(
+                    image: .init("waiting"),
+                    color: .systemColorWarning
+                ),
+                message: "Операция в обработке!",
+                messageConfig: .init(
+                    textFont: .textH3Sb18240(),
+                    textColor: .textSecondary
+                )
             ),
             rejected: .init(
-                image: .ic48Close,
-                color: .init(hex: "E3011B")
+                icon: .init(
+                    image: .ic48Close,
+                    color: .init(hex: "E3011B")
+                ),
+                message: "Операция неуспешна",
+                messageConfig: .init(
+                    textFont: .textH3Sb18240(),
+                    textColor: .textSecondary
+                )
             ),
             fraud: .init(
-                image: .init("waiting"),
-                color: .systemColorWarning
+                icon: .init(
+                    image: .init("waiting"),
+                    color: .systemColorWarning
+                ),
+                message: "Перевод отменен!",
+                messageConfig: .init(
+                    textFont: .textH3Sb18240(),
+                    textColor: .textRed
+                )
             )
-        ),
-        message: "Оплата прошла успешно",
-        messageConfig: .init(
-            textFont: .textH3Sb18240(),
-            textColor: .textSecondary
         ),
         logoHeight: 40
     )

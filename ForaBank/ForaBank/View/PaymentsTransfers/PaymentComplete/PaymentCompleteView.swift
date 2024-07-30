@@ -102,8 +102,6 @@ private extension PaymentCompleteView {
             
             VStack(spacing: 12) {
                 
-                config.message.text(withConfig: config.messageConfig)
-                
                 if state.hasExpired {
                     
                     config.reason.text(withConfig: config.reasonConfig)
@@ -121,8 +119,6 @@ private extension PaymentCompleteView {
     ) -> some View {
         
         VStack(spacing: 24) {
-            
-            config.message.text(withConfig: config.messageConfig)
             
             report.details?.logo.map {
                 $0
@@ -143,7 +139,15 @@ struct PaymentCompleteView_Previews: PreviewProvider {
         Group {
             
             paymentCompleteView(state: .fraudCancelled)
+                .previewDisplayName("fraud: cancelled")
             paymentCompleteView(state: .fraudExpired)
+                .previewDisplayName("fraud: expired")
+            paymentCompleteView(state: .completed)
+                .previewDisplayName("completed")
+            paymentCompleteView(state: .inflight)
+                .previewDisplayName("inflight")
+            paymentCompleteView(state: .rejected)
+                .previewDisplayName("rejected")
         }
     }
     

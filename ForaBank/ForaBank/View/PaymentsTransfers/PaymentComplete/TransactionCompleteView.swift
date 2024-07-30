@@ -23,6 +23,7 @@ struct TransactionCompleteView<Content: View>: View {
             VStack(spacing: 24) {
                 
                 iconFor(status: state.status)
+                messageFor(status: state.status)
                 content()
             }
             
@@ -49,33 +50,6 @@ extension TransactionCompleteView {
     typealias Factory = PaymentCompleteViewFactory
 }
 
-#warning("extract")
-struct TemplateButtonStateWrapperView: View {
-    
-    @StateObject var viewModel: ViewModel
-    
-    var body: some View {
-        
-        TemplateButtonView(viewModel: viewModel)
-    }
-    
-    typealias ViewModel = TemplateButtonView.ViewModel
-}
-
-struct TransactionCompleteState {
-    
-    let details: Details?
-    let documentID: DocumentID?
-    let status: Status
-    
-    typealias Details = TransactionDetailButton.Details
-    
-    enum Status {
-        
-        case completed, inflight, rejected, fraud
-    }
-}
-
 private extension TransactionCompleteView {
     
     func iconFor(
@@ -94,6 +68,15 @@ private extension TransactionCompleteView {
             .accessibilityIdentifier("SuccessPageStatusIcon")
     }
     
+    func messageFor(
+        status: State.Status
+    ) -> some View {
+        
+        let textConfig = config.configFor(status: status).messageConfig
+        
+        return config.messageFor(status: status).text(withConfig: textConfig)
+    }
+    
     @ViewBuilder
     func buttons() -> some View {
         
@@ -105,17 +88,17 @@ private extension TransactionCompleteView {
                 state.documentID.map(factory.makeDocumentButton)
                 state.details.map(factory.makeDetailButton)
             }
-
+            
         case .inflight:
             HStack {
                 
                 factory.makeTemplateButton()
                 state.details.map(factory.makeDetailButton)
             }
-
+            
         case .rejected, .fraud:
             EmptyView()
-        }        
+        }
     }
 }
 
@@ -135,16 +118,30 @@ private extension TransactionCompleteViewConfig {
         iconFor(status: status).color
     }
     
-    func iconFor(
+    func configFor(
         status: TransactionCompleteView.State.Status
-    ) -> Icons.Icon {
+    ) -> TransactionCompleteViewConfig.Statuses.Status {
         
         switch status {
-        case .completed: return icons.completed
-        case .inflight:  return icons.inflight
-        case .rejected:  return icons.rejected
-        case .fraud:     return icons.fraud
+        case .completed: return statuses.completed
+        case .inflight:  return statuses.inflight
+        case .rejected:  return statuses.rejected
+        case .fraud:     return statuses.fraud
         }
+    }
+    
+    func iconFor(
+        status: TransactionCompleteView.State.Status
+    ) -> Statuses.Status.Icon {
+        
+        return configFor(status: status).icon
+    }
+    
+    func messageFor(
+        status: TransactionCompleteView.State.Status
+    ) -> String {
+        
+        return configFor(status: status).message
     }
 }
 
@@ -174,7 +171,7 @@ struct TransactionCompleteView_Previews: PreviewProvider {
     ) -> some View {
         
         let state = TransactionCompleteState(
-            details: details, 
+            details: details,
             documentID: .init(12345),
             status: status
         )

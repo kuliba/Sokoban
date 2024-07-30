@@ -11,22 +11,27 @@ import SwiftUI
 struct TransactionCompleteViewConfig: Equatable {
     
     let amountConfig: TextConfig
-    let icons: Icons
-    let message: String
-    let messageConfig: TextConfig
+    let statuses: Statuses
     let logoHeight: CGFloat
-
-    struct Icons: Equatable {
+    
+    struct Statuses: Equatable {
         
-        let completed: Icon
-        let inflight: Icon
-        let rejected: Icon
-        let fraud: Icon
+        let completed: Status
+        let inflight: Status
+        let rejected: Status
+        let fraud: Status
         
-        struct Icon: Equatable {
+        struct Status: Equatable {
             
-            let image: Image
-            let color: Color
+            let icon: Icon
+            let message: String
+            let messageConfig: TextConfig
+            
+            struct Icon: Equatable {
+                
+                let image: Image
+                let color: Color
+            }
         }
     }
 }
