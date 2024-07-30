@@ -94,14 +94,28 @@ private extension TransactionCompleteView {
             .accessibilityIdentifier("SuccessPageStatusIcon")
     }
     
+    @ViewBuilder
     func buttons() -> some View {
         
-        HStack {
-            
-            factory.makeTemplateButton()
-            state.documentID.map(factory.makeDocumentButton)
-            state.details.map(factory.makeDetailButton)
-        }
+        switch state.status {
+        case .completed:
+            HStack {
+                
+                factory.makeTemplateButton()
+                state.documentID.map(factory.makeDocumentButton)
+                state.details.map(factory.makeDetailButton)
+            }
+
+        case .inflight:
+            HStack {
+                
+                factory.makeTemplateButton()
+                state.details.map(factory.makeDetailButton)
+            }
+
+        case .rejected, .fraud:
+            EmptyView()
+        }        
     }
 }
 
