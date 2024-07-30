@@ -14,7 +14,7 @@ extension RequestFactory {
         _ payload: InfoForRepeatPaymentPayload
     ) -> URLRequest {
         
-        let endpoint = Services.Endpoint.getAllLatestPayments
+        let endpoint = Services.Endpoint.getInfoForRepeatPayment
         let url = try! endpoint.url(
             withBase: Config.serverAgentEnvironment.baseURL
         )
@@ -30,14 +30,14 @@ extension RequestFactory {
 
 public struct InfoForRepeatPaymentPayload: Equatable {
     
-    public let paymentOperationDetailId: Int
+    let paymentOperationDetailId: Int
     
     public init(paymentOperationDetailId: Int) {
         self.paymentOperationDetailId = paymentOperationDetailId
     }
 }
 
-public extension InfoForRepeatPaymentPayload {
+private extension InfoForRepeatPaymentPayload {
     
     var httpBody: Data {
         
