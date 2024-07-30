@@ -14,7 +14,7 @@ final class ServicePaymentBinder {
     let content: Content
     let flow: Flow
     
-    private var cancellables = Set<AnyCancellable>()
+    private let cancellable: AnyCancellable
     
     init(
         content: Content,
@@ -23,25 +23,16 @@ final class ServicePaymentBinder {
     ) {
         self.content = content
         self.flow = flow
-        self.bind(on: scheduler)
-    }
-    
-    typealias Content = AnywayTransactionViewModel
-    typealias Flow = ServicePaymentFlowModel
-}
-
-extension ServicePaymentBinder {
-    
-    func bind(on scheduler: AnySchedulerOf<DispatchQueue>) {
-        
-        content.$state
+        self.cancellable = content.$state
             .map(\.transaction.projection)
             .removeDuplicates()
             .debounce(for: 0.1, scheduler: scheduler)
             .receive(on: scheduler)
-            .sink { [weak self] in self?.flow.event(.notify($0)) }
-            .store(in: &cancellables)
+            .sink { [weak flow] in flow?.event(.notify($0)) }
     }
+    
+    typealias Content = AnywayTransactionViewModel
+    typealias Flow = ServicePaymentFlowModel
 }
 
 private extension AnywayTransactionState.Transaction {

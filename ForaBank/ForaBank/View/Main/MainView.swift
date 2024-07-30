@@ -7,6 +7,7 @@
 
 import ActivateSlider
 import Combine
+import FooterComponent
 import ForaTools
 import InfoComponent
 import LandingUIComponent
@@ -246,8 +247,8 @@ struct MainView<NavigationOperationView: View>: View {
                 .navigationBarTitle("Оформление заявки", displayMode: .inline)
                 .edgesIgnoringSafeArea(.bottom)
             
-        case let .paymentProviderPicker(providers, destination):
-            paymentProviderPicker(for: providers, with: destination)
+        case let .paymentProviderPicker(qrCode, providers, destination):
+            paymentProviderPicker(qrCode: qrCode, providers: providers, with: destination)
             
         case let .providerServicePicker(model):
             servicePicker(model: model)
@@ -315,20 +316,46 @@ struct MainView<NavigationOperationView: View>: View {
     }
 }
 
+// MARK: - Helpers
+
+private extension MainView {
+    
+    func iconView(
+        _ icon: String?
+    ) -> IconDomain.IconView {
+     
+        viewFactory.makeIconView(icon.map { .md5Hash(.init($0)) })
+    }
+    
+    func label(
+        title: String,
+        subtitle: String? = nil,
+        icon: String?
+    ) -> some View {
+        
+        LabelWithIcon(
+            title: title,
+            subtitle: subtitle,
+            config: .iFora,
+            iconView: iconView(icon)
+        )
+    }
+}
+
 // MARK: - payment provider & service pickers
 
 private extension MainView {
     
-#warning("fix nav bar below")
     func paymentProviderPicker(
-        for providers: MultiElementArray<SegmentedPaymentProvider>,
+        qrCode: QRCode,
+        providers: MultiElementArray<SegmentedPaymentProvider>,
         with destination: PaymentProviderServicePickerFlowModel?
     ) -> some View {
         
         PaymentProviderSegmentsView(
             segments: .init(with: providers.elements),
             providerView: paymentProviderView,
-            footer: paymentProviderPickerFooter,
+            footer: { paymentProviderPickerFooter(qrCode: qrCode) },
             config: .iFora
         )
         .navigationDestination(
@@ -336,15 +363,12 @@ private extension MainView {
             dismissDestination: viewModel.dismissPaymentProviderPickerDestination,
             content: servicePicker(model:)
         )
-        .navigationBarWithAsyncIcon(
-            title: "state.content.operator.title",
-            subtitle: "state.content.operator.subtitle",
+        .navigationBarWithBack(
+            title: PaymentsTransfersSectionType.payments.name,
             dismiss: viewModel.dismissProviderServicePicker,
-            icon: .init(
-                image: .ic24Hash,
-                publisher: Empty().eraseToAnyPublisher()
-            ),
-            style: .large
+            rightItem: .barcodeScanner(
+                action: viewModel.dismissProviderServicePicker
+            )
         )
     }
     
@@ -358,77 +382,113 @@ private extension MainView {
             
         } label: {
             
-            Text("icon")
-            
-            VStack(alignment: .leading) {
-                
-                Text(provider.title)
-                provider.inn.map(Text.init)
-            }
+            label(
+                title: provider.title,
+                subtitle: provider.inn,
+                icon: provider.icon
+            )
         }
         .buttonStyle(.plain)
     }
     
-#warning("FIX footer")
-    func paymentProviderPickerFooter() -> some View {
+    func paymentProviderPickerFooter(
+        qrCode: QRCode
+    ) -> some View {
         
-        Text("TBD: Footer with buttons")
+        FooterView(
+            state: .footer(.iFora),
+            event: event(qrCode: qrCode),
+            config: .iFora
+        )
     }
     
-#warning("fixme")
-#warning("extract helpers")
+    private func event(
+        qrCode: QRCode
+    ) -> (FooterEvent) -> Void {
+        
+        return { event in
+    
+            switch event {
+            case .addCompany:
+                viewModel.goToChat()
+                
+            case .payByInstruction:
+                viewModel.payByInstructions(withQR: qrCode)
+            }
+        }
+    }
+    
+    @ViewBuilder
     func servicePicker(
         model: PaymentProviderServicePickerFlowModel
     ) -> some View {
         
+        let provider = model.state.content.state.payload.provider
+        
         PaymentProviderServicePickerFlowView(
             model: model,
-            contentView: { content in
-#warning("extract helper") 
-                return
-                PaymentProviderServicePickerWrapperView(
-                    model: model.state.content,
-                    failureView: {
-                        Text(" Failure view with pay by instructions button")
-                    },
-                    itemView: { service in
-                        
-                        Button {
-                            model.state.content.event(.select(service))
-                        } label: {
-#warning("fixme")
-                            UtilityServiceLabel(
-                                service: service,
-                                iconView: Text("icon")
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
-                )
-            },
-            alertContent: { alert in
-#warning("extract helper")
-                return .init(with: .init(
-                    title: "Error",
-                    message: {
-                        
-                        switch alert.serviceFailure {
-                        case .connectivityError:
-                            return "Some Error"
-                            
-                        case let .serverError(errorMessage):
-                            return errorMessage
-                        }
-                    }(),
-                    primary: .init(
-                        type: .default,
-                        title: "OK",
-                        action: { print("dismiss alert") }
-                    )
-                ))
-            },
+            contentView: servicePickerContentView,
+            alertContent: servicePickerAlertContent,
             destinationContent: servicePickerDestinationContent
         )
+        .navigationBarWithAsyncIcon(
+            title: provider.title,
+            subtitle: provider.inn,
+            dismiss: viewModel.dismissProviderServicePicker,
+            icon: iconView(provider.icon),
+            style: .large
+        )
+    }
+    
+    private func servicePickerContentView(
+        model: PaymentProviderServicePickerModel
+    ) -> some View {
+        
+        PaymentProviderServicePickerWrapperView(
+            model: model,
+            failureView: {
+                
+                FooterView(
+                    state: .failure(.iFora),
+                    event: event(qrCode: model.state.payload.qrCode),
+                    config: .iFora
+                )
+            },
+            itemView: { service in
+                
+                Button {
+                    model.event(.select(service))
+                } label: {
+                    label(title: service.name, icon: nil)
+                }
+                .buttonStyle(.plain)
+            },
+            config: .iFora
+        )
+    }
+    
+    private func servicePickerAlertContent(
+        alert: ServiceFailureAlert
+    ) -> Alert {
+        
+        return .init(with: .init(
+            title: "Ошибка",
+            message: {
+                
+                switch alert.serviceFailure {
+                case .connectivityError:
+                    return "Ошибка"
+                    
+                case let .serverError(errorMessage):
+                    return errorMessage
+                }
+            }(),
+            primary: .init(
+                type: .default,
+                title: "OK",
+                action: { print("dismiss alert") }
+            )
+        ))
     }
     
     @ViewBuilder
@@ -438,7 +498,15 @@ private extension MainView {
         
         switch destination {
         case let .payment(binder):
+            let payload  = binder.content.state.transaction.context.outline.payload
+            
             paymentFlow(binder: binder)
+                .navigationBarWithAsyncIcon(
+                    title: payload.title,
+                    subtitle: payload.subtitle,
+                    dismiss: { binder.flow.event(.terminate) },
+                    icon: iconView(payload.icon)
+                )
             
         case .paymentByInstruction:
             Text("DestinationView: paymentByInstruction")
@@ -494,7 +562,7 @@ private extension MainView {
 
 extension PaymentProviderServicePickerFlowModel: Identifiable {
     
-    var id: String { state.content.state.payload.id }
+    var id: String { state.content.state.payload.provider.id }
 }
 
 private extension MainViewModel.Route {

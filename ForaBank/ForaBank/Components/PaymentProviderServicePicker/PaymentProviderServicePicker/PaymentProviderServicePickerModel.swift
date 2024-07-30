@@ -6,10 +6,11 @@
 //
 
 import ForaTools
+import Foundation
 import RxViewModel
 
 typealias AsyncPickerPickerModel<Payload, Item, Response> = RxViewModel<AsyncPickerState<Payload, Item, Response>, AsyncPickerEvent<Item, Response>, AsyncPickerEffect<Payload, Item>>
 
-typealias PaymentProviderServicePickerModel = AsyncPickerPickerModel<PaymentProviderSegment.Provider, UtilityService, PaymentProviderServicePickerResult>
+typealias PaymentProviderServicePickerModel = AsyncPickerPickerModel<PaymentProviderServicePickerPayload, UtilityService, PaymentProviderServicePickerResult>
 
 typealias PaymentProviderServicePickerResult = Result<AnywayTransactionState.Transaction, ServiceFailureAlert.ServiceFailure>

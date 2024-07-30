@@ -45,7 +45,7 @@ extension PaymentsTransfersFactory {
     typealias MakePaymentsTransfersSections = () -> [PaymentsTransfersSectionViewModel]
     typealias MakeAlertDataUpdateFailureViewModel = (@escaping DismissAction) -> Alert.ViewModel?
     
-    typealias MakePaymentProviderServicePickerFlowModel = (PaymentProviderSegment.Provider) -> PaymentProviderServicePickerFlowModel
+    typealias MakePaymentProviderServicePickerFlowModel = (PaymentProviderServicePickerPayload) -> PaymentProviderServicePickerFlowModel
     
     typealias MakeServicePaymentBinder = (AnywayTransactionState.Transaction, ServicePaymentFlowState) -> ServicePaymentBinder
 }
@@ -88,13 +88,13 @@ extension PaymentsTransfersFactory {
 extension PaymentProviderServicePickerFlowModel {
     
     static func preview(
-        provider: PaymentProviderSegment.Provider
+        payload: PaymentProviderServicePickerPayload
     ) -> Self {
         
         return .init(
             initialState: .init(
                 content: .init(
-                    initialState: .init(payload: provider),
+                    initialState: .init(payload: payload),
                     reduce: { state, _ in (state, nil) },
                     handleEffect: { _,_ in }
                 )

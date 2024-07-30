@@ -16,7 +16,8 @@ where FailureView: View,
     
     let failureView: () -> FailureView
     let itemView: (Service) -> ServiceView
-    
+    let config: Config
+
     var body: some View {
         
         Group {
@@ -29,7 +30,7 @@ where FailureView: View,
                 failureView()
                 
             case let .some(items):
-                ServicePickerView(state: items, serviceView: itemView)
+                ServicePickerView(state: items, serviceView: serviceView)
             }
         }
         .onFirstAppear { model.event(.load) }
@@ -40,19 +41,26 @@ extension PaymentProviderServicePickerWrapperView {
     
     typealias Service = UtilityService
     typealias Model = PaymentProviderServicePickerModel
+    typealias Config = PaymentProviderServicePickerConfig
+}
+
+private extension PaymentProviderServicePickerWrapperView {
+    
+    func serviceView(
+        service: UtilityService
+    ) -> some View {
+        
+        itemView(service)
+            .padding()
+            .background(config.background)
+            .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
+    }
 }
 
 #Preview {
     PaymentProviderServicePickerWrapperView(
         model: .init(
-            initialState: .init(
-                payload: .init(
-                    id: UUID().uuidString,
-                    icon: nil,
-                    inn: nil,
-                    title: "Some Provider"
-                )
-            ),
+            initialState: .init(payload: .preview),
             reduce: { state, _ in (state, nil) },
             handleEffect: { _,_ in }
         ),
@@ -62,8 +70,9 @@ extension PaymentProviderServicePickerWrapperView {
             Button {
                 print(item)
             } label: {
-                Text("\(item)")
+                Text(item.name)
             }
-        }
+        },
+        config: .iFora
     )
 }

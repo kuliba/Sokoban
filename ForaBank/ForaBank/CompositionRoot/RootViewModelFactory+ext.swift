@@ -249,6 +249,7 @@ extension RootViewModelFactory {
                 }
             ),
             factory: servicePickerFlowModelFactory,
+            model: model,
             nanoServices: utilityNanoServices,
             scheduler: scheduler
         )
