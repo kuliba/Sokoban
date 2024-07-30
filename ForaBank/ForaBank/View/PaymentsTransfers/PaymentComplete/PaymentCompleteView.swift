@@ -40,6 +40,7 @@ extension PaymentCompleteView {
         
         let detailID: Int
         let details: Details?
+        let formattedAmount: String
         let status: DocumentStatus
         
         typealias Details = TransactionCompleteState.Details
@@ -95,7 +96,7 @@ private extension PaymentCompleteView {
             return fraud.formattedAmount
             
         case let .success(report):
-            return "report"
+            return report.formattedAmount
         }
     }
     
@@ -175,10 +176,16 @@ extension PaymentCompleteView.Report {
     private static func preview(
         detailID: Int = 1,
         details: Details? = nil,
+        formattedAmount: String = "1 000 ₽",
         _ status: DocumentStatus
     ) -> Self {
         
-        return .init(detailID: detailID, details: details, status: status)
+        return .init(
+            detailID: detailID,
+            details: details,
+            formattedAmount: formattedAmount,
+            status: status
+        )
     }
 }
 
@@ -187,7 +194,15 @@ extension PaymentCompleteViewFactory {
     static let preview: Self = .init(
         makeDetailButton: { _ in .init(details: .init(logo: nil, cells: [])) },
         makeDocumentButton: { _ in .init(getDocument: { _ in }) },
-        makeTemplateButton: { return .init(viewModel: .init(model: .emptyMock, operation: nil, operationDetail: .stub()))
+        makeTemplateButton: {
+            
+            return .init(
+                viewModel: .init(
+                    model: .emptyMock,
+                    operation: nil,
+                    operationDetail: .stub()
+                )
+            )
         }
     )
 }

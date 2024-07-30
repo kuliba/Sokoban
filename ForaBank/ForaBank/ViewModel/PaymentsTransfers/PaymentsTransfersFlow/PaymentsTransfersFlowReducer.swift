@@ -224,13 +224,19 @@ private extension PaymentsTransfersFlowReducer {
         case let .showResult(transactionResult):
             switch transactionResult {
             case let .failure(fraud):
-                state.setPaymentFullScreenCover(to: .completed(.failure(.init(
+                state.setPaymentFullScreenCover(to: .completed(.init(
                     formattedAmount: fraud.formattedAmount,
-                    hasExpired: fraud.hasExpired
-                ))))
+                    result: .failure(.init(
+                        formattedAmount: fraud.formattedAmount,
+                        hasExpired: fraud.hasExpired
+                    ))
+                )))
                 
             case let .success(report):
-                state.setPaymentFullScreenCover(to: .completed(.success(report)))
+                state.setPaymentFullScreenCover(to: .completed(.init(
+                    formattedAmount: factory.getFormattedAmount(state) ?? "",
+                    result: .success(report)
+                )))
             }
         }
         

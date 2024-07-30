@@ -165,7 +165,7 @@ private extension RootViewFactoryComposer {
     }
     
     func makePaymentCompleteView(
-        result: TransactionResult,
+        result: Completed,
         goToMain: @escaping () -> Void
     ) -> PaymentCompleteView {
         
@@ -194,18 +194,19 @@ private extension RootViewFactoryComposer {
         }
     }
     
-    typealias TransactionResult = UtilityServicePaymentFlowState<AnywayTransactionViewModel>.FullScreenCover.TransactionResult
+    typealias Completed = UtilityServicePaymentFlowState<AnywayTransactionViewModel>.FullScreenCover.Completed
     
     private func map(
-        _ result: TransactionResult
+        _ completed: Completed
     ) -> PaymentCompleteView.State {
         
-        return result
+        return completed.result
             .map {
                 
                 return .init(
                     detailID: $0.detailID,
                     details: model.makeTransactionDetailButtonDetail(with: $0.info),
+                    formattedAmount: completed.formattedAmount,
                     status: $0.status
                 )
             }
@@ -246,12 +247,12 @@ private extension RootViewFactoryComposer {
     }
     
     private func makeTemplateButtonView(
-        with result: TransactionResult
+        with completed: Completed
     ) -> () -> TemplateButtonStateWrapperView? {
     
         return {
             
-            guard let report = try? result.get(),
+            guard let report = try? completed.result.get(),
                   let operationDetail = report.info.operationDetail
             else { return nil }
             
