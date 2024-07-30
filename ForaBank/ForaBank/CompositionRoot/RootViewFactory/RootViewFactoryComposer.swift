@@ -176,7 +176,8 @@ private extension RootViewFactoryComposer {
                 makeDetailButton: TransactionDetailButton.init,
                 makeDocumentButton: makeDocumentButton,
                 makeTemplateButton: makeTemplateButtonView(with: result)
-            )
+            ),
+            config: .iFora
         )
     }
     

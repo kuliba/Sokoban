@@ -12,6 +12,7 @@ struct PaymentCompleteView: View {
     let state: State
     let goToMain: () -> Void
     let factory: Factory
+    let config: Config
     
     var body: some View {
         
@@ -45,6 +46,7 @@ extension PaymentCompleteView {
     }
     
     typealias Factory = PaymentCompleteViewFactory
+    typealias Config = PaymentCompleteViewConfig
 }
 
 private extension PaymentCompleteView {
@@ -55,7 +57,7 @@ private extension PaymentCompleteView {
         
         completeView(
             status: .fraud,
-            content: { fraudContent(fraud, config: .iFora) }
+            content: { fraudContent(fraud, config: config.fraud) }
         )
     }
     
@@ -67,7 +69,7 @@ private extension PaymentCompleteView {
             details: report.details,
             documentID: .init(report.detailID),
             status: .completed,
-            content: { reportContent(report, config: .iFora) }
+            content: { reportContent(report, config: config.transaction) }
         )
     }
     
@@ -85,7 +87,7 @@ private extension PaymentCompleteView {
                 status: status
             ),
             goToMain: goToMain,
-            config: .iFora,
+            config: config.transaction,
             content: content,
             factory: factory
         )
@@ -152,7 +154,8 @@ struct PaymentCompleteView_Previews: PreviewProvider {
         PaymentCompleteView(
             state: state,
             goToMain: {},
-            factory: .preview
+            factory: .preview,
+            config: .iFora
         )
     }
 }
