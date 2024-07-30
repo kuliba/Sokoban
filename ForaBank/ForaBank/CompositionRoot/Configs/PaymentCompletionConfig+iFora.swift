@@ -6,6 +6,7 @@
 //
 
 import PaymentCompletionUI
+import SwiftUI
 
 extension PaymentCompletionConfig {
     
@@ -115,7 +116,7 @@ extension PaymentCompletionConfig {
                     logoHeight: 44,
                     title: .init(
                         textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
+                        textColor: .textRed
                     ),
                     subtitle: .init(
                         textFont: .textH3Sb18240(),
@@ -143,7 +144,7 @@ extension PaymentCompletionConfig {
                     logoHeight: 44,
                     title: .init(
                         textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
+                        textColor: .textRed
                     ),
                     subtitle: .init(
                         textFont: .textH3Sb18240(),
@@ -154,3 +155,64 @@ extension PaymentCompletionConfig {
         )
     )
 }
+
+#if DEBUG
+struct PaymentCompletionStatusView_PaymentCompletion_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        Group {
+            
+            statusView(.completed)
+                .previewDisplayName("completed")
+            statusView(.inflight)
+                .previewDisplayName("inflight")
+            statusView(.rejected)
+                .previewDisplayName("rejected")
+            statusView(.fraudCancelled)
+                .previewDisplayName("fraud: cancelled")
+            statusView(.fraudExpired)
+                .previewDisplayName("fraud: expired")
+        }
+    }
+    
+    private static func statusView(
+        _ completion: PaymentCompletion
+    ) -> some View {
+        
+        PaymentCompletionStatusView(
+            state: completion,
+            config: .iFora
+        )
+    }
+}
+
+private extension PaymentCompletion {
+    
+    static let completed: Self = .init(
+        formattedAmount: "1 000 ₽",
+        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        status: .completed
+    )
+    static let inflight: Self = .init(
+        formattedAmount: "1 000 ₽",
+        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        status: .inflight
+    )
+    static let rejected: Self = .init(
+        formattedAmount: "1 000 ₽",
+        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        status: .rejected
+    )
+    static let fraudCancelled: Self = .init(
+        formattedAmount: "1 000 ₽",
+        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        status: .fraud(.cancelled)
+    )
+    static let fraudExpired: Self = .init(
+        formattedAmount: "1 000 ₽",
+        merchantIcon: .init(systemName: "externaldrive.connected.to.line.below"),
+        status: .fraud(.expired)
+    )
+}
+#endif

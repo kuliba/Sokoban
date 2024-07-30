@@ -8,12 +8,12 @@
 import SwiftUI
 import UIPrimitives
 
-struct PaymentCompletionStatusView: View {
+public struct PaymentCompletionStatusView: View {
     
     let state: State
     let config: Config
     
-    var body: some View {
+    public var body: some View {
         
         VStack(spacing: 24) {
             

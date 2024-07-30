@@ -8,18 +8,28 @@
 import SharedConfigs
 import SwiftUI
 
-struct PaymentCompletion: Equatable {
+public struct PaymentCompletion: Equatable {
     
-    let formattedAmount: String
-    let merchantIcon: Image?
-    let status: Status
+    public let formattedAmount: String
+    public let merchantIcon: Image?
+    public let status: Status
     
-    enum Status: Equatable {
+    public init(
+        formattedAmount: String, 
+        merchantIcon: Image?,
+        status: Status
+    ) {
+        self.formattedAmount = formattedAmount
+        self.merchantIcon = merchantIcon
+        self.status = status
+    }
+    
+    public enum Status: Equatable {
         
         case completed, inflight, rejected
         case fraud(Fraud)
         
-        enum Fraud: Equatable {
+        public enum Fraud: Equatable {
             
             case cancelled, expired
         }
