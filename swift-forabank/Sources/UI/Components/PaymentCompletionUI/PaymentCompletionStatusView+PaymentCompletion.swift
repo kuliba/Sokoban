@@ -264,7 +264,7 @@ private extension PaymentCompletionConfig {
                 content: .init(
                     logo: .init(systemName: "clock.badge.xmark"),
                     title: "Payment cancelled",
-                    subtitle: "fraud timeout expired"
+                    subtitle: "Payment cancelled due to confirmation period expiration"
                 ),
                 config: .init(
                     amount: .init(

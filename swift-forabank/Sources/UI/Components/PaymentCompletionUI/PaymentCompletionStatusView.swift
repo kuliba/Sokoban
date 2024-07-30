@@ -60,7 +60,8 @@ private extension PaymentCompletionStatusView {
     func subtitleView() -> some View {
         
         state.status.subtitle.map {
-            $0.text(withConfig: config.subtitle)
+            
+            $0.text(withConfig: config.subtitle, alignment: .center)
         }
     }
     
@@ -114,7 +115,7 @@ private extension PaymentCompletionStatus.Status {
     static let withSubtitle: Self = .init(
         logo: .init(systemName: "xmark.bin.circle"),
         title: "Payment cancelled",
-        subtitle: "Confirmation period expired"
+        subtitle: "Payment cancelled due to confirmation period expiration"
     )
 }
 
