@@ -1,13 +1,13 @@
 //
-//  TransactionCompleteStatus.swift
-//  ForaBank
+//  PaymentCompletionStatus.swift
+//
 //
 //  Created by Igor Malyarov on 30.07.2024.
 //
 
 import SwiftUI
 
-struct TransactionCompleteStatus: Equatable {
+struct PaymentCompletionStatus {
     
     let status: Status
     let formattedAmount: String

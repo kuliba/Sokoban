@@ -1,13 +1,14 @@
 //
-//  TransactionCompleteStatusView.swift
-//  ForaBank
+//  PaymentCompletionStatusView.swift
+//
 //
 //  Created by Igor Malyarov on 30.07.2024.
 //
 
 import SwiftUI
+import UIPrimitives
 
-struct TransactionCompleteStatusView: View {
+struct PaymentCompletionStatusView: View {
     
     let state: State
     let config: Config
@@ -28,26 +29,27 @@ struct TransactionCompleteStatusView: View {
     }
 }
 
-extension TransactionCompleteStatusView {
+extension PaymentCompletionStatusView {
     
-    typealias State = TransactionCompleteStatus
-    typealias Config = TransactionCompleteStatusViewConfig
+    typealias State = PaymentCompletionStatus
+    typealias Config = PaymentCompletionStatusViewConfig
 }
 
-private extension TransactionCompleteStatusView {
+private extension PaymentCompletionStatusView {
     
     func iconView() -> some View {
         
         state.status.logo
             .resizable()
             .aspectRatio(1, contentMode: .fill)
-            .foregroundColor(.iconWhite)
-            .frame(width: 88, height: 88)
+            .foregroundColor(config.icon.foregroundColor)
+            .frame(config.icon.innerSize)
+            .frame(config.icon.outerSize)
             .background(
                 Circle()
-                    .foregroundColor(config.logoBackgroundColor)
+                    .foregroundColor(config.icon.backgroundColor)
             )
-            .accessibilityIdentifier("SuccessPageStatusIcon")
+            .accessibilityIdentifier("PaymentCompletionStatusIcon")
     }
     
     func titleView() -> some View {
@@ -86,57 +88,62 @@ private extension TransactionCompleteStatusView {
 }
 
 #if DEBUG
-private extension TransactionCompleteStatus {
+private extension PaymentCompletionStatus {
     
     static let preview: Self = .init(
         status: .preview,
         formattedAmount: "1 000 ₽",
-        merchantLogo: .ic24Bank
+        merchantLogo: .init(systemName: "pencil.and.outline")
     )
     
     static let withSubtitle: Self = .init(
         status: .withSubtitle,
         formattedAmount: "1 000 ₽",
-        merchantLogo: .ic24Bank
+        merchantLogo: .init(systemName: "tray.full.fill")
     )
 }
 
-private extension TransactionCompleteStatus.Status {
+private extension PaymentCompletionStatus.Status {
     
     static let preview: Self = .init(
-        logo: .ic24Star,
+        logo: .init(systemName: "xmark.bin"),
         title: "Payment completed",
         subtitle: nil
     )
     
     static let withSubtitle: Self = .init(
-        logo: .ic24Star,
+        logo: .init(systemName: "xmark.bin.circle"),
         title: "Payment cancelled",
         subtitle: "Confirmation period expired"
     )
 }
 
-private extension TransactionCompleteStatusViewConfig {
+private extension PaymentCompletionStatusViewConfig {
     
     static let preview: Self = .init(
         amount: .init(
-            textFont: .textH1Sb24322(),
-            textColor: .textGreen
+            textFont: .subheadline,
+            textColor: .pink
         ),
-        logoBackgroundColor: .green,
+        icon: .init(
+            foregroundColor: .green,
+            backgroundColor: .orange,
+            innerSize: .init(width: 44, height: 44),
+            outerSize: .init(width: 88, height: 88)
+        ),
         title: .init(
-            textFont: .textH1Sb24322(),
-            textColor: .textRed
+            textFont: .title3,
+            textColor: .blue
         ),
         subtitle: .init(
-            textFont: .textH3Sb18240(),
-            textColor: .textGreen
+            textFont: .footnote,
+            textColor: .orange
         ),
         logoHeight: 40
     )
 }
 
-struct TransactionCompleteStatusView_Previews: PreviewProvider {
+struct PaymentCompletionStatusView_Previews: PreviewProvider {
     
     static var previews: some View {
         
@@ -148,10 +155,10 @@ struct TransactionCompleteStatusView_Previews: PreviewProvider {
     }
     
     private static func tcStatusView(
-        _ state: TransactionCompleteStatusView.State
+        _ state: PaymentCompletionStatusView.State
     ) -> some View {
         
-        TransactionCompleteStatusView(state: state, config: .preview)
+        PaymentCompletionStatusView(state: state, config: .preview)
     }
 }
 #endif
