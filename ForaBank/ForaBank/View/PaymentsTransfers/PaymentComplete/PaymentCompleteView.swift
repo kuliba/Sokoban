@@ -87,6 +87,7 @@ private extension PaymentCompleteView {
                 status: status
             ),
             goToMain: goToMain,
+            repeat: {},
             config: config.transaction,
             content: content,
             factory: factory
