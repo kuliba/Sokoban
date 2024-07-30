@@ -29,11 +29,11 @@ final class AnywayPaymentTransactionReducerMultiSumWithAntiFraudTests: AnywayPay
         try msFraud_5_continue(&state, &states)
         try msFraud_6_update(&state, &states)
 
-        XCTAssertNoDiff(state.context.payment.elements.count, 21)
+        XCTAssertNoDiff(state.context.payment.elements.count, 22)
         let parameterIDsStep3 = state.parameterIDs
         XCTAssertNoDiff(parameterIDsStep3.count, 11)
         XCTAssertNoDiff(parameterIDsStep3, ["1", "2",  "5", "9", "13", "17", "21", "25", "29", "65", "143"])
-        XCTAssertNoDiff(state.widgetIDs.count, 0)
+        XCTAssertNoDiff(state.widgetIDs.count, 1)
         
         try msFraud_7_continue(&state, &states)
         try msFraud_8_update(&state, &states)
