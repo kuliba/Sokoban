@@ -6,22 +6,28 @@
 //
 
 import SwiftUI
+import PaymentCompletionUI
 
 struct PaymentCompleteView: View {
     
     let state: State
     let goToMain: () -> Void
+    let `repeat`: () -> Void
     let factory: Factory
     let config: Config
     
     var body: some View {
         
-        switch state {
-        case let .failure(fraud):
-            completeView(fraud)
-            
-        case let .success(report):
-            completeView(report)
+        TransactionCompleteView(
+            state: transactionCompleteState,
+            goToMain: goToMain,
+            repeat: `repeat`,
+            factory: factory
+        ) {
+            PaymentCompletionStatusView(
+                state: paymentCompletionState,
+                config: config
+            )
         }
     }
 }
@@ -46,87 +52,53 @@ extension PaymentCompleteView {
     }
     
     typealias Factory = PaymentCompleteViewFactory
-    typealias Config = PaymentCompleteViewConfig
+    typealias Config = PaymentCompletionConfig
 }
 
 private extension PaymentCompleteView {
     
-    func completeView(
-        _ fraud: Fraud
-    ) -> some View {
+    var transactionCompleteState: TransactionCompleteState {
         
-        completeView(
-            status: .fraud,
-            content: { fraudContent(fraud, config: config.fraud) }
-        )
-    }
-    
-    func completeView(
-        _ report: Report
-    ) -> some View {
-        
-        completeView(
-            details: report.details,
-            documentID: .init(report.detailID),
-            status: .completed,
-            content: { reportContent(report, config: config.transaction) }
-        )
-    }
-    
-    func completeView(
-        details: TransactionCompleteState.Details? = nil,
-        documentID: DocumentID? = nil,
-        status: TransactionCompleteState.Status,
-        content: @escaping () -> some View
-    ) -> some View {
-        
-        TransactionCompleteView(
-            state: .init(
-                details: details,
-                documentID: documentID,
-                status: status
-            ),
-            goToMain: goToMain,
-            repeat: {},
-            config: config.transaction,
-            content: content,
-            factory: factory
-        )
-    }
-    
-    func fraudContent(
-        _ state: Fraud,
-        config: FraudPaymentCompleteViewConfig
-    ) -> some View {
-        
-        VStack(spacing: 24) {
+        switch state {
+        case .failure:
+            return .init(details: nil, documentID: nil, status: .fraud)
             
-            VStack(spacing: 12) {
-                
-                if state.hasExpired {
+        case let .success(report):
+            return .init(
+                details: report.details,
+                documentID: .init(report.detailID),
+                status: {
                     
-                    config.reason.text(withConfig: config.reasonConfig)
-                        .multilineTextAlignment(.center)
-                }
-            }
-            
-            state.formattedAmount.text(withConfig: config.amountConfig)
+                    switch report.status {
+                    case .completed: return .completed
+                    case .inflight:  return .inflight
+                    case .rejected:  return .rejected
+                    }
+                }()
+            )
         }
     }
     
-    func reportContent(
-        _ report: Report,
-        config: TransactionCompleteViewConfig
-    ) -> some View {
+    var paymentCompletionState: PaymentCompletion {
         
-        VStack(spacing: 24) {
+        return .init(
+            formattedAmount: "",
+            merchantIcon: nil,
+            status: paymentCompletionStatus
+        )
+    }
+    
+    private var paymentCompletionStatus: PaymentCompletion.Status {
+        
+        switch state {
+        case let .failure(fraud):
+            return .fraud(fraud.hasExpired ? .expired : .cancelled)
             
-            report.details?.logo.map {
-                $0
-                    .renderingMode(.original)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: config.logoHeight, height: config.logoHeight)
+        case let .success(report):
+            switch report.status {
+            case .completed: return .completed
+            case .inflight:  return .inflight
+            case .rejected:  return .rejected
             }
         }
     }
@@ -159,6 +131,7 @@ struct PaymentCompleteView_Previews: PreviewProvider {
         PaymentCompleteView(
             state: state,
             goToMain: {},
+            repeat: {},
             factory: .preview,
             config: .iFora
         )

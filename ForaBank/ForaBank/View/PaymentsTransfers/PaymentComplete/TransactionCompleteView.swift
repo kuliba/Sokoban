@@ -6,6 +6,7 @@
 //
 
 import PaymentComponents
+import PaymentCompletionUI
 import SwiftUI
 
 struct TransactionCompleteView<Content: View>: View {
@@ -13,20 +14,14 @@ struct TransactionCompleteView<Content: View>: View {
     let state: State
     let goToMain: () -> Void
     let `repeat`: () -> Void
-    let config: Config
-    let content: () -> Content
     let factory: Factory
+    let content: () -> Content
     
     var body: some View {
         
         VStack {
             
-            VStack(spacing: 24) {
-                
-                iconFor(status: state.status)
-                messageFor(status: state.status)
-                content()
-            }
+            content()
             
             Spacer()
             
@@ -37,13 +32,12 @@ struct TransactionCompleteView<Content: View>: View {
                 
                 VStack(spacing: 8) {
                     
-                    repeatButton()
+                    // repeatButton()
                     
                     PaymentComponents.ButtonView.goToMain(goToMain: goToMain)
                 }
             }
         }
-        .padding(.top, 88)
         .padding(.bottom)
         .padding(.horizontal)
     }
@@ -52,37 +46,11 @@ struct TransactionCompleteView<Content: View>: View {
 extension TransactionCompleteView {
     
     typealias State = TransactionCompleteState
-    typealias Config = TransactionCompleteViewConfig
+    typealias Config = PaymentCompletionConfig
     typealias Factory = PaymentCompleteViewFactory
 }
 
 private extension TransactionCompleteView {
-    
-    func iconFor(
-        status: State.Status
-    ) -> some View {
-        
-        config.imageFor(status: status)
-            .resizable()
-            .aspectRatio(1, contentMode: .fill)
-            .frame(width: 48, height: 48)
-            .foregroundColor(.iconWhite)
-            .frame(width: 88, height: 88)
-            .background(
-                Circle()
-                    .foregroundColor(config.colorFor(status: status))
-            )
-            .accessibilityIdentifier("SuccessPageStatusIcon")
-    }
-    
-    func messageFor(
-        status: State.Status
-    ) -> some View {
-        
-        let textConfig = config.configFor(status: status).messageConfig
-        
-        return config.messageFor(status: status).text(withConfig: textConfig)
-    }
     
     @ViewBuilder
     func buttons() -> some View {
@@ -124,49 +92,6 @@ private extension TransactionCompleteView {
     }
 }
 
-private extension TransactionCompleteViewConfig {
-    
-    func imageFor(
-        status: TransactionCompleteView.State.Status
-    ) -> Image {
-        
-        iconFor(status: status).image
-    }
-    
-    func colorFor(
-        status: TransactionCompleteView.State.Status
-    ) -> Color {
-        
-        iconFor(status: status).color
-    }
-    
-    func configFor(
-        status: TransactionCompleteView.State.Status
-    ) -> TransactionCompleteViewConfig.Statuses.Status {
-        
-        switch status {
-        case .completed: return statuses.completed
-        case .inflight:  return statuses.inflight
-        case .rejected:  return statuses.rejected
-        case .fraud:     return statuses.fraud
-        }
-    }
-    
-    func iconFor(
-        status: TransactionCompleteView.State.Status
-    ) -> Statuses.Status.Icon {
-        
-        return configFor(status: status).icon
-    }
-    
-    func messageFor(
-        status: TransactionCompleteView.State.Status
-    ) -> String {
-        
-        return configFor(status: status).message
-    }
-}
-
 #if DEBUG
 struct TransactionCompleteView_Previews: PreviewProvider {
     
@@ -193,13 +118,12 @@ struct TransactionCompleteView_Previews: PreviewProvider {
             state: state,
             goToMain: {},
             repeat: {},
-            config: .iFora,
-            content: { Text("Content") },
             factory: .init(
                 makeDetailButton: TransactionDetailButton.init,
                 makeDocumentButton: { _ in .init(getDocument: { $0(nil) }) },
                 makeTemplateButton: { nil }
-            )
+            ),
+            content: { Text("Content") }
         )
     }
 }

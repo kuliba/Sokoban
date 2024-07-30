@@ -172,6 +172,7 @@ private extension RootViewFactoryComposer {
         return PaymentCompleteView(
             state: map(result),
             goToMain: goToMain,
+            repeat: {},
             factory: .init(
                 makeDetailButton: TransactionDetailButton.init,
                 makeDocumentButton: makeDocumentButton,
