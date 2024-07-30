@@ -62,7 +62,6 @@ extension AnywayPaymentFactoryComposer {
 extension AnywayPaymentFactoryComposer {
     
     typealias CurrencyOfProduct = (ProductSelect.Product) -> String
-    typealias GetProducts = () -> [ProductSelect.Product]
     
     typealias UIComponent = AnywayPaymentDomain.AnywayElement.UIComponent
     typealias IconView = UIPrimitives.AsyncImage
