@@ -204,9 +204,9 @@ private extension RootViewFactoryComposer {
             .map {
                 
                 return .init(
-                    status: $0.status,
                     detailID: $0.detailID,
-                    details: model.makeTransactionDetailButtonDetail(with: $0.info)
+                    details: model.makeTransactionDetailButtonDetail(with: $0.info),
+                    status: $0.status
                 )
             }
             .mapError {

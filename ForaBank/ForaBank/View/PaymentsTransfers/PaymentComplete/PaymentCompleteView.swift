@@ -38,9 +38,9 @@ extension PaymentCompleteView {
     
     struct Report {
         
-        let status: DocumentStatus
         let detailID: Int
         let details: Details?
+        let status: DocumentStatus
         
         typealias Details = TransactionCompleteState.Details
     }
@@ -82,10 +82,21 @@ private extension PaymentCompleteView {
     var paymentCompletionState: PaymentCompletion {
         
         return .init(
-            formattedAmount: "",
+            formattedAmount: formattedAmount,
             merchantIcon: nil,
             status: paymentCompletionStatus
         )
+    }
+    
+    private var formattedAmount: String {
+        
+        switch state {
+        case let .failure(fraud):
+            return fraud.formattedAmount
+            
+        case let .success(report):
+            return "report"
+        }
     }
     
     private var paymentCompletionStatus: PaymentCompletion.Status {
@@ -162,12 +173,12 @@ extension PaymentCompleteView.Report {
     static let rejected: Self = .preview(.rejected)
     
     private static func preview(
-        _ status: DocumentStatus,
         detailID: Int = 1,
-        details: Details? = nil
+        details: Details? = nil,
+        _ status: DocumentStatus
     ) -> Self {
         
-        return .init(status: status, detailID: detailID, details: details)
+        return .init(detailID: detailID, details: details, status: status)
     }
 }
 
