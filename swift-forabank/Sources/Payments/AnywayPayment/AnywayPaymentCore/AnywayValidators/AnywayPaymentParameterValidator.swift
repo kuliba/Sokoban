@@ -78,72 +78,10 @@ private extension AnywayPaymentParameterValidator {
         
         guard !parameter.validation.regExp.isEmpty else { return nil }
         
-        let value = parameter.valueForRegex
+        let value = parameter.field.value ?? ""
         let pattern = parameter.validation.regExp
         let isMatching = NSPredicate(format: "SELF MATCHES %@", pattern).evaluate(with: value)
         
         return isMatching ? nil : .regExViolation
-    }
-}
-
-private extension AnywayElement.Parameter {
-    
-    var valueForRegex: String {
-        
-        guard let value = field.value else { return "" }
-        
-        switch uiAttributes.dataType {
-        case .number:
-            return value.convertedToSBER(
-                serviceDecimalSeparator: ".",
-                serviceThousandSeparator: ","
-            ) ?? ""
-            
-        default:
-            return value
-        }
-    }
-}
-
-extension String {
-    
-    func convertedToSBER(
-        from locale: Locale = .autoupdatingCurrent,
-        serviceDecimalSeparator: String,
-        serviceThousandSeparator: String
-    ) -> String? {
-        
-        let decimal = NumberFormatter.decimal(for: locale)
-        let sber = NumberFormatter.sberDecimal
-        
-        guard let number = decimal.number(from: self),
-              let sberFormatted = sber.string(from: number)
-        else { return nil }
-        
-        return sberFormatted
-    }
-}
-
-extension NumberFormatter {
-    
-    static func decimal(
-        for locale: Locale
-    ) -> NumberFormatter {
-        
-        let formatter = NumberFormatter()
-        formatter.locale = locale
-        formatter.numberStyle = .decimal
-        
-        return formatter
-    }
-    
-    static var sberDecimal: NumberFormatter {
-        
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.decimalSeparator = "."
-        formatter.groupingSeparator = ","
-        
-        return formatter
     }
 }
