@@ -41,7 +41,7 @@ private extension PaymentCompletionStatusView {
         
         state.status.logo
             .resizable()
-            .aspectRatio(1, contentMode: .fill)
+            .scaledToFit()
             .foregroundColor(config.icon.foregroundColor)
             .frame(config.icon.innerSize)
             .frame(config.icon.outerSize)
@@ -72,7 +72,7 @@ private extension PaymentCompletionStatusView {
     @ViewBuilder
     func merchantLogoView() -> some View {
         
-        state.merchantLogo.map(logoView)
+        state.merchantIcon.map(logoView)
     }
     
     private func logoView(
@@ -93,13 +93,13 @@ private extension PaymentCompletionStatus {
     static let preview: Self = .init(
         status: .preview,
         formattedAmount: "1 000 ₽",
-        merchantLogo: .init(systemName: "pencil.and.outline")
+        merchantIcon: .init(systemName: "pencil.and.outline")
     )
     
     static let withSubtitle: Self = .init(
         status: .withSubtitle,
         formattedAmount: "1 000 ₽",
-        merchantLogo: .init(systemName: "tray.full.fill")
+        merchantIcon: .init(systemName: "tray.full.fill")
     )
 }
 
@@ -131,6 +131,7 @@ private extension PaymentCompletionStatusViewConfig {
             innerSize: .init(width: 44, height: 44),
             outerSize: .init(width: 88, height: 88)
         ),
+        logoHeight: 40,
         title: .init(
             textFont: .title3,
             textColor: .blue
@@ -138,8 +139,7 @@ private extension PaymentCompletionStatusViewConfig {
         subtitle: .init(
             textFont: .footnote,
             textColor: .orange
-        ),
-        logoHeight: 40
+        )
     )
 }
 
