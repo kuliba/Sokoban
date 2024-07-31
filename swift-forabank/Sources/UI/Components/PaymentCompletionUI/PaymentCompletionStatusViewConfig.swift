@@ -12,9 +12,9 @@ struct PaymentCompletionStatusViewConfig: Equatable {
     
     let amount: TextConfig
     let icon: Icon
+    let logoHeight: CGFloat
     let title: TextConfig
     let subtitle: TextConfig
-    let logoHeight: CGFloat
     
     struct Icon: Equatable {
         
