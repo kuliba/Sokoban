@@ -13,13 +13,20 @@ import XCTest
 
 final class CreateAnywayTransferResponseStubTests: XCTestCase {
     
-    func test_shouldMapToAnywayPaymentUpdate() {
+    func test_step4_shouldMapToAnywayPaymentUpdate() {
         
-        let update = AnywayPaymentUpdate(stub)
+        let update = AnywayPaymentUpdate(step4)
+        XCTAssertNotNil(update)
+    }
+
+    func test_step4Fraud_shouldMapToAnywayPaymentUpdate() {
+        
+        let update = AnywayPaymentUpdate(step4Fraud)
         XCTAssertNotNil(update)
     }
 
     // MARK: - Helpers
     
-    private let stub = RemoteServices.ResponseMapper.CreateAnywayTransferResponse.step4
+    private let step4 = RemoteServices.ResponseMapper.CreateAnywayTransferResponse.step4
+    private let step4Fraud = RemoteServices.ResponseMapper.CreateAnywayTransferResponse.step4Fraud
 }

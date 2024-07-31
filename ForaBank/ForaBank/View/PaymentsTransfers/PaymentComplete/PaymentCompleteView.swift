@@ -6,127 +6,83 @@
 //
 
 import SwiftUI
+import PaymentCompletionUI
 
 struct PaymentCompleteView: View {
     
     let state: State
     let goToMain: () -> Void
+    let `repeat`: () -> Void
     let factory: Factory
     let config: Config
     
     var body: some View {
         
-        switch state {
-        case let .failure(fraud):
-            completeView(fraud)
-            
-        case let .success(report):
-            completeView(report)
+        TransactionCompleteView(
+            state: transactionCompleteState,
+            goToMain: goToMain,
+            repeat: `repeat`,
+            factory: factory
+        ) {
+            PaymentCompletionStatusView(
+                state: paymentCompletionState,
+                config: config
+            )
         }
     }
 }
 
 extension PaymentCompleteView {
     
-    typealias State = Result<Report, Fraud>
-    
-    struct Report {
-        
-        let status: DocumentStatus
-        let detailID: Int
-        let details: Details?
-        
-        typealias Details = TransactionCompleteState.Details
-    }
-    
-    struct Fraud: Equatable, Error {
-        
-        let formattedAmount: String
-        let hasExpired: Bool
-    }
-    
+    typealias State = PaymentCompleteState
     typealias Factory = PaymentCompleteViewFactory
-    typealias Config = PaymentCompleteViewConfig
+    typealias Config = PaymentCompletionConfig
 }
 
 private extension PaymentCompleteView {
     
-    func completeView(
-        _ fraud: Fraud
-    ) -> some View {
+    var transactionCompleteState: TransactionCompleteState {
         
-        completeView(
-            status: .fraud,
-            content: { fraudContent(fraud, config: config.fraud) }
-        )
-    }
-    
-    func completeView(
-        _ report: Report
-    ) -> some View {
-        
-        completeView(
-            details: report.details,
-            documentID: .init(report.detailID),
-            status: .completed,
-            content: { reportContent(report, config: config.transaction) }
-        )
-    }
-    
-    func completeView(
-        details: TransactionCompleteState.Details? = nil,
-        documentID: DocumentID? = nil,
-        status: TransactionCompleteState.Status,
-        content: @escaping () -> some View
-    ) -> some View {
-        
-        TransactionCompleteView(
-            state: .init(
-                details: details,
-                documentID: documentID,
-                status: status
-            ),
-            goToMain: goToMain,
-            repeat: {},
-            config: config.transaction,
-            content: content,
-            factory: factory
-        )
-    }
-    
-    func fraudContent(
-        _ state: Fraud,
-        config: FraudPaymentCompleteViewConfig
-    ) -> some View {
-        
-        VStack(spacing: 24) {
+        switch state.result {
+        case .failure:
+            return .init(details: nil, documentID: nil, status: .fraud)
             
-            VStack(spacing: 12) {
-                
-                if state.hasExpired {
+        case let .success(report):
+            return .init(
+                details: report.details,
+                documentID: .init(report.detailID),
+                status: {
                     
-                    config.reason.text(withConfig: config.reasonConfig)
-                        .multilineTextAlignment(.center)
-                }
-            }
-            
-            state.formattedAmount.text(withConfig: config.amountConfig)
+                    switch report.status {
+                    case .completed: return .completed
+                    case .inflight:  return .inflight
+                    case .rejected:  return .rejected
+                    }
+                }()
+            )
         }
     }
     
-    func reportContent(
-        _ report: Report,
-        config: TransactionCompleteViewConfig
-    ) -> some View {
+    var paymentCompletionState: PaymentCompletion {
         
-        VStack(spacing: 24) {
+        return .init(
+            formattedAmount: state.formattedAmount,
+            merchantIcon: nil,
+            status: paymentCompletionStatus
+        )
+    }
+    
+    private var paymentCompletionStatus: PaymentCompletion.Status {
+        
+        switch state.result {
+        case let .failure(fraud):
+            return .fraud(fraud.hasExpired ? .expired : .cancelled)
             
-            report.details?.logo.map {
-                $0
-                    .renderingMode(.original)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: config.logoHeight, height: config.logoHeight)
+        case let .success(report):
+            switch report.status {
+            case .completed: return .completed
+            case .inflight:  return .inflight
+            case .rejected:  return .rejected
             }
         }
     }
@@ -159,42 +115,50 @@ struct PaymentCompleteView_Previews: PreviewProvider {
         PaymentCompleteView(
             state: state,
             goToMain: {},
+            repeat: {},
             factory: .preview,
             config: .iFora
         )
     }
 }
 
-extension PaymentCompleteView.State {
+extension PaymentCompleteState {
     
-    static let fraudCancelled: Self = .failure(.init(
-        formattedAmount: "1,000 ₽",
-        hasExpired: false
-    ))
+    static let fraudCancelled: Self = .preview(.failure(.init(hasExpired: false)))
     
-    static let fraudExpired: Self = .failure(.init(
-        formattedAmount: "1,000 ₽",
-        hasExpired: true
-    ))
+    static let fraudExpired: Self = .preview(.failure(.init(hasExpired: true)))
     
-    static let completed: Self = .success(.completed)
-    static let inflight: Self = .success(.inflight)
-    static let rejected: Self = .success(.rejected)
+    static let completed: Self = .preview(.success(.completed))
+    
+    static let inflight: Self = .preview(.success(.inflight))
+    
+    static let rejected: Self = .preview(.success(.rejected))
+    
+    private static func preview(
+        _ result: Result<Report, Fraud>
+    ) -> Self {
+        
+        return .init(formattedAmount: "1,000 ₽", result: result)
+    }
 }
 
-extension PaymentCompleteView.Report {
+extension PaymentCompleteState.Report {
     
     static let completed: Self = .preview(.completed)
     static let inflight: Self = .preview(.inflight)
     static let rejected: Self = .preview(.rejected)
     
     private static func preview(
-        _ status: DocumentStatus,
         detailID: Int = 1,
-        details: Details? = nil
+        details: Details? = nil,
+        _ status: DocumentStatus
     ) -> Self {
         
-        return .init(status: status, detailID: detailID, details: details)
+        return .init(
+            detailID: detailID,
+            details: details,
+            status: status
+        )
     }
 }
 
@@ -203,7 +167,15 @@ extension PaymentCompleteViewFactory {
     static let preview: Self = .init(
         makeDetailButton: { _ in .init(details: .init(logo: nil, cells: [])) },
         makeDocumentButton: { _ in .init(getDocument: { _ in }) },
-        makeTemplateButton: { return .init(viewModel: .init(model: .emptyMock, operation: nil, operationDetail: .stub()))
+        makeTemplateButton: {
+            
+            return .init(
+                viewModel: .init(
+                    model: .emptyMock,
+                    operation: nil,
+                    operationDetail: .stub()
+                )
+            )
         }
     )
 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension PaymentCompletionStatusView {
+public extension PaymentCompletionStatusView {
     
     init(
         state: PaymentCompletion,
@@ -91,11 +91,16 @@ struct PaymentCompletionStatusView_PaymentCompletion_Previews: PreviewProvider {
         
         Group {
             
-            statusView(.completed).previewDisplayName("completed")
-            statusView(.inflight).previewDisplayName("inflight")
-            statusView(.rejected).previewDisplayName("rejected")
-            statusView(.fraudCancelled).previewDisplayName("fraud: cancelled")
-            statusView(.fraudExpired).previewDisplayName("fraud: expired")
+            statusView(.completed)
+                .previewDisplayName("completed")
+            statusView(.inflight)
+                .previewDisplayName("inflight")
+            statusView(.rejected)
+                .previewDisplayName("rejected")
+            statusView(.fraudCancelled)
+                .previewDisplayName("fraud: cancelled")
+            statusView(.fraudExpired)
+                .previewDisplayName("fraud: expired")
         }
     }
     
@@ -259,7 +264,7 @@ private extension PaymentCompletionConfig {
                 content: .init(
                     logo: .init(systemName: "clock.badge.xmark"),
                     title: "Payment cancelled",
-                    subtitle: "fraud timeout expired"
+                    subtitle: "Payment cancelled due to confirmation period expiration"
                 ),
                 config: .init(
                     amount: .init(
