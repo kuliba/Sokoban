@@ -386,6 +386,182 @@ final class PaymentsMeToMeViewModelTests: XCTestCase {
             .complete
         )
     }
+    
+    // MARK: - handle Create Transfer Response
+ 
+    func test_handleCreateTransferResponse_success_needMake() {
+        
+        let transferResponse = TransferResponseData.makeDummy(needMake: true, needOTP: false)
+        let response = ModelAction.Payment.MeToMe.CreateTransfer.Response(result: .success(.makeDummy(needMake: true, needOTP: false)))
+        
+        let model = modelWithNecessaryData()
+        let sut = makeSUT(model: model, mode: .general)!
+        
+        let spy = ValueSpy(model.action.compactMap { $0 as? ModelAction.Payment.MeToMe.MakeTransfer.Request })
+        
+        sut.handleCreateTransferResponse(response)
+        
+        XCTAssertEqual(sut.state, .loading)
+        XCTAssertEqual(spy.values.first?.transferResponse, transferResponse)
+    }
+    
+    func test_handleCreateTransferResponse_success_noNeedMake_noNeedOTP() {
+        
+        let response = ModelAction.Payment.MeToMe.CreateTransfer.Response(
+            result: .success(.makeDummy(needMake: false, needOTP: false))
+        )
+        
+        let (sut, _, spy) = makeSUTWithSpy(model: modelWithNecessaryData(), response: response)
+        
+        XCTAssertEqual(sut.state, .normal)
+        XCTAssertEqual(spy.values.count, 0)
+    }
+    
+    func test_handleCreateTransferResponse_success_noNeedMake_needOTP() {
+        
+        let response = ModelAction.Payment.MeToMe.CreateTransfer.Response(
+            result: .success(.makeDummy(needMake: false, needOTP: true))
+        )
+        
+        let (sut, _, _) = makeSUTWithSpy(model: modelWithNecessaryData(), response: response)
+        let spy = ValueSpy(sut.action.compactMap { $0 as? PaymentsMeToMeAction.Response.Failed })
+        
+        XCTAssertEqual(spy.values.count, 0)
+    }
+    
+    func test_handleCreateTransferResponse_failure_timeout() {
+        
+        let response = ModelAction.Payment.MeToMe.CreateTransfer.Response(
+            result: .failure(.statusError(status: .timeout, message: "Timeout error"))
+        )
+        
+        let (sut, _, _) = makeSUTWithSpy(model: modelWithNecessaryData(), response: response)
+        
+        XCTAssertEqual(sut.state, .normal)
+        XCTAssertEqual(sut.alert?.title, "Операция в обработке")
+        XCTAssertEqual(sut.alert?.message, "Проверьте её статус позже в истории операций.")
+    }
+    
+    func test_handleCreateTransferResponse_failure_other() {
+        
+        let response = ModelAction.Payment.MeToMe.CreateTransfer.Response(
+            result: .failure(.statusError(status: .serverError, message: "Server error"))
+        )
+        
+        let (sut, _, _) = makeSUTWithSpy(model: modelWithNecessaryData(), response: response)
+        
+        XCTAssertEqual(sut.state, .normal)
+        XCTAssertEqual(sut.alert?.title, "Ошибка")
+        XCTAssertEqual(sut.alert?.message, "Server error")
+    }
+    
+    func test_handleCreateTransferResponse_success_noNeedMake_noNeedOTP_success() {
+        
+        let response = ModelAction.Payment.MeToMe.CreateTransfer.Response(
+            result: .success(.makeDummy(needMake: false, needOTP: false, documentStatus: .complete))
+        )
+        
+        let (sut, _, spy) = makeSUTWithSpy(model: modelWithNecessaryData(), response: response)
+        
+        XCTAssertEqual(sut.state, .normal)
+        XCTAssertEqual(spy.values.count, 1)
+        XCTAssertNotNil(spy.values.first?.viewModel)
+    }
+    
+    func test_handleMakeTransferResponse_success() {
+        
+        let response = ModelAction.Payment.MeToMe.MakeTransfer.Response(
+            result: .success(.makeDummy(documentStatus: .complete))
+        )
+        
+        let (sut, _, spy) = makeSUTWithSpyForMakeTransfer(model: modelWithNecessaryData(), response: response)
+        
+        XCTAssertEqual(sut.state, .normal)
+        XCTAssertEqual(spy.values.count, 1)
+        XCTAssertNotNil(spy.values.first?.viewModel)
+    }
+    
+    func test_handleMakeTransferResponse_failure_timeout() {
+        
+        let response = ModelAction.Payment.MeToMe.MakeTransfer.Response(
+            result: .failure(.statusError(status: .timeout, message: "Timeout error"))
+        )
+        
+        let (sut, _, _) = makeSUTWithSpyForMakeTransfer(model: modelWithNecessaryData(), response: response)
+        
+        XCTAssertEqual(sut.state, .normal)
+        XCTAssertEqual(sut.alert?.title, "Операция в обработке")
+        XCTAssertEqual(sut.alert?.message, "Проверьте её статус позже в истории операций.")
+    }
+    
+    func test_handleMakeTransferResponse_failure_other() {
+        
+        let response = ModelAction.Payment.MeToMe.MakeTransfer.Response(
+            result: .failure(.statusError(status: .serverError, message: "Server error"))
+        )
+        
+        let (sut, _, _) = makeSUTWithSpyForMakeTransfer(model: modelWithNecessaryData(), response: response)
+        
+        XCTAssertEqual(sut.state, .normal)
+        XCTAssertEqual(sut.alert?.title, "Ошибка")
+        XCTAssertEqual(sut.alert?.message, "Server error")
+    }
+    
+    func test_handleMakeTransferResponse_success_emptySwapViewModelItems() {
+        
+        let model = modelWithNecessaryData()
+        let response = ModelAction.Payment.MeToMe.MakeTransfer.Response(
+            result: .success(.makeDummy(documentStatus: .complete))
+        )
+        
+        let (sut, _, spy) = makeSUTWithSpyForMakeTransfer(model: model, response: response)
+        sut.swapViewModel.items = []
+        
+        XCTAssertEqual(sut.state, .normal)
+        XCTAssertEqual(spy.values.count, 1)
+    }
+    
+    func test_handleMakeTransferResponse_success_inProgressDocumentStatus() {
+        
+        let response = ModelAction.Payment.MeToMe.MakeTransfer.Response(
+            result: .success(.makeDummy(documentStatus: .inProgress))
+        )
+        
+        let (sut, _, spy) = makeSUTWithSpyForMakeTransfer(model: modelWithNecessaryData(), response: response)
+        
+        XCTAssertEqual(sut.state, .normal)
+        XCTAssertEqual(spy.values.count, 1)
+    }
+    
+    func test_handleMakeTransferResponse_failure_other_error() {
+        
+        let sut = makeSUT(model: modelWithNecessaryData(), mode: .general)
+        let failureResponse = ModelAction.Payment.MeToMe.MakeTransfer.Response(
+            result: .failure(.emptyData(message: "Empty data error"))
+        )
+        
+        sut?.handleMakeTransferResponse(failureResponse)
+        
+        XCTAssertEqual(sut?.state, .normal)
+        XCTAssertEqual(sut?.alert?.title, "Ошибка")
+        XCTAssertEqual(sut?.alert?.message, "Empty data error")
+    }
+    
+    func test_handleMakeTransferResponse_success_withOutDocumentStatus_guardElseReturn() {
+        
+        let model = modelWithNecessaryData()
+        let sut = makeSUT(model: model, mode: .general)
+        let successResponse = ModelAction.Payment.MeToMe.MakeTransfer.Response(
+            result: .success(.makeDummy())
+        )
+        
+        let spy = ValueSpy(sut!.action.compactMap { $0 as? PaymentsMeToMeAction.Response.Success })
+        
+        sut?.handleMakeTransferResponse(successResponse)
+        
+        XCTAssertEqual(spy.values.count, 0)
+    }
+    
     // MARK: - Helpers
     
     private func makeModelWithServerAgentStub() -> Model {
@@ -454,6 +630,43 @@ extension PaymentsMeToMeViewModelTests {
         model.products.value = [.card: [ProductData.stub(productId: 1)]]
         
         return model
+    }
+    
+    func makeSUTWithSpy(
+        model: Model,
+        mode: PaymentsMeToMeViewModel.Mode = .general,
+        response: ModelAction.Payment.MeToMe.CreateTransfer.Response,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: PaymentsMeToMeViewModel,
+        model: Model,
+        spy: ValueSpy<PaymentsMeToMeAction.Response.Success>
+    ) {
+        let sut = makeSUT(model: model, mode: mode, file: file, line: line)!
+        let spy = ValueSpy(sut.action.compactMap { $0 as? PaymentsMeToMeAction.Response.Success })
+        
+        sut.handleCreateTransferResponse(response)
+        
+        return (sut, model, spy)
+    }
+    
+    func makeSUTWithSpyForMakeTransfer(
+        model: Model,
+        mode: PaymentsMeToMeViewModel.Mode = .general,
+        response: ModelAction.Payment.MeToMe.MakeTransfer.Response,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: PaymentsMeToMeViewModel,
+        model: Model,
+        spy: ValueSpy<PaymentsMeToMeAction.Response.Success>
+    ) {
+        let sut = makeSUT(model: model, mode: mode, file: file, line: line)!
+        let spy = ValueSpy(sut.action.compactMap { $0 as? PaymentsMeToMeAction.Response.Success })
+        sut.handleMakeTransferResponse(response)
+        
+        return (sut, model, spy)
     }
     
     func makeSUT(
