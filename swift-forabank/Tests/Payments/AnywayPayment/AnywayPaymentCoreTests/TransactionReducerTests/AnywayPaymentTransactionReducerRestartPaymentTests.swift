@@ -11,121 +11,115 @@ final class AnywayPaymentTransactionReducerRestartPaymentTests: AnywayPaymentTra
     
     func test_restartFlow_confirm() throws {
         
-        try XCTExpectFailure("due to hardcoded SBER regex for numbers that ignores uses's Locale test") {
-            
-            var (state, states) = restart_0_initiate()
-            XCTAssertNoDiff(state.elementIDs, [])
-            XCTAssertTrue(state.isValid)
-            XCTAssertTrue(states.map(\.isValid).allSatisfy({ $0 }))
-            
-            try restart_1_update(&state, &states)
-            XCTAssertNoDiff(state.parameterIDs, ["1"])
-            XCTAssertFalse(state.isValid)
-            
-            try msFraud_2_setValue(&state, &states)
-            assertValue("009", forParameterID: "1", in: state)
-            XCTAssertNoDiff(state.parameterIDs, ["1"])
-            XCTAssertTrue(state.isValid)
-            
-            try restart_3_continue(&state, &states)
-            XCTAssertNoDiff(state.context.staged, ["1"])
-            XCTAssertNoDiff(state.context.outline.fields, ["1": "009"])
-            XCTAssertNoDiff(state.parameterIDs, ["1"])
-            XCTAssertTrue(state.isValid)
-            
-            try restart_4_update(&state, &states)
-            XCTAssertNoDiff(state.context.staged, ["1"])
-            XCTAssertNoDiff(state.context.outline.fields, ["1": "009"])
-            
-            XCTAssertNoDiff(states.map(\.status), [
-                .none, .none, .none,
-                .inflight,
-                .none
-            ])
-            XCTAssertNoDiff(state.parameterIDs, ["1", "4", "6", "8"])
-            XCTAssertTrue(state.isValid)
-            
-            try restart_5_setValue(&state, &states)
-            assertValue("00", forParameterID: "1", in: state)
-            XCTAssertNoDiff(state.status, .awaitingPaymentRestartConfirmation)
-            XCTAssertTrue(states.map(\.context.shouldRestart).allSatisfy({ !$0 }))
-            XCTAssertNoDiff(state.parameterIDs, ["1", "4", "6", "8"])
-            XCTAssertTrue(state.isValid)
-            
-            try restart_6_confirm(&state, &states)
-            assertValue("00", forParameterID: "1", in: state)
-            XCTAssertTrue(state.isValid)
-            XCTAssertNil(state.status)
-            XCTAssertTrue(state.context.shouldRestart)
-            XCTAssertNoDiff(state.context.staged, ["1"])
-            XCTAssertNoDiff(state.context.outline.fields, ["1": "009"], "Outline should be updated after `continue`")
-            XCTAssertNoDiff(state.parameterIDs, ["1", "4", "6", "8"])
-            
-            try restart_7_continue(&state, &states)
-            XCTAssertNoDiff(state.elementIDs, []) // OR WHAT IS IN PAYMENT_RESET
-            XCTAssertTrue(state.isValid)
-            XCTAssertNoDiff(state.status, .inflight)
-            XCTAssertTrue(state.context.shouldRestart)
-            XCTAssertNoDiff(state.context.staged, [])
-            XCTAssertNoDiff(state.context.outline.fields, [
-                "1": "00",
-                "4": "0720",
-                "6": "1000.15",
-                "8": "200.15",
-            ], "Outline should be updated after `continue`")
-            XCTAssertNoDiff(state.parameterIDs, [])
-            
-            try restart_8_confirm_update(&state, &states)
-            XCTAssertNoDiff(state.parameterIDs, ["1"])
-            assertValue("00", forParameterID: "1", in: state)
-            XCTAssertTrue(state.isValid)
-            XCTAssertNil(state.status)
-            XCTAssertFalse(state.context.shouldRestart)
-            XCTAssertNoDiff(state.context.staged, [])
-            XCTAssertNoDiff(state.context.outline.fields, [
-                "1": "00",
-                "4": "0720",
-                "6": "1000.15",
-                "8": "200.15",
-            ], "Outline should be updated after `continue`")
-            XCTAssertNoDiff(state.parameterIDs, ["1"])
-        }
+        var (state, states) = restart_0_initiate()
+        XCTAssertNoDiff(state.elementIDs, [])
+        XCTAssertTrue(state.isValid)
+        XCTAssertTrue(states.map(\.isValid).allSatisfy({ $0 }))
+        
+        try restart_1_update(&state, &states)
+        XCTAssertNoDiff(state.parameterIDs, ["1"])
+        XCTAssertFalse(state.isValid)
+        
+        try msFraud_2_setValue(&state, &states)
+        assertValue("009", forParameterID: "1", in: state)
+        XCTAssertNoDiff(state.parameterIDs, ["1"])
+        XCTAssertTrue(state.isValid)
+        
+        try restart_3_continue(&state, &states)
+        XCTAssertNoDiff(state.context.staged, ["1"])
+        XCTAssertNoDiff(state.context.outline.fields, ["1": "009"])
+        XCTAssertNoDiff(state.parameterIDs, ["1"])
+        XCTAssertTrue(state.isValid)
+        
+        try restart_4_update(&state, &states)
+        XCTAssertNoDiff(state.context.staged, ["1"])
+        XCTAssertNoDiff(state.context.outline.fields, ["1": "009"])
+        
+        XCTAssertNoDiff(states.map(\.status), [
+            .none, .none, .none,
+            .inflight,
+            .none
+        ])
+        XCTAssertNoDiff(state.parameterIDs, ["1", "4", "6", "8"])
+        XCTAssertTrue(state.isValid)
+        
+        try restart_5_setValue(&state, &states)
+        assertValue("00", forParameterID: "1", in: state)
+        XCTAssertNoDiff(state.status, .awaitingPaymentRestartConfirmation)
+        XCTAssertTrue(states.map(\.context.shouldRestart).allSatisfy({ !$0 }))
+        XCTAssertNoDiff(state.parameterIDs, ["1", "4", "6", "8"])
+        XCTAssertTrue(state.isValid)
+        
+        try restart_6_confirm(&state, &states)
+        assertValue("00", forParameterID: "1", in: state)
+        XCTAssertTrue(state.isValid)
+        XCTAssertNil(state.status)
+        XCTAssertTrue(state.context.shouldRestart)
+        XCTAssertNoDiff(state.context.staged, ["1"])
+        XCTAssertNoDiff(state.context.outline.fields, ["1": "009"], "Outline should be updated after `continue`")
+        XCTAssertNoDiff(state.parameterIDs, ["1", "4", "6", "8"])
+        
+        try restart_7_continue(&state, &states)
+        XCTAssertNoDiff(state.elementIDs, []) // OR WHAT IS IN PAYMENT_RESET
+        XCTAssertTrue(state.isValid)
+        XCTAssertNoDiff(state.status, .inflight)
+        XCTAssertTrue(state.context.shouldRestart)
+        XCTAssertNoDiff(state.context.staged, [])
+        XCTAssertNoDiff(state.context.outline.fields, [
+            "1": "00",
+            "4": "0720",
+            "6": "1000.15",
+            "8": "200.15",
+        ], "Outline should be updated after `continue`")
+        XCTAssertNoDiff(state.parameterIDs, [])
+        
+        try restart_8_confirm_update(&state, &states)
+        XCTAssertNoDiff(state.parameterIDs, ["1"])
+        assertValue("00", forParameterID: "1", in: state)
+        XCTAssertTrue(state.isValid)
+        XCTAssertNil(state.status)
+        XCTAssertFalse(state.context.shouldRestart)
+        XCTAssertNoDiff(state.context.staged, [])
+        XCTAssertNoDiff(state.context.outline.fields, [
+            "1": "00",
+            "4": "0720",
+            "6": "1000.15",
+            "8": "200.15",
+        ], "Outline should be updated after `continue`")
+        XCTAssertNoDiff(state.parameterIDs, ["1"])
     }
     
     func test_restartFlow_deny() throws {
         
-        try XCTExpectFailure("due to hardcoded SBER regex for numbers that ignores uses's Locale test") {
-            
-            var (state, states) = restart_0_initiate()
-            try restart_1_update(&state, &states)
-            try msFraud_2_setValue(&state, &states)
-            try restart_3_continue(&state, &states)
-            try restart_4_update(&state, &states)
-            try restart_5_setValue(&state, &states)
-            assertValue("00", forParameterID: "1", in: state)
-            XCTAssertNoDiff(state.status, .awaitingPaymentRestartConfirmation)
-            
-            try restart_6_deny(&state, &states)
-            assertValue("009", forParameterID: "1", in: state)
-            XCTAssertTrue(state.isValid)
-            XCTAssertNil(state.status)
-            XCTAssertFalse(state.context.shouldRestart)
-            XCTAssertNoDiff(state.context.staged, ["1"])
-            XCTAssertNoDiff(state.context.outline.fields, ["1": "009"])
-            
-            try restart_7_continue(&state, &states)
-            assertValue("009", forParameterID: "1", in: state)
-            XCTAssertTrue(state.isValid)
-            XCTAssertNoDiff(state.status, .inflight)
-            XCTAssertFalse(state.context.shouldRestart)
-            XCTAssertNoDiff(state.context.staged, ["1", "4", "6", "8"])
-            XCTAssertNoDiff(state.context.outline.fields, [
-                "1": "009",
-                "4": "0720",
-                "6": "1000.15",
-                "8": "200.15",
-            ], "Outline should be updated after `continue`")
-        }
+        var (state, states) = restart_0_initiate()
+        try restart_1_update(&state, &states)
+        try msFraud_2_setValue(&state, &states)
+        try restart_3_continue(&state, &states)
+        try restart_4_update(&state, &states)
+        try restart_5_setValue(&state, &states)
+        assertValue("00", forParameterID: "1", in: state)
+        XCTAssertNoDiff(state.status, .awaitingPaymentRestartConfirmation)
+        
+        try restart_6_deny(&state, &states)
+        assertValue("009", forParameterID: "1", in: state)
+        XCTAssertTrue(state.isValid)
+        XCTAssertNil(state.status)
+        XCTAssertFalse(state.context.shouldRestart)
+        XCTAssertNoDiff(state.context.staged, ["1"])
+        XCTAssertNoDiff(state.context.outline.fields, ["1": "009"])
+        
+        try restart_7_continue(&state, &states)
+        assertValue("009", forParameterID: "1", in: state)
+        XCTAssertTrue(state.isValid)
+        XCTAssertNoDiff(state.status, .inflight)
+        XCTAssertFalse(state.context.shouldRestart)
+        XCTAssertNoDiff(state.context.staged, ["1", "4", "6", "8"])
+        XCTAssertNoDiff(state.context.outline.fields, [
+            "1": "009",
+            "4": "0720",
+            "6": "1000.15",
+            "8": "200.15",
+        ], "Outline should be updated after `continue`")
     }
 
     // MARK: - Flow Helpers
