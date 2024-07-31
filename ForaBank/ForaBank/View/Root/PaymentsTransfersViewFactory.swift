@@ -23,6 +23,6 @@ extension PaymentsTransfersViewFactory {
     typealias MakeIconView = IconDomain.MakeIconView
     typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
     
-    typealias TransactionResult = UtilityServicePaymentFlowState<AnywayTransactionViewModel>.FullScreenCover.TransactionResult
-    typealias MakePaymentCompleteView = (TransactionResult, @escaping () -> Void) -> PaymentCompleteView
+    typealias Completed = UtilityServicePaymentFlowState<AnywayTransactionViewModel>.FullScreenCover.Completed
+    typealias MakePaymentCompleteView = (Completed, @escaping () -> Void) -> PaymentCompleteView
 }

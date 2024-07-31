@@ -6,26 +6,22 @@
 //
 
 import PaymentComponents
+import PaymentCompletionUI
 import SwiftUI
 
 struct TransactionCompleteView<Content: View>: View {
     
     let state: State
     let goToMain: () -> Void
-    let config: Config
-    let content: () -> Content
+    let `repeat`: () -> Void
     let factory: Factory
+    let content: () -> Content
     
     var body: some View {
         
         VStack {
             
-            VStack(spacing: 24) {
-                
-                iconFor(status: state.status)
-                messageFor(status: state.status)
-                content()
-            }
+            content()
             
             Spacer()
             
@@ -34,10 +30,14 @@ struct TransactionCompleteView<Content: View>: View {
                 buttons()
                     .frame(maxHeight: .infinity, alignment: .bottom)
                 
-                PaymentComponents.ButtonView.goToMain(goToMain: goToMain)
+                VStack(spacing: 8) {
+                    
+                    // repeatButton()
+                    
+                    PaymentComponents.ButtonView.goToMain(goToMain: goToMain)
+                }
             }
         }
-        .padding(.top, 88)
         .padding(.bottom)
         .padding(.horizontal)
     }
@@ -46,36 +46,11 @@ struct TransactionCompleteView<Content: View>: View {
 extension TransactionCompleteView {
     
     typealias State = TransactionCompleteState
-    typealias Config = TransactionCompleteViewConfig
+    typealias Config = PaymentCompletionConfig
     typealias Factory = PaymentCompleteViewFactory
 }
 
 private extension TransactionCompleteView {
-    
-    func iconFor(
-        status: State.Status
-    ) -> some View {
-        
-        config.imageFor(status: status)
-            .resizable()
-            .aspectRatio(1, contentMode: .fill)
-            .foregroundColor(.iconWhite)
-            .frame(width: 88, height: 88)
-            .background(
-                Circle()
-                    .foregroundColor(config.colorFor(status: status))
-            )
-            .accessibilityIdentifier("SuccessPageStatusIcon")
-    }
-    
-    func messageFor(
-        status: State.Status
-    ) -> some View {
-        
-        let textConfig = config.configFor(status: status).messageConfig
-        
-        return config.messageFor(status: status).text(withConfig: textConfig)
-    }
     
     @ViewBuilder
     func buttons() -> some View {
@@ -100,92 +75,91 @@ private extension TransactionCompleteView {
             EmptyView()
         }
     }
-}
-
-private extension TransactionCompleteViewConfig {
     
-    func imageFor(
-        status: TransactionCompleteView.State.Status
-    ) -> Image {
+    @ViewBuilder
+    func repeatButton() -> some View {
         
-        iconFor(status: status).image
-    }
-    
-    func colorFor(
-        status: TransactionCompleteView.State.Status
-    ) -> Color {
-        
-        iconFor(status: status).color
-    }
-    
-    func configFor(
-        status: TransactionCompleteView.State.Status
-    ) -> TransactionCompleteViewConfig.Statuses.Status {
-        
-        switch status {
-        case .completed: return statuses.completed
-        case .inflight:  return statuses.inflight
-        case .rejected:  return statuses.rejected
-        case .fraud:     return statuses.fraud
+        if state.status == .rejected {
+            
+            Button("TBD: Repeat Button", action: `repeat`)
+                .frame(maxWidth: .infinity)
+                .frame(height: 56)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .foregroundColor(Color.buttonSecondary)
+                )
         }
     }
-    
-    func iconFor(
-        status: TransactionCompleteView.State.Status
-    ) -> Statuses.Status.Icon {
-        
-        return configFor(status: status).icon
-    }
-    
-    func messageFor(
-        status: TransactionCompleteView.State.Status
-    ) -> String {
-        
-        return configFor(status: status).message
-    }
 }
 
+#if DEBUG
 struct TransactionCompleteView_Previews: PreviewProvider {
     
     static var previews: some View {
         
         Group {
             
-            completeView(nil)
-            completeView(nil, .fraud)
-            completeView(nil, .inflight)
-            completeView(nil, .rejected)
-            completeView(nil)
-            completeView(.init(logo: .ic16Tv, cells: []))
-            completeView(.init(logo: .ic16Tv, cells: [
-                OperationDetailInfoViewModel.DefaultCellViewModel(title: "Title"),
-                OperationDetailInfoViewModel.PropertyCellViewModel(title: "title", iconType: .cardPlaceholder, value: "value"),
-                OperationDetailInfoViewModel.IconCellViewModel(icon: .ic24Car),
-            ]))
+            completeView(.completed)
+            completeView(.completedWithDetails)
+            completeView(.completedWithDocumentID)
+            completeView(.completedWithDetailsAndDocumentID)
+            
+            completeView(.inflight)
+            completeView(.rejected)
+            completeView(.fraud)
         }
     }
     
     private static func completeView(
-        _ details: TransactionCompleteView.State.Details?,
-        _ status: TransactionCompleteView.State.Status = .completed
+        _ state: TransactionCompleteState
     ) -> some View {
-        
-        let state = TransactionCompleteState(
-            details: details,
-            documentID: .init(12345),
-            status: status
-        )
         
         return TransactionCompleteView(
             state: state,
             goToMain: {},
-            config: .iFora,
-            content: { Text("Content") },
+            repeat: {},
             factory: .init(
                 makeDetailButton: TransactionDetailButton.init,
                 makeDocumentButton: { _ in .init(getDocument: { $0(nil) }) },
                 makeTemplateButton: { nil }
-            )
+            ),
+            content: { Text("Content") }
         )
     }
 }
+
+private extension TransactionCompleteState {
+    
+    static let completed: Self = .completed()
+    static let completedWithDetails: Self = .completed(details: .empty)
+    static let completedWithDocumentID: Self = .completed(documentID: 1)
+    static let completedWithDetailsAndDocumentID: Self = .completed(
+        details: .empty,
+        documentID: 1
+    )
+    private static func completed(
+        details: Details? = nil,
+        documentID: DocumentID? = nil
+    ) -> Self {
+        
+        return .init(details: details, documentID: documentID, status: .completed)
+    }
+    
+    static let inflight: Self = .init(details: .empty, .inflight)
+    static let rejected: Self = .init(.rejected)
+    static let fraud: Self = .init(.fraud)
+    
+    private init(
+        details: Details? = nil,
+        documentID: DocumentID? = nil,
+        _ status: Status
+    ) {
+        self.init(details: details, documentID: documentID, status: status)
+    }
+}
+
+private extension TransactionDetailButton.Details {
+    
+    static let empty: Self = .init(logo: nil, cells: [])
+}
+#endif
