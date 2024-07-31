@@ -220,6 +220,7 @@ let package = Package(
         .selectorComponentTests,
         .inputPhoneComponent,
         .inputComponent,
+        .paymentCompletionUI,
         .paymentComponents,
         .productProfileComponents,
         .productSelectComponent,
@@ -521,9 +522,10 @@ private extension Product {
             .inputPhoneComponent,
             .nameComponent,
             .paymentComponents,
+            .paymentCompletionUI,
             .productSelectComponent,
             .selectComponent,
-//            .selectorComponent,
+            // .selectorComponent,
             .sharedConfigs,
         ]
     )
@@ -1965,6 +1967,15 @@ private extension Target {
         path: "Sources/UI/Components/\(String.nameComponent)"
     )
        
+    static let paymentCompletionUI = target(
+        name: .paymentCompletionUI,
+        dependencies: [
+            .sharedConfigs,
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/Components/\(String.paymentCompletionUI)"
+    )
+       
     static let selectComponent = target(
         name: .selectComponent,
         dependencies: [
@@ -2042,6 +2053,7 @@ private extension Target {
             .footerComponent,
             .nameComponent,
             .otpInputComponent,
+            .paymentCompletionUI,
             .inputComponent,
             .inputPhoneComponent,
             .productSelectComponent,
@@ -2338,6 +2350,10 @@ private extension Target.Dependency {
     
     static let otpInputComponent = byName(
         name: .otpInputComponent
+    )
+    
+    static let paymentCompletionUI = byName(
+        name: .paymentCompletionUI
     )
     
     static let pickerWithPreviewComponent = byName(
@@ -2637,6 +2653,8 @@ private extension String {
     static let otpInputComponent = "OTPInputComponent"
     static let otpInputComponentTests = "OTPInputComponentTests"
     
+    static let paymentCompletionUI = "PaymentCompletionUI"
+
     static let pickerWithPreviewComponent = "PickerWithPreviewComponent"
     static let pickerWithPreviewComponentTests = "PickerWithPreviewComponentTests"
     
