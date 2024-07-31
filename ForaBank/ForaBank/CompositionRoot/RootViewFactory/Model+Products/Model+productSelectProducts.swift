@@ -30,7 +30,7 @@ extension Model {
     func productSelectProductsForSberQR(
     ) -> [ProductSelect.Product] {
         
-        return paymentProductsForSberQR()
+        return paymentEligibleProducts()
             .compactMap {
                 
                 $0.productSelectProduct(
