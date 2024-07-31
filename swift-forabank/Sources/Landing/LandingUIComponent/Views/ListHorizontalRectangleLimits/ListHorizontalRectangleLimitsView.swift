@@ -42,7 +42,7 @@ struct ListHorizontalRectangleLimitsView: View {
     ) -> some View {
         
         switch destination {
-        case let .settingsView(viewModel, subtitle):
+        case let .settingsView(viewModel, subtitle, limitType):
             
             VStack {
                 NavigationBar(
@@ -54,18 +54,34 @@ struct ListHorizontalRectangleLimitsView: View {
 
                 LandingWrapperView(viewModel: viewModel)
                     .frame(maxHeight: .infinity)
-                Button(action: { /* TODO: add save action */ }) {
-                    ZStack {
-                        Color(red: 255/255, green: 54/255, blue: 54/255)
-                        Text("Сохранить")
-                            .padding()
+                    .alert(
+                        item: .init(
+                            get: { state.alert?.text },
+                            set: { _ in }
+                        ),
+                        content: alertContent
+                    )
+                
+                if state.editEnableFor(limitType) {
+                    Button(action: { event(.saveLimits(viewModel.newLimitsValue)) }) {
+                        ZStack {
+                            if state.saveButtonEnable {
+                                Color(red: 255/255, green: 54/255, blue: 54/255)
+
+                            } else {
+                                Color(red: 211/255, green: 211/255, blue: 211/255)
+                            }
+                            Text("Сохранить")
+                                .padding()
+                        }
                     }
+                    .foregroundColor(.white)
+                    .cornerRadius(config.cornerRadius)
+                    .frame(height: 56)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, config.paddings.vertical)
+                    .disabled(!state.saveButtonEnable)
                 }
-                .foregroundColor(.white)
-                .cornerRadius(config.cornerRadius)
-                .frame(height: 56)
-                .padding(.horizontal, 16)
-                .padding(.vertical, config.paddings.vertical)
             }
             .navigationBarTitle("")
             .navigationBarHidden(true)
@@ -74,6 +90,14 @@ struct ListHorizontalRectangleLimitsView: View {
         }
     }
         
+    private func alertContent(_ message: String) -> Alert {
+        
+        return .init(
+            title: Text("Ошибка"),
+            message: Text(message)
+        )
+    }
+
     private func itemView (
         item: Item
     ) -> some View {

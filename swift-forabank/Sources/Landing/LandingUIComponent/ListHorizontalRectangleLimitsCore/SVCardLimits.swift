@@ -26,3 +26,20 @@ public struct SVCardLimits: Equatable {
         }
     }
 }
+
+public struct CardLimitsInfo: Equatable {
+    
+    let type: String
+    let svCardLimits: SVCardLimits?
+    let editEnable: Bool
+    
+    public init(
+        type: String,
+        svCardLimits: SVCardLimits?,
+        editEnable: Bool
+    ) {
+        self.type = type
+        self.svCardLimits = svCardLimits
+        self.editEnable = editEnable
+    }
+}

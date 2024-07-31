@@ -11,13 +11,13 @@ public struct InputState: Equatable {
     
     let id: String
     let maxSum: Decimal
-    var value: String
+    var value: Decimal
     var warning: String?
     
     public init(
         id: String,
         maxSum: Decimal,
-        value: String,
+        value: Decimal,
         warning: String? = nil
     ) {
         self.id = id

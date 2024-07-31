@@ -28,8 +28,11 @@ public final class LandingWrapperViewModel: ObservableObject {
     private var bindings = Set<AnyCancellable>()
     private var landingActions: (LandingEvent) -> Void
     let makeIconView: LandingView.MakeIconView
-
+    
     let config: UILanding.Component.Config
+    
+    var cardLimitsInfo: CardLimitsInfo?
+    var newLimitsValue: [BlockHorizontalRectangularEvent.Limit] = []
     
     public init(
         initialState: State = .success(nil),
@@ -168,6 +171,12 @@ public final class LandingWrapperViewModel: ObservableObject {
             self.message = message
         }
     }
+    
+    // TODO: change after refactoring
+    
+    public func updateCardLimitsInfo(_ newValue: CardLimitsInfo?) {
+        cardLimitsInfo = newValue
+    }
 }
 
 public extension LandingWrapperViewModel {
@@ -207,7 +216,14 @@ public struct LandingWrapperView: View {
             landingUIView(
                 landing,
                 viewModel.images,
-                viewModel.config
+                viewModel.config,
+                viewModel.cardLimitsInfo,
+                {
+                    viewModel.newLimitsValue.updateOrAddLimit($0)
+                },
+                { 
+                    return viewModel.newLimitsValue
+                }
             )
         }
     }
@@ -215,14 +231,20 @@ public struct LandingWrapperView: View {
     private func landingUIView(
         _ landing: UILanding,
         _ images: [String: Image],
-        _ config: UILanding.Component.Config
+        _ config: UILanding.Component.Config,
+        _ cardLimitsInfo: CardLimitsInfo?,
+        _ limitIsChanged: @escaping (BlockHorizontalRectangularEvent.Limit) -> Void,
+        _ newLimits: @escaping () -> [BlockHorizontalRectangularEvent.Limit]
     ) -> LandingView {
         .init(
             viewModel: .init(landing: landing, config: config),
             images: images,
             action: viewModel.action,
             makeIconView: viewModel.makeIconView, 
-            limitsViewModel: viewModel.limitsViewModel
+            limitsViewModel: viewModel.limitsViewModel,
+            cardLimitsInfo: cardLimitsInfo, 
+            limitIsChanged: limitIsChanged,
+            newLimits: newLimits
         )
     }
 }

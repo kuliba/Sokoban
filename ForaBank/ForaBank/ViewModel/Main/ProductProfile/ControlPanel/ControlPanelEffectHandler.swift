@@ -8,6 +8,8 @@
 import SwiftUI
 import LandingUIComponent
 import LandingMapping
+import SVCardLimitAPI
+import RemoteServices
 
 final class ControlPanelEffectHandler {
     
@@ -97,7 +99,7 @@ extension ControlPanelEffectHandler {
                             
                             return .init(
                                 initialState: .init(list: .init(limits), limitsLoadingStatus: .inflight(.loadingSVCardLimits)),
-                                reduce: ListHorizontalRectangleLimitsReducer.init().reduce(_:_:),
+                                reduce: ListHorizontalRectangleLimitsReducer.init(makeInformer: self.productProfileServices.makeInformer).reduce(_:_:),
                                 handleEffect: self.handleEffect(_:_:))
                         }
                         return nil
@@ -144,7 +146,7 @@ private extension ControlPanelEffectHandler {
         _ dispatch: @escaping LimitsDispatch
     ) {
         switch effect {
-        case .loadSVCardLanding:
+        case let .loadSVCardLanding(limitType):
             
             let cardType = card.cardType ?? .regular
             
@@ -153,7 +155,7 @@ private extension ControlPanelEffectHandler {
                 result in
                 switch result {
                 case .failure:
-                    dispatch(.loadedLimits(nil, ""))
+                    dispatch(.loadedLimits(nil, "", limitType))
                     
                 case let .success(landing):
                                         
@@ -162,8 +164,32 @@ private extension ControlPanelEffectHandler {
                         nil,
                         .default,
                         self.landingEvent
-                    ),  self.card.navigationTitleForControlPanel))
+                    ),  self.card.navigationTitleForControlPanel, limitType))
                 }
+            }
+            
+        case let .saveLimits(limits):
+            
+            productProfileServices.createChangeSVCardLimit.сhangeSVCardLimits(card: card, payloads: limits.payloads(card.cardId)) {
+                
+                switch ($0, $1) {
+                    
+                case let (.some(text), nil):
+                    dispatch(.delayAlert(text))
+                    
+                case let (.none, .some(limits)):
+                    
+                    dispatch(.informerWithLimits("Лимиты установлены", limits))
+                default:
+                    break
+                }
+            }
+            
+        case let .showAlert(message, interval):
+            
+            DispatchQueue.main.delay(for: interval) {
+                
+                dispatch(.showAlert(message))
             }
         }
     }
@@ -171,6 +197,26 @@ private extension ControlPanelEffectHandler {
     typealias LimitsEvent = ListHorizontalRectangleLimitsEvent
     typealias LimitsEffect = ListHorizontalRectangleLimitsEffect
     typealias LimitsDispatch = (LimitsEvent) -> Void
+}
+
+private extension ChangeSVCardLimitPayload {
+    
+    init(
+        _ cardId: Int,
+        _ data: BlockHorizontalRectangularEvent.Limit
+    ) {
+        self.init(cardId: cardId, limit: .init(name: data.id, value: data.value))
+    }
+}
+
+private extension Array where Element ==  BlockHorizontalRectangularEvent.Limit {
+    
+    func payloads(_ cardId: ProductData.ID) -> [ChangeSVCardLimitPayload] {
+        
+        map {
+            .init(cardId, $0)
+        }
+    }
 }
 
 private extension UILanding.List.HorizontalRectangleLimits {

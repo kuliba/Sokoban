@@ -9,10 +9,14 @@ import SwiftUI
 
 public extension String {
     
-    func text(withConfig config: TextConfig) -> some View {
+    func text(
+        withConfig config: TextConfig,
+        alignment: TextAlignment = .leading
+    ) -> some View {
         
         Text(self)
             .font(config.textFont)
             .foregroundColor(config.textColor)
+            .multilineTextAlignment(alignment)
     }
 }
