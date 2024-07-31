@@ -56,7 +56,7 @@ struct ServicePaymentFlowStateWrapperView: View {
         .fullScreenCover(
             cover: flowModel.state.fullScreenCover,
             dismissFullScreenCover: { flowModel.event(.terminate) },
-            content: { factory.fullScreenCoverContent($0.result) }
+            content: { factory.fullScreenCoverContent($0.completed) }
         )
         .padding(.bottom)
         .ignoresSafeArea(.container, edges: .bottom)
@@ -64,7 +64,7 @@ struct ServicePaymentFlowStateWrapperView: View {
 }
 
 extension ServicePaymentFlowState {
-
+    
     var alert: Alert? {
         
         guard case let .alert(alert) = self
@@ -89,16 +89,16 @@ extension ServicePaymentFlowState {
     
     var fullScreenCover: FullScreenCover? {
         
-        guard case let .fullScreenCover(result) = self
+        guard case let .fullScreenCover(completed) = self
         else { return nil }
         
-        return .init(result: result)
+        return .init(completed: completed)
     }
     
     struct FullScreenCover: Identifiable {
         
         let id = UUID()
-        let result: TransactionResult
+        let completed: Completed
     }
 }
 

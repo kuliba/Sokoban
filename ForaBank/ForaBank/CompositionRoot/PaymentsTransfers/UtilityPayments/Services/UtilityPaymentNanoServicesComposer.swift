@@ -489,12 +489,13 @@ extension RemoteServices.ResponseMapper.CreateAnywayTransferResponse {
     )
     
     static let step4: Self = .make(
+        finalStep: true,
         needMake: true,
         needOTP: true
     )
     
     static let step4Fraud: Self = .make(
-        needMake: true,
+        needMake: false,
         needOTP: true,
         scenario: .suspect
     )

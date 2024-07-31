@@ -26,10 +26,14 @@ class ServicePaymentFlowTests: XCTestCase {
     }
     
     func makeState(
-        result: ServicePaymentFlowState.TransactionResult
+        formattedAmount: String = anyMessage(),
+        result: ServicePaymentFlowState.Completed.TransactionResult
     ) -> ServicePaymentFlowState {
         
-        return .fullScreenCover(result)
+        return .fullScreenCover(.init(
+            formattedAmount: formattedAmount,
+            result: result
+        ))
     }
     
     func makeFraudPayload(
@@ -43,11 +47,10 @@ class ServicePaymentFlowTests: XCTestCase {
     }
     
     func makeFraud(
-        formattedAmount: String = anyMessage(),
         hasExpired: Bool
-    ) -> ServicePaymentFlowEvent.Fraud {
+    ) -> ServicePaymentFlowEvent.Completed.Fraud {
         
-        return .init(formattedAmount: formattedAmount, hasExpired: hasExpired)
+        return .init(hasExpired: hasExpired)
     }
     
     func makePaymentUpdate() -> AnywayPaymentUpdate {

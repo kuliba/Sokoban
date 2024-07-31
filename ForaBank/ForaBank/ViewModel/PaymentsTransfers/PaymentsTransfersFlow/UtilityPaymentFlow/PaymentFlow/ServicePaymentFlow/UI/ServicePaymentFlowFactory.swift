@@ -20,8 +20,8 @@ extension ServicePaymentFlowFactory {
 
     typealias BottomSheetContent = (FraudNoticePayload) -> FraudNoticeView
 
-    typealias TransactionResult = ServicePaymentFlowState.TransactionResult
-    typealias FullScreenCoverContent = (TransactionResult) -> PaymentCompleteView
+    typealias Completed = ServicePaymentFlowState.Completed
+    typealias FullScreenCoverContent = (Completed) -> PaymentCompleteView
     
     typealias IconView = IconDomain.IconView
     typealias Element = AnywayTransactionState.IdentifiedModel

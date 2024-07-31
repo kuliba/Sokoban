@@ -14,12 +14,12 @@ typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, Sli
 typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
 typealias MakeHistoryButtonView = (@escaping (HistoryEvent) -> Void) -> HistoryButtonView?
 typealias MakeIconView = IconDomain.MakeIconView
-typealias MakePaymentCompleteView = (TransactionResult, @escaping () -> Void) -> PaymentCompleteView
+typealias MakePaymentCompleteView = (Completed, @escaping () -> Void) -> PaymentCompleteView
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 
-typealias TransactionResult = UtilityServicePaymentFlowState.FullScreenCover.TransactionResult
+typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
 struct RootViewFactory {
     

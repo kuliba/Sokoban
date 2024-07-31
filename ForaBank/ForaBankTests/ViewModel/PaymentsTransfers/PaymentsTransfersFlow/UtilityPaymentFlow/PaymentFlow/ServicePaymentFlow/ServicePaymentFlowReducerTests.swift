@@ -54,7 +54,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
     
     func test_terminate_shouldSetFullScreenCoverStateToTerminated() {
         
-        assert(.fullScreenCover(.success(makeReport())), event: .terminate) {
+        assert(.fullScreenCover(.init(formattedAmount: anyMessage(), result: .success(makeReport()))), event: .terminate) {
             
             $0 = .terminated
         }
@@ -62,7 +62,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
     
     func test_dismissModal_shouldNotDeliverEffectOnFullScreenCoverState() {
         
-        assert(.fullScreenCover(.success(makeReport())), event: .terminate, delivers: nil)
+        assert(.fullScreenCover(.init(formattedAmount: anyMessage(), result: .success(makeReport()))), event: .terminate, delivers: nil)
     }
     
     // MARK: - notify
@@ -215,10 +215,10 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
             makeState(alert: .paymentRestartConfirmation),
             event: notify(.result(.failure(.fraud(.cancelled)))),
             delivers: .delay(
-                .showResult(.failure(.init(
+                .showResult(.init(
                     formattedAmount: formattedAmount,
-                    hasExpired: false
-                ))),
+                    result: .failure(.init(hasExpired: false))
+                )),
                 for: .milliseconds(300)
             )
         )
@@ -244,10 +244,10 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
             makeState(alert: .paymentRestartConfirmation),
             event: notify(.result(.failure(.fraud(.expired)))),
             delivers: .delay(
-                .showResult(.failure(.init(
+                .showResult(.init(
                     formattedAmount: formattedAmount,
-                    hasExpired: true
-                ))),
+                    result: .failure(.init(hasExpired: true))
+                )),
                 for: .milliseconds(300)
             )
         )
@@ -278,7 +278,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
             makeState(alert: .paymentRestartConfirmation),
             event: notify(.result(.failure(.updatePaymentFailure)))
         ) {
-            $0 = .alert(.serverError("Error"))
+            $0 = .alert(.serverError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
         }
     }
     
@@ -303,13 +303,19 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
     
     func test_notify_shouldDeliverEffectOnSuccess() {
         
+        let formattedAmount = anyMessage()
         let report = makeReport()
+        let sut = makeSUT(formattedAmount: formattedAmount)
         
         assert(
+            sut: sut,
             makeState(alert: .paymentRestartConfirmation),
             event: notify(.result(.success(report))),
             delivers: .delay(
-                .showResult(.success(report)),
+                .showResult(.init(
+                    formattedAmount: formattedAmount,
+                    result: .success(report)
+                )),
                 for: .milliseconds(300)
             )
         )
@@ -319,14 +325,17 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
     
     func test_showResult_shouldSetStateToFullScreenCoverFailureOnNonExpiredFraud() {
         
+        let formattedAmount = anyMessage()
         let nonExpiredFraud = makeFraud(hasExpired: true)
         
-        assert(.none, event: .showResult(.failure(nonExpiredFraud))) {
-            
-            $0 = .fullScreenCover(.failure(.init(
-                formattedAmount: nonExpiredFraud.formattedAmount,
-                hasExpired: nonExpiredFraud.hasExpired
-            )))
+        assert(.none, event: .showResult(.init(
+            formattedAmount: formattedAmount,
+            result: .failure(nonExpiredFraud)
+        ))) {
+            $0 = .fullScreenCover(.init(
+                formattedAmount: formattedAmount,
+                result: .failure(.init(hasExpired: nonExpiredFraud.hasExpired))
+            ))
         }
     }
     
@@ -334,19 +343,22 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         let nonExpiredFraud = makeFraud(hasExpired: true)
         
-        assert(.none, event: .showResult(.failure(nonExpiredFraud)), delivers: nil)
+        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), result: .failure(nonExpiredFraud))), delivers: nil)
     }
     
     func test_showResult_shouldSetStateToFullScreenCoverFailureOnExpiredFraud() {
         
+        let formattedAmount = anyMessage()
         let expiredFraud = makeFraud(hasExpired: false)
         
-        assert(.none, event: .showResult(.failure(expiredFraud))) {
-            
-            $0 = .fullScreenCover(.failure(.init(
-                formattedAmount: expiredFraud.formattedAmount,
-                hasExpired: expiredFraud.hasExpired
-            )))
+        assert(.none, event: .showResult(.init(
+            formattedAmount: formattedAmount,
+            result: .failure(expiredFraud)
+        ))) {
+            $0 = .fullScreenCover(.init(
+                formattedAmount: formattedAmount,
+                result: .failure(.init(hasExpired: expiredFraud.hasExpired))
+            ))
         }
     }
     
@@ -354,16 +366,22 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         let expiredFraud = makeFraud(hasExpired: false)
         
-        assert(.none, event: .showResult(.failure(expiredFraud)), delivers: nil)
+        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), result: .failure(expiredFraud))), delivers: nil)
     }
     
     func test_showResult_shouldSetStateToFullScreenCoverSuccessOnSuccess() {
         
+        let formattedAmount = anyMessage()
         let report = makeReport()
         
-        assert(.none, event: .showResult(.success(report))) {
-            
-            $0 = .fullScreenCover(.success(report))
+        assert(.none, event: .showResult(.init(
+            formattedAmount: formattedAmount,
+            result: .success(report)
+        ))) {
+            $0 = .fullScreenCover(.init(
+                formattedAmount: formattedAmount,
+                result: .success(report)
+            ))
         }
     }
     
@@ -371,7 +389,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         let report = makeReport()
         
-        assert(.none, event: .showResult(.success(report)), delivers: nil)
+        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), result: .success(report))), delivers: nil)
     }
     
     // MARK: - Helpers

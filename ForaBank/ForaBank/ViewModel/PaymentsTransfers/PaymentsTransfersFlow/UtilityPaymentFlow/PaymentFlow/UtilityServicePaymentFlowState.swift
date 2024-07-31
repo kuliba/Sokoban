@@ -43,14 +43,19 @@ extension UtilityServicePaymentFlowState {
     
     enum FullScreenCover: Equatable {
         
-        case completed(TransactionResult)
+        case completed(Completed)
         
-        typealias TransactionResult = Result<AnywayTransactionReport, Fraud>
-        
-        struct Fraud: Equatable, Error {
+        struct Completed: Equatable {
             
             let formattedAmount: String
-            let hasExpired: Bool
+            let result: TransactionResult
+            
+            typealias TransactionResult = Result<AnywayTransactionReport, Fraud>
+            
+            struct Fraud: Equatable, Error {
+                
+                let hasExpired: Bool
+            }
         }
     }
     

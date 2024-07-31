@@ -96,10 +96,10 @@ private extension ServicePaymentFlowReducer {
             case let .fraud(fraud):
                 state = .none
                 effect = .delay(
-                    .showResult(.failure(.init(
+                    .showResult(.init(
                         formattedAmount: formattedAmount,
-                        hasExpired: fraud == .expired
-                    ))),
+                        result: .failure(.init(hasExpired: fraud == .expired))
+                    )),
                     for: .milliseconds(300)
                 )
                 
@@ -109,13 +109,16 @@ private extension ServicePaymentFlowReducer {
                 
                 // TODO: the case should have associated string
             case .updatePaymentFailure:
-                state = .alert(.serverError("Error"))
+                state = .alert(.serverError("Во время проведения платежа произошла ошибка.\nПопробуйте повторить операцию позже."))
             }
             
         case let .success(report):
             state = .none
             effect = .delay(
-                .showResult(.success(report)),
+                .showResult(.init(
+                    formattedAmount: formattedAmount,
+                    result: .success(report)
+                )),
                 for: .milliseconds(300)
             )
         }
@@ -124,17 +127,20 @@ private extension ServicePaymentFlowReducer {
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        with result: Event.TransactionResult
+        with completed: Event.Completed
     ) {
-        switch result {
+        switch completed.result {
         case let .failure(fraud):
-            state = .fullScreenCover(.failure(.init(
-                formattedAmount: fraud.formattedAmount,
-                hasExpired: fraud.hasExpired
-            )))
+            state = .fullScreenCover(.init(
+                formattedAmount: completed.formattedAmount,
+                result: .failure(.init(hasExpired: fraud.hasExpired))
+            ))
             
         case let .success(report):
-            state = .fullScreenCover(.success(report))
+            state = .fullScreenCover(.init(
+                formattedAmount: completed.formattedAmount,
+                result: .success(report)
+            ))
         }
     }
 }

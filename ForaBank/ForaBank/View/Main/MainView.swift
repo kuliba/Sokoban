@@ -535,17 +535,16 @@ private extension MainView {
                     event: { binder.content.event(.fraud($0)) }
                 )
             },
-            fullScreenCoverContent: { result in
+            fullScreenCoverContent: {
                 
                 viewFactory.makePaymentCompleteView(
-                    result
-                        .mapError {
+                    .init(
+                        formattedAmount: $0.formattedAmount,
+                        result: $0.result.mapError {
                             
-                            return .init(
-                                formattedAmount: $0.formattedAmount,
-                                hasExpired: $0.hasExpired
-                            )
-                        },
+                            return .init(hasExpired: $0.hasExpired)
+                        }
+                    ),
                     { binder.flow.event(.terminate) }
                 )
             },

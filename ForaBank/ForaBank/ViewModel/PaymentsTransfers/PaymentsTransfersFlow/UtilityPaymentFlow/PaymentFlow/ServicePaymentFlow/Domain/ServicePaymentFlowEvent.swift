@@ -11,7 +11,7 @@ import AnywayPaymentUI
 enum ServicePaymentFlowEvent: Equatable {
     
     case notify(TransactionProjection)
-    case showResult(TransactionResult)
+    case showResult(Completed)
     case terminate
 }
 
@@ -23,11 +23,16 @@ extension ServicePaymentFlowEvent {
         let status: AnywayTransactionStatus?
     }
     
-    typealias TransactionResult = Result<AnywayTransactionReport, Fraud>
-    
-    struct Fraud: Equatable, Error {
+    struct Completed: Equatable {
         
         let formattedAmount: String
-        let hasExpired: Bool
+        let result: TransactionResult
+        
+        typealias TransactionResult = Result<AnywayTransactionReport, Fraud>
+        
+        struct Fraud: Equatable, Error {
+            
+            let hasExpired: Bool
+        }
     }
 }
