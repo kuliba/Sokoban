@@ -12,7 +12,7 @@ public enum GetInfoRepeatPaymentDomain {}
 
 public extension GetInfoRepeatPaymentDomain {
     
-    typealias Payload = GetInfoRepeatPaymentCode
+    typealias Payload = GetInfoRepeatPayment
     typealias Result = Swift.Result<Payload, Error>
     typealias Completion = (Result) -> Void
     
@@ -30,16 +30,16 @@ public extension GetInfoRepeatPaymentDomain {
 
 extension GetInfoRepeatPaymentDomain {
     
-    public struct GetInfoRepeatPaymentCode: Equatable {
+    public struct GetInfoRepeatPayment: Equatable {
         
         let type: String
         let parameterList: [Transfer]
-        let productTemplate: ProductTemplate
+        let productTemplate: ProductTemplate?
     
         public init(
             type: String,
             parameterList: [Transfer],
-            productTemplate: ProductTemplate
+            productTemplate: ProductTemplate?
         ) {
             self.type = type
             self.parameterList = parameterList
@@ -53,14 +53,42 @@ extension GetInfoRepeatPaymentDomain {
             let currencyAmount: String
             let payer: Payer
             
-            struct Payer: Equatable {
+            public init(
+                check: Bool,
+                amount: Double,
+                currencyAmount: String,
+                payer: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.Transfer.Payer
+            ) {
+                self.check = check
+                self.amount = amount
+                self.currencyAmount = currencyAmount
+                self.payer = payer
+            }
+            
+            public struct Payer: Equatable {
                 
-                let cardId: Int
-                let cardNumber: String
-                let accountId: Int
-                let accountNumber: String
-                let phoneNumber: String
-                let inn: String
+                let cardId: Int?
+                let cardNumber: String?
+                let accountId: Int?
+                let accountNumber: String?
+                let phoneNumber: String?
+                let inn: String?
+                
+                public init(
+                    cardId: Int?,
+                    cardNumber: String?,
+                    accountId: Int?,
+                    accountNumber: String?,
+                    phoneNumber: String?,
+                    inn: String?
+                ) {
+                    self.cardId = cardId
+                    self.cardNumber = cardNumber
+                    self.accountId = accountId
+                    self.accountNumber = accountNumber
+                    self.phoneNumber = phoneNumber
+                    self.inn = inn
+                }
             }
         }
         

@@ -86,7 +86,7 @@ public enum GetInfoRepeatPaymentMapper {
     }
 }
 
-private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPaymentCode {
+private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
     
     init(decodableGetInfoRepeatPaymentCode: GetInfoRepeatPaymentMapper.DecodableGetInfoRepeatPaymentCode) {
      
@@ -114,7 +114,7 @@ private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPaymentCode {
     }
 }
 
-private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPaymentCode.ProductTemplate.ProductType {
+private extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment.ProductTemplate.ProductType {
 
     init(productType: GetInfoRepeatPaymentMapper.DecodableGetInfoRepeatPaymentCode.ProductTemplate.ProductType) {
         
