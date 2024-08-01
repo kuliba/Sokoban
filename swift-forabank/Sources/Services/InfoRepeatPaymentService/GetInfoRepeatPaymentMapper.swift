@@ -16,38 +16,12 @@ public enum GetInfoRepeatPaymentMapper {
         _ httpURLResponse: HTTPURLResponse
     ) -> Result {
         
-        let statusCode = httpURLResponse.statusCode
-        
-        switch statusCode {
-        case statusCode200:
-            return handle200(with: data)
-            
-        case statusCode500:
-            return handle500(with: data)
-            
-        default:
-            return .failure(.unknownStatusCode(statusCode))
-        }
-    }
-    
-    private static func handle200(with data: Data) -> Result {
-        
         do {
             let decodableGetInfoRepeat = try JSONDecoder().decode(DecodableGetInfoRepeatPaymentCode.self, from: data)
             
             return .success(decodableGetInfoRepeat)
         } catch {
             return .failure(.invalidData(statusCode: 200))
-        }
-    }
-    
-    private static func handle500(with data: Data) -> Result {
-        
-        do {
-            let decoded = try JSONDecoder().decode(ServerError.self, from: data)
-            return .failure(.serverError(statusCode: decoded.statusCode, errorMessage: decoded.errorMessage))
-        } catch {
-            return .failure(.invalidData(statusCode: statusCode500))
         }
     }
     
@@ -111,6 +85,3 @@ public enum GetInfoRepeatPaymentMapper {
         let errorMessage: String
     }
 }
-
-private let statusCode200 = 200
-private let statusCode500 = 500

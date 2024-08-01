@@ -24,8 +24,6 @@ public extension GetInfoRepeatPaymentDomain {
     enum Error: Swift.Error, Equatable {
         
         case connectivity
-        case invalidData(statusCode: Int)
-        case unknownStatusCode(Int)
         case serverError(statusCode: Int, errorMessage: String)
     }
 }
