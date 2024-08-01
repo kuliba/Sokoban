@@ -32,9 +32,9 @@ extension GetInfoRepeatPaymentDomain {
     
     public struct GetInfoRepeatPaymentCode: Equatable {
         
-        public let type: String
-        public let parameterList: [Transfer]
-        public let productTemplate: ProductTemplate
+        let type: String
+        let parameterList: [Transfer]
+        let productTemplate: ProductTemplate
     
         public init(
             type: String,
@@ -46,14 +46,14 @@ extension GetInfoRepeatPaymentDomain {
             self.productTemplate = productTemplate
         }
         
-        struct Transfer {
+        public struct Transfer: Equatable {
             
             let check: Bool
             let amount: Double
             let currencyAmount: String
             let payer: Payer
             
-            struct Payer {
+            struct Payer: Equatable {
                 
                 let cardId: Int
                 let cardNumber: String
@@ -64,7 +64,7 @@ extension GetInfoRepeatPaymentDomain {
             }
         }
         
-        struct ProductTemplate {
+        public struct ProductTemplate: Equatable {
             
             let id: Int
             let numberMask: String
@@ -74,7 +74,7 @@ extension GetInfoRepeatPaymentDomain {
             let smallDesign: String
             let paymentSystemImage: String
             
-            enum ProductType {
+            enum ProductType: Equatable {
                 
                 case account
                 case card
