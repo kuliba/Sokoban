@@ -33,6 +33,17 @@ final class RequestFactory_getInfoForRepeatPaymentRequestTests: XCTestCase {
         XCTAssertNoDiff(request.cachePolicy, .reloadIgnoringLocalAndRemoteCacheData)
     }
     
+    func test_createRequest_shouldSetRequestBody() throws {
+        
+        let request = try createRequest(payload: .init(paymentOperationDetailId: 1))
+        let decodedRequest = try JSONDecoder().decode(
+            DecodableInfoForRepeatPaymentRequest.self,
+            from: XCTUnwrap(request.httpBody)
+        )
+        
+        XCTAssertNoDiff(decodedRequest.paymentOperationDetailId, "1")
+    }
+    
     // MARK: - Helpers
     
     private func createRequest(
@@ -41,6 +52,16 @@ final class RequestFactory_getInfoForRepeatPaymentRequestTests: XCTestCase {
     ) throws -> URLRequest {
         
         return RequestFactory.getInfoForRepeatPayment(payload)
+    }
+    
+    private struct DecodableInfoForRepeatPaymentRequest: Decodable {
+        
+        let paymentOperationDetailId: String
+        
+        init(infoForRepeatPayment: InfoForRepeatPaymentPayload) {
+            
+            self.paymentOperationDetailId = "\(infoForRepeatPayment.paymentOperationDetailId)"
+        }
     }
 }
 
