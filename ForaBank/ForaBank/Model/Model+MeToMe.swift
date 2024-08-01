@@ -129,8 +129,8 @@ extension Model {
                 }
             
             case let .failure(error):
-                self.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Response(result: .failure(.serverCommandError(error: error.localizedDescription))))
-                self.handleServerCommandError(error: error, command: command)
+                
+                self.handleMakeTransferError(error: error, command: command)
             }
         }
     }
@@ -138,11 +138,19 @@ extension Model {
 
 private extension Model {
     
-    func handleCreateTransferError(error: ServerAgentError, command: ServerCommands.TransferController.CreateTransfer) {
+    private func handleCreateTransferError(error: ServerAgentError, command: ServerCommands.TransferController.CreateTransfer) {
         
         let statusCode: ServerStatusCode = error.isTimeoutSAError() ? .timeout : .serverError
         
         self.action.send(ModelAction.Payment.MeToMe.CreateTransfer.Response(result: .failure(.statusError(status: statusCode, message: error.localizedDescription))))
+        self.handleServerCommandError(error: error, command: command)
+    }
+    
+    private func handleMakeTransferError(error: ServerAgentError, command: ServerCommands.TransferController.MakeTransfer) {
+        
+        let statusCode: ServerStatusCode = error.isTimeoutSAError() ? .timeout : .serverError
+        
+        self.action.send(ModelAction.Payment.MeToMe.MakeTransfer.Response(result: .failure(.statusError(status: statusCode, message: error.localizedDescription))))
         self.handleServerCommandError(error: error, command: command)
     }
 }
