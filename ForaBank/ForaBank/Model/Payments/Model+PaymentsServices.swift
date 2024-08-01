@@ -547,29 +547,7 @@ extension Model {
     
     func additionalList(for operatorData: OperatorGroupData.OperatorData, qrCode: QRCode) -> [PaymentServiceData.AdditionalListData]? {
         
-        case account = "a3_PERSONAL_ACCOUNT_1_1"
-        case code = "a3_CODE_3_1"
-    }
-    
-    func getValue(for parameterData: ParameterData, qrCode: QRCode) -> String {
-        
-        switch ParameterType(rawValue: parameterData.id) {
-            
-        case .account:
-            
-            return parameterData.inputFieldType == .account ? accountNumberForPayment(qrCode: qrCode) : ""
-        case .code:
-            
-            return qrCode.rawData["category"] ?? ""
-        case .none:
-            
-            return ""
-        }
-    }
-    
-    func additionalList(for operatorData: OperatorGroupData.OperatorData, qrCode: QRCode) -> [PaymentServiceData.AdditionalListData]? {
-
-        return operatorData.parameterList.compactMap {
+        operatorData.parameterList.compactMap {
             
             if $0.viewType == .input {
                 
