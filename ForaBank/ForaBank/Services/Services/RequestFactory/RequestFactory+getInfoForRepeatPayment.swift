@@ -24,7 +24,6 @@ extension RequestFactory {
         request.httpBody = try? payload.httpBody
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         return request
-        
     }
 }
 
